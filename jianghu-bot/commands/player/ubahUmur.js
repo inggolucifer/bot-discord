@@ -8,7 +8,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('umur-baru').setDescription('Umur baru karaktermu').setRequired(true).setMinValue(1).setMaxValue(9999)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const umurBaru = interaction.options.getInteger('umur-baru');
 

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -8,7 +8,7 @@ module.exports = {
     .setDescription('[ADMIN] Hapus log lama SEKARANG JUGA (manual, di luar jadwal otomatis)'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const config = await GuildConfig.findOne({ guildId: interaction.guildId });
