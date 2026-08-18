@@ -36,7 +36,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const kategori = interaction.options.getString('kategori');
     const nama = interaction.options.getString('nama');

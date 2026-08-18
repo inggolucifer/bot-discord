@@ -11,7 +11,7 @@ module.exports = {
     .setDescription('Klaim hadiah harian (10 Silver Tael), reset tiap jam 00:00 WIB'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar. Gunakan `/daftar` dulu.' });

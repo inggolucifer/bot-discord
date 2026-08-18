@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -9,7 +9,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('hari').setDescription('Jumlah hari (1-3650). Default: 30').setRequired(true).setMinValue(1).setMaxValue(3650)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const hari = interaction.options.getInteger('hari');

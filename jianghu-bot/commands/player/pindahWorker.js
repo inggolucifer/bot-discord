@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const WorkerContract = require('../../models/WorkerContract');
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
@@ -20,7 +20,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const workerUser = interaction.options.getUser('worker');
     const assetName = interaction.options.getString('aset');

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Asset = require('../../models/Asset');
 
@@ -15,10 +15,10 @@ module.exports = {
   },
 
   async execute(interaction) {
-    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const nama = interaction.options.getString('nama');
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
-    if (!asset) return interaction.reply({ content: `❌ Aset "${nama}" tidak ditemukan.`, ephemeral: true });
+    if (!asset) return interaction.reply({ content: `❌ Aset "${nama}" tidak ditemukan.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_asset_${asset._id}`).setTitle(`Edit: ${asset.name}`.slice(0, 45));
     modal.addComponents(

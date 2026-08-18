@@ -20,7 +20,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const from = interaction.options.getString('dari');
     const to = interaction.options.getString('ke');

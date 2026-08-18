@@ -26,7 +26,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const namaAset = interaction.options.getString('nama-aset');
     const jumlah = interaction.options.getInteger('jumlah');

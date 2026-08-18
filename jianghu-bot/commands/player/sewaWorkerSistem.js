@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
 const { calculateProgress } = require('../../utils/assetProgress');
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const assetName = interaction.options.getString('aset');
     const durasi = interaction.options.getInteger('durasi');
