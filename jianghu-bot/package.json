@@ -1,0 +1,21 @@
+{
+  "name": "jianghu-world-bot",
+  "version": "1.0.0",
+  "description": "Discord Bot RP Xianxia/Wuxia (Jianghu World style)",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.7.0",
+    "moment-timezone": "^0.5.46"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
