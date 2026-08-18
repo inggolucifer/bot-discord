@@ -90,6 +90,18 @@ module.exports = {
         }
       }
 
+
+      // ---- Cek Kematian Player ----
+      if (interaction.commandName !== 'restart-karakter' && interaction.commandName !== 'help') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+        if (player && player.status === 'dead') {
+          return interaction.reply({
+            content: '💀 Kamu telah meninggal. Cari pertolongan pemain lain yang memiliki kemampuan membangkitkanmu, atau restart akun dari awal dengan command: `/restart-karakter`',
+            ephemeral: true
+          });
+        }
+      }
+
       try {
         await command.execute(interaction);
       } catch (err) {
@@ -120,8 +132,54 @@ module.exports = {
       // Tombol transfer & barter ditangani sendiri oleh collector di command masing-masing. Lewati di sini.
       if (id.startsWith('transfer_') || id.startsWith('barter_')) return;
 
+
+      if (id.startsWith('hire_worker_')) {
+        const workerId = id.replace('hire_worker_', '');
+
+        // Cek kalau dia mau sewa diri sendiri
+        if (workerId === interaction.user.id) {
+           return interaction.reply({ content: '❌ Kamu tidak bisa menyewa dirimu sendiri.', ephemeral: true });
+        }
+
+        const modal = new ModalBuilder().setCustomId(`modal_hire_worker_${workerId}`).setTitle('Sewa Worker');
+        modal.addComponents(
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('hours').setLabel('Berapa jam ingin menyewa?').setStyle(TextInputStyle.Short).setRequired(true)),
+        );
+        return interaction.showModal(modal);
+      }
+
       if (id === 'cancel_action') {
         return interaction.update({ content: '❎ Dibatalkan.', embeds: [], components: [] });
+      }
+
+      if (id === 'confirm_restart_karakter_yes') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+        if (!player || player.status !== 'dead') {
+           return interaction.update({ content: '❌ Karakter tidak valid atau belum mati.', embeds: [], components: [] });
+        }
+
+        player.status = 'active';
+        player.customStatus = null;
+        player.inventory = [];
+        player.pets = [];
+        player.assets = [];
+        player.currency = { silver: 0, gold: 0, jade: 0, spirit: 0 };
+        player.realm = 'Mortal';
+        player.stage = '-';
+        player.sect = 'Tanpa Sekte (Rogue Cultivator)';
+        player.age = 16;
+        player.totalWealth = 0; // it gets recalculated anyway but let's reset it to be clean
+        await player.save();
+
+        await logAdminAction(interaction.client, {
+          guildId: interaction.guildId,
+          adminId: interaction.client.user.id,
+          action: 'RESTART_CHARACTER',
+          targetUserId: interaction.user.id,
+          details: 'Pemain melakukan restart dari kematian.'
+        });
+
+        return interaction.update({ content: '✨ Karaktermu telah terlahir kembali! Semoga kehidupan kali ini lebih baik.', embeds: [], components: [] });
       }
 
       if (id === 'panel_help_admin') {
@@ -137,7 +195,7 @@ module.exports = {
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('rankTier').setLabel('Rank & Tier (contoh: Epic 5)').setStyle(TextInputStyle.Short).setValue('Common 1').setRequired(true)),
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('priceInfo').setLabel('Harga Dasar & Currency (contoh: 500 silver)').setStyle(TextInputStyle.Short).setValue('0 silver').setRequired(true)),
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('description').setLabel('Deskripsi').setStyle(TextInputStyle.Paragraph).setRequired(true)),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('imageUrl').setLabel('URL Gambar (opsional)').setStyle(TextInputStyle.Short).setRequired(false)),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('category').setLabel('Kategori (weapon, material, dll)').setStyle(TextInputStyle.Short).setValue('none').setRequired(false)),
         );
         return interaction.showModal(modal);
       }
@@ -297,12 +355,73 @@ module.exports = {
       const id = interaction.customId;
 
       try {
+
+        // ---- Sewa Worker ----
+        if (id.startsWith('modal_hire_worker_')) {
+          const workerId = id.replace('modal_hire_worker_', '');
+          const hoursInput = interaction.fields.getTextInputValue('hours').trim();
+          const hours = parseInt(hoursInput, 10);
+
+          if (!Number.isInteger(hours) || hours <= 0) {
+            return interaction.reply({ content: '❌ Durasi harus berupa angka bulat lebih dari 0.', ephemeral: true });
+          }
+
+          const employer = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+          if (!employer) return interaction.reply({ content: '❌ Kamu belum terdaftar.', ephemeral: true });
+
+          const WorkerContract = require('../models/WorkerContract');
+          const contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId });
+
+          if (!contract || contract.status !== 'available') {
+            return interaction.reply({ content: '❌ Worker ini sudah tidak tersedia atau sedang bekerja.', ephemeral: true });
+          }
+
+          if (hours > contract.maxDurationHours) {
+             return interaction.reply({ content: `❌ Worker ini hanya menawarkan maksimal ${contract.maxDurationHours} jam.`, ephemeral: true });
+          }
+
+          const totalCost = contract.pricePerHour * hours;
+          if (employer.currency.silver < totalCost) {
+            return interaction.reply({ content: `❌ Uangmu tidak cukup. Biaya sewa adalah ${totalCost} Silver, saldomu ${employer.currency.silver} Silver.`, ephemeral: true });
+          }
+
+          employer.currency.silver -= totalCost;
+          await employer.save();
+
+          // Uang masuk setelah kontrak selesai? Atau di awal? Sesuai requirement: "Uang penyewa dipotong di awal... Gaji diberikan setelah pekerjaan selesai".
+          // Kita simpan durasinya, saat timer habis, uang baru diberikan ke worker.
+          // Untuk saat ini kita assign saja statusnya. Gaji bisa kita berikan saat update.
+          // We will store current employer ID so we know who to log the salary to
+          contract.status = 'working';
+          contract.currentEmployerId = interaction.user.id;
+          contract.workingSince = new Date();
+          contract.workingUntil = new Date(Date.now() + (hours * 3600000));
+          await contract.save();
+
+          const { refreshWorkerChannel } = require('../services/workerChannelService');
+          await refreshWorkerChannel(interaction.client, interaction.guildId);
+
+          const { logTransaction } = require('../utils/logger');
+          await logTransaction(interaction.client, {
+            guildId: interaction.guildId, type: 'hire_worker', fromUserId: interaction.user.id, toUserId: workerId,
+            currency: 'silver', amount: totalCost,
+            itemDescription: `Menyewa worker selama ${hours} jam`
+          });
+
+          // Salary will be transferred upon worker sync when the time has passed.
+
+
+          return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Worker Berhasil Disewa').setDescription(`Kamu menyewa **${contract.workerName}** selama ${hours} jam dengan biaya **${totalCost} Silver**.\n\nSekarang kamu bisa memasukkannya ke dalam asetmu lewat command `/pindah-worker`.`)] });
+        }
+
         // ---- Tambah Item ----
         if (id === 'modal_add_item') {
           if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
-          const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+          const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+          const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+          const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
           if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
@@ -313,7 +432,7 @@ module.exports = {
           if (exists) return interaction.reply({ content: `❌ Item dengan nama "${name}" sudah ada.`, ephemeral: true });
 
           await Item.create({
-            guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, imageUrl,
+            guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, category,
             basePrice: pc.amount, priceCurrency: pc.currency, createdBy: interaction.user.id,
           });
           await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'ADD_ITEM', details: name });
@@ -330,14 +449,16 @@ module.exports = {
 
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
-          const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+          const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+          const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+          const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
           if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
           if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, ephemeral: true });
 
-          item.name = name; item.rank = rt.rank; item.tier = rt.tier; item.description = description; item.imageUrl = imageUrl;
+          item.name = name; item.rank = rt.rank; item.tier = rt.tier; item.description = description; item.category = category;
           item.basePrice = pc.amount; item.priceCurrency = pc.currency;
           await item.save();
           await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_ITEM', details: name });

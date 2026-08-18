@@ -28,7 +28,7 @@ module.exports = {
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('rankTier').setLabel('Rank & Tier (contoh: Epic 5)').setStyle(TextInputStyle.Short).setValue(`${item.rank} ${item.tier}`).setRequired(true)),
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('priceInfo').setLabel('Harga Dasar & Currency (contoh: 500 silver)').setStyle(TextInputStyle.Short).setValue(`${item.basePrice} ${item.priceCurrency}`).setRequired(true)),
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('description').setLabel('Deskripsi').setStyle(TextInputStyle.Paragraph).setValue(item.description || '').setRequired(true)),
-      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('imageUrl').setLabel('URL Gambar').setStyle(TextInputStyle.Short).setValue(item.imageUrl || '').setRequired(false)),
+      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('category').setLabel('Kategori (weapon, material, dll)').setStyle(TextInputStyle.Short).setValue(item.category || 'none').setRequired(false)),
     );
 
     await interaction.showModal(modal);

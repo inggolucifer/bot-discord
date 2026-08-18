@@ -10,10 +10,16 @@ module.exports = {
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset').setRequired(true).setAutocomplete(true))
     .addStringOption((o) => o.setName('bahan-1').setDescription('Nama item bahan #1').setRequired(true))
     .addIntegerOption((o) => o.setName('jumlah-1').setDescription('Jumlah bahan #1').setRequired(true).setMinValue(1))
-    .addStringOption((o) => o.setName('bahan-2').setDescription('Nama item bahan #2 (opsional)'))
-    .addIntegerOption((o) => o.setName('jumlah-2').setDescription('Jumlah bahan #2').setMinValue(1))
-    .addStringOption((o) => o.setName('bahan-3').setDescription('Nama item bahan #3 (opsional)'))
-    .addIntegerOption((o) => o.setName('jumlah-3').setDescription('Jumlah bahan #3').setMinValue(1)),
+    .addStringOption((o) => o.setName('bahan-2').setDescription('Nama item bahan #2').setRequired(true))
+    .addIntegerOption((o) => o.setName('jumlah-2').setDescription('Jumlah bahan #2').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('bahan-3').setDescription('Nama item bahan #3').setRequired(true))
+    .addIntegerOption((o) => o.setName('jumlah-3').setDescription('Jumlah bahan #3').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('bahan-4').setDescription('Nama item bahan #4').setRequired(true))
+    .addIntegerOption((o) => o.setName('jumlah-4').setDescription('Jumlah bahan #4').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('bahan-5').setDescription('Nama item bahan #5').setRequired(true))
+    .addIntegerOption((o) => o.setName('jumlah-5').setDescription('Jumlah bahan #5').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('bahan-6').setDescription('Nama item bahan #6 (opsional)'))
+    .addIntegerOption((o) => o.setName('jumlah-6').setDescription('Jumlah bahan #6').setMinValue(1)),
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
@@ -30,7 +36,7 @@ module.exports = {
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const materials = [];
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 6; i++) {
       const bahanNama = interaction.options.getString(`bahan-${i}`);
       const bahanJumlah = interaction.options.getInteger(`jumlah-${i}`);
       if (!bahanNama) continue;
@@ -42,7 +48,7 @@ module.exports = {
       materials.push({ itemId: matItem._id, itemName: matItem.name, quantity: bahanJumlah });
     }
 
-    if (!materials.length) return interaction.editReply({ content: '❌ Minimal harus ada 1 bahan.' });
+    if (materials.length < 5) return interaction.editReply({ content: '❌ Minimal harus ada 5 bahan untuk membangun aset.' });
 
     asset.buildable = true;
     asset.buildRequirements = materials;

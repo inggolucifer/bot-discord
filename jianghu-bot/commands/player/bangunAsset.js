@@ -27,7 +27,11 @@ module.exports = {
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
-    if (!asset.buildable || !asset.buildRequirements?.length) {
+    if (!asset.buildable || !asset.buildRequirements || asset.buildRequirements.length < 5) {
+      return interaction.editReply({ content: `❌ "${asset.name}" belum memiliki minimal 5 syarat material. Minta admin untuk mengaturnya.` });
+    }
+
+    if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri. Beli lewat shop kalau tersedia.` });
     }
 
@@ -48,7 +52,7 @@ module.exports = {
     if (owned) {
       owned.quantity += 1; // aset yang sudah ada sebelumnya (sudah selesai dibangun) tidak diulang timernya
     } else {
-      player.assets.push({ assetId: asset._id, quantity: 1, lastClaimAt: null, constructionCompleteAt });
+      player.assets.push({ assetId: asset._id, quantity: 1, lastClaimAt: null, constructionCompleteAt, status: 'pending', progressAccumulated: 0, lastProgressUpdate: new Date(), assignedWorkers: [] });
     }
     await player.save();
 
