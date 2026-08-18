@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Sect = require('../../models/Sect');
 const { syncPlayerSectLabel } = require('../../utils/sectSync');
 
@@ -9,7 +9,7 @@ module.exports = {
     .addUserOption((o) => o.setName('user').setDescription('Player yang dikeluarkan').setRequired(true)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const target = interaction.options.getUser('user');
 

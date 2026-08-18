@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -9,7 +9,7 @@ module.exports = {
     .addChannelOption((o) => o.setName('channel').setDescription('Channel yang diizinkan (default: channel ini)').setRequired(false)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 

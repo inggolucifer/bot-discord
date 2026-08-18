@@ -15,7 +15,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
     const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });

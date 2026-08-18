@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 
@@ -11,11 +11,11 @@ module.exports = {
   async execute(interaction) {
     // PENTING: TIDAK boleh deferReply() di sini karena showModal() harus jadi respons PERTAMA
     // terhadap interaction (Discord API melarang showModal setelah deferReply/reply).
-    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
 
     const target = interaction.options.getUser('user');
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
-    if (!player) return interaction.reply({ content: `❌ ${target.username} belum terdaftar.`, ephemeral: true });
+    if (!player) return interaction.reply({ content: `❌ ${target.username} belum terdaftar.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_player_${target.id}`).setTitle(`Edit: ${player.characterName}`.slice(0, 45));
     modal.addComponents(

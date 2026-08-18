@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const WorkerContract = require('../../models/WorkerContract');
 const { refreshWorkerChannel } = require('../../services/workerChannelService');
@@ -11,7 +11,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('durasi-maks').setDescription('Durasi maksimal yang kamu tawarkan (dalam jam)').setRequired(true).setMinValue(1)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });

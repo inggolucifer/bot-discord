@@ -13,7 +13,7 @@ module.exports = {
     .addUserOption((opt) => opt.setName('user').setDescription('Player yang ingin dilihat profilnya').setRequired(false)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const targetUser = interaction.options.getUser('user') || interaction.user;
 

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const WorkerContract = require('../../models/WorkerContract');
 const { refreshWorkerChannel } = require('../../services/workerChannelService');
 
@@ -10,7 +10,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('durasi-maks').setDescription('Durasi maksimal yang kamu tawarkan (dalam jam)').setRequired(true).setMinValue(1)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId: interaction.user.id });
     if (!contract) return interaction.editReply({ content: '❌ Kamu tidak sedang mendaftar sebagai Worker. Gunakan `/daftar-worker`.' });

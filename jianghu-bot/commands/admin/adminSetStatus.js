@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const { logAdminAction } = require('../../utils/logger');
@@ -16,7 +16,7 @@ module.exports = {
     .addStringOption((o) => o.setName('custom-status').setDescription('Status kustom (contoh: Sedang Meditasi)').setRequired(false)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const targetUser = interaction.options.getUser('user');

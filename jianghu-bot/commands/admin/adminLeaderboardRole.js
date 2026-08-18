@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 const { updateTop3LeaderboardRoles } = require('../../utils/leaderboardRoles');
@@ -13,7 +13,7 @@ module.exports = {
     .addRoleOption((o) => o.setName('role').setDescription('Role yang dipasang otomatis (kosongkan untuk menghapus mapping)').setRequired(false)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const peringkat = interaction.options.getInteger('peringkat');

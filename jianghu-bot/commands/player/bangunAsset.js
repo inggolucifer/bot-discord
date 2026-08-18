@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
 const { checkMaterials, consumeMaterials } = require('../../utils/crafting');
@@ -17,7 +17,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const namaAset = interaction.options.getString('nama-aset');
 
