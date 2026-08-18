@@ -59,9 +59,28 @@ module.exports = {
     const diterimaSeller = totalHarga - fee;
 
     buyer.currency[listing.currency] -= totalHarga;
-    const buyerOwned = buyer.inventory.find((i) => i.itemId.equals(listing.itemId));
-    if (buyerOwned) buyerOwned.quantity += listing.quantity;
-    else buyer.inventory.push({ itemId: listing.itemId, quantity: listing.quantity });
+
+    if (listing.type === 'item') {
+      const refId = listing.refId || listing.itemId; const buyerOwned = buyer.inventory.find((i) => i.itemId.equals(refId));
+      if (buyerOwned) buyerOwned.quantity += listing.quantity;
+      else buyer.inventory.push({ itemId: refId, quantity: listing.quantity });
+    } else if (listing.type === 'pet') {
+      const buyerOwned = buyer.pets.find((p) => p.petId.equals(listing.refId));
+      if (buyerOwned) buyerOwned.quantity += listing.quantity;
+      else buyer.pets.push({ petId: listing.refId, quantity: listing.quantity });
+    } else if (listing.type === 'asset') {
+      const buyerOwned = buyer.assets.find((a) => a.assetId.equals(listing.refId));
+      if (buyerOwned) buyerOwned.quantity += listing.quantity;
+      else buyer.assets.push({
+        assetId: listing.refId,
+        quantity: listing.quantity,
+        status: 'active',
+        assignedWorkers: [],
+        progressAccumulated: 0,
+        lastProgressUpdate: new Date(),
+      });
+    }
+
     await buyer.save();
 
     seller.currency[listing.currency] += diterimaSeller;
