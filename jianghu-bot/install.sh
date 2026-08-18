@@ -353,7 +353,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const target = interaction.options.getUser('user');
@@ -412,7 +412,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const target = interaction.options.getUser('user');
@@ -470,7 +470,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const target = interaction.options.getUser('user');
@@ -515,7 +515,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('hari').setDescription('Jumlah hari (1-3650). Default: 30').setRequired(true).setMinValue(1).setMaxValue(3650)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const hari = interaction.options.getInteger('hari');
@@ -549,7 +549,7 @@ module.exports = {
     .setDescription('[ADMIN] Hapus log lama SEKARANG JUGA (manual, di luar jadwal otomatis)'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const config = await GuildConfig.findOne({ guildId: interaction.guildId });
@@ -588,7 +588,7 @@ module.exports = {
     .addRoleOption((o) => o.setName('role').setDescription('Role yang dipasang otomatis (kosongkan untuk menghapus mapping)').setRequired(false)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const peringkat = interaction.options.getInteger('peringkat');
@@ -635,7 +635,7 @@ module.exports = {
     .addRoleOption((o) => o.setName('role').setDescription('Role yang dipasang otomatis untuk ranah ini').setRequired(true)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaRanah = interaction.options.getString('nama-ranah').trim();
@@ -672,7 +672,7 @@ module.exports = {
     .addStringOption((o) => o.setName('nama-ranah').setDescription('Nama ranah yang mappingnya mau dihapus').setRequired(true)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaRanah = interaction.options.getString('nama-ranah').trim();
@@ -700,7 +700,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('admin-realm-role-list').setDescription('[ADMIN] Lihat semua mapping role ranah & role leaderboard'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const config = await GuildConfig.findOne({ guildId: interaction.guildId });
@@ -735,7 +735,7 @@ module.exports = {
     .addStringOption((o) => o.setName('nama').setDescription('Nama turnamen').setRequired(true).setMaxLength(64)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const nama = interaction.options.getString('nama').trim();
@@ -781,7 +781,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaTurnamen = interaction.options.getString('nama-turnamen');
@@ -831,7 +831,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaTurnamen = interaction.options.getString('nama-turnamen');
@@ -862,7 +862,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('admin-tournament-list').setDescription('[ADMIN] Lihat semua turnamen di server ini'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const list = await Tournament.find({ guildId: interaction.guildId }).sort({ createdAt: -1 }).limit(25);
@@ -1029,7 +1029,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaTurnamen = interaction.options.getString('nama-turnamen');
@@ -1607,7 +1607,7 @@ module.exports = {
         if (!bypass) {
           const allowed = await isChannelAllowed(interaction);
           if (!allowed) {
-            return interaction.reply({ content: '❌ Bot tidak aktif di channel ini. Hubungi admin untuk mengizinkan channel ini lewat `/admin-channel-add`.', ephemeral: true });
+            return interaction.reply({ content: '❌ Bot tidak aktif di channel ini. Hubungi admin untuk mengizinkan channel ini lewat `/admin-channel-add`.', flags: MessageFlags.Ephemeral });
           }
         }
       }
@@ -1616,7 +1616,7 @@ module.exports = {
         await command.execute(interaction);
       } catch (err) {
         console.error(`[ERROR] Command ${interaction.commandName} gagal:`, err);
-        const payload = { content: '❌ Terjadi kesalahan saat menjalankan command ini. Coba lagi atau hubungi admin.', ephemeral: true };
+        const payload = { content: '❌ Terjadi kesalahan saat menjalankan command ini. Coba lagi atau hubungi admin.', flags: MessageFlags.Ephemeral };
         if (interaction.replied || interaction.deferred) await interaction.followUp(payload).catch(() => {});
         else await interaction.reply(payload).catch(() => {});
       }
@@ -1652,7 +1652,7 @@ module.exports = {
       }
 
       if (id === 'panel_add_item') {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const modal = new ModalBuilder().setCustomId('modal_add_item').setTitle('Tambah Item Baru');
         modal.addComponents(
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('name').setLabel('Nama Item').setStyle(TextInputStyle.Short).setRequired(true)),
@@ -1665,7 +1665,7 @@ module.exports = {
       }
 
       if (id === 'panel_add_pet') {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const modal = new ModalBuilder().setCustomId('modal_add_pet').setTitle('Tambah Pet Baru');
         modal.addComponents(
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('name').setLabel('Nama Pet').setStyle(TextInputStyle.Short).setRequired(true)),
@@ -1678,7 +1678,7 @@ module.exports = {
       }
 
       if (id === 'panel_add_asset') {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const modal = new ModalBuilder().setCustomId('modal_add_asset').setTitle('Buat Aset Baru');
         modal.addComponents(
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('name').setLabel('Nama Aset').setStyle(TextInputStyle.Short).setRequired(true)),
@@ -1691,7 +1691,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_delete_item_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const itemId = id.replace('confirm_delete_item_', '');
         const item = await Item.findByIdAndDelete(itemId);
         await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'DELETE_ITEM', details: item?.name || itemId });
@@ -1699,7 +1699,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_delete_pet_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const petId = id.replace('confirm_delete_pet_', '');
         const pet = await Pet.findByIdAndDelete(petId);
         await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'DELETE_PET', details: pet?.name || petId });
@@ -1707,7 +1707,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_delete_asset_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const assetId = id.replace('confirm_delete_asset_', '');
         const asset = await Asset.findByIdAndDelete(assetId);
         await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'DELETE_ASSET', details: asset?.name || assetId });
@@ -1715,7 +1715,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_unregister_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const discordId = id.replace('confirm_unregister_', '');
         const player = await Player.findOneAndDelete({ discordId, guildId: interaction.guildId });
         await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'FORCE_UNREGISTER', targetUserId: discordId, details: player?.characterName || '-' });
@@ -1723,7 +1723,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_clear_logs_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const retentionDays = parseInt(id.replace('confirm_clear_logs_', ''), 10) || 30;
         await interaction.deferUpdate();
         const result = await manualCleanup(interaction.guildId, retentionDays);
@@ -1738,7 +1738,7 @@ module.exports = {
       }
 
       if (id.startsWith('confirm_cancel_tournament_')) {
-        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
         const tournamentId = id.replace('confirm_cancel_tournament_', '');
         const tournament = await Tournament.findByIdAndUpdate(tournamentId, { status: 'cancelled' }, { new: true });
         await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'TOURNAMENT_CANCEL', details: tournament?.name || tournamentId });
@@ -1755,18 +1755,18 @@ module.exports = {
       try {
         // ---- Tambah Item ----
         if (id === 'modal_add_item') {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
-          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
+          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
-          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, ephemeral: true });
+          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
           const exists = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
-          if (exists) return interaction.reply({ content: `❌ Item dengan nama "${name}" sudah ada.`, ephemeral: true });
+          if (exists) return interaction.reply({ content: `❌ Item dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
           await Item.create({
             guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, imageUrl,
@@ -1779,19 +1779,19 @@ module.exports = {
 
         // ---- Edit Item ----
         if (id.startsWith('modal_edit_item_')) {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const itemId = id.replace('modal_edit_item_', '');
           const item = await Item.findById(itemId);
-          if (!item) return interaction.reply({ content: '❌ Item tidak ditemukan (mungkin sudah dihapus).', ephemeral: true });
+          if (!item) return interaction.reply({ content: '❌ Item tidak ditemukan (mungkin sudah dihapus).', flags: MessageFlags.Ephemeral });
 
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
-          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
+          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
-          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, ephemeral: true });
+          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
           item.name = name; item.rank = rt.rank; item.tier = rt.tier; item.description = description; item.imageUrl = imageUrl;
           item.basePrice = pc.amount; item.priceCurrency = pc.currency;
@@ -1803,18 +1803,18 @@ module.exports = {
 
         // ---- Tambah Pet ----
         if (id === 'modal_add_pet') {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
-          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
+          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
-          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, ephemeral: true });
+          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
           const exists = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
-          if (exists) return interaction.reply({ content: `❌ Pet dengan nama "${name}" sudah ada.`, ephemeral: true });
+          if (exists) return interaction.reply({ content: `❌ Pet dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
           await Pet.create({
             guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, imageUrl,
@@ -1827,19 +1827,19 @@ module.exports = {
 
         // ---- Edit Pet ----
         if (id.startsWith('modal_edit_pet_')) {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const petId = id.replace('modal_edit_pet_', '');
           const pet = await Pet.findById(petId);
-          if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
+          if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
-          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
+          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
-          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, ephemeral: true });
+          if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
           pet.name = name; pet.rank = rt.rank; pet.tier = rt.tier; pet.description = description; pet.imageUrl = imageUrl;
           pet.basePrice = pc.amount; pet.priceCurrency = pc.currency;
@@ -1851,18 +1851,18 @@ module.exports = {
 
         // ---- Tambah Asset ----
         if (id === 'modal_add_asset') {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const profit = parseAmountCurrency(interaction.fields.getTextInputValue('profitInfo'));
-          if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, ephemeral: true });
+          if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, flags: MessageFlags.Ephemeral });
           const price = parseAmountCurrencyRank(interaction.fields.getTextInputValue('priceInfo'));
-          if (price.error) return interaction.reply({ content: `❌ ${price.error}`, ephemeral: true });
+          if (price.error) return interaction.reply({ content: `❌ ${price.error}`, flags: MessageFlags.Ephemeral });
 
           const exists = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
-          if (exists) return interaction.reply({ content: `❌ Aset dengan nama "${name}" sudah ada.`, ephemeral: true });
+          if (exists) return interaction.reply({ content: `❌ Aset dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
           await Asset.create({
             guildId: interaction.guildId, name, description, imageUrl,
@@ -1877,19 +1877,19 @@ module.exports = {
 
         // ---- Edit Asset ----
         if (id.startsWith('modal_edit_asset_')) {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const assetId = id.replace('modal_edit_asset_', '');
           const asset = await Asset.findById(assetId);
-          if (!asset) return interaction.reply({ content: '❌ Aset tidak ditemukan.', ephemeral: true });
+          if (!asset) return interaction.reply({ content: '❌ Aset tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
           const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
 
           const profit = parseAmountCurrency(interaction.fields.getTextInputValue('profitInfo'));
-          if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, ephemeral: true });
+          if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, flags: MessageFlags.Ephemeral });
           const price = parseAmountCurrencyRank(interaction.fields.getTextInputValue('priceInfo'));
-          if (price.error) return interaction.reply({ content: `❌ ${price.error}`, ephemeral: true });
+          if (price.error) return interaction.reply({ content: `❌ ${price.error}`, flags: MessageFlags.Ephemeral });
 
           asset.name = name; asset.description = description; asset.imageUrl = imageUrl;
           asset.dailyProfit = profit.amount; asset.profitCurrency = profit.currency;
@@ -1902,13 +1902,13 @@ module.exports = {
 
         // ---- Edit Player ----
         if (id.startsWith('modal_edit_player_')) {
-          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const discordId = id.replace('modal_edit_player_', '');
           const player = await Player.findOne({ discordId, guildId: interaction.guildId });
-          if (!player) return interaction.reply({ content: '❌ Player tidak ditemukan.', ephemeral: true });
+          if (!player) return interaction.reply({ content: '❌ Player tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
           const rt = parseRealmTier(interaction.fields.getTextInputValue('realmTier'));
-          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, ephemeral: true });
+          if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
 
           const stage = interaction.fields.getTextInputValue('stage')?.trim() || '-';
           const ageRaw = interaction.fields.getTextInputValue('age').trim();
@@ -1916,7 +1916,7 @@ module.exports = {
           const characterImage = interaction.fields.getTextInputValue('characterImage')?.trim() || null;
 
           const age = parseInt(ageRaw, 10);
-          if (!Number.isInteger(age) || age < 0) return interaction.reply({ content: '❌ Umur harus angka valid.', ephemeral: true });
+          if (!Number.isInteger(age) || age < 0) return interaction.reply({ content: '❌ Umur harus angka valid.', flags: MessageFlags.Ephemeral });
 
           player.realm = rt.realm; player.realmTier = rt.tier;
           player.stage = stage; player.age = age; player.sect = sect; player.characterImage = characterImage;
@@ -1930,7 +1930,7 @@ module.exports = {
         }
       } catch (err) {
         console.error('[ERROR] Modal submit gagal:', err);
-        const payload = { content: '❌ Terjadi kesalahan saat memproses form ini.', ephemeral: true };
+        const payload = { content: '❌ Terjadi kesalahan saat memproses form ini.', flags: MessageFlags.Ephemeral };
         if (interaction.replied || interaction.deferred) await interaction.followUp(payload).catch(() => {});
         else await interaction.reply(payload).catch(() => {});
       }
@@ -1955,7 +1955,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const nama = interaction.options.getString('nama').trim();
 
@@ -2013,7 +2013,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('help').setDescription('Lihat semua command player'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const embed = new EmbedBuilder()
       .setColor(0x8e5b3c)
@@ -2044,7 +2044,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('help-admin').setDescription('[ADMIN] Lihat semua command admin'),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 

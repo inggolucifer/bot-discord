@@ -117,7 +117,7 @@ module.exports = {
 
     collector.on('collect', async (btn) => {
       if (btn.user.id !== target.id) {
-        return btn.reply({ content: '❌ Hanya penerima barter yang bisa merespon.', ephemeral: false });
+        return btn.reply({ content: '❌ Hanya penerima barter yang bisa merespon.' });
       }
 
       const freshBarter = await Barter.findById(barter._id);

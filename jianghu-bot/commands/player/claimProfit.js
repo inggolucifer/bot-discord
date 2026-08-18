@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
 const { isClaimedToday } = require('../../utils/timezone');
@@ -15,7 +15,7 @@ module.exports = {
     .addStringOption((o) => o.setName('tipe').setDescription('Apa yang mau diklaim?').setRequired(false).addChoices({ name: 'Semua', value: 'all' }, { name: 'Currency Saja', value: 'currency' }, { name: 'Material Saja', value: 'item' })),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     // Sync pekerja dlu biar kontrak expired kecabut
     await syncWorkerContracts(interaction.client, interaction.guildId);

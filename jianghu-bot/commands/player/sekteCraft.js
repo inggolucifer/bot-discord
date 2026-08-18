@@ -33,7 +33,7 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const namaSekte = interaction.options.getString('nama-sekte');
     const namaAset = interaction.options.getString('nama-aset');

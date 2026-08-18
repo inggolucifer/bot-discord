@@ -11,7 +11,7 @@ module.exports = {
     .addStringOption((o) => o.setName('nama').setDescription('Nama karakter yang meninggal').setRequired(true)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
 

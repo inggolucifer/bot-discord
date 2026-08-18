@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 
@@ -9,7 +9,7 @@ module.exports = {
     .addStringOption((o) => o.setName('nama').setDescription('Nama turnamen').setRequired(true).setMaxLength(64)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const nama = interaction.options.getString('nama').trim();

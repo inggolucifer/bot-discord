@@ -62,7 +62,7 @@ module.exports = {
 
     collector.on('collect', async (btnInteraction) => {
       if (btnInteraction.user.id !== target.id) {
-        return btnInteraction.reply({ content: '❌ Hanya penerima yang bisa merespon permintaan ini.', ephemeral: false });
+        return btnInteraction.reply({ content: '❌ Hanya penerima yang bisa merespon permintaan ini.' });
       }
 
       if (btnInteraction.customId.startsWith('transfer_decline')) {

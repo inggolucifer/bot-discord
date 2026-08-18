@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Sect = require('../../models/Sect');
 const Player = require('../../models/Player');
 const { syncPlayerSectLabel } = require('../../utils/sectSync');
@@ -13,7 +13,7 @@ module.exports = {
     )),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const target = interaction.options.getUser('user');
     const posisi = interaction.options.getString('posisi');

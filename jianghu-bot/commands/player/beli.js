@@ -20,7 +20,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('jumlah').setDescription('Jumlah (default 1)').setMinValue(1)),
 
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply();
 
     const kategori = interaction.options.getString('kategori');
     const nama = interaction.options.getString('nama');

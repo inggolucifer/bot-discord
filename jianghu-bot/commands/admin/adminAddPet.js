@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 
 module.exports = {
   data: new SlashCommandBuilder().setName('admin-add-pet').setDescription('[ADMIN] Tambah pet baru lewat form (modal)'),
 
   async execute(interaction) {
-    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', ephemeral: true });
+    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId('modal_add_pet').setTitle('Tambah Pet Baru');
     modal.addComponents(
