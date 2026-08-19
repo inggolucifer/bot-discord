@@ -387,7 +387,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRemovePet.js"
 cat > commands/admin/adminRemovePet.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const Pet = require('../../models/Pet');
@@ -440,6 +440,7 @@ module.exports = {
     return interaction.editReply({ embeds: [new EmbedBuilder().setColor(0xc0392b).setTitle('🗑️ Pet Dihapus').setDescription(`**${pet.name}**${removed.nickname ? ` (${removed.nickname})` : ''} dihapus dari koleksi ${target}.`)] });
   },
 };
+
 
 JIANGHU_EOF_MARKER
 
@@ -1174,6 +1175,7 @@ echo "--> [DIPERBARUI] Menulis models/Player.js"
 cat > models/Player.js << 'JIANGHU_EOF_MARKER'
 // Data karakter player, terikat permanen ke discordId + guildId
 const mongoose = require('mongoose');
+const { normalizeCurrency } = require('../utils/currencyNormalize');
 
 const inventoryItemSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
@@ -1181,15 +1183,35 @@ const inventoryItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const petOwnedSchema = new mongoose.Schema({
+  instanceId: { type: String, required: true }, // unique string
   petId: { type: mongoose.Schema.Types.ObjectId, ref: 'Pet', required: true },
   nickname: { type: String, default: null },
-  quantity: { type: Number, default: 1 },
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
+  hp: { type: Number, default: 50 },
+  maxHp: { type: Number, default: 50 },
+  atk: { type: Number, default: 10 },
+  def: { type: Number, default: 5 },
+  spd: { type: Number, default: 8 },
+  hunger: { type: Number, default: 100 }, // 0-100
+  element: { type: String, default: 'Netral' },
+  wins: { type: Number, default: 0 },
+  losses: { type: Number, default: 0 },
+  lastFedAt: { type: Date, default: null },
+  lastBattledAt: { type: Date, default: null },
+  isLocked: { type: Boolean, default: false }, // true saat sedang battle
+  affinity: { type: Number, default: 0 }, // max 100
 }, { _id: false });
 
 const assetOwnedSchema = new mongoose.Schema({
   assetId: { type: mongoose.Schema.Types.ObjectId, ref: 'Asset', required: true },
   quantity: { type: Number, default: 1 },
   lastClaimAt: { type: Date, default: null },
+  constructionCompleteAt: { type: Date, default: null },
+  assignedWorkers: { type: [{ workerId: String }], default: [] },
+  progressAccumulated: { type: Number, default: 0 },
+  lastProgressUpdate: { type: Date, default: null },
+  status: { type: String, enum: ['pending', 'building', 'active'], default: 'active' },
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
@@ -1197,11 +1219,15 @@ const playerSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },
 
   characterName: { type: String, required: true },
-  realm: { type: String, default: 'Mortal (Manusia Biasa)' },
-  realmTier: { type: Number, min: 1, max: 10, default: 1 }, // 1 = paling lemah, 10 = paling kuat -> dipakai untuk warna & teks dramatis di profil
+
+  realm: { type: String, default: 'Mortal' },
   stage: { type: String, default: '-' },
+
   age: { type: Number, default: 16 },
+  gender: { type: String, enum: ['Laki-laki', 'Perempuan', null], default: null },
+
   sect: { type: String, default: 'Tanpa Sekte (Rogue Cultivator)' },
+
   characterImage: { type: String, default: null },
 
   currency: {
@@ -1212,8 +1238,17 @@ const playerSchema = new mongoose.Schema({
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
-  pets: { type: [petOwnedSchema], default: [] },
+  pets: {
+    type: [petOwnedSchema],
+    default: [],
+    validate: {
+      validator: function(v) { return v.length <= 6; },
+      message: 'Maksimal 6 pet per player'
+    }
+  },
   assets: { type: [assetOwnedSchema], default: [] },
+
+  customStatus: { type: String, default: null },
 
   status: {
     type: String,
@@ -1224,15 +1259,16 @@ const playerSchema = new mongoose.Schema({
   lastDailyClaim: { type: Date, default: null },
   registeredAt: { type: Date, default: Date.now },
 
-  // Total kekayaan dalam satuan Silver Tael (dihitung otomatis dari currency setiap kali disimpan).
-  // Dipakai untuk /leaderboard dan sinkronisasi role Top 1/2/3 terkaya, supaya query sort bisa cepat (ada index).
   totalWealth: { type: Number, default: 0, index: true },
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
+playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencarian pet instance yang efisien
 
-// Hitung ulang totalWealth otomatis setiap kali dokumen player disimpan (memakai rate yang sama seperti /convert)
+// Setiap kali player disimpan: (1) currency dinormalisasi otomatis (100 Silver->1 Gold, dst),
+// (2) totalWealth dihitung ulang dari currency yang SUDAH dinormalisasi.
 playerSchema.pre('save', function (next) {
+  normalizeCurrency(this.currency);
   const c = this.currency || {};
   this.totalWealth = (c.silver || 0) + (c.gold || 0) * 100 + (c.jade || 0) * 10000 + (c.spirit || 0) * 1000000;
   next();
@@ -1371,20 +1407,19 @@ echo "--> [DIPERBARUI] Menulis utils/embeds.js"
 cat > utils/embeds.js << 'JIANGHU_EOF_MARKER'
 const { EmbedBuilder } = require('discord.js');
 const { CURRENCY_EMOJI, CURRENCY_LABEL, formatCurrencyLine } = require('./currency');
-const { getRankStyle, dramaticTitle, REALM_STYLE_BY_TIER } = require('./dramatic');
+const { getRankStyle, dramaticTitle } = require('./dramatic');
+const { isUnderConstruction, formatRemainingTime } = require('./crafting');
 
-function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [], assetDocs = []) {
-  const realmStyle = REALM_STYLE_BY_TIER(player.realmTier || 1);
-
+function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [], assetDocs = [], sectRole = null) {
   const embed = new EmbedBuilder()
-    .setColor(realmStyle.color)
+    .setColor(0x8e5b3c)
     .setTitle(`📜 Profil: ${player.characterName}`)
     .setThumbnail(discordUser?.displayAvatarURL?.() || null)
-    .setDescription(`${realmStyle.badge} _${realmStyle.flourish}_`)
     .addFields(
-      { name: '⚔️ Ranah', value: `${player.realm}${player.stage && player.stage !== '-' ? ` — ${player.stage}` : ''} ${realmStyle.badge}`, inline: true },
+      { name: '⚔️ Ranah', value: `${player.realm}${player.stage && player.stage !== '-' ? ` — ${player.stage}` : ''}`, inline: true },
       { name: '🎂 Umur', value: `${player.age} tahun`, inline: true },
-      { name: '🏯 Sekte/Afiliasi', value: player.sect, inline: true },
+      { name: '⚧ Jenis Kelamin', value: player.gender || '_(belum diisi)_', inline: true },
+      { name: '🏯 Sekte/Afiliasi', value: sectRole ? `${player.sect} (${sectRole})` : player.sect, inline: true },
       { name: '📌 Status', value: player.status === 'active' ? '✅ Aktif' : player.status === 'frozen' ? '🥶 Dibekukan' : '☠️ Meninggal', inline: true },
       { name: '💰 Currency', value: formatCurrencyLine(player.currency) },
     );
@@ -1400,7 +1435,10 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
   embed.addFields({ name: '🎒 Inventory', value: invLine.slice(0, 1024) });
 
   const assetLine = assetDocs.length
-    ? assetDocs.map((a) => `🏠 **${a.doc.name}** x${a.quantity}`).join('\n')
+    ? assetDocs.map((a) => {
+        const underConstruction = isUnderConstruction(a.owned);
+        return `🏠 **${a.doc.name}** x${a.quantity}${underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : ''}`;
+      }).join('\n')
     : '_Belum punya aset_';
   embed.addFields({ name: '🏠 Asset', value: assetLine.slice(0, 1024) });
 
@@ -1459,13 +1497,31 @@ function buildAssetEmbed(asset) {
   const embed = new EmbedBuilder()
     .setColor(style ? style.color : 0x27ae60)
     .setTitle(style ? dramaticTitle(asset.name, asset.rank) : `🏠 ${asset.name}`)
-    .setDescription(`${asset.description || '-'}${style ? `\n\n_${style.flourish}_` : ''}`)
-    .addFields(
-      { name: 'Profit Harian', value: `${CURRENCY_EMOJI[asset.profitCurrency]} ${asset.dailyProfit} ${CURRENCY_LABEL[asset.profitCurrency]}`, inline: true },
-    );
+    .setDescription(`${asset.description || '-'}${style ? `\n\n_${style.flourish}_` : ''}`);
+
+  if (asset.dailyProfit > 0) {
+    embed.addFields({ name: '💰 Profit Harian', value: `${CURRENCY_EMOJI[asset.profitCurrency]} ${asset.dailyProfit} ${CURRENCY_LABEL[asset.profitCurrency]}`, inline: true });
+  }
+  if (asset.workerOutputItemId && asset.workerOutputQuantity > 0) {
+    embed.addFields({ name: '⛏️ Hasil Pekerja Harian', value: `${asset.workerOutputQuantity}x ${asset.workerOutputItemName}`, inline: true });
+  }
   if (style) embed.addFields({ name: 'Rank', value: `${style.emoji} **${style.label}** ${style.stars}`, inline: true });
   if (asset.basePrice > 0) {
-    embed.addFields({ name: '💰 Harga Beli', value: `${CURRENCY_EMOJI[asset.priceCurrency]} ${asset.basePrice} ${CURRENCY_LABEL[asset.priceCurrency]}`, inline: true });
+    embed.addFields({ name: '🛒 Harga Beli (Shop)', value: `${CURRENCY_EMOJI[asset.priceCurrency]} ${asset.basePrice} ${CURRENCY_LABEL[asset.priceCurrency]}`, inline: true });
+  }
+  if (asset.constructionTimeHours > 0) {
+    embed.addFields({ name: '🚧 Waktu Pembangunan', value: `${asset.constructionTimeHours} jam`, inline: true });
+  }
+  if (asset.buildable && asset.buildRequirements?.length) {
+    const buildMats = asset.buildRequirements.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+    embed.addFields({ name: '🔨 Bisa Dibangun Mandiri', value: `Butuh: ${buildMats}\nGunakan \`/bangun-asset\` atau \`/sekte-bangun-asset\`.` });
+  }
+  if (asset.isCraftingStation && asset.recipes.length) {
+    const recipeLines = asset.recipes.map((r) => {
+      const mats = r.materials.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+      return `**${r.recipeName}** → ${r.resultQuantity}x ${r.resultItemName} _(butuh: ${mats})_`;
+    });
+    embed.addFields({ name: '⚒️ Resep yang Bisa Dibuat', value: recipeLines.join('\n').slice(0, 1024) });
   }
   if (asset.imageUrl) embed.setImage(asset.imageUrl);
   return embed;
@@ -1511,22 +1567,61 @@ function buildTournamentEmbed(tournament) {
   return embed;
 }
 
-module.exports = { buildPlayerProfileEmbed, buildItemEmbed, buildPetEmbed, buildAssetEmbed, buildTournamentEmbed };
+function buildSectEmbed(sect, resourceDocs = [], assetDocs = []) {
+  const embed = new EmbedBuilder()
+    .setColor(0x2c3e50)
+    .setTitle(`🏯 Sekte: ${sect.name}`)
+    .setDescription(sect.description || '-');
+
+  if (sect.imageUrl) embed.setImage(sect.imageUrl);
+
+  embed.addFields(
+    { name: '👑 Ketua', value: sect.leaderId ? `<@${sect.leaderId}>` : '_(kosong)_', inline: true },
+    { name: '🎖️ Wakil Ketua', value: sect.viceLeaderId ? `<@${sect.viceLeaderId}>` : '_(kosong)_', inline: true },
+    { name: '💰 Kekayaan Sekte', value: formatCurrencyLine(sect.currency), inline: true },
+    { name: '📿 Tetua', value: sect.elderIds.length ? sect.elderIds.map((id) => `<@${id}>`).join(', ') : '_(kosong)_' },
+    { name: `👥 Anggota (${sect.memberIds.length})`, value: sect.memberIds.length ? sect.memberIds.map((id) => `<@${id}>`).join(', ').slice(0, 1000) : '_(kosong)_' },
+  );
+
+  const resourceLine = resourceDocs.length
+    ? resourceDocs.map((r) => `• **${r.doc.name}** x${r.quantity}`).join('\n')
+    : '_Belum ada sumber daya_';
+  embed.addFields({ name: '📦 Sumber Daya Sekte', value: resourceLine.slice(0, 1024) });
+
+  const assetLine = assetDocs.length
+    ? assetDocs.map((a) => {
+        const underConstruction = isUnderConstruction(a.owned);
+        return `🏠 **${a.doc.name}** x${a.quantity}${underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : ''}`;
+      }).join('\n')
+    : '_Belum ada aset sekte_';
+  embed.addFields({ name: '🏛️ Aset Sekte', value: assetLine.slice(0, 1024) });
+
+  return embed;
+}
+
+module.exports = { buildPlayerProfileEmbed, buildItemEmbed, buildPetEmbed, buildAssetEmbed, buildTournamentEmbed, buildSectEmbed };
+
 
 JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis events/interactionCreate.js"
 cat > events/interactionCreate.js << 'JIANGHU_EOF_MARKER'
-const { Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const { Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const Item = require('../models/Item');
 const Pet = require('../models/Pet');
 const Asset = require('../models/Asset');
 const Player = require('../models/Player');
 const Tournament = require('../models/Tournament');
+const Sect = require('../models/Sect');
 const { isAdmin, isChannelAllowed } = require('../utils/permissions');
+const PetBattle = require('../models/PetBattle');
+const { simulateRound } = require('../services/petService');
+
 const { logAdminAction } = require('../utils/logger');
 const { syncRealmRole } = require('../utils/realmRole');
 const { manualCleanup } = require('../utils/logCleanup');
+const { executeSectWar } = require('../utils/sectWar');
+const { CURRENCY_LABEL } = require('../utils/currency');
 
 const VALID_RANKS = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 const VALID_CURRENCIES = ['silver', 'gold', 'jade', 'spirit'];
@@ -1580,22 +1675,97 @@ function parseAmountCurrencyRank(text) {
   return { amount, currency, rank };
 }
 
-/** Parse "Foundation Establishment 5" -> { realm: 'Foundation Establishment', tier: 5 } */
-function parseRealmTier(text) {
-  const parts = text.trim().split(/\s+/);
-  const tierRaw = parts[parts.length - 1];
-  const tier = parseInt(tierRaw, 10);
-  if (!Number.isInteger(tier) || tier < 1 || tier > 10) {
-    return { error: 'Format salah. Akhiri dengan angka tier 1-10, contoh: "Foundation Establishment 5".' };
-  }
-  const realm = parts.slice(0, -1).join(' ');
+/** Validasi nama ranah -- sekarang cukup teks bebas, TIDAK ada tier lagi (disederhanakan). */
+function parseRealm(text) {
+  const realm = text.trim();
   if (!realm) return { error: 'Nama ranah tidak boleh kosong.' };
-  return { realm, tier };
+  return { realm };
 }
 
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
+
+    if (interaction.isStringSelectMenu()) {
+      if (interaction.customId === 'select_pet_battle') {
+        const battleRecord = await PetBattle.findOne({ messageId: interaction.message.id });
+        if (!battleRecord) return interaction.reply({ content: '❌ Data duel tidak ditemukan atau sudah kadaluarsa.', flags: MessageFlags.Ephemeral });
+        if (battleRecord.opponentId !== interaction.user.id) return interaction.reply({ content: '❌ Kamu bukan target duel ini.', flags: MessageFlags.Ephemeral });
+        if (battleRecord.status !== 'pending') return interaction.reply({ content: '❌ Duel ini sudah diproses.', flags: MessageFlags.Ephemeral });
+
+        const p2InstanceId = interaction.values[0];
+        const p2 = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('pets.petId');
+        const p1 = await Player.findOne({ discordId: battleRecord.challengerId, guildId: interaction.guildId }).populate('pets.petId');
+
+        const pet2 = p2.pets.find(p => p.instanceId === p2InstanceId);
+        const pet1 = p1.pets.find(p => p.instanceId === battleRecord.challengerPetInstanceId);
+
+        if (!pet2 || !pet1) return interaction.reply({ content: '❌ Salah satu pet tidak valid.', flags: MessageFlags.Ephemeral });
+        if (pet2.isLocked) return interaction.reply({ content: '❌ Pet kamu sedang dipakai di duel lain.', flags: MessageFlags.Ephemeral });
+
+        pet2.isLocked = true;
+        p2.markModified('pets');
+        await p2.save();
+
+        battleRecord.opponentPetInstanceId = pet2.instanceId;
+        battleRecord.status = 'accepted';
+        await battleRecord.save();
+
+        await interaction.update({ content: `⚔️ **${p1.characterName}** (${pet1.nickname || pet1.petId.name}) VS **${p2.characterName}** (${pet2.nickname || pet2.petId.name}) dimulai!`, components: [] });
+
+        // --- SIMULASI BATTLE ---
+        let rounds = [];
+        let p1Hp = pet1.hp;
+        let p2Hp = pet2.hp;
+
+        let winner = null;
+        for (let i = 1; i <= 8; i++) { // Max 8 turn
+          const result = simulateRound(pet1, pet2, pet1.nickname || pet1.petId.name, pet2.nickname || pet2.petId.name);
+          rounds.push(`**Turn ${i}**: ${result.log}`);
+
+          if (pet1.hp <= 0) { winner = 2; break; }
+          if (pet2.hp <= 0) { winner = 1; break; }
+        }
+
+        if (!winner) {
+          winner = pet1.hp >= pet2.hp ? 1 : 2; // Tie breaker by HP left
+        }
+
+        // Update stats
+        if (winner === 1) {
+          pet1.wins += 1;
+          pet2.losses += 1;
+        } else {
+          pet2.wins += 1;
+          pet1.losses += 1;
+        }
+
+        pet1.isLocked = false;
+        pet2.isLocked = false;
+        pet1.lastBattledAt = new Date();
+        pet2.lastBattledAt = new Date();
+
+        p1.markModified('pets');
+        p2.markModified('pets');
+        await p1.save();
+        await p2.save();
+
+        battleRecord.status = 'finished';
+        await battleRecord.save();
+
+        const winName = winner === 1 ? p1.characterName : p2.characterName;
+        const winPet = winner === 1 ? (pet1.nickname || pet1.petId.name) : (pet2.nickname || pet2.petId.name);
+
+        const embed = new EmbedBuilder()
+          .setColor(0xe74c3c)
+          .setTitle('⚔️ Hasil Duel Pet')
+          .setDescription(rounds.join('\n'))
+          .addFields({ name: '🏆 Pemenang', value: `**${winName}** dengan pet **${winPet}**!`});
+
+        return interaction.followUp({ embeds: [embed] });
+      }
+    }
+
     // ================= SLASH COMMAND =================
     if (interaction.isChatInputCommand()) {
       const command = interaction.client.commands.get(interaction.commandName);
@@ -1609,6 +1779,18 @@ module.exports = {
           if (!allowed) {
             return interaction.reply({ content: '❌ Bot tidak aktif di channel ini. Hubungi admin untuk mengizinkan channel ini lewat `/admin-channel-add`.', flags: MessageFlags.Ephemeral });
           }
+        }
+      }
+
+
+      // ---- Cek Kematian Player ----
+      if (interaction.commandName !== 'restart-karakter' && interaction.commandName !== 'help') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+        if (player && player.status === 'dead') {
+          return interaction.reply({
+            content: '💀 Kamu telah meninggal. Cari pertolongan pemain lain yang memiliki kemampuan membangkitkanmu, atau restart akun dari awal dengan command: `/restart-karakter`',
+            flags: MessageFlags.Ephemeral
+          });
         }
       }
 
@@ -1637,13 +1819,81 @@ module.exports = {
 
     // ================= BUTTON =================
     if (interaction.isButton()) {
+
+      if (id.startsWith('release_confirm_')) {
+        const instanceId = id.replace('release_confirm_', '');
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('pets.petId');
+        if (!player) return;
+
+        const petIndex = player.pets.findIndex(p => p.instanceId === instanceId);
+        if (petIndex === -1) return interaction.update({ content: '❌ Pet tidak ditemukan atau sudah dilepas.', components: [] });
+
+        const pet = player.pets[petIndex];
+        if (pet.isLocked) return interaction.update({ content: '❌ Pet ini sedang dalam battle!', components: [] });
+
+        player.pets.splice(petIndex, 1);
+        await player.save();
+
+        return interaction.update({ content: `👋 Kamu telah melepaskan **${pet.nickname || pet.petId.name}** kembali ke alam liar. Ia tidak akan pernah kembali.`, components: [] });
+      }
+
+      if (id.startsWith('release_cancel_')) {
+        return interaction.update({ content: '❌ Pelepasan pet dibatalkan.', components: [] });
+      }
+
       const id = interaction.customId;
 
       // Tombol transfer & barter ditangani sendiri oleh collector di command masing-masing. Lewati di sini.
       if (id.startsWith('transfer_') || id.startsWith('barter_')) return;
 
+
+      if (id.startsWith('hire_worker_')) {
+        const workerId = id.replace('hire_worker_', '');
+
+        // Cek kalau dia mau sewa diri sendiri
+        if (workerId === interaction.user.id) {
+           return interaction.reply({ content: '❌ Kamu tidak bisa menyewa dirimu sendiri.', flags: MessageFlags.Ephemeral });
+        }
+
+        const modal = new ModalBuilder().setCustomId(`modal_hire_worker_${workerId}`).setTitle('Sewa Worker');
+        modal.addComponents(
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('hours').setLabel('Berapa jam ingin menyewa?').setStyle(TextInputStyle.Short).setRequired(true)),
+        );
+        return interaction.showModal(modal);
+      }
+
       if (id === 'cancel_action') {
         return interaction.update({ content: '❎ Dibatalkan.', embeds: [], components: [] });
+      }
+
+      if (id === 'confirm_restart_karakter_yes') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+        if (!player || player.status !== 'dead') {
+           return interaction.update({ content: '❌ Karakter tidak valid atau belum mati.', embeds: [], components: [] });
+        }
+
+        player.status = 'active';
+        player.customStatus = null;
+        player.inventory = [];
+        player.pets = [];
+        player.assets = [];
+        player.currency = { silver: 0, gold: 0, jade: 0, spirit: 0 };
+        player.realm = 'Mortal';
+        player.stage = '-';
+        player.sect = 'Tanpa Sekte (Rogue Cultivator)';
+        player.age = 16;
+        player.totalWealth = 0; // it gets recalculated anyway but let's reset it to be clean
+        await player.save();
+
+        await logAdminAction(interaction.client, {
+          guildId: interaction.guildId,
+          adminId: interaction.client.user.id,
+          action: 'RESTART_CHARACTER',
+          targetUserId: interaction.user.id,
+          details: 'Pemain melakukan restart dari kematian.'
+        });
+
+        return interaction.update({ content: '✨ Karaktermu telah terlahir kembali! Semoga kehidupan kali ini lebih baik.', embeds: [], components: [] });
       }
 
       if (id === 'panel_help_admin') {
@@ -1659,7 +1909,7 @@ module.exports = {
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('rankTier').setLabel('Rank & Tier (contoh: Epic 5)').setStyle(TextInputStyle.Short).setValue('Common 1').setRequired(true)),
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('priceInfo').setLabel('Harga Dasar & Currency (contoh: 500 silver)').setStyle(TextInputStyle.Short).setValue('0 silver').setRequired(true)),
           new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('description').setLabel('Deskripsi').setStyle(TextInputStyle.Paragraph).setRequired(true)),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('imageUrl').setLabel('URL Gambar (opsional)').setStyle(TextInputStyle.Short).setRequired(false)),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('category').setLabel('Kategori (weapon, material, dll)').setStyle(TextInputStyle.Short).setValue('none').setRequired(false)),
         );
         return interaction.showModal(modal);
       }
@@ -1745,6 +1995,72 @@ module.exports = {
         return interaction.update({ content: `❌ Turnamen **${tournament?.name || '(tidak diketahui)'}** telah dibatalkan.`, embeds: [], components: [] });
       }
 
+      if (id.startsWith('confirm_delete_sect_')) {
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+        const sectId = id.replace('confirm_delete_sect_', '');
+        const sect = await Sect.findByIdAndDelete(sectId);
+        if (sect) {
+          const allMemberIds = [sect.leaderId, sect.viceLeaderId, ...sect.elderIds, ...sect.memberIds].filter(Boolean);
+          await Player.updateMany(
+            { guildId: interaction.guildId, discordId: { $in: allMemberIds } },
+            { $set: { sect: 'Tanpa Sekte (Rogue Cultivator)' } },
+          );
+        }
+        await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'SECT_DELETE', details: sect?.name || sectId });
+        return interaction.update({ content: `🗑️ Sekte **${sect?.name || '(tidak diketahui)'}** telah dibubarkan.`, embeds: [], components: [] });
+      }
+
+      if (id.startsWith('confirm_sekte_war_')) {
+        if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+        const [, , , winnerId, loserId] = id.split('_'); // confirm_sekte_war_<winnerId>_<loserId>
+        await interaction.deferUpdate();
+
+        const winner = await Sect.findById(winnerId);
+        const loser = await Sect.findById(loserId);
+        if (!winner || !loser) {
+          return interaction.editReply({ content: '❌ Salah satu sekte sudah tidak ada lagi. Perang dibatalkan.', embeds: [], components: [] });
+        }
+
+        const [itemDocs, assetDocs] = await Promise.all([
+          Item.find({ _id: { $in: loser.resources.map((r) => r.itemId) } }),
+          Asset.find({ _id: { $in: loser.assets.map((a) => a.assetId) } }),
+        ]);
+
+        const { lootedResources, lootedAssets } = executeSectWar(winner, loser);
+        await winner.save();
+        await loser.save();
+
+        await logAdminAction(interaction.client, {
+          guildId: interaction.guildId, adminId: interaction.user.id, action: 'SECT_WAR',
+          details: `${winner.name} mengalahkan ${loser.name}. Loot: ${lootedResources.length} jenis resource, ${lootedAssets.length} jenis aset.`,
+        });
+
+        const resourceLines = lootedResources.length
+          ? lootedResources.map((r) => {
+              const doc = itemDocs.find((d) => d._id.equals(r.itemId));
+              return `• **${doc?.name || 'Item'}**: ${r.quantity}/${r.fullQuantity} dirampas`;
+            }).join('\n')
+          : '_Tidak ada resource yang berhasil dirampas (dadu tidak berpihak)_';
+
+        const assetLines = lootedAssets.length
+          ? lootedAssets.map((a) => {
+              const doc = assetDocs.find((d) => d._id.equals(a.assetId));
+              return `• **${doc?.name || 'Aset'}**: ${a.quantity}/${a.fullQuantity} dirampas`;
+            }).join('\n')
+          : '_Tidak ada aset yang berhasil dirampas (dadu tidak berpihak)_';
+
+        const embed = new EmbedBuilder()
+          .setColor(0xc0392b)
+          .setTitle(`⚔️ Perang Sekte: ${winner.name} MENANG atas ${loser.name}!`)
+          .setDescription(`${loser.name} hancur berkeping-keping! Seluruh kekayaannya musnah, keanggotaan tetap ada untuk membangun ulang dari nol.`)
+          .addFields(
+            { name: '📦 Resource Dirampas', value: resourceLines },
+            { name: '🏛️ Aset Dirampas', value: assetLines },
+          );
+
+        return interaction.editReply({ content: null, embeds: [embed], components: [] });
+      }
+
       return;
     }
 
@@ -1753,12 +2069,73 @@ module.exports = {
       const id = interaction.customId;
 
       try {
+
+        // ---- Sewa Worker ----
+        if (id.startsWith('modal_hire_worker_')) {
+          const workerId = id.replace('modal_hire_worker_', '');
+          const hoursInput = interaction.fields.getTextInputValue('hours').trim();
+          const hours = parseInt(hoursInput, 10);
+
+          if (!Number.isInteger(hours) || hours <= 0) {
+            return interaction.reply({ content: '❌ Durasi harus berupa angka bulat lebih dari 0.', flags: MessageFlags.Ephemeral });
+          }
+
+          const employer = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+          if (!employer) return interaction.reply({ content: '❌ Kamu belum terdaftar.', flags: MessageFlags.Ephemeral });
+
+          const WorkerContract = require('../models/WorkerContract');
+          const contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId });
+
+          if (!contract || contract.status !== 'available') {
+            return interaction.reply({ content: '❌ Worker ini sudah tidak tersedia atau sedang bekerja.', flags: MessageFlags.Ephemeral });
+          }
+
+          if (hours > contract.maxDurationHours) {
+             return interaction.reply({ content: `❌ Worker ini hanya menawarkan maksimal ${contract.maxDurationHours} jam.`, flags: MessageFlags.Ephemeral });
+          }
+
+          const totalCost = contract.pricePerHour * hours;
+          if (employer.currency.silver < totalCost) {
+            return interaction.reply({ content: `❌ Uangmu tidak cukup. Biaya sewa adalah ${totalCost} Silver, saldomu ${employer.currency.silver} Silver.`, flags: MessageFlags.Ephemeral });
+          }
+
+          employer.currency.silver -= totalCost;
+          await employer.save();
+
+          // Uang masuk setelah kontrak selesai? Atau di awal? Sesuai requirement: "Uang penyewa dipotong di awal... Gaji diberikan setelah pekerjaan selesai".
+          // Kita simpan durasinya, saat timer habis, uang baru diberikan ke worker.
+          // Untuk saat ini kita assign saja statusnya. Gaji bisa kita berikan saat update.
+          // We will store current employer ID so we know who to log the salary to
+          contract.status = 'working';
+          contract.currentEmployerId = interaction.user.id;
+          contract.workingSince = new Date();
+          contract.workingUntil = new Date(Date.now() + (hours * 3600000));
+          await contract.save();
+
+          const { refreshWorkerChannel } = require('../services/workerChannelService');
+          await refreshWorkerChannel(interaction.client, interaction.guildId);
+
+          const { logTransaction } = require('../utils/logger');
+          await logTransaction(interaction.client, {
+            guildId: interaction.guildId, type: 'hire_worker', fromUserId: interaction.user.id, toUserId: workerId,
+            currency: 'silver', amount: totalCost,
+            itemDescription: `Menyewa worker selama ${hours} jam`
+          });
+
+          // Salary will be transferred upon worker sync when the time has passed.
+
+
+          return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Worker Berhasil Disewa').setDescription(`Kamu menyewa **${contract.workerName}** selama ${hours} jam dengan biaya **${totalCost} Silver**.\n\nSekarang kamu bisa memasukkannya ke dalam asetmu lewat command `/pindah-worker`.`)] });
+        }
+
         // ---- Tambah Item ----
         if (id === 'modal_add_item') {
           if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
-          const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+          const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+          const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+          const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
           if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
@@ -1769,7 +2146,7 @@ module.exports = {
           if (exists) return interaction.reply({ content: `❌ Item dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
           await Item.create({
-            guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, imageUrl,
+            guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, category,
             basePrice: pc.amount, priceCurrency: pc.currency, createdBy: interaction.user.id,
           });
           await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'ADD_ITEM', details: name });
@@ -1786,14 +2163,16 @@ module.exports = {
 
           const name = interaction.fields.getTextInputValue('name').trim();
           const description = interaction.fields.getTextInputValue('description').trim();
-          const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+          const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+          const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+          const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
           const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
           if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
           const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
           if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
-          item.name = name; item.rank = rt.rank; item.tier = rt.tier; item.description = description; item.imageUrl = imageUrl;
+          item.name = name; item.rank = rt.rank; item.tier = rt.tier; item.description = description; item.category = category;
           item.basePrice = pc.amount; item.priceCurrency = pc.currency;
           await item.save();
           await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_ITEM', details: name });
@@ -1850,6 +2229,50 @@ module.exports = {
         }
 
         // ---- Tambah Asset ----
+
+        // ---- Edit Pet Stats ----
+        if (id.startsWith('modal_edit_pet_stats_')) {
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+          const petId = id.replace('modal_edit_pet_stats_', '');
+          const pet = await Pet.findById(petId);
+          if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
+
+          const baseStatsRaw = interaction.fields.getTextInputValue('baseStats').trim().split(',');
+          if (baseStatsRaw.length !== 4) return interaction.reply({ content: '❌ Format Base Stats salah (HP,ATK,DEF,SPD).', flags: MessageFlags.Ephemeral });
+
+          const baseHp = parseInt(baseStatsRaw[0]);
+          const baseAtk = parseInt(baseStatsRaw[1]);
+          const baseDef = parseInt(baseStatsRaw[2]);
+          const baseSpd = parseInt(baseStatsRaw[3]);
+
+          if (isNaN(baseHp) || isNaN(baseAtk) || isNaN(baseDef) || isNaN(baseSpd)) {
+             return interaction.reply({ content: '❌ Base Stats harus berupa angka.', flags: MessageFlags.Ephemeral });
+          }
+
+          const element = interaction.fields.getTextInputValue('element').trim();
+          const validElements = ['Api', 'Air', 'Tanah', 'Angin', 'Petir', 'Cahaya', 'Kegelapan', 'Netral'];
+          if (!validElements.includes(element)) return interaction.reply({ content: '❌ Elemen tidak valid.', flags: MessageFlags.Ephemeral });
+
+          const growthRate = parseFloat(interaction.fields.getTextInputValue('growthRate').trim());
+          if (isNaN(growthRate) || growthRate < 0.1 || growthRate > 5.0) return interaction.reply({ content: '❌ Growth Rate tidak valid.', flags: MessageFlags.Ephemeral });
+
+          const maxLevel = parseInt(interaction.fields.getTextInputValue('maxLevel').trim());
+          if (isNaN(maxLevel) || maxLevel < 1 || maxLevel > 200) return interaction.reply({ content: '❌ Max Level tidak valid.', flags: MessageFlags.Ephemeral });
+
+          pet.baseHp = baseHp;
+          pet.baseAtk = baseAtk;
+          pet.baseDef = baseDef;
+          pet.baseSpd = baseSpd;
+          pet.element = element;
+          pet.growthRate = growthRate;
+          pet.maxLevel = maxLevel;
+
+          await pet.save();
+          await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PET_STATS', details: pet.name });
+
+          return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x2980b9).setTitle('✅ Stats Pet Diperbarui').setDescription(`Atribut untuk **${pet.name}** berhasil diupdate.`)] });
+        }
+
         if (id === 'modal_add_asset') {
           if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();
@@ -1907,21 +2330,28 @@ module.exports = {
           const player = await Player.findOne({ discordId, guildId: interaction.guildId });
           if (!player) return interaction.reply({ content: '❌ Player tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
-          const rt = parseRealmTier(interaction.fields.getTextInputValue('realmTier'));
+          const rt = parseRealm(interaction.fields.getTextInputValue('realm'));
           if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
 
           const stage = interaction.fields.getTextInputValue('stage')?.trim() || '-';
           const ageRaw = interaction.fields.getTextInputValue('age').trim();
-          const sect = interaction.fields.getTextInputValue('sect').trim();
+          const genderRaw = interaction.fields.getTextInputValue('gender')?.trim() || '';
           const characterImage = interaction.fields.getTextInputValue('characterImage')?.trim() || null;
 
           const age = parseInt(ageRaw, 10);
           if (!Number.isInteger(age) || age < 0) return interaction.reply({ content: '❌ Umur harus angka valid.', flags: MessageFlags.Ephemeral });
 
-          player.realm = rt.realm; player.realmTier = rt.tier;
-          player.stage = stage; player.age = age; player.sect = sect; player.characterImage = characterImage;
+          let gender = player.gender;
+          if (genderRaw) {
+            const normalized = ['Laki-laki', 'Perempuan'].find((g) => g.toLowerCase() === genderRaw.toLowerCase());
+            if (!normalized) return interaction.reply({ content: '❌ Jenis kelamin harus "Laki-laki" atau "Perempuan" (atau kosongkan untuk tidak diubah).', flags: MessageFlags.Ephemeral });
+            gender = normalized;
+          }
+
+          player.realm = rt.realm;
+          player.stage = stage; player.age = age; player.gender = gender; player.characterImage = characterImage;
           await player.save();
-          await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PLAYER', targetUserId: discordId, details: `Ranah: ${rt.realm} (Tier ${rt.tier}), Sekte: ${sect}` });
+          await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PLAYER', targetUserId: discordId, details: `Ranah: ${rt.realm}, Umur: ${age}` });
 
           // Sinkronisasi role ranah otomatis (copot role ranah lama, pasang role ranah baru kalau ada mapping-nya)
           syncRealmRole(interaction.client, interaction.guildId, discordId, rt.realm).catch((e) => console.error('[REALM-ROLE] Gagal sync:', e.message));
@@ -1937,6 +2367,7 @@ module.exports = {
     }
   },
 };
+
 
 JIANGHU_EOF_MARKER
 
