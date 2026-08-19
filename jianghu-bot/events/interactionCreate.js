@@ -6,6 +6,9 @@ const Player = require('../models/Player');
 const Tournament = require('../models/Tournament');
 const Sect = require('../models/Sect');
 const { isAdmin, isChannelAllowed } = require('../utils/permissions');
+const PetBattle = require('../models/PetBattle');
+const { simulateRound } = require('../services/petService');
+
 const { logAdminAction } = require('../utils/logger');
 const { syncRealmRole } = require('../utils/realmRole');
 const { manualCleanup } = require('../utils/logCleanup');
@@ -74,6 +77,87 @@ function parseRealm(text) {
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
+
+    if (interaction.isStringSelectMenu()) {
+      if (interaction.customId === 'select_pet_battle') {
+        const battleRecord = await PetBattle.findOne({ messageId: interaction.message.id });
+        if (!battleRecord) return interaction.reply({ content: '❌ Data duel tidak ditemukan atau sudah kadaluarsa.', flags: MessageFlags.Ephemeral });
+        if (battleRecord.opponentId !== interaction.user.id) return interaction.reply({ content: '❌ Kamu bukan target duel ini.', flags: MessageFlags.Ephemeral });
+        if (battleRecord.status !== 'pending') return interaction.reply({ content: '❌ Duel ini sudah diproses.', flags: MessageFlags.Ephemeral });
+
+        const p2InstanceId = interaction.values[0];
+        const p2 = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('pets.petId');
+        const p1 = await Player.findOne({ discordId: battleRecord.challengerId, guildId: interaction.guildId }).populate('pets.petId');
+
+        const pet2 = p2.pets.find(p => p.instanceId === p2InstanceId);
+        const pet1 = p1.pets.find(p => p.instanceId === battleRecord.challengerPetInstanceId);
+
+        if (!pet2 || !pet1) return interaction.reply({ content: '❌ Salah satu pet tidak valid.', flags: MessageFlags.Ephemeral });
+        if (pet2.isLocked) return interaction.reply({ content: '❌ Pet kamu sedang dipakai di duel lain.', flags: MessageFlags.Ephemeral });
+
+        pet2.isLocked = true;
+        p2.markModified('pets');
+        await p2.save();
+
+        battleRecord.opponentPetInstanceId = pet2.instanceId;
+        battleRecord.status = 'accepted';
+        await battleRecord.save();
+
+        await interaction.update({ content: `⚔️ **${p1.characterName}** (${pet1.nickname || pet1.petId.name}) VS **${p2.characterName}** (${pet2.nickname || pet2.petId.name}) dimulai!`, components: [] });
+
+        // --- SIMULASI BATTLE ---
+        let rounds = [];
+        let p1Hp = pet1.hp;
+        let p2Hp = pet2.hp;
+
+        let winner = null;
+        for (let i = 1; i <= 8; i++) { // Max 8 turn
+          const result = simulateRound(pet1, pet2, pet1.nickname || pet1.petId.name, pet2.nickname || pet2.petId.name);
+          rounds.push(`**Turn ${i}**: ${result.log}`);
+
+          if (pet1.hp <= 0) { winner = 2; break; }
+          if (pet2.hp <= 0) { winner = 1; break; }
+        }
+
+        if (!winner) {
+          winner = pet1.hp >= pet2.hp ? 1 : 2; // Tie breaker by HP left
+        }
+
+        // Update stats
+        if (winner === 1) {
+          pet1.wins += 1;
+          pet2.losses += 1;
+        } else {
+          pet2.wins += 1;
+          pet1.losses += 1;
+        }
+
+        pet1.isLocked = false;
+        pet2.isLocked = false;
+        pet1.lastBattledAt = new Date();
+        pet2.lastBattledAt = new Date();
+
+        p1.markModified('pets');
+        p2.markModified('pets');
+        await p1.save();
+        await p2.save();
+
+        battleRecord.status = 'finished';
+        await battleRecord.save();
+
+        const winName = winner === 1 ? p1.characterName : p2.characterName;
+        const winPet = winner === 1 ? (pet1.nickname || pet1.petId.name) : (pet2.nickname || pet2.petId.name);
+
+        const embed = new EmbedBuilder()
+          .setColor(0xe74c3c)
+          .setTitle('⚔️ Hasil Duel Pet')
+          .setDescription(rounds.join('\n'))
+          .addFields({ name: '🏆 Pemenang', value: `**${winName}** dengan pet **${winPet}**!`});
+
+        return interaction.followUp({ embeds: [embed] });
+      }
+    }
+
     // ================= SLASH COMMAND =================
     if (interaction.isChatInputCommand()) {
       const command = interaction.client.commands.get(interaction.commandName);
@@ -127,6 +211,28 @@ module.exports = {
 
     // ================= BUTTON =================
     if (interaction.isButton()) {
+
+      if (id.startsWith('release_confirm_')) {
+        const instanceId = id.replace('release_confirm_', '');
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('pets.petId');
+        if (!player) return;
+
+        const petIndex = player.pets.findIndex(p => p.instanceId === instanceId);
+        if (petIndex === -1) return interaction.update({ content: '❌ Pet tidak ditemukan atau sudah dilepas.', components: [] });
+
+        const pet = player.pets[petIndex];
+        if (pet.isLocked) return interaction.update({ content: '❌ Pet ini sedang dalam battle!', components: [] });
+
+        player.pets.splice(petIndex, 1);
+        await player.save();
+
+        return interaction.update({ content: `👋 Kamu telah melepaskan **${pet.nickname || pet.petId.name}** kembali ke alam liar. Ia tidak akan pernah kembali.`, components: [] });
+      }
+
+      if (id.startsWith('release_cancel_')) {
+        return interaction.update({ content: '❌ Pelepasan pet dibatalkan.', components: [] });
+      }
+
       const id = interaction.customId;
 
       // Tombol transfer & barter ditangani sendiri oleh collector di command masing-masing. Lewati di sini.
@@ -515,6 +621,50 @@ module.exports = {
         }
 
         // ---- Tambah Asset ----
+
+        // ---- Edit Pet Stats ----
+        if (id.startsWith('modal_edit_pet_stats_')) {
+          if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+          const petId = id.replace('modal_edit_pet_stats_', '');
+          const pet = await Pet.findById(petId);
+          if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
+
+          const baseStatsRaw = interaction.fields.getTextInputValue('baseStats').trim().split(',');
+          if (baseStatsRaw.length !== 4) return interaction.reply({ content: '❌ Format Base Stats salah (HP,ATK,DEF,SPD).', flags: MessageFlags.Ephemeral });
+
+          const baseHp = parseInt(baseStatsRaw[0]);
+          const baseAtk = parseInt(baseStatsRaw[1]);
+          const baseDef = parseInt(baseStatsRaw[2]);
+          const baseSpd = parseInt(baseStatsRaw[3]);
+
+          if (isNaN(baseHp) || isNaN(baseAtk) || isNaN(baseDef) || isNaN(baseSpd)) {
+             return interaction.reply({ content: '❌ Base Stats harus berupa angka.', flags: MessageFlags.Ephemeral });
+          }
+
+          const element = interaction.fields.getTextInputValue('element').trim();
+          const validElements = ['Api', 'Air', 'Tanah', 'Angin', 'Petir', 'Cahaya', 'Kegelapan', 'Netral'];
+          if (!validElements.includes(element)) return interaction.reply({ content: '❌ Elemen tidak valid.', flags: MessageFlags.Ephemeral });
+
+          const growthRate = parseFloat(interaction.fields.getTextInputValue('growthRate').trim());
+          if (isNaN(growthRate) || growthRate < 0.1 || growthRate > 5.0) return interaction.reply({ content: '❌ Growth Rate tidak valid.', flags: MessageFlags.Ephemeral });
+
+          const maxLevel = parseInt(interaction.fields.getTextInputValue('maxLevel').trim());
+          if (isNaN(maxLevel) || maxLevel < 1 || maxLevel > 200) return interaction.reply({ content: '❌ Max Level tidak valid.', flags: MessageFlags.Ephemeral });
+
+          pet.baseHp = baseHp;
+          pet.baseAtk = baseAtk;
+          pet.baseDef = baseDef;
+          pet.baseSpd = baseSpd;
+          pet.element = element;
+          pet.growthRate = growthRate;
+          pet.maxLevel = maxLevel;
+
+          await pet.save();
+          await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PET_STATS', details: pet.name });
+
+          return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x2980b9).setTitle('✅ Stats Pet Diperbarui').setDescription(`Atribut untuk **${pet.name}** berhasil diupdate.`)] });
+        }
+
         if (id === 'modal_add_asset') {
           if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
           const name = interaction.fields.getTextInputValue('name').trim();

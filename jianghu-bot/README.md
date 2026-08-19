@@ -115,6 +115,14 @@ guildId, logChannelId, adminLogChannelId, adminRoleIds
 | `/beli [kategori] [nama] [jumlah]` | Beli barang dari toko |
 | `/jual [kategori] [nama] [jumlah]` | Jual item/pet/aset ke sistem seharga 20% dari harga dasar |
 | `/loot [nama]` | Ambil harta dari karakter yang meninggal (jika ditujukan untukmu) |
+| `/pet list` | Lihat daftar pet |
+| `/pet status` | Lihat detail status dan stats pet |
+| `/pet feed` | Beri makan pet menggunakan item makanan |
+| `/pet heal` | Sembuhkan pet menggunakan item potion |
+| `/pet rename` | Ubah nickname pet |
+| `/pet release` | Lepas pet selamanya |
+| `/pet battle` | Tantang duel pet dengan pemain lain |
+| `/pet leaderboard` | Top 10 pet di server |
 | `/help` | Daftar command player |
 
 ### Admin
