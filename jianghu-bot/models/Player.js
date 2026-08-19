@@ -8,9 +8,24 @@ const inventoryItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const petOwnedSchema = new mongoose.Schema({
+  instanceId: { type: String, required: true }, // unique string
   petId: { type: mongoose.Schema.Types.ObjectId, ref: 'Pet', required: true },
   nickname: { type: String, default: null },
-  quantity: { type: Number, default: 1 },
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
+  hp: { type: Number, default: 50 },
+  maxHp: { type: Number, default: 50 },
+  atk: { type: Number, default: 10 },
+  def: { type: Number, default: 5 },
+  spd: { type: Number, default: 8 },
+  hunger: { type: Number, default: 100 }, // 0-100
+  element: { type: String, default: 'Netral' },
+  wins: { type: Number, default: 0 },
+  losses: { type: Number, default: 0 },
+  lastFedAt: { type: Date, default: null },
+  lastBattledAt: { type: Date, default: null },
+  isLocked: { type: Boolean, default: false }, // true saat sedang battle
+  affinity: { type: Number, default: 0 }, // max 100
 }, { _id: false });
 
 const assetOwnedSchema = new mongoose.Schema({
@@ -48,7 +63,14 @@ const playerSchema = new mongoose.Schema({
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
-  pets: { type: [petOwnedSchema], default: [] },
+  pets: {
+    type: [petOwnedSchema],
+    default: [],
+    validate: {
+      validator: function(v) { return v.length <= 6; },
+      message: 'Maksimal 6 pet per player'
+    }
+  },
   assets: { type: [assetOwnedSchema], default: [] },
 
   customStatus: { type: String, default: null },
@@ -66,6 +88,7 @@ const playerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
+playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencarian pet instance yang efisien
 
 // Setiap kali player disimpan: (1) currency dinormalisasi otomatis (100 Silver->1 Gold, dst),
 // (2) totalWealth dihitung ulang dari currency yang SUDAH dinormalisasi.
@@ -77,4 +100,3 @@ playerSchema.pre('save', function (next) {
 });
 
 module.exports = mongoose.model('Player', playerSchema);
-

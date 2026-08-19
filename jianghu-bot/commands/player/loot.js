@@ -37,9 +37,21 @@ module.exports = {
       const owned = player.inventory.find((i) => i.itemId.equals(it.itemId));
       if (owned) owned.quantity += it.quantity; else player.inventory.push({ itemId: it.itemId, quantity: it.quantity });
     }
+
+    // Pets transfer logic. Max 6 limit
+    let petLootedCount = 0;
     for (const p of pool.pets) {
-      player.pets.push({ petId: p.petId, nickname: p.nickname, quantity: p.quantity });
+      if (player.pets.length < 6) {
+        player.pets.push(p);
+        petLootedCount++;
+      }
     }
+
+    let overLimitMsg = '';
+    if (pool.pets.length > petLootedCount) {
+      overLimitMsg = `\n_Catatan: ${pool.pets.length - petLootedCount} pet tidak diambil karena limit maksimal 6 pet per player._`;
+    }
+
     await player.save();
 
     pool.claimed = true;
@@ -57,7 +69,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(0x7f8c8d)
       .setTitle(`☠️ Loot dari ${pool.deceasedCharacterName}`)
-      .setDescription(`Kamu berhasil mengambil harta peninggalan.\n\n**Currency didapat:**\n${formatCurrencyLine(pool.currency)}\n\n**Item:** ${pool.inventory.length} jenis\n**Pet:** ${pool.pets.length} ekor`);
+      .setDescription(`Kamu berhasil mengambil harta peninggalan.\n\n**Currency didapat:**\n${formatCurrencyLine(pool.currency)}\n\n**Item:** ${pool.inventory.length} jenis\n**Pet:** ${petLootedCount} ekor${overLimitMsg}`);
     return interaction.editReply({ embeds: [embed] });
   },
 };
