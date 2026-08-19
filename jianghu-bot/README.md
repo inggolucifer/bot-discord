@@ -98,57 +98,51 @@ guildId, logChannelId, adminLogChannelId, adminRoleIds
 
 ## 3. Daftar Command Lengkap
 
-### Player
-| Command | Fungsi |
-|---|---|
-| `/daftar [nama]` | Daftar karakter baru, otomatis ubah nickname Discord |
-| `/profil [@user]` | Lihat profil karakter (diri sendiri jika tanpa opsi) |
-| `/convert [dari] [ke] [jumlah]` | Konversi currency |
-| `/transfer-currency @user [jenis] [jumlah]` | Transfer currency (perlu Accept dari penerima) |
-| `/daily` | Klaim 10 Silver Tael, reset 00:00 WIB |
-| `/barter-offer @user ...` | Ajukan tukar item/currency (timeout 5 menit) |
-| `/cek-item [nama]` | Detail item |
-| `/cek-pet [nama]` | Detail pet |
-| `/cek-asset [nama]` | Detail aset |
-| `/claim-profit` | Klaim profit harian dari semua aset yang dimiliki |
-| `/shop [kategori]` | Lihat daftar barang di toko |
-| `/beli [kategori] [nama] [jumlah]` | Beli barang dari toko |
-| `/jual [kategori] [nama] [jumlah]` | Jual item/pet/aset ke sistem seharga 20% dari harga dasar |
-| `/loot [nama]` | Ambil harta dari karakter yang meninggal (jika ditujukan untukmu) |
-| `/help` | Daftar command player |
+**Player Commands:**
+- `/daftar`
+- `/profil [@user]`
+- `/daily`
+- `/convert [dari] [ke] [jumlah]`
+- `/transfer [@user] [jenis] [jumlah]`
+- `/barter [@user] ...`
+- `/shop [kategori]`
+- `/beli [kategori] [nama] [jumlah]`
+- `/jual [kategori] [nama] [jumlah]`
+- `/cek item|pet|asset [nama]`
+- `/claim profit|loot`
+- `/inventory`
+- `/craft`
+- `/cari-item`
+- `/leaderboard`
+- `/restart-karakter`
+- `/ubah-umur`
 
-### Admin
-| Command | Fungsi |
-|---|---|
-| `/admin-panel` | Buka panel tombol untuk aksi cepat |
-| `/admin-add-item` | Tambah item + harga dasar (form/modal) |
-| `/admin-edit-item [nama]` | Edit item (form/modal, sudah terisi data lama) |
-| `/admin-delete-item [nama]` | Hapus item (konfirmasi tombol) |
-| `/admin-add-pet` | Tambah pet + harga dasar (form/modal) |
-| `/admin-edit-pet [nama]` | Edit pet (form/modal) |
-| `/admin-delete-pet [nama]` | Hapus pet (konfirmasi tombol) |
-| `/admin-add-asset` | Buat aset + harga (form/modal) |
-| `/admin-edit-asset [nama]` | Edit aset (form/modal) |
-| `/admin-delete-asset [nama]` | Hapus aset (konfirmasi tombol) |
-| `/admin-channel-add [channel]` | Izinkan bot dipakai di channel tertentu |
-| `/admin-channel-remove [channel]` | Cabut izin channel |
-| `/admin-channel-list` | Lihat semua channel yang diizinkan |
-| `/admin-edit-player @user` | Edit ranah/stage/umur/sekte/gambar karakter (form/modal) |
-| `/admin-give-currency @user [jenis] [jumlah]` | Beri/kurangi currency |
-| `/admin-give-item @user [nama] [jumlah]` | Beri item |
-| `/admin-give-pet @user [nama] [nickname]` | Beri pet |
-| `/admin-give-asset @user [nama] [jumlah]` | Beri kepemilikan aset |
-| `/admin-freeze @user [alasan]` | Bekukan karakter |
-| `/admin-unfreeze @user` | Cabut pembekuan |
-| `/admin-kill @user @loot-untuk` | Tandai mati, harta pindah ke loot pool |
-| `/admin-force-unregister @user` | Hapus paksa karakter (konfirmasi tombol) |
-| `/admin-shop-add [kategori] [nama] [harga] [currency] [stok]` | Tambah ke shop |
-| `/admin-shop-remove [kategori] [nama]` | Hapus dari shop |
-| `/admin-set-log [channel] [channel-admin]` | Atur channel log |
-| `/admin-set-role @role` | Jadikan role sebagai Admin Bot |
-| `/help-admin` | Daftar command admin |
+**Player Subcommands:**
+- `/worker daftar|batal|ubah|pindah|sewa-sistem|pekerja-saya`
+- `/asset bangun|claim-profit`
+- `/listing jual-item|jual-pet|jual-asset|beli|batal`
+- `/sekte list|info|donasi|deposit-resource|craft|bangun-asset|claim-profit|kelola-anggota|kick|leaderboard`
+- `/tournament bracket`
+- `/help`
 
----
+**Admin Commands:**
+- `/admin-panel`
+- `/admin-item add|edit|delete`
+- `/admin-pet add|edit|delete`
+- `/admin-asset add|edit|delete|set-construction|finish-construction|set-build-requirement|remove-build-requirement|add-recipe|remove-recipe|set-worker|remove-worker`
+- `/admin-give currency|item|pet|asset`
+- `/admin-player edit|freeze|unfreeze|kill|unregister|set-status|remove-item|remove-pet|remove-asset`
+- `/admin-shop add|remove`
+- `/admin-channel add|remove|list`
+- `/admin-log set|set-retention|clear`
+- `/admin-role set`
+- `/admin-realm-role set|remove|list`
+- `/adminLeaderboardRole`
+- `/admin-sekte create|delete|assign|remove-member|give-resource|give-asset|war`
+- `/admin-tournament create|start|cancel|list|add-player|remove-player|set-winner`
+- `/admin-worker-channel set`
+- `/help-admin`
+
 
 ## 4. Contoh Kode Fitur Kunci
 

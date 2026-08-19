@@ -328,7 +328,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRemoveItem.js"
 cat > commands/admin/adminRemoveItem.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
@@ -387,7 +387,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRemovePet.js"
 cat > commands/admin/adminRemovePet.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const Pet = require('../../models/Pet');
@@ -445,7 +445,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRemoveAsset.js"
 cat > commands/admin/adminRemoveAsset.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
@@ -504,7 +504,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminSetLogRetention.js"
 cat > commands/admin/adminSetLogRetention.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -539,7 +539,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminClearLogs.js"
 cat > commands/admin/adminClearLogs.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -573,7 +573,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminLeaderboardRole.js"
 cat > commands/admin/adminLeaderboardRole.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 const { updateTop3LeaderboardRoles } = require('../../utils/leaderboardRoles');
@@ -623,7 +623,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRealmRoleSet.js"
 cat > commands/admin/adminRealmRoleSet.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -661,7 +661,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRealmRoleRemove.js"
 cat > commands/admin/adminRealmRoleRemove.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -692,7 +692,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminRealmRoleList.js"
 cat > commands/admin/adminRealmRoleList.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const GuildConfig = require('../../models/GuildConfig');
 
@@ -724,7 +724,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentCreate.js"
 cat > commands/admin/adminTournamentCreate.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 
@@ -762,7 +762,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentAddPlayer.js"
 cat > commands/admin/adminTournamentAddPlayer.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 const Player = require('../../models/Player');
@@ -813,7 +813,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentRemovePlayer.js"
 cat > commands/admin/adminTournamentRemovePlayer.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 
@@ -854,7 +854,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentList.js"
 cat > commands/admin/adminTournamentList.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 
@@ -879,7 +879,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentStart.js"
 cat > commands/admin/adminTournamentStart.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder } = require('discord.js');
+const {  SlashCommandBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 const { generateFirstRound } = require('../../utils/bracket');
@@ -926,7 +926,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentSetWinner.js"
 cat > commands/admin/adminTournamentSetWinner.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder } = require('discord.js');
+const {  SlashCommandBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 const { generateNextRound, isRoundComplete } = require('../../utils/bracket');
@@ -1012,7 +1012,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/admin/adminTournamentCancel.js"
 cat > commands/admin/adminTournamentCancel.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
 
@@ -1053,7 +1053,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/player/tournamentBracket.js"
 cat > commands/player/tournamentBracket.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder } = require('discord.js');
+const {  SlashCommandBuilder , MessageFlags } = require('discord.js');
 const Tournament = require('../../models/Tournament');
 const { buildTournamentEmbed } = require('../../utils/embeds');
 
@@ -1084,7 +1084,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [BARU] Menulis commands/player/leaderboard.js"
 cat > commands/player/leaderboard.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const { CURRENCY_LABEL } = require('../../utils/currency');
 
@@ -1288,7 +1288,7 @@ cat > utils/logger.js << 'JIANGHU_EOF_MARKER'
 const TransactionLog = require('../models/TransactionLog');
 const AdminLog = require('../models/AdminLog');
 const GuildConfig = require('../models/GuildConfig');
-const { EmbedBuilder } = require('discord.js');
+const {  EmbedBuilder , MessageFlags } = require('discord.js');
 const { updateTop3LeaderboardRoles } = require('./leaderboardRoles');
 
 // Tipe transaksi yang benar-benar mengubah saldo player -> perlu dicek ulang untuk role leaderboard Top 1/2/3.
@@ -1369,7 +1369,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis utils/embeds.js"
 cat > utils/embeds.js << 'JIANGHU_EOF_MARKER'
-const { EmbedBuilder } = require('discord.js');
+const {  EmbedBuilder , MessageFlags } = require('discord.js');
 const { CURRENCY_EMOJI, CURRENCY_LABEL, formatCurrencyLine } = require('./currency');
 const { getRankStyle, dramaticTitle, REALM_STYLE_BY_TIER } = require('./dramatic');
 
@@ -1517,7 +1517,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis events/interactionCreate.js"
 cat > events/interactionCreate.js << 'JIANGHU_EOF_MARKER'
-const { Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+const {  Events, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder , MessageFlags } = require('discord.js');
 const Item = require('../models/Item');
 const Pet = require('../models/Pet');
 const Asset = require('../models/Asset');
@@ -1942,7 +1942,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis commands/player/daftar.js"
 cat > commands/player/daftar.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const { syncRealmRole } = require('../../utils/realmRole');
 
@@ -2007,7 +2007,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis commands/player/help.js"
 cat > commands/player/help.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder().setName('help').setDescription('Lihat semua command player'),
@@ -2037,7 +2037,7 @@ JIANGHU_EOF_MARKER
 
 echo "--> [DIPERBARUI] Menulis commands/admin/helpAdmin.js"
 cat > commands/admin/helpAdmin.js << 'JIANGHU_EOF_MARKER'
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const {  SlashCommandBuilder, EmbedBuilder , MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 
 module.exports = {
@@ -2078,7 +2078,7 @@ cat > index.js << 'JIANGHU_EOF_MARKER'
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
+const {  Client, GatewayIntentBits, Partials, Collection , MessageFlags } = require('discord.js');
 const { connectDB } = require('./config/database');
 const { runScheduledCleanup } = require('./utils/logCleanup');
 
@@ -2144,6 +2144,74 @@ JIANGHU_EOF_MARKER
 
 echo ""
 echo "=== Semua file berhasil ditulis. Menjalankan langkah selanjutnya... ==="
+
+
+echo "--> [BARU] Menulis commands/player/inventory.js"
+cat > commands/player/inventory.js << 'JIANGHU_EOF_MARKER'
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const Player = require('../../models/Player');
+const Item = require('../../models/Item');
+const Pet = require('../../models/Pet');
+const Asset = require('../../models/Asset');
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('inventory')
+    .setDescription('Lihat gabungan inventory, pet, dan asset yang kamu miliki')
+    .addUserOption((opt) => opt.setName('user').setDescription('Player yang ingin dilihat inventory-nya (opsional)').setRequired(false)),
+
+  async execute(interaction) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+    const targetUser = interaction.options.getUser('user') || interaction.user;
+
+    const player = await Player.findOne({ discordId: targetUser.id, guildId: interaction.guildId });
+    if (!player) {
+      const isSelf = targetUser.id === interaction.user.id;
+      return interaction.editReply({
+        content: isSelf
+          ? '❌ Kamu belum terdaftar. Gunakan \`/daftar [nama karakter]\` dulu.'
+          : \`❌ ${targetUser.username} belum terdaftar sebagai karakter.\`,
+      });
+    }
+
+    const itemIds = player.inventory.map((i) => i.itemId);
+    const petIds = player.pets.map((p) => p.petId);
+    const assetIds = player.assets.map((a) => a.assetId);
+
+    const [itemDocsRaw, petDocsRaw, assetDocsRaw] = await Promise.all([
+      Item.find({ _id: { \$in: itemIds } }),
+      Pet.find({ _id: { \$in: petIds } }),
+      Asset.find({ _id: { \$in: assetIds } }),
+    ]);
+
+    const itemDocs = player.inventory.map((i) => ({ doc: itemDocsRaw.find((d) => d._id.equals(i.itemId)), quantity: i.quantity })).filter((x) => x.doc);
+    const petDocs = player.pets.map((p) => ({ doc: petDocsRaw.find((d) => d._id.equals(p.petId)), nickname: p.nickname, quantity: p.quantity })).filter((x) => x.doc);
+    const assetDocs = player.assets.map((a) => ({ doc: assetDocsRaw.find((d) => d._id.equals(a.assetId)), quantity: a.quantity, owned: a })).filter((x) => x.doc);
+
+    const embed = new EmbedBuilder()
+      .setColor(0x3498db)
+      .setTitle(\`🎒 Inventory & Kekayaan: ${player.characterName}\`)
+      .setDescription(\`Daftar lengkap item, pet, dan aset yang dimiliki oleh **${player.characterName}**.\`);
+
+    let itemsText = itemDocs.map((i) => \`• **${i.doc.name}** (x${i.quantity})\`).join('\n');
+    let petsText = petDocs.map((p) => \`• **${p.doc.name}** (x${p.quantity})${p.nickname ? \` - *${p.nickname}*\` : ''}\`).join('\n');
+    let assetsText = assetDocs.map((a) => {
+        let status = a.owned.isConstructing ? ' (Sedang Dibangun)' : '';
+        return \`• **${a.doc.name}** (x${a.quantity})${status}\`;
+    }).join('\n');
+
+    embed.addFields(
+      { name: '🗡️ Items', value: itemsText || 'Kosong', inline: true },
+      { name: '🐾 Pets', value: petsText || 'Kosong', inline: true },
+      { name: '🏠 Assets', value: assetsText || 'Kosong', inline: false }
+    );
+
+    return interaction.editReply({ embeds: [embed] });
+  },
+};
+JIANGHU_EOF_MARKER
+
 
 echo "--> Install/update dependency npm..."
 npm install
