@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const Sect = require('../../../models/Sect');
 const Player = require('../../../models/Player');
 const Item = require('../../../models/Item');
 const { logTransaction } = require('../../../utils/logger');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,11 +29,8 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    const sect = await Sect.findOne({
-      guildId: interaction.guildId,
-      $or: [{ leaderId: interaction.user.id }, { viceLeaderId: interaction.user.id }, { elderIds: interaction.user.id }, { memberIds: interaction.user.id }],
-    });
-    if (!sect) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte manapun.' });
+    const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+    if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
     const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaItem}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
@@ -59,4 +56,3 @@ module.exports = {
     return interaction.editReply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Setoran Berhasil').setDescription(`Kamu menyetor **${jumlah}x ${item.name}** ke sumber daya sekte **${sect.name}**.`)] });
   },
 };
-
