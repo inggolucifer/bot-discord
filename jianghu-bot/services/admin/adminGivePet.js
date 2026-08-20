@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const crypto = require('crypto');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
 const Pet = require('../../models/Pet');
@@ -32,7 +33,11 @@ module.exports = {
     const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
 
-    player.pets.push({ petId: pet._id, nickname, quantity: 1 });
+    player.pets.push({
+      instanceId: crypto.randomUUID(),
+      petId: pet._id,
+      nickname
+    });
     await player.save();
 
     await logAdminAction(interaction.client, {
