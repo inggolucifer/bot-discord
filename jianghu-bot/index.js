@@ -60,6 +60,13 @@ for (const file of eventFiles) {
 
 // Tangani error yang tidak tertangkap supaya bot tidak crash diam-diam
 process.on('unhandledRejection', (err) => {
-  console.error('[UNHANDLED REJECTION]', err);
+  if (err && err.name === 'ValidationError') {
+    console.error('[UNHANDLED REJECTION] Mongoose Validation Error:', err.message);
+    for (const field in err.errors) {
+      console.error(`  - Field '${field}': ${err.errors[field].message}`);
+    }
+  } else {
+    console.error('[UNHANDLED REJECTION]', err);
+  }
 });
 
