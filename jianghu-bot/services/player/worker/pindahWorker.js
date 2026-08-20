@@ -3,13 +3,14 @@ const WorkerContract = require('../../../models/WorkerContract');
 const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const { calculateProgress } = require('../../../utils/assetProgress');
+const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('pindah-worker')
     .setDescription('Pindahkan worker yang sedang kamu sewa ke aset tertentu')
-    .addUserOption((o) => o.setName('worker').setDescription('Pilih worker (pemain) yang kamu sewa').setRequired(true))
-    .addStringOption((o) => o.setName('aset').setDescription('Nama aset milikmu').setRequired(true).setAutocomplete(true)),
+    .addUserOption((o) => o.setName(WORKER_OPTIONS.PEKERJA).setDescription('Pilih worker (pemain) yang kamu sewa').setRequired(true))
+    .addStringOption((o) => o.setName(WORKER_OPTIONS.ASET_TUJUAN).setDescription('Nama aset milikmu').setRequired(true).setAutocomplete(true)),
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
@@ -22,8 +23,8 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const workerUser = interaction.options.getUser('worker');
-    const assetName = interaction.options.getString('aset');
+    const workerUser = interaction.options.getUser(WORKER_OPTIONS.PEKERJA);
+    const assetName = interaction.options.getString(WORKER_OPTIONS.ASET_TUJUAN);
 
     const contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId: workerUser.id, currentEmployerId: interaction.user.id, status: 'working' });
     if (!contract) return interaction.editReply({ content: '❌ Worker tersebut tidak sedang bekerja untukmu.' });

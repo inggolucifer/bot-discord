@@ -2,13 +2,14 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'
 const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const { calculateProgress } = require('../../../utils/assetProgress');
+const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('sewa-worker-sistem')
     .setDescription('Sewa NPC Worker untuk menjalankan/membangun asetmu (5 Silver/jam)')
-    .addStringOption((o) => o.setName('aset').setDescription('Nama aset milikmu').setRequired(true).setAutocomplete(true))
-    .addIntegerOption((o) => o.setName('durasi').setDescription('Durasi sewa (dalam jam)').setRequired(true).setMinValue(1)),
+    .addStringOption((o) => o.setName(WORKER_OPTIONS.ASET).setDescription('Nama aset milikmu').setRequired(true).setAutocomplete(true))
+    .addIntegerOption((o) => o.setName(WORKER_OPTIONS.DURASI).setDescription('Durasi sewa (dalam jam)').setRequired(true).setMinValue(1)),
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
@@ -21,8 +22,8 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const assetName = interaction.options.getString('aset');
-    const durasi = interaction.options.getInteger('durasi');
+    const assetName = interaction.options.getString(WORKER_OPTIONS.ASET);
+    const durasi = interaction.options.getInteger(WORKER_OPTIONS.DURASI);
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
