@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const Sect = require('../../../models/Sect');
 const Player = require('../../../models/Player');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../../utils/currency');
 const { logTransaction } = require('../../../utils/logger');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,18 +14,15 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const jenis = interaction.options.getString('jenis');
+    const jenis = interaction.options.getString('jenis') || interaction.options.getString('currency');
     const jumlah = interaction.options.getInteger('jumlah');
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    const sect = await Sect.findOne({
-      guildId: interaction.guildId,
-      $or: [{ leaderId: interaction.user.id }, { viceLeaderId: interaction.user.id }, { elderIds: interaction.user.id }, { memberIds: interaction.user.id }],
-    });
-    if (!sect) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte manapun.' });
+    const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+    if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
     if (player.currency[jenis] < jumlah) {
       return interaction.editReply({ content: `❌ ${CURRENCY_LABEL[jenis]} kamu tidak cukup. Saldo: ${player.currency[jenis]}.` });
@@ -50,4 +47,3 @@ module.exports = {
     return interaction.editReply({ embeds: [embed] });
   },
 };
-
