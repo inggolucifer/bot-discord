@@ -101,7 +101,8 @@ async function handleModal(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+    let categoryInput = 'none';
+    try { categoryInput = interaction.fields.getTextInputValue('category').trim().toLowerCase(); } catch (e) {}
     const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
     const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
@@ -127,7 +128,8 @@ async function handleModal(interaction) {
 
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const categoryInput = interaction.fields.getTextInputValue('category')?.trim().toLowerCase() || 'none';
+    let categoryInput = 'none';
+    try { categoryInput = interaction.fields.getTextInputValue('category').trim().toLowerCase(); } catch (e) {}
     const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
     const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
