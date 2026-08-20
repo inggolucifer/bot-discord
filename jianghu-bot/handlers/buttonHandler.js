@@ -200,6 +200,74 @@ async function handleButton(interaction) {
     return interaction.update({ content: `🗑️ Sekte **${sect?.name || '(tidak diketahui)'}** telah dibubarkan.`, embeds: [], components: [] });
   }
 
+  if (id.startsWith('approve_auction_')) {
+    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+    const auctionId = id.replace('approve_auction_', '');
+    const Auction = require('../models/Auction');
+    const GuildConfig = require('../models/GuildConfig');
+
+    const auction = await Auction.findById(auctionId).populate('itemId sellerId');
+    if (!auction) return interaction.reply({ content: '❌ Lelang tidak ditemukan.', flags: MessageFlags.Ephemeral });
+    if (auction.status !== 'pending') return interaction.reply({ content: '❌ Lelang ini sudah tidak pending.', flags: MessageFlags.Ephemeral });
+
+    const config = await GuildConfig.findOne({ guildId: interaction.guildId });
+    if (!config || !config.auctionChannelId) {
+      return interaction.reply({ content: '❌ Channel lelang belum diset, tidak bisa approve.', flags: MessageFlags.Ephemeral });
+    }
+
+    const auctionChannel = interaction.guild.channels.cache.get(config.auctionChannelId);
+    if (!auctionChannel) {
+      return interaction.reply({ content: '❌ Channel lelang tidak ditemukan di server.', flags: MessageFlags.Ephemeral });
+    }
+
+    // Set expiration 24 jam dari sekarang
+    auction.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    auction.status = 'active';
+    await auction.save();
+
+    const embed = new EmbedBuilder()
+      .setTitle('📢 LELANG PEMAIN BARU!')
+      .setDescription(`Pemain <@${auction.sellerId.discordId}> mengadakan lelang untuk item berikut:\n\n**Barang:** ${auction.itemId.name} (x${auction.quantity})\n**Harga Awal:** ${auction.startingBid} Silver\n\nGunakan \`/lelang bid id-lelang:${auction._id} jumlah-bid:[...]\` untuk menawar!\n*Berakhir: <t:${Math.floor(auction.expiresAt.getTime() / 1000)}:R>*`)
+      .setColor('#FFA500')
+      .addFields({ name: 'ID Lelang', value: auction._id.toString() });
+
+    const msg = await auctionChannel.send({ embeds: [embed] });
+    auction.messageId = msg.id;
+    await auction.save();
+
+    return interaction.update({ content: `✅ Lelang untuk **${auction.itemId.name}** disetujui dan dikirim ke <#${config.auctionChannelId}>.`, embeds: [], components: [] });
+  }
+
+  if (id.startsWith('reject_auction_')) {
+    if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
+    const auctionId = id.replace('reject_auction_', '');
+    const Auction = require('../models/Auction');
+    const Player = require('../models/Player');
+
+    const auction = await Auction.findById(auctionId).populate('itemId sellerId');
+    if (!auction) return interaction.reply({ content: '❌ Lelang tidak ditemukan.', flags: MessageFlags.Ephemeral });
+    if (auction.status !== 'pending') return interaction.reply({ content: '❌ Lelang ini sudah tidak pending.', flags: MessageFlags.Ephemeral });
+
+    auction.status = 'rejected';
+    await auction.save();
+
+    // Kembalikan item
+    if (auction.sellerId) {
+      const player = await Player.findById(auction.sellerId._id);
+      if (player) {
+        const invIndex = player.inventory.findIndex(i => i.itemId.toString() === auction.itemId._id.toString());
+        if (invIndex >= 0) {
+          player.inventory[invIndex].quantity += auction.quantity;
+        } else {
+          player.inventory.push({ itemId: auction.itemId._id, quantity: auction.quantity });
+        }
+        await player.save();
+      }
+    }
+
+    return interaction.update({ content: `❌ Lelang untuk **${auction.itemId?.name || 'Item'}** telah ditolak. Barang dikembalikan ke pemain.`, embeds: [], components: [] });
+  }
+
   if (id.startsWith('confirm_sekte_war_')) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const [, , , winnerId, loserId] = id.split('_'); // confirm_sekte_war_<winnerId>_<loserId>
