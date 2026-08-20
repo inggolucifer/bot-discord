@@ -9,7 +9,7 @@ module.exports = {
     .setName('admin-asset-finish-construction')
     .setDescription('[ADMIN] Percepat/selesaikan langsung pembangunan aset milik seorang player')
     .addUserOption((o) => o.setName('user').setDescription('Pemilik aset').setRequired(true))
-    .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset').setRequired(true).setAutocomplete(true)),
+    .addStringOption((o) => o.setName('nama').setDescription('Nama aset yang sedang dibangun').setRequired(true).setAutocomplete(true)),
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
@@ -26,7 +26,7 @@ module.exports = {
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const target = interaction.options.getUser('user');
-    const nama = interaction.options.getString('nama-aset');
+    const nama = interaction.options.getString('nama');
 
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });

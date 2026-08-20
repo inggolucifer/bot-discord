@@ -6,7 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('admin-asset-set-construction')
     .setDescription('[ADMIN] Atur waktu pembangunan (jam) untuk sebuah jenis aset')
-    .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset').setRequired(true).setAutocomplete(true))
+    .addStringOption((o) => o.setName('nama').setDescription('Nama aset').setRequired(true).setAutocomplete(true))
     .addIntegerOption((o) => o.setName('jam').setDescription('Waktu pembangunan dalam jam (0 = langsung jadi)').setRequired(true).setMinValue(0)),
 
   async autocomplete(interaction) {
@@ -19,7 +19,7 @@ module.exports = {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
-    const nama = interaction.options.getString('nama-aset');
+    const nama = interaction.options.getString('nama');
     const jam = interaction.options.getInteger('jam');
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
