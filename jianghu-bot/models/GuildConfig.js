@@ -12,6 +12,8 @@ const guildConfigSchema = new mongoose.Schema({
   adminLogChannelId: { type: String, default: null },  // channel log aksi admin
   adminRoleIds: { type: [String], default: [] },
   workerChannelId: { type: String, default: null },
+  auctionChannelId: { type: String, default: null },       // Channel untuk menampilkan lelang aktif
+  auctionRequestChannelId: { type: String, default: null }, // Channel khusus admin untuk review request lelang
 
   // Whitelist channel: kalau kosong [] = bot bisa dipakai di SEMUA channel (default).
   allowedChannelIds: { type: [String], default: [] },

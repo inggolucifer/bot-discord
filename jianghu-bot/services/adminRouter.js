@@ -74,6 +74,10 @@ const routeMap = {
   'tournamentremoveplayer': 'adminTournamentRemovePlayer',
   'tournamentsetwinner': 'adminTournamentSetWinner',
 
+  // LELANG
+  'lelangconfig': 'adminLelangConfig',
+  'lelangbuat': 'adminLelangBuat',
+
   // NO GROUP
   'realmroleset': 'adminRealmRoleSet',
   'realmroleremove': 'adminRealmRoleRemove',
