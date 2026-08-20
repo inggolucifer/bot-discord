@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const crypto = require('crypto');
 const Player = require('../../models/Player');
 const PlayerListing = require('../../models/PlayerListing');
 const { CURRENCY_LABEL } = require('../../utils/currency');
@@ -65,9 +66,15 @@ module.exports = {
       if (buyerOwned) buyerOwned.quantity += listing.quantity;
       else buyer.inventory.push({ itemId: refId, quantity: listing.quantity });
     } else if (listing.type === 'pet') {
-      const buyerOwned = buyer.pets.find((p) => p.petId.equals(listing.refId));
-      if (buyerOwned) buyerOwned.quantity += listing.quantity;
-      else buyer.pets.push({ petId: listing.refId, quantity: listing.quantity });
+      if (buyer.pets.length + listing.quantity > 6) {
+        return interaction.editReply({ content: `❌ Pembelian gagal. Maksimal pet adalah 6. (Kamu punya ${buyer.pets.length})` });
+      }
+      for (let i = 0; i < listing.quantity; i++) {
+        buyer.pets.push({
+          instanceId: crypto.randomUUID(),
+          petId: listing.refId
+        });
+      }
     } else if (listing.type === 'asset') {
       const buyerOwned = buyer.assets.find((a) => a.assetId.equals(listing.refId));
       if (buyerOwned) buyerOwned.quantity += listing.quantity;

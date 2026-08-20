@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const crypto = require('crypto');
 const Shop = require('../../models/Shop');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
@@ -52,8 +53,18 @@ module.exports = {
       const owned = player.inventory.find((i) => i.itemId.equals(doc._id));
       if (owned) owned.quantity += jumlah; else player.inventory.push({ itemId: doc._id, quantity: jumlah });
     } else if (kategori === 'pet') {
-      const owned = player.pets.find((p) => p.petId.equals(doc._id));
-      if (owned) owned.quantity += jumlah; else player.pets.push({ petId: doc._id, quantity: jumlah });
+      // Pet doesn't stack in quantity according to the schema (but old logic assumed it did)
+      // Since max pet is 6, limit the total pet count
+      const totalPetsToBe = player.pets.length + jumlah;
+      if (totalPetsToBe > 6) {
+        return interaction.editReply({ content: `❌ Pembelian gagal. Maksimal pet adalah 6. Saat ini kamu punya ${player.pets.length} pet.` });
+      }
+      for (let i = 0; i < jumlah; i++) {
+        player.pets.push({
+          instanceId: crypto.randomUUID(),
+          petId: doc._id
+        });
+      }
     } else if (kategori === 'asset') {
       const owned = player.assets.find((a) => a.assetId.equals(doc._id));
       if (owned) {
