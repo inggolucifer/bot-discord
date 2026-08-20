@@ -122,7 +122,24 @@ module.exports = {
     .addSubcommand(sub => sub.setName('set-log-retention').setDescription('Set retensi log').addIntegerOption(o => o.setName('hari').setDescription('Hari').setRequired(true)))
     .addSubcommand(sub => sub.setName('clear-logs').setDescription('Clear log manual'))
     .addSubcommand(sub => sub.setName('set-role').setDescription('Set admin role').addRoleOption(o => o.setName('role').setDescription('Role').setRequired(true)))
-    .addSubcommand(sub => sub.setName('set-worker-channel').setDescription('Set worker channel').addChannelOption(o => o.setName('channel').setDescription('Channel').setRequired(true))),
+    .addSubcommand(sub => sub.setName('set-worker-channel').setDescription('Set worker channel').addChannelOption(o => o.setName('channel').setDescription('Channel').setRequired(true)))
+
+    // AUCTION GROUP
+    .addSubcommandGroup(group => group
+      .setName('lelang')
+      .setDescription('Manajemen Lelang')
+      .addSubcommand(sub => sub.setName('config')
+        .setDescription('Set channel lelang dan request')
+        .addChannelOption(o => o.setName('auction-channel').setDescription('Channel untuk lelang aktif'))
+        .addChannelOption(o => o.setName('request-channel').setDescription('Channel untuk request lelang dari pemain'))
+      )
+      .addSubcommand(sub => sub.setName('buat')
+        .setDescription('Buat lelang sistem')
+        .addStringOption(o => o.setName('nama-item').setDescription('Nama item').setRequired(true).setAutocomplete(true))
+        .addIntegerOption(o => o.setName('jumlah').setDescription('Jumlah item').setRequired(true).setMinValue(1))
+        .addIntegerOption(o => o.setName('starting-bid').setDescription('Harga awal bid (Silver)').setRequired(true).setMinValue(1))
+      )
+    ),
 
   async autocomplete(interaction) {
     const adminRouter = require('../../services/adminRouter');
