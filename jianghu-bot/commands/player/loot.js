@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const crypto = require('crypto');
 const LootPool = require('../../models/LootPool');
 const Player = require('../../models/Player');
 const { logTransaction } = require('../../utils/logger');
@@ -42,7 +43,12 @@ module.exports = {
     let petLootedCount = 0;
     for (const p of pool.pets) {
       if (player.pets.length < 6) {
-        player.pets.push(p);
+        // Create new instanceId when transferring pet to avoid duplicates
+        // or just to ensure it has one if the original was broken
+        const transferredPet = p.toObject ? p.toObject() : { ...p };
+        transferredPet.instanceId = crypto.randomUUID();
+
+        player.pets.push(transferredPet);
         petLootedCount++;
       }
     }
