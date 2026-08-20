@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, ComponentType , MessageFlags } = require('discord.js');
 const Player = require('../../models/Player');
 const Pet = require('../../models/Pet');
 const Item = require('../../models/Item');
@@ -114,10 +114,10 @@ module.exports = {
     }
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('pets.petId');
-    if (!player) return interaction.reply({ content: '❌ Kamu belum terdaftar.', ephemeral: true });
+    if (!player) return interaction.reply({ content: '❌ Kamu belum terdaftar.', flags: MessageFlags.Ephemeral });
 
     if (sub === 'list') {
-      if (!player.pets.length) return interaction.reply({ content: '❌ Kamu belum memiliki pet.', ephemeral: true });
+      if (!player.pets.length) return interaction.reply({ content: '❌ Kamu belum memiliki pet.', flags: MessageFlags.Ephemeral });
 
       const embed = new EmbedBuilder()
         .setColor(0x2ecc71)
@@ -133,7 +133,7 @@ module.exports = {
     if (sub === 'status') {
       const instanceId = interaction.options.getString('pet');
       const pet = player.pets.find(p => p.instanceId === instanceId);
-      if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
+      if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
       const expReq = getExpRequired(pet.level);
       const expPercent = Math.min(100, Math.floor((pet.exp / expReq) * 100));
@@ -165,10 +165,10 @@ module.exports = {
       const instanceId = interaction.options.getString('pet');
       const newName = interaction.options.getString('nama_baru').trim();
 
-      if (newName.length > 16) return interaction.reply({ content: '❌ Nickname maksimal 16 karakter.', ephemeral: true });
+      if (newName.length > 16) return interaction.reply({ content: '❌ Nickname maksimal 16 karakter.', flags: MessageFlags.Ephemeral });
 
       const petIndex = player.pets.findIndex(p => p.instanceId === instanceId);
-      if (petIndex === -1) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
+      if (petIndex === -1) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
       player.pets[petIndex].nickname = newName;
       await player.save();
@@ -179,7 +179,7 @@ module.exports = {
     if (sub === 'release') {
       const instanceId = interaction.options.getString('pet');
       const pet = player.pets.find(p => p.instanceId === instanceId);
-      if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
+      if (!pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId(`release_confirm_${instanceId}`).setLabel('Ya, Lepaskan!').setStyle(ButtonStyle.Danger),
@@ -197,19 +197,19 @@ module.exports = {
       const itemId = interaction.options.getString('item');
 
       const petIndex = player.pets.findIndex(p => p.instanceId === instanceId);
-      if (petIndex === -1) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
+      if (petIndex === -1) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
 
       const invIndex = player.inventory.findIndex(i => i.itemId.toString() === itemId);
-      if (invIndex === -1) return interaction.reply({ content: '❌ Kamu tidak memiliki item tersebut.', ephemeral: true });
+      if (invIndex === -1) return interaction.reply({ content: '❌ Kamu tidak memiliki item tersebut.', flags: MessageFlags.Ephemeral });
 
       const itemDoc = await Item.findById(itemId);
-      if (!itemDoc || !itemDoc.effect) return interaction.reply({ content: '❌ Item tidak memiliki efek pet.', ephemeral: true });
+      if (!itemDoc || !itemDoc.effect) return interaction.reply({ content: '❌ Item tidak memiliki efek pet.', flags: MessageFlags.Ephemeral });
 
       const effect = parsePetItemEffect(itemDoc.effect);
-      if (!effect) return interaction.reply({ content: '❌ Efek item tidak valid.', ephemeral: true });
+      if (!effect) return interaction.reply({ content: '❌ Efek item tidak valid.', flags: MessageFlags.Ephemeral });
 
-      if (sub === 'feed' && effect.type !== 'pet_food') return interaction.reply({ content: '❌ Ini bukan makanan pet.', ephemeral: true });
-      if (sub === 'heal' && effect.type !== 'pet_heal') return interaction.reply({ content: '❌ Ini bukan potion pet.', ephemeral: true });
+      if (sub === 'feed' && effect.type !== 'pet_food') return interaction.reply({ content: '❌ Ini bukan makanan pet.', flags: MessageFlags.Ephemeral });
+      if (sub === 'heal' && effect.type !== 'pet_heal') return interaction.reply({ content: '❌ Ini bukan potion pet.', flags: MessageFlags.Ephemeral });
 
       const pet = player.pets[petIndex];
       let msg = '';
@@ -232,7 +232,7 @@ module.exports = {
         const isFull = effect.params.full === 'true';
         const healAmt = parseInt(effect.params.amount) || 0;
 
-        if (pet.hp >= pet.maxHp) return interaction.reply({ content: '❌ HP Pet sudah penuh.', ephemeral: true });
+        if (pet.hp >= pet.maxHp) return interaction.reply({ content: '❌ HP Pet sudah penuh.', flags: MessageFlags.Ephemeral });
 
         if (isFull) {
           pet.hp = pet.maxHp;
@@ -256,25 +256,25 @@ module.exports = {
       const lawan = interaction.options.getUser('lawan');
       const petKamuId = interaction.options.getString('pet_kamu');
 
-      if (lawan.id === interaction.user.id) return interaction.reply({ content: '❌ Kamu tidak bisa menantang dirimu sendiri.', ephemeral: true });
-      if (lawan.bot) return interaction.reply({ content: '❌ Kamu tidak bisa menantang bot.', ephemeral: true });
+      if (lawan.id === interaction.user.id) return interaction.reply({ content: '❌ Kamu tidak bisa menantang dirimu sendiri.', flags: MessageFlags.Ephemeral });
+      if (lawan.bot) return interaction.reply({ content: '❌ Kamu tidak bisa menantang bot.', flags: MessageFlags.Ephemeral });
 
       const p1Pet = player.pets.find(p => p.instanceId === petKamuId);
-      if (!p1Pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', ephemeral: true });
-      if (p1Pet.isLocked) return interaction.reply({ content: '❌ Pet ini sedang dalam battle lain.', ephemeral: true });
-      if (p1Pet.hunger < 20) return interaction.reply({ content: '❌ Pet ini terlalu lapar untuk bertarung (Hunger < 20).', ephemeral: true });
-      if (p1Pet.hp < p1Pet.maxHp * 0.3) return interaction.reply({ content: '❌ HP Pet terlalu rendah untuk bertarung (< 30%).', ephemeral: true });
+      if (!p1Pet) return interaction.reply({ content: '❌ Pet tidak ditemukan.', flags: MessageFlags.Ephemeral });
+      if (p1Pet.isLocked) return interaction.reply({ content: '❌ Pet ini sedang dalam battle lain.', flags: MessageFlags.Ephemeral });
+      if (p1Pet.hunger < 20) return interaction.reply({ content: '❌ Pet ini terlalu lapar untuk bertarung (Hunger < 20).', flags: MessageFlags.Ephemeral });
+      if (p1Pet.hp < p1Pet.maxHp * 0.3) return interaction.reply({ content: '❌ HP Pet terlalu rendah untuk bertarung (< 30%).', flags: MessageFlags.Ephemeral });
 
       const cooldownPet = 5 * 60 * 1000;
       if (p1Pet.lastBattledAt && (Date.now() - p1Pet.lastBattledAt.getTime() < cooldownPet)) {
-        return interaction.reply({ content: '❌ Pet ini masih kelelahan, tunggu beberapa saat lagi.', ephemeral: true });
+        return interaction.reply({ content: '❌ Pet ini masih kelelahan, tunggu beberapa saat lagi.', flags: MessageFlags.Ephemeral });
       }
 
       const lawanData = await Player.findOne({ discordId: lawan.id, guildId: interaction.guildId }).populate('pets.petId');
-      if (!lawanData) return interaction.reply({ content: '❌ Lawan belum terdaftar.', ephemeral: true });
+      if (!lawanData) return interaction.reply({ content: '❌ Lawan belum terdaftar.', flags: MessageFlags.Ephemeral });
 
       const validLawanPets = lawanData.pets.filter(p => !p.isLocked && p.hunger >= 20 && p.hp >= (p.maxHp * 0.3));
-      if (!validLawanPets.length) return interaction.reply({ content: '❌ Lawan tidak memiliki pet yang siap bertarung.', ephemeral: true });
+      if (!validLawanPets.length) return interaction.reply({ content: '❌ Lawan tidak memiliki pet yang siap bertarung.', flags: MessageFlags.Ephemeral });
 
       // Tanya lawan untuk pilih pet
       const options = validLawanPets.map(p => ({
