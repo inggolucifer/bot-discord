@@ -3,12 +3,13 @@ const Sect = require('../../../models/Sect');
 const Item = require('../../../models/Item');
 const Asset = require('../../../models/Asset');
 const { buildSectEmbed } = require('../../../utils/embeds');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('sekte-info')
     .setDescription('Lihat info sebuah sekte: jabatan, aset, dan sumber daya')
-    .addStringOption((o) => o.setName('nama-sekte').setDescription('Nama sekte').setRequired(true).setAutocomplete(true)),
+    .addStringOption((o) => o.setName('nama').setDescription('Nama sekte (kosongkan untuk sekte sendiri)').setAutocomplete(true)),
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
@@ -19,9 +20,16 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const namaSekte = interaction.options.getString('nama-sekte');
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
-    if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
+    let namaSekte = interaction.options.getString('nama');
+    let sect;
+
+    if (namaSekte) {
+      sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
+      if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
+    } else {
+      sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+      if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun. Gunakan opsi `nama` untuk melihat sekte lain.' });
+    }
 
     const [resourceItemDocs, assetDocsRaw] = await Promise.all([
       Item.find({ _id: { $in: sect.resources.map((r) => r.itemId) } }),
@@ -42,4 +50,3 @@ module.exports = {
     return interaction.editReply({ embeds: [buildSectEmbed(sect, resourceDocs, assetDocs)] });
   },
 };
-
