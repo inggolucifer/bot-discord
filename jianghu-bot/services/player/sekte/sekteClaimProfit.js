@@ -7,28 +7,23 @@ const { isUnderConstruction, formatRemainingTime } = require('../../../utils/cra
 const { splitSectProfit } = require('../../../utils/sectProfitSplit');
 const { logTransaction } = require('../../../utils/logger');
 const { CURRENCY_EMOJI, CURRENCY_LABEL } = require('../../../utils/currency');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('sekte-claim-profit')
-    .setDescription('Klaim profit aset sekte (currency dibagi semua anggota sesuai jabatan, material masuk stok)')
-    .addStringOption((o) => o.setName('nama-sekte').setDescription('Nama sekte').setRequired(true).setAutocomplete(true)),
-
-  async autocomplete(interaction) {
-    const focused = interaction.options.getFocused();
-    const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
-    return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
-  },
+    .setDescription('Klaim profit aset sekte (currency dibagi semua anggota sesuai jabatan, material masuk stok)'),
 
   async execute(interaction) {
     await interaction.deferReply(); // publik -- pembagian profit sekte pantas dilihat semua anggota
 
-    const namaSekte = interaction.options.getString('nama-sekte');
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
-    if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
+    const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+    if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
     const role = sect.getRoleOf(interaction.user.id);
-    if (!role) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte ini. Hanya anggota sekte yang bisa memicu klaim profit.' });
+    if (role !== 'Ketua' && role !== 'Wakil Ketua' && role !== 'Tetua') {
+      return interaction.editReply({ content: '❌ Hanya Ketua/Wakil/Tetua Sekte yang bisa melakukan ini!' });
+    }
 
     if (!sect.assets.length) return interaction.editReply({ content: '❌ Sekte ini belum memiliki aset apapun.' });
 
@@ -118,4 +113,3 @@ module.exports = {
     return interaction.editReply({ embeds: [embed] });
   },
 };
-

@@ -3,29 +3,25 @@ const Sect = require('../../../models/Sect');
 const Asset = require('../../../models/Asset');
 const { isUnderConstruction, formatRemainingTime, checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('sekte-craft')
     .setDescription('Buat item lewat aset crafting sekte, pakai sumber daya bersama sekte')
-    .addStringOption((o) => o.setName('nama-sekte').setDescription('Nama sekte').setRequired(true).setAutocomplete(true))
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset crafting sekte').setRequired(true).setAutocomplete(true))
     .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep').setRequired(true).setAutocomplete(true)),
 
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
-    if (focusedOpt.name === 'nama-sekte') {
-      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
-      return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
-    }
     if (focusedOpt.name === 'nama-aset') {
-      const namaSekte = interaction.options.getString('nama-sekte');
-      const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
+      const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
       if (!sect) return interaction.respond([]);
       const assets = await Asset.find({ _id: { $in: sect.assets.map((a) => a.assetId) }, isCraftingStation: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     }
     const namaAset = interaction.options.getString('nama-aset');
+    if (!namaAset) return interaction.respond([]);
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.respond([]);
     const matches = asset.recipes.filter((r) => r.recipeName.toLowerCase().includes(focusedOpt.value.toLowerCase()));
@@ -35,12 +31,11 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const namaSekte = interaction.options.getString('nama-sekte');
     const namaAset = interaction.options.getString('nama-aset');
     const namaResep = interaction.options.getString('nama-resep');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
-    if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
+    const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+    if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
     const role = sect.getRoleOf(interaction.user.id);
     if (!role) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte ini.' });
@@ -83,4 +78,3 @@ module.exports = {
     return interaction.editReply({ embeds: [embed] });
   },
 };
-

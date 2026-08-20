@@ -3,35 +3,35 @@ const Sect = require('../../../models/Sect');
 const Asset = require('../../../models/Asset');
 const { checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
+const { getPlayerSect } = require('../../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('sekte-bangun-asset')
     .setDescription('Bangun aset untuk sekte menggunakan sumber daya bersama sekte')
-    .addStringOption((o) => o.setName('nama-sekte').setDescription('Nama sekte').setRequired(true).setAutocomplete(true))
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset yang mau dibangun').setRequired(true).setAutocomplete(true)),
 
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
-    if (focusedOpt.name === 'nama-sekte') {
-      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
-      return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
+    if (focusedOpt.name === 'nama-aset') {
+      const assets = await Asset.find({ guildId: interaction.guildId, buildable: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+      return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     }
-    const assets = await Asset.find({ guildId: interaction.guildId, buildable: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
-    return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
+    return interaction.respond([]);
   },
 
   async execute(interaction) {
     await interaction.deferReply();
 
-    const namaSekte = interaction.options.getString('nama-sekte');
     const namaAset = interaction.options.getString('nama-aset');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
-    if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
+    const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
+    if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
     const role = sect.getRoleOf(interaction.user.id);
-    if (!role) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte ini.' });
+    if (role !== 'Ketua' && role !== 'Wakil Ketua') {
+      return interaction.editReply({ content: '❌ Hanya Ketua/Wakil Sekte yang bisa melakukan ini!' });
+    }
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
@@ -73,4 +73,3 @@ module.exports = {
     return interaction.editReply({ embeds: [embed] });
   },
 };
-
