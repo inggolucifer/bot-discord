@@ -1,5 +1,3 @@
-// Jalankan file ini SETIAP KALI kamu menambah/mengubah command:
-//   node deploy-commands.js
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
@@ -10,18 +8,27 @@ const guildCommands = [];
 
 // Load player commands as global
 const playerCommandsPath = path.join(__dirname, 'commands', 'player');
-const playerCommandFiles = fs.readdirSync(playerCommandsPath).filter((f) => f.endsWith('.js'));
-for (const file of playerCommandFiles) {
-  const command = require(path.join(playerCommandsPath, file));
-  if (command?.data) globalCommands.push(command.data.toJSON());
+if (fs.existsSync(playerCommandsPath)) {
+  const playerCommandFiles = fs.readdirSync(playerCommandsPath).filter((f) => f.endsWith('.js'));
+  for (const file of playerCommandFiles) {
+    const command = require(path.join(playerCommandsPath, file));
+    if (command?.data) globalCommands.push(command.data.toJSON());
+  }
 }
 
 // Load admin commands as guild-specific
 const adminCommandsPath = path.join(__dirname, 'commands', 'admin');
-const adminCommandFiles = fs.readdirSync(adminCommandsPath).filter((f) => f.endsWith('.js'));
-for (const file of adminCommandFiles) {
-  const command = require(path.join(adminCommandsPath, file));
-  if (command?.data) guildCommands.push(command.data.toJSON());
+if (fs.existsSync(adminCommandsPath)) {
+  const adminCommandFiles = fs.readdirSync(adminCommandsPath).filter((f) => f.endsWith('.js'));
+  for (const file of adminCommandFiles) {
+    const command = require(path.join(adminCommandsPath, file));
+    if (command?.data) guildCommands.push(command.data.toJSON());
+  }
+}
+
+if (!process.env.DISCORD_TOKEN) {
+    console.warn("[DEPLOY] Skipping deployment: DISCORD_TOKEN is not set.");
+    process.exit(0);
 }
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
@@ -39,17 +46,14 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
     // 2. Daftarkan Guild Commands (Admin commands)
     if (process.env.GUILD_ID) {
-      // Mode development: command admin langsung muncul di 1 server tertentu
       await rest.put(
         Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
         { body: guildCommands },
       );
       console.log(`[DEPLOY] Sukses! ${guildCommands.length} Command Admin terdaftar di server GUILD_ID=${process.env.GUILD_ID}.`);
     } else {
-      // Mode production: cari semua server tempat bot berada dan daftarkan admin commands ke tiap server
       console.log('[DEPLOY] Mengambil daftar server bot...');
       const guilds = await rest.get(Routes.userGuilds());
-
       for (const guild of guilds) {
         try {
           await rest.put(
