@@ -13,7 +13,7 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
       { name: '🎂 Umur', value: `${player.age} tahun`, inline: true },
       { name: '⚧ Jenis Kelamin', value: player.gender || '_(belum diisi)_', inline: true },
       { name: '🏯 Sekte/Afiliasi', value: sectRole ? `${player.sect} (${sectRole})` : player.sect, inline: true },
-      { name: '📌 Status', value: player.status === 'active' ? '✅ Aktif' : player.status === 'frozen' ? '🥶 Dibekukan' : '☠️ Meninggal', inline: true },
+      { name: '📌 Status', value: player.customStatus ? player.customStatus : (player.status === 'active' ? '✅ Aktif' : player.status === 'frozen' ? '🥶 Dibekukan' : '☠️ Meninggal'), inline: true },
       { name: '💰 Currency', value: formatCurrencyLine(player.currency) },
     );
 

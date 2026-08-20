@@ -32,12 +32,16 @@ module.exports = {
         guildId: interaction.guildId,
         workerId: interaction.user.id,
         workerName: player.characterName,
+        pricePerHour: pricePerHour,
+        maxDurationHours: maxDurationHours,
+        status: 'available',
       });
+    } else {
+      contract.pricePerHour = pricePerHour;
+      contract.maxDurationHours = maxDurationHours;
+      contract.status = 'available';
     }
 
-    contract.pricePerHour = pricePerHour;
-    contract.maxDurationHours = maxDurationHours;
-    contract.status = 'available';
     await contract.save();
 
     await refreshWorkerChannel(interaction.client, interaction.guildId);
