@@ -9,19 +9,19 @@ module.exports = {
     .setDescription('[ADMIN] Tambah resep crafting ke sebuah aset (mis. Tungku Tempa bisa buat Pedang)')
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset (jadi stasiun crafting)').setRequired(true).setAutocomplete(true))
     .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep, cth: Pedang Baja').setRequired(true))
-    .addStringOption((o) => o.setName('item-hasil').setDescription('Nama item yang dihasilkan').setRequired(true))
-    .addStringOption((o) => o.setName('bahan-1').setDescription('Nama item bahan #1').setRequired(true))
-    .addIntegerOption((o) => o.setName('jumlah-1').setDescription('Jumlah bahan #1').setRequired(true).setMinValue(1))
-    .addIntegerOption((o) => o.setName('jumlah-hasil').setDescription('Jumlah item yang dihasilkan (default 1)').setMinValue(1))
-    .addStringOption((o) => o.setName('bahan-2').setDescription('Nama item bahan #2 (opsional)'))
-    .addIntegerOption((o) => o.setName('jumlah-2').setDescription('Jumlah bahan #2').setMinValue(1))
-    .addStringOption((o) => o.setName('bahan-3').setDescription('Nama item bahan #3 (opsional)'))
-    .addIntegerOption((o) => o.setName('jumlah-3').setDescription('Jumlah bahan #3').setMinValue(1)),
+    .addStringOption((o) => o.setName('item-hasil').setDescription('Nama item yang dihasilkan').setRequired(true).setAutocomplete(true))
+    .addIntegerOption((o) => o.setName('jumlah-hasil').setDescription('Jumlah item yang dihasilkan (default 1)').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('materials').setDescription('Material (Contoh: Kayu:2,Besi:1)').setRequired(true)),
 
   async autocomplete(interaction) {
-    const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
-    return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
+    const focusedOption = interaction.options.getFocused(true);
+    if (focusedOption.name === 'nama-aset') {
+      const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(focusedOption.value, 'i') }).limit(25);
+      return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
+    } else if (focusedOption.name === 'item-hasil') {
+      const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(focusedOption.value, 'i') }).limit(25);
+      return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
+    }
   },
 
   async execute(interaction) {
@@ -32,6 +32,7 @@ module.exports = {
     const namaResep = interaction.options.getString('nama-resep').trim();
     const namaHasil = interaction.options.getString('item-hasil');
     const jumlahHasil = interaction.options.getInteger('jumlah-hasil') || 1;
+    const materialsStr = interaction.options.getString('materials');
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
@@ -40,16 +41,23 @@ module.exports = {
     if (!resultItem) return interaction.editReply({ content: `❌ Item hasil "${namaHasil}" tidak ditemukan. Buat dulu itemnya lewat /admin-add-item.` });
 
     const materials = [];
-    for (let i = 1; i <= 3; i++) {
-      const bahanNama = interaction.options.getString(`bahan-${i}`);
-      const bahanJumlah = interaction.options.getInteger(`jumlah-${i}`);
-      if (!bahanNama) continue;
-      if (!bahanJumlah) return interaction.editReply({ content: `❌ Jumlah untuk bahan-${i} belum diisi.` });
+    const matParts = materialsStr.split(',');
 
-      const matItem = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${bahanNama}$`, 'i') });
-      if (!matItem) return interaction.editReply({ content: `❌ Item bahan "${bahanNama}" tidak ditemukan. Buat dulu itemnya lewat /admin-add-item.` });
+    for (const part of matParts) {
+        const [bahanNama, jumlahStr] = part.split(':').map(s => s.trim());
+        if (!bahanNama || !jumlahStr) {
+            return interaction.editReply({ content: `❌ Format material salah pada "${part}". Harus "NamaItem:Jumlah", contoh: Kayu:2` });
+        }
 
-      materials.push({ itemId: matItem._id, itemName: matItem.name, quantity: bahanJumlah });
+        const bahanJumlah = parseInt(jumlahStr, 10);
+        if (isNaN(bahanJumlah) || bahanJumlah < 1) {
+             return interaction.editReply({ content: `❌ Jumlah material tidak valid pada "${part}".` });
+        }
+
+        const matItem = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${bahanNama}$`, 'i') });
+        if (!matItem) return interaction.editReply({ content: `❌ Item bahan "${bahanNama}" tidak ditemukan. Buat dulu itemnya lewat /admin-add-item.` });
+
+        materials.push({ itemId: matItem._id, itemName: matItem.name, quantity: bahanJumlah });
     }
 
     if (!materials.length) return interaction.editReply({ content: '❌ Minimal harus ada 1 bahan untuk resep ini.' });
