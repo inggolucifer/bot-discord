@@ -12,6 +12,7 @@ const routeMap = {
   'itemedit': 'adminEditItem',
   'itemdelete': 'adminDeleteItem',
   'itemremove': 'adminRemoveItem',
+  'itemsetimage': 'adminItemSetImage',
 
   // PET
   'petadd': 'adminAddPet',
