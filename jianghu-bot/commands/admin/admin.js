@@ -91,13 +91,13 @@ module.exports = {
     .addSubcommandGroup(group => group
       .setName('sekte')
       .setDescription('Manajemen Sekte')
-      .addSubcommand(sub => sub.setName('create').setDescription('Buat sekte').addStringOption(o => o.setName('nama').setDescription('Nama').setRequired(true)))
-      .addSubcommand(sub => sub.setName('delete').setDescription('Hapus sekte').addStringOption(o => o.setName('nama').setDescription('Nama').setRequired(true).setAutocomplete(true)))
-      .addSubcommand(sub => sub.setName('assign').setDescription('Set ketua').addStringOption(o => o.setName('nama').setDescription('Sekte').setRequired(true).setAutocomplete(true)).addUserOption(o => o.setName('user').setDescription('Ketua').setRequired(true)))
-      .addSubcommand(sub => sub.setName('remove-member').setDescription('Keluarkan anggota').addUserOption(o => o.setName('user').setDescription('Anggota').setRequired(true)))
+      .addSubcommand(sub => sub.setName('create').setDescription('Buat sekte').addStringOption(o => o.setName('nama').setDescription('Nama').setRequired(true)).addStringOption(o => o.setName('deskripsi').setDescription('Deskripsi sekte')).addStringOption(o => o.setName('gambar-url').setDescription('URL gambar/lambang sekte')))
+      .addSubcommand(sub => sub.setName('delete').setDescription('Hapus sekte').addStringOption(o => o.setName('nama-sekte').setDescription('Nama').setRequired(true).setAutocomplete(true)))
+      .addSubcommand(sub => sub.setName('assign').setDescription('Set ketua').addStringOption(o => o.setName('nama-sekte').setDescription('Sekte').setRequired(true).setAutocomplete(true)).addUserOption(o => o.setName('user').setDescription('Player yang diangkat').setRequired(true)).addStringOption(o => o.setName('posisi').setDescription('Jabatan di sekte').setRequired(true).addChoices({ name: 'Ketua', value: 'Ketua' }, { name: 'Wakil Ketua', value: 'Wakil Ketua' }, { name: 'Tetua', value: 'Tetua' }, { name: 'Anggota', value: 'Anggota' })))
+      .addSubcommand(sub => sub.setName('remove-member').setDescription('Keluarkan anggota').addStringOption(o => o.setName('nama-sekte').setDescription('Sekte').setRequired(true).setAutocomplete(true)).addUserOption(o => o.setName('user').setDescription('Anggota').setRequired(true)))
       .addSubcommand(sub => sub.setName('give-asset').setDescription('Beri aset').addStringOption(o => o.setName('nama-sekte').setDescription('Sekte').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('nama-aset').setDescription('Aset').setRequired(true).setAutocomplete(true)).addIntegerOption(o => o.setName('jumlah').setDescription('Jumlah')))
       .addSubcommand(sub => sub.setName('give-resource').setDescription('Beri resource').addStringOption(o => o.setName('nama-sekte').setDescription('Sekte').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('nama-item').setDescription('Item').setRequired(true).setAutocomplete(true)).addIntegerOption(o => o.setName('jumlah').setDescription('Jumlah')))
-      .addSubcommand(sub => sub.setName('war').setDescription('Perang').addStringOption(o => o.setName('penyerang').setDescription('Penyerang').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('bertahan').setDescription('Bertahan').setRequired(true).setAutocomplete(true)))
+      .addSubcommand(sub => sub.setName('war').setDescription('Perang').addStringOption(o => o.setName('sekte-menang').setDescription('Penyerang').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('sekte-kalah').setDescription('Bertahan').setRequired(true).setAutocomplete(true)))
     )
 
     // TOURNAMENT GROUP
