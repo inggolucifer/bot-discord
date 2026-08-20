@@ -65,7 +65,16 @@ module.exports = {
       .addSubcommand(sub => sub.setName('unfreeze').setDescription('Unfreeze').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)))
       .addSubcommand(sub => sub.setName('kill').setDescription('Bunuh').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)).addUserOption(o => o.setName('loot-untuk').setDescription('Beri loot ke').setRequired(true)))
       .addSubcommand(sub => sub.setName('force-unregister').setDescription('Hapus akun').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)))
-      .addSubcommand(sub => sub.setName('set-status').setDescription('Set custom status').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)).addStringOption(o => o.setName('status').setDescription('Status (kosong=hapus)')))
+      .addSubcommand(sub => sub.setName('set-status')
+        .setDescription('Set status karakter')
+        .addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true))
+        .addStringOption(o => o.setName('base-status').setDescription('Status dasar karakter').setRequired(true).addChoices(
+          { name: 'Active', value: 'active' },
+          { name: 'Frozen', value: 'frozen' },
+          { name: 'Dead', value: 'dead' }
+        ))
+        .addStringOption(o => o.setName('custom-status').setDescription('Status kustom (opsional)'))
+      )
     )
 
     // CHANNEL GROUP
