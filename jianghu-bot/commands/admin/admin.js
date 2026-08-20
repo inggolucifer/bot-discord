@@ -13,6 +13,7 @@ module.exports = {
       .addSubcommand(sub => sub.setName('edit').setDescription('Edit item (via modal)').addStringOption(o => o.setName('nama').setDescription('Nama item').setRequired(true).setAutocomplete(true)))
       .addSubcommand(sub => sub.setName('delete').setDescription('Hapus item permanen').addStringOption(o => o.setName('nama').setDescription('Nama item').setRequired(true).setAutocomplete(true)))
       .addSubcommand(sub => sub.setName('remove').setDescription('Hapus item dari pemain').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)).addStringOption(o => o.setName('nama').setDescription('Nama item').setRequired(true).setAutocomplete(true)).addIntegerOption(o => o.setName('jumlah').setDescription('Jumlah').setMinValue(1)))
+      .addSubcommand(sub => sub.setName('set-image').setDescription('Atur gambar/image url untuk item').addStringOption(o => o.setName('nama-item').setDescription('Nama item').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('image-url').setDescription('URL Gambar').setRequired(true)))
     )
 
     // PET GROUP
