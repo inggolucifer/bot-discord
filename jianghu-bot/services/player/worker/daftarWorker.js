@@ -2,13 +2,14 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'
 const Player = require('../../../models/Player');
 const WorkerContract = require('../../../models/WorkerContract');
 const { refreshWorkerChannel } = require('../../../services/workerChannelService');
+const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('daftar-worker')
     .setDescription('Tawarkan jasamu sebagai Worker untuk dipekerjakan oleh player lain')
-    .addIntegerOption((o) => o.setName('harga').setDescription('Harga per jam (minimal 2 silver)').setRequired(true).setMinValue(2))
-    .addIntegerOption((o) => o.setName('durasi-maks').setDescription('Durasi maksimal yang kamu tawarkan (dalam jam)').setRequired(true).setMinValue(1)),
+    .addIntegerOption((o) => o.setName(WORKER_OPTIONS.HARGA_PER_JAM).setDescription('Harga per jam (minimal 2 silver)').setRequired(true).setMinValue(2))
+    .addIntegerOption((o) => o.setName(WORKER_OPTIONS.MAKS_DURASI_JAM).setDescription('Durasi maksimal yang kamu tawarkan (dalam jam)').setRequired(true).setMinValue(1)),
 
   async execute(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
@@ -17,8 +18,8 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    const pricePerHour = interaction.options.getInteger('harga');
-    const maxDurationHours = interaction.options.getInteger('durasi-maks');
+    const pricePerHour = interaction.options.getInteger(WORKER_OPTIONS.HARGA_PER_JAM);
+    const maxDurationHours = interaction.options.getInteger(WORKER_OPTIONS.MAKS_DURASI_JAM);
 
     let contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId: interaction.user.id });
 
