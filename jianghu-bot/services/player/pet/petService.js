@@ -191,6 +191,62 @@ module.exports = {
       return interaction.editReply({ content: msg });
     }
 
+    if (sub === 'buyslot') {
+      if (player.petSlots >= 6) {
+        return interaction.editReply({ content: '❌ Maksimal slot pet adalah 6.' });
+      }
+
+      // Harga awal untuk slot ke-3 adalah 10 Gold (1000 silver)
+      // Slot 3: 1000 silver
+      // Slot 4: 1200 silver (+20%)
+      // Slot 5: 1440 silver (+20%)
+      // Slot 6: 1728 silver (+20%)
+      let baseCost = 1000;
+      let cost = Math.floor(baseCost * Math.pow(1.2, player.petSlots - 2));
+
+      if (player.totalWealth < cost) {
+        return interaction.editReply({ content: `❌ Kekayaanmu tidak cukup. Biaya buka slot ke-${player.petSlots + 1} adalah ${(cost / 100).toFixed(2)} Gold.` });
+      }
+
+      let remaining = cost;
+      if (player.currency.silver >= remaining) {
+        player.currency.silver -= remaining;
+        remaining = 0;
+      } else {
+        remaining -= player.currency.silver;
+        player.currency.silver = 0;
+
+        let goldNeeded = Math.ceil(remaining / 100);
+        if (player.currency.gold >= goldNeeded) {
+           player.currency.gold -= goldNeeded;
+           player.currency.silver += (goldNeeded * 100) - remaining;
+           remaining = 0;
+        } else {
+           remaining -= player.currency.gold * 100;
+           player.currency.gold = 0;
+
+           let jadeNeeded = Math.ceil(remaining / 10000);
+           if (player.currency.jade >= jadeNeeded) {
+              player.currency.jade -= jadeNeeded;
+              player.currency.silver += (jadeNeeded * 10000) - remaining;
+              remaining = 0;
+           } else {
+              remaining -= player.currency.jade * 10000;
+              player.currency.jade = 0;
+
+              let spiritNeeded = Math.ceil(remaining / 1000000);
+              player.currency.spirit -= spiritNeeded;
+              player.currency.silver += (spiritNeeded * 1000000) - remaining;
+           }
+        }
+      }
+
+      player.petSlots += 1;
+      await player.save();
+
+      return interaction.editReply({ content: `✅ Berhasil membuka pet slot ke-${player.petSlots}! (Biaya: ${(cost / 100).toFixed(2)} Gold)` });
+    }
+
     if (sub === 'battle') {
       const lawan = interaction.options.getUser('lawan');
       const petKamuId = interaction.options.getString('pet_kamu');
