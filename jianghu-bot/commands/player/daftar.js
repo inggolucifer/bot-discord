@@ -49,8 +49,13 @@ module.exports = {
     try {
       await interaction.member.setNickname(nama);
     } catch (e) {
-      // Bot mungkin tidak punya izin (misalnya target adalah Server Owner). Tidak fatal.
-      console.warn(`[DAFTAR] Gagal ubah nickname untuk ${interaction.user.id}:`, e.message);
+      // Bot mungkin tidak punya izin (misalnya target adalah Server Owner atau role hirarki bot lebih rendah). Tidak fatal.
+      if (e.code === 50013) {
+        // Missing Permissions, skip silently or log less severely
+        // console.warn(`[DAFTAR] Info: Gagal ubah nickname untuk ${interaction.user.id} karena hierarki role atau bot kurang izin "Manage Nicknames".`);
+      } else {
+        console.warn(`[DAFTAR] Gagal ubah nickname untuk ${interaction.user.id}:`, e.message);
+      }
     }
 
     // Pasang role ranah default kalau admin sudah mapping role untuk ranah awal ini

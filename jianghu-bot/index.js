@@ -20,7 +20,7 @@ client.commands = new Collection();
 const commandFolders = ['player', 'admin'];
 for (const folder of commandFolders) {
   const commandsPath = path.join(__dirname, 'commands', folder);
-  const commandFiles = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js'));
+  const commandFiles = fs.readdirSync(commandsPath).filter((f) => f.endsWith('.js') && !f.endsWith('Options.js'));
   for (const file of commandFiles) {
     const command = require(path.join(commandsPath, file));
     if (!command?.data || !command?.execute) {
