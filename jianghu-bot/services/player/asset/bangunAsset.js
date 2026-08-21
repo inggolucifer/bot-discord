@@ -27,12 +27,12 @@ module.exports = {
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
-    if (!asset.buildable || !asset.buildRequirements || asset.buildRequirements.length < 5) {
-      return interaction.editReply({ content: `❌ "${asset.name}" belum memiliki minimal 5 syarat material. Minta admin untuk mengaturnya.` });
-    }
-
     if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri. Beli lewat shop kalau tersedia.` });
+    }
+
+    if (!asset.buildRequirements || asset.buildRequirements.length === 0) {
+      return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri karena belum memiliki syarat material. Minta admin untuk mengaturnya.` });
     }
 
     const fakeRecipe = { materials: asset.buildRequirements };
