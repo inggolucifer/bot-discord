@@ -31,6 +31,12 @@ module.exports = {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri. Beli lewat shop kalau tersedia.` });
     }
 
+    const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
+    const maxAssetSlots = player.assetSlots || 1;
+    if (currentTotalAssets + 1 > maxAssetSlots) {
+      return interaction.editReply({ content: `❌ Lahan aset kamu penuh (${currentTotalAssets}/${maxAssetSlots}). Gunakan \`/asset tambah-slot\` untuk menambah kapasitas.` });
+    }
+
     if (!asset.buildRequirements || asset.buildRequirements.length === 0) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri karena belum memiliki syarat material. Minta admin untuk mengaturnya.` });
     }

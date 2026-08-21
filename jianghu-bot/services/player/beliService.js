@@ -42,6 +42,14 @@ module.exports = {
       return interaction.editReply({ content: `❌ Stok "${doc.name}" tersisa ${listing.stock}, tidak cukup untuk ${jumlah}.` });
     }
 
+    if (kategori === 'asset') {
+      const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
+      const maxAssetSlots = player.assetSlots || 1;
+      if (currentTotalAssets + jumlah > maxAssetSlots) {
+        return interaction.editReply({ content: `❌ Lahan aset kamu tidak cukup untuk menampung ${jumlah} aset baru (${currentTotalAssets}/${maxAssetSlots}). Gunakan \`/asset tambah-slot\` untuk menambah kapasitas.` });
+      }
+    }
+
     const totalHarga = listing.price * jumlah;
     if (player.currency[listing.priceCurrency] < totalHarga) {
       return interaction.editReply({ content: `❌ ${CURRENCY_LABEL[listing.priceCurrency]} kamu tidak cukup. Butuh ${totalHarga}, saldo ${player.currency[listing.priceCurrency]}.` });
