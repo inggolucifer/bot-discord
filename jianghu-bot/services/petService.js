@@ -11,21 +11,36 @@ const RANK_MULTIPLIER = {
 };
 
 /**
+ * Helper: Generate random multiplier between 1.0 and 2.5
+ */
+function getRandomStatMultiplier() {
+  return parseFloat((Math.random() * 1.5 + 1.0).toFixed(2));
+}
+
+/**
  * Buat instance pet baru berdasarkan base stat dari katalog
  */
 function createPetInstance(petDoc, nickname = null) {
   const multiplier = RANK_MULTIPLIER[petDoc.rank] || 1.0;
+
+  const statMultipliers = {
+    hp: getRandomStatMultiplier(),
+    atk: getRandomStatMultiplier(),
+    def: getRandomStatMultiplier(),
+    spd: getRandomStatMultiplier()
+  };
+
   return {
     instanceId: crypto.randomUUID(),
     petId: petDoc._id,
     nickname: nickname,
     level: 1,
     exp: 0,
-    hp: Math.floor(petDoc.baseHp * multiplier),
-    maxHp: Math.floor(petDoc.baseHp * multiplier),
-    atk: Math.floor(petDoc.baseAtk * multiplier),
-    def: Math.floor(petDoc.baseDef * multiplier),
-    spd: Math.floor(petDoc.baseSpd * multiplier),
+    hp: Math.floor(petDoc.baseHp * multiplier * statMultipliers.hp),
+    maxHp: Math.floor(petDoc.baseHp * multiplier * statMultipliers.hp),
+    atk: Math.floor(petDoc.baseAtk * multiplier * statMultipliers.atk),
+    def: Math.floor(petDoc.baseDef * multiplier * statMultipliers.def),
+    spd: Math.floor(petDoc.baseSpd * multiplier * statMultipliers.spd),
     hunger: 100,
     element: petDoc.element || 'Netral',
     wins: 0,
@@ -33,7 +48,8 @@ function createPetInstance(petDoc, nickname = null) {
     lastFedAt: null,
     lastBattledAt: null,
     isLocked: false,
-    affinity: 0
+    affinity: 0,
+    statMultipliers: statMultipliers
   };
 }
 
@@ -61,12 +77,14 @@ function addExp(petInstance, amount, petDoc) {
 
     const growth = petDoc.growthRate || 1.0;
     const rankMul = RANK_MULTIPLIER[petDoc.rank] || 1.0;
-    const statMul = growth * rankMul;
 
-    const hpUp = Math.floor((petDoc.baseHp * 0.1) * statMul) || 1;
-    const atkUp = Math.floor((petDoc.baseAtk * 0.1) * statMul) || 1;
-    const defUp = Math.floor((petDoc.baseDef * 0.1) * statMul) || 1;
-    const spdUp = Math.floor((petDoc.baseSpd * 0.1) * statMul) || 1;
+    // Fallback if old pet doesn't have statMultipliers
+    const pStatMul = petInstance.statMultipliers || { hp: 1.0, atk: 1.0, def: 1.0, spd: 1.0 };
+
+    const hpUp = Math.floor((petDoc.baseHp * 0.1) * growth * rankMul * pStatMul.hp) || 1;
+    const atkUp = Math.floor((petDoc.baseAtk * 0.1) * growth * rankMul * pStatMul.atk) || 1;
+    const defUp = Math.floor((petDoc.baseDef * 0.1) * growth * rankMul * pStatMul.def) || 1;
+    const spdUp = Math.floor((petDoc.baseSpd * 0.1) * growth * rankMul * pStatMul.spd) || 1;
 
     petInstance.maxHp += hpUp;
     petInstance.hp += hpUp;
@@ -108,7 +126,7 @@ function parsePetItemEffect(effectStr) {
  * Cek Element Advantage
  * Api > Angin > Tanah > Petir > Air > Api
  * Cahaya <> Kegelapan
- * Return: 1.2 (advantage), 0.8 (disadvantage), 1.0 (netral)
+ * Return: 1.25 (advantage), 0.75 (disadvantage), 1.0 (netral)
  */
 function getElementAdvantage(attackerEl, defenderEl) {
   if (attackerEl === defenderEl) return 1.0;
@@ -123,8 +141,8 @@ function getElementAdvantage(attackerEl, defenderEl) {
     'Kegelapan': 'Cahaya'
   };
 
-  if (advantages[attackerEl] === defenderEl) return 1.2;
-  if (advantages[defenderEl] === attackerEl) return 0.8;
+  if (advantages[attackerEl] === defenderEl) return 1.25;
+  if (advantages[defenderEl] === attackerEl) return 0.75;
   return 1.0;
 }
 

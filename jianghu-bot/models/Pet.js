@@ -19,7 +19,7 @@ const petSchema = new mongoose.Schema({
   baseAtk: { type: Number, default: 10 },
   baseDef: { type: Number, default: 5 },
   baseSpd: { type: Number, default: 8 },
-  maxLevel: { type: Number, default: 50 },
+  maxLevel: { type: Number, default: 100 },
   element: { type: String, enum: ELEMENTS, default: 'Netral' },
   growthRate: { type: Number, default: 1.0 },
 

@@ -11,7 +11,8 @@ module.exports = {
     .addSubcommand(sub => sub.setName('heal').setDescription('Sembuhkan HP pet').addStringOption(o => o.setName('pet').setDescription('Pilih pet').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('item').setDescription('Pilih potion dari inventory').setRequired(true).setAutocomplete(true)))
     .addSubcommand(sub => sub.setName('rename').setDescription('Ubah nama panggilan pet').addStringOption(o => o.setName('pet').setDescription('Pilih pet').setRequired(true).setAutocomplete(true)).addStringOption(o => o.setName('nama_baru').setDescription('Nama baru (maks 16 karakter)').setRequired(true)))
     .addSubcommand(sub => sub.setName('release').setDescription('Lepaskan pet ke alam liar').addStringOption(o => o.setName('pet').setDescription('Pilih pet yang mau dilepas').setRequired(true).setAutocomplete(true)))
-    .addSubcommand(sub => sub.setName('battle').setDescription('Tantang pet pemain lain').addUserOption(o => o.setName('lawan').setDescription('Pemain lawan').setRequired(true)).addStringOption(o => o.setName('pet_kamu').setDescription('Pilih pet yang akan bertarung').setRequired(true).setAutocomplete(true))),
+    .addSubcommand(sub => sub.setName('battle').setDescription('Tantang pet pemain lain').addUserOption(o => o.setName('lawan').setDescription('Pemain lawan').setRequired(true)).addStringOption(o => o.setName('pet_kamu').setDescription('Pilih pet yang akan bertarung').setRequired(true).setAutocomplete(true)))
+    .addSubcommand(sub => sub.setName('buyslot').setDescription('Beli tambahan slot pet (Maks 6)')),
 
   async autocomplete(interaction) {
     if (petService.autocomplete) return petService.autocomplete(interaction);

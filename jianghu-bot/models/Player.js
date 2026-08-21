@@ -26,6 +26,12 @@ const petOwnedSchema = new mongoose.Schema({
   lastBattledAt: { type: Date, default: null },
   isLocked: { type: Boolean, default: false }, // true saat sedang battle
   affinity: { type: Number, default: 0 }, // max 100
+  statMultipliers: {
+    hp: { type: Number, default: 1.0 },
+    atk: { type: Number, default: 1.0 },
+    def: { type: Number, default: 1.0 },
+    spd: { type: Number, default: 1.0 }
+  }
 }, { _id: false });
 
 const assetOwnedSchema = new mongoose.Schema({
@@ -63,12 +69,13 @@ const playerSchema = new mongoose.Schema({
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
+  petSlots: { type: Number, default: 2 },
   pets: {
     type: [petOwnedSchema],
     default: [],
     validate: {
-      validator: function(v) { return v.length <= 6; },
-      message: 'Maksimal 6 pet per player'
+      validator: function(v) { return v.length <= this.petSlots; },
+      message: 'Melebihi maksimal pet slot'
     }
   },
   assets: { type: [assetOwnedSchema], default: [] },
