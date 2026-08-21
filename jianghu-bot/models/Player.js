@@ -78,7 +78,18 @@ const playerSchema = new mongoose.Schema({
       message: 'Melebihi maksimal pet slot'
     }
   },
-  assets: { type: [assetOwnedSchema], default: [] },
+  assetSlots: { type: Number, default: 1 },
+  assets: {
+    type: [assetOwnedSchema],
+    default: [],
+    validate: {
+      validator: function(v) {
+        const totalAssets = v.reduce((sum, asset) => sum + (asset.quantity || 1), 0);
+        return totalAssets <= this.assetSlots;
+      },
+      message: 'Melebihi maksimal asset slot'
+    }
+  },
 
   customStatus: { type: String, default: null },
 
