@@ -34,6 +34,12 @@ module.exports = {
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
+    const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
+    const maxAssetSlots = player.assetSlots || 1;
+    if (currentTotalAssets + jumlah > maxAssetSlots) {
+      return interaction.editReply({ content: `❌ Lahan aset target tidak cukup. Saat ini: ${currentTotalAssets}/${maxAssetSlots}. Butuh ${jumlah} slot lagi. Target harus menambah slotnya.` });
+    }
+
     const owned = player.assets.find((a) => a.assetId.equals(asset._id));
     if (owned) {
       owned.quantity += jumlah;

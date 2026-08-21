@@ -42,6 +42,14 @@ module.exports = {
       return interaction.editReply({ content: '❌ Tidak bisa membeli listing milikmu sendiri. Gunakan `/cancel-listing` kalau mau menariknya.' });
     }
 
+    if (listing.type === 'asset') {
+      const currentTotalAssets = buyer.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
+      const maxAssetSlots = buyer.assetSlots || 1;
+      if (currentTotalAssets + listing.quantity > maxAssetSlots) {
+        return interaction.editReply({ content: `❌ Lahan aset kamu tidak cukup untuk menampung ${listing.quantity} aset baru (${currentTotalAssets}/${maxAssetSlots}). Gunakan \`/asset tambah-slot\` untuk menambah kapasitas.` });
+      }
+    }
+
     const totalHarga = listing.pricePerUnit * listing.quantity;
     if (buyer.currency[listing.currency] < totalHarga) {
       return interaction.editReply({ content: `❌ ${CURRENCY_LABEL[listing.currency]} kamu tidak cukup. Butuh ${totalHarga}, saldo ${buyer.currency[listing.currency]}.` });

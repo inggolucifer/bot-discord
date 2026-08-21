@@ -27,13 +27,15 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
     : '_Kosong_';
   embed.addFields({ name: '🎒 Inventory', value: invLine.slice(0, 1024) });
 
+  const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
+  const assetSlots = player.assetSlots || 1;
   const assetLine = assetDocs.length
     ? assetDocs.map((a) => {
         const underConstruction = isUnderConstruction(a.owned);
         return `🏠 **${a.doc.name}** x${a.quantity}${underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : ''}`;
       }).join('\n')
     : '_Belum punya aset_';
-  embed.addFields({ name: '🏠 Asset', value: assetLine.slice(0, 1024) });
+  embed.addFields({ name: `🏠 Asset (${currentTotalAssets}/${assetSlots} Slot Lahan)`, value: assetLine.slice(0, 1024) });
 
   const petLine = petDocs.length
     ? petDocs.map((p) => {
