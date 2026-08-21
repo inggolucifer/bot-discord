@@ -13,9 +13,9 @@ module.exports = {
         { name: '🧍 Karakter', value: '`/daftar [nama]` — Daftar karakter baru\n`/profil [@user]` — Lihat profil karakter\n`/ubah-umur [umur-baru]` — Ubah umur karaktermu\n`/restart-karakter` — Restart karakter yang sudah mati' },
         { name: '💰 Currency', value: '`/convert [dari] [ke] [jumlah]` — Konversi mata uang\n`/transfer-currency @user [jenis] [jumlah]` — Kirim currency\n`/daily` — Klaim hadiah harian\n`/claim-profit` — Klaim profit dari aset' },
         { name: '🤝 Trade & Loot', value: '`/barter-offer @user ...` — Ajukan barter\n`/loot [nama]` — Ambil harta dari mayat' },
-        { name: '🎒 Aset, Pet, Item', value: '`/asset cek` — Lihat detail aset\n`/asset bangun` — Bangun aset\n`/pet list`, `status`, `feed`, `heal`, `rename`, `release`, `battle`\n`/item cek`, `cari`, `craft`' },
+        { name: '🎒 Aset, Pet, Item', value: '`/asset cek`, `bangun`, `tambah-slot`\n`/pet list`, `status`, `feed`, `heal`, `rename`, `release`, `battle`, `buyslot`\n`/item cek`, `cari`, `craft`' },
         { name: '⚒️ Worker', value: '`/worker daftar`, `batal`, `ubah`, `pindah`, `pekerja-saya`, `sewa-sistem`' },
-        { name: '🏪 Shop & Market', value: '`/shop lihat`, `beli`, `jual` — Toko Sistem & Pemain\n`/market jual-item`, `jual-pet`, `jual-asset`, `beli`, `batal` — Jualan Pemain' },
+        { name: '🏪 Shop, Market, Lelang', value: '`/shop lihat`, `beli`, `jual` — Toko Sistem\n`/market jual-item`, `jual-pet`, `jual-asset`, `beli`, `batal` — Market Pemain\n`/lelang bid`, `request` — Lelang Sistem & Pemain' },
         { name: '🏯 Sekte', value: '`/sekte info`, `list`, `leaderboard`, `donasi`, `deposit-resource`, `bangun-asset`, `craft`, `claim-profit`, `kelola-anggota`, `kick-anggota`' },
         { name: '🏆 Turnamen & Rank', value: '`/tournament bracket [nama]` — Lihat bracket\n`/leaderboard` — 10 player terkaya' },
       )
