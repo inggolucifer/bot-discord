@@ -14,7 +14,7 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
       { name: '⚧ Jenis Kelamin', value: player.gender || '_(belum diisi)_', inline: true },
       { name: '🏯 Sekte/Afiliasi', value: sectRole ? `${player.sect} (${sectRole})` : player.sect, inline: true },
       { name: '📌 Status', value: player.customStatus ? player.customStatus : (player.status === 'active' ? '✅ Aktif' : player.status === 'frozen' ? '🥶 Dibekukan' : '☠️ Meninggal'), inline: true },
-      { name: '💰 Currency', value: formatCurrencyLine(player.currency) },
+      { name: '💰 Currency', value: `${formatCurrencyLine(player.currency)}\n\n**Currency Total**: 🪙 **${player.totalWealth}**` },
     );
 
   if (player.characterImage) embed.setImage(player.characterImage);
