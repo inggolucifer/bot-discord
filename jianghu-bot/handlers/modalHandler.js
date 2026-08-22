@@ -149,7 +149,8 @@ async function handleModal(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+    let imageUrl = null;
+    try { imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null; } catch (e) {}
     const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
     if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
     const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
@@ -172,7 +173,8 @@ async function handleModal(interaction) {
 
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+    let imageUrl = null;
+    try { imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null; } catch (e) {}
     const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
     if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
     const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
@@ -221,7 +223,8 @@ async function handleModal(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+    let imageUrl = null;
+    try { imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null; } catch (e) {}
     const profit = parseAmountCurrency(interaction.fields.getTextInputValue('profitInfo'));
     if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, flags: MessageFlags.Ephemeral });
     const price = parseAmountCurrencyRank(interaction.fields.getTextInputValue('priceInfo'));
@@ -244,7 +247,8 @@ async function handleModal(interaction) {
 
     const name = interaction.fields.getTextInputValue('name').trim();
     const description = interaction.fields.getTextInputValue('description').trim();
-    const imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null;
+    let imageUrl = null;
+    try { imageUrl = interaction.fields.getTextInputValue('imageUrl')?.trim() || null; } catch (e) {}
     const profit = parseAmountCurrency(interaction.fields.getTextInputValue('profitInfo'));
     if (profit.error) return interaction.reply({ content: `❌ ${profit.error}`, flags: MessageFlags.Ephemeral });
     const price = parseAmountCurrencyRank(interaction.fields.getTextInputValue('priceInfo'));
@@ -266,10 +270,13 @@ async function handleModal(interaction) {
     const rt = parseRealm(interaction.fields.getTextInputValue('realm'));
     if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
 
-    const stage = interaction.fields.getTextInputValue('stage')?.trim() || '-';
+    let stage = '-';
+    try { stage = interaction.fields.getTextInputValue('stage')?.trim() || '-'; } catch (e) {}
     const ageRaw = interaction.fields.getTextInputValue('age').trim();
-    const genderRaw = interaction.fields.getTextInputValue('gender')?.trim() || '';
-    const characterImage = interaction.fields.getTextInputValue('characterImage')?.trim() || null;
+    let genderRaw = '';
+    try { genderRaw = interaction.fields.getTextInputValue('gender')?.trim() || ''; } catch (e) {}
+    let characterImage = null;
+    try { characterImage = interaction.fields.getTextInputValue('characterImage')?.trim() || null; } catch (e) {}
 
     const age = parseInt(ageRaw, 10);
     if (!Number.isInteger(age) || age < 0) return interaction.reply({ content: '❌ Umur harus angka valid.', flags: MessageFlags.Ephemeral });
