@@ -77,7 +77,15 @@ module.exports = {
       }
 
       // Tipe Worker: material/item
+      // HANYA jika TIDAK membutuhkan input material. Jika membutuhkan input (workerInputMaterials.length > 0),
+      // maka aset ini sepenuhnya diproses oleh auto-cron job (workerAutoProcess), jadi dilewati di sini agar tidak double.
       if (doc.workerOutputItemId && doc.workerOutputQuantity > 0 && (claimTipe === 'all' || claimTipe === 'item')) {
+        if (doc.workerInputMaterials && doc.workerInputMaterials.length > 0) {
+            // Aset ini diproses otomatis setiap menit, cukup berikan status di UI.
+            underConstruction.push(`${doc.name} ⚙️ (Diproses otomatis)`);
+            continue;
+        }
+
         const hasil = hoursPassed * doc.workerOutputQuantity * owned.quantity;
         const ownedItem = player.inventory.find((i) => i.itemId.equals(doc.workerOutputItemId));
         if (ownedItem) ownedItem.quantity += hasil;

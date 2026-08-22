@@ -33,6 +33,7 @@ const routeMap = {
   'assetaddrecipe': 'adminAssetAddRecipe',
   'assetremoverecipe': 'adminAssetRemoveRecipe',
   'assetsetworker': 'adminAssetSetWorker',
+  'assetsetworkerinput': 'adminAssetSetWorkerInput',
   'assetremoveworker': 'adminAssetRemoveWorker',
 
   // SHOP

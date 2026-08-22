@@ -4,6 +4,7 @@ const path = require('path');
 const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js');
 const { connectDB } = require('./config/database');
 const { runScheduledCleanup } = require('./utils/logCleanup');
+const { runWorkerAutoProcess } = require('./utils/workerAutoProcess');
 
 const client = new Client({
   intents: [
@@ -56,6 +57,12 @@ for (const file of eventFiles) {
       runScheduledCleanup(client).catch((e) => console.error('[LOG-CLEANUP] Gagal cleanup terjadwal:', e.message));
     }, 24 * 60 * 60 * 1000); // 24 jam
   }, 2 * 60 * 1000); // tunggu 2 menit setelah startup
+
+  // ====== Jadwal auto-process worker (Interval Ringan per 1 menit) ======
+  setInterval(() => {
+    runWorkerAutoProcess(client).catch(e => console.error('[WORKER-CRON] Gagal memproses worker otomatis:', e));
+  }, 1 * 60 * 1000); // 1 menit
+
 })();
 
 // Tangani error yang tidak tertangkap supaya bot tidak crash diam-diam
