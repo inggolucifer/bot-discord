@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const Item = require('../../../models/Item');
 const { getRankStyle } = require('../../../utils/dramatic');
 const { CURRENCY_LABEL, CURRENCY_EMOJI } = require('../../../utils/currency');
@@ -81,7 +81,7 @@ module.exports = {
 
       collector.on('collect', async (i) => {
         if (i.user.id !== interaction.user.id) {
-          return i.reply({ content: '❌ Anda tidak dapat menggunakan tombol ini.', flags: ['Ephemeral'] });
+          return i.reply({ content: '❌ Anda tidak dapat menggunakan tombol ini.', flags: MessageFlags.Ephemeral });
         }
 
         if (i.customId === 'prev_page' && currentPage > 0) {
