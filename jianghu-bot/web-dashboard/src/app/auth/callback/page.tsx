@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
@@ -10,6 +10,7 @@ function AuthCallbackContent() {
   const searchParams = useSearchParams();
   const login = useAuthStore((state) => state.login);
   const [error, setError] = useState<string | null>(null);
+  const hasAuthenticated = useRef(false);
 
   useEffect(() => {
     const code = searchParams.get('code');
@@ -18,6 +19,9 @@ function AuthCallbackContent() {
       setError('Kode otorisasi tidak ditemukan.');
       return;
     }
+
+    if (hasAuthenticated.current) return;
+    hasAuthenticated.current = true;
 
     const authenticate = async () => {
       try {

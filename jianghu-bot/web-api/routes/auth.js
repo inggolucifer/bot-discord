@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
             grant_type: 'authorization_code',
             code: code,
             redirect_uri: redirectUri
-        }), {
+        }).toString(), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
