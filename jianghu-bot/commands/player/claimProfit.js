@@ -85,7 +85,7 @@ module.exports = {
         const hasil = hoursPassed * doc.workerOutputQuantity * owned.quantity;
         const ownedItem = player.inventory.find((i) => i.itemId.equals(doc.workerOutputItemId));
         if (ownedItem) ownedItem.quantity += hasil;
-        else player.inventory.push({ itemId: doc.workerOutputItemId, quantity: hasil });
+        else if (doc.workerOutputItemId) player.inventory.push({ itemId: doc.workerOutputItemId, quantity: hasil });
         claimedNow.push(`${doc.name} x${owned.quantity} → ⛏️ ${hasil}x ${doc.workerOutputItemName}`);
         claimedSomething = true;
       }

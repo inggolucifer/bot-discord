@@ -66,7 +66,7 @@ module.exports = {
         const hasil = doc.workerOutputQuantity * owned.quantity;
         const ownedRes = sect.resources.find((r) => r.itemId.equals(doc.workerOutputItemId));
         if (ownedRes) ownedRes.quantity += hasil;
-        else sect.resources.push({ itemId: doc.workerOutputItemId, quantity: hasil });
+        else if (doc.workerOutputItemId) sect.resources.push({ itemId: doc.workerOutputItemId, quantity: hasil });
         materialClaimed.push(`${doc.name} x${owned.quantity} → ⛏️ ${hasil}x ${doc.workerOutputItemName} (masuk stok sekte)`);
         claimedSomething = true;
       }
