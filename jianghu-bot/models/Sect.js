@@ -6,6 +6,8 @@ const sectAssetSchema = new mongoose.Schema({
   quantity: { type: Number, default: 1 },
   lastClaimAt: { type: Date, default: null },
   constructionCompleteAt: { type: Date, default: null },
+  isHalted: { type: Boolean, default: false },
+  lastWarningSentAt: { type: Date, default: null },
 }, { _id: false });
 
 const sectResourceSchema = new mongoose.Schema({
