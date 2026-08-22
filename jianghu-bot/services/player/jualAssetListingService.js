@@ -4,6 +4,7 @@ const Asset = require('../../models/Asset');
 const PlayerListing = require('../../models/PlayerListing');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
+const { isUnderConstruction } = require('../../utils/crafting');
 
 const MAX_LISTING_PER_PLAYER = 10;
 const LISTING_FEE_RATE = 0.05;
@@ -47,6 +48,10 @@ module.exports = {
     const owned = player.assets.find((a) => a.assetId.equals(asset._id));
     if (!owned || owned.quantity < jumlah) {
       return interaction.editReply({ content: `❌ Aset "${asset.name}" kamu tidak cukup. Kamu punya ${owned?.quantity || 0}.` });
+    }
+
+    if (isUnderConstruction(owned)) {
+      return interaction.editReply({ content: `❌ Aset "${asset.name}" masih dalam tahap pembangunan dan tidak bisa dijual.` });
     }
 
     // Aset ditahan escrow

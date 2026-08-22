@@ -3,6 +3,7 @@ const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const WorkerContract = require('../../../models/WorkerContract');
 const { logTransaction } = require('../../../utils/logger');
+const { isUnderConstruction } = require('../../../utils/crafting');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -46,6 +47,10 @@ module.exports = {
 
     const ownedAsset = player.assets[assetIndex];
     const assetRef = ownedAsset.assetId; // Fully populated Asset document
+
+    if (isUnderConstruction(ownedAsset)) {
+      return interaction.editReply({ content: `❌ Aset "**${assetRef.name}**" masih dalam tahap pembangunan dan tidak bisa dihancurkan.` });
+    }
 
     // Free any assigned workers back to idle status
     if (ownedAsset.assignedWorkers && ownedAsset.assignedWorkers.length > 0) {

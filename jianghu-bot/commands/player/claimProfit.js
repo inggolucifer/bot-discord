@@ -39,12 +39,8 @@ module.exports = {
       const doc = assetDocs.find((d) => d._id.equals(owned.assetId));
       if (!doc) continue;
 
-      if (owned.status === 'pending') {
-         underConstruction.push(`${doc.name} 🚧 (Pending - butuh worker)`);
-         continue;
-      }
-      if (owned.status === 'building') {
-         underConstruction.push(`${doc.name} 🚧 (Sedang dibangun)`);
+      if (isUnderConstruction(owned)) {
+         underConstruction.push(`${doc.name} 🚧 (Sedang dibangun / butuh worker)`);
          continue;
       }
 
