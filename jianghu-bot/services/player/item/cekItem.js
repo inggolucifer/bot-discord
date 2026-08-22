@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Item = require('../../../models/Item');
+const Asset = require('../../../models/Asset');
+const Shop = require('../../../models/Shop');
 const { buildItemEmbed } = require('../../../utils/embeds');
 
 module.exports = {
@@ -20,6 +22,23 @@ module.exports = {
     const nama = interaction.options.getString('nama');
     const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${nama}" tidak ditemukan.` });
-    return interaction.editReply({ embeds: [buildItemEmbed(item)] });
+
+    // Find sources
+    const shopEntry = await Shop.findOne({ guildId: interaction.guildId, refId: item._id, isActive: true });
+
+    const assetsProducing = await Asset.find({
+      guildId: interaction.guildId,
+      $or: [
+        { workerOutputItemId: item._id },
+        { 'recipes.resultItemId': item._id }
+      ]
+    });
+
+    const sourceData = {
+      shop: shopEntry,
+      assets: assetsProducing
+    };
+
+    return interaction.editReply({ embeds: [buildItemEmbed(item, sourceData)] });
   },
 };
