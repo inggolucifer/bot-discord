@@ -133,42 +133,46 @@ async function seedEconomy() {
     // 4. ITEMS: MATERIAL OLAHAN & CRAFTED (PROCESSED)
     // =========================================================================
     const procMats = [
-      // Primitif & Desa (Existing)
-      { name: "Daging Bakar", rank: "Common", category: "consume", tier: 1, description: "Daging di api unggun.", basePrice: 5, priceCurrency: "silver", effect: "Memulihkan 15 Hunger" },
-      { name: "Batu Bata", rank: "Common", category: "material", tier: 1, description: "Tanah liat bakar.", basePrice: 5, priceCurrency: "silver" },
-      { name: "Genteng Keramik", rank: "Uncommon", category: "material", tier: 2, description: "Atap kokoh.", basePrice: 10, priceCurrency: "silver" },
-      { name: "Papan Kayu", rank: "Common", category: "material", tier: 1, description: "Kayu halus.", basePrice: 5, priceCurrency: "silver" },
-      { name: "Balok Batu", rank: "Common", category: "material", tier: 1, description: "Batu pahat.", basePrice: 5, priceCurrency: "silver" },
-      { name: "Kaca Kusam", rank: "Common", category: "material", tier: 1, description: "Pasir lebur.", basePrice: 10, priceCurrency: "silver" },
-      { name: "Semen Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Semen kapur.", basePrice: 25, priceCurrency: "silver" },
-      { name: "Benang", rank: "Common", category: "material", tier: 1, description: "Pintalan kapas.", basePrice: 5, priceCurrency: "silver" },
-      { name: "Kain Katun", rank: "Common", category: "material", tier: 1, description: "Tenunan benang.", basePrice: 20, priceCurrency: "silver" },
-      { name: "Kulit Samak", rank: "Uncommon", category: "material", tier: 2, description: "Kulit kuat.", basePrice: 20, priceCurrency: "silver" },
-      { name: "Batangan Tembaga", rank: "Common", category: "material", tier: 1, description: "Tembaga murni.", basePrice: 20, priceCurrency: "silver" },
-      { name: "Batangan Timah", rank: "Common", category: "material", tier: 1, description: "Timah murni.", basePrice: 20, priceCurrency: "silver" },
-      { name: "Perunggu", rank: "Uncommon", category: "material", tier: 2, description: "Paduan logam.", basePrice: 50, priceCurrency: "silver" },
-      { name: "Batangan Besi", rank: "Uncommon", category: "material", tier: 2, description: "Besi lebur.", basePrice: 80, priceCurrency: "silver" },
-      { name: "Baja Keras", rank: "Rare", category: "material", tier: 3, description: "Besi tempa.", basePrice: 2, priceCurrency: "gold" },
-      { name: "Batangan Emas", rank: "Rare", category: "material", tier: 3, description: "Beliung emas.", basePrice: 5, priceCurrency: "gold" },
-      { name: "Garam Dapur", rank: "Common", category: "material", tier: 1, description: "Garam pengawet.", basePrice: 5, priceCurrency: "silver" },
-      { name: "Tepung Terigu", rank: "Common", category: "material", tier: 1, description: "Gilingan gandum.", basePrice: 8, priceCurrency: "silver" },
-      { name: "Beras Putih", rank: "Common", category: "material", tier: 1, description: "Padi tumbuk.", basePrice: 8, priceCurrency: "silver" },
-      { name: "Nasi Putih", rank: "Common", category: "consume", tier: 1, description: "Nasi pulen.", basePrice: 15, priceCurrency: "silver", effect: "Memulihkan 20 Hunger" },
-      { name: "Keju", rank: "Uncommon", category: "consume", tier: 2, description: "Olahan susu.", basePrice: 20, priceCurrency: "silver", effect: "Memulihkan 30 Hunger" },
-      { name: "Ikan Asin", rank: "Uncommon", category: "consume", tier: 2, description: "Ikan awet.", basePrice: 20, priceCurrency: "silver", effect: "Memulihkan 30 Hunger" },
-      { name: "Anggur Merah (Wine)", rank: "Uncommon", category: "consume", tier: 2, description: "Fermentasi anggur.", basePrice: 30, priceCurrency: "silver" },
-      { name: "Arak Beras (Sake)", rank: "Rare", category: "consume", tier: 3, description: "Minuman murim.", basePrice: 1, priceCurrency: "gold" },
+      // Primitif & Desa (Harga Shop Sistem dipompa ekstrim (Pajak Kemalasan) agar Player Trade lebih laku)
+      { name: "Daging Bakar", rank: "Common", category: "consume", tier: 1, description: "Daging di api unggun.", basePrice: 15, priceCurrency: "silver", effect: "Memulihkan 15 Hunger" },
+      { name: "Batu Bata", rank: "Common", category: "material", tier: 1, description: "Tanah liat bakar.", basePrice: 15, priceCurrency: "silver" },
+      { name: "Genteng Keramik", rank: "Uncommon", category: "material", tier: 2, description: "Atap kokoh.", basePrice: 40, priceCurrency: "silver" },
+      { name: "Papan Kayu", rank: "Common", category: "material", tier: 1, description: "Kayu halus.", basePrice: 15, priceCurrency: "silver" },
+      { name: "Balok Batu", rank: "Common", category: "material", tier: 1, description: "Batu pahat.", basePrice: 15, priceCurrency: "silver" },
+      { name: "Kaca Kusam", rank: "Common", category: "material", tier: 1, description: "Pasir lebur.", basePrice: 30, priceCurrency: "silver" },
+      { name: "Semen Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Semen kapur.", basePrice: 75, priceCurrency: "silver" },
+      { name: "Benang", rank: "Common", category: "material", tier: 1, description: "Pintalan kapas.", basePrice: 20, priceCurrency: "silver" },
+      { name: "Kain Katun", rank: "Common", category: "material", tier: 1, description: "Tenunan benang.", basePrice: 80, priceCurrency: "silver" },
+      { name: "Kulit Samak", rank: "Uncommon", category: "material", tier: 2, description: "Kulit kuat.", basePrice: 60, priceCurrency: "silver" },
 
-      // Murim & Xianxia (Existing + Expansion)
-      { name: "Baja Hitam Mistis", rank: "Epic", category: "material", tier: 5, description: "Logam senjata roh.", basePrice: 20, priceCurrency: "gold" },
-      { name: "Batangan Besi Dingin", rank: "Epic", category: "material", tier: 5, description: "Besi berelemen es.", basePrice: 50, priceCurrency: "gold" },
-      { name: "Baja Darah (Blood Steel)", rank: "Epic", category: "material", tier: 5, description: "Baja yang direndam darah spirit beast.", basePrice: 60, priceCurrency: "gold" },
-      { name: "Sutra Ulat Salju", rank: "Epic", category: "material", tier: 5, description: "Kain sekuat baja.", basePrice: 40, priceCurrency: "gold" },
-      { name: "Jimat Giok Roh", rank: "Legendary", category: "material", tier: 7, description: "Media array tertinggi.", basePrice: 2, priceCurrency: "jade" },
-      { name: "Kertas Jimat", rank: "Rare", category: "material", tier: 3, description: "Kertas roh.", basePrice: 10, priceCurrency: "gold" },
-      { name: "Pil Pengumpul Qi", rank: "Epic", category: "pill", tier: 5, description: "Sirkulasi Qi besar.", basePrice: 1, priceCurrency: "jade" },
-      { name: "Pil Penempa Tulang", rank: "Legendary", category: "pill", tier: 7, description: "Menghancurkan dan membangun ulang tulang.", basePrice: 5, priceCurrency: "jade" },
-      { name: "Batu Roh Utuh", rank: "Legendary", category: "material", tier: 7, description: "100 pecahan batu roh.", basePrice: 10, priceCurrency: "jade" }
+      // Metalurgi & Pandai Besi (Harga sangat mahal untuk menekan agar pemain pakai Tungku Peleburan)
+      { name: "Batangan Tembaga", rank: "Common", category: "material", tier: 1, description: "Tembaga murni.", basePrice: 80, priceCurrency: "silver" },
+      { name: "Batangan Timah", rank: "Common", category: "material", tier: 1, description: "Timah murni.", basePrice: 80, priceCurrency: "silver" },
+      { name: "Perunggu", rank: "Uncommon", category: "material", tier: 2, description: "Paduan logam.", basePrice: 3, priceCurrency: "gold" },
+      { name: "Batangan Besi", rank: "Uncommon", category: "material", tier: 2, description: "Besi lebur.", basePrice: 5, priceCurrency: "gold" },
+      { name: "Baja Keras", rank: "Rare", category: "material", tier: 3, description: "Besi tempa.", basePrice: 15, priceCurrency: "gold" },
+      { name: "Batangan Emas", rank: "Rare", category: "material", tier: 3, description: "Batangan kemurnian tinggi.", basePrice: 30, priceCurrency: "gold" },
+
+      // Kuliner & Obat
+      { name: "Garam Dapur", rank: "Common", category: "material", tier: 1, description: "Garam pengawet.", basePrice: 15, priceCurrency: "silver" },
+      { name: "Tepung Terigu", rank: "Common", category: "material", tier: 1, description: "Gilingan gandum.", basePrice: 25, priceCurrency: "silver" },
+      { name: "Beras Putih", rank: "Common", category: "material", tier: 1, description: "Padi tumbuk.", basePrice: 25, priceCurrency: "silver" },
+      { name: "Nasi Putih", rank: "Common", category: "consume", tier: 1, description: "Nasi pulen.", basePrice: 40, priceCurrency: "silver", effect: "Memulihkan 20 Hunger" },
+      { name: "Keju", rank: "Uncommon", category: "consume", tier: 2, description: "Olahan susu.", basePrice: 60, priceCurrency: "silver", effect: "Memulihkan 30 Hunger" },
+      { name: "Ikan Asin", rank: "Uncommon", category: "consume", tier: 2, description: "Ikan awet.", basePrice: 50, priceCurrency: "silver", effect: "Memulihkan 30 Hunger" },
+      { name: "Anggur Merah (Wine)", rank: "Uncommon", category: "consume", tier: 2, description: "Fermentasi anggur.", basePrice: 80, priceCurrency: "silver" },
+      { name: "Arak Beras (Sake)", rank: "Rare", category: "consume", tier: 3, description: "Minuman murim.", basePrice: 3, priceCurrency: "gold" },
+
+      // Murim & Xianxia (Material Tingkat Dewa, Shop System gila-gilaan mahalnya)
+      { name: "Baja Hitam Mistis", rank: "Epic", category: "material", tier: 5, description: "Logam senjata roh.", basePrice: 80, priceCurrency: "gold" },
+      { name: "Batangan Besi Dingin", rank: "Epic", category: "material", tier: 5, description: "Besi berelemen es.", basePrice: 200, priceCurrency: "gold" },
+      { name: "Baja Darah (Blood Steel)", rank: "Epic", category: "material", tier: 5, description: "Baja yang direndam darah spirit beast.", basePrice: 250, priceCurrency: "gold" },
+      { name: "Sutra Ulat Salju", rank: "Epic", category: "material", tier: 5, description: "Kain sekuat baja.", basePrice: 150, priceCurrency: "gold" },
+      { name: "Jimat Giok Roh", rank: "Legendary", category: "material", tier: 7, description: "Media array tertinggi.", basePrice: 8, priceCurrency: "jade" },
+      { name: "Kertas Jimat", rank: "Rare", category: "material", tier: 3, description: "Kertas roh.", basePrice: 30, priceCurrency: "gold" },
+      { name: "Pil Pengumpul Qi", rank: "Epic", category: "pill", tier: 5, description: "Sirkulasi Qi besar.", basePrice: 4, priceCurrency: "jade" },
+      { name: "Pil Penempa Tulang", rank: "Legendary", category: "pill", tier: 7, description: "Menghancurkan dan membangun ulang tulang.", basePrice: 20, priceCurrency: "jade" },
+      { name: "Batu Roh Utuh", rank: "Legendary", category: "material", tier: 7, description: "100 pecahan batu roh.", basePrice: 50, priceCurrency: "jade" }
     ];
     await createItems(procMats);
 
