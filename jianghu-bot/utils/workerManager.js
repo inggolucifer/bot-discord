@@ -60,4 +60,25 @@ async function syncWorkerContracts(client, guildId) {
   }
 }
 
-module.exports = { syncWorkerContracts };
+
+
+// Fungsi ini dipanggil dari cron job untuk mengecek dan memproses kontrak kadaluarsa di semua guild secara global
+async function syncAllWorkerContracts(client) {
+  const expiredContracts = await WorkerContract.find({
+    status: 'working',
+    workingUntil: { $lt: new Date() }
+  });
+
+  if (expiredContracts.length === 0) return;
+
+  const affectedGuilds = new Set();
+  for (const contract of expiredContracts) {
+    affectedGuilds.add(contract.guildId);
+  }
+
+  for (const guildId of affectedGuilds) {
+    await syncWorkerContracts(client, guildId).catch(console.error);
+  }
+}
+
+module.exports = { syncWorkerContracts, syncAllWorkerContracts };

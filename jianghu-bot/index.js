@@ -5,6 +5,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const { connectDB } = require('./config/database');
 const { runScheduledCleanup } = require('./utils/logCleanup');
 const { runWorkerAutoProcess } = require('./utils/workerAutoProcess');
+const { syncAllWorkerContracts } = require('./utils/workerManager');
 const setupServer = require('./web-api/server');
 
 const client = new Client({
@@ -64,8 +65,17 @@ for (const file of eventFiles) {
   }, 2 * 60 * 1000); // tunggu 2 menit setelah startup
 
   // ====== Jadwal auto-process worker (Interval Ringan per 1 menit) ======
-  setInterval(() => {
-    runWorkerAutoProcess(client).catch(e => console.error('[WORKER-CRON] Gagal memproses worker otomatis:', e));
+  setInterval(async () => {
+    try {
+      await runWorkerAutoProcess(client);
+    } catch (e) {
+      console.error('[WORKER-CRON] Gagal memproses worker otomatis:', e);
+    }
+    try {
+      await syncAllWorkerContracts(client);
+    } catch (e) {
+      console.error('[WORKER-CRON] Gagal sinkronisasi kontrak pekerja:', e);
+    }
   }, 1 * 60 * 1000); // 1 menit
 
 })();
