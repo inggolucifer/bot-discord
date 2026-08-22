@@ -34,11 +34,34 @@ module.exports = {
       ]
     });
 
+
     const sourceData = {
       shop: shopEntry,
       assets: assetsProducing
     };
 
-    return interaction.editReply({ embeds: [buildItemEmbed(item, sourceData)] });
+    // Find usages
+    const assetsUsingAsMaterial = await Asset.find({
+      guildId: interaction.guildId,
+      'recipes.materials.itemId': item._id
+    });
+
+    const assetsUsingToBuild = await Asset.find({
+      guildId: interaction.guildId,
+      'buildRequirements.itemId': item._id
+    });
+
+    const assetsUsingAsInput = await Asset.find({
+      guildId: interaction.guildId,
+      'workerInputMaterials.itemId': item._id
+    });
+
+    const usageData = {
+      asMaterial: assetsUsingAsMaterial,
+      toBuild: assetsUsingToBuild,
+      asInput: assetsUsingAsInput
+    };
+
+    return interaction.editReply({ embeds: [buildItemEmbed(item, sourceData, usageData)] });
   },
 };
