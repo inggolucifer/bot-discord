@@ -43,6 +43,8 @@ const assetOwnedSchema = new mongoose.Schema({
   progressAccumulated: { type: Number, default: 0 },
   lastProgressUpdate: { type: Date, default: null },
   status: { type: String, enum: ['pending', 'building', 'active'], default: 'active' },
+  isHalted: { type: Boolean, default: false },
+  lastWarningSentAt: { type: Date, default: null },
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({

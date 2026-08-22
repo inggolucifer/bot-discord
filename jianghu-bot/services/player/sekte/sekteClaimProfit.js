@@ -57,6 +57,12 @@ module.exports = {
       }
 
       if (doc.workerOutputItemId && doc.workerOutputQuantity > 0) {
+        if (doc.workerInputMaterials && doc.workerInputMaterials.length > 0) {
+            // Aset ini diproses otomatis
+            underConstruction.push(`${doc.name} ⚙️ (Diproses otomatis)`);
+            continue;
+        }
+
         const hasil = doc.workerOutputQuantity * owned.quantity;
         const ownedRes = sect.resources.find((r) => r.itemId.equals(doc.workerOutputItemId));
         if (ownedRes) ownedRes.quantity += hasil;

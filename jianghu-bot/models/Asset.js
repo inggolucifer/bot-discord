@@ -35,6 +35,7 @@ const assetSchema = new mongoose.Schema({
   workerOutputItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
   workerOutputItemName: { type: String, default: null },
   workerOutputQuantity: { type: Number, default: 0, min: 0 },
+  workerInputMaterials: { type: [recipeMaterialSchema], default: [] }, // Bahan yang dibutuhkan per jam produksi
 
   // Harga beli di shop (opsional)
   basePrice: { type: Number, default: 0, min: 0 },
