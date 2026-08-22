@@ -5,6 +5,7 @@ const Pet = require('../../models/Pet');
 const Asset = require('../../models/Asset');
 const { logTransaction } = require('../../utils/logger');
 const { CURRENCY_LABEL, CURRENCY_EMOJI } = require('../../utils/currency');
+const { isUnderConstruction } = require('../../utils/crafting');
 
 const SELL_RATE = 0.2; // 20% dari harga dasar
 const MODEL_MAP = { item: Item, pet: Pet, asset: Asset };
@@ -61,6 +62,10 @@ module.exports = {
 
     const owned = ownedList.find((x) => x[ownedField].equals(doc._id));
     if (!owned) return interaction.editReply({ content: `❌ Kamu tidak memiliki "${doc.name}".` });
+
+    if (kategori === 'asset' && isUnderConstruction(owned)) {
+      return interaction.editReply({ content: `❌ Aset "${doc.name}" masih dalam tahap pembangunan dan tidak bisa dijual.` });
+    }
 
     const jualJumlah = kategori === 'pet' ? 1 : jumlah; // pet dijual satuan (pakai entry terpisah per ekor)
     if (owned.quantity < jualJumlah) {
