@@ -8,6 +8,8 @@ const WorkerContract = require('../models/WorkerContract');
 const { logAdminAction, logTransaction } = require('../utils/logger');
 const { syncRealmRole } = require('../utils/realmRole');
 const { refreshWorkerChannel } = require('../services/workerChannelService');
+const { calculateProgress } = require('../utils/assetProgress');
+const GuildConfig = require('../models/GuildConfig');
 
 const VALID_RANKS = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 const VALID_CURRENCIES = ['silver', 'gold', 'jade', 'spirit'];
@@ -84,7 +86,38 @@ async function handleModal(interaction) {
     contract.currentEmployerId = interaction.user.id;
     contract.workingSince = new Date();
     contract.workingUntil = new Date(Date.now() + (hours * 3600000));
+
+    // Auto-assign worker ke aset yang kosong/sedang dibangun
+    let targetAsset = null;
+    let targetAssetDoc = null;
+    const playerAssetsDocs = await Asset.find({ _id: { $in: employer.assets.map(a => a.assetId) } });
+
+    for (const ownedAsset of employer.assets) {
+      if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+      const hasActiveWorker = ownedAsset.assignedWorkers.some(w => !w.endTime || w.endTime.getTime() > Date.now());
+      if (!hasActiveWorker) {
+        targetAsset = ownedAsset;
+        targetAssetDoc = playerAssetsDocs.find(d => d._id.equals(ownedAsset.assetId));
+        break;
+      }
+    }
+
+    if (targetAsset) {
+      targetAsset.progressAccumulated = (targetAsset.progressAccumulated || 0) + calculateProgress(targetAsset);
+      targetAsset.lastProgressUpdate = new Date();
+      targetAsset.assignedWorkers.push({ workerId: workerId, endTime: contract.workingUntil });
+      if (targetAsset.status === 'pending') targetAsset.status = 'building';
+      contract.currentAssetId = targetAssetDoc._id.toString();
+    }
+
     await contract.save();
+    await employer.save();
+
+    const workerPlayer = await Player.findOne({ discordId: workerId, guildId: interaction.guildId });
+    if (workerPlayer && targetAsset) {
+      workerPlayer.customStatus = `Sedang bekerja di asset ${targetAssetDoc.name} milik ${employer.characterName}`;
+      await workerPlayer.save();
+    }
 
     await refreshWorkerChannel(interaction.client, interaction.guildId);
 
@@ -93,7 +126,28 @@ async function handleModal(interaction) {
       currency: 'silver', amount: totalCost, itemDescription: `Menyewa worker selama ${hours} jam`
     });
 
-    return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Worker Berhasil Disewa').setDescription(`Kamu menyewa **${contract.workerName}** selama ${hours} jam dengan biaya **${totalCost} Silver**.\n\nSekarang kamu bisa memasukkannya ke dalam asetmu lewat command \`/worker pindah\`.`)] });
+    if (!targetAsset) {
+      const guildConfig = await GuildConfig.findOne({ guildId: interaction.guildId });
+      if (guildConfig && guildConfig.workerChannelId) {
+        try {
+          const channel = await interaction.client.channels.fetch(guildConfig.workerChannelId);
+          if (channel) {
+            channel.send(`⚠️ <@${interaction.user.id}>, pekerja <@${workerId}> yang baru kamu sewa sedang **menganggur** karena semua asetmu sudah terisi pekerja (atau kamu tidak punya aset)! Pekerja tidak akan menghasilkan profit hingga kamu membangun aset baru atau memindahkannya ke aset yang kosong.`);
+          }
+        } catch (e) {
+          console.error('[WorkerHire] Failed to send warning to worker channel:', e);
+        }
+      }
+      try {
+        await interaction.user.send(`⚠️ **Pekerja Menganggur!** Pekerja **${contract.workerName}** yang baru kamu sewa tidak bisa ditempatkan karena semua asetmu penuh. Ia sedang menganggur!`);
+      } catch(e) {}
+    }
+
+    const replyMsg = targetAsset
+      ? `Kamu menyewa **${contract.workerName}** selama ${hours} jam dengan biaya **${totalCost} Silver**.\n\nPekerja **otomatis ditempatkan** di aset **${targetAssetDoc.name}**!`
+      : `Kamu menyewa **${contract.workerName}** selama ${hours} jam dengan biaya **${totalCost} Silver**.\n\n⚠️ **Pekerja saat ini menganggur** karena tidak ada aset kosong yang ditemukan.`;
+
+    return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Worker Berhasil Disewa').setDescription(replyMsg)] });
   }
 
   // ---- Tambah Item ----
