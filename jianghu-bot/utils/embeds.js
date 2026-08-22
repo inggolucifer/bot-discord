@@ -49,7 +49,7 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
   return embed;
 }
 
-function buildItemEmbed(item, sourceData = null) {
+function buildItemEmbed(item, sourceData = null, usageData = null) {
   const style = getRankStyle(item.rank);
   const embed = new EmbedBuilder()
     .setColor(style.color)
@@ -81,10 +81,44 @@ function buildItemEmbed(item, sourceData = null) {
       sourceText = '❓ _Tidak ditemukan sumber yang diketahui (Mungkin drop khusus atau event)_';
     }
 
+
     embed.addFields({ name: '📍 Cara Mendapatkan', value: sourceText.substring(0, 1024) });
   }
 
+  if (usageData) {
+    let usageText = '';
+
+    if (usageData.asMaterial && usageData.asMaterial.length > 0) {
+      const craftedItems = new Set();
+      usageData.asMaterial.forEach(asset => {
+        asset.recipes.forEach(recipe => {
+          if (recipe.materials.some(m => m.itemId.toString() === item._id.toString())) {
+            craftedItems.add(recipe.resultItemName);
+          }
+        });
+      });
+      if (craftedItems.size > 0) {
+        usageText += `⚒️ **Crafting**: ${Array.from(craftedItems).join(', ')}\n`;
+      }
+    }
+
+    if (usageData.toBuild && usageData.toBuild.length > 0) {
+      const builtAssets = usageData.toBuild.map(a => a.name);
+      usageText += `🏗️ **Bahan Bangunan**: ${builtAssets.join(', ')}\n`;
+    }
+
+    if (usageData.asInput && usageData.asInput.length > 0) {
+      const inputAssets = usageData.asInput.map(a => a.name);
+      usageText += `⚙️ **Operasional Asset**: ${inputAssets.join(', ')}\n`;
+    }
+
+    if (usageText) {
+      embed.addFields({ name: '🛠️ Berguna Untuk', value: usageText.substring(0, 1024) });
+    }
+  }
+
   if (item.imageUrl) embed.setImage(item.imageUrl);
+
   return embed;
 }
 
