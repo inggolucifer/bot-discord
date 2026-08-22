@@ -49,7 +49,7 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
   return embed;
 }
 
-function buildItemEmbed(item) {
+function buildItemEmbed(item, sourceData = null) {
   const style = getRankStyle(item.rank);
   const embed = new EmbedBuilder()
     .setColor(style.color)
@@ -64,6 +64,26 @@ function buildItemEmbed(item) {
   if (item.basePrice > 0) {
     embed.addFields({ name: '💰 Harga Dasar', value: `${CURRENCY_EMOJI[item.priceCurrency]} ${item.basePrice} ${CURRENCY_LABEL[item.priceCurrency]}`, inline: true });
   }
+
+  if (sourceData) {
+    let sourceText = '';
+
+    if (sourceData.shop) {
+      sourceText += `🛒 **Shop**: Dijual seharga ${CURRENCY_EMOJI[sourceData.shop.priceCurrency]} ${sourceData.shop.price} ${CURRENCY_LABEL[sourceData.shop.priceCurrency]}\n`;
+    }
+
+    if (sourceData.assets && sourceData.assets.length > 0) {
+      const assetNames = sourceData.assets.map(a => `🏠 ${a.name}`).join(', ');
+      sourceText += `🔨 **Asset**: ${assetNames}\n`;
+    }
+
+    if (!sourceText) {
+      sourceText = '❓ _Tidak ditemukan sumber yang diketahui (Mungkin drop khusus atau event)_';
+    }
+
+    embed.addFields({ name: '📍 Cara Mendapatkan', value: sourceText.substring(0, 1024) });
+  }
+
   if (item.imageUrl) embed.setImage(item.imageUrl);
   return embed;
 }
