@@ -12,7 +12,7 @@ const transactionLogSchema = new mongoose.Schema({
       'craft', 'player_listing_create', 'player_listing_sale', 'player_listing_cancel',
       'sect_deposit', 'sect_claim_profit', 'sect_craft', 'sect_admin_grant',
       'sect_donate', 'sect_war_loot', 'worker_claim', 'sect_worker_claim',
-      'player_build_asset', 'sect_build_asset', 'hire_worker',
+      'player_build_asset', 'sect_build_asset', 'hire_worker', 'worker_salary',
     ],
     required: true,
   },
