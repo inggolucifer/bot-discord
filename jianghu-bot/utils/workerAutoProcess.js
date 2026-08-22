@@ -142,7 +142,7 @@ async function runWorkerAutoProcess(client) {
             if (outputItem) {
                 outputItem.quantity += totalOutput;
             } else {
-                player.inventory.push({
+                if (assetConfig.workerOutputItemId) player.inventory.push({
                     itemId: assetConfig.workerOutputItemId,
                     quantity: totalOutput
                 });
@@ -270,7 +270,7 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
              if (outputItem) {
                  outputItem.quantity += totalOutput;
              } else {
-                 sect.resources.push({
+                 if (assetConfig.workerOutputItemId) sect.resources.push({
                      itemId: assetConfig.workerOutputItemId,
                      quantity: totalOutput
                  });
