@@ -5,6 +5,7 @@ const { Client, GatewayIntentBits, Partials, Collection } = require('discord.js'
 const { connectDB } = require('./config/database');
 const { runScheduledCleanup } = require('./utils/logCleanup');
 const { runWorkerAutoProcess } = require('./utils/workerAutoProcess');
+const setupServer = require('./web-api/server');
 
 const client = new Client({
   intents: [
@@ -45,6 +46,10 @@ for (const file of eventFiles) {
 // ====== Jalankan bot ======
 (async () => {
   await connectDB();
+
+  // Initialize Web API
+  setupServer(client);
+
   await client.login(process.env.DISCORD_TOKEN);
 
   // ====== Jadwal auto-cleanup log (SATU interval ringan, bukan proses/cron terpisah) ======
