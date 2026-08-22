@@ -3,12 +3,12 @@ const Player = require('../../models/Player');
 const { isClaimedToday, formatDuration, msUntilNextResetWIB } = require('../../utils/timezone');
 const { logTransaction } = require('../../utils/logger');
 
-const DAILY_REWARD = 10; // 10 Silver Tael
+const DAILY_REWARD = 2; // 2 Silver Tael
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('daily')
-    .setDescription('Klaim hadiah harian (10 Silver Tael), reset tiap jam 00:00 WIB'),
+    .setDescription('Klaim hadiah harian (2 Silver Tael), reset tiap jam 00:00 WIB'),
 
   async execute(interaction) {
     await interaction.deferReply();
