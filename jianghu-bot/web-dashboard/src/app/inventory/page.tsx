@@ -1,24 +1,59 @@
+'use client';
+
 import { Package, Search, Filter } from "lucide-react";
 import FallbackImage from "@/components/FallbackImage";
+import { useEffect, useState } from 'react';
+import api from '@/lib/api';
+import { useAuthStore } from '@/lib/store';
 
 export default function InventoryPage() {
-  // Mock Data for visual demonstration
-  const mockInventory = [
-    { id: 1, name: "Besi Mentah", type: "material", rarity: "common", qty: 45, emoji: "🪨", imageUrl: null },
-    { id: 2, name: "Cangkul Besi", type: "tool", rarity: "uncommon", qty: 1, emoji: "⛏️", imageUrl: "https://example.com/mock-cangkul.png" }, // Mock image url
-    { id: 3, name: "Pil Pemulih Qi", type: "consumable", rarity: "rare", qty: 5, emoji: "💊", imageUrl: null },
-    { id: 4, name: "Kayu Jati", type: "material", rarity: "common", qty: 120, emoji: "🪵", imageUrl: null },
-    { id: 5, name: "Pedang Bintang", type: "weapon", rarity: "epic", qty: 1, emoji: "⚔️", imageUrl: "https://example.com/mock-sword.png" }, // Mock image url
-    { id: 6, name: "Bunga Teratai Salju", type: "material", rarity: "legendary", qty: 2, emoji: "🌸", imageUrl: null },
-  ];
+
+// Interface for API data
+interface InventoryItem {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  rarity: string;
+  quantity: number;
+  price: number;
+  imageUrl: string | null;
+  emoji: string;
+}
+  const { user } = useAuthStore();
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchInventory = async () => {
+      try {
+        const res = await api.get('/inventory');
+        setInventory(res.data.data);
+      } catch (err: any) {
+        console.error(err);
+        setError(err.response?.data?.error || 'Gagal memuat inventory.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInventory();
+  }, [user]);
 
   const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'common': return 'border-gray-600 bg-gray-900/50';
-      case 'uncommon': return 'border-green-600 bg-green-900/20';
-      case 'rare': return 'border-blue-500 bg-blue-900/20';
-      case 'epic': return 'border-purple-500 bg-purple-900/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]';
-      case 'legendary': return 'border-yellow-500 bg-yellow-900/20 shadow-[0_0_15px_rgba(234,179,8,0.3)] text-yellow-500';
+    switch (rarity?.toLowerCase()) {
+      case 'common': return 'border-gray-600 bg-gray-900/50 hover:border-gray-400';
+      case 'uncommon': return 'border-green-600 bg-green-900/20 hover:border-green-400';
+      case 'rare': return 'border-blue-500 bg-blue-900/20 hover:border-blue-400';
+      case 'epic': return 'border-purple-500 bg-purple-900/20 glow-epic hover:border-purple-400 text-purple-200';
+      case 'legendary': return 'border-yellow-500 bg-yellow-900/20 glow-legendary hover:border-yellow-300 text-yellow-200';
+      case 'mythical': return 'border-red-500 bg-red-900/20 shadow-[0_0_20px_rgba(239,68,68,0.5)] hover:border-red-400 text-red-200';
       default: return 'border-gray-600 bg-gray-900/50';
     }
   };
@@ -72,11 +107,35 @@ export default function InventoryPage() {
           <div className="bg-[#1a1a1a] jianghu-border p-6 rounded-lg min-h-[500px]">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
 
-              {mockInventory.map((item) => (
-                <div key={item.id} className={`relative border rounded-lg p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:scale-105 transition-transform ${getRarityColor(item.rarity)}`}>
+              {!user && !loading && (
+                <div className="col-span-full py-20 text-center text-gray-500">
+                  Silakan login menggunakan Discord untuk melihat Inventory Anda.
+                </div>
+              )}
+
+              {loading && (
+                <div className="col-span-full py-20 text-center text-[#c5a880] animate-pulse">
+                  Membongkar tas penyimpanan...
+                </div>
+              )}
+
+              {error && (
+                <div className="col-span-full py-10 text-center text-red-500 bg-red-900/10 border border-red-900/50 rounded-lg">
+                  {error}
+                </div>
+              )}
+
+              {user && !loading && inventory.length === 0 && !error && (
+                <div className="col-span-full py-20 text-center text-gray-500">
+                  Gudang penyimpanan Anda masih kosong.
+                </div>
+              )}
+
+              {user && !loading && inventory.map((item) => (
+                <div key={item.id} className={`group relative border rounded-lg p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ${getRarityColor(item.rarity)}`}>
                   {/* Quantity Badge */}
-                  <div className="absolute -top-2 -right-2 bg-black border border-[#c5a880] text-xs px-2 py-0.5 rounded-full z-10 text-white shadow-lg">
-                    x{item.qty}
+                  <div className="absolute -top-2 -right-2 bg-black border border-[#c5a880] text-xs px-2 py-0.5 rounded-full z-10 text-white shadow-lg font-bold">
+                    x{item.quantity}
                   </div>
 
                   {/* Item Icon or Image */}
@@ -94,17 +153,17 @@ export default function InventoryPage() {
                   </div>
 
                   {/* Item Details */}
-                  <div className="w-full mt-auto">
-                    <p className="text-xs font-bold text-white truncate px-1">{item.name}</p>
-                    <p className="text-[10px] text-gray-400 capitalize mt-0.5">{item.type}</p>
+                  <div className="w-full mt-auto pt-2 border-t border-white/5 group-hover:border-white/20 transition-colors">
+                    <p className="text-xs font-bold text-gray-100 truncate px-1">{item.name}</p>
+                    <p className="text-[10px] text-gray-500 capitalize mt-0.5 group-hover:text-gray-300">{item.type}</p>
                   </div>
                 </div>
               ))}
 
-              {/* Empty Slots Filler */}
-              {Array.from({ length: 14 }).map((_, i) => (
-                <div key={`empty-${i}`} className="border border-dashed border-[#333] bg-black/20 rounded-lg h-28 flex flex-col items-center justify-center opacity-30">
-                  <span className="text-gray-700 text-sm">Kosong</span>
+              {/* Empty Slots Filler (only show if logged in and loaded) */}
+              {user && !loading && Array.from({ length: Math.max(0, 10 - inventory.length) }).map((_, i) => (
+                <div key={`empty-${i}`} className="border border-dashed border-[#333] bg-black/10 rounded-lg h-32 flex flex-col items-center justify-center opacity-30 hover:opacity-50 transition-opacity">
+                  <span className="text-gray-700 text-sm">Slot Kosong</span>
                 </div>
               ))}
 
