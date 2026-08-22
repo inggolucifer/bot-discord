@@ -13,7 +13,7 @@ async function runWorkerAutoProcess(client) {
     // 1. Get all assets that actually produce items (workerOutputItemId is not null) AND require inputs
     const producingAssets = await Asset.find({
         workerOutputItemId: { $ne: null },
-        $expr: { $gt: [{ $size: "$workerInputMaterials" }, 0] } // Hanya aset yang membutuhkan input
+        'workerInputMaterials.0': { $exists: true } // Aman untuk backward-compatibility database lama
     });
     if (!producingAssets.length) {
         isProcessing = false;
@@ -79,30 +79,32 @@ async function runWorkerAutoProcess(client) {
 
             if (hoursPassed < 1) continue; // Not enough time for 1 cycle (1 hour)
 
-            // Calculate needed materials for this cycle (hoursPassed)
-            let hasEnoughMaterials = true;
-            let missingMaterialName = '';
+            // Find how many cycles (hours) the player can actually afford
+            let affordableHours = hoursPassed;
+            let missingMaterialName = null;
 
-            const neededMaterials = [];
             for (const input of assetConfig.workerInputMaterials) {
-                const totalNeeded = input.quantity * hoursPassed * owned.quantity;
+                const neededPerHour = input.quantity * owned.quantity;
                 const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
-                if (!ownedItem || ownedItem.quantity < totalNeeded) {
-                    hasEnoughMaterials = false;
-                    missingMaterialName = input.itemName;
-                    break;
+                const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+
+                // Calculate max hours affordable for this specific material
+                const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+
+                if (maxAffordableForThisMat < affordableHours) {
+                    affordableHours = maxAffordableForThisMat;
+                    if (affordableHours === 0 && !missingMaterialName) {
+                        missingMaterialName = input.itemName;
+                    }
                 }
-                neededMaterials.push({ itemId: input.itemId, totalNeeded });
             }
 
-            if (!hasEnoughMaterials) {
-                // Check if we need to send a warning
+            if (affordableHours === 0) {
+                // Cannot afford even 1 hour of production
                 if (!owned.isHalted) {
-                    owned.isHalted = true; // Mark as halted
+                    owned.isHalted = true;
                     owned.lastWarningSentAt = new Date();
-                    playerUpdated = true;
 
-                    // Send warning message
                     if (guildConfig && guildConfig.workerChannelId) {
                         try {
                             const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
@@ -114,20 +116,28 @@ async function runWorkerAutoProcess(client) {
                         }
                     }
                 }
-                continue; // Skip production for this asset
+
+                // CRITICAL FIX: Reset the accumulated progress.
+                // Since the factory is halted, it loses the time it sat idle without materials.
+                // This prevents massive "time debt" accumulation.
+                owned.progressAccumulated = 0;
+                owned.lastProgressUpdate = new Date();
+                playerUpdated = true;
+
+                continue;
             }
 
-            // If we have enough materials, perform production
+            // If we have affordable hours, perform production for THOSE hours
             // 1. Deduct materials
-            for (const needed of neededMaterials) {
-                const ownedItem = player.inventory.find(i => i.itemId.equals(needed.itemId));
-                ownedItem.quantity -= needed.totalNeeded;
-                // If it hits 0, you could remove it, but keeping it 0 is fine too.
-                if(ownedItem.quantity < 0) ownedItem.quantity = 0; // Fallback
+            for (const input of assetConfig.workerInputMaterials) {
+                const totalNeeded = input.quantity * affordableHours * owned.quantity;
+                const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
+                ownedItem.quantity -= totalNeeded;
+                if(ownedItem.quantity < 0) ownedItem.quantity = 0; // Safe fallback
             }
 
             // 2. Add outputs
-            const totalOutput = assetConfig.workerOutputQuantity * hoursPassed * owned.quantity;
+            const totalOutput = assetConfig.workerOutputQuantity * affordableHours * owned.quantity;
             let outputItem = player.inventory.find(i => i.itemId.equals(assetConfig.workerOutputItemId));
             if (outputItem) {
                 outputItem.quantity += totalOutput;
@@ -139,8 +149,12 @@ async function runWorkerAutoProcess(client) {
             }
 
             // 3. Reset state & progress
-            const leftoverMs = progressMs - (hoursPassed * 3600 * 1000);
-            owned.progressAccumulated = leftoverMs;
+            // Subtract ONLY the hours actually processed. The rest of the time is "lost" if they couldn't afford it.
+            const consumedMs = affordableHours * 3600 * 1000;
+            const leftoverMs = progressMs - consumedMs;
+
+            // If they couldn't afford all hours passed, it means the factory halted. Discard leftover time.
+            owned.progressAccumulated = (affordableHours < hoursPassed) ? 0 : leftoverMs;
             owned.lastProgressUpdate = new Date();
 
             if (owned.isHalted) {
@@ -200,26 +214,27 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
 
              if (hoursPassed < 1) continue;
 
-             let hasEnoughMaterials = true;
-             let missingMaterialName = '';
-             const neededMaterials = [];
+             let affordableHours = hoursPassed;
+             let missingMaterialName = null;
 
              for (const input of assetConfig.workerInputMaterials) {
-                 const totalNeeded = input.quantity * hoursPassed * owned.quantity;
+                 const neededPerHour = input.quantity * owned.quantity;
                  const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
-                 if (!ownedItem || ownedItem.quantity < totalNeeded) {
-                     hasEnoughMaterials = false;
-                     missingMaterialName = input.itemName;
-                     break;
+                 const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+
+                 const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+                 if (maxAffordableForThisMat < affordableHours) {
+                     affordableHours = maxAffordableForThisMat;
+                     if (affordableHours === 0 && !missingMaterialName) {
+                         missingMaterialName = input.itemName;
+                     }
                  }
-                 neededMaterials.push({ itemId: input.itemId, totalNeeded });
              }
 
-             if (!hasEnoughMaterials) {
+             if (affordableHours === 0) {
                  if (!owned.isHalted) {
                      owned.isHalted = true;
                      owned.lastWarningSentAt = new Date();
-                     sectUpdated = true;
 
                      if (guildConfig && guildConfig.workerChannelId) {
                          try {
@@ -235,17 +250,22 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
                          }
                      }
                  }
+                 // Reset time debt: sync to current time
+                 owned.lastClaimAt = new Date();
+                 sectUpdated = true;
                  continue;
              }
 
              // Deduct
-             for (const needed of neededMaterials) {
-                 const ownedItem = sect.resources.find(r => r.itemId.equals(needed.itemId));
-                 ownedItem.quantity -= needed.totalNeeded;
+             for (const input of assetConfig.workerInputMaterials) {
+                 const totalNeeded = input.quantity * affordableHours * owned.quantity;
+                 const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
+                 ownedItem.quantity -= totalNeeded;
+                 if (ownedItem.quantity < 0) ownedItem.quantity = 0;
              }
 
              // Add output
-             const totalOutput = assetConfig.workerOutputQuantity * hoursPassed * owned.quantity;
+             const totalOutput = assetConfig.workerOutputQuantity * affordableHours * owned.quantity;
              let outputItem = sect.resources.find(r => r.itemId.equals(assetConfig.workerOutputItemId));
              if (outputItem) {
                  outputItem.quantity += totalOutput;
@@ -256,10 +276,13 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
                  });
              }
 
-             // Update lastClaimAt to reflect the EXACT hour boundary so leftover progress isn't lost
-             // e.g., if 1.5 hours passed, we advance lastClaimAt by 1 hour.
-             const advanceMs = hoursPassed * 3600 * 1000;
-             owned.lastClaimAt = new Date(lastUpdate + advanceMs);
+             // Update lastClaimAt. If they couldn't afford all hours, it means they halted, reset to now.
+             if (affordableHours < hoursPassed) {
+                 owned.lastClaimAt = new Date();
+             } else {
+                 const advanceMs = affordableHours * 3600 * 1000;
+                 owned.lastClaimAt = new Date(lastUpdate + advanceMs);
+             }
 
              if (owned.isHalted) owned.isHalted = false;
              sectUpdated = true;
