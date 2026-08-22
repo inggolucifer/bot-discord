@@ -1,14 +1,15 @@
 import { Package, Search, Filter } from "lucide-react";
+import FallbackImage from "@/components/FallbackImage";
 
 export default function InventoryPage() {
   // Mock Data for visual demonstration
   const mockInventory = [
-    { id: 1, name: "Besi Mentah", type: "material", rarity: "common", qty: 45, emoji: "🪨" },
-    { id: 2, name: "Cangkul Besi", type: "tool", rarity: "uncommon", qty: 1, emoji: "⛏️" },
-    { id: 3, name: "Pil Pemulih Qi", type: "consumable", rarity: "rare", qty: 5, emoji: "💊" },
-    { id: 4, name: "Kayu Jati", type: "material", rarity: "common", qty: 120, emoji: "🪵" },
-    { id: 5, name: "Pedang Bintang", type: "weapon", rarity: "epic", qty: 1, emoji: "⚔️" },
-    { id: 6, name: "Bunga Teratai Salju", type: "material", rarity: "legendary", qty: 2, emoji: "🌸" },
+    { id: 1, name: "Besi Mentah", type: "material", rarity: "common", qty: 45, emoji: "🪨", imageUrl: null },
+    { id: 2, name: "Cangkul Besi", type: "tool", rarity: "uncommon", qty: 1, emoji: "⛏️", imageUrl: "https://example.com/mock-cangkul.png" }, // Mock image url
+    { id: 3, name: "Pil Pemulih Qi", type: "consumable", rarity: "rare", qty: 5, emoji: "💊", imageUrl: null },
+    { id: 4, name: "Kayu Jati", type: "material", rarity: "common", qty: 120, emoji: "🪵", imageUrl: null },
+    { id: 5, name: "Pedang Bintang", type: "weapon", rarity: "epic", qty: 1, emoji: "⚔️", imageUrl: "https://example.com/mock-sword.png" }, // Mock image url
+    { id: 6, name: "Bunga Teratai Salju", type: "material", rarity: "legendary", qty: 2, emoji: "🌸", imageUrl: null },
   ];
 
   const getRarityColor = (rarity: string) => {
@@ -78,9 +79,18 @@ export default function InventoryPage() {
                     x{item.qty}
                   </div>
 
-                  {/* Item Icon */}
-                  <div className="text-4xl mb-2 drop-shadow-md">
-                    {item.emoji}
+                  {/* Item Icon or Image */}
+                  <div className="h-12 w-12 flex items-center justify-center mb-2 drop-shadow-md">
+                    {item.imageUrl ? (
+                      <FallbackImage
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="max-h-full max-w-full object-contain"
+                        fallbackHtml={`<span class="text-4xl">${item.emoji}</span>`}
+                      />
+                    ) : (
+                      <span className="text-4xl">{item.emoji}</span>
+                    )}
                   </div>
 
                   {/* Item Details */}

@@ -44,10 +44,12 @@ router.post('/login', async (req, res) => {
 
         // 3. Generate our own JWT for session management
         // We embed the userId in the token
+        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${discordUser.avatar}.png`;
         const token = jwt.sign(
             {
                 userId: userId,
-                username: discordUser.username
+                username: discordUser.username,
+                avatar: avatarUrl
             },
             JWT_SECRET,
             { expiresIn: '24h' } // Token expires in 24 hours

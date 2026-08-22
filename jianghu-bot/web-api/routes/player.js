@@ -19,9 +19,15 @@ router.get('/profile', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Karakter tidak ditemukan. Pastikan Anda sudah register di Discord.' });
         }
 
+        // Inject Discord Avatar URL from the JWT payload as fallback
+        const discordAvatarUrl = req.user.avatar; // Assuming we passed it during auth
+
         res.json({
             success: true,
-            data: player
+            data: {
+                ...player,
+                discordAvatar: discordAvatarUrl || null
+            }
         });
     } catch (error) {
         console.error('[API-PLAYER] Error fetching profile:', error);
