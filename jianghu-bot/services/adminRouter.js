@@ -126,7 +126,7 @@ module.exports = {
             const help = require('./admin/helpAdmin');
             return help.execute(interaction);
         }
-        await interaction.deferReply({ ephemeral: true }).catch(() => {});
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
         return interaction.editReply({ content: `❌ Command admin \`${group ? group + ' ' : ''}${sub}\` tidak ditemukan atau belum diimplementasi (router error).` });
     }
   }
