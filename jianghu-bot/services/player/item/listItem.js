@@ -9,7 +9,7 @@ module.exports = {
     .setDescription('Lihat daftar keseluruhan item'),
 
   async execute(interaction) {
-    await interaction.deferReply();
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const items = await Item.find({ guildId: interaction.guildId }).sort({ rank: 1, name: 1 });
 
@@ -80,10 +80,6 @@ module.exports = {
       const collector = message.createMessageComponentCollector({ time: 300000 }); // 5 menit
 
       collector.on('collect', async (i) => {
-        if (i.user.id !== interaction.user.id) {
-          return i.reply({ content: '❌ Anda tidak dapat menggunakan tombol ini.', flags: MessageFlags.Ephemeral });
-        }
-
         if (i.customId === 'prev_page' && currentPage > 0) {
           currentPage--;
         } else if (i.customId === 'next_page' && currentPage < totalPages - 1) {
