@@ -24,7 +24,6 @@ function consumeMaterials(materialBag, recipe) {
 
 /** Cek apakah sebuah instance aset (subdokumen owned) sudah selesai dibangun & boleh dipakai */
 function isUnderConstruction(ownedAssetSubdoc) {
-  if (ownedAssetSubdoc.status === 'pending' || ownedAssetSubdoc.status === 'building') return true;
   if (!ownedAssetSubdoc.constructionCompleteAt) return false;
   return new Date(ownedAssetSubdoc.constructionCompleteAt) > new Date();
 }

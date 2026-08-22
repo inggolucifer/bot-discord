@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { CURRENCY_EMOJI, CURRENCY_LABEL, formatCurrencyLine } = require('./currency');
 const { getRankStyle, dramaticTitle } = require('./dramatic');
 const { isUnderConstruction, formatRemainingTime } = require('./crafting');
+const { calculateProgress } = require('./assetProgress');
 
 function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [], assetDocs = [], sectRole = null) {
   const embed = new EmbedBuilder()
@@ -32,7 +33,28 @@ function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [
   const assetLine = assetDocs.length
     ? assetDocs.map((a) => {
         const underConstruction = isUnderConstruction(a.owned);
-        return `🏠 **${a.doc.name}** x${a.quantity}${underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : ''}`;
+        if (underConstruction) {
+          return `🏠 **${a.doc.name}** x${a.quantity} 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_`;
+        }
+
+        const progressMs = (a.owned.progressAccumulated || 0) + calculateProgress(a.owned);
+        const timeRemaining = 3600000 - (progressMs % 3600000);
+        const timeStr = formatRemainingTime(Date.now() + timeRemaining);
+
+        let status = '⏱️';
+        if (a.owned.isHalted) {
+          status = '⏸️ _(kurang material)_';
+        } else {
+          let hasActiveWorker = false;
+          if (a.owned.assignedWorkers && a.owned.assignedWorkers.length > 0) {
+            hasActiveWorker = a.owned.assignedWorkers.some(w => !w.endTime || w.endTime.getTime() > Date.now());
+          }
+          if (!a.doc.isCraftingStation && !hasActiveWorker) {
+            status = '⏸️ _(butuh pekerja)_';
+          }
+        }
+
+        return `🏠 **${a.doc.name}** x${a.quantity} ${status} _(${timeStr} ke profit)_`;
       }).join('\n')
     : '_Belum punya aset_';
   embed.addFields({ name: `🏠 Asset (${currentTotalAssets}/${assetSlots} Slot Lahan)`, value: assetLine.slice(0, 1024) });
