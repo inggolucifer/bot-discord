@@ -24,10 +24,11 @@ router.get('/', authenticateToken, async (req, res) => {
             name: slot.itemId.name,
             description: slot.itemId.description,
             type: slot.itemId.type,
-            rarity: slot.itemId.rarity,
+            rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
             quantity: slot.quantity,
-            price: slot.itemId.price,
-            emoji: slot.itemId.emoji || '📦'
+            price: slot.itemId.basePrice, // Changed to match DB schema
+            imageUrl: slot.itemId.imageUrl, // Include image URL
+            emoji: '📦' // Fallback
         }));
 
         res.json({

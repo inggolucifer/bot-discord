@@ -1,4 +1,5 @@
 import { Coins, Flame, Scroll, Users, Sword } from "lucide-react";
+import FallbackImage from "@/components/FallbackImage";
 
 export default function Home() {
   return (
@@ -18,7 +19,12 @@ export default function Home() {
         <div className="bg-black/60 border border-[#333] rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 max-w-3xl mx-auto text-left relative z-10 backdrop-blur-sm">
 
           <div className="relative w-24 h-24 rounded-full border-2 border-[#c5a880] overflow-hidden flex-shrink-0 bg-gray-800 shadow-[0_0_15px_rgba(197,168,128,0.3)]">
-             <div className="absolute inset-0 flex items-center justify-center text-4xl">🧑‍🎤</div>
+             <FallbackImage
+               src="https://cdn.discordapp.com/embed/avatars/0.png"
+               alt="Character Avatar"
+               className="w-full h-full object-cover"
+               fallbackHtml='<div class="absolute inset-0 flex items-center justify-center text-4xl">🧑‍🎤</div>'
+             />
           </div>
 
           <div className="flex-grow space-y-2 w-full">
