@@ -2,12 +2,14 @@ const { SlashCommandBuilder } = require('discord.js');
 const cekAssetService = require('../../services/player/asset/cekAsset');
 const bangunAssetService = require('../../services/player/asset/bangunAsset');
 const tambahSlotAssetService = require('../../services/player/asset/tambahSlotAsset');
+const listAssetService = require('../../services/player/asset/listAsset');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('asset')
     .setDescription('Sistem Aset')
     .addSubcommand(sub => sub.setName('cek').setDescription('Lihat detail sebuah aset').addStringOption(o => o.setName('nama').setDescription('Nama aset').setRequired(true).setAutocomplete(true)))
+    .addSubcommand(sub => sub.setName('list').setDescription('Lihat daftar keseluruhan aset'))
     .addSubcommand(sub => sub.setName('bangun').setDescription('Bangun aset secara mandiri (butuh material)').addStringOption(o => o.setName('nama-aset').setDescription('Nama aset yang ingin dibangun').setRequired(true).setAutocomplete(true)))
     .addSubcommand(sub => sub.setName('tambah-slot').setDescription('Tambah slot maksimal lahan aset dengan Silver/Gold')),
 
@@ -20,6 +22,7 @@ module.exports = {
   async execute(interaction) {
     const sub = interaction.options.getSubcommand();
     if (sub === 'cek') return cekAssetService.execute(interaction);
+    if (sub === 'list') return listAssetService.execute(interaction);
     if (sub === 'bangun') return bangunAssetService.execute(interaction);
     if (sub === 'tambah-slot') return tambahSlotAssetService.execute(interaction);
   }
