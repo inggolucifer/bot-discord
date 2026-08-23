@@ -8,8 +8,19 @@ const setupServer = (client) => {
 
     // Security middlewares
     app.use(helmet());
+
+    // Konfigurasi asal yang lebih aman
+    const allowedOrigins = process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : ['http://localhost:3000', 'https://immortal-x.online', 'https://www.immortal-x.online'];
+
     app.use(cors({
-        origin: '*', // For development. Change to your domain in production
+        origin: function(origin, callback){
+          if(!origin) return callback(null, true);
+          if(allowedOrigins.indexOf(origin) === -1){
+            var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+          }
+          return callback(null, true);
+        },
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
     }));
@@ -44,10 +55,12 @@ const setupServer = (client) => {
     const authRoutes = require('./routes/auth');
     const playerRoutes = require('./routes/player');
     const inventoryRoutes = require('./routes/inventory');
+    const marketRoutes = require('./routes/market');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
     app.use('/api/inventory', inventoryRoutes);
+    app.use('/api/market', marketRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
@@ -55,7 +68,7 @@ const setupServer = (client) => {
     });
 
     // Start server
-    const PORT = process.env.API_PORT || 3000;
+    const PORT = process.env.API_PORT || 3001;
     app.listen(PORT, () => {
         console.log(`[API] Web API Server running on port ${PORT}`);
         console.log(`[API] Anti-Cheat Locks & Rate Limiters Initialized.`);

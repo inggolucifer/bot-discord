@@ -6,12 +6,24 @@ module.exports = {
       name: 'jianghu-bot',
       script: 'index.js',
       instances: 1,
-      autorestart: true,       // otomatis restart kalau bot crash
+      autorestart: true,
       watch: false,
       max_memory_restart: '300M',
       env: {
         NODE_ENV: 'production',
       },
     },
+    {
+      name: 'web-frontend',
+      script: 'npm',
+      args: 'run start',
+      cwd: './web-dashboard',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      env: {
+        NODE_ENV: 'production',
+      }
+    }
   ],
 };
