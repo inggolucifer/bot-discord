@@ -3,6 +3,7 @@ const Player = require('../../../models/Player');
 const WorkerContract = require('../../../models/WorkerContract');
 const { refreshWorkerChannel } = require('../../../services/workerChannelService');
 const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
+const { calculateProgress } = require('../../../utils/assetProgress');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,6 +26,24 @@ module.exports = {
 
     if (contract && contract.status === 'working') {
       return interaction.editReply({ content: '❌ Kamu sedang terikat kontrak kerja dengan orang lain. Selesaikan dulu pekerjaanmu.' });
+    }
+
+    // Hentikan kerja mandiri jika ada
+    let wasWorkingMandiri = false;
+    for (const owned of player.assets) {
+      if (owned.assignedWorkers) {
+        const myIndex = owned.assignedWorkers.findIndex(w => w.workerId === interaction.user.id);
+        if (myIndex !== -1) {
+          owned.progressAccumulated = (owned.progressAccumulated || 0) + calculateProgress(owned);
+          owned.lastProgressUpdate = new Date();
+          owned.assignedWorkers.splice(myIndex, 1);
+          wasWorkingMandiri = true;
+        }
+      }
+    }
+    if (wasWorkingMandiri) {
+      player.customStatus = null;
+      await player.save();
     }
 
     if (!contract) {
