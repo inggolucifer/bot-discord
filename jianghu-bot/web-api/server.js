@@ -56,11 +56,15 @@ const setupServer = (client) => {
     const playerRoutes = require('./routes/player');
     const inventoryRoutes = require('./routes/inventory');
     const marketRoutes = require('./routes/market');
+    const sectRoutes = require('./routes/sect');
+    const workerRoutes = require('./routes/worker');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
     app.use('/api/inventory', inventoryRoutes);
     app.use('/api/market', marketRoutes);
+    app.use('/api/sect', sectRoutes);
+    app.use('/api/worker', workerRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
