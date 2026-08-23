@@ -16,7 +16,7 @@ function AuthCallbackContent() {
     const code = searchParams.get('code');
 
     if (!code) {
-      setError('Kode otorisasi tidak ditemukan.');
+      setTimeout(() => setError('Kode otorisasi tidak ditemukan.'), 0);
       return;
     }
 
@@ -35,9 +35,14 @@ function AuthCallbackContent() {
 
         // Redirect home after successful login
         router.push('/');
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(err);
-        setError(err.response?.data?.error || 'Gagal login melalui Discord.');
+        const errorData = (err as { response?: { status?: number, data?: { error?: string } } });
+        if (errorData.response?.status === 400 && errorData.response?.data?.error === 'invalid_request') {
+           setError('Gagal login: Redirect URI tidak cocok. Pastikan URL login sesuai dengan konfigurasi Discord.');
+        } else {
+           setError(errorData.response?.data?.error || 'Gagal login melalui Discord.');
+        }
       }
     };
 
