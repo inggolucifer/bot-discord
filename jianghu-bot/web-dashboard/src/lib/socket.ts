@@ -4,4 +4,6 @@ const URL = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.re
 
 export const socket = io(URL, {
   autoConnect: false,
+  transports: ['websocket', 'polling'], // Fallback mechanism for better stability behind proxies
+  reconnectionAttempts: 5,
 });

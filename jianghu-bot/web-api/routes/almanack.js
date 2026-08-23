@@ -11,6 +11,38 @@ const { authenticateToken } = require('../middlewares/auth');
 router.get('/items', async (req, res) => {
     try {
         const items = await Item.find({}).sort({ rank: -1, name: 1 }).lean();
+
+        // Find usages of items in Asset buildRequirements or Asset recipes
+        const assets = await Asset.find({}).lean();
+
+        for (const item of items) {
+            let usages = [];
+
+            // Check if item is used to build any asset
+            for (const asset of assets) {
+                if (asset.buildable && asset.buildRequirements) {
+                    const isReq = asset.buildRequirements.find(req => req.itemId.toString() === item._id.toString());
+                    if (isReq) {
+                        usages.push(`Bahan untuk membangun ${asset.name}`);
+                    }
+                }
+
+                // Check if item is used in any crafting station recipes
+                if (asset.isCraftingStation && asset.recipes) {
+                    for (const recipe of asset.recipes) {
+                        if (recipe.materials) {
+                            const isMat = recipe.materials.find(mat => mat.itemId.toString() === item._id.toString());
+                            if (isMat) {
+                                usages.push(`Bahan untuk meracik ${recipe.recipeName} di ${asset.name}`);
+                            }
+                        }
+                    }
+                }
+            }
+
+            item.usedFor = usages.length > 0 ? [...new Set(usages)] : null; // Remove duplicates if any
+        }
+
         res.json({ success: true, data: items });
     } catch (error) {
         console.error('[API-ALMANACK] Error fetching items:', error);
