@@ -6,7 +6,7 @@ import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
 import api from '@/lib/api';
 
-type TabType = 'item' | 'asset';
+type TabType = 'item' | 'asset' | 'blueprint';
 
 export default function AlmanackPage() {
   const { user } = useAuthStore();
@@ -93,9 +93,14 @@ export default function AlmanackPage() {
           className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'asset' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
           onClick={() => {setActiveTab('asset'); setMessage(null);}}
         >
-          <PackageOpen size={16} /> Asset
+          <PackageOpen size={16} /> Asset Biasa
         </button>
-
+        <button
+          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'blueprint' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+          onClick={() => {setActiveTab('blueprint'); setMessage(null);}}
+        >
+          <Wrench size={16} /> Blueprint (Bisa Dibangun)
+        </button>
       </div>
 
       {message && (
@@ -131,17 +136,26 @@ export default function AlmanackPage() {
               </div>
               <p className="text-xs text-gray-400 italic line-clamp-3">{item.description}</p>
 
-              {(item.basePrice > 0 || item.effect) && (
-                <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-500 space-y-1">
-                  {item.effect && <p><span className="text-gray-400">Efek:</span> {item.effect}</p>}
-                  {item.basePrice > 0 && <p><span className="text-gray-400">Harga Dasar:</span> {item.basePrice} {item.priceCurrency}</p>}
-                </div>
-              )}
+              <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-500 space-y-1">
+                {item.origin && <p><span className="text-gray-400">Asal:</span> {item.origin}</p>}
+                {item.effect && <p><span className="text-gray-400">Efek:</span> {item.effect}</p>}
+                {item.basePrice > 0 && <p><span className="text-gray-400">Harga Dasar:</span> {item.basePrice} {item.priceCurrency}</p>}
+                {item.usedFor && item.usedFor.length > 0 && (
+                    <div className="mt-2">
+                        <span className="text-gray-400 block mb-1">Kegunaan:</span>
+                        <ul className="list-disc list-inside text-[10px] text-gray-300 space-y-0.5">
+                            {item.usedFor.map((usage: string, i: number) => (
+                                <li key={i}>{usage}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+              </div>
             </div>
           ))}
 
-          {/* TAB ASSET (Hunknowna info) */}
-          {activeTab === 'asset' && filteredAssets.map((asset) => (
+          {/* TAB ASSET (Hanya info, bukan blueprint) */}
+          {activeTab === 'asset' && filteredAssets.filter(a => !a.buildable).map((asset) => (
             <div key={asset._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3">
               <div className="flex items-start gap-4">
                 <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
@@ -173,7 +187,51 @@ export default function AlmanackPage() {
                 {asset.basePrice > 0 && (
                    <p className="flex justify-between"><span>Harga Beli:</span> <span className="text-gray-300">{asset.basePrice} {asset.priceCurrency}</span></p>
                 )}
-                <p className="flex justify-between"><span>Buildable:</span> <span className={asset.buildable ? "text-green-400" : "text-red-400"}>{asset.buildable ? "Ya" : "Tidak"}</span></p>
+              </div>
+            </div>
+          ))}
+
+          {/* TAB BLUEPRINT (Khusus yg buildable) */}
+          {activeTab === 'blueprint' && buildableAssets.map((asset) => (
+            <div key={asset._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3">
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
+                  <FallbackImage
+                    src={asset.imageUrl || ""}
+                    alt={asset.name}
+                    className="max-w-full max-h-full object-contain"
+                    fallbackHtml='<div class="text-2xl">🏛️</div>'
+                  />
+                </div>
+                <div>
+                  <h3 className="font-bold text-[#c5a880]">{asset.name}</h3>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-green-900/50 text-green-400 rounded border border-green-800">Blueprint</span>
+                    {asset.dailyProfit > 0 && <span className="text-[10px] px-1.5 py-0.5 bg-yellow-900/50 text-yellow-500 rounded border border-yellow-700">Income</span>}
+                    {asset.workerOutputItemId && <span className="text-[10px] px-1.5 py-0.5 bg-blue-900/50 text-blue-400 rounded border border-blue-800">Production</span>}
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 italic mb-2">{asset.description}</p>
+
+              <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-400 space-y-2">
+                <p className="flex justify-between"><span>Waktu Pembangunan:</span> <span className="text-orange-400">{asset.constructionTimeHours} Jam</span></p>
+
+                <div className="mt-2">
+                    <span className="text-gray-400 block mb-1">Material Dibutuhkan:</span>
+                    {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                            {asset.buildRequirements.map((req: any, i: number) => (
+                                <div key={i} className="flex items-center gap-1 bg-black/50 border border-[#444] px-2 py-1 rounded">
+                                    <span className="text-[#c5a880]">{req.itemName}</span>
+                                    <span className="text-gray-500">x{req.quantity}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <span className="text-gray-500 italic">Tidak ada material khusus.</span>
+                    )}
+                </div>
               </div>
             </div>
           ))}
@@ -182,8 +240,11 @@ export default function AlmanackPage() {
           {activeTab === 'item' && filteredItems.length === 0 && (
              <div className="col-span-full text-center py-10 text-gray-500">Item tidak ditemukan.</div>
           )}
-          {activeTab === 'asset' && filteredAssets.length === 0 && (
-             <div className="col-span-full text-center py-10 text-gray-500">Aset tidak ditemukan.</div>
+          {activeTab === 'asset' && filteredAssets.filter(a => !a.buildable).length === 0 && (
+             <div className="col-span-full text-center py-10 text-gray-500">Aset biasa tidak ditemukan.</div>
+          )}
+          {activeTab === 'blueprint' && buildableAssets.length === 0 && (
+             <div className="col-span-full text-center py-10 text-gray-500">Blueprint tidak ditemukan.</div>
           )}
 
 

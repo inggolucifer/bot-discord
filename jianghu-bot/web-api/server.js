@@ -91,7 +91,8 @@ const setupServer = (client) => {
         cors: {
             origin: allowedOrigins,
             methods: ["GET", "POST"]
-        }
+        },
+        transports: ['websocket', 'polling']
     });
 
     // Chat history in memory
