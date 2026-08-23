@@ -78,7 +78,8 @@ export default function SectPage() {
       router.push('/');
       return;
     }
-    fetchSectData();
+    const timer = setTimeout(() => fetchSectData(), 0);
+    return () => clearTimeout(timer);
   }, [user, router]);
 
   const handleClaimProfit = async () => {

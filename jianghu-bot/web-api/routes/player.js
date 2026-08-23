@@ -412,4 +412,41 @@ router.post('/assets/move-worker', authenticateToken, async (req, res) => {
     }
 });
 
+
+// Endpoint to fetch public profile for chat interaction
+router.get('/public-profile/:discordId', async (req, res) => {
+    try {
+        const { discordId } = req.params;
+        const player = await Player.findOne({ discordId })
+            .select('characterName characterImage sect status realm stage totalWealth assets pets customStatus')
+            .lean();
+
+        if (!player) {
+            return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        }
+
+        const totalAssets = player.assets ? player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0) : 0;
+        const totalPets = player.pets ? player.pets.length : 0;
+
+        res.json({
+            success: true,
+            data: {
+                characterName: player.characterName,
+                characterImage: player.characterImage,
+                sect: player.sect,
+                status: player.status,
+                realm: player.realm,
+                stage: player.stage,
+                totalWealth: player.totalWealth,
+                totalAssets,
+                totalPets,
+                customStatus: player.customStatus
+            }
+        });
+    } catch (error) {
+        console.error('[API-PLAYER] Error fetching public profile:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
 module.exports = router;
