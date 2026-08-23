@@ -2,13 +2,19 @@
 
 import { useAuthStore } from '@/lib/store';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleLogin = () => {
-    // Replace with your actual Discord OAuth URL
-    const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID || 'YOUR_CLIENT_ID';
+    const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+    if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
+      setErrorMsg("Konfigurasi login belum lengkap (NEXT_PUBLIC_DISCORD_CLIENT_ID belum diatur). Hubungi admin.");
+      return;
+    }
+
     const redirectUri = encodeURIComponent(
       process.env.NEXT_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_URL}/auth/callback` : 'http://localhost:3000/auth/callback'
     );
@@ -27,6 +33,9 @@ export default function Navbar() {
           <Link href="/market" className="hover:text-[#c5a880] transition-colors">Pasar</Link>
         </nav>
         <div className="flex gap-4 items-center">
+          {errorMsg && (
+            <span className="text-[#8b0000] text-sm font-semibold">{errorMsg}</span>
+          )}
           {user ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-300 hidden md:inline">{user.username}</span>

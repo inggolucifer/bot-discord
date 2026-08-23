@@ -25,26 +25,64 @@ interface InventoryItem {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Meta data states
+  const [totalSlots, setTotalSlots] = useState(0);
+  const [maxSlots, setMaxSlots] = useState(50);
+
+  // Filter/Search states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+
   useEffect(() => {
+    let isMounted = true;
     if (!user) {
-      setLoading(false);
+      setTimeout(() => {
+        if (isMounted) setLoading(false);
+      }, 0);
       return;
     }
 
     const fetchInventory = async () => {
       try {
         const res = await api.get('/inventory');
-        setInventory(res.data.data);
-      } catch (err: any) {
+        if (isMounted) {
+          setInventory(res.data.data);
+          if (res.data.meta) {
+              setTotalSlots(res.data.meta.totalSlots);
+              setMaxSlots(res.data.meta.maxSlots);
+          }
+        }
+      } catch (err: unknown) {
         console.error(err);
-        setError(err.response?.data?.error || 'Gagal memuat inventory.');
+        if (isMounted) setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat inventory.');
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchInventory();
+    return () => { isMounted = false; };
   }, [user]);
+
+  // Derived filtered items
+  const filteredInventory = inventory.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+    let matchesCategory = true;
+    if (activeCategory !== 'all') {
+        if (activeCategory === 'material') {
+             matchesCategory = item.type === 'material' || item.type === 'herb';
+        } else if (activeCategory === 'consumable') {
+             matchesCategory = item.type === 'pill' || item.type === 'consume';
+        } else if (activeCategory === 'tools') {
+             matchesCategory = item.type === 'none' || !item.type; // Assuming default none/tools
+        } else if (activeCategory === 'equipment') {
+             matchesCategory = item.type === 'weapon' || item.type === 'cloth' || item.type === 'accessories' || item.type === 'artifact';
+        }
+    }
+
+    return matchesSearch && matchesCategory;
+  });
 
   const getRarityColor = (rarity: string) => {
     switch (rarity?.toLowerCase()) {
@@ -67,7 +105,7 @@ interface InventoryItem {
           <h1 className="text-3xl font-bold font-serif text-[#c5a880] flex items-center gap-3">
             <Package /> Gudang Penyimpanan
           </h1>
-          <p className="text-gray-400 text-sm mt-1">Kapasitas: 6 / 50 Slot</p>
+          <p className="text-gray-400 text-sm mt-1">Kapasitas: {totalSlots} / {maxSlots} Slot</p>
         </div>
 
         <div className="flex gap-3 w-full md:w-auto">
@@ -76,10 +114,12 @@ interface InventoryItem {
             <input
               type="text"
               placeholder="Cari item..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-black border border-[#333] rounded px-10 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
             />
           </div>
-          <button className="bg-black border border-[#333] p-2 rounded hover:text-[#c5a880] hover:border-[#c5a880] transition-colors">
+          <button className="bg-black border border-[#333] p-2 rounded hover:text-[#c5a880] hover:border-[#c5a880] transition-colors" title="Filter features">
             <Filter size={18} />
           </button>
         </div>
@@ -93,11 +133,11 @@ interface InventoryItem {
           <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg">
             <h3 className="font-bold text-[#c5a880] mb-3 border-b border-[#333] pb-2">Kategori</h3>
             <ul className="space-y-1 text-sm">
-              <li><button className="w-full text-left px-3 py-2 bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]">Semua Item</button></li>
-              <li><button className="w-full text-left px-3 py-2 text-gray-400 hover:bg-black/50 hover:text-white transition-colors">Bahan Baku (Material)</button></li>
-              <li><button className="w-full text-left px-3 py-2 text-gray-400 hover:bg-black/50 hover:text-white transition-colors">Konsumsi (Pil/Herbal)</button></li>
-              <li><button className="w-full text-left px-3 py-2 text-gray-400 hover:bg-black/50 hover:text-white transition-colors">Peralatan (Tools)</button></li>
-              <li><button className="w-full text-left px-3 py-2 text-gray-400 hover:bg-black/50 hover:text-white transition-colors">Senjata & Armor</button></li>
+              <li><button onClick={() => setActiveCategory('all')} className={`w-full text-left px-3 py-2 transition-colors ${activeCategory === 'all' ? 'bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}>Semua Item</button></li>
+              <li><button onClick={() => setActiveCategory('material')} className={`w-full text-left px-3 py-2 transition-colors ${activeCategory === 'material' ? 'bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}>Bahan Baku (Material)</button></li>
+              <li><button onClick={() => setActiveCategory('consumable')} className={`w-full text-left px-3 py-2 transition-colors ${activeCategory === 'consumable' ? 'bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}>Konsumsi (Pil/Herbal)</button></li>
+              <li><button onClick={() => setActiveCategory('tools')} className={`w-full text-left px-3 py-2 transition-colors ${activeCategory === 'tools' ? 'bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}>Peralatan (Tools)</button></li>
+              <li><button onClick={() => setActiveCategory('equipment')} className={`w-full text-left px-3 py-2 transition-colors ${activeCategory === 'equipment' ? 'bg-[#8b0000]/20 text-[#c5a880] border-l-2 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}>Senjata & Armor</button></li>
             </ul>
           </div>
         </div>
@@ -125,13 +165,13 @@ interface InventoryItem {
                 </div>
               )}
 
-              {user && !loading && inventory.length === 0 && !error && (
+              {user && !loading && filteredInventory.length === 0 && !error && (
                 <div className="col-span-full py-20 text-center text-gray-500">
-                  Gudang penyimpanan Anda masih kosong.
+                  Item tidak ditemukan atau gudang penyimpanan Anda masih kosong.
                 </div>
               )}
 
-              {user && !loading && inventory.map((item) => (
+              {user && !loading && filteredInventory.map((item) => (
                 <div key={item.id} className={`group relative border rounded-lg p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ${getRarityColor(item.rarity)}`}>
                   {/* Quantity Badge */}
                   <div className="absolute -top-2 -right-2 bg-black border border-[#c5a880] text-xs px-2 py-0.5 rounded-full z-10 text-white shadow-lg font-bold">
@@ -161,7 +201,7 @@ interface InventoryItem {
               ))}
 
               {/* Empty Slots Filler (only show if logged in and loaded) */}
-              {user && !loading && Array.from({ length: Math.max(0, 10 - inventory.length) }).map((_, i) => (
+              {user && !loading && Array.from({ length: Math.max(0, 10 - filteredInventory.length) }).map((_, i) => (
                 <div key={`empty-${i}`} className="border border-dashed border-[#333] bg-black/10 rounded-lg h-32 flex flex-col items-center justify-center opacity-30 hover:opacity-50 transition-opacity">
                   <span className="text-gray-700 text-sm">Slot Kosong</span>
                 </div>

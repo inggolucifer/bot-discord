@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
+const { JWT_SECRET } = require('../utils/jwtSecret');
 
 // Middleware to authenticate API requests from the frontend using JWT
 const authenticateToken = (req, res, next) => {

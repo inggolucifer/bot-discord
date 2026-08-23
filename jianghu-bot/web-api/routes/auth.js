@@ -1,9 +1,10 @@
 const express = require('express');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const Player = require('../../models/Player');
+const { JWT_SECRET } = require('../utils/jwtSecret');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
 
 // Route for the frontend to exchange a Discord OAuth code for a JWT
 router.post('/login', async (req, res) => {
@@ -42,9 +43,20 @@ router.post('/login', async (req, res) => {
         // You might want to get the specific guild the user is in.
         // For now, we rely on the bot's database to verify if they are registered.
 
-        // 3. Generate our own JWT for session management
+        // 3. Pengecekan Karakter (Player)
+        const player = await Player.findOne({ discordId: userId });
+        const hasCharacter = !!player;
+
+        // 4. Generate our own JWT for session management
         // We embed the userId in the token
-        const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${discordUser.avatar}.png`;
+        const avatarHash = discordUser.avatar;
+        // Fallback to default avatar if avatarHash is null
+        const defaultAvatarId = (BigInt(userId) >> 22n) % 6n;
+        const defaultAvatarUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarId}.png`;
+        const avatarUrl = avatarHash
+            ? `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png`
+            : defaultAvatarUrl;
+
         const token = jwt.sign(
             {
                 userId: userId,
@@ -60,12 +72,18 @@ router.post('/login', async (req, res) => {
             user: {
                 id: userId,
                 username: discordUser.username,
-                avatar: `https://cdn.discordapp.com/avatars/${userId}/${discordUser.avatar}.png`
+                avatar: avatarUrl,
+                hasCharacter
             }
         });
 
     } catch (error) {
         console.error('[API-AUTH] Discord OAuth Error:', error.response ? error.response.data : error.message);
+
+        if (error.response && error.response.data && error.response.data.error === 'invalid_request') {
+            return res.status(400).json({ error: 'invalid_request' });
+        }
+
         res.status(500).json({ error: 'Gagal mengautentikasi dengan Discord.' });
     }
 });
