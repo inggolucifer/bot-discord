@@ -28,27 +28,6 @@ function isValidCurrency(code) {
   return CURRENCIES.includes(code);
 }
 
-/**
- * Konversi jumlah dari satu currency ke currency lain.
- * Mengembalikan { ok, resultAmount, error }
- * Catatan: hasil dibulatkan ke bawah (floor) agar tidak ada nilai desimal aneh.
- */
-function convertAmount(fromCode, toCode, amount) {
-  if (!isValidCurrency(fromCode) || !isValidCurrency(toCode)) {
-    return { ok: false, error: 'Jenis currency tidak valid.' };
-  }
-  if (amount <= 0) {
-    return { ok: false, error: 'Jumlah harus lebih dari 0.' };
-  }
-  const totalInSilver = amount * RATE_TO_SILVER[fromCode];
-  const resultAmount = totalInSilver / RATE_TO_SILVER[toCode];
-
-  if (!Number.isFinite(resultAmount) || resultAmount <= 0) {
-    return { ok: false, error: 'Jumlah terlalu kecil untuk dikonversi (hasil = 0). Perbesar jumlahnya.' };
-  }
-  return { ok: true, resultAmount };
-}
-
 function formatCurrencyLine(currencyObj) {
   return CURRENCIES.map(
     (c) => `${CURRENCY_EMOJI[c]} **${currencyObj?.[c] ?? 0}** ${CURRENCY_LABEL[c]}`
@@ -57,5 +36,5 @@ function formatCurrencyLine(currencyObj) {
 
 module.exports = {
   CURRENCIES, CURRENCY_LABEL, CURRENCY_EMOJI, RATE_TO_SILVER,
-  isValidCurrency, convertAmount, formatCurrencyLine,
+  isValidCurrency, formatCurrencyLine,
 };
