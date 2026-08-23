@@ -67,6 +67,7 @@ module.exports = {
       .addSubcommand(sub => sub.setName('unfreeze').setDescription('Unfreeze').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)))
       .addSubcommand(sub => sub.setName('kill').setDescription('Bunuh').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)).addUserOption(o => o.setName('loot-untuk').setDescription('Beri loot ke').setRequired(true)))
       .addSubcommand(sub => sub.setName('force-unregister').setDescription('Hapus akun').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)))
+      .addSubcommand(sub => sub.setName('force-stop-work').setDescription('Paksa berhenti kerja/reset status pekerja').addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true)))
       .addSubcommand(sub => sub.setName('set-status')
         .setDescription('Set status karakter')
         .addUserOption(o => o.setName('user').setDescription('Pemain').setRequired(true))

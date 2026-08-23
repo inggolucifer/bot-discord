@@ -50,6 +50,7 @@ const routeMap = {
   'playerunfreeze': 'adminUnfreeze',
   'playerkill': 'adminKill',
   'playerforceunregister': 'adminForceUnregister',
+  'playerforcestopwork': 'adminForceStopWork',
   'playersetstatus': 'adminSetStatus',
 
   // CHANNEL
