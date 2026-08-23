@@ -202,3 +202,60 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+// 4. POST /api/market/shop/buy
+router.post('/shop/buy', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { shopId, quantity } = req.body;
+
+    if (!shopId || !quantity || quantity <= 0) {
+        return res.status(400).json({ error: 'Data tidak valid.' });
+    }
+
+    const lockKey = `market_shop_buy_${shopId}_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    try {
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const shopItem = await Shop.findById(shopId);
+        if (!shopItem || !shopItem.isActive) return res.status(404).json({ error: 'Barang tidak ditemukan di toko.' });
+        if (shopItem.stock !== -1 && shopItem.stock < quantity) {
+            return res.status(400).json({ error: 'Stok barang tidak mencukupi.' });
+        }
+
+        const totalPrice = shopItem.price * quantity;
+        const currencyType = shopItem.priceCurrency;
+
+        if (player.currency[currencyType] < totalPrice) {
+            // Note: Simplification for exact currency match instead of calculating totalWealth.
+            // Better matching should deduct total wealth properly or require exact currency match.
+            return res.status(400).json({ error: `Uang ${currencyType} tidak cukup. Butuh ${totalPrice}.` });
+        }
+
+        player.currency[currencyType] -= totalPrice;
+
+        if (shopItem.stock !== -1) {
+            shopItem.stock -= quantity;
+            await shopItem.save();
+        }
+
+        if (shopItem.category === 'item') {
+            const existingItem = player.inventory.find(i => i.itemId.equals(shopItem.refId));
+            if (existingItem) existingItem.quantity += quantity;
+            else player.inventory.push({ itemId: shopItem.refId, quantity: quantity });
+        } else if (shopItem.category === 'asset') {
+            const existingAsset = player.assets.find(a => a.assetId.equals(shopItem.refId));
+            if (existingAsset) existingAsset.quantity += quantity;
+            else player.assets.push({ assetId: shopItem.refId, quantity: quantity });
+        } // Pets simplified out for now
+
+        await player.save();
+
+        res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
+    } catch (error) {
+        console.error('[API-MARKET] Buy error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
+    } finally {
+        releaseLock();
+    }
+});
