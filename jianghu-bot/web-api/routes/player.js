@@ -191,4 +191,225 @@ router.post('/assets/claim-profit', authenticateToken, async (req, res) => {
     }
 });
 
+
+router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const guildId = req.user.guildId || req.user.userId;
+        const { assetId, durasi } = req.body;
+
+        if (!assetId || !durasi || durasi < 1) {
+            return res.status(400).json({ error: 'Data tidak lengkap atau durasi tidak valid.' });
+        }
+
+        const player = await Player.findOne({ discordId: userId, guildId: guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const assetDoc = await Asset.findById(assetId);
+        if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
+
+        const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+
+        if (!isUnderConstruction(ownedAsset)) {
+            if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+            const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+            if (activeWorkers >= 1) {
+                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            }
+        }
+
+        const totalCost = durasi * 5;
+        if (player.currency.silver < totalCost) {
+            return res.status(400).json({ error: `Silver kamu tidak cukup. Butuh ${totalCost} Silver.` });
+        }
+
+        player.currency.silver -= totalCost;
+
+        ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
+        ownedAsset.lastProgressUpdate = new Date();
+
+        if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+        ownedAsset.assignedWorkers.push({
+            workerId: `NPC_${Date.now()}`,
+            endTime: new Date(Date.now() + durasi * 3600000)
+        });
+
+        if (ownedAsset.status === 'pending') ownedAsset.status = 'building';
+
+        await player.save();
+
+        res.json({ success: true, message: `Berhasil menyewa NPC Worker untuk ${durasi} jam.` });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error hiring NPC:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat menyewa NPC.' });
+    }
+});
+
+router.post('/assets/hire-player', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const guildId = req.user.guildId || req.user.userId;
+        const { assetId, workerId, durasi } = req.body;
+
+        if (!assetId || !workerId || !durasi || durasi < 1) {
+            return res.status(400).json({ error: 'Data tidak lengkap.' });
+        }
+
+        const WorkerContract = require('../../models/WorkerContract');
+        const contract = await WorkerContract.findOne({ _id: workerId, guildId, status: 'available' });
+        if (!contract) return res.status(400).json({ error: 'Pekerja tidak tersedia.' });
+
+        if (durasi > contract.maxDurationHours) {
+            return res.status(400).json({ error: `Durasi melebihi batas maksimal pekerja (${contract.maxDurationHours} jam).` });
+        }
+        if (contract.workerId === userId) {
+            return res.status(400).json({ error: 'Tidak bisa menyewa diri sendiri.' });
+        }
+
+        const player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const assetDoc = await Asset.findById(assetId);
+        if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
+
+        const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+
+        if (!isUnderConstruction(ownedAsset)) {
+            if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+            const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+            if (activeWorkers >= 1) {
+                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            }
+        }
+
+        const totalCost = durasi * contract.pricePerHour;
+        if (player.currency.silver < totalCost) {
+            return res.status(400).json({ error: `Silver kamu tidak cukup. Butuh ${totalCost} Silver.` });
+        }
+
+        player.currency.silver -= totalCost;
+
+        ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
+        ownedAsset.lastProgressUpdate = new Date();
+
+        const endTime = new Date(Date.now() + durasi * 3600000);
+
+        if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+        ownedAsset.assignedWorkers.push({
+            workerId: contract.workerId,
+            endTime: endTime
+        });
+
+        if (ownedAsset.status === 'pending') ownedAsset.status = 'building';
+
+        contract.status = 'working';
+        contract.currentAssetId = assetDoc._id.toString();
+        contract.currentEmployerId = userId;
+        contract.workingSince = new Date();
+        contract.workingUntil = endTime;
+
+        await contract.save();
+        await player.save();
+
+        const workerPlayer = await Player.findOne({ discordId: contract.workerId, guildId });
+        if (workerPlayer) {
+            workerPlayer.customStatus = `Sedang bekerja di asset ${assetDoc.name} milik ${player.characterName}`;
+            await workerPlayer.save();
+        }
+
+        res.json({ success: true, message: `Berhasil menyewa ${contract.workerName} untuk ${durasi} jam.` });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error hiring player:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat menyewa pekerja.' });
+    }
+});
+
+router.post('/assets/move-worker', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const guildId = req.user.guildId || req.user.userId;
+        const { targetAssetId, workerId } = req.body;
+
+        if (!targetAssetId || !workerId) return res.status(400).json({ error: 'Data tidak lengkap.' });
+
+        const player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const WorkerContract = require('../../models/WorkerContract');
+        let contract = null;
+        let isNpc = workerId.startsWith('NPC_');
+
+        if (!isNpc) {
+            contract = await WorkerContract.findOne({ guildId, workerId: workerId, currentEmployerId: userId, status: 'working' });
+            if (!contract) return res.status(400).json({ error: 'Worker tersebut tidak sedang bekerja untukmu.' });
+        }
+
+        const targetAssetDoc = await Asset.findById(targetAssetId);
+        if (!targetAssetDoc) return res.status(404).json({ error: 'Aset tujuan tidak ditemukan.' });
+
+        const targetOwnedAsset = player.assets.find(a => a.assetId.equals(targetAssetDoc._id));
+        if (!targetOwnedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tujuan tersebut.' });
+
+        if (!isUnderConstruction(targetOwnedAsset)) {
+            if (!targetOwnedAsset.assignedWorkers) targetOwnedAsset.assignedWorkers = [];
+            const activeWorkers = targetOwnedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+            if (activeWorkers >= 1) return res.status(400).json({ error: 'Aset tujuan sudah jadi, maksimal 1 pekerja.' });
+        }
+
+        let oldAssetFound = false;
+        let endTimeToCarryOver = null;
+
+        for (let a of player.assets) {
+            if (!a.assignedWorkers) continue;
+            const workerIdx = a.assignedWorkers.findIndex(w => w.workerId === workerId);
+            if (workerIdx !== -1) {
+                const w = a.assignedWorkers[workerIdx];
+                if (w.endTime && w.endTime.getTime() < Date.now()) {
+                    return res.status(400).json({ error: 'Kontrak pekerja ini sudah habis.' });
+                }
+                endTimeToCarryOver = w.endTime;
+
+                a.progressAccumulated += calculateProgress(a);
+                a.lastProgressUpdate = new Date();
+
+                a.assignedWorkers.splice(workerIdx, 1);
+                if (a.assignedWorkers.length === 0) a.status = 'pending';
+
+                oldAssetFound = true;
+                break;
+            }
+        }
+
+        if (!oldAssetFound) return res.status(400).json({ error: 'Pekerja tidak ditemukan di aset manapun milikmu.' });
+
+        targetOwnedAsset.progressAccumulated += calculateProgress(targetOwnedAsset);
+        targetOwnedAsset.lastProgressUpdate = new Date();
+
+        if (!targetOwnedAsset.assignedWorkers) targetOwnedAsset.assignedWorkers = [];
+        targetOwnedAsset.assignedWorkers.push({ workerId: workerId, endTime: endTimeToCarryOver });
+        if (targetOwnedAsset.status === 'pending') targetOwnedAsset.status = 'building';
+
+        if (contract) {
+            contract.currentAssetId = targetAssetDoc._id.toString();
+            await contract.save();
+            const workerPlayer = await Player.findOne({ discordId: workerId, guildId });
+            if (workerPlayer) {
+                workerPlayer.customStatus = `Sedang bekerja di asset ${targetAssetDoc.name} milik ${player.characterName}`;
+                await workerPlayer.save();
+            }
+        }
+
+        await player.save();
+        res.json({ success: true, message: 'Berhasil memindahkan pekerja.' });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error moving worker:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat memindah pekerja.' });
+    }
+});
+
 module.exports = router;
