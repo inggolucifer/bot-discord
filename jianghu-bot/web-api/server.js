@@ -3,8 +3,12 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
+const http = require('http');
+const { Server } = require('socket.io');
+
 const setupServer = (client) => {
     const app = express();
+    const server = http.createServer(app);
 
     // Security middlewares
     app.use(helmet());
@@ -59,6 +63,7 @@ const setupServer = (client) => {
     const sectRoutes = require('./routes/sect');
     const workerRoutes = require('./routes/worker');
     const almanackRoutes = require('./routes/almanack');
+    const petRoutes = require('./routes/pet');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -67,6 +72,7 @@ const setupServer = (client) => {
     app.use('/api/sect', sectRoutes);
     app.use('/api/worker', workerRoutes);
     app.use('/api/almanack', almanackRoutes);
+    app.use('/api/pet', petRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
@@ -75,12 +81,45 @@ const setupServer = (client) => {
 
     // Start server
     const PORT = process.env.API_PORT || 3001;
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`[API] Web API Server running on port ${PORT}`);
         console.log(`[API] Anti-Cheat Locks & Rate Limiters Initialized.`);
     });
 
-    return app;
+    // Setup Socket.io
+    const io = new Server(server, {
+        cors: {
+            origin: allowedOrigins,
+            methods: ["GET", "POST"]
+        }
+    });
+
+    // Chat history in memory
+    const chatHistory = [];
+
+    io.on('connection', (socket) => {
+        // Send chat history to new connection
+        socket.emit('chat_history', chatHistory);
+
+        socket.on('send_message', (data) => {
+            if (!data.user || !data.message) return;
+            const message = {
+                id: Date.now().toString(),
+                user: data.user, // { id, name, avatar }
+                message: data.message,
+                timestamp: new Date()
+            };
+
+            chatHistory.push(message);
+            if (chatHistory.length > 50) {
+                chatHistory.shift();
+            }
+
+            io.emit('new_message', message);
+        });
+    });
+
+    return { app, server, io };
 };
 
 module.exports = setupServer;

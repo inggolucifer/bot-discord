@@ -72,7 +72,7 @@ export default function AssetsPage() {
       setLoading(true);
       const res = await api.get('/player/assets');
       setAssets(res.data.data);
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error(err);
       setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data aset.');
     } finally {
@@ -85,7 +85,8 @@ export default function AssetsPage() {
       router.push('/');
       return;
     }
-    fetchAssets();
+    const timer = setTimeout(() => fetchAssets(), 0);
+    return () => clearTimeout(timer);
   }, [user, router]);
 
   const handleClaimProfit = async () => {
@@ -96,7 +97,7 @@ export default function AssetsPage() {
       const res = await api.post('/player/assets/claim-profit');
       setClaimResult(res.data.data);
       await fetchAssets();
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error(err);
       setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal mengklaim profit.');
     } finally {
@@ -115,7 +116,7 @@ export default function AssetsPage() {
           await fetchAssets();
           setSelectedAsset(null);
           alert('Berhasil memindahkan pekerja.');
-      } catch (err: unknown) {
+      } catch (err: any) {
           console.error(err);
           alert((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memindah pekerja.');
       } finally {
@@ -319,7 +320,7 @@ export default function AssetsPage() {
                                       <Pickaxe size={16} /> Sewa Pekerja dari Papan
                                   </button>
                                   {!selectedAsset.underConstruction && selectedAsset.assignedWorkers.length >= 1 && (
-                                      <p className="text-[10px] text-red-400 mt-2 text-center">Aset yang sudah jadi hanya bisa ditangani 1 pekerja.</p>
+                                      <p className="text-[10px] text-red-400 mt-2 text-center">Aset yang sudah jadi hunknowna bisa ditangani 1 pekerja.</p>
                                   )}
                               </div>
                           </>

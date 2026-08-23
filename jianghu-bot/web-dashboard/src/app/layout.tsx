@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 import Navbar from "@/components/Navbar";
+import GlobalChatWrapper from '@/components/chat/GlobalChatWrapper';
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
         <footer className="bg-black/90 border-t border-[#333] p-6 text-center text-xs text-gray-500 mt-auto relative z-10">
           <p>© {new Date().getFullYear()} Jianghu Roleplay Server. All Rights Reserved.</p>
         </footer>
+        <GlobalChatWrapper />
       </body>
     </html>
   );
