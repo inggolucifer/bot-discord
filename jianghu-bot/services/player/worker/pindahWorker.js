@@ -3,6 +3,7 @@ const WorkerContract = require('../../../models/WorkerContract');
 const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const { calculateProgress } = require('../../../utils/assetProgress');
+const { isUnderConstruction } = require('../../../utils/crafting');
 const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
 
 module.exports = {
@@ -35,6 +36,14 @@ module.exports = {
 
     const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
     if (!ownedAsset) return interaction.editReply({ content: '❌ Kamu tidak memiliki aset tersebut.' });
+
+    if (!isUnderConstruction(ownedAsset)) {
+      if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+      const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+      if (activeWorkers >= 1) {
+        return interaction.editReply({ content: '❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+      }
+    }
 
     // Hapus dari aset lama jika ada
     if (contract.currentAssetId) {
