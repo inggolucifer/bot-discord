@@ -49,6 +49,12 @@ STATUS: ROADMAP UTAMA SELESAI — mode maintenance ringan
 - [x] Jalankan `npm run lint` & `npm run build` di web-dashboard sebelum tiap PR.
 - [x] Kalau SEMUA checklist di atas sudah tercentang: ubah STATUS di paling atas file ini jadi "STATUS: ROADMAP UTAMA SELESAI — mode maintenance ringan", dan sesi berikutnya cukup cari bug kecil/dependency usang, JANGAN menambah fitur besar baru tanpa instruksi eksplisit dari pemilik repo.
 
+## PERBAIKAN CHAT GLOBAL & PEMERATAAN FITUR (Sesi Tambahan)
+- [x] Perbaikan Socket.io (exclude `/api/socket.io` dari `apiLimiter`), autentikasi socket pakai JWT, simpan chat history di Mongoose (`ChatMessage`), dan UI status "Menyambung".
+- [x] Tambah halaman & navigasi Navbar untuk fitur yang sudah ada di Bot: Leaderboard (`/leaderboard`), Tournament Bracket (`/tournament`), dan Meja Barter (`/barter`), beserta integrasi Mongoose-nya ke `/api/...`.
+- [x] Hapus referensi command usang `/convert` dari `README.md`.
+- [x] Hapus file sampah `backend_output.log` dari tracking repo.
+
 ## CARA KERJA LINTAS-SESI (wajib diikuti setiap sesi kerja, termasuk sesi terjadwal berikutnya)
 1. Baca file ini dari awal.
 2. Pilih SATU item checklist yang belum tercentang (☐), urut sesuai fase (jangan loncat ke fase belakangan kalau fase sebelumnya belum selesai, kecuali itemnya independen).
