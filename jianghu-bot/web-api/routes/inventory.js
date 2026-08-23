@@ -19,21 +19,42 @@ router.get('/', authenticateToken, async (req, res) => {
         }
 
         // Format the output for the frontend
+
+        const getEmojiForShopItem = (itemType, category) => {
+            if (category === 'asset') return '🏯';
+            if (category === 'pet') return '🐉';
+
+            switch(itemType) {
+              case 'weapon': return '🗡️';
+              case 'cloth': return '👘';
+              case 'herb': return '🌿';
+              case 'pill': return '💊';
+              case 'material': return '🧱';
+              case 'artifact': return '🔮';
+              case 'accessories': return '💍';
+              default: return '📦';
+            }
+        };
+
         const formattedInventory = player.inventory.map(slot => ({
             id: slot.itemId._id,
             name: slot.itemId.name,
             description: slot.itemId.description,
-            type: slot.itemId.type,
+            type: slot.itemId.category,
             rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
             quantity: slot.quantity,
             price: slot.itemId.basePrice, // Changed to match DB schema
             imageUrl: slot.itemId.imageUrl, // Include image URL
-            emoji: '📦' // Fallback
+            emoji: getEmojiForShopItem(slot.itemId.category, 'item')
         }));
 
         res.json({
             success: true,
-            data: formattedInventory
+            data: formattedInventory,
+            meta: {
+                totalSlots: player.inventory.length,
+                maxSlots: 50 // Fixed capacity as mentioned in typical game rules, can be made dynamic from DB later
+            }
         });
     } catch (error) {
         console.error('[API-INVENTORY] Error fetching inventory:', error);
