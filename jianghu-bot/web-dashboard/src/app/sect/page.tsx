@@ -24,22 +24,8 @@ export default function SectPage() {
     const fetchSect = async () => {
       try {
         setLoading(true);
-        // Note: For full implementation, this should fetch actual sect data based on player's sect string
-        // For now, we will query player's sect from profile and mock the rest if no specific endpoint exists,
-        // or we could add a new endpoint /api/player/sect
-        const res = await api.get('/player/profile');
-        const profile = res.data.data;
-
-        if (!profile.sect || profile.sect === 'Tanpa Sekte (Rogue Cultivator)') {
-             setSect(null);
-        } else {
-             // In phase 4, we establish a basic page. A real fetch to a sect model could be done here.
-             setSect({
-                 name: profile.sect,
-                 description: 'Balai pusat perkumpulan para pendekar dan kultivator.',
-                 role: 'Anggota' // this could be derived from the database if we build a proper sect API
-             });
-        }
+        const res = await api.get('/sect/profile');
+        setSect(res.data.data);
       } catch (err: unknown) {
         console.error(err);
         setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data sekte.');
@@ -62,12 +48,17 @@ export default function SectPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4 mb-10">
-        <h1 className="text-4xl font-bold font-serif text-[#c5a880]">Balai Sekte</h1>
-        <p className="text-gray-400">Pusat logistik dan koordinasi sekte (Dalam Pengembangan).</p>
+      <div className="text-center space-y-4 mb-10 relative">
+        <div className="absolute inset-0 opacity-20 pointer-events-none flex justify-center z-0">
+           <span className="text-[120px] text-green-900/30 leading-none select-none">⛩️</span>
+        </div>
+        <h1 className="text-4xl font-bold font-serif text-green-500 relative z-10 drop-shadow-md">Balai Sekte</h1>
+        <p className="text-gray-400 relative z-10">Pusat logistik dan koordinasi sekte Anda.</p>
       </div>
 
-      <div className="bg-[#1a1a1a] jianghu-border rounded-lg p-6 min-h-[40vh] flex flex-col items-center justify-center">
+      <div className="bg-[#1a1a1a] jianghu-border border-green-900/50 rounded-lg p-6 min-h-[40vh] flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-green-900/10 rounded-bl-full pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#c5a880]/5 rounded-tr-full pointer-events-none"></div>
         {!sect ? (
           <div className="text-center space-y-4">
              <Users size={48} className="mx-auto text-gray-600" />
@@ -94,14 +85,16 @@ export default function SectPage() {
                <Shield size={16} /> Jabatan Anda: {sect.role as string}
              </div>
 
-             <div className="border-t border-[#333] pt-8 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                <div className="bg-black/40 p-4 rounded border border-[#333]">
-                   <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Users size={16}/> Informasi Keanggotaan</h3>
-                   <p className="text-sm text-gray-500">Daftar anggota dan struktur sekte (Segera Hadir)</p>
+             <div className="border-t border-green-900/30 pt-8 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left relative z-10">
+                <div className="bg-black/60 p-4 rounded border border-green-900/40 hover:border-green-600 transition-colors">
+                   <h3 className="font-bold text-green-400 mb-2 flex items-center gap-2"><Users size={16}/> Informasi Keanggotaan</h3>
+                   <p className="text-sm text-gray-300 font-semibold mb-1">Jumlah Anggota: {sect.memberCount as number}</p>
+                   <p className="text-xs text-gray-500">Manajemen anggota penuh tersedia di bot Discord (menggunakan komando /sekte).</p>
                 </div>
-                <div className="bg-black/40 p-4 rounded border border-[#333]">
+                <div className="bg-black/60 p-4 rounded border border-[#c5a880]/40 hover:border-[#c5a880] transition-colors">
                    <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16}/> Gudang Sekte</h3>
-                   <p className="text-sm text-gray-500">Manajemen kas dan sumber daya sekte (Segera Hadir)</p>
+                   <p className="text-sm text-gray-300 font-semibold mb-1">Total Kekayaan: {(sect.totalWealth as number).toLocaleString()} Silver</p>
+                   <p className="text-xs text-gray-500">Aset: Spirit ({(sect.currency as Record<string, number>).spirit}), Gold ({(sect.currency as Record<string, number>).gold}), Jade ({(sect.currency as Record<string, number>).jade})</p>
                 </div>
              </div>
           </div>

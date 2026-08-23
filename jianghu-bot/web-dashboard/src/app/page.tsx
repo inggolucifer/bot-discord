@@ -95,32 +95,32 @@ export default function Home() {
       {user && profile && (
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col items-center justify-center gap-2">
-             <div className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-300 border border-blue-900/50">
-                <Coins size={20} />
-             </div>
-             <span className="text-xs text-gray-400">Spirit</span>
-             <span className="text-xl font-bold text-blue-300">{((profile.currency as Record<string, number>)?.spirit) || 0}</span>
-          </div>
-          <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col items-center justify-center gap-2">
              <div className="w-10 h-10 rounded-full bg-gray-700/30 flex items-center justify-center text-gray-300 border border-gray-600/50">
                 <Coins size={20} />
              </div>
-             <span className="text-xs text-gray-400">Silver</span>
+             <span className="text-xs text-gray-400">Silver Tael</span>
              <span className="text-xl font-bold text-gray-300">{((profile.currency as Record<string, number>)?.silver) || 0}</span>
           </div>
           <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col items-center justify-center gap-2">
              <div className="w-10 h-10 rounded-full bg-yellow-900/30 flex items-center justify-center text-yellow-500 border border-yellow-700/50">
                 <Coins size={20} />
              </div>
-             <span className="text-xs text-gray-400">Gold</span>
+             <span className="text-xs text-gray-400">Gold Tael</span>
              <span className="text-xl font-bold text-yellow-500">{((profile.currency as Record<string, number>)?.gold) || 0}</span>
           </div>
           <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col items-center justify-center gap-2 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
              <div className="w-10 h-10 rounded-full bg-green-900/30 flex items-center justify-center text-green-400 border border-green-700/50">
                 <Coins size={20} />
              </div>
-             <span className="text-xs text-gray-400">Jade</span>
+             <span className="text-xs text-gray-400">Jade Tael</span>
              <span className="text-xl font-bold text-green-400">{((profile.currency as Record<string, number>)?.jade) || 0}</span>
+          </div>
+          <div className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col items-center justify-center gap-2">
+             <div className="w-10 h-10 rounded-full bg-blue-900/30 flex items-center justify-center text-blue-300 border border-blue-900/50">
+                <Coins size={20} />
+             </div>
+             <span className="text-xs text-gray-400">Spirit Stone</span>
+             <span className="text-xl font-bold text-blue-300">{((profile.currency as Record<string, number>)?.spirit) || 0}</span>
           </div>
         </section>
       )}
