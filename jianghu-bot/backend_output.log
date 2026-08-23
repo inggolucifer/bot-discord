@@ -1,0 +1,16 @@
+
+> jianghu-world-bot@1.0.0 start
+> node index.js
+
+[BOT] 24 command berhasil dimuat.
+[DATABASE] Gagal konek ke MongoDB: MongooseError: The `uri` parameter to `openUri()` must be a string, got "undefined". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.
+    at NativeConnection.createClient (/app/jianghu-bot/node_modules/mongoose/lib/drivers/node-mongodb-native/connection.js:237:11)
+    at NativeConnection.openUri (/app/jianghu-bot/node_modules/mongoose/lib/connection.js:1075:34)
+    at Mongoose.connect (/app/jianghu-bot/node_modules/mongoose/lib/mongoose.js:450:15)
+    at connectDB (/app/jianghu-bot/config/database.js:5:20)
+    at /app/jianghu-bot/index.js:49:9
+    at Object.<anonymous> (/app/jianghu-bot/index.js:81:3)
+    at Module._compile (node:internal/modules/cjs/loader:1705:14)
+    at Object..js (node:internal/modules/cjs/loader:1838:10)
+    at Module.load (node:internal/modules/cjs/loader:1441:32)
+    at Function._load (node:internal/modules/cjs/loader:1263:12)
