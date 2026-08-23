@@ -88,6 +88,7 @@ const setupServer = (client) => {
 
     // Setup Socket.io
     const io = new Server(server, {
+        path: '/api/socket.io',
         cors: {
             origin: allowedOrigins,
             methods: ["GET", "POST"]
