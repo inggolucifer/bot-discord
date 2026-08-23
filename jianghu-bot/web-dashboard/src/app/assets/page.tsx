@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Loader2, Pickaxe, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+import { Loader2, Pickaxe, CheckCircle2, Clock, AlertTriangle, DollarSign } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
@@ -25,32 +25,49 @@ export default function AssetsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [claimLoading, setClaimLoading] = useState(false);
+  const [claimResult, setClaimResult] = useState<{ claimed: string[], waiting: string[], other: string[] } | null>(null);
+
   const { user } = useAuthStore();
   const router = useRouter();
 
+  const fetchAssets = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get('/player/assets');
+      setAssets(res.data.data);
+    } catch (err: unknown) {
+      console.error(err);
+      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data aset.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
     if (!user) {
       router.push('/');
       return;
     }
-
-    const fetchAssets = async () => {
-      try {
-        if (isMounted) setLoading(true);
-        const res = await api.get('/player/assets');
-        if (isMounted) setAssets(res.data.data);
-      } catch (err: unknown) {
-        console.error(err);
-        if (isMounted) setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data aset.');
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
     fetchAssets();
-    return () => { isMounted = false; };
   }, [user, router]);
+
+  const handleClaimProfit = async () => {
+    setClaimLoading(true);
+    setClaimResult(null);
+    setError(null);
+    try {
+      const res = await api.post('/player/assets/claim-profit');
+      setClaimResult(res.data.data);
+      await fetchAssets(); // Refresh asset states
+    } catch (err: unknown) {
+      console.error(err);
+      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal mengklaim profit.');
+    } finally {
+      setClaimLoading(false);
+    }
+  };
+
 
   if (loading) {
     return <div className="flex justify-center p-20 text-[#c5a880]"><Loader2 className="animate-spin" size={48} /></div>;
@@ -69,6 +86,31 @@ export default function AssetsPage() {
       </div>
 
       <div className="bg-[#1a1a1a] jianghu-border rounded-lg p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-white font-serif">Aset Pribadi</h2>
+          <button
+            onClick={handleClaimProfit}
+            disabled={claimLoading || assets.length === 0}
+            className="flex items-center gap-2 bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 disabled:text-gray-500 text-green-100 text-sm px-4 py-2 rounded border border-green-800 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)]"
+          >
+            {claimLoading ? <Loader2 size={16} className="animate-spin" /> : <DollarSign size={16} />}
+            Klaim Profit
+          </button>
+        </div>
+
+        {claimResult && (
+          <div className="mb-6 p-4 rounded bg-black/50 border border-green-900/50">
+            <h3 className="text-green-400 font-bold mb-2">Hasil Klaim:</h3>
+            {claimResult.claimed.length > 0 ? (
+              <ul className="text-sm text-gray-300 list-disc list-inside">
+                {claimResult.claimed.map((msg, i) => <li key={i}>{msg}</li>)}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-400">Tidak ada profit yang bisa diklaim saat ini.</p>
+            )}
+          </div>
+        )}
+
         {assets.length === 0 ? (
           <div className="text-center py-10 text-gray-500">
             Anda belum memiliki aset apapun. Beli aset di Pasar atau bangun menggunakan material.
