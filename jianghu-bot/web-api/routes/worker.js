@@ -10,7 +10,16 @@ router.get('/', authenticateToken, async (req, res) => {
 
         const workers = await WorkerContract.find({ guildId, status: 'available' }).lean();
 
-        res.json({ success: true, data: workers });
+        // Inject NPC System Worker as a static option so frontend can render it
+        const npcWorker = {
+           _id: 'NPC_SYSTEM',
+           workerName: 'NPC Worker (Sistem)',
+           pricePerHour: 5,
+           maxDurationHours: 72, // Arbitrary high max
+           isNpc: true
+        };
+
+        res.json({ success: true, data: [npcWorker, ...workers] });
     } catch (error) {
         console.error('[API-WORKER] Error fetching workers:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
