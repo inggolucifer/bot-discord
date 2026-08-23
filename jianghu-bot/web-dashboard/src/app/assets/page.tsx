@@ -58,6 +58,7 @@ export default function AssetsPage() {
   const [claimResult, setClaimResult] = useState<{ claimed: string[], waiting: string[], other: string[] } | null>(null);
 
   const [blueprints, setBlueprints] = useState<any[]>([]);
+  const [playerInventory, setPlayerInventory] = useState<any[]>([]);
   const [showBlueprints, setShowBlueprints] = useState(false);
   const [buildLoading, setBuildLoading] = useState(false);
 
@@ -74,18 +75,41 @@ export default function AssetsPage() {
   const fetchAssets = async () => {
     try {
       setLoading(true);
-      const [res, bpRes] = await Promise.all([
+      const [res, bpRes, invRes] = await Promise.all([
         api.get('/player/assets'),
-        api.get('/almanack/assets')
+        api.get('/almanack/assets'),
+        api.get('/inventory').catch(() => ({ data: { data: [] } })) // gracefully fallback if inventory fetch fails
       ]);
       setAssets(res.data.data);
-      setBlueprints(bpRes.data.data.filter((a: any) => a.buildable));
+
+      const inventory = invRes.data.data || [];
+      setPlayerInventory(inventory);
+
+      // Sort: buildable = true first, then buildable = false
+      const allAssets = bpRes.data.data.sort((a: any, b: any) => {
+          if (a.buildable === b.buildable) return a.name.localeCompare(b.name);
+          return a.buildable ? -1 : 1;
+      });
+      setBlueprints(allAssets);
     } catch (err: any) {
       console.error(err);
       setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data aset.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const checkMaterials = (requirements: any[]) => {
+      if (!requirements || requirements.length === 0) return { ok: true, missing: [] };
+      const missing = [];
+      for (const req of requirements) {
+          const owned = playerInventory.find((item: any) => item.name === req.itemName);
+          const have = owned ? owned.quantity : 0;
+          if (have < req.quantity) {
+              missing.push(`${req.itemName} (${have}/${req.quantity})`);
+          }
+      }
+      return { ok: missing.length === 0, missing };
   };
 
   useEffect(() => {
@@ -192,39 +216,83 @@ export default function AssetsPage() {
         {/* Blueprints Section */}
         {showBlueprints && (
           <div className="mb-8 bg-black/60 border border-[#444] rounded p-4">
-            <h3 className="text-lg font-bold text-[#c5a880] mb-4 flex items-center gap-2"><Building size={18}/> Blueprint Tersedia</h3>
+            <h3 className="text-lg font-bold text-[#c5a880] mb-4 flex items-center gap-2"><Building size={18}/> Daftar Aset & Blueprint</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {blueprints.length === 0 ? (
-                 <p className="text-gray-500 text-sm">Tidak ada blueprint yang tersedia.</p>
-              ) : blueprints.map(bp => (
-                <div key={bp._id} className="bg-[#1a1a1a] border border-[#333] p-4 rounded flex flex-col gap-3">
+                 <p className="text-gray-500 text-sm">Tidak ada aset yang tersedia di database.</p>
+              ) : blueprints.map(bp => {
+                const matCheck = checkMaterials(bp.buildRequirements || []);
+                const isBuildable = bp.buildable;
+                const canBuild = isBuildable && matCheck.ok;
+
+                return (
+                <div key={bp._id} className={`bg-[#1a1a1a] border p-4 rounded flex flex-col gap-3 ${isBuildable ? 'border-[#444] hover:border-[#c5a880]' : 'border-gray-800 opacity-75'}`}>
                   <div className="flex gap-3">
                      <div className="w-12 h-12 bg-black rounded border border-[#444] flex items-center justify-center p-1">
                        <FallbackImage src={bp.imageUrl || ""} alt={bp.name} fallbackHtml='<div class="text-xl">🏛️</div>' />
                      </div>
                      <div>
                         <h4 className="font-bold text-[#c5a880]">{bp.name}</h4>
-                        <p className="text-[10px] text-orange-400">Waktu Bangun: {bp.constructionTimeHours} Jam</p>
+                        <div className="flex items-center gap-2 mt-1">
+                           {isBuildable ? (
+                             <span className="text-[10px] px-1.5 py-0.5 bg-green-900/50 text-green-400 rounded border border-green-800">Bisa Dibangun</span>
+                           ) : (
+                             <span className="text-[10px] px-1.5 py-0.5 bg-red-900/50 text-red-400 rounded border border-red-800">Tidak Bisa Dibangun</span>
+                           )}
+                        </div>
                      </div>
                   </div>
-                  <div className="text-xs text-gray-400">
-                    <span className="block mb-1 font-semibold">Bahan:</span>
-                    <ul className="list-disc list-inside">
-                      {bp.buildRequirements?.map((req: any, i: number) => (
-                         <li key={i}>{req.itemName} x{req.quantity}</li>
-                      ))}
-                    </ul>
+
+                  <div className="text-xs text-gray-400 flex-grow">
+                    {isBuildable && (
+                        <>
+                            <p className="text-[10px] text-orange-400 mb-1">Waktu Bangun: {bp.constructionTimeHours} Jam</p>
+                            <span className="block mb-1 font-semibold">Bahan Dibutuhkan:</span>
+                            {bp.buildRequirements?.length > 0 ? (
+                                <ul className="list-disc list-inside">
+                                  {bp.buildRequirements.map((req: any, i: number) => {
+                                      const owned = playerInventory.find((item: any) => item.name === req.itemName);
+                                      const have = owned ? owned.quantity : 0;
+                                      const isEnough = have >= req.quantity;
+                                      return (
+                                          <li key={i} className={isEnough ? "text-green-400" : "text-red-400"}>
+                                              {req.itemName}: {have}/{req.quantity}
+                                          </li>
+                                      );
+                                  })}
+                                </ul>
+                            ) : (
+                                <span className="italic">Tidak ada syarat material</span>
+                            )}
+                            {!matCheck.ok && (
+                                <p className="text-[10px] text-red-400 mt-2 bg-red-900/20 p-1 rounded border border-red-900/50">Kurang material: {matCheck.missing.join(', ')}</p>
+                            )}
+                        </>
+                    )}
+                    {!isBuildable && (
+                        <p className="mt-2 text-gray-500 italic">Aset ini hanya bisa didapatkan melalui cara lain (misalnya Shop atau Event).</p>
+                    )}
                   </div>
-                  <button
-                    onClick={() => handleBuildAsset(bp._id)}
-                    disabled={buildLoading}
-                    className="mt-auto w-full bg-[#8b0000] hover:bg-red-800 disabled:bg-gray-800 disabled:text-gray-500 text-white text-xs py-2 rounded transition-colors font-bold flex justify-center items-center gap-2"
-                  >
-                    {buildLoading ? <Loader2 size={12} className="animate-spin" /> : <Hammer size={12}/>}
-                    Mulai Bangun
-                  </button>
+
+                  {isBuildable ? (
+                      <button
+                        onClick={() => handleBuildAsset(bp._id)}
+                        disabled={buildLoading || !canBuild}
+                        className={`mt-auto w-full text-white text-xs py-2 rounded transition-colors font-bold flex justify-center items-center gap-2 ${canBuild ? 'bg-[#8b0000] hover:bg-red-800' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}
+                      >
+                        {buildLoading ? <Loader2 size={12} className="animate-spin" /> : <Hammer size={12}/>}
+                        {canBuild ? 'Mulai Bangun' : 'Material Tidak Cukup'}
+                      </button>
+                  ) : (
+                      <button
+                        disabled
+                        className="mt-auto w-full bg-gray-800 text-gray-500 text-xs py-2 rounded font-bold cursor-not-allowed"
+                      >
+                        Tidak Bisa Dibangun
+                      </button>
+                  )}
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         )}

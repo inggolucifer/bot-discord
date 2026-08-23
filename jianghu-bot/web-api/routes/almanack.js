@@ -65,16 +65,17 @@ router.get('/assets', async (req, res) => {
 router.post('/build-asset', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
         const { assetId } = req.body;
 
         if (!assetId) {
             return res.status(400).json({ error: 'Asset ID tidak valid.' });
         }
 
-        const player = await Player.findOne({ discordId: userId, guildId: guildId });
+        const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
         if (player.status !== 'active') return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
+
+        const guildId = player.guildId;
 
         const asset = await Asset.findById(assetId);
         if (!asset) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
