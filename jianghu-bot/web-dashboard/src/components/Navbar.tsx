@@ -31,6 +31,7 @@ export default function Navbar() {
           <Link href="/" className="hover:text-[#c5a880] transition-colors">Karakter</Link>
           <Link href="/inventory" className="hover:text-[#c5a880] transition-colors">Inventory</Link>
           <Link href="/market" className="hover:text-[#c5a880] transition-colors">Pasar</Link>
+          <Link href="/almanack" className="hover:text-[#c5a880] transition-colors">Almanack</Link>
         </nav>
         <div className="flex gap-4 items-center">
           {errorMsg && (
