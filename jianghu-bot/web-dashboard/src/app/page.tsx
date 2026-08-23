@@ -1,6 +1,6 @@
 'use client';
 
-import { Coins, Flame, Scroll, Users, Sword } from "lucide-react";
+import { Coins, Flame, Scroll, Users, Sword, BookOpen } from "lucide-react";
 import FallbackImage from "@/components/FallbackImage";
 import { useAuthStore } from '@/lib/store';
 import { useEffect, useState } from "react";
@@ -126,7 +126,7 @@ export default function Home() {
       )}
 
       {/* Quick Actions (Visual Only for now) */}
-      <section className="grid md:grid-cols-3 gap-6">
+      <section className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <a href="/inventory" className="group relative bg-[#1a1a1a] jianghu-border p-6 rounded-lg hover:border-[#c5a880] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(197,168,128,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-[#c5a880]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="p-4 bg-black rounded-full text-[#c5a880] group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(197,168,128,0.4)] transition-all duration-300 relative z-10">
@@ -152,6 +152,15 @@ export default function Home() {
           </div>
           <h3 className="font-bold font-serif text-lg text-white relative z-10">Balai Sekte</h3>
           <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Pusat logistik dan komunikasi bagi anggota sekte Anda.</p>
+        </a>
+
+        <a href="/almanack" className="group relative bg-[#1a1a1a] jianghu-border p-6 rounded-lg hover:border-blue-700 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(29,78,216,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="p-4 bg-black rounded-full text-blue-600 group-hover:text-blue-400 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(29,78,216,0.4)] transition-all duration-300 relative z-10">
+            <BookOpen size={32} />
+          </div>
+          <h3 className="font-bold font-serif text-lg text-white relative z-10">Almanack</h3>
+          <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Kitab panduan lengkap pusaka, item, dan cetak biru bangunan.</p>
         </a>
       </section>
     </div>
