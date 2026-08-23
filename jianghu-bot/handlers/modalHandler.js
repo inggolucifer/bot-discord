@@ -1,6 +1,7 @@
 const { EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../utils/permissions');
 const Item = require('../models/Item');
+const { isUnderConstruction } = require('../utils/crafting');
 const Pet = require('../models/Pet');
 const Asset = require('../models/Asset');
 const Player = require('../models/Player');
@@ -94,11 +95,19 @@ async function handleModal(interaction) {
 
     for (const ownedAsset of employer.assets) {
       if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
-      const hasActiveWorker = ownedAsset.assignedWorkers.some(w => !w.endTime || w.endTime.getTime() > Date.now());
-      if (!hasActiveWorker) {
-        targetAsset = ownedAsset;
-        targetAssetDoc = playerAssetsDocs.find(d => d._id.equals(ownedAsset.assetId));
-        break;
+      const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+      const isCompleted = !isUnderConstruction(ownedAsset);
+
+      if (activeWorkers === 0 || !isCompleted) {
+        if (activeWorkers === 0) {
+          targetAsset = ownedAsset;
+          targetAssetDoc = playerAssetsDocs.find(d => d._id.equals(ownedAsset.assetId));
+          break;
+        }
+        if (!targetAsset) {
+           targetAsset = ownedAsset;
+           targetAssetDoc = playerAssetsDocs.find(d => d._id.equals(ownedAsset.assetId));
+        }
       }
     }
 

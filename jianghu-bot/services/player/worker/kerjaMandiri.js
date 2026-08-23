@@ -3,6 +3,8 @@ const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const WorkerContract = require('../../../models/WorkerContract');
 const { calculateProgress } = require('../../../utils/assetProgress');
+const { isUnderConstruction } = require('../../../utils/crafting');
+const { refreshWorkerChannel } = require('../../../services/workerChannelService');
 const WORKER_OPTIONS = require('../../../commands/player/workerOptions');
 
 module.exports = {
@@ -23,14 +25,30 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
 
     // Pastikan player tidak sedang disewa orang lain
-    const contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId: interaction.user.id, status: 'working' });
-    if (contract) return interaction.editReply({ content: '❌ Kamu sedang disewa oleh orang lain! Selesaikan dulu kontrak kerjamu.' });
+    let contract = await WorkerContract.findOne({ guildId: interaction.guildId, workerId: interaction.user.id });
+    if (contract && contract.status === 'working') {
+      return interaction.editReply({ content: '❌ Kamu sedang disewa oleh orang lain! Selesaikan dulu kontrak kerjamu.' });
+    }
 
     const assetDoc = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${assetName}$`, 'i') });
     if (!assetDoc) return interaction.editReply({ content: '❌ Aset tidak ditemukan.' });
 
     const targetAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
     if (!targetAsset) return interaction.editReply({ content: '❌ Kamu tidak memiliki aset tersebut.' });
+
+    if (!isUnderConstruction(targetAsset)) {
+      if (!targetAsset.assignedWorkers) targetAsset.assignedWorkers = [];
+      const activeWorkers = targetAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+      if (activeWorkers >= 1) {
+        return interaction.editReply({ content: '❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+      }
+    }
+
+    // Hapus dari listing worker jika ada
+    if (contract && contract.status === 'available') {
+      await WorkerContract.deleteOne({ _id: contract._id });
+      await refreshWorkerChannel(interaction.client, interaction.guildId);
+    }
 
     // Cabut dari aset mana pun miliknya yang sebelumnya dikerjakan sendiri
     for (const owned of player.assets) {
