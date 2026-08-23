@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BookOpen, Search, Filter, Wrench, Package, PackageOpen } from 'lucide-react';
+import { Search, Package, PackageOpen, Wrench, BookOpen } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
 import api from '@/lib/api';
 
-type TabType = 'item' | 'asset' | 'build';
+type TabType = 'item' | 'asset';
 
 export default function AlmanackPage() {
   const { user } = useAuthStore();
@@ -15,12 +15,7 @@ export default function AlmanackPage() {
   const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+    const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -38,26 +33,13 @@ export default function AlmanackPage() {
     }
   };
 
-  const handleBuildAsset = async (assetId: string) => {
-    if (!user) {
-      setMessage({ type: 'error', text: 'Silakan login terlebih dahulu untuk membangun aset.' });
-      return;
-    }
-    setActionLoading(true);
-    setMessage(null);
-    try {
-      const res = await api.post('/almanack/build-asset', { assetId });
-      setMessage({ type: 'success', text: res.data.message });
-      // Optionally fetch data again to update inventory/assets if we had it in this view
-    } catch (err: any) {
-      setMessage({
-        type: 'error',
-        text: err.response?.data?.error || 'Terjadi kesalahan saat membangun aset.'
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => fetchData(), 0);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  ;
 
   // Filter and sort items/assets based on search and tab logic
   const filteredItems = items.filter(item =>
@@ -113,12 +95,7 @@ export default function AlmanackPage() {
         >
           <PackageOpen size={16} /> Asset
         </button>
-        <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'build' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
-          onClick={() => {setActiveTab('build'); setMessage(null);}}
-        >
-          <Wrench size={16} /> Bangun Asset
-        </button>
+
       </div>
 
       {message && (
@@ -163,7 +140,7 @@ export default function AlmanackPage() {
             </div>
           ))}
 
-          {/* TAB ASSET (Hanya info) */}
+          {/* TAB ASSET (Hunknowna info) */}
           {activeTab === 'asset' && filteredAssets.map((asset) => (
             <div key={asset._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3">
               <div className="flex items-start gap-4">
@@ -201,51 +178,6 @@ export default function AlmanackPage() {
             </div>
           ))}
 
-          {/* TAB BANGUN ASSET */}
-          {activeTab === 'build' && buildableAssets.map((asset) => (
-             <div key={asset._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3 border-[#c5a880]/30 hover:border-[#c5a880] transition-colors">
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
-                  <FallbackImage
-                    src={asset.imageUrl || ""}
-                    alt={asset.name}
-                    className="max-w-full max-h-full object-contain"
-                    fallbackHtml='<div class="text-2xl">🔨</div>'
-                  />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white">{asset.name}</h3>
-                  <p className="text-[10px] text-gray-400 mt-1">Waktu Bangun: {asset.constructionTimeHours} Jam</p>
-                </div>
-              </div>
-
-              <div className="bg-black/50 p-2 rounded border border-[#333] flex-grow">
-                <p className="text-[11px] text-gray-400 font-semibold mb-1">Material Dibutuhkan:</p>
-                {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
-                  <ul className="text-xs space-y-1">
-                    {asset.buildRequirements.map((req: any, i: number) => (
-                      <li key={i} className="flex justify-between text-gray-300">
-                        <span>- {req.itemName}</span>
-                        <span className="text-[#c5a880]">x{req.quantity}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-xs text-red-400 italic">Belum ada syarat material diatur oleh Admin.</p>
-                )}
-              </div>
-
-              <button
-                onClick={() => handleBuildAsset(asset._id)}
-                disabled={actionLoading || !user || !asset.buildRequirements?.length}
-                className="mt-2 w-full bg-[#8b0000] hover:bg-red-900 text-white text-sm font-bold py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-              >
-                {actionLoading ? 'Membangun...' : <><Wrench size={16} /> Bangun Asset</>}
-              </button>
-              {!user && <p className="text-[10px] text-center text-gray-500 mt-1">Login untuk membangun</p>}
-            </div>
-          ))}
-
           {/* Empty States */}
           {activeTab === 'item' && filteredItems.length === 0 && (
              <div className="col-span-full text-center py-10 text-gray-500">Item tidak ditemukan.</div>
@@ -253,9 +185,7 @@ export default function AlmanackPage() {
           {activeTab === 'asset' && filteredAssets.length === 0 && (
              <div className="col-span-full text-center py-10 text-gray-500">Aset tidak ditemukan.</div>
           )}
-          {activeTab === 'build' && buildableAssets.length === 0 && (
-             <div className="col-span-full text-center py-10 text-gray-500">Tidak ada aset yang bisa dibangun saat ini.</div>
-          )}
+
 
         </div>
       )}

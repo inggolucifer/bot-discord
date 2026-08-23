@@ -30,6 +30,7 @@ export default function Navbar() {
         <nav className="hidden md:flex gap-6 text-sm">
           <Link href="/" className="hover:text-[#c5a880] transition-colors">Karakter</Link>
           <Link href="/inventory" className="hover:text-[#c5a880] transition-colors">Inventory</Link>
+          <Link href="/pet" className="hover:text-[#c5a880] transition-colors">Pet</Link>
           <Link href="/market" className="hover:text-[#c5a880] transition-colors">Pasar</Link>
           <Link href="/almanack" className="hover:text-[#c5a880] transition-colors">Almanack</Link>
         </nav>
