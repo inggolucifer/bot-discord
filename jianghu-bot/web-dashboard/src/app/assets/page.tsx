@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
-import { Loader2, Pickaxe, CheckCircle2, Clock, AlertTriangle, DollarSign, X } from 'lucide-react';
+import { Loader2, Pickaxe, CheckCircle2, Clock, AlertTriangle, DollarSign, X, Building, Hammer } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
@@ -57,6 +57,10 @@ export default function AssetsPage() {
   const [claimLoading, setClaimLoading] = useState(false);
   const [claimResult, setClaimResult] = useState<{ claimed: string[], waiting: string[], other: string[] } | null>(null);
 
+  const [blueprints, setBlueprints] = useState<any[]>([]);
+  const [showBlueprints, setShowBlueprints] = useState(false);
+  const [buildLoading, setBuildLoading] = useState(false);
+
   const [selectedAsset, setSelectedAsset] = useState<AssetData | null>(null);
 
   const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
@@ -70,8 +74,12 @@ export default function AssetsPage() {
   const fetchAssets = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/player/assets');
+      const [res, bpRes] = await Promise.all([
+        api.get('/player/assets'),
+        api.get('/almanack/assets')
+      ]);
       setAssets(res.data.data);
+      setBlueprints(bpRes.data.data.filter((a: any) => a.buildable));
     } catch (err: any) {
       console.error(err);
       setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data aset.');
@@ -88,6 +96,22 @@ export default function AssetsPage() {
     const timer = setTimeout(() => fetchAssets(), 0);
     return () => clearTimeout(timer);
   }, [user, router]);
+
+  const handleBuildAsset = async (assetId: string) => {
+    setBuildLoading(true);
+    setError(null);
+    try {
+      const res = await api.post('/almanack/build-asset', { assetId });
+      setClaimResult({ claimed: [res.data.message], waiting: [], other: [] });
+      setShowBlueprints(false);
+      await fetchAssets();
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || 'Gagal membangun aset.');
+    } finally {
+      setBuildLoading(false);
+    }
+  };
 
   const handleClaimProfit = async () => {
     setClaimLoading(true);
@@ -145,15 +169,65 @@ export default function AssetsPage() {
       <div className="bg-[#1a1a1a] jianghu-border rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-white font-serif">Aset Pribadi</h2>
-          <button
-            onClick={handleClaimProfit}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowBlueprints(!showBlueprints)}
+              className="flex items-center gap-2 bg-[#8b0000] hover:bg-red-800 text-white text-sm px-4 py-2 rounded border border-red-900 transition-colors shadow-[0_0_10px_rgba(139,0,0,0.5)]"
+            >
+              <Hammer size={16} />
+              Bangun Aset Baru
+            </button>
+            <button
+              onClick={handleClaimProfit}
             disabled={claimLoading || assets.length === 0}
             className="flex items-center gap-2 bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 disabled:text-gray-500 text-green-100 text-sm px-4 py-2 rounded border border-green-800 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)]"
           >
             {claimLoading ? <Loader2 size={16} className="animate-spin" /> : <DollarSign size={16} />}
             Klaim Profit
-          </button>
+            </button>
+          </div>
         </div>
+
+
+        {/* Blueprints Section */}
+        {showBlueprints && (
+          <div className="mb-8 bg-black/60 border border-[#444] rounded p-4">
+            <h3 className="text-lg font-bold text-[#c5a880] mb-4 flex items-center gap-2"><Building size={18}/> Blueprint Tersedia</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {blueprints.length === 0 ? (
+                 <p className="text-gray-500 text-sm">Tidak ada blueprint yang tersedia.</p>
+              ) : blueprints.map(bp => (
+                <div key={bp._id} className="bg-[#1a1a1a] border border-[#333] p-4 rounded flex flex-col gap-3">
+                  <div className="flex gap-3">
+                     <div className="w-12 h-12 bg-black rounded border border-[#444] flex items-center justify-center p-1">
+                       <FallbackImage src={bp.imageUrl || ""} alt={bp.name} fallbackHtml='<div class="text-xl">🏛️</div>' />
+                     </div>
+                     <div>
+                        <h4 className="font-bold text-[#c5a880]">{bp.name}</h4>
+                        <p className="text-[10px] text-orange-400">Waktu Bangun: {bp.constructionTimeHours} Jam</p>
+                     </div>
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    <span className="block mb-1 font-semibold">Bahan:</span>
+                    <ul className="list-disc list-inside">
+                      {bp.buildRequirements?.map((req: any, i: number) => (
+                         <li key={i}>{req.itemName} x{req.quantity}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button
+                    onClick={() => handleBuildAsset(bp._id)}
+                    disabled={buildLoading}
+                    className="mt-auto w-full bg-[#8b0000] hover:bg-red-800 disabled:bg-gray-800 disabled:text-gray-500 text-white text-xs py-2 rounded transition-colors font-bold flex justify-center items-center gap-2"
+                  >
+                    {buildLoading ? <Loader2 size={12} className="animate-spin" /> : <Hammer size={12}/>}
+                    Mulai Bangun
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {claimResult && (
           <div className="mb-6 p-4 rounded bg-black/50 border border-green-900/50">
