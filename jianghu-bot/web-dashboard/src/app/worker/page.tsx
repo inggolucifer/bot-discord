@@ -60,7 +60,8 @@ export default function WorkerPage() {
       router.push('/');
       return;
     }
-    fetchWorkersAndAssets();
+    const timer = setTimeout(() => fetchWorkersAndAssets(), 0);
+    return () => clearTimeout(timer);
   }, [user, router]);
 
   const handleHire = async () => {
