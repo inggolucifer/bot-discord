@@ -26,6 +26,12 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('jianghu_token');
+
+    // Inisialisasi socket auth
+    if (token) {
+      socket.auth = { token };
+    }
     socket.connect();
 
     function onConnect() {
@@ -40,15 +46,21 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
     function onNewMessage(msg: ChatMessage) {
       setMessages(prev => [...prev, msg]);
     }
+    function onConnectError(err: Error) {
+        console.error('Socket connect error:', err.message);
+        setIsConnected(false);
+    }
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
+    socket.on('connect_error', onConnectError);
     socket.on('chat_history', onChatHistory);
     socket.on('new_message', onNewMessage);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      socket.off('connect_error', onConnectError);
       socket.off('chat_history', onChatHistory);
       socket.off('new_message', onNewMessage);
       socket.disconnect();
@@ -85,7 +97,10 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
           <div className="bg-black border-b border-[#333] p-3 flex justify-between items-center">
             <h3 className="text-[#c5a880] font-bold flex items-center gap-2">
               <MessageSquare size={16} /> Chat Global
-              <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></span>
+              <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} title={isConnected ? 'Terhubung' : 'Terputus'}></span>
+                  {!isConnected && <span className="text-[10px] text-gray-400">Menyambung...</span>}
+              </div>
             </h3>
             <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white transition-colors">
               <X size={18} />
@@ -135,14 +150,15 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ketik pesan..."
-                    className="flex-1 bg-[#1a1a1a] border border-[#444] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors"
+                    placeholder={isConnected ? "Ketik pesan..." : "Menyambungkan..."}
+                    className="flex-1 bg-[#1a1a1a] border border-[#444] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors disabled:opacity-50"
                     maxLength={200}
+                    disabled={!isConnected}
                 />
                 <button
                     type="submit"
-                    disabled={!input.trim()}
-                    className="bg-[#8b0000] hover:bg-red-800 disabled:bg-gray-700 text-white p-2 rounded transition-colors flex items-center justify-center"
+                    disabled={!input.trim() || !isConnected}
+                    className="bg-[#8b0000] hover:bg-red-800 disabled:bg-gray-700 text-white p-2 rounded transition-colors flex items-center justify-center disabled:opacity-50"
                 >
                     <Send size={16} />
                 </button>
