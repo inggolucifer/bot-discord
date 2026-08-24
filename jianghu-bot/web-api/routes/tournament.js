@@ -6,7 +6,7 @@ const { authenticateToken } = require('../middlewares/auth');
 // Dapatkan tournament aktif/terbaru
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId;
+        const guildId = req.user.guildId || req.user.userId;
         if (!guildId) {
             return res.status(400).json({ error: 'Guild ID tidak ditemukan di sesi Anda.' });
         }

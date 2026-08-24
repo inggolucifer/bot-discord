@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Barter = require('../../models/Barter');
 const Player = require('../../models/Player');
-const LockManager = require('../utils/LockManager');
+const LockManager = require('../utils/lockManager');
 const barterService = require('../../services/player/barterService');
 const { authenticateToken } = require('../middlewares/auth');
 
 // Ambil tawaran barter yang melibatkan user (sebagai pengirim atau penerima)
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId;
+        const guildId = req.user.guildId || req.user.userId;
         const userId = req.user.userId;
 
         if (!guildId) {
@@ -42,7 +42,7 @@ router.get('/', authenticateToken, async (req, res) => {
 router.post('/respond', authenticateToken, async (req, res) => {
     const { barterId, action } = req.body; // action: 'accept' atau 'decline'
     const userId = req.user.userId;
-    const guildId = req.user.guildId;
+    const guildId = req.user.guildId || req.user.userId;
 
     if (!barterId || !['accept', 'decline'].includes(action)) {
         return res.status(400).json({ error: 'Data tidak valid.' });
@@ -72,30 +72,19 @@ router.post('/respond', authenticateToken, async (req, res) => {
              return res.status(403).json({ error: 'Hanya penerima yang bisa menerima/menolak tawaran ini.' });
          }
 
-         // Gunakan service yang sudah ada untuk proses
-         // Karena service dirancang untuk Discord interaction, kita perlu "mock" object interaction
-         const mockInteraction = {
-             user: { id: userId },
-             guildId: guildId,
-             deferUpdate: async () => {}, // Mock discord function
-             editReply: async () => {},   // Mock discord function
-             reply: async () => {},       // Mock discord function
-             channel: { send: async () => {} } // Mock channel send
-         };
-
          if (action === 'accept') {
-             const success = await barterService.acceptBarter(mockInteraction, barterId);
-             if (success) {
+             const result = await barterService.acceptBarter(req.discordClient, guildId, barterId, userId);
+             if (result.success) {
                   return res.json({ message: 'Barter berhasil diterima!' });
              } else {
-                  return res.status(400).json({ error: 'Gagal memproses barter (mungkin item/currency tidak cukup atau ada error).' });
+                  return res.status(400).json({ error: result.reason || 'Gagal memproses barter.' });
              }
          } else {
-             const success = await barterService.cancelBarter(mockInteraction, barterId, 'declined');
-             if (success) {
+             const result = await barterService.cancelBarter(req.discordClient, guildId, barterId, 'declined', userId);
+             if (result.success) {
                  return res.json({ message: 'Barter ditolak.' });
              } else {
-                 return res.status(400).json({ error: 'Gagal menolak barter.' });
+                 return res.status(400).json({ error: result.reason || 'Gagal menolak barter.' });
              }
          }
 
@@ -111,7 +100,7 @@ router.post('/respond', authenticateToken, async (req, res) => {
 router.post('/cancel', authenticateToken, async (req, res) => {
     const { barterId } = req.body;
     const userId = req.user.userId;
-    const guildId = req.user.guildId;
+    const guildId = req.user.guildId || req.user.userId;
 
     if (!barterId) {
         return res.status(400).json({ error: 'Barter ID diperlukan.' });
@@ -136,20 +125,11 @@ router.post('/cancel', authenticateToken, async (req, res) => {
              return res.status(400).json({ error: `Barter sudah tidak aktif (Status: ${barter.status}).` });
         }
 
-        const mockInteraction = {
-            user: { id: userId },
-            guildId: guildId,
-            deferUpdate: async () => {},
-            editReply: async () => {},
-            reply: async () => {},
-            channel: { send: async () => {} }
-        };
-
-        const success = await barterService.cancelBarter(mockInteraction, barterId, 'cancelled');
-        if (success) {
+        const result = await barterService.cancelBarter(req.discordClient, guildId, barterId, 'cancelled', userId);
+        if (result.success) {
              res.json({ message: 'Barter berhasil dibatalkan.' });
         } else {
-             res.status(400).json({ error: 'Gagal membatalkan barter.' });
+             res.status(400).json({ error: result.reason || 'Gagal membatalkan barter.' });
         }
     } catch (error) {
         console.error('[API-BARTER] Error cancelling barter:', error);
