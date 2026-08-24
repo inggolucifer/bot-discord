@@ -1,37 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const Player = require('../../models/Player');
-const WorkerContract = require('../../models/WorkerContract');
-const { authenticateToken } = require('../middlewares/auth');
+const fs = require('fs');
+let code = fs.readFileSync('jianghu-bot/web-api/routes/worker.js', 'utf8');
 
-router.get('/', authenticateToken, async (req, res) => {
-    try {
-        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const workers = await WorkerContract.find({ guildId, status: 'available' }).lean();
-
-        // Inject NPC System Worker as a static option so frontend can render it
-        const npcWorker = {
-           _id: 'NPC_SYSTEM',
-           workerName: 'NPC Worker (Sistem)',
-           pricePerHour: 5,
-           maxDurationHours: 72, // Arbitrary high max
-           isNpc: true
-        };
-
-        res.json({ success: true, data: [npcWorker, ...workers] });
-    } catch (error) {
-        console.error('[API-WORKER] Error fetching workers:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
-    }
-});
-
-
+const newEndpoint = `
 const { calculateProgress } = require('../utils/assetProgress');
 const LockManager = require('../utils/lockManager');
 
 router.post('/stop-mandiri', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const lockKey = `worker_stop_${userId}`;
+    const lockKey = \`worker_stop_\${userId}\`;
     const releaseLock = await LockManager.acquire(lockKey);
     try {
         const player = await Player.findOne({ discordId: userId });
@@ -65,5 +41,8 @@ router.post('/stop-mandiri', authenticateToken, async (req, res) => {
         releaseLock();
     }
 });
+`;
 
-module.exports = router;
+code = code.replace(/module\.exports = router;/, newEndpoint + '\nmodule.exports = router;');
+fs.writeFileSync('jianghu-bot/web-api/routes/worker.js', code);
+console.log('patched worker api');
