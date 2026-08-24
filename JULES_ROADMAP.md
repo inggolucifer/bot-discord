@@ -1,0 +1,1 @@
+- [x] Fixed React Hydration Error #418 caused by Zustand localStorage mismatch.

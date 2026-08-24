@@ -15,16 +15,33 @@ interface AuthState {
   hasCharacter: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
+  initialize: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: typeof window !== 'undefined' ? localStorage.getItem('jianghu_token') : null,
-  user: typeof window !== 'undefined' && localStorage.getItem('jianghu_user')
-    ? JSON.parse(localStorage.getItem('jianghu_user') as string)
-    : null,
-  hasCharacter: typeof window !== 'undefined' && localStorage.getItem('jianghu_user')
-    ? (JSON.parse(localStorage.getItem('jianghu_user') as string) as User).hasCharacter || false
-    : false,
+  token: null,
+  user: null,
+  hasCharacter: false,
+
+  initialize: () => {
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('jianghu_token');
+      const storedUser = localStorage.getItem('jianghu_user');
+
+      if (storedToken && storedUser) {
+        try {
+          const userObj = JSON.parse(storedUser) as User;
+          set({
+            token: storedToken,
+            user: userObj,
+            hasCharacter: userObj.hasCharacter || false
+          });
+        } catch (e) {
+          console.error("Failed to parse stored user", e);
+        }
+      }
+    }
+  },
 
   login: (token, user) => {
     localStorage.setItem('jianghu_token', token);
