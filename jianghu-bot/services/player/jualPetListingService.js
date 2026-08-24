@@ -13,8 +13,8 @@ module.exports = {
     .setName('jual-pet-listing')
     .setDescription(`Listing jual pet ke sesama pemain (biaya ${LISTING_FEE_RATE * 100}% dipotong saat laku)`)
     .addStringOption((o) => o.setName('nama-pet').setDescription('Nama pet yang mau dijual').setRequired(true).setAutocomplete(true))
-    .addIntegerOption((o) => o.setName('jumlah').setDescription('Jumlah yang dijual').setRequired(true).setMinValue(1))
-    .addIntegerOption((o) => o.setName('harga-per-unit').setDescription('Harga per 1 ekor pet').setRequired(true).setMinValue(1))
+    .addStringOption((o) => o.setName('instance-id').setDescription('Instance ID pet').setRequired(true))
+    .addIntegerOption((o) => o.setName('harga-total').setDescription('Harga total pet ini').setRequired(true).setMinValue(1))
     .addStringOption((o) => o.setName('currency').setDescription('Jenis currency').setRequired(true).addChoices(...CURRENCIES.map((c) => ({ name: CURRENCY_LABEL[c], value: c })))),
 
   async autocomplete(interaction) {
@@ -29,8 +29,8 @@ module.exports = {
     await interaction.deferReply();
 
     const namaPet = interaction.options.getString('nama-pet');
-    const jumlah = interaction.options.getInteger('jumlah');
-    const hargaPerUnit = interaction.options.getInteger('harga-per-unit');
+    const instanceId = interaction.options.getString('instance-id');
+    const hargaTotal = interaction.options.getInteger('harga-total');
     const currency = interaction.options.getString('currency');
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
@@ -42,15 +42,19 @@ module.exports = {
     }
 
     const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaPet}$`, 'i') });
-    if (!pet) return interaction.editReply({ content: `❌ Pet "${namaPet}" tidak ditemukan.` });
+    if (!pet) return interaction.editReply({ content: `❌ Pet "${namaPet}" tidak ditemukan di sistem.` });
 
-    const owned = player.pets.find((p) => p.petId.equals(pet._id));
-    if (!owned || owned.quantity < jumlah) {
-      return interaction.editReply({ content: `❌ Pet "${pet.name}" kamu tidak cukup. Kamu punya ${owned?.quantity || 0}.` });
+    const ownedIndex = player.pets.findIndex((p) => p.instanceId === instanceId && p.petId.equals(pet._id));
+    if (ownedIndex === -1) {
+      return interaction.editReply({ content: `❌ Pet "${pet.name}" dengan Instance ID \`${instanceId}\` tidak ditemukan di dalam inventarismu.` });
     }
 
-    owned.quantity -= jumlah;
-    if (owned.quantity <= 0) player.pets = player.pets.filter((p) => !p.petId.equals(pet._id));
+    if (player.pets[ownedIndex].isLocked) {
+      return interaction.editReply({ content: `❌ Pet "${pet.name}" sedang terkunci (mungkin sedang battle) dan tidak bisa dijual.` });
+    }
+
+    // Hapus pet dari inventaris player
+    player.pets.splice(ownedIndex, 1);
     await player.save();
 
     const listing = await PlayerListing.create({
@@ -60,26 +64,25 @@ module.exports = {
       type: 'pet',
       refId: pet._id,
       itemName: pet.name,
-      quantity: jumlah,
-      pricePerUnit: hargaPerUnit,
+      quantity: 1, // Pet selalu dijual 1 per 1 (per instance)
+      pricePerUnit: hargaTotal,
       currency,
     });
 
     await logTransaction(interaction.client, {
       guildId: interaction.guildId, type: 'player_listing_create', fromUserId: interaction.user.id,
-      itemDescription: `Listing ${jumlah}x Pet ${pet.name} @ ${hargaPerUnit} ${currency}`,
+      itemDescription: `Listing 1x Pet ${pet.name} (ID: ${instanceId}) @ ${hargaTotal} ${currency}`,
     });
 
     const kode = listing._id.toString().slice(-6).toUpperCase();
-    const totalHarga = hargaPerUnit * jumlah;
-    const perkiraanDiterima = Math.floor(totalHarga * (1 - LISTING_FEE_RATE));
+    const perkiraanDiterima = Math.floor(hargaTotal * (1 - LISTING_FEE_RATE));
 
     const embed = new EmbedBuilder()
       .setColor(0x9b59b6)
       .setTitle('📋 Listing Pet Dibuat!')
       .setDescription(
-        `**${jumlah}x ${pet.name}** dipasang di player shop seharga **${hargaPerUnit} ${CURRENCY_LABEL[currency]}/unit** (total ${totalHarga}).\n\n` +
-        `Kode listing: \`${kode}\` (dipakai orang lain untuk beli via \`/beli-listing\`)\n` +
+        `**1x ${pet.name}** dipasang di player shop seharga **${hargaTotal} ${CURRENCY_LABEL[currency]}**.\n\n` +
+        `Kode listing: \`${kode}\` (dipakai orang lain untuk beli via \`/market beli\`)\n` +
         `Kalau laku, kamu terima **${perkiraanDiterima} ${CURRENCY_LABEL[currency]}**.`
       );
     return interaction.editReply({ embeds: [embed] });
