@@ -436,17 +436,22 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
         if (target.status !== 'active') return res.status(400).json({ error: `Listing sudah dalam status ${target.status}.` });
 
         // Kembalikan barang ke inventory
+        const targetId = target.refId || target.itemId;
+
         if (target.type === 'item') {
-            const owned = player.inventory.find((i) => i.itemId.equals(target.itemId));
+            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID item/ref.' });
+            const owned = player.inventory.find((i) => i.itemId && i.itemId.equals(targetId));
             if (owned) owned.quantity += target.quantity;
-            else player.inventory.push({ itemId: target.itemId, quantity: target.quantity });
+            else player.inventory.push({ itemId: targetId, quantity: target.quantity });
         } else if (target.type === 'asset') {
-            const owned = player.assets.find((a) => a.assetId.equals(target.refId));
+            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID asset/ref.' });
+            const owned = player.assets.find((a) => a.assetId && a.assetId.equals(targetId));
             if (owned) owned.quantity += target.quantity;
-            else player.assets.push({ assetId: target.refId, quantity: target.quantity });
+            else player.assets.push({ assetId: targetId, quantity: target.quantity });
         } else if (target.type === 'pet') {
+            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID pet/ref.' });
             const Pet = require('../../models/Pet');
-            const petDoc = await Pet.findById(target.refId);
+            const petDoc = await Pet.findById(targetId);
             if (petDoc) {
                 for (let i = 0; i < target.quantity; i++) {
                     player.pets.push({
