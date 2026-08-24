@@ -302,7 +302,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Data tidak valid.' });
     }
 
-    const lockKey = `market_playershop_${listingId}`;
+    const lockKey = `market_playershop_buy_${listingId}_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     try {
         const player = await Player.findOne({ discordId: userId });
@@ -379,102 +379,4 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
         releaseLock();
     }
 });
-
-// 7. GET /api/market/player-shop/my-listings
-router.get('/player-shop/my-listings', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
-
-        const PlayerListing = require('../../models/PlayerListing');
-
-        // Populate refId sesuai dengan refModel
-        const listings = await PlayerListing.find({ guildId, sellerId: userId, status: 'active' }).populate('itemId').lean();
-
-        const formattedListings = listings.map(listing => {
-            return {
-                id: listing._id,
-                kodeListing: listing._id.toString().slice(-6).toUpperCase(),
-                name: listing.itemId ? listing.itemId.name : listing.itemName,
-                price: listing.pricePerUnit,
-                currency: listing.currency,
-                emoji: getEmojiForShopItem(listing.itemId ? listing.itemId.category : null, listing.type),
-                quantity: listing.quantity,
-                type: listing.type
-            };
-        });
-
-        res.json({ success: true, data: formattedListings });
-    } catch (error) {
-        console.error('[API-MARKET] Error fetching my listings:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
-    }
-});
-
-// 8. POST /api/market/player-shop/my-listings/cancel
-router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, res) => {
-    const userId = req.user.userId;
-    const { listingId } = req.body;
-
-    if (!listingId) {
-        return res.status(400).json({ error: 'Data tidak valid.' });
-    }
-
-    const lockKey = `market_playershop_${listingId}`;
-    const releaseLock = await LockManager.acquire(lockKey);
-    try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-
-        const PlayerListing = require('../../models/PlayerListing');
-        const TransactionLog = require('../../models/TransactionLog');
-        const target = await PlayerListing.findById(listingId);
-
-        if (!target) return res.status(404).json({ error: 'Listing tidak ditemukan.' });
-        if (target.sellerId !== userId) return res.status(403).json({ error: 'Ini bukan listing milikmu.' });
-        if (target.status !== 'active') return res.status(400).json({ error: `Listing sudah dalam status ${target.status}.` });
-
-        // Kembalikan barang ke inventory
-        if (target.type === 'item') {
-            const owned = player.inventory.find((i) => i.itemId.equals(target.itemId));
-            if (owned) owned.quantity += target.quantity;
-            else player.inventory.push({ itemId: target.itemId, quantity: target.quantity });
-        } else if (target.type === 'asset') {
-            const owned = player.assets.find((a) => a.assetId.equals(target.refId));
-            if (owned) owned.quantity += target.quantity;
-            else player.assets.push({ assetId: target.refId, quantity: target.quantity });
-        } else if (target.type === 'pet') {
-            const Pet = require('../../models/Pet');
-            const petDoc = await Pet.findById(target.refId);
-            if (petDoc) {
-                for (let i = 0; i < target.quantity; i++) {
-                    player.pets.push({
-                        instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
-                        petId: petDoc._id,
-                    });
-                }
-            }
-        }
-
-        await player.save();
-
-        target.status = 'cancelled';
-        await target.save();
-
-        await TransactionLog.create({
-            guildId: target.guildId,
-            type: 'MARKET_PLAYER_CANCEL',
-            description: `[${player.characterName}] membatalkan listing ${target.quantity}x ${target.itemName}.`,
-        });
-
-        res.json({ success: true, message: `Listing berhasil dibatalkan. ${target.quantity}x ${target.itemName} dikembalikan.` });
-    } catch (error) {
-        console.error('[API-MARKET] Player Shop Cancel error:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan saat membatalkan listing.' });
-    } finally {
-        releaseLock();
-    }
-});
-
 module.exports = router;
