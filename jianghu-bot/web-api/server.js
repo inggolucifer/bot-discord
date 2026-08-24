@@ -11,7 +11,7 @@ const setupServer = (client) => {
     const server = http.createServer(app);
 
     // Security middlewares
-    app.use(helmet());
+    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
     // Konfigurasi asal yang lebih aman
 
@@ -26,10 +26,7 @@ const setupServer = (client) => {
     }
 
     app.use(cors({
-        origin: function(origin, callback){
-          // Allow all for now to unblock testing
-          return callback(null, true);
-        },
+        origin: allowedOrigins,
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization']
