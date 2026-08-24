@@ -53,6 +53,7 @@ export default function MarketPage() {
   const [buyModal, setBuyModal] = useState<{ isOpen: boolean, shopId: string, name: string, isPlayerShop: boolean, maxQuantity?: number } | null>(null);
   const [buyQuantity, setBuyQuantity] = useState<number>(1);
   const [sellModal, setSellModal] = useState<{ isOpen: boolean } | null>(null);
+  const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
   const [sellQuantity, setSellQuantity] = useState<number>(1);
   const [sellPrice, setSellPrice] = useState<number>(1);
   const [sellCurrency, setSellCurrency] = useState<string>('silver');
@@ -82,7 +83,7 @@ export default function MarketPage() {
         setAuctions(auctionRes.data.data);
         setPlayerShopItems((await api.get('/market/player-shop')).data.data);
         setMyListings((await api.get('/market/player-shop/my-listings')).data.data);
-      } catch (err: unknown) {
+      } catch {
         console.error(err);
       } finally {
         setLoading(false);
@@ -121,7 +122,7 @@ export default function MarketPage() {
         const shopRes = await api.get('/market/shop');
         setShopItems(shopRes.data.data);
       }
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal membeli.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -138,7 +139,7 @@ export default function MarketPage() {
       if (res.data.data.length > 0) {
         setSellItemId(res.data.data[0].id);
       }
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: 'Gagal memuat inventory.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -164,7 +165,7 @@ export default function MarketPage() {
       const myListingsRes = await api.get('/market/player-shop/my-listings');
       setMyListings(myListingsRes.data.data);
       setSellModal(null);
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menjual item.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -175,6 +176,7 @@ export default function MarketPage() {
 
   const handleCancelListing = async (listingId: string) => {
     try {
+      setConfirmCancelId(null);
       setActionLoading(true);
       setMessage(null);
       const res = await api.post('/market/player-shop/my-listings/cancel', { listingId });
@@ -182,7 +184,7 @@ export default function MarketPage() {
       // Refresh my listings
       const myListingsRes = await api.get('/market/player-shop/my-listings');
       setMyListings(myListingsRes.data.data);
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal membatalkan listing.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -201,7 +203,7 @@ export default function MarketPage() {
       setMessage({ text: res.data.message, type: 'success' });
       const auctionRes = await api.get('/market/auctions');
       setAuctions(auctionRes.data.data);
-    } catch (err: unknown) {
+    } catch {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menawar.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -471,17 +473,35 @@ export default function MarketPage() {
                      </span>
                      <Coins size={14} className={item.currency === 'gold' ? 'text-yellow-500' : item.currency === 'jade' ? 'text-green-400' : item.currency === 'spirit' ? 'text-blue-300' : 'text-gray-400'} />
                   </div>
-                  <button
-                     disabled={actionLoading}
-                     onClick={() => {
-                        if (confirm(`Apakah kamu yakin ingin membatalkan penjualan ${item.name}?`)) {
-                          handleCancelListing(item.id);
-                        }
-                     }}
-                     className="bg-red-900 hover:bg-red-800 disabled:bg-gray-800 text-red-100 text-xs px-3 py-1.5 rounded border border-red-700 transition-colors"
-                  >
-                    Batalkan Jualan
-                  </button>
+                  {confirmCancelId === item.id ? (
+                    <div className="flex flex-col gap-1 items-end">
+                      <span className="text-xs text-red-400">Yakin batalkan?</span>
+                      <div className="flex gap-2">
+                        <button
+                          disabled={actionLoading}
+                          onClick={() => handleCancelListing(item.id)}
+                          className="bg-red-900 hover:bg-red-800 disabled:bg-gray-800 text-white text-xs px-2 py-1 rounded border border-red-700 transition-colors"
+                        >
+                          Ya
+                        </button>
+                        <button
+                          disabled={actionLoading}
+                          onClick={() => setConfirmCancelId(null)}
+                          className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 text-white text-xs px-2 py-1 rounded border border-gray-600 transition-colors"
+                        >
+                          Tidak
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                       disabled={actionLoading}
+                       onClick={() => setConfirmCancelId(item.id)}
+                       className="bg-red-900 hover:bg-red-800 disabled:bg-gray-800 text-red-100 text-xs px-3 py-1.5 rounded border border-red-700 transition-colors"
+                    >
+                      Batalkan Jualan
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
