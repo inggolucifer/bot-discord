@@ -4,6 +4,7 @@ const Item = require('../../models/Item');
 const Barter = require('../../models/Barter');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
+const barterService = require('../../services/player/barterService');
 
 async function findOwnedItem(player, guildId, itemName) {
   if (!itemName) return null;
@@ -117,93 +118,22 @@ module.exports = {
 
     collector.on('collect', async (btn) => {
       if (btn.user.id !== target.id) {
-        return btn.reply({ content: '❌ Hanya penerima barter yang bisa merespon.' });
-      }
-
-      const freshBarter = await Barter.findById(barter._id);
-      if (!freshBarter || freshBarter.status !== 'pending') {
-        return btn.update({ content: '❌ Barter ini sudah tidak berlaku.', embeds: [], components: [] });
+        return btn.reply({ content: '❌ Hanya penerima barter yang bisa merespon.', flags: 64 });
       }
 
       if (btn.customId.startsWith('barter_decline')) {
-        freshBarter.status = 'declined';
-        await freshBarter.save();
+        const result = await barterService.cancelBarter(btn.client, interaction.guildId, barter._id, 'declined', target.id);
+        if (!result.success) {
+             return btn.update({ content: `❌ ${result.reason}`, embeds: [], components: [] });
+        }
         return btn.update({ content: `❌ ${target.username} menolak barter ini.`, embeds: [], components: [] });
       }
 
-      // === PROSES ACCEPT: validasi ulang semua syarat sebelum eksekusi (anti-cheat/double spend) ===
-      const freshSender = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
-      const freshReceiver = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
+      const result = await barterService.acceptBarter(btn.client, interaction.guildId, barter._id, target.id);
 
-      if (!freshSender || freshSender.status !== 'active' || !freshReceiver || freshReceiver.status !== 'active') {
-        return btn.update({ content: '❌ Barter gagal: status salah satu karakter berubah.', embeds: [], components: [] });
+      if (!result.success) {
+           return btn.update({ content: `❌ Barter gagal: ${result.reason}`, embeds: [], components: [] });
       }
-
-      // Cek currency sender (offer) & receiver (request)
-      for (const [cur, amt] of Object.entries(freshBarter.offerCurrency.toObject ? freshBarter.offerCurrency.toObject() : freshBarter.offerCurrency)) {
-        if (amt > 0 && freshSender.currency[cur] < amt) {
-          return btn.update({ content: `❌ Barter gagal: ${interaction.user.username} tidak lagi punya cukup ${cur}.`, embeds: [], components: [] });
-        }
-      }
-      for (const [cur, amt] of Object.entries(freshBarter.requestCurrency.toObject ? freshBarter.requestCurrency.toObject() : freshBarter.requestCurrency)) {
-        if (amt > 0 && freshReceiver.currency[cur] < amt) {
-          return btn.update({ content: `❌ Barter gagal: ${target.username} tidak punya cukup ${cur} yang diminta.`, embeds: [], components: [] });
-        }
-      }
-      // Cek item sender (offer)
-      for (const oi of freshBarter.offerItems) {
-        const owned = freshSender.inventory.find((i) => i.itemId.equals(oi.itemId));
-        if (!owned || owned.quantity < oi.quantity) {
-          return btn.update({ content: `❌ Barter gagal: item yang ditawarkan ${interaction.user.username} sudah tidak cukup.`, embeds: [], components: [] });
-        }
-      }
-      // Cek item receiver (request)
-      for (const ri of freshBarter.requestItems) {
-        const owned = freshReceiver.inventory.find((i) => i.itemId.equals(ri.itemId));
-        if (!owned || owned.quantity < ri.quantity) {
-          return btn.update({ content: `❌ Barter gagal: item yang diminta tidak dimiliki ${target.username}.`, embeds: [], components: [] });
-        }
-      }
-
-      // Eksekusi: pindahkan currency
-      const addCurrency = (offerObj) => Object.entries(offerObj.toObject ? offerObj.toObject() : offerObj);
-      for (const [cur, amt] of addCurrency(freshBarter.offerCurrency)) {
-        if (amt > 0) { freshSender.currency[cur] -= amt; freshReceiver.currency[cur] += amt; }
-      }
-      for (const [cur, amt] of addCurrency(freshBarter.requestCurrency)) {
-        if (amt > 0) { freshReceiver.currency[cur] -= amt; freshSender.currency[cur] += amt; }
-      }
-      // Eksekusi: pindahkan item offer (sender -> receiver)
-      for (const oi of freshBarter.offerItems) {
-        const senderOwned = freshSender.inventory.find((i) => i.itemId.equals(oi.itemId));
-        senderOwned.quantity -= oi.quantity;
-        if (senderOwned.quantity <= 0) freshSender.inventory = freshSender.inventory.filter((i) => !i.itemId.equals(oi.itemId));
-        const recvOwned = freshReceiver.inventory.find((i) => i.itemId.equals(oi.itemId));
-        if (recvOwned) recvOwned.quantity += oi.quantity;
-        else freshReceiver.inventory.push({ itemId: oi.itemId, quantity: oi.quantity });
-      }
-      // Eksekusi: pindahkan item request (receiver -> sender)
-      for (const ri of freshBarter.requestItems) {
-        const recvOwned = freshReceiver.inventory.find((i) => i.itemId.equals(ri.itemId));
-        recvOwned.quantity -= ri.quantity;
-        if (recvOwned.quantity <= 0) freshReceiver.inventory = freshReceiver.inventory.filter((i) => !i.itemId.equals(ri.itemId));
-        const senderOwned = freshSender.inventory.find((i) => i.itemId.equals(ri.itemId));
-        if (senderOwned) senderOwned.quantity += ri.quantity;
-        else freshSender.inventory.push({ itemId: ri.itemId, quantity: ri.quantity });
-      }
-
-      await freshSender.save();
-      await freshReceiver.save();
-      freshBarter.status = 'accepted';
-      await freshBarter.save();
-
-      await logTransaction(btn.client, {
-        guildId: interaction.guildId,
-        type: 'barter',
-        fromUserId: interaction.user.id,
-        toUserId: target.id,
-        note: `Barter selesai antara ${interaction.user.tag} dan ${target.tag}`,
-      });
 
       const doneEmbed = new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Barter Berhasil').setDescription('Item & currency telah dipertukarkan.');
       return btn.update({ content: null, embeds: [doneEmbed], components: [] });
