@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/Navbar";
 import GlobalChatWrapper from '@/components/chat/GlobalChatWrapper';
+import AuthInitializer from "@/components/AuthInitializer";
 
 export default function RootLayout({
   children,
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={`${inter.variable} ${playfair.variable} antialiased min-h-screen flex flex-col relative`}>
+        <AuthInitializer />
         <div className="wuxia-bg"></div>
         <div className="bamboo-overlay-left hidden md:block"></div>
         <div className="bamboo-overlay-right hidden md:block"></div>
