@@ -81,7 +81,7 @@ export default function LeaderboardPage() {
                     {MEDAL[index] || <span className="text-gray-500 text-lg">#{index + 1}</span>}
                   </div>
                   <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#c5a880] flex-shrink-0">
-                    <FallbackImage src={player.characterImage || ''} alt={player.characterName} fallbackHtml='<div class="bg-gray-800 w-full h-full flex items-center justify-center text-xs">👤</div>' />
+                    <FallbackImage src={player.characterImage || ''} alt={player.characterName} fallbackNode={<div className="bg-gray-800 w-full h-full flex items-center justify-center text-xs">👤</div>} />
                   </div>
                   <div>
                     <div className="font-bold text-[#c5a880]">{player.characterName}</div>
