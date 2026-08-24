@@ -26,7 +26,7 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 
-const { calculateProgress } = require('../utils/assetProgress');
+const { calculateProgress } = require('../../utils/assetProgress');
 const LockManager = require('../utils/lockManager');
 
 router.post('/stop-mandiri', authenticateToken, async (req, res) => {
