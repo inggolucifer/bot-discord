@@ -4,6 +4,7 @@ const jualPetListingService = require('../../services/player/jualPetListingServi
 const jualAssetListingService = require('../../services/player/jualAssetListingService');
 const beliListingService = require('../../services/player/beliListingService');
 const cancelListingService = require('../../services/player/cancelListingService');
+const lihatJualanService = require('../../services/player/lihatJualanService');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -43,6 +44,10 @@ module.exports = {
       .setName('batal')
       .setDescription('Batalkan listing kamu yang ada di Player Market')
       .addStringOption(o => o.setName('kode-listing').setDescription('Kode listing yang mau dibatalkan').setRequired(true))
+    )
+    .addSubcommand(sub => sub
+      .setName('lihat-jualan')
+      .setDescription('Lihat seluruh jualan (listing aktif) kamu di Player Market')
     ),
 
   async autocomplete(interaction) {
@@ -59,5 +64,6 @@ module.exports = {
     if (sub === 'jual-asset') return jualAssetListingService.execute(interaction);
     if (sub === 'beli') return beliListingService.execute(interaction);
     if (sub === 'batal') return cancelListingService.execute(interaction);
+    if (sub === 'lihat-jualan') return lihatJualanService.execute(interaction);
   }
 };
