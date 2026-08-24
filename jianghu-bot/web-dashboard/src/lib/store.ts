@@ -6,11 +6,13 @@ interface User {
   id: string;
   username: string;
   avatar: string | null;
+  hasCharacter?: boolean;
 }
 
 interface AuthState {
   token: string | null;
   user: User | null;
+  hasCharacter: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
 }
@@ -20,17 +22,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: typeof window !== 'undefined' && localStorage.getItem('jianghu_user')
     ? JSON.parse(localStorage.getItem('jianghu_user') as string)
     : null,
+  hasCharacter: typeof window !== 'undefined' && localStorage.getItem('jianghu_user')
+    ? (JSON.parse(localStorage.getItem('jianghu_user') as string) as User).hasCharacter || false
+    : false,
 
   login: (token, user) => {
     localStorage.setItem('jianghu_token', token);
     localStorage.setItem('jianghu_user', JSON.stringify(user));
-    set({ token, user });
+    set({ token, user, hasCharacter: user.hasCharacter || false });
   },
 
   logout: () => {
     localStorage.removeItem('jianghu_token');
     localStorage.removeItem('jianghu_user');
-    set({ token: null, user: null });
+    set({ token: null, user: null, hasCharacter: false });
     window.location.href = '/';
   }
 }));
