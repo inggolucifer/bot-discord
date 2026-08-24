@@ -1,0 +1,3 @@
+- [x] Added "Toko Saya" tab to Pasar web dashboard with ability to view and cancel active market listings.
+- [x] Added quantity prompt to System Shop purchasing.
+- [x] Secured market transactions with unified `LockManager` keys to prevent duplication exploits.
