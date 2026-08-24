@@ -21,7 +21,9 @@ function calculateProgress(assetOwned) {
   }
 
   let buff = 1.0;
-  if (activeWorkers > 0) {
+  if (activeWorkers === 0) {
+    buff = 0.0;
+  } else if (activeWorkers > 0) {
     buff += (activeWorkers * 0.1);
   }
 
