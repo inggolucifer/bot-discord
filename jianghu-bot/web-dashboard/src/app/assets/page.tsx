@@ -66,6 +66,7 @@ export default function AssetsPage() {
 
   const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
   const [moveLoading, setMoveLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [targetAssetId, setTargetAssetId] = useState('');
   const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] = useState('');
 
@@ -151,6 +152,28 @@ export default function AssetsPage() {
     } finally {
       setClaimLoading(false);
     }
+  };
+
+
+  const handleWorkSelf = async () => {
+      if (!selectedAsset) return;
+      try {
+          setActionLoading(true);
+          const res = await api.post('/player/assets/work-self', { assetId: selectedAsset.id });
+          alert(res.data.message);
+
+          const assetsRes = await api.get('/player/assets');
+          setAssets(assetsRes.data.data);
+
+          const updatedSelected = assetsRes.data.data.find((a: any) => a.id === selectedAsset.id);
+          if (updatedSelected) setSelectedAsset(updatedSelected);
+
+      } catch (err: unknown) {
+          console.error(err);
+          alert((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memulai kerja mandiri.');
+      } finally {
+          setActionLoading(false);
+      }
   };
 
   const handleMoveWorker = async () => {
@@ -458,6 +481,10 @@ export default function AssetsPage() {
                               </div>
 
                               <div className="border-t border-[#333] pt-4 mt-auto">
+
+                                  <button onClick={handleWorkSelf} disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.assignedWorkers.length >= 1) || selectedAsset.assignedWorkers.some(w => w.workerId === user?.id)} className="w-full bg-[#8b0000]/80 hover:bg-[#8b0000] disabled:bg-gray-800 disabled:text-gray-500 text-red-100 text-sm py-2 rounded transition-colors font-bold flex items-center justify-center gap-2 mb-2">
+                                      <Pickaxe size={16} /> Kerja Mandiri di Aset Ini
+                                  </button>
                                   <button onClick={() => router.push('/worker')} className="w-full bg-[#1f402e] hover:bg-green-900 text-green-100 text-sm py-2 rounded transition-colors font-bold flex items-center justify-center gap-2">
                                       <Pickaxe size={16} /> Sewa Pekerja dari Papan
                                   </button>

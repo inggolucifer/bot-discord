@@ -195,8 +195,8 @@ router.post('/assets/claim-profit', authenticateToken, async (req, res) => {
 router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-        const { assetId, durasi } = req.body;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { assetId, durasi } = req.body;
 
         if (!assetId || !durasi || durasi < 1) {
             return res.status(400).json({ error: 'Data tidak lengkap atau durasi tidak valid.' });
@@ -247,11 +247,84 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
     }
 });
 
+router.post('/assets/work-self', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+        const { assetId } = req.body;
+
+        if (!assetId) {
+            return res.status(400).json({ error: 'Data tidak lengkap.' });
+        }
+
+        const player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const Asset = require('../../models/Asset');
+        const assetDoc = await Asset.findById(assetId);
+        if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
+
+        const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+
+        const { isUnderConstruction, calculateProgress } = require('../../utils/crafting');
+
+        if (!isUnderConstruction(ownedAsset)) {
+            if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+            const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+            if (activeWorkers >= 1) {
+                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            }
+        }
+
+        // Cek jika player sudah bekerja di suatu tempat
+        for (const a of player.assets) {
+           if(a.assignedWorkers && a.assignedWorkers.find(w => w.workerId === userId)) {
+               return res.status(400).json({ error: 'Kamu sudah bekerja secara mandiri di aset lain.' });
+           }
+        }
+
+        // Batalkan kontrak dari WorkerContract jika ada
+        const WorkerContract = require('../../models/WorkerContract');
+        const existingContract = await WorkerContract.findOne({ guildId, workerId: userId });
+        if (existingContract) {
+            if (existingContract.status === 'working') {
+                return res.status(400).json({ error: 'Kamu sedang terikat kontrak dengan pemain lain.' });
+            } else {
+                await WorkerContract.deleteOne({ _id: existingContract._id });
+            }
+        }
+
+        ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
+        ownedAsset.lastProgressUpdate = new Date();
+
+        if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+        // endTime null berarti permanen sampai dibatalkan
+        ownedAsset.assignedWorkers.push({
+            workerId: userId,
+            endTime: null
+        });
+
+        if (ownedAsset.status === 'pending') ownedAsset.status = 'building';
+
+        player.customStatus = `Sedang bekerja mandiri di asset ${assetDoc.name} miliknya.`;
+
+        await player.save();
+
+        res.json({ success: true, message: 'Berhasil mulai bekerja secara mandiri di aset ini.' });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error work self:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat memproses kerja mandiri.' });
+    }
+});
+
 router.post('/assets/hire-player', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-        const { assetId, workerId, durasi } = req.body;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { assetId, workerId, durasi } = req.body;
 
         if (!assetId || !workerId || !durasi || durasi < 1) {
             return res.status(400).json({ error: 'Data tidak lengkap.' });
@@ -331,8 +404,8 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
 router.post('/assets/move-worker', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-        const { targetAssetId, workerId } = req.body;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { targetAssetId, workerId } = req.body;
 
         if (!targetAssetId || !workerId) return res.status(400).json({ error: 'Data tidak lengkap.' });
 
