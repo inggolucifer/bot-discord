@@ -3,6 +3,7 @@ const router = express.Router();
 const Item = require('../../models/Item');
 const Asset = require('../../models/Asset');
 const Player = require('../../models/Player');
+const Shop = require('../../models/Shop');
 const { checkMaterials, consumeMaterials } = require('../../utils/crafting');
 const { logTransaction } = require('../../utils/logger');
 const { authenticateToken } = require('../middlewares/auth');
@@ -14,17 +15,34 @@ router.get('/items', async (req, res) => {
 
         // Find usages of items in Asset buildRequirements or Asset recipes
         const assets = await Asset.find({}).lean();
+        const shops = await Shop.find({ category: 'item', isActive: true }).lean();
 
         for (const item of items) {
             let usages = [];
+            let obtainedFrom = [];
 
-            // Check if item is used to build any asset
+            if (item.origin) {
+                obtainedFrom.push(item.origin);
+            }
+
+            // Check if item is sold in shop
+            const inShop = shops.find(s => s.refId.toString() === item._id.toString());
+            if (inShop) {
+                obtainedFrom.push(`Toko Sistem (${inShop.price} ${inShop.priceCurrency})`);
+            }
+
+            // Check if item is produced by asset or crafted
             for (const asset of assets) {
+                // Usage checking
                 if (asset.buildable && asset.buildRequirements) {
                     const isReq = asset.buildRequirements.find(req => req.itemId.toString() === item._id.toString());
                     if (isReq) {
                         usages.push(`Bahan untuk membangun ${asset.name}`);
                     }
+                }
+
+                if (asset.workerOutputItemId && asset.workerOutputItemId.toString() === item._id.toString()) {
+                    obtainedFrom.push(`Produksi Pekerja di ${asset.name}`);
                 }
 
                 // Check if item is used in any crafting station recipes
@@ -36,11 +54,16 @@ router.get('/items', async (req, res) => {
                                 usages.push(`Bahan untuk meracik ${recipe.recipeName} di ${asset.name}`);
                             }
                         }
+
+                        if (recipe.resultItemId && recipe.resultItemId.toString() === item._id.toString()) {
+                            obtainedFrom.push(`Hasil Racikan (${recipe.recipeName}) di ${asset.name}`);
+                        }
                     }
                 }
             }
 
             item.usedFor = usages.length > 0 ? [...new Set(usages)] : null; // Remove duplicates if any
+            item.obtainedFrom = obtainedFrom.length > 0 ? [...new Set(obtainedFrom)] : null;
         }
 
         res.json({ success: true, data: items });
