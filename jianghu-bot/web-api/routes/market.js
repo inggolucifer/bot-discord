@@ -30,7 +30,8 @@ function getEmojiForShopItem(itemType, category) {
 // 1. GET /api/market/shop
 router.get('/shop', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId || req.user.userId; // fallback jika butuh guildId
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
 
         // Populate refId sesuai dengan refModel
         const shopList = await Shop.find({ isActive: true }).lean();
@@ -254,6 +255,125 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
         res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
     } catch (error) {
         console.error('[API-MARKET] Buy error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
+    } finally {
+        releaseLock();
+    }
+});
+
+// 5. GET /api/market/player-shop
+router.get('/player-shop', authenticateToken, async (req, res) => {
+    try {
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+
+        const PlayerListing = require('../../models/PlayerListing');
+
+        // Populate refId sesuai dengan refModel
+        const listings = await PlayerListing.find({ guildId, status: 'active' }).populate('itemId').lean();
+
+        const formattedListings = listings.map(listing => {
+            return {
+                id: listing._id,
+                name: listing.itemId ? listing.itemId.name : listing.itemName,
+                sellerId: listing.sellerId,
+                sellerName: listing.sellerName,
+                price: listing.pricePerUnit,
+                currency: listing.currency,
+                emoji: getEmojiForShopItem(listing.itemId ? listing.itemId.category : null, listing.type),
+                quantity: listing.quantity,
+                type: listing.type
+            };
+        });
+
+        res.json({ success: true, data: formattedListings });
+    } catch (error) {
+        console.error('[API-MARKET] Error fetching player shop:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
+// 6. POST /api/market/player-shop/buy
+router.post('/player-shop/buy', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { listingId, quantity } = req.body;
+
+    if (!listingId || !quantity || quantity <= 0) {
+        return res.status(400).json({ error: 'Data tidak valid.' });
+    }
+
+    const lockKey = `market_playershop_buy_${listingId}_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    try {
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const PlayerListing = require('../../models/PlayerListing');
+        const TransactionLog = require('../../models/TransactionLog');
+        const listing = await PlayerListing.findById(listingId);
+
+        if (!listing || listing.status !== 'active') return res.status(404).json({ error: 'Barang tidak ditemukan atau sudah terjual.' });
+        if (listing.quantity < quantity) {
+            return res.status(400).json({ error: 'Kuantitas barang yang diminta melebihi stok yang ada.' });
+        }
+
+        if (listing.sellerId === userId) {
+            return res.status(400).json({ error: 'Kamu tidak bisa membeli barangmu sendiri.' });
+        }
+
+        const totalPrice = listing.pricePerUnit * quantity;
+        const currencyType = listing.currency;
+
+        if (player.currency[currencyType] < totalPrice) {
+            return res.status(400).json({ error: `Uang ${currencyType} tidak cukup. Butuh ${totalPrice}.` });
+        }
+
+        const seller = await Player.findOne({ discordId: listing.sellerId });
+        if (!seller) return res.status(404).json({ error: 'Penjual tidak ditemukan.' });
+
+        // Proses Pemotongan dan Penambahan Uang
+        player.currency[currencyType] -= totalPrice;
+        seller.currency[currencyType] += totalPrice;
+
+        // Proses Pindah Barang
+        if (listing.type === 'item') {
+            const existingItem = player.inventory.find(i => i.itemId.equals(listing.itemId));
+            if (existingItem) existingItem.quantity += quantity;
+            else player.inventory.push({ itemId: listing.itemId, quantity: quantity });
+        } else if (listing.type === 'asset') {
+            const existingAsset = player.assets.find(a => a.assetId.equals(listing.refId));
+            if (existingAsset) existingAsset.quantity += quantity;
+            else player.assets.push({ assetId: listing.refId, quantity: quantity });
+        } else if (listing.type === 'pet') {
+            const Pet = require('../../models/Pet');
+            const petDoc = await Pet.findById(listing.refId);
+            if(petDoc) {
+                 player.pets.push({
+                     instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
+                     petId: petDoc._id,
+                 })
+            }
+        }
+
+        // Update Stok
+        listing.quantity -= quantity;
+        if (listing.quantity <= 0) {
+            listing.status = 'sold';
+            listing.buyerId = userId;
+        }
+        await listing.save();
+        await player.save();
+        await seller.save();
+
+        await TransactionLog.create({
+            guildId: listing.guildId,
+            type: 'MARKET_PLAYER_BUY',
+            description: `[${player.characterName}] membeli ${quantity}x ${listing.itemName} dari [${seller.characterName}] seharga ${totalPrice} ${currencyType}.`,
+        });
+
+        res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
+    } catch (error) {
+        console.error('[API-MARKET] Player Shop Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
         releaseLock();
