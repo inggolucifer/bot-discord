@@ -114,7 +114,7 @@ export default function PetPage() {
                     src={pet.petId.imageUrl || ""}
                     alt={pet.petId.name}
                     className="max-w-full max-h-full object-contain"
-                    fallbackHtml='<div class="text-3xl">🐉</div>'
+                    fallbackNode={<div className="text-3xl">🐉</div>}
                   />
                 </div>
                 <div className="flex-1">

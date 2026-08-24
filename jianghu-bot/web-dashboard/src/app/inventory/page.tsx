@@ -185,7 +185,7 @@ interface InventoryItem {
                         src={item.imageUrl}
                         alt={item.name}
                         className="max-h-full max-w-full object-contain"
-                        fallbackHtml={`<span class="text-4xl">${item.emoji}</span>`}
+                        fallbackNode={<span className="text-4xl">{item.emoji}</span>}
                       />
                     ) : (
                       <span className="text-4xl">{item.emoji}</span>
