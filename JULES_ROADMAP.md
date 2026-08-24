@@ -4,3 +4,4 @@
 - Menambahkan tab "Toko Player" di halaman Pasar Web Dashboard, mengkonsumsi endpoint baru `/api/market/player-shop` yang terintegrasi dengan database `PlayerListing`.
 - Menambahkan fungsi "Kerja Mandiri" di UI web Aset, agar pemain dapat menugaskan diri sendiri ke asetnya langsung dari web.
 - Fixed 500 Internal Server Error when starting independent work by removing invalid local require of calculateProgress from crafting utils.
+- [x] Fix: Masalah "Terus Menyambungkan..." pada Socket.io di VPS. Mengubah state di `GlobalChat.tsx` agar berhenti me-retry dan menampilkan "Koneksi Gagal" jika terjadi `Authentication error`. Ditambahkan juga panduan lengkap mengenai konfigurasi Nginx dan Env pada `TUTORIAL_VPS_NGINX_SOCKET.md`.
