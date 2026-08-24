@@ -83,7 +83,7 @@ export default function MarketPage() {
         setAuctions(auctionRes.data.data);
         setPlayerShopItems((await api.get('/market/player-shop')).data.data);
         setMyListings((await api.get('/market/player-shop/my-listings')).data.data);
-      } catch {
+      } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
@@ -122,7 +122,7 @@ export default function MarketPage() {
         const shopRes = await api.get('/market/shop');
         setShopItems(shopRes.data.data);
       }
-    } catch {
+    } catch (err) {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal membeli.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -165,7 +165,7 @@ export default function MarketPage() {
       const myListingsRes = await api.get('/market/player-shop/my-listings');
       setMyListings(myListingsRes.data.data);
       setSellModal(null);
-    } catch {
+    } catch (err) {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menjual item.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -184,7 +184,7 @@ export default function MarketPage() {
       // Refresh my listings
       const myListingsRes = await api.get('/market/player-shop/my-listings');
       setMyListings(myListingsRes.data.data);
-    } catch {
+    } catch (err) {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal membatalkan listing.', type: 'error' });
     } finally {
       setActionLoading(false);
@@ -203,7 +203,7 @@ export default function MarketPage() {
       setMessage({ text: res.data.message, type: 'success' });
       const auctionRes = await api.get('/market/auctions');
       setAuctions(auctionRes.data.data);
-    } catch {
+    } catch (err) {
       setMessage({ text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menawar.', type: 'error' });
     } finally {
       setActionLoading(false);
