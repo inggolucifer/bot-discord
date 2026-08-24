@@ -126,9 +126,19 @@ export default function AlmanackPage() {
               <p className="text-xs text-gray-400 italic line-clamp-3">{item.description}</p>
 
               <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-500 space-y-1">
-                {item.origin && <p><span className="text-gray-400">Asal:</span> {item.origin}</p>}
+
                 {item.effect && <p><span className="text-gray-400">Efek:</span> {item.effect}</p>}
                 {item.basePrice > 0 && <p><span className="text-gray-400">Harga Dasar:</span> {item.basePrice} {item.priceCurrency}</p>}
+                {item.obtainedFrom && item.obtainedFrom.length > 0 && (
+                    <div className="mt-2">
+                        <span className="text-gray-400 block mb-1">Dapat Dari:</span>
+                        <ul className="list-disc list-inside text-[10px] text-gray-300 space-y-0.5">
+                            {item.obtainedFrom.map((source: string, i: number) => (
+                                <li key={i}>{source}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 {item.usedFor && item.usedFor.length > 0 && (
                     <div className="mt-2">
                         <span className="text-gray-400 block mb-1">Kegunaan:</span>
