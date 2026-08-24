@@ -22,7 +22,6 @@ Jianghu World adalah bot Discord untuk permainan Roleplay Xianxia/Wuxia dengan s
 - `/daftar`
 - `/profil`
 - `/daily`
-- `/convert`
 - `/transfer-currency`
 - `/barter-offer`
 - `/claim-profit`

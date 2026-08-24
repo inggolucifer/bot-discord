@@ -27,12 +27,18 @@ export default function Navbar() {
         <Link href="/" className="text-xl font-bold text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors">
           JIANGHU RP
         </Link>
-        <nav className="hidden md:flex gap-6 text-sm">
+        <nav className="hidden md:flex gap-4 lg:gap-6 text-sm overflow-x-auto whitespace-nowrap custom-scrollbar pb-1">
           <Link href="/" className="hover:text-[#c5a880] transition-colors">Karakter</Link>
           <Link href="/inventory" className="hover:text-[#c5a880] transition-colors">Inventory</Link>
           <Link href="/pet" className="hover:text-[#c5a880] transition-colors">Pet</Link>
+          <Link href="/assets" className="hover:text-[#c5a880] transition-colors">Assets</Link>
+          <Link href="/sect" className="hover:text-[#c5a880] transition-colors">Sekte</Link>
+          <Link href="/worker" className="hover:text-[#c5a880] transition-colors">Pekerja</Link>
           <Link href="/market" className="hover:text-[#c5a880] transition-colors">Pasar</Link>
+          <Link href="/barter" className="hover:text-[#c5a880] transition-colors">Barter</Link>
           <Link href="/almanack" className="hover:text-[#c5a880] transition-colors">Almanack</Link>
+          <Link href="/leaderboard" className="hover:text-[#c5a880] transition-colors">Leaderboard</Link>
+          <Link href="/tournament" className="hover:text-[#c5a880] transition-colors">Turnamen</Link>
         </nav>
         <div className="flex gap-4 items-center">
           {errorMsg && (

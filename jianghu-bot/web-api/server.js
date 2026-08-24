@@ -46,7 +46,13 @@ const setupServer = (client) => {
         message: 'Anda melakukan transaksi terlalu cepat. Mohon perlambat.'
     });
 
-    app.use('/api/', apiLimiter);
+    // Kecualikan /api/socket.io dari apiLimiter agar tidak memutus polling Socket.io
+    app.use('/api/', (req, res, next) => {
+        if (req.path.startsWith('/socket.io')) {
+            return next();
+        }
+        return apiLimiter(req, res, next);
+    });
     app.use('/api/transaction/', transactionLimiter);
 
     // Pass discord client to req for routes to use (e.g. fetching user info)
@@ -64,6 +70,9 @@ const setupServer = (client) => {
     const workerRoutes = require('./routes/worker');
     const almanackRoutes = require('./routes/almanack');
     const petRoutes = require('./routes/pet');
+    const leaderboardRoutes = require('./routes/leaderboard');
+    const tournamentRoutes = require('./routes/tournament');
+    const barterRoutes = require('./routes/barter');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -73,6 +82,9 @@ const setupServer = (client) => {
     app.use('/api/worker', workerRoutes);
     app.use('/api/almanack', almanackRoutes);
     app.use('/api/pet', petRoutes);
+    app.use('/api/leaderboard', leaderboardRoutes);
+    app.use('/api/tournament', tournamentRoutes);
+    app.use('/api/barter', barterRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
@@ -96,28 +108,86 @@ const setupServer = (client) => {
         transports: ['websocket', 'polling']
     });
 
-    // Chat history in memory
-    const chatHistory = [];
+    const jwt = require('jsonwebtoken');
+    const { JWT_SECRET } = require('./utils/jwtSecret');
+    const ChatMessage = require('../models/ChatMessage');
 
-    io.on('connection', (socket) => {
-        // Send chat history to new connection
-        socket.emit('chat_history', chatHistory);
+    // Middleware Autentikasi Socket.io
+    io.use((socket, next) => {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error('Authentication error: Token missing'));
+        }
+        jwt.verify(token, JWT_SECRET, (err, user) => {
+            if (err) return next(new Error('Authentication error: Invalid token'));
+            socket.user = user;
+            next();
+        });
+    });
 
-        socket.on('send_message', (data) => {
-            if (!data.user || !data.message) return;
-            const message = {
-                id: Date.now().toString(),
-                user: data.user, // { id, name, avatar }
-                message: data.message,
-                timestamp: new Date()
-            };
+    io.on('connection', async (socket) => {
+        // Rate limiting in-memory per koneksi socket (maksimal 1 pesan per 3 detik)
+        let lastMessageTime = 0;
 
-            chatHistory.push(message);
-            if (chatHistory.length > 50) {
-                chatHistory.shift();
+        try {
+            // Ambil 50 pesan terakhir dari database
+            const chatHistoryDB = await ChatMessage.find().sort({ createdAt: -1 }).limit(50);
+
+            // Format ulang agar sesuai dengan yang diharapkan frontend
+            const formattedHistory = chatHistoryDB.reverse().map(msg => ({
+                id: msg._id.toString(),
+                user: msg.user,
+                message: msg.message,
+                timestamp: msg.createdAt
+            }));
+
+            // Kirim chat history
+            socket.emit('chat_history', formattedHistory);
+        } catch (error) {
+            console.error('[SOCKET] Failed to load chat history:', error);
+        }
+
+        socket.on('send_message', async (data) => {
+            // Rate Limit
+            const now = Date.now();
+            if (now - lastMessageTime < 3000) {
+                return; // Ignore spam
+            }
+            lastMessageTime = now;
+
+            // Validasi input
+            const messageText = typeof data.message === 'string' ? data.message.trim() : '';
+            if (!messageText || messageText.length === 0 || messageText.length > 200) {
+                return; // Abaikan pesan kosong atau terlalu panjang
             }
 
-            io.emit('new_message', message);
+            // Gunakan identitas dari JWT yang terverifikasi, BUKAN dari payload client
+            const verifiedUser = {
+                id: socket.user.userId,
+                name: socket.user.username,
+                avatar: socket.user.avatar
+            };
+
+            try {
+                // Simpan ke database
+                const newMessage = new ChatMessage({
+                    user: verifiedUser,
+                    message: messageText
+                });
+                await newMessage.save();
+
+                // Format untuk di-broadcast
+                const broadcastMessage = {
+                    id: newMessage._id.toString(),
+                    user: verifiedUser,
+                    message: messageText,
+                    timestamp: newMessage.createdAt
+                };
+
+                io.emit('new_message', broadcastMessage);
+            } catch (error) {
+                console.error('[SOCKET] Failed to save chat message:', error);
+            }
         });
     });
 
