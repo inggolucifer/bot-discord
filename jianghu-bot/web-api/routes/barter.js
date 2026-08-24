@@ -9,8 +9,8 @@ const { authenticateToken } = require('../middlewares/auth');
 // Ambil tawaran barter yang melibatkan user (sebagai pengirim atau penerima)
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId || req.user.userId;
-        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const userId = req.user.userId;
 
         if (!guildId) {
             return res.status(400).json({ error: 'Guild ID tidak ditemukan.' });
@@ -42,9 +42,8 @@ router.get('/', authenticateToken, async (req, res) => {
 router.post('/respond', authenticateToken, async (req, res) => {
     const { barterId, action } = req.body; // action: 'accept' atau 'decline'
     const userId = req.user.userId;
-    const guildId = req.user.guildId || req.user.userId;
-
-    if (!barterId || !['accept', 'decline'].includes(action)) {
+    const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);if (!barterId || !['accept', 'decline'].includes(action)) {
         return res.status(400).json({ error: 'Data tidak valid.' });
     }
 
@@ -100,9 +99,8 @@ router.post('/respond', authenticateToken, async (req, res) => {
 router.post('/cancel', authenticateToken, async (req, res) => {
     const { barterId } = req.body;
     const userId = req.user.userId;
-    const guildId = req.user.guildId || req.user.userId;
-
-    if (!barterId) {
+    const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);if (!barterId) {
         return res.status(400).json({ error: 'Barter ID diperlukan.' });
     }
 

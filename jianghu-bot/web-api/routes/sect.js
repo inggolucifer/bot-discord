@@ -114,9 +114,8 @@ router.get('/assets', authenticateToken, async (req, res) => {
 router.post('/assets/claim-profit', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-
-        const sect = await getPlayerSect(guildId, userId);
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const sect = await getPlayerSect(guildId, userId);
         if (!sect) return res.status(400).json({ error: 'Kamu tidak sedang bergabung dalam sekte manapun.' });
 
         const role = sect.getRoleOf(userId);

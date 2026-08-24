@@ -6,9 +6,8 @@ const { authenticateToken } = require('../middlewares/auth');
 
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId || req.user.userId;
-
-        const workers = await WorkerContract.find({ guildId, status: 'available' }).lean();
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const workers = await WorkerContract.find({ guildId, status: 'available' }).lean();
 
         // Inject NPC System Worker as a static option so frontend can render it
         const npcWorker = {

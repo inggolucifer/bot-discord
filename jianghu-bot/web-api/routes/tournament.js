@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Tournament = require('../../models/Tournament');
 const { authenticateToken } = require('../middlewares/auth');
+const Player = require('../../models/Player');
 
 // Dapatkan tournament aktif/terbaru
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId || req.user.userId;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+
         if (!guildId) {
             return res.status(400).json({ error: 'Guild ID tidak ditemukan di sesi Anda.' });
         }

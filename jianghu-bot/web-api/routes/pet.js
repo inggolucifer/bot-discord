@@ -9,9 +9,8 @@ const { authenticateToken } = require('../middlewares/auth');
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-
-        const player = await Player.findOne({ discordId: userId, guildId }).populate('pets.petId').lean();
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const player = await Player.findOne({ discordId: userId, guildId }).populate('pets.petId').lean();
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
         res.json({
@@ -31,8 +30,8 @@ router.get('/', authenticateToken, async (req, res) => {
 router.post('/release', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const guildId = req.user.guildId || req.user.userId;
-        const { instanceId } = req.body;
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { instanceId } = req.body;
 
         const player = await Player.findOne({ discordId: userId, guildId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
