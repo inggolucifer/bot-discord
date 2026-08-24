@@ -6,18 +6,27 @@ interface FallbackImageProps {
   src: string;
   alt: string;
   className?: string;
-  fallbackHtml: string;
+  fallbackHtml?: string;
+  fallbackNode?: React.ReactNode;
 }
 
-export default function FallbackImage({ src, alt, className, fallbackHtml }: FallbackImageProps) {
+export default function FallbackImage({ src, alt, className, fallbackHtml, fallbackNode }: FallbackImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   if (hasError || !src) {
+    if (fallbackNode) {
+       return (
+        <div className={`${className || ''} flex items-center justify-center animate-in fade-in duration-300`}>
+          {fallbackNode}
+        </div>
+       );
+    }
+
     return (
       <div
-        className={`${className} flex items-center justify-center animate-in fade-in duration-300`}
-        dangerouslySetInnerHTML={{ __html: fallbackHtml }}
+        className={`${className || ''} flex items-center justify-center animate-in fade-in duration-300`}
+        dangerouslySetInnerHTML={{ __html: fallbackHtml || '' }}
       />
     );
   }

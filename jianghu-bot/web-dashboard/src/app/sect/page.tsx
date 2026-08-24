@@ -135,7 +135,7 @@ export default function SectPage() {
                     <FallbackImage
                        src={sect.imageUrl as string || ''}
                        alt="Sect Banner"
-                       fallbackHtml='<span class="text-4xl">⛩️</span>'
+                       fallbackNode={<span className="text-4xl">⛩️</span>}
                        className="w-full h-full object-cover"
                     />
                  </div>
@@ -253,7 +253,7 @@ export default function SectPage() {
                         <FallbackImage
                           src={asset.imageUrl || ''}
                           alt={asset.name}
-                          fallbackHtml='<div class="w-full h-full flex items-center justify-center text-3xl">🏯</div>'
+                          fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">🏯</div>}
                           className="w-full h-full object-cover"
                         />
                       </div>

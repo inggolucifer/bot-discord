@@ -54,7 +54,7 @@ export default function Home() {
                    src={(profile.characterImage as string) || (profile.discordAvatar as string) || "https://cdn.discordapp.com/embed/avatars/0.png"}
                    alt="Character Avatar"
                    className="w-full h-full object-cover"
-                   fallbackHtml='<div class="absolute inset-0 flex items-center justify-center text-4xl">🧑‍🎤</div>'
+                   fallbackNode={<div className="absolute inset-0 flex items-center justify-center text-4xl">🧑‍🎤</div>}
                  />
               </div>
 
