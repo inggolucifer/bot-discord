@@ -391,15 +391,8 @@ export default function MarketPage() {
           <div className="bg-black/50 border-b border-[#333] p-4 flex items-center justify-between">
 
             <h2 className="text-xl font-bold font-serif text-white flex items-center gap-2">
-              <Store className="text-green-400" /> Jualan Saya
+              <Store className="text-[#c5a880]" /> Toko Sistem
             </h2>
-            <button
-               onClick={handleOpenSellModal}
-               disabled={actionLoading}
-               className="bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 text-green-100 text-sm px-4 py-2 rounded border border-green-700 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)] font-bold flex items-center gap-2"
-            >
-              + Jual Item
-            </button>
 
           </div>
 
@@ -447,6 +440,13 @@ export default function MarketPage() {
             <h2 className="text-xl font-bold font-serif text-white flex items-center gap-2">
               <Store className="text-green-400" /> Jualan Saya
             </h2>
+            <button
+               onClick={handleOpenSellModal}
+               disabled={actionLoading}
+               className="bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 text-green-100 text-sm px-4 py-2 rounded border border-green-700 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)] font-bold flex items-center gap-2"
+            >
+              + Jual Item
+            </button>
           </div>
 
           <div className="p-6 grid gap-4 grid-cols-1 md:grid-cols-2 flex-grow max-h-[700px] overflow-y-auto custom-scrollbar">

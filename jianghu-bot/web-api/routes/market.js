@@ -525,6 +525,7 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
             sellerId: userId,
             sellerName: player.characterName,
             type: 'item',
+            itemId: item._id,
             refId: item._id,
             itemName: item.name,
             quantity: quantity,
