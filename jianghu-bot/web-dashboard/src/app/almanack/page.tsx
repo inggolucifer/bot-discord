@@ -112,7 +112,7 @@ export default function AlmanackPage() {
                     src={item.imageUrl || ""}
                     alt={item.name}
                     className="max-w-full max-h-full object-contain"
-                    fallbackHtml={`<div class="text-2xl">${item.category === 'weapon' ? '⚔️' : item.category === 'herb' ? '🌿' : '📦'}</div>`}
+                    fallbackNode={<div className="text-2xl">{item.category === 'weapon' ? '⚔️' : item.category === 'herb' ? '🌿' : '📦'}</div>}
                   />
                 </div>
                 <div>
@@ -152,7 +152,7 @@ export default function AlmanackPage() {
                     src={asset.imageUrl || ""}
                     alt={asset.name}
                     className="max-w-full max-h-full object-contain"
-                    fallbackHtml='<div class="text-2xl">🏛️</div>'
+                    fallbackNode={<div className="text-2xl">🏛️</div>}
                   />
                 </div>
                 <div>

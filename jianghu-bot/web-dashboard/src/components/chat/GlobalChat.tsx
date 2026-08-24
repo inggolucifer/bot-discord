@@ -135,7 +135,11 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
                     title="Lihat Profil"
                   >
                     {msg.user.avatar ? (
-                      <FallbackImage src={msg.user.avatar} alt={msg.user.name} fallbackHtml='<div class="bg-gray-800 w-full h-full flex items-center justify-center text-xs">👤</div>' />
+                      <FallbackImage
+                         src={msg.user.avatar}
+                         alt={msg.user.name}
+                         fallbackNode={<div className="bg-gray-800 w-full h-full flex items-center justify-center text-xs">👤</div>}
+                      />
                     ) : (
                       <div className="bg-gray-800 w-full h-full flex items-center justify-center text-xs"><User size={14}/></div>
                     )}

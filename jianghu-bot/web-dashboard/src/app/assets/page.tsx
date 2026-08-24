@@ -252,7 +252,7 @@ export default function AssetsPage() {
                 <div key={bp._id} className={`bg-[#1a1a1a] border p-4 rounded flex flex-col gap-3 ${isBuildable ? 'border-[#444] hover:border-[#c5a880]' : 'border-gray-800 opacity-75'}`}>
                   <div className="flex gap-3">
                      <div className="w-12 h-12 bg-black rounded border border-[#444] flex items-center justify-center p-1">
-                       <FallbackImage src={bp.imageUrl || ""} alt={bp.name} fallbackHtml='<div class="text-xl">🏛️</div>' />
+                       <FallbackImage src={bp.imageUrl || ""} alt={bp.name} fallbackNode={<div className="text-xl">🏛️</div>} />
                      </div>
                      <div>
                         <h4 className="font-bold text-[#c5a880]">{bp.name}</h4>
@@ -369,7 +369,7 @@ export default function AssetsPage() {
                     <FallbackImage
                       src={asset.imageUrl || ''}
                       alt={asset.name}
-                      fallbackHtml='<div class="w-full h-full flex items-center justify-center text-3xl">🏯</div>'
+                      fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">🏯</div>}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -411,7 +411,7 @@ export default function AssetsPage() {
                       <FallbackImage
                           src={selectedAsset.imageUrl || ''}
                           alt={selectedAsset.name}
-                          fallbackHtml='<div class="w-full h-full flex items-center justify-center text-5xl opacity-20">🏯</div>'
+                          fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl opacity-20">🏯</div>}
                           className="w-full h-full object-cover opacity-50"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>

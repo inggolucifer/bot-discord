@@ -60,7 +60,7 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
                         <FallbackImage
                             src={profile.characterImage || ''}
                             alt={profile.characterName}
-                            fallbackHtml='<div class="w-full h-full flex items-center justify-center text-4xl">👤</div>'
+                            fallbackNode={<div className="w-full h-full flex items-center justify-center text-4xl">👤</div>}
                         />
                     </div>
                 </div>
