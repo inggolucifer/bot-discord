@@ -6,7 +6,7 @@ const { authenticateToken } = require('../middlewares/auth');
 // Dapatkan top 10 player (Leaderboard) berdasarkan totalWealth
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const guildId = req.user.guildId; // Harus pakai guildId untuk isolasi server
+        const guildId = req.user.guildId || req.user.userId; // Harus pakai guildId untuk isolasi server
         if (!guildId) {
              return res.status(400).json({ error: 'Guild ID tidak ditemukan di sesi Anda.' });
         }
