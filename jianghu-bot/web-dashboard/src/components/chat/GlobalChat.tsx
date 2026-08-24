@@ -18,7 +18,7 @@ interface ChatMessage {
 }
 
 export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordId: string) => void }) {
-  const { user } = useAuthStore();
+  const { user, token: storeToken } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -26,11 +26,19 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('jianghu_token');
+    // Gunakan storeToken dari Zustand jika ada, kalau tidak ambil dari localStorage.
+    // storeToken akan re-trigger effect ini kalau berubah (misal habis login).
+    const currentToken = storeToken || localStorage.getItem('jianghu_token');
 
-    // Inisialisasi socket auth
-    if (token) {
-      socket.auth = { token };
+    if (currentToken) {
+      socket.auth = { token: currentToken };
+    } else {
+      socket.auth = {}; // Clear token jika tidak login
+    }
+
+    // Putuskan dulu kalau sedang terkoneksi tapi token berubah
+    if (socket.connected) {
+       socket.disconnect();
     }
     socket.connect();
 
@@ -65,7 +73,7 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
       socket.off('new_message', onNewMessage);
       socket.disconnect();
     };
-  }, []);
+  }, [storeToken]);
 
   useEffect(() => {
     if (isOpen) {

@@ -55,6 +55,12 @@ STATUS: ROADMAP UTAMA SELESAI — mode maintenance ringan
 - [x] Hapus referensi command usang `/convert` dari `README.md`.
 - [x] Hapus file sampah `backend_output.log` dari tracking repo.
 
+## PERBAIKAN FATAL CRASH & REGRESI (Sesi 24/08)
+- [x] Fix web API crash caused by `barter.js` tidak dapat menemukan `lockManager` (capitalization error) dan file `barterService` yang fiktif. Ekstraksi logic ke `services/player/barterService.js` dilakukan dengan sukses.
+- [x] Perbaikan error `Guild ID tidak ditemukan` di rute API baru (leaderboard, tournament, barter) dengan menggunakan fallback `req.user.guildId || req.user.userId`.
+- [x] Perbaikan Socket Token di `GlobalChat.tsx` untuk bergantung pada store `useAuthStore` dan melakukan re-connect jika token (login state) berubah di client-side.
+- [x] Verifikasi modul API di backend dengan mengujinya secara logis (require syntax/module-resolution tanpa memicu error fatal).
+
 ## CARA KERJA LINTAS-SESI (wajib diikuti setiap sesi kerja, termasuk sesi terjadwal berikutnya)
 1. Baca file ini dari awal.
 2. Pilih SATU item checklist yang belum tercentang (☐), urut sesuai fase (jangan loncat ke fase belakangan kalau fase sebelumnya belum selesai, kecuali itemnya independen).
