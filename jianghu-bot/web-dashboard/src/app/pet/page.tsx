@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
+import { getRarityColor, ranks } from '@/lib/rarity';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
 import { Loader2, Heart, Sword, Shield, Zap, XCircle } from 'lucide-react';
@@ -34,6 +35,7 @@ export default function PetPage() {
   const router = useRouter();
   const [pets, setPets] = useState<PetData[]>([]);
   const [petSlots, setPetSlots] = useState(0);
+  const [activeRank, setActiveRank] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState<{type: 'error' | 'success', text: string} | null>(null);
@@ -89,8 +91,35 @@ export default function PetPage() {
           </h1>
           <p className="text-gray-400 text-sm mt-1">Latih dan rawat rekan spiritualmu.</p>
         </div>
-        <div className="bg-black/50 p-2 rounded border border-[#333] text-sm text-gray-300">
-          Slot Tersedia: <span className="font-bold text-white">{pets.length} / {petSlots}</span>
+        <div className="flex gap-4 items-center">
+          <select
+            className="bg-black border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
+            value={activeRank}
+            onChange={(e) => setActiveRank(e.target.value)}
+          >
+            {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
+          </select>
+          <div className="flex gap-4 items-center">
+          <select
+            className="bg-black border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
+            value={activeRank}
+            onChange={(e) => setActiveRank(e.target.value)}
+          >
+            {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
+          </select>
+          <div className="flex gap-4 items-center">
+          <select
+            className="bg-black border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
+            value={activeRank}
+            onChange={(e) => setActiveRank(e.target.value)}
+          >
+            {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
+          </select>
+          <div className="bg-black/50 p-2 rounded border border-[#333] text-sm text-gray-300">
+            Slot Tersedia: <span className="font-bold text-white">{pets.length} / {petSlots}</span>
+          </div>
+        </div>
+        </div>
         </div>
       </div>
 
@@ -106,8 +135,8 @@ export default function PetPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {pets.map((pet) => (
-            <div key={pet.instanceId} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col relative group overflow-hidden">
+          {pets.filter(pet => activeRank === 'all' || pet.petId.rank?.toLowerCase() === activeRank.toLowerCase()).map((pet) => (
+            <div key={pet.instanceId} className={`jianghu-border p-4 rounded-lg flex flex-col relative group overflow-hidden ${getRarityColor(pet.petId.rank)}`}>
               <div className="flex gap-4 mb-4">
                 <div className="w-20 h-20 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
                   <FallbackImage
@@ -194,7 +223,7 @@ export default function PetPage() {
                  >
                     {actionLoading ? <Loader2 size={16} className="animate-spin" /> : <XCircle size={16}/>}
                  </button>
-              </div>
+                      </div>
 
               {pet.isLocked && (
                 <div className="absolute top-2 right-2 bg-red-900 text-white text-[10px] px-2 py-1 rounded shadow">
