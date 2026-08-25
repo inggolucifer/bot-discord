@@ -60,7 +60,7 @@ module.exports = {
 
         await TransactionLog.create({
           guildId,
-          type: 'LELANG_REFUND',
+          type: 'auction_refund',
           description: `Refund bid lelang ${auctionId} sebesar ${auction.highestBid} Silver ke [${prevBidder.characterName}] karena bid dikalahkan.`,
         });
       }
@@ -96,7 +96,7 @@ module.exports = {
 
     await TransactionLog.create({
       guildId,
-      type: 'LELANG_BID',
+      type: 'auction_bid',
       description: `[${player.characterName}] bid ${bidAmount} Silver pada lelang ${auctionId}.`,
     });
 
