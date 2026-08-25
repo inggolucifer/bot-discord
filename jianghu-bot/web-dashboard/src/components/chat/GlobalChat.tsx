@@ -5,6 +5,7 @@ import { socket } from '@/lib/socket';
 import { useAuthStore } from '@/lib/store';
 import { MessageSquare, X, Send, User } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
+import { Button } from '@/components/ui/Button';
 
 interface ChatMessage {
   id: string;
@@ -105,9 +106,9 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end">
       {isOpen && (
-        <div className="bg-[#1a1a1a]/95 backdrop-blur-md border border-[#c5a880]/50 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.8)] w-[320px] sm:w-[380px] h-[450px] flex flex-col mb-4 overflow-hidden">
+        <div className="bg-[#1a1a1a]/95 backdrop-blur-md border border-[#c5a880]/50 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.8)] w-[calc(100vw-2rem)] sm:w-[380px] h-[450px] max-h-[calc(100vh-6rem)] flex flex-col mb-4 overflow-hidden">
           {/* Header */}
           <div className="bg-black border-b border-[#333] p-3 flex justify-between items-center">
             <h3 className="text-[#c5a880] font-bold flex items-center gap-2">
@@ -174,13 +175,14 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
                     maxLength={200}
                     disabled={!isConnected}
                 />
-                <button
+                <Button
                     type="submit"
                     disabled={!input.trim() || !isConnected}
-                    className="bg-[#8b0000] hover:bg-red-800 disabled:bg-gray-700 text-white p-2 rounded transition-colors flex items-center justify-center disabled:opacity-50"
+                    variant="destructive"
+                    size="icon"
                 >
                     <Send size={16} />
-                </button>
+                </Button>
                 </form>
             ) : (
                 <p className="text-xs text-center text-gray-500 py-2">Anda harus login untuk chat.</p>
