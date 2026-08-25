@@ -3,6 +3,8 @@ const router = express.Router();
 const Player = require('../../models/Player');
 const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
+const Asset = require('../../models/Asset');
+const { isUnderConstruction, checkMaterials, consumeMaterials } = require('../../utils/crafting');
 
 // Endpoint to fetch player's inventory
 router.get('/', authenticateToken, async (req, res) => {
@@ -106,7 +108,114 @@ router.post('/discard', authenticateToken, async (req, res) => {
         console.error('[API-INVENTORY] Discard error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
-        releaseLock(); // 🔓 ALWAYS release the lock
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: GET /api/inventory/craft-recipes
+router.get('/craft-recipes', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId }).lean();
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const ownedAssetIds = player.assets.map((a) => a.assetId);
+        const assets = await Asset.find({
+            _id: { $in: ownedAssetIds },
+            isCraftingStation: true
+        }).lean();
+
+        const stations = assets.map(asset => {
+            const owned = player.assets.find(a => a.assetId.toString() === asset._id.toString());
+            return {
+                id: asset._id,
+                name: asset.name,
+                isUnderConstruction: isUnderConstruction(owned),
+                recipes: asset.recipes || []
+            };
+        });
+
+        res.json({ success: true, data: stations });
+    } catch (error) {
+        console.error('[API-INVENTORY] Error fetching craft recipes:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
+// Endpoint: POST /api/inventory/craft
+router.post('/craft', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { assetId, recipeName, times } = req.body;
+    const multiplier = times && times > 0 ? times : 1;
+
+    if (!assetId || !recipeName) {
+        return res.status(400).json({ error: 'Parameter tidak valid.' });
+    }
+
+    const lockKey = `inventory_craft_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) {
+         return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+    }
+
+    try {
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
+
+        const asset = await Asset.findOne({ guildId, _id: assetId });
+        if (!asset) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
+        if (!asset.isCraftingStation) return res.status(400).json({ error: 'Aset ini bukan stasiun crafting.' });
+
+        const owned = player.assets.find((a) => a.assetId.equals(asset._id));
+        if (!owned) return res.status(403).json({ error: `Kamu tidak memiliki aset ${asset.name}.` });
+        if (isUnderConstruction(owned)) return res.status(400).json({ error: `Aset ${asset.name} masih dalam pembangunan.` });
+
+        const recipe = asset.recipes.find((r) => r.recipeName.toLowerCase() === recipeName.toLowerCase());
+        if (!recipe) return res.status(404).json({ error: 'Resep tidak ditemukan.' });
+
+        // Multiply recipe requirements
+        const scaledRecipe = {
+            ...recipe.toObject(),
+            resultQuantity: recipe.resultQuantity * multiplier,
+            materials: recipe.materials.map(m => ({ ...m.toObject(), quantity: m.quantity * multiplier }))
+        };
+
+        const check = checkMaterials(player.inventory, scaledRecipe);
+        if (!check.ok) {
+            const missingLines = check.missing.map((m) => `${m.itemName}: butuh ${m.need}, kamu punya ${m.have}`).join(', ');
+            return res.status(400).json({ error: `Bahan tidak cukup: ${missingLines}` });
+        }
+
+        player.inventory = consumeMaterials(player.inventory, scaledRecipe);
+
+        if (scaledRecipe.resultItemId) {
+            const resultOwned = player.inventory.find((i) => i.itemId.equals(scaledRecipe.resultItemId));
+            if (resultOwned) resultOwned.quantity += scaledRecipe.resultQuantity;
+            else player.inventory.push({ itemId: scaledRecipe.resultItemId, quantity: scaledRecipe.resultQuantity });
+        }
+
+        await player.save();
+
+        const TransactionLog = require('../../models/TransactionLog');
+        await TransactionLog.create({
+            guildId,
+            type: 'craft',
+            description: `[${player.characterName}] craft ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName} di ${asset.name}.`
+        });
+
+        res.json({ success: true, message: `Berhasil membuat ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName}!` });
+    } catch (error) {
+        console.error('[API-INVENTORY] Crafting error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat crafting.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
