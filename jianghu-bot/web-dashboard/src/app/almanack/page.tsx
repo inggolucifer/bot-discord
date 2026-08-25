@@ -26,9 +26,12 @@ export default function AlmanackPage() {
   useEffect(() => {
     const fetchAlmanack = async () => {
       try {
-        const res = await api.get('/almanack');
-        setItems(res.data.data.items);
-        setAssets(res.data.data.assets);
+        const [itemsRes, assetsRes] = await Promise.all([
+          api.get('/almanack/items'),
+          api.get('/almanack/assets')
+        ]);
+        setItems(itemsRes.data.data);
+        setAssets(assetsRes.data.data);
       } catch (err: any) {
         console.error(err);
         setMessage({ type: 'error', text: err.response?.data?.error || 'Gagal memuat Almanack.' });
