@@ -154,7 +154,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
 
                 await TransactionLog.create({
                     guildId: auction.guildId,
-                    type: 'LELANG_REFUND',
+                    type: 'auction_refund',
                     description: `Refund bid lelang ${auction._id} sebesar ${auction.highestBid} Silver ke [${prevBidder.characterName}] karena dikalahkan.`,
                 });
             }
@@ -187,7 +187,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
 
         await TransactionLog.create({
             guildId: auction.guildId,
-            type: 'LELANG_BID',
+            type: 'auction_bid',
             description: `[${player.characterName}] bid ${bidAmount} Silver pada lelang ${auctionId}.`,
         });
 
@@ -367,7 +367,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
 
         await TransactionLog.create({
             guildId: listing.guildId,
-            type: 'MARKET_PLAYER_BUY',
+            type: 'player_listing_sale',
             description: `[${player.characterName}] membeli ${quantity}x ${listing.itemName} dari [${seller.characterName}] seharga ${totalPrice} ${currencyType}.`,
         });
 
@@ -469,7 +469,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
 
         await TransactionLog.create({
             guildId: target.guildId,
-            type: 'MARKET_PLAYER_CANCEL',
+            type: 'player_listing_cancel',
             description: `[${player.characterName}] membatalkan listing ${target.quantity}x ${target.itemName}.`,
         });
 
@@ -540,7 +540,7 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
 
         await TransactionLog.create({
             guildId: player.guildId,
-            type: 'MARKET_PLAYER_SELL',
+            type: 'player_listing_create',
             description: `[${player.characterName}] menjual ${quantity}x ${item.name} @ ${pricePerUnit} ${currency}`,
         });
 

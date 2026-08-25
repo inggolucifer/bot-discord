@@ -75,7 +75,7 @@ module.exports = {
     // Log
     await TransactionLog.create({
       guildId,
-      type: 'LELANG_REQUEST',
+      type: 'auction_request',
       description: `[${player.characterName}] request lelang ${quantity}x ${item.name} start bid ${startingBid} Silver.`,
     });
 
