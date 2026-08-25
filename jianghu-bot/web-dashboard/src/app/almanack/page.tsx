@@ -1,20 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Package, PackageOpen, Wrench, BookOpen } from 'lucide-react';
+import { Search, Package, PackageOpen, BookOpen } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
+import { getRarityColor, getRarityTextClass, ranks } from '@/lib/rarity';
 import api from '@/lib/api';
 
 type TabType = 'item' | 'asset';
 
 export default function AlmanackPage() {
-  const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<TabType>('item');
   const [items, setItems] = useState<any[]>([]);
   const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeRank, setActiveRank] = useState<string>('all');
     const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
 
   const fetchData = async () => {
@@ -36,21 +37,23 @@ export default function AlmanackPage() {
   useEffect(() => {
     const timer = setTimeout(() => fetchData(), 0);
     return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   ;
 
   // Filter and sort items/assets based on search and tab logic
-  const filteredItems = items.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredItems = items.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRank = activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase();
+    return matchesSearch && matchesRank;
+  });
 
-  const filteredAssets = assets.filter(asset =>
-    asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    asset.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAssets = assets.filter(asset => {
+    const matchesSearch = asset.name.toLowerCase().includes(searchQuery.toLowerCase()) || asset.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRank = activeRank === 'all' || asset.rank?.toLowerCase() === activeRank.toLowerCase();
+    return matchesSearch && matchesRank;
+  });
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -74,6 +77,13 @@ export default function AlmanackPage() {
           />
           <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
         </div>
+        <select
+          className="bg-black border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
+          value={activeRank}
+          onChange={(e) => setActiveRank(e.target.value)}
+        >
+          {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
+        </select>
       </div>
 
       {/* Tabs */}
@@ -105,7 +115,7 @@ export default function AlmanackPage() {
 
           {/* TAB ITEM */}
           {activeTab === 'item' && filteredItems.map((item) => (
-            <div key={item._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3 relative overflow-hidden group">
+            <div key={item._id} className={`jianghu-border p-4 rounded-lg flex flex-col gap-3 relative overflow-hidden group ${getRarityColor(item.rank)}`}>
               <div className="flex items-start gap-4">
                 <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
                   <FallbackImage
@@ -116,7 +126,7 @@ export default function AlmanackPage() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#c5a880]">{item.name}</h3>
+                  <h3 className={`font-bold ${getRarityTextClass(item.rank)}`}>{item.name}</h3>
                   <div className="flex flex-wrap gap-1 mt-1">
                     <span className="text-[10px] px-1.5 py-0.5 bg-gray-800 rounded text-gray-300">{item.rank}</span>
                     <span className="text-[10px] px-1.5 py-0.5 bg-gray-800 rounded text-gray-300 capitalize">{item.category}</span>
@@ -155,7 +165,7 @@ export default function AlmanackPage() {
 
           {/* TAB ASSET (Gabungan semua aset) */}
           {activeTab === 'asset' && filteredAssets.map((asset) => (
-            <div key={asset._id} className="bg-[#1a1a1a] jianghu-border p-4 rounded-lg flex flex-col gap-3">
+            <div key={asset._id} className={`jianghu-border p-4 rounded-lg flex flex-col gap-3 relative overflow-hidden group ${getRarityColor(asset.rank)}`}>
               <div className="flex items-start gap-4">
                 <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
                   <FallbackImage
@@ -166,7 +176,7 @@ export default function AlmanackPage() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#c5a880]">{asset.name}</h3>
+                  <h3 className={`font-bold ${getRarityTextClass(asset.rank)}`}>{asset.name}</h3>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {asset.buildable && <span className="text-[10px] px-1.5 py-0.5 bg-green-900/50 text-green-400 rounded border border-green-800">Blueprint (Bisa Dibangun)</span>}
                     {!asset.buildable && <span className="text-[10px] px-1.5 py-0.5 bg-gray-900/50 text-gray-400 rounded border border-gray-700">Aset Jadi</span>}
