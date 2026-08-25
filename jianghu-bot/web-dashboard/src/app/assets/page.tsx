@@ -191,7 +191,7 @@ export default function AssetsPage() {
       try {
           const [assetsRes, invRes] = await Promise.all([
               api.get('/almanack/assets'),
-              api.get('/player/inventory')
+              api.get('/inventory')
           ]);
           const buildable = assetsRes.data.data.filter((a: {buildable: boolean}) => a.buildable);
           setBuildableAssets(buildable);
