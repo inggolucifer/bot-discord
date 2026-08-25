@@ -84,7 +84,7 @@ export default function PetPage() {
     }
     setTimeout(() => fetchPets(), 0);
     setTimeout(() => fetchConsumables(), 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [hasCharacter]);
 
   const handleAction = async (endpoint: string, payload: any) => {
