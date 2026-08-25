@@ -1,10 +1,12 @@
 'use client';
 
-import { Map, Clock, ArrowRight, Loader2, Pickaxe, CheckCircle2, AlertTriangle, Hammer, X, Users, Plus } from "lucide-react";
+import { Map, Clock, ArrowRight, Loader2, Pickaxe, CheckCircle2, AlertTriangle, Hammer, X, Users, Search, PackageOpen } from "lucide-react";
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { useRouter } from "next/navigation";
+import FallbackImage from '@/components/FallbackImage';
+import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
 import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
@@ -40,6 +42,10 @@ interface BuildableAsset {
   buildable: boolean;
   constructionTimeHours: number;
   buildRequirements: { itemId: { _id: string, name: string }; quantity: number }[];
+  imageUrl?: string;
+  rank?: string;
+  basePrice?: number;
+  priceCurrency?: string;
 }
 
 const Countdown = ({ targetDate }: { targetDate: string }) => {
@@ -77,13 +83,15 @@ export default function AssetsPage() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
+  const [activePageTab, setActivePageTab] = useState<'my-assets' | 'build-asset'>('my-assets');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] = useState<string>('');
   const [targetAssetId, setTargetAssetId] = useState<string>('');
   const [moveLoading, setMoveLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
 
-  const [isBuildModalOpen, setIsBuildModalOpen] = useState(false);
   const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
+  const [inventory, setInventory] = useState<{item: {_id: string}, quantity: number}[]>([]);
   const [loadingBuildable, setLoadingBuildable] = useState(false);
   const [buildActionLoading, setBuildActionLoading] = useState(false);
 
@@ -93,9 +101,9 @@ export default function AssetsPage() {
       try {
           const res = await api.get('/player/assets');
           setAssets(res.data.data);
-      } catch (err: any) {
+      } catch (err) {
           console.error(err);
-          setError(err.response?.data?.error || 'Gagal memuat data aset.');
+          setError((err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal memuat data aset.');
       } finally {
           setLoading(false);
       }
@@ -110,21 +118,6 @@ export default function AssetsPage() {
       return () => clearTimeout(timeout);
   }, [user]);
 
-  const handleClaimProgress = async (assetId: string) => {
-      setActionLoading(true);
-      setActionMessage(null);
-      try {
-          const res = await api.post('/player/assets/claim-progress', { assetId });
-          setActionMessage({ type: 'success', text: res.data.message });
-          await setTimeout(() => fetchAssets(), 0);
-          if (selectedAsset?.id === assetId) setSelectedAsset(null); // Close modal if open
-      } catch (err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal klaim progress.' });
-      } finally {
-          setActionLoading(false);
-      }
-  };
-
   const handleWorkSelf = async () => {
       if(!selectedAsset) return;
       setActionLoading(true);
@@ -134,8 +127,8 @@ export default function AssetsPage() {
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
           setSelectedAsset(null);
-      } catch(err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal mulai kerja mandiri.' });
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal mulai kerja mandiri.' });
       } finally {
           setActionLoading(false);
       }
@@ -150,8 +143,8 @@ export default function AssetsPage() {
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
           setSelectedAsset(null);
-      } catch(err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal berhenti kerja.' });
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal berhenti kerja.' });
       } finally {
           setActionLoading(false);
       }
@@ -159,26 +152,22 @@ export default function AssetsPage() {
 
   const handleHireNpc = async () => {
       if(!selectedAsset) return;
-      if (npcDuration < 1) {
-          setActionMessage({ type: 'error', text: 'Durasi minimal 1 jam.' });
-          return;
-      }
       setActionLoading(true);
       setActionMessage(null);
       try {
-          const res = await api.post('/player/assets/hire-npc', { assetId: selectedAsset.id, durasi: npcDuration });
+          const res = await api.post('/player/assets/hire-npc', { assetId: selectedAsset.id, hours: npcDuration });
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
           setSelectedAsset(null);
-      } catch(err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal menyewa NPC.' });
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal menyewa NPC.' });
       } finally {
           setActionLoading(false);
       }
   }
 
   const handleMoveWorker = async () => {
-      if (!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
+      if(!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
       setMoveLoading(true);
       setActionMessage(null);
       try {
@@ -190,21 +179,26 @@ export default function AssetsPage() {
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
           setSelectedAsset(null);
-      } catch(err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal memindah pekerja.' });
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal memindah pekerja.' });
       } finally {
           setMoveLoading(false);
       }
   }
 
-  const handleOpenBuildModal = async () => {
-      setIsBuildModalOpen(true);
+  const fetchBuildableAssets = async () => {
       setLoadingBuildable(true);
       try {
-          const res = await api.get('/almanack/assets');
-          const buildable = res.data.data.filter((a: any) => a.buildable);
+          const [assetsRes, invRes] = await Promise.all([
+              api.get('/almanack/assets'),
+              api.get('/player/inventory')
+          ]);
+          const buildable = assetsRes.data.data.filter((a: {buildable: boolean}) => a.buildable);
           setBuildableAssets(buildable);
-      } catch (err: any) {
+          if (invRes.data && invRes.data.data) {
+              setInventory(invRes.data.data.inventory || []);
+          }
+      } catch (err) {
           console.error(err);
           setActionMessage({ type: 'error', text: 'Gagal memuat daftar aset yang bisa dibangun.' });
       } finally {
@@ -212,38 +206,114 @@ export default function AssetsPage() {
       }
   }
 
+  useEffect(() => {
+      if (activePageTab === 'build-asset' && buildableAssets.length === 0) {
+          const timeout = setTimeout(() => fetchBuildableAssets(), 0);
+          return () => clearTimeout(timeout);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePageTab]);
+
+  const filteredBuildableAssets = buildableAssets.filter(asset =>
+      asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (asset.description && asset.description.toLowerCase().includes(searchQuery.toLowerCase()))
+  ).map(asset => {
+      let canBuild = true;
+      if (asset.buildRequirements && asset.buildRequirements.length > 0) {
+          for (const req of asset.buildRequirements) {
+              const invItem = inventory.find(i => i.item && i.item._id === (req.itemId as { _id: string })._id);
+              if (!invItem || invItem.quantity < req.quantity) {
+                  canBuild = false;
+                  break;
+              }
+          }
+      }
+      return { ...asset, canBuild };
+  }).sort((a, b) => {
+      if (a.canBuild && !b.canBuild) return -1;
+      if (!a.canBuild && b.canBuild) return 1;
+      return a.name.localeCompare(b.name);
+  });
+
   const handleBuildAsset = async (assetId: string) => {
       setBuildActionLoading(true);
       setActionMessage(null);
       try {
           const res = await api.post('/almanack/build-asset', { assetId });
           setActionMessage({ type: 'success', text: res.data.message });
-          setIsBuildModalOpen(false);
-          await setTimeout(() => fetchAssets(), 0);
-      } catch (err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal membangun aset.' });
+          await setTimeout(() => {
+              fetchAssets();
+              fetchBuildableAssets();
+          }, 0);
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal membangun aset.' });
       } finally {
           setBuildActionLoading(false);
       }
   }
 
+  const handleCompleteConstruction = async (assetId: string) => {
+      setActionLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/player/assets/claim-progress', { assetId });
+          setActionMessage({ type: 'success', text: res.data.message });
+          await setTimeout(() => fetchAssets(), 0);
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal menyelesaikan pembangunan aset.' });
+      } finally {
+          setActionLoading(false);
+      }
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
-
       <PageHeader
         title="Manajemen Aset"
         description="Pantau pembangunan aset, produksi tambang, dan kelola pekerja Anda."
         action={
-          <div className="flex gap-2">
-              <Button variant="default" onClick={handleOpenBuildModal}>
-                  <Plus className="w-4 h-4 mr-2" /> Bangun Aset
-              </Button>
-              <Button variant="outline" onClick={() => fetchAssets()}>
+          <div className="flex flex-col sm:flex-row gap-3">
+              {activePageTab === 'build-asset' && (
+                 <div className="relative w-full sm:w-64">
+                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                   <input
+                     type="text"
+                     placeholder="Cari blueprint..."
+                     value={searchQuery}
+                     onChange={(e) => setSearchQuery(e.target.value)}
+                     className="w-full bg-[#111] border border-[#444] rounded-md pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors"
+                   />
+                 </div>
+              )}
+              <Button variant="outline" onClick={() => activePageTab === 'my-assets' ? fetchAssets() : fetchBuildableAssets()}>
                   Refresh Data
               </Button>
           </div>
         }
       />
+
+      {!user && !loading ? (
+        <EmptyState
+            icon={<Map />}
+            title="Akses Ditolak"
+            description="Silakan login menggunakan Discord untuk melihat Aset Anda."
+        />
+      ) : (
+      <>
+      <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar">
+        <button
+          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'my-assets' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+          onClick={() => {setActivePageTab('my-assets'); setActionMessage(null);}}
+        >
+          <Map size={16} /> Aset Saya ({assets.length})
+        </button>
+        <button
+          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'build-asset' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+          onClick={() => {setActivePageTab('build-asset'); setActionMessage(null);}}
+        >
+          <Hammer size={16} /> Bangun Aset
+        </button>
+      </div>
 
       {actionMessage && (
           <div className={`p-4 rounded-lg flex items-center justify-between border ${actionMessage.type === 'success' ? 'bg-green-900/20 border-green-900/50 text-green-400' : 'bg-red-900/20 border-red-900/50 text-red-400'}`}>
@@ -252,103 +322,154 @@ export default function AssetsPage() {
           </div>
       )}
 
-      {!user && !loading && (
-        <EmptyState
-            icon={<Map />}
-            title="Akses Ditolak"
-            description="Silakan login menggunakan Discord untuk melihat Aset Anda."
-        />
-      )}
 
-      {loading && <LoadingState text="Memuat peta aset..." />}
 
-      {error && (
-        <div className="py-10 text-center text-red-500 bg-red-900/10 border border-red-900/50 rounded-lg">
-          {error}
-        </div>
-      )}
+      {/* Tab: Aset Saya */}
+      {activePageTab === 'my-assets' && (
+        <>
+            {loading && <LoadingState text="Memuat peta aset..." />}
 
-      {user && !loading && assets.length === 0 && !error && (
-         <EmptyState
-           icon={<Hammer />}
-           title="Belum Ada Aset"
-           description="Anda belum memiliki aset apapun. Bangun aset baru menggunakan item Blueprint (Cetak Biru) melalui command Discord."
-         />
-      )}
+            {error && (
+                <div className="py-10 text-center text-red-500 bg-red-900/10 border border-red-900/50 rounded-lg">
+                {error}
+                </div>
+            )}
 
-      {user && !loading && assets.length > 0 && (
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {assets.map(asset => (
-                <div
-                  key={asset.id}
-                  className={`relative flex flex-col rounded-lg border p-4 sm:p-5 transition-all duration-300 hover:shadow-lg ${asset.underConstruction ? 'bg-[#1a110a] border-orange-900/40 hover:border-orange-700/60' : 'bg-[#111] border-[#333] hover:border-[#8b0000]/50'}`}
-                >
-                    <div className="flex justify-between items-start mb-3">
-                        <div className="flex-1 pr-2">
-                           <h3 className="font-serif font-bold text-lg text-[#c5a880] truncate">{asset.name}</h3>
-                           <div className="flex flex-wrap gap-2 mt-1">
-                               <Badge variant="outline" className="text-[10px] text-gray-400 border-gray-700">{asset.type}</Badge>
-                               <Badge variant={asset.underConstruction ? 'warning' : (asset.status === 'Halted (Terhenti)' ? 'destructive' : 'success')} className="text-[10px]">
-                                   {asset.underConstruction ? 'Membangun' : (asset.status === 'Produksi' ? 'Produksi' : asset.status)}
-                               </Badge>
-                           </div>
-                        </div>
-                        <div className="text-center bg-black/40 border border-[#333] rounded p-2 min-w-[50px]">
-                           <p className="text-[10px] text-gray-500">Jml</p>
-                           <p className="font-bold text-white leading-none">{asset.quantity}</p>
-                        </div>
-                    </div>
+            {user && !loading && assets.length === 0 && !error && (
+                <EmptyState
+                icon={<Hammer />}
+                title="Belum Ada Aset"
+                description="Anda belum memiliki aset apapun. Buka tab 'Bangun Aset' untuk membangun aset baru menggunakan item Blueprint (Cetak Biru)."
+                />
+            )}
 
-                    <div className="my-4 flex-1">
-                        {asset.underConstruction ? (
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs text-gray-400 mb-1">
-                                    <span>Progress Pembangunan</span>
-                                    <span>{asset.progressPercent.toFixed(1)}%</span>
+            {user && !loading && assets.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    {assets.map(asset => (
+                        <div
+                        key={asset.id}
+                        className={`relative flex flex-col rounded-lg border p-4 sm:p-5 transition-all duration-300 hover:shadow-lg ${asset.underConstruction ? 'bg-[#1a110a] border-orange-900/40 hover:border-orange-700/60' : 'bg-[#111] border-[#333] hover:border-[#8b0000]/50'}`}
+                        >
+                            <div className="flex justify-between items-start mb-3">
+                                <div className="flex-1 pr-2">
+                                <h3 className="font-serif font-bold text-lg text-[#c5a880] truncate">{asset.name}</h3>
+                                <p className="text-xs text-gray-500 mt-1 capitalize flex items-center gap-1"><PackageOpen size={12}/> {asset.type}</p>
                                 </div>
-                                <div className="w-full bg-black rounded-full h-1.5 border border-[#333]">
-                                  <div className="bg-orange-500 h-1.5 rounded-full transition-all duration-1000" style={{width: `${asset.progressPercent}%`}}></div>
+                                <Badge variant={asset.underConstruction ? 'warning' : 'outline'} className={asset.underConstruction ? 'bg-orange-900/80 text-orange-200' : 'border-[#444] text-gray-300'}>
+                                    {asset.underConstruction ? 'Membangun' : 'Aktif'}
+                                </Badge>
+                            </div>
+
+                            <p className="text-sm text-gray-400 mb-4 line-clamp-2 h-10">{asset.description}</p>
+
+                            <div className="grid grid-cols-2 gap-2 mb-4 bg-black/40 p-2 rounded-md border border-[#333]/50">
+                                <div>
+                                    <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">Jumlah</p>
+                                    <p className="text-sm font-bold text-white">{asset.quantity}</p>
                                 </div>
-                                {asset.constructionCompleteAt && (
-                                    <p className="text-[10px] text-orange-400 mt-2 flex items-center gap-1">
-                                        <Clock size={12}/> <Countdown targetDate={asset.constructionCompleteAt} />
+                                <div>
+                                    <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">Pekerja</p>
+                                    <p className="text-sm font-bold text-white flex items-center gap-1">
+                                        <Users size={12} className="text-gray-400"/>
+                                        {asset.assignedWorkers.length} {asset.underConstruction ? '' : '/ 1'}
                                     </p>
+                                </div>
+                            </div>
+
+                            {asset.underConstruction && asset.constructionCompleteAt && (
+                                <div className="mb-4 bg-orange-900/20 p-2 rounded-md border border-orange-900/30">
+                                    <div className="flex justify-between text-xs mb-1">
+                                        <span className="text-orange-400">Progres</span>
+                                        <span className="text-orange-400 font-mono"><Countdown targetDate={asset.constructionCompleteAt} /></span>
+                                    </div>
+                                    <div className="w-full bg-black/50 rounded-full h-1.5 border border-orange-900/50 overflow-hidden">
+                                        <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${asset.progressPercent}%` }}></div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mt-auto pt-4 border-t border-[#333]/50 flex justify-end">
+                                {asset.underConstruction && asset.progressPercent >= 100 ? (
+                                    <Button size="sm" variant="default" onClick={() => handleCompleteConstruction(asset.id)} disabled={actionLoading} className="w-full sm:w-auto bg-green-700 hover:bg-green-600 text-white">
+                                        <CheckCircle2 className="w-4 h-4 mr-1" /> Selesaikan Bangunan
+                                    </Button>
+                                ) : (
+                                    <Button size="sm" variant="outline" onClick={() => setSelectedAsset(asset)} className="ml-auto text-xs w-full sm:w-auto">
+                                        Kelola <ArrowRight className="w-3 h-3 ml-1" />
+                                    </Button>
                                 )}
                             </div>
-                        ) : (
-                             <div className="text-sm text-gray-400 line-clamp-2">
-                                 {asset.description}
-                             </div>
-                        )}
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-auto pt-4 border-t border-[#333]">
-                        <div className="flex -space-x-2 mr-2">
-                            {asset.assignedWorkers.length > 0 ? (
-                                asset.assignedWorkers.map((w, i) => (
-                                    <div key={i} className="w-6 h-6 rounded-full bg-gray-800 border-2 border-[#111] flex items-center justify-center text-[10px]" title={w.workerId}>
-                                        👷
-                                    </div>
-                                ))
-                            ) : (
-                                <span className="text-[10px] text-gray-500 italic ml-2">0 Pekerja</span>
-                            )}
                         </div>
-
-                        {/* Actions */}
-                        {asset.underConstruction && asset.progressPercent >= 100 ? (
-                            <Button size="sm" variant="success" onClick={() => handleClaimProgress(asset.id)} disabled={actionLoading} className="ml-auto text-xs w-full sm:w-auto">
-                                Selesaikan <CheckCircle2 className="w-3 h-3 ml-1" />
-                            </Button>
-                        ) : (
-                            <Button size="sm" variant="outline" onClick={() => setSelectedAsset(asset)} className="ml-auto text-xs w-full sm:w-auto">
-                                Kelola <ArrowRight className="w-3 h-3 ml-1" />
-                            </Button>
-                        )}
-                    </div>
+                    ))}
                 </div>
-            ))}
-         </div>
+            )}
+        </>
+      )}
+
+      {/* Tab: Bangun Aset */}
+      {user && activePageTab === 'build-asset' && (
+          <div className="space-y-4">
+              {loadingBuildable ? (
+                  <LoadingState text="Memuat daftar blueprint..." />
+              ) : filteredBuildableAssets.length === 0 ? (
+                  <EmptyState icon={<Hammer/>} title="Tidak Ada Aset" description="Tidak ada aset yang bisa dibangun atau cocok dengan pencarian." />
+              ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      {filteredBuildableAssets.map((asset: BuildableAsset) => (
+                          <div key={asset._id} className={`bg-[#111] border p-4 sm:p-5 rounded-lg flex flex-col gap-3 relative overflow-hidden group hover:border-[#c5a880]/50 hover:shadow-lg transition-all ${getRarityColor(asset.rank || '')}`}>
+                              <div className="flex items-start gap-4">
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/60 rounded-md border border-[#333] flex-shrink-0 flex items-center justify-center p-1 shadow-inner">
+                                    <FallbackImage
+                                        src={asset.imageUrl || ""}
+                                        alt={asset.name}
+                                        className="max-w-full max-h-full object-contain"
+                                        fallbackNode={<div className="text-2xl sm:text-4xl">🏛️</div>}
+                                    />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className={`font-bold text-sm sm:text-base leading-tight mb-1.5 ${getRarityTextClass(asset.rank || '')} truncate`} title={asset.name}>{asset.name}</h3>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        <Badge variant="success" className="text-[9px] sm:text-[10px] py-0 h-4 bg-[#1f402e]/80">Blueprint</Badge>
+                                        <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40 capitalize">{asset.type}</Badge>
+                                    </div>
+                                </div>
+                              </div>
+                              <p className="text-[10px] sm:text-xs text-gray-400 italic mb-2 line-clamp-3 bg-black/30 p-2 rounded border border-[#333]/50">{asset.description}</p>
+
+                              <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
+                                  <p className="flex justify-between"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
+
+                                  <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
+                                      <span className="text-gray-400 block mb-1.5 font-semibold">Material Dibutuhkan:</span>
+                                      {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
+                                          <div className="flex flex-wrap gap-1.5">
+                                              {asset.buildRequirements.map((req: { itemId?: { name: string }, quantity: number }, i: number) => (
+                                                  <div key={i} className="flex items-center gap-1 bg-[#111] border border-[#444] px-1.5 py-0.5 rounded-sm">
+                                                      <span className="text-[#c5a880] truncate max-w-[80px]" title={req.itemId?.name || 'Unknown Item'}>{req.itemId?.name || 'Unknown Item'}</span>
+                                                      <span className="text-gray-500 font-mono">x{req.quantity}</span>
+                                                  </div>
+                                              ))}
+                                          </div>
+                                      ) : (
+                                          <span className="text-gray-600 italic">Tidak ada material khusus.</span>
+                                      )}
+                                  </div>
+
+                                  <Button
+                                      variant={(asset as BuildableAsset & {canBuild: boolean}).canBuild ? "default" : "secondary"}
+                                      size="sm"
+                                      onClick={() => handleBuildAsset(asset._id)}
+                                      disabled={buildActionLoading || !(asset as BuildableAsset & {canBuild: boolean}).canBuild}
+                                      className="w-full mt-3"
+                                  >
+                                      {buildActionLoading ? <Loader2 size={14} className="animate-spin"/> : <><Hammer size={14} className="mr-2"/> Bangun Aset Ini</>}
+                                  </Button>
+                              </div>
+                          </div>
+                      ))}
+                  </div>
+              )}
+          </div>
       )}
 
       {/* Asset Management Modal */}
@@ -403,28 +524,27 @@ export default function AssetsPage() {
                           <div>
                               <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">Daftar Pekerja ({selectedAsset.assignedWorkers.length})</h3>
                               {selectedAsset.assignedWorkers.length === 0 ? (
-                                  <div className="text-center py-6 bg-black/20 rounded border border-[#333]/50">
-                                      <p className="text-xs text-gray-500 italic">Tidak ada pekerja yang ditugaskan.</p>
-                                  </div>
+                                  <p className="text-sm text-gray-500 italic">Tidak ada pekerja yang ditugaskan.</p>
                               ) : (
-                                  <ul className="space-y-2">
-                                      {selectedAsset.assignedWorkers.map((w, i) => (
-                                          <li key={i} className="text-xs bg-black/40 p-3 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border border-[#333]">
-                                              <span className="text-gray-300 flex items-center gap-2">
-                                                  <Pickaxe size={14} className="text-gray-500"/>
-                                                  {w.workerId.startsWith('NPC') ? w.workerId.substring(0, 15) + '...' : 'Pemain: ' + w.workerId}
+                                  <ul className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                      {selectedAsset.assignedWorkers.map((worker, index) => (
+                                          <li key={index} className="flex justify-between items-center text-xs sm:text-sm bg-[#111] p-3 rounded-md border border-[#333]">
+                                              <span className="font-semibold text-gray-300">
+                                                  {worker.workerId.startsWith('NPC') ? worker.workerId.substring(0, 15) + '...' : worker.workerId}
+                                                  {worker.workerId === user?.id && ' (Anda)'}
                                               </span>
-                                              <span className="text-orange-400 flex items-center gap-1 font-mono">
-                                                  {w.endTime && <Clock size={12} />}
-                                                  {w.endTime ? <Countdown targetDate={w.endTime} /> : 'Permanen'}
-                                              </span>
+                                              {worker.endTime && (
+                                                  <span className="text-orange-400 bg-orange-900/20 px-2 py-1 rounded text-[10px] sm:text-xs flex items-center gap-1 border border-orange-900/30">
+                                                      <Clock size={12} /> <Countdown targetDate={worker.endTime} />
+                                                  </span>
+                                              )}
                                           </li>
                                       ))}
                                   </ul>
                               )}
                           </div>
 
-                          <div className="pt-4 mt-auto space-y-2">
+                          <div className="space-y-3">
                               {selectedAsset.assignedWorkers.some(w => w.workerId === user?.id) ? (
                                   <Button variant="outline" className="w-full border-orange-900 text-orange-400 hover:bg-orange-900/20" onClick={handleStopWorkSelf} disabled={actionLoading}>
                                       <Pickaxe className="mr-2 h-4 w-4" /> Berhenti Kerja Mandiri
@@ -526,56 +646,8 @@ export default function AssetsPage() {
               </div>
           )}
       </Modal>
-
-      {/* Build Asset Modal */}
-      <Modal
-          isOpen={isBuildModalOpen}
-          onClose={() => setIsBuildModalOpen(false)}
-          title="Bangun Aset Baru"
-      >
-          <div className="space-y-4">
-              {loadingBuildable ? (
-                  <div className="py-8 flex justify-center">
-                      <Loader2 className="animate-spin text-[#c5a880]" size={24} />
-                  </div>
-              ) : buildableAssets.length === 0 ? (
-                  <EmptyState icon={<Hammer/>} title="Tidak Ada Aset" description="Tidak ada aset yang bisa dibangun saat ini." />
-              ) : (
-                  <div className="grid grid-cols-1 gap-4 max-h-[60vh] overflow-y-auto pr-2">
-                      {buildableAssets.map(asset => (
-                          <div key={asset._id} className="bg-[#111] border border-[#333] p-4 rounded-lg flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                              <div className="flex-1">
-                                  <h4 className="font-bold text-[#c5a880] text-sm">{asset.name}</h4>
-                                  <p className="text-xs text-gray-400 mt-1 line-clamp-2">{asset.description}</p>
-                                  {asset.buildRequirements && asset.buildRequirements.length > 0 && (
-                                      <div className="mt-2 text-[10px] text-gray-500">
-                                          <span className="font-semibold text-gray-400 block mb-1">Syarat:</span>
-                                          <ul className="list-disc list-inside">
-                                              {asset.buildRequirements.map((req, i) => (
-                                                  <li key={i}>{req.itemId?.name || 'Unknown Item'} x{req.quantity}</li>
-                                              ))}
-                                          </ul>
-                                      </div>
-                                  )}
-                                  <div className="mt-2 text-[10px] text-orange-400 flex items-center gap-1">
-                                      <Clock size={12}/> Waktu bangun: {asset.constructionTimeHours} Jam
-                                  </div>
-                              </div>
-                              <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleBuildAsset(asset._id)}
-                                  disabled={buildActionLoading}
-                                  className="w-full sm:w-auto whitespace-nowrap"
-                              >
-                                  {buildActionLoading ? <Loader2 size={14} className="animate-spin"/> : 'Bangun'}
-                              </Button>
-                          </div>
-                      ))}
-                  </div>
-              )}
-          </div>
-      </Modal>
+      </>
+      )}
     </div>
   );
 }
