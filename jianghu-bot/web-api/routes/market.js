@@ -56,7 +56,8 @@ router.get('/shop', authenticateToken, async (req, res) => {
                 currency: shop.priceCurrency,
                 emoji: getEmojiForShopItem(doc.category, shop.category),
                 stock: shop.stock,
-                refId: shop.refId
+                refId: shop.refId,
+                rank: doc.rank || 'Common'
             });
         }
 
@@ -84,7 +85,8 @@ router.get('/auctions', authenticateToken, async (req, res) => {
                 currency: 'silver', // Semua lelang berjalan dengan base price silver (sesuai normalisasi)
                 timeLeft: auction.expiresAt, // bisa di-format di sisi frontend
                 emoji: getEmojiForShopItem(auction.itemId.category, 'item'),
-                quantity: auction.quantity
+                quantity: auction.quantity,
+                rank: auction.itemId.rank || 'Common'
             };
         });
 
@@ -282,7 +284,8 @@ router.get('/player-shop', authenticateToken, async (req, res) => {
                 currency: listing.currency,
                 emoji: getEmojiForShopItem(listing.itemId ? listing.itemId.category : null, listing.type),
                 quantity: listing.quantity,
-                type: listing.type
+                type: listing.type,
+                rank: listing.itemId ? listing.itemId.rank : 'Common'
             };
         });
 
@@ -401,7 +404,8 @@ router.get('/player-shop/my-listings', authenticateToken, async (req, res) => {
                 currency: listing.currency,
                 emoji: getEmojiForShopItem(listing.itemId ? listing.itemId.category : null, listing.type),
                 quantity: listing.quantity,
-                type: listing.type
+                type: listing.type,
+                rank: listing.itemId ? listing.itemId.rank : 'Common'
             };
         });
 

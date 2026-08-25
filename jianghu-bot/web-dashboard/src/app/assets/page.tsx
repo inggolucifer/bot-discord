@@ -5,6 +5,7 @@ import api from '@/lib/api';
 import { Loader2, Pickaxe, CheckCircle2, Clock, AlertTriangle, DollarSign, X, Building, Hammer } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
+import { getRarityColor } from '@/lib/rarity';
 import { useRouter } from 'next/navigation';
 
 interface AssignedWorker {
@@ -19,6 +20,7 @@ interface AssetData {
   imageUrl: string | null;
   quantity: number;
   status: string;
+  rank: string;
   underConstruction: boolean;
   constructionCompleteAt: string | null;
   assignedWorkers: AssignedWorker[];
@@ -65,6 +67,7 @@ export default function AssetsPage() {
   const [selectedAsset, setSelectedAsset] = useState<AssetData | null>(null);
 
   const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
+  const [activeRank, setActiveRank] = useState<string>('all');
   const [moveLoading, setMoveLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [targetAssetId, setTargetAssetId] = useState('');
@@ -356,17 +359,17 @@ export default function AssetsPage() {
           </div>
         )}
 
-        {assets.length === 0 ? (
+        {assets.filter(asset => activeRank === 'all' || asset.rank?.toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
           <div className="text-center py-10 text-gray-500">
             Anda belum memiliki aset apapun. Beli aset di Pasar atau bangun menggunakan material.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assets.map((asset, index) => (
+            {assets.filter(asset => activeRank === 'all' || asset.rank?.toLowerCase() === activeRank.toLowerCase()).map((asset, index) => (
               <div
                 key={index}
                 onClick={() => { setSelectedAsset(asset); setActiveTab('info'); }}
-                className="bg-black/40 border border-[#333] rounded-lg p-4 hover:border-[#c5a880] transition-colors relative cursor-pointer group"
+                className={`border rounded-lg p-4 transition-colors relative cursor-pointer group ${getRarityColor(asset.rank)}`}
               >
 
                 {asset.underConstruction && (

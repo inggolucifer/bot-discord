@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { Store, Gavel, Coins, Loader2 } from "lucide-react";
 import { useAuthStore } from '@/lib/store';
+import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
 import { useRouter } from 'next/navigation';
 
 interface ShopItem {
@@ -14,6 +15,7 @@ interface ShopItem {
   currency: string;
   emoji: string;
   stock: number;
+  rank: string;
 }
 
 interface PlayerShopItem {
@@ -26,6 +28,7 @@ interface PlayerShopItem {
   emoji: string;
   quantity: number;
   type: string;
+  rank: string;
 }
 
 interface AuctionItem {
@@ -37,6 +40,7 @@ interface AuctionItem {
   timeLeft: string;
   emoji: string;
   quantity: number;
+  rank: string;
 }
 
 export default function MarketPage() {
@@ -45,9 +49,13 @@ export default function MarketPage() {
   const [playerShopItems, setPlayerShopItems] = useState<PlayerShopItem[]>([]);
   const [myListings, setMyListings] = useState<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [activeTab, setActiveTab] = useState<'system' | 'player' | 'auction' | 'my-shop'>('system');
+  const [activeRank, setActiveRank] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string, type: 'success'|'error' } | null>(null);
+
+
+
 
   // Modal states
   const [buyModal, setBuyModal] = useState<{ isOpen: boolean, shopId: string, name: string, isPlayerShop: boolean, maxQuantity?: number } | null>(null);
@@ -216,6 +224,11 @@ export default function MarketPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
+
+
+
+
+
 
       {/* Buy Modal */}
       {buyModal?.isOpen && (
@@ -392,9 +405,18 @@ export default function MarketPage() {
         <section className="bg-[#1a1a1a] jianghu-border rounded-lg overflow-hidden flex flex-col">
           <div className="bg-black/50 border-b border-[#333] p-4 flex items-center justify-between">
 
+
             <h2 className="text-xl font-bold font-serif text-white flex items-center gap-2">
-              <Store className="text-[#c5a880]" /> Toko Sistem
+              <Store className="text-green-400" /> Jualan Saya
             </h2>
+            <button
+               onClick={handleOpenSellModal}
+               disabled={actionLoading}
+               className="bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 text-green-100 text-sm px-4 py-2 rounded border border-green-700 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)] font-bold flex items-center gap-2"
+            >
+              + Jual Item
+            </button>
+
 
           </div>
 
@@ -402,11 +424,11 @@ export default function MarketPage() {
             {shopItems.length === 0 ? (
                <div className="text-center py-10 text-gray-500 col-span-full">Toko sedang kosong.</div>
             ) : shopItems.map(item => (
-              <div key={item.id} className="border border-[#333] bg-black/40 rounded p-4 flex items-center justify-between hover:border-[#c5a880] transition-colors">
+              <div key={item.id} className={`border rounded p-4 flex items-center justify-between transition-colors ${getRarityColor(item.rank)}`}>
                 <div className="flex items-center gap-4">
                   <div className="text-3xl p-2 bg-gray-900 rounded border border-gray-700">{item.emoji}</div>
                   <div>
-                    <h3 className="font-bold text-gray-200">{item.name}</h3>
+                    <h3 className={`font-bold ${getRarityTextClass(item.rank)}`}>{item.name}</h3>
                     <p className="text-xs text-gray-500">{item.type}</p>
                     {item.stock !== -1 && <p className="text-[10px] text-gray-600 mt-1">Stok: {item.stock}</p>}
                   </div>
@@ -452,14 +474,14 @@ export default function MarketPage() {
           </div>
 
           <div className="p-6 grid gap-4 grid-cols-1 md:grid-cols-2 flex-grow max-h-[700px] overflow-y-auto custom-scrollbar">
-            {myListings.length === 0 ? (
+            {myListings.filter(item => activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
                <div className="text-center py-10 text-gray-500 col-span-full">Kamu belum memiliki jualan aktif di Toko Player. Gunakan command Discord `/market jual` untuk mulai berjualan.</div>
-            ) : myListings.map(item => (
-              <div key={item.id} className="border border-green-900/30 bg-black/40 rounded p-4 flex items-center justify-between hover:border-green-700/50 transition-colors">
+            ) : myListings.filter(item => activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase()).map(item => (
+              <div key={item.id} className={`border rounded p-4 flex items-center justify-between transition-colors ${getRarityColor(item.rank)}`}>
                 <div className="flex items-center gap-4">
                   <div className="text-3xl p-2 bg-gray-900 rounded border border-gray-700">{item.emoji}</div>
                   <div>
-                    <h3 className="font-bold text-gray-200">{item.name}</h3>
+                    <h3 className={`font-bold ${getRarityTextClass(item.rank)}`}>{item.name}</h3>
                     <p className="text-xs text-green-400">Kode: {item.kodeListing}</p>
                     <p className="text-[10px] text-gray-600 mt-1">Stok: {item.quantity}</p>
                   </div>
@@ -520,14 +542,14 @@ export default function MarketPage() {
           </div>
 
           <div className="p-6 grid gap-4 grid-cols-1 md:grid-cols-2 flex-grow max-h-[700px] overflow-y-auto custom-scrollbar">
-            {playerShopItems.length === 0 ? (
+            {playerShopItems.filter(item => activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
                <div className="text-center py-10 text-gray-500 col-span-full">Toko sedang kosong.</div>
-            ) : playerShopItems.map(item => (
-              <div key={item.id} className="border border-[#333] bg-black/40 rounded p-4 flex items-center justify-between hover:border-blue-900 transition-colors">
+            ) : playerShopItems.filter(item => activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase()).map(item => (
+              <div key={item.id} className={`border rounded p-4 flex items-center justify-between transition-colors ${getRarityColor(item.rank)}`}>
                 <div className="flex items-center gap-4">
                   <div className="text-3xl p-2 bg-gray-900 rounded border border-gray-700">{item.emoji}</div>
                   <div>
-                    <h3 className="font-bold text-gray-200">{item.name}</h3>
+                    <h3 className={`font-bold ${getRarityTextClass(item.rank)}`}>{item.name}</h3>
                     <p className="text-xs text-blue-400">Penjual: {item.sellerName}</p>
                     <p className="text-[10px] text-gray-600 mt-1">Stok: {item.quantity}</p>
                   </div>
@@ -571,8 +593,8 @@ export default function MarketPage() {
           </div>
 
           <div className="p-6 grid gap-4 grid-cols-1 md:grid-cols-2 flex-grow max-h-[700px] overflow-y-auto custom-scrollbar">
-            {auctions.map(auction => (
-              <div key={auction.id} className="border border-red-900/30 bg-black/40 rounded p-4 hover:border-red-700/50 transition-colors relative overflow-hidden">
+            {auctions.filter(item => activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase()).map(auction => (
+              <div key={auction.id} className={`border rounded p-4 transition-colors relative overflow-hidden ${getRarityColor(auction.rank)}`}>
                 <div className="absolute top-0 right-0 bg-red-900/80 text-[10px] px-2 py-1 rounded-bl text-red-200">
                   Sisa: {new Date(auction.timeLeft).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                 </div>
@@ -580,7 +602,7 @@ export default function MarketPage() {
                 <div className="flex gap-4 mt-2">
                   <div className="text-3xl p-2 bg-gray-900 rounded border border-gray-700 h-fit">{auction.emoji}</div>
                   <div className="flex-grow">
-                    <h3 className="font-bold text-red-100">{auction.name}</h3>
+                    <h3 className={`font-bold ${getRarityTextClass(auction.rank)}`}>{auction.name}</h3>
                     <p className="text-xs text-gray-500 mb-3">Penjual: {auction.seller}</p>
 
                     <div className="flex justify-between items-end">
