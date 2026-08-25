@@ -34,7 +34,14 @@ const lootPoolSchema = new mongoose.Schema({
     losses: { type: Number, default: 0 },
     lastFedAt: { type: Date, default: null },
     lastBattledAt: { type: Date, default: null },
+    isLocked: { type: Boolean, default: false },
     affinity: { type: Number, default: 0 },
+    statMultipliers: {
+      hp: { type: Number, default: 1.0 },
+      atk: { type: Number, default: 1.0 },
+      def: { type: Number, default: 1.0 },
+      spd: { type: Number, default: 1.0 }
+    }
   }],
 
   claimed: { type: Boolean, default: false },
