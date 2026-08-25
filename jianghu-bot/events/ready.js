@@ -47,7 +47,7 @@ module.exports = {
 
               await TransactionLog.create({
                 guildId: auction.guildId,
-                type: 'LELANG_WIN',
+                type: 'auction_win',
                 description: `[${winner.characterName}] menang lelang ${auction.itemId.name} (x${auction.quantity}) seharga ${auction.highestBid} Silver.`,
               });
 
@@ -61,7 +61,7 @@ module.exports = {
 
                   await TransactionLog.create({
                     guildId: auction.guildId,
-                    type: 'LELANG_PROFIT',
+                    type: 'auction_profit',
                     description: `[${seller.characterName}] mendapat ${profit} Silver (setelah pajak) dari hasil lelang ${auction.itemId.name}.`,
                   });
                 }
