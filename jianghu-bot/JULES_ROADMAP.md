@@ -68,3 +68,8 @@ STATUS: ROADMAP UTAMA SELESAI — mode maintenance ringan
 4. Update file ini: centang item itu (☑) + tambahkan satu baris catatan file apa saja yang berubah.
 5. Commit & buka Pull Request dengan judul singkat berbahasa Indonesia.
 6. Berhenti setelah satu PR — jangan lanjut ke item berikutnya di sesi/PR yang sama.
+
+### Sesi Perombakan Tampilan, Pemerataan Fitur & Audit Keamanan
+- **Keamanan (Bagian 3):** Memperbaiki penggunaan `LockManager` di rute yang memodifikasi state (seperti barter, market, worker) dengan meng-`await` janji dan menjalankan `release()` closure. Memastikan rate limiter transaksi diterapkan ke rute mutasi yang sesuai. Melakukan cleanup file sementara.
+- **UI/UX (Bagian 1):** Mengonfigurasi `clsx` & `tailwind-merge` untuk membuat *Shared UI Kit* komponen Wuxia (`Button`, `Card`, `Badge`, `Modal`, `PageHeader`, dll.). Memperbaiki masalah navigasi pada mobile dengan *Drawer menu* dan navigasi desktop dengan grup Dropdown. Semua halaman di `web-dashboard` direfactor memakai UI kit ini dengan tetap mempertahankan tema warna Wuxia yang sudah ada.
+- **Pemerataan Fitur Bot ke Web (Bagian 2 & 2.6):** Menambahkan *endpoints* API serta fungsionalitas UI untuk **Daily Claim** (dengan pemeriksaan *cooldown* waktu), **Loot** (menghormati cooldown DB dan limit inventarisasi hewan), **Transfer Currency** (dengan konfirmasi UI dan mutasi atomik), **Crafting** (integrasi *lock* `inventory_craft` dan perbanyak resep dengan jumlah material), serta merombak fitur **Pet** dengan opsi Rename, Heal, Feed, dan tantangan Battle. Halaman beranda diperbarui untuk dapat melihat **Riwayat Transaksi**.

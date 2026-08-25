@@ -56,7 +56,29 @@ const setupServer = (client) => {
         }
         return apiLimiter(req, res, next);
     });
-    app.use('/api/transaction/', transactionLimiter);
+
+    // Apply transactionLimiter to mutating routes
+    const transactionRoutes = [
+        '/api/market/buy',
+        '/api/market/sell',
+        '/api/market/bid',
+        '/api/barter/respond',
+        '/api/barter/cancel',
+        '/api/worker/hire',
+        '/api/inventory/craft',
+        '/api/player/transfer',
+        '/api/player/daily',
+        '/api/player/loot',
+        '/api/pet/feed',
+        '/api/pet/heal',
+        '/api/pet/battle'
+    ];
+    app.use((req, res, next) => {
+        if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
+             return transactionLimiter(req, res, next);
+        }
+        next();
+    });
 
     // Pass discord client to req for routes to use (e.g. fetching user info)
     app.use((req, res, next) => {
@@ -105,7 +127,7 @@ const setupServer = (client) => {
     const io = new Server(server, {
         path: '/api/socket.io',
         cors: {
-            origin: true,
+            origin: allowedOrigins,
             methods: ["GET", "POST", "OPTIONS"],
             credentials: true
         },

@@ -1,148 +1,142 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Search, Package, PackageOpen, BookOpen } from 'lucide-react';
-import FallbackImage from '@/components/FallbackImage';
-import { useAuthStore } from '@/lib/store';
-import { getRarityColor, getRarityTextClass, ranks } from '@/lib/rarity';
+import { useEffect, useState } from 'react';
 import api from '@/lib/api';
+import FallbackImage from '@/components/FallbackImage';
+import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
+import { BookOpen, Search, Package, PackageOpen } from 'lucide-react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 
-type TabType = 'item' | 'asset';
+const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Divine'];
 
 export default function AlmanackPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('item');
   const [items, setItems] = useState<any[]>([]);
-  const [assets, setAssets] = useState<any[]>([]);
+  const [assets, setAssets] = useState<any[]>([]); // Includes both blueprints and built assets
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeRank, setActiveRank] = useState<string>('all');
-    const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
+  const [message, setMessage] = useState<{type: 'error'|'success', text: string} | null>(null);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [itemRes, assetRes] = await Promise.all([
-        api.get('/almanack/items'),
-        api.get('/almanack/assets')
-      ]);
-      setItems(itemRes.data.data);
-      setAssets(assetRes.data.data);
-    } catch (error) {
-      console.error("Error fetching almanack data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [activeTab, setActiveTab] = useState<'item' | 'asset'>('item');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeRank, setActiveRank] = useState('all');
 
   useEffect(() => {
-    const timer = setTimeout(() => fetchData(), 0);
-    return () => clearTimeout(timer);
+    const fetchAlmanack = async () => {
+      try {
+        const res = await api.get('/almanack');
+        setItems(res.data.data.items);
+        setAssets(res.data.data.assets);
+      } catch (err: any) {
+        console.error(err);
+        setMessage({ type: 'error', text: err.response?.data?.error || 'Gagal memuat Almanack.' });
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchAlmanack();
   }, []);
 
-  ;
+  const filterBySearchAndRank = (list: any[]) => {
+    return list.filter(item => {
+      const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      const matchRank = activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase();
+      return matchSearch && matchRank;
+    });
+  };
 
-  // Filter and sort items/assets based on search and tab logic
-  const filteredItems = items.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRank = activeRank === 'all' || item.rank?.toLowerCase() === activeRank.toLowerCase();
-    return matchesSearch && matchesRank;
-  });
-
-  const filteredAssets = assets.filter(asset => {
-    const matchesSearch = asset.name.toLowerCase().includes(searchQuery.toLowerCase()) || asset.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRank = activeRank === 'all' || asset.rank?.toLowerCase() === activeRank.toLowerCase();
-    return matchesSearch && matchesRank;
-  });
+  const filteredItems = filterBySearchAndRank(items);
+  const filteredAssets = filterBySearchAndRank(assets);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-serif font-bold text-[#c5a880] flex items-center gap-2">
-            <BookOpen size={28} />
-            Almanack Jianghu
-          </h1>
-          <p className="text-gray-400 text-sm mt-1">Kitab panduan lengkap pusaka, item, dan cetak biru bangunan.</p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Cari..."
-            className="w-full md:w-64 bg-black/50 border border-[#333] rounded-lg pl-10 pr-4 py-2 text-sm text-gray-200 focus:outline-none focus:border-[#c5a880] transition-colors"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
-        </div>
-        <select
-          className="bg-black border border-[#333] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
-          value={activeRank}
-          onChange={(e) => setActiveRank(e.target.value)}
-        >
-          {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
-        </select>
-      </div>
+    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+      <PageHeader
+        title="Almanack Jianghu"
+        description="Kitab panduan lengkap pusaka, item, dan cetak biru bangunan."
+        action={
+          <div className="flex flex-col sm:flex-row gap-3">
+             <div className="relative w-full sm:w-64">
+               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+               <input
+                 type="text"
+                 placeholder="Cari..."
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+                 className="w-full bg-[#111] border border-[#444] rounded-md pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors"
+               />
+             </div>
+             <select
+               className="bg-[#111] border border-[#444] rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] appearance-none"
+               value={activeRank}
+               onChange={(e) => setActiveRank(e.target.value)}
+             >
+               {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
+             </select>
+          </div>
+        }
+      />
 
       {/* Tabs */}
-      <div className="flex border-b border-[#333] gap-6">
+      <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar">
         <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'item' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'item' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
           onClick={() => {setActiveTab('item'); setMessage(null);}}
         >
-          <Package size={16} /> Item
+          <Package size={16} /> Item ({filteredItems.length})
         </button>
         <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 ${activeTab === 'asset' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'asset' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
           onClick={() => {setActiveTab('asset'); setMessage(null);}}
         >
-          <PackageOpen size={16} /> Asset
+          <PackageOpen size={16} /> Asset ({filteredAssets.length})
         </button>
       </div>
 
       {message && (
-        <div className={`p-4 rounded-lg border ${message.type === 'error' ? 'bg-red-900/20 border-red-900 text-red-200' : 'bg-green-900/20 border-green-900 text-green-200'}`}>
+        <div className={`p-4 rounded-lg border ${message.type === 'error' ? 'bg-red-900/20 border-red-900/50 text-red-400' : 'bg-green-900/20 border-green-900/50 text-green-400'}`}>
           {message.text}
         </div>
       )}
 
       {loading ? (
-        <div className="text-center py-20 text-[#c5a880] animate-pulse">Memuat Kitab Almanack...</div>
+        <LoadingState text="Membuka Kitab Almanack..." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
           {/* TAB ITEM */}
           {activeTab === 'item' && filteredItems.map((item) => (
-            <div key={item._id} className={`jianghu-border p-4 rounded-lg flex flex-col gap-3 relative overflow-hidden group ${getRarityColor(item.rank)}`}>
+            <div key={item._id} className={`bg-[#111] border p-4 sm:p-5 rounded-lg flex flex-col gap-3 relative overflow-hidden group hover:border-blue-900/50 hover:shadow-lg transition-all ${getRarityColor(item.rank)}`}>
               <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/60 rounded-md border border-[#333] flex-shrink-0 flex items-center justify-center p-1 shadow-inner">
                   <FallbackImage
                     src={item.imageUrl || ""}
                     alt={item.name}
                     className="max-w-full max-h-full object-contain"
-                    fallbackNode={<div className="text-2xl">{item.category === 'weapon' ? '⚔️' : item.category === 'herb' ? '🌿' : '📦'}</div>}
+                    fallbackNode={<div className="text-2xl sm:text-4xl">{item.category === 'weapon' ? '⚔️' : item.category === 'herb' ? '🌿' : '📦'}</div>}
                   />
                 </div>
-                <div>
-                  <h3 className={`font-bold ${getRarityTextClass(item.rank)}`}>{item.name}</h3>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    <span className="text-[10px] px-1.5 py-0.5 bg-gray-800 rounded text-gray-300">{item.rank}</span>
-                    <span className="text-[10px] px-1.5 py-0.5 bg-gray-800 rounded text-gray-300 capitalize">{item.category}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className={`font-bold text-sm sm:text-base leading-tight mb-1.5 ${getRarityTextClass(item.rank)} truncate`} title={item.name}>{item.name}</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    <Badge variant="rank" rank={item.rank} className="text-[9px] sm:text-[10px] py-0 h-4">{item.rank}</Badge>
+                    <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40 capitalize">{item.category}</Badge>
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 italic line-clamp-3">{item.description}</p>
+              <p className="text-[10px] sm:text-xs text-gray-400 italic line-clamp-3 leading-relaxed bg-black/30 p-2 rounded border border-[#333]/50">{item.description}</p>
 
-              <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-500 space-y-1">
+              <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-500 space-y-1.5">
 
-                {item.effect && <p><span className="text-gray-400">Efek:</span> {item.effect}</p>}
-                {item.basePrice > 0 && <p><span className="text-gray-400">Harga Dasar:</span> {item.basePrice} {item.priceCurrency}</p>}
+                {item.effect && <p><span className="text-gray-400 font-semibold">Efek:</span> {item.effect}</p>}
+                {item.basePrice > 0 && <p><span className="text-gray-400 font-semibold">Harga Dasar:</span> {item.basePrice} {item.priceCurrency}</p>}
                 {item.obtainedFrom && item.obtainedFrom.length > 0 && (
                     <div className="mt-2">
-                        <span className="text-gray-400 block mb-1">Dapat Dari:</span>
-                        <ul className="list-disc list-inside text-[10px] text-gray-300 space-y-0.5">
+                        <span className="text-gray-400 font-semibold block mb-1">Dapat Dari:</span>
+                        <ul className="list-disc list-inside text-gray-300 space-y-0.5 ml-1">
                             {item.obtainedFrom.map((source: string, i: number) => (
                                 <li key={i}>{source}</li>
                             ))}
@@ -151,8 +145,8 @@ export default function AlmanackPage() {
                 )}
                 {item.usedFor && item.usedFor.length > 0 && (
                     <div className="mt-2">
-                        <span className="text-gray-400 block mb-1">Kegunaan:</span>
-                        <ul className="list-disc list-inside text-[10px] text-gray-300 space-y-0.5">
+                        <span className="text-gray-400 font-semibold block mb-1">Kegunaan:</span>
+                        <ul className="list-disc list-inside text-gray-300 space-y-0.5 ml-1">
                             {item.usedFor.map((usage: string, i: number) => (
                                 <li key={i}>{usage}</li>
                             ))}
@@ -163,58 +157,58 @@ export default function AlmanackPage() {
             </div>
           ))}
 
-          {/* TAB ASSET (Gabungan semua aset) */}
+          {/* TAB ASSET */}
           {activeTab === 'asset' && filteredAssets.map((asset) => (
-            <div key={asset._id} className={`jianghu-border p-4 rounded-lg flex flex-col gap-3 relative overflow-hidden group ${getRarityColor(asset.rank)}`}>
+            <div key={asset._id} className={`bg-[#111] border p-4 sm:p-5 rounded-lg flex flex-col gap-3 relative overflow-hidden group hover:border-blue-900/50 hover:shadow-lg transition-all ${getRarityColor(asset.rank)}`}>
               <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-black rounded border border-[#333] flex-shrink-0 flex items-center justify-center p-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/60 rounded-md border border-[#333] flex-shrink-0 flex items-center justify-center p-1 shadow-inner">
                   <FallbackImage
                     src={asset.imageUrl || ""}
                     alt={asset.name}
                     className="max-w-full max-h-full object-contain"
-                    fallbackNode={<div className="text-2xl">🏛️</div>}
+                    fallbackNode={<div className="text-2xl sm:text-4xl">🏛️</div>}
                   />
                 </div>
-                <div>
-                  <h3 className={`font-bold ${getRarityTextClass(asset.rank)}`}>{asset.name}</h3>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {asset.buildable && <span className="text-[10px] px-1.5 py-0.5 bg-green-900/50 text-green-400 rounded border border-green-800">Blueprint (Bisa Dibangun)</span>}
-                    {!asset.buildable && <span className="text-[10px] px-1.5 py-0.5 bg-gray-900/50 text-gray-400 rounded border border-gray-700">Aset Jadi</span>}
-                    {asset.isCraftingStation && <span className="text-[10px] px-1.5 py-0.5 bg-blue-900/50 text-blue-300 rounded border border-blue-900">Crafting Station</span>}
-                    {asset.dailyProfit > 0 && <span className="text-[10px] px-1.5 py-0.5 bg-yellow-900/50 text-yellow-500 rounded border border-yellow-700">Income</span>}
-                    {asset.workerOutputItemId && <span className="text-[10px] px-1.5 py-0.5 bg-purple-900/50 text-purple-400 rounded border border-purple-800">Production</span>}
+                <div className="flex-1 min-w-0">
+                  <h3 className={`font-bold text-sm sm:text-base leading-tight mb-1.5 ${getRarityTextClass(asset.rank)} truncate`} title={asset.name}>{asset.name}</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {asset.buildable && <Badge variant="success" className="text-[9px] sm:text-[10px] py-0 h-4 bg-[#1f402e]/80">Blueprint</Badge>}
+                    {!asset.buildable && <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40">Aset Jadi</Badge>}
+                    {asset.isCraftingStation && <Badge variant="secondary" className="text-[9px] sm:text-[10px] py-0 h-4">Station</Badge>}
+                    {asset.dailyProfit > 0 && <Badge variant="warning" className="text-[9px] sm:text-[10px] py-0 h-4 bg-yellow-900/80">Income</Badge>}
+                    {asset.workerOutputItemId && <Badge variant="default" className="text-[9px] sm:text-[10px] py-0 h-4 bg-purple-900/80 text-white">Production</Badge>}
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 italic mb-2">{asset.description}</p>
+              <p className="text-[10px] sm:text-xs text-gray-400 italic mb-2 line-clamp-3 bg-black/30 p-2 rounded border border-[#333]/50">{asset.description}</p>
 
-              <div className="mt-auto pt-3 border-t border-[#333]/50 text-xs text-gray-400 space-y-2">
+              <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
                 {asset.dailyProfit > 0 && (
-                   <p className="flex justify-between"><span>Profit Harian:</span> <span className="text-yellow-500">{asset.dailyProfit} {asset.profitCurrency}</span></p>
+                   <p className="flex justify-between"><span>Profit Harian:</span> <span className="text-yellow-500 font-mono">{asset.dailyProfit} {asset.profitCurrency}</span></p>
                 )}
                 {asset.workerOutputQuantity > 0 && (
-                   <p className="flex justify-between"><span>Output Produksi:</span> <span className="text-purple-400">{asset.workerOutputQuantity}x {asset.workerOutputItemName}</span></p>
+                   <p className="flex justify-between"><span>Output Produksi:</span> <span className="text-purple-400 font-mono">{asset.workerOutputQuantity}x {asset.workerOutputItemName}</span></p>
                 )}
                 {asset.basePrice > 0 && !asset.buildable && (
-                   <p className="flex justify-between"><span>Harga Beli (Shop):</span> <span className="text-gray-300">{asset.basePrice} {asset.priceCurrency}</span></p>
+                   <p className="flex justify-between"><span>Harga (Shop):</span> <span className="text-gray-300 font-mono">{asset.basePrice} {asset.priceCurrency}</span></p>
                 )}
 
                 {asset.buildable && (
                    <>
-                       <p className="flex justify-between"><span>Waktu Pembangunan:</span> <span className="text-orange-400">{asset.constructionTimeHours} Jam</span></p>
-                       <div className="mt-2">
-                           <span className="text-gray-400 block mb-1">Material Dibutuhkan:</span>
+                       <p className="flex justify-between"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
+                       <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
+                           <span className="text-gray-400 block mb-1.5 font-semibold">Material Dibutuhkan:</span>
                            {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
-                               <div className="flex flex-wrap gap-2">
+                               <div className="flex flex-wrap gap-1.5">
                                    {asset.buildRequirements.map((req: any, i: number) => (
-                                       <div key={i} className="flex items-center gap-1 bg-black/50 border border-[#444] px-2 py-1 rounded">
-                                           <span className="text-[#c5a880]">{req.itemName}</span>
-                                           <span className="text-gray-500">x{req.quantity}</span>
+                                       <div key={i} className="flex items-center gap-1 bg-[#111] border border-[#444] px-1.5 py-0.5 rounded-sm">
+                                           <span className="text-[#c5a880] truncate max-w-[80px]" title={req.itemName}>{req.itemName}</span>
+                                           <span className="text-gray-500 font-mono">x{req.quantity}</span>
                                        </div>
                                    ))}
                                </div>
                            ) : (
-                               <span className="text-gray-500 italic">Tidak ada material khusus.</span>
+                               <span className="text-gray-600 italic">Tidak ada material khusus.</span>
                            )}
                        </div>
                    </>
@@ -225,12 +219,15 @@ export default function AlmanackPage() {
 
           {/* Empty States */}
           {activeTab === 'item' && filteredItems.length === 0 && (
-             <div className="col-span-full text-center py-10 text-gray-500">Item tidak ditemukan.</div>
+             <div className="col-span-full">
+               <EmptyState icon={<BookOpen />} title="Item Tidak Ditemukan" description="Tidak ada item yang cocok dengan pencarian Anda." />
+             </div>
           )}
           {activeTab === 'asset' && filteredAssets.length === 0 && (
-             <div className="col-span-full text-center py-10 text-gray-500">Aset tidak ditemukan.</div>
+             <div className="col-span-full">
+               <EmptyState icon={<BookOpen />} title="Asset Tidak Ditemukan" description="Tidak ada aset yang cocok dengan pencarian Anda." />
+             </div>
           )}
-
 
         </div>
       )}

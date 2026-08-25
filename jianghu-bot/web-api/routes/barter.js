@@ -48,7 +48,8 @@ router.post('/respond', authenticateToken, async (req, res) => {
     }
 
     const lockId = `barter_respond_${barterId}`;
-    if (!LockManager.acquire(lockId)) {
+    const releaseLock = await LockManager.acquire(lockId);
+    if (!releaseLock) {
         return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
     }
 
@@ -91,7 +92,7 @@ router.post('/respond', authenticateToken, async (req, res) => {
         console.error('[API-BARTER] Error responding to barter:', error);
         res.status(500).json({ error: 'Terjadi kesalahan sistem saat memproses barter.' });
     } finally {
-        LockManager.release(lockId);
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -105,7 +106,8 @@ router.post('/cancel', authenticateToken, async (req, res) => {
     }
 
     const lockId = `barter_cancel_${barterId}`;
-    if (!LockManager.acquire(lockId)) {
+    const releaseLock = await LockManager.acquire(lockId);
+    if (!releaseLock) {
          return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
     }
 
@@ -133,7 +135,7 @@ router.post('/cancel', authenticateToken, async (req, res) => {
         console.error('[API-BARTER] Error cancelling barter:', error);
         res.status(500).json({ error: 'Terjadi kesalahan sistem saat membatalkan barter.' });
     } finally {
-        LockManager.release(lockId);
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
