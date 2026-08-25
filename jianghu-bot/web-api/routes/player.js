@@ -82,7 +82,8 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 underConstruction: underConstruction,
                 constructionCompleteAt: asset.constructionCompleteAt,
                 assignedWorkers: asset.assignedWorkers,
-                progressHours: progressHours
+                progressHours: progressHours,
+                rank: asset.assetId ? asset.assetId.rank : 'Common'
             };
         });
 
