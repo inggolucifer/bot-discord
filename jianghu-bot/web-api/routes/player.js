@@ -555,15 +555,11 @@ router.get('/public-profile/:discordId', async (req, res) => {
 
 // Endpoint: POST /api/player/transfer
 router.post('/transfer', authenticateToken, async (req, res) => {
-    const { targetUserId, currencyType, amount } = req.body;
+    const { targetName, currencyType, amount } = req.body;
     const userId = req.user.userId;
 
-    if (!targetUserId || !currencyType || !amount || amount <= 0 || !Number.isInteger(amount)) {
+    if (!targetName || !currencyType || !amount || amount <= 0 || !Number.isInteger(amount)) {
         return res.status(400).json({ error: 'Data tidak valid. Pastikan jumlah adalah angka positif utuh.' });
-    }
-
-    if (targetUserId === userId) {
-        return res.status(400).json({ error: 'Tidak bisa transfer ke diri sendiri.' });
     }
 
     const validCurrencies = ['silver', 'gold', 'jade', 'spirit'];
@@ -585,9 +581,17 @@ router.post('/transfer', authenticateToken, async (req, res) => {
         if (!sender) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
         if (sender.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${sender.status}.` });
 
-        const receiver = await Player.findOne({ discordId: targetUserId, guildId });
-        if (!receiver) return res.status(404).json({ error: 'Penerima tidak ditemukan di sekte/guild yang sama.' });
+        const receiver = await Player.findOne({
+            characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
+            guildId
+        });
+
+        if (!receiver) return res.status(404).json({ error: 'Karakter penerima tidak ditemukan di sekte/guild yang sama.' });
         if (receiver.status !== 'active') return res.status(403).json({ error: `Penerima berstatus ${receiver.status}.` });
+
+        if (receiver.discordId === userId) {
+            return res.status(400).json({ error: 'Tidak bisa transfer ke diri sendiri.' });
+        }
 
         if (sender.currency[currencyType] < amount) {
             return res.status(400).json({ error: `Saldo ${currencyType} kamu tidak mencukupi.` });
