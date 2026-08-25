@@ -76,7 +76,7 @@ router.get('/items', async (req, res) => {
 // Public route to fetch assets
 router.get('/assets', async (req, res) => {
     try {
-        const assets = await Asset.find({}).sort({ buildable: -1, name: 1 }).lean();
+        const assets = await Asset.find({}).populate('buildRequirements.itemId', 'name').sort({ buildable: -1, name: 1 }).lean();
         res.json({ success: true, data: assets });
     } catch (error) {
         console.error('[API-ALMANACK] Error fetching assets:', error);
