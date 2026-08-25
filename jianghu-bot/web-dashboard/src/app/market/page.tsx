@@ -63,6 +63,15 @@ export default function MarketPage() {
   const [activeRank, setActiveRank] = useState<string>('all');
   const [actionLoading, setActionLoading] = useState(false);
 
+
+  // Sell Modal states
+  const [sellModalOpen, setSellModalOpen] = useState(false);
+  const [inventory, setInventory] = useState<any[]>([]);
+  const [sellItemId, setSellItemId] = useState('');
+  const [sellQuantity, setSellQuantity] = useState(1);
+  const [sellPrice, setSellPrice] = useState(10);
+  const [sellCurrency, setSellCurrency] = useState('silver');
+
   // Buy Modal states
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [buyModalItem, setBuyModalItem] = useState<{id: string, name: string, isPlayerShop: boolean, maxQuantity?: number} | null>(null);
@@ -74,7 +83,7 @@ export default function MarketPage() {
       setLoading(true);
       const [shopRes, auctionRes, playerShopRes] = await Promise.all([
         api.get('/market/shop'),
-        api.get('/market/auction'),
+        api.get('/market/auctions'),
         api.get('/market/player-shop')
       ]);
 
@@ -136,6 +145,45 @@ export default function MarketPage() {
           await setTimeout(() => fetchData(), 0);
       } catch (err: any) {
           alert(err.response?.data?.error || 'Gagal melakukan bid.');
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+
+  const fetchInventory = async () => {
+    try {
+        const res = await api.get('/inventory');
+        setInventory(res.data.data.items);
+    } catch (err: any) {
+        console.error("Failed to load inventory for selling.", err);
+    }
+  };
+
+  const handleOpenSellModal = async () => {
+      await fetchInventory();
+      setSellModalOpen(true);
+      setSellItemId('');
+      setSellQuantity(1);
+      setSellPrice(10);
+      setSellCurrency('silver');
+  };
+
+  const handleSell = async () => {
+      if(!sellItemId || sellQuantity <= 0 || sellPrice <= 0) return;
+      setActionLoading(true);
+      try {
+          const res = await api.post('/market/player-shop/my-listings/sell', {
+              itemId: sellItemId,
+              quantity: sellQuantity,
+              pricePerUnit: sellPrice,
+              currency: sellCurrency
+          });
+          // No success message state exists in this component, just closing the modal is fine. (Or could add a state if needed)
+          setSellModalOpen(false);
+          await setTimeout(() => fetchData(), 0);
+      } catch(err: any) {
+          setError(err.response?.data?.error || 'Gagal menjual item.');
       } finally {
           setActionLoading(false);
       }
@@ -293,9 +341,14 @@ export default function MarketPage() {
               {activeTab === 'my-shop' && (
               <section className="bg-[#111] border border-[#1f402e]/50 rounded-xl overflow-hidden flex flex-col shadow-[0_0_15px_rgba(31,64,46,0.1)]">
                 <div className="bg-[#1f402e]/30 border-b border-[#1f402e]/50 p-4 sm:p-5 flex items-center">
-                  <h2 className="text-lg sm:text-xl font-bold font-serif text-green-400 flex items-center gap-2">
-                    <LogOut className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" /> Jualan Saya
-                  </h2>
+                  <div className="flex items-center justify-between w-full">
+                    <h2 className="text-lg sm:text-xl font-bold font-serif text-green-400 flex items-center gap-2">
+                      <LogOut className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" /> Jualan Saya
+                    </h2>
+                    <Button onClick={handleOpenSellModal} size="sm" className="bg-green-600 hover:bg-green-500 text-white border-0">
+                        + Jual Item
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
@@ -489,6 +542,79 @@ export default function MarketPage() {
         )}
       </Modal>
 
+
+      {/* Sell Modal */}
+      <Modal isOpen={sellModalOpen} onClose={() => setSellModalOpen(false)} title="Jual Item" maxWidth="sm">
+          <div className="space-y-4">
+              <div>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Pilih Item</label>
+                  <select
+                      value={sellItemId}
+                      onChange={(e) => {
+                          setSellItemId(e.target.value);
+                          setSellQuantity(1);
+                      }}
+                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
+                  >
+                      <option value="">-- Pilih Item --</option>
+                      {inventory.map((item: any) => (
+                          <option key={item.itemId} value={item.itemId}>
+                              {item.name} (Stok: {item.quantity})
+                          </option>
+                      ))}
+                  </select>
+              </div>
+
+              {sellItemId && (
+                <>
+                  <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Jumlah Dijual</label>
+                      <input
+                          type="number"
+                          min="1"
+                          max={inventory.find((i: any) => i.itemId === sellItemId)?.quantity || 1}
+                          value={sellQuantity}
+                          onChange={(e) => setSellQuantity(parseInt(e.target.value) || 1)}
+                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"
+                      />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                      <div>
+                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Harga / Unit</label>
+                          <input
+                              type="number"
+                              min="1"
+                              value={sellPrice}
+                              onChange={(e) => setSellPrice(parseInt(e.target.value) || 1)}
+                              className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"
+                          />
+                      </div>
+                      <div>
+                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mata Uang</label>
+                          <select
+                              value={sellCurrency}
+                              onChange={(e) => setSellCurrency(e.target.value)}
+                              className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
+                          >
+                              <option value="silver">Silver 🥈</option>
+                              <option value="gold">Gold 🥇</option>
+                              <option value="jade">Jade 💎</option>
+                              <option value="spirit">Spirit 🔮</option>
+                          </select>
+                      </div>
+                  </div>
+                </>
+              )}
+
+              <Button
+                  onClick={handleSell}
+                  disabled={actionLoading || !sellItemId || sellQuantity <= 0 || sellPrice <= 0}
+                  className="w-full bg-green-700 hover:bg-green-600 mt-2 border-0"
+              >
+                  {actionLoading ? 'Memproses...' : 'Pasang di Toko'}
+              </Button>
+          </div>
+      </Modal>
     </div>
   );
 }

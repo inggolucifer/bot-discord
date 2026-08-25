@@ -30,7 +30,7 @@ export default function Home() {
 
   // Transfer Currency
   const [transferModalOpen, setTransferModalOpen] = useState(false);
-  const [transferUserId, setTransferUserId] = useState('');
+  const [transferTargetName, setTransferTargetName] = useState('');
   const [transferCurrencyType, setTransferCurrencyType] = useState('silver');
   const [transferAmount, setTransferAmount] = useState(0);
 
@@ -95,18 +95,18 @@ export default function Home() {
   };
 
   const handleTransfer = async () => {
-      if(!transferUserId || transferAmount <= 0) return;
+      if(!transferTargetName || transferAmount <= 0) return;
       setActionLoading(true);
       setActionMessage(null);
       try {
           const res = await api.post('/player/transfer', {
-              targetUserId: transferUserId,
+              targetName: transferTargetName,
               currencyType: transferCurrencyType,
               amount: transferAmount
           });
           setActionMessage({ type: 'success', text: res.data.message });
           setTransferModalOpen(false);
-          setTransferUserId('');
+          setTransferTargetName('');
           setTransferAmount(0);
           await setTimeout(() => fetchProfile(), 0);
       } catch (err: any) {
@@ -334,12 +334,12 @@ export default function Home() {
       <Modal isOpen={transferModalOpen} onClose={() => setTransferModalOpen(false)} title="Transfer Saldo" maxWidth="sm">
           <div className="space-y-4">
               <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">ID Discord Penerima</label>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Nama Karakter Penerima</label>
                   <input
                       type="text"
-                      placeholder="Masukkan ID Discord (contoh: 123456789...)"
-                      value={transferUserId}
-                      onChange={(e) => setTransferUserId(e.target.value)}
+                      placeholder="Masukkan Nama Karakter Penerima"
+                      value={transferTargetName}
+                      onChange={(e) => setTransferTargetName(e.target.value)}
                       className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm font-mono"
                   />
               </div>
@@ -370,7 +370,7 @@ export default function Home() {
               </div>
               <Button
                   onClick={handleTransfer}
-                  disabled={actionLoading || !transferUserId || transferAmount <= 0}
+                  disabled={actionLoading || !transferTargetName || transferAmount <= 0}
                   className="w-full bg-[#1e3a5f] hover:bg-blue-900 mt-2"
               >
                   {actionLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Send size={16} className="mr-2" />}
