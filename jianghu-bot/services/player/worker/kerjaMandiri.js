@@ -39,8 +39,8 @@ module.exports = {
     if (!isUnderConstruction(targetAsset)) {
       if (!targetAsset.assignedWorkers) targetAsset.assignedWorkers = [];
       const activeWorkers = targetAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-      if (activeWorkers >= 1) {
-        return interaction.editReply({ content: '❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+      if (activeWorkers >= targetAsset.quantity) {
+        return interaction.editReply({ content: `❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja per unit (maks ${targetAsset.quantity} pekerja).` });
       }
     }
 

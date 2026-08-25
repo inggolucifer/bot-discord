@@ -40,8 +40,8 @@ module.exports = {
     if (!isUnderConstruction(ownedAsset)) {
       if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
       const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-      if (activeWorkers >= 1) {
-        return interaction.editReply({ content: '❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+      if (activeWorkers >= ownedAsset.quantity) {
+        return interaction.editReply({ content: `❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja per unit (maks ${ownedAsset.quantity} pekerja).` });
       }
     }
 

@@ -64,11 +64,27 @@ module.exports = {
          continue;
       }
 
+      // Hitung unit aset yang produktif
+      let activeWorkersCount = 0;
+      if (owned.assignedWorkers && owned.assignedWorkers.length > 0) {
+         activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+      }
+
+      let productiveQuantity = owned.quantity;
+      if (!doc.isCraftingStation) {
+         productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
+      }
+
+      if (productiveQuantity <= 0) {
+         underConstruction.push(`${doc.name} ⚠️ (Kekurangan pekerja, butuh minimal 1 pekerja per unit)`);
+         continue;
+      }
+
       // Tipe Income: currency
       if (doc.dailyProfit > 0 && (claimTipe === 'all' || claimTipe === 'currency')) {
-        const profit = hoursPassed * doc.dailyProfit * owned.quantity;
+        const profit = hoursPassed * doc.dailyProfit * productiveQuantity;
         currencyTotals[doc.profitCurrency] = (currencyTotals[doc.profitCurrency] || 0) + profit;
-        claimedNow.push(`${doc.name} x${owned.quantity} → ${CURRENCY_EMOJI[doc.profitCurrency]} ${profit}`);
+        claimedNow.push(`${doc.name} x${productiveQuantity} → ${CURRENCY_EMOJI[doc.profitCurrency]} ${profit}`);
         claimedSomething = true;
       }
 
@@ -82,11 +98,11 @@ module.exports = {
             continue;
         }
 
-        const hasil = hoursPassed * doc.workerOutputQuantity * owned.quantity;
+        const hasil = hoursPassed * doc.workerOutputQuantity * productiveQuantity;
         const ownedItem = player.inventory.find((i) => i.itemId.equals(doc.workerOutputItemId));
         if (ownedItem) ownedItem.quantity += hasil;
         else if (doc.workerOutputItemId) player.inventory.push({ itemId: doc.workerOutputItemId, quantity: hasil });
-        claimedNow.push(`${doc.name} x${owned.quantity} → ⛏️ ${hasil}x ${doc.workerOutputItemName}`);
+        claimedNow.push(`${doc.name} x${productiveQuantity} → ⛏️ ${hasil}x ${doc.workerOutputItemName}`);
         claimedSomething = true;
       }
 
