@@ -1,286 +1,320 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Shield, Users, Banknote, Map, DollarSign, Pickaxe, CheckCircle2, Clock, AlertTriangle, Loader2 } from "lucide-react";
+import { useEffect, useState } from 'react';
 import api from '@/lib/api';
-import { Loader2, Users, Shield, Banknote, Pickaxe, CheckCircle2, Clock, AlertTriangle, DollarSign } from 'lucide-react';
-import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
-import { useRouter } from 'next/navigation';
+import FallbackImage from "@/components/FallbackImage";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { Card, CardContent } from "@/components/ui/Card";
 
-interface SectAssetData {
+interface SectData {
   id: string;
   name: string;
   description: string;
-  imageUrl: string | null;
-  quantity: number;
-  status: string;
-  underConstruction: boolean;
-  constructionCompleteAt: string | null;
-  profitAvailable: boolean;
-  isCraftingStation: boolean;
+  memberCount: number;
+  totalWealth: number;
+  imageUrl: string;
+  role: string; // role user saat ini
+  currency: { silver: number; gold: number; jade: number; spirit: number; }
 }
 
-// Timer Component
+interface Asset {
+  id: string;
+  name: string;
+  description: string;
+  quantity: number;
+  underConstruction: boolean;
+  status: string;
+  imageUrl: string;
+  profitAvailable: boolean;
+  isCraftingStation: boolean;
+  constructionCompleteAt: string | null;
+}
+
+interface ClaimResult {
+    claimedCurrency: string[];
+    claimedMaterial: string[];
+    distributionSummary: string[];
+}
+
 const Countdown = ({ targetDate }: { targetDate: string }) => {
     const [timeLeft, setTimeLeft] = useState<string>('');
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            const distance = new Date(targetDate).getTime() - new Date().getTime();
-            if (distance < 0) {
-                setTimeLeft('Selesai (Refresh)');
-                clearInterval(interval);
-                return;
-            }
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            setTimeLeft(`${hours}j ${minutes}m ${seconds}s`);
-        }, 1000);
+        const calculateTimeLeft = () => {
+            const difference = new Date(targetDate).getTime() - new Date().getTime();
 
-        return () => clearInterval(interval);
+            if (difference > 0) {
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+                setTimeLeft(`${hours}j ${minutes}m ${seconds}s`);
+            } else {
+                setTimeLeft('Selesai');
+            }
+        };
+
+        calculateTimeLeft();
+        const timer = setInterval(calculateTimeLeft, 1000);
+        return () => clearInterval(timer);
     }, [targetDate]);
 
     return <span>{timeLeft}</span>;
 };
 
 export default function SectPage() {
-  const [sect, setSect] = useState<Record<string, unknown> | null>(null);
-  const [assets, setAssets] = useState<SectAssetData[]>([]);
+  const { user } = useAuthStore();
+  const [sect, setSect] = useState<SectData | null>(null);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [claimLoading, setClaimLoading] = useState(false);
-  const [claimResult, setClaimResult] = useState<{ claimedCurrency: string[], claimedMaterial: string[], distributionSummary: string[], waiting: string[], other: string[] } | null>(null);
-
-  const { user } = useAuthStore();
-  const router = useRouter();
+  const [claimResult, setClaimResult] = useState<ClaimResult | null>(null);
+  const [claimError, setClaimError] = useState<string | null>(null);
 
   const fetchSectData = async () => {
-    try {
-      setLoading(true);
-      const [profileRes, assetsRes] = await Promise.all([
-         api.get('/sect/profile'),
-         api.get('/sect/assets')
-      ]);
-      setSect(profileRes.data.data);
-      setAssets(assetsRes.data.data);
-    } catch (err: unknown) {
-      console.error(err);
-      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat data sekte.');
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const res = await api.get('/sect');
+        setSect(res.data.data.sect);
+        setAssets(res.data.data.assets);
+      } catch (err: any) {
+        console.error(err);
+        setError(err.response?.data?.error || 'Gagal memuat data sekte.');
+      } finally {
+        setLoading(false);
+      }
   };
 
   useEffect(() => {
     if (!user) {
-      router.push('/');
+      setTimeout(() => setLoading(false), 0);
       return;
     }
-    const timer = setTimeout(() => fetchSectData(), 0);
-    return () => clearTimeout(timer);
-  }, [user, router]);
+    setTimeout(() => fetchSectData(), 0);
+  }, [user]);
 
   const handleClaimProfit = async () => {
-    setClaimLoading(true);
-    setClaimResult(null);
-    setError(null);
-    try {
-      const res = await api.post('/sect/assets/claim-profit');
-      setClaimResult(res.data.data);
-      await fetchSectData(); // Refresh asset states
-    } catch (err: unknown) {
-      console.error(err);
-      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal mengklaim profit sekte.');
-    } finally {
-      setClaimLoading(false);
-    }
+      if(!sect || (sect.role !== 'Ketua' && sect.role !== 'Wakil Ketua' && sect.role !== 'Tetua')) return;
+
+      setClaimLoading(true);
+      setClaimError(null);
+      setClaimResult(null);
+
+      try {
+          const res = await api.post('/sect/claim-profit');
+          setClaimResult(res.data.data);
+          await setTimeout(() => fetchSectData(), 0);
+      } catch (err: any) {
+          setClaimError(err.response?.data?.error || 'Gagal klaim profit sekte.');
+      } finally {
+          setClaimLoading(false);
+      }
   };
 
   if (loading) {
-    return <div className="flex justify-center p-20 text-[#c5a880]"><Loader2 className="animate-spin" size={48} /></div>;
-  }
-
-  if (error) {
-    return <div className="text-center p-20 text-red-500 font-bold">{error}</div>;
+      return <LoadingState text="Menghubungkan ke Balai Sekte..." />;
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-4 mb-10 relative">
-        <div className="absolute inset-0 opacity-20 pointer-events-none flex justify-center z-0">
-           <span className="text-[120px] text-green-900/30 leading-none select-none">⛩️</span>
-        </div>
-        <h1 className="text-4xl font-bold font-serif text-green-500 relative z-10 drop-shadow-md">Balai Sekte</h1>
-        <p className="text-gray-400 relative z-10">Pusat logistik dan koordinasi sekte Anda.</p>
-      </div>
+    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+      <PageHeader
+        title="Balai Sekte"
+        description="Pusat informasi dan manajemen sekte Anda."
+      />
 
-      {!sect ? (
-          <div className="bg-[#1a1a1a] jianghu-border border-green-900/50 rounded-lg p-6 min-h-[40vh] flex flex-col items-center justify-center">
-             <Users size={48} className="mx-auto text-gray-600 mb-4" />
-             <h2 className="text-xl font-bold text-gray-300">Anda adalah Rogue Cultivator</h2>
-             <p className="text-gray-500 text-sm max-w-md mx-auto text-center mt-2">
-               Anda saat ini tidak tergabung dalam sekte manapun. Cari sekte di Discord dan minta undangan dari Ketua Sekte untuk bergabung.
-             </p>
-          </div>
-      ) : (
+      {!user && (
+          <EmptyState
+            icon={<Shield />}
+            title="Akses Ditolak"
+            description="Silakan login menggunakan Discord untuk melihat informasi Sekte."
+          />
+      )}
+
+      {error && !sect && (
+          <EmptyState
+            icon={<Shield />}
+            title="Pengembara Tanpa Tuan"
+            description={error}
+          />
+      )}
+
+      {user && sect && (
           <>
-          {/* Info Sekte Section */}
-          <div className="bg-[#1a1a1a] jianghu-border border-green-900/50 rounded-lg p-6 relative overflow-hidden">
+          {/* Hero Profil Sekte */}
+          <div className="relative rounded-xl bg-[#111] border border-[#1f402e]/50 overflow-hidden shadow-[0_0_30px_rgba(31,64,46,0.1)]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-green-900/10 rounded-bl-full pointer-events-none"></div>
-            <div className="text-center w-full space-y-6">
-                 <div className="w-24 h-24 mx-auto bg-black rounded-full border-2 border-green-700 flex items-center justify-center mb-4 overflow-hidden relative z-10 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+            <div className="absolute -left-16 -top-16 w-64 h-64 bg-[#1f402e] rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
+
+            <div className="p-6 sm:p-10 text-center relative z-10">
+                 <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto bg-black rounded-full border-2 border-green-700 flex items-center justify-center mb-4 overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.2)]">
                     <FallbackImage
                        src={sect.imageUrl as string || ''}
                        alt="Sect Banner"
-                       fallbackNode={<span className="text-4xl">⛩️</span>}
+                       fallbackNode={<span className="text-4xl sm:text-5xl">⛩️</span>}
                        className="w-full h-full object-cover"
                     />
                  </div>
 
-                 <h2 className="text-3xl font-bold text-white font-serif">{sect.name as string}</h2>
-                 <p className="text-gray-400 max-w-lg mx-auto">{sect.description as string}</p>
+                 <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif mb-2">{sect.name}</h2>
+                 <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto mb-6">{sect.description}</p>
 
-                 <div className="inline-flex items-center gap-2 bg-green-900/20 text-green-400 px-4 py-2 rounded-full border border-green-800 shadow-inner">
-                   <Shield size={16} /> Jabatan Anda: {sect.role as string}
+                 <div className="inline-flex items-center gap-2 bg-[#1f402e]/30 text-green-400 px-4 py-2 rounded-full border border-green-800/50 shadow-inner text-sm font-semibold">
+                   <Shield size={16} /> Jabatan: {sect.role}
                  </div>
 
-                 <div className="border-t border-green-900/30 pt-8 mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left relative z-10">
-                    <div className="bg-black/60 p-4 rounded border border-green-900/40 hover:border-green-600 transition-colors">
-                       <h3 className="font-bold text-green-400 mb-2 flex items-center gap-2"><Users size={16}/> Informasi Keanggotaan</h3>
-                       <p className="text-sm text-gray-300 font-semibold mb-1">Jumlah Anggota: {sect.memberCount as number}</p>
-                       <p className="text-xs text-gray-500">Manajemen anggota penuh tersedia di bot Discord (menggunakan komando /sekte).</p>
-                    </div>
-                    <div className="bg-black/60 p-4 rounded border border-[#c5a880]/40 hover:border-[#c5a880] transition-colors">
-                       <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16}/> Gudang Sekte</h3>
-                       <p className="text-sm text-gray-300 font-semibold mb-1">Total Kekayaan: {(sect.totalWealth as number).toLocaleString()} Silver</p>
-                       <p className="text-xs text-gray-500">Aset: Spirit ({(sect.currency as Record<string, number>).spirit}), Gold ({(sect.currency as Record<string, number>).gold}), Jade ({(sect.currency as Record<string, number>).jade})</p>
-                    </div>
+                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                    <Card variant="green" className="bg-black/40">
+                       <CardContent className="p-4 sm:p-5">
+                          <h3 className="font-bold text-green-400 mb-2 flex items-center gap-2"><Users size={16}/> Informasi Keanggotaan</h3>
+                          <p className="text-lg text-gray-200 font-semibold mb-1">{sect.memberCount} Anggota</p>
+                          <p className="text-xs text-gray-500">Manajemen anggota penuh tersedia di bot Discord (menggunakan komando /sekte).</p>
+                       </CardContent>
+                    </Card>
+                    <Card variant="gold" className="bg-black/40">
+                       <CardContent className="p-4 sm:p-5">
+                          <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16}/> Gudang Sekte</h3>
+                          <p className="text-lg text-gray-200 font-semibold mb-2 font-mono">{(sect.totalWealth).toLocaleString()} Silver (Total)</p>
+                          <div className="flex flex-wrap gap-2 text-xs">
+                             <Badge variant="outline" className="border-gray-700 text-gray-400">S: {(sect.currency).silver}</Badge>
+                             <Badge variant="outline" className="border-yellow-900/50 text-yellow-500">G: {(sect.currency).gold}</Badge>
+                             <Badge variant="outline" className="border-green-900/50 text-green-400">J: {(sect.currency).jade}</Badge>
+                             <Badge variant="outline" className="border-blue-900/50 text-blue-400">SP: {(sect.currency).spirit}</Badge>
+                          </div>
+                       </CardContent>
+                    </Card>
                  </div>
               </div>
           </div>
 
           {/* Aset Sekte Section */}
-          <div className="bg-[#1a1a1a] jianghu-border border-green-900/50 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6 border-b border-green-900/30 pb-4">
-              <h2 className="text-xl font-bold text-green-400 font-serif">Aset Sekte</h2>
+          <div className="bg-[#111] border border-[#1f402e]/30 rounded-xl p-4 sm:p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-[#333] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-green-500 font-serif flex items-center gap-2"><Map className="w-5 h-5 sm:w-6 sm:h-6" /> Aset Sekte</h2>
+
               {(sect.role === 'Ketua' || sect.role === 'Wakil Ketua' || sect.role === 'Tetua') && (
-                  <button
+                  <Button
+                    variant="success"
                     onClick={handleClaimProfit}
                     disabled={claimLoading || assets.length === 0}
-                    className="flex items-center gap-2 bg-[#1f402e] hover:bg-green-900 disabled:bg-gray-800 disabled:text-gray-500 text-green-100 text-sm px-4 py-2 rounded border border-green-800 transition-colors shadow-[0_0_10px_rgba(31,64,46,0.5)]"
+                    className="w-full sm:w-auto shadow-[0_0_10px_rgba(31,64,46,0.5)]"
                   >
-                    {claimLoading ? <Loader2 size={16} className="animate-spin" /> : <DollarSign size={16} />}
+                    {claimLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <DollarSign size={16} className="mr-2" />}
                     Klaim Profit Sekte
-                  </button>
+                  </Button>
               )}
             </div>
 
             {(sect.role !== 'Ketua' && sect.role !== 'Wakil Ketua' && sect.role !== 'Tetua') && (
-                <div className="mb-6 p-3 bg-blue-900/20 border border-blue-900/50 rounded text-sm text-blue-300 flex items-center gap-2">
-                    <Shield size={16}/> Hanya Ketua, Wakil, atau Tetua yang dapat melakukan klaim profit sekte.
+                <div className="mb-6 p-3 bg-[#1e3a5f]/20 border border-[#1e3a5f]/50 rounded-md text-xs sm:text-sm text-blue-300 flex items-center gap-2">
+                    <Shield size={16} className="shrink-0"/> Hanya Ketua, Wakil, atau Tetua yang dapat melakukan klaim profit sekte.
+                </div>
+            )}
+
+            {claimError && (
+                <div className="mb-6 p-3 bg-red-900/20 border border-red-900/50 rounded-md text-xs sm:text-sm text-red-400 flex items-center gap-2">
+                    <AlertTriangle size={16} className="shrink-0"/> {claimError}
                 </div>
             )}
 
             {claimResult && (
-              <div className="mb-6 p-4 rounded bg-black/50 border border-green-900/50">
-                <h3 className="text-green-400 font-bold mb-2">Hasil Klaim Sekte:</h3>
+              <div className="mb-6 p-4 sm:p-5 rounded-lg bg-black/60 border border-green-900/50 shadow-inner">
+                <h3 className="text-green-400 font-bold mb-3 font-serif">Hasil Klaim Sekte:</h3>
 
                 {claimResult.claimedCurrency.length > 0 && (
-                    <div className="mb-2">
-                        <p className="text-xs text-gray-400 font-bold">💰 Income (Dibagikan ke anggota):</p>
-                        <ul className="text-sm text-green-300 list-disc list-inside ml-2">
+                    <div className="mb-3">
+                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">💰 Income (Dibagikan ke anggota):</p>
+                        <ul className="text-xs sm:text-sm text-green-300 list-disc list-inside ml-2 space-y-1">
                             {claimResult.claimedCurrency.map((msg, i) => <li key={i}>{msg}</li>)}
                         </ul>
                     </div>
                 )}
 
                 {claimResult.claimedMaterial.length > 0 && (
-                    <div className="mb-2">
-                        <p className="text-xs text-gray-400 font-bold">⛏️ Material (Masuk Gudang):</p>
-                        <ul className="text-sm text-orange-300 list-disc list-inside ml-2">
+                    <div className="mb-3">
+                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">⛏️ Material (Masuk Gudang):</p>
+                        <ul className="text-xs sm:text-sm text-orange-300 list-disc list-inside ml-2 space-y-1">
                             {claimResult.claimedMaterial.map((msg, i) => <li key={i}>{msg}</li>)}
                         </ul>
                     </div>
                 )}
 
                 {claimResult.distributionSummary.length > 0 && (
-                    <div className="mb-2 mt-4 pt-2 border-t border-green-900/30">
-                        <p className="text-xs text-[#c5a880] font-bold">📊 Distribusi Profit (Langsung masuk saldo pribadi):</p>
-                        <ul className="text-sm text-gray-300 list-disc list-inside ml-2">
+                    <div className="mt-4 pt-3 border-t border-[#333]">
+                        <p className="text-xs text-[#c5a880] font-semibold uppercase tracking-wider mb-1">📊 Distribusi Profit (Langsung masuk saldo pribadi):</p>
+                        <ul className="text-xs sm:text-sm text-gray-300 list-disc list-inside ml-2 space-y-1">
                             {claimResult.distributionSummary.map((msg, i) => <li key={i}>{msg}</li>)}
                         </ul>
                     </div>
                 )}
 
                 {claimResult.claimedCurrency.length === 0 && claimResult.claimedMaterial.length === 0 && (
-                  <p className="text-sm text-gray-400">Tidak ada profit yang bisa diklaim saat ini.</p>
+                  <p className="text-sm text-gray-500 italic">Tidak ada profit yang bisa diklaim saat ini.</p>
                 )}
               </div>
             )}
 
             {assets.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">
-                Sekte ini belum memiliki aset apapun. Gunakan /sekte bangun-asset di Discord.
-              </div>
+              <EmptyState
+                icon={<Map />}
+                title="Sekte Miskin"
+                description="Sekte ini belum memiliki aset apapun. Gunakan /sekte bangun-asset di Discord."
+              />
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {assets.map((asset, index) => (
-                  <div key={index} className="bg-black/40 border border-[#333] rounded-lg p-4 hover:border-green-800 transition-colors relative group">
+                  <div key={index} className="bg-black/40 border border-[#333] rounded-lg p-4 hover:border-green-800/60 transition-colors relative group">
 
-                    {asset.underConstruction && (
-                       <div className="absolute top-2 right-2 bg-orange-900/80 text-orange-200 text-[10px] px-2 py-1 rounded border border-orange-700 flex items-center gap-1 z-10">
-                         <Clock size={12} /> Sedang Dibangun
-                       </div>
-                    )}
+                    <div className="absolute top-2 right-2 z-10">
+                        {asset.underConstruction ? (
+                            <Badge variant="warning" className="text-[9px] gap-1"><Clock size={10} /> Membangun</Badge>
+                        ) : asset.status === 'Halted (Terhenti)' ? (
+                            <Badge variant="destructive" className="text-[9px] gap-1"><AlertTriangle size={10} /> Terhenti</Badge>
+                        ) : (
+                            <Badge variant="success" className="text-[9px] gap-1 bg-[#1f402e]/80"><CheckCircle2 size={10} /> Aktif</Badge>
+                        )}
+                    </div>
 
-                    {!asset.underConstruction && asset.status === 'Aktif' && (
-                       <div className="absolute top-2 right-2 bg-green-900/80 text-green-200 text-[10px] px-2 py-1 rounded border border-green-700 flex items-center gap-1 z-10">
-                         <CheckCircle2 size={12} /> {asset.status}
-                       </div>
-                    )}
-
-                    {asset.status === 'Halted (Terhenti)' && (
-                       <div className="absolute top-2 right-2 bg-red-900/80 text-red-200 text-[10px] px-2 py-1 rounded border border-red-700 flex items-center gap-1 z-10">
-                         <AlertTriangle size={12} /> Terhenti
-                       </div>
-                    )}
-
-                    <div className="flex gap-4 mb-4">
-                      <div className="w-16 h-16 bg-gray-900 rounded border border-gray-700 overflow-hidden flex-shrink-0">
+                    <div className="flex gap-3 sm:gap-4 mb-3 sm:mb-4">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-900 rounded-md border border-[#333] overflow-hidden flex-shrink-0 shadow-inner">
                         <FallbackImage
                           src={asset.imageUrl || ''}
                           alt={asset.name}
-                          fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">🏯</div>}
+                          fallbackNode={<div className="w-full h-full flex items-center justify-center text-2xl sm:text-3xl">🏯</div>}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-200 group-hover:text-green-400 transition-colors">{asset.name}</h3>
-                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{asset.description}</p>
-                        <p className="text-xs text-[#c5a880] mt-2 font-bold">Jumlah: {asset.quantity}</p>
+                      <div className="flex-1 min-w-0 pr-12">
+                        <h3 className="font-bold text-gray-200 group-hover:text-green-400 transition-colors text-sm sm:text-base truncate">{asset.name}</h3>
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-1 line-clamp-2 leading-tight">{asset.description}</p>
+                        <p className="text-[10px] sm:text-xs text-[#c5a880] mt-1.5 font-bold font-mono">Qty: {asset.quantity}</p>
                       </div>
                     </div>
 
-                    <div className="border-t border-[#333] pt-3 flex justify-between items-center text-xs text-gray-400">
-                      <div className="flex items-center gap-2">
+                    <div className="border-t border-[#333] pt-3 flex justify-between items-center text-[10px] sm:text-xs">
+                      <div className="flex items-center gap-1.5">
                         {asset.isCraftingStation ? (
-                            <span className="text-blue-400">Fasilitas Crafting</span>
+                            <Badge variant="outline" className="border-blue-900 text-blue-400 py-0 h-5">Fasilitas Crafting</Badge>
                         ) : (
-                            <span className="text-gray-500">Otomatis / Pasif</span>
+                            <Badge variant="outline" className="border-[#333] text-gray-500 py-0 h-5">Pasif</Badge>
                         )}
                       </div>
                       {!asset.underConstruction && asset.status === 'Aktif' && asset.profitAvailable && (
-                         <span className="text-green-400 font-bold animate-pulse">Profit tersedia</span>
+                         <span className="text-green-400 font-bold animate-pulse flex items-center gap-1">
+                             <DollarSign size={12} /> Profit sedia
+                         </span>
                       )}
                     </div>
 
                     {asset.underConstruction && asset.constructionCompleteAt && (
-                        <div className="mt-3 p-2 bg-black/60 rounded border border-[#333]">
-                           <p className="text-[10px] text-gray-500 mb-1">Target Selesai:</p>
-                           <p className="text-xs text-orange-400 font-semibold"><Countdown targetDate={asset.constructionCompleteAt} /></p>
+                        <div className="mt-3 p-2 bg-black/60 rounded border border-[#333] flex justify-between items-center">
+                           <p className="text-[9px] sm:text-[10px] text-gray-500">Target Selesai:</p>
+                           <p className="text-[10px] sm:text-xs text-orange-400 font-semibold font-mono"><Countdown targetDate={asset.constructionCompleteAt} /></p>
                         </div>
                     )}
 

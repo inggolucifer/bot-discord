@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
 import { useAuthStore } from '@/lib/store';
-import { Trophy } from 'lucide-react';
+import { Trophy, RefreshCw, Loader2, Coins } from 'lucide-react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { Button } from '@/components/ui/Button';
 
 interface PlayerRank {
   discordId: string;
@@ -25,92 +29,129 @@ interface PlayerRank {
 const MEDAL = ['🥇', '🥈', '🥉'];
 
 export default function LeaderboardPage() {
-  const { hasCharacter } = useAuthStore();
+  const { user, hasCharacter } = useAuthStore();
   const [leaderboard, setLeaderboard] = useState<PlayerRank[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const fetchLeaderboard = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get('/leaderboard');
+      setLeaderboard(res.data);
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const e = err as any;
+      setError(e.response?.data?.error || 'Gagal memuat leaderboard');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!hasCharacter) {
       setTimeout(() => setLoading(false), 0);
       return;
     }
-
-    const fetchLeaderboard = async () => {
-      try {
-        const res = await api.get('/leaderboard');
-        setLeaderboard(res.data);
-      } catch (err: unknown) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const e = err as any;
-        setError(e.response?.data?.error || 'Gagal memuat leaderboard');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLeaderboard();
+    setTimeout(() => fetchLeaderboard(), 0);
   }, [hasCharacter]);
 
-  if (!hasCharacter) return null;
-  if (loading) return <div className="text-center py-20 text-[#c5a880] animate-pulse">Memuat Gulungan Peringkat...</div>;
-  if (error) return <div className="text-center py-20 text-[#8b0000]">{error}</div>;
+  if (!user || !hasCharacter) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-[#c5a880] font-serif mb-2 flex items-center justify-center gap-3">
-          <Trophy className="text-yellow-500" /> Leaderboard Kekayaan
-        </h1>
-        <p className="text-gray-400 text-sm">10 Pendekar Terkaya di Jianghu</p>
-      </div>
+    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
+      <PageHeader
+        title="Papan Peringkat"
+        description="Daftar Pendekar Terkaya di Jianghu."
+        action={
+          <Button variant="outline" onClick={fetchLeaderboard} disabled={loading}>
+            {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            Refresh
+          </Button>
+        }
+      />
 
-      <div className="bg-black/80 border border-[#333] rounded-lg p-6 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-        {leaderboard.length === 0 ? (
-          <p className="text-center text-gray-500 py-10">Belum ada pendekar yang terdaftar di papan peringkat.</p>
-        ) : (
-          <div className="space-y-4">
-            {leaderboard.map((player, index) => (
-              <div
-                key={player.discordId}
-                className={`flex flex-col md:flex-row items-center gap-4 p-4 rounded-md border ${index < 3 ? 'border-yellow-600/50 bg-[#1a1a00]/50' : 'border-[#222] bg-[#111]'} transition-transform hover:scale-[1.01]`}
-              >
-                {/* Rank & Avatar */}
-                <div className="flex items-center gap-4 w-full md:w-1/3">
-                  <div className="text-2xl w-8 text-center font-bold">
-                    {MEDAL[index] || <span className="text-gray-500 text-lg">#{index + 1}</span>}
+      {error ? (
+        <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-center text-red-400">
+          {error}
+        </div>
+      ) : loading && leaderboard.length === 0 ? (
+        <LoadingState text="Memuat Gulungan Peringkat..." />
+      ) : leaderboard.length === 0 ? (
+        <EmptyState
+          icon={<Trophy />}
+          title="Gulungan Kosong"
+          description="Belum ada pendekar yang terdaftar di papan peringkat."
+        />
+      ) : (
+        <div className="bg-[#111] border border-[#333] rounded-xl p-4 sm:p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+          <div className="space-y-3 sm:space-y-4">
+            {leaderboard.map((player, index) => {
+              // Highlight the logged-in user
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const isCurrentUser = player.discordId === ((user as any)?.userId || user?.id);
+
+              return (
+                <div
+                  key={player.discordId}
+                  className={`flex flex-col sm:flex-row items-center sm:items-stretch gap-4 p-4 rounded-lg border transition-all hover:scale-[1.01] hover:shadow-lg ${
+                    index < 3
+                      ? 'border-yellow-600/50 bg-[#1a1a00]/30 hover:border-yellow-500'
+                      : isCurrentUser
+                        ? 'border-[#c5a880]/50 bg-[#c5a880]/10 hover:border-[#c5a880]'
+                        : 'border-[#333] bg-black/40 hover:border-[#555]'
+                  }`}
+                >
+                  {/* Rank & Avatar */}
+                  <div className="flex items-center gap-4 w-full sm:w-5/12">
+                    <div className="text-xl sm:text-2xl w-8 text-center font-bold font-serif shrink-0">
+                      {MEDAL[index] || <span className="text-gray-500 text-base sm:text-lg">#{index + 1}</span>}
+                    </div>
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 flex-shrink-0 bg-[#222] ${index < 3 ? 'border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]' : 'border-[#555]'}`}>
+                      <FallbackImage
+                        src={player.characterImage || ''}
+                        alt={player.characterName}
+                        fallbackNode={<div className="w-full h-full flex items-center justify-center text-xl">👤</div>}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className={`font-bold truncate text-sm sm:text-base ${index < 3 ? 'text-yellow-500' : 'text-[#c5a880]'}`} title={player.characterName}>
+                        {player.characterName} {isCurrentUser && <span className="text-[10px] bg-[#c5a880] text-black px-1 rounded ml-1">Anda</span>}
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-gray-400 truncate mt-0.5">{player.sect}</div>
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#c5a880] flex-shrink-0">
-                    <FallbackImage src={player.characterImage || ''} alt={player.characterName} fallbackNode={<div className="bg-gray-800 w-full h-full flex items-center justify-center text-xs">👤</div>} />
+
+                  {/* Cultivation */}
+                  <div className="w-full sm:w-3/12 flex items-center justify-center sm:justify-start text-xs sm:text-sm text-gray-300 border-t sm:border-t-0 sm:border-l border-[#333] pt-3 sm:pt-0 sm:pl-4">
+                    <div className="flex flex-col items-center sm:items-start w-full">
+                       <span className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">Kultivasi</span>
+                       <span className="font-semibold text-gray-200 truncate w-full text-center sm:text-left">{player.realm}</span>
+                       <span className="text-[10px] text-gray-400">({player.stage})</span>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-[#c5a880]">{player.characterName}</div>
-                    <div className="text-xs text-gray-400">{player.sect}</div>
+
+                  {/* Wealth */}
+                  <div className="w-full sm:w-4/12 flex items-center justify-center sm:justify-end text-sm border-t sm:border-t-0 sm:border-l border-[#333] pt-3 sm:pt-0 sm:pl-4">
+                    <div className="flex flex-col items-center sm:items-end w-full">
+                      <div className="text-gray-500 text-[10px] uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                          <Coins size={10} /> Kekayaan
+                      </div>
+                      <div className="flex justify-center sm:justify-end gap-1.5 flex-wrap">
+                        {player.currency.silver > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-[#444] font-mono">{player.currency.silver} 🥈</span>}
+                        {player.currency.gold > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-yellow-900/50 font-mono">{player.currency.gold} 🥇</span>}
+                        {player.currency.jade > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-green-900/50 font-mono">{player.currency.jade} 💎</span>}
+                        {player.currency.spirit > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-blue-900/50 font-mono">{player.currency.spirit} 🔮</span>}
+                        {player.totalWealth === 0 && <span className="text-gray-600 text-xs italic">Miskin</span>}
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* Cultivation */}
-                <div className="w-full md:w-1/3 text-center md:text-left text-sm text-gray-300">
-                  <span className="text-gray-500">Kultivasi: </span>
-                  {player.realm} <span className="text-xs">({player.stage})</span>
-                </div>
-
-                {/* Wealth */}
-                <div className="w-full md:w-1/3 text-center md:text-right text-sm">
-                  <div className="text-gray-500 text-xs mb-1">Kekayaan:</div>
-                  <div className="flex justify-center md:justify-end gap-2 flex-wrap">
-                    {player.currency.silver > 0 && <span>{player.currency.silver} 🥈</span>}
-                    {player.currency.gold > 0 && <span>{player.currency.gold} 🥇</span>}
-                    {player.currency.jade > 0 && <span>{player.currency.jade} 💎</span>}
-                    {player.currency.spirit > 0 && <span>{player.currency.spirit} 🔮</span>}
-                    {player.totalWealth === 0 && <span className="text-gray-600">0</span>}
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

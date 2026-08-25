@@ -3,7 +3,11 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
-import { ArrowLeftRight, Check, X, Ban } from 'lucide-react';
+import { ArrowLeftRight, Check, X, Ban, Loader2 } from 'lucide-react';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { Button } from '@/components/ui/Button';
 
 interface BarterItem {
   itemId: {
@@ -109,35 +113,32 @@ export default function BarterPage() {
   if (!hasCharacter) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-[#c5a880] font-serif mb-2 flex items-center gap-3">
-            <ArrowLeftRight className="text-blue-500" /> Meja Barter
-          </h1>
-          <p className="text-gray-400 text-sm">Tawaran pertukaran item dan mata uang</p>
-        </div>
-        <button
-          onClick={fetchBarters}
-          disabled={loading}
-          className="bg-[#1a1a1a] hover:bg-[#333] text-[#c5a880] px-4 py-2 rounded text-sm border border-[#444] transition-colors"
-        >
-          {loading ? 'Memuat...' : 'Refresh'}
-        </button>
-      </div>
+    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
+      <PageHeader
+        title="Meja Barter"
+        description="Tawaran pertukaran item dan mata uang."
+        action={
+          <Button variant="outline" onClick={fetchBarters} disabled={loading}>
+            {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ArrowLeftRight className="w-4 h-4 mr-2" />}
+            Refresh
+          </Button>
+        }
+      />
 
       {error && (
-        <div className="bg-red-900/20 border border-red-700/50 text-red-400 p-3 rounded text-center text-sm">
+        <div className="bg-red-900/20 border border-red-700/50 text-red-400 p-3 rounded-lg text-center text-sm">
           {error}
         </div>
       )}
 
       {loading && barters.length === 0 ? (
-        <div className="text-center py-20 text-[#c5a880] animate-pulse">Memeriksa meja barter...</div>
+        <LoadingState text="Memeriksa meja barter..." />
       ) : barters.length === 0 ? (
-        <div className="bg-black/80 border border-[#333] rounded-lg p-10 text-center shadow-[0_0_15px_rgba(0,0,0,0.5)] text-gray-500">
-          Tidak ada tawaran barter yang tertunda.
-        </div>
+        <EmptyState
+          icon={<ArrowLeftRight />}
+          title="Tidak Ada Barter Aktif"
+          description="Saat ini tidak ada tawaran barter yang melibatkan Anda."
+        />
       ) : (
         <div className="grid gap-6">
           {barters.map(barter => {
@@ -145,34 +146,40 @@ export default function BarterPage() {
             const isIncoming = (user as any)?.userId === barter.toUserId || user?.id === barter.toUserId;
 
             return (
-              <div key={barter._id} className="bg-black/80 border border-[#444] rounded-lg p-5 shadow-[0_0_15px_rgba(0,0,0,0.5)] relative">
+              <div key={barter._id} className="bg-[#111] border border-[#1e3a5f]/50 hover:border-[#1e3a5f] transition-colors rounded-xl p-5 shadow-[0_0_15px_rgba(30,58,95,0.1)] relative">
 
-                <div className="absolute top-0 right-0 bg-[#222] text-gray-400 text-[10px] px-2 py-1 rounded-bl-lg rounded-tr-lg border-b border-l border-[#444]">
-                  Kadaluarsa: {new Date(barter.expiresAt).toLocaleTimeString()}
+                <div className="absolute top-0 right-0 bg-black/60 text-gray-500 text-[10px] sm:text-xs px-3 py-1 rounded-bl-lg rounded-tr-xl border-b border-l border-[#333]">
+                  Batas Waktu: {new Date(barter.expiresAt).toLocaleTimeString()}
                 </div>
 
-                <h3 className="text-center font-bold text-lg mb-4 text-[#c5a880]">
+                <h3 className="text-center font-bold text-lg sm:text-xl mb-6 mt-2 text-[#c5a880] font-serif">
                   {isIncoming ? (
                      <span>Tawaran dari <span className="text-white">{barter.fromPlayerName}</span></span>
                   ) : (
-                     <span>Menunggu jawaban dari <span className="text-white">{barter.toPlayerName}</span></span>
+                     <span>Menunggu dari <span className="text-white">{barter.toPlayerName}</span></span>
                   )}
                 </h3>
 
-                <div className="flex flex-col md:flex-row gap-4 items-stretch justify-center mb-6">
+                <div className="flex flex-col md:flex-row gap-4 sm:gap-6 items-stretch justify-center mb-6">
                   {/* Pihak 1 (Pengirim) */}
-                  <div className="flex-1 bg-[#111] p-4 rounded border border-[#333]">
-                    <div className="text-sm text-gray-500 mb-2 border-b border-[#333] pb-1">
-                      Ditawarkan oleh {barter.fromPlayerName}
+                  <div className="flex-1 bg-black/40 p-4 sm:p-5 rounded-lg border border-[#333]">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 border-b border-[#333] pb-2 text-center md:text-left">
+                      Ditawarkan ({barter.fromPlayerName})
                     </div>
-                    <div className="space-y-2 text-sm">
-                      <div><span className="text-gray-400">Currency:</span> {renderCurrency(barter.offerCurrency)}</div>
-                      <div>
-                         <span className="text-gray-400">Item:</span>
-                         {barter.offerItems.length === 0 ? ' Tidak ada' : (
-                           <ul className="list-disc list-inside mt-1 ml-2 text-gray-300 text-xs">
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between items-center bg-[#111] p-2 rounded">
+                        <span className="text-gray-400">Currency</span>
+                        <span className="font-mono text-gray-200">{renderCurrency(barter.offerCurrency)}</span>
+                      </div>
+                      <div className="bg-[#111] p-2 rounded">
+                         <span className="text-gray-400 block mb-1">Item:</span>
+                         {barter.offerItems.length === 0 ? <span className="text-gray-600 italic">Tidak ada</span> : (
+                           <ul className="space-y-1 mt-1 text-gray-300 text-xs">
                              {barter.offerItems.map((oi, idx) => (
-                               <li key={idx}>{oi.itemId.name} (x{oi.quantity})</li>
+                               <li key={idx} className="flex justify-between items-center bg-black/50 px-2 py-1 rounded">
+                                 <span>{oi.itemId.name}</span>
+                                 <span className="text-gray-500 font-mono">x{oi.quantity}</span>
+                               </li>
                              ))}
                            </ul>
                          )}
@@ -181,23 +188,29 @@ export default function BarterPage() {
                   </div>
 
                   {/* Icon Panah */}
-                  <div className="flex items-center justify-center text-[#c5a880]">
-                    <ArrowLeftRight size={24} className="md:rotate-0 rotate-90" />
+                  <div className="flex items-center justify-center text-blue-500 py-2 md:py-0">
+                    <ArrowLeftRight size={28} className="md:rotate-0 rotate-90" />
                   </div>
 
                   {/* Pihak 2 (Penerima) */}
-                  <div className="flex-1 bg-[#111] p-4 rounded border border-[#333]">
-                    <div className="text-sm text-gray-500 mb-2 border-b border-[#333] pb-1">
-                      Diminta dari {barter.toPlayerName}
+                  <div className="flex-1 bg-black/40 p-4 sm:p-5 rounded-lg border border-[#333]">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 border-b border-[#333] pb-2 text-center md:text-left">
+                      Diminta ({barter.toPlayerName})
                     </div>
-                    <div className="space-y-2 text-sm">
-                      <div><span className="text-gray-400">Currency:</span> {renderCurrency(barter.requestCurrency)}</div>
-                      <div>
-                         <span className="text-gray-400">Item:</span>
-                         {barter.requestItems.length === 0 ? ' Tidak ada' : (
-                           <ul className="list-disc list-inside mt-1 ml-2 text-gray-300 text-xs">
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between items-center bg-[#111] p-2 rounded">
+                         <span className="text-gray-400">Currency</span>
+                         <span className="font-mono text-gray-200">{renderCurrency(barter.requestCurrency)}</span>
+                      </div>
+                      <div className="bg-[#111] p-2 rounded">
+                         <span className="text-gray-400 block mb-1">Item:</span>
+                         {barter.requestItems.length === 0 ? <span className="text-gray-600 italic">Tidak ada</span> : (
+                           <ul className="space-y-1 mt-1 text-gray-300 text-xs">
                              {barter.requestItems.map((ri, idx) => (
-                               <li key={idx}>{ri.itemId.name} (x{ri.quantity})</li>
+                               <li key={idx} className="flex justify-between items-center bg-black/50 px-2 py-1 rounded">
+                                 <span>{ri.itemId.name}</span>
+                                 <span className="text-gray-500 font-mono">x{ri.quantity}</span>
+                               </li>
                              ))}
                            </ul>
                          )}
@@ -207,32 +220,38 @@ export default function BarterPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-center gap-4">
+                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6">
                   {isIncoming ? (
                     <>
-                      <button
+                      <Button
+                        variant="success"
                         onClick={() => handleRespond(barter._id, 'accept')}
                         disabled={actionLoading !== null}
-                        className="flex items-center gap-2 bg-green-900/40 hover:bg-green-800 text-green-400 hover:text-white px-6 py-2 rounded text-sm border border-green-700/50 transition-colors disabled:opacity-50"
+                        className="w-full sm:w-auto"
                       >
-                        <Check size={16} /> {actionLoading === barter._id ? 'Memproses...' : 'Terima'}
-                      </button>
-                      <button
+                        {actionLoading === barter._id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Check className="w-4 h-4 mr-2" />}
+                        Terima Tawaran
+                      </Button>
+                      <Button
+                        variant="destructive"
                         onClick={() => handleRespond(barter._id, 'decline')}
                         disabled={actionLoading !== null}
-                        className="flex items-center gap-2 bg-red-900/40 hover:bg-red-800 text-red-400 hover:text-white px-6 py-2 rounded text-sm border border-red-700/50 transition-colors disabled:opacity-50"
+                        className="w-full sm:w-auto"
                       >
-                        <X size={16} /> {actionLoading === barter._id ? 'Memproses...' : 'Tolak'}
-                      </button>
+                        {actionLoading === barter._id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <X className="w-4 h-4 mr-2" />}
+                        Tolak
+                      </Button>
                     </>
                   ) : (
-                    <button
+                    <Button
+                        variant="destructive"
                         onClick={() => handleCancel(barter._id)}
                         disabled={actionLoading !== null}
-                        className="flex items-center gap-2 bg-[#8b0000] hover:bg-red-800 text-white px-6 py-2 rounded text-sm transition-colors disabled:opacity-50"
+                        className="w-full sm:w-auto"
                       >
-                        <Ban size={16} /> {actionLoading === barter._id ? 'Memproses...' : 'Batalkan Tawaran'}
-                    </button>
+                        {actionLoading === barter._id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Ban className="w-4 h-4 mr-2" />}
+                        Batalkan Tawaran
+                    </Button>
                   )}
                 </div>
               </div>

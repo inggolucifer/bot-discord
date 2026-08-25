@@ -33,6 +33,7 @@ router.post('/stop-mandiri', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
     const lockKey = `worker_stop_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
@@ -62,7 +63,7 @@ router.post('/stop-mandiri', authenticateToken, async (req, res) => {
         console.error('[API-WORKER] Stop mandiri error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 

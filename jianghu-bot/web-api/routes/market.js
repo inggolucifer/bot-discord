@@ -110,6 +110,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
     // 🔒 MUTEX LOCK: Cegah race condition
     const lockKey = `market_auction_bid_${auctionId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
 
     try {
         const player = await Player.findOne({ discordId: userId });
@@ -200,7 +201,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Bid error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat bid.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -216,6 +217,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
 
     const lockKey = `market_shop_buy_${shopId}_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
@@ -259,7 +261,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -307,6 +309,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
 
     const lockKey = `market_playershop_${listingId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
@@ -379,7 +382,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Player Shop Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -427,6 +430,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
 
     const lockKey = `market_playershop_${listingId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
@@ -482,7 +486,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
         console.error('[API-MARKET] Player Shop Cancel error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membatalkan listing.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -498,6 +502,7 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
 
     const lockKey = `market_playershop_sell_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
@@ -553,7 +558,7 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
         console.error('[API-MARKET] Player Shop Sell error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat menjual item.' });
     } finally {
-        releaseLock();
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
