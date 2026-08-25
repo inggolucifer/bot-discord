@@ -103,10 +103,11 @@ export default function AssetsPage() {
 
   useEffect(() => {
     if (!user) {
-      setLoading(false);
-      return;
+        const timeout = setTimeout(() => setLoading(false), 0);
+        return () => clearTimeout(timeout);
     }
-    setTimeout(() => fetchAssets(), 0);
+      const timeout = setTimeout(() => fetchAssets(), 0);
+      return () => clearTimeout(timeout);
   }, [user]);
 
   const handleClaimProgress = async (assetId: string) => {
