@@ -59,15 +59,18 @@ async function runWorkerAutoProcess(client) {
             if (!assetConfig) continue;
 
             // Check if there is an active worker
-            let hasActiveWorker = false;
+            let activeWorkersCount = 0;
             if (owned.assignedWorkers && owned.assignedWorkers.length > 0) {
-                // Simplified check: if it has workers assigned, we assume they are active.
-                // In a robust system, you'd check worker expiration times here if applicable.
-                hasActiveWorker = true;
+                activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+            }
+
+            let productiveQuantity = owned.quantity;
+            if (!assetConfig.isCraftingStation) {
+                productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
             }
 
             // Only Tipe 3 requires active workers (or is producing something)
-            if (!assetConfig.isCraftingStation && !hasActiveWorker) {
+            if (productiveQuantity <= 0) {
                 continue;
             }
 
@@ -84,7 +87,7 @@ async function runWorkerAutoProcess(client) {
             let missingMaterialName = null;
 
             for (const input of assetConfig.workerInputMaterials) {
-                const neededPerHour = input.quantity * owned.quantity;
+                const neededPerHour = input.quantity * productiveQuantity;
                 const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
                 const availableQuantity = ownedItem ? ownedItem.quantity : 0;
 
@@ -130,14 +133,14 @@ async function runWorkerAutoProcess(client) {
             // If we have affordable hours, perform production for THOSE hours
             // 1. Deduct materials
             for (const input of assetConfig.workerInputMaterials) {
-                const totalNeeded = input.quantity * affordableHours * owned.quantity;
+                const totalNeeded = input.quantity * affordableHours * productiveQuantity;
                 const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
                 ownedItem.quantity -= totalNeeded;
                 if(ownedItem.quantity < 0) ownedItem.quantity = 0; // Safe fallback
             }
 
             // 2. Add outputs
-            const totalOutput = assetConfig.workerOutputQuantity * affordableHours * owned.quantity;
+            const totalOutput = assetConfig.workerOutputQuantity * affordableHours * productiveQuantity;
             let outputItem = player.inventory.find(i => i.itemId.equals(assetConfig.workerOutputItemId));
             if (outputItem) {
                 outputItem.quantity += totalOutput;
