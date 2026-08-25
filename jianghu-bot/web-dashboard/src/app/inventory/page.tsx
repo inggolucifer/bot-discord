@@ -77,7 +77,7 @@ export default function InventoryPage() {
       return;
     }
     setTimeout(() => fetchInventoryAndRecipes(), 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [user]);
 
   // Derived filtered items

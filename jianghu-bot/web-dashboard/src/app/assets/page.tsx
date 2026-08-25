@@ -1,6 +1,6 @@
 'use client';
 
-import { Map, Clock, ArrowRight, Loader2, Pickaxe, CheckCircle2, AlertTriangle, Hammer, X, Users } from "lucide-react";
+import { Map, Clock, ArrowRight, Loader2, Pickaxe, CheckCircle2, AlertTriangle, Hammer, X, Users, Plus } from "lucide-react";
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
@@ -30,6 +30,16 @@ interface Asset {
   status: string;
   progressPercent: number;
   remainingMs: number;
+}
+
+interface BuildableAsset {
+  _id: string;
+  name: string;
+  description: string;
+  type: string;
+  buildable: boolean;
+  constructionTimeHours: number;
+  buildRequirements: { itemId: { _id: string, name: string }; quantity: number }[];
 }
 
 const Countdown = ({ targetDate }: { targetDate: string }) => {
@@ -71,6 +81,13 @@ export default function AssetsPage() {
   const [targetAssetId, setTargetAssetId] = useState<string>('');
   const [moveLoading, setMoveLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
+
+  const [isBuildModalOpen, setIsBuildModalOpen] = useState(false);
+  const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
+  const [loadingBuildable, setLoadingBuildable] = useState(false);
+  const [buildActionLoading, setBuildActionLoading] = useState(false);
+
+  const [npcDuration, setNpcDuration] = useState<number>(1);
 
   const fetchAssets = async () => {
       try {
@@ -139,6 +156,26 @@ export default function AssetsPage() {
       }
   }
 
+  const handleHireNpc = async () => {
+      if(!selectedAsset) return;
+      if (npcDuration < 1) {
+          setActionMessage({ type: 'error', text: 'Durasi minimal 1 jam.' });
+          return;
+      }
+      setActionLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/player/assets/hire-npc', { assetId: selectedAsset.id, durasi: npcDuration });
+          setActionMessage({ type: 'success', text: res.data.message });
+          await setTimeout(() => fetchAssets(), 0);
+          setSelectedAsset(null);
+      } catch(err: any) {
+          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal menyewa NPC.' });
+      } finally {
+          setActionLoading(false);
+      }
+  }
+
   const handleMoveWorker = async () => {
       if (!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
       setMoveLoading(true);
@@ -159,6 +196,36 @@ export default function AssetsPage() {
       }
   }
 
+  const handleOpenBuildModal = async () => {
+      setIsBuildModalOpen(true);
+      setLoadingBuildable(true);
+      try {
+          const res = await api.get('/almanack/assets');
+          const buildable = res.data.data.filter((a: any) => a.buildable);
+          setBuildableAssets(buildable);
+      } catch (err: any) {
+          console.error(err);
+          setActionMessage({ type: 'error', text: 'Gagal memuat daftar aset yang bisa dibangun.' });
+      } finally {
+          setLoadingBuildable(false);
+      }
+  }
+
+  const handleBuildAsset = async (assetId: string) => {
+      setBuildActionLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/almanack/build-asset', { assetId });
+          setActionMessage({ type: 'success', text: res.data.message });
+          setIsBuildModalOpen(false);
+          await setTimeout(() => fetchAssets(), 0);
+      } catch (err: any) {
+          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal membangun aset.' });
+      } finally {
+          setBuildActionLoading(false);
+      }
+  }
+
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
 
@@ -166,9 +233,14 @@ export default function AssetsPage() {
         title="Manajemen Aset"
         description="Pantau pembangunan aset, produksi tambang, dan kelola pekerja Anda."
         action={
-          <Button variant="outline" onClick={() => fetchAssets()}>
-            Refresh Data
-          </Button>
+          <div className="flex gap-2">
+              <Button variant="default" onClick={handleOpenBuildModal}>
+                  <Plus className="w-4 h-4 mr-2" /> Bangun Aset
+              </Button>
+              <Button variant="outline" onClick={() => fetchAssets()}>
+                  Refresh Data
+              </Button>
+          </div>
         }
       />
 
@@ -371,6 +443,27 @@ export default function AssetsPage() {
                                       <AlertTriangle size={12} /> Aset yang sudah jadi hanya bisa ditangani maksimal 1 pekerja.
                                   </p>
                               )}
+
+                              <div className="pt-4 mt-4 border-t border-[#333]">
+                                  <h4 className="text-xs font-bold text-gray-400 mb-2">Sewa NPC (5 Silver / Jam)</h4>
+                                  <div className="flex gap-2">
+                                      <input
+                                          type="number"
+                                          min="1"
+                                          value={npcDuration}
+                                          onChange={(e) => setNpcDuration(parseInt(e.target.value) || 1)}
+                                          className="w-20 bg-[#111] border border-[#333] rounded px-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
+                                      />
+                                      <Button
+                                          variant="outline"
+                                          className="flex-1"
+                                          onClick={handleHireNpc}
+                                          disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.assignedWorkers.length >= 1)}
+                                      >
+                                          Sewa NPC ({npcDuration * 5} Silver)
+                                      </Button>
+                                  </div>
+                              </div>
                           </div>
                       </div>
                   )}
@@ -431,6 +524,56 @@ export default function AssetsPage() {
                   )}
               </div>
           )}
+      </Modal>
+
+      {/* Build Asset Modal */}
+      <Modal
+          isOpen={isBuildModalOpen}
+          onClose={() => setIsBuildModalOpen(false)}
+          title="Bangun Aset Baru"
+      >
+          <div className="space-y-4">
+              {loadingBuildable ? (
+                  <div className="py-8 flex justify-center">
+                      <Loader2 className="animate-spin text-[#c5a880]" size={24} />
+                  </div>
+              ) : buildableAssets.length === 0 ? (
+                  <EmptyState icon={<Hammer/>} title="Tidak Ada Aset" description="Tidak ada aset yang bisa dibangun saat ini." />
+              ) : (
+                  <div className="grid grid-cols-1 gap-4 max-h-[60vh] overflow-y-auto pr-2">
+                      {buildableAssets.map(asset => (
+                          <div key={asset._id} className="bg-[#111] border border-[#333] p-4 rounded-lg flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                              <div className="flex-1">
+                                  <h4 className="font-bold text-[#c5a880] text-sm">{asset.name}</h4>
+                                  <p className="text-xs text-gray-400 mt-1 line-clamp-2">{asset.description}</p>
+                                  {asset.buildRequirements && asset.buildRequirements.length > 0 && (
+                                      <div className="mt-2 text-[10px] text-gray-500">
+                                          <span className="font-semibold text-gray-400 block mb-1">Syarat:</span>
+                                          <ul className="list-disc list-inside">
+                                              {asset.buildRequirements.map((req, i) => (
+                                                  <li key={i}>{req.itemId?.name || 'Unknown Item'} x{req.quantity}</li>
+                                              ))}
+                                          </ul>
+                                      </div>
+                                  )}
+                                  <div className="mt-2 text-[10px] text-orange-400 flex items-center gap-1">
+                                      <Clock size={12}/> Waktu bangun: {asset.constructionTimeHours} Jam
+                                  </div>
+                              </div>
+                              <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleBuildAsset(asset._id)}
+                                  disabled={buildActionLoading}
+                                  className="w-full sm:w-auto whitespace-nowrap"
+                              >
+                                  {buildActionLoading ? <Loader2 size={14} className="animate-spin"/> : 'Bangun'}
+                              </Button>
+                          </div>
+                      ))}
+                  </div>
+              )}
+          </div>
       </Modal>
     </div>
   );
