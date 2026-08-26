@@ -10,7 +10,7 @@ function Badge({ className, variant = "default", rank, ...props }: BadgeProps) {
   let rankVariant = variant;
   if (variant === "rank" && rank) {
       const lowerRank = rank.toLowerCase();
-      if (lowerRank === 'mythic' || lowerRank === 'divine') rankVariant = "destructive";
+      if (lowerRank === 'mythical' || lowerRank === 'divine') rankVariant = "destructive";
       else if (lowerRank === 'legendary') rankVariant = "warning";
       else if (lowerRank === 'epic' || lowerRank === 'rare') rankVariant = "secondary";
       else rankVariant = "default"; // Common/Uncommon
