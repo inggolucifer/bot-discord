@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
-import FallbackImage from './FallbackImage'; // Need to check if FallbackImage exists, if not we will fix it later.
+ // Need to check if FallbackImage exists, if not we will fix it later.
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
@@ -147,12 +147,12 @@ export default function Navbar() {
         </nav>
 
         {/* Right Section (Auth & Mobile Toggle) */}
-        <div className="flex items-center gap-3 lg:gap-4 z-50">
+        <div className="flex items-center gap-2 lg:gap-4 z-50">
           {errorMsg && (
             <span className="text-[#8b0000] text-xs font-semibold hidden sm:inline">{errorMsg}</span>
           )}
           {user ? (
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-300 hidden sm:inline">{user.username}</span>
               {user.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -165,7 +165,7 @@ export default function Navbar() {
                 variant="outline"
                 size="sm"
                 onClick={logout}
-                className="hidden sm:inline-flex border-[#333] text-gray-400 hover:text-white hover:bg-black/50"
+                className="border-[#333] text-gray-400 hover:text-white hover:bg-black/50 px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
               >
                 Logout
               </Button>
@@ -175,7 +175,7 @@ export default function Navbar() {
               onClick={handleLogin}
               variant="destructive"
               size="sm"
-              className="shadow-[0_0_10px_rgba(139,0,0,0.5)]"
+              className="shadow-[0_0_10px_rgba(139,0,0,0.5)] px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
             >
               Login Discord
             </Button>
