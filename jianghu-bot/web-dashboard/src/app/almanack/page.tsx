@@ -23,6 +23,17 @@ export default function AlmanackPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeRank, setActiveRank] = useState('all');
 
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+  const [expandedAssets, setExpandedAssets] = useState<Record<string, boolean>>({});
+
+  const toggleItemExpand = (id: string) => {
+    setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleAssetExpand = (id: string) => {
+    setExpandedAssets(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
   useEffect(() => {
     const fetchAlmanack = async () => {
       try {
@@ -130,7 +141,20 @@ export default function AlmanackPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-[10px] sm:text-xs text-gray-400 italic line-clamp-3 leading-relaxed bg-black/30 p-2 rounded border border-[#333]/50">{item.description}</p>
+              <div className="bg-black/30 p-2 rounded border border-[#333]/50">
+                  <p className={`text-[10px] sm:text-xs text-gray-400 italic leading-relaxed ${expandedItems[item._id] ? '' : 'line-clamp-3'}`}>
+                      {item.description}
+                  </p>
+                  {item.description && item.description.length > 100 && (
+                      <button
+                          onClick={() => toggleItemExpand(item._id)}
+                          className="text-[10px] text-[#c5a880] hover:text-white mt-1 flex items-center gap-1 w-full justify-center"
+                      >
+                          {expandedItems[item._id] ? 'Tutup' : 'Selengkapnya'}
+                          <span className={`transform transition-transform ${expandedItems[item._id] ? 'rotate-180' : ''}`}>▼</span>
+                      </button>
+                  )}
+              </div>
 
               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-500 space-y-1.5">
 
@@ -183,7 +207,20 @@ export default function AlmanackPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-[10px] sm:text-xs text-gray-400 italic mb-2 line-clamp-3 bg-black/30 p-2 rounded border border-[#333]/50">{asset.description}</p>
+              <div className="mb-2 bg-black/30 p-2 rounded border border-[#333]/50">
+                  <p className={`text-[10px] sm:text-xs text-gray-400 italic leading-relaxed ${expandedAssets[asset._id] ? '' : 'line-clamp-3'}`}>
+                      {asset.description}
+                  </p>
+                  {asset.description && asset.description.length > 100 && (
+                      <button
+                          onClick={() => toggleAssetExpand(asset._id)}
+                          className="text-[10px] text-[#c5a880] hover:text-white mt-1 flex items-center gap-1 w-full justify-center"
+                      >
+                          {expandedAssets[asset._id] ? 'Tutup' : 'Selengkapnya'}
+                          <span className={`transform transition-transform ${expandedAssets[asset._id] ? 'rotate-180' : ''}`}>▼</span>
+                      </button>
+                  )}
+              </div>
 
               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
                 {asset.dailyProfit > 0 && (
