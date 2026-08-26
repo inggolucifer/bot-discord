@@ -55,7 +55,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
           </Button>
         </div>
 
-        <div className="p-4 sm:p-6 overflow-y-auto">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0">
           {children}
         </div>
 

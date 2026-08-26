@@ -167,7 +167,7 @@ export default function BarterPage() {
                       Ditawarkan ({barter.fromPlayerName})
                     </div>
                     <div className="space-y-3 text-sm">
-                      <div className="flex justify-between items-center bg-[#111] p-2 rounded">
+                      <div className="flex flex-wrap justify-between items-center gap-2 bg-[#111] p-2 rounded">
                         <span className="text-gray-400">Currency</span>
                         <span className="font-mono text-gray-200">{renderCurrency(barter.offerCurrency)}</span>
                       </div>
@@ -176,7 +176,7 @@ export default function BarterPage() {
                          {barter.offerItems.length === 0 ? <span className="text-gray-600 italic">Tidak ada</span> : (
                            <ul className="space-y-1 mt-1 text-gray-300 text-xs">
                              {barter.offerItems.map((oi, idx) => (
-                               <li key={idx} className="flex justify-between items-center bg-black/50 px-2 py-1 rounded">
+                               <li key={idx} className="flex flex-wrap justify-between items-center gap-1 bg-black/50 px-2 py-1 rounded">
                                  <span>{oi.itemId.name}</span>
                                  <span className="text-gray-500 font-mono">x{oi.quantity}</span>
                                </li>
@@ -198,7 +198,7 @@ export default function BarterPage() {
                       Diminta ({barter.toPlayerName})
                     </div>
                     <div className="space-y-3 text-sm">
-                      <div className="flex justify-between items-center bg-[#111] p-2 rounded">
+                      <div className="flex flex-wrap justify-between items-center gap-2 bg-[#111] p-2 rounded">
                          <span className="text-gray-400">Currency</span>
                          <span className="font-mono text-gray-200">{renderCurrency(barter.requestCurrency)}</span>
                       </div>
@@ -207,7 +207,7 @@ export default function BarterPage() {
                          {barter.requestItems.length === 0 ? <span className="text-gray-600 italic">Tidak ada</span> : (
                            <ul className="space-y-1 mt-1 text-gray-300 text-xs">
                              {barter.requestItems.map((ri, idx) => (
-                               <li key={idx} className="flex justify-between items-center bg-black/50 px-2 py-1 rounded">
+                               <li key={idx} className="flex flex-wrap justify-between items-center gap-1 bg-black/50 px-2 py-1 rounded">
                                  <span>{ri.itemId.name}</span>
                                  <span className="text-gray-500 font-mono">x{ri.quantity}</span>
                                </li>
@@ -220,7 +220,7 @@ export default function BarterPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6">
+                <div className="flex flex-wrap sm:flex-row justify-center gap-3 sm:gap-4 mt-6">
                   {isIncoming ? (
                     <>
                       <Button

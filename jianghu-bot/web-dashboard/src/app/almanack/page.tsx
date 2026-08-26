@@ -200,7 +200,7 @@ export default function AlmanackPage() {
 
         {/* Rank Filter */}
         <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar py-1">
-          <Filter size={16} className="text-gray-500 hidden sm:block" />
+          <Filter size={16} className="text-gray-500 " />
           {ranks.map(rank => (
             <button
               key={rank}
@@ -321,18 +321,18 @@ export default function AlmanackPage() {
 
               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
                 {asset.dailyProfit > 0 && (
-                   <p className="flex justify-between"><span>Profit Harian:</span> <span className="text-yellow-500 font-mono">{asset.dailyProfit} {asset.profitCurrency}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Profit Harian:</span> <span className="text-yellow-500 font-mono">{asset.dailyProfit} {asset.profitCurrency}</span></p>
                 )}
                 {asset.workerOutputQuantity > 0 && (
-                   <p className="flex justify-between"><span>Output Produksi:</span> <span className="text-purple-400 font-mono">{asset.workerOutputQuantity}x {asset.workerOutputItemName}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Output Produksi:</span> <span className="text-purple-400 font-mono">{asset.workerOutputQuantity}x {asset.workerOutputItemName}</span></p>
                 )}
                 {asset.basePrice > 0 && !asset.buildable && (
-                   <p className="flex justify-between"><span>Harga (Shop):</span> <span className="text-gray-300 font-mono">{asset.basePrice} {asset.priceCurrency}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Harga (Shop):</span> <span className="text-gray-300 font-mono">{asset.basePrice} {asset.priceCurrency}</span></p>
                 )}
 
                 {asset.buildable && (
                    <>
-                       <p className="flex justify-between"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
+                       <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
                        <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
                            <span className="text-gray-400 block mb-1.5 font-semibold">Material Dibutuhkan:</span>
                            {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
@@ -383,10 +383,10 @@ export default function AlmanackPage() {
 
               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400">
                 <div className="grid grid-cols-2 gap-2">
-                   <p className="flex justify-between"><span>HP:</span> <span className="text-green-500 font-mono">{pet.baseHp}</span></p>
-                   <p className="flex justify-between"><span>ATK:</span> <span className="text-red-400 font-mono">{pet.baseAtk}</span></p>
-                   <p className="flex justify-between"><span>DEF:</span> <span className="text-blue-400 font-mono">{pet.baseDef}</span></p>
-                   <p className="flex justify-between"><span>SPD:</span> <span className="text-yellow-400 font-mono">{pet.baseSpd}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>HP:</span> <span className="text-green-500 font-mono">{pet.baseHp}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>ATK:</span> <span className="text-red-400 font-mono">{pet.baseAtk}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>DEF:</span> <span className="text-blue-400 font-mono">{pet.baseDef}</span></p>
+                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>SPD:</span> <span className="text-yellow-400 font-mono">{pet.baseSpd}</span></p>
                 </div>
               </div>
             </div>

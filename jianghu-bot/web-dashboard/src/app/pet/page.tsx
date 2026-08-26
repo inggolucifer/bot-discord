@@ -135,8 +135,8 @@ export default function PetPage() {
         title="Pet Spiritual"
         description="Latih dan rawat rekan spiritualmu."
         action={
-           <div className="flex flex-col sm:flex-row gap-3">
-              <div className="bg-[#111] border border-[#333] px-4 py-2 rounded-md flex items-center justify-between sm:justify-start gap-4">
+           <div className="flex flex-wrap sm:flex-row gap-3">
+              <div className="bg-[#111] border border-[#333] px-4 py-2 rounded-md flex flex-wrap items-center justify-between sm:justify-start gap-4">
                   <span className="text-xs text-gray-400 uppercase tracking-wider">Slot Terpakai</span>
                   <span className="text-lg font-bold text-[#c5a880] font-mono">{pets.length} / {petSlots}</span>
               </div>
