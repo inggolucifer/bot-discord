@@ -194,7 +194,7 @@ export default function SectPage() {
 
           {/* Aset Sekte Section */}
           <div className="bg-[#111] border border-[#1f402e]/30 rounded-xl p-4 sm:p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-[#333] pb-4">
+            <div className="flex flex-wrap sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-[#333] pb-4">
               <h2 className="text-xl sm:text-2xl font-bold text-green-500 font-serif flex items-center gap-2"><Map className="w-5 h-5 sm:w-6 sm:h-6" /> Aset Sekte</h2>
 
               {(sect.role === 'Ketua' || sect.role === 'Wakil Ketua' || sect.role === 'Tetua') && (
@@ -296,7 +296,7 @@ export default function SectPage() {
                       </div>
                     </div>
 
-                    <div className="border-t border-[#333] pt-3 flex justify-between items-center text-[10px] sm:text-xs">
+                    <div className="border-t border-[#333] pt-3 flex flex-wrap justify-between items-center gap-2 text-[10px] sm:text-xs">
                       <div className="flex items-center gap-1.5">
                         {asset.isCraftingStation ? (
                             <Badge variant="outline" className="border-blue-900 text-blue-400 py-0 h-5">Fasilitas Crafting</Badge>
@@ -312,7 +312,7 @@ export default function SectPage() {
                     </div>
 
                     {asset.underConstruction && asset.constructionCompleteAt && (
-                        <div className="mt-3 p-2 bg-black/60 rounded border border-[#333] flex justify-between items-center">
+                        <div className="mt-3 p-2 bg-black/60 rounded border border-[#333] flex flex-wrap justify-between items-center gap-1">
                            <p className="text-[9px] sm:text-[10px] text-gray-500">Target Selesai:</p>
                            <p className="text-[10px] sm:text-xs text-orange-400 font-semibold font-mono"><Countdown targetDate={asset.constructionCompleteAt} /></p>
                         </div>

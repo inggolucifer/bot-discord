@@ -199,11 +199,11 @@ export default function WorkerPage() {
                 </div>
 
                 <div className="p-4 bg-black/60 border border-[#333] rounded-lg shadow-inner">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex flex-wrap justify-between items-center mb-2 gap-2">
                         <span className="text-gray-400 text-xs sm:text-sm">Tarif per jam:</span>
                         <span className="text-gray-300 font-mono text-sm">{selectedWorker.pricePerHour} Silver</span>
                     </div>
-                    <div className="flex justify-between items-center border-t border-[#333] pt-2 mt-2">
+                    <div className="flex flex-wrap justify-between items-center border-t gap-2 border-[#333] pt-2 mt-2">
                         <span className="text-gray-400 text-xs sm:text-sm font-semibold">Total Biaya:</span>
                         <span className="text-[#c5a880] font-bold text-lg font-mono">{selectedWorker.pricePerHour * hireDuration} Silver</span>
                     </div>
