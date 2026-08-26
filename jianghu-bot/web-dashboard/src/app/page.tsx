@@ -194,7 +194,7 @@ export default function Home() {
                      <div className="absolute inset-0 bg-white/20 w-full animate-[shimmer_2s_infinite]"></div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center mt-2 gap-2">
+                <div className="flex justify-between items-center mt-2 gap-2 gap-2">
                     <p className="text-[10px] sm:text-xs text-gray-500">Progress menuju terobosan selanjutnya</p>
                     <p className="text-[10px] sm:text-xs font-mono text-[#c5a880]">60%</p>
                 </div>
