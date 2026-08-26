@@ -48,7 +48,7 @@ interface AuctionItem {
   rank?: string;
 }
 
-const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Divine'];
+const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
 export default function MarketPage() {
   const { user } = useAuthStore();
