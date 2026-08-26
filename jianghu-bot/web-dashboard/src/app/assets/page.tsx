@@ -91,7 +91,7 @@ export default function AssetsPage() {
   const [actionMessage, setActionMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
 
   const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
-  const [inventory, setInventory] = useState<{item: {_id: string}, quantity: number}[]>([]);
+  const [inventory, setInventory] = useState<{id: string, quantity: number}[]>([]);
   const [loadingBuildable, setLoadingBuildable] = useState(false);
   const [buildActionLoading, setBuildActionLoading] = useState(false);
 
@@ -196,7 +196,7 @@ export default function AssetsPage() {
           const buildable = assetsRes.data.data.filter((a: {buildable: boolean}) => a.buildable);
           setBuildableAssets(buildable);
           if (invRes.data && invRes.data.data) {
-              setInventory(invRes.data.data.inventory || []);
+              setInventory(invRes.data.data || []);
           }
       } catch (err) {
           console.error(err);
@@ -221,7 +221,7 @@ export default function AssetsPage() {
       let canBuild = true;
       if (asset.buildRequirements && asset.buildRequirements.length > 0) {
           for (const req of asset.buildRequirements) {
-              const invItem = inventory.find(i => i.item && i.item._id === (req.itemId as { _id: string })._id);
+              const invItem = inventory.find(i => i.id === (req.itemId as { _id: string })._id);
               if (!invItem || invItem.quantity < req.quantity) {
                   canBuild = false;
                   break;
