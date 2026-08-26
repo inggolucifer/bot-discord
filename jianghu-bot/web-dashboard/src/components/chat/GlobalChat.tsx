@@ -110,7 +110,7 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
       {isOpen && (
         <div className="bg-[#1a1a1a]/95 backdrop-blur-md border border-[#c5a880]/50 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.8)] w-[calc(100vw-2rem)] sm:w-[380px] h-[450px] max-h-[calc(100vh-6rem)] flex flex-col mb-4 overflow-hidden">
           {/* Header */}
-          <div className="bg-black border-b border-[#333] p-3 flex justify-between items-center">
+          <div className="bg-black border-b border-[#333] p-3 flex flex-wrap justify-between items-center gap-2">
             <h3 className="text-[#c5a880] font-bold flex items-center gap-2">
               <MessageSquare size={16} /> Chat Global
               <div className="flex items-center gap-2">
