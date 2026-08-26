@@ -1,25 +1,72 @@
-'use client';
 
-import { useEffect, useState } from 'react';
+"use client";
+
+import { useState, useEffect } from 'react';
+import { Search, Filter, AlertCircle, BookOpen, Package, PackageOpen } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
-import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
-import { BookOpen, Search, Package, PackageOpen } from 'lucide-react';
-import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+
+// Define base properties
+interface BaseEntity {
+  _id: string;
+  name: string;
+  description: string;
+  imageUrl?: string;
+  rank: string;
+}
+
+// Define specific properties
+interface Item extends BaseEntity {
+  category: string;
+  effect: string;
+  basePrice: number;
+  priceCurrency: string;
+  obtainedFrom: string[];
+  usedFor: string[];
+}
+
+interface AssetRequirement {
+  itemId: string;
+  itemName: string;
+  quantity: number;
+}
+
+interface Asset extends BaseEntity {
+  buildable: boolean;
+  isCraftingStation: boolean;
+  dailyProfit: number;
+  profitCurrency: string;
+  workerOutputItemId: string;
+  workerOutputItemName: string;
+  workerOutputQuantity: number;
+  basePrice: number;
+  priceCurrency: string;
+  constructionTimeHours: number;
+  buildRequirements: AssetRequirement[];
+}
+
+interface Pet extends BaseEntity {
+  tier: number;
+  element: string;
+  baseHp: number;
+  baseAtk: number;
+  baseDef: number;
+  baseSpd: number;
+}
 
 const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Divine'];
 
 export default function AlmanackPage() {
-  const [items, setItems] = useState<any[]>([]);
-  const [assets, setAssets] = useState<any[]>([]); // Includes both blueprints and built assets
+  const [items, setItems] = useState<Item[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]); // Includes both blueprints and built assets
+  const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<{type: 'error'|'success', text: string} | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'item' | 'asset'>('item');
+  const [activeTab, setActiveTab] = useState<'item' | 'asset' | 'pet'>('item');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeRank, setActiveRank] = useState('all');
 
@@ -37,15 +84,17 @@ export default function AlmanackPage() {
   useEffect(() => {
     const fetchAlmanack = async () => {
       try {
-        const [itemsRes, assetsRes] = await Promise.all([
+        const [itemsRes, assetsRes, petsRes] = await Promise.all([
           api.get('/almanack/items'),
-          api.get('/almanack/assets')
+          api.get('/almanack/assets'),
+          api.get('/almanack/pets')
         ]);
         setItems(itemsRes.data.data);
         setAssets(assetsRes.data.data);
-      } catch (err: any) {
+        setPets(petsRes.data.data);
+      } catch (err: unknown) {
         console.error(err);
-        setMessage({ type: 'error', text: err.response?.data?.error || 'Gagal memuat Almanack.' });
+        setMessage({ type: 'error', text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal memuat Almanack.' });
       } finally {
         setLoading(false);
       }
@@ -54,7 +103,7 @@ export default function AlmanackPage() {
     fetchAlmanack();
   }, []);
 
-  const filterBySearchAndRank = (list: any[]) => {
+  const filterBySearchAndRank = (list: (Item | Asset | Pet)[]) => {
     return list.filter(item => {
       const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -63,58 +112,108 @@ export default function AlmanackPage() {
     });
   };
 
-  const filteredItems = filterBySearchAndRank(items);
-  const filteredAssets = filterBySearchAndRank(assets);
+  const filteredItems = filterBySearchAndRank(items) as Item[];
+  const filteredAssets = filterBySearchAndRank(assets) as Asset[];
+  const filteredPets = filterBySearchAndRank(pets) as Pet[];
+
+  const getRarityColor = (rank: string) => {
+    switch (rank?.toLowerCase()) {
+      case 'uncommon': return 'border-green-800 shadow-[0_0_15px_rgba(22,163,74,0.1)]';
+      case 'rare': return 'border-blue-700 shadow-[0_0_15px_rgba(29,78,216,0.1)]';
+      case 'epic': return 'border-purple-700 shadow-[0_0_15px_rgba(126,34,206,0.1)]';
+      case 'legendary': return 'border-yellow-600 shadow-[0_0_15px_rgba(202,138,4,0.15)]';
+      case 'mythic': return 'border-red-700 shadow-[0_0_15px_rgba(185,28,28,0.15)]';
+      case 'divine': return 'border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]';
+      default: return 'border-[#333]';
+    }
+  };
+
+  const getRarityTextClass = (rank: string) => {
+    switch (rank?.toLowerCase()) {
+      case 'uncommon': return 'text-green-500';
+      case 'rare': return 'text-blue-400';
+      case 'epic': return 'text-purple-400';
+      case 'legendary': return 'text-yellow-500 drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]';
+      case 'mythic': return 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]';
+      case 'divine': return 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]';
+      default: return 'text-gray-300';
+    }
+  };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
-      <PageHeader
-        title="Almanack Jianghu"
-        description="Kitab panduan lengkap pusaka, item, dan cetak biru bangunan."
-        action={
-          <div className="flex flex-col sm:flex-row gap-3">
-             <div className="relative w-full sm:w-64">
-               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-               <input
-                 type="text"
-                 placeholder="Cari..."
-                 value={searchQuery}
-                 onChange={(e) => setSearchQuery(e.target.value)}
-                 className="w-full bg-[#111] border border-[#444] rounded-md pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors"
-               />
-             </div>
-             <select
-               className="bg-[#111] border border-[#444] rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] appearance-none"
-               value={activeRank}
-               onChange={(e) => setActiveRank(e.target.value)}
-             >
-               {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Semua Rank' : r}</option>)}
-             </select>
-          </div>
-        }
-      />
-
-      {/* Tabs */}
-      <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar">
-        <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'item' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
-          onClick={() => {setActiveTab('item'); setMessage(null);}}
-        >
-          <Package size={16} /> Item ({filteredItems.length})
-        </button>
-        <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'asset' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
-          onClick={() => {setActiveTab('asset'); setMessage(null);}}
-        >
-          <PackageOpen size={16} /> Asset ({filteredAssets.length})
-        </button>
+    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#333] pb-6 relative">
+         <div className="absolute top-0 right-0 w-32 h-32 bg-[url('/img/dragon-watermark.png')] bg-contain bg-no-repeat opacity-10 pointer-events-none"></div>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#c5a880] mb-2 flex items-center gap-2">
+            <BookOpen className="text-red-900" size={28} />
+            Kitab Almanack
+          </h1>
+          <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">
+            Ensiklopedia lengkap dunia Jianghu. Pelajari berbagai item, blueprint, dan bangunan yang tersebar di daratan ini.
+          </p>
+        </div>
       </div>
 
       {message && (
-        <div className={`p-4 rounded-lg border ${message.type === 'error' ? 'bg-red-900/20 border-red-900/50 text-red-400' : 'bg-green-900/20 border-green-900/50 text-green-400'}`}>
-          {message.text}
+        <div className={`p-3 sm:p-4 rounded border ${message.type === 'error' ? 'bg-red-950/50 border-red-900 text-red-200' : 'bg-green-950/50 border-green-900 text-green-200'} flex items-start gap-3`}>
+          <AlertCircle className="mt-0.5 flex-shrink-0" size={18} />
+          <p className="text-sm">{message.text}</p>
         </div>
       )}
+
+      {/* Controls: Search, Tabs, Rank Filter */}
+      <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between bg-[#111] p-4 rounded-lg border border-[#333] shadow-inner">
+
+        {/* Search */}
+        <div className="relative w-full lg:w-72">
+          <input
+            type="text"
+            placeholder="Cari nama atau deskripsi..."
+            className="w-full bg-black/50 border border-[#333] rounded-md py-2 pl-9 pr-4 text-sm text-gray-200 focus:outline-none focus:border-[#c5a880] transition-colors"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
+        </div>
+
+        {/* Tabs Desktop & Mobile Scrollable */}
+        <div className="flex overflow-x-auto hide-scrollbar gap-2 sm:gap-4 border-b lg:border-b-0 border-[#333] pb-2 lg:pb-0">
+          <button
+            className={`pb-3 lg:pb-0 lg:py-2 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'item' ? 'text-red-400 border-b-2 lg:border-b-0 lg:text-[#c5a880] border-red-400 lg:bg-[#222] lg:px-4 lg:rounded-md' : 'text-gray-500 hover:text-gray-300 lg:px-4'}`}
+            onClick={() => {setActiveTab('item'); setMessage(null);}}
+          >
+            <Package size={16} /> Item ({filteredItems.length})
+          </button>
+          <button
+            className={`pb-3 lg:pb-0 lg:py-2 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'asset' ? 'text-blue-400 border-b-2 lg:border-b-0 lg:text-[#c5a880] border-blue-400 lg:bg-[#222] lg:px-4 lg:rounded-md' : 'text-gray-500 hover:text-gray-300 lg:px-4'}`}
+            onClick={() => {setActiveTab('asset'); setMessage(null);}}
+          >
+            <PackageOpen size={16} /> Asset ({filteredAssets.length})
+          </button>
+          <button
+            className={`pb-3 lg:pb-0 lg:py-2 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === 'pet' ? 'text-green-400 border-b-2 lg:border-b-0 lg:text-[#c5a880] border-green-400 lg:bg-[#222] lg:px-4 lg:rounded-md' : 'text-gray-500 hover:text-gray-300 lg:px-4'}`}
+            onClick={() => {setActiveTab('pet'); setMessage(null);}}
+          >
+            🐾 Pet ({filteredPets.length})
+          </button>
+        </div>
+
+        {/* Rank Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar py-1">
+          <Filter size={16} className="text-gray-500 hidden sm:block" />
+          {ranks.map(rank => (
+            <button
+              key={rank}
+              onClick={() => setActiveRank(rank.toLowerCase())}
+              className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${activeRank === rank.toLowerCase() ? 'bg-[#c5a880] text-black' : 'bg-[#222] text-gray-400 hover:bg-[#333]'}`}
+            >
+              {rank}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {loading ? (
         <LoadingState text="Membuka Kitab Almanack..." />
@@ -240,7 +339,7 @@ export default function AlmanackPage() {
                            <span className="text-gray-400 block mb-1.5 font-semibold">Material Dibutuhkan:</span>
                            {asset.buildRequirements && asset.buildRequirements.length > 0 ? (
                                <div className="flex flex-wrap gap-1.5">
-                                   {asset.buildRequirements.map((req: any, i: number) => (
+                                   {asset.buildRequirements.map((req: AssetRequirement, i: number) => (
                                        <div key={i} className="flex items-center gap-1 bg-[#111] border border-[#444] px-1.5 py-0.5 rounded-sm">
                                            <span className="text-[#c5a880] truncate max-w-[80px]" title={req.itemName}>{req.itemName}</span>
                                            <span className="text-gray-500 font-mono">x{req.quantity}</span>
@@ -257,6 +356,44 @@ export default function AlmanackPage() {
             </div>
           ))}
 
+          {/* TAB PET */}
+          {activeTab === 'pet' && filteredPets.map((pet) => (
+            <div key={pet._id} className={`bg-[#111] border p-4 sm:p-5 rounded-lg flex flex-col gap-3 relative overflow-hidden group hover:border-blue-900/50 hover:shadow-lg transition-all ${getRarityColor(pet.rank)}`}>
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/60 rounded-md border border-[#333] flex-shrink-0 flex items-center justify-center p-1 shadow-inner">
+                  <FallbackImage
+                    src={pet.imageUrl || ""}
+                    alt={pet.name}
+                    className="max-w-full max-h-full object-contain"
+                    fallbackNode={<div className="text-2xl sm:text-4xl">🐾</div>}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className={`font-bold text-sm sm:text-base leading-tight mb-1.5 ${getRarityTextClass(pet.rank)} truncate`} title={pet.name}>{pet.name}</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    <Badge variant="rank" rank={pet.rank} className="text-[9px] sm:text-[10px] py-0 h-4">{pet.rank}</Badge>
+                    <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40 capitalize">Tier {pet.tier}</Badge>
+                    {pet.element && <Badge variant="outline" className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40 capitalize">{pet.element}</Badge>}
+                  </div>
+                </div>
+              </div>
+              <div className="mb-2 bg-black/30 p-2 rounded border border-[#333]/50">
+                  <p className={`text-[10px] sm:text-xs text-gray-400 italic leading-relaxed`}>
+                      {pet.description || 'Tidak ada deskripsi.'}
+                  </p>
+              </div>
+
+              <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400">
+                <div className="grid grid-cols-2 gap-2">
+                   <p className="flex justify-between"><span>HP:</span> <span className="text-green-500 font-mono">{pet.baseHp}</span></p>
+                   <p className="flex justify-between"><span>ATK:</span> <span className="text-red-400 font-mono">{pet.baseAtk}</span></p>
+                   <p className="flex justify-between"><span>DEF:</span> <span className="text-blue-400 font-mono">{pet.baseDef}</span></p>
+                   <p className="flex justify-between"><span>SPD:</span> <span className="text-yellow-400 font-mono">{pet.baseSpd}</span></p>
+                </div>
+              </div>
+            </div>
+          ))}
+
           {/* Empty States */}
           {activeTab === 'item' && filteredItems.length === 0 && (
              <div className="col-span-full">
@@ -268,7 +405,11 @@ export default function AlmanackPage() {
                <EmptyState icon={<BookOpen />} title="Asset Tidak Ditemukan" description="Tidak ada aset yang cocok dengan pencarian Anda." />
              </div>
           )}
-
+          {activeTab === 'pet' && filteredPets.length === 0 && (
+             <div className="col-span-full">
+               <EmptyState icon={<BookOpen />} title="Pet Tidak Ditemukan" description="Tidak ada pet yang cocok dengan pencarian Anda." />
+             </div>
+          )}
         </div>
       )}
     </div>
