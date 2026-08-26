@@ -128,11 +128,11 @@ export default function TournamentPage() {
                               MATCH {match.matchNumber} {isCompleted ? '(SELESAI)' : ''}
                             </div>
                             <div className="flex flex-col">
-                               <div className={`p-2.5 border-b border-[#333] flex justify-between items-center ${isCompleted && match.winnerId ? 'text-gray-300' : 'text-gray-300'}`}>
+                               <div className={`p-2.5 border-b border-[#333] flex flex-wrap justify-between items-center gap-1 ${isCompleted && match.winnerId ? 'text-gray-300' : 'text-gray-300'}`}>
                                   <span className="font-semibold truncate pr-2 text-sm">{match.player1Name || '???'}</span>
                                   {/* Since we don't have winner name per match, we omit the WIN label for intermediate rounds unless we can reliably calculate it. */}
                                </div>
-                               <div className={`p-2.5 flex justify-between items-center ${isCompleted && match.winnerId ? 'text-gray-300' : 'text-gray-300'}`}>
+                               <div className={`p-2.5 flex flex-wrap justify-between items-center gap-1 ${isCompleted && match.winnerId ? 'text-gray-300' : 'text-gray-300'}`}>
                                   <span className="font-semibold truncate pr-2 text-sm">{match.player2Name === null ? <span className="text-gray-600 italic">BYE</span> : (match.player2Name || '???')}</span>
                                </div>
                             </div>

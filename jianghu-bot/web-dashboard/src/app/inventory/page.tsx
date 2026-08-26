@@ -149,7 +149,7 @@ export default function InventoryPage() {
       />
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#111] border border-[#333] p-4 rounded-lg shadow-md">
+      <div className="flex flex-wrap justify-between items-center gap-4 bg-[#111] border border-[#333] p-4 rounded-lg shadow-md">
         <div className="flex gap-2 w-full overflow-x-auto pb-2 sm:pb-0 custom-scrollbar sm:w-auto">
              <Button size="sm" variant={activeCategory === 'all' ? 'default' : 'ghost'} onClick={() => setActiveCategory('all')} className="whitespace-nowrap">Semua</Button>
              <Button size="sm" variant={activeCategory === 'material' ? 'default' : 'ghost'} onClick={() => setActiveCategory('material')} className="whitespace-nowrap">Material</Button>
@@ -316,7 +316,7 @@ export default function InventoryPage() {
                                      const isEnough = have >= need;
 
                                      return (
-                                         <li key={i} className="flex justify-between items-center bg-[#111] p-1.5 rounded">
+                                         <li key={i} className="flex flex-wrap justify-between items-center gap-1 bg-[#111] p-1.5 rounded">
                                              <span className="text-gray-300">{m.itemName}</span>
                                              <span className={`font-mono text-xs ${isEnough ? 'text-green-400' : 'text-red-400'}`}>
                                                  {have} / {need}
@@ -327,7 +327,7 @@ export default function InventoryPage() {
                              </ul>
                          </div>
 
-                         <div className="flex items-end justify-between mt-4 pt-4 border-t border-[#333]">
+                         <div className="flex flex-wrap sm:flex-nowrap items-end justify-between mt-4 pt-4 gap-4 border-t border-[#333]">
                              <div>
                                  <label className="block text-xs text-gray-500 mb-1">Jumlah Craft</label>
                                  <input

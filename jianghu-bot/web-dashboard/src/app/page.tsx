@@ -194,7 +194,7 @@ export default function Home() {
                      <div className="absolute inset-0 bg-white/20 w-full animate-[shimmer_2s_infinite]"></div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center mt-2">
+                <div className="flex justify-between items-center mt-2 gap-2 gap-2">
                     <p className="text-[10px] sm:text-xs text-gray-500">Progress menuju terobosan selanjutnya</p>
                     <p className="text-[10px] sm:text-xs font-mono text-[#c5a880]">60%</p>
                 </div>
@@ -406,7 +406,7 @@ export default function Home() {
           <div className="space-y-4">
               <p className="text-sm text-gray-300">Ada beberapa pendekar gugur yang meninggalkan hartanya untukmu.</p>
               {availableLoots.map(pool => (
-                  <div key={pool._id} className="bg-black/40 border border-[#333] p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div key={pool._id} className="bg-black/40 border border-[#333] p-4 rounded-lg flex flex-wrap sm:flex-nowrap justify-between items-center gap-4">
                       <div>
                           <h4 className="font-bold text-red-400 mb-1">Mendiang: {pool.deceasedCharacterName}</h4>
                           <p className="text-xs text-gray-400">

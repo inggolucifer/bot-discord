@@ -471,7 +471,7 @@ export default function AssetsPage() {
                               <p className="text-[10px] sm:text-xs text-gray-400 italic mb-2 line-clamp-3 bg-black/30 p-2 rounded border border-[#333]/50">{asset.description}</p>
 
                               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
-                                  <p className="flex justify-between"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
+                                  <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
 
                                   <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
                                       <span className="text-gray-400 block mb-1.5 font-semibold">Material Dibutuhkan:</span>
@@ -562,7 +562,7 @@ export default function AssetsPage() {
                               ) : (
                                   <ul className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                                       {selectedAsset.assignedWorkers.map((worker, index) => (
-                                          <li key={index} className="flex justify-between items-center text-xs sm:text-sm bg-[#111] p-3 rounded-md border border-[#333]">
+                                          <li key={index} className="flex flex-wrap justify-between items-center gap-1 text-xs sm:text-sm bg-[#111] p-3 rounded-md border border-[#333]">
                                               <span className="font-semibold text-gray-300">
                                                   {worker.workerId.startsWith('NPC') ? worker.workerId.substring(0, 15) + '...' : worker.workerId}
                                                   {worker.workerId === user?.id && ' (Anda)'}

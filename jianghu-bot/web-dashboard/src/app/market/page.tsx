@@ -248,7 +248,7 @@ export default function MarketPage() {
 
         {/* Categories Sidebar */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="bg-[#111] border border-[#333] rounded-lg overflow-hidden flex flex-row lg:flex-col shadow-md">
+          <div className="bg-[#111] border border-[#333] rounded-lg overflow-hidden flex flex-col sm:flex-row lg:flex-col shadow-md">
             <button
               onClick={() => setActiveTab('shop')}
               className={`flex-1 lg:w-full text-left px-3 py-3 sm:px-4 sm:py-4 transition-colors flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-3 ${activeTab === 'shop' ? 'bg-[#c5a880]/10 text-[#c5a880] lg:border-l-4 lg:border-b-0 border-b-4 border-[#c5a880]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}
@@ -319,7 +319,7 @@ export default function MarketPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
+                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
                         {renderCurrency(item.price, item.currency)}
                         <Button
                           variant="outline"
@@ -371,12 +371,12 @@ export default function MarketPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
+                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
                         {renderCurrency(item.price, item.currency)}
 
                         {confirmCancelId === item.id ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-red-400 hidden sm:inline">Yakin?</span>
+                            <span className="text-[10px] text-red-400 ">Yakin?</span>
                             <Button size="sm" variant="destructive" className="h-7 px-2 text-[10px]" disabled={actionLoading} onClick={() => handleCancelListing(item.id)}>Ya</Button>
                             <Button size="sm" variant="outline" className="h-7 px-2 text-[10px]" disabled={actionLoading} onClick={() => setConfirmCancelId(null)}>Batal</Button>
                           </div>
@@ -426,7 +426,7 @@ export default function MarketPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
+                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
                         {renderCurrency(item.price, item.currency)}
                         <Button
                           variant="outline"

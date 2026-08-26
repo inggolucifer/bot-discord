@@ -66,7 +66,7 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
                 </div>
             </div>
 
-            <div className="pt-12 px-6 pb-6 overflow-y-auto custom-scrollbar">
+            <div className="pt-12 px-6 pb-6 overflow-y-auto flex-1 min-h-0 custom-scrollbar">
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <h2 className="text-2xl font-bold text-[#c5a880] font-serif leading-tight">{profile.characterName}</h2>
