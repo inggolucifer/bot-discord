@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- *  JIANHU BOT — SEED ECONOMY v3.0 FINAL (Complete · Fair · Long-term Stable)
+ *  JIANHU BOT — SEED ECONOMY v3.1 (Deskripsi Konkret · Rantai Terhubung · Fair)
  * ============================================================================
  *  Satu kali run = semua item, asset, pet, shop tersinkron & diperbaiki.
  *  Desain: Era Batu → Besi → Industri/Murim → Tinggi → Kultivasi.
@@ -132,128 +132,128 @@ function buildAllItems(guildId) {
 
   // TOOLS
   const tools = [
-    g({ name: 'Batu Tajam', rank: 'Common', category: 'material', tier: 1, description: 'Batu yang ditajamkan. Alat paling primitif.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Kapak Batu', rank: 'Common', category: 'consume', tier: 1, description: 'Kapak batu + kayu. Penebangan ringan.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Tombak Kayu', rank: 'Common', category: 'consume', tier: 1, description: 'Tombak berburu hewan kecil.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Alat Pancing Kayu', rank: 'Common', category: 'consume', tier: 1, description: 'Kail bambu sederhana.', basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Pisau Tulang', rank: 'Common', category: 'consume', tier: 1, description: 'Pisau dari tulang hewan.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Pengikis Kulit', rank: 'Common', category: 'consume', tier: 1, description: 'Alat menguliti hewan.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Cangkul Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Cangkul besi dasar pertanian.', basePrice: 40, priceCurrency: 'silver' }),
-    g({ name: 'Kapak Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Kapak besi kokoh.', basePrice: 45, priceCurrency: 'silver' }),
-    g({ name: 'Beliung Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Alat tambang bijih dangkal.', basePrice: 50, priceCurrency: 'silver' }),
-    g({ name: 'Pisau Jagal', rank: 'Common', category: 'consume', tier: 1, description: 'Pisau memproses daging & kulit.', basePrice: 35, priceCurrency: 'silver' }),
-    g({ name: 'Gergaji Besi', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Gergaji memotong kayu jadi papan.', basePrice: 80, priceCurrency: 'silver' }),
-    g({ name: 'Palu Tempa', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Palu penempa logam.', basePrice: 2, priceCurrency: 'gold' }),
-    g({ name: 'Alat Tenun Sederhana', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Alat tenun tangan.', basePrice: 1, priceCurrency: 'gold' }),
-    g({ name: 'Jarum Jahit Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Jarum untuk menjahit kain & kulit.', basePrice: 15, priceCurrency: 'silver' }),
-    g({ name: 'Sekop Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Sekop untuk menggali tanah.', basePrice: 35, priceCurrency: 'silver' }),
-    g({ name: 'Beliung Baja Hitam', rank: 'Rare', category: 'consume', tier: 3, description: 'Menambang mineral mistis.', basePrice: 8, priceCurrency: 'gold' }),
-    g({ name: 'Pisau Bedah Qi', rank: 'Rare', category: 'consume', tier: 3, description: 'Bedah spirit beast tanpa merusak energi.', basePrice: 12, priceCurrency: 'gold' }),
-    g({ name: 'Palu Formasi Array', rank: 'Epic', category: 'consume', tier: 5, description: 'Palu penempa pusaka & array.', basePrice: 2, priceCurrency: 'jade' }),
-    g({ name: 'Cangkul Giok', rank: 'Epic', category: 'consume', tier: 5, description: 'Tidak merusak akar herbal roh.', basePrice: 25, priceCurrency: 'gold' }),
-    g({ name: 'Kapak Petir Surgawi', rank: 'Epic', category: 'consume', tier: 5, description: 'Membelah kayu dewa.', basePrice: 1, priceCurrency: 'jade' }),
-    g({ name: 'Beliung Penekan Qi', rank: 'Legendary', category: 'consume', tier: 7, description: 'Menekan ledakan energi bumi.', basePrice: 4, priceCurrency: 'jade' }),
-    g({ name: 'Jarum Meridian', rank: 'Epic', category: 'consume', tier: 5, description: 'Jarum akupunktur kultivator.', basePrice: 30, priceCurrency: 'gold' }),
-    g({ name: 'Kuas Jimat', rank: 'Rare', category: 'consume', tier: 3, description: 'Kuas menuliskan jimat.', basePrice: 5, priceCurrency: 'gold' }),
+    g({ name: 'Batu Tajam', rank: 'Common', category: 'material', tier: 1, description: 'Batu sungai yang diasah hingga tajam. Alat pertama umat manusia — untuk menguliti, mengukir, dan bertahan hidup.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Kapak Batu', rank: 'Common', category: 'consume', tier: 1, description: 'Kepala batu diikat ke gagang kayu. Dipakai menebang pohon kecil dan membelah kayu bakar. Dijual di System Shop.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Tombak Kayu', rank: 'Common', category: 'consume', tier: 1, description: 'Tombak runcing dari kayu keras. Senjata berburu hewan kecil di Area Buruan Primitif.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Alat Pancing Kayu', rank: 'Common', category: 'consume', tier: 1, description: 'Kail bambu + benang sederhana. Wajib untuk Dermaga Nelayan dan kolam ikan.', basePrice: 5, priceCurrency: 'silver' }),
+    g({ name: 'Pisau Tulang', rank: 'Common', category: 'consume', tier: 1, description: 'Pisau dari tulang hewan buruan. Menguliti dan memotong daging mentah.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Pengikis Kulit', rank: 'Common', category: 'consume', tier: 1, description: 'Alat mengikis bulu & lemak dari kulit mentah sebelum disamak.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Cangkul Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Cangkul bilah besi. Dibutuhkan sawah, kebun, dan lahan pertanian. Di-craft di tungku (bukan shop).', basePrice: 40, priceCurrency: 'silver' }),
+    g({ name: 'Kapak Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Kapak kokoh dari batangan besi. Input Area Penebangan Kayu & hutan tingkat desa.', basePrice: 45, priceCurrency: 'silver' }),
+    g({ name: 'Beliung Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Alat gali bijih dangkal. Wajib Tambang Tembaga, Timah, Besi, dan Galian Batu Bara.', basePrice: 50, priceCurrency: 'silver' }),
+    g({ name: 'Pisau Jagal', rank: 'Common', category: 'consume', tier: 1, description: 'Pisau pemroses hasil buruan menjadi daging & kulit mentah.', basePrice: 35, priceCurrency: 'silver' }),
+    g({ name: 'Gergaji Besi', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Gergaji gigi besi. Mempercepat potong kayu mentah menjadi papan di bengkel.', basePrice: 80, priceCurrency: 'silver' }),
+    g({ name: 'Palu Tempa', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Palu penempa logam. Kunci craft tool besi, baja, dan senjata di tungku lanjutan.', basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Alat Tenun Sederhana', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Alat tenun tangan. Mengubah benang kapas menjadi kain katun.', basePrice: 1, priceCurrency: 'gold' }),
+    g({ name: 'Jarum Jahit Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Jarum besi untuk menjahit kain & kulit menjadi pakaian atau tas.', basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Sekop Besi', rank: 'Common', category: 'consume', tier: 1, description: 'Sekop gali tanah dan kerikil. Berguna di lahan tanah liat & konstruksi.', basePrice: 35, priceCurrency: 'silver' }),
+    g({ name: 'Beliung Baja Hitam', rank: 'Rare', category: 'consume', tier: 3, description: 'Beliung dari baja hitam mistis. Menambang mineral langka: Giok Roh, Besi Dingin, Emas dalam.', basePrice: 8, priceCurrency: 'gold' }),
+    g({ name: 'Pisau Bedah Qi', rank: 'Rare', category: 'consume', tier: 3, description: 'Pisau bedah yang tidak merusak inti energi. Memotong organ spirit beast untuk bahan alkimia.', basePrice: 12, priceCurrency: 'gold' }),
+    g({ name: 'Palu Formasi Array', rank: 'Epic', category: 'consume', tier: 5, description: 'Palu ukir formasi. Dipakai menempa pusaka dan mengukir array pada giok/logam.', basePrice: 2, priceCurrency: 'jade' }),
+    g({ name: 'Cangkul Giok', rank: 'Epic', category: 'consume', tier: 5, description: 'Cangkul berlapis giok. Tidak merusak akar herbal roh — wajib kebun ginseng & teratai.', basePrice: 25, priceCurrency: 'gold' }),
+    g({ name: 'Kapak Petir Surgawi', rank: 'Epic', category: 'consume', tier: 5, description: 'Kapak bermuatan petir. Satu-satunya yang mampu menebang Kayu Surga.', basePrice: 1, priceCurrency: 'jade' }),
+    g({ name: 'Beliung Penekan Qi', rank: 'Legendary', category: 'consume', tier: 7, description: 'Beliung yang menekan ledakan Qi bumi. Dipakai Tambang Kristal Ilahi & Batu Roh.', basePrice: 4, priceCurrency: 'jade' }),
+    g({ name: 'Jarum Meridian', rank: 'Epic', category: 'consume', tier: 5, description: 'Jarum akupunktur kultivator. Bahan craft jimat & perawatan luka meridian.', basePrice: 30, priceCurrency: 'gold' }),
+    g({ name: 'Kuas Jimat', rank: 'Rare', category: 'consume', tier: 3, description: 'Kuas bulu beast + batang bambu hitam. Menulis talisman dengan darah spirit beast.', basePrice: 5, priceCurrency: 'gold' }),
   ];
   items.push(...tools);
 
   // SEEDS FOOD
   const food = [
-    g({ name: 'Buah Liar', rank: 'Common', category: 'consume', tier: 1, description: 'Buah hutan darurat.', basePrice: 1, priceCurrency: 'silver', effect: 'Memulihkan 5 Hunger' }),
-    g({ name: 'Daging Mentah', rank: 'Common', category: 'consume', tier: 1, description: 'Daging buruan. Harus dimasak.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Kayu Bakar', rank: 'Common', category: 'consume', tier: 1, description: 'Ranting kering.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Air Bersih', rank: 'Common', category: 'consume', tier: 1, description: 'Air sungai bersih.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Gandum', rank: 'Common', category: 'material', tier: 1, description: 'Biji gandum.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Padi', rank: 'Common', category: 'material', tier: 1, description: 'Bibit padi air.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Kapas', rank: 'Common', category: 'material', tier: 1, description: 'Serat kapas.', basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Anggur', rank: 'Common', category: 'material', tier: 1, description: 'Biji anggur.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Bambu', rank: 'Common', category: 'material', tier: 1, description: 'Tunas bambu.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Sayur', rank: 'Common', category: 'material', tier: 1, description: 'Campuran sayur dapur.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Jagung', rank: 'Common', category: 'material', tier: 1, description: 'Bibit jagung.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Kedelai', rank: 'Common', category: 'material', tier: 1, description: 'Bibit kedelai.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bibit Teh', rank: 'Uncommon', category: 'material', tier: 2, description: 'Bibit pohon teh.', basePrice: 15, priceCurrency: 'silver' }),
-    g({ name: 'Pakan Ternak', rank: 'Common', category: 'consume', tier: 1, description: 'Rumput + dedak.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Roti Panggang', rank: 'Common', category: 'consume', tier: 1, description: 'Roti pekerja.', basePrice: 15, priceCurrency: 'silver', effect: 'Memulihkan 15 Hunger' }),
-    g({ name: 'Nasi Putih', rank: 'Common', category: 'consume', tier: 1, description: 'Nasi pulen.', basePrice: 18, priceCurrency: 'silver', effect: 'Memulihkan 18 Hunger' }),
-    g({ name: 'Daging Bakar', rank: 'Common', category: 'consume', tier: 1, description: 'Daging panggang.', basePrice: 12, priceCurrency: 'silver', effect: 'Memulihkan 20 Hunger' }),
-    g({ name: 'Sup Tulang', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Sup bergizi tinggi.', basePrice: 30, priceCurrency: 'silver', effect: 'Memulihkan 35 Hunger' }),
-    g({ name: 'Bibit Ginseng Darah', rank: 'Rare', category: 'material', tier: 3, description: 'Bibit ginseng penguat darah.', basePrice: 2, priceCurrency: 'gold' }),
-    g({ name: 'Bibit Teratai Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Benih teratai penyerap energi.', basePrice: 8, priceCurrency: 'gold' }),
-    g({ name: 'Bibit Rumput Sumsum', rank: 'Epic', category: 'material', tier: 5, description: 'Bibit herbal perombak tulang.', basePrice: 12, priceCurrency: 'gold' }),
-    g({ name: 'Bibit Bunga Bulan', rank: 'Rare', category: 'material', tier: 3, description: 'Bunga yang mekar di malam hari.', basePrice: 3, priceCurrency: 'gold' }),
-    g({ name: 'Bibit Akar Naga', rank: 'Legendary', category: 'material', tier: 7, description: 'Akar yang menyerap Qi bumi.', basePrice: 2, priceCurrency: 'jade' }),
-    g({ name: 'Daun Bambu Hitam', rank: 'Rare', category: 'material', tier: 3, description: 'Pakan spirit beast vegetarian.', basePrice: 3, priceCurrency: 'gold' }),
-    g({ name: 'Pakan Spirit Beast', rank: 'Rare', category: 'consume', tier: 3, description: 'Makanan berenergi tinggi.', basePrice: 5, priceCurrency: 'gold' }),
-    g({ name: 'Pil Nutrisi Pekerja', rank: 'Epic', category: 'consume', tier: 5, description: 'Pil agar tidak lapar seharian.', basePrice: 80, priceCurrency: 'gold', effect: 'Memulihkan 100 Hunger' }),
-    g({ name: 'Pil Nutrisi Tinggi', rank: 'Legendary', category: 'consume', tier: 7, description: 'Nutrisi untuk pekerja realm tinggi.', basePrice: 3, priceCurrency: 'jade', effect: 'Memulihkan 200 Hunger' }),
+    g({ name: 'Buah Liar', rank: 'Common', category: 'consume', tier: 1, description: 'Buah hutan yang bisa dipetik di Pohon Buah Liar. Bahan barter awal atau dimakan.', basePrice: 1, priceCurrency: 'silver', effect: 'Memulihkan 5 Hunger' }),
+    g({ name: 'Daging Mentah', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil Area Buruan. Harus diolah (bakar/masak) sebelum bernilai lebih.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Kayu Bakar', rank: 'Common', category: 'consume', tier: 1, description: 'Ranting kering. Bahan bakar tungku, dapur, dan beberapa resep olahan.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Air Bersih', rank: 'Common', category: 'consume', tier: 1, description: 'Air sungai jernih. Bahan masak, fermentasi, dan beberapa proses kimia dasar.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Gandum', rank: 'Common', category: 'material', tier: 1, description: 'Bibit musim semi. Input wajib Lahan Gandum setiap siklus produksi.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Padi', rank: 'Common', category: 'material', tier: 1, description: 'Bibit padi air. Input wajib Sawah Padi.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Kapas', rank: 'Common', category: 'material', tier: 1, description: 'Bibit kapas. Input Kebun Kapas → serat → benang → kain.', basePrice: 5, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Anggur', rank: 'Common', category: 'material', tier: 1, description: 'Biji anggur. Untuk kebun anggur & bahan wine di pabrik fermentasi.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Bambu', rank: 'Common', category: 'material', tier: 1, description: 'Tunas bambu. Menanam hutan bambu untuk bahan bangunan ringan.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Sayur', rank: 'Common', category: 'material', tier: 1, description: 'Campuran bibit dapur. Input kebun sayur tingkat desa.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Jagung', rank: 'Common', category: 'material', tier: 1, description: 'Bibit jagung. Alternatif pertanian & pakan.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Kedelai', rank: 'Common', category: 'material', tier: 1, description: 'Bibit kedelai. Bahan tahu, kecap, dan pakan protein.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bibit Teh', rank: 'Uncommon', category: 'material', tier: 2, description: 'Bibit pohon teh. Daunnya diolah menjadi teh jual di kedai.', basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Pakan Ternak', rank: 'Common', category: 'consume', tier: 1, description: 'Campuran rumput & dedak. Input wajib peternakan ayam/sapi/kambing.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Roti Panggang', rank: 'Common', category: 'consume', tier: 1, description: 'Roti sederhana dari tepung. Sering jadi input pekerja di beberapa asset.', basePrice: 15, priceCurrency: 'silver', effect: 'Memulihkan 15 Hunger' }),
+    g({ name: 'Nasi Putih', rank: 'Common', category: 'consume', tier: 1, description: 'Nasi dari beras tumbuk. Makanan pokok hasil rantai padi.', basePrice: 18, priceCurrency: 'silver', effect: 'Memulihkan 18 Hunger' }),
+    g({ name: 'Daging Bakar', rank: 'Common', category: 'consume', tier: 1, description: 'Daging yang dipanggang di api unggun. Nilai jual lebih tinggi dari mentah.', basePrice: 12, priceCurrency: 'silver', effect: 'Memulihkan 20 Hunger' }),
+    g({ name: 'Sup Tulang', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Sup dari tulang buruan. Olahan dapur tingkat desa.', basePrice: 30, priceCurrency: 'silver', effect: 'Memulihkan 35 Hunger' }),
+    g({ name: 'Bibit Ginseng Darah', rank: 'Rare', category: 'material', tier: 3, description: 'Bibit herbal murim. Input Kebun Ginseng Darah.', basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Bibit Teratai Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Benih teratai penyerap Qi. Input Kebun Teratai Surgawi.', basePrice: 8, priceCurrency: 'gold' }),
+    g({ name: 'Bibit Rumput Sumsum', rank: 'Epic', category: 'material', tier: 5, description: 'Bibit herbal perombak tulang. Bahan Pil Penempa Tulang.', basePrice: 12, priceCurrency: 'gold' }),
+    g({ name: 'Bibit Bunga Bulan', rank: 'Rare', category: 'material', tier: 3, description: 'Bunga yang mekar di malam hari. Bahan jimat & pil malam.', basePrice: 3, priceCurrency: 'gold' }),
+    g({ name: 'Bibit Akar Naga', rank: 'Legendary', category: 'material', tier: 7, description: 'Akar yang menyerap Qi bumi. Kebun tingkat legend.', basePrice: 2, priceCurrency: 'jade' }),
+    g({ name: 'Daun Bambu Hitam', rank: 'Rare', category: 'material', tier: 3, description: 'Daun dari Bambu Hitam. Pakan favorit Ulat Salju & spirit beast vegetarian.', basePrice: 3, priceCurrency: 'gold' }),
+    g({ name: 'Pakan Spirit Beast', rank: 'Rare', category: 'consume', tier: 3, description: 'Pakan berenergi tinggi untuk pet beast & peternakan mistis.', basePrice: 5, priceCurrency: 'gold' }),
+    g({ name: 'Pil Nutrisi Pekerja', rank: 'Epic', category: 'consume', tier: 5, description: 'Pil agar pekerja realm tinggi tetap produktif. Input asset legend.', basePrice: 80, priceCurrency: 'gold', effect: 'Memulihkan 100 Hunger' }),
+    g({ name: 'Pil Nutrisi Tinggi', rank: 'Legendary', category: 'consume', tier: 7, description: 'Nutrisi puncak untuk pekerja & ritual tingkat dewa.', basePrice: 3, priceCurrency: 'jade', effect: 'Memulihkan 200 Hunger' }),
   ];
   items.push(...food);
 
   // RAW
   const raw = [
-    g({ name: 'Gandum', rank: 'Common', category: 'material', tier: 1, description: 'Biji gandum mentah.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Padi Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Padi belum ditumbuk.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Kapas Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Kapas putih.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Jagung Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Jagung segar.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Kedelai Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Kedelai segar.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Anggur Segar', rank: 'Common', category: 'consume', tier: 1, description: 'Anggur ranum.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Daun Teh Mentah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Daun teh segar.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Telur Mentah', rank: 'Common', category: 'consume', tier: 1, description: 'Telur ayam.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Susu Sapi', rank: 'Common', category: 'consume', tier: 1, description: 'Susu segar.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Susu Kambing', rank: 'Common', category: 'consume', tier: 1, description: 'Susu kambing.', basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Kulit Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Kulit hewan.', basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Wol Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Bulu domba.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bulu Ayam', rank: 'Common', category: 'material', tier: 1, description: 'Bulu untuk bantal/panah.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Ikan Air Tawar', rank: 'Common', category: 'consume', tier: 1, description: 'Ikan sungai.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Ikan Laut', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Ikan laut bergizi.', basePrice: 10, priceCurrency: 'silver' }),
+    g({ name: 'Gandum', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Lahan Gandum. Digiling di Kincir Air menjadi Tepung Terigu.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Padi Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Sawah Padi. Ditumbuk menjadi Beras Putih.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Kapas Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Kebun Kapas. Dipintal menjadi Benang.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Jagung Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Hasil ladang jagung. Pakan atau digiling.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Kedelai Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Hasil kebun kedelai. Bahan olahan protein.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Anggur Segar', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil kebun anggur. Bahan utama Anggur Merah (Wine).', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Daun Teh Mentah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Daun segar dari kebun teh. Diolah menjadi teh kering.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Telur Mentah', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil Peternakan Ayam. Bahan masak & barter.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Susu Sapi', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil Peternakan Sapi. Bahan keju & minuman.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Susu Kambing', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil peternakan kambing. Alternatif susu & keju.', basePrice: 5, priceCurrency: 'silver' }),
+    g({ name: 'Kulit Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Kulit hewan buruan/jagal. Disamak menjadi Kulit Samak.', basePrice: 5, priceCurrency: 'silver' }),
+    g({ name: 'Wol Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Bulu domba. Dipintal menjadi benang wol.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bulu Ayam', rank: 'Common', category: 'material', tier: 1, description: 'Bulu hasil peternakan. Bahan bantal, panah, atau kuas murah.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Ikan Air Tawar', rank: 'Common', category: 'consume', tier: 1, description: 'Hasil Dermaga/kolam. Bisa diasinkan atau dimasak.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Ikan Laut', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Hasil perairan laut. Bergizi, bahan ikan asin premium.', basePrice: 10, priceCurrency: 'silver' }),
     g({ name: 'Udang Sungai', rank: 'Common', category: 'consume', tier: 1, description: 'Udang air tawar.', basePrice: 5, priceCurrency: 'silver' }),
     g({ name: 'Madu Liar', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Madu lebah hutan.', basePrice: 15, priceCurrency: 'silver' }),
     g({ name: 'Lilinya Lebah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Lilin alami.', basePrice: 12, priceCurrency: 'silver' }),
-    g({ name: 'Tanah Liat', rank: 'Common', category: 'material', tier: 1, description: 'Lumpur pembuat bata.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Tanah Liat Merah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Tanah genteng.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Batu Kasar', rank: 'Common', category: 'material', tier: 1, description: 'Batu fana.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Pasir Putih', rank: 'Common', category: 'material', tier: 1, description: 'Pasir kaca & bangunan.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Batu Kapur', rank: 'Common', category: 'material', tier: 1, description: 'Bahan semen.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Air Laut', rank: 'Common', category: 'material', tier: 1, description: 'Bahan garam.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Garam Kasar', rank: 'Common', category: 'material', tier: 1, description: 'Garam penguapan.', basePrice: 3, priceCurrency: 'silver' }),
-    g({ name: 'Kerikil Sungai', rank: 'Common', category: 'material', tier: 1, description: 'Kerikil untuk konstruksi.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Kayu Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Kayu segar hutan.', basePrice: 1, priceCurrency: 'silver' }),
-    g({ name: 'Bambu', rank: 'Common', category: 'material', tier: 1, description: 'Batang bambu.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Kayu Pinus', rank: 'Common', category: 'material', tier: 1, description: 'Kayu pinus harum.', basePrice: 2, priceCurrency: 'silver' }),
-    g({ name: 'Kayu Jati', rank: 'Uncommon', category: 'material', tier: 2, description: 'Kayu jati tahan lama.', basePrice: 15, priceCurrency: 'silver' }),
-    g({ name: 'Kayu Ulin (Ironwood)', rank: 'Rare', category: 'material', tier: 3, description: 'Kayu sekeras besi.', basePrice: 4, priceCurrency: 'gold' }),
-    g({ name: 'Kayu Persik Berdarah', rank: 'Rare', category: 'material', tier: 3, description: 'Penolak bala, serap Yang.', basePrice: 6, priceCurrency: 'gold' }),
-    g({ name: 'Bambu Hitam (Black Bamboo)', rank: 'Rare', category: 'material', tier: 3, description: 'Tahan tebasan pedang.', basePrice: 5, priceCurrency: 'gold' }),
-    g({ name: 'Kayu Sandalwood', rank: 'Rare', category: 'material', tier: 3, description: 'Kayu harum untuk dupa & pusaka.', basePrice: 7, priceCurrency: 'gold' }),
-    g({ name: 'Kayu Surga (Heavenly Wood)', rank: 'Legendary', category: 'material', tier: 7, description: 'Pilar istana dewa.', basePrice: 2, priceCurrency: 'jade' }),
+    g({ name: 'Tanah Liat', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Lahan Tanah Liat. Dibakar menjadi Batu Bata.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Tanah Liat Merah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Tanah liat kualitas genteng. Bahan Genteng Keramik.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Batu Kasar', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Tambang Batu Kasar. Dipahat menjadi Balok Batu.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Pasir Putih', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Galian Pasir. Bahan utama Kaca Kusam.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Batu Kapur', rank: 'Common', category: 'material', tier: 1, description: 'Hasil galian kapur. Bahan Semen Mentah.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Air Laut', rank: 'Common', category: 'material', tier: 1, description: 'Air dari pantai/tambak. Direbus menjadi Garam Dapur.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Garam Kasar', rank: 'Common', category: 'material', tier: 1, description: 'Garam penguapan tambak. Pengawet & bumbu.', basePrice: 3, priceCurrency: 'silver' }),
+    g({ name: 'Kerikil Sungai', rank: 'Common', category: 'material', tier: 1, description: 'Kerikil untuk pondasi & campuran bangunan.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Kayu Mentah', rank: 'Common', category: 'material', tier: 1, description: 'Hasil Area Penebangan. Dipotong menjadi Papan Kayu di bengkel.', basePrice: 1, priceCurrency: 'silver' }),
+    g({ name: 'Bambu', rank: 'Common', category: 'material', tier: 1, description: 'Batang bambu. Bahan bangunan ringan, alat pancing, dan kerajinan.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Kayu Pinus', rank: 'Common', category: 'material', tier: 1, description: 'Kayu pinus harum. Bahan perabotan & dupa murah.', basePrice: 2, priceCurrency: 'silver' }),
+    g({ name: 'Kayu Jati', rank: 'Uncommon', category: 'material', tier: 2, description: 'Kayu jati tahan lama. Bahan bangunan menengah.', basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Kayu Ulin (Ironwood)', rank: 'Rare', category: 'material', tier: 3, description: 'Kayu sekeras besi dari Hutan Kayu Ulin. Bahan bangunan epic.', basePrice: 4, priceCurrency: 'gold' }),
+    g({ name: 'Kayu Persik Berdarah', rank: 'Rare', category: 'material', tier: 3, description: 'Kayu penolak bala dari Pohon Persik Darah. Menyerap energi Yang.', basePrice: 6, priceCurrency: 'gold' }),
+    g({ name: 'Bambu Hitam (Black Bamboo)', rank: 'Rare', category: 'material', tier: 3, description: 'Bambu mistis tahan tebasan. Bahan senjata & formasi.', basePrice: 5, priceCurrency: 'gold' }),
+    g({ name: 'Kayu Sandalwood', rank: 'Rare', category: 'material', tier: 3, description: 'Kayu harum. Bahan dupa, ukiran, dan gagang pusaka.', basePrice: 7, priceCurrency: 'gold' }),
+    g({ name: 'Kayu Surga (Heavenly Wood)', rank: 'Legendary', category: 'material', tier: 7, description: 'Kayu legendaris. Hanya ditebang Kapak Petir Surgawi — pilar istana dewa.', basePrice: 2, priceCurrency: 'jade' }),
     g({ name: 'Kayu Jiwa (Soulwood)', rank: 'Legendary', category: 'material', tier: 7, description: 'Kayu yang menyimpan jiwa.', basePrice: 3, priceCurrency: 'jade' }),
-    g({ name: 'Batu Bara', rank: 'Common', category: 'material', tier: 1, description: 'Bahan bakar tungku.', basePrice: 4, priceCurrency: 'silver' }),
-    g({ name: 'Bijih Tembaga', rank: 'Common', category: 'material', tier: 1, description: 'Logam kemerahan.', basePrice: 6, priceCurrency: 'silver' }),
-    g({ name: 'Bijih Timah', rank: 'Common', category: 'material', tier: 1, description: 'Logam lunak.', basePrice: 6, priceCurrency: 'silver' }),
-    g({ name: 'Bijih Besi', rank: 'Uncommon', category: 'material', tier: 2, description: 'Logam keras dasar.', basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Batu Bara', rank: 'Common', category: 'material', tier: 1, description: 'Bahan bakar panas dari galian. Wajib lebur logam di tungku & mesin uap industri.', basePrice: 4, priceCurrency: 'silver' }),
+    g({ name: 'Bijih Tembaga', rank: 'Common', category: 'material', tier: 1, description: 'Bijih kemerahan dari Tambang Tembaga. Dilebur menjadi Batangan Tembaga.', basePrice: 6, priceCurrency: 'silver' }),
+    g({ name: 'Bijih Timah', rank: 'Common', category: 'material', tier: 1, description: 'Bijih lunak dari Tambang Timah. Dipadu dengan tembaga menjadi Perunggu.', basePrice: 6, priceCurrency: 'silver' }),
+    g({ name: 'Bijih Besi', rank: 'Uncommon', category: 'material', tier: 2, description: 'Bijih keras dari Tambang Besi. Dilebur menjadi Batangan Besi — fondasi era besi.', basePrice: 15, priceCurrency: 'silver' }),
     g({ name: 'Bijih Perak', rank: 'Uncommon', category: 'material', tier: 2, description: 'Logam putih.', basePrice: 25, priceCurrency: 'silver' }),
-    g({ name: 'Bijih Emas', rank: 'Rare', category: 'material', tier: 3, description: 'Logam berharga.', basePrice: 80, priceCurrency: 'silver' }),
+    g({ name: 'Bijih Emas', rank: 'Rare', category: 'material', tier: 3, description: 'Bijih berharga dari Tambang Emas. Dilebur menjadi Batangan Emas.', basePrice: 80, priceCurrency: 'silver' }),
     g({ name: 'Bijih Timbal', rank: 'Common', category: 'material', tier: 1, description: 'Logam berat.', basePrice: 5, priceCurrency: 'silver' }),
     g({ name: 'Bijih Seng', rank: 'Common', category: 'material', tier: 1, description: 'Logam paduan.', basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Batu Meteor Api', rank: 'Rare', category: 'material', tier: 3, description: 'Batu panas langit.', basePrice: 8, priceCurrency: 'gold' }),
-    g({ name: 'Bijih Besi Dingin (Cold Iron)', rank: 'Epic', category: 'material', tier: 5, description: 'Aura es.', basePrice: 20, priceCurrency: 'gold' }),
-    g({ name: 'Bijih Giok Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Penampung Qi alam.', basePrice: 25, priceCurrency: 'gold' }),
+    g({ name: 'Batu Meteor Api', rank: 'Rare', category: 'material', tier: 3, description: 'Batu panas jatuh dari langit. Bahan tempa Baja Hitam Mistis.', basePrice: 8, priceCurrency: 'gold' }),
+    g({ name: 'Bijih Besi Dingin (Cold Iron)', rank: 'Epic', category: 'material', tier: 5, description: 'Besi bermuatan es dari Tambang Besi Dingin. Bahan senjata anti-panas & pusaka.', basePrice: 20, priceCurrency: 'gold' }),
+    g({ name: 'Bijih Giok Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Batu penampung Qi dari Tambang Giok Roh. Diukir menjadi Jimat Giok Roh.', basePrice: 25, priceCurrency: 'gold' }),
     g({ name: 'Bijih Mithril', rank: 'Epic', category: 'material', tier: 5, description: 'Logam ringan sekuat baja.', basePrice: 40, priceCurrency: 'gold' }),
-    g({ name: 'Pecahan Batu Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Mata uang kultivasi rendah.', basePrice: 40, priceCurrency: 'gold' }),
-    g({ name: 'Kristal Roh Ilahi', rank: 'Legendary', category: 'material', tier: 7, description: 'Inti formasi tinggi.', basePrice: 4, priceCurrency: 'jade' }),
+    g({ name: 'Pecahan Batu Roh', rank: 'Epic', category: 'material', tier: 5, description: 'Serpihan batu roh — mata uang dunia kultivasi. Dipadatkan menjadi Batu Roh Utuh.', basePrice: 40, priceCurrency: 'gold' }),
+    g({ name: 'Kristal Roh Ilahi', rank: 'Legendary', category: 'material', tier: 7, description: 'Inti kristal dari Tambang Kristal Ilahi. Jantung formasi & reaktor spirit.', basePrice: 4, priceCurrency: 'jade' }),
     g({ name: 'Bijih Star Iron', rank: 'Legendary', category: 'material', tier: 7, description: 'Besi bintang jatuh.', basePrice: 5, priceCurrency: 'jade' }),
     g({ name: 'Inti Bumi', rank: 'Mythical', category: 'material', tier: 9, description: 'Inti energi bumi purba.', basePrice: 1, priceCurrency: 'spirit' }),
-    g({ name: 'Ginseng Darah', rank: 'Rare', category: 'herb', tier: 3, description: 'Ginseng merah penguat darah.', basePrice: 15, priceCurrency: 'gold' }),
-    g({ name: 'Rumput Pembersih Sumsum', rank: 'Epic', category: 'herb', tier: 5, description: 'Bahan pil pondasi.', basePrice: 35, priceCurrency: 'gold' }),
-    g({ name: 'Teratai Roh Langit', rank: 'Legendary', category: 'herb', tier: 7, description: 'Membentuk fondasi.', basePrice: 8, priceCurrency: 'jade' }),
+    g({ name: 'Ginseng Darah', rank: 'Rare', category: 'herb', tier: 3, description: 'Ginseng merah menyala dari Kebun Ginseng. Bahan Pil Pengumpul Qi.', basePrice: 15, priceCurrency: 'gold' }),
+    g({ name: 'Rumput Pembersih Sumsum', rank: 'Epic', category: 'herb', tier: 5, description: 'Herbal perombak tulang. Bahan utama Pil Penempa Tulang.', basePrice: 35, priceCurrency: 'gold' }),
+    g({ name: 'Teratai Roh Langit', rank: 'Legendary', category: 'herb', tier: 7, description: 'Bunga teratai penyerap Qi langit. Bahan fondasi kultivasi tinggi.', basePrice: 8, priceCurrency: 'jade' }),
     g({ name: 'Bunga Bulan', rank: 'Rare', category: 'herb', tier: 3, description: 'Mekar di malam, serap Yin.', basePrice: 12, priceCurrency: 'gold' }),
-    g({ name: 'Akar Naga', rank: 'Legendary', category: 'herb', tier: 7, description: 'Akar penyerap Qi bumi.', basePrice: 10, priceCurrency: 'jade' }),
+    g({ name: 'Akar Naga', rank: 'Legendary', category: 'herb', tier: 7, description: 'Akar legendaris penyerap Qi bumi. Bahan alkimia tingkat dewa.', basePrice: 10, priceCurrency: 'jade' }),
     g({ name: 'Daun Longevity', rank: 'Epic', category: 'herb', tier: 5, description: 'Memperpanjang umur sedikit.', basePrice: 50, priceCurrency: 'gold' }),
     g({ name: 'Bunga Api Surgawi', rank: 'Epic', category: 'herb', tier: 5, description: 'Bunga elemen api.', basePrice: 45, priceCurrency: 'gold' }),
     g({ name: 'Rumput Es Abadi', rank: 'Epic', category: 'herb', tier: 5, description: 'Rumput elemen es.', basePrice: 45, priceCurrency: 'gold' }),
-    g({ name: 'Darah Spirit Beast', rank: 'Rare', category: 'material', tier: 3, description: 'Tinta talisman & baja darah.', basePrice: 12, priceCurrency: 'gold' }),
-    g({ name: 'Kepompong Ulat Salju', rank: 'Epic', category: 'material', tier: 5, description: 'Benang sutra abadi.', basePrice: 12, priceCurrency: 'gold' }),
+    g({ name: 'Darah Spirit Beast', rank: 'Rare', category: 'material', tier: 3, description: 'Darah beast berenergi. Tinta talisman & bahan Baja Darah.', basePrice: 12, priceCurrency: 'gold' }),
+    g({ name: 'Kepompong Ulat Salju', rank: 'Epic', category: 'material', tier: 5, description: 'Kepompong dari Peternakan Ulat Salju. Berisi benang Sutra Ulat Salju.', basePrice: 12, priceCurrency: 'gold' }),
     g({ name: 'Tanduk Unicorn Muda', rank: 'Epic', category: 'material', tier: 5, description: 'Tanduk penyucian.', basePrice: 60, priceCurrency: 'gold' }),
     g({ name: 'Sisik Naga Muda', rank: 'Legendary', category: 'material', tier: 7, description: 'Sisik naga tingkat rendah.', basePrice: 5, priceCurrency: 'jade' }),
     g({ name: 'Hati Phoenix', rank: 'Legendary', category: 'material', tier: 7, description: 'Hati burung api.', basePrice: 8, priceCurrency: 'jade' }),
@@ -262,42 +262,42 @@ function buildAllItems(guildId) {
 
   // PROCESSED
   const processed = [
-    g({ name: 'Batu Bata', rank: 'Common', category: 'material', tier: 1, description: 'Tanah liat bakar.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Genteng Keramik', rank: 'Uncommon', category: 'material', tier: 2, description: 'Genteng atap kokoh.', basePrice: 25, priceCurrency: 'silver' }),
-    g({ name: 'Papan Kayu', rank: 'Common', category: 'material', tier: 1, description: 'Kayu dihaluskan.', basePrice: 6, priceCurrency: 'silver' }),
-    g({ name: 'Balok Batu', rank: 'Common', category: 'material', tier: 1, description: 'Batu dipahat.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Kaca Kusam', rank: 'Common', category: 'material', tier: 1, description: 'Kaca lebur pasir.', basePrice: 20, priceCurrency: 'silver' }),
-    g({ name: 'Semen Mentah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Campuran kapur.', basePrice: 40, priceCurrency: 'silver' }),
-    g({ name: 'Tepung Terigu', rank: 'Common', category: 'material', tier: 1, description: 'Gandum digiling.', basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Beras Putih', rank: 'Common', category: 'material', tier: 1, description: 'Padi ditumbuk.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Batu Bata', rank: 'Common', category: 'material', tier: 1, description: 'Tanah liat yang dibakar di tungku. Bahan bangunan paling dasar untuk hampir semua bangunan.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Genteng Keramik', rank: 'Uncommon', category: 'material', tier: 2, description: 'Atap dari tanah liat merah. Melindungi bangunan dari hujan & api.', basePrice: 25, priceCurrency: 'silver' }),
+    g({ name: 'Papan Kayu', rank: 'Common', category: 'material', tier: 1, description: 'Kayu mentah yang dipotong rapi di bengkel. Rangka dinding, lantai, dan perabotan.', basePrice: 6, priceCurrency: 'silver' }),
+    g({ name: 'Balok Batu', rank: 'Common', category: 'material', tier: 1, description: 'Batu kasar yang dipahat. Pondasi & dinding bangunan kokoh.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Kaca Kusam', rank: 'Common', category: 'material', tier: 1, description: 'Pasir putih yang dilebur. Jendela, botol, dan bahan lensa dasar.', basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Semen Mentah', rank: 'Uncommon', category: 'material', tier: 2, description: 'Campuran kapur + tanah liat. Perekat bangunan tingkat kota.', basePrice: 40, priceCurrency: 'silver' }),
+    g({ name: 'Tepung Terigu', rank: 'Common', category: 'material', tier: 1, description: 'Gandum yang digiling di Kincir Air. Bahan roti & kue.', basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Beras Putih', rank: 'Common', category: 'material', tier: 1, description: 'Padi yang ditumbuk. Dimasak menjadi Nasi Putih.', basePrice: 8, priceCurrency: 'silver' }),
     g({ name: 'Tepung Jagung', rank: 'Common', category: 'material', tier: 1, description: 'Jagung digiling.', basePrice: 7, priceCurrency: 'silver' }),
     g({ name: 'Tahu', rank: 'Common', category: 'consume', tier: 1, description: 'Olahan kedelai.', basePrice: 10, priceCurrency: 'silver', effect: 'Memulihkan 12 Hunger' }),
-    g({ name: 'Kain Katun', rank: 'Common', category: 'material', tier: 1, description: 'Kain tenun kapas.', basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Kain Katun', rank: 'Common', category: 'material', tier: 1, description: 'Hasil tenun benang. Pakaian desa, tikar, dan bahan craft kain.', basePrice: 15, priceCurrency: 'silver' }),
     g({ name: 'Benang Wol', rank: 'Common', category: 'material', tier: 1, description: 'Wol dipintal.', basePrice: 12, priceCurrency: 'silver' }),
     g({ name: 'Kain Wol', rank: 'Uncommon', category: 'material', tier: 2, description: 'Kain wol hangat.', basePrice: 30, priceCurrency: 'silver' }),
-    g({ name: 'Kulit Samak', rank: 'Uncommon', category: 'material', tier: 2, description: 'Kulit disamak.', basePrice: 20, priceCurrency: 'silver' }),
-    g({ name: 'Keju', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Olahan susu.', basePrice: 25, priceCurrency: 'silver', effect: 'Memulihkan 25 Hunger' }),
-    g({ name: 'Ikan Asin', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Ikan diawetkan.', basePrice: 18, priceCurrency: 'silver', effect: 'Memulihkan 22 Hunger' }),
-    g({ name: 'Anggur Merah (Wine)', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Fermentasi anggur.', basePrice: 40, priceCurrency: 'silver' }),
-    g({ name: 'Arak Beras (Sake)', rank: 'Rare', category: 'consume', tier: 3, description: 'Minuman murim.', basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Kulit Samak', rank: 'Uncommon', category: 'material', tier: 2, description: 'Kulit mentah yang disamak. Bahan armor ringan, tas, dan sepatu.', basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Keju', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Susu yang difermentasi. Makanan tahan lama & jual di pasar.', basePrice: 25, priceCurrency: 'silver', effect: 'Memulihkan 25 Hunger' }),
+    g({ name: 'Ikan Asin', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Ikan yang diasinkan. Tahan lama untuk perjalanan & jual.', basePrice: 18, priceCurrency: 'silver', effect: 'Memulihkan 22 Hunger' }),
+    g({ name: 'Anggur Merah (Wine)', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Hasil fermentasi anggur. Minuman kedai & bahan barter.', basePrice: 40, priceCurrency: 'silver' }),
+    g({ name: 'Arak Beras (Sake)', rank: 'Rare', category: 'consume', tier: 3, description: 'Hasil fermentasi beras. Minuman murim & ritual.', basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Teh Hijau', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Teh kualitas baik.', basePrice: 20, priceCurrency: 'silver' }),
     g({ name: 'Madu Murni', rank: 'Uncommon', category: 'consume', tier: 2, description: 'Madu disaring.', basePrice: 25, priceCurrency: 'silver' }),
-    g({ name: 'Batangan Tembaga', rank: 'Common', category: 'material', tier: 1, description: 'Tembaga dilebur.', basePrice: 20, priceCurrency: 'silver' }),
-    g({ name: 'Batangan Timah', rank: 'Common', category: 'material', tier: 1, description: 'Timah murni.', basePrice: 20, priceCurrency: 'silver' }),
-    g({ name: 'Perunggu', rank: 'Uncommon', category: 'material', tier: 2, description: 'Paduan tembaga+timah.', basePrice: 50, priceCurrency: 'silver' }),
-    g({ name: 'Batangan Besi', rank: 'Uncommon', category: 'material', tier: 2, description: 'Besi dilebur.', basePrice: 40, priceCurrency: 'silver' }),
-    g({ name: 'Baja Keras', rank: 'Rare', category: 'material', tier: 3, description: 'Besi ditempa berulang.', basePrice: 2, priceCurrency: 'gold' }),
-    g({ name: 'Batangan Emas', rank: 'Rare', category: 'material', tier: 3, description: 'Emas murni.', basePrice: 3, priceCurrency: 'gold' }),
+    g({ name: 'Batangan Tembaga', rank: 'Common', category: 'material', tier: 1, description: 'Tembaga murni hasil lebur. Bahan perunggu, kawat, dan kerajinan.', basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Batangan Timah', rank: 'Common', category: 'material', tier: 1, description: 'Timah murni hasil lebur. Dipadu tembaga menjadi Perunggu.', basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Perunggu', rank: 'Uncommon', category: 'material', tier: 2, description: 'Paduan tembaga + timah. Senjata & alat era perunggu.', basePrice: 50, priceCurrency: 'silver' }),
+    g({ name: 'Batangan Besi', rank: 'Uncommon', category: 'material', tier: 2, description: 'Besi lebur dari bijih. Bahan tool besi, baja, dan senjata desa.', basePrice: 40, priceCurrency: 'silver' }),
+    g({ name: 'Baja Keras', rank: 'Rare', category: 'material', tier: 3, description: 'Besi yang ditempa berulang. Bahan senjata murim & rangka mesin.', basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Batangan Emas', rank: 'Rare', category: 'material', tier: 3, description: 'Emas kemurnian tinggi. Mata uang barter tingkat tinggi & ukiran mewah.', basePrice: 3, priceCurrency: 'gold' }),
     g({ name: 'Batangan Perak', rank: 'Uncommon', category: 'material', tier: 2, description: 'Perak murni.', basePrice: 80, priceCurrency: 'silver' }),
     g({ name: 'Kuningan', rank: 'Uncommon', category: 'material', tier: 2, description: 'Paduan tembaga+seng.', basePrice: 45, priceCurrency: 'silver' }),
-    g({ name: 'Baja Hitam Mistis', rank: 'Epic', category: 'material', tier: 5, description: 'Logam senjata roh.', basePrice: 60, priceCurrency: 'gold' }),
-    g({ name: 'Batangan Besi Dingin', rank: 'Epic', category: 'material', tier: 5, description: 'Besi dingin dilebur.', basePrice: 150, priceCurrency: 'gold' }),
-    g({ name: 'Baja Darah (Blood Steel)', rank: 'Epic', category: 'material', tier: 5, description: 'Direndam darah beast.', basePrice: 180, priceCurrency: 'gold' }),
+    g({ name: 'Baja Hitam Mistis', rank: 'Epic', category: 'material', tier: 5, description: 'Baja + batu meteor. Bahan senjata gelap & bangunan legend.', basePrice: 60, priceCurrency: 'gold' }),
+    g({ name: 'Batangan Besi Dingin', rank: 'Epic', category: 'material', tier: 5, description: 'Besi dingin murni. Senjata aura es & penahan panas.', basePrice: 150, priceCurrency: 'gold' }),
+    g({ name: 'Baja Darah (Blood Steel)', rank: 'Epic', category: 'material', tier: 5, description: 'Baja hitam + darah beast. Senjata menghisap vitalitas.', basePrice: 180, priceCurrency: 'gold' }),
     g({ name: 'Batangan Mithril', rank: 'Epic', category: 'material', tier: 5, description: 'Mithril murni.', basePrice: 200, priceCurrency: 'gold' }),
-    g({ name: 'Sutra Ulat Salju', rank: 'Epic', category: 'material', tier: 5, description: 'Kain sekuat baja.', basePrice: 100, priceCurrency: 'gold' }),
-    g({ name: 'Jimat Giok Roh', rank: 'Legendary', category: 'material', tier: 7, description: 'Media array tertinggi.', basePrice: 6, priceCurrency: 'jade' }),
+    g({ name: 'Sutra Ulat Salju', rank: 'Epic', category: 'material', tier: 5, description: 'Benang dari kepompong ulat salju. Kain mewah & bahan jubah kultivator.', basePrice: 100, priceCurrency: 'gold' }),
+    g({ name: 'Jimat Giok Roh', rank: 'Legendary', category: 'material', tier: 7, description: 'Giok yang diukir formasi. Menampung Qi & proteksi singkat.', basePrice: 6, priceCurrency: 'jade' }),
     g({ name: 'Kertas Jimat', rank: 'Rare', category: 'material', tier: 3, description: 'Kertas roh.', basePrice: 20, priceCurrency: 'gold' }),
-    g({ name: 'Batu Roh Utuh', rank: 'Legendary', category: 'material', tier: 7, description: 'Batu roh dipadatkan.', basePrice: 3, priceCurrency: 'jade' }),
+    g({ name: 'Batu Roh Utuh', rank: 'Legendary', category: 'material', tier: 7, description: '100 pecahan batu roh yang dipadatkan. Mata uang & bahan ritual tinggi.', basePrice: 3, priceCurrency: 'jade' }),
     g({ name: 'Benang Jiwa', rank: 'Legendary', category: 'material', tier: 7, description: 'Benang dari kayu jiwa.', basePrice: 4, priceCurrency: 'jade' }),
     g({ name: 'Pelat Star Iron', rank: 'Legendary', category: 'material', tier: 7, description: 'Pelat besi bintang.', basePrice: 8, priceCurrency: 'jade' }),
   ];
@@ -307,9 +307,9 @@ function buildAllItems(guildId) {
   const pills = [
     g({ name: 'Pil Pemulih Luka Ringan', rank: 'Uncommon', category: 'pill', tier: 2, description: 'Menutup luka luar.', basePrice: 50, priceCurrency: 'silver' }),
     g({ name: 'Pil Pemulih Luka Berat', rank: 'Rare', category: 'pill', tier: 3, description: 'Menyembuhkan luka dalam.', basePrice: 3, priceCurrency: 'gold' }),
-    g({ name: 'Pil Pengumpul Qi', rank: 'Epic', category: 'pill', tier: 5, description: 'Sirkulasi Qi besar.', basePrice: 3, priceCurrency: 'jade' }),
+    g({ name: 'Pil Pengumpul Qi', rank: 'Epic', category: 'pill', tier: 5, description: 'Pil dari ginseng darah + pecahan batu roh. Mempercepat kultivasi dasar.', basePrice: 3, priceCurrency: 'jade' }),
     g({ name: 'Pil Pembersih Meridian', rank: 'Epic', category: 'pill', tier: 5, description: 'Membersihkan sumbatan.', basePrice: 2, priceCurrency: 'jade' }),
-    g({ name: 'Pil Penempa Tulang', rank: 'Legendary', category: 'pill', tier: 7, description: 'Membangun ulang tulang.', basePrice: 15, priceCurrency: 'jade' }),
+    g({ name: 'Pil Penempa Tulang', rank: 'Legendary', category: 'pill', tier: 7, description: 'Pil dari rumput sumsum. Memperkuat tulang & fondasi tubuh.', basePrice: 15, priceCurrency: 'jade' }),
     g({ name: 'Pil Loncatan Realm', rank: 'Legendary', category: 'pill', tier: 7, description: 'Bantu terobosan realm (risiko).', basePrice: 25, priceCurrency: 'jade' }),
     g({ name: 'Pil Keabadian Semu', rank: 'Mythical', category: 'pill', tier: 9, description: 'Perpanjang umur signifikan.', basePrice: 1, priceCurrency: 'spirit' }),
     g({ name: 'Pil Detoksifikasi', rank: 'Rare', category: 'pill', tier: 3, description: 'Membersihkan racun.', basePrice: 4, priceCurrency: 'gold' }),
@@ -368,7 +368,7 @@ function buildAllItems(guildId) {
     const tier = rank === 'Uncommon' ? 2 : rank === 'Rare' ? 3 : 5;
     const price = rank === 'Uncommon' ? 30 : rank === 'Rare' ? 8 : 40;
     const curr = rank === 'Uncommon' ? 'silver' : 'gold';
-    items.push(g({ name: n, rank, category: 'herb', tier, description: `Herbal ${rank.toLowerCase()} dari alam.`, basePrice: price, priceCurrency: curr }));
+    items.push(g({ name: n, rank, category: 'herb', tier, description: `Herbal ${rank.toLowerCase()} liar. Bahan alkimia, pil, dan barter kultivator.`, basePrice: price, priceCurrency: curr }));
   });
   const snacks = ['Kue Beras', 'Kue Gandum', 'Ikan Bakar', 'Udang Rebus', 'Telur Dadar', 'Bubur Gandum', 'Sup Sayur', 'Daging Asap', 'Kue Jagung', 'Bubur Kedelai'];
   snacks.forEach((n, i) => {
@@ -411,10 +411,10 @@ function buildAllItems(guildId) {
     const tier = rank === "Uncommon" ? 2 : rank === "Rare" ? 3 : rank === "Epic" ? 5 : 7;
     const price = rank === "Uncommon" ? 25 + i : rank === "Rare" ? 5 + i : rank === "Epic" ? 30 + i * 2 : 2;
     const curr = rank === "Legendary" ? "jade" : rank === "Uncommon" ? "silver" : "gold";
-    items.push(g({ name: `Rumput ${h}`, rank, category: "herb", tier, description: `Herbal ${h.toLowerCase()} berkualitas ${rank}.`, basePrice: price, priceCurrency: curr }));
-    items.push(g({ name: `Daun ${h}`, rank, category: "herb", tier, description: `Daun ${h.toLowerCase()} berkualitas ${rank}.`, basePrice: price, priceCurrency: curr }));
-    items.push(g({ name: `Akar ${h}`, rank, category: "herb", tier, description: `Akar ${h.toLowerCase()} berkualitas ${rank}.`, basePrice: Math.floor(price * 1.2), priceCurrency: curr }));
-    items.push(g({ name: `Bunga ${h}`, rank, category: "herb", tier, description: `Bunga ${h.toLowerCase()} berkualitas ${rank}.`, basePrice: Math.floor(price * 1.1), priceCurrency: curr }));
+    items.push(g({ name: `Rumput ${h}`, rank, category: "herb", tier, description: `Rumput ${h.toLowerCase()} (${rank}). Dipetik di kebun/hutan — bahan pil & jimat.`, basePrice: price, priceCurrency: curr }));
+    items.push(g({ name: `Daun ${h}`, rank, category: "herb", tier, description: `Daun ${h.toLowerCase()} (${rank}). Bahan seduhan, pil, atau pakan beast.`, basePrice: price, priceCurrency: curr }));
+    items.push(g({ name: `Akar ${h}`, rank, category: "herb", tier, description: `Akar ${h.toLowerCase()} (${rank}). Bagian terkuat untuk suling pil.`, basePrice: Math.floor(price * 1.2), priceCurrency: curr }));
+    items.push(g({ name: `Bunga ${h}`, rank, category: "herb", tier, description: `Bunga ${h.toLowerCase()} (${rank}). Aroma & esensi untuk jimat dan parfum kultivasi.`, basePrice: Math.floor(price * 1.1), priceCurrency: curr }));
   });
 
   // More processed
@@ -448,7 +448,7 @@ function buildAllItems(guildId) {
     wMats.forEach(wm => {
       const name = `${wt} ${wm.m}`;
       if (items.some(it => it.name === name)) return;
-      items.push(g({ name, rank: wm.rank, category: "weapon", tier: wm.tier, description: `${wt} dari ${wm.m}.`, basePrice: wm.price, priceCurrency: wm.curr }));
+      items.push(g({ name, rank: wm.rank, category: "weapon", tier: wm.tier, description: `${wt} tempaan ${wm.m}. Senjata tempur — craft di bengkel/paviliun senjata.`, basePrice: wm.price, priceCurrency: wm.curr }));
     });
   });
 
@@ -468,7 +468,7 @@ function buildAllItems(guildId) {
     cMats.forEach(cm => {
       const name = `${ct} ${cm.m}`;
       if (items.some(it => it.name === name)) return;
-      items.push(g({ name, rank: cm.rank, category: "cloth", tier: cm.tier, description: `${ct} dari ${cm.m}.`, basePrice: cm.price, priceCurrency: cm.curr }));
+      items.push(g({ name, rank: cm.rank, category: "cloth", tier: cm.tier, description: `${ct} berbahan ${cm.m}. Perlengkapan tubuh — craft di penjahit/tempa.`, basePrice: cm.price, priceCurrency: cm.curr }));
     });
   });
 
@@ -479,8 +479,8 @@ function buildAllItems(guildId) {
     const tier = rank === "Uncommon" ? 2 : rank === "Rare" ? 3 : rank === "Epic" ? 5 : 7;
     const price = rank === "Uncommon" ? 40 : rank === "Rare" ? 3 : rank === "Epic" ? 2 : 10;
     const curr = rank === "Uncommon" ? "silver" : rank === "Rare" ? "gold" : "jade";
-    items.push(g({ name: `Pil ${pe} Dasar`, rank, category: "pill", tier, description: `Pil ${pe.toLowerCase()} tingkat dasar.`, basePrice: price, priceCurrency: curr }));
-    items.push(g({ name: `Pil ${pe} Lanjutan`, rank: rank === "Legendary" ? "Mythical" : rank, category: "pill", tier: Math.min(tier + 2, 9), description: `Pil ${pe.toLowerCase()} tingkat lanjut.`, basePrice: price * 3, priceCurrency: curr === "silver" ? "gold" : curr }));
+    items.push(g({ name: `Pil ${pe} Dasar`, rank, category: "pill", tier, description: `Pil ${pe.toLowerCase()} tingkat dasar. Suling di kawah alkimia — bantu kultivasi & recovery.`, basePrice: price, priceCurrency: curr }));
+    items.push(g({ name: `Pil ${pe} Lanjutan`, rank: rank === "Legendary" ? "Mythical" : rank, category: "pill", tier: Math.min(tier + 2, 9), description: `Pil ${pe.toLowerCase()} tingkat lanjut. Efek lebih kuat; butuh bahan herbal & batu roh.`, basePrice: price * 3, priceCurrency: curr === "silver" ? "gold" : curr }));
   });
 
   // More artifacts & accessories
@@ -491,7 +491,7 @@ function buildAllItems(guildId) {
       const tier = j === 0 ? 3 : j === 1 ? 5 : j === 2 ? 7 : 9;
       const price = j === 0 ? 8 : j === 1 ? 2 : j === 2 ? 8 : 1;
       const curr = j === 0 ? "gold" : j < 3 ? "jade" : "spirit";
-      items.push(g({ name: `${an} ${lv}`, rank, category: j < 2 ? "accessories" : "artifact", tier, description: `${an} tingkat ${lv.toLowerCase()}.`, basePrice: price, priceCurrency: curr }));
+      items.push(g({ name: `${an} ${lv}`, rank, category: j < 2 ? "accessories" : "artifact", tier, description: `${an} tingkat ${lv.toLowerCase()}. Artefak/aksesori — craft atau jarang drop.`, basePrice: price, priceCurrency: curr }));
     });
   });
 
@@ -503,7 +503,7 @@ function buildAllItems(guildId) {
       const tier = j + 1;
       const price = j === 0 ? 12 : j === 1 ? 30 : j === 2 ? 2 : 20;
       const curr = j < 2 ? "silver" : j === 2 ? "gold" : "gold";
-      items.push(g({ name: `${f} ${q}`, rank, category: "consume", tier, description: `${f} kualitas ${q.toLowerCase()}.`, basePrice: price, priceCurrency: curr, effect: "Memulihkan Hunger" }));
+      items.push(g({ name: `${f} ${q}`, rank, category: "consume", tier, description: `${f} ${q.toLowerCase()}. Olahan dapur/kedai — nilai jual naik seiring kualitas.`, basePrice: price, priceCurrency: curr, effect: "Memulihkan Hunger" }));
     });
   });
 
@@ -516,7 +516,7 @@ function buildAllItems(guildId) {
       const tier = rank === "Rare" ? 3 : rank === "Epic" ? 5 : 7;
       const price = rank === "Rare" ? 5 + ei : rank === "Epic" ? 25 + ei * 2 : 3;
       const curr = rank === "Legendary" ? "jade" : "gold";
-      items.push(g({ name: `${pref} ${el}`, rank, category: "material", tier, description: `${pref} elemen ${el}.`, basePrice: price, priceCurrency: curr }));
+      items.push(g({ name: `${pref} ${el}`, rank, category: "material", tier, description: `${pref} bermuatan elemen ${el}. Bahan formasi, senjata elemen, dan array.`, basePrice: price, priceCurrency: curr }));
     });
   });
   // More tools
@@ -530,7 +530,7 @@ function buildAllItems(guildId) {
       const tier = tqi < 1 ? 1 : tqi < 2 ? 2 : tqi < 3 ? 3 : tqi < 4 ? 5 : 7;
       const price = tqi < 1 ? 40 : tqi < 2 ? 2 : tqi < 3 ? 8 : tqi < 4 ? 1 : 4;
       const curr = tqi < 1 ? "silver" : tqi < 3 ? "gold" : "jade";
-      items.push(g({ name, rank, category: "consume", tier, description: `${ta} kualitas ${tq}.`, basePrice: price, priceCurrency: curr }));
+      items.push(g({ name, rank, category: "consume", tier, description: `${ta} mutu ${tq}. Tool kerja — makin tinggi mutu, makin efisien di asset terkait.`, basePrice: price, priceCurrency: curr }));
     });
   });
 
@@ -579,24 +579,24 @@ function buildAllItems(guildId) {
 
   // --- Industrial Materials & Components ---
   const industrial = [
-    g({ name: "Batu Bara Berkualitas", rank: "Uncommon", category: "material", tier: 2, description: "Batu bara padat untuk mesin uap.", basePrice: 12, priceCurrency: "silver" }),
-    g({ name: "Minyak Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Minyak bumi dasar industri.", basePrice: 20, priceCurrency: "silver" }),
-    g({ name: "Minyak Olahan", rank: "Rare", category: "material", tier: 3, description: "Minyak hasil penyulingan.", basePrice: 3, priceCurrency: "gold" }),
-    g({ name: "Karet Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Getah pohon karet.", basePrice: 15, priceCurrency: "silver" }),
-    g({ name: "Karet Olahan", rank: "Rare", category: "material", tier: 3, description: "Karet siap pakai.", basePrice: 2, priceCurrency: "gold" }),
-    g({ name: "Kawat Tembaga", rank: "Uncommon", category: "material", tier: 2, description: "Kawat konduktor dasar.", basePrice: 30, priceCurrency: "silver" }),
-    g({ name: "Kawat Baja", rank: "Rare", category: "material", tier: 3, description: "Kawat baja kuat.", basePrice: 2, priceCurrency: "gold" }),
-    g({ name: "Roda Gigi Besi", rank: "Uncommon", category: "material", tier: 2, description: "Komponen mesin dasar.", basePrice: 40, priceCurrency: "silver" }),
-    g({ name: "Roda Gigi Baja", rank: "Rare", category: "material", tier: 3, description: "Komponen mesin presisi.", basePrice: 3, priceCurrency: "gold" }),
-    g({ name: "Pegas Baja", rank: "Rare", category: "material", tier: 3, description: "Pegas untuk mekanisme.", basePrice: 2, priceCurrency: "gold" }),
-    g({ name: "Pelat Baja Tebal", rank: "Rare", category: "material", tier: 3, description: "Pelat untuk rangka mesin & kapal.", basePrice: 4, priceCurrency: "gold" }),
-    g({ name: "Baut & Mur", rank: "Common", category: "material", tier: 1, description: "Pengikat mesin.", basePrice: 8, priceCurrency: "silver" }),
+    g({ name: "Batu Bara Berkualitas", rank: "Uncommon", category: "material", tier: 2, description: "Batu bara padat untuk mesin uap & peleburan industri.", basePrice: 12, priceCurrency: "silver" }),
+    g({ name: "Minyak Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Minyak dari sumur dangkal. Disuling menjadi Minyak Olahan.", basePrice: 20, priceCurrency: "silver" }),
+    g({ name: "Minyak Olahan", rank: "Rare", category: "material", tier: 3, description: "Hasil suling minyak mentah. Bahan bakar & pelumas mesin.", basePrice: 3, priceCurrency: "gold" }),
+    g({ name: "Karet Mentah", rank: "Uncommon", category: "material", tier: 2, description: "Getah kebun karet. Diolah menjadi Karet Olahan.", basePrice: 15, priceCurrency: "silver" }),
+    g({ name: "Karet Olahan", rank: "Rare", category: "material", tier: 3, description: "Karet siap pakai. Roda, seal, dan komponen mesin.", basePrice: 2, priceCurrency: "gold" }),
+    g({ name: "Kawat Tembaga", rank: "Uncommon", category: "material", tier: 2, description: "Tembaga ditarik halus. Konduktor dasar & komponen chip Qi.", basePrice: 30, priceCurrency: "silver" }),
+    g({ name: "Kawat Baja", rank: "Rare", category: "material", tier: 3, description: "Kawat baja kuat. Kabel struktur & pegas.", basePrice: 2, priceCurrency: "gold" }),
+    g({ name: "Roda Gigi Besi", rank: "Uncommon", category: "material", tier: 2, description: "Komponen mesin dasar dari besi. Rangka transmisi uap.", basePrice: 40, priceCurrency: "silver" }),
+    g({ name: "Roda Gigi Baja", rank: "Rare", category: "material", tier: 3, description: "Roda gigi presisi. Jantung Inti Mesin Uap.", basePrice: 3, priceCurrency: "gold" }),
+    g({ name: "Pegas Baja", rank: "Rare", category: "material", tier: 3, description: "Pegas mekanisme. Senjata getar & mesin otomatis.", basePrice: 2, priceCurrency: "gold" }),
+    g({ name: "Pelat Baja Tebal", rank: "Rare", category: "material", tier: 3, description: "Pelat untuk rangka kapal, pabrik, dan armor berat.", basePrice: 4, priceCurrency: "gold" }),
+    g({ name: "Baut & Mur", rank: "Common", category: "material", tier: 1, description: "Pengikat mesin. Selalu dibutuhkan perakitan industri.", basePrice: 8, priceCurrency: "silver" }),
     g({ name: "Uap Terkondensasi", rank: "Uncommon", category: "material", tier: 2, description: "Energi uap dalam bentuk padat sementara.", basePrice: 25, priceCurrency: "silver" }),
-    g({ name: "Inti Mesin Uap", rank: "Rare", category: "material", tier: 3, description: "Jantung mesin uap murim.", basePrice: 8, priceCurrency: "gold" }),
-    g({ name: "Katalis Kimia Dasar", rank: "Rare", category: "material", tier: 3, description: "Mempercepat reaksi kimia.", basePrice: 5, priceCurrency: "gold" }),
-    g({ name: "Asam Industri", rank: "Rare", category: "material", tier: 3, description: "Asam untuk pengolahan logam.", basePrice: 4, priceCurrency: "gold" }),
-    g({ name: "Kaca Optik", rank: "Rare", category: "material", tier: 3, description: "Kaca presisi untuk lensa.", basePrice: 6, priceCurrency: "gold" }),
-    g({ name: "Lensa Presisi", rank: "Epic", category: "material", tier: 5, description: "Lensa untuk alat ukur & senjata.", basePrice: 40, priceCurrency: "gold" }),
+    g({ name: "Inti Mesin Uap", rank: "Rare", category: "material", tier: 3, description: "Jantung mesin uap murim. Merakit senapan uap & pembangkit.", basePrice: 8, priceCurrency: "gold" }),
+    g({ name: "Katalis Kimia Dasar", rank: "Rare", category: "material", tier: 3, description: "Mempercepat reaksi di laboratorium kimia murim.", basePrice: 5, priceCurrency: "gold" }),
+    g({ name: "Asam Industri", rank: "Rare", category: "material", tier: 3, description: "Asam pengolahan logam & pemurnian bijih.", basePrice: 4, priceCurrency: "gold" }),
+    g({ name: "Kaca Optik", rank: "Rare", category: "material", tier: 3, description: "Kaca jernih presisi. Bahan Lensa Presisi.", basePrice: 6, priceCurrency: "gold" }),
+    g({ name: "Lensa Presisi", rank: "Epic", category: "material", tier: 5, description: "Lensa untuk scanner, senjata, dan alat ukur aura.", basePrice: 40, priceCurrency: "gold" }),
   ];
   items.push(...industrial);
 
@@ -668,7 +668,7 @@ function buildAllItems(guildId) {
         const curr = rank === "Legendary" ? "jade" : rank === "Uncommon" ? "silver" : "gold";
         const name = `${mt} ${el} ${reg}`;
         if (items.some(it => it.name === name)) return;
-        items.push(g({ name, rank, category: "material", tier, description: `${mt} elemen ${el} dari ${reg}.`, basePrice: price, priceCurrency: curr }));
+        items.push(g({ name, rank, category: "material", tier, description: `${mt} elemen ${el} khas ${reg}. Material regional untuk craft & barter antar pemain.`, basePrice: price, priceCurrency: curr }));
       });
     });
   });
@@ -684,7 +684,7 @@ function buildAllItems(guildId) {
       const curr = rank === "Uncommon" ? "silver" : "gold";
       const name = `${hp} ${reg}`;
       if (items.some(it => it.name === name)) return;
-      items.push(g({ name, rank, category: "herb", tier, description: `${hp} khas ${reg}.`, basePrice: price, priceCurrency: curr }));
+      items.push(g({ name, rank, category: "herb", tier, description: `${hp} khas wilayah ${reg}. Herbal regional — dicari untuk resep lokal & barter.`, basePrice: price, priceCurrency: curr }));
     });
   });
 
@@ -699,7 +699,7 @@ function buildAllItems(guildId) {
       const curr = fqi < 2 ? "silver" : fqi < 4 ? "gold" : "jade";
       const name = `${fb} ${fq}`;
       if (items.some(it => it.name === name)) return;
-      items.push(g({ name, rank, category: "consume", tier, description: `${fb} kualitas ${fq.toLowerCase()}.`, basePrice: price, priceCurrency: curr, effect: "Memulihkan Hunger" }));
+      items.push(g({ name, rank, category: "consume", tier, description: `${fb} ${fq.toLowerCase()}. Produk olahan — dijual di player shop atau dipakai sendiri.`, basePrice: price, priceCurrency: curr, effect: "Memulihkan Hunger" }));
     });
   });
 
@@ -714,7 +714,7 @@ function buildAllItems(guildId) {
       const curr = pli === 0 ? "silver" : pli === 1 ? "gold" : pli < 4 ? "jade" : "spirit";
       const name = `Pil ${pt} ${pl}`;
       if (items.some(it => it.name === name)) return;
-      items.push(g({ name, rank, category: "pill", tier, description: `Pil ${pt.toLowerCase()} tingkat ${pl.toLowerCase()}.`, basePrice: price, priceCurrency: curr }));
+      items.push(g({ name, rank, category: "pill", tier, description: `Pil ${pt.toLowerCase()} (${pl}). Rantai alkimia — bahan herbal + tungku/kawah sesuai rank.`, basePrice: price, priceCurrency: curr }));
     });
   });
 
@@ -730,34 +730,34 @@ function buildAllAssets(guildId) {
 
   // PRODUCTION (balanced low output + input)
   const prod = [
-    g({ name: 'Pohon Buah Liar', description: '2 Buah Liar/jam. Tanpa input.', rank: 'Common', workerOutputItemId: idOf('Buah Liar'), workerOutputItemName: 'Buah Liar', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 0, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 5, priceCurrency: 'silver' }),
-    g({ name: 'Area Buruan Primitif', description: '1 Daging Mentah/jam.', rank: 'Common', workerOutputItemId: idOf('Daging Mentah'), workerOutputItemName: 'Daging Mentah', workerOutputQuantity: 1, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Tombak Kayu'), itemName: 'Tombak Kayu', quantity: 1 }], basePrice: 10, priceCurrency: 'silver' }),
-    g({ name: 'Lahan Tanah Liat Primitif', description: '2 Tanah Liat/jam.', rank: 'Common', workerOutputItemId: idOf('Tanah Liat'), workerOutputItemName: 'Tanah Liat', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Tambang Batu Kasar Primitif', description: '2 Batu Kasar/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Kasar'), workerOutputItemName: 'Batu Kasar', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Galian Pasir Putih', description: '3 Pasir Putih/jam.', rank: 'Common', workerOutputItemId: idOf('Pasir Putih'), workerOutputItemName: 'Pasir Putih', workerOutputQuantity: 3, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
-    g({ name: 'Galian Batu Kapur', description: '2 Batu Kapur/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Kapur'), workerOutputItemName: 'Batu Kapur', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 10, priceCurrency: 'silver' }),
-    g({ name: 'Area Penebangan Kayu Dasar', description: '2 Kayu Mentah/jam. Butuh 1 Kapak Batu/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }], constructionTimeHours: 2, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 2 }], basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Pohon Buah Liar', description: 'Pohon hutan yang bisa dipanen tanpa tool mahal. Hasil: Buah Liar — barang barter & modal awal.', rank: 'Common', workerOutputItemId: idOf('Buah Liar'), workerOutputItemName: 'Buah Liar', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 0, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 5, priceCurrency: 'silver' }),
+    g({ name: 'Area Buruan Primitif', description: 'Wilayah buruan hewan kecil. Butuh Tombak Kayu. Hasil: Daging Mentah & peluang kulit.', rank: 'Common', workerOutputItemId: idOf('Daging Mentah'), workerOutputItemName: 'Daging Mentah', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Tombak Kayu'), itemName: 'Tombak Kayu', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Tombak Kayu'), itemName: 'Tombak Kayu', quantity: 1 }], basePrice: 10, priceCurrency: 'silver' }),
+    g({ name: 'Lahan Tanah Liat Primitif', description: 'Lumpur tepi sungai. Hasil: Tanah Liat → dibakar jadi Batu Bata di tungku.', rank: 'Common', workerOutputItemId: idOf('Tanah Liat'), workerOutputItemName: 'Tanah Liat', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Tambang Batu Kasar Primitif', description: 'Tebing batu dangkal. Hasil: Batu Kasar → dipahat jadi Balok Batu.', rank: 'Common', workerOutputItemId: idOf('Batu Kasar'), workerOutputItemName: 'Batu Kasar', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Galian Pasir Putih', description: 'Hamparan pasir pantai/sungai. Hasil: Pasir Putih → dilebur jadi Kaca Kusam.', rank: 'Common', workerOutputItemId: idOf('Pasir Putih'), workerOutputItemName: 'Pasir Putih', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
+    g({ name: 'Galian Batu Kapur', description: 'Bukit kapur. Hasil: Batu Kapur → bahan Semen Mentah.', rank: 'Common', workerOutputItemId: idOf('Batu Kapur'), workerOutputItemName: 'Batu Kapur', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 10, priceCurrency: 'silver' }),
+    g({ name: 'Area Penebangan Kayu Dasar', description: 'Hutan tepi desa. Hasil: 2 Kayu Mentah/jam. Input: Kapak Batu. Pintu masuk rantai kayu.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }], constructionTimeHours: 2, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 2 }], basePrice: 15, priceCurrency: 'silver' }),
     g({ name: 'Sungai Dangkal', description: '2 Ikan Air Tawar/jam. Butuh 1 Alat Pancing/jam.', rank: 'Common', workerOutputItemId: idOf('Ikan Air Tawar'), workerOutputItemName: 'Ikan Air Tawar', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Alat Pancing Kayu'), itemName: 'Alat Pancing Kayu', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Alat Pancing Kayu'), itemName: 'Alat Pancing Kayu', quantity: 1 }], basePrice: 12, priceCurrency: 'silver' }),
     g({ name: 'Sarang Lebah Liar', description: '1 Madu Liar/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Madu Liar'), workerOutputItemName: 'Madu Liar', workerOutputQuantity: 1, workerInputMaterials: [], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Pisau Tulang'), itemName: 'Pisau Tulang', quantity: 1 }], basePrice: 30, priceCurrency: 'silver' }),
-    g({ name: 'Sawah Gandum', description: '3 Gandum/jam. Butuh 1 Bibit Gandum/jam.', rank: 'Common', workerOutputItemId: idOf('Gandum'), workerOutputItemName: 'Gandum', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 5 }], basePrice: 50, priceCurrency: 'silver' }),
-    g({ name: 'Sawah Padi', description: '3 Padi Mentah/jam. Butuh 1 Bibit Padi/jam.', rank: 'Common', workerOutputItemId: idOf('Padi Mentah'), workerOutputItemName: 'Padi Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Padi'), itemName: 'Bibit Padi', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Padi'), itemName: 'Bibit Padi', quantity: 5 }], basePrice: 50, priceCurrency: 'silver' }),
-    g({ name: 'Kebun Kapas', description: '3 Kapas Mentah/jam. Butuh 1 Bibit Kapas/jam.', rank: 'Common', workerOutputItemId: idOf('Kapas Mentah'), workerOutputItemName: 'Kapas Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Kapas'), itemName: 'Bibit Kapas', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Kapas'), itemName: 'Bibit Kapas', quantity: 5 }], basePrice: 55, priceCurrency: 'silver' }),
-    g({ name: 'Kebun Jagung', description: '3 Jagung Mentah/jam. Butuh 1 Bibit Jagung/jam.', rank: 'Common', workerOutputItemId: idOf('Jagung Mentah'), workerOutputItemName: 'Jagung Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Jagung'), itemName: 'Bibit Jagung', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Jagung'), itemName: 'Bibit Jagung', quantity: 5 }], basePrice: 48, priceCurrency: 'silver' }),
-    g({ name: 'Kebun Kedelai', description: '3 Kedelai Mentah/jam. Butuh 1 Bibit Kedelai/jam.', rank: 'Common', workerOutputItemId: idOf('Kedelai Mentah'), workerOutputItemName: 'Kedelai Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Kedelai'), itemName: 'Bibit Kedelai', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Kedelai'), itemName: 'Bibit Kedelai', quantity: 5 }], basePrice: 48, priceCurrency: 'silver' }),
-    g({ name: 'Hutan Bambu', description: '3 Bambu/jam. Butuh 1 Bibit Bambu/jam.', rank: 'Common', workerOutputItemId: idOf('Bambu'), workerOutputItemName: 'Bambu', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Bambu'), itemName: 'Bibit Bambu', quantity: 1 }], constructionTimeHours: 3, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Bambu'), itemName: 'Bibit Bambu', quantity: 5 }], basePrice: 45, priceCurrency: 'silver' }),
+    g({ name: 'Sawah Gandum', description: '2 Gandum/jam. Butuh 1 Bibit Gandum/jam.', rank: 'Common', workerOutputItemId: idOf('Gandum'), workerOutputItemName: 'Gandum', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 5 }], basePrice: 50, priceCurrency: 'silver' }),
+    g({ name: 'Sawah Padi', description: '2 Padi Mentah/jam. Input: Bibit Padi. Hasil ditumbuk jadi beras.', rank: 'Common', workerOutputItemId: idOf('Padi Mentah'), workerOutputItemName: 'Padi Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Padi'), itemName: 'Bibit Padi', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Padi'), itemName: 'Bibit Padi', quantity: 5 }], basePrice: 50, priceCurrency: 'silver' }),
+    g({ name: 'Kebun Kapas', description: '2 Kapas Mentah/jam. Input: Bibit Kapas. Rantai: kapas → benang → kain.', rank: 'Common', workerOutputItemId: idOf('Kapas Mentah'), workerOutputItemName: 'Kapas Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Kapas'), itemName: 'Bibit Kapas', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Kapas'), itemName: 'Bibit Kapas', quantity: 5 }], basePrice: 55, priceCurrency: 'silver' }),
+    g({ name: 'Kebun Jagung', description: '2 Jagung Mentah/jam. Butuh 1 Bibit Jagung/jam.', rank: 'Common', workerOutputItemId: idOf('Jagung Mentah'), workerOutputItemName: 'Jagung Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Jagung'), itemName: 'Bibit Jagung', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Jagung'), itemName: 'Bibit Jagung', quantity: 5 }], basePrice: 48, priceCurrency: 'silver' }),
+    g({ name: 'Kebun Kedelai', description: '2 Kedelai Mentah/jam. Butuh 1 Bibit Kedelai/jam.', rank: 'Common', workerOutputItemId: idOf('Kedelai Mentah'), workerOutputItemName: 'Kedelai Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Kedelai'), itemName: 'Bibit Kedelai', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Kedelai'), itemName: 'Bibit Kedelai', quantity: 5 }], basePrice: 48, priceCurrency: 'silver' }),
+    g({ name: 'Hutan Bambu', description: 'Rumpun bambu. Input: Kapak. Hasil bahan bangunan ringan & alat.', rank: 'Common', workerOutputItemId: idOf('Bambu'), workerOutputItemName: 'Bambu', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Bambu'), itemName: 'Bibit Bambu', quantity: 1 }], constructionTimeHours: 3, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Bambu'), itemName: 'Bibit Bambu', quantity: 5 }], basePrice: 45, priceCurrency: 'silver' }),
     g({ name: 'Kebun Anggur', description: '2 Anggur Segar/jam. Butuh 1 Bibit Anggur/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Anggur Segar'), workerOutputItemName: 'Anggur Segar', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Anggur'), itemName: 'Bibit Anggur', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Anggur'), itemName: 'Bibit Anggur', quantity: 8 }], basePrice: 80, priceCurrency: 'silver' }),
     g({ name: 'Kebun Teh', description: '2 Daun Teh Mentah/jam. Butuh 1 Bibit Teh/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Daun Teh Mentah'), workerOutputItemName: 'Daun Teh Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Bibit Teh'), itemName: 'Bibit Teh', quantity: 1 }], constructionTimeHours: 10, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Teh'), itemName: 'Bibit Teh', quantity: 5 }], basePrice: 1, priceCurrency: 'gold' }),
-    g({ name: 'Tambak Garam', description: '4 Air Laut/jam. Butuh 1 Roti Panggang/jam.', rank: 'Common', workerOutputItemId: idOf('Air Laut'), workerOutputItemName: 'Air Laut', workerOutputQuantity: 4, workerInputMaterials: [{ itemId: idOf('Roti Panggang'), itemName: 'Roti Panggang', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }], basePrice: 60, priceCurrency: 'silver' }),
-    g({ name: 'Peternakan Ayam', description: '2 Telur Mentah/jam. Butuh 1 Pakan Ternak/jam.', rank: 'Common', workerOutputItemId: idOf('Telur Mentah'), workerOutputItemName: 'Telur Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 15 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], basePrice: 80, priceCurrency: 'silver' }),
-    g({ name: 'Peternakan Sapi', description: '1 Susu Sapi/jam. Butuh 2 Pakan Ternak/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Susu Sapi'), workerOutputItemName: 'Susu Sapi', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 2 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 30 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 20 }], basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Tambak Garam', description: '2 Air Laut/jam. Butuh 1 Roti Panggang/jam.', rank: 'Common', workerOutputItemId: idOf('Air Laut'), workerOutputItemName: 'Air Laut', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Roti Panggang'), itemName: 'Roti Panggang', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }], basePrice: 60, priceCurrency: 'silver' }),
+    g({ name: 'Peternakan Ayam', description: 'Kandang ayam. Input: Pakan Ternak. Hasil: Telur & bulu.', rank: 'Common', workerOutputItemId: idOf('Telur Mentah'), workerOutputItemName: 'Telur Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 15 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], basePrice: 80, priceCurrency: 'silver' }),
+    g({ name: 'Peternakan Sapi', description: 'Kandang sapi. Input: Pakan Ternak. Hasil: Susu (bahan keju).', rank: 'Uncommon', workerOutputItemId: idOf('Susu Sapi'), workerOutputItemName: 'Susu Sapi', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 2 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 30 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 20 }], basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Peternakan Domba', description: '1 Wol Mentah/jam. Butuh 1 Pakan Ternak/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Wol Mentah'), workerOutputItemName: 'Wol Mentah', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 1 }], constructionTimeHours: 10, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 25 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
-    g({ name: 'Area Penebangan Kayu Besi', description: '2 Kayu Mentah/jam. Butuh 1 Kapak Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }], basePrice: 70, priceCurrency: 'silver' }),
+    g({ name: 'Area Penebangan Kayu Besi', description: 'Hutan lebih dalam. Hasil: 3 Kayu Mentah/jam. Input: Kapak Besi. Upgrade jelas dari Dasar.', rank: 'Uncommon', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 10 }], basePrice: 1, priceCurrency: 'gold' }),
     g({ name: 'Hutan Pinus', description: '2 Kayu Pinus/jam. Butuh 1 Kapak Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Kayu Pinus'), workerOutputItemName: 'Kayu Pinus', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }], basePrice: 90, priceCurrency: 'silver' }),
     g({ name: 'Hutan Jati', description: '1 Kayu Jati/jam. Butuh 1 Kapak Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Kayu Jati'), workerOutputItemName: 'Kayu Jati', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 3 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 10 }], basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Tambang Batu Bara Dangkal', description: '2 Batu Bara/jam. Butuh 1 Beliung Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Bara'), workerOutputItemName: 'Batu Bara', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 10 }], basePrice: 90, priceCurrency: 'silver' }),
     g({ name: 'Tambang Bijih Besi Dangkal', description: '1 Bijih Besi/jam. Butuh 1 Beliung Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Bijih Besi'), workerOutputItemName: 'Bijih Besi', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 2 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 20 }], basePrice: 2, priceCurrency: 'gold' }),
-    g({ name: 'Tambang Tembaga', description: '2 Bijih Tembaga/jam. Butuh 1 Beliung Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Bijih Tembaga'), workerOutputItemName: 'Bijih Tembaga', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
-    g({ name: 'Tambang Timah', description: '2 Bijih Timah/jam. Butuh 1 Beliung Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Bijih Timah'), workerOutputItemName: 'Bijih Timah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
+    g({ name: 'Tambang Tembaga', description: 'Urutan tembaga. Input: Beliung Besi. Bijih → Batangan Tembaga.', rank: 'Common', workerOutputItemId: idOf('Bijih Tembaga'), workerOutputItemName: 'Bijih Tembaga', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
+    g({ name: 'Tambang Timah', description: 'Urutan timah. Input: Beliung Besi. Dipadu tembaga → Perunggu.', rank: 'Common', workerOutputItemId: idOf('Bijih Timah'), workerOutputItemName: 'Bijih Timah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
     g({ name: 'Tambang Perak', description: '1 Bijih Perak/jam. Butuh 1 Beliung Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Bijih Perak'), workerOutputItemName: 'Bijih Perak', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 16, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 2 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 25 }], basePrice: 3, priceCurrency: 'gold' }),
     g({ name: 'Tambang Emas Dangkal', description: '1 Bijih Emas/jam. Butuh 1 Beliung Baja Hitam/jam.', rank: 'Rare', workerOutputItemId: idOf('Bijih Emas'), workerOutputItemName: 'Bijih Emas', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Beliung Baja Hitam'), itemName: 'Beliung Baja Hitam', quantity: 1 }], constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Baja Hitam'), itemName: 'Beliung Baja Hitam', quantity: 1 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 10 }], basePrice: 10, priceCurrency: 'gold' }),
     g({ name: 'Hutan Kayu Ulin', description: '1 Kayu Ulin/jam. Butuh 1 Kapak Besi/jam.', rank: 'Rare', workerOutputItemId: idOf('Kayu Ulin (Ironwood)'), workerOutputItemName: 'Kayu Ulin (Ironwood)', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 3 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 5 }], basePrice: 8, priceCurrency: 'gold' }),
@@ -781,11 +781,11 @@ function buildAllAssets(guildId) {
   // CRAFTING (full chain)
   const craft = [
     g({ name: 'Tungku Tanah Liat Sederhana', description: 'Membakar bata & memasak dasar.', rank: 'Common', isCraftingStation: true, constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 20 }, { itemId: idOf('Batu Kasar'), itemName: 'Batu Kasar', quantity: 10 }], recipes: [ { recipeName: 'Bakar Batu Bata', resultItemId: idOf('Batu Bata'), resultItemName: 'Batu Bata', resultQuantity: 4, materials: [{ itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 5 }, { itemId: idOf('Kayu Bakar'), itemName: 'Kayu Bakar', quantity: 2 }] }, { recipeName: 'Panggang Daging', resultItemId: idOf('Daging Bakar'), resultItemName: 'Daging Bakar', resultQuantity: 1, materials: [{ itemId: idOf('Daging Mentah'), itemName: 'Daging Mentah', quantity: 1 }, { itemId: idOf('Kayu Bakar'), itemName: 'Kayu Bakar', quantity: 1 }] }, { recipeName: 'Buat Garam', resultItemId: idOf('Garam Kasar'), resultItemName: 'Garam Kasar', resultQuantity: 2, materials: [{ itemId: idOf('Air Laut'), itemName: 'Air Laut', quantity: 5 }] } ], basePrice: 30, priceCurrency: 'silver' }),
-    g({ name: 'Bengkel Kayu Desa', description: 'Mengolah kayu & alat primitif.', rank: 'Common', isCraftingStation: true, constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 30 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], recipes: [ { recipeName: 'Potong Papan (Batu)', resultItemId: idOf('Papan Kayu'), resultItemName: 'Papan Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 4 }, { itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }] }, { recipeName: 'Potong Papan (Besi)', resultItemId: idOf('Papan Kayu'), resultItemName: 'Papan Kayu', resultQuantity: 2, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 3 }, { itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }] }, { recipeName: 'Buat Kapak Batu', resultItemId: idOf('Kapak Batu'), resultItemName: 'Kapak Batu', resultQuantity: 1, materials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 2 }, { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1 }] }, { recipeName: 'Buat Tombak Kayu', resultItemId: idOf('Tombak Kayu'), resultItemName: 'Tombak Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 2 }, { itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }] }, { recipeName: 'Buat Alat Pancing', resultItemId: idOf('Alat Pancing Kayu'), resultItemName: 'Alat Pancing Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Bambu'), itemName: 'Bambu', quantity: 2 }, { itemId: idOf('Benang Wol'), itemName: 'Benang Wol', quantity: 1 }] } ], basePrice: 50, priceCurrency: 'silver' }),
+    g({ name: 'Bengkel Kayu Desa', description: 'Bengkel potong & rakit kayu. Resep: Papan Kayu (Kapak Batu/Besi), alat primitif.', rank: 'Common', isCraftingStation: true, constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 30 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], recipes: [ { recipeName: 'Potong Papan (Batu)', resultItemId: idOf('Papan Kayu'), resultItemName: 'Papan Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 4 }, { itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }] }, { recipeName: 'Potong Papan (Besi)', resultItemId: idOf('Papan Kayu'), resultItemName: 'Papan Kayu', resultQuantity: 2, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 3 }, { itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }] }, { recipeName: 'Buat Kapak Batu', resultItemId: idOf('Kapak Batu'), resultItemName: 'Kapak Batu', resultQuantity: 1, materials: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 2 }, { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1 }] }, { recipeName: 'Buat Tombak Kayu', resultItemId: idOf('Tombak Kayu'), resultItemName: 'Tombak Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 2 }, { itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }] }, { recipeName: 'Buat Alat Pancing', resultItemId: idOf('Alat Pancing Kayu'), resultItemName: 'Alat Pancing Kayu', resultQuantity: 1, materials: [{ itemId: idOf('Bambu'), itemName: 'Bambu', quantity: 2 }, { itemId: idOf('Benang Wol'), itemName: 'Benang Wol', quantity: 1 }] } ], basePrice: 50, priceCurrency: 'silver' }),
     g({ name: 'Penggilingan Desa', description: 'Mengolah hasil pertanian.', rank: 'Common', isCraftingStation: true, constructionTimeHours: 10, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 20 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 15 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 10 }], recipes: [ { recipeName: 'Giling Tepung', resultItemId: idOf('Tepung Terigu'), resultItemName: 'Tepung Terigu', resultQuantity: 2, materials: [{ itemId: idOf('Gandum'), itemName: 'Gandum', quantity: 3 }] }, { recipeName: 'Tumbuk Beras', resultItemId: idOf('Beras Putih'), resultItemName: 'Beras Putih', resultQuantity: 2, materials: [{ itemId: idOf('Padi Mentah'), itemName: 'Padi Mentah', quantity: 3 }] }, { recipeName: 'Giling Jagung', resultItemId: idOf('Tepung Jagung'), resultItemName: 'Tepung Jagung', resultQuantity: 2, materials: [{ itemId: idOf('Jagung Mentah'), itemName: 'Jagung Mentah', quantity: 3 }] }, { recipeName: 'Buat Roti', resultItemId: idOf('Roti Panggang'), resultItemName: 'Roti Panggang', resultQuantity: 2, materials: [{ itemId: idOf('Tepung Terigu'), itemName: 'Tepung Terigu', quantity: 2 }, { itemId: idOf('Kayu Bakar'), itemName: 'Kayu Bakar', quantity: 1 }] }, { recipeName: 'Buat Nasi', resultItemId: idOf('Nasi Putih'), resultItemName: 'Nasi Putih', resultQuantity: 2, materials: [{ itemId: idOf('Beras Putih'), itemName: 'Beras Putih', quantity: 2 }, { itemId: idOf('Air Bersih'), itemName: 'Air Bersih', quantity: 1 }] }, { recipeName: 'Buat Tahu', resultItemId: idOf('Tahu'), resultItemName: 'Tahu', resultQuantity: 2, materials: [{ itemId: idOf('Kedelai Mentah'), itemName: 'Kedelai Mentah', quantity: 3 }] } ], basePrice: 80, priceCurrency: 'silver' }),
     g({ name: 'Tempat Penenunan', description: 'Menenun kain dari serat.', rank: 'Uncommon', isCraftingStation: true, constructionTimeHours: 16, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 25 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 20 }], recipes: [ { recipeName: 'Tenun Kain Katun', resultItemId: idOf('Kain Katun'), resultItemName: 'Kain Katun', resultQuantity: 1, materials: [{ itemId: idOf('Kapas Mentah'), itemName: 'Kapas Mentah', quantity: 4 }, { itemId: idOf('Alat Tenun Sederhana'), itemName: 'Alat Tenun Sederhana', quantity: 1 }] }, { recipeName: 'Pintal Benang Wol', resultItemId: idOf('Benang Wol'), resultItemName: 'Benang Wol', resultQuantity: 2, materials: [{ itemId: idOf('Wol Mentah'), itemName: 'Wol Mentah', quantity: 3 }] }, { recipeName: 'Tenun Kain Wol', resultItemId: idOf('Kain Wol'), resultItemName: 'Kain Wol', resultQuantity: 1, materials: [{ itemId: idOf('Benang Wol'), itemName: 'Benang Wol', quantity: 4 }] } ], basePrice: 2, priceCurrency: 'gold' }),
-    g({ name: 'Tungku Peleburan Dasar', description: 'Melebur tembaga, timah, perunggu.', rank: 'Uncommon', isCraftingStation: true, constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 40 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 20 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 10 }], recipes: [ { recipeName: 'Lebur Tembaga', resultItemId: idOf('Batangan Tembaga'), resultItemName: 'Batangan Tembaga', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Tembaga'), itemName: 'Bijih Tembaga', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 1 }] }, { recipeName: 'Lebur Timah', resultItemId: idOf('Batangan Timah'), resultItemName: 'Batangan Timah', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Timah'), itemName: 'Bijih Timah', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 1 }] }, { recipeName: 'Paduan Perunggu', resultItemId: idOf('Perunggu'), resultItemName: 'Perunggu', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Tembaga'), itemName: 'Batangan Tembaga', quantity: 2 }, { itemId: idOf('Batangan Timah'), itemName: 'Batangan Timah', quantity: 1 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Buat Semen', resultItemId: idOf('Semen Mentah'), resultItemName: 'Semen Mentah', resultQuantity: 2, materials: [{ itemId: idOf('Batu Kapur'), itemName: 'Batu Kapur', quantity: 3 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 2 }] }, { recipeName: 'Lebur Kaca', resultItemId: idOf('Kaca Kusam'), resultItemName: 'Kaca Kusam', resultQuantity: 1, materials: [{ itemId: idOf('Pasir Putih'), itemName: 'Pasir Putih', quantity: 5 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] } ], basePrice: 3, priceCurrency: 'gold' }),
-    g({ name: 'Tungku Peleburan Lanjutan', description: 'Melebur besi, baja, emas, perak.', rank: 'Uncommon', isCraftingStation: true, constructionTimeHours: 36, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 80 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 40 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 20 }], recipes: [ { recipeName: 'Lebur Besi', resultItemId: idOf('Batangan Besi'), resultItemName: 'Batangan Besi', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Besi'), itemName: 'Bijih Besi', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Tempa Baja Keras', resultItemId: idOf('Baja Keras'), resultItemName: 'Baja Keras', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 3 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Lebur Emas', resultItemId: idOf('Batangan Emas'), resultItemName: 'Batangan Emas', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Emas'), itemName: 'Bijih Emas', quantity: 5 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 3 }] }, { recipeName: 'Lebur Perak', resultItemId: idOf('Batangan Perak'), resultItemName: 'Batangan Perak', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Perak'), itemName: 'Bijih Perak', quantity: 4 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Tempa Cangkul Besi', resultItemId: idOf('Cangkul Besi'), resultItemName: 'Cangkul Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Kapak Besi', resultItemId: idOf('Kapak Besi'), resultItemName: 'Kapak Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Beliung Besi', resultItemId: idOf('Beliung Besi'), resultItemName: 'Beliung Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Pisau Jagal', resultItemId: idOf('Pisau Jagal'), resultItemName: 'Pisau Jagal', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 1 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Palu Tempa', resultItemId: idOf('Palu Tempa'), resultItemName: 'Palu Tempa', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1 }, { itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }] }, { recipeName: 'Samak Kulit', resultItemId: idOf('Kulit Samak'), resultItemName: 'Kulit Samak', resultQuantity: 1, materials: [{ itemId: idOf('Kulit Mentah'), itemName: 'Kulit Mentah', quantity: 2 }, { itemId: idOf('Garam Kasar'), itemName: 'Garam Kasar', quantity: 1 }] } ], basePrice: 8, priceCurrency: 'gold' }),
+    g({ name: 'Tungku Peleburan Dasar', description: 'Tungku lebur tembaga, timah, perunggu, kaca, semen. Pintu masuk metalurgi.', rank: 'Uncommon', isCraftingStation: true, constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 40 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 20 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 10 }], recipes: [ { recipeName: 'Lebur Tembaga', resultItemId: idOf('Batangan Tembaga'), resultItemName: 'Batangan Tembaga', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Tembaga'), itemName: 'Bijih Tembaga', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 1 }] }, { recipeName: 'Lebur Timah', resultItemId: idOf('Batangan Timah'), resultItemName: 'Batangan Timah', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Timah'), itemName: 'Bijih Timah', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 1 }] }, { recipeName: 'Paduan Perunggu', resultItemId: idOf('Perunggu'), resultItemName: 'Perunggu', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Tembaga'), itemName: 'Batangan Tembaga', quantity: 2 }, { itemId: idOf('Batangan Timah'), itemName: 'Batangan Timah', quantity: 1 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Buat Semen', resultItemId: idOf('Semen Mentah'), resultItemName: 'Semen Mentah', resultQuantity: 2, materials: [{ itemId: idOf('Batu Kapur'), itemName: 'Batu Kapur', quantity: 3 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 2 }] }, { recipeName: 'Lebur Kaca', resultItemId: idOf('Kaca Kusam'), resultItemName: 'Kaca Kusam', resultQuantity: 1, materials: [{ itemId: idOf('Pasir Putih'), itemName: 'Pasir Putih', quantity: 5 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] } ], basePrice: 3, priceCurrency: 'gold' }),
+    g({ name: 'Tungku Peleburan Lanjutan', description: 'Tungku baja & tool besi. Resep: Batangan Besi, Baja Keras, Cangkul/Kapak/Beliung Besi, Palu Tempa.', rank: 'Uncommon', isCraftingStation: true, constructionTimeHours: 36, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 80 }, { itemId: idOf('Tanah Liat'), itemName: 'Tanah Liat', quantity: 40 }, { itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 20 }], recipes: [ { recipeName: 'Lebur Besi', resultItemId: idOf('Batangan Besi'), resultItemName: 'Batangan Besi', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Besi'), itemName: 'Bijih Besi', quantity: 3 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Tempa Baja Keras', resultItemId: idOf('Baja Keras'), resultItemName: 'Baja Keras', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 3 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Lebur Emas', resultItemId: idOf('Batangan Emas'), resultItemName: 'Batangan Emas', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Emas'), itemName: 'Bijih Emas', quantity: 5 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 3 }] }, { recipeName: 'Lebur Perak', resultItemId: idOf('Batangan Perak'), resultItemName: 'Batangan Perak', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Perak'), itemName: 'Bijih Perak', quantity: 4 }, { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2 }] }, { recipeName: 'Tempa Cangkul Besi', resultItemId: idOf('Cangkul Besi'), resultItemName: 'Cangkul Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Kapak Besi', resultItemId: idOf('Kapak Besi'), resultItemName: 'Kapak Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Beliung Besi', resultItemId: idOf('Beliung Besi'), resultItemName: 'Beliung Besi', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Pisau Jagal', resultItemId: idOf('Pisau Jagal'), resultItemName: 'Pisau Jagal', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 1 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Palu Tempa', resultItemId: idOf('Palu Tempa'), resultItemName: 'Palu Tempa', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2 }, { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1 }, { itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }] }, { recipeName: 'Samak Kulit', resultItemId: idOf('Kulit Samak'), resultItemName: 'Kulit Samak', resultQuantity: 1, materials: [{ itemId: idOf('Kulit Mentah'), itemName: 'Kulit Mentah', quantity: 2 }, { itemId: idOf('Garam Kasar'), itemName: 'Garam Kasar', quantity: 1 }] } ], basePrice: 8, priceCurrency: 'gold' }),
     g({ name: 'Bengkel Tempa Murim', description: 'Senjata & armor tingkat menengah.', rank: 'Rare', isCraftingStation: true, constructionTimeHours: 48, buildable: true, buildRequirements: [{ itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 20 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 100 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 50 }], recipes: [ { recipeName: 'Tempa Pedang Baja', resultItemId: idOf('Pedang Baja'), resultItemName: 'Pedang Baja', resultQuantity: 1, materials: [{ itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 3 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Tempa Pedang Baja Hitam', resultItemId: idOf('Pedang Baja Hitam'), resultItemName: 'Pedang Baja Hitam', resultQuantity: 1, materials: [{ itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 2 }, { itemId: idOf('Palu Formasi Array'), itemName: 'Palu Formasi Array', quantity: 1 }] }, { recipeName: 'Tempa Pedang Besi Biasa', resultItemId: idOf('Pedang Besi Biasa'), resultItemName: 'Pedang Besi Biasa', resultQuantity: 1, materials: [{ itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 3 }, { itemId: idOf('Palu Tempa'), itemName: 'Palu Tempa', quantity: 1 }] }, { recipeName: 'Buat Jubah Kulit', resultItemId: idOf('Jubah Kulit'), resultItemName: 'Jubah Kulit', resultQuantity: 1, materials: [{ itemId: idOf('Kulit Samak'), itemName: 'Kulit Samak', quantity: 4 }, { itemId: idOf('Jarum Jahit Besi'), itemName: 'Jarum Jahit Besi', quantity: 1 }] } ], basePrice: 25, priceCurrency: 'gold' }),
     g({ name: 'Paviliun Alkimia', description: 'Meramu pil & mengolah herbal roh.', rank: 'Epic', isCraftingStation: true, constructionTimeHours: 72, buildable: true, buildRequirements: [{ itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 15 }, { itemId: idOf('Pecahan Batu Roh'), itemName: 'Pecahan Batu Roh', quantity: 30 }, { itemId: idOf('Genteng Keramik'), itemName: 'Genteng Keramik', quantity: 50 }], recipes: [ { recipeName: 'Suling Pil Pengumpul Qi', resultItemId: idOf('Pil Pengumpul Qi'), resultItemName: 'Pil Pengumpul Qi', resultQuantity: 1, materials: [{ itemId: idOf('Ginseng Darah'), itemName: 'Ginseng Darah', quantity: 2 }, { itemId: idOf('Pecahan Batu Roh'), itemName: 'Pecahan Batu Roh', quantity: 5 }] }, { recipeName: 'Suling Pil Penempa Tulang', resultItemId: idOf('Pil Penempa Tulang'), resultItemName: 'Pil Penempa Tulang', resultQuantity: 1, materials: [{ itemId: idOf('Rumput Pembersih Sumsum'), itemName: 'Rumput Pembersih Sumsum', quantity: 3 }, { itemId: idOf('Pecahan Batu Roh'), itemName: 'Pecahan Batu Roh', quantity: 10 }] }, { recipeName: 'Padatkan Batu Roh', resultItemId: idOf('Batu Roh Utuh'), resultItemName: 'Batu Roh Utuh', resultQuantity: 1, materials: [{ itemId: idOf('Pecahan Batu Roh'), itemName: 'Pecahan Batu Roh', quantity: 100 }] }, { recipeName: 'Suling Pil Pemulih Berat', resultItemId: idOf('Pil Pemulih Luka Berat'), resultItemName: 'Pil Pemulih Luka Berat', resultQuantity: 1, materials: [{ itemId: idOf('Ginseng Darah'), itemName: 'Ginseng Darah', quantity: 1 }, { itemId: idOf('Madu Murni'), itemName: 'Madu Murni', quantity: 2 }] }, { recipeName: 'Buat Baja Darah', resultItemId: idOf('Baja Darah (Blood Steel)'), resultItemName: 'Baja Darah (Blood Steel)', resultQuantity: 1, materials: [{ itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 1 }, { itemId: idOf('Darah Spirit Beast'), itemName: 'Darah Spirit Beast', quantity: 3 }] }, { recipeName: 'Buat Sutra Ulat Salju', resultItemId: idOf('Sutra Ulat Salju'), resultItemName: 'Sutra Ulat Salju', resultQuantity: 1, materials: [{ itemId: idOf('Kepompong Ulat Salju'), itemName: 'Kepompong Ulat Salju', quantity: 5 }] } ], basePrice: 3, priceCurrency: 'jade' }),
     g({ name: 'Bengkel Pusaka Tinggi', description: 'Membuat senjata & artifact tingkat tinggi.', rank: 'Legendary', isCraftingStation: true, constructionTimeHours: 120, buildable: true, buildRequirements: [{ itemId: idOf('Baja Darah (Blood Steel)'), itemName: 'Baja Darah (Blood Steel)', quantity: 20 }, { itemId: idOf('Kristal Roh Ilahi'), itemName: 'Kristal Roh Ilahi', quantity: 10 }, { itemId: idOf('Kayu Surga (Heavenly Wood)'), itemName: 'Kayu Surga (Heavenly Wood)', quantity: 15 }], recipes: [ { recipeName: 'Tempa Pedang Darah Spirit', resultItemId: idOf('Pedang Darah Spirit'), resultItemName: 'Pedang Darah Spirit', resultQuantity: 1, materials: [{ itemId: idOf('Baja Darah (Blood Steel)'), itemName: 'Baja Darah (Blood Steel)', quantity: 3 }, { itemId: idOf('Palu Formasi Array'), itemName: 'Palu Formasi Array', quantity: 1 }] }, { recipeName: 'Tempa Pedang Star Iron', resultItemId: idOf('Pedang Star Iron'), resultItemName: 'Pedang Star Iron', resultQuantity: 1, materials: [{ itemId: idOf('Pelat Star Iron'), itemName: 'Pelat Star Iron', quantity: 2 }, { itemId: idOf('Palu Formasi Array'), itemName: 'Palu Formasi Array', quantity: 1 }, { itemId: idOf('Kristal Roh Ilahi'), itemName: 'Kristal Roh Ilahi', quantity: 2 }] }, { recipeName: 'Buat Jimat Giok Roh', resultItemId: idOf('Jimat Giok Roh'), resultItemName: 'Jimat Giok Roh', resultQuantity: 1, materials: [{ itemId: idOf('Bijih Giok Roh'), itemName: 'Bijih Giok Roh', quantity: 5 }, { itemId: idOf('Pecahan Batu Roh'), itemName: 'Pecahan Batu Roh', quantity: 10 }] }, { recipeName: 'Buat Jubah Sutra Salju', resultItemId: idOf('Jubah Sutra Salju'), resultItemName: 'Jubah Sutra Salju', resultQuantity: 1, materials: [{ itemId: idOf('Sutra Ulat Salju'), itemName: 'Sutra Ulat Salju', quantity: 5 }, { itemId: idOf('Jarum Meridian'), itemName: 'Jarum Meridian', quantity: 1 }] } ], basePrice: 10, priceCurrency: 'jade' }),
@@ -794,12 +794,12 @@ function buildAllAssets(guildId) {
 
   // INCOME
   const income = [
-    g({ name: 'Tikar Pengemis', description: '3 Silver/hari.', rank: 'Common', dailyProfit: 3, profitCurrency: 'silver', constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Kain Katun'), itemName: 'Kain Katun', quantity: 2 }], basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Tikar Pengemis', description: 'Income kecil 5 silver/hari. Cocok modal sangat awal, ROI cepat tapi tipis.', rank: 'Common', dailyProfit: 3, profitCurrency: 'silver', constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Kain Katun'), itemName: 'Kain Katun', quantity: 2 }], basePrice: 20, priceCurrency: 'silver' }),
     g({ name: 'Warung Desa', description: '8 Silver/hari.', rank: 'Common', dailyProfit: 8, profitCurrency: 'silver', constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 15 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], basePrice: 60, priceCurrency: 'silver' }),
-    g({ name: 'Kuil Leluhur Desa', description: '15 Silver/hari.', rank: 'Uncommon', dailyProfit: 15, profitCurrency: 'silver', constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 40 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 25 }], basePrice: 2, priceCurrency: 'gold' }),
+    g({ name: 'Kuil Leluhur Desa', description: 'Income 20 silver/hari. Butuh bata & papan — tujuan menengah awal.', rank: 'Uncommon', dailyProfit: 15, profitCurrency: 'silver', constructionTimeHours: 24, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 40 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 25 }], basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Kedai Teh', description: '25 Silver/hari.', rank: 'Uncommon', dailyProfit: 25, profitCurrency: 'silver', constructionTimeHours: 30, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 40 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 30 }, { itemId: idOf('Kain Katun'), itemName: 'Kain Katun', quantity: 10 }], basePrice: 3, priceCurrency: 'gold' }),
-    g({ name: 'Kedai Arak Murim', description: '80 Silver/hari.', rank: 'Rare', dailyProfit: 80, profitCurrency: 'silver', constructionTimeHours: 48, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 150 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 100 }, { itemId: idOf('Genteng Keramik'), itemName: 'Genteng Keramik', quantity: 60 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 8 }], basePrice: 15, priceCurrency: 'gold' }),
-    g({ name: 'Penginapan Kota', description: '1.5 Gold/hari.', rank: 'Rare', dailyProfit: 150, profitCurrency: 'silver', constructionTimeHours: 60, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 200 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 120 }, { itemId: idOf('Genteng Keramik'), itemName: 'Genteng Keramik', quantity: 80 }, { itemId: idOf('Kain Wol'), itemName: 'Kain Wol', quantity: 20 }], basePrice: 25, priceCurrency: 'gold' }),
+    g({ name: 'Kedai Arak Murim', description: '80 Silver/hari.', rank: 'Rare', dailyProfit: 55, profitCurrency: 'silver', constructionTimeHours: 48, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 150 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 100 }, { itemId: idOf('Genteng Keramik'), itemName: 'Genteng Keramik', quantity: 60 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 8 }], basePrice: 15, priceCurrency: 'gold' }),
+    g({ name: 'Penginapan Kota', description: '1.5 Gold/hari.', rank: 'Rare', dailyProfit: 70, profitCurrency: 'silver', constructionTimeHours: 60, buildable: true, buildRequirements: [{ itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 200 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 120 }, { itemId: idOf('Genteng Keramik'), itemName: 'Genteng Keramik', quantity: 80 }, { itemId: idOf('Kain Wol'), itemName: 'Kain Wol', quantity: 20 }], basePrice: 25, priceCurrency: 'gold' }),
     g({ name: 'Balai Lelang Kota', description: '4 Gold/hari.', rank: 'Epic', dailyProfit: 4, profitCurrency: 'gold', constructionTimeHours: 96, buildable: true, buildRequirements: [{ itemId: idOf('Semen Mentah'), itemName: 'Semen Mentah', quantity: 80 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 40 }, { itemId: idOf('Kaca Kusam'), itemName: 'Kaca Kusam', quantity: 40 }, { itemId: idOf('Kayu Ulin (Ironwood)'), itemName: 'Kayu Ulin (Ironwood)', quantity: 15 }], basePrice: 80, priceCurrency: 'gold' }),
     g({ name: 'Markas Sekte Luar', description: '8 Gold/hari.', rank: 'Epic', dailyProfit: 8, profitCurrency: 'gold', constructionTimeHours: 120, buildable: true, buildRequirements: [{ itemId: idOf('Balok Batu'), itemName: 'Balok Batu', quantity: 150 }, { itemId: idOf('Baja Keras'), itemName: 'Baja Keras', quantity: 60 }, { itemId: idOf('Sutra Ulat Salju'), itemName: 'Sutra Ulat Salju', quantity: 10 }, { itemId: idOf('Kayu Persik Berdarah'), itemName: 'Kayu Persik Berdarah', quantity: 20 }], basePrice: 150, priceCurrency: 'gold' }),
     g({ name: 'Paviliun Harta Surgawi', description: '1 Jade/hari (batas max individu).', rank: 'Legendary', dailyProfit: 1, profitCurrency: 'jade', constructionTimeHours: 168, buildable: true, buildRequirements: [{ itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 50 }, { itemId: idOf('Kayu Surga (Heavenly Wood)'), itemName: 'Kayu Surga (Heavenly Wood)', quantity: 20 }, { itemId: idOf('Kristal Roh Ilahi'), itemName: 'Kristal Roh Ilahi', quantity: 8 }, { itemId: idOf('Batu Roh Utuh'), itemName: 'Batu Roh Utuh', quantity: 3 }], basePrice: 15, priceCurrency: 'jade' }),
@@ -953,7 +953,7 @@ function buildAllAssets(guildId) {
   // Generate many balanced production assets by resource families
   const resourceFamilies = [
     { prefix: "Ladang", outs: ["Gandum", "Padi Mentah", "Jagung Mentah", "Kedelai Mentah", "Kapas Mentah"], tool: "Cangkul Besi", seedMap: { "Gandum": "Bibit Gandum", "Padi Mentah": "Bibit Padi", "Jagung Mentah": "Bibit Jagung", "Kedelai Mentah": "Bibit Kedelai", "Kapas Mentah": "Bibit Kapas" }, rank: "Common", q: 2, time: 4, price: 45, curr: "silver" },
-    { prefix: "Hutan", outs: ["Kayu Mentah", "Bambu", "Kayu Pinus", "Kayu Maple"], tool: "Kapak Besi", rank: "Common", q: 2, time: 4, price: 50, curr: "silver" },
+    { prefix: "Hutan", outs: ["Bambu", "Kayu Pinus", "Kayu Maple"], tool: "Kapak Besi", rank: "Uncommon", q: 1, time: 8, price: 80, curr: "silver" },
     { prefix: "Tambang Dangkal", outs: ["Batu Bara", "Bijih Tembaga", "Bijih Timah", "Bijih Besi", "Batu Kasar"], tool: "Beliung Besi", rank: "Common", q: 1, time: 8, price: 70, curr: "silver" },
     { prefix: "Tambang Dalam", outs: ["Bijih Perak", "Bijih Emas", "Bijih Nikel", "Kristal Kuarsa"], tool: "Beliung Baja Hitam", rank: "Rare", q: 1, time: 24, price: 8, curr: "gold" },
     { prefix: "Kebun Herbal", outs: ["Rumput Qi", "Daun Spirit", "Akar Moon", "Bunga Sun", "Rumput Fire"], tool: "Cangkul Giok", rank: "Rare", q: 1, time: 20, price: 6, curr: "gold" },
@@ -964,7 +964,7 @@ function buildAllAssets(guildId) {
   let assetCounter = 0;
   resourceFamilies.forEach(fam => {
     fam.outs.forEach((out, oi) => {
-      for (let variant = 1; variant <= 3; variant++) {
+      for (let variant = 1; variant <= 0; variant++) { // DISABLED: spam variant Utama/Cadangan/Kecil
         try {
           const name = `${fam.prefix} ${out.replace(/ Mentah| \(.*\)/g, "")} ${variant === 1 ? "Utama" : variant === 2 ? "Cadangan" : "Kecil"}`;
           const outId = idOf(out);
@@ -1001,7 +1001,7 @@ function buildAllAssets(guildId) {
   });
 
   // Generate many small income shacks / stalls
-  const stallTypes = ["Warung", "Kios", "Stan", "Pondok", "Gubuk", "Kedai Kecil", "Toko Kecil", "Lapak"];
+  const stallTypes = []; // DISABLED: spam warung
   const stallGoods = ["Makanan", "Minuman", "Obat", "Alat", "Pakaian", "Senjata", "Herbal", "Jimat", "Buku", "Perhiasan"];
   stallTypes.forEach((st, si) => {
     stallGoods.forEach((sg, gi) => {
@@ -1062,7 +1062,7 @@ function buildAllAssets(guildId) {
 
   // FINAL ASSET PUSH - more variants
   const zones = ["Utara", "Selatan", "Timur", "Barat", "Tengah", "Pegunungan", "Lembah", "Pantai", "Hutan Dalam", "Gurun"];
-  const resTypes = ["Kayu", "Batu", "Bijih", "Herbal", "Ikan", "Buruan"];
+  const resTypes = ["Bijih", "Herbal", "Ikan"]; // Kayu/Batu/Buruan sudah ada asset utama — hindari duplikat rancu
   zones.forEach((z, zi) => {
     resTypes.forEach((rt, rti) => {
       try {
@@ -1379,16 +1379,21 @@ function buildAllAssets(guildId) {
 
   // ========== MEGA PUSH ASSETS KE ~500 ==========
   // More resource nodes by region
-  const zoneList = ["Utara", "Selatan", "Timur", "Barat", "Tengah", "Pegunungan", "Lembah", "Pantai", "Gurun", "Rawa", "Hutan Lebat", "Dataran Tinggi"];
+  const zoneList = []; // DISABLED: spam zona
   const resList = [
-    { out: "Kayu Mentah", q: 2, tool: "Kapak Batu", rank: "Common" },
-    { out: "Batu Kasar", q: 2, tool: "Batu Tajam", rank: "Common" },
-    { out: "Tanah Liat", q: 2, tool: "Batu Tajam", rank: "Common" },
-    { out: "Daging Mentah", q: 1, tool: "Tombak Kayu", rank: "Common" },
+    // Kayu Mentah hanya dari Area Penebangan Kayu Dasar/Besi (hindari rancu)
+    // { out: "Kayu Mentah", q: 2, tool: "Kapak Batu", rank: "Common" },
+    // Batu Kasar hanya dari Tambang Batu Kasar Primitif
+    // { out: "Batu Kasar", q: 2, tool: "Batu Tajam", rank: "Common" },
+    // Tanah Liat hanya dari Lahan Tanah Liat Primitif
+    // { out: "Tanah Liat", q: 2, tool: "Batu Tajam", rank: "Common" },
+    // Daging Mentah hanya dari Area Buruan
+    // { out: "Daging Mentah", q: 1, tool: "Tombak Kayu", rank: "Common" },
     { out: "Ikan Air Tawar", q: 2, tool: "Alat Pancing Kayu", rank: "Common" },
     { out: "Bijih Besi", q: 1, tool: "Beliung Besi", rank: "Uncommon" },
     { out: "Batu Bara", q: 2, tool: "Beliung Besi", rank: "Common" },
-    { out: "Gandum", q: 2, tool: "Cangkul Besi", rank: "Common" },
+    // Gandum hanya dari Sawah Gandum
+    // { out: "Gandum", q: 2, tool: "Cangkul Besi", rank: "Common" },
   ];
   zoneList.forEach((z, zi) => {
     resList.forEach((r, ri) => {
@@ -1422,7 +1427,7 @@ function buildAllAssets(guildId) {
   });
 
   // More small income stalls by district
-  const districts = ["Pasar", "Pelabuhan", "Desa", "Kota", "Pinggiran", "Pegunungan", "Lembah", "Pantai"];
+  const districts = []; // DISABLED: spam lapak
   const stallGoods2 = ["Makanan", "Minuman", "Obat", "Alat", "Pakaian", "Senjata", "Herbal", "Jimat", "Buku", "Perhiasan", "Kayu", "Logam", "Kain", "Ikan", "Daging"];
   districts.forEach((d, di) => {
     stallGoods2.forEach((sg, sgi) => {
@@ -1450,7 +1455,7 @@ function buildAllAssets(guildId) {
   });
 
   // More mid halls
-  const hallTypes = ["Balai", "Paviliun", "Aula", "Gedung", "Menara", "Kuil", "Dojo", "Bengkel"];
+  const hallTypes = []; // DISABLED: spam balai bernama jelek
   const hallFuncs = ["Pertemuan", "Latihan", "Meditasi", "Perdagangan", "Penyimpanan", "Penelitian", "Pengobatan", "Senjata", "Formasi", "Alkimia"];
   hallTypes.forEach((ht, hti) => {
     hallFuncs.forEach((hf, hfi) => {
@@ -1478,6 +1483,115 @@ function buildAllAssets(guildId) {
     });
   });
 
+  // =========================================================================
+  // ASET KURASI PROFESIONAL (nama bagus · rantai jelas · harga adil)
+  // Setiap node punya peran di rantai: raw → olah → craft / jual
+  // =========================================================================
+  const curatedNodes = [
+    // --- KAYU: Kapak → Kayu → Papan (bengkel) ---
+    { name: "Hutan Desa", out: "Kayu Mentah", q: 2, inputs: [["Kapak Batu", 1]], rank: "Common", time: 3, price: 20, curr: "silver",
+      build: [["Kapak Batu", 2]], desc: "IN: Kapak Batu → OUT: 2 Kayu Mentah/jam → olah jadi Papan di Bengkel Kayu." },
+    { name: "Hutan Rimba Dalam", out: "Kayu Mentah", q: 3, inputs: [["Kapak Besi", 1]], rank: "Uncommon", time: 10, price: 1, curr: "gold",
+      build: [["Kapak Besi", 2], ["Papan Kayu", 12]], desc: "IN: Kapak Besi → OUT: 3 Kayu Mentah/jam. Upgrade Hutan Desa." },
+    { name: "Hutan Pinus Kabut", out: "Kayu Pinus", q: 2, inputs: [["Kapak Besi", 1]], rank: "Uncommon", time: 12, price: 2, curr: "gold",
+      build: [["Kapak Besi", 2], ["Papan Kayu", 15]], desc: "IN: Kapak Besi → OUT: Kayu Pinus → papan premium / bangunan menengah." },
+    { name: "Hutan Ulin Leluhur", out: "Kayu Ulin (Ironwood)", q: 1, inputs: [["Kapak Besi", 1]], rank: "Rare", time: 30, price: 8, curr: "gold",
+      build: [["Kapak Besi", 3], ["Baja Keras", 5], ["Papan Kayu", 20]], desc: "IN: Kapak Besi → OUT: Kayu Ulin → bangunan epic & senjata kayu mistis." },
+
+    // --- BATU/TAMBANG: Beliung → bijih → lebur di Tungku ---
+    { name: "Tebing Batu Desa", out: "Batu Kasar", q: 2, inputs: [["Batu Tajam", 1]], rank: "Common", time: 2, price: 12, curr: "silver",
+      build: [["Batu Tajam", 1]], desc: "IN: Batu Tajam → OUT: Batu Kasar → pahat Balok Batu di bengkel." },
+    { name: "Lahan Tanah Liat Sungai", out: "Tanah Liat", q: 2, inputs: [["Batu Tajam", 1]], rank: "Common", time: 2, price: 12, curr: "silver",
+      build: [["Batu Tajam", 1]], desc: "IN: Batu Tajam → OUT: Tanah Liat → bakar Batu Bata di tungku." },
+    { name: "Tambang Batu Bara Desa", out: "Batu Bara", q: 2, inputs: [["Beliung Besi", 1]], rank: "Common", time: 10, price: 1, curr: "gold",
+      build: [["Beliung Besi", 1], ["Papan Kayu", 12]], desc: "IN: Beliung Besi → OUT: Batu Bara → bahan bakar tungku & mesin." },
+    { name: "Tambang Tembaga Desa", out: "Bijih Tembaga", q: 2, inputs: [["Beliung Besi", 1]], rank: "Common", time: 10, price: 1, curr: "gold",
+      build: [["Beliung Besi", 1], ["Balok Batu", 12]], desc: "IN: Beliung → OUT: Bijih Tembaga → Batangan → Perunggu." },
+    { name: "Tambang Besi Lereng", out: "Bijih Besi", q: 1, inputs: [["Beliung Besi", 1]], rank: "Uncommon", time: 16, price: 3, curr: "gold",
+      build: [["Beliung Besi", 2], ["Balok Batu", 20]], desc: "IN: Beliung → OUT: Bijih Besi → Batangan Besi → tool & baja." },
+    { name: "Tambang Emas Terlarang", out: "Bijih Emas", q: 1, inputs: [["Beliung Baja Hitam", 1]], rank: "Rare", time: 48, price: 15, curr: "gold",
+      build: [["Beliung Baja Hitam", 2], ["Baja Keras", 15]], desc: "IN: Beliung Baja Hitam → OUT: Bijih Emas → Batangan Emas (sink luxury)." },
+
+    // --- PERTANIAN: Bibit → panen → giling/masak ---
+    { name: "Ladang Gandum Desa", out: "Gandum", q: 2, inputs: [["Bibit Gandum", 1]], rank: "Common", time: 6, price: 55, curr: "silver",
+      build: [["Cangkul Besi", 1], ["Bibit Gandum", 5]], desc: "IN: Bibit Gandum → OUT: Gandum → Tepung (Kincir) → Roti (Dapur)." },
+    { name: "Sawah Padi Desa", out: "Padi Mentah", q: 2, inputs: [["Bibit Padi", 1]], rank: "Common", time: 6, price: 55, curr: "silver",
+      build: [["Cangkul Besi", 1], ["Bibit Padi", 5]], desc: "IN: Bibit Padi → OUT: Padi → Beras → Nasi / Sake." },
+    { name: "Kebun Kapas Desa", out: "Kapas Mentah", q: 2, inputs: [["Bibit Kapas", 1]], rank: "Common", time: 6, price: 60, curr: "silver",
+      build: [["Cangkul Besi", 1], ["Bibit Kapas", 5]], desc: "IN: Bibit Kapas → OUT: Kapas → Benang → Kain Katun (tenun)." },
+    { name: "Kebun Anggur Lereng", out: "Anggur Segar", q: 2, inputs: [["Bibit Anggur", 1]], rank: "Uncommon", time: 12, price: 2, curr: "gold",
+      build: [["Cangkul Besi", 1], ["Bibit Anggur", 5], ["Papan Kayu", 10]], desc: "IN: Bibit Anggur → OUT: Anggur → Wine (fermentasi)." },
+
+    // --- TERNAK & LAUT ---
+    { name: "Kandang Ayam Desa", out: "Telur Mentah", q: 2, inputs: [["Pakan Ternak", 1]], rank: "Common", time: 8, price: 70, curr: "silver",
+      build: [["Papan Kayu", 15], ["Pakan Ternak", 5]], desc: "IN: Pakan Ternak → OUT: Telur → masak / jual player shop." },
+    { name: "Padang Penggembalaan", out: "Susu Sapi", q: 1, inputs: [["Pakan Ternak", 1]], rank: "Uncommon", time: 14, price: 2, curr: "gold",
+      build: [["Papan Kayu", 25], ["Pakan Ternak", 10]], desc: "IN: Pakan → OUT: Susu → Keju (fermentasi)." },
+    { name: "Dermaga Nelayan Desa", out: "Ikan Air Tawar", q: 2, inputs: [["Alat Pancing Kayu", 1]], rank: "Common", time: 8, price: 60, curr: "silver",
+      build: [["Papan Kayu", 12], ["Alat Pancing Kayu", 2]], desc: "IN: Alat Pancing → OUT: Ikan → masak / Ikan Asin." },
+
+    // --- BURUAN ---
+    { name: "Hutan Buruan Desa", out: "Daging Mentah", q: 1, inputs: [["Tombak Kayu", 1]], rank: "Common", time: 4, price: 25, curr: "silver",
+      build: [["Tombak Kayu", 2]], desc: "IN: Tombak Kayu → OUT: Daging Mentah → Daging Bakar / Kulit." },
+
+    // --- HERBAL MURIM ---
+    { name: "Kebun Ginseng Darah", out: "Ginseng Darah", q: 1, inputs: [["Bibit Ginseng Darah", 1]], rank: "Rare", time: 40, price: 10, curr: "gold",
+      build: [["Cangkul Giok", 1], ["Bibit Ginseng Darah", 3], ["Papan Kayu", 20]], desc: "IN: Bibit Ginseng → OUT: Ginseng Darah → Pil Pengumpul Qi (Kawah Alkimia)." },
+    { name: "Rawa Rumput Sumsum", out: "Rumput Pembersih Sumsum", q: 1, inputs: [["Bibit Rumput Sumsum", 1]], rank: "Epic", time: 56, price: 25, curr: "gold",
+      build: [["Cangkul Giok", 1], ["Pecahan Batu Roh", 10]], desc: "IN: Bibit Sumsum → OUT: Rumput Sumsum → Pil Penempa Tulang." },
+  ];
+
+  curatedNodes.forEach(n => {
+    try {
+      const inputs = (n.inputs || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q }));
+      const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q }));
+      assets.push(g({
+        name: n.name,
+        description: n.desc,
+        rank: n.rank,
+        workerOutputItemId: idOf(n.out),
+        workerOutputItemName: n.out,
+        workerOutputQuantity: n.q,
+        workerInputMaterials: inputs,
+        constructionTimeHours: n.time,
+        buildable: true,
+        buildRequirements: builds,
+        basePrice: n.price,
+        priceCurrency: n.curr,
+      }));
+    } catch (e) { /* item belum ada */ }
+  });
+
+  // Income bernama baik (bukan Warung Timur dll)
+  const curatedIncome = [
+    // ROI: bangun sebentar, profit kecil, balik modal terasa (bukan instan, bukan siksa)
+    { name: "Tikar Pengemis", desc: "IN: Kain → OUT: 8 Silver/hari. ROI cepat untuk pemula.", profit: 8, curr: "silver", rank: "Common", time: 2, price: 25, pcurr: "silver", mats: [["Kain Katun", 2]] },
+    { name: "Warung Nasi Kampung", desc: "IN: Papan+Bata → OUT: 18 Silver/hari. Butuh stok pangan desa.", profit: 18, curr: "silver", rank: "Common", time: 10, price: 90, pcurr: "silver", mats: [["Papan Kayu", 18], ["Batu Bata", 12]] },
+    { name: "Kedai Teh Pinggir Jalan", desc: "IN: bangunan menengah → OUT: 30 Silver/hari.", profit: 30, curr: "silver", rank: "Uncommon", time: 20, price: 2, pcurr: "gold", mats: [["Papan Kayu", 28], ["Batu Bata", 22], ["Kain Katun", 5]] },
+    { name: "Kuil Leluhur Desa", desc: "IN: Bata+Papan → OUT: 28 Silver/hari dari umat.", profit: 28, curr: "silver", rank: "Uncommon", time: 28, price: 3, pcurr: "gold", mats: [["Batu Bata", 55], ["Papan Kayu", 35]] },
+    { name: "Kedai Arak Murim", desc: "IN: Baja+bangunan → OUT: 55 Silver/hari. Tempat pendekar.", profit: 55, curr: "silver", rank: "Rare", time: 56, price: 18, pcurr: "gold", mats: [["Batu Bata", 100], ["Papan Kayu", 80], ["Baja Keras", 10]] },
+    { name: "Balai Lelang Kota", desc: "IN: material kota → OUT: 90 Silver/hari pajak lelang.", profit: 90, curr: "silver", rank: "Epic", time: 100, price: 45, pcurr: "gold", mats: [["Semen Mentah", 80], ["Baja Keras", 40], ["Kaca Kusam", 30]] },
+    { name: "Paviliun Harta Surgawi", desc: "IN: material legendaris → OUT: 1 Jade/hari (cap individu).", profit: 1, curr: "jade", rank: "Legendary", time: 168, price: 18, pcurr: "jade", mats: [["Baja Hitam Mistis", 40], ["Kristal Roh Ilahi", 8], ["Batu Roh Utuh", 3]] },
+  ];
+  curatedIncome.forEach(inc => {
+    try {
+      const reqs = inc.mats.map(([n, q]) => ({ itemId: idOf(n), itemName: n, quantity: q }));
+      assets.push(g({
+        name: inc.name,
+        description: inc.desc,
+        rank: inc.rank,
+        dailyProfit: inc.profit,
+        profitCurrency: inc.curr,
+        constructionTimeHours: inc.time,
+        buildable: true,
+        buildRequirements: reqs,
+        basePrice: inc.price,
+        priceCurrency: inc.pcurr,
+      }));
+    } catch (e) {}
+  });
+
+
   return assets;
 }
 
@@ -1487,7 +1601,7 @@ function buildAllAssets(guildId) {
 function buildAllPets(guildId) {
   const g = (o) => ({ guildId, createdBy: 'System Oracle', ...o });
   return [
-    g({ name: 'Ayam Hutan', rank: 'Common', tier: 1, description: 'Ayam liar dilatih.', element: 'Netral', baseHp: 40, baseAtk: 8, baseDef: 4, baseSpd: 12, basePrice: 20, priceCurrency: 'silver' }),
+    g({ name: 'Ayam Hutan', rank: 'Common', tier: 1, description: 'Memasak roti, nasi, garam, dan olahan dapur desa.', element: 'Netral', baseHp: 40, baseAtk: 8, baseDef: 4, baseSpd: 12, basePrice: 20, priceCurrency: 'silver' }),
     g({ name: 'Anjing Pemburu', rank: 'Common', tier: 1, description: 'Anjing setia.', element: 'Netral', baseHp: 55, baseAtk: 12, baseDef: 6, baseSpd: 14, basePrice: 40, priceCurrency: 'silver' }),
     g({ name: 'Kucing Liar', rank: 'Common', tier: 1, description: 'Gesit mandiri.', element: 'Netral', baseHp: 35, baseAtk: 10, baseDef: 3, baseSpd: 18, basePrice: 25, priceCurrency: 'silver' }),
     g({ name: 'Ular Rumput', rank: 'Common', tier: 1, description: 'Racun ringan.', element: 'Tanah', baseHp: 30, baseAtk: 14, baseDef: 2, baseSpd: 15, basePrice: 30, priceCurrency: 'silver' }),
@@ -1572,7 +1686,7 @@ async function seedEconomy() {
     // =====================================================================
     // 2b. MIGRASI PAKSA — perbaiki / nonaktifkan asset LAMA yang tidak seimbang
     // =====================================================================
-    // Masalah: seed lama pakai nama berbeda (mis. "Area Penebang Kayu" 20/jam).
+    // Masalah: seed lama pakai nama berbeda (mis. "Area Penebang Kayu" 2/jam).
     // Upsert by name tidak menyentuh mereka. Solusi: deteksi & perbaiki.
     console.log('[3/5] Migrasi paksa asset LAMA (nama persis dari seed old)...');
 
@@ -1586,8 +1700,13 @@ async function seedEconomy() {
       "Tambang Batu Kasar Primitif": { workerOutputQuantity: 2, constructionTimeHours: 1 },
       "Galian Pasir Putih":        { workerOutputQuantity: 2, constructionTimeHours: 2 },
       "Galian Batu Kapur":         { workerOutputQuantity: 2, constructionTimeHours: 2 },
-      "Area Penebangan Kayu":      { workerOutputQuantity: 2, constructionTimeHours: 4, // DULU 20!!!
-        forceInput: "Kapak Besi" },
+      "Area Penebangan Kayu":      { workerOutputQuantity: 2, constructionTimeHours: 2,
+        forceInput: "Kapak Batu" }, // entry primitif (dulu 2/jam)
+      "Area Penebangan Kayu Dasar": { workerOutputQuantity: 2, constructionTimeHours: 2,
+        forceInput: "Kapak Batu" },
+      "Area Penebangan Kayu Besi":  { workerOutputQuantity: 3, constructionTimeHours: 8,
+        forceInput: "Kapak Besi" }, // HARUS lebih baik dari Dasar
+
       "Lahan Gandum":              { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Gandum" },
       "Sawah Padi":                { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Padi" },
       "Kebun Kapas":               { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Kapas" },
@@ -1712,6 +1831,114 @@ async function seedEconomy() {
       fixedByThreshold++;
     }
 
+
+    // =====================================================================
+    // DEDUPE: asset yang output-nya sama tapi tier tidak jelas
+    // =====================================================================
+    // Aturan: untuk tiap workerOutputItemName, asset dengan rank/cost lebih tinggi
+    // HARUS punya output >= asset lebih murah. Jika tidak → naikkan output.
+    const allWorker = await Asset.find({
+      guildId,
+      workerOutputItemName: { $ne: null, $exists: true },
+      workerOutputQuantity: { $gt: 0 },
+    }).lean();
+
+    const byItem = {};
+    for (const a of allWorker) {
+      const key = a.workerOutputItemName;
+      if (!byItem[key]) byItem[key] = [];
+      byItem[key].push(a);
+    }
+
+    let dedupeFixed = 0;
+    for (const [itemName, list] of Object.entries(byItem)) {
+      if (list.length < 2) continue;
+
+      // Urutkan: yang constructionTime / basePrice lebih rendah = tier bawah
+      list.sort((a, b) => {
+        const ca = (a.constructionTimeHours || 0) + (a.basePrice || 0);
+        const cb = (b.constructionTimeHours || 0) + (b.basePrice || 0);
+        return ca - cb;
+      });
+
+      let prevQty = 0;
+      for (let i = 0; i < list.length; i++) {
+        const a = list[i];
+        let targetQty = a.workerOutputQuantity || 1;
+
+        // Tier lebih mahal/lama harus >= tier sebelumnya
+        if (i > 0 && targetQty < prevQty) {
+          targetQty = Math.min(prevQty + 1, 4); // max 4/jam tetap adil
+        }
+        // Cap global tetap
+        if (targetQty > 4) targetQty = 4;
+
+        // Kayu Mentah: hanya 2 jalur resmi
+        if (itemName === "Kayu Mentah") {
+          if (/Dasar|Primitif|Area Penebangan Kayu$/i.test(a.name) && !/Besi/i.test(a.name)) {
+            targetQty = 2;
+          } else if (/Besi/i.test(a.name)) {
+            targetQty = 3;
+          } else if (!/Ulin|Surga|Ebony|Pinus|Maple|Jati/i.test(a.name)) {
+            // Duplikat generator zona → turunkan jadi 1 agar tidak menyaingi jalur resmi
+            targetQty = 1;
+          }
+        }
+
+        if (targetQty !== a.workerOutputQuantity) {
+          await Asset.updateOne(
+            { _id: a._id },
+            {
+              $set: {
+                workerOutputQuantity: targetQty,
+                description: `${targetQty} ${itemName}/jam` + (a.workerInputMaterials?.length ? " (butuh input)." : "."),
+                createdBy: "System Oracle (dedupe)",
+              },
+            }
+          );
+          console.log(`      DEDUPE: "${a.name}" ${itemName} ${a.workerOutputQuantity} → ${targetQty}/jam`);
+          dedupeFixed++;
+        }
+        prevQty = Math.max(prevQty, targetQty);
+      }
+    }
+    console.log(`      → ${dedupeFixed} asset di-normalisasi (anti-rancu).\n`);
+
+    
+
+    // =====================================================================
+    // ARSIPKAN ASSET JELEK (nama zona/spam generator)
+    // buildable=false, output=0, profit=0 — tidak bisa dibangun lagi
+    // =====================================================================
+    const JUNK_NAME = /(Utama|Cadangan|Kecil)$|^(Area (Kayu|Batu|Bijih|Herbal|Ikan|Buruan) )|^(Ladang|Hutan|Tambang Dangkal|Tambang Dalam|Kebun Herbal|Peternakan|Perairan) .*(Utama|Cadangan|Kecil)$|^(Warung|Kios|Stan|Pondok|Gubuk|Kedai Kecil|Toko Kecil|Lapak) |^(Pasar|Pelabuhan|Desa|Kota|Pinggiran) Lapak |^(Balai|Paviliun|Aula|Gedung|Menara|Kuil|Dojo|Bengkel) .+ \d+$|Area Penebangan Kayu Dasar|Area Penebangan Kayu Besi/;
+    // Catatan: Area Penebangan Kayu Dasar/Besi diganti nama kurasi "Hutan Desa" / "Hutan Rimba Dalam"
+
+    const junk = await Asset.find({ guildId, name: { $regex: JUNK_NAME } });
+    let archived = 0;
+    for (const doc of junk) {
+      // Jangan arsipkan curated names
+      if (/^(Hutan Desa|Hutan Rimba Dalam|Hutan Pinus Kabut|Hutan Ulin Leluhur|Tebing Batu Desa|Tambang Batu Bara Desa|Tambang Tembaga Desa|Tambang Besi Lereng|Tambang Emas Terlarang|Ladang Gandum Desa|Sawah Padi Desa|Kebun Kapas Desa|Kebun Anggur Lereng|Kandang Ayam Desa|Padang Penggembalaan|Dermaga Nelayan Desa|Warung Nasi Kampung|Kedai Teh Pinggir Jalan)$/.test(doc.name)) {
+        continue;
+      }
+      await Asset.updateOne(
+        { _id: doc._id },
+        {
+          $set: {
+            buildable: false,
+            workerOutputQuantity: 0,
+            dailyProfit: 0,
+            description: "[DIARSIPKAN] Diganti aset kurasi baru. Tidak bisa dibangun. Hubungi admin jika masih terpasang di lahanmu.",
+            createdBy: "System Oracle (archived)",
+          },
+        }
+      );
+      archived++;
+    }
+    if (archived > 0) {
+      console.log(`      → ${archived} asset spam/jelek diarsipkan (buildable=false, output=0).\n`);
+    }
+
+    
     console.log(`      → ${fixedByName} asset old di-fix by name.`);
     console.log(`      → ${fixedByThreshold} asset lain di-fix by threshold.\n`);
 
