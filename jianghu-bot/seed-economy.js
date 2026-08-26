@@ -58,7 +58,32 @@ async function upsertAsset(data) {
   const clean = { ...data };
   delete clean.guildId;
   delete clean.name;
-  const doc = await Asset.findOneAndUpdate(filter, { $set: { ...clean, createdBy: 'System Oracle' } }, { upsert: true, new: true, setDefaultsOnInsert: true });
+  // Paksa update SEMUA field ekonomi (termasuk yang lama tidak seimbang)
+  const doc = await Asset.findOneAndUpdate(
+    filter,
+    {
+      $set: {
+        description: clean.description ?? '-',
+        rank: clean.rank ?? 'Common',
+        dailyProfit: clean.dailyProfit ?? 0,
+        profitCurrency: clean.profitCurrency ?? 'silver',
+        isCraftingStation: clean.isCraftingStation ?? false,
+        recipes: clean.recipes ?? [],
+        workerOutputItemId: clean.workerOutputItemId ?? null,
+        workerOutputItemName: clean.workerOutputItemName ?? null,
+        workerOutputQuantity: clean.workerOutputQuantity ?? 0,
+        workerInputMaterials: clean.workerInputMaterials ?? [],
+        basePrice: clean.basePrice ?? 0,
+        priceCurrency: clean.priceCurrency ?? 'silver',
+        constructionTimeHours: clean.constructionTimeHours ?? 0,
+        buildable: clean.buildable ?? false,
+        buildRequirements: clean.buildRequirements ?? [],
+        imageUrl: clean.imageUrl ?? null,
+        createdBy: 'System Oracle',
+      },
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true }
+  );
   assetCache.set(data.name, doc);
   return doc;
 }
@@ -711,7 +736,7 @@ function buildAllAssets(guildId) {
     g({ name: 'Tambang Batu Kasar Primitif', description: '2 Batu Kasar/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Kasar'), workerOutputItemName: 'Batu Kasar', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
     g({ name: 'Galian Pasir Putih', description: '3 Pasir Putih/jam.', rank: 'Common', workerOutputItemId: idOf('Pasir Putih'), workerOutputItemName: 'Pasir Putih', workerOutputQuantity: 3, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 8, priceCurrency: 'silver' }),
     g({ name: 'Galian Batu Kapur', description: '2 Batu Kapur/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Kapur'), workerOutputItemName: 'Batu Kapur', workerOutputQuantity: 2, workerInputMaterials: [], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Batu Tajam'), itemName: 'Batu Tajam', quantity: 1 }], basePrice: 10, priceCurrency: 'silver' }),
-    g({ name: 'Area Penebangan Kayu Dasar', description: '3 Kayu Mentah/jam. Butuh 1 Kapak Batu/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }], constructionTimeHours: 2, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 2 }], basePrice: 15, priceCurrency: 'silver' }),
+    g({ name: 'Area Penebangan Kayu Dasar', description: '2 Kayu Mentah/jam. Butuh 1 Kapak Batu/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 1 }], constructionTimeHours: 2, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Batu'), itemName: 'Kapak Batu', quantity: 2 }], basePrice: 15, priceCurrency: 'silver' }),
     g({ name: 'Sungai Dangkal', description: '2 Ikan Air Tawar/jam. Butuh 1 Alat Pancing/jam.', rank: 'Common', workerOutputItemId: idOf('Ikan Air Tawar'), workerOutputItemName: 'Ikan Air Tawar', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Alat Pancing Kayu'), itemName: 'Alat Pancing Kayu', quantity: 1 }], constructionTimeHours: 1, buildable: true, buildRequirements: [{ itemId: idOf('Alat Pancing Kayu'), itemName: 'Alat Pancing Kayu', quantity: 1 }], basePrice: 12, priceCurrency: 'silver' }),
     g({ name: 'Sarang Lebah Liar', description: '1 Madu Liar/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Madu Liar'), workerOutputItemName: 'Madu Liar', workerOutputQuantity: 1, workerInputMaterials: [], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Pisau Tulang'), itemName: 'Pisau Tulang', quantity: 1 }], basePrice: 30, priceCurrency: 'silver' }),
     g({ name: 'Sawah Gandum', description: '3 Gandum/jam. Butuh 1 Bibit Gandum/jam.', rank: 'Common', workerOutputItemId: idOf('Gandum'), workerOutputItemName: 'Gandum', workerOutputQuantity: 3, workerInputMaterials: [{ itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Cangkul Besi'), itemName: 'Cangkul Besi', quantity: 1 }, { itemId: idOf('Bibit Gandum'), itemName: 'Bibit Gandum', quantity: 5 }], basePrice: 50, priceCurrency: 'silver' }),
@@ -726,7 +751,7 @@ function buildAllAssets(guildId) {
     g({ name: 'Peternakan Ayam', description: '2 Telur Mentah/jam. Butuh 1 Pakan Ternak/jam.', rank: 'Common', workerOutputItemId: idOf('Telur Mentah'), workerOutputItemName: 'Telur Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 15 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 10 }], basePrice: 80, priceCurrency: 'silver' }),
     g({ name: 'Peternakan Sapi', description: '1 Susu Sapi/jam. Butuh 2 Pakan Ternak/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Susu Sapi'), workerOutputItemName: 'Susu Sapi', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 2 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 30 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 20 }], basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Peternakan Domba', description: '1 Wol Mentah/jam. Butuh 1 Pakan Ternak/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Wol Mentah'), workerOutputItemName: 'Wol Mentah', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Pakan Ternak'), itemName: 'Pakan Ternak', quantity: 1 }], constructionTimeHours: 10, buildable: true, buildRequirements: [{ itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 25 }, { itemId: idOf('Batu Bata'), itemName: 'Batu Bata', quantity: 15 }], basePrice: 1, priceCurrency: 'gold' }),
-    g({ name: 'Area Penebangan Kayu Besi', description: '4 Kayu Mentah/jam. Butuh 1 Kapak Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 4, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }], basePrice: 70, priceCurrency: 'silver' }),
+    g({ name: 'Area Penebangan Kayu Besi', description: '2 Kayu Mentah/jam. Butuh 1 Kapak Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Kayu Mentah'), workerOutputItemName: 'Kayu Mentah', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 4, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }], basePrice: 70, priceCurrency: 'silver' }),
     g({ name: 'Hutan Pinus', description: '2 Kayu Pinus/jam. Butuh 1 Kapak Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Kayu Pinus'), workerOutputItemName: 'Kayu Pinus', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 6, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 2 }], basePrice: 90, priceCurrency: 'silver' }),
     g({ name: 'Hutan Jati', description: '1 Kayu Jati/jam. Butuh 1 Kapak Besi/jam.', rank: 'Uncommon', workerOutputItemId: idOf('Kayu Jati'), workerOutputItemName: 'Kayu Jati', workerOutputQuantity: 1, workerInputMaterials: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 1 }], constructionTimeHours: 12, buildable: true, buildRequirements: [{ itemId: idOf('Kapak Besi'), itemName: 'Kapak Besi', quantity: 3 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 10 }], basePrice: 2, priceCurrency: 'gold' }),
     g({ name: 'Tambang Batu Bara Dangkal', description: '2 Batu Bara/jam. Butuh 1 Beliung Besi/jam.', rank: 'Common', workerOutputItemId: idOf('Batu Bara'), workerOutputItemName: 'Batu Bara', workerOutputQuantity: 2, workerInputMaterials: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }], constructionTimeHours: 8, buildable: true, buildRequirements: [{ itemId: idOf('Beliung Besi'), itemName: 'Beliung Besi', quantity: 1 }, { itemId: idOf('Papan Kayu'), itemName: 'Papan Kayu', quantity: 10 }], basePrice: 90, priceCurrency: 'silver' }),
@@ -1532,12 +1557,165 @@ async function seedEconomy() {
     for (const d of items) await upsertItem(d);
     console.log(`      → ${items.length} items siap.\n`);
 
-    console.log('[2/4] Upsert Assets...');
+    console.log('[2/5] Upsert Assets (template baru)...');
     const assets = buildAllAssets(guildId);
-    for (const d of assets) await upsertAsset(d);
-    console.log(`      → ${assets.length} assets siap.\n`);
+    let updatedCount = 0;
+    let createdCount = 0;
+    for (const d of assets) {
+      const before = await Asset.findOne({ guildId, name: d.name }).lean();
+      await upsertAsset(d);
+      if (before) updatedCount++;
+      else createdCount++;
+    }
+    console.log(`      → ${assets.length} assets template (${updatedCount} diupdate, ${createdCount} baru).\n`);
 
-    console.log('[3/4] Upsert Pets...');
+    // =====================================================================
+    // 2b. MIGRASI PAKSA — perbaiki / nonaktifkan asset LAMA yang tidak seimbang
+    // =====================================================================
+    // Masalah: seed lama pakai nama berbeda (mis. "Area Penebang Kayu" 20/jam).
+    // Upsert by name tidak menyentuh mereka. Solusi: deteksi & perbaiki.
+    console.log('[3/5] Migrasi paksa asset LAMA (nama persis dari seed old)...');
+
+    // Mapping eksplisit dari seed-economy.OLD.js → nilai seimbang
+    // Nama HARUS sama persis dengan yang sudah ada di database
+    const OLD_ASSET_FIXES = {
+      // === WORKER (output tinggi → rendah + input) ===
+      "Pohon Buah Liar":           { workerOutputQuantity: 2, constructionTimeHours: 0 },
+      "Area Buruan Primitif":      { workerOutputQuantity: 1, constructionTimeHours: 1 },
+      "Lahan Tanah Liat Primitif": { workerOutputQuantity: 2, constructionTimeHours: 1 },
+      "Tambang Batu Kasar Primitif": { workerOutputQuantity: 2, constructionTimeHours: 1 },
+      "Galian Pasir Putih":        { workerOutputQuantity: 2, constructionTimeHours: 2 },
+      "Galian Batu Kapur":         { workerOutputQuantity: 2, constructionTimeHours: 2 },
+      "Area Penebangan Kayu":      { workerOutputQuantity: 2, constructionTimeHours: 4, // DULU 20!!!
+        forceInput: "Kapak Besi" },
+      "Lahan Gandum":              { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Gandum" },
+      "Sawah Padi":                { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Padi" },
+      "Kebun Kapas":               { workerOutputQuantity: 2, constructionTimeHours: 4, forceInput: "Bibit Kapas" },
+      "Hutan Bambu":               { workerOutputQuantity: 2, constructionTimeHours: 6, forceInput: "Kapak Besi" },
+      "Tambak Garam":              { workerOutputQuantity: 2, constructionTimeHours: 8 },
+      "Peternakan Ayam":           { workerOutputQuantity: 2, constructionTimeHours: 6, forceInput: "Pakan Ternak" },
+      "Peternakan Sapi":           { workerOutputQuantity: 1, constructionTimeHours: 8, forceInput: "Pakan Ternak" },
+      "Dermaga Nelayan":           { workerOutputQuantity: 2, constructionTimeHours: 6, forceInput: "Alat Pancing Kayu" },
+      "Galian Batu Bara":          { workerOutputQuantity: 2, constructionTimeHours: 8, forceInput: "Beliung Besi" },
+      "Tambang Tembaga":           { workerOutputQuantity: 1, constructionTimeHours: 10, forceInput: "Beliung Besi" },
+      "Tambang Timah":             { workerOutputQuantity: 1, constructionTimeHours: 10, forceInput: "Beliung Besi" },
+      "Tambang Besi":              { workerOutputQuantity: 1, constructionTimeHours: 12, forceInput: "Beliung Besi" },
+      "Tambang Emas":              { workerOutputQuantity: 1, constructionTimeHours: 24, forceInput: "Beliung Baja Hitam" },
+      "Hutan Kayu Ulin":           { workerOutputQuantity: 1, constructionTimeHours: 24, forceInput: "Kapak Besi" },
+      "Kebun Bambu Hitam":         { workerOutputQuantity: 1, constructionTimeHours: 24, forceInput: "Kapak Besi" },
+      "Pohon Persik Darah":        { workerOutputQuantity: 1, constructionTimeHours: 36 },
+      "Peternakan Ulat Salju":     { workerOutputQuantity: 1, constructionTimeHours: 48, forceInput: "Daun Bambu Hitam" },
+      "Tambang Besi Dingin":       { workerOutputQuantity: 1, constructionTimeHours: 48, forceInput: "Beliung Baja Hitam" },
+      "Tambang Giok Roh":          { workerOutputQuantity: 1, constructionTimeHours: 60, forceInput: "Beliung Baja Hitam" },
+      "Kawah Api Meteor":          { workerOutputQuantity: 1, constructionTimeHours: 72 },
+      "Area Buruan Mistis":        { workerOutputQuantity: 1, constructionTimeHours: 48 },
+      "Kebun Ginseng Darah":       { workerOutputQuantity: 1, constructionTimeHours: 36, forceInput: "Bibit Ginseng Darah" },
+      "Kebun Rumput Sumsum":       { workerOutputQuantity: 1, constructionTimeHours: 48, forceInput: "Bibit Rumput Sumsum" },
+      "Hutan Kayu Surgawi":        { workerOutputQuantity: 1, constructionTimeHours: 96, forceInput: "Kapak Petir Surgawi" },
+      "Tambang Kristal Ilahi":     { workerOutputQuantity: 1, constructionTimeHours: 120, forceInput: "Pil Nutrisi Pekerja" },
+      "Tambang Batu Roh Lapis Luar": { workerOutputQuantity: 1, constructionTimeHours: 96, forceInput: "Beliung Penekan Qi" },
+      "Kebun Teratai Surgawi":     { workerOutputQuantity: 1, constructionTimeHours: 120, forceInput: "Pil Nutrisi Pekerja" },
+
+      // === INCOME (cap berlebih) ===
+      "Tikar Pengemis":       { dailyProfit: 5,  profitCurrency: "silver", constructionTimeHours: 1 },
+      "Kuil Leluhur Desa":    { dailyProfit: 20, profitCurrency: "silver", constructionTimeHours: 24 },
+      "Kedai Arak Murim":     { dailyProfit: 50, profitCurrency: "silver", constructionTimeHours: 48 }, // dulu 100
+      "Balai Lelang Kota":    { dailyProfit: 80, profitCurrency: "silver", constructionTimeHours: 96 }, // dulu 500!!!
+      "Markas Sekte Luar":    { dailyProfit: 100, profitCurrency: "silver", constructionTimeHours: 120 }, // dulu 1000!!!
+      "Paviliun Harta Surgawi": { dailyProfit: 1, profitCurrency: "jade", constructionTimeHours: 168 },
+      "Istana Terapung":      { dailyProfit: 1, profitCurrency: "jade", constructionTimeHours: 168 },
+    };
+
+    let fixedByName = 0;
+    let fixedByThreshold = 0;
+
+    const templateNames = new Set(assets.map(a => a.name));
+
+    for (const [name, fix] of Object.entries(OLD_ASSET_FIXES)) {
+      // Jika sudah ada di template baru dengan nama sama → biarkan hasil upsert (sudah seimbang)
+      if (templateNames.has(name)) {
+        console.log(`      SKIP (sudah di template baru): "${name}"`);
+        continue;
+      }
+      const doc = await Asset.findOne({ guildId, name });
+      if (!doc) continue;
+
+      const $set = {
+        workerOutputQuantity: fix.workerOutputQuantity !== undefined ? fix.workerOutputQuantity : doc.workerOutputQuantity,
+        constructionTimeHours: fix.constructionTimeHours !== undefined ? fix.constructionTimeHours : doc.constructionTimeHours,
+        createdBy: "System Oracle (migrated)",
+      };
+      if (fix.dailyProfit !== undefined) $set.dailyProfit = fix.dailyProfit;
+      if (fix.profitCurrency) $set.profitCurrency = fix.profitCurrency;
+
+      // Pasang input wajib jika diminta
+      if (fix.forceInput) {
+        const mat = itemCache.get(fix.forceInput);
+        if (mat) {
+          $set.workerInputMaterials = [{ itemId: mat._id, itemName: mat.name, quantity: 1 }];
+        }
+      }
+
+      // Update description agar jelas
+      if (fix.workerOutputQuantity !== undefined && doc.workerOutputItemName) {
+        $set.description = `${fix.workerOutputQuantity} ${doc.workerOutputItemName}/jam` +
+          (fix.forceInput ? `. Butuh 1 ${fix.forceInput}/jam.` : ".");
+      }
+      if (fix.dailyProfit !== undefined) {
+        $set.description = `${fix.dailyProfit} ${fix.profitCurrency || doc.profitCurrency}/hari.`;
+      }
+
+      await Asset.updateOne({ _id: doc._id }, { $set });
+      console.log(`      FIX by name: "${name}" → out=${$set.workerOutputQuantity ?? "-"} profit=${$set.dailyProfit ?? "-"} time=${$set.constructionTimeHours}h`);
+      fixedByName++;
+    }
+
+    // Cadangan: asset lain yang masih output > 3
+    const stillHigh = await Asset.find({
+      guildId,
+      workerOutputQuantity: { $gt: 3 },
+    });
+    for (const doc of stillHigh) {
+      const oldQ = doc.workerOutputQuantity;
+      doc.workerOutputQuantity = 2;
+      if (!doc.workerInputMaterials || doc.workerInputMaterials.length === 0) {
+        const roti = itemCache.get("Roti Panggang") || itemCache.get("Kayu Bakar");
+        if (roti) {
+          doc.workerInputMaterials = [{ itemId: roti._id, itemName: roti.name, quantity: 1 }];
+        }
+      }
+      doc.createdBy = "System Oracle (migrated)";
+      await doc.save();
+      console.log(`      FIX threshold: "${doc.name}" ${oldQ}/jam → 2/jam`);
+      fixedByThreshold++;
+    }
+
+    // Cap jade
+    const jadeHigh = await Asset.find({ guildId, profitCurrency: "jade", dailyProfit: { $gt: 1 } });
+    for (const doc of jadeHigh) {
+      doc.dailyProfit = 1;
+      doc.createdBy = "System Oracle (migrated)";
+      await doc.save();
+      console.log(`      FIX jade: "${doc.name}" → 1 jade/hari`);
+      fixedByThreshold++;
+    }
+
+    // Cap silver income ekstrem (>150) yang bukan dari template baru
+    const silverHigh = await Asset.find({ guildId, profitCurrency: "silver", dailyProfit: { $gt: 150 } });
+    for (const doc of silverHigh) {
+      if (OLD_ASSET_FIXES[doc.name]) continue; // sudah di-fix di atas
+      const oldP = doc.dailyProfit;
+      doc.dailyProfit = 80;
+      doc.createdBy = "System Oracle (migrated)";
+      await doc.save();
+      console.log(`      FIX silver cap: "${doc.name}" ${oldP} → 80 silver/hari`);
+      fixedByThreshold++;
+    }
+
+    console.log(`      → ${fixedByName} asset old di-fix by name.`);
+    console.log(`      → ${fixedByThreshold} asset lain di-fix by threshold.\n`);
+
+    console.log('[4/5] Upsert Pets...');
     const pets = buildAllPets(guildId);
     for (const d of pets) await upsertPet(d);
     console.log(`      → ${pets.length} pets siap.\n`);
@@ -1551,7 +1729,7 @@ async function seedEconomy() {
     // - Ini yang membuat player shop rame dan barter jadi penting.
     // - Harga = basePrice item (adil, tidak dimarkup berlebihan).
     // - Non-starter yang mungkin sudah ada di DB dari seed lama → dinonaktifkan.
-    console.log('[4/4] System Shop PRIMITIF saja + nonaktifkan semua non-primitif...');
+    console.log('[5/5] System Shop PRIMITIF saja + nonaktifkan semua non-primitif...');
 
     const starters = [
       // ============================================================
@@ -1621,7 +1799,7 @@ async function seedEconomy() {
     console.log(`  Items  : ${items.length}`);
     console.log(`  Assets : ${assets.length}`);
     console.log(`  Pets   : ${pets.length}`);
-    console.log('  Semua data lama telah diperbaiki (upsert).');
+    console.log('  Template di-upsert + asset lama tidak seimbang di-migrasi paksa.');
     console.log('  Ekonomi seimbang · rantai panjang · barter & player shop hidup.');
     console.log('══════════════════════════════════════════════════════════');
   } catch (err) {
