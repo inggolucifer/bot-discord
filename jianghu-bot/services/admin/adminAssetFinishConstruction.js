@@ -13,7 +13,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const targetId = interaction.options.getUser('user')?.id;
+    const targetId = interaction.options.get('user')?.value;
     if (!targetId) return interaction.respond([]);
     const player = await Player.findOne({ discordId: targetId, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
