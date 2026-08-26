@@ -200,9 +200,31 @@ export default function Home() {
                 </div>
               </div>
             </>
+          ) : user ? (
+            <div className="w-full text-center py-6 sm:py-8 flex flex-col items-center justify-center gap-4">
+               <p className="text-gray-400 text-sm sm:text-base">Anda sudah login, namun karakter belum ditemukan. Silakan buat karakter di Discord.</p>
+            </div>
           ) : (
-             <div className="w-full text-center py-6 sm:py-8">
-                <p className="text-gray-500 text-sm sm:text-base">Silakan login melalui Discord untuk melihat profil Anda.</p>
+             <div className="w-full text-center py-6 sm:py-8 flex flex-col items-center justify-center gap-4">
+                <p className="text-gray-400 text-sm sm:text-base">Anda belum login. Silakan login untuk mengelola karakter, kultivasi, inventory, dan aset Anda.</p>
+                <Button
+                   onClick={() => {
+                     const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+                     if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
+                       alert("Konfigurasi login belum lengkap (NEXT_PUBLIC_DISCORD_CLIENT_ID belum diatur). Hubungi admin.");
+                       return;
+                     }
+                     const redirectUri = encodeURIComponent(
+                       process.env.NEXT_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_URL}/auth/callback` : 'http://localhost:3000/auth/callback'
+                     );
+                     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
+                   }}
+                   variant="destructive"
+                   size="lg"
+                   className="shadow-[0_0_15px_rgba(139,0,0,0.6)] animate-[pulse_2s_infinite]"
+                >
+                   Login via Discord
+                </Button>
              </div>
           )}
         </div>
