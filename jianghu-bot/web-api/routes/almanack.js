@@ -4,6 +4,7 @@ const Item = require('../../models/Item');
 const Asset = require('../../models/Asset');
 const Player = require('../../models/Player');
 const Shop = require('../../models/Shop');
+const Pet = require('../../models/Pet');
 const { checkMaterials, consumeMaterials } = require('../../utils/crafting');
 const { logTransaction } = require('../../utils/logger');
 const { authenticateToken } = require('../middlewares/auth');
@@ -81,6 +82,18 @@ router.get('/assets', async (req, res) => {
     } catch (error) {
         console.error('[API-ALMANACK] Error fetching assets:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat memuat aset.' });
+    }
+});
+
+
+// Public route to fetch pets
+router.get('/pets', async (req, res) => {
+    try {
+        const pets = await Pet.find({}).sort({ rank: -1, tier: -1, name: 1 }).lean();
+        res.json({ success: true, data: pets });
+    } catch (error) {
+        console.error('[API-ALMANACK] Error fetching pets:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server saat memuat pet.' });
     }
 });
 
