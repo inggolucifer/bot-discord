@@ -85,10 +85,11 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md">
-      <div className="container mx-auto px-4 h-16 flex justify-between items-center">
+    <>
+      <header className="bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md">
+        <div className="container mx-auto px-4 h-16 flex justify-between items-center">
 
-        {/* Logo */}
+          {/* Logo */}
         <Link href="/" className="text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
           JIANGHU RP
         </Link>
@@ -181,16 +182,17 @@ export default function Navbar() {
             </Button>
           )}
 
-          {/* Mobile Menu Toggle */}
-          <button
-            className="lg:hidden p-2 text-gray-300 hover:text-[#c5a880]"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            {/* Mobile Menu Toggle */}
+            <button
+              className="lg:hidden p-2 text-gray-300 hover:text-[#c5a880]"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Menu Overlay / Drawer */}
       <div
@@ -262,19 +264,19 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-auto pt-6 border-t border-[#333]">
-             {user && (
-               <Button
-                 variant="outline"
-                 onClick={() => { logout(); closeMobileMenu(); }}
-                 className="w-full justify-center border-[#333] text-gray-400"
-               >
-                 Logout
-               </Button>
-             )}
+            <div className="mt-auto pt-6 border-t border-[#333]">
+               {user && (
+                 <Button
+                   variant="outline"
+                   onClick={() => { logout(); closeMobileMenu(); }}
+                   className="w-full justify-center border-[#333] text-gray-400"
+                 >
+                   Logout
+                 </Button>
+               )}
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+    </>
   );
 }
