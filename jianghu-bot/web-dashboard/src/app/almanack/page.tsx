@@ -57,7 +57,7 @@ interface Pet extends BaseEntity {
   baseSpd: number;
 }
 
-const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Divine'];
+const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical', 'Divine'];
 
 export default function AlmanackPage() {
   const [items, setItems] = useState<Item[]>([]);
@@ -122,7 +122,7 @@ export default function AlmanackPage() {
       case 'rare': return 'border-blue-700 shadow-[0_0_15px_rgba(29,78,216,0.1)]';
       case 'epic': return 'border-purple-700 shadow-[0_0_15px_rgba(126,34,206,0.1)]';
       case 'legendary': return 'border-yellow-600 shadow-[0_0_15px_rgba(202,138,4,0.15)]';
-      case 'mythic': return 'border-red-700 shadow-[0_0_15px_rgba(185,28,28,0.15)]';
+      case 'mythical': return 'border-red-700 shadow-[0_0_15px_rgba(185,28,28,0.15)]';
       case 'divine': return 'border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]';
       default: return 'border-[#333]';
     }
@@ -134,7 +134,7 @@ export default function AlmanackPage() {
       case 'rare': return 'text-blue-400';
       case 'epic': return 'text-purple-400';
       case 'legendary': return 'text-yellow-500 drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]';
-      case 'mythic': return 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]';
+      case 'mythical': return 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]';
       case 'divine': return 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]';
       default: return 'text-gray-300';
     }
