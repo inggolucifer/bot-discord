@@ -107,8 +107,7 @@ export default function SectPage() {
       setClaimResult(null);
 
       try {
-          const res = await api.post('/sect/claim-profit');
-          setClaimResult(res.data.data);
+                    setClaimResult(res.data.data);
           await setTimeout(() => fetchSectData(), 0);
       } catch (err: any) {
           setClaimError(err.response?.data?.error || 'Gagal klaim profit sekte.');
