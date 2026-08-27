@@ -101,12 +101,19 @@ function makeInput(itemName, quantity = 1) {
 
 async function upsertItem(data) {
   const filter = { guildId: data.guildId, name: data.name };
+
+  let desc = data.description || '-';
+  const dur = durabilityOf(data.name);
+  if (dur > 1 && !/Daya tahan alat:/.test(desc)) {
+    desc = `${desc} Daya tahan alat: ${dur} jam kerja.`;
+  }
+
   const update = {
     $set: {
       rank: data.rank || 'Common',
       category: data.category || 'none',
       tier: data.tier ?? 1,
-      description: data.description || '-',
+      description: desc,
       effect: data.effect || null,
       origin: data.origin || null,
       basePrice: data.basePrice ?? 0,
@@ -1666,7 +1673,7 @@ function buildAllAssets(guildId) {
     try {
       const inputs = (n.inputs || []).map(([name, q]) => makeInput(name, q));
       const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q, durabilityHours: 1 }));
-      const inputDesc = inputs.map(i => `${i.itemName} (tahan ${i.durabilityHours} jam)`).join(', ');
+      const inputDesc = inputs.map(i => i.itemName).join(', ');
       const desc = n.desc + (inputs.length ? ` | Tool/input: ${inputDesc}` : '');
       assets.push(g({
         name: n.name,
@@ -1749,7 +1756,7 @@ function buildAllAssets(guildId) {
     try {
       const inputs = (n.inputs || []).map(([name, q]) => makeInput(name, q));
       const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q, durabilityHours: 1 }));
-      const inputDesc = inputs.map(i => `${i.itemName} (tahan ${i.durabilityHours} jam)`).join(', ');
+      const inputDesc = inputs.map(i => i.itemName).join(', ');
       assets.push(g({
         name: n.name,
         description: n.desc + (inputs.length ? ` | Input: ${inputDesc}` : ''),
@@ -2275,10 +2282,10 @@ async function seedEconomy() {
     
 
     // =====================================================================
-    // DAYA TAHAN TOOL: stamp durabilityHours di semua workerInputMaterials
+    // DAYA TAHAN TOOL: stamp durabilityHours di semua workerInputMaterials & bersihkan deskripsi
     // =====================================================================
-    console.log('[3c/5] Stamp daya tahan tool (durabilityHours)...');
-    const allForDur = await Asset.find({ guildId, 'workerInputMaterials.0': { $exists: true } });
+    console.log('[3c/5] Stamp daya tahan tool & bersihkan deskripsi...');
+    const allForDur = await Asset.find({ guildId });
     let durFixed = 0;
     for (const doc of allForDur) {
       let changed = false;
@@ -2293,21 +2300,28 @@ async function seedEconomy() {
         if (!obj.quantity || obj.quantity < 1) obj.quantity = 1;
         return obj;
       });
-      if (changed) {
-        doc.workerInputMaterials = next;
-        // Perkaya deskripsi singkat jika tool
-        const toolBits = next
-          .filter((m) => (m.durabilityHours || 1) > 1)
-          .map((m) => `${m.itemName} tahan ${m.durabilityHours}j`);
-        if (toolBits.length && doc.description && !/tahan \d+j/.test(doc.description)) {
-          doc.description = `${doc.description} [${toolBits.join(', ')}]`;
+      // Bersihkan deskripsi dari string "(tahan X jam)" atau "[...tahan Xj]"
+      let descChanged = false;
+      if (doc.description) {
+        const cleanedDesc = doc.description
+          .replace(/\(tahan \d+ jam\)/g, '')
+          .replace(/\[.*?tahan \d+j.*?\]/g, '')
+          .replace(/\s+/g, ' ') // rapikan spasi berlebih
+          .trim();
+        if (doc.description !== cleanedDesc) {
+          doc.description = cleanedDesc;
+          descChanged = true;
         }
+      }
+
+      if (changed || descChanged) {
+        if (changed) doc.workerInputMaterials = next;
         doc.createdBy = doc.createdBy || 'System Oracle';
         await doc.save();
         durFixed++;
       }
     }
-    console.log(`      → ${durFixed} asset dapat daya tahan tool.\n`);
+    console.log(`      → ${durFixed} asset di-update (daya tahan & pembersihan deskripsi).\n`);
 
 
     console.log(`      → ${fixedByName} asset old di-fix by name.`);

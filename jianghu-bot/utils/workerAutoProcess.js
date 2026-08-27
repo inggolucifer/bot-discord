@@ -126,7 +126,25 @@ async function runWorkerAutoProcess(client) {
                         const neededPerHour = input.quantity * productiveQuantity;
                         const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
                         const availableQuantity = ownedItem ? ownedItem.quantity : 0;
-                        const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+
+                        // Validasi keras: Untuk MEMULAI kerja, pemain minimal harus punya tool = kebutuhan base * pekerja
+                        if (availableQuantity < neededPerHour) {
+                            affordableHours = 0;
+                            if (!missingMaterialName) missingMaterialName = input.itemName;
+                            break;
+                        }
+
+                        const durability = input.durabilityHours || 1;
+                        let maxAffordableForThisMat = hoursPassed;
+
+                        if (durability === 1) {
+                            maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+                        } else {
+                            // Untuk alat yang awet, hitung ekspektasi maksimum waktu bertahan alat
+                            // (Jumlah alat / (kebutuhan / durabilitas))
+                            const expectedBurnRatePerHour = neededPerHour / durability;
+                            maxAffordableForThisMat = Math.floor(availableQuantity / expectedBurnRatePerHour);
+                        }
 
                         if (maxAffordableForThisMat < affordableHours) {
                             affordableHours = maxAffordableForThisMat;
@@ -162,10 +180,31 @@ async function runWorkerAutoProcess(client) {
                 // Deduct Input
                 if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
                     for (const input of assetConfig.workerInputMaterials) {
-                        const totalNeeded = input.quantity * affordableHours * productiveQuantity;
-                        const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
-                        ownedItem.quantity -= totalNeeded;
-                        if(ownedItem.quantity < 0) ownedItem.quantity = 0;
+                        const baseNeeded = input.quantity * productiveQuantity;
+                        const durability = input.durabilityHours || 1;
+                        let totalBroken = 0;
+
+                        if (durability === 1) {
+                            totalBroken = baseNeeded * affordableHours;
+                        } else {
+                            // Sistem kerusakan probabilistik
+                            // Melempar dadu per jam, per kebutuhan pekerja
+                            for (let h = 0; h < affordableHours; h++) {
+                                for (let p = 0; p < baseNeeded; p++) {
+                                    if (Math.random() < (1.0 / durability)) {
+                                        totalBroken++;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (totalBroken > 0) {
+                            const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
+                            if (ownedItem) {
+                                ownedItem.quantity -= totalBroken;
+                                if(ownedItem.quantity < 0) ownedItem.quantity = 0;
+                            }
+                        }
                     }
                 }
 
@@ -258,7 +297,23 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                      const neededPerHour = input.quantity * owned.quantity;
                      const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
                      const availableQuantity = ownedItem ? ownedItem.quantity : 0;
-                     const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+
+                     // Validasi keras: minimal punya alat untuk mulai
+                     if (availableQuantity < neededPerHour) {
+                         affordableHours = 0;
+                         if (!missingMaterialName) missingMaterialName = input.itemName;
+                         break;
+                     }
+
+                     const durability = input.durabilityHours || 1;
+                     let maxAffordableForThisMat = hoursPassed;
+
+                     if (durability === 1) {
+                         maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+                     } else {
+                         const expectedBurnRatePerHour = neededPerHour / durability;
+                         maxAffordableForThisMat = Math.floor(availableQuantity / expectedBurnRatePerHour);
+                     }
 
                      if (maxAffordableForThisMat < affordableHours) {
                          affordableHours = maxAffordableForThisMat;
@@ -292,10 +347,29 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
              // Deduct
              if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
                  for (const input of assetConfig.workerInputMaterials) {
-                     const totalNeeded = input.quantity * affordableHours * owned.quantity;
-                     const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
-                     ownedItem.quantity -= totalNeeded;
-                     if (ownedItem.quantity < 0) ownedItem.quantity = 0;
+                     const baseNeeded = input.quantity * owned.quantity;
+                     const durability = input.durabilityHours || 1;
+                     let totalBroken = 0;
+
+                     if (durability === 1) {
+                         totalBroken = baseNeeded * affordableHours;
+                     } else {
+                         for (let h = 0; h < affordableHours; h++) {
+                             for (let p = 0; p < baseNeeded; p++) {
+                                 if (Math.random() < (1.0 / durability)) {
+                                     totalBroken++;
+                                 }
+                             }
+                         }
+                     }
+
+                     if (totalBroken > 0) {
+                         const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
+                         if (ownedItem) {
+                             ownedItem.quantity -= totalBroken;
+                             if (ownedItem.quantity < 0) ownedItem.quantity = 0;
+                         }
+                     }
                  }
              }
 
