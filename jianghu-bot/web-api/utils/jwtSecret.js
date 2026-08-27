@@ -1,7 +1,7 @@
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
+const JWT_SECRET = process.env.JWT_SECRET;
 
-if (JWT_SECRET === 'fallback-secret-for-development-only') {
-    console.warn('[WARNING] JWT_SECRET tidak diatur di environment variables! Menggunakan fallback secret. JANGAN gunakan ini di production.');
+if (!JWT_SECRET) {
+    throw new Error('FATAL: JWT_SECRET environment variable is required');
 }
 
 module.exports = { JWT_SECRET };

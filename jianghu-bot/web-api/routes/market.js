@@ -9,6 +9,8 @@ const Asset = require('../../models/Asset');
 const TransactionLog = require('../../models/TransactionLog');
 const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/CustomError');
 
 // Helper to determine emoji based on item/asset type
 function getEmojiForShopItem(itemType, category) {
@@ -113,91 +115,99 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
 
     try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-        const auction = await Auction.findById(auctionId).populate('itemId');
-        if (!auction) return res.status(404).json({ error: 'Lelang tidak ditemukan.' });
+            const auction = await Auction.findById(auctionId).populate('itemId').session(session);
+            if (!auction) throw new CustomError('Lelang tidak ditemukan.', 404);
 
-        if (auction.status !== 'active') {
-            return res.status(400).json({ error: 'Lelang ini sudah tidak aktif.' });
-        }
-
-        if (new Date() > auction.expiresAt) {
-             auction.status = 'pending'; // Should be handled by cron but just in case
-             await auction.save();
-             return res.status(400).json({ error: 'Waktu lelang telah habis.' });
-        }
-
-        // Cek jika penawar adalah orang yang sama (tidak boleh bid berkali2)
-        if (auction.highestBidderId && auction.highestBidderId.toString() === player._id.toString()) {
-            return res.status(400).json({ error: 'Anda sudah memegang bid tertinggi saat ini.' });
-        }
-
-        // Cek jika penjual mencoba menawar barangnya sendiri
-        if (auction.sellerId && auction.sellerId.toString() === player._id.toString()) {
-            return res.status(400).json({ error: 'Anda tidak bisa menawar barang lelang sendiri.' });
-        }
-
-        const minBid = auction.highestBid > 0 ? auction.highestBid + 1 : auction.startingBid;
-        if (bidAmount < minBid) {
-            return res.status(400).json({ error: `Bid harus lebih besar dari tertinggi saat ini! Minimal bid: ${minBid} Silver.` });
-        }
-
-        if (player.totalWealth < bidAmount) {
-            return res.status(400).json({ error: `Kekayaanmu tidak cukup. Total kekayaanmu setara dengan ${player.totalWealth} Silver.` });
-        }
-
-        // Refund the previous highest bidder
-        if (auction.highestBidderId) {
-            const prevBidder = await Player.findById(auction.highestBidderId);
-            if (prevBidder) {
-                prevBidder.currency.silver += auction.highestBid;
-                await prevBidder.save();
-
-                await TransactionLog.create({
-                    guildId: auction.guildId,
-                    type: 'auction_refund',
-                    description: `Refund bid lelang ${auction._id} sebesar ${auction.highestBid} Silver ke [${prevBidder.characterName}] karena dikalahkan.`,
-                });
+            if (auction.status !== 'active') {
+                throw new CustomError('Lelang ini sudah tidak aktif.', 400);
             }
-        }
 
-        // Cut money from current player
-        let remainingToPay = bidAmount;
-        if (player.currency.silver >= remainingToPay) {
-            player.currency.silver -= remainingToPay;
-        } else {
-            let total = (player.currency.silver || 0) +
-                        (player.currency.gold || 0) * 100 +
-                        (player.currency.jade || 0) * 10000 +
-                        (player.currency.spirit || 0) * 1000000;
+            if (new Date() > auction.expiresAt) {
+                 auction.status = 'pending'; // Should be handled by cron but just in case
+                 await auction.save({ session });
+                 throw new CustomError('Waktu lelang telah habis.', 400);
+            }
 
-            total -= remainingToPay;
+            // Cek jika penawar adalah orang yang sama (tidak boleh bid berkali2)
+            if (auction.highestBidderId && auction.highestBidderId.toString() === player._id.toString()) {
+                throw new CustomError('Anda sudah memegang bid tertinggi saat ini.', 400);
+            }
 
-            player.currency.spirit = Math.floor(total / 1000000);
-            total %= 1000000;
-            player.currency.jade = Math.floor(total / 10000);
-            total %= 10000;
-            player.currency.gold = Math.floor(total / 100);
-            player.currency.silver = total % 100;
-        }
-        await player.save();
+            // Cek jika penjual mencoba menawar barangnya sendiri
+            if (auction.sellerId && auction.sellerId.toString() === player._id.toString()) {
+                throw new CustomError('Anda tidak bisa menawar barang lelang sendiri.', 400);
+            }
 
-        auction.highestBid = bidAmount;
-        auction.highestBidderId = player._id;
-        await auction.save();
+            const minBid = auction.highestBid > 0 ? auction.highestBid + 1 : auction.startingBid;
+            if (bidAmount < minBid) {
+                throw new CustomError(`Bid harus lebih besar dari tertinggi saat ini! Minimal bid: ${minBid} Silver.`, 400);
+            }
 
-        await TransactionLog.create({
-            guildId: auction.guildId,
-            type: 'auction_bid',
-            description: `[${player.characterName}] bid ${bidAmount} Silver pada lelang ${auctionId}.`,
+            if (player.totalWealth < bidAmount) {
+                throw new CustomError(`Kekayaanmu tidak cukup. Total kekayaanmu setara dengan ${player.totalWealth} Silver.`, 400);
+            }
+
+            // Refund the previous highest bidder
+            if (auction.highestBidderId) {
+                // Using findOneAndUpdate to atomically increment the refunded player's silver
+                const prevBidder = await Player.findOneAndUpdate(
+                    { _id: auction.highestBidderId },
+                    { $inc: { 'currency.silver': auction.highestBid } },
+                    { new: true, session }
+                );
+
+                if (prevBidder) {
+                    await TransactionLog.create([{
+                        guildId: auction.guildId,
+                        type: 'auction_refund',
+                        description: `Refund bid lelang ${auction._id} sebesar ${auction.highestBid} Silver ke [${prevBidder.characterName}] karena dikalahkan.`,
+                    }], { session });
+                }
+            }
+
+            // Cut money from current player. We will use the object approach here since we might have to convert wealth
+            let remainingToPay = bidAmount;
+            if (player.currency.silver >= remainingToPay) {
+                player.currency.silver -= remainingToPay;
+            } else {
+                let total = (player.currency.silver || 0) +
+                            (player.currency.gold || 0) * 100 +
+                            (player.currency.jade || 0) * 10000 +
+                            (player.currency.spirit || 0) * 1000000;
+
+                total -= remainingToPay;
+
+                player.currency.spirit = Math.floor(total / 1000000);
+                total %= 1000000;
+                player.currency.jade = Math.floor(total / 10000);
+                total %= 10000;
+                player.currency.gold = Math.floor(total / 100);
+                player.currency.silver = total % 100;
+            }
+            await player.save({ session });
+
+            auction.highestBid = bidAmount;
+            auction.highestBidderId = player._id;
+            await auction.save({ session });
+
+            await TransactionLog.create([{
+                guildId: auction.guildId,
+                type: 'auction_bid',
+                description: `[${player.characterName}] bid ${bidAmount} Silver pada lelang ${auctionId}.`,
+            }], { session });
         });
 
         // (We can emit Socket event here to live reload web-dashboard if we use socket, or discord message logic)
 
         res.json({ success: true, message: `Berhasil melakukan bid sebesar ${bidAmount} Silver.` });
     } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-MARKET] Bid error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat bid.' });
     } finally {
@@ -219,45 +229,55 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        await withTransaction(async (session) => {
+            const shopItem = await Shop.findById(shopId).session(session);
+            if (!shopItem || !shopItem.isActive) throw new CustomError('Barang tidak ditemukan di toko.', 404);
+            if (shopItem.stock !== -1 && shopItem.stock < quantity) {
+                throw new CustomError('Stok barang tidak mencukupi.', 400);
+            }
 
-        const shopItem = await Shop.findById(shopId);
-        if (!shopItem || !shopItem.isActive) return res.status(404).json({ error: 'Barang tidak ditemukan di toko.' });
-        if (shopItem.stock !== -1 && shopItem.stock < quantity) {
-            return res.status(400).json({ error: 'Stok barang tidak mencukupi.' });
-        }
+            const totalPrice = shopItem.price * quantity;
+            const currencyType = shopItem.priceCurrency;
 
-        const totalPrice = shopItem.price * quantity;
-        const currencyType = shopItem.priceCurrency;
+            // Atomically check and deduct player currency
+            const updateQuery = {};
+            updateQuery[`currency.${currencyType}`] = -totalPrice;
 
-        if (player.currency[currencyType] < totalPrice) {
-            // Note: Simplification for exact currency match instead of calculating totalWealth.
-            // Better matching should deduct total wealth properly or require exact currency match.
-            return res.status(400).json({ error: `Uang ${currencyType} tidak cukup. Butuh ${totalPrice}.` });
-        }
+            const player = await Player.findOneAndUpdate(
+                { discordId: userId, [`currency.${currencyType}`]: { $gte: totalPrice } },
+                { $inc: updateQuery },
+                { new: true, session }
+            );
 
-        player.currency[currencyType] -= totalPrice;
+            if (!player) {
+                throw new CustomError(`Uang ${currencyType} tidak cukup atau karakter tidak ditemukan. Butuh ${totalPrice}.`, 400);
+            }
 
-        if (shopItem.stock !== -1) {
-            shopItem.stock -= quantity;
-            await shopItem.save();
-        }
+            // Deduct stock if not unlimited
+            if (shopItem.stock !== -1) {
+                shopItem.stock -= quantity;
+                await shopItem.save({ session });
+            }
 
-        if (shopItem.category === 'item') {
-            const existingItem = player.inventory.find(i => i.itemId.equals(shopItem.refId));
-            if (existingItem) existingItem.quantity += quantity;
-            else player.inventory.push({ itemId: shopItem.refId, quantity: quantity });
-        } else if (shopItem.category === 'asset') {
-            const existingAsset = player.assets.find(a => a.assetId.equals(shopItem.refId));
-            if (existingAsset) existingAsset.quantity += quantity;
-            else player.assets.push({ assetId: shopItem.refId, quantity: quantity });
-        } // Pets simplified out for now
+            // Add to player inventory
+            if (shopItem.category === 'item') {
+                const existingItem = player.inventory.find(i => i.itemId.equals(shopItem.refId));
+                if (existingItem) existingItem.quantity += quantity;
+                else player.inventory.push({ itemId: shopItem.refId, quantity: quantity });
+            } else if (shopItem.category === 'asset') {
+                const existingAsset = player.assets.find(a => a.assetId.equals(shopItem.refId));
+                if (existingAsset) existingAsset.quantity += quantity;
+                else player.assets.push({ assetId: shopItem.refId, quantity: quantity });
+            } // Pets simplified out for now
 
-        await player.save();
+            await player.save({ session });
+        });
 
         res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
     } catch (error) {
+        if (error instanceof CustomError) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-MARKET] Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
@@ -311,74 +331,91 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        await withTransaction(async (session) => {
+            const PlayerListing = require('../../models/PlayerListing');
+            const TransactionLog = require('../../models/TransactionLog');
+            const listing = await PlayerListing.findById(listingId).session(session);
 
-        const PlayerListing = require('../../models/PlayerListing');
-        const TransactionLog = require('../../models/TransactionLog');
-        const listing = await PlayerListing.findById(listingId);
-
-        if (!listing || listing.status !== 'active') return res.status(404).json({ error: 'Barang tidak ditemukan atau sudah terjual.' });
-        if (listing.quantity < quantity) {
-            return res.status(400).json({ error: 'Kuantitas barang yang diminta melebihi stok yang ada.' });
-        }
-
-        if (listing.sellerId === userId) {
-            return res.status(400).json({ error: 'Kamu tidak bisa membeli barangmu sendiri.' });
-        }
-
-        const totalPrice = listing.pricePerUnit * quantity;
-        const currencyType = listing.currency;
-
-        if (player.currency[currencyType] < totalPrice) {
-            return res.status(400).json({ error: `Uang ${currencyType} tidak cukup. Butuh ${totalPrice}.` });
-        }
-
-        const seller = await Player.findOne({ discordId: listing.sellerId });
-        if (!seller) return res.status(404).json({ error: 'Penjual tidak ditemukan.' });
-
-        // Proses Pemotongan dan Penambahan Uang
-        player.currency[currencyType] -= totalPrice;
-        seller.currency[currencyType] += totalPrice;
-
-        // Proses Pindah Barang
-        if (listing.type === 'item') {
-            const existingItem = player.inventory.find(i => i.itemId.equals(listing.itemId));
-            if (existingItem) existingItem.quantity += quantity;
-            else player.inventory.push({ itemId: listing.itemId, quantity: quantity });
-        } else if (listing.type === 'asset') {
-            const existingAsset = player.assets.find(a => a.assetId.equals(listing.refId));
-            if (existingAsset) existingAsset.quantity += quantity;
-            else player.assets.push({ assetId: listing.refId, quantity: quantity });
-        } else if (listing.type === 'pet') {
-            const Pet = require('../../models/Pet');
-            const petDoc = await Pet.findById(listing.refId);
-            if(petDoc) {
-                 player.pets.push({
-                     instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
-                     petId: petDoc._id,
-                 })
+            if (!listing || listing.status !== 'active') throw new CustomError('Barang tidak ditemukan atau sudah terjual.', 404);
+            if (listing.quantity < quantity) {
+                throw new CustomError('Kuantitas barang yang diminta melebihi stok yang ada.', 400);
             }
-        }
 
-        // Update Stok
-        listing.quantity -= quantity;
-        if (listing.quantity <= 0) {
-            listing.status = 'sold';
-            listing.buyerId = userId;
-        }
-        await listing.save();
-        await player.save();
-        await seller.save();
+            if (listing.sellerId === userId) {
+                throw new CustomError('Kamu tidak bisa membeli barangmu sendiri.', 400);
+            }
 
-        await TransactionLog.create({
-            guildId: listing.guildId,
-            type: 'player_listing_sale',
-            description: `[${player.characterName}] membeli ${quantity}x ${listing.itemName} dari [${seller.characterName}] seharga ${totalPrice} ${currencyType}.`,
+            const totalPrice = listing.pricePerUnit * quantity;
+            const currencyType = listing.currency;
+
+            // Atomically check and deduct player currency
+            const updateQuery = {};
+            updateQuery[`currency.${currencyType}`] = -totalPrice;
+
+            const player = await Player.findOneAndUpdate(
+                { discordId: userId, [`currency.${currencyType}`]: { $gte: totalPrice } },
+                { $inc: updateQuery },
+                { new: true, session }
+            );
+
+            if (!player) {
+                throw new CustomError(`Uang ${currencyType} kamu tidak cukup atau karakter tidak ditemukan. Butuh ${totalPrice}.`, 400);
+            }
+
+            // Add money to seller atomically
+            const addQuery = {};
+            addQuery[`currency.${currencyType}`] = totalPrice;
+            const seller = await Player.findOneAndUpdate(
+                { discordId: listing.sellerId },
+                { $inc: addQuery },
+                { new: true, session }
+            );
+
+            if (!seller) throw new CustomError('Penjual tidak ditemukan (mungkin sudah dihapus).', 404);
+
+            // Proses Pindah Barang
+            if (listing.type === 'item') {
+                const existingItem = player.inventory.find(i => i.itemId.equals(listing.itemId));
+                if (existingItem) existingItem.quantity += quantity;
+                else player.inventory.push({ itemId: listing.itemId, quantity: quantity });
+            } else if (listing.type === 'asset') {
+                const existingAsset = player.assets.find(a => a.assetId.equals(listing.refId));
+                if (existingAsset) existingAsset.quantity += quantity;
+                else player.assets.push({ assetId: listing.refId, quantity: quantity });
+            } else if (listing.type === 'pet') {
+                const Pet = require('../../models/Pet');
+                const petDoc = await Pet.findById(listing.refId).session(session);
+                if(petDoc) {
+                     player.pets.push({
+                         instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
+                         petId: petDoc._id,
+                     })
+                }
+            }
+
+            // Update Stok
+            listing.quantity -= quantity;
+            if (listing.quantity <= 0) {
+                listing.status = 'sold';
+                listing.buyerId = userId;
+            }
+
+            await listing.save({ session });
+            await player.save({ session });
+            // seller sudah disave lewat findOneAndUpdate
+
+            await TransactionLog.create([{
+                guildId: listing.guildId,
+                type: 'player_listing_sale',
+                description: `[${player.characterName}] membeli ${quantity}x ${listing.itemName} dari [${seller.characterName}] seharga ${totalPrice} ${currencyType}.`,
+            }], { session });
         });
 
         res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
     } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-MARKET] Player Shop Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
@@ -432,57 +469,65 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        let successMessage = '';
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-        const PlayerListing = require('../../models/PlayerListing');
-        const TransactionLog = require('../../models/TransactionLog');
-        const target = await PlayerListing.findById(listingId);
+            const PlayerListing = require('../../models/PlayerListing');
+            const TransactionLog = require('../../models/TransactionLog');
+            const target = await PlayerListing.findById(listingId).session(session);
 
-        if (!target) return res.status(404).json({ error: 'Listing tidak ditemukan.' });
-        if (target.sellerId !== userId) return res.status(403).json({ error: 'Ini bukan listing milikmu.' });
-        if (target.status !== 'active') return res.status(400).json({ error: `Listing sudah dalam status ${target.status}.` });
+            if (!target) throw new CustomError('Listing tidak ditemukan.', 404);
+            if (target.sellerId !== userId) throw new CustomError('Ini bukan listing milikmu.', 403);
+            if (target.status !== 'active') throw new CustomError(`Listing sudah dalam status ${target.status}.`, 400);
 
-        // Kembalikan barang ke inventory
-        const targetId = target.refId || target.itemId;
+            // Kembalikan barang ke inventory
+            const targetId = target.refId || target.itemId;
 
-        if (target.type === 'item') {
-            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID item/ref.' });
-            const owned = player.inventory.find((i) => i.itemId && i.itemId.equals(targetId));
-            if (owned) owned.quantity += target.quantity;
-            else player.inventory.push({ itemId: targetId, quantity: target.quantity });
-        } else if (target.type === 'asset') {
-            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID asset/ref.' });
-            const owned = player.assets.find((a) => a.assetId && a.assetId.equals(targetId));
-            if (owned) owned.quantity += target.quantity;
-            else player.assets.push({ assetId: targetId, quantity: target.quantity });
-        } else if (target.type === 'pet') {
-            if (!targetId) return res.status(400).json({ error: 'Data listing tidak memiliki ID pet/ref.' });
-            const Pet = require('../../models/Pet');
-            const petDoc = await Pet.findById(targetId);
-            if (petDoc) {
-                for (let i = 0; i < target.quantity; i++) {
-                    player.pets.push({
-                        instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
-                        petId: petDoc._id,
-                    });
+            if (target.type === 'item') {
+                if (!targetId) throw new CustomError('Data listing tidak memiliki ID item/ref.', 400);
+                const owned = player.inventory.find((i) => i.itemId && i.itemId.equals(targetId));
+                if (owned) owned.quantity += target.quantity;
+                else player.inventory.push({ itemId: targetId, quantity: target.quantity });
+            } else if (target.type === 'asset') {
+                if (!targetId) throw new CustomError('Data listing tidak memiliki ID asset/ref.', 400);
+                const owned = player.assets.find((a) => a.assetId && a.assetId.equals(targetId));
+                if (owned) owned.quantity += target.quantity;
+                else player.assets.push({ assetId: targetId, quantity: target.quantity });
+            } else if (target.type === 'pet') {
+                if (!targetId) throw new CustomError('Data listing tidak memiliki ID pet/ref.', 400);
+                const Pet = require('../../models/Pet');
+                const petDoc = await Pet.findById(targetId).session(session);
+                if (petDoc) {
+                    for (let i = 0; i < target.quantity; i++) {
+                        player.pets.push({
+                            instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
+                            petId: petDoc._id,
+                        });
+                    }
                 }
             }
-        }
 
-        await player.save();
+            await player.save({ session });
 
-        target.status = 'cancelled';
-        await target.save();
+            target.status = 'cancelled';
+            await target.save({ session });
 
-        await TransactionLog.create({
-            guildId: target.guildId,
-            type: 'player_listing_cancel',
-            description: `[${player.characterName}] membatalkan listing ${target.quantity}x ${target.itemName}.`,
+            await TransactionLog.create([{
+                guildId: target.guildId,
+                type: 'player_listing_cancel',
+                description: `[${player.characterName}] membatalkan listing ${target.quantity}x ${target.itemName}.`,
+            }], { session });
+
+            successMessage = `Listing berhasil dibatalkan. ${target.quantity}x ${target.itemName} dikembalikan.`;
         });
 
-        res.json({ success: true, message: `Listing berhasil dibatalkan. ${target.quantity}x ${target.itemName} dikembalikan.` });
+        res.json({ success: true, message: successMessage });
     } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-MARKET] Player Shop Cancel error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membatalkan listing.' });
     } finally {
@@ -504,57 +549,62 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
     try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-        const PlayerListing = require('../../models/PlayerListing');
-        const Item = require('../../models/Item');
-        const TransactionLog = require('../../models/TransactionLog');
+            const PlayerListing = require('../../models/PlayerListing');
+            const Item = require('../../models/Item');
+            const TransactionLog = require('../../models/TransactionLog');
 
-        const MAX_LISTING_PER_PLAYER = 10;
-        const activeCount = await PlayerListing.countDocuments({ guildId: player.guildId, sellerId: userId, status: 'active' });
+            const MAX_LISTING_PER_PLAYER = 10;
+            const activeCount = await PlayerListing.countDocuments({ guildId: player.guildId, sellerId: userId, status: 'active' }).session(session);
 
-        if (activeCount >= MAX_LISTING_PER_PLAYER) {
-            return res.status(400).json({ error: `Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}).` });
-        }
+            if (activeCount >= MAX_LISTING_PER_PLAYER) {
+                throw new CustomError(`Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}).`, 400);
+            }
 
-        const owned = player.inventory.find(i => i.itemId.toString() === itemId);
-        if (!owned || owned.quantity < quantity) {
-            return res.status(400).json({ error: 'Item di inventory tidak cukup.' });
-        }
+            const owned = player.inventory.find(i => i.itemId.toString() === itemId);
+            if (!owned || owned.quantity < quantity) {
+                throw new CustomError('Item di inventory tidak cukup.', 400);
+            }
 
-        const item = await Item.findById(itemId);
-        if (!item) return res.status(404).json({ error: 'Item tidak ditemukan.' });
+            const item = await Item.findById(itemId).session(session);
+            if (!item) throw new CustomError('Item tidak ditemukan.', 404);
 
-        // Escrow item
-        owned.quantity -= quantity;
-        if (owned.quantity <= 0) {
-            player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId);
-        }
+            // Escrow item
+            owned.quantity -= quantity;
+            if (owned.quantity <= 0) {
+                player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId);
+            }
 
-        await player.save();
+            await player.save({ session });
 
-        const listing = await PlayerListing.create({
-            guildId: player.guildId,
-            sellerId: userId,
-            sellerName: player.characterName,
-            type: 'item',
-            itemId: item._id,
-            refId: item._id,
-            itemName: item.name,
-            quantity: quantity,
-            pricePerUnit: pricePerUnit,
-            currency: currency,
-        });
+            const listing = await PlayerListing.create([{
+                guildId: player.guildId,
+                sellerId: userId,
+                sellerName: player.characterName,
+                type: 'item',
+                itemId: item._id,
+                refId: item._id,
+                itemName: item.name,
+                quantity: quantity,
+                pricePerUnit: pricePerUnit,
+                currency: currency,
+            }], { session });
 
-        await TransactionLog.create({
-            guildId: player.guildId,
-            type: 'player_listing_create',
-            description: `[${player.characterName}] menjual ${quantity}x ${item.name} @ ${pricePerUnit} ${currency}`,
+            await TransactionLog.create([{
+                guildId: player.guildId,
+                type: 'player_listing_create',
+                description: `[${player.characterName}] menjual ${quantity}x ${item.name} @ ${pricePerUnit} ${currency}`,
+            }], { session });
         });
 
         res.json({ success: true, message: 'Berhasil menambahkan item ke Toko Player.' });
     } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-MARKET] Player Shop Sell error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat menjual item.' });
     } finally {
