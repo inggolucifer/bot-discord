@@ -271,8 +271,7 @@ export default function AssetsPage() {
       setClaimLoading(true);
       setActionMessage(null);
       try {
-          const res = await api.post('/player/assets/claim-profit');
-          const messageLines = [];
+                    const messageLines = [];
           if (res.data.data.claimed && res.data.data.claimed.length > 0) {
               messageLines.push(`Berhasil klaim: ${res.data.data.claimed.join(', ')}`);
           } else {
@@ -584,7 +583,7 @@ export default function AssetsPage() {
                                       <Pickaxe className="mr-2 h-4 w-4" /> Berhenti Kerja Mandiri
                                   </Button>
                               ) : (
-                                  <Button variant="destructive" className="w-full bg-[#8b0000]" onClick={handleWorkSelf} disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.assignedWorkers.length >= 1)}>
+                                  <Button variant="destructive" className="w-full bg-[#8b0000]" onClick={handleWorkSelf} disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= selectedAsset.quantity) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}>
                                       <Pickaxe className="mr-2 h-4 w-4" /> Kerja Mandiri di Aset Ini
                                   </Button>
                               )}
@@ -613,7 +612,7 @@ export default function AssetsPage() {
                                           variant="outline"
                                           className="flex-1"
                                           onClick={handleHireNpc}
-                                          disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.assignedWorkers.length >= 1)}
+                                          disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= selectedAsset.quantity) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}
                                       >
                                           Sewa NPC ({npcDuration * 5} Silver)
                                       </Button>
@@ -657,8 +656,8 @@ export default function AssetsPage() {
                                       >
                                           <option value="" disabled>-- Pilih Aset --</option>
                                           {assets.filter(a => a.id !== selectedAsset.id).map(a => (
-                                              <option key={a.id} value={a.id} disabled={!a.underConstruction && a.assignedWorkers.length >= 1} className="disabled:text-gray-600">
-                                                  {a.name} {!a.underConstruction && a.assignedWorkers.length >= 1 ? '(Penuh)' : ''}
+                                              <option key={a.id} value={a.id} disabled={(!a.underConstruction && a.status === "active" && a.assignedWorkers.length >= (a.quantity || 1)) || ((a.underConstruction || a.status !== "active") && a.assignedWorkers.length >= 4)} className="disabled:text-gray-600">
+                                                  {a.name} {((!a.underConstruction && a.status === "active" && a.assignedWorkers.length >= (a.quantity || 1)) || ((a.underConstruction || a.status !== "active") && a.assignedWorkers.length >= 4)) ? '(Penuh)' : ''}
                                               </option>
                                           ))}
                                       </select>

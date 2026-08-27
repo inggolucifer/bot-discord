@@ -24,13 +24,12 @@ Jianghu World adalah bot Discord untuk permainan Roleplay Xianxia/Wuxia dengan s
 - `/daily`
 - `/transfer-currency`
 - `/barter-offer`
-- `/claim-profit`
 - `/loot`
 - `/help`
 - `/pet` (subcommand: list, status, feed, heal, rename, release, battle)
 - `/shop` (subcommand: lihat, beli, jual)
 - `/market` (subcommand: jual-item, jual-pet, jual-asset, beli, batal)
-- `/sekte` (subcommand: info, list, leaderboard, donasi, deposit-resource, bangun-asset, craft, claim-profit, kelola-anggota, kick-anggota)
+- `/sekte` (subcommand: info, list, leaderboard, donasi, deposit-resource, bangun-asset, craft, kelola-anggota, kick-anggota)
 - `/worker` (subcommand: daftar, batal, pindah, ubah, sewa-sistem, pekerja-saya)
 - `/asset` (subcommand: bangun, cek)
 - `/item` (subcommand: cek, cari, craft)
