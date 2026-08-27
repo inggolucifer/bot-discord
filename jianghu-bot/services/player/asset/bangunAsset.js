@@ -73,7 +73,7 @@ module.exports = {
       .setTitle('🔨 Pembangunan Dimulai!')
       .setDescription(
         `Kamu berhasil membangun **${asset.name}**!\n\nMaterial terpakai: ${matUsed}` +
-        (constructionCompleteAt ? `\n\n🚧 Butuh **${asset.constructionTimeHours} jam** sebelum bisa di-claim-profit/craft.` : '\n\n✅ Langsung bisa dipakai sekarang.')
+        (constructionCompleteAt ? `\n\n🚧 Butuh **${asset.constructionTimeHours} jam** sebelum bisa berproduksi / digunakan.` : '\n\n✅ Langsung bisa dipakai sekarang.')
       );
     return interaction.editReply({ embeds: [embed] });
   },

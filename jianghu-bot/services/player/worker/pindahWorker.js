@@ -37,11 +37,17 @@ module.exports = {
     const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
     if (!ownedAsset) return interaction.editReply({ content: '❌ Kamu tidak memiliki aset tersebut.' });
 
-    if (!isUnderConstruction(ownedAsset)) {
+    if (!isUnderConstruction(ownedAsset) && ownedAsset.status !== 'pending' && ownedAsset.status !== 'building') {
       if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
       const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
       if (activeWorkers >= ownedAsset.quantity) {
         return interaction.editReply({ content: `❌ Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja per unit (maks ${ownedAsset.quantity} pekerja).` });
+      }
+    } else {
+      if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
+      const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+      if (activeWorkers >= 4) {
+        return interaction.editReply({ content: `❌ Aset yang sedang dibangun maksimal menampung 4 pekerja.` });
       }
     }
 

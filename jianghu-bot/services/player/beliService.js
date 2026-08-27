@@ -107,7 +107,7 @@ module.exports = {
       .setTitle('🛒 Pembelian Berhasil')
       .setDescription(`Kamu membeli **${jumlah}x ${doc.name}** seharga **${totalHarga} ${CURRENCY_LABEL[listing.priceCurrency]}**.`);
     if (kategori === 'asset' && doc.constructionTimeHours > 0) {
-      embed.addFields({ name: '🚧 Sedang Dibangun', value: `Aset ini butuh **${doc.constructionTimeHours} jam** sebelum bisa di-claim-profit/craft (kalau ini pembelian pertamamu untuk aset ini).` });
+      embed.addFields({ name: '🚧 Sedang Dibangun', value: `Aset ini butuh **${doc.constructionTimeHours} jam** sebelum bisa berproduksi / digunakan (kalau ini pembelian pertamamu untuk aset ini).` });
     }
     return interaction.editReply({ embeds: [embed] });
   },
