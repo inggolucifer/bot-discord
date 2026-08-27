@@ -271,8 +271,7 @@ export default function AssetsPage() {
       setClaimLoading(true);
       setActionMessage(null);
       try {
-          const res = await api.post('/player/assets/claim-profit');
-          const messageLines = [];
+                    const messageLines = [];
           if (res.data.data.claimed && res.data.data.claimed.length > 0) {
               messageLines.push(`Berhasil klaim: ${res.data.data.claimed.join(', ')}`);
           } else {
