@@ -267,31 +267,7 @@ export default function AssetsPage() {
       }
   }
 
-  const handleClaimProfit = async () => {
-      setClaimLoading(true);
-      setActionMessage(null);
-      try {
-                    const messageLines = [];
-          if (res.data.data.claimed && res.data.data.claimed.length > 0) {
-              messageLines.push(`Berhasil klaim: ${res.data.data.claimed.join(', ')}`);
-          } else {
-              messageLines.push('Tidak ada profit atau produksi yang bisa diklaim saat ini.');
-          }
-          if (res.data.data.waiting && res.data.data.waiting.length > 0) {
-              messageLines.push(`Menunggu (belum 1 jam): ${res.data.data.waiting.join(', ')}`);
-          }
-          if (res.data.data.other && res.data.data.other.length > 0) {
-              messageLines.push(`Lainnya: ${res.data.data.other.join(', ')}`);
-          }
 
-          setActionMessage({ type: res.data.data.claimed && res.data.data.claimed.length > 0 ? 'success' : 'error', text: messageLines.join(' | ') });
-          await setTimeout(() => fetchAssets(), 0);
-      } catch (err) {
-          setActionMessage({ type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal klaim profit.' });
-      } finally {
-          setClaimLoading(false);
-      }
-  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
@@ -312,12 +288,7 @@ export default function AssetsPage() {
                    />
                  </div>
               )}
-              {activePageTab === 'my-assets' && user && (
-                  <Button variant="default" onClick={handleClaimProfit} disabled={claimLoading} className="bg-green-700 hover:bg-green-600 text-white">
-                      {claimLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Pickaxe size={16} className="mr-2" />}
-                      Claim Profit
-                  </Button>
-              )}
+
               <Button variant="outline" onClick={() => activePageTab === 'my-assets' ? fetchAssets() : fetchBuildableAssets()}>
                   Refresh Data
               </Button>
@@ -583,7 +554,7 @@ export default function AssetsPage() {
                                       <Pickaxe className="mr-2 h-4 w-4" /> Berhenti Kerja Mandiri
                                   </Button>
                               ) : (
-                                  <Button variant="destructive" className="w-full bg-[#8b0000]" onClick={handleWorkSelf} disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= selectedAsset.quantity) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}>
+                                  <Button variant="destructive" className="w-full bg-[#8b0000]" onClick={handleWorkSelf} disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= (selectedAsset.quantity || 1)) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}>
                                       <Pickaxe className="mr-2 h-4 w-4" /> Kerja Mandiri di Aset Ini
                                   </Button>
                               )}
@@ -612,7 +583,7 @@ export default function AssetsPage() {
                                           variant="outline"
                                           className="flex-1"
                                           onClick={handleHireNpc}
-                                          disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= selectedAsset.quantity) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}
+                                          disabled={actionLoading || (!selectedAsset.underConstruction && selectedAsset.status === "active" && selectedAsset.assignedWorkers.length >= (selectedAsset.quantity || 1)) || ((selectedAsset.underConstruction || selectedAsset.status !== "active") && selectedAsset.assignedWorkers.length >= 4)}
                                       >
                                           Sewa NPC ({npcDuration * 5} Silver)
                                       </Button>
