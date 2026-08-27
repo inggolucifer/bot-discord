@@ -32,6 +32,73 @@ function idOf(name) {
   return doc._id;
 }
 
+/** Daya tahan default (jam produksi) per nama item — tool tahan lama, consumable 1 jam */
+const DURABILITY_HOURS = {
+  // Tools primitif
+  'Batu Tajam': 12,
+  'Kapak Batu': 24,
+  'Tombak Kayu': 24,
+  'Alat Pancing Kayu': 24,
+  'Pisau Tulang': 18,
+  'Pengikis Kulit': 18,
+  // Tools besi
+  'Cangkul Besi': 36,
+  'Kapak Besi': 48,
+  'Beliung Besi': 36,
+  'Pisau Jagal': 24,
+  'Palu Tempa': 48,
+  'Gergaji Besi': 36,
+  'Sekop Besi': 36,
+  'Jarum Jahit Besi': 48,
+  // Tools tinggi
+  'Beliung Baja Hitam': 48,
+  'Cangkul Giok': 60,
+  'Kapak Petir Surgawi': 72,
+  'Beliung Penekan Qi': 72,
+  'Palu Formasi Array': 72,
+  'Pisau Bedah Qi': 36,
+  // Modern tools
+  'Kunci Inggris Besi': 48,
+  'Obeng Presisi': 48,
+  'Mesin Bor Portable': 60,
+  'Las Listrik Qi': 60,
+  'Scanner Aura': 72,
+  'Printer Formasi': 72,
+};
+
+/** Consumable per jam (bibit, pakan, pil nutrisi worker, bahan bakar) */
+const CONSUMABLE_PER_HOUR = new Set([
+  'Bibit Gandum', 'Bibit Padi', 'Bibit Kapas', 'Bibit Anggur', 'Bibit Bambu', 'Bibit Sayur',
+  'Bibit Jagung', 'Bibit Kedelai', 'Bibit Teh', 'Bibit Ginseng Darah', 'Bibit Teratai Roh',
+  'Bibit Rumput Sumsum', 'Bibit Bunga Bulan', 'Bibit Akar Naga',
+  'Pakan Ternak', 'Pakan Spirit Beast', 'Daun Bambu Hitam',
+  'Pil Nutrisi Pekerja', 'Pil Nutrisi Tinggi', 'Pil Jiwa Stabil',
+  'Bahan Bakar Uap', 'Bahan Bakar Spirit', 'Pelumas Mesin', 'Roti Panggang', 'Kayu Bakar',
+]);
+
+function durabilityOf(itemName) {
+  if (DURABILITY_HOURS[itemName] != null) return DURABILITY_HOURS[itemName];
+  if (CONSUMABLE_PER_HOUR.has(itemName)) return 1;
+  // default: material mentah / semi = tahan sedang jika dipakai sebagai input
+  if (/Kapak|Beliung|Cangkul|Tombak|Pancing|Palu|Gergaji|Pisau|Jarum|Sekop|Bor|Las|Scanner|Printer|Kunci|Obeng/i.test(itemName)) {
+    return 36;
+  }
+  return 1;
+}
+
+function makeInput(itemName, quantity = 1) {
+  const doc = itemCache.get(itemName);
+  if (!doc) throw new Error(`[SEED] Input item belum di-cache: ${itemName}`);
+  return {
+    itemId: doc._id,
+    itemName,
+    quantity,
+    durabilityHours: durabilityOf(itemName),
+  };
+}
+
+
+
 async function upsertItem(data) {
   const filter = { guildId: data.guildId, name: data.name };
   const update = {
@@ -1543,11 +1610,13 @@ function buildAllAssets(guildId) {
 
   curatedNodes.forEach(n => {
     try {
-      const inputs = (n.inputs || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q }));
-      const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q }));
+      const inputs = (n.inputs || []).map(([name, q]) => makeInput(name, q));
+      const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q, durabilityHours: 1 }));
+      const inputDesc = inputs.map(i => `${i.itemName} (tahan ${i.durabilityHours} jam)`).join(', ');
+      const desc = n.desc + (inputs.length ? ` | Tool/input: ${inputDesc}` : '');
       assets.push(g({
         name: n.name,
-        description: n.desc,
+        description: desc,
         rank: n.rank,
         workerOutputItemId: idOf(n.out),
         workerOutputItemName: n.out,
@@ -1590,6 +1659,214 @@ function buildAllAssets(guildId) {
       }));
     } catch (e) {}
   });
+
+
+
+  // =========================================================================
+  // SAMBUNGKAN ITEM YATIM (Legendary / Mythical) KE RANTAI EKONOMI
+  // Produksi material tinggi + station craft yang mengonsumsi & menghasilkan gear/pil
+  // =========================================================================
+
+  // --- Node produksi material tinggi (butuh input mahal = sink) ---
+  const lateNodes = [
+    { name: "Kawah Meteor Jatuh", out: "Inti Meteor", q: 1, inputs: [["Pil Nutrisi Tinggi", 1]], rank: "Legendary", time: 120, price: 10, curr: "jade",
+      build: [["Baja Hitam Mistis", 20], ["Kristal Roh Ilahi", 5]], desc: "IN: Pil Nutrisi Tinggi → OUT: Inti Meteor → tempa senjata legendaris." },
+    { name: "Ladang Debu Bintang", out: "Debu Bintang", q: 1, inputs: [["Pil Nutrisi Tinggi", 1]], rank: "Legendary", time: 120, price: 10, curr: "jade",
+      build: [["Kristal Roh Ilahi", 8], ["Pecahan Batu Roh", 30]], desc: "IN: Pil Nutrisi Tinggi → OUT: Debu Bintang → jimat & array." },
+    { name: "Retakan Dimensi Kecil", out: "Serpihan Dimensi", q: 1, inputs: [["Pil Nutrisi Tinggi", 1]], rank: "Mythical", time: 168, price: 3, curr: "spirit",
+      build: [["Inti Meteor", 3], ["Debu Bintang", 3], ["Batu Roh Utuh", 5]], desc: "IN: Pil Nutrisi Tinggi → OUT: Serpihan Dimensi → Segel Dimensi / gear myth." },
+    { name: "Hutan Tulang Naga", out: "Kayu Dragonbone", q: 1, inputs: [["Kapak Petir Surgawi", 1]], rank: "Legendary", time: 144, price: 12, curr: "jade",
+      build: [["Kapak Petir Surgawi", 1], ["Kayu Surga (Heavenly Wood)", 10]], desc: "IN: Kapak Petir → OUT: Kayu Dragonbone → gagang pusaka." },
+    { name: "Sarang Phoenix Muda", out: "Hati Phoenix", q: 1, inputs: [["Pil Nutrisi Tinggi", 1]], rank: "Legendary", time: 144, price: 15, curr: "jade",
+      build: [["Bulu Zhuque", 1], ["Kristal Roh Ilahi", 5]], desc: "IN: Pil Nutrisi Tinggi → OUT: Hati Phoenix → Pil Immortal / temper." },
+    { name: "Kolam Jiwa Sunyi", out: "Benang Jiwa", q: 1, inputs: [["Pil Jiwa Stabil", 1]], rank: "Legendary", time: 120, price: 12, curr: "jade",
+      build: [["Sutra Ulat Salju", 10], ["Pecahan Batu Roh", 20]], desc: "IN: Pil Jiwa Stabil → OUT: Benang Jiwa → jubah & jimat jiwa." },
+  ];
+  lateNodes.forEach(n => {
+    try {
+      const inputs = (n.inputs || []).map(([name, q]) => makeInput(name, q));
+      const builds = (n.build || []).map(([name, q]) => ({ itemId: idOf(name), itemName: name, quantity: q, durabilityHours: 1 }));
+      const inputDesc = inputs.map(i => `${i.itemName} (tahan ${i.durabilityHours} jam)`).join(', ');
+      assets.push(g({
+        name: n.name,
+        description: n.desc + (inputs.length ? ` | Input: ${inputDesc}` : ''),
+        rank: n.rank,
+        workerOutputItemId: idOf(n.out),
+        workerOutputItemName: n.out,
+        workerOutputQuantity: n.q,
+        workerInputMaterials: inputs,
+        constructionTimeHours: n.time,
+        buildable: true,
+        buildRequirements: builds,
+        basePrice: n.price,
+        priceCurrency: n.curr,
+      }));
+    } catch (e) {}
+  });
+
+
+  try {
+    const herbNodes = [
+      { name: "Kebun Daun Longevity", out: "Daun Longevity", q: 1, inputs: [["Pil Nutrisi Pekerja", 1]], rank: "Epic", time: 72, price: 30, curr: "gold",
+        build: [["Cangkul Giok", 1], ["Pecahan Batu Roh", 15]], desc: "IN: Pil Nutrisi Pekerja → OUT: Daun Longevity → pil/jimat." },
+      { name: "Kawah Bunga Api Surgawi", out: "Bunga Api Surgawi", q: 1, inputs: [["Pil Nutrisi Pekerja", 1]], rank: "Epic", time: 72, price: 30, curr: "gold",
+        build: [["Cangkul Giok", 1], ["Batu Meteor Api", 5]], desc: "IN: Pil Nutrisi → OUT: Bunga Api → Jimat Ledakan Api." },
+      { name: "Rawa Es Abadi", out: "Rumput Es Abadi", q: 1, inputs: [["Pil Nutrisi Pekerja", 1]], rank: "Epic", time: 72, price: 30, curr: "gold",
+        build: [["Cangkul Giok", 1], ["Batangan Besi Dingin", 3]], desc: "IN: Pil Nutrisi → OUT: Rumput Es → Pil Pembersih Meridian." },
+      { name: "Kebun Teratai Langit", out: "Teratai Roh Langit", q: 1, inputs: [["Bibit Teratai Roh", 1]], rank: "Legendary", time: 120, price: 8, curr: "jade",
+        build: [["Bibit Teratai Roh", 3], ["Kristal Roh Ilahi", 3]], desc: "IN: Bibit Teratai → OUT: Teratai Roh Langit → Pil Loncatan Realm." },
+      { name: "Lereng Akar Naga", out: "Akar Naga", q: 1, inputs: [["Bibit Akar Naga", 1]], rank: "Legendary", time: 144, price: 10, curr: "jade",
+        build: [["Bibit Akar Naga", 2], ["Batu Roh Utuh", 2]], desc: "IN: Bibit Akar Naga → OUT: Akar Naga → craft lanjutan." },
+    ];
+    herbNodes.forEach(n => {
+      try {
+        assets.push(g({
+          name: n.name,
+          description: n.desc,
+          rank: n.rank,
+          workerOutputItemId: idOf(n.out),
+          workerOutputItemName: n.out,
+          workerOutputQuantity: n.q,
+          workerInputMaterials: n.inputs.map(([a,b])=>({itemId:idOf(a),itemName:a,quantity:b})),
+          constructionTimeHours: n.time,
+          buildable: true,
+          buildRequirements: n.build.map(([a,b])=>({itemId:idOf(a),itemName:a,quantity:b})),
+          basePrice: n.price,
+          priceCurrency: n.curr,
+        }));
+      } catch(e) {}
+    });
+  } catch(e) {}
+
+  // --- Station: menyambungkan material → pil / senjata / artifact ---
+  const wireRecipes = [];
+  const tryRecipe = (rn, res, rq, mats) => {
+    try {
+      wireRecipes.push({
+        recipeName: rn,
+        resultItemId: idOf(res),
+        resultItemName: res,
+        resultQuantity: rq,
+        materials: mats.map(([n, q]) => ({ itemId: idOf(n), itemName: n, quantity: q })),
+      });
+    } catch (e) {}
+  };
+
+  // Pil (sink herbal + batu roh)
+  tryRecipe("Suling Pil Nutrisi Tinggi", "Pil Nutrisi Tinggi", 1, [["Pil Nutrisi Pekerja", 2], ["Ginseng Darah", 2], ["Pecahan Batu Roh", 5]]);
+  tryRecipe("Suling Pil Fondasi Sempurna", "Pil Fondasi Sempurna", 1, [["Pil Penempa Tulang", 1], ["Rumput Pembersih Sumsum", 2], ["Batu Roh Utuh", 1]]);
+  tryRecipe("Suling Pil Pencerahan Jiwa", "Pil Pencerahan Jiwa", 1, [["Pil Pengumpul Qi", 2], ["Benang Jiwa", 1], ["Kristal Roh Ilahi", 1]]);
+  tryRecipe("Suling Pil Jiwa Stabil", "Pil Jiwa Stabil", 1, [["Pil Pengumpul Qi", 1], ["Pecahan Batu Roh", 10], ["Debu Bintang", 1]]);
+  tryRecipe("Suling Pil Loncatan Realm", "Pil Loncatan Realm", 1, [["Pil Fondasi Sempurna", 1], ["Teratai Roh Langit", 1], ["Batu Roh Utuh", 2]]);
+  tryRecipe("Suling Pil Immortal Draft", "Pil Immortal Draft", 1, [["Pil Loncatan Realm", 1], ["Hati Phoenix", 1], ["Inti Primordial", 1]]);
+  tryRecipe("Suling Pil Keabadian Semu", "Pil Keabadian Semu", 1, [["Pil Immortal Draft", 1], ["Serpihan Dimensi", 1], ["Inti Bumi", 1]]);
+  tryRecipe("Suling Pil Ascension", "Pil Ascension", 1, [["Pil Keabadian Semu", 1], ["Inti Primordial", 1], ["Serpihan Dimensi", 2]]);
+
+  // Senjata / armor (sink metal + myth mats)
+  tryRecipe("Tempa Pedang Langit Putih", "Pedang Langit Putih", 1, [["Baja Darah (Blood Steel)", 3], ["Inti Meteor", 1], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Tombak Naga Hitam", "Tombak Naga Hitam", 1, [["Baja Hitam Mistis", 3], ["Sisik Naga Muda", 1], ["Kayu Dragonbone", 1]]);
+  tryRecipe("Tempa Pedang Jiwa", "Pedang Jiwa", 1, [["Batangan Besi Dingin", 2], ["Benang Jiwa", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Pedang Primordial", "Pedang Primordial", 1, [["Pedang Langit Putih", 1], ["Inti Primordial", 1], ["Serpihan Dimensi", 1]]);
+  tryRecipe("Jahit Jubah Bintang", "Jubah Bintang", 1, [["Sutra Ulat Salju", 5], ["Debu Bintang", 2], ["Benang Jiwa", 1]]);
+  tryRecipe("Jahit Jubah Immortal", "Jubah Immortal", 1, [["Jubah Bintang", 1], ["Hati Phoenix", 1], ["Serpihan Dimensi", 1]]);
+  tryRecipe("Ukir Mahkota Giok Roh", "Mahkota Giok Roh", 1, [["Jimat Giok Roh", 3], ["Kristal Roh Ilahi", 2], ["Debu Bintang", 1]]);
+  tryRecipe("Rakit Jimat Kebangkitan", "Jimat Kebangkitan", 1, [["Jimat Giok Roh", 2], ["Hati Phoenix", 1], ["Batu Roh Utuh", 1]]);
+  tryRecipe("Rakit Segel Dimensi", "Segel Dimensi", 1, [["Serpihan Dimensi", 2], ["Modul Formasi Portabel", 1], ["Inti Meteor", 1]]);
+  tryRecipe("Rakit Lentera Jiwa Abadi", "Lentera Jiwa Abadi", 1, [["Benang Jiwa", 2], ["Kristal Roh Ilahi", 2], ["Debu Bintang", 2]]);
+  tryRecipe("Rakit Array Flag Lanjutan", "Array Flag Lanjutan", 1, [["Jimat Giok Roh", 4], ["Debu Bintang", 1], ["Kabel Optik Qi", 1]]);
+  tryRecipe("Tempa Armor Serat Karbon", "Armor Serat Karbon", 1, [["Pelat Serat Karbon", 4], ["Alloy Modern", 2], ["Karet Olahan", 2]]);
+  tryRecipe("Rakit Komunikasi Spirit", "Komunikasi Spirit", 1, [["Chip Qi Lanjutan", 1], ["Baterai Spirit", 2], ["Sensor Aura", 1]]);
+
+  // Material paduan myth (supaya Inti Bumi dll punya jalan masuk)
+  
+  tryRecipe("Suling Air Mata Phoenix", "Air Mata Phoenix", 1, [["Hati Phoenix", 1], ["Pil Nutrisi Tinggi", 1]]);
+  tryRecipe("Tempa Tanduk Qilin", "Tanduk Qilin", 1, [["Kristal Roh Ilahi", 2], ["Debu Bintang", 1], ["Batu Roh Utuh", 1]]);
+  tryRecipe("Tempa Tombak Naga", "Tombak Naga", 1, [["Tombak Naga Hitam", 1], ["Sisik Naga Muda", 1]]);
+  tryRecipe("Rakit Printer Formasi", "Printer Formasi", 1, [["Modul Formasi Portabel", 1], ["Chip Qi Lanjutan", 1], ["Lensa Presisi", 2]]);
+
+  
+  // --- Epic+ yatim: disambungkan agar berguna ---
+  tryRecipe("Tenun Kepompong Salju", "Sutra Ulat Salju", 1, [["Kepompong Ulat Salju", 3]]);
+  tryRecipe("Lebur Batangan Mithril", "Batangan Mithril", 1, [["Bijih Besi Dingin (Cold Iron)", 2], ["Batu Meteor Api", 1], ["Batu Bara Berkualitas", 2]]);
+  tryRecipe("Tempa Pelat Mithril", "Pelat Mithril", 1, [["Batangan Mithril", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Pelat Star Iron", "Pelat Star Iron", 1, [["Inti Meteor", 1], ["Baja Hitam Mistis", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Pedang Besi Dingin", "Pedang Besi Dingin", 1, [["Batangan Besi Dingin", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Pedang Mithril", "Pedang Mithril", 1, [["Batangan Mithril", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Jahit Jubah Baja Hitam", "Jubah Baja Hitam", 1, [["Baja Hitam Mistis", 3], ["Sutra Ulat Salju", 2]]);
+  tryRecipe("Ukir Cincin Baja Hitam", "Cincin Baja Hitam", 1, [["Baja Hitam Mistis", 1], ["Pecahan Batu Roh", 3]]);
+  tryRecipe("Ukir Kalung Batu Roh", "Kalung Batu Roh", 1, [["Pecahan Batu Roh", 8], ["Batangan Emas", 1]]);
+  tryRecipe("Tulis Jimat Ledakan Api", "Jimat Ledakan Api", 1, [["Darah Spirit Beast", 1], ["Batu Meteor Api", 1], ["Kuas Jimat", 1]]);
+  tryRecipe("Tulis Jimat Perisai Qi", "Jimat Perisai Qi", 1, [["Pecahan Batu Roh", 5], ["Kuas Jimat", 1]]);
+  tryRecipe("Suling Pil Pembersih Meridian", "Pil Pembersih Meridian", 1, [["Ginseng Darah", 2], ["Pecahan Batu Roh", 4]]);
+  tryRecipe("Suling Pil Pemurnian Darah", "Pil Pemurnian Darah", 1, [["Ginseng Darah", 1], ["Rumput Pembersih Sumsum", 1]]);
+  tryRecipe("Suling Pil Penjaga Jiwa", "Pil Penjaga Jiwa", 1, [["Pil Pengumpul Qi", 1], ["Benang Jiwa", 1]]);
+  tryRecipe("Suling Pil Regenerasi Total", "Pil Regenerasi Total", 1, [["Pil Nutrisi Tinggi", 1], ["Hati Phoenix", 1]]);
+  tryRecipe("Tempa Kipas Angin Surgawi", "Kipas Angin Surgawi", 1, [["Sutra Ulat Salju", 3], ["Debu Bintang", 1], ["Palu Formasi Array", 1]]);
+  tryRecipe("Tempa Belati Bayangan", "Belati Bayangan", 1, [["Baja Hitam Mistis", 1], ["Benang Jiwa", 1]]);
+  tryRecipe("Potong Kayu Phoenix", "Kayu Phoenix", 1, [["Kayu Surga (Heavenly Wood)", 1], ["Kapak Petir Surgawi", 1]]);
+  tryRecipe("Lebur Batangan Platinum", "Batangan Platinum", 1, [["Bijih Emas", 3], ["Batu Meteor Api", 2]]);
+  tryRecipe("Lebur Kaca Roh", "Kaca Roh", 1, [["Kaca Optik", 2], ["Pecahan Batu Roh", 3]]);
+  tryRecipe("Tenun Kain Giok", "Kain Giok", 1, [["Sutra Ulat Salju", 2], ["Bijih Giok Roh", 2]]);
+  tryRecipe("Rakit Las Listrik Qi", "Las Listrik Qi", 1, [["Inti Mesin Uap", 1], ["Kawat Tembaga", 3], ["Baterai Spirit", 1]]);
+  tryRecipe("Rakit Scanner Aura", "Scanner Aura", 1, [["Sensor Aura", 1], ["Lensa Presisi", 1], ["Chip Qi Sederhana", 1]]);
+  tryRecipe("Olahan Daun Longevity", "Pil Pengumpul Qi", 1, [["Daun Longevity", 2], ["Ginseng Darah", 1]]);
+  tryRecipe("Olahan Bunga Api Surgawi", "Jimat Ledakan Api", 1, [["Bunga Api Surgawi", 2], ["Darah Spirit Beast", 1]]);
+  tryRecipe("Olahan Rumput Es Abadi", "Pil Pembersih Meridian", 1, [["Rumput Es Abadi", 2], ["Pecahan Batu Roh", 2]]);
+  tryRecipe("Ukir Tanduk Unicorn", "Tanduk Unicorn Muda", 1, [["Tanduk Qilin", 1], ["Kristal Roh Ilahi", 1]]);
+  tryRecipe("Tanam Bibit Teratai", "Teratai Roh Langit", 1, [["Bibit Teratai Roh", 1], ["Pil Nutrisi Pekerja", 1], ["Pecahan Batu Roh", 5]]);
+  tryRecipe("Tanam Bibit Akar Naga", "Akar Naga", 1, [["Bibit Akar Naga", 1], ["Pil Nutrisi Tinggi", 1]]);
+  tryRecipe("Tempa Jarum Meridian", "Jarum Meridian", 1, [["Batangan Besi Dingin", 1], ["Palu Formasi Array", 1]]);
+
+  
+  tryRecipe("Tempa Pedang Getar Baja", "Pedang Getar Baja", 1, [["Alloy Modern", 2], ["Pegas Baja", 2], ["Palu Formasi Array", 1]]);
+  tryRecipe("Rakit Tongkat Stun Qi", "Tongkat Stun Qi", 1, [["Chip Qi Sederhana", 1], ["Baterai Spirit", 1], ["Kawat Tembaga", 2]]);
+  tryRecipe("Rakit Jam Tangan Qi", "Jam Tangan Qi", 1, [["Chip Qi Sederhana", 1], ["Batangan Emas", 1], ["Lensa Presisi", 1]]);
+  tryRecipe("Suling Bahan Bakar Spirit", "Bahan Bakar Spirit", 1, [["Minyak Olahan", 2], ["Pecahan Batu Roh", 3]]);
+
+  tryRecipe("Padatkan Inti Bumi", "Inti Bumi", 1, [["Kristal Roh Ilahi", 3], ["Inti Meteor", 2], ["Batu Roh Utuh", 2]]);
+  tryRecipe("Anyam Sisik Naga Muda", "Sisik Naga Muda", 1, [["Baja Darah (Blood Steel)", 2], ["Darah Spirit Beast", 3], ["Pecahan Batu Roh", 10]]);
+
+  try {
+    const reqs = [
+      { itemId: idOf("Baja Hitam Mistis"), itemName: "Baja Hitam Mistis", quantity: 25 },
+      { itemId: idOf("Kristal Roh Ilahi"), itemName: "Kristal Roh Ilahi", quantity: 10 },
+      { itemId: idOf("Batu Roh Utuh"), itemName: "Batu Roh Utuh", quantity: 3 },
+    ];
+    assets.push(g({
+      name: "Paviliun Pusaka Abadi",
+      description: "Station puncak: suling pil realm, tempa senjata legend/myth, rakit artifact. Mengonsumsi material tinggi (sink ekonomi).",
+      rank: "Legendary",
+      isCraftingStation: true,
+      constructionTimeHours: 168,
+      buildable: true,
+      buildRequirements: reqs,
+      recipes: wireRecipes,
+      basePrice: 20,
+      priceCurrency: "jade",
+    }));
+  } catch (e) {}
+
+  // Income prestige yang butuh myth mats (sink + tujuan akhir)
+  try {
+    assets.push(g({
+      name: "Altar Empat Dewa",
+      description: "IN: Sisik/Bulu/Cakar/Cangkang Empat Dewa + Inti Primordial → OUT: 1 Jade/hari (cap).",
+      rank: "Mythical",
+      dailyProfit: 1,
+      profitCurrency: "jade",
+      constructionTimeHours: 240,
+      buildable: true,
+      buildRequirements: [
+        { itemId: idOf("Sisik Qinglong"), itemName: "Sisik Qinglong", quantity: 1 },
+        { itemId: idOf("Bulu Zhuque"), itemName: "Bulu Zhuque", quantity: 1 },
+        { itemId: idOf("Cakar Baihu"), itemName: "Cakar Baihu", quantity: 1 },
+        { itemId: idOf("Cangkang Xuanwu"), itemName: "Cangkang Xuanwu", quantity: 1 },
+        { itemId: idOf("Inti Primordial"), itemName: "Inti Primordial", quantity: 1 },
+      ],
+      basePrice: 30,
+      priceCurrency: "jade",
+    }));
+  } catch (e) {}
 
 
   return assets;
@@ -1939,6 +2216,43 @@ async function seedEconomy() {
     }
 
     
+
+    // =====================================================================
+    // DAYA TAHAN TOOL: stamp durabilityHours di semua workerInputMaterials
+    // =====================================================================
+    console.log('[3c/5] Stamp daya tahan tool (durabilityHours)...');
+    const allForDur = await Asset.find({ guildId, 'workerInputMaterials.0': { $exists: true } });
+    let durFixed = 0;
+    for (const doc of allForDur) {
+      let changed = false;
+      const next = (doc.workerInputMaterials || []).map((mat) => {
+        const name = mat.itemName || '';
+        const d = durabilityOf(name);
+        const obj = mat.toObject ? mat.toObject() : { ...mat };
+        if (obj.durabilityHours !== d) {
+          changed = true;
+          obj.durabilityHours = d;
+        }
+        if (!obj.quantity || obj.quantity < 1) obj.quantity = 1;
+        return obj;
+      });
+      if (changed) {
+        doc.workerInputMaterials = next;
+        // Perkaya deskripsi singkat jika tool
+        const toolBits = next
+          .filter((m) => (m.durabilityHours || 1) > 1)
+          .map((m) => `${m.itemName} tahan ${m.durabilityHours}j`);
+        if (toolBits.length && doc.description && !/tahan \d+j/.test(doc.description)) {
+          doc.description = `${doc.description} [${toolBits.join(', ')}]`;
+        }
+        doc.createdBy = doc.createdBy || 'System Oracle';
+        await doc.save();
+        durFixed++;
+      }
+    }
+    console.log(`      → ${durFixed} asset dapat daya tahan tool.\n`);
+
+
     console.log(`      → ${fixedByName} asset old di-fix by name.`);
     console.log(`      → ${fixedByThreshold} asset lain di-fix by threshold.\n`);
 
