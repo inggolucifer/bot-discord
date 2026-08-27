@@ -8,6 +8,8 @@ const { isUnderConstruction } = require('../../utils/crafting');
 const { syncWorkerContracts } = require('../../utils/workerManager');
 const { isClaimedToday } = require('../../utils/timezone');
 const LockManager = require('../utils/lockManager');
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/CustomError');
 
 // Endpoint: GET /api/player/transactions
 router.get('/transactions', authenticateToken, async (req, res) => {
@@ -481,42 +483,61 @@ router.post('/transfer', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
-        const sender = await Player.findOne({ discordId: userId, guildId });
-        if (!sender) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-        if (sender.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${sender.status}.` });
+        let receiverName = '';
 
-        const receiver = await Player.findOne({
-            characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
-            guildId
+        await withTransaction(async (session) => {
+            const receiver = await Player.findOne({
+                characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
+                guildId
+            }).session(session);
+
+            if (!receiver) throw new CustomError('Karakter penerima tidak ditemukan di sekte/guild yang sama.', 404);
+            if (receiver.status !== 'active') throw new CustomError(`Penerima berstatus ${receiver.status}.`, 403);
+            if (receiver.discordId === userId) throw new CustomError('Tidak bisa transfer ke diri sendiri.', 400);
+
+            receiverName = receiver.characterName;
+
+            // Atomically check and deduct sender currency
+            const updateQuery = {};
+            updateQuery[`currency.${currencyType}`] = -amount;
+
+            const sender = await Player.findOneAndUpdate(
+                { discordId: userId, guildId, [`currency.${currencyType}`]: { $gte: amount }, status: 'active' },
+                { $inc: updateQuery },
+                { new: true, session }
+            );
+
+            if (!sender) {
+                // Determine the cause of failure to provide a better error message
+                const senderCheck = await Player.findOne({ discordId: userId, guildId }).session(session);
+                if (!senderCheck) throw new CustomError('Karakter tidak ditemukan.', 404);
+                if (senderCheck.status !== 'active') throw new CustomError(`Karaktermu berstatus ${senderCheck.status}.`, 403);
+                throw new CustomError(`Saldo ${currencyType} kamu tidak mencukupi.`, 400);
+            }
+
+            // Atomically add to receiver
+            const addQuery = {};
+            addQuery[`currency.${currencyType}`] = amount;
+
+            await Player.updateOne(
+                { _id: receiver._id },
+                { $inc: addQuery },
+                { session }
+            );
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'transfer',
+                description: `[${sender.characterName}] mengirim ${amount} ${currencyType} kepada [${receiver.characterName}].`
+            }], { session });
         });
 
-        if (!receiver) return res.status(404).json({ error: 'Karakter penerima tidak ditemukan di sekte/guild yang sama.' });
-        if (receiver.status !== 'active') return res.status(403).json({ error: `Penerima berstatus ${receiver.status}.` });
-
-        if (receiver.discordId === userId) {
-            return res.status(400).json({ error: 'Tidak bisa transfer ke diri sendiri.' });
-        }
-
-        if (sender.currency[currencyType] < amount) {
-            return res.status(400).json({ error: `Saldo ${currencyType} kamu tidak mencukupi.` });
-        }
-
-        // Atomically transfer
-        sender.currency[currencyType] -= amount;
-        receiver.currency[currencyType] += amount;
-
-        await sender.save();
-        await receiver.save();
-
-        const TransactionLog = require('../../models/TransactionLog');
-        await TransactionLog.create({
-            guildId,
-            type: 'transfer',
-            description: `[${sender.characterName}] mengirim ${amount} ${currencyType} kepada [${receiver.characterName}].`
-        });
-
-        res.json({ success: true, message: `Berhasil mentransfer ${amount} ${currencyType} kepada ${receiver.characterName}.` });
+        res.json({ success: true, message: `Berhasil mentransfer ${amount} ${currencyType} kepada ${receiverName}.` });
     } catch (error) {
+        if (error instanceof CustomError) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-PLAYER] Error transfer currency:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
@@ -562,55 +583,65 @@ router.post('/loot', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
-        const LootPool = require('../../models/LootPool');
-        const pool = await LootPool.findOne({ _id: poolId, guildId, targetUserId: userId, claimed: false });
+        let successMessage = '';
 
-        if (!pool) return res.status(404).json({ error: 'Loot tidak ditemukan atau sudah diklaim.' });
+        await withTransaction(async (session) => {
+            const LootPool = require('../../models/LootPool');
+            // Atomically lock and claim the pool
+            const pool = await LootPool.findOneAndUpdate(
+                { _id: poolId, guildId, targetUserId: userId, claimed: false },
+                { $set: { claimed: true, claimedAt: new Date() } },
+                { new: true, session }
+            );
 
-        const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-        if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
+            if (!pool) throw new CustomError('Loot tidak ditemukan atau sudah diklaim.', 404);
 
-        for (const c of ['silver', 'gold', 'jade', 'spirit']) {
-            player.currency[c] += pool.currency[c] || 0;
-        }
+            const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-        for (const it of pool.inventory) {
-            const owned = player.inventory.find((i) => i.itemId.equals(it.itemId));
-            if (owned) owned.quantity += it.quantity;
-            else player.inventory.push({ itemId: it.itemId, quantity: it.quantity });
-        }
-
-        let petLootedCount = 0;
-        const crypto = require('crypto');
-        for (const p of pool.pets) {
-            if (player.pets.length < 6) {
-                const transferredPet = p;
-                transferredPet.instanceId = crypto.randomUUID();
-                player.pets.push(transferredPet);
-                petLootedCount++;
+            for (const c of ['silver', 'gold', 'jade', 'spirit']) {
+                player.currency[c] += pool.currency[c] || 0;
             }
-        }
 
-        await player.save();
+            for (const it of pool.inventory) {
+                const owned = player.inventory.find((i) => i.itemId.equals(it.itemId));
+                if (owned) owned.quantity += it.quantity;
+                else player.inventory.push({ itemId: it.itemId, quantity: it.quantity });
+            }
 
-        pool.claimed = true;
-        pool.claimedAt = new Date();
-        await pool.save();
+            let petLootedCount = 0;
+            const crypto = require('crypto');
+            for (const p of pool.pets) {
+                if (player.pets.length < 6) {
+                    const transferredPet = p;
+                    transferredPet.instanceId = crypto.randomUUID();
+                    player.pets.push(transferredPet);
+                    petLootedCount++;
+                }
+            }
 
-        const TransactionLog = require('../../models/TransactionLog');
-        await TransactionLog.create({
-            guildId,
-            type: 'loot_claim',
-            description: `[${player.characterName}] klaim loot dari ${pool.deceasedCharacterName}.`
+            await player.save({ session });
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'loot_claim',
+                description: `[${player.characterName}] klaim loot dari ${pool.deceasedCharacterName}.`
+            }], { session });
+
+            successMessage = `Berhasil mengambil loot dari ${pool.deceasedCharacterName}. ${petLootedCount < pool.pets.length ? 'Beberapa pet tidak diambil karena kapasitas penuh.' : ''}`;
         });
 
         res.json({
             success: true,
-            message: `Berhasil mengambil loot dari ${pool.deceasedCharacterName}. ${petLootedCount < pool.pets.length ? 'Beberapa pet tidak diambil karena kapasitas penuh.' : ''}`
+            message: successMessage
         });
 
     } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-PLAYER] Error claiming loot:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
@@ -628,27 +659,32 @@ router.post('/daily', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
-        const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-        if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-        if (isClaimedToday(player.lastDailyClaim)) {
-            return res.status(400).json({ error: 'Kamu sudah klaim daily hari ini. Reset pada jam 00:00 WIB.' });
-        }
+            if (isClaimedToday(player.lastDailyClaim)) {
+                throw new CustomError('Kamu sudah klaim daily hari ini. Reset pada jam 00:00 WIB.', 400);
+            }
 
-        player.currency.silver += 2; // Daily reward: 2 silver
-        player.lastDailyClaim = new Date();
-        await player.save();
+            player.currency.silver += 2; // Daily reward: 2 silver
+            player.lastDailyClaim = new Date();
+            await player.save({ session });
 
-        const TransactionLog = require('../../models/TransactionLog');
-        await TransactionLog.create({
-            guildId,
-            type: 'daily_claim',
-            description: `[${player.characterName}] klaim daily reward 2 silver.`
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'daily_claim',
+                description: `[${player.characterName}] klaim daily reward 2 silver.`
+            }], { session });
         });
 
         res.json({ success: true, message: 'Berhasil klaim daily reward (2 Silver)!' });
     } catch (error) {
+        if (error instanceof CustomError) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
         console.error('[API-PLAYER] Error daily claim:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
