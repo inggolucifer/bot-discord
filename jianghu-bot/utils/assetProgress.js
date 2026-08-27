@@ -8,11 +8,6 @@ function calculateProgress(assetOwned) {
   let activeWorkers = 0;
   if (assetOwned.assignedWorkers && assetOwned.assignedWorkers.length > 0) {
     for (const w of assetOwned.assignedWorkers) {
-       // w.endTime must be tracked. In our current implementation we need to handle it.
-       // Let's rely on the global worker sync or we just pass the valid active worker count.
-       // For now, if we don't have contract info inside assetOwned, we will assume they are active
-       // unless we modify the caller to pass it.
-       // Wait, we can check w.endTime if we store it!
        if (w.endTime && w.endTime.getTime() < Date.now()) {
           continue; // expired
        }
@@ -20,14 +15,27 @@ function calculateProgress(assetOwned) {
     }
   }
 
-  let buff = 1.0;
-  if (activeWorkers === 0) {
-    buff = 0.0;
-  } else if (activeWorkers > 0) {
-    buff += (activeWorkers * 0.1);
+  // Jika sedang masa pembangunan (pending/building atau punya constructionCompleteAt di masa depan)
+  // kecepatan dasar adalah 1.0 (meskipun tanpa pekerja). Pekerja mempercepat hingga 1.4 (maks 4 pekerja)
+  let isBuilding = false;
+  if (assetOwned.status === 'pending' || assetOwned.status === 'building' ||
+      (assetOwned.constructionCompleteAt && assetOwned.constructionCompleteAt.getTime() > Date.now())) {
+      isBuilding = true;
   }
 
-  if (buff > 1.4) buff = 1.4;
+  let buff = 1.0;
+  if (isBuilding) {
+     buff = 1.0 + (activeWorkers * 0.1);
+     if (buff > 1.4) buff = 1.4;
+  } else {
+     // Aset sudah jadi (mode produksi)
+     if (activeWorkers === 0) {
+       buff = 0.0;
+     } else if (activeWorkers > 0) {
+       buff = 1.0 + (activeWorkers * 0.1);
+     }
+     if (buff > 1.4) buff = 1.4;
+  }
 
   return Math.floor(elapsedMs * buff);
 }

@@ -2,7 +2,10 @@ const Player = require('../models/Player');
 const Sect = require('../models/Sect');
 const Asset = require('../models/Asset');
 const GuildConfig = require('../models/GuildConfig');
+const { splitSectProfit } = require('./sectProfitSplit');
 const { calculateProgress } = require('./assetProgress');
+const { isUnderConstruction } = require('./crafting');
+const { logTransaction } = require('./logger');
 
 let isProcessing = false;
 
@@ -10,184 +13,210 @@ async function runWorkerAutoProcess(client) {
     if (isProcessing) return;
     isProcessing = true;
     try {
-    // 1. Get all assets that actually produce items (workerOutputItemId is not null) AND require inputs
-    const producingAssets = await Asset.find({
-        workerOutputItemId: { $ne: null },
-        'workerInputMaterials.0': { $exists: true } // Aman untuk backward-compatibility database lama
-    });
-    if (!producingAssets.length) {
-        isProcessing = false;
-        return;
-    }
-
-    // Map of asset configurations for fast lookup
-    const assetMap = new Map();
-    for (const asset of producingAssets) {
-        assetMap.set(asset._id.toString(), asset);
-    }
-
-    const guildConfigs = new Map(); // Cache guild configs
-
-    // 2. Process Players
-    // Find players who own at least one active asset that is in our producingAssets list
-    const producingAssetIds = producingAssets.map(a => a._id);
-
-    // A player might have multiple assets, check all of them
-    // To optimize memory, we iterate through players who have active assigned workers
-    const players = await Player.find({
-        'assets': {
-            $elemMatch: {
-                assetId: { $in: producingAssetIds },
-                status: 'active'
-            }
-        }
-    });
-
-    for (const player of players) {
-        let playerUpdated = false;
-
-        let guildConfig = guildConfigs.get(player.guildId);
-        if (!guildConfig) {
-            guildConfig = await GuildConfig.findOne({ guildId: player.guildId });
-            guildConfigs.set(player.guildId, guildConfig);
+        // Ambil semua aset yang bisa memproduksi baik itu currency (dailyProfit > 0) atau item (workerOutputQuantity > 0)
+        // Dan aset yang sedang dibangun juga akan diproses agar progress update-nya real-time (karena tidak ada filter disini)
+        const allAssets = await Asset.find({});
+        const assetMap = new Map();
+        for (const asset of allAssets) {
+            assetMap.set(asset._id.toString(), asset);
         }
 
-        for (const owned of player.assets) {
-            if (owned.status !== 'active') continue;
+        const guildConfigs = new Map();
 
-            const assetConfig = assetMap.get(owned.assetId.toString());
-            if (!assetConfig) continue;
+        // Cari semua player yang punya aset
+        const players = await Player.find({ 'assets.0': { $exists: true }, status: 'active' });
 
-            // Check if there is an active worker
-            let activeWorkersCount = 0;
-            if (owned.assignedWorkers && owned.assignedWorkers.length > 0) {
-                activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+        for (const player of players) {
+            let playerUpdated = false;
+            let guildConfig = guildConfigs.get(player.guildId);
+            if (!guildConfig) {
+                guildConfig = await GuildConfig.findOne({ guildId: player.guildId });
+                guildConfigs.set(player.guildId, guildConfig);
             }
 
-            let productiveQuantity = owned.quantity;
-            if (!assetConfig.isCraftingStation) {
-                productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
-            }
+            for (const owned of player.assets) {
+                const assetConfig = assetMap.get(owned.assetId.toString());
+                if (!assetConfig) continue;
 
-            // Only Tipe 3 requires active workers (or is producing something)
-            if (productiveQuantity <= 0) {
-                continue;
-            }
+                const progressMs = calculateProgress(owned) + (owned.progressAccumulated || 0);
 
-            if (assetConfig.workerOutputQuantity <= 0) continue;
+                // --- FASE PEMBANGUNAN ---
+                if (isUnderConstruction(owned) || owned.status === 'pending' || owned.status === 'building') {
+                    // Update the dynamic constructionCompleteAt based on accumulated progress
+                    if (!owned.originalConstructionStart) {
+                         // Fallback jika tdk ada start (baru), set sekarang + jam config
+                         owned.originalConstructionStart = owned.lastProgressUpdate || new Date();
+                         owned.progressAccumulated = 0; // reset to 0 as base
+                    }
 
-            // Calculate hours passed
-            const progressMs = calculateProgress(owned) + (owned.progressAccumulated || 0);
-            const hoursPassed = Math.floor(progressMs / (3600 * 1000));
+                    const neededMs = assetConfig.constructionTimeHours * 3600 * 1000;
+                    if (progressMs >= neededMs) {
+                        // PEMBANGUNAN SELESAI
+                        owned.status = 'active';
+                        owned.constructionCompleteAt = null; // Tandai beres
+                        owned.progressAccumulated = progressMs - neededMs; // Sisanya langsung jadi modal profit
+                        owned.lastProgressUpdate = new Date();
+                        playerUpdated = true;
 
-            if (hoursPassed < 1) continue; // Not enough time for 1 cycle (1 hour)
+                        if (guildConfig && guildConfig.workerChannelId) {
+                            try {
+                                const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
+                                if (channel) {
+                                    channel.send(`🎉 <@${player.discordId}>, pembangunan aset **${assetConfig.name}** telah selesai dan langsung beroperasi!`);
+                                }
+                            } catch (e) {}
+                        }
+                    } else {
+                        // Masih proses, simpan progress, update last update
+                        owned.progressAccumulated = progressMs;
+                        owned.lastProgressUpdate = new Date();
 
-            // Find how many cycles (hours) the player can actually afford
-            let affordableHours = hoursPassed;
-            let missingMaterialName = null;
+                        // Kalkulasi ulang ETA untuk di-show di frontend (meskipun sebenernya ETA itu sekedar target date, kita butuh fixed point dari current time)
+                        const remainingMs = neededMs - owned.progressAccumulated;
+                        // Karena speed sekarang bisa berubah (dari pekerja), constructionCompleteAt adalah Date.now() + remainingMs (diasumsikan kalau jalannya 1.0x).
+                        // Sebenarnya kalau speed > 1.0, selesainya akan lebih cepat. Di sini diset agar konsisten di cek UI.
+                        owned.constructionCompleteAt = new Date(Date.now() + remainingMs);
 
-            for (const input of assetConfig.workerInputMaterials) {
-                const neededPerHour = input.quantity * productiveQuantity;
-                const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
-                const availableQuantity = ownedItem ? ownedItem.quantity : 0;
-
-                // Calculate max hours affordable for this specific material
-                const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
-
-                if (maxAffordableForThisMat < affordableHours) {
-                    affordableHours = maxAffordableForThisMat;
-                    if (affordableHours === 0 && !missingMaterialName) {
-                        missingMaterialName = input.itemName;
+                        playerUpdated = true;
+                        continue; // Masih dibangun, tidak usah proses profit.
                     }
                 }
-            }
 
-            if (affordableHours === 0) {
-                // Cannot afford even 1 hour of production
-                if (!owned.isHalted) {
-                    owned.isHalted = true;
-                    owned.lastWarningSentAt = new Date();
+                // --- FASE PRODUKSI ---
+                if (owned.status !== 'active') continue;
 
-                    if (guildConfig && guildConfig.workerChannelId) {
-                        try {
-                            const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
-                            if (channel) {
-                                channel.send(`⚠️ <@${player.discordId}>, pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`);
+                // Hitung active workers valid
+                let activeWorkersCount = 0;
+                if (owned.assignedWorkers && owned.assignedWorkers.length > 0) {
+                    activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+                }
+
+                // Crafting Station tdk memproduksi otomatis.
+                if (assetConfig.isCraftingStation) {
+                     // Tetap reset timer update supaya tidak luber ke max int
+                     owned.progressAccumulated = 0;
+                     owned.lastProgressUpdate = new Date();
+                     continue;
+                }
+
+                // Aset butuh minimal 1 pekerja per unit (jika Tipe 3, atau jg Tipe 1 yang bukan Crafting Station)
+                let productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
+                if (productiveQuantity <= 0) {
+                     // Berhenti bekerja, tidak menambah accumulated
+                     owned.lastProgressUpdate = new Date(); // Update Date agar progress tdk numpuk di old date
+                     continue;
+                }
+
+                // Kita asumsikan saat di Fase Produksi, progress baru = progressMs hasil calculate yg barusan (atau dari sisa selesainya konstruksi).
+                const hoursPassed = Math.floor(progressMs / (3600 * 1000));
+
+                if (hoursPassed < 1) {
+                     owned.progressAccumulated = progressMs;
+                     owned.lastProgressUpdate = new Date();
+                     playerUpdated = true;
+                     continue; // Belum cukup 1 jam
+                }
+
+                // Cek kebutuhan input material per jam (jika ada)
+                let affordableHours = hoursPassed;
+                let missingMaterialName = null;
+
+                if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                    for (const input of assetConfig.workerInputMaterials) {
+                        const neededPerHour = input.quantity * productiveQuantity;
+                        const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
+                        const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+                        const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
+
+                        if (maxAffordableForThisMat < affordableHours) {
+                            affordableHours = maxAffordableForThisMat;
+                            if (affordableHours === 0 && !missingMaterialName) {
+                                missingMaterialName = input.itemName;
                             }
-                        } catch (e) {
-                            console.error('[WorkerAutoProcess] Failed to send warning:', e);
                         }
                     }
                 }
 
-                // CRITICAL FIX: Reset the accumulated progress.
-                // Since the factory is halted, it loses the time it sat idle without materials.
-                // This prevents massive "time debt" accumulation.
-                owned.progressAccumulated = 0;
+                if (affordableHours === 0) {
+                    if (!owned.isHalted) {
+                        owned.isHalted = true;
+                        owned.lastWarningSentAt = new Date();
+                        if (guildConfig && guildConfig.workerChannelId) {
+                            try {
+                                const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
+                                if (channel) {
+                                    channel.send(`⚠️ <@${player.discordId}>, pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`);
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                    owned.progressAccumulated = 0; // Halted, rugi waktu
+                    owned.lastProgressUpdate = new Date();
+                    playerUpdated = true;
+                    continue;
+                }
+
+                // Eksekusi produksi sesuai `affordableHours`
+                let claimedLoot = false;
+
+                // Deduct Input
+                if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                    for (const input of assetConfig.workerInputMaterials) {
+                        const totalNeeded = input.quantity * affordableHours * productiveQuantity;
+                        const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
+                        ownedItem.quantity -= totalNeeded;
+                        if(ownedItem.quantity < 0) ownedItem.quantity = 0;
+                    }
+                }
+
+                // Add Currency (Tipe 1)
+                if (assetConfig.dailyProfit > 0) {
+                    const profit = affordableHours * assetConfig.dailyProfit * productiveQuantity;
+                    player.currency[assetConfig.profitCurrency] += profit;
+                    claimedLoot = true;
+                }
+
+                // Add Output Item (Tipe 3)
+                if (assetConfig.workerOutputItemId && assetConfig.workerOutputQuantity > 0) {
+                    const totalOutput = assetConfig.workerOutputQuantity * affordableHours * productiveQuantity;
+                    let outputItem = player.inventory.find(i => i.itemId.equals(assetConfig.workerOutputItemId));
+                    if (outputItem) {
+                        outputItem.quantity += totalOutput;
+                    } else {
+                        player.inventory.push({
+                            itemId: assetConfig.workerOutputItemId,
+                            quantity: totalOutput
+                        });
+                    }
+                    claimedLoot = true;
+                }
+
+                // Reset state
+                const consumedMs = affordableHours * 3600 * 1000;
+                const leftoverMs = progressMs - consumedMs;
+                owned.progressAccumulated = (affordableHours < hoursPassed) ? 0 : leftoverMs;
                 owned.lastProgressUpdate = new Date();
+
+                if (owned.isHalted) owned.isHalted = false;
                 playerUpdated = true;
-
-                continue;
             }
 
-            // If we have affordable hours, perform production for THOSE hours
-            // 1. Deduct materials
-            for (const input of assetConfig.workerInputMaterials) {
-                const totalNeeded = input.quantity * affordableHours * productiveQuantity;
-                const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
-                ownedItem.quantity -= totalNeeded;
-                if(ownedItem.quantity < 0) ownedItem.quantity = 0; // Safe fallback
+            if (playerUpdated) {
+                await player.save().catch(e => console.error('[WorkerAutoProcess] Failed to save player:', e));
             }
-
-            // 2. Add outputs
-            const totalOutput = assetConfig.workerOutputQuantity * affordableHours * productiveQuantity;
-            let outputItem = player.inventory.find(i => i.itemId.equals(assetConfig.workerOutputItemId));
-            if (outputItem) {
-                outputItem.quantity += totalOutput;
-            } else {
-                if (assetConfig.workerOutputItemId) player.inventory.push({
-                    itemId: assetConfig.workerOutputItemId,
-                    quantity: totalOutput
-                });
-            }
-
-            // 3. Reset state & progress
-            // Subtract ONLY the hours actually processed. The rest of the time is "lost" if they couldn't afford it.
-            const consumedMs = affordableHours * 3600 * 1000;
-            const leftoverMs = progressMs - consumedMs;
-
-            // If they couldn't afford all hours passed, it means the factory halted. Discard leftover time.
-            owned.progressAccumulated = (affordableHours < hoursPassed) ? 0 : leftoverMs;
-            owned.lastProgressUpdate = new Date();
-
-            if (owned.isHalted) {
-                owned.isHalted = false; // Reset halted flag if it resumed
-            }
-            playerUpdated = true;
         }
 
-        if (playerUpdated) {
-            await player.save().catch(e => console.error('[WorkerAutoProcess] Failed to save player:', e));
-        }
-    }
-
-    // Process Sects
-    await runWorkerAutoProcessSects(client, producingAssets, assetMap, guildConfigs);
+        // Process Sects
+        await runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfigs);
     } finally {
         isProcessing = false;
     }
 }
 
 // Continuation for Sects
-async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guildConfigs) {
-    const producingAssetIds = producingAssets.map(a => a._id);
-    const sects = await Sect.find({
-        'assets': {
-            $elemMatch: {
-                assetId: { $in: producingAssetIds }
-            }
-        }
-    });
+async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfigs) {
+    // Cari sekte yang punya aset aktif
+    const sects = await Sect.find({ 'assets.0': { $exists: true } });
 
     for (const sect of sects) {
         let sectUpdated = false;
@@ -199,37 +228,43 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
         }
 
         for (const owned of sect.assets) {
-             // For Sect assets, they might not have explicit status pending/building tracked the same way,
-             // but we'll assume they are active if they are not under construction.
-             if (owned.constructionCompleteAt && owned.constructionCompleteAt > new Date()) continue; // Under construction
-
              const assetConfig = assetMap.get(owned.assetId.toString());
-             if (!assetConfig || assetConfig.workerOutputQuantity <= 0) continue;
+             if (!assetConfig) continue;
 
-             // In Sect schema, we don't have assignedWorkers right now, so we assume sect assets auto-produce if they exist
-             // (Or they might be Tipe 3 which just ticks over time)
-
-             // calculateProgress doesn't officially exist for sects, we need to calculate it manually here
              const now = Date.now();
-             const lastUpdate = owned.lastClaimAt ? owned.lastClaimAt.getTime() : (owned.constructionCompleteAt ? owned.constructionCompleteAt.getTime() : sect.createdAt.getTime());
+             const lastUpdate = owned.lastClaimAt ? owned.lastClaimAt.getTime() : (sect.createdAt.getTime());
              const progressMs = now - lastUpdate;
-             const hoursPassed = Math.floor(progressMs / (3600 * 1000));
 
+             if (owned.constructionCompleteAt && owned.constructionCompleteAt.getTime() > now) {
+                  // Sekte construction tidak pakai pekerja (saat ini) jadi progress fix.
+                  // Belum kelar, jgn proses.
+                  continue;
+             }
+
+             if (assetConfig.isCraftingStation) {
+                  owned.lastClaimAt = new Date(); // Tetap update time state biar ga overflow
+                  sectUpdated = true;
+                  continue;
+             }
+
+             const hoursPassed = Math.floor(progressMs / (3600 * 1000));
              if (hoursPassed < 1) continue;
 
              let affordableHours = hoursPassed;
              let missingMaterialName = null;
 
-             for (const input of assetConfig.workerInputMaterials) {
-                 const neededPerHour = input.quantity * owned.quantity;
-                 const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
-                 const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+             if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                 for (const input of assetConfig.workerInputMaterials) {
+                     const neededPerHour = input.quantity * owned.quantity;
+                     const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
+                     const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+                     const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
 
-                 const maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
-                 if (maxAffordableForThisMat < affordableHours) {
-                     affordableHours = maxAffordableForThisMat;
-                     if (affordableHours === 0 && !missingMaterialName) {
-                         missingMaterialName = input.itemName;
+                     if (maxAffordableForThisMat < affordableHours) {
+                         affordableHours = maxAffordableForThisMat;
+                         if (affordableHours === 0 && !missingMaterialName) {
+                             missingMaterialName = input.itemName;
+                         }
                      }
                  }
              }
@@ -238,48 +273,65 @@ async function runWorkerAutoProcessSects(client, producingAssets, assetMap, guil
                  if (!owned.isHalted) {
                      owned.isHalted = true;
                      owned.lastWarningSentAt = new Date();
-
                      if (guildConfig && guildConfig.workerChannelId) {
                          try {
                              const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
                              if (channel) {
-                                 // Notify the leader or vice leader
                                  let mention = `Ketua Sekte **${sect.name}**`;
                                  if (sect.leaderId) mention = `<@${sect.leaderId}>`;
-                                 channel.send(`⚠️ ${mention}, pekerja di aset sekte **${assetConfig.name}** telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera setorkan item ke sekte.`);
+                                 channel.send(`⚠️ ${mention}, aset sekte **${assetConfig.name}** telah **berhenti beroperasi** karena kekurangan material: **${missingMaterialName}**!`);
                              }
-                         } catch (e) {
-                             console.error('[WorkerAutoProcess] Failed to send sect warning:', e);
-                         }
+                         } catch (e) {}
                      }
                  }
-                 // Reset time debt: sync to current time
                  owned.lastClaimAt = new Date();
                  sectUpdated = true;
                  continue;
              }
 
              // Deduct
-             for (const input of assetConfig.workerInputMaterials) {
-                 const totalNeeded = input.quantity * affordableHours * owned.quantity;
-                 const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
-                 ownedItem.quantity -= totalNeeded;
-                 if (ownedItem.quantity < 0) ownedItem.quantity = 0;
+             if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                 for (const input of assetConfig.workerInputMaterials) {
+                     const totalNeeded = input.quantity * affordableHours * owned.quantity;
+                     const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
+                     ownedItem.quantity -= totalNeeded;
+                     if (ownedItem.quantity < 0) ownedItem.quantity = 0;
+                 }
              }
 
-             // Add output
-             const totalOutput = assetConfig.workerOutputQuantity * affordableHours * owned.quantity;
-             let outputItem = sect.resources.find(r => r.itemId.equals(assetConfig.workerOutputItemId));
-             if (outputItem) {
-                 outputItem.quantity += totalOutput;
-             } else {
-                 if (assetConfig.workerOutputItemId) sect.resources.push({
-                     itemId: assetConfig.workerOutputItemId,
-                     quantity: totalOutput
-                 });
+             // Add Currency (Tipe 1)
+             if (assetConfig.dailyProfit > 0) {
+                 const profit = affordableHours * assetConfig.dailyProfit * owned.quantity;
+                 // Distribusikan ke anggota sesuai persentase sectProfitSplit
+                 const shares = splitSectProfit(sect, profit);
+                 if (shares && shares.length > 0) {
+                     for (const share of shares) {
+                         // Find the player in database directly and give them the currency (lazy load)
+                         Player.updateOne(
+                             { discordId: share.userId, guildId: sect.guildId },
+                             { $inc: { [`currency.${assetConfig.profitCurrency}`]: share.amount } }
+                         ).catch(() => {});
+                     }
+                 } else {
+                     // Fallback ke kas sekte jika kosong anggotanya (meski jarang)
+                     sect.currency[assetConfig.profitCurrency] += profit;
+                 }
              }
 
-             // Update lastClaimAt. If they couldn't afford all hours, it means they halted, reset to now.
+             // Add Output Item (Tipe 3)
+             if (assetConfig.workerOutputItemId && assetConfig.workerOutputQuantity > 0) {
+                 const totalOutput = assetConfig.workerOutputQuantity * affordableHours * owned.quantity;
+                 let outputItem = sect.resources.find(r => r.itemId.equals(assetConfig.workerOutputItemId));
+                 if (outputItem) {
+                     outputItem.quantity += totalOutput;
+                 } else {
+                     sect.resources.push({
+                         itemId: assetConfig.workerOutputItemId,
+                         quantity: totalOutput
+                     });
+                 }
+             }
+
              if (affordableHours < hoursPassed) {
                  owned.lastClaimAt = new Date();
              } else {

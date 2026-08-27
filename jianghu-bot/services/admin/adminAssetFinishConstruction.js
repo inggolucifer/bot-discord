@@ -44,7 +44,7 @@ module.exports = {
       guildId: interaction.guildId, adminId: interaction.user.id, action: 'FINISH_CONSTRUCTION', targetUserId: target.id, details: asset.name,
     });
 
-    return interaction.editReply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Pembangunan Selesai').setDescription(`**${asset.name}** milik ${target} sekarang langsung bisa dipakai (claim-profit/craft).`)] });
+    return interaction.editReply({ embeds: [new EmbedBuilder().setColor(0x27ae60).setTitle('✅ Pembangunan Selesai').setDescription(`**${asset.name}** milik ${target} sekarang langsung bisa dipakai (berproduksi/craft).`)] });
   },
 };
 

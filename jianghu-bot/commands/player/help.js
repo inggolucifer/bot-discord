@@ -16,7 +16,7 @@ module.exports = {
         { name: '🎒 Aset, Pet, Item', value: '`/asset cek`, `list`, `bangun`, `tambah-slot`\n`/pet list`, `status`, `feed`, `heal`, `rename`, `release`, `battle`, `buyslot`\n`/item cek`, `list`, `craft`' },
         { name: '⚒️ Worker', value: '`/worker daftar`, `batal`, `ubah`, `pindah`, `pekerja-saya`, `sewa-sistem`' },
         { name: '🏪 Shop, Market, Lelang', value: '`/shop lihat`, `beli`, `jual` — Toko Sistem\n`/market jual-item`, `jual-pet`, `jual-asset`, `beli`, `batal` — Market Pemain\n`/lelang bid`, `request` — Lelang Sistem & Pemain' },
-        { name: '🏯 Sekte', value: '`/sekte info`, `list`, `leaderboard`, `donasi`, `deposit-resource`, `bangun-asset`, `craft`, `claim-profit`, `kelola-anggota`, `kick-anggota`' },
+        { name: '🏯 Sekte', value: '`/sekte info`, `list`, `leaderboard`, `donasi`, `deposit-resource`, `bangun-asset`, `craft`, `kelola-anggota`, `kick-anggota`' },
         { name: '🏆 Turnamen & Rank', value: '`/tournament bracket [nama]` — Lihat bracket\n`/leaderboard` — 10 player terkaya' },
       )
       .setFooter({ text: 'Admin? Gunakan /help-admin untuk melihat command khusus admin.' });
