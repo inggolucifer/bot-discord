@@ -25,6 +25,8 @@ interface Asset {
   name: string;
   underConstruction: boolean;
   assignedWorkers: any[];
+  status?: string;
+  quantity?: number;
 }
 
 export default function WorkerPage() {
@@ -178,8 +180,8 @@ export default function WorkerPage() {
                     >
                         <option value="" disabled>-- Pilih Aset --</option>
                         {assets.map(a => (
-                            <option key={a.id} value={a.id} disabled={!a.underConstruction && a.assignedWorkers.length >= 1} className="disabled:text-gray-600">
-                                {a.name} {!a.underConstruction && a.assignedWorkers.length >= 1 ? '(Penuh)' : ''}
+                            <option key={a.id} value={a.id} disabled={(!a.underConstruction && a.status === "active" && a.assignedWorkers.length >= (a.quantity || 1)) || ((a.underConstruction || a.status !== "active") && a.assignedWorkers.length >= 4)} className="disabled:text-gray-600">
+                                {a.name} {((!a.underConstruction && a.status === "active" && a.assignedWorkers.length >= (a.quantity || 1)) || ((a.underConstruction || a.status !== "active") && a.assignedWorkers.length >= 4)) ? '(Penuh)' : ''}
                             </option>
                         ))}
                     </select>

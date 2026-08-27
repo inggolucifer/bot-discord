@@ -1,8 +1,9 @@
-const Player = require('../models/Player');
+const fs = require('fs');
+
+const content = `const Player = require('../models/Player');
 const Sect = require('../models/Sect');
 const Asset = require('../models/Asset');
 const GuildConfig = require('../models/GuildConfig');
-const { splitSectProfit } = require('./sectProfitSplit');
 const { calculateProgress } = require('./assetProgress');
 const { isUnderConstruction } = require('./crafting');
 const { logTransaction } = require('./logger');
@@ -62,7 +63,7 @@ async function runWorkerAutoProcess(client) {
                             try {
                                 const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
                                 if (channel) {
-                                    channel.send(`🎉 <@${player.discordId}>, pembangunan aset **${assetConfig.name}** telah selesai dan langsung beroperasi!`);
+                                    channel.send(\`🎉 <@\${player.discordId}>, pembangunan aset **\${assetConfig.name}** telah selesai dan langsung beroperasi!\`);
                                 }
                             } catch (e) {}
                         }
@@ -145,7 +146,7 @@ async function runWorkerAutoProcess(client) {
                             try {
                                 const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
                                 if (channel) {
-                                    channel.send(`⚠️ <@${player.discordId}>, pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`);
+                                    channel.send(\`⚠️ <@\${player.discordId}>, pekerja di aset **\${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **\${missingMaterialName}**! Segera isi ulang inventory-mu.\`);
                                 }
                             } catch (e) {}
                         }
@@ -156,7 +157,7 @@ async function runWorkerAutoProcess(client) {
                     continue;
                 }
 
-                // Eksekusi produksi sesuai `affordableHours`
+                // Eksekusi produksi sesuai \`affordableHours\`
                 let claimedLoot = false;
 
                 // Deduct Input
@@ -277,9 +278,9 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                          try {
                              const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
                              if (channel) {
-                                 let mention = `Ketua Sekte **${sect.name}**`;
-                                 if (sect.leaderId) mention = `<@${sect.leaderId}>`;
-                                 channel.send(`⚠️ ${mention}, aset sekte **${assetConfig.name}** telah **berhenti beroperasi** karena kekurangan material: **${missingMaterialName}**!`);
+                                 let mention = \`Ketua Sekte **\${sect.name}**\`;
+                                 if (sect.leaderId) mention = \`<\@\${sect.leaderId}>\`;
+                                 channel.send(\`⚠️ \${mention}, aset sekte **\${assetConfig.name}** telah **berhenti beroperasi** karena kekurangan material: **\${missingMaterialName}**!\`);
                              }
                          } catch (e) {}
                      }
@@ -302,20 +303,7 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
              // Add Currency (Tipe 1)
              if (assetConfig.dailyProfit > 0) {
                  const profit = affordableHours * assetConfig.dailyProfit * owned.quantity;
-                 // Distribusikan ke anggota sesuai persentase sectProfitSplit
-                 const shares = splitSectProfit(sect, profit);
-                 if (shares && shares.length > 0) {
-                     for (const share of shares) {
-                         // Find the player in database directly and give them the currency (lazy load)
-                         Player.updateOne(
-                             { discordId: share.userId, guildId: sect.guildId },
-                             { $inc: { [`currency.${assetConfig.profitCurrency}`]: share.amount } }
-                         ).catch(() => {});
-                     }
-                 } else {
-                     // Fallback ke kas sekte jika kosong anggotanya (meski jarang)
-                     sect.currency[assetConfig.profitCurrency] += profit;
-                 }
+                 sect.currency[assetConfig.profitCurrency] += profit;
              }
 
              // Add Output Item (Tipe 3)
@@ -349,3 +337,5 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
     }
 }
 module.exports = { runWorkerAutoProcess };
+`;
+fs.writeFileSync('jianghu-bot/utils/workerAutoProcess.js', content);

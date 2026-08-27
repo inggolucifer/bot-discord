@@ -39,7 +39,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
       .setTitle('⛏️ Aset Pekerja Diatur')
-      .setDescription(`**${asset.name}** sekarang menghasilkan **${jumlahHasil}x ${item.name}** setiap hari saat di-claim-profit (bisa berbarengan dengan income currency & crafting kalau ada).`);
+      .setDescription(`**${asset.name}** sekarang menghasilkan **${jumlahHasil}x ${item.name}** setiap hari secara otomatis saat beroperasi (bisa berbarengan dengan income currency & crafting kalau ada).`);
     return interaction.editReply({ embeds: [embed] });
   },
 };

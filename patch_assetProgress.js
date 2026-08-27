@@ -1,4 +1,8 @@
-function calculateProgress(assetOwned) {
+const fs = require('fs');
+const filepath = 'jianghu-bot/utils/assetProgress.js';
+let content = fs.readFileSync(filepath, 'utf8');
+
+const newContent = `function calculateProgress(assetOwned) {
   if (!assetOwned.lastProgressUpdate) return 0;
 
   const elapsedMs = Date.now() - assetOwned.lastProgressUpdate.getTime();
@@ -41,3 +45,6 @@ function calculateProgress(assetOwned) {
 }
 
 module.exports = { calculateProgress };
+`;
+fs.writeFileSync(filepath, newContent);
+console.log('patched assetProgress.js');
