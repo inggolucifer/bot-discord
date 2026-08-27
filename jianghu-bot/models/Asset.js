@@ -7,6 +7,7 @@ const recipeMaterialSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
   itemName: { type: String, required: true },
   quantity: { type: Number, required: true, min: 1 },
+  durabilityHours: { type: Number, default: 1 },
 }, { _id: false });
 
 const recipeSchema = new mongoose.Schema({
