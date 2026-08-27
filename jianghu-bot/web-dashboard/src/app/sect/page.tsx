@@ -99,22 +99,6 @@ export default function SectPage() {
     setTimeout(() => fetchSectData(), 0);
   }, [user]);
 
-  const handleClaimProfit = async () => {
-      if(!sect || (sect.role !== 'Ketua' && sect.role !== 'Wakil Ketua' && sect.role !== 'Tetua')) return;
-
-      setClaimLoading(true);
-      setClaimError(null);
-      setClaimResult(null);
-
-      try {
-                    setClaimResult(res.data.data);
-          await setTimeout(() => fetchSectData(), 0);
-      } catch (err: any) {
-          setClaimError(err.response?.data?.error || 'Gagal klaim profit sekte.');
-      } finally {
-          setClaimLoading(false);
-      }
-  };
 
   if (loading) {
       return <LoadingState text="Menghubungkan ke Balai Sekte..." />;
@@ -196,67 +180,10 @@ export default function SectPage() {
             <div className="flex flex-wrap sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-[#333] pb-4">
               <h2 className="text-xl sm:text-2xl font-bold text-green-500 font-serif flex items-center gap-2"><Map className="w-5 h-5 sm:w-6 sm:h-6" /> Aset Sekte</h2>
 
-              {(sect.role === 'Ketua' || sect.role === 'Wakil Ketua' || sect.role === 'Tetua') && (
-                  <Button
-                    variant="success"
-                    onClick={handleClaimProfit}
-                    disabled={claimLoading || assets.length === 0}
-                    className="w-full sm:w-auto shadow-[0_0_10px_rgba(31,64,46,0.5)]"
-                  >
-                    {claimLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <DollarSign size={16} className="mr-2" />}
-                    Klaim Profit Sekte
-                  </Button>
-              )}
             </div>
 
-            {(sect.role !== 'Ketua' && sect.role !== 'Wakil Ketua' && sect.role !== 'Tetua') && (
-                <div className="mb-6 p-3 bg-[#1e3a5f]/20 border border-[#1e3a5f]/50 rounded-md text-xs sm:text-sm text-blue-300 flex items-center gap-2">
-                    <Shield size={16} className="shrink-0"/> Hanya Ketua, Wakil, atau Tetua yang dapat melakukan klaim profit sekte.
-                </div>
-            )}
 
-            {claimError && (
-                <div className="mb-6 p-3 bg-red-900/20 border border-red-900/50 rounded-md text-xs sm:text-sm text-red-400 flex items-center gap-2">
-                    <AlertTriangle size={16} className="shrink-0"/> {claimError}
-                </div>
-            )}
 
-            {claimResult && (
-              <div className="mb-6 p-4 sm:p-5 rounded-lg bg-black/60 border border-green-900/50 shadow-inner">
-                <h3 className="text-green-400 font-bold mb-3 font-serif">Hasil Klaim Sekte:</h3>
-
-                {claimResult.claimedCurrency.length > 0 && (
-                    <div className="mb-3">
-                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">💰 Income (Dibagikan ke anggota):</p>
-                        <ul className="text-xs sm:text-sm text-green-300 list-disc list-inside ml-2 space-y-1">
-                            {claimResult.claimedCurrency.map((msg, i) => <li key={i}>{msg}</li>)}
-                        </ul>
-                    </div>
-                )}
-
-                {claimResult.claimedMaterial.length > 0 && (
-                    <div className="mb-3">
-                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">⛏️ Material (Masuk Gudang):</p>
-                        <ul className="text-xs sm:text-sm text-orange-300 list-disc list-inside ml-2 space-y-1">
-                            {claimResult.claimedMaterial.map((msg, i) => <li key={i}>{msg}</li>)}
-                        </ul>
-                    </div>
-                )}
-
-                {claimResult.distributionSummary.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-[#333]">
-                        <p className="text-xs text-[#c5a880] font-semibold uppercase tracking-wider mb-1">📊 Distribusi Profit (Langsung masuk saldo pribadi):</p>
-                        <ul className="text-xs sm:text-sm text-gray-300 list-disc list-inside ml-2 space-y-1">
-                            {claimResult.distributionSummary.map((msg, i) => <li key={i}>{msg}</li>)}
-                        </ul>
-                    </div>
-                )}
-
-                {claimResult.claimedCurrency.length === 0 && claimResult.claimedMaterial.length === 0 && (
-                  <p className="text-sm text-gray-500 italic">Tidak ada profit yang bisa diklaim saat ini.</p>
-                )}
-              </div>
-            )}
 
             {assets.length === 0 ? (
               <EmptyState
