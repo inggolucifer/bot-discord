@@ -58,14 +58,12 @@ async function runWorkerAutoProcess(client) {
                         owned.lastProgressUpdate = new Date();
                         playerUpdated = true;
 
-                        if (guildConfig && guildConfig.workerChannelId) {
-                            try {
-                                const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
-                                if (channel) {
-                                    channel.send(`🎉 <@${player.discordId}>, pembangunan aset **${assetConfig.name}** telah selesai dan langsung beroperasi!`);
-                                }
-                            } catch (e) {}
-                        }
+                        try {
+                            const user = await client.users.fetch(player.discordId).catch(() => null);
+                            if (user) {
+                                await user.send(`🎉 Pembangunan aset **${assetConfig.name}** milikmu telah selesai dan langsung beroperasi!`).catch(() => null);
+                            }
+                        } catch (e) {}
                     } else {
                         // Masih proses, simpan progress, update last update
                         owned.progressAccumulated = progressMs;
@@ -159,14 +157,12 @@ async function runWorkerAutoProcess(client) {
                     if (!owned.isHalted) {
                         owned.isHalted = true;
                         owned.lastWarningSentAt = new Date();
-                        if (guildConfig && guildConfig.workerChannelId) {
-                            try {
-                                const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
-                                if (channel) {
-                                    channel.send(`⚠️ <@${player.discordId}>, pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`);
-                                }
-                            } catch (e) {}
-                        }
+                        try {
+                            const user = await client.users.fetch(player.discordId).catch(() => null);
+                            if (user) {
+                                await user.send(`⚠️ Pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`).catch(() => null);
+                            }
+                        } catch (e) {}
                     }
                     owned.progressAccumulated = 0; // Halted, rugi waktu
                     owned.lastProgressUpdate = new Date();
@@ -328,13 +324,11 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                  if (!owned.isHalted) {
                      owned.isHalted = true;
                      owned.lastWarningSentAt = new Date();
-                     if (guildConfig && guildConfig.workerChannelId) {
+                     if (sect.leaderId) {
                          try {
-                             const channel = await client.channels.fetch(guildConfig.workerChannelId).catch(() => null);
-                             if (channel) {
-                                 let mention = `Ketua Sekte **${sect.name}**`;
-                                 if (sect.leaderId) mention = `<@${sect.leaderId}>`;
-                                 channel.send(`⚠️ ${mention}, aset sekte **${assetConfig.name}** telah **berhenti beroperasi** karena kekurangan material: **${missingMaterialName}**!`);
+                             const user = await client.users.fetch(sect.leaderId).catch(() => null);
+                             if (user) {
+                                 await user.send(`⚠️ Aset sekte **${assetConfig.name}** milik sekte **${sect.name}** telah **berhenti beroperasi** karena kekurangan material: **${missingMaterialName}**!`).catch(() => null);
                              }
                          } catch (e) {}
                      }
