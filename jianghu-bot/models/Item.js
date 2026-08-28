@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Rank diurutkan dari terendah ke tertinggi. Dipakai juga oleh Pet & Asset.
 const RANKS = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
-const CURRENCY_ENUM = ['silver', 'gold', 'jade', 'spirit'];
+const CURRENCY_ENUM = ['copper', 'silver', 'gold', 'jade', 'spirit'];
 
 const itemSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },

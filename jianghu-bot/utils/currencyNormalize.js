@@ -5,6 +5,9 @@
 function normalizeCurrency(currency) {
   if (!currency) return currency;
 
+  currency.silver = (currency.silver || 0) + Math.floor((currency.copper || 0) / 100);
+  currency.copper = (currency.copper || 0) % 100;
+
   currency.gold = (currency.gold || 0) + Math.floor((currency.silver || 0) / 100);
   currency.silver = (currency.silver || 0) % 100;
 

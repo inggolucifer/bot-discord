@@ -70,7 +70,7 @@ export default function MarketPage() {
   const [sellItemId, setSellItemId] = useState('');
   const [sellQuantity, setSellQuantity] = useState(1);
   const [sellPrice, setSellPrice] = useState(10);
-  const [sellCurrency, setSellCurrency] = useState('silver');
+  const [sellCurrency, setSellCurrency] = useState('copper');
 
   // Buy Modal states
   const [buyModalOpen, setBuyModalOpen] = useState(false);
@@ -166,7 +166,7 @@ export default function MarketPage() {
       setSellItemId('');
       setSellQuantity(1);
       setSellPrice(10);
-      setSellCurrency('silver');
+      setSellCurrency('copper');
   };
 
   const handleSell = async () => {
@@ -596,6 +596,7 @@ export default function MarketPage() {
                               onChange={(e) => setSellCurrency(e.target.value)}
                               className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
                           >
+                              <option value="copper">Copper 🟤</option>
                               <option value="silver">Silver 🥈</option>
                               <option value="gold">Gold 🥇</option>
                               <option value="jade">Jade 💎</option>

@@ -21,6 +21,7 @@ module.exports = {
     const lines = topPlayers.map((p, i) => {
       const rankLabel = MEDAL[i] || `**#${i + 1}**`;
       const detail = [
+        p.currency.copper ? `${p.currency.copper} ${CURRENCY_LABEL.copper}` : null,
         p.currency.silver ? `${p.currency.silver} ${CURRENCY_LABEL.silver}` : null,
         p.currency.gold ? `${p.currency.gold} ${CURRENCY_LABEL.gold}` : null,
         p.currency.jade ? `${p.currency.jade} ${CURRENCY_LABEL.jade}` : null,
