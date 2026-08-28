@@ -64,6 +64,7 @@ const playerSchema = new mongoose.Schema({
   characterImage: { type: String, default: null },
 
   currency: {
+    copper: { type: Number, default: 0 },
     silver: { type: Number, default: 0 },
     gold: { type: Number, default: 0 },
     jade: { type: Number, default: 0 },
@@ -115,7 +116,7 @@ playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencari
 playerSchema.pre('save', function (next) {
   normalizeCurrency(this.currency);
   const c = this.currency || {};
-  this.totalWealth = (c.silver || 0) + (c.gold || 0) * 100 + (c.jade || 0) * 10000 + (c.spirit || 0) * 1000000;
+  this.totalWealth = ((c.copper || 0) / 100) + (c.silver || 0) + (c.gold || 0) * 100 + (c.jade || 0) * 10000 + (c.spirit || 0) * 1000000;
   next();
 });
 

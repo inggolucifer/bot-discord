@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { RANKS } = require('./Item');
 
-const CURRENCY_ENUM = ['silver', 'gold', 'jade', 'spirit'];
+const CURRENCY_ENUM = ['copper', 'silver', 'gold', 'jade', 'spirit'];
 
 const recipeMaterialSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },

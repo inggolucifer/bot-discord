@@ -10,7 +10,7 @@ const playerListingSchema = new mongoose.Schema({
   quantity: { type: Number, required: true, min: 1 },
 
   pricePerUnit: { type: Number, required: true, min: 1 },
-  currency: { type: String, enum: ['silver', 'gold', 'jade', 'spirit'], required: true },
+  currency: { type: String, enum: ['copper', 'silver', 'gold', 'jade', 'spirit'], required: true },
 
   type: { type: String, enum: ['item', 'pet', 'asset'], default: 'item' },
   refId: { type: mongoose.Schema.Types.ObjectId, required: false },

@@ -13,6 +13,7 @@ import { Modal } from '@/components/ui/Modal';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 interface Currency {
+    copper: number;
     silver: number;
     gold: number;
     jade: number;
@@ -31,7 +32,7 @@ export default function Home() {
   // Transfer Currency
   const [transferModalOpen, setTransferModalOpen] = useState(false);
   const [transferTargetName, setTransferTargetName] = useState('');
-  const [transferCurrencyType, setTransferCurrencyType] = useState('silver');
+  const [transferCurrencyType, setTransferCurrencyType] = useState('copper');
   const [transferAmount, setTransferAmount] = useState(0);
 
   // Loot
@@ -273,7 +274,16 @@ export default function Home() {
 
       {/* Currency & Quick Stats */}
       {user && profile && (
-        <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <section className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+          <Card className="bg-[#111] border-[#444]">
+             <CardContent className="p-3 sm:p-5 flex flex-col items-center justify-center gap-2 text-center">
+                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#3d2314] flex items-center justify-center text-[#cd7f32] border border-[#8b4513]">
+                    <Coins size={16} className="sm:w-5 sm:h-5" />
+                 </div>
+                 <span className="text-[10px] sm:text-xs text-gray-400 font-medium">Copper Tael</span>
+                 <span className="text-lg sm:text-2xl font-bold text-[#cd7f32] font-mono">{((profile.currency as Record<string, number>)?.copper) || 0}</span>
+             </CardContent>
+          </Card>
           <Card variant="default" className="bg-[#111]">
              <CardContent className="p-3 sm:p-5 flex flex-col items-center justify-center gap-2 text-center">
                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 border border-gray-600">
@@ -373,6 +383,7 @@ export default function Home() {
                           onChange={(e) => setTransferCurrencyType(e.target.value)}
                           className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-blue-500 text-sm appearance-none"
                       >
+                          <option value="copper">Copper 🟤</option>
                           <option value="silver">Silver 🥈</option>
                           <option value="gold">Gold 🥇</option>
                           <option value="jade">Jade 💎</option>
