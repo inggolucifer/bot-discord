@@ -1449,6 +1449,62 @@ function buildAllAssets(guildId) {
   } catch (e) {}
 
 
+
+  for (let i = 0; i < assets.length; i++) {
+    const a = assets[i];
+    let baseDesc = "";
+    const name = a.name;
+    if (name.includes('Pohon Buah Liar')) baseDesc = "Pohon kuno di pinggir hutan mistis yang akarnya menyerap embun pagi spiritual. Tempat ini memberikan pencerahan dan hasil bagi mereka yang mau berusaha.";
+    else if (name.includes('Buruan')) baseDesc = "Jejak hewan buas terukir di tanah berbatu. Area ini dipenuhi Qi liar, menantang para kultivator untuk membuktikan insting pemburu mereka.";
+    else if (name.includes('Tanah Liat')) baseDesc = "Lumpur tebal yang menyimpan intisari elemen Bumi, bahan dasar bagi karya para pembangun dan pembuat formasi.";
+    else if (name.includes('Batu Kasar') || name.includes('Tebing Batu')) baseDesc = "Gua dangkal di kaki gunung surgawi, tempat di mana gema pahatan memecah kesunyian demi membongkar kekuatan batu alam.";
+    else if (name.includes('Pasir Putih')) baseDesc = "Hamparan pasir halus di tepi danau yang memantulkan sinar rembulan, memancarkan Yin Qi yang cocok untuk dilebur menjadi karya seni.";
+    else if (name.includes('Batu Kapur')) baseDesc = "Tebing kapur putih yang menyimpan jejak lautan purba, memendam sisa-sisa energi naga air yang telah lama mengering.";
+    else if (name.includes('Penebangan') || name.includes('Kayu') || name.includes('Kayu Besi') || name.includes('Kayu Ulin')) baseDesc = "Rimbunan pohon keras yang tumbuh menjulang membelah awan, menantang para penebang untuk membuktikan ketajaman kapak dan Qi mereka.";
+    else if (name.includes('Sungai') || name.includes('Kolam') || name.includes('Air Tawar') || name.includes('Laut') || name.includes('Dermaga') || name.includes('Tambak Udang')) baseDesc = "Perairan tenang yang menyembunyikan pusaran Qi air di dasar riaknya. Tempat memancing ketenangan jiwa dan hasil laut.";
+    else if (name.includes('Sarang Lebah')) baseDesc = "Sarang alami di antara dahan raksasa. Dengungan lebah menyiratkan hukum alam tentang kerja keras tanpa henti.";
+    else if (name.includes('Gandum') || name.includes('Padi') || name.includes('Kapas') || name.includes('Jagung') || name.includes('Kedelai') || name.includes('Sayur')) baseDesc = "Hamparan keemasan yang menari ditiup angin Qi. Ladang ini adalah denyut nadi kehidupan dan sumber energi fana bagi para penduduk.";
+    else if (name.includes('Bambu')) baseDesc = "Rumpun bambu yang bergoyang mengikuti aliran Yin dan Yang. Batangnya lurus dan lentur, melambangkan keteguhan dao seorang pendekar.";
+    else if (name.includes('Anggur')) baseDesc = "Rambatan anggur di perbukitan yang menyerap sari bumi, bersiap untuk difermentasi menjadi arak dewata pemabuk.";
+    else if (name.includes('Teh')) baseDesc = "Kebun di puncak gunung yang diselimuti kabut abadi. Daunnya menyerap esensi langit, memberikan ketenangan dan pencerahan dao.";
+    else if (name.includes('Garam')) baseDesc = "Hamparan ladang kristal putih yang berkilauan, mengkristalkan esensi elemen air dari samudra tak bertepi.";
+    else if (name.includes('Ayam') || name.includes('Sapi') || name.includes('Domba') || name.includes('Kambing') || name.includes('Kandang') || name.includes('Penggembalaan')) baseDesc = "Tempat memelihara makhluk fana yang perlahan menyerap Qi lingkungan, menghasilkan bahan bernutrisi tinggi bagi tubuh.";
+    else if (name.includes('Pinus') || name.includes('Jati') || name.includes('Ulin') || name.includes('Ebony') || name.includes('Maple') || name.includes('Ek')) baseDesc = "Hutan dengan aura kayu yang kental. Pepohonannya bernafas bersama bumi, menghasilkan kayu keras bermutu tinggi untuk paviliun mewah.";
+    else if (name.includes('Batu Bara')) baseDesc = "Galian gelap yang memendam kristal api bumi. Batu bara ini adalah bahan bakar utama untuk tungku-tungku peleburan logam.";
+    else if (name.includes('Tambang Tembaga') || name.includes('Tambang Timah') || name.includes('Tambang Besi') || name.includes('Tambang Perak') || name.includes('Tambang Emas') || name.includes('Tambang Nikel') || name.includes('Tambang Kobalt') || name.includes('Tambang Platinum') || name.includes('Tambang Obsidian') || name.includes('Galian Kuarsa') || name.includes('Tambang Ametis') || name.includes('Tambang Aluminium')) baseDesc = "Urat bumi yang memancarkan aura logam berharga. Setiap ketukan beliung membebaskan esensi logam yang terkunci jutaan tahun.";
+    else if (name.includes('Giok')) baseDesc = "Tambang yang memendam batu penampung roh. Tempat di mana energi spiritual dunia mengkristal menjadi urat nadi giok.";
+    else if (name.includes('Sandalwood')) baseDesc = "Hutan harum yang menenangkan jiwa. Kayunya sering dibakar dalam ritual atau dipahat menjadi gagang pusaka penangkal iblis.";
+    else if (name.includes('Ginseng') || name.includes('Bunga Bulan') || name.includes('Rumput Sumsum') || name.includes('Rumput Qi') || name.includes('Daun Spirit') || name.includes('Daun Longevity') || name.includes('Bunga Api') || name.includes('Rumput Es') || name.includes('Bunga Moon')) baseDesc = "Lahan suci bertanah merah, merawat akar dan dedaunan berharga yang menyerap saripati Yin, Yang, dan Qi murni dari alam semesta.";
+    else if (name.includes('Batu Roh')) baseDesc = "Gua kristal yang memancarkan pendar energi absolut. Setiap retakannya melepaskan nafas bumi yang menjadi mata uang dunia kultivasi.";
+    else if (name.includes('Besi Dingin')) baseDesc = "Lubang tambang yang memancarkan aura es menggigit tulang. Hanya mereka yang bermental baja yang mampu menahan dinginnya.";
+    else if (name.includes('Mithril')) baseDesc = "Urat bijih perak yang bersinar kebiruan dari bintang jatuh. Bahan mistis yang sangat ringan namun mustahil dihancurkan.";
+    else if (name.includes('Teratai')) baseDesc = "Kolam awan tempat mekarnya bunga tanpa noda, menyerap embun surgawi yang jatuh perlahan dari langit kesembilan.";
+    else if (name.includes('Akar Naga')) baseDesc = "Tanah berukir yang berdenyut layaknya jantung raksasa. Akar-akarnya menjalar jauh seperti urat nadi naga bumi purba.";
+    else if (name.includes('Kristal Ilahi')) baseDesc = "Inti kristal bercahaya di kedalaman dunia yang belum terjamah, memancarkan resonansi yang menggetarkan fondasi jiwa.";
+    else if (name.includes('Kayu Surga')) baseDesc = "Pohon-pohon raksasa yang menyentuh tirai surga, diselimuti oleh aura keemasan yang tak tertembus oleh senjata fana apapun.";
+    else if (name.includes('Kayu Jiwa')) baseDesc = "Pepohonan gelap berbisik yang dahan-dahannya menyimpan ingatan dan jeritan jiwa-jiwa dari era perang masa lampau.";
+    else if (name.includes('Star Iron')) baseDesc = "Kawah jatuhnya bintang besar yang membawa logam hitam pekat, masih berdenyut menyerap pendaran dari konstelasi kosmik.";
+    else if (name.includes('Tungku') || name.includes('Bengkel') || name.includes('Pabrik') || name.includes('Dapur') || name.includes('Destilasi')) baseDesc = "Asap dupa dan api spiritual mengepul dari tempat ini. Di sinilah bahan mentah dilebur dengan hukum alam menjadi karya agung.";
+    else if (name.includes('Kincir') || name.includes('Penggilingan') || name.includes('Penenunan')) baseDesc = "Roda mekanisme yang berputar mengikuti ritme Dao. Mengubah panen dan serat menjadi kebutuhan dasar yang menopang peradaban.";
+    else if (name.includes('Paviliun Alkimia') || name.includes('Laboratorium')) baseDesc = "Wangi herba ilahi dan pil suci mengudara tebal. Kawah alkimianya mendidihkan harapan bagi para kultivator yang ingin menentang langit.";
+    else if (name.includes('Tikar Pengemis') || name.includes('Warung') || name.includes('Kuil') || name.includes('Kedai') || name.includes('Penginapan') || name.includes('Balai') || name.includes('Markas') || name.includes('Toko') || name.includes('Rumah Bordir') || name.includes('Apotek') || name.includes('Dojo') || name.includes('Menara') || name.includes('Paviliun Teh') || name.includes('Paviliun Harta')) baseDesc = "Bangunan tempat bertemunya berbagai nasib. Denyut ekonomi dan perputaran koin terjadi di sini, mengalirkan kekayaan di antara para manusia fana dan kultivator.";
+    else if (name.includes('Istana Terapung')) baseDesc = "Kastil yang melayang megah di antara lautan awan, manifestasi dari kekuatan absolut yang memandang rendah dunia fana di bawahnya.";
+    else if (name.includes('Altar') || name.includes('Perpustakaan') || name.includes('Pusat Data') || name.includes('Menara Observasi')) baseDesc = "Pusat spiritual yang menyimpan rahasia penciptaan dan hukum tertinggi alam semesta. Tempat bermukimnya keajaiban.";
+    else if (name.includes('Air Mata Phoenix') || name.includes('Laba-laba Kristal') || name.includes('Kawah Meteor') || name.includes('Debu Bintang') || name.includes('Retakan Dimensi') || name.includes('Tulang Naga') || name.includes('Sarang Phoenix') || name.includes('Kolam Jiwa')) baseDesc = "Zona anomali spiritual dengan tekanan energi ekstrem. Hanya eksistensi tingkat tinggi yang mampu mengekstrak sumber daya legendaris dari tempat ini.";
+    else if (name.includes('Minyak') || name.includes('Karet') || name.includes('Serat Karbon')) baseDesc = "Bahan langka di era mekanisasi mistis. Menggabungkan teknologi masa depan dengan aliran Qi purba.";
+    else baseDesc = "Tempat yang memancarkan energi unik di dunia Jianghu. Kombinasi hukum alam dan usaha keras manusia akan membuahkan hasil di sini.";
+
+    let reqStr = "";
+    if (a.workerInputMaterials && a.workerInputMaterials.length > 0) {
+        const inputs = a.workerInputMaterials.map(m => m.itemName || m.name).filter(Boolean).join(', ');
+        if (inputs) {
+            reqStr = ` (Butuh ${inputs} untuk beroperasi)`;
+        }
+    }
+
+    a.description = baseDesc + reqStr;
+  }
+
   return assets;
 }
 
