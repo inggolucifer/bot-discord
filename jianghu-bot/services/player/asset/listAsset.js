@@ -52,6 +52,10 @@ module.exports = {
 
         if (asset.isCraftingStation) {
            details += `**Tipe:** Crafting Station\n`;
+           if (asset.recipes && asset.recipes.length > 0) {
+             const recipeList = asset.recipes.map(r => r.recipeName).join(', ');
+             details += `**Resep:** ${recipeList}\n`;
+           }
         }
 
         details += `\n_${desc}_`;

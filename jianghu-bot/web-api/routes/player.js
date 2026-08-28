@@ -117,7 +117,9 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 constructionCompleteAt: asset.constructionCompleteAt,
                 assignedWorkers: asset.assignedWorkers,
                 progressHours: progressHours,
-                rank: asset.assetId ? asset.assetId.rank : 'Common'
+                rank: asset.assetId ? asset.assetId.rank : 'Common',
+                isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false,
+                recipes: asset.assetId ? asset.assetId.recipes : []
             };
         });
 
