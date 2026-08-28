@@ -71,7 +71,6 @@ export default function Navbar() {
     ],
     ekonomi: [
       { href: "/market", label: "Pasar" },
-      { href: "/barter", label: "Barter" },
       { href: "/worker", label: "Pekerja" },
     ],
     komunitas: [

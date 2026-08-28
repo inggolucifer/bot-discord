@@ -89,7 +89,6 @@ export default function AssetsPage() {
   const [targetAssetId, setTargetAssetId] = useState<string>('');
   const [moveLoading, setMoveLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
-  const [claimLoading, setClaimLoading] = useState(false);
 
   const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
   const [inventory, setInventory] = useState<{id: string, quantity: number}[]>([]);

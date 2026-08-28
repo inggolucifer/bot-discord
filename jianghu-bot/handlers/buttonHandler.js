@@ -34,8 +34,8 @@ async function handleButton(interaction) {
     return interaction.update({ content: '❌ Pelepasan pet dibatalkan.', components: [] });
   }
 
-  // Tombol transfer & barter ditangani sendiri oleh collector di command masing-masing. Lewati di sini.
-  if (id.startsWith('transfer_') || id.startsWith('barter_')) return;
+  // Tombol transfer ditangani sendiri oleh collector di command masing-masing. Lewati di sini.
+  if (id.startsWith('transfer_')) return;
 
   if (id.startsWith('hire_worker_')) {
     const workerId = id.replace('hire_worker_', '');
@@ -169,10 +169,10 @@ async function handleButton(interaction) {
     const result = await manualCleanup(interaction.guildId, retentionDays);
     await logAdminAction(interaction.client, {
       guildId: interaction.guildId, adminId: interaction.user.id, action: 'MANUAL_CLEAR_LOGS',
-      details: `${result.transactionLogs} transaction log, ${result.adminLogs} admin log, ${result.barters} barter lama dihapus`,
+      details: `${result.transactionLogs} transaction log, ${result.adminLogs} admin log dihapus`,
     });
     return interaction.editReply({
-      content: `✅ Cleanup selesai: **${result.transactionLogs}** log transaksi, **${result.adminLogs}** log admin, dan **${result.barters}** riwayat barter lama telah dihapus.`,
+      content: `✅ Cleanup selesai: **${result.transactionLogs}** log transaksi, **${result.adminLogs}** log admin lama telah dihapus.`,
       embeds: [], components: [],
     });
   }
