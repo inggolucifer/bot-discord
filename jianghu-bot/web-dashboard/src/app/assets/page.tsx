@@ -32,6 +32,18 @@ interface Asset {
   status: string;
   progressPercent: number;
   remainingMs: number;
+  isCraftingStation?: boolean;
+  recipes?: {
+    recipeName: string;
+    resultItemId: string;
+    resultItemName: string;
+    resultQuantity: number;
+    materials: {
+      itemId: string;
+      itemName: string;
+      quantity: number;
+    }[];
+  }[];
 }
 
 interface BuildableAsset {
@@ -521,6 +533,29 @@ export default function AssetsPage() {
                                   <p className="text-xl sm:text-2xl font-mono font-bold text-orange-400">
                                       <Countdown targetDate={selectedAsset.constructionCompleteAt} />
                                   </p>
+                              </div>
+                          )}
+
+                          {selectedAsset.isCraftingStation && selectedAsset.recipes && selectedAsset.recipes.length > 0 && (
+                              <div>
+                                  <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">Resep Crafting</h3>
+                                  <div className="space-y-3">
+                                      {selectedAsset.recipes.map((recipe, i) => (
+                                          <div key={i} className="bg-[#111] border border-[#333] p-3 rounded-md">
+                                              <div className="text-xs sm:text-sm text-white font-medium mb-2">
+                                                  <span className="text-blue-400">{recipe.recipeName}</span> → {recipe.resultQuantity}x <span className="text-purple-400">{recipe.resultItemName}</span>
+                                              </div>
+                                              <div className="flex flex-wrap gap-2">
+                                                  {recipe.materials && recipe.materials.map((mat, j) => (
+                                                      <div key={j} className="flex items-center gap-1 bg-black/40 border border-[#444] px-2 py-1 rounded text-[10px] sm:text-xs">
+                                                          <span className="text-[#c5a880]">{mat.itemName}</span>
+                                                          <span className="text-gray-500 font-mono">x{mat.quantity}</span>
+                                                      </div>
+                                                  ))}
+                                              </div>
+                                          </div>
+                                      ))}
+                                  </div>
                               </div>
                           )}
 

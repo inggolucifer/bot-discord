@@ -46,6 +46,13 @@ interface Asset extends BaseEntity {
   priceCurrency: string;
   constructionTimeHours: number;
   buildRequirements: AssetRequirement[];
+  recipes?: {
+    recipeName: string;
+    resultItemId: string;
+    resultItemName: string;
+    resultQuantity: number;
+    materials: AssetRequirement[];
+  }[];
 }
 
 interface Pet extends BaseEntity {
@@ -349,6 +356,29 @@ export default function AlmanackPage() {
                            )}
                        </div>
                    </>
+                )}
+
+                {asset.isCraftingStation && asset.recipes && asset.recipes.length > 0 && (
+                   <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
+                       <span className="text-gray-400 block mb-1.5 font-semibold">Resep Crafting:</span>
+                       <div className="space-y-2">
+                           {asset.recipes.map((recipe, i: number) => (
+                               <div key={i} className="text-[10px] sm:text-xs">
+                                   <div className="text-white font-medium mb-1">
+                                       <span className="text-blue-400">{recipe.recipeName}</span> → {recipe.resultQuantity}x <span className="text-purple-400">{recipe.resultItemName}</span>
+                                   </div>
+                                   <div className="flex flex-wrap gap-1.5">
+                                       {recipe.materials && recipe.materials.map((mat, j) => (
+                                           <div key={j} className="flex items-center gap-1 bg-[#111] border border-[#444] px-1.5 py-0.5 rounded-sm">
+                                               <span className="text-[#c5a880] truncate max-w-[80px]" title={mat.itemName}>{mat.itemName}</span>
+                                               <span className="text-gray-500 font-mono">x{mat.quantity}</span>
+                                           </div>
+                                       ))}
+                                   </div>
+                               </div>
+                           ))}
+                       </div>
+                   </div>
                 )}
               </div>
             </div>
