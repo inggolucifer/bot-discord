@@ -1414,7 +1414,7 @@ function buildAllAssets(guildId) {
     ];
     assets.push(g({
       name: "Paviliun Pusaka Abadi",
-      description: "Gua kristal yang memancarkan pendar energi samar. Setiap retakannya adalah nafas bumi yang bocor. Membutuhkan Kapak Batu untuk beroperasi.",
+      description: "Puncak dari segala puncak karya tangan, di mana bahan langit dan bumi dilebur menjadi pusaka tak terkalahkan.",
       rank: "Legendary",
       isCraftingStation: true,
       constructionTimeHours: 168,
@@ -1936,6 +1936,6 @@ async function seedEconomy() {
   }
 
 
-seedEconomy();
-
 }
+
+seedEconomy();
