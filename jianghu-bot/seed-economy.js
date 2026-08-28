@@ -1358,13 +1358,13 @@ function buildAllAssets(guildId) {
   tryRecipe("Rakit Komunikasi Spirit", "Komunikasi Spirit", 1, [["Chip Qi Lanjutan", 1], ["Baterai Spirit", 2], ["Sensor Aura", 1]]);
 
   // Material paduan myth (supaya Inti Bumi dll punya jalan masuk)
-  
+
   tryRecipe("Suling Air Mata Phoenix", "Air Mata Phoenix", 1, [["Hati Phoenix", 1], ["Pil Nutrisi Tinggi", 1]]);
   tryRecipe("Tempa Tanduk Qilin", "Tanduk Qilin", 1, [["Kristal Roh Ilahi", 2], ["Debu Bintang", 1], ["Batu Roh Utuh", 1]]);
   tryRecipe("Tempa Tombak Naga", "Tombak Naga", 1, [["Tombak Naga Hitam", 1], ["Sisik Naga Muda", 1]]);
   tryRecipe("Rakit Printer Formasi", "Printer Formasi", 1, [["Modul Formasi Portabel", 1], ["Chip Qi Lanjutan", 1], ["Lensa Presisi", 2]]);
 
-  
+
   // --- Epic+ yatim: disambungkan agar berguna ---
   tryRecipe("Tenun Kepompong Salju", "Sutra Ulat Salju", 1, [["Kepompong Ulat Salju", 3]]);
   tryRecipe("Lebur Batangan Mithril", "Batangan Mithril", 1, [["Bijih Besi Dingin (Cold Iron)", 2], ["Batu Meteor Api", 1], ["Batu Bara Berkualitas", 2]]);
@@ -1397,7 +1397,7 @@ function buildAllAssets(guildId) {
   tryRecipe("Tanam Bibit Akar Naga", "Akar Naga", 1, [["Bibit Akar Naga", 1], ["Pil Nutrisi Tinggi", 1]]);
   tryRecipe("Tempa Jarum Meridian", "Jarum Meridian", 1, [["Batangan Besi Dingin", 1], ["Palu Formasi Array", 1]]);
 
-  
+
   tryRecipe("Tempa Pedang Getar Baja", "Pedang Getar Baja", 1, [["Alloy Modern", 2], ["Pegas Baja", 2], ["Palu Formasi Array", 1]]);
   tryRecipe("Rakit Tongkat Stun Qi", "Tongkat Stun Qi", 1, [["Chip Qi Sederhana", 1], ["Baterai Spirit", 1], ["Kawat Tembaga", 2]]);
   tryRecipe("Rakit Jam Tangan Qi", "Jam Tangan Qi", 1, [["Chip Qi Sederhana", 1], ["Batangan Emas", 1], ["Lensa Presisi", 1]]);
@@ -1821,7 +1821,7 @@ async function seedEconomy() {
     }
     console.log(`      → ${dedupeFixed} asset di-normalisasi (anti-rancu).\n`);
 
-    
+
 
     // =====================================================================
     // ARSIPKAN ASSET JELEK (nama zona/spam generator)
@@ -1849,7 +1849,7 @@ async function seedEconomy() {
       console.log(`      → ${archived} asset spam/jelek diarsipkan (buildable=false, output=0).\n`);
     }
 
-    
+
 
     // =====================================================================
     // DAYA TAHAN TOOL: stamp durabilityHours di semua workerInputMaterials & bersihkan deskripsi
