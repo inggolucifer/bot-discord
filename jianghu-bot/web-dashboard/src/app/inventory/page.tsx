@@ -11,7 +11,6 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { Modal } from "@/components/ui/Modal";
-import { Badge } from "@/components/ui/Badge";
 
 // Interface for API data
 interface InventoryItem {
@@ -39,10 +38,30 @@ export default function InventoryPage() {
   // Filter/Search states
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [activeRank, setActiveRank] = useState<string>('all');
+  const [activeRank] = useState<string>('all');
 
   // Crafting states
-  const [craftingStations, setCraftingStations] = useState<any[]>([]);
+  interface RecipeMaterial {
+    itemId: string;
+    name: string;
+    itemName?: string;
+    quantity: number;
+    owned: number;
+  }
+  interface Recipe {
+    recipeName: string;
+    materials: RecipeMaterial[];
+    resultQuantity: number;
+    description: string;
+    resultItemName?: string;
+  }
+  interface CraftingStation {
+    id: string;
+    name: string;
+    recipes: Recipe[];
+    isUnderConstruction?: boolean;
+  }
+  const [craftingStations, setCraftingStations] = useState<CraftingStation[]>([]);
   const [craftModalOpen, setCraftModalOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<string>('');
   const [selectedRecipe, setSelectedRecipe] = useState<string>('');
@@ -116,18 +135,19 @@ export default function InventoryPage() {
           });
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchInventoryAndRecipes(), 0); // Refresh inventory
-      } catch (err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal melakukan crafting.' });
+      } catch (err) {
+          const error = err as { response?: { data?: { error?: string } } };
+          setActionMessage({ type: 'error', text: error.response?.data?.error || 'Gagal melakukan crafting.' });
       } finally {
           setActionLoading(false);
       }
   };
 
-  const getSelectedRecipeObj = () => {
+  const getSelectedRecipeObj = (): Recipe | null => {
       if(!selectedStation || !selectedRecipe) return null;
       const station = craftingStations.find(s => s.id === selectedStation);
       if(!station) return null;
-      return station.recipes.find((r: any) => r.recipeName === selectedRecipe);
+      return station.recipes.find((r: Recipe) => r.recipeName === selectedRecipe) || null;
   };
 
   return (
@@ -301,14 +321,14 @@ export default function InventoryPage() {
                  {getSelectedRecipeObj() && (
                      <div className="bg-black/40 border border-[#333] p-4 rounded-lg">
                          <h4 className="font-bold text-[#c5a880] mb-2 flex justify-between">
-                            <span>Hasil: {getSelectedRecipeObj().resultItemName}</span>
-                            <span className="text-blue-400 font-mono">x{getSelectedRecipeObj().resultQuantity * craftTimes}</span>
+                            <span>Hasil: {getSelectedRecipeObj()?.resultItemName || getSelectedRecipeObj()?.recipeName}</span>
+                            <span className="text-blue-400 font-mono">x{(getSelectedRecipeObj()?.resultQuantity || 1) * craftTimes}</span>
                          </h4>
 
                          <div className="mb-4">
                              <p className="text-xs text-gray-500 mb-1">Bahan Diperlukan:</p>
                              <ul className="text-sm space-y-1">
-                                 {getSelectedRecipeObj().materials.map((m: any, i: number) => {
+                                 {getSelectedRecipeObj()?.materials.map((m: RecipeMaterial, i: number) => {
                                      // Temukan jumlah yg dimiliki di inventory
                                      const invItem = inventory.find(inv => inv.name === m.itemName);
                                      const have = invItem ? invItem.quantity : 0;
