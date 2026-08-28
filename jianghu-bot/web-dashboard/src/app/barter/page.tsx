@@ -18,6 +18,7 @@ interface BarterItem {
 }
 
 interface Currency {
+  copper: number;
   silver: number;
   gold: number;
   jade: number;
@@ -103,6 +104,7 @@ export default function BarterPage() {
 
   const renderCurrency = (currency: Currency) => {
     const parts = [];
+    if (currency.copper > 0) parts.push(`${currency.copper} 🟤`);
     if (currency.silver > 0) parts.push(`${currency.silver} 🥈`);
     if (currency.gold > 0) parts.push(`${currency.gold} 🥇`);
     if (currency.jade > 0) parts.push(`${currency.jade} 💎`);

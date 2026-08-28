@@ -19,7 +19,7 @@ const transactionLogSchema = new mongoose.Schema({
   },
   fromUserId: { type: String, default: null },   // null jika dari sistem (mis. daily)
   toUserId: { type: String, default: null },
-  currency: { type: String, enum: ['silver', 'gold', 'jade', 'spirit', null], default: null },
+  currency: { type: String, enum: ['copper', 'silver', 'gold', 'jade', 'spirit', null], default: null },
   amount: { type: Number, default: 0 },
   itemDescription: { type: String, default: null }, // untuk transaksi item/pet/asset
   balanceAfter: { type: mongoose.Schema.Types.Mixed, default: null }, // snapshot saldo setelah transaksi (anti-cheat)
