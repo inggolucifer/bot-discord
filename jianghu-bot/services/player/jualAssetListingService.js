@@ -86,7 +86,7 @@ module.exports = {
       .setDescription(
         `**${jumlah}x ${asset.name}** dipasang di player shop seharga **${hargaPerUnit} ${CURRENCY_LABEL[currency]}/unit** (total ${totalHarga}).\n\n` +
         `Kode listing: \`${kode}\` (dipakai orang lain untuk beli via \`/beli-listing\`)\n` +
-        `Kalau laku, kamu terima **${perkiraanDiterima} ${CURRENCY_LABEL[currency]}**.`
+        `Kalau laku, kamu terima **${perkiraanDiterima} ${CURRENCY_LABEL[currency]}** (setelah dipotong biaya listing 5%).`
       );
     return interaction.editReply({ embeds: [embed] });
   },

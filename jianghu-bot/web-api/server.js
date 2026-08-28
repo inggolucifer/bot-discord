@@ -62,8 +62,6 @@ const setupServer = (client) => {
         '/api/market/buy',
         '/api/market/sell',
         '/api/market/bid',
-        '/api/barter/respond',
-        '/api/barter/cancel',
         '/api/worker/hire',
         '/api/inventory/craft',
         '/api/player/transfer',
@@ -97,7 +95,6 @@ const setupServer = (client) => {
     const petRoutes = require('./routes/pet');
     const leaderboardRoutes = require('./routes/leaderboard');
     const tournamentRoutes = require('./routes/tournament');
-    const barterRoutes = require('./routes/barter');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -109,7 +106,6 @@ const setupServer = (client) => {
     app.use('/api/pet', petRoutes);
     app.use('/api/leaderboard', leaderboardRoutes);
     app.use('/api/tournament', tournamentRoutes);
-    app.use('/api/barter', barterRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {

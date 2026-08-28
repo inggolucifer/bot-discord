@@ -6,7 +6,7 @@ const transactionLogSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      'daily_claim', 'convert', 'transfer', 'barter',
+      'daily_claim', 'convert', 'transfer',
       'shop_purchase', 'sell_to_system', 'asset_profit_claim',
       'admin_grant', 'admin_revoke', 'death_loot', 'loot_claim',
       'craft', 'player_listing_create', 'player_listing_sale', 'player_listing_cancel',
