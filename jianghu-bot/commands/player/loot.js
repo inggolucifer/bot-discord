@@ -31,7 +31,7 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    for (const c of ['silver', 'gold', 'jade', 'spirit']) {
+    for (const c of ['copper', 'silver', 'gold', 'jade', 'spirit']) {
       player.currency[c] += pool.currency[c] || 0;
     }
     for (const it of pool.inventory) {

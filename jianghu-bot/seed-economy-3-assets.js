@@ -1,4 +1,3 @@
-// Bagian definisi asset untuk seed-economy-3
 module.exports = function buildAssetsDataExport(itemCache) {
 function makeInput(itemName, quantity = 1, durabilityHours = 1) {
   const doc = itemCache.get(itemName);
@@ -7,7 +6,7 @@ function makeInput(itemName, quantity = 1, durabilityHours = 1) {
     itemId: doc._id,
     itemName,
     quantity,
-    durabilityHours, // Kalo 1 artinya abis per jam. Kalau 24, artinya alat tahan 24 jam.
+    durabilityHours,
   };
 }
 
@@ -18,56 +17,53 @@ function idOf(name) {
 }
   const assets = [
     // =====================================================================
-    // ERA PRIMITIF (Batu & Kayu) - Mudah
+    // ERA PRIMITIF (Batu & Kayu) - Mudah (Max ~10 copper/jam atau setara)
     // =====================================================================
     {
       name: 'Pusat Pemotongan Kayu Liar',
-      description: 'Lahan tempat menebang kayu liar. Mengandalkan tenaga manual yang keras.',
+      description: 'Lahan tempat menebang kayu liar. Pekerja shift lambat.',
       rank: 'Common',
       workerOutputItemName: 'Kayu Mentah',
-      workerOutputQuantity: 20,
+      workerOutputQuantity: 10,
       workerInputMaterials: [
-        makeInput('Kapak Batu', 1, 24), // kapak batu tahan 24 jam
-        makeInput('Air Bersih', 2, 1),   // minum 2 botol air per jam
-      ],
-      constructionTimeHours: 2, // 2 jam aja buat pemanasan
-      buildable: true,
-      buildRequirements: [], // aset awal tidak butuh material bangunan, beli langsung
-      basePrice: 50,
-      priceCurrency: 'silver'
-    },
-    {
-      name: 'Tambang Batu Permukaan',
-      description: 'Lubang galian dangkal untuk mengambil bebatuan dasar.',
-      rank: 'Common',
-      workerOutputItemName: 'Batu Kasar',
-      workerOutputQuantity: 20,
-      workerInputMaterials: [
-        makeInput('Beliung Batu', 1, 24),
-        makeInput('Air Bersih', 2, 1),
+        makeInput('Kapak Batu', 1, 24),
+        makeInput('Air Bersih', 1, 1), // 1 air minum per jam
       ],
       constructionTimeHours: 2,
       buildable: true,
       buildRequirements: [],
       basePrice: 50,
-      priceCurrency: 'silver'
+      priceCurrency: 'copper'
+    },
+    {
+      name: 'Kotak Amal Tua',
+      description: 'Hanya orang lewat yang sesekali memberi koin receh. Ditinggalkan dan diambil setiap 8 jam.',
+      rank: 'Common',
+      dailyProfit: 10, // Max asset primitif max profit 10 copper per jam. Di sini tepat 10 copper/jam
+      profitCurrency: 'copper',
+      workerInputMaterials: [], // Passive income sangat kecil
+      constructionTimeHours: 1,
+      buildable: true,
+      buildRequirements: [],
+      basePrice: 100,
+      priceCurrency: 'copper'
     },
     {
       name: 'Lahan Padi Sederhana',
-      description: 'Sawah tadah hujan primitif untuk bertani.',
+      description: 'Sawah tadah hujan primitif. Panen bervariasi bergantung kondisi alam.',
       rank: 'Common',
       workerOutputItemName: 'Beras Mentah',
-      workerOutputQuantity: 10,
+      workerOutputQuantity: 5,
       workerInputMaterials: [
         makeInput('Batu Tajam', 1, 12),
-        makeInput('Air Bersih', 5, 1),
+        makeInput('Air Bersih', 2, 1),
         makeInput('Bibit Padi', 1, 1),
       ],
       constructionTimeHours: 4,
       buildable: true,
       buildRequirements: [],
-      basePrice: 100,
-      priceCurrency: 'silver'
+      basePrice: 200,
+      priceCurrency: 'copper'
     },
 
     // =====================================================================
@@ -90,14 +86,14 @@ function idOf(name) {
           ]
         }
       ],
-      constructionTimeHours: 24, // 1 hari
+      constructionTimeHours: 24,
       buildable: true,
       buildRequirements: [
         makeInput('Kayu Mentah', 500),
         makeInput('Batu Kasar', 300)
       ],
-      basePrice: 2,
-      priceCurrency: 'gold'
+      basePrice: 5,
+      priceCurrency: 'silver'
     },
     {
       name: 'Tungku Pembakaran Bata',
@@ -112,57 +108,36 @@ function idOf(name) {
           resultQuantity: 5,
           materials: [
             { itemId: idOf('Batu Kasar'), itemName: 'Batu Kasar', quantity: 10, durabilityHours: 1 },
-            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 5, durabilityHours: 1 } // Butuh kayu sbg bahan bakar pembakaran bata
+            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 5, durabilityHours: 1 }
           ]
         }
       ],
-      constructionTimeHours: 24, // 1 hari
+      constructionTimeHours: 24,
       buildable: true,
       buildRequirements: [
         makeInput('Batu Kasar', 800),
         makeInput('Kayu Mentah', 200)
       ],
-      basePrice: 2,
-      priceCurrency: 'gold'
+      basePrice: 5,
+      priceCurrency: 'silver'
     },
     {
-      name: 'Tambang Besi Dalam',
-      description: 'Terowongan bawah tanah yang butuh penyangga untuk mengeruk bijih besi.',
+      name: 'Warung Teh Pinggir Jalan',
+      description: 'Tempat singgah pengembara. Ramai siang hari.',
       rank: 'Uncommon',
-      workerOutputItemName: 'Bijih Besi',
-      workerOutputQuantity: 15,
+      dailyProfit: 3, // 3 Silver per jam (setara 300 copper/jam)
+      profitCurrency: 'silver',
       workerInputMaterials: [
-        makeInput('Beliung Besi', 1, 48), // beliung tahan lama
-        makeInput('Kayu Mentah', 5, 1),   // Butuh kayu penyangga tiap jam
-        makeInput('Makanan Matang', 2, 1) // Butuh makanan layak
+        makeInput('Beras Mentah', 5, 1),
+        makeInput('Air Bersih', 10, 1),
       ],
-      constructionTimeHours: 72, // 3 hari
+      constructionTimeHours: 48,
       buildable: true,
       buildRequirements: [
-        makeInput('Papan Kayu', 1000),
-        makeInput('Batu Bata', 1500)
+        makeInput('Papan Kayu', 800),
+        makeInput('Batu Bata', 500)
       ],
-      basePrice: 5,
-      priceCurrency: 'gold'
-    },
-    {
-      name: 'Tambang Batu Bara',
-      description: 'Galian panas dan kotor untuk mengambil bahan bakar utama.',
-      rank: 'Uncommon',
-      workerOutputItemName: 'Batu Bara',
-      workerOutputQuantity: 20,
-      workerInputMaterials: [
-        makeInput('Beliung Besi', 1, 48),
-        makeInput('Kayu Mentah', 3, 1),
-        makeInput('Makanan Matang', 2, 1)
-      ],
-      constructionTimeHours: 72, // 3 hari
-      buildable: true,
-      buildRequirements: [
-        makeInput('Papan Kayu', 1200),
-        makeInput('Batu Bata', 1000)
-      ],
-      basePrice: 5,
+      basePrice: 1,
       priceCurrency: 'gold'
     },
     {
@@ -182,33 +157,13 @@ function idOf(name) {
           ]
         },
         {
-          recipeName: 'Tempa Beliung Besi',
-          resultItemId: idOf('Beliung Besi'),
-          resultItemName: 'Beliung Besi',
+          recipeName: 'Tempa Pedang Besi Biasa',
+          resultItemId: idOf('Pedang Besi Biasa'),
+          resultItemName: 'Pedang Besi Biasa',
           resultQuantity: 1,
           materials: [
-            { itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2, durabilityHours: 1 },
-            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Tempa Kapak Besi',
-          resultItemId: idOf('Kapak Besi'),
-          resultItemName: 'Kapak Besi',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 2, durabilityHours: 1 },
-            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Tempa Palu Besi',
-          resultItemId: idOf('Palu Besi'),
-          resultItemName: 'Palu Besi',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 3, durabilityHours: 1 },
-            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1, durabilityHours: 1 }
+            { itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 5, durabilityHours: 1 },
+            { itemId: idOf('Palu Besi'), itemName: 'Palu Besi', quantity: 1, durabilityHours: 48 }
           ]
         }
       ],
@@ -218,7 +173,7 @@ function idOf(name) {
         makeInput('Batu Bata', 3000),
         makeInput('Papan Kayu', 1000)
       ],
-      basePrice: 8,
+      basePrice: 2,
       priceCurrency: 'gold'
     },
 
@@ -227,14 +182,14 @@ function idOf(name) {
     // =====================================================================
     {
       name: 'Kilang Minyak Darat',
-      description: 'Menyedot darah bumi. Menghasilkan minyak mentah pembawa energi kotor.',
+      description: 'Menyedot darah bumi. Mesin bekerja siang dan malam menghasilkan minyak mentah.',
       rank: 'Rare',
       workerOutputItemName: 'Minyak Mentah',
       workerOutputQuantity: 10,
       workerInputMaterials: [
-        makeInput('Alat Bor Berat', 1, 96), // Bor alat berat
-        makeInput('Batu Bara', 10, 1),      // Butuh energi buat pompa
-        makeInput('Pil Pekerja Keras', 1, 1)// 1 pil per jam per pekerja
+        makeInput('Alat Bor Berat', 1, 96),
+        makeInput('Batu Bara', 10, 1),
+        makeInput('Pil Pekerja Keras', 1, 1)
       ],
       constructionTimeHours: 336, // 14 HARI (2 minggu)
       buildable: true,
@@ -247,8 +202,8 @@ function idOf(name) {
       priceCurrency: 'gold'
     },
     {
-      name: 'Pabrik Baja Karbon',
-      description: 'Membakar besi dengan suhu luar biasa untuk menghasilkan baja modern.',
+      name: 'Pabrik Baja Karbon & Manufaktur',
+      description: 'Pabrik raksasa pembakar baja, mencetak alat elektronik dan senjata kelas militer.',
       rank: 'Rare',
       isCraftingStation: true,
       recipes: [
@@ -263,22 +218,13 @@ function idOf(name) {
           ]
         },
         {
-          recipeName: 'Olah Bahan Bakar',
-          resultItemId: idOf('Bahan Bakar Mesin'),
-          resultItemName: 'Bahan Bakar Mesin',
-          resultQuantity: 5,
-          materials: [
-            { itemId: idOf('Minyak Mentah'), itemName: 'Minyak Mentah', quantity: 2, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Buat Komponen Elektronik',
-          resultItemId: idOf('Komponen Elektronik'),
-          resultItemName: 'Komponen Elektronik',
+          recipeName: 'Tempa Pedang Baja',
+          resultItemId: idOf('Pedang Baja'),
+          resultItemName: 'Pedang Baja',
           resultQuantity: 1,
           materials: [
-            { itemId: idOf('Batangan Besi'), itemName: 'Batangan Besi', quantity: 5, durabilityHours: 1 },
-            { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 2, durabilityHours: 1 }
+            { itemId: idOf('Baja Murni'), itemName: 'Baja Murni', quantity: 3, durabilityHours: 1 },
+            { itemId: idOf('Palu Besi'), itemName: 'Palu Besi', quantity: 1, durabilityHours: 48 }
           ]
         },
         {
@@ -289,26 +235,6 @@ function idOf(name) {
           materials: [
             { itemId: idOf('Baja Murni'), itemName: 'Baja Murni', quantity: 15, durabilityHours: 1 },
             { itemId: idOf('Komponen Elektronik'), itemName: 'Komponen Elektronik', quantity: 5, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Rakit Gergaji Mesin',
-          resultItemId: idOf('Gergaji Mesin'),
-          resultItemName: 'Gergaji Mesin',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Baja Murni'), itemName: 'Baja Murni', quantity: 10, durabilityHours: 1 },
-            { itemId: idOf('Komponen Elektronik'), itemName: 'Komponen Elektronik', quantity: 2, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Aduk Semen Campuran',
-          resultItemId: idOf('Semen Campuran'),
-          resultItemName: 'Semen Campuran',
-          resultQuantity: 10,
-          materials: [
-            { itemId: idOf('Batu Kasar'), itemName: 'Batu Kasar', quantity: 50, durabilityHours: 1 },
-            { itemId: idOf('Air Bersih'), itemName: 'Air Bersih', quantity: 20, durabilityHours: 1 }
           ]
         }
       ],
@@ -327,92 +253,19 @@ function idOf(name) {
     // ERA MURIM (Kultivasi Puncak) - End Game (Coc)
     // =====================================================================
     {
-      name: 'Nadi Bumi Kuno (Earth Vein)',
-      description: 'Menyadap aura purba pegunungan untuk mengkristalkan batu fana menjadi Batu Roh Kasar.',
-      rank: 'Epic',
-      workerOutputItemName: 'Batu Roh Kasar',
-      workerOutputQuantity: 5,
-      workerInputMaterials: [
-        makeInput('Beliung Pelenyap Gunung', 1, 168), // 1 minggu
-        makeInput('Bahan Bakar Mesin', 20, 1),       // Gabungan teknologi & magis
-        makeInput('Cairan Inti Bumi', 1, 1)          // Super langka
-      ],
-      constructionTimeHours: 720, // 30 HARI
-      buildable: true,
-      buildRequirements: [
-        makeInput('Baja Murni', 25000),
-        makeInput('Semen Campuran', 100000), // 100k semen
-        makeInput('Komponen Elektronik', 5000)
-      ],
-      basePrice: 5,
-      priceCurrency: 'jade'
-    },
-    {
       name: 'Paviliun Alkimia Langit (Heavenly Alchemy)',
-      description: 'Bangunan ilahi yang merombak energi alam dan baja menjadi benda-benda dari dongeng.',
+      description: 'Bangunan ilahi yang merombak energi alam menjadi artifak pusaka sekte abadi.',
       rank: 'Epic',
       isCraftingStation: true,
       recipes: [
         {
-          recipeName: 'Suling Cairan Inti Bumi',
-          resultItemId: idOf('Cairan Inti Bumi'),
-          resultItemName: 'Cairan Inti Bumi',
+          recipeName: 'Tempa Pedang Hitam Mistis',
+          resultItemId: idOf('Pedang Hitam Mistis'),
+          resultItemName: 'Pedang Hitam Mistis',
           resultQuantity: 1,
           materials: [
-            { itemId: idOf('Minyak Mentah'), itemName: 'Minyak Mentah', quantity: 100, durabilityHours: 1 },
-            { itemId: idOf('Batu Bara'), itemName: 'Batu Bara', quantity: 500, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Tempa Baja Hitam Mistis',
-          resultItemId: idOf('Baja Hitam Mistis'),
-          resultItemName: 'Baja Hitam Mistis',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Baja Murni'), itemName: 'Baja Murni', quantity: 50, durabilityHours: 1 },
-            { itemId: idOf('Batu Roh Kasar'), itemName: 'Batu Roh Kasar', quantity: 10, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Tumbuhkan Kayu Surga',
-          resultItemId: idOf('Kayu Surga'),
-          resultItemName: 'Kayu Surga',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Kayu Mentah'), itemName: 'Kayu Mentah', quantity: 1000, durabilityHours: 1 },
-            { itemId: idOf('Cairan Inti Bumi'), itemName: 'Cairan Inti Bumi', quantity: 2, durabilityHours: 1 }
-          ]
-        },
-        {
-          recipeName: 'Tempa Beliung Pelenyap Gunung',
-          resultItemId: idOf('Beliung Pelenyap Gunung'),
-          resultItemName: 'Beliung Pelenyap Gunung',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 50, durabilityHours: 1 },
-            { itemId: idOf('Kayu Surga'), itemName: 'Kayu Surga', quantity: 20, durabilityHours: 1 },
+            { itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 10, durabilityHours: 1 },
             { itemId: idOf('Palu Formasi Array'), itemName: 'Palu Formasi Array', quantity: 1, durabilityHours: 168 }
-          ]
-        },
-        {
-          recipeName: 'Tempa Kapak Penembus Surga',
-          resultItemId: idOf('Kapak Penembus Surga'),
-          resultItemName: 'Kapak Penembus Surga',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 50, durabilityHours: 1 },
-            { itemId: idOf('Kayu Surga'), itemName: 'Kayu Surga', quantity: 20, durabilityHours: 1 },
-            { itemId: idOf('Palu Formasi Array'), itemName: 'Palu Formasi Array', quantity: 1, durabilityHours: 168 }
-          ]
-        },
-        {
-          recipeName: 'Rakit Palu Formasi Array',
-          resultItemId: idOf('Palu Formasi Array'),
-          resultItemName: 'Palu Formasi Array',
-          resultQuantity: 1,
-          materials: [
-            { itemId: idOf('Baja Hitam Mistis'), itemName: 'Baja Hitam Mistis', quantity: 20, durabilityHours: 1 },
-            { itemId: idOf('Batu Roh Kasar'), itemName: 'Batu Roh Kasar', quantity: 50, durabilityHours: 1 }
           ]
         },
         {
@@ -438,23 +291,24 @@ function idOf(name) {
     },
 
     // =====================================================================
-    // FORMATION (INCOME GENERATOR TERTINGGI)
+    // FORMATION (INCOME GENERATOR TERTINGGI - END GAME)
     // =====================================================================
     {
       name: 'Formasi Pengunci Langit (Heaven Sealing Array)',
-      description: 'Menarik kekayaan dari dimensi lain. Pendapatan terbesar di dunia Jianghu.',
+      description: 'Formasi mistis penyerap energi. Max profit tertingggi dunia fana: ~10 Gold/hari (41 Silver/jam).',
       rank: 'Legendary',
-      dailyProfit: 130, // 130 silver/jam -> 3120 silver/hari (~1 Jade/3hari per 1 pekerja)
+      // User request: Max 10 Gold per hari. 10 Gold = 1000 Silver. 1000 / 24 = ~41.6 Silver/jam.
+      dailyProfit: 41, // 41 silver/jam -> ~984 silver/hari -> Mendekati 10 Gold/hari
       profitCurrency: 'silver',
       workerOutputItemId: null,
       workerInputMaterials: [
-        makeInput('Batu Roh Kasar', 5, 1), // 5 batu roh sejam
-        makeInput('Pil Pengumpul Qi', 1, 1) // 1 pil sejam per pekerja
+        makeInput('Batu Roh Kasar', 5, 1),
+        makeInput('Pil Pengumpul Qi', 1, 1) // 1 pil sejam
       ],
-      constructionTimeHours: 1440, // 60 HARI (2 Bulan) - Puncak kesabaran
+      constructionTimeHours: 1440, // 60 HARI (2 Bulan)
       buildable: true,
       buildRequirements: [
-        makeInput('Baja Hitam Mistis', 5000), // 5k baja mistis gila2an
+        makeInput('Baja Hitam Mistis', 5000), // 5k baja mistis
         makeInput('Kayu Surga', 2500),
         makeInput('Cairan Inti Bumi', 1000)
       ],
@@ -463,7 +317,6 @@ function idOf(name) {
     }
   ];
 
-  // Append prefix ke description jika butuh material
   for (const a of assets) {
     if (a.workerInputMaterials && a.workerInputMaterials.length > 0) {
       const inputs = a.workerInputMaterials.map(m => `${m.quantity}x ${m.itemName}`).join(', ');

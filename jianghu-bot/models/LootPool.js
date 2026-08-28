@@ -8,6 +8,7 @@ const lootPoolSchema = new mongoose.Schema({
   targetUserId: { type: String, required: true }, // yang berhak /loot
 
   currency: {
+    copper: { type: Number, default: 0 },
     silver: { type: Number, default: 0 },
     gold: { type: Number, default: 0 },
     jade: { type: Number, default: 0 },

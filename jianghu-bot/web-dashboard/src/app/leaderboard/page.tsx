@@ -18,6 +18,7 @@ interface PlayerRank {
   realm: string;
   characterImage: string | null;
   currency: {
+    copper: number;
     silver: number;
     gold: number;
     jade: number;

@@ -20,7 +20,7 @@ interface SectData {
   totalWealth: number;
   imageUrl: string;
   role: string; // role user saat ini
-  currency: { silver: number; gold: number; jade: number; spirit: number; }
+  currency: { copper: number; silver: number; gold: number; jade: number; spirit: number; }
 }
 
 interface Asset {
@@ -164,6 +164,7 @@ export default function SectPage() {
                           <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16}/> Gudang Sekte</h3>
                           <p className="text-lg text-gray-200 font-semibold mb-2 font-mono">{(sect.totalWealth).toLocaleString()} Silver (Total)</p>
                           <div className="flex flex-wrap gap-2 text-xs">
+                             <Badge variant="outline" className="border-[#8b4513] text-[#cd7f32]">C: {(sect.currency).copper}</Badge>
                              <Badge variant="outline" className="border-gray-700 text-gray-400">S: {(sect.currency).silver}</Badge>
                              <Badge variant="outline" className="border-yellow-900/50 text-yellow-500">G: {(sect.currency).gold}</Badge>
                              <Badge variant="outline" className="border-green-900/50 text-green-400">J: {(sect.currency).jade}</Badge>
