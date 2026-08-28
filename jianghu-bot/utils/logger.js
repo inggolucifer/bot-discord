@@ -8,7 +8,7 @@ const { updateTop3LeaderboardRoles } = require('./leaderboardRoles');
 // Tipe transaksi yang benar-benar mengubah saldo player -> perlu dicek ulang untuk role leaderboard Top 1/2/3.
 // Tipe di luar daftar ini (mis. hanya query/lihat) tidak akan memicu pengecekan sama sekali.
 const WEALTH_AFFECTING_TYPES = new Set([
-  'daily_claim', 'convert', 'transfer', 'barter', 'shop_purchase',
+  'daily_claim', 'convert', 'transfer', 'shop_purchase',
   'sell_to_system', 'asset_profit_claim', 'admin_grant', 'admin_revoke', 'loot_claim',
 ]);
 

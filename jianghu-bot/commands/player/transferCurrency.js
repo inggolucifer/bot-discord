@@ -81,8 +81,12 @@ module.exports = {
         return btnInteraction.update({ content: '❌ Transfer gagal: status penerima berubah.', embeds: [], components: [] });
       }
 
+      const taxRate = 0.08;
+      const taxAmount = Math.ceil(jumlah * taxRate);
+      const amountReceived = jumlah - taxAmount;
+
       freshSender.currency[jenis] -= jumlah;
-      freshReceiver.currency[jenis] += jumlah;
+      freshReceiver.currency[jenis] += amountReceived;
       await freshSender.save();
       await freshReceiver.save();
 
@@ -94,13 +98,13 @@ module.exports = {
         currency: jenis,
         amount: jumlah,
         balanceAfter: { sender: freshSender.currency, receiver: freshReceiver.currency },
-        note: `Transfer ${jumlah} ${jenis} dari ${interaction.user.tag} ke ${target.tag}`,
+        note: `Transfer ${jumlah} ${jenis} dari ${interaction.user.tag} ke ${target.tag} (pajak ${taxAmount} ${jenis})`,
       });
 
       const doneEmbed = new EmbedBuilder()
         .setColor(0x27ae60)
         .setTitle('✅ Transfer Berhasil')
-        .setDescription(`${jumlah} ${CURRENCY_LABEL[jenis]} berhasil dikirim dari ${interaction.user} ke ${target}.`);
+        .setDescription(`**${jumlah} ${CURRENCY_LABEL[jenis]}** berhasil dikirim dari ${interaction.user} ke ${target}.\n\nSetelah dipotong pajak transfer sebesar 8% (**${taxAmount} ${CURRENCY_LABEL[jenis]}**), penerima mendapatkan **${amountReceived} ${CURRENCY_LABEL[jenis]}**.`);
 
       await btnInteraction.update({ content: null, embeds: [doneEmbed], components: [] });
     });

@@ -83,7 +83,7 @@ module.exports = {
       .setDescription(
         `**1x ${pet.name}** dipasang di player shop seharga **${hargaTotal} ${CURRENCY_LABEL[currency]}**.\n\n` +
         `Kode listing: \`${kode}\` (dipakai orang lain untuk beli via \`/market beli\`)\n` +
-        `Kalau laku, kamu terima **${perkiraanDiterima} ${CURRENCY_LABEL[currency]}**.`
+        `Kalau laku, kamu terima **${perkiraanDiterima} ${CURRENCY_LABEL[currency]}** (setelah dipotong biaya listing 5%).`
       );
     return interaction.editReply({ embeds: [embed] });
   },
