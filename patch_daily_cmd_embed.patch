@@ -1,0 +1,11 @@
+--- ./jianghu-bot/commands/player/daily.js
++++ ./jianghu-bot/commands/player/daily.js
+@@ -62,7 +62,7 @@
+     const embed = new EmbedBuilder()
+       .setColor(0xf1c40f)
+       .setTitle('🎁 Daily Claim Berhasil!')
+-      .setDescription(`Kamu mendapatkan **${DAILY_REWARD} Silver Tael (银两)**.\nSaldo Silver Tael sekarang: **${player.currency.silver}**`);
++      .setDescription(`Kamu mendapatkan **${reward.label}**.\nStreak: **Hari ke-${player.dailyStreak}** / 7\nSaldo ${reward.type === 'copper' ? 'Copper Coins' : 'Silver Tael'} sekarang: **${player.currency[reward.type]}**`);
+     return interaction.editReply({ embeds: [embed] });
+   },
+ };

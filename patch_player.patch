@@ -1,0 +1,10 @@
+--- ./jianghu-bot/models/Player.js
++++ ./jianghu-bot/models/Player.js
+@@ -74,6 +74,7 @@
+   },
+
+   lastDailyClaim: { type: Date, default: null },
++  dailyStreak: { type: Number, default: 0 },
+   registeredAt: { type: Date, default: Date.now },
+
+   totalWealth: { type: Number, default: 0, index: true },

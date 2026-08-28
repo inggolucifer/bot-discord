@@ -1,0 +1,71 @@
+--- ./jianghu-bot/web-api/routes/player.js
++++ ./jianghu-bot/web-api/routes/player.js
+@@ -6,7 +6,7 @@
+ const { calculateProgress } = require('../../utils/assetProgress');
+ const { isUnderConstruction } = require('../../utils/crafting');
+ const { syncWorkerContracts } = require('../../utils/workerManager');
+-const { isClaimedToday } = require('../../utils/timezone');
++const { isClaimedToday, isClaimedYesterday } = require('../../utils/timezone');
+ const LockManager = require('../utils/lockManager');
+ const { withTransaction } = require('../utils/dbTransaction');
+ const CustomError = require('../utils/CustomError');
+@@ -656,12 +656,22 @@
+     const userId = req.user.userId;
+     const lockKey = `daily_claim_${userId}`;
+     const releaseLock = await LockManager.acquire(lockKey);
++
++    const STREAK_REWARDS = [
++        { type: 'copper', amount: 10, label: '10 Copper Coins (铜币)' },
++        { type: 'copper', amount: 20, label: '20 Copper Coins (铜币)' },
++        { type: 'copper', amount: 40, label: '40 Copper Coins (铜币)' },
++        { type: 'copper', amount: 50, label: '50 Copper Coins (铜币)' },
++        { type: 'copper', amount: 60, label: '60 Copper Coins (铜币)' },
++        { type: 'copper', amount: 80, label: '80 Copper Coins (铜币)' },
++        { type: 'silver', amount: 1, label: '1 Silver Tael (银两)' }
++    ];
+
+     try {
+         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+-        await withTransaction(async (session) => {
++        const rewardData = await withTransaction(async (session) => {
+             const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+@@ -670,18 +680,31 @@
+                 throw new CustomError('Kamu sudah klaim daily hari ini. Reset pada jam 00:00 WIB.', 400);
+             }
+
+-            player.currency.silver += 2; // Daily reward: 2 silver
++            if (isClaimedYesterday(player.lastDailyClaim)) {
++                player.dailyStreak += 1;
++                if (player.dailyStreak > 7) {
++                    player.dailyStreak = 1;
++                }
++            } else {
++                player.dailyStreak = 1;
++            }
++
++            const rewardIndex = player.dailyStreak - 1;
++            const reward = STREAK_REWARDS[rewardIndex];
++
++            player.currency[reward.type] += reward.amount;
+             player.lastDailyClaim = new Date();
+             await player.save({ session });
+
+             const TransactionLog = require('../../models/TransactionLog');
+             await TransactionLog.create([{
+                 guildId,
+                 type: 'daily_claim',
+-                description: `[${player.characterName}] klaim daily reward 2 silver.`
++                description: `[${player.characterName}] klaim daily reward hari ke-${player.dailyStreak} (${reward.amount} ${reward.type}).`
+             }], { session });
++            return { reward, dailyStreak: player.dailyStreak };
+         });
+
+-        res.json({ success: true, message: 'Berhasil klaim daily reward (2 Silver)!' });
++        res.json({ success: true, message: `Berhasil klaim daily reward hari ke-${rewardData.dailyStreak}! Kamu mendapatkan ${rewardData.reward.label}.` });
+     } catch (error) {
+         if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });

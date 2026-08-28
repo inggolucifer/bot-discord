@@ -103,6 +103,7 @@ const playerSchema = new mongoose.Schema({
   },
 
   lastDailyClaim: { type: Date, default: null },
+  dailyStreak: { type: Number, default: 0 },
   registeredAt: { type: Date, default: Date.now },
 
   totalWealth: { type: Number, default: 0, index: true },
