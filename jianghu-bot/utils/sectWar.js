@@ -39,7 +39,7 @@ function executeSectWar(winner, loser) {
   // ==== Loser hancur total: kembali ke 0 ====
   loser.resources = [];
   loser.assets = [];
-  loser.currency = { silver: 0, gold: 0, jade: 0, spirit: 0 };
+  loser.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
 
   return { lootedResources, lootedAssets };
 }

@@ -468,7 +468,7 @@ router.post('/transfer', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Data tidak valid. Pastikan jumlah adalah angka positif utuh.' });
     }
 
-    const validCurrencies = ['silver', 'gold', 'jade', 'spirit'];
+    const validCurrencies = ['copper', 'silver', 'gold', 'jade', 'spirit'];
     if (!validCurrencies.includes(currencyType)) {
         return res.status(400).json({ error: 'Mata uang tidak valid.' });
     }
@@ -600,7 +600,7 @@ router.post('/loot', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-            for (const c of ['silver', 'gold', 'jade', 'spirit']) {
+            for (const c of ['copper', 'silver', 'gold', 'jade', 'spirit']) {
                 player.currency[c] += pool.currency[c] || 0;
             }
 
