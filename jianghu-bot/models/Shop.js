@@ -6,7 +6,7 @@ const shopSchema = new mongoose.Schema({
   refId: { type: mongoose.Schema.Types.ObjectId, required: true }, // ID ke Item/Pet/Asset
   refModel: { type: String, enum: ['Item', 'Pet', 'Asset'], required: true },
   price: { type: Number, required: true },
-  priceCurrency: { type: String, enum: ['silver', 'gold', 'jade', 'spirit'], default: 'silver' },
+  priceCurrency: { type: String, enum: ['copper', 'silver', 'gold', 'jade', 'spirit'], default: 'silver' },
   stock: { type: Number, default: -1 }, // -1 = unlimited
   isActive: { type: Boolean, default: true },
   addedBy: { type: String, default: null },

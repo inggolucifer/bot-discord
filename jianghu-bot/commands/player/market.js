@@ -16,7 +16,7 @@ module.exports = {
       .addStringOption(o => o.setName('nama-item').setDescription('Nama item yang ingin dijual').setRequired(true).setAutocomplete(true))
       .addIntegerOption(o => o.setName('jumlah').setDescription('Berapa banyak yang dijual').setRequired(true).setMinValue(1))
       .addIntegerOption(o => o.setName('harga-per-unit').setDescription('Harga satuan').setRequired(true).setMinValue(1))
-      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
+      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Copper Tael', value: 'copper' }, { name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
     )
     .addSubcommand(sub => sub
       .setName('jual-pet')
@@ -24,7 +24,7 @@ module.exports = {
       .addStringOption(o => o.setName('nama-pet').setDescription('Nama jenis pet yang ingin dijual').setRequired(true).setAutocomplete(true))
       .addStringOption(o => o.setName('instance-id').setDescription('Instance ID pet (lihat dari profil)').setRequired(true))
       .addIntegerOption(o => o.setName('harga-total').setDescription('Harga total pet ini').setRequired(true).setMinValue(1))
-      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
+      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Copper Tael', value: 'copper' }, { name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
     )
     .addSubcommand(sub => sub
       .setName('jual-asset')
@@ -32,7 +32,7 @@ module.exports = {
       .addStringOption(o => o.setName('nama-asset').setDescription('Nama aset yang ingin dijual').setRequired(true).setAutocomplete(true))
       .addIntegerOption(o => o.setName('jumlah').setDescription('Berapa banyak yang dijual').setRequired(true).setMinValue(1))
       .addIntegerOption(o => o.setName('harga-per-unit').setDescription('Harga satuan').setRequired(true).setMinValue(1))
-      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
+      .addStringOption(o => o.setName('currency').setDescription('Jenis mata uang').setRequired(true).addChoices({ name: 'Copper Tael', value: 'copper' }, { name: 'Silver Tael', value: 'silver' }, { name: 'Gold Ingot', value: 'gold' }, { name: 'Spirit Jade', value: 'jade' }, { name: 'Heavenly Spirit', value: 'spirit' }))
     )
     .addSubcommand(sub => sub
       .setName('beli')

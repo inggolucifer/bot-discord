@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { RANKS } = require('./Item');
 
-const CURRENCY_ENUM = ['silver', 'gold', 'jade', 'spirit'];
+const CURRENCY_ENUM = ['copper', 'silver', 'gold', 'jade', 'spirit'];
 const ELEMENTS = ['Api', 'Air', 'Tanah', 'Angin', 'Petir', 'Cahaya', 'Kegelapan', 'Netral'];
 
 const petSchema = new mongoose.Schema({

@@ -13,6 +13,7 @@ const barterSchema = new mongoose.Schema({
 
   offerItems: { type: [barterOfferItemSchema], default: [] },
   offerCurrency: {
+    copper: { type: Number, default: 0 },
     silver: { type: Number, default: 0 },
     gold: { type: Number, default: 0 },
     jade: { type: Number, default: 0 },
@@ -21,6 +22,7 @@ const barterSchema = new mongoose.Schema({
 
   requestItems: { type: [barterOfferItemSchema], default: [] },
   requestCurrency: {
+    copper: { type: Number, default: 0 },
     silver: { type: Number, default: 0 },
     gold: { type: Number, default: 0 },
     jade: { type: Number, default: 0 },
