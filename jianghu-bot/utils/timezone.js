@@ -22,6 +22,13 @@ function isClaimedToday(lastClaimDate) {
   return isSameWIBDay(lastClaimDate, new Date());
 }
 
+/** Cek apakah suatu tanggal (lastClaim) adalah "kemarin" di WIB (untuk cek streak) */
+function isClaimedYesterday(lastClaimDate) {
+  if (!lastClaimDate) return false;
+  const yesterday = nowWIB().subtract(1, 'day').toDate();
+  return isSameWIBDay(lastClaimDate, yesterday);
+}
+
 /** Format Date ke string yang enak dibaca, contoh: 14 Agustus 2026, 08:00 WIB */
 function formatWIB(date) {
   if (!date) return '-';
@@ -42,4 +49,4 @@ function formatDuration(ms) {
   return `${hours} jam ${minutes} menit`;
 }
 
-module.exports = { TZ, nowWIB, isSameWIBDay, isClaimedToday, formatWIB, msUntilNextResetWIB, formatDuration };
+module.exports = { TZ, nowWIB, isSameWIBDay, isClaimedToday, isClaimedYesterday, formatWIB, msUntilNextResetWIB, formatDuration };
