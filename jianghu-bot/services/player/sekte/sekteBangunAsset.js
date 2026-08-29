@@ -14,7 +14,7 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
     if (focusedOpt.name === 'nama-aset') {
-      const assets = await Asset.find({ guildId: interaction.guildId, buildable: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+      const assets = await Asset.find({ buildable: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     }
     return interaction.respond([]);
@@ -33,7 +33,7 @@ module.exports = {
       return interaction.editReply({ content: '❌ Hanya Ketua/Wakil Sekte yang bisa melakukan ini!' });
     }
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
     if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri.` });
