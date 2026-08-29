@@ -37,11 +37,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Lahan aset kamu penuh (${currentTotalAssets}/${maxAssetSlots}). Gunakan \`/asset tambah-slot\` untuk menambah kapasitas.` });
     }
 
-    if (!asset.buildRequirements || asset.buildRequirements.length === 0) {
-      return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri karena belum memiliki syarat material. Minta admin untuk mengaturnya.` });
-    }
-
-    const fakeRecipe = { materials: asset.buildRequirements };
+    const fakeRecipe = { materials: asset.buildRequirements || [] };
     const check = checkMaterials(player.inventory, fakeRecipe);
     if (!check.ok) {
       const missingLines = check.missing.map((m) => `**${m.itemName}**: butuh ${m.need}, kamu punya ${m.have}`).join('\n');
@@ -67,7 +63,10 @@ module.exports = {
       itemDescription: `Membangun ${asset.name} dari material`,
     });
 
-    const matUsed = asset.buildRequirements.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+    const matUsed = asset.buildRequirements?.length > 0
+      ? asset.buildRequirements.map((m) => `${m.quantity}x ${m.itemName}`).join(', ')
+      : 'Tidak ada material yang diperlukan';
+
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
       .setTitle('🔨 Pembangunan Dimulai!')

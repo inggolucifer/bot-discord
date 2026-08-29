@@ -35,11 +35,11 @@ module.exports = {
 
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
-    if (!asset.buildable || !asset.buildRequirements?.length) {
+    if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri.` });
     }
 
-    const fakeRecipe = { materials: asset.buildRequirements };
+    const fakeRecipe = { materials: asset.buildRequirements || [] };
     const check = checkMaterials(sect.resources, fakeRecipe);
     if (!check.ok) {
       const missingLines = check.missing.map((m) => `**${m.itemName}**: butuh ${m.need}, stok sekte ${m.have}`).join('\n');
@@ -62,7 +62,10 @@ module.exports = {
       itemDescription: `Sekte ${sect.name} membangun ${asset.name}`,
     });
 
-    const matUsed = asset.buildRequirements.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+    const matUsed = asset.buildRequirements?.length > 0
+      ? asset.buildRequirements.map((m) => `${m.quantity}x ${m.itemName}`).join(', ')
+      : 'Tidak ada material yang diperlukan';
+
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
       .setTitle('🔨 Sekte Membangun Aset!')
