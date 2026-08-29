@@ -58,6 +58,10 @@ interface BuildableAsset {
   rank?: string;
   basePrice?: number;
   priceCurrency?: string;
+  dailyProfit?: number;
+  profitCurrency?: string;
+  workerOutputQuantity?: number;
+  workerOutputItemName?: string;
 }
 
 const Countdown = ({ targetDate }: { targetDate: string }) => {
@@ -108,6 +112,11 @@ export default function AssetsPage() {
   const [buildActionLoading, setBuildActionLoading] = useState(false);
 
   const [npcDuration, setNpcDuration] = useState<number>(1);
+  const [expandedAssets, setExpandedAssets] = useState<Record<string, boolean>>({});
+
+  const toggleAssetExpand = (id: string) => {
+    setExpandedAssets(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const fetchAssets = async () => {
       try {
@@ -449,9 +458,31 @@ export default function AssetsPage() {
                                     </div>
                                 </div>
                               </div>
-                              <p className="text-[10px] sm:text-xs text-gray-400 italic mb-2 line-clamp-3 bg-black/30 p-2 rounded border border-[#333]/50">{asset.description}</p>
+                              <div className="mb-2 bg-black/30 p-2 rounded border border-[#333]/50">
+                                  <p className={`text-[10px] sm:text-xs text-gray-400 italic leading-relaxed ${expandedAssets[asset._id] ? '' : 'line-clamp-3'}`}>
+                                      {asset.description}
+                                  </p>
+                                  {asset.description && asset.description.length > 100 && (
+                                      <button
+                                          onClick={() => toggleAssetExpand(asset._id)}
+                                          className="text-[10px] text-[#c5a880] hover:text-white mt-1 flex items-center gap-1 w-full justify-center"
+                                      >
+                                          {expandedAssets[asset._id] ? 'Tutup' : 'Selengkapnya'}
+                                          <span className={`transform transition-transform ${expandedAssets[asset._id] ? 'rotate-180' : ''}`}>▼</span>
+                                      </button>
+                                  )}
+                              </div>
 
                               <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
+                                  {asset.dailyProfit !== undefined && asset.dailyProfit > 0 && (
+                                      <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Profit Harian:</span> <span className="text-yellow-500 font-mono">{asset.dailyProfit} {asset.profitCurrency}</span></p>
+                                  )}
+                                  {asset.workerOutputQuantity !== undefined && asset.workerOutputQuantity > 0 && (
+                                      <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Output Produksi:</span> <span className="text-purple-400 font-mono">{asset.workerOutputQuantity}x {asset.workerOutputItemName}</span></p>
+                                  )}
+                                  {asset.basePrice !== undefined && asset.basePrice > 0 && !asset.buildable && (
+                                      <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Harga (Shop):</span> <span className="text-gray-300 font-mono">{asset.basePrice} {asset.priceCurrency}</span></p>
+                                  )}
                                   <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2"><span>Waktu Bangun:</span> <span className="text-orange-400 font-mono">{asset.constructionTimeHours} Jam</span></p>
 
                                   <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
