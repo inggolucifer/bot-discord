@@ -42,7 +42,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}). Batalkan salah satu dulu dengan \`/cancel-listing\`.` });
     }
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaItem}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${namaItem}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = player.inventory.find((i) => i.itemId.equals(item._id));

@@ -7,11 +7,11 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
     if (focusedOpt.name === 'nama-aset') {
-      const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
+      const assets = await Asset.find({ name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(assets.map(a => ({ name: a.name, value: a.name })));
     }
     if (focusedOpt.name === 'item-bahan') {
-      const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
+      const items = await Item.find({ name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(items.map(i => ({ name: i.name, value: i.name })));
     }
     return interaction.respond([]);
@@ -24,10 +24,10 @@ module.exports = {
     const namaItem = interaction.options.getString('item-bahan');
     const jumlah = interaction.options.getInteger('jumlah-bahan');
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     // Tambahkan atau update di list input materials

@@ -41,7 +41,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}).` });
     }
 
-    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaPet}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^${namaPet}$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${namaPet}" tidak ditemukan di sistem.` });
 
     const ownedIndex = player.pets.findIndex((p) => p.instanceId === instanceId && p.petId.equals(pet._id));

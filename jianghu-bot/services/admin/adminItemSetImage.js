@@ -7,7 +7,7 @@ module.exports = {
   // data is optional here since we define it in admin.js, but standard structure helps if needed
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+    const items = await Item.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -19,7 +19,7 @@ module.exports = {
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${nama}" tidak ditemukan.` });
 
     item.imageUrl = imageUrl;

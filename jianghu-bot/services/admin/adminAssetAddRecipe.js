@@ -17,10 +17,10 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOption = interaction.options.getFocused(true);
     if (focusedOption.name === 'nama-aset') {
-      const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
+      const assets = await Asset.find({ name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     } else if (focusedOption.name === 'item-hasil') {
-      const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
+      const items = await Item.find({ name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
       return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
     }
   },
@@ -35,10 +35,10 @@ module.exports = {
     const jumlahHasil = interaction.options.getInteger('jumlah-hasil') || 1;
     const materialsStr = interaction.options.getString('materials');
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
-    const resultItem = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaHasil)}$`, 'i') });
+    const resultItem = await Item.findOne({ name: new RegExp(`^${escapeRegex(namaHasil)}$`, 'i') });
     if (!resultItem) return interaction.editReply({ content: `❌ Item hasil "${namaHasil}" tidak ditemukan. Buat dulu itemnya lewat /admin-add-item.` });
 
     const materials = [];
@@ -55,7 +55,7 @@ module.exports = {
              return interaction.editReply({ content: `❌ Jumlah material tidak valid pada "${part}".` });
         }
 
-        const matItem = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(bahanNama)}$`, 'i') });
+        const matItem = await Item.findOne({ name: new RegExp(`^${escapeRegex(bahanNama)}$`, 'i') });
         if (!matItem) return interaction.editReply({ content: `❌ Item bahan "${bahanNama}" tidak ditemukan. Buat dulu itemnya lewat /admin-add-item.` });
 
         materials.push({ itemId: matItem._id, itemName: matItem.name, quantity: bahanJumlah });

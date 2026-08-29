@@ -11,14 +11,14 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+    const assets = await Asset.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
   async execute(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const nama = interaction.options.getString('nama');
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!asset) return interaction.reply({ content: `❌ Aset "${nama}" tidak ditemukan.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_asset_${asset._id}`).setTitle(`Edit: ${asset.name}`.slice(0, 45));

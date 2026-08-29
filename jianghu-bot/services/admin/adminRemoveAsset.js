@@ -34,7 +34,7 @@ module.exports = {
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     const owned = player.assets.find((a) => a.assetId.equals(asset._id));

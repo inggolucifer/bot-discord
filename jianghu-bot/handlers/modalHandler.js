@@ -174,7 +174,7 @@ async function handleModal(interaction) {
     const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
     if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
-    const exists = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
+    const exists = await Item.findOne({ name: new RegExp(`^${name}$`, 'i') });
     if (exists) return interaction.reply({ content: `❌ Item dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
     await Item.create({ guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, category, basePrice: pc.amount, priceCurrency: pc.currency, createdBy: interaction.user.id });
@@ -219,7 +219,7 @@ async function handleModal(interaction) {
     const pc = parseAmountCurrency(interaction.fields.getTextInputValue('priceInfo'));
     if (pc.error) return interaction.reply({ content: `❌ ${pc.error}`, flags: MessageFlags.Ephemeral });
 
-    const exists = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
+    const exists = await Pet.findOne({ name: new RegExp(`^${name}$`, 'i') });
     if (exists) return interaction.reply({ content: `❌ Pet dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
     await Pet.create({ guildId: interaction.guildId, name, rank: rt.rank, tier: rt.tier, description, imageUrl, basePrice: pc.amount, priceCurrency: pc.currency, createdBy: interaction.user.id });
@@ -293,7 +293,7 @@ async function handleModal(interaction) {
     const price = parseAmountCurrencyRank(interaction.fields.getTextInputValue('priceInfo'));
     if (price.error) return interaction.reply({ content: `❌ ${price.error}`, flags: MessageFlags.Ephemeral });
 
-    const exists = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${name}$`, 'i') });
+    const exists = await Asset.findOne({ name: new RegExp(`^${name}$`, 'i') });
     if (exists) return interaction.reply({ content: `❌ Aset dengan nama "${name}" sudah ada.`, flags: MessageFlags.Ephemeral });
 
     await Asset.create({ guildId: interaction.guildId, name, description, imageUrl, dailyProfit: profit.amount, profitCurrency: profit.currency, basePrice: price.amount, priceCurrency: price.currency, rank: price.rank, createdBy: interaction.user.id });

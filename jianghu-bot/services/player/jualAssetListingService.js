@@ -42,7 +42,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif.` });
     }
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const owned = player.assets.find((a) => a.assetId.equals(asset._id));

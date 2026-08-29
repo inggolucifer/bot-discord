@@ -13,11 +13,11 @@ module.exports = {
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
     if (interaction.options.getFocused(true).name === 'nama-aset') {
-      const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+      const assets = await Asset.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     }
     const namaAset = interaction.options.getString('nama-aset');
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.respond([]);
     const matches = asset.recipes.filter((r) => r.recipeName.toLowerCase().includes(focused.toLowerCase()));
     return interaction.respond(matches.map((r) => ({ name: r.recipeName, value: r.recipeName })).slice(0, 25));
@@ -30,7 +30,7 @@ module.exports = {
     const namaAset = interaction.options.getString('nama-aset');
     const namaResep = interaction.options.getString('nama-resep');
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const before = asset.recipes.length;
