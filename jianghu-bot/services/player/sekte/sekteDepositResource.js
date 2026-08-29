@@ -32,7 +32,7 @@ module.exports = {
     const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
     if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaItem}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${namaItem}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = player.inventory.find((i) => i.itemId.equals(item._id));

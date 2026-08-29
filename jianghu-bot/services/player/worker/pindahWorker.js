@@ -31,7 +31,7 @@ module.exports = {
     if (!contract) return interaction.editReply({ content: '❌ Worker tersebut tidak sedang bekerja untukmu.' });
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
-    const assetDoc = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${assetName}$`, 'i') });
+    const assetDoc = await Asset.findOne({ name: new RegExp(`^${assetName}$`, 'i') });
     if (!assetDoc) return interaction.editReply({ content: '❌ Aset tidak ditemukan.' });
 
     const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));

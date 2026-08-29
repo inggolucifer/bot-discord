@@ -23,7 +23,7 @@ module.exports = {
     }
 
     const namaAset = interaction.options.getString('nama-aset');
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.respond([]);
     const matches = asset.recipes.filter((r) => r.recipeName.toLowerCase().includes(focusedOpt.value.toLowerCase()));
     return interaction.respond(matches.map((r) => ({ name: r.recipeName, value: r.recipeName })).slice(0, 25));
@@ -39,7 +39,7 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
     if (!asset.isCraftingStation) return interaction.editReply({ content: `❌ "${asset.name}" bukan aset crafting.` });
 

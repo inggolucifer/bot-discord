@@ -15,10 +15,10 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOption = interaction.options.getFocused(true);
     if (focusedOption.name === 'nama-aset') {
-      const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
+      const assets = await Asset.find({ name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     } else if (focusedOption.name === 'nama-item') {
-      const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
+      const items = await Item.find({ name: new RegExp(escapeRegex(focusedOption.value), 'i') }).limit(25);
       return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
     }
   },
@@ -31,10 +31,10 @@ module.exports = {
     const namaItem = interaction.options.getString('nama-item');
     const jumlah = interaction.options.getInteger('jumlah');
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     if (!asset.buildRequirements) asset.buildRequirements = [];

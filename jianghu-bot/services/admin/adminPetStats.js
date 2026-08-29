@@ -11,7 +11,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const pets = await Pet.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+    const pets = await Pet.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(pets.map((p) => ({ name: p.name, value: p.name })));
   },
 
@@ -19,7 +19,7 @@ module.exports = {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
 
     const nama = interaction.options.getString('nama');
-    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!pet) return interaction.reply({ content: `❌ Pet "${nama}" tidak ditemukan.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder()
