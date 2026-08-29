@@ -32,10 +32,10 @@ module.exports = {
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const doc = await Model.findOne({ name: new RegExp(`^${nama}$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" tidak ditemukan di kategori ${kategori}.` });
 
-    const listing = await Shop.findOne({ guildId: interaction.guildId, category: kategori, refId: doc._id, isActive: true });
+    const listing = await Shop.findOne({ category: kategori, refId: doc._id, isActive: true });
     if (!listing) return interaction.editReply({ content: `❌ "${doc.name}" tidak dijual di shop.` });
 
     if (listing.stock !== -1 && listing.stock < jumlah) {

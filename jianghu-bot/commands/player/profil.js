@@ -13,6 +13,7 @@ module.exports = {
     .addUserOption((opt) => opt.setName('user').setDescription('Player yang ingin dilihat profilnya').setRequired(false)),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply();
 
     const targetUser = interaction.options.getUser('user') || interaction.user;
@@ -64,6 +65,14 @@ module.exports = {
 
     const embed = buildPlayerProfileEmbed(player, targetUser, itemDocs, petDocs, assetDocs, sectRole);
     return interaction.editReply({ embeds: [embed] });
+    } catch (err) {
+      console.error('[ERROR] Command profil gagal:', err);
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: '❌ Terjadi kesalahan saat memuat profil.' }).catch(() => {});
+      } else {
+        await interaction.reply({ content: '❌ Terjadi kesalahan saat memuat profil.', ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };
 
