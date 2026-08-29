@@ -160,7 +160,7 @@ export default function AssetsPage() {
       setActionLoading(true);
       setActionMessage(null);
       try {
-          const res = await api.post('/player/assets/stop-work', { assetId: selectedAsset.id });
+          const res = await api.post('/worker/stop-mandiri');
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
           setSelectedAsset(null);
@@ -194,8 +194,7 @@ export default function AssetsPage() {
       try {
           const res = await api.post('/player/assets/move-worker', {
               workerId: selectedWorkerIdToMove,
-              fromAssetId: selectedAsset.id,
-              toAssetId: targetAssetId
+              targetAssetId: targetAssetId
           });
           setActionMessage({ type: 'success', text: res.data.message });
           await setTimeout(() => fetchAssets(), 0);
