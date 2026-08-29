@@ -204,41 +204,13 @@ module.exports = {
       let baseCost = 1000;
       let cost = Math.floor(baseCost * Math.pow(1.2, player.petSlots - 2));
 
-      if (player.totalWealth < cost) {
-        return interaction.editReply({ content: `❌ Kekayaanmu tidak cukup. Biaya buka slot ke-${player.petSlots + 1} adalah ${(cost / 100).toFixed(2)} Gold.` });
+      const { hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
+      if (!hasEnoughCurrency(player.currency, cost, 'silver')) {
+        return interaction.editReply({ content: `❌ Uang tidak cukup. Biaya buka slot ke-${player.petSlots + 1} setara dengan ${(cost / 100).toFixed(2)} Gold.` });
       }
 
-      let remaining = cost;
-      if (player.currency.silver >= remaining) {
-        player.currency.silver -= remaining;
-        remaining = 0;
-      } else {
-        remaining -= player.currency.silver;
-        player.currency.silver = 0;
-
-        let goldNeeded = Math.ceil(remaining / 100);
-        if (player.currency.gold >= goldNeeded) {
-           player.currency.gold -= goldNeeded;
-           player.currency.silver += (goldNeeded * 100) - remaining;
-           remaining = 0;
-        } else {
-           remaining -= player.currency.gold * 100;
-           player.currency.gold = 0;
-
-           let jadeNeeded = Math.ceil(remaining / 10000);
-           if (player.currency.jade >= jadeNeeded) {
-              player.currency.jade -= jadeNeeded;
-              player.currency.silver += (jadeNeeded * 10000) - remaining;
-              remaining = 0;
-           } else {
-              remaining -= player.currency.jade * 10000;
-              player.currency.jade = 0;
-
-              let spiritNeeded = Math.ceil(remaining / 1000000);
-              player.currency.spirit -= spiritNeeded;
-              player.currency.silver += (spiritNeeded * 1000000) - remaining;
-           }
-        }
+      if (!payCurrency(player.currency, cost, 'silver')) {
+        return interaction.editReply({ content: `❌ Terjadi kesalahan saat memotong uang.` });
       }
 
       player.petSlots += 1;

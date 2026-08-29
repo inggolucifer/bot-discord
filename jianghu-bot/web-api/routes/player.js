@@ -161,11 +161,10 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
         }
 
         const totalCost = durasi * 5;
-        if (player.currency.silver < totalCost) {
-            return res.status(400).json({ error: `Silver kamu tidak cukup. Butuh ${totalCost} Silver.` });
+        const { payCurrency } = require('../../utils/currency');
+        if (!payCurrency(player.currency, totalCost, 'silver')) {
+            return res.status(400).json({ error: `Uang kamu tidak cukup. Butuh setara dengan ${totalCost} Silver.` });
         }
-
-        player.currency.silver -= totalCost;
 
         ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
         ownedAsset.lastProgressUpdate = new Date();
@@ -298,11 +297,10 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
         }
 
         const totalCost = durasi * contract.pricePerHour;
-        if (player.currency.silver < totalCost) {
-            return res.status(400).json({ error: `Silver kamu tidak cukup. Butuh ${totalCost} Silver.` });
+        const { payCurrency } = require('../../utils/currency');
+        if (!payCurrency(player.currency, totalCost, 'silver')) {
+            return res.status(400).json({ error: `Uang kamu tidak cukup. Butuh setara dengan ${totalCost} Silver.` });
         }
-
-        player.currency.silver -= totalCost;
 
         ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
         ownedAsset.lastProgressUpdate = new Date();
