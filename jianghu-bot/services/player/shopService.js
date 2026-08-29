@@ -35,7 +35,7 @@ module.exports = {
 
     // sumber === 'sistem'
     const kategori = interaction.options.getString('kategori');
-    const query = { guildId: interaction.guildId, isActive: true };
+    const query = { isActive: true };
     if (kategori) query.category = kategori;
 
     const listings = await Shop.find(query).limit(25);
