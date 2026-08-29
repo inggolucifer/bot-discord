@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const crypto = require('crypto');
 const { isAdmin } = require('../../utils/permissions');
@@ -15,7 +16,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const pets = await Pet.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const pets = await Pet.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(pets.map((p) => ({ name: p.name, value: p.name })));
   },
 
@@ -30,7 +31,7 @@ module.exports = {
 
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
-    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
 
     player.pets.push({

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
@@ -15,7 +16,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const list = await Tournament.find({ guildId: interaction.guildId, status: 'ongoing', name: new RegExp(focused, 'i') }).limit(25);
+    const list = await Tournament.find({ guildId: interaction.guildId, status: 'ongoing', name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(list.map((t) => ({ name: t.name, value: t.name })));
   },
 
@@ -27,7 +28,7 @@ module.exports = {
     const matchNomor = interaction.options.getInteger('match-nomor');
     const pemenang = interaction.options.getUser('pemenang');
 
-    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaTurnamen}$`, 'i') });
+    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaTurnamen)}$`, 'i') });
     if (!tournament) return interaction.editReply({ content: `❌ Turnamen "${namaTurnamen}" tidak ditemukan.` });
     if (tournament.status !== 'ongoing') return interaction.editReply({ content: `❌ Turnamen ini berstatus **${tournament.status}**, tidak bisa set pemenang.` });
 

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { EmbedBuilder, MessageFlags } = require('discord.js');
 const Item = require('../../models/Item');
 const Auction = require('../../models/Auction');
@@ -25,7 +26,7 @@ module.exports = {
       return interaction.editReply('❌ Channel lelang belum di-set. Gunakan `/admin lelang config` terlebih dahulu.');
     }
 
-    const item = await Item.findOne({ name: new RegExp(`^${itemName}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(itemName)}$`, 'i') });
     if (!item) {
       return interaction.editReply(`❌ Item "${itemName}" tidak ditemukan di database.`);
     }

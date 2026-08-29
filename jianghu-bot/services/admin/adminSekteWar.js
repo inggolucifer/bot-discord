@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Sect = require('../../models/Sect');
@@ -15,7 +16,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
   },
 
@@ -30,9 +31,9 @@ module.exports = {
       return interaction.editReply({ content: '❌ Sekte pemenang dan yang kalah tidak boleh sama.' });
     }
 
-    const winner = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaMenang}$`, 'i') });
+    const winner = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaMenang)}$`, 'i') });
     if (!winner) return interaction.editReply({ content: `❌ Sekte "${namaMenang}" tidak ditemukan.` });
-    const loser = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaKalah}$`, 'i') });
+    const loser = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaKalah)}$`, 'i') });
     if (!loser) return interaction.editReply({ content: `❌ Sekte "${namaKalah}" tidak ditemukan.` });
 
     const row = new ActionRowBuilder().addComponents(
