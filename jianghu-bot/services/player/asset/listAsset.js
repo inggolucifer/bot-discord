@@ -11,7 +11,7 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const assets = await Asset.find({ guildId: interaction.guildId }).sort({ rank: 1, name: 1 });
+    const assets = await Asset.find({}).sort({ rank: 1, name: 1 });
 
     if (!assets.length) {
       return interaction.editReply({ content: '❌ Tidak ada aset yang terdaftar.' });
