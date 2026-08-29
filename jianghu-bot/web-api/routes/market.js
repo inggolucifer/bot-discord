@@ -227,19 +227,15 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             const totalPrice = shopItem.price * quantity;
             const currencyType = shopItem.priceCurrency;
 
-            // Atomically check and deduct player currency
-            const updateQuery = {};
-            updateQuery[`currency.${currencyType}`] = -totalPrice;
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-            const player = await Player.findOneAndUpdate(
-                { discordId: userId, [`currency.${currencyType}`]: { $gte: totalPrice } },
-                { $inc: updateQuery },
-                { new: true, session }
-            );
-
-            if (!player) {
-                throw new CustomError(`Uang ${currencyType} tidak cukup atau karakter tidak ditemukan. Butuh ${totalPrice}.`, 400);
+            const { payCurrency } = require('../../utils/currency');
+            if (!payCurrency(player.currency, totalPrice, currencyType)) {
+                 throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
             }
+
+            await player.save({ session });
 
             // Deduct stock if not unlimited
             if (shopItem.stock !== -1) {
@@ -336,19 +332,14 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
             const totalPrice = listing.pricePerUnit * quantity;
             const currencyType = listing.currency;
 
-            // Atomically check and deduct player currency
-            const updateQuery = {};
-            updateQuery[`currency.${currencyType}`] = -totalPrice;
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-            const player = await Player.findOneAndUpdate(
-                { discordId: userId, [`currency.${currencyType}`]: { $gte: totalPrice } },
-                { $inc: updateQuery },
-                { new: true, session }
-            );
-
-            if (!player) {
-                throw new CustomError(`Uang ${currencyType} kamu tidak cukup atau karakter tidak ditemukan. Butuh ${totalPrice}.`, 400);
+            const { payCurrency } = require('../../utils/currency');
+            if (!payCurrency(player.currency, totalPrice, currencyType)) {
+                 throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
             }
+            await player.save({ session });
 
             // Add money to seller atomically
             const addQuery = {};
