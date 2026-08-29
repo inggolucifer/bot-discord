@@ -51,11 +51,10 @@ module.exports = {
     }
 
     const totalHarga = listing.price * jumlah;
-    if (player.currency[listing.priceCurrency] < totalHarga) {
-      return interaction.editReply({ content: `❌ ${CURRENCY_LABEL[listing.priceCurrency]} kamu tidak cukup. Butuh ${totalHarga}, saldo ${player.currency[listing.priceCurrency]}.` });
+    const { payCurrency } = require('../../utils/currency');
+    if (!payCurrency(player.currency, totalHarga, listing.priceCurrency)) {
+       return interaction.editReply({ content: `❌ Uangmu tidak cukup. Butuh setara dengan ${totalHarga} ${CURRENCY_LABEL[listing.priceCurrency]}.` });
     }
-
-    player.currency[listing.priceCurrency] -= totalHarga;
 
     if (kategori === 'item') {
       const owned = player.inventory.find((i) => i.itemId.equals(doc._id));

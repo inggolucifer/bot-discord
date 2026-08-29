@@ -35,8 +35,9 @@ module.exports = {
 
     // Check if player has at least 1 Gold (100 Silver)
     const HANCURKAN_COST_SILVER = 100;
-    if (player.totalWealth < HANCURKAN_COST_SILVER) {
-        return interaction.editReply({ content: '❌ Saldo Wealth kamu tidak cukup. Butuh **1 Gold** (100 Silver) untuk menghancurkan aset.' });
+    const { hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
+    if (!hasEnoughCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
+        return interaction.editReply({ content: '❌ Saldo Wealth kamu tidak cukup. Butuh setara dengan **1 Gold** (100 Silver) untuk menghancurkan aset.' });
     }
 
     // Find the asset in player's assets array
@@ -71,18 +72,8 @@ module.exports = {
     }
 
     // Deduct cost
-    let remainingToPay = HANCURKAN_COST_SILVER;
-    if (player.currency.silver >= remainingToPay) {
-      player.currency.silver -= remainingToPay;
-    } else {
-      // Use total wealth calculation and rebuild
-      let total = player.totalWealth - remainingToPay;
-      player.currency.spirit = Math.floor(total / 1000000);
-      total %= 1000000;
-      player.currency.jade = Math.floor(total / 10000);
-      total %= 10000;
-      player.currency.gold = Math.floor(total / 100);
-      player.currency.silver = total % 100;
+    if (!payCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
+      return interaction.editReply(\`❌ Uang tidak cukup. Butuh setara dengan **\${HANCURKAN_COST_SILVER} Silver**.\`);
     }
 
     await player.save();

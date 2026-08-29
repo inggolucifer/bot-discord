@@ -20,7 +20,8 @@ module.exports = {
     // Formula: 100 * (1.5 ^ (currentSlots - 1)) in Silver (100 Silver = 1 Gold)
     const costSilver = Math.floor(100 * Math.pow(1.5, currentSlots - 1));
 
-    if (player.totalWealth < costSilver) {
+    const { hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
+    if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
        // Convert costSilver to readable string
        let tempCost = costSilver;
        const spirit = Math.floor(tempCost / 1000000); tempCost %= 1000000;
@@ -38,18 +39,8 @@ module.exports = {
     }
 
     // Deduct wealth
-    let remainingToPay = costSilver;
-    if (player.currency.silver >= remainingToPay) {
-      player.currency.silver -= remainingToPay;
-    } else {
-      // Use total wealth calculation and rebuild
-      let total = player.totalWealth - remainingToPay;
-      player.currency.spirit = Math.floor(total / 1000000);
-      total %= 1000000;
-      player.currency.jade = Math.floor(total / 10000);
-      total %= 10000;
-      player.currency.gold = Math.floor(total / 100);
-      player.currency.silver = total % 100;
+    if (!payCurrency(player.currency, costSilver, 'silver')) {
+       return interaction.editReply(\`❌ Uang tidak cukup. Butuh setara dengan **\${costSilver} Silver**.\`);
     }
 
     player.assetSlots = currentSlots + 1;

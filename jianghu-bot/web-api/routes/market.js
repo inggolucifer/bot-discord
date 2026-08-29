@@ -147,7 +147,8 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
                 throw new CustomError(`Bid harus lebih besar dari tertinggi saat ini! Minimal bid: ${minBid} Silver.`, 400);
             }
 
-            if (player.totalWealth < bidAmount) {
+            const { hasEnoughCurrency } = require('../../utils/currency');
+            if (!hasEnoughCurrency(player.currency, bidAmount, 'silver')) {
                 throw new CustomError(`Kekayaanmu tidak cukup. Total kekayaanmu setara dengan ${player.totalWealth} Silver.`, 400);
             }
 
@@ -170,23 +171,10 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
             }
 
             // Cut money from current player. We will use the object approach here since we might have to convert wealth
-            let remainingToPay = bidAmount;
-            if (player.currency.silver >= remainingToPay) {
-                player.currency.silver -= remainingToPay;
-            } else {
-                let total = (player.currency.silver || 0) +
-                            (player.currency.gold || 0) * 100 +
-                            (player.currency.jade || 0) * 10000 +
-                            (player.currency.spirit || 0) * 1000000;
+            const { payCurrency } = require('../../utils/currency');
 
-                total -= remainingToPay;
-
-                player.currency.spirit = Math.floor(total / 1000000);
-                total %= 1000000;
-                player.currency.jade = Math.floor(total / 10000);
-                total %= 10000;
-                player.currency.gold = Math.floor(total / 100);
-                player.currency.silver = total % 100;
+            if (!payCurrency(player.currency, bidAmount, 'silver')) {
+                 throw new CustomError(`Saldo tidak cukup meskipun total kekayaan setara ${player.totalWealth} Silver.`, 400);
             }
             await player.save({ session });
 

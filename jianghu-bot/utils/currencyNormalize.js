@@ -5,6 +5,34 @@
 function normalizeCurrency(currency) {
   if (!currency) return currency;
 
+  currency.copper = Math.round(currency.copper || 0);
+  currency.silver = Math.round(currency.silver || 0);
+  currency.gold = Math.round(currency.gold || 0);
+  currency.jade = Math.round(currency.jade || 0);
+  currency.spirit = Math.round(currency.spirit || 0);
+
+  // Jika ada nilai negatif (akibat deduction persentase/desimal sebelumnya), pinjam dari tingkatan atas
+  // dengan cara melebur semuanya ke copper, lalu menormalisasinya kembali.
+  if (currency.copper < 0 || currency.silver < 0 || currency.gold < 0 || currency.jade < 0 || currency.spirit < 0) {
+    let totalCopper = currency.copper + (currency.silver * 100) + (currency.gold * 10000) + (currency.jade * 1000000) + (currency.spirit * 100000000);
+
+    if (totalCopper < 0) {
+        // Jika total hutang melebihi kekayaan, pasang 0 untuk keamanan
+        currency.copper = 0; currency.silver = 0; currency.gold = 0; currency.jade = 0; currency.spirit = 0;
+    } else {
+        currency.spirit = Math.floor(totalCopper / 100000000);
+        totalCopper %= 100000000;
+        currency.jade = Math.floor(totalCopper / 1000000);
+        totalCopper %= 1000000;
+        currency.gold = Math.floor(totalCopper / 10000);
+        totalCopper %= 10000;
+        currency.silver = Math.floor(totalCopper / 100);
+        totalCopper %= 100;
+        currency.copper = Math.round(totalCopper);
+        return currency;
+    }
+  }
+
   currency.silver = (currency.silver || 0) + Math.floor((currency.copper || 0) / 100);
   currency.copper = (currency.copper || 0) % 100;
 

@@ -37,7 +37,59 @@ function formatCurrencyLine(currencyObj) {
   ).join('\n');
 }
 
+const RATE_TO_COPPER = {
+  copper: 1,
+  silver: 100,
+  gold: 10000,
+  jade: 1000000,
+  spirit: 100000000,
+};
+
+function getTotalCopper(currencyObj) {
+  if (!currencyObj) return 0;
+  return Math.round(
+    (currencyObj.copper || 0) * RATE_TO_COPPER.copper +
+    (currencyObj.silver || 0) * RATE_TO_COPPER.silver +
+    (currencyObj.gold || 0) * RATE_TO_COPPER.gold +
+    (currencyObj.jade || 0) * RATE_TO_COPPER.jade +
+    (currencyObj.spirit || 0) * RATE_TO_COPPER.spirit
+  );
+}
+
+function hasEnoughCurrency(currencyObj, amount, currencyType) {
+  const priceCopper = Math.round(amount * (RATE_TO_COPPER[currencyType] || 0));
+  const totalCopper = getTotalCopper(currencyObj);
+  return totalCopper >= priceCopper;
+}
+
+function payCurrency(currencyObj, amount, currencyType) {
+  const priceCopper = Math.round(amount * (RATE_TO_COPPER[currencyType] || 0));
+  const totalCopper = getTotalCopper(currencyObj);
+
+  if (totalCopper < priceCopper) {
+    return false;
+  }
+
+  let rem = totalCopper - priceCopper;
+
+  currencyObj.spirit = Math.floor(rem / RATE_TO_COPPER.spirit);
+  rem %= RATE_TO_COPPER.spirit;
+
+  currencyObj.jade = Math.floor(rem / RATE_TO_COPPER.jade);
+  rem %= RATE_TO_COPPER.jade;
+
+  currencyObj.gold = Math.floor(rem / RATE_TO_COPPER.gold);
+  rem %= RATE_TO_COPPER.gold;
+
+  currencyObj.silver = Math.floor(rem / RATE_TO_COPPER.silver);
+  rem %= RATE_TO_COPPER.silver;
+
+  currencyObj.copper = Math.round(rem);
+
+  return true;
+}
+
 module.exports = {
-  CURRENCIES, CURRENCY_LABEL, CURRENCY_EMOJI, RATE_TO_SILVER,
-  isValidCurrency, formatCurrencyLine,
+  CURRENCIES, CURRENCY_LABEL, CURRENCY_EMOJI, RATE_TO_SILVER, RATE_TO_COPPER,
+  isValidCurrency, formatCurrencyLine, getTotalCopper, hasEnoughCurrency, payCurrency,
 };
