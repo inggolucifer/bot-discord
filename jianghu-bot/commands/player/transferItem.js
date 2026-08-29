@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
@@ -5,7 +6,7 @@ const { logTransaction } = require('../../utils/logger');
 
 async function findOwnedItem(player, guildId, itemName) {
   if (!itemName) return null;
-  const itemDoc = await Item.findOne({ guildId, name: new RegExp(`^${itemName}$`, 'i') });
+  const itemDoc = await Item.findOne({ guildId, name: new RegExp(`^${escapeRegex(itemName)}$`, 'i') });
   if (!itemDoc) return { error: `Item "${itemName}" tidak ditemukan.` };
   const owned = player.inventory.find((i) => i.itemId.equals(itemDoc._id));
   if (!owned) return { error: `Kamu tidak memiliki item "${itemDoc.name}".` };
@@ -24,7 +25,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Shop = require('../../models/Shop');
@@ -34,7 +35,7 @@ module.exports = {
     const stok = interaction.options.getInteger('stok') ?? -1;
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" belum ada di database ${kategori}. Buat dulu dengan /admin-add-${kategori}.` });
 
     let listing = await Shop.findOne({ guildId: interaction.guildId, category: kategori, refId: doc._id });
