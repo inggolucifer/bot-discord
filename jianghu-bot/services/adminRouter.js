@@ -103,7 +103,8 @@ for (const [key, filename] of Object.entries(routeMap)) {
 module.exports = {
   async autocomplete(interaction) {
     const group = interaction.options.getSubcommandGroup(false);
-    const sub = interaction.options.getSubcommand();
+    const sub = interaction.options.getSubcommand(false);
+    if (!sub) return;
 
     let key = group ? `${group}${sub.replace(/-/g, '')}`.toLowerCase() : sub.replace(/-/g, '').toLowerCase();
     const target = services[key];
@@ -115,7 +116,8 @@ module.exports = {
 
   async execute(interaction) {
     const group = interaction.options.getSubcommandGroup(false);
-    const sub = interaction.options.getSubcommand();
+    const sub = interaction.options.getSubcommand(false);
+    if (!sub) return;
 
     let key = group ? `${group}${sub.replace(/-/g, '')}`.toLowerCase() : sub.replace(/-/g, '').toLowerCase();
     const target = services[key];

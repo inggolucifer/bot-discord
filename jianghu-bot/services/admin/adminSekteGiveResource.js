@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Sect = require('../../models/Sect');
@@ -15,10 +16,10 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
     if (focusedOpt.name === 'nama-sekte') {
-      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
     }
-    const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+    const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
     return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -30,10 +31,10 @@ module.exports = {
     const namaItem = interaction.options.getString('nama-item');
     const jumlah = interaction.options.getInteger('jumlah');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
+    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaItem}$`, 'i') });
+    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = sect.resources.find((r) => r.itemId.equals(item._id));

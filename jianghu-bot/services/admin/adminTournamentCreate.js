@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Tournament = require('../../models/Tournament');
@@ -13,7 +14,7 @@ module.exports = {
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const nama = interaction.options.getString('nama').trim();
-    const exists = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const exists = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (exists) return interaction.editReply({ content: `❌ Turnamen dengan nama "${nama}" sudah ada.` });
 
     await Tournament.create({ guildId: interaction.guildId, name: nama, createdBy: interaction.user.id });
