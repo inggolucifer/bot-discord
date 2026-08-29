@@ -67,25 +67,8 @@ module.exports = {
     }
 
     // Potong uang bidder baru
-    // Kita distribusikan mundur secara manual.
-    let remainingToPay = bidAmount;
-    if (player.currency.silver >= remainingToPay) {
-      player.currency.silver -= remainingToPay;
-    } else {
-        // Ambil kekayaan jadi total silver, lalu kurangi, lalu re-calculate
-        let total = (player.currency.silver || 0) +
-                    (player.currency.gold || 0) * 100 +
-                    (player.currency.jade || 0) * 10000 +
-                    (player.currency.spirit || 0) * 1000000;
-
-        total -= remainingToPay;
-
-        player.currency.spirit = Math.floor(total / 1000000);
-        total %= 1000000;
-        player.currency.jade = Math.floor(total / 10000);
-        total %= 10000;
-        player.currency.gold = Math.floor(total / 100);
-        player.currency.silver = total % 100;
+    if (!payCurrency(player.currency, bidAmount, 'silver')) {
+       return interaction.editReply(\`❌ Terjadi kesalahan pada saat menghitung kurs uang.\`);
     }
     await player.save();
 

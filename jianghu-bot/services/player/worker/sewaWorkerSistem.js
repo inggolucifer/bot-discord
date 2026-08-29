@@ -50,11 +50,10 @@ module.exports = {
     }
 
     const totalCost = durasi * 5;
-    if (player.currency.silver < totalCost) {
-      return interaction.editReply({ content: `❌ Silver kamu tidak cukup. Butuh ${totalCost} Silver, saldomu ${player.currency.silver} Silver.` });
+    const { payCurrency } = require('../../../utils/currency');
+    if (!payCurrency(player.currency, totalCost, 'silver')) {
+      return interaction.editReply({ content: `❌ Uangmu tidak cukup. Butuh setara dengan ${totalCost} Silver.` });
     }
-
-    player.currency.silver -= totalCost;
 
     // Flush current progress first
     ownedAsset.progressAccumulated += calculateProgress(ownedAsset);
