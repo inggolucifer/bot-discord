@@ -6,7 +6,7 @@ const { logTransaction } = require('../../utils/logger');
 
 async function findOwnedItem(player, guildId, itemName) {
   if (!itemName) return null;
-  const itemDoc = await Item.findOne({ guildId, name: new RegExp(`^${escapeRegex(itemName)}$`, 'i') });
+  const itemDoc = await Item.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(itemName)}\\s*$`, 'i') });
   if (!itemDoc) return { error: `Item "${itemName}" tidak ditemukan.` };
   const owned = player.inventory.find((i) => i.itemId.equals(itemDoc._id));
   if (!owned) return { error: `Kamu tidak memiliki item "${itemDoc.name}".` };

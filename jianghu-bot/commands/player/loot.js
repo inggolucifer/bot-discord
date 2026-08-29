@@ -19,7 +19,7 @@ module.exports = {
 
     const pool = await LootPool.findOne({
       guildId: interaction.guildId,
-      deceasedCharacterName: new RegExp(`^${escapeRegex(nama)}$`, 'i'),
+      deceasedCharacterName: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i'),
       targetUserId: interaction.user.id,
       claimed: false,
     });

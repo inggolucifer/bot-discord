@@ -24,10 +24,10 @@ module.exports = {
     const namaItem = interaction.options.getString('item-bahan');
     const jumlah = interaction.options.getInteger('jumlah-bahan');
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
+    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaItem)}\\s*$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     // Tambahkan atau update di list input materials

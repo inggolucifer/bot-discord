@@ -32,7 +32,7 @@ module.exports = {
 
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);

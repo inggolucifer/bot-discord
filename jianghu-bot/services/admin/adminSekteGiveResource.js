@@ -31,10 +31,10 @@ module.exports = {
     const namaItem = interaction.options.getString('nama-item');
     const jumlah = interaction.options.getInteger('jumlah');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
+    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaSekte)}\\s*$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaItem)}$`, 'i') });
+    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaItem)}\\s*$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = sect.resources.find((r) => r.itemId.equals(item._id));

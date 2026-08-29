@@ -20,7 +20,7 @@ module.exports = {
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
     const nama = interaction.options.getString('nama');
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     const row = new ActionRowBuilder().addComponents(

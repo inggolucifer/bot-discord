@@ -18,7 +18,7 @@ module.exports = {
   async execute(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const nama = interaction.options.getString('nama');
-    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!pet) return interaction.reply({ content: `❌ Pet "${nama}" tidak ditemukan.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_pet_${pet._id}`).setTitle(`Edit: ${pet.name}`.slice(0, 45));
