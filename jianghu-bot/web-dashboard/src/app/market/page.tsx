@@ -208,6 +208,7 @@ export default function MarketPage() {
       case 'gold': return <Coins className={`text-yellow-500 ${className}`} />;
       case 'jade': return <Coins className={`text-green-400 ${className}`} />;
       case 'spirit': return <Coins className={`text-blue-300 ${className}`} />;
+      case 'copper': return <Coins className={`text-[#cd7f32] ${className}`} />;
       default: return <Coins className={`text-gray-400 ${className}`} />;
     }
   }
@@ -218,10 +219,11 @@ export default function MarketPage() {
     if (currency === 'gold') { colorClass = 'text-yellow-500'; label = 'Gold'; }
     if (currency === 'jade') { colorClass = 'text-green-400'; label = 'Jade'; }
     if (currency === 'spirit') { colorClass = 'text-blue-400'; label = 'Spirit'; }
+    if (currency === 'copper') { colorClass = 'text-[#cd7f32]'; label = 'Copper'; }
 
     return (
       <div className="flex items-center gap-1 font-mono">
-        <span className={colorClass}>{price}</span>
+        <span className={colorClass} title={label}>{price}</span>
         <CurrencyIcon currency={currency} className="w-3 h-3 sm:w-4 sm:h-4" />
       </div>
     );
