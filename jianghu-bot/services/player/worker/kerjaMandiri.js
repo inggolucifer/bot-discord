@@ -30,7 +30,7 @@ module.exports = {
       return interaction.editReply({ content: '❌ Kamu sedang disewa oleh orang lain! Selesaikan dulu kontrak kerjamu.' });
     }
 
-    const assetDoc = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${assetName}$`, 'i') });
+    const assetDoc = await Asset.findOne({ name: new RegExp(`^${assetName}$`, 'i') });
     if (!assetDoc) return interaction.editReply({ content: '❌ Aset tidak ditemukan.' });
 
     const targetAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));

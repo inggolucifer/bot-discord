@@ -169,7 +169,7 @@ router.post('/craft', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
         if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
 
-        const asset = await Asset.findOne({ guildId, _id: assetId });
+        const asset = await Asset.findOne({ _id: assetId });
         if (!asset) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
         if (!asset.isCraftingStation) return res.status(400).json({ error: 'Aset ini bukan stasiun crafting.' });
 

@@ -22,7 +22,7 @@ module.exports = {
     }
     const namaAset = interaction.options.getString('nama-aset');
     if (!namaAset) return interaction.respond([]);
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset) return interaction.respond([]);
     const matches = asset.recipes.filter((r) => r.recipeName.toLowerCase().includes(focusedOpt.value.toLowerCase()));
     return interaction.respond(matches.map((r) => ({ name: r.recipeName, value: r.recipeName })).slice(0, 25));
@@ -40,7 +40,7 @@ module.exports = {
     const role = sect.getRoleOf(interaction.user.id);
     if (!role) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte ini.' });
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
     if (!asset || !asset.isCraftingStation) return interaction.editReply({ content: `❌ "${namaAset}" bukan aset crafting yang valid.` });
 
     const owned = sect.assets.find((a) => a.assetId.equals(asset._id));

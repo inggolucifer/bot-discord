@@ -11,7 +11,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+    const assets = await Asset.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -20,7 +20,7 @@ module.exports = {
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
     const nama = interaction.options.getString('nama');
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     const row = new ActionRowBuilder().addComponents(

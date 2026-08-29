@@ -14,7 +14,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
+    const assets = await Asset.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -26,10 +26,10 @@ module.exports = {
     const namaHasil = interaction.options.getString('item-hasil');
     const jumlahHasil = interaction.options.getInteger('jumlah-hasil') || 1;
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaHasil)}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(namaHasil)}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaHasil}" tidak ditemukan. Buat dulu lewat /admin-add-item.` });
 
     asset.workerOutputItemId = item._id;

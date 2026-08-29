@@ -20,7 +20,7 @@ module.exports = {
       const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
     }
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
+    const assets = await Asset.find({ name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -36,7 +36,7 @@ module.exports = {
     const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const owned = sect.assets.find((a) => a.assetId.equals(asset._id));
