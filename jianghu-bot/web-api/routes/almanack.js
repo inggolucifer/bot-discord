@@ -124,11 +124,7 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: `Lahan aset penuh (${currentTotalAssets}/${maxAssetSlots}). Beli lahan baru di bot via /asset tambah-slot.` });
         }
 
-        if (!asset.buildRequirements || asset.buildRequirements.length === 0) {
-            return res.status(400).json({ error: 'Aset ini belum memiliki syarat material.' });
-        }
-
-        const fakeRecipe = { materials: asset.buildRequirements };
+        const fakeRecipe = { materials: asset.buildRequirements || [] };
         const check = checkMaterials(player.inventory, fakeRecipe);
         if (!check.ok) {
             const missingLines = check.missing.map((m) => `${m.itemName}: Butuh ${m.need}, Punya ${m.have}`).join(', ');
