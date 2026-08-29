@@ -12,7 +12,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const items = await Item.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const items = await Item.find({ name: new RegExp(focused, 'i') }).limit(25);
     await interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -20,14 +20,14 @@ module.exports = {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
-    const item = await Item.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^${nama}$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${nama}" tidak ditemukan.` });
 
     // Find sources
-    const shopEntry = await Shop.findOne({ guildId: interaction.guildId, refId: item._id, isActive: true });
+    const shopEntry = await Shop.findOne({ refId: item._id, isActive: true });
 
     const assetsProducing = await Asset.find({
-      guildId: interaction.guildId,
+
       $or: [
         { workerOutputItemId: item._id },
         { 'recipes.resultItemId': item._id }
@@ -42,17 +42,17 @@ module.exports = {
 
     // Find usages
     const assetsUsingAsMaterial = await Asset.find({
-      guildId: interaction.guildId,
+
       'recipes.materials.itemId': item._id
     });
 
     const assetsUsingToBuild = await Asset.find({
-      guildId: interaction.guildId,
+
       'buildRequirements.itemId': item._id
     });
 
     const assetsUsingAsInput = await Asset.find({
-      guildId: interaction.guildId,
+
       'workerInputMaterials.itemId': item._id
     });
 

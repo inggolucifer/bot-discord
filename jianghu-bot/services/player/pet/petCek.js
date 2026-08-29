@@ -10,7 +10,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const pets = await Pet.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const pets = await Pet.find({ name: new RegExp(focused, 'i') }).limit(25);
     await interaction.respond(pets.map((p) => ({ name: p.name, value: p.name })));
   },
 
@@ -18,7 +18,7 @@ module.exports = {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
-    const pet = await Pet.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^${nama}$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
     return interaction.editReply({ embeds: [buildPetEmbed(pet)] });
   },

@@ -11,7 +11,7 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const items = await Item.find({ guildId: interaction.guildId }).sort({ rank: 1, name: 1 });
+    const items = await Item.find({}).sort({ rank: 1, name: 1 });
 
     if (!items.length) {
       return interaction.editReply({ content: '❌ Tidak ada item yang terdaftar.' });
