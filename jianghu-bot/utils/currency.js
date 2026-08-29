@@ -66,7 +66,7 @@ function payCurrency(currencyObj, amount, currencyType) {
   const priceCopper = Math.round(amount * (RATE_TO_COPPER[currencyType] || 0));
   const totalCopper = getTotalCopper(currencyObj);
 
-  if (totalCopper < priceCopper) {
+  if (Number.isNaN(priceCopper) || totalCopper < priceCopper) {
     return false;
   }
 

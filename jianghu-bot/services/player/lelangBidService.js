@@ -67,8 +67,9 @@ module.exports = {
     }
 
     // Potong uang bidder baru
+    const { payCurrency } = require('../../utils/currency');
     if (!payCurrency(player.currency, bidAmount, 'silver')) {
-       return interaction.editReply(\`❌ Terjadi kesalahan pada saat menghitung kurs uang.\`);
+       return interaction.editReply(`❌ Terjadi kesalahan pada saat menghitung kurs uang.`);
     }
     await player.save();
 

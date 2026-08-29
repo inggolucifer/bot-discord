@@ -73,7 +73,7 @@ module.exports = {
 
     // Deduct cost
     if (!payCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
-      return interaction.editReply(\`❌ Uang tidak cukup. Butuh setara dengan **\${HANCURKAN_COST_SILVER} Silver**.\`);
+      return interaction.editReply(`❌ Uang tidak cukup. Butuh setara dengan **${HANCURKAN_COST_SILVER} Silver**.`);
     }
 
     await player.save();
