@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Sect = require('../../models/Sect');
@@ -16,10 +17,10 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
     if (focusedOpt.name === 'nama-sekte') {
-      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+      const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
     }
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -32,10 +33,10 @@ module.exports = {
     const jumlah = interaction.options.getInteger('jumlah') || 1;
     const skipPembangunan = interaction.options.getBoolean('skip-pembangunan') || false;
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
+    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const owned = sect.assets.find((a) => a.assetId.equals(asset._id));

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const crypto = require('crypto');
 const LootPool = require('../../models/LootPool');
@@ -18,7 +19,7 @@ module.exports = {
 
     const pool = await LootPool.findOne({
       guildId: interaction.guildId,
-      deceasedCharacterName: new RegExp(`^${nama}$`, 'i'),
+      deceasedCharacterName: new RegExp(`^${escapeRegex(nama)}$`, 'i'),
       targetUserId: interaction.user.id,
       claimed: false,
     });

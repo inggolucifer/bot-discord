@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { isAdmin } = require('../../utils/permissions');
 const Player = require('../../models/Player');
@@ -15,7 +16,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const assets = await Asset.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -31,7 +32,7 @@ module.exports = {
 
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
-    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);
