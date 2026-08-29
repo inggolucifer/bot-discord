@@ -40,7 +40,7 @@ module.exports = {
 
     // Deduct wealth
     if (!payCurrency(player.currency, costSilver, 'silver')) {
-       return interaction.editReply(\`❌ Uang tidak cukup. Butuh setara dengan **\${costSilver} Silver**.\`);
+       return interaction.editReply(`❌ Uang tidak cukup. Butuh setara dengan **${costSilver} Silver**.`);
     }
 
     player.assetSlots = currentSlots + 1;
