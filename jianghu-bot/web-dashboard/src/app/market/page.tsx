@@ -180,10 +180,17 @@ export default function MarketPage() {
   const fetchInventory = async () => {
     try {
         const res = await api.get('/inventory');
-        setInventory(res.data.data.items);
+        setInventory(res.data.data || []);
     } catch (err) {
         console.error("Failed to load inventory for selling.", err);
     }
+  };
+
+  const handleOpenSellSystemModal = async () => {
+      await fetchInventory();
+      setSellSystemModalOpen(true);
+      setSellSystemItemId('');
+      setSellSystemQuantity(1);
   };
 
   const handleOpenSellModal = async () => {
@@ -323,7 +330,7 @@ export default function MarketPage() {
                   <h2 className="text-lg sm:text-xl font-bold font-serif text-[#c5a880] flex items-center gap-2">
                     <Store className="text-[#c5a880] w-5 h-5 sm:w-6 sm:h-6" /> Toko Sistem
                   </h2>
-                  <Button onClick={() => setSellSystemModalOpen(true)} size="sm" className="bg-[#c5a880] hover:bg-[#a68a65] text-black border-0">
+                  <Button onClick={handleOpenSellSystemModal} size="sm" className="bg-[#c5a880] hover:bg-[#a68a65] text-black border-0">
                       Jual ke Sistem
                   </Button>
                 </div>
