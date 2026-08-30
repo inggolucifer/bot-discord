@@ -39,7 +39,7 @@ const assetOwnedSchema = new mongoose.Schema({
   quantity: { type: Number, default: 1 },
   lastClaimAt: { type: Date, default: null },
   constructionCompleteAt: { type: Date, default: null },
-  assignedWorkers: { type: [{ workerId: String }], default: [] },
+  assignedWorkers: { type: [{ workerId: String, endTime: { type: Date, default: null } }], default: [] },
   progressAccumulated: { type: Number, default: 0 },
   lastProgressUpdate: { type: Date, default: null },
   status: { type: String, enum: ['pending', 'building', 'active'], default: 'active' },
