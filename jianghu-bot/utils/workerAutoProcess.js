@@ -109,6 +109,24 @@ async function runWorkerAutoProcess(client) {
                 const hoursPassed = Math.floor(progressMs / (3600 * 1000));
 
                 if (hoursPassed < 1) {
+                     if (owned.isHalted) {
+                         let hasMaterialsForOneHour = true;
+                         if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                             for (const input of assetConfig.workerInputMaterials) {
+                                 const neededPerHour = input.quantity * productiveQuantity;
+                                 const ownedItem = player.inventory.find(i => i.itemId.equals(input.itemId));
+                                 const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+                                 if (availableQuantity < neededPerHour) {
+                                     hasMaterialsForOneHour = false;
+                                     break;
+                                 }
+                             }
+                         }
+                         if (hasMaterialsForOneHour) {
+                             owned.isHalted = false;
+                         }
+                     }
+
                      owned.progressAccumulated = progressMs;
                      owned.lastProgressUpdate = new Date();
                      playerUpdated = true;
@@ -283,7 +301,27 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
              }
 
              const hoursPassed = Math.floor(progressMs / (3600 * 1000));
-             if (hoursPassed < 1) continue;
+             if (hoursPassed < 1) {
+                 if (owned.isHalted) {
+                     let hasMaterialsForOneHour = true;
+                     if (assetConfig.workerInputMaterials && assetConfig.workerInputMaterials.length > 0) {
+                         for (const input of assetConfig.workerInputMaterials) {
+                             const neededPerHour = input.quantity * owned.quantity;
+                             const ownedItem = sect.resources.find(r => r.itemId.equals(input.itemId));
+                             const availableQuantity = ownedItem ? ownedItem.quantity : 0;
+                             if (availableQuantity < neededPerHour) {
+                                 hasMaterialsForOneHour = false;
+                                 break;
+                             }
+                         }
+                     }
+                     if (hasMaterialsForOneHour) {
+                         owned.isHalted = false;
+                         sectUpdated = true;
+                     }
+                 }
+                 continue;
+             }
 
              let affordableHours = hoursPassed;
              let missingMaterialName = null;
