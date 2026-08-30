@@ -155,8 +155,9 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
         if (!isUnderConstruction(ownedAsset)) {
             if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
             const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-            if (activeWorkers >= 1) {
-                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            const maxWorkers = ownedAsset.quantity || 1;
+            if (activeWorkers >= maxWorkers) {
+                return res.status(400).json({ error: `Aset yang sudah jadi hanya boleh maksimal memiliki ${maxWorkers} pekerja.` });
             }
         }
 
@@ -211,8 +212,9 @@ router.post('/assets/work-self', authenticateToken, async (req, res) => {
         if (!isUnderConstruction(ownedAsset)) {
             if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
             const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-            if (activeWorkers >= 1) {
-                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            const maxWorkers = ownedAsset.quantity || 1;
+            if (activeWorkers >= maxWorkers) {
+                return res.status(400).json({ error: `Aset yang sudah jadi hanya boleh maksimal memiliki ${maxWorkers} pekerja.` });
             }
         }
 
@@ -291,8 +293,9 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
         if (!isUnderConstruction(ownedAsset)) {
             if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
             const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-            if (activeWorkers >= 1) {
-                return res.status(400).json({ error: 'Aset yang sudah jadi hanya boleh maksimal memiliki 1 pekerja.' });
+            const maxWorkers = ownedAsset.quantity || 1;
+            if (activeWorkers >= maxWorkers) {
+                return res.status(400).json({ error: `Aset yang sudah jadi hanya boleh maksimal memiliki ${maxWorkers} pekerja.` });
             }
         }
 
@@ -367,7 +370,8 @@ router.post('/assets/move-worker', authenticateToken, async (req, res) => {
         if (!isUnderConstruction(targetOwnedAsset)) {
             if (!targetOwnedAsset.assignedWorkers) targetOwnedAsset.assignedWorkers = [];
             const activeWorkers = targetOwnedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
-            if (activeWorkers >= 1) return res.status(400).json({ error: 'Aset tujuan sudah jadi, maksimal 1 pekerja.' });
+            const maxWorkers = targetOwnedAsset.quantity || 1;
+            if (activeWorkers >= maxWorkers) return res.status(400).json({ error: `Aset tujuan sudah jadi, maksimal ${maxWorkers} pekerja.` });
         }
 
         let oldAssetFound = false;
