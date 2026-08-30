@@ -589,13 +589,13 @@ export default function MarketPage() {
                       className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none"
                   >
                       <option value="">-- Pilih Item --</option>
-                      {inventory.filter((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => item.basePrice && item.basePrice > 0).map((item: any) => (
-                          <option key={item.itemId} value={item.itemId}>
-                              {item.name} (Stok: {item.quantity}) - {item.basePrice * 0.2} {item.priceCurrency || 'copper'}/unit
+                      {inventory.filter((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => item.price && item.price > 0).map((item: any) => (
+                          <option key={item.id} value={item.id}>
+                              {item.name} (Stok: {item.quantity}) - {Math.floor(item.price * 0.2)} {item.priceCurrency || 'copper'}/unit
                           </option>
                       ))}
                   </select>
-                  {inventory.filter((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => item.basePrice && item.basePrice > 0).length === 0 && (
+                  {inventory.filter((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => item.price && item.price > 0).length === 0 && (
                       <p className="text-xs text-red-400 mt-2">Tidak ada item dengan harga dasar di inventory kamu.</p>
                   )}
               </div>
@@ -607,7 +607,7 @@ export default function MarketPage() {
                       <input
                           type="number"
                           min="1"
-                          max={inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellSystemItemId)?.quantity || 1}
+                          max={inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellSystemItemId)?.quantity || 1}
                           value={sellSystemQuantity}
                           onChange={(e) => setSellSystemQuantity(parseInt(e.target.value) || 1)}
                           className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm font-mono"
@@ -617,9 +617,9 @@ export default function MarketPage() {
                     <p className="text-xs text-gray-400">Total Didapat (20% Harga Dasar):</p>
                     <p className="text-lg font-bold text-[#c5a880] flex items-center justify-center gap-2 mt-1">
                       {(() => {
-                         const item = inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellSystemItemId);
+                         const item = inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellSystemItemId);
                          if (!item) return '-';
-                         const total = Math.floor(item.basePrice * sellSystemQuantity * 0.2);
+                         const total = Math.floor(item.price * sellSystemQuantity * 0.2);
                          return renderCurrency(total, item.priceCurrency || 'copper');
                       })()}
                     </p>
@@ -651,8 +651,8 @@ export default function MarketPage() {
                       className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
                   >
                       <option value="">-- Pilih Item --</option>
-                      {inventory.map((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => (
-                          <option key={item.itemId} value={item.itemId}>
+                      {inventory.map((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => (
+                          <option key={item.id} value={item.id}>
                               {item.name} (Stok: {item.quantity})
                           </option>
                       ))}
@@ -666,7 +666,7 @@ export default function MarketPage() {
                       <input
                           type="number"
                           min="1"
-                          max={inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellItemId)?.quantity || 1}
+                          max={inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellItemId)?.quantity || 1}
                           value={sellQuantity}
                           onChange={(e) => setSellQuantity(parseInt(e.target.value) || 1)}
                           className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"

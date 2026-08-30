@@ -46,6 +46,7 @@ router.get('/', authenticateToken, async (req, res) => {
             rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
             quantity: slot.quantity,
             price: slot.itemId.basePrice, // Changed to match DB schema
+            priceCurrency: slot.itemId.priceCurrency || 'copper',
             imageUrl: slot.itemId.imageUrl, // Include image URL
             emoji: getEmojiForShopItem(slot.itemId.category, 'item')
         }));
