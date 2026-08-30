@@ -123,7 +123,7 @@ router.get('/assets', authenticateToken, async (req, res) => {
             };
         });
 
-        res.json({ success: true, data: assets });
+        res.json({ success: true, data: assets, assetSlots: player.assetSlots || 1 });
     } catch (error) {
         console.error('[API-PLAYER] Error fetching assets:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
@@ -132,6 +132,69 @@ router.get('/assets', authenticateToken, async (req, res) => {
 
 
 
+
+router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId: guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (player.status !== 'active') return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
+
+        const currentSlots = player.assetSlots || 1;
+
+        if (currentSlots >= 5) {
+            return res.status(400).json({ error: 'Maksimal slot aset adalah 5.' });
+        }
+
+        // Formula: 100 * (1.5 ^ (currentSlots - 1)) in Silver (100 Silver = 1 Gold)
+        const costSilver = Math.floor(100 * Math.pow(1.5, currentSlots - 1));
+
+        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+        if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
+           let tempCost = costSilver;
+           const spirit = Math.floor(tempCost / 1000000); tempCost %= 1000000;
+           const jade = Math.floor(tempCost / 10000); tempCost %= 10000;
+           const gold = Math.floor(tempCost / 100);
+           const silver = tempCost % 100;
+
+           let costStr = [];
+           if (spirit > 0) costStr.push(`${spirit} Spirit`);
+           if (jade > 0) costStr.push(`${jade} Jade`);
+           if (gold > 0) costStr.push(`${gold} Gold`);
+           if (silver > 0) costStr.push(`${silver} Silver`);
+
+           return res.status(400).json({ error: `Saldo Wealth kamu tidak cukup. Butuh ${costStr.join(' ')} untuk unlock slot aset ke-${currentSlots + 1}.` });
+        }
+
+        // Deduct wealth
+        if (!payCurrency(player.currency, costSilver, 'silver')) {
+           return res.status(400).json({ error: `Uang tidak cukup. Butuh setara dengan ${costSilver} Silver.` });
+        }
+
+        player.assetSlots = currentSlots + 1;
+        await player.save();
+
+        const { logTransaction } = require('../../utils/logger');
+        // Using shop_purchase as per user instruction
+        await logTransaction(req.app.get('client'), {
+          guildId: guildId,
+          type: 'shop_purchase',
+          fromUserId: userId,
+          currency: 'silver',
+          amount: costSilver,
+          itemDescription: `Unlock Asset Slot ke-${currentSlots + 1} dari Web`,
+          balanceAfter: player.currency
+        });
+
+        res.json({ success: true, message: `Berhasil menambah slot aset! Kamu sekarang memiliki ${currentSlots + 1} slot aset.`, newSlots: currentSlots + 1 });
+    } catch (error) {
+        console.error('[API-PLAYER] Error tambah slot aset:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
 
 router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
     try {
