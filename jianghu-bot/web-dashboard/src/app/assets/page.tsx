@@ -102,6 +102,9 @@ export default function AssetsPage() {
   const [activePageTab, setActivePageTab] = useState<'my-assets' | 'build-asset'>('my-assets');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] = useState<string>('');
+  const [assetSlots, setAssetSlots] = useState<number>(1);
+  const [buySlotModalOpen, setBuySlotModalOpen] = useState(false);
+  const [buySlotLoading, setBuySlotLoading] = useState(false);
   const [targetAssetId, setTargetAssetId] = useState<string>('');
   const [moveLoading, setMoveLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
@@ -122,6 +125,9 @@ export default function AssetsPage() {
       try {
           const res = await api.get('/player/assets');
           setAssets(res.data.data);
+          if (res.data.assetSlots) {
+              setAssetSlots(res.data.assetSlots);
+          }
       } catch (err) {
           console.error(err);
           setError((err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal memuat data aset.');
@@ -138,6 +144,22 @@ export default function AssetsPage() {
       const timeout = setTimeout(() => fetchAssets(), 0);
       return () => clearTimeout(timeout);
   }, [user]);
+
+  const handleBuySlot = async () => {
+      setBuySlotLoading(true);
+      try {
+          const res = await api.post('/player/assets/tambah-slot');
+          setActionMessage({type: 'success', text: res.data.message || 'Berhasil menambah slot aset!'});
+          setBuySlotModalOpen(false);
+          fetchAssets();
+      } catch (err) {
+          console.error(err);
+          setActionMessage({type: 'error', text: (err as {response?: {data?: {error?: string}}}).response?.data?.error || 'Gagal menambah slot.'});
+          setBuySlotModalOpen(false);
+      } finally {
+          setBuySlotLoading(false);
+      }
+  };
 
   const handleWorkSelf = async () => {
       if(!selectedAsset) return;
@@ -323,20 +345,63 @@ export default function AssetsPage() {
         />
       ) : (
       <>
-      <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar">
-        <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'my-assets' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
-          onClick={() => {setActivePageTab('my-assets'); setActionMessage(null);}}
+      <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar justify-between items-center">
+        <div className="flex gap-4 sm:gap-6">
+            <button
+            className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'my-assets' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+            onClick={() => {setActivePageTab('my-assets'); setActionMessage(null);}}
+            >
+            <Map size={16} /> Aset Saya ({assets.length})
+            </button>
+            <button
+            className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'build-asset' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
+            onClick={() => {setActivePageTab('build-asset'); setActionMessage(null);}}
+            >
+            <Hammer size={16} /> Bangun Aset
+            </button>
+        </div>
+        <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setBuySlotModalOpen(true)}
+            disabled={assetSlots >= 5}
+            className={`mb-3 ${assetSlots >= 5 ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#c5a880] hover:text-[#c5a880]'}`}
         >
-          <Map size={16} /> Aset Saya ({assets.length})
-        </button>
-        <button
-          className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === 'build-asset' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
-          onClick={() => {setActivePageTab('build-asset'); setActionMessage(null);}}
-        >
-          <Hammer size={16} /> Bangun Aset
-        </button>
+            Slot Lahan: {assetSlots}/5 {assetSlots < 5 ? '+' : '(Max)'}
+        </Button>
       </div>
+
+      <Modal
+        isOpen={buySlotModalOpen}
+        onClose={() => setBuySlotModalOpen(false)}
+        title="Tambah Slot Aset"
+      >
+        <div className="p-4">
+            <p className="text-sm text-gray-300 mb-4">
+                Apakah Anda yakin ingin menambah slot aset maksimal menjadi <strong>{assetSlots + 1}</strong>?
+            </p>
+            <div className="bg-[#111] p-3 rounded-lg border border-[#333] mb-4">
+                <p className="text-xs text-gray-400">Biaya yang dibutuhkan:</p>
+                <p className="text-lg font-bold text-gray-200 mt-1 flex items-center gap-2">
+                    {Math.floor(100 * Math.pow(1.5, assetSlots - 1))} Silver Tael
+                </p>
+            </div>
+            {assetSlots >= 5 && (
+                <p className="text-sm text-red-400 mb-4">Anda sudah mencapai batas maksimal 5 slot aset.</p>
+            )}
+            <div className="flex justify-end gap-2 mt-4">
+                <Button variant="outline" onClick={() => setBuySlotModalOpen(false)}>Batal</Button>
+                <Button
+                    variant="default"
+                    onClick={handleBuySlot}
+                    disabled={buySlotLoading || assetSlots >= 5}
+                >
+                    {buySlotLoading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : null}
+                    Beli Slot
+                </Button>
+            </div>
+        </div>
+      </Modal>
 
       {actionMessage && (
           <div className={`p-4 rounded-lg flex items-center justify-between border ${actionMessage.type === 'success' ? 'bg-green-900/20 border-green-900/50 text-green-400' : 'bg-red-900/20 border-red-900/50 text-red-400'}`}>
