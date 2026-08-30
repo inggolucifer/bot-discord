@@ -204,6 +204,78 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
 });
 
 
+// POST /api/market/shop/sell-to-system
+router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemId, quantity } = req.body;
+
+    if (!itemId || !quantity || quantity <= 0) {
+        return res.status(400).json({ error: 'Data tidak valid.' });
+    }
+
+    const lockKey = `player_${userId}`;
+    const acquired = await LockManager.acquire(lockKey);
+    if (!acquired) {
+        return res.status(429).json({ error: 'Sistem sedang sibuk. Coba lagi dalam beberapa saat.' });
+    }
+
+    try {
+        const result = await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Player tidak ditemukan', 404);
+
+            const inventoryItem = player.inventory.find(i => i.itemId.toString() === itemId);
+            if (!inventoryItem) throw new CustomError('Kamu tidak memiliki item ini.', 400);
+            if (inventoryItem.quantity < quantity) throw new CustomError('Jumlah item tidak mencukupi.', 400);
+
+            const item = await Item.findById(itemId).session(session);
+            if (!item) throw new CustomError('Item tidak ditemukan di database.', 404);
+            if (!item.basePrice || item.basePrice <= 0) {
+                throw new CustomError('Item ini tidak memiliki harga dasar dan tidak bisa dijual ke sistem.', 400);
+            }
+
+            const SELL_RATE = 0.2;
+            const totalHarga = Math.floor(item.basePrice * quantity * SELL_RATE);
+            const currencyType = item.priceCurrency || 'copper';
+
+            // Deduct Item
+            inventoryItem.quantity -= quantity;
+            if (inventoryItem.quantity <= 0) {
+                player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId);
+            }
+
+            // Add Currency
+            player.currency[currencyType] += totalHarga;
+            await player.save({ session });
+
+            await new TransactionLog({
+                guildId: player.guildId,
+                type: 'sell_to_system',
+                fromUserId: userId,
+                currency: currencyType,
+                amount: totalHarga,
+                itemDescription: `${quantity}x ${item.name} (item) dijual ke sistem melalui web`,
+                balanceAfter: player.currency
+            }).save({ session });
+
+            return {
+                currency: currencyType,
+                amount: totalHarga,
+                itemName: item.name,
+                soldQuantity: quantity
+            };
+        });
+
+        res.json({ success: true, data: result, message: `Berhasil menjual ${result.soldQuantity}x ${result.itemName} seharga ${result.amount} ${result.currency}` });
+    } catch (err) {
+        console.error('Error sell to system via web:', err);
+        const status = err.statusCode || 500;
+        res.status(status).json({ error: err.message || 'Terjadi kesalahan pada server.' });
+    } finally {
+        LockManager.release(lockKey);
+    }
+});
+
 // 4. POST /api/market/shop/buy
 router.post('/shop/buy', authenticateToken, async (req, res) => {
     const userId = req.user.userId;

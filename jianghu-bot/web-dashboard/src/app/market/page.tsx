@@ -63,6 +63,11 @@ export default function MarketPage() {
   const [activeRank, setActiveRank] = useState<string>('all');
   const [actionLoading, setActionLoading] = useState(false);
 
+  const [sellSystemModalOpen, setSellSystemModalOpen] = useState(false);
+  const [sellSystemItemId, setSellSystemItemId] = useState('');
+  const [sellSystemQuantity, setSellSystemQuantity] = useState(1);
+
+
 
   // Sell Modal states
   const [sellModalOpen, setSellModalOpen] = useState(false);
@@ -95,9 +100,9 @@ export default function MarketPage() {
          const myListingRes = await api.get('/market/player-shop/my-listings');
          setMyListings(myListingRes.data.data);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.response?.data?.error || 'Gagal memuat data pasar.');
+      setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal memuat data pasar.');
     } finally {
       setLoading(false);
     }
@@ -107,6 +112,27 @@ export default function MarketPage() {
     setTimeout(() => fetchData(), 0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+
+  const handleSellToSystem = async () => {
+      if (!sellSystemItemId || sellSystemQuantity <= 0) return;
+      setActionLoading(true);
+      try {
+          const res = await api.post('/market/shop/sell-to-system', {
+              itemId: sellSystemItemId,
+              quantity: sellSystemQuantity
+          });
+          alert(res.data.message || 'Item berhasil dijual ke sistem.');
+          setSellSystemModalOpen(false);
+          setSellSystemItemId('');
+          setSellSystemQuantity(1);
+          await setTimeout(() => fetchData(), 0);
+      } catch(err: any) {
+          setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item ke sistem.');
+      } finally {
+          setActionLoading(false);
+      }
+  };
 
   const handleOpenBuyModal = (id: string, name: string, isPlayerShop: boolean, maxQuantity?: number) => {
       setBuyModalItem({ id, name, isPlayerShop, maxQuantity });
@@ -127,8 +153,8 @@ export default function MarketPage() {
           alert(res.data.message);
           setBuyModalOpen(false);
           await setTimeout(() => fetchData(), 0);
-      } catch (err: any) {
-          alert(err.response?.data?.error || 'Gagal membeli item.');
+      } catch (err) {
+          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membeli item.');
       } finally {
           setActionLoading(false);
       }
@@ -143,8 +169,8 @@ export default function MarketPage() {
           const res = await api.post('/market/auction/bid', { auctionId, bidAmount });
           alert(res.data.message);
           await setTimeout(() => fetchData(), 0);
-      } catch (err: any) {
-          alert(err.response?.data?.error || 'Gagal melakukan bid.');
+      } catch (err) {
+          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal melakukan bid.');
       } finally {
           setActionLoading(false);
       }
@@ -155,7 +181,7 @@ export default function MarketPage() {
     try {
         const res = await api.get('/inventory');
         setInventory(res.data.data.items);
-    } catch (err: any) {
+    } catch (err) {
         console.error("Failed to load inventory for selling.", err);
     }
   };
@@ -183,7 +209,7 @@ export default function MarketPage() {
           setSellModalOpen(false);
           await setTimeout(() => fetchData(), 0);
       } catch(err: any) {
-          setError(err.response?.data?.error || 'Gagal menjual item.');
+          setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item.');
       } finally {
           setActionLoading(false);
       }
@@ -196,8 +222,8 @@ export default function MarketPage() {
           alert(res.data.message);
           setConfirmCancelId(null);
           await setTimeout(() => fetchData(), 0);
-      } catch (err: any) {
-          alert(err.response?.data?.error || 'Gagal membatalkan listing.');
+      } catch (err) {
+          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membatalkan listing.');
       } finally {
           setActionLoading(false);
       }
@@ -293,10 +319,13 @@ export default function MarketPage() {
               {/* System Shop Section */}
               {activeTab === 'shop' && (
               <section className="bg-[#111] border border-[#333] rounded-xl overflow-hidden flex flex-col shadow-md">
-                <div className="bg-[#c5a880]/10 border-b border-[#c5a880]/30 p-4 sm:p-5 flex items-center">
+                <div className="bg-[#c5a880]/10 border-b border-[#c5a880]/30 p-4 sm:p-5 flex items-center justify-between">
                   <h2 className="text-lg sm:text-xl font-bold font-serif text-[#c5a880] flex items-center gap-2">
-                    <Store className="text-[#c5a880] w-5 h-5 sm:w-6 sm:h-6" /> Toko Sistem Tertinggi
+                    <Store className="text-[#c5a880] w-5 h-5 sm:w-6 sm:h-6" /> Toko Sistem
                   </h2>
+                  <Button onClick={() => setSellSystemModalOpen(true)} size="sm" className="bg-[#c5a880] hover:bg-[#a68a65] text-black border-0">
+                      Jual ke Sistem
+                  </Button>
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
@@ -545,6 +574,69 @@ export default function MarketPage() {
       </Modal>
 
 
+
+      {/* Sell To System Modal */}
+      <Modal isOpen={sellSystemModalOpen} onClose={() => setSellSystemModalOpen(false)} title="Jual ke Sistem" maxWidth="sm">
+          <div className="space-y-4">
+              <div>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Pilih Item (yang memiliki harga dasar)</label>
+                  <select
+                      value={sellSystemItemId}
+                      onChange={(e) => {
+                          setSellSystemItemId(e.target.value);
+                          setSellSystemQuantity(1);
+                      }}
+                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none"
+                  >
+                      <option value="">-- Pilih Item --</option>
+                      {inventory.filter((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => item.basePrice && item.basePrice > 0).map((item: any) => (
+                          <option key={item.itemId} value={item.itemId}>
+                              {item.name} (Stok: {item.quantity}) - {item.basePrice * 0.2} {item.priceCurrency || 'copper'}/unit
+                          </option>
+                      ))}
+                  </select>
+                  {inventory.filter((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => item.basePrice && item.basePrice > 0).length === 0 && (
+                      <p className="text-xs text-red-400 mt-2">Tidak ada item dengan harga dasar di inventory kamu.</p>
+                  )}
+              </div>
+
+              {sellSystemItemId && (
+                <>
+                  <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Jumlah Dijual</label>
+                      <input
+                          type="number"
+                          min="1"
+                          max={inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellSystemItemId)?.quantity || 1}
+                          value={sellSystemQuantity}
+                          onChange={(e) => setSellSystemQuantity(parseInt(e.target.value) || 1)}
+                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm font-mono"
+                      />
+                  </div>
+                  <div className="bg-black/40 p-3 rounded-lg border border-[#333] text-center">
+                    <p className="text-xs text-gray-400">Total Didapat (20% Harga Dasar):</p>
+                    <p className="text-lg font-bold text-[#c5a880] flex items-center justify-center gap-2 mt-1">
+                      {(() => {
+                         const item = inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellSystemItemId);
+                         if (!item) return '-';
+                         const total = Math.floor(item.basePrice * sellSystemQuantity * 0.2);
+                         return renderCurrency(total, item.priceCurrency || 'copper');
+                      })()}
+                    </p>
+                  </div>
+                </>
+              )}
+
+              <Button
+                  onClick={handleSellToSystem}
+                  disabled={actionLoading || !sellSystemItemId || sellSystemQuantity <= 0}
+                  className="w-full bg-[#c5a880] hover:bg-[#a68a65] text-black mt-2 border-0"
+              >
+                  {actionLoading ? 'Memproses...' : 'Konfirmasi Jual'}
+              </Button>
+          </div>
+      </Modal>
+
       {/* Sell Modal */}
       <Modal isOpen={sellModalOpen} onClose={() => setSellModalOpen(false)} title="Jual Item" maxWidth="sm">
           <div className="space-y-4">
@@ -559,7 +651,7 @@ export default function MarketPage() {
                       className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
                   >
                       <option value="">-- Pilih Item --</option>
-                      {inventory.map((item: any) => (
+                      {inventory.map((item: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => (
                           <option key={item.itemId} value={item.itemId}>
                               {item.name} (Stok: {item.quantity})
                           </option>
@@ -574,7 +666,7 @@ export default function MarketPage() {
                       <input
                           type="number"
                           min="1"
-                          max={inventory.find((i: any) => i.itemId === sellItemId)?.quantity || 1}
+                          max={inventory.find((i: { itemId: string; name: string; quantity: number; basePrice?: number; priceCurrency?: string }) => i.itemId === sellItemId)?.quantity || 1}
                           value={sellQuantity}
                           onChange={(e) => setSellQuantity(parseInt(e.target.value) || 1)}
                           className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"
