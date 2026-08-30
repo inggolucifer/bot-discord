@@ -26,13 +26,13 @@ module.exports = {
     const nama = interaction.options.getString('nama');
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" tidak ditemukan.` });
 
-    const result = await Shop.findOneAndDelete({ category: kategori, refId: doc._id });
+    const result = await Shop.findOneAndDelete({ guildId: interaction.guildId, category: kategori, refId: doc._id });
     if (!result) return interaction.editReply({ content: `❌ "${doc.name}" tidak ada di shop.` });
 
-    await logAdminAction(interaction.client, { adminId: interaction.user.id, action: 'SHOP_REMOVE', details: `${doc.name} (${kategori})` });
+    await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'SHOP_REMOVE', details: `${doc.name} (${kategori})` });
     return interaction.editReply({ embeds: [new EmbedBuilder().setColor(0xc0392b).setTitle('🗑️ Dihapus dari Shop').setDescription(`**${doc.name}** sudah tidak dijual lagi.`)] });
   },
 };
