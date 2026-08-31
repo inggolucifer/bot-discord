@@ -149,14 +149,8 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Maksimal slot aset adalah 5.' });
         }
 
-        const slotCosts = {
-            2: 100, // 1 Gold
-            3: 2000, // 20 Gold
-            4: 8000, // 80 Gold
-            5: 10000 // 1 Jade (100 Gold)
-        };
-
-        const costSilver = slotCosts[currentSlots + 1];
+        // Formula: 100 * (1.5 ^ (currentSlots - 1)) in Silver (100 Silver = 1 Gold)
+        const costSilver = Math.floor(100 * Math.pow(1.5, currentSlots - 1));
 
         const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
         if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
