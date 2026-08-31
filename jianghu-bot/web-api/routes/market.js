@@ -214,8 +214,8 @@ router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
     }
 
     const lockKey = `player_${userId}`;
-    const acquired = await LockManager.acquire(lockKey);
-    if (!acquired) {
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) {
         return res.status(429).json({ error: 'Sistem sedang sibuk. Coba lagi dalam beberapa saat.' });
     }
 
@@ -272,7 +272,7 @@ router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
         const status = err.statusCode || 500;
         res.status(status).json({ error: err.message || 'Terjadi kesalahan pada server.' });
     } finally {
-        LockManager.release(lockKey);
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -437,10 +437,12 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
                 const Pet = require('../../models/Pet');
                 const petDoc = await Pet.findById(listing.refId).session(session);
                 if(petDoc) {
-                     player.pets.push({
-                         instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
-                         petId: petDoc._id,
-                     })
+                    for (let i = 0; i < quantity; i++) {
+                        player.pets.push({
+                            instanceId: `PET_${Date.now()}_${Math.random().toString(36).substring(2,9)}`,
+                            petId: petDoc._id,
+                        });
+                    }
                 }
             }
 
