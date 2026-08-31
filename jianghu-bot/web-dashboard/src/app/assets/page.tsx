@@ -383,7 +383,7 @@ export default function AssetsPage() {
             <div className="bg-[#111] p-3 rounded-lg border border-[#333] mb-4">
                 <p className="text-xs text-gray-400">Biaya yang dibutuhkan:</p>
                 <p className="text-lg font-bold text-gray-200 mt-1 flex items-center gap-2">
-                    {Math.floor(100 * Math.pow(1.5, assetSlots - 1))} Silver Tael
+                    {assetSlots === 1 ? '1 Gold' : assetSlots === 2 ? '20 Gold' : assetSlots === 3 ? '80 Gold' : assetSlots === 4 ? '1 Jade' : 'Max'}
                 </p>
             </div>
             {assetSlots >= 5 && (
