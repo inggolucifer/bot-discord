@@ -17,8 +17,18 @@ module.exports = {
 
     const currentSlots = player.assetSlots || 1;
 
-    // Formula: 100 * (1.5 ^ (currentSlots - 1)) in Silver (100 Silver = 1 Gold)
-    const costSilver = Math.floor(100 * Math.pow(1.5, currentSlots - 1));
+    if (currentSlots >= 5) {
+      return interaction.editReply({ content: '❌ Kamu sudah mencapai batas maksimal 5 slot aset.' });
+    }
+
+    const slotCosts = {
+      2: 100, // 1 Gold
+      3: 2000, // 20 Gold
+      4: 8000, // 80 Gold
+      5: 10000 // 1 Jade (100 Gold)
+    };
+
+    const costSilver = slotCosts[currentSlots + 1];
 
     const { hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
     if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
