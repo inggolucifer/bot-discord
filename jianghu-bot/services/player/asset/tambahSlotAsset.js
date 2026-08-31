@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../../models/Player');
 const { logTransaction } = require('../../../utils/logger');
-const { formatCurrency, parseCurrencyString } = require('../../../utils/currency');
+const { formatCurrency, parseCurrencyString, hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,10 +17,15 @@ module.exports = {
 
     const currentSlots = player.assetSlots || 1;
 
-    // Formula: 100 * (1.5 ^ (currentSlots - 1)) in Silver (100 Silver = 1 Gold)
-    const costSilver = Math.floor(100 * Math.pow(1.5, currentSlots - 1));
+    let costSilver = 0;
+    switch (currentSlots) {
+        case 1: costSilver = 100; break;      // 1 Gold
+        case 2: costSilver = 2000; break;     // 20 Gold
+        case 3: costSilver = 8000; break;     // 80 Gold
+        case 4: costSilver = 10000; break;    // 1 Jade
+        default: return interaction.editReply({ content: '❌ Kamu sudah mencapai batas maksimal slot lahan (5 Slot).' });
+    }
 
-    const { hasEnoughCurrency, payCurrency } = require('../../../utils/currency');
     if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
        // Convert costSilver to readable string
        let tempCost = costSilver;
@@ -48,9 +53,9 @@ module.exports = {
 
     await logTransaction(interaction.client, {
       guildId: interaction.guildId,
-      type: 'shop_purchase', // Or maybe we can use generic player_build_asset type or a new one
+      type: 'shop_purchase',
       fromUserId: interaction.user.id,
-      currency: 'silver', // We just use silver equivalent
+      currency: 'silver',
       amount: costSilver,
       itemDescription: `Unlock Asset Slot ke-${currentSlots + 1}`,
       balanceAfter: player.currency
