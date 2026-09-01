@@ -157,6 +157,14 @@ module.exports = {
         if (!pm) return interaction.editReply('❌ Kamu tidak memiliki manual ini.');
         if (!pm.isComprehending) return interaction.editReply('❌ Kamu belum memulai comprehend untuk manual ini.');
 
+        // Anti-Waste Protection Check
+        const msPassed = Date.now() - new Date(pm.comprehendStartTime).getTime();
+        const hoursPassed = msPassed / (1000 * 60 * 60);
+
+        if (hoursPassed >= pm.manualId.timeToComprehendHours) {
+             return interaction.editReply('❌ Meditasimu sudah mencapai puncaknya! Kamu hanya perlu melakukan `/manual upgrade`.');
+        }
+
         // Verify player has the item and it's a time skip item
         await player.populate('inventory.itemId');
         const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
