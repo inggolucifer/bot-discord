@@ -1,285 +1,187 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import api from "@/lib/api";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Loader2, Zap, AlertTriangle, ShieldCheck } from "lucide-react";
-import toast from "react-hot-toast";
-
-interface CultivationData {
-  realm: string;
-  stage: number;
-  realmIdx: number;
-  currentQi: number;
-  maxQi: number;
-  ratePerMinute: number;
-  isReadyForBreakthrough: boolean;
-  baseSuccessRate: number;
-  maxStage: number;
-  isMaxLevel: boolean;
-  pill: {
-    name: string;
-    count: number;
-    itemId: string | null;
-  };
-}
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuthStore } from '@/lib/store';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Card, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { toast } from '@/components/ui/Toast';
+import { Modal } from '@/components/ui/Modal';
+import { Flame, ArrowUpCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function CultivationPage() {
-  const [data, setData] = useState<CultivationData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [usePill, setUsePill] = useState(false);
+    const { token } = useAuthStore();
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false);
+    const [cultivationData, setCultivationData] = useState<any>(null);
+    const [breakthroughModalOpen, setBreakthroughModalOpen] = useState(false);
 
-  const fetchCultivation = async () => {
-    try {
-      const res = await api.get("/cultivation");
-      setData(res.data.data);
-      // Auto-toggle pill off if no pill available
-      if (res.data.data.pill.count === 0) setUsePill(false);
-    } catch (err: unknown) {
-      console.error(err);
-      setError(
-          err && typeof err === 'object' && 'response' in err
-              ? (err as { response: { data: { error: string } } }).response?.data?.error
-              : "Gagal memuat data kultivasi."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    useEffect(() => {
+        if (!token) {
+            router.push('/auth/login');
+            return;
+        }
+        fetchCultivation();
+        const interval = setInterval(fetchCultivation, 60000); // Poll every minute for smooth Qi updates
+        return () => clearInterval(interval);
+    }, [token]);
 
-  useEffect(() => {
-    const isMounted = true;
-
-    const init = async () => {
+    const fetchCultivation = async () => {
         try {
-            const res = await api.get("/cultivation");
-            if (isMounted) {
-                setData(res.data.data);
-                if (res.data.data.pill.count === 0) setUsePill(false);
-                setLoading(false);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/cultivation`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.data.success) {
+                setCultivationData(res.data.data);
             }
-        } catch (err: unknown) {
-            console.error(err);
-            if (isMounted) {
-                setError(
-                    err && typeof err === 'object' && 'response' in err
-                        ? (err as { response: { data: { error: string } } }).response?.data?.error
-                        : "Gagal memuat data kultivasi."
-                );
-                setLoading(false);
-            }
+        } catch (error) {
+            console.error("Failed to fetch cultivation", error);
+            // Ignore error for now, handle loading state
+        } finally {
+            setLoading(false);
         }
     };
-    init();
 
-    // Polling interval to auto-update Qi softly on UI (simulating the background growth)
-    const intervalId = setInterval(() => {
-        setData(prev => {
-            if (!prev || prev.isReadyForBreakthrough) return prev;
+    const handleBreakthrough = async (usePill: boolean) => {
+        setActionLoading(true);
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/cultivation/breakthrough`,
+                { usePill },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-            // Add (ratePerMinute / 60) per second
-            const qps = prev.ratePerMinute / 60;
-            const newQi = Math.min(prev.maxQi, prev.currentQi + qps);
-
-            return {
-                ...prev,
-                currentQi: newQi,
-                isReadyForBreakthrough: newQi >= prev.maxQi
+            if (res.data.success) {
+                if (res.data.isSuccess) {
+                    toast.show({ message: res.data.message, type: 'success' });
+                } else {
+                    toast.show({ message: res.data.message, type: 'error' });
+                }
+                setBreakthroughModalOpen(false);
+                fetchCultivation(); // Refresh immediately
             }
-        });
-    }, 1000);
+        } catch (error: any) {
+            toast.show({ message: error.response?.data?.error || 'Gagal melakukan terobosan.', type: 'error' });
+        } finally {
+            setActionLoading(false);
+        }
+    };
 
-    return () => clearInterval(intervalId);
-  }, []);
+    if (loading) return <LoadingState text="Menghubungkan ke Dantian..." />;
 
-  const handleBreakthrough = async () => {
-    if (!data?.isReadyForBreakthrough) return;
+    if (!cultivationData) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data kultivasi." icon={<Flame size={48} />} />;
 
-    setIsProcessing(true);
-    const toastId = toast.loading("Sedang mencoba menerobos batas...");
+    const { realm, stage, currentQi, maxQi, ratePerMinute, isReadyForBreakthrough, baseSuccessRate, isMaxLevel, pill } = cultivationData;
+    const progressPercent = Math.min(100, Math.max(0, (currentQi / maxQi) * 100));
 
-    try {
-      const res = await api.post("/cultivation/breakthrough", { usePill });
-
-      if (res.data.isSuccess) {
-          toast.success(res.data.message, { id: toastId, duration: 5000 });
-      } else {
-          toast.error(res.data.message, { id: toastId, duration: 6000 });
-      }
-
-      // Refresh data
-      await fetchCultivation();
-    } catch (err: unknown) {
-      toast.error(
-          err && typeof err === 'object' && 'response' in err
-              ? (err as { response: { data: { error: string } } }).response?.data?.error
-              : "Gagal melakukan terobosan.",
-          { id: toastId }
-      );
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  if (loading) {
     return (
-      <div className="flex justify-center items-center h-[50vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#c5a880]" />
-      </div>
-    );
-  }
+        <div className="space-y-6">
+            <PageHeader
+                title="Kultivasi Spiritual"
+                description="Pantau perkembangan Qi dan lakukan terobosan untuk mencapai Realm yang lebih tinggi."
+            />
 
-  if (error) {
-    return (
-      <div className="text-center text-red-500 p-8 border border-red-500/20 bg-red-500/10 rounded-md">
-        <p>{error}</p>
-        <Button variant="outline" className="mt-4" onClick={() => { setError(null); setLoading(true); fetchCultivation(); }}>
-          Coba Lagi
-        </Button>
-      </div>
-    );
-  }
-
-  if (!data) return null;
-
-  const percentage = Math.min(100, (data.currentQi / data.maxQi) * 100);
-  const currentSuccessRate = Math.min(100, data.baseSuccessRate + (usePill ? 5 : 0));
-
-  return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-
-      {/* Header Info */}
-      <div className="bg-[#111] border border-[#333] rounded-lg p-6 relative overflow-hidden">
-         {/* Subtle background glow based on ready state */}
-         <div className={`absolute -inset-1 blur-3xl opacity-20 transition-colors duration-1000 ${data.isReadyForBreakthrough ? 'bg-green-500' : 'bg-blue-600'}`}></div>
-
-         <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 justify-between">
-            <div className="text-center md:text-left">
-                <h1 className="text-2xl font-serif text-[#c5a880] mb-2 font-bold tracking-widest uppercase">
-                    Kultivasi Sistem
-                </h1>
-                <p className="text-gray-400 text-sm">Serap Qi dari alam semesta dan terobos batas kemanusiaan.</p>
-            </div>
-            <div className="flex flex-col items-center md:items-end">
-                <div className="text-3xl font-bold text-white tracking-wider font-serif">
-                   {data.realm}
-                </div>
-                <div className="text-gray-400 mt-1 flex items-center gap-2">
-                   {data.realmIdx > 0 ? (
-                       <Badge variant="outline" className="bg-[#1a1a1a] text-[#c5a880] border-[#c5a880]/30">Tahap {data.stage}</Badge>
-                   ) : (
-                       <Badge variant="outline" className="bg-[#1a1a1a] text-gray-400 border-gray-600">Dasar</Badge>
-                   )}
-                </div>
-            </div>
-         </div>
-      </div>
-
-      {/* Main Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#111] border border-[#333] rounded-lg p-6 flex flex-col justify-center items-center min-h-[250px]">
-
-             {/* Circular Progress (CSS based) */}
-             <div className="relative w-48 h-48 rounded-full flex justify-center items-center">
-                 {/* Background circle */}
-                 <svg className="w-full h-full absolute inset-0 -rotate-90" viewBox="0 0 100 100">
-                     <circle cx="50" cy="50" r="45" fill="transparent" stroke="#222" strokeWidth="8" />
-                     <circle cx="50" cy="50" r="45" fill="transparent" stroke={data.isReadyForBreakthrough ? '#2ecc71' : '#3498db'} strokeWidth="8"
-                             strokeDasharray={`${percentage * 2.827} 282.7`} strokeLinecap="round" className="transition-all duration-500" />
-                 </svg>
-                 <div className="text-center z-10 flex flex-col items-center">
-                     <span className="text-4xl font-bold font-serif text-white">{percentage.toFixed(0)}%</span>
-                     <span className="text-xs text-gray-500 uppercase tracking-widest mt-1">Qi Terkumpul</span>
-                 </div>
-
-                 {/* Sparkles if ready */}
-                 {data.isReadyForBreakthrough && (
-                     <div className="absolute inset-0 border-4 border-green-500/50 rounded-full animate-ping opacity-20"></div>
-                 )}
-             </div>
-
-             <div className="mt-6 text-center text-sm font-mono text-gray-400">
-                 {Math.floor(data.currentQi).toLocaleString()} / {data.maxQi.toLocaleString()}
-             </div>
-             <div className="mt-2 text-xs flex items-center gap-1 text-blue-400 bg-blue-900/20 px-3 py-1 rounded-full">
-                <Zap className="w-3 h-3" /> +{data.ratePerMinute.toLocaleString()} Qi/menit
-             </div>
-          </div>
-
-          <div className="bg-[#111] border border-[#333] rounded-lg p-6 flex flex-col">
-             <h2 className="text-xl font-bold text-white border-b border-[#333] pb-3 mb-4">Terobosan (Breakthrough)</h2>
-
-             {data.isMaxLevel ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center text-yellow-500 bg-yellow-900/10 border border-yellow-900/30 rounded-md p-4">
-                    <ShieldCheck className="w-12 h-12 mb-3 opacity-80" />
-                    <p className="font-semibold text-lg">Puncak Kultivasi</p>
-                    <p className="text-sm mt-1 text-yellow-500/80">Tidak ada batasan lagi yang bisa ditembus. Kamu telah mencapai kesempurnaan.</p>
-                </div>
-             ) : (
-                <>
-                    <div className="space-y-4 flex-1">
-                        <div className="flex justify-between items-center bg-[#1a1a1a] p-3 rounded border border-[#333]">
-                           <span className="text-gray-400 text-sm">Peluang Sukses Dasar</span>
-                           <span className="text-white font-mono">{data.baseSuccessRate}%</span>
-                        </div>
-
-                        <div className="flex justify-between items-center bg-[#1a1a1a] p-3 rounded border border-[#333]">
-                           <span className="text-gray-400 text-sm">Penalti Kegagalan</span>
-                           <span className="text-red-400 font-mono text-sm flex items-center gap-1">
-                               <AlertTriangle className="w-3 h-3" /> Hilang 25% Qi Max
-                           </span>
-                        </div>
-
-                        {data.realmIdx > 0 && (
-                            <div className={`p-4 rounded border ${usePill ? 'bg-green-900/20 border-green-900/50' : 'bg-[#1a1a1a] border-[#333]'}`}>
-                                <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                        <div className="text-sm font-semibold text-gray-200">{data.pill.name}</div>
-                                        <div className="text-xs text-gray-500">Meningkatkan peluang sukses +5%.</div>
-                                    </div>
-                                    <Badge variant="outline" className={data.pill.count > 0 ? "text-green-400 border-green-400/50" : "text-gray-500"}>
-                                        Dimiliki: {data.pill.count}
-                                    </Badge>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="col-span-1 lg:col-span-2 bg-[#111] border-[#c5a880]/30">
+                    <CardContent className="p-6 sm:p-8 flex flex-col items-center text-center space-y-6">
+                        <div className="relative">
+                            <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full border-4 border-[#333] flex items-center justify-center relative overflow-hidden bg-black shadow-[0_0_30px_rgba(197,168,128,0.1)]">
+                                {/* Water fill effect for Qi */}
+                                <div
+                                    className="absolute bottom-0 left-0 right-0 bg-blue-500/30 transition-all duration-1000 ease-in-out"
+                                    style={{ height: `${progressPercent}%` }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#c5a880]/20 to-transparent opacity-50" />
+                                <div className="relative z-10 flex flex-col items-center">
+                                    <Flame size={48} className="text-[#c5a880] mb-2 animate-pulse" />
+                                    <span className="text-xl sm:text-2xl font-bold font-mono text-white">
+                                        {Math.floor(currentQi).toLocaleString()}
+                                    </span>
+                                    <span className="text-xs text-gray-400">/ {maxQi.toLocaleString()} Qi</span>
                                 </div>
-                                <Button
-                                    variant={usePill ? "default" : "outline"}
-                                    size="sm"
-                                    className={`w-full mt-2 text-xs ${usePill ? 'bg-green-600 hover:bg-green-700 text-white border-none' : 'border-[#444] text-gray-400'}`}
-                                    onClick={() => setUsePill(!usePill)}
-                                    disabled={data.pill.count <= 0 || isProcessing}
-                                >
-                                    {usePill ? '✓ Pil Digunakan (+5%)' : 'Gunakan Pil'}
-                                </Button>
                             </div>
-                        )}
+                            <div className="absolute -bottom-2 -right-2 bg-[#1f402e] border border-green-800 rounded-full p-2 text-green-400 text-xs font-bold shadow-lg" title="Qi Generasi">
+                                +{ratePerMinute.toFixed(1)}/mnt
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#c5a880] mb-2">{realm}</h2>
+                            <p className="text-lg text-gray-300">Tahap {stage}</p>
+                            {isMaxLevel && (
+                                <p className="text-sm text-yellow-500 mt-2 font-semibold">Puncak Alam Semesta Tercapai!</p>
+                            )}
+                        </div>
+
+                        <div className="w-full max-w-md mt-4">
+                            {!isMaxLevel && (
+                                <Button
+                                    className="w-full bg-[#1e3a5f] hover:bg-blue-900 border border-blue-800 text-white font-bold py-3 text-lg"
+                                    disabled={!isReadyForBreakthrough}
+                                    onClick={() => setBreakthroughModalOpen(true)}
+                                >
+                                    <ArrowUpCircle className="mr-2" />
+                                    {isReadyForBreakthrough ? 'Lakukan Terobosan' : 'Qi Belum Mencukupi'}
+                                </Button>
+                            )}
+                            {!isReadyForBreakthrough && !isMaxLevel && (
+                                <div className="w-full bg-[#222] rounded-full h-2 mt-4 overflow-hidden border border-[#444]">
+                                    <div className="bg-[#c5a880] h-2 transition-all duration-500" style={{ width: `${progressPercent}%` }}></div>
+                                </div>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Breakthrough Modal */}
+            <Modal
+                isOpen={breakthroughModalOpen}
+                onClose={() => !actionLoading && setBreakthroughModalOpen(false)}
+                title="Konfirmasi Terobosan"
+            >
+                <div className="space-y-4">
+                    <p className="text-sm text-gray-300">
+                        Kamu akan mencoba menerobos batas ke tingkat selanjutnya. Proses ini memiliki risiko kegagalan yang dapat mengurangi Qi kamu secara drastis jika pondasimu tidak stabil.
+                    </p>
+                    <div className="bg-black/50 border border-[#333] rounded-lg p-4 space-y-2">
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Realm Saat Ini:</span>
+                            <span className="font-bold text-white">{realm} (Tahap {stage})</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-400">Peluang Sukses Dasar:</span>
+                            <span className="font-bold text-yellow-500">{baseSuccessRate}%</span>
+                        </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-[#333]">
-                        <Button
-                            className={`w-full py-6 text-lg font-bold tracking-widest transition-all ${
-                                data.isReadyForBreakthrough
-                                    ? 'bg-[#c5a880] text-black hover:bg-[#d6b991] shadow-[0_0_15px_rgba(197,168,128,0.5)]'
-                                    : 'bg-[#222] text-gray-500 cursor-not-allowed'
-                            }`}
-                            disabled={!data.isReadyForBreakthrough || isProcessing}
-                            onClick={handleBreakthrough}
-                        >
-                            {isProcessing ? (
-                                <Loader2 className="w-6 h-6 animate-spin" />
-                            ) : data.isReadyForBreakthrough ? (
-                                `MENEROBOS (${currentSuccessRate}%)`
-                            ) : (
-                                "QI BELUM MENCUKUPI"
-                            )}
-                        </Button>
-                    </div>
-                </>
-             )}
-          </div>
-      </div>
-    </div>
-  );
+                    {pill && pill.itemId && (
+                        <div className="bg-[#1f402e]/30 border border-green-800 rounded-lg p-4 mt-4">
+                            <p className="text-sm text-gray-300 mb-2">Kamu memiliki <span className="font-bold text-green-400">{pill.name}</span> (x{pill.count}). Menggunakan pil ini akan meningkatkan peluang sukses sebesar 25%.</p>
+                            <Button
+                                onClick={() => handleBreakthrough(true)}
+                                disabled={actionLoading || pill.count < 1}
+                                className="w-full bg-green-700 hover:bg-green-600 mb-2"
+                            >
+                                Gunakan Pil & Terobosan
+                            </Button>
+                        </div>
+                    )}
+
+                    <Button
+                        onClick={() => handleBreakthrough(false)}
+                        disabled={actionLoading}
+                        variant="outline"
+                        className="w-full"
+                    >
+                        Terobosan Tanpa Pil
+                    </Button>
+                </div>
+            </Modal>
+        </div>
+    );
 }

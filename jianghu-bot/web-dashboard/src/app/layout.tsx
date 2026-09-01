@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 import Navbar from "@/components/Navbar";
 import GlobalChatWrapper from '@/components/chat/GlobalChatWrapper';
 import AuthInitializer from "@/components/AuthInitializer";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 
 export default function RootLayout({
   children,
@@ -39,6 +40,7 @@ export default function RootLayout({
           <p>© {new Date().getFullYear()} Jianghu Roleplay Server. All Rights Reserved.</p>
         </footer>
         <GlobalChatWrapper />
+        <ToastContainer />
       </body>
     </html>
   );
