@@ -95,6 +95,7 @@ const setupServer = (client) => {
     const petRoutes = require('./routes/pet');
     const leaderboardRoutes = require('./routes/leaderboard');
     const tournamentRoutes = require('./routes/tournament');
+    const cultivationRoutes = require('./routes/cultivation');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);

@@ -147,10 +147,19 @@ function getElementAdvantage(attackerEl, defenderEl) {
 }
 
 /**
- * Simulasi satu ronde battle
+ * Simulasi satu ronde battle (dengan buff kultivasi sistem)
+ * p1CultivationRealm dan p2CultivationRealm berisi realmIndex (0-8)
  */
-function simulateRound(pet1, pet2, p1Name, p2Name) {
-  const isP1Turn = pet1.spd >= pet2.spd ? Math.random() < 0.6 : Math.random() < 0.4;
+function simulateRound(pet1, pet2, p1Name, p2Name, p1CultivationRealm = 0, p2CultivationRealm = 0) {
+  // Bonus stat dari realm: +2% per realm index
+  const p1Bonus = 1 + (p1CultivationRealm * 0.02);
+  const p2Bonus = 1 + (p2CultivationRealm * 0.02);
+
+  // Apply realm speed bonus
+  const p1Spd = pet1.spd * p1Bonus;
+  const p2Spd = pet2.spd * p2Bonus;
+
+  const isP1Turn = p1Spd >= p2Spd ? Math.random() < 0.6 : Math.random() < 0.4;
 
   let attacker = isP1Turn ? pet1 : pet2;
   let defender = isP1Turn ? pet2 : pet1;
@@ -163,8 +172,12 @@ function simulateRound(pet1, pet2, p1Name, p2Name) {
   const atkAffinityBonus = 1 + (attacker.affinity * 0.001);
   const defAffinityBonus = 1 + (defender.affinity * 0.001);
 
-  const finalAtk = attacker.atk * atkAffinityBonus * advantage;
-  const finalDef = defender.def * defAffinityBonus;
+  // Apply Cultivation Realm Bonus
+  const attackerRealmBonus = isP1Turn ? p1Bonus : p2Bonus;
+  const defenderRealmBonus = isP1Turn ? p2Bonus : p1Bonus;
+
+  const finalAtk = attacker.atk * atkAffinityBonus * advantage * attackerRealmBonus;
+  const finalDef = defender.def * defAffinityBonus * defenderRealmBonus;
 
   let rawDamage = (finalAtk * (0.85 + Math.random() * 0.3)) - (finalDef * 0.6);
   let damage = Math.max(1, Math.floor(rawDamage));
