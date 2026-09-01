@@ -79,6 +79,17 @@ module.exports = {
          let round = 1;
 
          // Helper for narrative
+
+         // Helper elements
+         const getElement = (playerObj) => (playerObj.laws && playerObj.laws.length > 0) ? playerObj.laws[0].element : 'Netral';
+         const p1Element = getElement(challenger);
+         const p2Element = getElement(opponent);
+
+         const checkAdvantage = (atkElem, defElem) => {
+             const advMap = { 'Air': 'Api', 'Api': 'Logam', 'Logam': 'Kayu', 'Kayu': 'Tanah', 'Tanah': 'Air' };
+             return advMap[atkElem] === defElem;
+         };
+
          const p1Skills = challenger.manuals.filter(m => m.manualId).map(m => m.manualId.name);
          const p2Skills = opponent.manuals.filter(m => m.manualId).map(m => m.manualId.name);
 
@@ -100,13 +111,31 @@ module.exports = {
                  dmg = Math.floor(dmg * 1.2); // 20% bonus dmg for skill proc
              }
 
+             // Elemental Advantage Check
+             const atkElem = p1Turn ? p1Element : p2Element;
+             const defElem = p1Turn ? p2Element : p1Element;
+             let elemText = '';
+             if (checkAdvantage(atkElem, defElem)) {
+                 dmg = Math.floor(dmg * 1.15); // +15% Elemental Advantage
+                 elemText = '🔥 *(Super Efektif!)*';
+             }
+
+             // Critical Hit Check
+             const spdStat = p1Turn ? p1Stats.spd : p2Stats.spd;
+             const critChance = 5 + (spdStat * 0.1);
+             let critText = '';
+             if ((Math.random() * 100) <= critChance) {
+                 dmg = Math.floor(dmg * 1.5);
+                 critText = '💥 **CRITICAL HIT!**';
+             }
+
+             const finalLine = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! ${elemText} ${critText} Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${p1Turn ? Math.max(0, p2Hp - dmg) : Math.max(0, p1Hp - dmg)})\n`;
              if (p1Turn) {
                  p2Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})\n`;
              } else {
                  p1Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})\n`;
              }
+             battleLog += finalLine;
              round++;
          }
 

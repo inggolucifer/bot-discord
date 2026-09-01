@@ -19,6 +19,12 @@ module.exports = {
         .setDescription('Mulai meditasi/comprehend untuk menaikkan level Manual')
         .addStringOption(opt => opt.setName('nama_manual').setDescription('Nama Manual milikmu').setRequired(true).setAutocomplete(true))
     )
+
+    .addSubcommand(sub => sub.setName('accelerate')
+        .setDescription('Gunakan Pil Pencerahan untuk memotong waktu meditasi')
+        .addStringOption(opt => opt.setName('nama_manual').setDescription('Manual yang sedang dimeditasi').setRequired(true).setAutocomplete(true))
+        .addStringOption(opt => opt.setName('item').setDescription('Item pemotong waktu dari inventory').setRequired(true).setAutocomplete(true))
+    )
     .addSubcommand(sub => sub.setName('upgrade')
         .setDescription('Selesaikan meditasi dan bayar biaya untuk naik level')
         .addStringOption(opt => opt.setName('nama_manual').setDescription('Nama Manual milikmu').setRequired(true).setAutocomplete(true))
@@ -27,6 +33,26 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused();
     const sub = interaction.options.getSubcommand();
+
+
+    if (sub === 'accelerate') {
+        const focusedOption = interaction.options.getFocused(true);
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId })
+            .populate('manuals.manualId')
+            .populate('inventory.itemId');
+        if (!player) return interaction.respond([]);
+
+        if (focusedOption.name === 'nama_manual') {
+             const manuals = player.manuals.map(m => m.manualId).filter(m => m && m.name.match(new RegExp(focusedOption.value, 'i'))).slice(0, 10);
+             return interaction.respond(manuals.map(m => ({ name: m.name, value: m.name })));
+        }
+        if (focusedOption.name === 'item') {
+             // Filter items that have effect "time_skip_X"
+             const items = player.inventory.filter(i => i.quantity > 0 && i.itemId && i.itemId.effect && i.itemId.effect.match(/time_skip_\d+/i));
+             const filtered = items.filter(i => i.itemId.name.match(new RegExp(focusedOption.value, 'i'))).slice(0, 10);
+             return interaction.respond(filtered.map(i => ({ name: `${i.itemId.name} (x${i.quantity})`, value: i.itemId._id.toString() })));
+        }
+    }
 
     if (sub === 'learn' || sub === 'list') {
        const manuals = await Manual.find({ guildId: interaction.guildId, name: { $regex: new RegExp(focusedValue, 'i') } }).limit(10);
@@ -112,6 +138,49 @@ module.exports = {
         await player.save();
 
         return interaction.editReply(`📖 Kamu mulai membaca **${manualToLearn.name}**. Gunakan \`/manual comprehend\` untuk menaikkan levelnya.`);
+      }
+
+
+      if (sub === 'accelerate') {
+          const manualName = interaction.options.getString('nama_manual');
+          const itemIdStr = interaction.options.getString('item');
+
+          await player.populate('inventory.itemId');
+          const pm = player.manuals.find(m => m.manualId && m.manualId.name.toLowerCase() === manualName.toLowerCase());
+
+          if (!pm) return interaction.editReply('❌ Kamu tidak memiliki manual ini.');
+          if (!pm.isComprehending) return interaction.editReply('❌ Manual ini tidak sedang dalam proses comprehend.');
+
+          const invIndex = player.inventory.findIndex(i => i.itemId && i.itemId._id.toString() === itemIdStr);
+          if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
+              return interaction.editReply('❌ Kamu tidak memiliki item tersebut.');
+          }
+
+          const itemObj = player.inventory[invIndex].itemId;
+          const match = itemObj.effect ? itemObj.effect.match(/time_skip_(\d+)/i) : null;
+
+          if (!match) {
+              return interaction.editReply('❌ Item ini tidak memiliki efek akselerasi waktu.');
+          }
+
+          const hoursToSkip = parseInt(match[1]);
+
+          // Deduct item
+          player.inventory[invIndex].quantity -= 1;
+
+          // Modify startTime backwards
+          const st = new Date(pm.comprehendStartTime);
+          st.setHours(st.getHours() - hoursToSkip);
+          pm.comprehendStartTime = st;
+
+          player.markModified('inventory');
+          player.markModified('manuals');
+          await player.save();
+
+          // Log transaction
+          await logTransaction(interaction.guildId, player.discordId, 'comprehend_manual', {}, `Consume ${itemObj.name} for ${hoursToSkip}h skip`);
+
+          return interaction.editReply(`⏳ Kamu menelan **${itemObj.name}**. Pikiranmu menjadi jernih, waktu pemahaman **${pm.manualId.name}** dipotong sebanyak **${hoursToSkip} Jam**!`);
       }
 
       if (sub === 'comprehend') {
