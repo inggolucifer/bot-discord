@@ -66,6 +66,8 @@ export default function Navbar() {
     utama: [
       { href: "/", label: "Karakter" },
       { href: "/cultivation", label: "Kultivasi" },
+      { href: "/skills", label: "Kitab & Hukum" },
+      { href: "/arena", label: "Arena Duel" },
       { href: "/inventory", label: "Inventory" },
       { href: "/pet", label: "Pet" },
       { href: "/assets", label: "Assets" },

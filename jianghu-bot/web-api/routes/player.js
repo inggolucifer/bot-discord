@@ -50,6 +50,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
         // For now, we fetch the first profile found for the user (assuming 1 main server)
         // In a full production scenario, the frontend should pass guildId.
         const player = await Player.findOne({ discordId: userId })
+            .populate('laws')
+            .populate('manuals.manualId')
             .select('-inventory -pets -assets') // Exclude heavy arrays for the simple profile view
             .lean();
 
@@ -60,10 +62,28 @@ router.get('/profile', authenticateToken, async (req, res) => {
         // Inject Discord Avatar URL from the JWT payload as fallback
         const discordAvatarUrl = req.user.avatar; // Assuming we passed it during auth
 
+        // Format Manuals to bring manual details directly into the object and flatten it slightly
+        const formattedManuals = (player.manuals || []).map(pm => {
+            if (!pm.manualId) return null;
+            return {
+                id: pm.manualId._id,
+                name: pm.manualId.name,
+                description: pm.manualId.description,
+                maxLevel: pm.manualId.maxLevel,
+                level: pm.level,
+                effectType: pm.manualId.effectType,
+                effectValue: pm.manualId.effectValue,
+                triggerChance: pm.manualId.triggerChance,
+                isComprehending: pm.isComprehending,
+                comprehendStartTime: pm.comprehendStartTime
+            };
+        }).filter(m => m !== null);
+
         res.json({
             success: true,
             data: {
                 ...player,
+                manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null
             }
         });
