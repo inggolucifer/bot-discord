@@ -82,6 +82,21 @@ module.exports = {
          const p1Skills = challenger.manuals.filter(m => m.manualId).map(m => m.manualId.name);
          const p2Skills = opponent.manuals.filter(m => m.manualId).map(m => m.manualId.name);
 
+         // Elemental Advantage check
+         const getElement = (playerObj) => playerObj.laws && playerObj.laws.length > 0 ? playerObj.laws[0].element.toLowerCase() : 'netral';
+         const p1Element = getElement(challenger);
+         const p2Element = getElement(opponent);
+
+         const checkAdvantage = (atkElem, defElem) => {
+             // Air > Api > Logam > Kayu > Tanah > Air
+             if (atkElem === 'air' && defElem === 'api') return true;
+             if (atkElem === 'api' && defElem === 'logam') return true;
+             if (atkElem === 'logam' && defElem === 'kayu') return true;
+             if (atkElem === 'kayu' && defElem === 'tanah') return true;
+             if (atkElem === 'tanah' && defElem === 'air') return true;
+             return false;
+         };
+
          while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
              // Speed determines who attacks first, simple rng for now
              const p1Turn = p1Stats.spd + Math.random() * 20 > p2Stats.spd + Math.random() * 20;
@@ -90,22 +105,44 @@ module.exports = {
              let defender = p1Turn ? opponent : challenger;
              let atkStat = p1Turn ? p1Stats.atk : p2Stats.atk;
              let defStat = p1Turn ? p2Stats.def : p1Stats.def;
+             let atkSpd = p1Turn ? p1Stats.spd : p2Stats.spd;
              let attackerSkills = p1Turn ? p1Skills : p2Skills;
+
+             let attackerElement = p1Turn ? p1Element : p2Element;
+             let defenderElement = p1Turn ? p2Element : p1Element;
 
              let dmg = Math.max(1, Math.floor(atkStat - (defStat * 0.5)));
 
+             let attackNotes = [];
              let skillText = '';
+
+             // Skill Trigger
              if (attackerSkills.length > 0 && Math.random() > 0.5) {
                  skillText = ` dengan menggunakan jurus **${attackerSkills[Math.floor(Math.random() * attackerSkills.length)]}**`;
                  dmg = Math.floor(dmg * 1.2); // 20% bonus dmg for skill proc
              }
 
+             // Elemental Advantage
+             if (checkAdvantage(attackerElement, defenderElement)) {
+                 dmg = Math.floor(dmg * 1.15);
+                 attackNotes.push('🔥 *Serangan Super Efektif!*');
+             }
+
+             // Critical Hit: Base 5% + (Spd * 0.1)% -> Base 0.05 + (Spd * 0.001)
+             const critChance = 0.05 + (atkSpd * 0.001);
+             if (Math.random() < critChance) {
+                 dmg = Math.floor(dmg * 1.5);
+                 attackNotes.push('💥 **CRITICAL HIT!**');
+             }
+
+             let extraLog = attackNotes.length > 0 ? `\n   ↳ ${attackNotes.join(' | ')}` : '';
+
              if (p1Turn) {
                  p2Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})\n`;
+                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})${extraLog}\n`;
              } else {
                  p1Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})\n`;
+                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})${extraLog}\n`;
              }
              round++;
          }
