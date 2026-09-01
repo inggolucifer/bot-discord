@@ -65,6 +65,7 @@ export default function Navbar() {
   const navLinks = {
     utama: [
       { href: "/", label: "Karakter" },
+      { href: "/cultivation", label: "Kultivasi" },
       { href: "/inventory", label: "Inventory" },
       { href: "/pet", label: "Pet" },
       { href: "/assets", label: "Assets" },
