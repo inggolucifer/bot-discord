@@ -113,6 +113,11 @@ async function handleSelectMenu(interaction) {
     if (!pet2 || !pet1) return interaction.reply({ content: '❌ Salah satu pet tidak valid.', flags: MessageFlags.Ephemeral });
     if (pet2.isLocked) return interaction.reply({ content: '❌ Pet kamu sedang dipakai di duel lain.', flags: MessageFlags.Ephemeral });
 
+    // Import utilitas kultivasi untuk mengambil index Realm
+    const { getRealmIndex } = require('../utils/cultivation');
+    const p1RealmIdx = p1.systemCultivation ? getRealmIndex(p1.systemCultivation.realm) : 0;
+    const p2RealmIdx = p2.systemCultivation ? getRealmIndex(p2.systemCultivation.realm) : 0;
+
     pet2.isLocked = true;
     p2.markModified('pets');
     await p2.save();
@@ -129,7 +134,7 @@ async function handleSelectMenu(interaction) {
 
     let winner = null;
     for (let i = 1; i <= 8; i++) { // Max 8 turn
-      const result = simulateRound(pet1, pet2, pet1.nickname || pet1.petId.name, pet2.nickname || pet2.petId.name);
+      const result = simulateRound(pet1, pet2, pet1.nickname || pet1.petId.name, pet2.nickname || pet2.petId.name, p1RealmIdx, p2RealmIdx);
       rounds.push(`**Turn ${i}**: ${result.log}`);
 
       if (pet1.hp <= 0) { winner = 2; break; }
