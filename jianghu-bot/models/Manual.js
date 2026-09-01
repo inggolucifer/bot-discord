@@ -29,8 +29,9 @@ const manualSchema = new mongoose.Schema({
   multiplierBonusPerLevel: { type: statBonusSchema, default: () => ({}) },
 
   // Unique skill effects
-  effectType: { type: String, enum: ['damage', 'lifesteal', 'stun', 'poison'], default: 'damage' },
+  effectType: { type: String, enum: ['damage', 'lifesteal', 'stun', 'poison', 'reflect', 'shield', 'cleanse'], default: 'damage' },
   effectValue: { type: Number, default: 1.2 },
+  triggerChance: { type: Number, default: 0.5, min: 0, max: 1 },
 
   createdBy: { type: String, default: null }
 }, { timestamps: true });

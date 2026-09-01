@@ -83,12 +83,14 @@ module.exports = {
          const p1Skills = challenger.manuals.filter(m => m?.manualId).map(m => ({
              name: m.manualId.name,
              type: m.manualId.effectType || 'damage',
-             value: m.manualId.effectValue || 1.2
+             value: m.manualId.effectValue || 1.2,
+             triggerChance: m.manualId.triggerChance !== undefined ? m.manualId.triggerChance : 0.5
          }));
          const p2Skills = opponent.manuals.filter(m => m?.manualId).map(m => ({
              name: m.manualId.name,
              type: m.manualId.effectType || 'damage',
-             value: m.manualId.effectValue || 1.2
+             value: m.manualId.effectValue || 1.2,
+             triggerChance: m.manualId.triggerChance !== undefined ? m.manualId.triggerChance : 0.5
          }));
 
          // Elemental Advantage check
@@ -130,6 +132,12 @@ module.exports = {
          let p1StunResist = 0;
          let p2StunResist = 0;
 
+         let p1ConsecutiveTurns = 0;
+         let p2ConsecutiveTurns = 0;
+
+         let p1PoisonStacks = 0;
+         let p2PoisonStacks = 0;
+
          while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
              // ATB tick loop
              while (p1Action < actionThreshold && p2Action < actionThreshold) {
@@ -139,6 +147,23 @@ module.exports = {
 
              // Determine whose turn it is based on ATB
              const p1Turn = p1Action >= actionThreshold && (p1Action >= p2Action || p2Action < actionThreshold);
+
+             // ATB Speed-Lock Pity System
+             if (p1Turn) {
+                 p1ConsecutiveTurns++;
+                 p2ConsecutiveTurns = 0;
+                 if (p1ConsecutiveTurns >= 3) {
+                     p2Action = actionThreshold; // Pity Boost
+                     p1ConsecutiveTurns = 0;
+                 }
+             } else {
+                 p2ConsecutiveTurns++;
+                 p1ConsecutiveTurns = 0;
+                 if (p2ConsecutiveTurns >= 3) {
+                     p1Action = actionThreshold; // Pity Boost
+                     p2ConsecutiveTurns = 0;
+                 }
+             }
 
              let attacker = p1Turn ? challenger : opponent;
              let defender = p1Turn ? opponent : challenger;
@@ -152,8 +177,34 @@ module.exports = {
              let defenderElement = p1Turn ? p2Element : p1Element;
 
              let attackNotes = [];
+             let preAttackNotes = [];
              let skillText = '';
              let isDodged = false;
+
+             // Poison DoT Processing at the start of turn
+             let activePoisonStacks = p1Turn ? p1PoisonStacks : p2PoisonStacks;
+             if (activePoisonStacks > 0) {
+                 const poisonMaxHp = p1Turn ? p1Stats.hp : p2Stats.hp;
+                 const applierAtk = p1Turn ? p2Stats.atk : p1Stats.atk;
+                 // Poison DoT base calculation. E.g., 2% of Max HP per stack
+                 let poisonDoT = Math.floor(poisonMaxHp * (0.02 * activePoisonStacks));
+                 // Cap DoT damage to not instantly wipe heavily stacked players, using the applier's ATK
+                 poisonDoT = Math.min(poisonDoT, Math.max(10, applierAtk * 2));
+
+                 if (p1Turn) {
+                     p1Hp -= poisonDoT;
+                 } else {
+                     p2Hp -= poisonDoT;
+                 }
+                 preAttackNotes.push(`🤢 *Terkena ${poisonDoT} DoT Racun (${activePoisonStacks} Stack)*`);
+
+                 // Death Check
+                 if ((p1Turn && p1Hp <= 0) || (!p1Turn && p2Hp <= 0)) {
+                     // Log the death and break the turn, ATB loop condition will catch it
+                     battleLog += `Round ${round}: **${attacker.characterName}** ${preAttackNotes.join(' | ')}\n   ↳ 💀 **Tumbang karena racun!**\n`;
+                     break;
+                 }
+             }
 
              // Dodge/Evasion Calculation (Counter-Stats & Diminishing Returns)
              const effectiveDefSpd = Math.max(0, defSpd - (atkStat * 0.1));
@@ -168,11 +219,36 @@ module.exports = {
                  effectiveDef = Math.max(0, effectiveDef);
                  dmg = Math.max(1, Math.floor(atkStat - (effectiveDef * 0.5)));
 
-                 // Skill Trigger
+                 // Attacker Skill Trigger
                  let chosenSkill = null;
-                 if (attackerSkills.length > 0 && Math.random() > 0.5) {
-                     chosenSkill = attackerSkills[Math.floor(Math.random() * attackerSkills.length)];
-                     skillText = ` dengan menggunakan jurus **${chosenSkill.name}**`;
+                 if (attackerSkills.length > 0) {
+                     const randomSkill = attackerSkills[Math.floor(Math.random() * attackerSkills.length)];
+                     // Cleanse triggers defensively at the start of attack phase if attacker has poison
+                     if (randomSkill.type === 'cleanse' && activePoisonStacks > 0) {
+                         if (Math.random() < randomSkill.triggerChance) {
+                             chosenSkill = randomSkill;
+                             skillText = ` dengan memurnikan diri menggunakan **${chosenSkill.name}** lalu menyerang`;
+                         }
+                     }
+                     // Other offensive skills
+                     else if (['damage', 'lifesteal', 'stun', 'poison'].includes(randomSkill.type)) {
+                         if (Math.random() < randomSkill.triggerChance) {
+                             chosenSkill = randomSkill;
+                             skillText = ` dengan menggunakan jurus **${chosenSkill.name}**`;
+                         }
+                     }
+                 }
+
+                 // Defender Skill Trigger (Shield / Reflect)
+                 let defenderSkills = p1Turn ? p2Skills : p1Skills;
+                 let chosenDefSkill = null;
+                 if (defenderSkills.length > 0) {
+                     const randomDefSkill = defenderSkills[Math.floor(Math.random() * defenderSkills.length)];
+                     if (['shield', 'reflect'].includes(randomDefSkill.type)) {
+                         if (Math.random() < randomDefSkill.triggerChance) {
+                             chosenDefSkill = randomDefSkill;
+                         }
+                     }
                  }
 
                  // Elemental Calc
@@ -190,6 +266,23 @@ module.exports = {
                  if (Math.random() < critChance) {
                      dmg = Math.floor(dmg * 1.5);
                      attackNotes.push('💥 **CRITICAL HIT!**');
+                 }
+
+                 // Apply Defender Skills (Shield / Reflect)
+                 if (chosenDefSkill) {
+                     if (chosenDefSkill.type === 'shield') {
+                         const reduction = Math.floor(dmg * chosenDefSkill.value);
+                         dmg = Math.max(1, dmg - reduction);
+                         attackNotes.push(`🛡️ *${defender.characterName} menahan serangan dengan ${chosenDefSkill.name} (-${reduction} DMG)*`);
+                     } else if (chosenDefSkill.type === 'reflect') {
+                         const reflectDmg = Math.floor(dmg * chosenDefSkill.value);
+                         if (p1Turn) {
+                             p1Hp -= reflectDmg;
+                         } else {
+                             p2Hp -= reflectDmg;
+                         }
+                         attackNotes.push(`🪞 *${defender.characterName} memantulkan ${reflectDmg} DMG dengan ${chosenDefSkill.name}*`);
+                     }
                  }
 
                  // Apply Unique Skill Effects
@@ -224,24 +317,38 @@ module.exports = {
                              attackNotes.push(`⚡ *Lawan terkena Stun! Action mundur*`);
                              break;
                          case 'poison':
-                             const defenderMaxHp = p1Turn ? p2Stats.hp : p1Stats.hp;
-                             const trueDamage = Math.min(Math.floor(defenderMaxHp * effectVal), atkStat * 2);
                              if (p1Turn) {
-                                 p2Hp -= trueDamage;
+                                 p2PoisonStacks++;
                              } else {
-                                 p1Hp -= trueDamage;
+                                 p1PoisonStacks++;
                              }
-                             attackNotes.push(`☠️ *Racun mematikan! -${trueDamage} True DMG*`);
+                             attackNotes.push(`☠️ *Meracuni lawan! (+1 Stack Racun)*`);
+                             break;
+                         case 'cleanse':
+                             if (p1Turn) {
+                                 p1PoisonStacks = 0;
+                                 const heal = Math.floor(p1Stats.hp * chosenSkill.value);
+                                 p1Hp = Math.min(p1Stats.hp, p1Hp + heal);
+                                 attackNotes.push(`✨ *Racun dimurnikan! Memulihkan ${heal} HP*`);
+                             } else {
+                                 p2PoisonStacks = 0;
+                                 const heal = Math.floor(p2Stats.hp * chosenSkill.value);
+                                 p2Hp = Math.min(p2Stats.hp, p2Hp + heal);
+                                 attackNotes.push(`✨ *Racun dimurnikan! Memulihkan ${heal} HP*`);
+                             }
                              break;
                      }
                  }
              }
 
              let extraLog = '';
+             if (preAttackNotes.length > 0) {
+                 extraLog += `\n   ↳ ${preAttackNotes.join(' | ')}`;
+             }
              if (isDodged) {
-                 extraLog = `\n   ↳ 💨 *Meleset! ${defender.characterName} bergerak terlalu cepat!*`;
+                 extraLog += `\n   ↳ 💨 *Meleset! ${defender.characterName} bergerak terlalu cepat!*`;
              } else if (attackNotes.length > 0) {
-                 extraLog = `\n   ↳ ${attackNotes.join(' | ')}`;
+                 extraLog += `\n   ↳ ${attackNotes.join(' | ')}`;
              }
 
              let roundLog = '';
