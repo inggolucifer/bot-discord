@@ -127,6 +127,9 @@ module.exports = {
          let p2Action = 0;
          const actionThreshold = Math.max(1, Math.max(p1Stats.spd, p2Stats.spd) * 2);
 
+         let p1StunResist = 0;
+         let p2StunResist = 0;
+
          while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
              // ATB tick loop
              while (p1Action < actionThreshold && p2Action < actionThreshold) {
@@ -197,7 +200,9 @@ module.exports = {
                              dmg = Math.floor(dmg * effectVal);
                              break;
                          case 'lifesteal':
-                             const healAmount = Math.floor(dmg * effectVal);
+                             const defenderCurrentHp = p1Turn ? p2Hp : p1Hp;
+                             const actualDamageDealt = Math.min(defenderCurrentHp, dmg);
+                             const healAmount = Math.floor(actualDamageDealt * effectVal);
                              const maxHp = p1Turn ? p1Stats.hp : p2Stats.hp;
                              if (p1Turn) {
                                  p1Hp = Math.min(maxHp, p1Hp + healAmount);
@@ -207,17 +212,20 @@ module.exports = {
                              attackNotes.push(`🩸 *Menyerap ${healAmount} HP*`);
                              break;
                          case 'stun':
-                             const gaugeReduction = actionThreshold * effectVal;
+                             const defenderStunResist = p1Turn ? p2StunResist : p1StunResist;
+                             const gaugeReduction = (actionThreshold * effectVal) * (1 - defenderStunResist);
                              if (p1Turn) {
                                  p2Action -= gaugeReduction;
+                                 p2StunResist = Math.min(0.8, p2StunResist + 0.2);
                              } else {
                                  p1Action -= gaugeReduction;
+                                 p1StunResist = Math.min(0.8, p1StunResist + 0.2);
                              }
                              attackNotes.push(`⚡ *Lawan terkena Stun! Action mundur*`);
                              break;
                          case 'poison':
                              const defenderMaxHp = p1Turn ? p2Stats.hp : p1Stats.hp;
-                             const trueDamage = Math.floor(defenderMaxHp * effectVal);
+                             const trueDamage = Math.min(Math.floor(defenderMaxHp * effectVal), atkStat * 2);
                              if (p1Turn) {
                                  p2Hp -= trueDamage;
                              } else {
@@ -263,8 +271,27 @@ module.exports = {
              round++;
          }
 
-         let winner = p1Hp > 0 ? challenger : opponent;
-         let loser = p1Hp > 0 ? opponent : challenger;
+         let winner;
+         let loser;
+
+         if (p1Hp > 0 && p2Hp > 0 && round > 20) {
+             // Tie-Breaker based on HP percentage
+             const p1HpPercentage = (p1Hp / p1Stats.hp) * 100;
+             const p2HpPercentage = (p2Hp / p2Stats.hp) * 100;
+
+             if (p1HpPercentage > p2HpPercentage) {
+                 winner = challenger;
+                 loser = opponent;
+             } else {
+                 // Defender (opponent) wins if p2HpPercentage > p1HpPercentage OR if they are equal
+                 winner = opponent;
+                 loser = challenger;
+             }
+             battleLog += `\n⏳ **Batas 20 Ronde Tercapai!**\nSisa HP ${challenger.characterName}: ${p1HpPercentage.toFixed(1)}% | ${opponent.characterName}: ${p2HpPercentage.toFixed(1)}%\n`;
+         } else {
+             winner = p1Hp > 0 ? challenger : opponent;
+             loser = p1Hp > 0 ? opponent : challenger;
+         }
 
          battleLog += `\n🏆 **${winner.characterName}** memenangkan duel ini!`;
 
