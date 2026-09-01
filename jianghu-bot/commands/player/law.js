@@ -2,6 +2,8 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, Butto
 const Player = require('../../models/Player');
 const Law = require('../../models/Law');
 const { getRealmIndex } = require('../../utils/cultivation');
+const { logTransaction } = require('../../utils/logger');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,14 +14,29 @@ module.exports = {
     .addSubcommand(sub => sub.setName('learn')
         .setDescription('Pelajari Hukum Alam (Hanya bisa di tahap Mortal)')
         .addStringOption(opt => opt.setName('nama_law').setDescription('Nama Hukum Alam yang ingin dipelajari').setRequired(true).setAutocomplete(true))
+    )
+    .addSubcommand(sub => sub.setName('reset')
+        .setDescription('Reset Hukum Alam (Membakar item langka)')
+        .addStringOption(opt => opt.setName('nama_item').setDescription('Item katalis reset (misal: Teratai Kelahiran Kembali)').setRequired(true).setAutocomplete(true))
     ),
 
   async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused();
-    const laws = await Law.find({ guildId: interaction.guildId, name: { $regex: new RegExp(focusedValue, 'i') } }).limit(10);
-    await interaction.respond(
-      laws.map(law => ({ name: law.name, value: law.name }))
-    );
+    const focusedOption = interaction.options.getFocused(true);
+    const sub = interaction.options.getSubcommand(false);
+
+    if (sub === 'learn') {
+        const laws = await Law.find({ guildId: interaction.guildId, name: { $regex: new RegExp(escapeRegex(focusedOption.value), 'i') } }).limit(10);
+        return interaction.respond(laws.map(law => ({ name: law.name, value: law.name })));
+    } else if (sub === 'reset') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('inventory.itemId');
+        if (!player) return interaction.respond([]);
+
+        const items = player.inventory
+            .filter(inv => inv.itemId && new RegExp(escapeRegex(focusedOption.value), 'i').test(inv.itemId.name))
+            .map(inv => inv.itemId)
+            .slice(0, 10);
+        return interaction.respond(items.map(item => ({ name: item.name, value: item.name })));
+    }
   },
 
   async execute(interaction) {
@@ -96,6 +113,54 @@ module.exports = {
         await player.save();
 
         return interaction.editReply(`🌌 Luar biasa! Kamu berhasil memahami **${lawToLearn.name}**. Fondasi jalan dewamu semakin kuat!`);
+      }
+
+      if (sub === 'reset') {
+        if (!player.laws || player.laws.length === 0) {
+            return interaction.editReply('❌ Kamu belum memahami Hukum Alam apapun untuk direset.');
+        }
+
+        const itemName = interaction.options.getString('nama_item');
+
+        await player.populate('inventory.itemId');
+        const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
+
+        if (inventorySlotIndex === -1 || player.inventory[inventorySlotIndex].quantity <= 0) {
+            return interaction.editReply(`❌ Kamu tidak memiliki item **${itemName}** di inventory.`);
+        }
+
+        const item = player.inventory[inventorySlotIndex].itemId;
+
+        await player.populate('laws');
+
+        const session = await Player.startSession();
+        session.startTransaction();
+        try {
+            // Deduct item
+            player.inventory[inventorySlotIndex].quantity -= 1;
+            if (player.inventory[inventorySlotIndex].quantity <= 0) {
+                player.inventory.splice(inventorySlotIndex, 1);
+            }
+            player.markModified('inventory');
+
+            // Clear laws
+            const oldLaw = player.laws[0];
+            player.laws = [];
+            player.markModified('laws');
+
+            await player.save({ session });
+            await session.commitTransaction();
+
+            await logTransaction(interaction.guildId, player.discordId, 'law_reset', {}, `Digunakan: ${item.name}`);
+
+            return interaction.editReply(`✨ Keajaiban terjadi! Kekuatan dari **${item.name}** mengalir ke seluruh meridianmu. Jiwamu disucikan kembali, menghapus ikatanmu dengan **${oldLaw.name}**. Kini kamu bebas mengukir takdir baru!`);
+        } catch (err) {
+            await session.abortTransaction();
+            console.error(err);
+            return interaction.editReply('❌ Terjadi kesalahan saat mencoba mereset Hukum Alam.');
+        } finally {
+            session.endSession();
+        }
       }
 
     } catch (e) {
