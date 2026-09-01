@@ -2,6 +2,21 @@
 const mongoose = require('mongoose');
 const { normalizeCurrency } = require('../utils/currencyNormalize');
 
+
+const playerManualSchema = new mongoose.Schema({
+  manualId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manual', required: true },
+  level: { type: Number, default: 0 }, // Level 0 means just learned, haven't finished first upgrade
+  isComprehending: { type: Boolean, default: false },
+  comprehendStartTime: { type: Date, default: null }
+}, { _id: false });
+
+const playerStatsSchema = new mongoose.Schema({
+  baseHp: { type: Number, default: 100 },
+  baseAtk: { type: Number, default: 15 },
+  baseDef: { type: Number, default: 10 },
+  baseSpd: { type: Number, default: 10 }
+}, { _id: false });
+
 const inventoryItemSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
   quantity: { type: Number, default: 1 },
@@ -65,6 +80,12 @@ const playerSchema = new mongoose.Schema({
 
   age: { type: Number, default: 16 },
   gender: { type: String, enum: ['Laki-laki', 'Perempuan', null], default: null },
+
+
+  stats: { type: playerStatsSchema, default: () => ({}) },
+  laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
+  manuals: { type: [playerManualSchema], default: [] },
+  isNormalCultivator: { type: Boolean, default: false },
 
   sect: { type: String, default: 'Tanpa Sekte (Rogue Cultivator)' },
 

@@ -76,6 +76,12 @@ module.exports = {
            return interaction.editReply('🏆 Kamu telah mencapai puncak kultivasi alam semesta! Tidak ada lagi batasan untuk diterobos.');
         }
 
+
+        // Check for Law requirement on Mortal 9 -> Qi Refining 1
+        let isMortalToQiRefining = (calcResult.realmIdx === 0 && stage === 9);
+        let warnsAboutLaw = isMortalToQiRefining && (!player.laws || player.laws.length === 0);
+        let acceptedWarning = false;
+
         // Hitung persentase dasar
         let baseSuccessRate = realmData.baseSuccessRate;
         if (stage > 0) baseSuccessRate -= (stage * 2);
@@ -113,6 +119,25 @@ module.exports = {
             .setTitle('⚡ Menerobos Batas Kultivasi')
             .setDescription(`Energi Qi-mu sudah memuncak!\n\n**Realm Saat Ini:** ${realmName} (Tahap ${stage})\n**Peluang Berhasil:** ${baseSuccessRate}%\n\nJika **GAGAL**, kamu akan kehilangan 25% dari kapasitas Max Qi-mu.\n\nApakah kamu siap menghadapi tribulasi?`);
 
+
+        if (warnsAboutLaw) {
+            embed.setColor(0xe74c3c)
+                 .setTitle('⚠️ PERINGATAN KRUSIAL: Menerobos Tanpa Hukum Alam!')
+                 .setDescription(`Kamu berada di ambang batas **Mortal** (Tahap 9). Energi Qi-mu sudah memuncak!
+
+**Realm Saat Ini:** ${realmName} (Tahap ${stage})
+**Peluang Berhasil:** ${baseSuccessRate}%
+
+**PERHATIAN:** Kamu belum mempelajari satupun **Hukum Alam (Law)**. Jika kamu menerobos sekarang, tubuh fanamu akan tertutup dari pemahaman alam semesta selamanya. Kamu akan menjadi **Kultivator Normal** tanpa bonus stat dari sistem Law!
+
+Jika **GAGAL**, kamu akan kehilangan 25% dari kapasitas Max Qi-mu.
+
+Apakah kamu YAKIN ingin menerobos?`);
+
+            btnNormal.setLabel(`Tetap Menerobos (${baseSuccessRate}%)`).setStyle(ButtonStyle.Danger);
+            btnNormal.setCustomId('cult_bt_normal_warning');
+        }
+
         if (!hasPill && calcResult.realmIdx > 0) {
             embed.setFooter({ text: `💡 Tip: Kamu bisa membeli "${pillName}" di Shop untuk meningkatkan peluang sebesar 5%.` });
         }
@@ -120,7 +145,7 @@ module.exports = {
         const response = await interaction.editReply({ embeds: [embed], components: [row] });
 
         // Tunggu klik
-        const filter = i => i.user.id === interaction.user.id && i.customId.startsWith('cult_bt_');
+        const filter = i => i.user.id === interaction.user.id && (i.customId.startsWith('cult_bt_') || i.customId === 'cult_bt_normal_warning');
         try {
             const confirmation = await response.awaitMessageComponent({ filter, time: 60000 });
 
@@ -133,6 +158,16 @@ module.exports = {
             }
 
             const usePill = confirmation.customId === 'cult_bt_pill';
+
+            if (warnsAboutLaw) {
+                if (confirmation.customId === 'cult_bt_normal_warning' || confirmation.customId === 'cult_bt_pill') {
+                     acceptedWarning = true;
+                     player.isNormalCultivator = true; // Lock out from laws
+                } else {
+                     return confirmation.update({ content: '❌ Terobosan dibatalkan.', embeds: [], components: [] });
+                }
+            }
+
 
             if (usePill) {
                  const currentPill = player.inventory.find(i => i.itemId.equals(pillItem._id));
