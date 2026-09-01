@@ -88,13 +88,30 @@ module.exports = {
          const p2Element = getElement(opponent);
 
          const checkAdvantage = (atkElem, defElem) => {
-             // Air > Api > Logam > Kayu > Tanah > Air
+             // Siklus Dasar (Wu Xing)
              if (atkElem === 'air' && defElem === 'api') return true;
              if (atkElem === 'api' && defElem === 'logam') return true;
              if (atkElem === 'logam' && defElem === 'kayu') return true;
              if (atkElem === 'kayu' && defElem === 'tanah') return true;
              if (atkElem === 'tanah' && defElem === 'air') return true;
+             // Siklus Varian (Mutasi Alam)
+             if (atkElem === 'petir' && defElem === 'angin') return true;
+             if (atkElem === 'angin' && defElem === 'es') return true;
+             if (atkElem === 'es' && defElem === 'petir') return true;
+             // Cross-Siklus
+             if (atkElem === 'api' && defElem === 'es') return true;
+             if (atkElem === 'tanah' && defElem === 'petir') return true;
+             if (atkElem === 'logam' && defElem === 'angin') return true;
+             // Siklus Kosmik
+             if ((atkElem === 'cahaya' && defElem === 'kegelapan') || (atkElem === 'kegelapan' && defElem === 'cahaya')) return true;
+
              return false;
+         };
+
+         const checkDisadvantage = (atkElem, defElem) => {
+             // Disadvantage is the inverse of Advantage, except for Cosmic
+             if ((atkElem === 'cahaya' && defElem === 'kegelapan') || (atkElem === 'kegelapan' && defElem === 'cahaya')) return false;
+             return checkAdvantage(defElem, atkElem);
          };
 
          while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
@@ -106,36 +123,55 @@ module.exports = {
              let atkStat = p1Turn ? p1Stats.atk : p2Stats.atk;
              let defStat = p1Turn ? p2Stats.def : p1Stats.def;
              let atkSpd = p1Turn ? p1Stats.spd : p2Stats.spd;
+             let defSpd = p1Turn ? p2Stats.spd : p1Stats.spd;
              let attackerSkills = p1Turn ? p1Skills : p2Skills;
 
              let attackerElement = p1Turn ? p1Element : p2Element;
              let defenderElement = p1Turn ? p2Element : p1Element;
 
-             let dmg = Math.max(1, Math.floor(atkStat - (defStat * 0.5)));
-
              let attackNotes = [];
              let skillText = '';
+             let isDodged = false;
 
-             // Skill Trigger
-             if (attackerSkills.length > 0 && Math.random() > 0.5) {
-                 skillText = ` dengan menggunakan jurus **${attackerSkills[Math.floor(Math.random() * attackerSkills.length)]}**`;
-                 dmg = Math.floor(dmg * 1.2); // 20% bonus dmg for skill proc
+             // Dodge/Evasion Calculation
+             const dodgeChance = 0.05 + (Math.max(0, defSpd - atkSpd) * 0.001);
+             if (Math.random() < dodgeChance) {
+                 isDodged = true;
              }
 
-             // Elemental Advantage
-             if (checkAdvantage(attackerElement, defenderElement)) {
-                 dmg = Math.floor(dmg * 1.15);
-                 attackNotes.push('🔥 *Serangan Super Efektif!*');
+             let dmg = 0;
+             if (!isDodged) {
+                 dmg = Math.max(1, Math.floor(atkStat - (defStat * 0.5)));
+
+                 // Skill Trigger
+                 if (attackerSkills.length > 0 && Math.random() > 0.5) {
+                     skillText = ` dengan menggunakan jurus **${attackerSkills[Math.floor(Math.random() * attackerSkills.length)]}**`;
+                     dmg = Math.floor(dmg * 1.2); // 20% bonus dmg for skill proc
+                 }
+
+                 // Elemental Calc
+                 if (checkAdvantage(attackerElement, defenderElement)) {
+                     dmg = Math.floor(dmg * 1.15);
+                     attackNotes.push('🔥 *Serangan Super Efektif!*');
+                 } else if (checkDisadvantage(attackerElement, defenderElement)) {
+                     dmg = Math.max(1, Math.floor(dmg * 0.85));
+                     attackNotes.push('🛡️ *Serangan Teredam Elemen...*');
+                 }
+
+                 // Critical Hit: Base 5% + (Spd * 0.1)% -> Base 0.05 + (Spd * 0.001)
+                 const critChance = 0.05 + (atkSpd * 0.001);
+                 if (Math.random() < critChance) {
+                     dmg = Math.floor(dmg * 1.5);
+                     attackNotes.push('💥 **CRITICAL HIT!**');
+                 }
              }
 
-             // Critical Hit: Base 5% + (Spd * 0.1)% -> Base 0.05 + (Spd * 0.001)
-             const critChance = 0.05 + (atkSpd * 0.001);
-             if (Math.random() < critChance) {
-                 dmg = Math.floor(dmg * 1.5);
-                 attackNotes.push('💥 **CRITICAL HIT!**');
+             let extraLog = '';
+             if (isDodged) {
+                 extraLog = `\n   ↳ 💨 *Meleset! ${defender.characterName} bergerak terlalu cepat!*`;
+             } else if (attackNotes.length > 0) {
+                 extraLog = `\n   ↳ ${attackNotes.join(' | ')}`;
              }
-
-             let extraLog = attackNotes.length > 0 ? `\n   ↳ ${attackNotes.join(' | ')}` : '';
 
              if (p1Turn) {
                  p2Hp -= dmg;
