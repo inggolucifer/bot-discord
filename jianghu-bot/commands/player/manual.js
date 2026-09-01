@@ -22,21 +22,36 @@ module.exports = {
     .addSubcommand(sub => sub.setName('upgrade')
         .setDescription('Selesaikan meditasi dan bayar biaya untuk naik level')
         .addStringOption(opt => opt.setName('nama_manual').setDescription('Nama Manual milikmu').setRequired(true).setAutocomplete(true))
+    )
+    .addSubcommand(sub => sub.setName('accelerate')
+        .setDescription('Gunakan item (seperti Pil Pencerahan) untuk mempercepat waktu meditasi')
+        .addStringOption(opt => opt.setName('nama_manual').setDescription('Nama Manual yang sedang dimeditasikan').setRequired(true).setAutocomplete(true))
+        .addStringOption(opt => opt.setName('nama_item').setDescription('Nama Item Akselerator (misal: Pil Pencerahan)').setRequired(true).setAutocomplete(true))
     ),
 
   async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused();
+    const focusedValue = interaction.options.getFocused(true);
     const sub = interaction.options.getSubcommand();
 
+    if (focusedValue.name === 'nama_item') {
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('inventory.itemId');
+        if (!player) return interaction.respond([]);
+        const items = player.inventory
+            .filter(inv => inv.itemId && inv.quantity > 0 && inv.itemId.effect && inv.itemId.effect.startsWith('time_skip_') && inv.itemId.name.match(new RegExp(focusedValue.value, 'i')))
+            .map(inv => ({ name: `${inv.itemId.name} (${inv.quantity}x)`, value: inv.itemId.name }))
+            .slice(0, 10);
+        return interaction.respond(items);
+    }
+
     if (sub === 'learn' || sub === 'list') {
-       const manuals = await Manual.find({ guildId: interaction.guildId, name: { $regex: new RegExp(focusedValue, 'i') } }).limit(10);
+       const manuals = await Manual.find({ guildId: interaction.guildId, name: { $regex: new RegExp(focusedValue.value, 'i') } }).limit(10);
        return interaction.respond(manuals.map(m => ({ name: m.name, value: m.name })));
     } else {
-       // my_manuals, comprehend, upgrade
+       // my_manuals, comprehend, upgrade, accelerate
        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('manuals.manualId');
        if (!player) return interaction.respond([]);
 
-       const manuals = player.manuals.map(m => m.manualId).filter(m => m && m.name.match(new RegExp(focusedValue, 'i'))).slice(0, 10);
+       const manuals = player.manuals.map(m => m.manualId).filter(m => m && m.name.match(new RegExp(focusedValue.value, 'i'))).slice(0, 10);
        return interaction.respond(manuals.map(m => ({ name: m.name, value: m.name })));
     }
   },
@@ -132,6 +147,65 @@ module.exports = {
         await player.save();
 
         return interaction.editReply(`🧘 Kamu mulai memediasikan **${pm.manualId.name}**. Butuh **${pm.manualId.timeToComprehendHours} jam** untuk menyelesaikannya.`);
+      }
+
+      if (sub === 'accelerate') {
+        const manualName = interaction.options.getString('nama_manual');
+        const itemName = interaction.options.getString('nama_item');
+
+        const pm = player.manuals.find(m => m.manualId && m.manualId.name.toLowerCase() === manualName.toLowerCase());
+        if (!pm) return interaction.editReply('❌ Kamu tidak memiliki manual ini.');
+        if (!pm.isComprehending) return interaction.editReply('❌ Kamu belum memulai comprehend untuk manual ini.');
+
+        // Verify player has the item and it's a time skip item
+        await player.populate('inventory.itemId');
+        const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
+
+        if (inventorySlotIndex === -1 || player.inventory[inventorySlotIndex].quantity <= 0) {
+            return interaction.editReply(`❌ Kamu tidak memiliki item **${itemName}** di inventory.`);
+        }
+
+        const item = player.inventory[inventorySlotIndex].itemId;
+
+        if (!item.effect || !item.effect.startsWith('time_skip_')) {
+             return interaction.editReply(`❌ Item **${item.name}** tidak bisa digunakan untuk mempercepat meditasi.`);
+        }
+
+        const hoursToSkip = parseInt(item.effect.split('_')[2], 10);
+        if (isNaN(hoursToSkip) || hoursToSkip <= 0) {
+            return interaction.editReply(`❌ Data efek item **${item.name}** tidak valid (time_skip_X).`);
+        }
+
+        const session = await Player.startSession();
+        session.startTransaction();
+
+        try {
+            // Deduct Item
+            player.inventory[inventorySlotIndex].quantity -= 1;
+            if (player.inventory[inventorySlotIndex].quantity <= 0) {
+                player.inventory.splice(inventorySlotIndex, 1);
+            }
+            player.markModified('inventory');
+
+            // Shift the start time to the past
+            const currentStartTime = new Date(pm.comprehendStartTime);
+            pm.comprehendStartTime = new Date(currentStartTime.getTime() - (hoursToSkip * 60 * 60 * 1000));
+            player.markModified('manuals');
+
+            await player.save({ session });
+            await session.commitTransaction();
+
+            await logTransaction(interaction.guildId, player.discordId, 'use_insight_pill', {}, `${item.name} on ${pm.manualId.name}`);
+
+            return interaction.editReply(`✨ Kamu menelan **${item.name}**. Pikiranmu menjadi sangat jernih! Waktu meditasi **${pm.manualId.name}** dipersingkat sebanyak **${hoursToSkip} jam**.`);
+
+        } catch (err) {
+            await session.abortTransaction();
+            console.error(err);
+            return interaction.editReply('❌ Terjadi kesalahan saat menggunakan item akselerator.');
+        } finally {
+            session.endSession();
+        }
       }
 
       if (sub === 'upgrade') {
