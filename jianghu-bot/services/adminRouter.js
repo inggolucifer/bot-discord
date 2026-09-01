@@ -1,5 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { MessageFlags } = require('discord.js');
+const Law = require('../models/Law');
+const Manual = require('../models/Manual');
+
 
 const services = {};
 const adminPath = path.join(__dirname, 'admin');
@@ -90,6 +94,13 @@ const routeMap = {
   'clearlogs': 'adminClearLogs',
   'setrole': 'adminSetRole',
   'setworkerchannel': 'adminSetWorkerChannel',
+  // LAW
+  'lawcreate': 'handleCreateLaw',
+  'lawlist': 'handleListLaw',
+  // MANUAL
+  'manualcreate': 'handleCreateManual',
+  'manuallist': 'handleListManual',
+
 };
 
 // Load all mapped files
@@ -106,7 +117,18 @@ module.exports = {
     const sub = interaction.options.getSubcommand(false);
     if (!sub) return;
 
+
     let key = group ? `${group}${sub.replace(/-/g, '')}`.toLowerCase() : sub.replace(/-/g, '').toLowerCase();
+
+    // Inline handlers for Law and Manual
+    if (key === 'lawcreate' || key === 'lawlist' || key === 'manualcreate' || key === 'manuallist') {
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
+        if (key === 'lawcreate') return handleCreateLaw(interaction);
+        if (key === 'lawlist') return handleListLaw(interaction);
+        if (key === 'manualcreate') return handleCreateManual(interaction);
+        if (key === 'manuallist') return handleListManual(interaction);
+    }
+
     const target = services[key];
 
     if (target && target.autocomplete) {
@@ -134,3 +156,65 @@ module.exports = {
     }
   }
 };
+
+
+
+async function handleCreateLaw(interaction) {
+    const name = interaction.options.getString('nama');
+    const element = interaction.options.getString('elemen');
+    const desc = interaction.options.getString('deskripsi');
+    const hpMult = interaction.options.getNumber('hp_mult') || 0;
+    const atkMult = interaction.options.getNumber('atk_mult') || 0;
+    const hpFlat = interaction.options.getNumber('hp_flat') || 0;
+    const atkFlat = interaction.options.getNumber('atk_flat') || 0;
+
+    await Law.create({
+        guildId: interaction.guildId,
+        name,
+        element,
+        description: desc,
+        multiplierBonus: { hp: hpMult, atk: atkMult, def: 0, spd: 0 },
+        flatBonus: { hp: hpFlat, atk: atkFlat, def: 0, spd: 0 },
+        createdBy: interaction.user.id
+    });
+    return interaction.editReply(`✅ Law ${name} berhasil dibuat.`);
+}
+
+async function handleListLaw(interaction) {
+    const laws = await Law.find({ guildId: interaction.guildId });
+    if(laws.length === 0) return interaction.editReply('Kosong');
+    let str = 'Laws:\n';
+    laws.forEach(l => str += `- ${l.name} (${l.element})\n`);
+    return interaction.editReply(str);
+}
+
+async function handleCreateManual(interaction) {
+    const name = interaction.options.getString('nama');
+    const desc = interaction.options.getString('deskripsi');
+    const max = interaction.options.getInteger('max_level') || 10;
+    const hrs = interaction.options.getInteger('waktu_jam') || 20;
+    const cost = interaction.options.getInteger('biaya') || 5;
+    const hpFlatLvl = interaction.options.getNumber('hp_flat_lvl') || 0;
+    const atkMultLvl = interaction.options.getNumber('atk_mult_lvl') || 0;
+
+    await Manual.create({
+        guildId: interaction.guildId,
+        name,
+        description: desc,
+        maxLevel: max,
+        timeToComprehendHours: hrs,
+        baseCost: cost,
+        flatBonusPerLevel: { hp: hpFlatLvl, atk: 0, def: 0, spd: 0 },
+        multiplierBonusPerLevel: { hp: 0, atk: atkMultLvl, def: 0, spd: 0 },
+        createdBy: interaction.user.id
+    });
+    return interaction.editReply(`✅ Manual ${name} berhasil dibuat.`);
+}
+
+async function handleListManual(interaction) {
+    const manuals = await Manual.find({ guildId: interaction.guildId });
+    if(manuals.length === 0) return interaction.editReply('Kosong');
+    let str = 'Manuals:\n';
+    manuals.forEach(m => str += `- ${m.name}\n`);
+    return interaction.editReply(str);
+}
