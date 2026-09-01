@@ -27,6 +27,39 @@ module.exports = {
       .addSubcommand(sub => sub.setName('stats').setDescription('Edit stats pet (via modal)').addStringOption(o => o.setName('nama').setDescription('Nama pet').setRequired(true).setAutocomplete(true)))
     )
 
+
+    // LAW GROUP
+    .addSubcommandGroup(group => group
+        .setName('law')
+        .setDescription('Manajemen Hukum Alam (Law)')
+        .addSubcommand(sub => sub.setName('create').setDescription('Buat Law baru')
+            .addStringOption(o => o.setName('nama').setDescription('Nama law').setRequired(true))
+            .addStringOption(o => o.setName('elemen').setDescription('Elemen (Api, Air, dll)').setRequired(true))
+            .addStringOption(o => o.setName('deskripsi').setDescription('Deskripsi').setRequired(true))
+            .addNumberOption(o => o.setName('atk_mult').setDescription('Bonus Atk Multiplier (Contoh 0.1 = 10%)'))
+            .addNumberOption(o => o.setName('hp_mult').setDescription('Bonus HP Multiplier'))
+            .addNumberOption(o => o.setName('atk_flat').setDescription('Bonus Atk Flat'))
+            .addNumberOption(o => o.setName('hp_flat').setDescription('Bonus HP Flat'))
+        )
+        .addSubcommand(sub => sub.setName('list').setDescription('List Law'))
+    )
+
+    // MANUAL GROUP
+    .addSubcommandGroup(group => group
+        .setName('manual')
+        .setDescription('Manajemen Manual/Jurus')
+        .addSubcommand(sub => sub.setName('create').setDescription('Buat Manual baru')
+            .addStringOption(o => o.setName('nama').setDescription('Nama').setRequired(true))
+            .addStringOption(o => o.setName('deskripsi').setDescription('Deskripsi').setRequired(true))
+            .addIntegerOption(o => o.setName('max_level').setDescription('Max Lvl (Default 10)'))
+            .addIntegerOption(o => o.setName('waktu_jam').setDescription('Waktu Comprehend per Lvl (Jam)'))
+            .addIntegerOption(o => o.setName('biaya').setDescription('Biaya (Gold) per Lvl'))
+            .addNumberOption(o => o.setName('atk_mult_lvl').setDescription('ATK Mult / Lvl (Misal 0.05 = 5%/lvl)'))
+            .addNumberOption(o => o.setName('hp_flat_lvl').setDescription('HP Flat / Lvl'))
+        )
+        .addSubcommand(sub => sub.setName('list').setDescription('List Manual'))
+    )
+
     // ASSET GROUP
     .addSubcommandGroup(group => group
       .setName('asset')
