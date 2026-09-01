@@ -28,6 +28,10 @@ const manualSchema = new mongoose.Schema({
   // Multiplier stat bonuses granted PER LEVEL (e.g. 0.05 for +5% per level)
   multiplierBonusPerLevel: { type: statBonusSchema, default: () => ({}) },
 
+  // Unique skill effects
+  effectType: { type: String, enum: ['damage', 'lifesteal', 'stun', 'poison'], default: 'damage' },
+  effectValue: { type: Number, default: 1.2 },
+
   createdBy: { type: String, default: null }
 }, { timestamps: true });
 

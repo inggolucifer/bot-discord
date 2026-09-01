@@ -79,9 +79,17 @@ module.exports = {
          let round = 1;
          let isLogTrimmed = false;
 
-         // Helper for narrative
-         const p1Skills = challenger.manuals.filter(m => m.manualId).map(m => m.manualId.name);
-         const p2Skills = opponent.manuals.filter(m => m.manualId).map(m => m.manualId.name);
+         // Helper for narrative and skill effects
+         const p1Skills = challenger.manuals.filter(m => m?.manualId).map(m => ({
+             name: m.manualId.name,
+             type: m.manualId.effectType || 'damage',
+             value: m.manualId.effectValue || 1.2
+         }));
+         const p2Skills = opponent.manuals.filter(m => m?.manualId).map(m => ({
+             name: m.manualId.name,
+             type: m.manualId.effectType || 'damage',
+             value: m.manualId.effectValue || 1.2
+         }));
 
          // Elemental Advantage check
          const getElement = (playerObj) => playerObj.laws && playerObj.laws.length > 0 ? playerObj.laws[0].element.toLowerCase() : 'netral';
@@ -115,9 +123,19 @@ module.exports = {
              return checkAdvantage(defElem, atkElem);
          };
 
+         let p1Action = 0;
+         let p2Action = 0;
+         const actionThreshold = Math.max(1, Math.max(p1Stats.spd, p2Stats.spd) * 2);
+
          while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
-             // Speed determines who attacks first, simple rng for now
-             const p1Turn = p1Stats.spd + Math.random() * 20 > p2Stats.spd + Math.random() * 20;
+             // ATB tick loop
+             while (p1Action < actionThreshold && p2Action < actionThreshold) {
+                 p1Action += Math.max(1, p1Stats.spd);
+                 p2Action += Math.max(1, p2Stats.spd);
+             }
+
+             // Determine whose turn it is based on ATB
+             const p1Turn = p1Action >= actionThreshold && (p1Action >= p2Action || p2Action < actionThreshold);
 
              let attacker = p1Turn ? challenger : opponent;
              let defender = p1Turn ? opponent : challenger;
@@ -134,8 +152,9 @@ module.exports = {
              let skillText = '';
              let isDodged = false;
 
-             // Dodge/Evasion Calculation
-             const dodgeChance = Math.min(0.75, 0.05 + (Math.max(0, defSpd - atkSpd) * 0.001));
+             // Dodge/Evasion Calculation (Counter-Stats & Diminishing Returns)
+             const effectiveDefSpd = Math.max(0, defSpd - (atkStat * 0.1));
+             const dodgeChance = effectiveDefSpd / (effectiveDefSpd + 50000);
              if (Math.random() < dodgeChance) {
                  isDodged = true;
              }
@@ -147,9 +166,10 @@ module.exports = {
                  dmg = Math.max(1, Math.floor(atkStat - (effectiveDef * 0.5)));
 
                  // Skill Trigger
+                 let chosenSkill = null;
                  if (attackerSkills.length > 0 && Math.random() > 0.5) {
-                     skillText = ` dengan menggunakan jurus **${attackerSkills[Math.floor(Math.random() * attackerSkills.length)]}**`;
-                     dmg = Math.floor(dmg * 1.2); // 20% bonus dmg for skill proc
+                     chosenSkill = attackerSkills[Math.floor(Math.random() * attackerSkills.length)];
+                     skillText = ` dengan menggunakan jurus **${chosenSkill.name}**`;
                  }
 
                  // Elemental Calc
@@ -161,11 +181,51 @@ module.exports = {
                      attackNotes.push('🛡️ *Serangan Teredam Elemen...*');
                  }
 
-                 // Critical Hit: Base 5% + (Spd * 0.1)% -> Base 0.05 + (Spd * 0.001)
-                 const critChance = Math.min(0.80, 0.05 + (atkSpd * 0.001));
+                 // Critical Hit (Counter-Stats & Diminishing Returns)
+                 const effectiveAtkSpd = Math.max(0, atkSpd - (defStat * 0.1));
+                 const critChance = effectiveAtkSpd / (effectiveAtkSpd + 50000);
                  if (Math.random() < critChance) {
                      dmg = Math.floor(dmg * 1.5);
                      attackNotes.push('💥 **CRITICAL HIT!**');
+                 }
+
+                 // Apply Unique Skill Effects
+                 if (chosenSkill) {
+                     const effectVal = chosenSkill.value;
+                     switch (chosenSkill.type) {
+                         case 'damage':
+                             dmg = Math.floor(dmg * effectVal);
+                             break;
+                         case 'lifesteal':
+                             const healAmount = Math.floor(dmg * effectVal);
+                             const maxHp = p1Turn ? p1Stats.hp : p2Stats.hp;
+                             if (p1Turn) {
+                                 p1Hp = Math.min(maxHp, p1Hp + healAmount);
+                             } else {
+                                 p2Hp = Math.min(maxHp, p2Hp + healAmount);
+                             }
+                             attackNotes.push(`🩸 *Menyerap ${healAmount} HP*`);
+                             break;
+                         case 'stun':
+                             const gaugeReduction = actionThreshold * effectVal;
+                             if (p1Turn) {
+                                 p2Action -= gaugeReduction;
+                             } else {
+                                 p1Action -= gaugeReduction;
+                             }
+                             attackNotes.push(`⚡ *Lawan terkena Stun! Action mundur*`);
+                             break;
+                         case 'poison':
+                             const defenderMaxHp = p1Turn ? p2Stats.hp : p1Stats.hp;
+                             const trueDamage = Math.floor(defenderMaxHp * effectVal);
+                             if (p1Turn) {
+                                 p2Hp -= trueDamage;
+                             } else {
+                                 p1Hp -= trueDamage;
+                             }
+                             attackNotes.push(`☠️ *Racun mematikan! -${trueDamage} True DMG*`);
+                             break;
+                     }
                  }
              }
 
@@ -178,11 +238,18 @@ module.exports = {
 
              let roundLog = '';
              if (p1Turn) {
-                 p2Hp -= dmg;
-                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})${extraLog}\n`;
+                 if (!isDodged) p2Hp -= dmg;
+                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${isDodged ? 0 : dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})${extraLog}\n`;
              } else {
-                 p1Hp -= dmg;
-                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})${extraLog}\n`;
+                 if (!isDodged) p1Hp -= dmg;
+                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${isDodged ? 0 : dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})${extraLog}\n`;
+             }
+
+             // Reduce gauge
+             if (p1Turn) {
+                 p1Action -= actionThreshold;
+             } else {
+                 p2Action -= actionThreshold;
              }
 
              if (!isLogTrimmed) {
