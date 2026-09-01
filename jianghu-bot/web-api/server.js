@@ -96,6 +96,7 @@ const setupServer = (client) => {
     const leaderboardRoutes = require('./routes/leaderboard');
     const tournamentRoutes = require('./routes/tournament');
     const cultivationRoutes = require('./routes/cultivation');
+    const battleRoutes = require('./routes/battle');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -107,6 +108,8 @@ const setupServer = (client) => {
     app.use('/api/pet', petRoutes);
     app.use('/api/leaderboard', leaderboardRoutes);
     app.use('/api/tournament', tournamentRoutes);
+    app.use('/api/cultivation', cultivationRoutes);
+    app.use('/api/battle', battleRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
