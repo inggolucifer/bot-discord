@@ -184,6 +184,11 @@ module.exports = {
             return interaction.editReply(`❌ Data efek item **${item.name}** tidak valid (time_skip_X).`);
         }
 
+        const hoursLeft = pm.manualId.timeToComprehendHours - hoursPassed;
+        if (hoursToSkip > hoursLeft + 2) {
+             return interaction.editReply(`❌ Hentikan! Meditasimu hanya tersisa **${hoursLeft.toFixed(1)} jam**. Menggunakan **${item.name}** (${hoursToSkip} Jam) akan membuang sebagian besar khasiatnya. Gunakan pil dengan efek yang lebih kecil.`);
+        }
+
         const session = await Player.startSession();
         session.startTransaction();
 

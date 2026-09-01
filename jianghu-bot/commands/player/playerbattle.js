@@ -77,6 +77,7 @@ module.exports = {
 
          let battleLog = `⚔️ **DUEL DIMULAI!**\n**${challenger.characterName}** vs **${opponent.characterName}**\n\n`;
          let round = 1;
+         let isLogTrimmed = false;
 
          // Helper for narrative
          const p1Skills = challenger.manuals.filter(m => m.manualId).map(m => m.manualId.name);
@@ -134,14 +135,16 @@ module.exports = {
              let isDodged = false;
 
              // Dodge/Evasion Calculation
-             const dodgeChance = 0.05 + (Math.max(0, defSpd - atkSpd) * 0.001);
+             const dodgeChance = Math.min(0.75, 0.05 + (Math.max(0, defSpd - atkSpd) * 0.001));
              if (Math.random() < dodgeChance) {
                  isDodged = true;
              }
 
              let dmg = 0;
              if (!isDodged) {
-                 dmg = Math.max(1, Math.floor(atkStat - (defStat * 0.5)));
+                 let effectiveDef = defStat - (atkSpd * 0.2);
+                 effectiveDef = Math.max(0, effectiveDef);
+                 dmg = Math.max(1, Math.floor(atkStat - (effectiveDef * 0.5)));
 
                  // Skill Trigger
                  if (attackerSkills.length > 0 && Math.random() > 0.5) {
@@ -159,7 +162,7 @@ module.exports = {
                  }
 
                  // Critical Hit: Base 5% + (Spd * 0.1)% -> Base 0.05 + (Spd * 0.001)
-                 const critChance = 0.05 + (atkSpd * 0.001);
+                 const critChance = Math.min(0.80, 0.05 + (atkSpd * 0.001));
                  if (Math.random() < critChance) {
                      dmg = Math.floor(dmg * 1.5);
                      attackNotes.push('💥 **CRITICAL HIT!**');
@@ -173,12 +176,22 @@ module.exports = {
                  extraLog = `\n   ↳ ${attackNotes.join(' | ')}`;
              }
 
+             let roundLog = '';
              if (p1Turn) {
                  p2Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})${extraLog}\n`;
+                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p2Hp)})${extraLog}\n`;
              } else {
                  p1Hp -= dmg;
-                 battleLog += `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})${extraLog}\n`;
+                 roundLog = `Round ${round}: **${attacker.characterName}** menyerang${skillText}! Memberikan **${dmg}** DMG! (${defender.characterName} HP: ${Math.max(0, p1Hp)})${extraLog}\n`;
+             }
+
+             if (!isLogTrimmed) {
+                 if (battleLog.length > 3000) {
+                     battleLog += `\n*... [Pertarungan berlangsung sangat sengit hingga kecepatan mereka tak bisa lagi diikuti oleh mata telanjang] ...*\n`;
+                     isLogTrimmed = true;
+                 } else {
+                     battleLog += roundLog;
+                 }
              }
              round++;
          }
