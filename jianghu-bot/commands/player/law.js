@@ -81,7 +81,13 @@ module.exports = {
 
         if (!lawToLearn) return interaction.editReply('❌ Hukum Alam tersebut tidak ditemukan.');
 
-        // Check if already learned
+        // Limit Law to 1
+        if (player.laws.length >= 1) {
+            const currentLaw = player.laws[0];
+            return interaction.editReply(`❌ Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan **${currentLaw.name}**.`);
+        }
+
+        // Check if already learned (though redundant now with the limit of 1, keeping for safety)
         if (player.laws.some(l => l._id.equals(lawToLearn._id))) {
             return interaction.editReply('❌ Kamu sudah memahami Hukum Alam ini.');
         }
