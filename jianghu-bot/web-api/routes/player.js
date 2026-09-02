@@ -84,7 +84,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
             data: {
                 ...player,
                 manuals: formattedManuals,
-                discordAvatar: discordAvatarUrl || null
+                discordAvatar: discordAvatarUrl || null,
+                hasCompletedTour: player.hasCompletedTour || false
             }
         });
     } catch (error) {
@@ -551,6 +552,22 @@ router.get('/public-profile/:discordId', async (req, res) => {
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     }
 });
+
+// Endpoint: POST /api/player/tour-complete
+router.post('/tour-complete', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        await Player.updateOne({ discordId: userId, guildId }, { $set: { hasCompletedTour: true } });
+        res.json({ success: true });
+    } catch (error) {
+        console.error('[API-PLAYER] Failed to complete tour:', error);
+        res.status(500).json({ error: 'Gagal mengupdate status tour.' });
+    }
+});
+
 
 // Endpoint: POST /api/player/transfer
 router.post('/transfer', authenticateToken, async (req, res) => {

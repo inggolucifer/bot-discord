@@ -7,6 +7,7 @@ const LockManager = require('../utils/lockManager');
 const { calculateCurrentQi, attemptBreakthrough, SYSTEM_REALMS, updateCultivationRole, syncPlayerCultivation } = require('../../utils/cultivation');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
+const { z } = require('zod');
 
 // Endpoint: GET /api/cultivation
 // Mengambil status real-time Qi (dihitung sejak lastSyncAt)
@@ -77,9 +78,18 @@ router.get('/', authenticateToken, async (req, res) => {
 
 // Endpoint: POST /api/cultivation/breakthrough
 // Memproses aksi breakthrough dengan atau tanpa pil dari web
+const breakthroughSchema = z.object({
+    usePill: z.boolean().optional().default(false)
+});
+
 router.post('/breakthrough', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { usePill } = req.body; // boolean
+
+    const validation = breakthroughSchema.safeParse(req.body);
+    if (!validation.success) {
+         return res.status(400).json({ error: 'Payload tidak valid.' });
+    }
+    const { usePill } = validation.data;
 
     const lockKey = `cultivation_breakthrough_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
