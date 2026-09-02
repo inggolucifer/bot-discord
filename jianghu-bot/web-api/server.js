@@ -10,8 +10,10 @@ const setupServer = (client) => {
     const app = express();
     const server = http.createServer(app);
 
+    const cookieParser = require('cookie-parser');
     // Security middlewares
     app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+    app.use(cookieParser());
 
     // Konfigurasi asal yang lebih aman
 
@@ -29,7 +31,7 @@ const setupServer = (client) => {
         origin: allowedOrigins,
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization']
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
     }));
     app.use(express.json());
 
@@ -149,8 +151,16 @@ const setupServer = (client) => {
     const ChatMessage = require('../models/ChatMessage');
 
     // Middleware Autentikasi Socket.io
+    const cookie = require('cookie');
     io.use((socket, next) => {
-        const token = socket.handshake.auth.token;
+        let token = socket.handshake.auth.token;
+
+        // Try to read from cookie if handshake token is not present
+        if (!token && socket.request.headers.cookie) {
+            const cookies = cookie.parse(socket.request.headers.cookie);
+            token = cookies.accessToken;
+        }
+
         if (!token) {
             return next(new Error('Authentication error: Token missing'));
         }
