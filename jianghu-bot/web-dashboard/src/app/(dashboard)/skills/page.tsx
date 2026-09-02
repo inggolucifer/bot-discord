@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/lib/api';
+import { motion } from 'framer-motion';
 import { useAuthStore } from '@/lib/store';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -14,33 +16,26 @@ import { useRouter } from 'next/navigation';
 export default function SkillsPage() {
     const { token } = useAuthStore();
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!token) {
             router.push('/auth/login');
-            return;
         }
-        fetchProfile();
     }, [token]);
 
-    const fetchProfile = async () => {
-        try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/player/profile`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.data.success) {
-                setProfile(res.data.data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch profile", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: rawProfile, isLoading } = useQuery({
+        queryKey: ['playerProfile'],
+        queryFn: async () => {
+            const { data } = await api.get('/player/profile');
+            return data;
+        },
+        enabled: !!token
+    });
 
-    if (loading) return <LoadingState text="Memuat Kitab & Hukum Alam..." />;
+    const profile = rawProfile?.data || rawProfile;
+
+    if (loading || isLoading) return <LoadingState text="Memuat Kitab & Hukum Alam..." />;
 
     if (!profile) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data skill." icon={<BookOpen size={48} />} />;
 
@@ -104,7 +99,8 @@ export default function SkillsPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         {laws.map((law: any) => (
-                            <Card key={law._id} className="bg-gradient-to-br from-[#111] to-[#1a1a1a] border-[#c5a880]/30 hover:border-[#c5a880] transition-colors relative overflow-hidden group">
+                            <motion.div key={law._id} whileHover={{ y: -5, scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}>
+                              <Card className="bg-gradient-to-br from-[#111] to-[#1a1a1a] border-[#c5a880]/30 hover:border-[#c5a880] transition-colors relative overflow-hidden group h-full">
                                 <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 <CardContent className="p-5 relative z-10">
                                     <div className="flex justify-between items-start mb-3">
@@ -124,7 +120,8 @@ export default function SkillsPage() {
                                         {(!law.multiplierBonus || Object.values(law.multiplierBonus).every((v: any) => v === 0)) && <div className="text-gray-500 italic">Pasif tersembunyi.</div>}
                                     </div>
                                 </CardContent>
-                            </Card>
+                              </Card>
+                            </motion.div>
                         ))}
                     </div>
                 )}
@@ -142,7 +139,8 @@ export default function SkillsPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {manuals.map((m: any) => (
-                            <Card key={m.id} className="bg-[#111] border-[#333] hover:border-[#c5a880]/50 transition-colors">
+                            <motion.div key={m.id} whileHover={{ y: -5, scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}>
+                              <Card className="bg-[#111] border-[#333] hover:border-[#c5a880]/50 transition-colors h-full">
                                 <CardContent className="p-5 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="text-xl font-bold text-white">{m.name}</h3>
@@ -164,7 +162,8 @@ export default function SkillsPage() {
                                         </div>
                                     </div>
                                 </CardContent>
-                            </Card>
+                              </Card>
+                            </motion.div>
                         ))}
                     </div>
                 )}

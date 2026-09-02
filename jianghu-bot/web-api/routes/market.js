@@ -191,6 +191,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
 
         // (We can emit Socket event here to live reload web-dashboard if we use socket, or discord message logic)
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil melakukan bid sebesar ${bidAmount} Silver.` });
         res.json({ success: true, message: `Berhasil melakukan bid sebesar ${bidAmount} Silver.` });
     } catch (error) {
         if (error instanceof CustomError) {
@@ -266,6 +267,7 @@ router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
             };
         });
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil menjual ${result.soldQuantity}x ${result.itemName}.` });
         res.json({ success: true, data: result, message: `Berhasil menjual ${result.soldQuantity}x ${result.itemName} seharga ${result.amount} ${result.currency}` });
     } catch (err) {
         console.error('Error sell to system via web:', err);
@@ -329,6 +331,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             await player.save({ session });
         });
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil membeli ${quantity} barang.` });
         res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
     } catch (error) {
         if (error instanceof CustomError) {
@@ -464,6 +467,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
             }], { session });
         });
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil membeli ${quantity} barang.` });
         res.json({ success: true, message: `Berhasil membeli ${quantity} barang.` });
     } catch (error) {
         if (error instanceof CustomError) {
@@ -576,6 +580,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
             successMessage = `Listing berhasil dibatalkan. ${target.quantity}x ${target.itemName} dikembalikan.`;
         });
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: successMessage });
         res.json({ success: true, message: successMessage });
     } catch (error) {
         if (error instanceof CustomError) {

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import api from '@/lib/api';
+import BreakthroughAnimation from '@/components/BreakthroughAnimation';
 import { useAuthStore } from '@/lib/store';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -18,60 +20,66 @@ export default function CultivationPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
-    const [cultivationData, setCultivationData] = useState<any>(null);
+
     const [breakthroughModalOpen, setBreakthroughModalOpen] = useState(false);
+    const [showBreakthroughAnim, setShowBreakthroughAnim] = useState(false);
+    const [breakthroughResult, setBreakthroughResult] = useState<any>(null);
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (!token) {
             router.push('/auth/login');
             return;
         }
-        fetchCultivation();
-        const interval = setInterval(fetchCultivation, 60000); // Poll every minute for smooth Qi updates
-        return () => clearInterval(interval);
+
+
     }, [token]);
 
-    const fetchCultivation = async () => {
-        try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/cultivation`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.data.success) {
-                setCultivationData(res.data.data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch cultivation", error);
-            // Ignore error for now, handle loading state
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: rawData, isLoading: isCultivationLoading } = useQuery({
+        queryKey: ['cultivation'],
+        queryFn: async () => {
+            const { data } = await api.get('/cultivation');
+            return data;
+        },
+        enabled: !!token,
+        refetchInterval: 60000 // Poll every minute for smooth Qi updates
+    });
 
-    const handleBreakthrough = async (usePill: boolean) => {
-        setActionLoading(true);
-        try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/cultivation/breakthrough`,
-                { usePill },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+    const cultivationData = rawData?.data || rawData;
 
-            if (res.data.success) {
-                if (res.data.isSuccess) {
-                    toast.show({ message: res.data.message, type: 'success' });
+    const breakthroughMutation = useMutation({
+        mutationFn: async (usePill: boolean) => {
+            const { data } = await api.post('/cultivation/breakthrough', { usePill });
+            return data;
+        },
+        onSuccess: (data) => {
+            if (data.success) {
+                if (data.isSuccess) {
+                    toast.show({ message: data.message, type: 'success' });
+                    setBreakthroughResult(data);
+                    setShowBreakthroughAnim(true);
                 } else {
-                    toast.show({ message: res.data.message, type: 'error' });
+                    toast.show({ message: data.message, type: 'error' });
                 }
                 setBreakthroughModalOpen(false);
-                fetchCultivation(); // Refresh immediately
+                queryClient.invalidateQueries({ queryKey: ['cultivation'] });
+                queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
             }
-        } catch (error: any) {
+        },
+        onError: (error: any) => {
             toast.show({ message: error.response?.data?.error || 'Gagal melakukan terobosan.', type: 'error' });
-        } finally {
+        },
+        onSettled: () => {
             setActionLoading(false);
         }
+    });
+
+    const handleBreakthrough = (usePill: boolean) => {
+        setActionLoading(true);
+        breakthroughMutation.mutate(usePill);
     };
 
-    if (loading) return <LoadingState text="Menghubungkan ke Dantian..." />;
+    if (loading || isCultivationLoading) return <LoadingState text="Menghubungkan ke Dantian..." />;
 
     if (!cultivationData) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data kultivasi." icon={<Flame size={48} />} />;
 
@@ -80,6 +88,7 @@ export default function CultivationPage() {
 
     return (
         <div className="space-y-6">
+            <BreakthroughAnimation isVisible={showBreakthroughAnim} onClose={() => { setShowBreakthroughAnim(false); setBreakthroughResult(null); }} />
             <PageHeader
                 title="Kultivasi Spiritual"
                 description="Pantau perkembangan Qi dan lakukan terobosan untuk mencapai Realm yang lebih tinggi."

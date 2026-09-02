@@ -13,14 +13,53 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md" }: ModalProps) {
+  const modalRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+
+      // focus trapping
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
+      document.addEventListener("keydown", handleKeyDown);
+      setTimeout(() => {
+         if (modalRef.current) {
+            const focusable = modalRef.current.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length) {
+                (focusable[0] as HTMLElement).focus();
+            }
+         }
+      }, 50);
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleKeyDown);
     }
-    return () => { document.body.style.overflow = 'unset' }
-  }, [isOpen])
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -46,6 +85,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
         )}
         role="dialog"
         aria-modal="true"
+        ref={modalRef}
       >
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#333]">
           <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#c5a880]">{title}</h2>

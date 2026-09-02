@@ -30,19 +30,7 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
   useEffect(() => {
     // Gunakan storeToken dari Zustand jika ada, kalau tidak ambil dari localStorage.
     // storeToken akan re-trigger effect ini kalau berubah (misal habis login).
-    const currentToken = storeToken || localStorage.getItem('jianghu_token');
-
-    if (currentToken) {
-      socket.auth = { token: currentToken };
-    } else {
-      socket.auth = {}; // Clear token jika tidak login
-    }
-
-    // Putuskan dulu kalau sedang terkoneksi tapi token berubah
-    if (socket.connected) {
-       socket.disconnect();
-    }
-    socket.connect();
+    setIsConnected(socket.connected);
 
     function onConnect() {
       setIsConnected(true);
@@ -79,9 +67,8 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
       socket.off('connect_error', onConnectError);
       socket.off('chat_history', onChatHistory);
       socket.off('new_message', onNewMessage);
-      socket.disconnect();
     };
-  }, [storeToken]);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
