@@ -3,6 +3,7 @@
 import { Store, ShoppingBag, Coins, Gavel, LogOut, ArrowRight, X } from "lucide-react";
 import FallbackImage from "@/components/FallbackImage";
 import { useEffect, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
@@ -52,12 +53,36 @@ const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic
 
 export default function MarketPage() {
   const { user } = useAuthStore();
-  const [shopItems, setShopItems] = useState<ShopItem[]>([]);
-  const [auctions, setAuctions] = useState<AuctionItem[]>([]);
-  const [myListings, setMyListings] = useState<PlayerListing[]>([]);
-  const [playerShopItems, setPlayerShopItems] = useState<PlayerListing[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { data: rawShop, isLoading: shopLoading } = useQuery({
+      queryKey: ['market_shop'],
+      queryFn: async () => { const { data } = await api.get('/market/shop'); return data; },
+      enabled: !!user
+  });
+  const { data: rawAuctions, isLoading: auctionsLoading } = useQuery({
+      queryKey: ['market_auctions'],
+      queryFn: async () => { const { data } = await api.get('/market/auctions'); return data; },
+      enabled: !!user
+  });
+  const { data: rawListings, isLoading: listingsLoading } = useQuery({
+      queryKey: ['market_listings'],
+      queryFn: async () => { const { data } = await api.get('/market/player-shop'); return data; },
+      enabled: !!user
+  });
+  const { data: rawMyListings, isLoading: myListingsLoading } = useQuery({
+      queryKey: ['market_my_listings'],
+      queryFn: async () => { const { data } = await api.get('/market/player-shop/my-listings'); return data; },
+      enabled: !!user
+  });
+
+  const shopItems = rawShop?.data || [];
+  const auctions = rawAuctions?.data || [];
+  const playerShopItems = rawListings?.data || [];
+  const myListings = rawMyListings?.data || [];
+  const isMarketLoading = shopLoading || auctionsLoading || listingsLoading || myListingsLoading;
 
   const [activeTab, setActiveTab] = useState<'shop' | 'player' | 'auction' | 'my-shop'>('shop');
   const [activeRank, setActiveRank] = useState<string>('all');
@@ -83,35 +108,9 @@ export default function MarketPage() {
   const [buyQuantity, setBuyQuantity] = useState(1);
   const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const [shopRes, auctionRes, playerShopRes] = await Promise.all([
-        api.get('/market/shop'),
-        api.get('/market/auctions'),
-        api.get('/market/player-shop')
-      ]);
 
-      setShopItems(shopRes.data.data);
-      setAuctions(auctionRes.data.data);
-      setPlayerShopItems(playerShopRes.data.data);
 
-      if (user) {
-         const myListingRes = await api.get('/market/player-shop/my-listings');
-         setMyListings(myListingRes.data.data);
-      }
-    } catch (err) {
-      console.error(err);
-      setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal memuat data pasar.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    setTimeout(() => fetchData(), 0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
 
   const handleSellToSystem = async () => {
@@ -126,7 +125,11 @@ export default function MarketPage() {
           setSellSystemModalOpen(false);
           setSellSystemItemId('');
           setSellSystemQuantity(1);
-          await setTimeout(() => fetchData(), 0);
+          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
+queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
+queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+
       } catch(err: any) {
           setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item ke sistem.');
       } finally {
@@ -152,7 +155,11 @@ export default function MarketPage() {
           const res = await api.post(endpoint, payload);
           alert(res.data.message);
           setBuyModalOpen(false);
-          await setTimeout(() => fetchData(), 0);
+          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
+queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
+queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+
       } catch (err) {
           alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membeli item.');
       } finally {
@@ -168,7 +175,11 @@ export default function MarketPage() {
       try {
           const res = await api.post('/market/auction/bid', { auctionId, bidAmount });
           alert(res.data.message);
-          await setTimeout(() => fetchData(), 0);
+          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
+queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
+queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+
       } catch (err) {
           alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal melakukan bid.');
       } finally {
@@ -214,7 +225,11 @@ export default function MarketPage() {
           });
           // No success message state exists in this component, just closing the modal is fine. (Or could add a state if needed)
           setSellModalOpen(false);
-          await setTimeout(() => fetchData(), 0);
+          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
+queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
+queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+
       } catch(err: any) {
           setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item.');
       } finally {
@@ -228,7 +243,11 @@ export default function MarketPage() {
           const res = await api.post('/market/player-shop/my-listings/cancel', { listingId });
           alert(res.data.message);
           setConfirmCancelId(null);
-          await setTimeout(() => fetchData(), 0);
+          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
+queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
+queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+
       } catch (err) {
           alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membatalkan listing.');
       } finally {
@@ -336,11 +355,11 @@ export default function MarketPage() {
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {shopItems.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
+                  {shopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
                     <div className="col-span-full py-8 text-center text-gray-500">
                       Toko sedang kosong atau tidak ada item dengan rank tersebut.
                     </div>
-                  ) : shopItems.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).map(item => (
+                  ) : shopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
                     <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 hover:shadow-md ${getRarityColor(item.rank || "common")}`}>
                       <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
@@ -390,11 +409,11 @@ export default function MarketPage() {
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {myListings.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
+                  {myListings?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
                     <div className="col-span-full py-8 text-center text-gray-500 bg-black/30 rounded-lg border border-dashed border-[#333]">
                       Kamu belum memiliki jualan aktif di Toko Player. Gunakan command Discord <code className="bg-black text-gray-300 px-1 rounded">/market jual</code> untuk mulai berjualan.
                     </div>
-                  ) : myListings.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).map(item => (
+                  ) : myListings?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
                     <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 ${getRarityColor(item.rank || "common")}`}>
                       <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
@@ -447,9 +466,9 @@ export default function MarketPage() {
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {playerShopItems.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
+                  {playerShopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
                     <div className="col-span-full py-8 text-center text-gray-500">Toko Player sedang kosong.</div>
-                  ) : playerShopItems.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).map(item => (
+                  ) : playerShopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
                     <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 ${getRarityColor(item.rank || "common")}`}>
                       <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
@@ -496,7 +515,7 @@ export default function MarketPage() {
                 </div>
 
                 <div className="p-4 sm:p-6 grid gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {auctions.filter(item => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).map(auction => (
+                  {auctions?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((auction: any) => (
                     <div key={auction.id} className={`bg-black/60 border rounded-lg p-4 transition-all relative overflow-hidden group hover:shadow-md ${getRarityColor(auction.rank || "common")}`}>
                       <div className="absolute top-0 right-0 bg-red-900/80 text-[9px] sm:text-[10px] px-2 py-1 rounded-bl-md text-red-100 font-mono">
                         Sisa: {new Date(auction.timeLeft).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
@@ -530,7 +549,7 @@ export default function MarketPage() {
                     </div>
                   ))}
 
-                  {auctions.length === 0 && (
+                  {auctions?.length === 0 && (
                       <div className="col-span-full border border-dashed border-[#333] bg-black/20 rounded-lg p-6 text-center text-gray-500 text-sm">
                         Tidak ada item lelang saat ini.
                       </div>

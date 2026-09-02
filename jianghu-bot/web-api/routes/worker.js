@@ -58,6 +58,7 @@ router.post('/stop-mandiri', authenticateToken, async (req, res) => {
         player.customStatus = null;
         await player.save();
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: 'Berhenti bekerja berhasil!' });
         res.json({ success: true, message: 'Kamu berhenti bekerja di asetmu.' });
     } catch (error) {
         console.error('[API-WORKER] Stop mandiri error:', error);
