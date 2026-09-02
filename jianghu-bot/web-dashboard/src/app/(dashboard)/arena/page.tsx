@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -16,8 +17,21 @@ export default function ArenaPage() {
     const { token, user } = useAuthStore();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    const [players, setPlayers] = useState<any[]>([]);
-    const [selectedOpponentId, setSelectedOpponentId] = useState('');
+        const [selectedOpponentId, setSelectedOpponentId] = useState('');
+
+    const { data: rawOpponents, isLoading: isOpponentsLoading } = useQuery({
+        queryKey: ['arenaOpponents'],
+        queryFn: async () => {
+            const { data } = await api.get('/leaderboard/wealth?limit=50');
+            return data;
+        },
+        enabled: !!token
+    });
+
+    const opponents = React.useMemo(() => {
+        if (!rawOpponents || !rawOpponents.data) return [];
+        return rawOpponents.data.filter((p: any) => p.discordId !== user?.id);
+    }, [rawOpponents, user]);
     const [searchQuery, setSearchQuery] = useState('');
 
     const [isBattling, setIsBattling] = useState(false);
@@ -31,7 +45,6 @@ export default function ArenaPage() {
             router.push('/auth/login');
             return;
         }
-        fetchPlayers();
     }, [token]);
 
     // Auto-scroll logs
@@ -41,22 +54,7 @@ export default function ArenaPage() {
         }
     }, [currentLogIndex, battleData]);
 
-    const fetchPlayers = async () => {
-        try {
-            // Kita bisa menggunakan endpoint leaderboard untuk mendapatkan daftar player
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/leaderboard/wealth?limit=50`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.data.success) {
-                // Filter out current user
-                setPlayers(res.data.data.filter((p: any) => p.discordId !== user?.id));
-            }
-        } catch (error) {
-            console.error("Failed to fetch players", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+
 
     const startBattle = async () => {
         if (!selectedOpponentId) {
@@ -69,7 +67,7 @@ export default function ArenaPage() {
         setCurrentLogIndex(0);
 
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/battle/simulate`,
+            const res = await api.post('/battle/simulate',
                 { opponentDiscordId: selectedOpponentId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -109,7 +107,7 @@ export default function ArenaPage() {
         setCurrentLogIndex(0);
     };
 
-    const filteredPlayers = players.filter(p => p.characterName.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredPlayers = opponents?.filter((p: any) => p.characterName.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const getLogIcon = (type: string) => {
         switch(type) {
@@ -128,7 +126,7 @@ export default function ArenaPage() {
         }
     };
 
-    if (loading) return <LoadingState text="Menyiapkan Arena Duel..." />;
+    if (loading || isOpponentsLoading) return <LoadingState text="Menyiapkan Arena Duel..." />;
 
     return (
         <div className="space-y-6">
@@ -155,7 +153,7 @@ export default function ArenaPage() {
                                 />
                             </div>
                             <div className="space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
-                                {filteredPlayers.map(p => (
+                                {filteredPlayers?.map((p: any) => (
                                     <div
                                         key={p.discordId}
                                         onClick={() => setSelectedOpponentId(p.discordId)}
@@ -172,7 +170,7 @@ export default function ArenaPage() {
                                         </div>
                                     </div>
                                 ))}
-                                {filteredPlayers.length === 0 && <p className="text-center text-sm text-gray-500 py-4">Lawan tidak ditemukan.</p>}
+                                {filteredPlayers?.length === 0 && <p className="text-center text-sm text-gray-500 py-4">Lawan tidak ditemukan.</p>}
                             </div>
 
                             <Button

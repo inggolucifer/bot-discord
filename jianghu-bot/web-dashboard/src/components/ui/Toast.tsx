@@ -22,14 +22,26 @@ export function Toast({ message, type = "info", onClose }: { message: string, ty
     type === "error" ? "bg-[#8b0000] border-red-900 text-white" :
     "bg-[#111] border-[#c5a880]/30 text-[#c5a880]";
 
+  // Accessibility: Allow escaping toast with Escape key
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className={cn(
+    <div
+      role="alert"
+      aria-live="assertive"
+      className={cn(
       "pointer-events-auto flex w-full max-w-sm items-center justify-between space-x-4 overflow-hidden rounded-md border p-4 shadow-lg transition-all",
       "animate-in slide-in-from-top-full fade-in duration-300",
       bgColor
     )}>
       <div className="flex-1 text-sm font-medium">{message}</div>
-      <button onClick={onClose} className="rounded-full p-1 hover:bg-black/20">
+      <button onClick={onClose} aria-label="Tutup notifikasi" className="rounded-full p-1 hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-white">
         <X className="h-4 w-4" />
       </button>
     </div>

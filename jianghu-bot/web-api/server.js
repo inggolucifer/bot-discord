@@ -33,9 +33,26 @@ const setupServer = (client) => {
     }));
     app.use(express.json());
 
+    const io = new Server(server, {
+        path: '/api/socket.io',
+        cors: {
+            origin: allowedOrigins,
+            methods: ["GET", "POST", "OPTIONS"],
+            credentials: true
+        },
+        transports: ['websocket', 'polling']
+    });
+
+
+    // io moved up
+
+
+    // io moved up
+
+
     // Basic Rate Limiting to prevent brute force/spam API calls
     const apiLimiter = rateLimit({
-        windowMs: 1 * 60 * 1000, // 1 minutes
+        windowMs: 1 * 60 * 1000, // 1 minute windows
         max: 60, // Limit each IP to 60 requests per windowMs
         message: 'Terlalu banyak permintaan dari IP ini, silakan coba lagi setelah 1 menit.',
         standardHeaders: true,
@@ -44,9 +61,9 @@ const setupServer = (client) => {
 
     // Strict limiter for transactions (Anti-Spam Click)
     const transactionLimiter = rateLimit({
-        windowMs: 1 * 60 * 1000, // 1 minute
-        max: 15, // Max 15 transactions per minute per IP
-        message: 'Anda melakukan transaksi terlalu cepat. Mohon perlambat.'
+        windowMs: 3 * 1000, // 3 seconds window
+        max: 1, // Max 1 transaction per 3 seconds per IP
+        message: 'Aksi terlalu cepat, harap tunggu beberapa detik (Anti-Spam).'
     });
 
     // Kecualikan /api/socket.io dari apiLimiter agar tidak memutus polling Socket.io
@@ -81,6 +98,7 @@ const setupServer = (client) => {
     // Pass discord client to req for routes to use (e.g. fetching user info)
     app.use((req, res, next) => {
         req.discordClient = client;
+        req.io = io;
         next();
     });
 
@@ -124,15 +142,7 @@ const setupServer = (client) => {
     });
 
     // Setup Socket.io
-    const io = new Server(server, {
-        path: '/api/socket.io',
-        cors: {
-            origin: allowedOrigins,
-            methods: ["GET", "POST", "OPTIONS"],
-            credentials: true
-        },
-        transports: ['websocket', 'polling']
-    });
+    // io moved up
 
     const jwt = require('jsonwebtoken');
     const { JWT_SECRET } = require('./utils/jwtSecret');
@@ -215,6 +225,8 @@ const setupServer = (client) => {
                 console.error('[SOCKET] Failed to save chat message:', error);
             }
         });
+
+
     });
 
     return { app, server, io };

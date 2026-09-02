@@ -184,6 +184,7 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
              }
         }
 
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: 'Terobosan berhasil!' });
         res.json({
             success: true,
             isSuccess: isSuccess,
