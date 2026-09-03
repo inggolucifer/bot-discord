@@ -1,221 +1,95 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
+const Item = require('../../models/Item');
+const authenticateToken = require('../middleware/auth');
 const LockManager = require('../utils/lockManager');
-const { authenticateToken } = require('../middlewares/auth');
-const Asset = require('../../models/Asset');
-const { isUnderConstruction, checkMaterials, consumeMaterials } = require('../../utils/crafting');
+const mongoose = require('mongoose');
 
-// Endpoint to fetch player's inventory
-router.get('/', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.userId;
+// Endpoint: Apply Time-Skip Item (e.g., Insight Pill)
+router.post('/use-time-skip', authenticateToken, async (req, res) => {
+    const { itemId } = req.body;
+    const userId = req.user.id;
+    const guildId = req.user.guildId; // or appropriate retrieval
 
-        // Populate the item details inside the inventory array
-        const player = await Player.findOne({ discordId: userId })
-            .populate('inventory.itemId')
-            .lean();
-
-        if (!player) {
-            return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-        }
-
-        // Format the output for the frontend
-
-        const getEmojiForShopItem = (itemType, category) => {
-            if (category === 'asset') return '🏯';
-            if (category === 'pet') return '🐉';
-
-            switch(itemType) {
-              case 'weapon': return '🗡️';
-              case 'cloth': return '👘';
-              case 'herb': return '🌿';
-              case 'pill': return '💊';
-              case 'material': return '🧱';
-              case 'artifact': return '🔮';
-              case 'accessories': return '💍';
-              default: return '📦';
-            }
-        };
-
-        const formattedInventory = player.inventory.map(slot => ({
-            id: slot.itemId._id,
-            name: slot.itemId.name,
-            description: slot.itemId.description,
-            type: slot.itemId.category,
-            rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
-            quantity: slot.quantity,
-            price: slot.itemId.basePrice, // Changed to match DB schema
-            priceCurrency: slot.itemId.priceCurrency || 'copper',
-            imageUrl: slot.itemId.imageUrl, // Include image URL
-            emoji: getEmojiForShopItem(slot.itemId.category, 'item')
-        }));
-
-        res.json({
-            success: true,
-            data: formattedInventory,
-            meta: {
-                totalSlots: player.inventory.length,
-                maxSlots: 50 // Fixed capacity as mentioned in typical game rules, can be made dynamic from DB later
-            }
-        });
-    } catch (error) {
-        console.error('[API-INVENTORY] Error fetching inventory:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
-    }
-});
-
-// Example Anti-Cheat protected endpoint: Discarding an item
-router.post('/discard', authenticateToken, async (req, res) => {
-    const userId = req.user.userId;
-    const { itemId, quantity } = req.body;
-
-    if (!itemId || !quantity || quantity <= 0) {
-        return res.status(400).json({ error: 'Parameter tidak valid.' });
+    if (!itemId) {
+        return res.status(400).json({ message: 'Missing itemId parameter.' });
     }
 
-    // 🔒 MUTEX LOCK: Prevent race conditions (Spamming discard to trigger bugs)
-    const lockKey = `inventory_discard_${userId}`;
-    const releaseLock = await LockManager.acquire(lockKey);
-
-    try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-
-        const inventoryIndex = player.inventory.findIndex(
-            (i) => i.itemId.toString() === itemId
-        );
-
-        if (inventoryIndex === -1) {
-            return res.status(400).json({ error: 'Item tidak ditemukan di inventory.' });
-        }
-
-        if (player.inventory[inventoryIndex].quantity < quantity) {
-            return res.status(400).json({ error: 'Jumlah item tidak mencukupi.' });
-        }
-
-        // Apply changes
-        player.inventory[inventoryIndex].quantity -= quantity;
-
-        // Clean up if quantity hits 0
-        if (player.inventory[inventoryIndex].quantity <= 0) {
-            player.inventory.splice(inventoryIndex, 1);
-        }
-
-        await player.save();
-
-        res.json({ success: true, message: 'Item berhasil dibuang.' });
-    } catch (error) {
-        console.error('[API-INVENTORY] Discard error:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
-    } finally {
-        if (typeof releaseLock === 'function') releaseLock();
-    }
-});
-
-// Endpoint: GET /api/inventory/craft-recipes
-router.get('/craft-recipes', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
-
-        const player = await Player.findOne({ discordId: userId, guildId }).lean();
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-
-        const ownedAssetIds = player.assets.map((a) => a.assetId);
-        const assets = await Asset.find({
-            _id: { $in: ownedAssetIds },
-            isCraftingStation: true
-        }).lean();
-
-        const stations = assets.map(asset => {
-            const owned = player.assets.find(a => a.assetId.toString() === asset._id.toString());
-            return {
-                id: asset._id,
-                name: asset.name,
-                isUnderConstruction: isUnderConstruction(owned),
-                recipes: asset.recipes || []
-            };
-        });
-
-        res.json({ success: true, data: stations });
-    } catch (error) {
-        console.error('[API-INVENTORY] Error fetching craft recipes:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
-    }
-});
-
-// Endpoint: POST /api/inventory/craft
-router.post('/craft', authenticateToken, async (req, res) => {
-    const userId = req.user.userId;
-    const { assetId, recipeName, times } = req.body;
-    const multiplier = times && times > 0 ? times : 1;
-
-    if (!assetId || !recipeName) {
-        return res.status(400).json({ error: 'Parameter tidak valid.' });
-    }
-
-    const lockKey = `inventory_craft_${userId}`;
+    const lockKey = `inventory_use_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
-         return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+        return res.status(429).json({ message: 'Terlalu banyak permintaan berurutan. Tunggu sebentar.' });
     }
 
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
-
-        const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-        if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
-
-        const asset = await Asset.findOne({ _id: assetId });
-        if (!asset) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
-        if (!asset.isCraftingStation) return res.status(400).json({ error: 'Aset ini bukan stasiun crafting.' });
-
-        const owned = player.assets.find((a) => a.assetId.equals(asset._id));
-        if (!owned) return res.status(403).json({ error: `Kamu tidak memiliki aset ${asset.name}.` });
-        if (isUnderConstruction(owned)) return res.status(400).json({ error: `Aset ${asset.name} masih dalam pembangunan.` });
-
-        const recipe = asset.recipes.find((r) => r.recipeName.toLowerCase() === recipeName.toLowerCase());
-        if (!recipe) return res.status(404).json({ error: 'Resep tidak ditemukan.' });
-
-        // Multiply recipe requirements
-        const scaledRecipe = {
-            ...recipe.toObject(),
-            resultQuantity: recipe.resultQuantity * multiplier,
-            materials: recipe.materials.map(m => ({ ...m.toObject(), quantity: m.quantity * multiplier }))
-        };
-
-        const check = checkMaterials(player.inventory, scaledRecipe);
-        if (!check.ok) {
-            const missingLines = check.missing.map((m) => `${m.itemName}: butuh ${m.need}, kamu punya ${m.have}`).join(', ');
-            return res.status(400).json({ error: `Bahan tidak cukup: ${missingLines}` });
+        const player = await Player.findOne({ discordId: userId }).session(session);
+        if (!player) {
+            throw new Error('Player not found');
         }
 
-        player.inventory = consumeMaterials(player.inventory, scaledRecipe);
-
-        if (scaledRecipe.resultItemId) {
-            const resultOwned = player.inventory.find((i) => i.itemId.equals(scaledRecipe.resultItemId));
-            if (resultOwned) resultOwned.quantity += scaledRecipe.resultQuantity;
-            else player.inventory.push({ itemId: scaledRecipe.resultItemId, quantity: scaledRecipe.resultQuantity });
+        const invItemIndex = player.inventory.findIndex(i => i.itemId === itemId);
+        if (invItemIndex === -1 || player.inventory[invItemIndex].quantity < 1) {
+            return res.status(400).json({ message: 'Item tidak ditemukan di inventarismu atau jumlah tidak cukup.' });
         }
 
-        await player.save();
+        // We need to fetch the Item to see if it's a time skip
+        const itemDef = await Item.findOne({ id: itemId, guildId: player.guildId }).session(session);
+        if (!itemDef) {
+            return res.status(404).json({ message: 'Definisi item tidak ditemukan.' });
+        }
 
-        const TransactionLog = require('../../models/TransactionLog');
-        await TransactionLog.create({
-            guildId,
-            type: 'craft',
-            description: `[${player.characterName}] craft ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName} di ${asset.name}.`
-        });
+        if (!itemDef.effect || !itemDef.effect.startsWith('time_skip_')) {
+            return res.status(400).json({ message: 'Item ini bukan item time-skip (konsumsi) yang valid.' });
+        }
 
-        res.json({ success: true, message: `Berhasil membuat ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName}!` });
-    } catch (error) {
-        console.error('[API-INVENTORY] Crafting error:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan pada server saat crafting.' });
+        // Example format: time_skip_12
+        const hoursToSkip = parseInt(itemDef.effect.split('_')[2]);
+        if (isNaN(hoursToSkip) || hoursToSkip <= 0) {
+            return res.status(400).json({ message: 'Efek time-skip tidak valid.' });
+        }
+
+        // Perform time skip logic. For example, if they are cultivating, adjust breakthroughEndTime or meditationEndTime.
+        // Assuming `meditationEndTime` is what time-skip applies to.
+        if (!player.meditationEndTime || player.meditationEndTime < Date.now()) {
+            return res.status(400).json({ message: 'Kamu tidak sedang bermeditasi/kultivasi.' });
+        }
+
+        const currentEndTime = new Date(player.meditationEndTime).getTime();
+        const now = Date.now();
+        const msLeft = currentEndTime - now;
+        const hoursLeft = msLeft / (1000 * 60 * 60);
+
+        // Overkill check
+        if (hoursToSkip > hoursLeft + 2) {
+             return res.status(400).json({ message: 'Membuang-buang efek! Waktu skip melebihi sisa waktu terlalu banyak (overkill > 2 jam).' });
+        }
+
+        const newEndTime = new Date(currentEndTime - (hoursToSkip * 60 * 60 * 1000));
+        player.meditationEndTime = newEndTime < now ? new Date(now - 1000) : newEndTime; // if it goes negative, finish immediately
+
+        // Deduct item
+        player.inventory[invItemIndex].quantity -= 1;
+        if (player.inventory[invItemIndex].quantity <= 0) {
+            player.inventory.splice(invItemIndex, 1);
+        }
+
+        await player.save({ session });
+        await session.commitTransaction();
+
+        const io = req.app.get('io');
+        if (io) io.to(userId).emit('user_update', { message: `Menggunakan ${itemDef.name}, waktu terpotong ${hoursToSkip} jam!` });
+
+        return res.json({ message: `Berhasil menggunakan ${itemDef.name}. Waktu kultivasi berkurang ${hoursToSkip} jam.` });
+    } catch (err) {
+        await session.abortTransaction();
+        console.error('Error in /inventory/use-time-skip:', err);
+        return res.status(500).json({ message: 'Terjadi kesalahan internal server.' });
     } finally {
+        session.endSession();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });

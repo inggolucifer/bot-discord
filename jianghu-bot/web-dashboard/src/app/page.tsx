@@ -43,6 +43,10 @@ export default function Home() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
 
+  // Restart Karakter
+  const [restartModalOpen, setRestartModalOpen] = useState(false);
+  const [restartConfirmText, setRestartConfirmText] = useState('');
+
   const fetchProfile = async () => {
     try {
       const res = await api.get('/player/profile');
@@ -110,8 +114,79 @@ export default function Home() {
           setTransferTargetName('');
           setTransferAmount(0);
           await setTimeout(() => fetchProfile(), 0);
-      } catch (err: any) {
-          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal transfer.' });
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal transfer.' });
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+  const openTransferItemModal = async () => {
+      setActionLoading(true);
+      try {
+          const res = await api.get('/inventory');
+          setInventoryItems(res.data.data);
+          if (res.data.data.length > 0) {
+              setTransferItemId(res.data.data[0].id);
+          }
+          setTransferItemModalOpen(true);
+      } catch (err) {
+          console.error(err);
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+  const handleTransferItem = async () => {
+      if (!transferItemTargetName || !transferItemId || transferItemQuantity <= 0) return;
+      setActionLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/player/transfer-item-request', {
+              targetName: transferItemTargetName,
+              itemId: transferItemId,
+              quantity: transferItemQuantity
+          });
+          setActionMessage({ type: 'success', text: res.data.message });
+          setTransferItemModalOpen(false);
+          setTransferItemTargetName('');
+          setTransferItemQuantity(1);
+          await setTimeout(() => fetchProfile(), 0);
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal mengirim permintaan transfer.' });
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+  const handleRespondTransfer = async (requestId: string, accept: boolean) => {
+      setActionLoading(true);
+      try {
+          const res = await api.post('/player/transfer-item-respond', { requestId, accept });
+          setActionMessage({ type: 'success', text: res.data.message });
+          fetchTransferRequests();
+          fetchProfile();
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal merespon transfer.' });
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+  const handleRestartKarakter = async () => {
+      if(!restartConfirmText) return;
+      setActionLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/player/restart-karakter', {
+              confirmation: restartConfirmText
+          });
+          setActionMessage({ type: 'success', text: res.data.message });
+          setRestartModalOpen(false);
+          setRestartConfirmText('');
+          await setTimeout(() => fetchProfile(), 0);
+      } catch (err) {
+          setActionMessage({ type: 'error', text: (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal restart karakter.' });
       } finally {
           setActionLoading(false);
       }
@@ -258,6 +333,29 @@ export default function Home() {
                     <History size={16} className="mr-2" />
                     Riwayat Transaksi
                 </Button>
+                <Button
+                    variant="outline"
+                    onClick={openTransferItemModal}
+                    className="bg-black/50 border-purple-600 text-purple-300 hover:bg-purple-900/50"
+                >
+                    <Gift size={16} className="mr-2" />
+                    Kirim Item
+                </Button>
+                <div className="relative inline-block">
+                    <Button
+                        variant="outline"
+                        onClick={() => setRequestsModalOpen(true)}
+                        className="bg-black/50 border-gray-600 text-gray-300 hover:bg-gray-800/50 w-full"
+                    >
+                        <Users size={16} className="mr-2" />
+                        Kotak Masuk
+                    </Button>
+                    {transferRequests.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                            {transferRequests.length}
+                        </span>
+                    )}
+                </div>
                 {availableLoots.length > 0 && (
                     <Button
                         variant="destructive"
@@ -266,6 +364,16 @@ export default function Home() {
                     >
                         <Sparkles size={16} className="mr-2" />
                         Loot Tersedia ({availableLoots.length})
+                    </Button>
+                )}
+                {profile?.status === 'dead' && (
+                    <Button
+                        variant="destructive"
+                        onClick={() => setRestartModalOpen(true)}
+                        className="bg-red-900/80 hover:bg-red-700 border border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                    >
+                        <RefreshCcw size={16} className="mr-2" />
+                        Reinkarnasi
                     </Button>
                 )}
             </div>
@@ -435,6 +543,102 @@ export default function Home() {
                       </Button>
                   </div>
               ))}
+          </div>
+      </Modal>
+
+      {/* Transfer Item Modal */}
+      <Modal isOpen={transferItemModalOpen} onClose={() => setTransferItemModalOpen(false)} title="Kirim Item" maxWidth="sm">
+          <div className="space-y-4">
+              <div>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Penerima</label>
+                  <input
+                      type="text"
+                      placeholder="Nama Karakter Penerima"
+                      value={transferItemTargetName}
+                      onChange={(e) => setTransferItemTargetName(e.target.value)}
+                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm font-mono"
+                  />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                  <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Item</label>
+                      <select
+                          value={transferItemId}
+                          onChange={(e) => setTransferItemId(e.target.value)}
+                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm appearance-none"
+                      >
+                          {inventoryItems.map(item => (
+                              <option key={item.id} value={item.id}>{item.name} (x{item.quantity})</option>
+                          ))}
+                      </select>
+                  </div>
+                  <div>
+                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Jumlah</label>
+                      <input
+                          type="number"
+                          min="1"
+                          max={inventoryItems.find(i => i.id === transferItemId)?.quantity || 1}
+                          value={transferItemQuantity}
+                          onChange={(e) => setTransferItemQuantity(parseInt(e.target.value) || 1)}
+                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-purple-500 text-sm font-mono"
+                      />
+                  </div>
+              </div>
+              <p className="text-[10px] text-gray-500 mt-2">Catatan: Pajak pengiriman adalah 1 Silver per item yang ditanggung pengirim.</p>
+              <Button
+                  onClick={handleTransferItem}
+                  disabled={actionLoading || !transferItemTargetName || transferItemQuantity <= 0 || !transferItemId}
+                  className="w-full bg-[#3b1e5f] hover:bg-purple-900 mt-2"
+              >
+                  {actionLoading ? <Loader2 size={16} className="animate-spin mr-2" /> : <Gift size={16} className="mr-2" />}
+                  Ajukan Permintaan Kirim
+              </Button>
+          </div>
+      </Modal>
+
+      {/* Transfer Requests Modal */}
+      <Modal isOpen={requestsModalOpen} onClose={() => setRequestsModalOpen(false)} title="Kotak Masuk (Permintaan Transfer)" maxWidth="md">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+              {transferRequests.length === 0 ? (
+                  <p className="text-gray-400 text-sm py-4 text-center">Tidak ada permintaan masuk.</p>
+              ) : (
+                  transferRequests.map(req => (
+                      <div key={req.id} className="bg-[#111] border border-[#333] p-4 rounded-lg">
+                          <p className="text-sm text-gray-300 mb-2">
+                              <span className="font-bold text-blue-400">{req.senderName}</span> ingin mengirimkan <span className="font-bold text-purple-400">{req.quantity}x {req.itemName}</span>.
+                          </p>
+                          <p className="text-[10px] text-gray-500 mb-4">Berakhir pada: {new Date(req.expiresAt).toLocaleString()}</p>
+                          <div className="flex justify-end gap-2">
+                              <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500/20" onClick={() => handleRespondTransfer(req.id, false)} disabled={actionLoading}>Tolak</Button>
+                              <Button variant="primary" className="bg-green-600 hover:bg-green-500 text-white" onClick={() => handleRespondTransfer(req.id, true)} disabled={actionLoading}>Terima</Button>
+                          </div>
+                      </div>
+                  ))
+              )}
+          </div>
+      </Modal>
+
+      {/* Restart Karakter Modal */}
+      <Modal isOpen={restartModalOpen} onClose={() => setRestartModalOpen(false)} title="Reinkarnasi Karakter" maxWidth="md">
+          <div className="space-y-4">
+              <p className="text-gray-300 text-sm">Apakah kamu yakin ingin me-restart karaktermu dari awal?</p>
+              <p className="text-red-400 text-xs font-bold">PERINGATAN: Semua inventory, pets, aset, dan currency akan hilang. Status akan kembali aktif. Nama karakter tetap dipertahankan. Tindakan ini TIDAK BISA DIBATALKAN.</p>
+              <div>
+                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ketik &quot;{profile?.characterName as string} RESTART&quot; untuk konfirmasi</label>
+                  <input
+                      type="text"
+                      placeholder={`${profile?.characterName} RESTART`}
+                      value={restartConfirmText}
+                      onChange={(e) => setRestartConfirmText(e.target.value)}
+                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm font-mono"
+                  />
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                  <Button variant="ghost" onClick={() => setRestartModalOpen(false)}>Batal</Button>
+                  <Button variant="destructive" onClick={handleRestartKarakter} disabled={actionLoading || restartConfirmText !== `${profile?.characterName} RESTART`}>
+                      {actionLoading ? 'Memproses...' : 'Reinkarnasi'}
+                  </Button>
+              </div>
           </div>
       </Modal>
 
