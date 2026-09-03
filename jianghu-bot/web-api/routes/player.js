@@ -1027,4 +1027,139 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
     }
 });
 
+
+const Law = require('../../models/Law');
+const { getRealmIndex } = require('../../utils/cultivation');
+
+// Endpoint: GET /api/player/laws
+router.get('/laws', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const laws = await Law.find({ guildId }).lean();
+        res.json({ success: true, data: laws });
+    } catch (error) {
+        console.error('[API-PLAYER] Error fetching laws:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
+// Endpoint: POST /api/player/laws/learn
+router.post('/laws/learn', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { lawId } = req.body;
+
+    if (!lawId) return res.status(400).json({ error: 'ID Law tidak valid.' });
+
+    const lockKey = `law_learn_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+
+    try {
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('laws').session(session);
+
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            if (player.isNormalCultivator || realmIdx > 0) {
+                throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
+            }
+
+            const lawToLearn = await Law.findOne({ _id: lawId, guildId }).session(session);
+            if (!lawToLearn) throw new CustomError('Hukum Alam tidak ditemukan.', 404);
+
+            if (player.laws.length >= 1) {
+                const currentLaw = player.laws[0];
+                throw new CustomError(`Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan ${currentLaw.name}.`, 400);
+            }
+
+            if (player.laws.some(l => l._id.equals(lawToLearn._id))) {
+                throw new CustomError('Kamu sudah memahami Hukum Alam ini.', 400);
+            }
+
+            player.laws.push(lawToLearn._id);
+            await player.save({ session });
+        });
+
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil mempelajari Hukum Alam.` });
+        res.json({ success: true, message: `Luar biasa! Kamu berhasil memahami Hukum Alam. Fondasi jalan dewamu semakin kuat!` });
+    } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
+        console.error('[API-PLAYER] Learn law error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: POST /api/player/laws/reset
+router.post('/laws/reset', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemName } = req.body;
+
+    if (!itemName) return res.status(400).json({ error: 'Nama item tidak valid.' });
+
+    const lockKey = `law_reset_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+
+    try {
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').populate('laws').session(session);
+
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            if (!player.laws || player.laws.length === 0) {
+                throw new CustomError('Kamu belum memahami Hukum Alam apapun untuk direset.', 400);
+            }
+
+            const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
+            if (inventorySlotIndex === -1 || player.inventory[inventorySlotIndex].quantity <= 0) {
+                throw new CustomError(`Kamu tidak memiliki item ${itemName} di inventory.`, 400);
+            }
+
+            const item = player.inventory[inventorySlotIndex].itemId;
+
+            player.inventory[inventorySlotIndex].quantity -= 1;
+            if (player.inventory[inventorySlotIndex].quantity <= 0) {
+                player.inventory.splice(inventorySlotIndex, 1);
+            }
+            player.markModified('inventory');
+
+            const oldLaw = player.laws[0];
+            player.laws = [];
+            player.markModified('laws');
+
+            await player.save({ session });
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'law_reset',
+                description: `[${player.characterName}] mereset Hukum Alam ${oldLaw.name} menggunakan ${item.name}.`,
+            }], { session });
+        });
+
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil mereset Hukum Alam.` });
+        res.json({ success: true, message: `Keajaiban terjadi! Kekuatan mengalir ke seluruh meridianmu. Jiwamu disucikan kembali, menghapus ikatanmu dengan Hukum Alam sebelumnya. Kini kamu bebas mengukir takdir baru!` });
+    } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
+        console.error('[API-PLAYER] Reset law error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
 module.exports = router;

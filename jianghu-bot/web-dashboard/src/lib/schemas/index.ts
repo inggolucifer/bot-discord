@@ -27,3 +27,37 @@ export const BreakthroughResponseSchema = z.object({
 
 export type CultivationData = z.infer<typeof CultivationDataSchema>;
 export type BreakthroughResponse = z.infer<typeof BreakthroughResponseSchema>;
+
+
+export const LawSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+  element: z.string().optional(),
+  description: z.string().optional(),
+  multiplierBonus: z.object({
+      hp: z.number().optional(),
+      atk: z.number().optional(),
+      def: z.number().optional(),
+      spd: z.number().optional(),
+  }).optional()
+});
+
+export const OracleEconomySchema = z.object({
+  copper: z.number(),
+  silver: z.number(),
+  gold: z.number(),
+  jade: z.number(),
+  spirit: z.number(),
+});
+
+export const OracleResponseSchema = z.object({
+  totalPlayers: z.number(),
+  totalSects: z.number(),
+  totalWealth: z.number(),
+  economy: OracleEconomySchema,
+  topSects: z.array(z.any()),
+  topPlayers: z.array(z.any()),
+});
+
+export type LawData = z.infer<typeof LawSchema>;
+export type OracleData = z.infer<typeof OracleResponseSchema>;
