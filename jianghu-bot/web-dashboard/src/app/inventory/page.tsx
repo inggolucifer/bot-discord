@@ -28,6 +28,28 @@ interface InventoryItem {
 export default function InventoryPage() {
   const { user } = useAuthStore();
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
+
+  const [discardModalOpen, setDiscardModalOpen] = useState(false);
+  const [itemToDiscard, setItemToDiscard] = useState<InventoryItem | null>(null);
+  const [discardQuantity, setDiscardQuantity] = useState(1);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const handleDiscard = async () => {
+    if (!itemToDiscard) return;
+    setActionLoading(true);
+    try {
+      await api.post('/inventory/discard', { itemId: itemToDiscard.id, quantity: discardQuantity });
+      setDiscardModalOpen(false);
+      setItemToDiscard(null);
+      setDiscardQuantity(1);
+      fetchInventory();
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Gagal membuang item.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -237,6 +259,8 @@ export default function InventoryPage() {
                 x{item.quantity}
               </div>
 
+              <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+
               {/* Item Icon or Image */}
               <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center mb-2 drop-shadow-md">
                 {item.imageUrl ? (
@@ -372,6 +396,26 @@ export default function InventoryPage() {
              </div>
          )}
       </Modal>
+
+      {/* Discard Modal */}
+      <Modal isOpen={discardModalOpen} onClose={() => setDiscardModalOpen(false)} title="Buang Item">
+        <div className="space-y-4">
+          <p className="text-gray-300">Buang <strong>{itemToDiscard?.name}</strong>?</p>
+          <input
+            type="number"
+            min={1}
+            max={itemToDiscard?.quantity || 1}
+            className="w-full bg-[#111] border border-[#444] rounded p-2 text-white"
+            value={discardQuantity}
+            onChange={(e) => setDiscardQuantity(Number(e.target.value))}
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setDiscardModalOpen(false)}>Batal</Button>
+            <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500/10" onClick={handleDiscard} disabled={actionLoading}>Buang</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 }

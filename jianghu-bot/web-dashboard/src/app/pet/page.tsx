@@ -103,7 +103,19 @@ export default function PetPage() {
       }
   };
 
-  const handleRelease = async (instanceId: string) => {
+
+  const [releaseConfirmText, setReleaseConfirmText] = useState("");
+
+  const handleRelease = (instanceId: string) => {
+      const pet = pets.find(p => p.instanceId === instanceId);
+      if (pet) {
+          setSelectedPet(pet);
+          setModalType('release');
+          setReleaseConfirmText("");
+      }
+  };
+
+  const _oldHandleRelease = async (instanceId: string) => {
     if (!confirm('Apakah kamu yakin ingin melepas pet ini? Tindakan ini tidak bisa dibatalkan.')) return;
     await handleAction('/pet/release', { instanceId });
   };
@@ -326,6 +338,24 @@ export default function PetPage() {
                           <input type="text" maxLength={16} value={newName} onChange={e => setNewName(e.target.value)} className="w-full bg-[#111] border border-[#444] rounded px-3 py-2 text-sm text-white focus:border-[#c5a880]" />
                           <Button className="w-full mt-4" disabled={!newName || actionLoading} onClick={() => handleAction('/pet/rename', { instanceId: selectedPet.instanceId, newName })}>
                              {actionLoading ? 'Menyimpan...' : 'Simpan Nama'}
+                          </Button>
+                      </div>
+                  )}
+
+
+                  {modalType === 'release' && (
+                      <div className="space-y-4">
+                          <p className="text-gray-300 text-sm">Apakah kamu yakin ingin melepaskan <strong>{selectedPet.nickname || selectedPet.petId.name}</strong> ke alam liar?</p>
+                          <p className="text-red-400 text-xs">Tindakan ini permanen. Pet akan hilang selamanya. Ketik <strong>LEPASKAN</strong> untuk konfirmasi.</p>
+                          <input
+                            type="text"
+                            className="w-full bg-[#111] border border-[#444] rounded p-2 text-white text-sm focus:border-red-500"
+                            value={releaseConfirmText}
+                            onChange={(e) => setReleaseConfirmText(e.target.value)}
+                            placeholder="LEPASKAN"
+                          />
+                          <Button className="w-full mt-4" variant="destructive" disabled={actionLoading || releaseConfirmText !== 'LEPASKAN'} onClick={() => handleAction('/pet/release', { instanceId: selectedPet.instanceId })}>
+                             {actionLoading ? 'Melepaskan...' : 'Lepaskan Pet'}
                           </Button>
                       </div>
                   )}
