@@ -10,7 +10,10 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { BookOpen, Shield, Wind, Droplet, Flame, Mountain, Zap, Sun, Moon, Skull, HeartPulse, RefreshCw } from 'lucide-react';
+import { BookOpen, Shield, Wind, Droplet, Flame, Mountain, Zap, Sun, Moon, Skull, HeartPulse, RefreshCw, AlertTriangle } from 'lucide-react';
+import Modal from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { ToastContainer, toast } from '@/components/ui/ToastContainer';
 import { useRouter } from 'next/navigation';
 
 export default function SkillsClient() {
@@ -21,6 +24,56 @@ export default function SkillsClient() {
   const queryClient = useQueryClient();
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState<{type: 'error'|'success', text: string} | null>(null);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [resetConfirmation, setResetConfirmation] = useState('');
+  const [isLearnModalOpen, setIsLearnModalOpen] = useState(false);
+  const [selectedLawToLearn, setSelectedLawToLearn] = useState<any>(null);
+
+
+  const handleLearnLaw = async () => {
+    if (!selectedLawToLearn) return;
+    setActionLoading(true);
+    try {
+      await api.post('/player/laws/learn', { lawId: selectedLawToLearn._id });
+      toast.success('Berhasil mempelajari Hukum Alam.');
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      setIsLearnModalOpen(false);
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleResetLaw = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (resetConfirmation !== 'RESET LAW') {
+      toast.error('Ketik RESET LAW untuk mengkonfirmasi.');
+      return;
+    }
+    setActionLoading(true);
+    try {
+      const invRes = await api.get('/inventory');
+      const inv = invRes.data.data;
+      const resetItem = inv.find((i: any) => i.name === 'Teratai Kelahiran Kembali');
+
+      if (!resetItem) {
+        toast.error('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
+        setActionLoading(false);
+        return;
+      }
+
+      await api.post('/player/laws/reset', { itemName: resetItem.name });
+      toast.success('Berhasil mereset Hukum Alam.');
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      setIsResetModalOpen(false);
+      setResetConfirmation('');
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   const handleComprehend = async (manualId: string) => {
     setActionLoading(true);
@@ -70,7 +123,18 @@ export default function SkillsClient() {
 
     if (!profile) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data skill." icon={<BookOpen size={48} />} />;
 
+
+    const { data: rawLaws } = useQuery({
+        queryKey: ['availableLaws'],
+        queryFn: async () => {
+            const { data } = await api.get('/player/laws');
+            return data.data;
+        },
+        enabled: !!token
+    });
+
     const { laws = [], manuals = [] } = profile;
+    const isMortal = profile.realm === 'Mortal' || profile.systemCultivation?.realm === 'Fondasi Fana (Mortal Foundation)';
 
     const getElementIcon = (element: string) => {
         switch (element?.toLowerCase()) {
@@ -123,7 +187,50 @@ export default function SkillsClient() {
                 <div className="flex items-center gap-2 mb-4 border-b border-[#333] pb-2">
                     <Wind className="text-teal-400" size={24} />
                     <h2 className="text-2xl font-serif font-bold text-white">Pemahaman Hukum Alam</h2>
+
+            <Modal isOpen={isLearnModalOpen} onClose={() => setIsLearnModalOpen(false)} title="Konfirmasi Pelajari Hukum Alam">
+                <div className="space-y-4 text-gray-300">
+                    <p>Apakah kamu yakin ingin mengikat takdirmu dengan <strong>{selectedLawToLearn?.name}</strong>?</p>
+                    <p className="text-sm text-orange-400">Peringatan: Jiwa fanamu hanya bisa menampung SATU Hukum Alam. Pilihan ini akan memengaruhi seluruh perjalanan kultivasimu.</p>
+                    <div className="flex justify-end gap-2 pt-4">
+                        <Button variant="ghost" onClick={() => setIsLearnModalOpen(false)}>Batal</Button>
+                        <Button variant="default" className="bg-green-600 hover:bg-green-700" onClick={handleLearnLaw} disabled={actionLoading}>Pelajari</Button>
+                    </div>
                 </div>
+            </Modal>
+
+            <Modal isOpen={isResetModalOpen} onClose={() => setIsResetModalOpen(false)} title="Peringatan Bahaya: Reset Hukum Alam">
+                <form onSubmit={handleResetLaw} className="space-y-4 text-gray-300">
+                    <div className="bg-red-500/10 border border-red-500/50 p-4 rounded-lg flex gap-3">
+                        <AlertTriangle className="text-red-500 flex-shrink-0 mt-1" />
+                        <div>
+                            <h4 className="font-bold text-red-400 mb-1">Tindakan Permanen</h4>
+                            <p className="text-sm text-gray-300">
+                                Mereset Hukum Alam akan menghapus ikatanmu saat ini dan mengkonsumsi 1x <strong className="text-white">Teratai Kelahiran Kembali</strong> dari inventory.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm mb-2 text-gray-400">Ketik <strong>RESET LAW</strong> untuk melanjutkan:</label>
+                        <input
+                            type="text"
+                            value={resetConfirmation}
+                            onChange={(e) => setResetConfirmation(e.target.value)}
+                            className="w-full bg-black border border-gray-700 rounded-md p-2 text-white"
+                            placeholder="RESET LAW"
+                        />
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-4">
+                        <Button type="button" variant="ghost" onClick={() => setIsResetModalOpen(false)}>Batal</Button>
+                        <Button type="submit" variant="destructive" disabled={actionLoading || resetConfirmation !== 'RESET LAW'}>Eksekusi Reset</Button>
+                    </div>
+                </form>
+            </Modal>
+
+            <ToastContainer />
+        </div>
 
                 {laws.length === 0 ? (
                     <EmptyState title="Belum Memahami Hukum Alam" description="Kamu belum memahami satupun hukum alam semesta. Cari peluang pencerahan!" icon={<Wind size={40} />} className="py-6" />

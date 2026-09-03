@@ -87,6 +87,9 @@ const setupServer = (client) => {
         '/api/player/daily',
         '/api/player/loot',
         '/api/pet/feed',
+        '/api/player/laws/learn',
+        '/api/player/laws/reset',
+        '/api/sect/donate',
         '/api/pet/heal',
         '/api/pet/battle'
     ];
@@ -117,6 +120,7 @@ const setupServer = (client) => {
     const tournamentRoutes = require('./routes/tournament');
     const cultivationRoutes = require('./routes/cultivation');
     const battleRoutes = require('./routes/battle');
+    const adminRoutes = require('./routes/admin');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -130,6 +134,7 @@ const setupServer = (client) => {
     app.use('/api/tournament', tournamentRoutes);
     app.use('/api/cultivation', cultivationRoutes);
     app.use('/api/battle', battleRoutes);
+    app.use('/api/admin', adminRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
