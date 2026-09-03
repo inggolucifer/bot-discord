@@ -134,6 +134,8 @@ const playerSchema = new mongoose.Schema({
   dailyStreak: { type: Number, default: 0 },
   registeredAt: { type: Date, default: Date.now },
 
+  hasCompletedTour: { type: Boolean, default: false },
+
   totalWealth: { type: Number, default: 0, index: true },
 }, { timestamps: true });
 

@@ -16,6 +16,7 @@ import AuthInitializer from "@/components/AuthInitializer";
 import { ToastContainer } from "@/components/ui/ToastContainer";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import SocketProvider from "@/components/SocketProvider";
+import ProductTour from "@/components/ui/tour/ProductTour";
 
 export default function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default function RootLayout({
         </footer>
         <GlobalChatWrapper />
         <ToastContainer />
+        <ProductTour />
           </SocketProvider>
         </ReactQueryProvider>
       </body>
