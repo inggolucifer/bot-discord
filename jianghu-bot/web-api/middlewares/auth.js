@@ -3,12 +3,15 @@ const { JWT_SECRET } = require('../utils/jwtSecret');
 
 // Middleware to authenticate API requests from the frontend using JWT
 const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
+    let token = req.cookies && req.cookies.accessToken;
 
-    // Format is usually "Bearer <token>"
-    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+        const authHeader = req.headers['authorization'];
+        // Format is usually "Bearer <token>"
+        token = authHeader && authHeader.split(' ')[1];
+    }
 
-    if (token == null) {
+    if (!token) {
         return res.status(401).json({ error: 'Akses Ditolak: Token tidak ditemukan.' });
     }
 

@@ -57,18 +57,34 @@ router.post('/login', async (req, res) => {
             ? `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png`
             : defaultAvatarUrl;
 
-        const token = jwt.sign(
-            {
-                userId: userId,
-                username: discordUser.username,
-                avatar: avatarUrl
-            },
-            JWT_SECRET,
-            { expiresIn: '24h' } // Token expires in 24 hours
-        );
+        const tokenPayload = {
+            userId: userId,
+            username: discordUser.username,
+            avatar: avatarUrl
+        };
+
+        const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        };
+
+        res.cookie('accessToken', accessToken, {
+            ...cookieOptions,
+            maxAge: 15 * 60 * 1000 // 15 minutes
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            ...cookieOptions,
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.json({
-            token,
+            token: accessToken, // Still returning for backward compatibility/local storage during migration, will be phased out
             user: {
                 id: userId,
                 username: discordUser.username,
@@ -86,6 +102,88 @@ router.post('/login', async (req, res) => {
 
         res.status(500).json({ error: 'Gagal mengautentikasi dengan Discord.' });
     }
+});
+
+// Route to refresh token
+router.post('/refresh', (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.status(401).json({ error: 'Refresh token tidak ditemukan.' });
+    }
+
+    jwt.verify(refreshToken, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Refresh token tidak valid atau telah kadaluarsa.' });
+        }
+
+        const tokenPayload = {
+            userId: user.userId,
+            username: user.username,
+            avatar: user.avatar
+        };
+
+        const newAccessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
+
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 15 * 60 * 1000 // 15 minutes
+        });
+
+        res.json({ success: true, token: newAccessToken });
+    });
+});
+
+// Route to migrate from localStorage to cookies (called by client if local storage token exists but no cookies)
+router.post('/migrate', (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.status(400).json({ error: 'Token is required' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Token tidak valid' });
+        }
+
+        const tokenPayload = {
+            userId: user.userId,
+            username: user.username,
+            avatar: user.avatar
+        };
+
+        const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        };
+
+        res.cookie('accessToken', accessToken, {
+            ...cookieOptions,
+            maxAge: 15 * 60 * 1000 // 15 minutes
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            ...cookieOptions,
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        res.json({ success: true, token: accessToken });
+    });
+});
+
+// Route to logout (clear cookies)
+router.post('/logout', (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    res.json({ success: true });
 });
 
 module.exports = router;

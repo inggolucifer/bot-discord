@@ -99,7 +99,7 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
           {navLinks.utama.map(link => (
-            <Link key={link.href} href={link.href} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
+            <Link key={link.href} href={link.href} id={`nav-${link.href.replace('/', '') || 'profile'}`} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
               {link.label}
             </Link>
           ))}
@@ -107,6 +107,7 @@ export default function Navbar() {
           {/* Dropdown Ekonomi */}
           <div className="relative">
             <button
+              id="nav-ekonomi"
               onClick={() => toggleDropdown('ekonomi')}
               className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
             >
