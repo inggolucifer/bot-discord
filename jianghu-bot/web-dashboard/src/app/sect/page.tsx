@@ -11,6 +11,9 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
+import Modal from "@/components/ui/Modal";
+import { ToastContainer, toast } from "@/components/ui/ToastContainer";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SectData {
   id: string;
@@ -77,6 +80,30 @@ export default function SectPage() {
   const [claimLoading, setClaimLoading] = useState(false);
   const [claimResult, setClaimResult] = useState<ClaimResult | null>(null);
   const [claimError, setClaimError] = useState<string | null>(null);
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+  const [donateType, setDonateType] = useState('copper');
+  const [donateAmount, setDonateAmount] = useState<number>(1);
+  const [donateLoading, setDonateLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+
+  const handleDonate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDonateLoading(true);
+    try {
+       await api.post('/sect/donate', { type: donateType, amount: donateAmount });
+       toast.success(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
+       setIsDonateModalOpen(false);
+       setDonateAmount(1);
+       setDonateType('copper');
+       fetchSectData();
+       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch(err: any) {
+       toast.error(err.response?.data?.error || 'Gagal melakukan donasi.');
+    } finally {
+       setDonateLoading(false);
+    }
+  };
 
   const fetchSectData = async () => {
       try {
@@ -149,6 +176,12 @@ export default function SectPage() {
 
                  <div className="inline-flex items-center gap-2 bg-[#1f402e]/30 text-green-400 px-4 py-2 rounded-full border border-green-800/50 shadow-inner text-sm font-semibold">
                    <Shield size={16} /> Jabatan: {sect.role}
+                 </div>
+
+                 <div className="mt-4 flex justify-center gap-2">
+                    <Button variant="outline" className="border-green-700 text-green-400 hover:bg-green-700/20" onClick={() => setIsDonateModalOpen(true)}>
+                        <DollarSign size={16} className="mr-1"/> Donasi Kekayaan
+                    </Button>
                  </div>
 
                  <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
