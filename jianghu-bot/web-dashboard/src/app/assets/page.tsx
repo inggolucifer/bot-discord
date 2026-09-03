@@ -161,6 +161,76 @@ export default function AssetsPage() {
       }
   };
 
+
+  const [actionLoading, setActionLoading] = useState(false);
+  const [destroyModalOpen, setDestroyModalOpen] = useState(false);
+  const [destroyConfirmText, setDestroyConfirmText] = useState("");
+  const [selectedAssetForDestroy, setSelectedAssetForDestroy] = useState<Asset | null>(null);
+
+  const [moveWorkerModalOpen, setMoveWorkerModalOpen] = useState(false);
+  const [selectedWorkerForMove, setSelectedWorkerForMove] = useState<Worker | null>(null);
+  const [selectedTargetAssetId, setSelectedTargetAssetId] = useState("");
+  const [sourceAssetIdForMove, setSourceAssetIdForMove] = useState("");
+
+  const handleDestroyAsset = async () => {
+    if (!selectedAssetForDestroy || destroyConfirmText !== 'HANCURKAN') return;
+    setActionLoading(true);
+    try {
+      await api.post('/player/assets/destroy', { assetId: selectedAssetForDestroy.id });
+      setDestroyModalOpen(false);
+      setDestroyConfirmText("");
+      setSelectedAssetForDestroy(null);
+      await fetchAssets();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Gagal menghancurkan aset.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleExpandSlot = async () => {
+    if (!confirm('Perluas slot aset? Biaya akan dipotong sesuai harga.')) return;
+    setActionLoading(true);
+    try {
+      await api.post('/player/assets/tambah-slot');
+      await fetchAssets();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Gagal menambah slot.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleMoveWorker = async () => {
+    if (!selectedWorkerForMove || !selectedTargetAssetId) return;
+    setActionLoading(true);
+    try {
+      await api.post('/player/assets/move-worker', { workerId: selectedWorkerForMove.workerId, targetAssetId: selectedTargetAssetId });
+      setMoveWorkerModalOpen(false);
+      setSelectedWorkerForMove(null);
+      setSelectedTargetAssetId("");
+      setSourceAssetIdForMove("");
+      await fetchAssets();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Gagal memindahkan pekerja.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleStopMandiri = async () => {
+    if (!confirm('Berhenti kerja mandiri?')) return;
+    setActionLoading(true);
+    try {
+      await api.post('/worker/stop-mandiri');
+      await fetchAssets();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Gagal berhenti kerja mandiri.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const handleWorkSelf = async () => {
       if(!selectedAsset) return;
       setActionLoading(true);
@@ -781,6 +851,47 @@ export default function AssetsPage() {
       </Modal>
       </>
       )}
+
+      {/* Destroy Modal */}
+      <Modal isOpen={destroyModalOpen} onClose={() => setDestroyModalOpen(false)} title="Hancurkan Aset">
+        <div className="space-y-4">
+          <p className="text-gray-300">Apakah kamu yakin ingin menghancurkan aset <strong>{selectedAssetForDestroy?.name}</strong>?</p>
+          <p className="text-red-400 text-sm">Tindakan ini permanen. Biaya: 1 Gold (100 Silver). Ketik <strong>HANCURKAN</strong> untuk konfirmasi.</p>
+          <input
+            type="text"
+            className="w-full bg-[#111] border border-[#444] rounded p-2 text-white"
+            value={destroyConfirmText}
+            onChange={(e) => setDestroyConfirmText(e.target.value)}
+            placeholder="HANCURKAN"
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setDestroyModalOpen(false)}>Batal</Button>
+            <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500/10" onClick={handleDestroyAsset} disabled={actionLoading || destroyConfirmText !== 'HANCURKAN'}>Hancurkan</Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Move Worker Modal */}
+      <Modal isOpen={moveWorkerModalOpen} onClose={() => setMoveWorkerModalOpen(false)} title="Pindahkan Pekerja">
+        <div className="space-y-4">
+          <p className="text-gray-300">Pilih aset tujuan untuk pekerja ini.</p>
+          <select
+            className="w-full bg-black/50 border border-gray-600 rounded p-2 text-white"
+            value={selectedTargetAssetId}
+            onChange={(e) => setSelectedTargetAssetId(e.target.value)}
+          >
+            <option value="">-- Pilih Aset Tujuan --</option>
+            {assets.filter(a => a.id !== sourceAssetIdForMove && !a.underConstruction).map(a => (
+              <option key={a.id} value={a.id}>{a.name}</option>
+            ))}
+          </select>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setMoveWorkerModalOpen(false)}>Batal</Button>
+            <Button variant="primary" onClick={handleMoveWorker} disabled={actionLoading || !selectedTargetAssetId}>Pindahkan</Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/lib/store';
@@ -17,6 +17,37 @@ export default function SkillsClient() {
     const { token } = useAuthStore();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+
+  const queryClient = useQueryClient();
+  const [actionLoading, setActionLoading] = useState(false);
+  const [message, setMessage] = useState<{type: 'error'|'success', text: string} | null>(null);
+
+  const handleComprehend = async (manualId: string) => {
+    setActionLoading(true);
+    try {
+      await api.post('/player/skills/comprehend', { manualId });
+      setMessage({ type: 'success', text: 'Berhasil memulai comprehend.' });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.response?.data?.error || 'Gagal comprehend.' });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleUpgrade = async (manualId: string) => {
+    setActionLoading(true);
+    try {
+      await api.post('/player/skills/upgrade', { manualId });
+      setMessage({ type: 'success', text: 'Berhasil upgrade level manual.' });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.response?.data?.error || 'Gagal upgrade manual.' });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
 
     useEffect(() => {
         if (!token) {
@@ -160,6 +191,19 @@ export default function SkillsClient() {
                                                 <div className="text-sm font-bold text-yellow-500">{(m.triggerChance * 100).toFixed(0)}%</div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div className="mt-4">
+                                      {m.isComprehending ? (
+                                        <div className="flex flex-col gap-2 border-t border-gray-700/50 pt-3">
+                                          <p className="text-xs text-blue-400 flex items-center justify-center gap-1"><RefreshCw size={12} className="animate-spin" /> Sedang Comprehend</p>
+                                          <Button size="sm" variant="outline" className="w-full border-[#c5a880] text-[#c5a880] hover:bg-[#c5a880]/10" disabled={actionLoading} onClick={() => handleUpgrade(m.manualId)}>Selesaikan (Upgrade)</Button>
+                                        </div>
+                                      ) : (
+                                        <div className="border-t border-gray-700/50 pt-3">
+                                          <Button size="sm" variant="outline" className="w-full border-blue-500 text-blue-500 hover:bg-blue-500/10" disabled={actionLoading || m.level >= m.maxLevel} onClick={() => handleComprehend(m.manualId)}>{m.level >= m.maxLevel ? 'Level Maksimal' : 'Comprehend'}</Button>
+                                        </div>
+                                      )}
                                     </div>
                                 </CardContent>
                               </Card>

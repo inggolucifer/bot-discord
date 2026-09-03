@@ -825,4 +825,206 @@ router.post('/daily', authenticateToken, async (req, res) => {
     }
 });
 
+
+// Hancurkan Aset (Destroy Asset)
+router.post('/assets/destroy', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { assetId } = req.body;
+
+    if (!assetId) {
+        return res.status(400).json({ error: 'Data tidak lengkap.' });
+    }
+
+    const lockKey = `asset_destroy_${userId}_${assetId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+
+    try {
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId').session(session);
+
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            const HANCURKAN_COST_SILVER = 100;
+            const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+
+            if (!hasEnoughCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
+                throw new CustomError('Saldo Wealth kamu tidak cukup. Butuh setara dengan 1 Gold (100 Silver) untuk menghancurkan aset.', 400);
+            }
+
+            const assetIndex = player.assets.findIndex(a => a.assetId && a.assetId.equals(assetId));
+            if (assetIndex === -1) {
+                throw new CustomError('Kamu tidak memiliki aset tersebut.', 400);
+            }
+
+            const ownedAsset = player.assets[assetIndex];
+            if (isUnderConstruction(ownedAsset)) {
+                throw new CustomError('Aset masih dalam tahap pembangunan dan tidak bisa dihancurkan.', 400);
+            }
+
+            const WorkerContract = require('../../models/WorkerContract');
+            if (ownedAsset.assignedWorkers && ownedAsset.assignedWorkers.length > 0) {
+                const workerIds = ownedAsset.assignedWorkers.map(w => w.workerId);
+                await WorkerContract.updateMany(
+                    { _id: { $in: workerIds }, guildId },
+                    { $set: { status: 'idle', assignedAssetId: null } },
+                    { session }
+                );
+                ownedAsset.assignedWorkers = [];
+            }
+
+            if (ownedAsset.quantity > 1) {
+                ownedAsset.quantity -= 1;
+            } else {
+                player.assets.splice(assetIndex, 1);
+            }
+
+            if (!payCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
+                throw new CustomError('Saldo tidak cukup untuk biaya penghancuran.', 400);
+            }
+
+            await player.save({ session });
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'player_destroy_asset',
+                description: `[${player.characterName}] menghancurkan aset ${ownedAsset.assetId.name} dengan biaya ${HANCURKAN_COST_SILVER} Silver.`,
+            }], { session });
+        });
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil menghancurkan aset.` });
+        res.json({ success: true, message: `Berhasil menghancurkan aset.` });
+    } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
+        console.error('[API-PLAYER] Destroy asset error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+
+// Skills: Comprehend
+router.post('/skills/comprehend', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { manualId } = req.body;
+
+    if (!manualId) return res.status(400).json({ error: 'Data tidak lengkap.' });
+
+    const lockKey = `skill_comprehend_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+
+    try {
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+        const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId');
+
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const pm = player.manuals.find(m => m.manualId && m.manualId.equals(manualId));
+        if (!pm) return res.status(400).json({ error: 'Kamu tidak memiliki manual ini.' });
+        if (pm.level >= pm.manualId.maxLevel) return res.status(400).json({ error: 'Manual ini sudah mencapai level maksimal.' });
+        if (pm.isComprehending) return res.status(400).json({ error: 'Kamu sudah sedang memediasikan manual ini.' });
+
+        const isAlreadyMeditating = player.manuals.some(m => m.isComprehending);
+        if (isAlreadyMeditating) return res.status(400).json({ error: 'Kamu hanya bisa memediasikan satu manual pada satu waktu.' });
+
+        pm.isComprehending = true;
+        pm.comprehendStartTime = new Date();
+
+        player.markModified('manuals');
+        await player.save();
+
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Mulai memediasikan ${pm.manualId.name}.` });
+        res.json({ success: true, message: `Mulai memediasikan ${pm.manualId.name}.` });
+    } catch (error) {
+        console.error('[API-PLAYER] Comprehend error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Skills: Upgrade
+router.post('/skills/upgrade', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { manualId } = req.body;
+
+    if (!manualId) return res.status(400).json({ error: 'Data tidak lengkap.' });
+
+    const lockKey = `skill_upgrade_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+
+    try {
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId').session(session);
+
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            const pm = player.manuals.find(m => m.manualId && m.manualId.equals(manualId));
+            if (!pm) throw new CustomError('Kamu tidak memiliki manual ini.', 400);
+            if (!pm.isComprehending) throw new CustomError('Kamu belum memulai comprehend untuk manual ini.', 400);
+
+            const m = pm.manualId;
+            const msPassed = Date.now() - new Date(pm.comprehendStartTime).getTime();
+            const hoursPassed = msPassed / (1000 * 60 * 60);
+
+            if (hoursPassed < m.timeToComprehendHours) {
+                const left = m.timeToComprehendHours - hoursPassed;
+                throw new CustomError(`Meditasi belum selesai. Tersisa sekitar ${left.toFixed(1)} jam.`, 400);
+            }
+
+            const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+            const costCurrency = m.costCurrency;
+            const nextLevel = pm.level + 1;
+            const totalCost = m.baseCost * nextLevel;
+
+            const costObj = {};
+            costObj[costCurrency] = totalCost;
+
+            if (!hasEnoughCurrency(player.currency, costObj)) {
+                throw new CustomError(`Uangmu tidak cukup. Butuh ${totalCost} ${costCurrency}.`, 400);
+            }
+
+            if (!payCurrency(player.currency, costObj)) {
+                throw new CustomError('Gagal memotong biaya uang.', 400);
+            }
+
+            pm.level = nextLevel;
+            pm.isComprehending = false;
+            pm.comprehendStartTime = null;
+
+            player.markModified('manuals');
+            player.markModified('currency');
+            await player.save({ session });
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'comprehend_manual',
+                description: `[${player.characterName}] memantapkan pemahaman ${m.name} ke level ${nextLevel}.`,
+            }], { session });
+        });
+
+        if (req.io && req.user) req.io.to(req.user.userId).emit('user_update', { message: `Berhasil memantapkan pemahaman.` });
+        res.json({ success: true, message: `Berhasil memantapkan pemahaman.` });
+    } catch (error) {
+        if (error instanceof CustomError) {
+             return res.status(error.statusCode).json({ error: error.message });
+        }
+        console.error('[API-PLAYER] Upgrade skill error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
 module.exports = router;
