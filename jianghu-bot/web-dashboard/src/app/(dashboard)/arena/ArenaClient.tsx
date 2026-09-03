@@ -12,25 +12,28 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { toast } from '@/components/ui/Toast';
 import { Swords, Play, Skull, Shield, Zap, RefreshCw, Flame, Search, User, Wind } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ArenaClient() {
     const { token, user } = useAuthStore();
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
+
         const [selectedOpponentId, setSelectedOpponentId] = useState('');
 
     const { data: rawOpponents, isLoading: isOpponentsLoading } = useQuery({
         queryKey: ['arenaOpponents'],
         queryFn: async () => {
-            const { data } = await api.get('/leaderboard/wealth?limit=50');
+            const { data } = await api.get('/leaderboard');
             return data;
         },
         enabled: !!token
     });
 
     const opponents = React.useMemo(() => {
-        if (!rawOpponents || !rawOpponents.data) return [];
-        return rawOpponents.data.filter((p: any) => p.discordId !== user?.id);
+        if (!rawOpponents) return [];
+        const arr = Array.isArray(rawOpponents) ? rawOpponents : rawOpponents.data;
+        if (!arr) return [];
+        return arr.filter((p: any) => p.discordId !== user?.id);
     }, [rawOpponents, user]);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -216,10 +219,11 @@ export default function ArenaClient() {
                                             <span className="font-bold text-white text-lg">{battleData.challenger.name}</span>
                                         </div>
                                         <div className="h-4 bg-[#222] rounded-full overflow-hidden border border-[#444] w-full">
-                                            <div
-                                                className="h-full bg-green-500 transition-all duration-300"
-                                                style={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p1Hp / battleData.result.p1MaxHp) * 100)}%` }}
-                                            ></div>
+                                            <motion.div
+        className="h-full bg-green-500"
+        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p1Hp / battleData.result.p1MaxHp) * 100)}%` }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+     />
                                         </div>
                                         <div className="text-xs text-right text-gray-400 font-mono">
                                             {battleData.logs[currentLogIndex]?.p1Hp} / {battleData.result.p1MaxHp}
@@ -234,10 +238,11 @@ export default function ArenaClient() {
                                             <span className="font-bold text-white text-lg">{battleData.opponent.name}</span>
                                         </div>
                                         <div className="h-4 bg-[#222] rounded-full overflow-hidden border border-[#444] w-full flex justify-end">
-                                            <div
-                                                className="h-full bg-red-500 transition-all duration-300"
-                                                style={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p2Hp / battleData.result.p2MaxHp) * 100)}%` }}
-                                            ></div>
+                                            <motion.div
+        className="h-full bg-red-500"
+        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p2Hp / battleData.result.p2MaxHp) * 100)}%` }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+     />
                                         </div>
                                         <div className="text-xs text-left text-gray-400 font-mono">
                                             {battleData.logs[currentLogIndex]?.p2Hp} / {battleData.result.p2MaxHp}
@@ -248,10 +253,16 @@ export default function ArenaClient() {
                                 {/* Floating Action Text (Center Area) */}
                                 <div className="flex-1 relative z-10 flex items-center justify-center p-8 text-center">
                                     {battleData.logs[currentLogIndex] && (
-                                        <div
-                                            key={`log-${currentLogIndex}`}
-                                            className="animate-in slide-in-from-bottom-4 fade-in duration-300"
-                                        >
+                                        <AnimatePresence mode="wait">
+        <motion.div
+            key={`log-${currentLogIndex}`}
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 1.1 }}
+            transition={{ duration: 0.3 }}
+            className="w-full text-center flex flex-col items-center justify-center"
+        >
+
                                             {battleData.logs[currentLogIndex].type === 'round_start' ? (
                                                 <div className="text-2xl font-bold text-yellow-500 uppercase tracking-widest bg-black/50 px-6 py-2 rounded-full border border-yellow-500/30">
                                                     {battleData.logs[currentLogIndex].text.replace(/\*\*/g, '')}
@@ -272,7 +283,8 @@ export default function ArenaClient() {
                                                     )}
                                                 </div>
                                             )}
-                                        </div>
+                                        </motion.div>
+                                        </AnimatePresence>
                                     )}
                                 </div>
                             </div>
