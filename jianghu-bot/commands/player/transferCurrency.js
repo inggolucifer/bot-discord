@@ -1,7 +1,20 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Player = require('../../models/Player');
-const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
+const { CURRENCIES, CURRENCY_LABEL, CURRENCY_EMOJI, RATE_TO_COPPER } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
+const { normalizeCurrency } = require('../../utils/currencyNormalize');
+
+function formatFromCopper(copperAmount) {
+  const cur = normalizeCurrency({ copper: copperAmount });
+  const parts = [];
+  if (cur.spirit > 0) parts.push(`**${cur.spirit}** ${CURRENCY_LABEL.spirit}`);
+  if (cur.jade > 0) parts.push(`**${cur.jade}** ${CURRENCY_LABEL.jade}`);
+  if (cur.gold > 0) parts.push(`**${cur.gold}** ${CURRENCY_LABEL.gold}`);
+  if (cur.silver > 0) parts.push(`**${cur.silver}** ${CURRENCY_LABEL.silver}`);
+  if (cur.copper > 0) parts.push(`**${cur.copper}** ${CURRENCY_LABEL.copper}`);
+  if (parts.length === 0) return `**0** ${CURRENCY_LABEL.copper}`;
+  return parts.join(', ');
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -82,13 +95,22 @@ module.exports = {
       }
 
       const taxRate = 0.08;
-      const taxAmount = Math.ceil(jumlah * taxRate);
-      const amountReceived = jumlah - taxAmount;
+      const totalCopper = jumlah * (RATE_TO_COPPER[jenis] || 1);
+      const taxCopper = Math.floor(totalCopper * taxRate);
+      const amountReceivedCopper = totalCopper - taxCopper;
 
       freshSender.currency[jenis] -= jumlah;
-      freshReceiver.currency[jenis] += amountReceived;
+
+      // Tambahkan jumlah sesuai currency asli, tapi potong pajaknya dalam bentuk copper
+      // Save pre-hook (normalizeCurrency) akan otomatis membereskannya
+      freshReceiver.currency[jenis] += jumlah;
+      freshReceiver.currency.copper -= taxCopper;
+
       await freshSender.save();
       await freshReceiver.save();
+
+      const taxString = formatFromCopper(taxCopper);
+      const receivedString = formatFromCopper(amountReceivedCopper);
 
       await logTransaction(btnInteraction.client, {
         guildId: interaction.guildId,
@@ -98,13 +120,13 @@ module.exports = {
         currency: jenis,
         amount: jumlah,
         balanceAfter: { sender: freshSender.currency, receiver: freshReceiver.currency },
-        note: `Transfer ${jumlah} ${jenis} dari ${interaction.user.tag} ke ${target.tag} (pajak ${taxAmount} ${jenis})`,
+        note: `Transfer ${jumlah} ${jenis} dari ${interaction.user.tag} ke ${target.tag} (pajak ${taxCopper} copper)`,
       });
 
       const doneEmbed = new EmbedBuilder()
         .setColor(0x27ae60)
         .setTitle('✅ Transfer Berhasil')
-        .setDescription(`**${jumlah} ${CURRENCY_LABEL[jenis]}** berhasil dikirim dari ${interaction.user} ke ${target}.\n\nSetelah dipotong pajak transfer sebesar 8% (**${taxAmount} ${CURRENCY_LABEL[jenis]}**), penerima mendapatkan **${amountReceived} ${CURRENCY_LABEL[jenis]}**.`);
+        .setDescription(`**${jumlah} ${CURRENCY_LABEL[jenis]}** berhasil dikirim dari ${interaction.user} ke ${target}.\n\nSetelah dipotong pajak transfer sebesar 8% (${taxString}), penerima mendapatkan ${receivedString}.`);
 
       await btnInteraction.update({ content: null, embeds: [doneEmbed], components: [] });
     });

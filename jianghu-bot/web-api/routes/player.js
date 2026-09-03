@@ -10,6 +10,7 @@ const { isClaimedToday, isClaimedYesterday } = require('../../utils/timezone');
 const LockManager = require('../utils/lockManager');
 const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
+const { RATE_TO_COPPER } = require('../../utils/currency');
 
 // Endpoint: GET /api/player/transactions
 router.get('/transactions', authenticateToken, async (req, res) => {
@@ -625,21 +626,23 @@ router.post('/transfer', authenticateToken, async (req, res) => {
                 throw new CustomError(`Saldo ${currencyType} kamu tidak mencukupi.`, 400);
             }
 
-            // Atomically add to receiver
-            const addQuery = {};
-            addQuery[`currency.${currencyType}`] = amount;
+            const taxRate = 0.08;
+            const totalCopper = amount * (RATE_TO_COPPER[currencyType] || 1);
+            const taxCopper = Math.floor(totalCopper * taxRate);
 
-            await Player.updateOne(
-                { _id: receiver._id },
-                { $inc: addQuery },
-                { session }
-            );
+            // Notice we use receiver.save() to trigger 'save' middleware on update?
+            // `updateOne` and `$inc` don't trigger `pre('save')` normalisation in mongoose natively.
+            // Since we need normalisation for the tax subtraction, we MUST fetch receiver and save it.
+
+            receiver.currency[currencyType] = (receiver.currency[currencyType] || 0) + amount;
+            receiver.currency.copper = (receiver.currency.copper || 0) - taxCopper;
+            await receiver.save({ session });
 
             const TransactionLog = require('../../models/TransactionLog');
             await TransactionLog.create([{
                 guildId,
                 type: 'transfer',
-                description: `[${sender.characterName}] mengirim ${amount} ${currencyType} kepada [${receiver.characterName}].`
+                description: `[${sender.characterName}] mengirim ${amount} ${currencyType} kepada [${receiver.characterName}] (pajak ${taxCopper} copper).`
             }], { session });
         });
 
