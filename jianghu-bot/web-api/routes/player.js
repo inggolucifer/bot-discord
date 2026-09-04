@@ -1254,11 +1254,11 @@ router.get('/transfer-requests', authenticateToken, async (req, res) => {
              return {
                  id: requestItem._id,
                  senderName: sender ? sender.characterName : 'Unknown',
-                 type: req.type,
+                 type: requestItem.type,
                  itemName: requestItem.itemId ? requestItem.itemId.name : null,
-                 quantity: req.quantity,
-                 taxAmount: req.taxAmount,
-                 expiresAt: req.expiresAt
+                 quantity: requestItem.quantity,
+                 taxAmount: requestItem.taxAmount,
+                 expiresAt: requestItem.expiresAt
              };
         }));
 
