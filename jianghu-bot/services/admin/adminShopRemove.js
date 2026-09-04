@@ -26,7 +26,7 @@ module.exports = {
     const nama = interaction.options.getString('nama');
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" tidak ditemukan.` });
 
     const result = await Shop.findOneAndDelete({ guildId: interaction.guildId, category: kategori, refId: doc._id });

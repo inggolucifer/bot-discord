@@ -18,9 +18,19 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'cek') return cekItemService.execute(interaction);
-    if (sub === 'list') return listItemService.execute(interaction);
-    if (sub === 'craft') return craftService.execute(interaction);
+    if (sub === 'cek') return await cekItemService.execute(interaction);
+    if (sub === 'list') return await listItemService.execute(interaction);
+    if (sub === 'craft') return await craftService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

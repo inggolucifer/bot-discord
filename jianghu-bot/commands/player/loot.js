@@ -13,6 +13,7 @@ module.exports = {
     .addStringOption((o) => o.setName('nama').setDescription('Nama karakter yang meninggal').setRequired(true)),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
@@ -78,5 +79,14 @@ module.exports = {
       .setTitle(`☠️ Loot dari ${pool.deceasedCharacterName}`)
       .setDescription(`Kamu berhasil mengambil harta peninggalan.\n\n**Currency didapat:**\n${formatCurrencyLine(pool.currency)}\n\n**Item:** ${pool.inventory.length} jenis\n**Pet:** ${petLootedCount} ekor${overLimitMsg}`);
     return interaction.editReply({ embeds: [embed] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

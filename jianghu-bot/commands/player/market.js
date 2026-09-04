@@ -58,12 +58,22 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'jual-item') return jualListingService.execute(interaction);
-    if (sub === 'jual-pet') return jualPetListingService.execute(interaction);
-    if (sub === 'jual-asset') return jualAssetListingService.execute(interaction);
-    if (sub === 'beli') return beliListingService.execute(interaction);
-    if (sub === 'batal') return cancelListingService.execute(interaction);
-    if (sub === 'lihat-jualan') return lihatJualanService.execute(interaction);
+    if (sub === 'jual-item') return await jualListingService.execute(interaction);
+    if (sub === 'jual-pet') return await jualPetListingService.execute(interaction);
+    if (sub === 'jual-asset') return await jualAssetListingService.execute(interaction);
+    if (sub === 'beli') return await beliListingService.execute(interaction);
+    if (sub === 'batal') return await cancelListingService.execute(interaction);
+    if (sub === 'lihat-jualan') return await lihatJualanService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };
