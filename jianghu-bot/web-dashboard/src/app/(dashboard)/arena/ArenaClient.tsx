@@ -129,7 +129,7 @@ export default function ArenaClient() {
         }
     };
 
-    if (loading || isOpponentsLoading) return <LoadingState text="Menyiapkan Arena Duel..." />;
+    if (isOpponentsLoading) return <LoadingState text="Menyiapkan Arena Duel..." />;
 
     return (
         <div className="space-y-6">

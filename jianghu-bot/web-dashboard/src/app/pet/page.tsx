@@ -50,7 +50,7 @@ export default function PetPage() {
 
   // Modal States
   const [selectedPet, setSelectedPet] = useState<PetData | null>(null);
-  const [modalType, setModalType] = useState<'feed' | 'heal' | 'rename' | 'battle' | null>(null);
+  const [modalType, setModalType] = useState<'feed' | 'heal' | 'rename' | 'battle' | 'release' | null>(null);
   const [consumables, setConsumables] = useState<{foodItems: any[], healItems: any[]}>({foodItems: [], healItems: []});
   const [selectedItem, setSelectedItem] = useState('');
   const [newName, setNewName] = useState('');

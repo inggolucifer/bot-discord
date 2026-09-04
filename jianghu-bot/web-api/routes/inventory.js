@@ -1,3 +1,4 @@
+const Item = require('../../models/Item');
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -48,7 +49,8 @@ router.get('/', authenticateToken, async (req, res) => {
             price: slot.itemId.basePrice, // Changed to match DB schema
             priceCurrency: slot.itemId.priceCurrency || 'copper',
             imageUrl: slot.itemId.imageUrl, // Include image URL
-            emoji: getEmojiForShopItem(slot.itemId.category, 'item')
+            emoji: getEmojiForShopItem(slot.itemId.category, 'item'),
+            effect: slot.itemId.effect
         }));
 
         res.json({
@@ -215,6 +217,98 @@ router.post('/craft', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[API-INVENTORY] Crafting error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat crafting.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: POST /api/inventory/use-time-skip
+router.post('/use-time-skip', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemId, targetManualId } = req.body;
+
+    if (!itemId || !targetManualId) {
+        return res.status(400).json({ error: 'Parameter tidak valid.' });
+    }
+
+    const lockKey = `inventory_use_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) {
+         return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+    }
+
+    try {
+        const { withTransaction } = require('../utils/dbTransaction');
+        const CustomError = require('../utils/CustomError');
+        const TransactionLog = require('../../models/TransactionLog');
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId').populate('inventory.itemId').session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+
+            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
+                throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
+            }
+
+            const item = player.inventory[inventoryIndex].itemId;
+            if (!item.effect || !item.effect.startsWith('time_skip_')) {
+                throw new CustomError(`Item **${item.name}** tidak bisa digunakan untuk mempercepat meditasi.`, 400);
+            }
+
+            const pm = player.manuals.find(m => m.manualId && m.manualId._id.toString() === targetManualId);
+            if (!pm) throw new CustomError('Kamu tidak sedang memediasikan manual ini.', 400);
+            if (!pm.isComprehending) throw new CustomError('Kamu belum memulai comprehend untuk manual ini.', 400);
+
+            const msPassed = Date.now() - new Date(pm.comprehendStartTime).getTime();
+            const hoursPassed = msPassed / (1000 * 60 * 60);
+            if (hoursPassed >= pm.manualId.timeToComprehendHours) {
+                throw new CustomError('Meditasimu sudah mencapai puncaknya!', 400);
+            }
+
+            const hoursToSkip = parseInt(item.effect.split('_')[2], 10);
+            if (isNaN(hoursToSkip) || hoursToSkip <= 0) {
+                throw new CustomError(`Data efek item **${item.name}** tidak valid.`, 400);
+            }
+
+            const hoursLeft = pm.manualId.timeToComprehendHours - hoursPassed;
+            if (hoursToSkip > hoursLeft + 2) {
+                throw new CustomError(`Hentikan! Meditasimu hanya tersisa **${hoursLeft.toFixed(1)} jam**. Menggunakan **${item.name}** (${hoursToSkip} Jam) akan membuang sebagian besar khasiatnya.`, 400);
+            }
+
+            // Deduct Item
+            player.inventory[inventoryIndex].quantity -= 1;
+            if (player.inventory[inventoryIndex].quantity <= 0) {
+                player.inventory.splice(inventoryIndex, 1);
+            }
+            player.markModified('inventory');
+
+            // Shift the start time to the past
+            const currentStartTime = new Date(pm.comprehendStartTime);
+            pm.comprehendStartTime = new Date(currentStartTime.getTime() - (hoursToSkip * 60 * 60 * 1000));
+            player.markModified('manuals');
+
+            await player.save({ session });
+
+            await TransactionLog.create([{
+                guildId,
+                type: 'use_insight_pill',
+                fromUserId: userId,
+                note: `[WEB] Gunakan ${item.name} pada ${pm.manualId.name} (-${hoursToSkip} Jam)`
+            }], { session });
+        });
+
+        res.json({ success: true, message: `Berhasil menggunakan item. Waktu meditasi dipersingkat!` });
+    } catch (error) {
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+        console.error('[API-INVENTORY] Use time skip error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
     }
