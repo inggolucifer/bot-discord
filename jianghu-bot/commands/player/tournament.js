@@ -13,7 +13,17 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'bracket') return tournamentBracketService.execute(interaction);
+    if (sub === 'bracket') return await tournamentBracketService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

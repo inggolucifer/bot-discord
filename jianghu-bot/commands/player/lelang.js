@@ -28,8 +28,18 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'request') return lelangRequestService.execute(interaction);
-    if (sub === 'bid') return lelangBidService.execute(interaction);
+    if (sub === 'request') return await lelangRequestService.execute(interaction);
+    if (sub === 'bid') return await lelangBidService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

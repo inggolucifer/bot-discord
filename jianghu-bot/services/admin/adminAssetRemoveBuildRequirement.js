@@ -19,10 +19,10 @@ module.exports = {
       const namaAset = interaction.options.getString('nama-aset');
       if (!namaAset) return interaction.respond([]);
 
-      const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+      const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
       if (!asset || !asset.buildRequirements) return interaction.respond([]);
 
-      const items = asset.buildRequirements.filter(r => new RegExp(escapeRegex(focusedOption.value), 'i').test(r.itemName)).slice(0, 25);
+      const items = asset.buildRequirements.filter(r => new RegExp(`^\\s*${escapeRegex(focusedOption.value)}`, 'i').test(r.itemName)).slice(0, 25);
       return interaction.respond(items.map((i) => ({ name: i.itemName, value: i.itemName })));
     }
   },
@@ -34,7 +34,7 @@ module.exports = {
     const namaAset = interaction.options.getString('nama-aset');
     const namaItem = interaction.options.getString('nama-item');
 
-    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(namaAset)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     if (!asset.buildRequirements) asset.buildRequirements = [];

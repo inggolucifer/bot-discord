@@ -23,11 +23,21 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'cek') return cekAssetService.execute(interaction);
-    if (sub === 'list') return listAssetService.execute(interaction);
-    if (sub === 'bangun') return bangunAssetService.execute(interaction);
-    if (sub === 'tambah-slot') return tambahSlotAssetService.execute(interaction);
-    if (sub === 'hancurkan') return hancurkanAssetService.execute(interaction);
+    if (sub === 'cek') return await cekAssetService.execute(interaction);
+    if (sub === 'list') return await listAssetService.execute(interaction);
+    if (sub === 'bangun') return await bangunAssetService.execute(interaction);
+    if (sub === 'tambah-slot') return await tambahSlotAssetService.execute(interaction);
+    if (sub === 'hancurkan') return await hancurkanAssetService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

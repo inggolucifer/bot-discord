@@ -23,7 +23,7 @@ module.exports = {
     const nama = interaction.options.getString('nama');
     const jam = interaction.options.getInteger('jam');
 
-    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 
     asset.constructionTimeHours = jam;

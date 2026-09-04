@@ -19,6 +19,7 @@ module.exports = {
     .setDescription('Klaim hadiah harian, dapatkan hadiah lebih besar dengan streak berturut-turut!'),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply();
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
@@ -62,5 +63,14 @@ module.exports = {
       .setTitle('🎁 Daily Claim Berhasil!')
       .setDescription(`Kamu mendapatkan **${reward.label}**.\nStreak: **Hari ke-${player.dailyStreak}** / 7\nSaldo ${reward.type === 'copper' ? 'Copper Coins' : 'Silver Tael'} sekarang: **${player.currency[reward.type]}**`);
     return interaction.editReply({ embeds: [embed] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

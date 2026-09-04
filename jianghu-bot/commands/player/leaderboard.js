@@ -8,6 +8,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('leaderboard').setDescription('Lihat 10 player terkaya di server ini'),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply(); // publik -- leaderboard memang untuk dipamerkan
 
     const topPlayers = await Player.find({ guildId: interaction.guildId, status: 'active' })
@@ -37,6 +38,15 @@ module.exports = {
       .setFooter({ text: 'Kekayaan dihitung dari total semua currency (dikonversi ke setara Silver Tael).' });
 
     return interaction.editReply({ embeds: [embed] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };
 

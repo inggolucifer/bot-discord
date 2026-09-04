@@ -4,6 +4,7 @@ module.exports = {
   data: new SlashCommandBuilder().setName('help').setDescription('Lihat semua command player'),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const embed = new EmbedBuilder()
@@ -22,5 +23,14 @@ module.exports = {
       .setFooter({ text: 'Admin? Gunakan /help-admin untuk melihat command khusus admin.' });
 
     return interaction.editReply({ embeds: [embed] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

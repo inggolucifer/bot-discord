@@ -32,15 +32,25 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'info') return sekteInfoService.execute(interaction);
-    if (sub === 'list') return sekteListService.execute(interaction);
-    if (sub === 'leaderboard') return sekteLeaderboardService.execute(interaction);
-    if (sub === 'donasi') return sekteDonasiService.execute(interaction);
-    if (sub === 'deposit-resource') return sekteDepositResourceService.execute(interaction);
-    if (sub === 'bangun-asset') return sekteBangunAssetService.execute(interaction);
-    if (sub === 'craft') return sekteCraftService.execute(interaction);
-        if (sub === 'kelola-anggota') return sekteKelolaAnggotaService.execute(interaction);
-    if (sub === 'kick-anggota') return sekteKickAnggotaService.execute(interaction);
+    if (sub === 'info') return await sekteInfoService.execute(interaction);
+    if (sub === 'list') return await sekteListService.execute(interaction);
+    if (sub === 'leaderboard') return await sekteLeaderboardService.execute(interaction);
+    if (sub === 'donasi') return await sekteDonasiService.execute(interaction);
+    if (sub === 'deposit-resource') return await sekteDepositResourceService.execute(interaction);
+    if (sub === 'bangun-asset') return await sekteBangunAssetService.execute(interaction);
+    if (sub === 'craft') return await sekteCraftService.execute(interaction);
+        if (sub === 'kelola-anggota') return await sekteKelolaAnggotaService.execute(interaction);
+    if (sub === 'kick-anggota') return await sekteKickAnggotaService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

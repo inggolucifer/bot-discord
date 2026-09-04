@@ -28,7 +28,7 @@ module.exports = {
     const matchNomor = interaction.options.getInteger('match-nomor');
     const pemenang = interaction.options.getUser('pemenang');
 
-    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaTurnamen)}$`, 'i') });
+    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaTurnamen)}\\s*$`, 'i') });
     if (!tournament) return interaction.editReply({ content: `❌ Turnamen "${namaTurnamen}" tidak ditemukan.` });
     if (tournament.status !== 'ongoing') return interaction.editReply({ content: `❌ Turnamen ini berstatus **${tournament.status}**, tidak bisa set pemenang.` });
 

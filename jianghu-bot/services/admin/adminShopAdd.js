@@ -35,7 +35,7 @@ module.exports = {
     const stok = interaction.options.getInteger('stok') ?? -1;
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" belum ada di database ${kategori}. Buat dulu dengan /admin-add-${kategori}.` });
 
     let listing = await Shop.findOne({ guildId: interaction.guildId, category: kategori, refId: doc._id });

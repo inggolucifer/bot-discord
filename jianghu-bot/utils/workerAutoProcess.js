@@ -1,3 +1,4 @@
+const { convertToCopper, convertFromCopper, RATE_TO_COPPER } = require('./currencyNormalize');
 const Player = require('../models/Player');
 const Sect = require('../models/Sect');
 const Asset = require('../models/Asset');
@@ -413,10 +414,13 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                  if (shares && shares.length > 0) {
                      for (const share of shares) {
                          // Find the player in database directly and give them the currency (lazy load)
-                         Player.updateOne(
-                             { discordId: share.userId, guildId: sect.guildId },
-                             { $inc: { [`currency.${assetConfig.profitCurrency}`]: share.amount } }
-                         ).catch(() => {});
+                         const memberPlayer = await Player.findOne({ discordId: share.userId, guildId: sect.guildId });
+                         if (memberPlayer) {
+                                                          const profitCopper = share.amount * RATE_TO_COPPER[assetConfig.profitCurrency];
+                             const totalCopper = convertToCopper(memberPlayer.currency) + profitCopper;
+                             memberPlayer.currency = convertFromCopper(totalCopper);
+                             await memberPlayer.save();
+                         }
                      }
                  } else {
                      // Fallback ke kas sekte jika kosong anggotanya (meski jarang)
