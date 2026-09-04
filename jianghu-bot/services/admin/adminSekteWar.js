@@ -31,9 +31,9 @@ module.exports = {
       return interaction.editReply({ content: '❌ Sekte pemenang dan yang kalah tidak boleh sama.' });
     }
 
-    const winner = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaMenang)}$`, 'i') });
+    const winner = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaMenang)}\\s*$`, 'i') });
     if (!winner) return interaction.editReply({ content: `❌ Sekte "${namaMenang}" tidak ditemukan.` });
-    const loser = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaKalah)}$`, 'i') });
+    const loser = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaKalah)}\\s*$`, 'i') });
     if (!loser) return interaction.editReply({ content: `❌ Sekte "${namaKalah}" tidak ditemukan.` });
 
     const row = new ActionRowBuilder().addComponents(

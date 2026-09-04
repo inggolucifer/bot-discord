@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const Player = require('../models/Player');
-const Item = require('../models/Item');
-const { SYSTEM_REALMS, calculateCurrentQi, syncPlayerCultivation, attemptBreakthrough, updateCultivationRole } = require('../utils/cultivation');
-const { logTransaction } = require('../utils/logger');
+const Player = require('../../models/Player');
+const Item = require('../../models/Item');
+const { SYSTEM_REALMS, calculateCurrentQi, syncPlayerCultivation, attemptBreakthrough, updateCultivationRole } = require('../../utils/cultivation');
+const { logTransaction } = require('../../utils/logger');
 
 module.exports = {
   data: new SlashCommandBuilder()

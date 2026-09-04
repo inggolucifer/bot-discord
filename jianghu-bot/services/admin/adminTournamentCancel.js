@@ -20,7 +20,7 @@ module.exports = {
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
 
     const namaTurnamen = interaction.options.getString('nama-turnamen');
-    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaTurnamen)}$`, 'i') });
+    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaTurnamen)}\\s*$`, 'i') });
     if (!tournament) return interaction.editReply({ content: `❌ Turnamen "${namaTurnamen}" tidak ditemukan.` });
     if (['finished', 'cancelled'].includes(tournament.status)) return interaction.editReply({ content: `❌ Turnamen ini sudah **${tournament.status}**.` });
 

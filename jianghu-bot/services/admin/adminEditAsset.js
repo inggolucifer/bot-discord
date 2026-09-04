@@ -18,7 +18,7 @@ module.exports = {
   async execute(interaction) {
     if (!(await isAdmin(interaction))) return interaction.reply({ content: '❌ Kamu bukan admin.', flags: MessageFlags.Ephemeral });
     const nama = interaction.options.getString('nama');
-    const asset = await Asset.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!asset) return interaction.reply({ content: `❌ Aset "${nama}" tidak ditemukan.`, flags: MessageFlags.Ephemeral });
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_asset_${asset._id}`).setTitle(`Edit: ${asset.name}`.slice(0, 45));

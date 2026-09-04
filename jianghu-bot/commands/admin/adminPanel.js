@@ -7,6 +7,7 @@ module.exports = {
     .setDescription('[ADMIN] Buka panel admin interaktif utama'),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
@@ -34,5 +35,14 @@ module.exports = {
     const row = new ActionRowBuilder().addComponents(selectMenu);
 
     return interaction.editReply({ embeds: [embed], components: [row] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

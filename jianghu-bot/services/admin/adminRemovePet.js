@@ -34,7 +34,7 @@ module.exports = {
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
 
-    const pet = await Pet.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
 
     const idx = player.pets.findIndex((p) => p.petId.equals(pet._id) && (nickname ? p.nickname === nickname : true));

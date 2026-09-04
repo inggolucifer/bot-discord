@@ -7,6 +7,7 @@ module.exports = {
     .setDescription('Restart karakter yang sudah mati (Reset semua data kecuali discordId dan guildId)'),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
@@ -27,5 +28,14 @@ module.exports = {
     );
 
     return interaction.editReply({ embeds: [embed], components: [row] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

@@ -24,7 +24,7 @@ module.exports = {
     const namaTurnamen = interaction.options.getString('nama-turnamen');
     const target = interaction.options.getUser('user');
 
-    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaTurnamen)}$`, 'i') });
+    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaTurnamen)}\\s*$`, 'i') });
     if (!tournament) return interaction.editReply({ content: `❌ Turnamen "${namaTurnamen}" tidak ditemukan.` });
     if (tournament.status !== 'registration') return interaction.editReply({ content: `❌ Turnamen ini sudah **${tournament.status}**, tidak bisa tambah peserta lagi.` });
 

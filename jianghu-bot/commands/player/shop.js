@@ -29,9 +29,19 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'lihat') return shopService.execute(interaction);
-    if (sub === 'beli') return beliService.execute(interaction);
-    if (sub === 'jual') return jualService.execute(interaction);
+    if (sub === 'lihat') return await shopService.execute(interaction);
+    if (sub === 'beli') return await beliService.execute(interaction);
+    if (sub === 'jual') return await jualService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };
