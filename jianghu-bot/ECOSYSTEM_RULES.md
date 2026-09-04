@@ -66,16 +66,16 @@ Sistem membeli dari pemain seharga 20% `basePrice`.
 * **Tier 5 (Relik/Zaman Murim):** 5 - 20 Gold
 * **Tier 6+ (Dewa):** 1+ Jade
 
-### B. Waktu Crafting Item (Sistem Kesabaran)
-Sama seperti Asset, pembuatan Item tingkat tinggi tidak boleh instan. Harus ada waktu tunggu (cooldown/proses tempa) yang memaksa pemain log off dan kembali keesokan harinya.
+### B. Waktu Crafting Item (Sistem Kesabaran & Batching)
+Sama seperti Asset, pembuatan Item tidak boleh instan agar selaras dengan siklus 1-jam auto-process bot. Crafting dapat dilakukan secara **Batch (Massal)**, namun batas waktu minimum pengerjaan dipatok di 1 Jam untuk semua tier dasar.
 
-| Tier / Kualitas Item | Contoh Barang | Waktu Crafting (Real-Time) |
-|---|---|---|
-| **Tier 1 - 2 (Common)** | Papan Kayu, Kapak Batu | Instan - 10 Menit |
-| **Tier 3 (Rare/Besi)** | Pedang Besi, Armor Kulit | 4 - 6 Jam |
-| **Tier 4 (Epic/Modern)**| Pil Kultivasi, Senjata Baja | 12 - 24 Jam |
-| **Tier 5 (Legendary)** | Relik Sekte, Pil Terobosan | 3 - 7 Hari |
-| **Tier 6+ (Mitos/Dewa)**| Pedang Pemecah Langit | **14 - 20 Hari** |
+| Tier / Kualitas Item | Contoh Barang | Waktu Crafting (Real-Time) | Keterangan Batch |
+|---|---|---|---|
+| **Tier 1 - 2 (Common)** | Papan Kayu, Kapak Batu | **1 Jam (Minimum)** | Pemain bisa antre batch puluhan item (misal 10 Kapak = 10 Jam) |
+| **Tier 3 (Rare/Besi)** | Pedang Besi, Armor Kulit | 4 - 6 Jam | Pembuatan alat menengah per unit |
+| **Tier 4 (Epic/Modern)**| Pil Kultivasi, Senjata Baja | 12 - 24 Jam | Senjata elit / sekte |
+| **Tier 5 (Legendary)** | Relik Sekte, Pil Terobosan | 3 - 7 Hari | Artefak kultivasi tinggi |
+| **Tier 6+ (Mitos/Dewa)**| Pedang Pemecah Langit | **14 - 20 Hari** | Mahakarya puncak fana |
 
 ### C. Regulasi Shop Sistem
 * **Fungsi Utama:** Mencegah Deadlock bagi pemula. Shop hanya menjual bahan/alat Tier 1 (Primitif/Batu) dan Blueprint Dasar.
@@ -117,7 +117,7 @@ Sebelum menyimpan desain baru ke Database MongoDB, pastikan:
 1. [ ] Apakah profit Asset Max Tier di bawah batas **2 Gold/hari**?
 2. [ ] Apakah Asset Pekerja membutuhkan alat ber-durability yang bisa hancur?
 3. [ ] Apakah biaya Guard/Perbaikan masuk akal dibanding profit Asset?
-4. [ ] Apakah Waktu Crafting Item sudah disesuaikan dengan Tier-nya (Misal Tier Dewa = 20 Hari)?
+4. [ ] Apakah Waktu Crafting Item mematuhi batas **Minimum 1 Jam** per item?
 5. [ ] Apakah Item ini merusak ekosistem barter jika dijual di Shop sistem?
 6. [ ] Apakah deskripsi (Lore) item sesuai standar emas dan mencerminkan "Zaman" nya?
 
