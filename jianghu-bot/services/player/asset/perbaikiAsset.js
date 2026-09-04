@@ -4,6 +4,7 @@ const Asset = require('../../../models/Asset');
 const escapeRegex = require('../../../utils/escapeRegex');
 const { hasEnoughCurrency, payCurrency, formatCurrency } = require('../../../utils/currency');
 const Item = require('../../../models/Item');
+const { calculateRepairCost } = require('../../../utils/assetCostCalculator');
 
 module.exports = {
   autocomplete: async (interaction) => {
@@ -47,15 +48,9 @@ module.exports = {
 
     let repairCostLog = "";
 
-    // Logic repair: 20% of build requirements OR 20% of base price
-    if (assetConfig.buildable && assetConfig.buildRequirements && assetConfig.buildRequirements.length > 0) {
-        // Need to pay 20% of materials
-        const neededMaterials = [];
-        for (const req of assetConfig.buildRequirements) {
-            const repairQty = Math.max(1, Math.floor(req.quantity * 0.2));
-            neededMaterials.push({ itemId: req.itemId, itemName: req.itemName, quantity: repairQty });
-        }
+    const { neededMaterials, repairCostInCopper } = calculateRepairCost(assetConfig);
 
+    if (neededMaterials.length > 0) {
         // Check inventory
         for (const mat of neededMaterials) {
             const owned = player.inventory.find(i => i.itemId.equals(mat.itemId));
@@ -72,10 +67,6 @@ module.exports = {
             repairCostLog += `- ${mat.quantity}x ${mat.itemName}\n`;
         }
     } else {
-        // Pay 20% of base price
-        const totalBasePriceInCopper = assetConfig.basePrice * (require('../../../utils/currencyNormalize').RATE_TO_COPPER[assetConfig.priceCurrency]);
-        const repairCostInCopper = Math.max(1, Math.floor(totalBasePriceInCopper * 0.2));
-
         // Convert cost to highest possible format for log
         const { convertFromCopper } = require('../../../utils/currencyNormalize');
         const costFormat = formatCurrency(convertFromCopper(repairCostInCopper));
