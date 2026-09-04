@@ -66,11 +66,22 @@ Sistem membeli dari pemain seharga 20% `basePrice`.
 * **Tier 5 (Relik/Zaman Murim):** 5 - 20 Gold
 * **Tier 6+ (Dewa):** 1+ Jade
 
-### B. Regulasi Shop Sistem
+### B. Waktu Crafting Item (Sistem Kesabaran)
+Sama seperti Asset, pembuatan Item tingkat tinggi tidak boleh instan. Harus ada waktu tunggu (cooldown/proses tempa) yang memaksa pemain log off dan kembali keesokan harinya.
+
+| Tier / Kualitas Item | Contoh Barang | Waktu Crafting (Real-Time) |
+|---|---|---|
+| **Tier 1 - 2 (Common)** | Papan Kayu, Kapak Batu | Instan - 10 Menit |
+| **Tier 3 (Rare/Besi)** | Pedang Besi, Armor Kulit | 4 - 6 Jam |
+| **Tier 4 (Epic/Modern)**| Pil Kultivasi, Senjata Baja | 12 - 24 Jam |
+| **Tier 5 (Legendary)** | Relik Sekte, Pil Terobosan | 3 - 7 Hari |
+| **Tier 6+ (Mitos/Dewa)**| Pedang Pemecah Langit | **14 - 20 Hari** |
+
+### C. Regulasi Shop Sistem
 * **Fungsi Utama:** Mencegah Deadlock bagi pemula. Shop hanya menjual bahan/alat Tier 1 (Primitif/Batu) dan Blueprint Dasar.
 * Barang Tier 3+ (Besi ke atas) dan Rank *Epic+* **DILARANG** masuk Shop permanen. Pemain harus craft, barter, atau drop dari bos.
 
-### C. Kualitas Deskripsi Item (Lore)
+### D. Kualitas Deskripsi Item (Lore)
 Setiap entitas (Item/Asset/Pet) wajib memiliki deskripsi yang mendalam, mencerminkan era/tier-nya, dan memiliki fungsi naratif.
 * *Buruk:* "Kapak dari batu untuk potong pohon."
 * *Standar Emas:* "[Durability: 24 Jam] Sebuah kapak kasar dari zaman batu, diikat dengan akar kuat. Meskipun tumpul dan berat, alat ini adalah fondasi awal peradaban fana untuk menaklukkan Hutan Liar."
@@ -106,7 +117,8 @@ Sebelum menyimpan desain baru ke Database MongoDB, pastikan:
 1. [ ] Apakah profit Asset Max Tier di bawah batas **2 Gold/hari**?
 2. [ ] Apakah Asset Pekerja membutuhkan alat ber-durability yang bisa hancur?
 3. [ ] Apakah biaya Guard/Perbaikan masuk akal dibanding profit Asset?
-4. [ ] Apakah Item ini merusak ekosistem barter jika dijual di Shop sistem?
-5. [ ] Apakah deskripsi (Lore) item sesuai standar emas dan mencerminkan "Zaman" nya?
+4. [ ] Apakah Waktu Crafting Item sudah disesuaikan dengan Tier-nya (Misal Tier Dewa = 20 Hari)?
+5. [ ] Apakah Item ini merusak ekosistem barter jika dijual di Shop sistem?
+6. [ ] Apakah deskripsi (Lore) item sesuai standar emas dan mencerminkan "Zaman" nya?
 
 > **Patuhi panduan ini untuk memastikan Jianghu tetap menjadi ekosistem yang sehat, menantang, dan adiktif untuk dimainkan bertahun-tahun.**
