@@ -13,61 +13,71 @@ Sistem ekonomi berbasis hierarki kelipatan 100.
 * **100 Jade (🟢) = 1 Spirit (🔵)**
 
 > **Golden Rule Pendapatan:** Desain semua harga mengacu pada F2P Baseline Income (`/daily`), yang rata-rata menghasilkan **1 Silver per hari** (di luar event). Jika sebuah item berharga 10 Silver, artinya pemain butuh perjuangan login 10 hari tanpa pengeluaran.
+> **Sistem Barter:** Sangat didorong bagi pemain untuk menggunakan sistem Trade/Barter (tukar item dengan item) untuk mengurangi kebergantungan murni pada sistem uang bot, terutama dalam membangun Asset yang membutuhkan banyak bahan alam (kayu, batu).
 
 ---
 
-## 2. ATURAN ASSET & BATASAN PROFIT HARIAN (ROI SYSTEM)
-Asset adalah jantung dari long-play. Untuk mencegah inflasi brutal, Asset penghasil mata uang ("Income") dibatasi keras dengan sistem **ROI (Return on Investment)**. Semakin besar profit, semakin lama waktu balik modal.
+## 2. ZAMAN & PROGRES PERADABAN (ERA PROGRESSION)
+Untuk menjaga alur ekosistem tetap masuk akal, desain material dan alat terbagi berdasarkan "Zaman" (Era Progression):
+1. **Zaman Primitif (Tier 0-1):** Mengandalkan tangan kosong, tulang, dan kayu patah. Alat mudah hancur.
+2. **Zaman Batu (Tier 1-2):** Alat dari batu kasar (Kapak Batu, Palu Batu). Pengumpulan material dasar (Kayu Mentah, Batu Kasar).
+3. **Zaman Besi (Tier 3-4):** Menggunakan Forge/Tungku untuk melebur Besi/Tembaga. Alat jauh lebih awet dan kuat. Memulai era sekte kecil.
+4. **Zaman Modern/Maju (Tier 5):** Alat mekanik, Pabrik pengolahan cepat. Produksi massal.
+5. **Zaman Murim (Tier 6+):** Menggunakan Qi, Energi Spiritual, Relik Kuno, dan Array Formasi sihir. Konstruksi butuh Spirit Stone dan elemen alam (Api Surgawi, dll).
+
+---
+
+## 3. ATURAN ASSET & BATASAN PROFIT HARIAN (ROI SYSTEM)
+Asset adalah jantung dari long-play. Untuk mencegah inflasi brutal, Asset penghasil mata uang ("Income") dibatasi keras dengan sistem **ROI (Return on Investment)**.
 
 ### A. Asset Tipe 1: Passive Income (Penghasil Currency)
-Setiap pembuatan Asset Tipe Income wajib mengikuti formula Harga dan Waktu Konstruksi berikut:
+**Batas Maksimal Mutlak:** Profit per hari untuk Asset level Tertinggi/Dewa (Max Tier) **DIKUNCI PADA 2 GOLD per hari**. Waktu pembangunannya sangat lama (hingga berminggu-minggu). Asset awal dirancang agar pemain **tidak merugi terus**, namun profitnya kecil.
 
-| Tier Asset | Target Profit Max/Hari | Waktu Balik Modal (ROI) | Formula Harga Beli (`basePrice`) | Waktu Konstruksi |
-|---|---|---|---|---|
-| **Tier 1 (Fana/Gubuk)** | 20 - 50 Copper | **20 Hari** | `Profit Harian x 20` | 4 Jam |
-| **Tier 2 (Menengah/Toko)** | 1 - 5 Silver | **30 Hari** | `Profit Harian x 30` | 12 Jam |
-| **Tier 3 (Besar/Pabrik)** | 10 - 50 Silver | **45 Hari** | `Profit Harian x 45` | 24 Jam |
-| **Tier 4 (Elit/Sekte Luar)** | 1 - 5 Gold | **60 Hari** | `Profit Harian x 60` | 3 Hari |
-| **Tier 5 (Sekte Inti)** | 10 - 20 Gold | **90 Hari** | `Profit Harian x 90` | 7 Hari |
-| **Tier 6+ (Dewa/Legenda)** | Maks 1 Jade | **120 Hari** | `Profit Harian x 120` | 14 Hari |
+| Tier Asset (Zaman) | Target Profit Max/Hari | Waktu Balik Modal (ROI) | Formula Harga Beli | Waktu Konstruksi | Estimasi Biaya Guard / Hari |
+|---|---|---|---|---|---|
+| **Tier 1 (Primitif/Gubuk)** | 20 - 50 Copper | **20 Hari** | `Profit Harian x 20` | 4 Jam | 5 Copper |
+| **Tier 2 (Batu/Toko Dasar)** | 1 - 5 Silver | **30 Hari** | `Profit Harian x 30` | 24 Jam | 20 Copper |
+| **Tier 3 (Besi/Pabrik)** | 10 - 20 Silver | **45 Hari** | `Profit Harian x 45` | 3 Hari | 2 Silver |
+| **Tier 4 (Modern/Sekte Luar)**| 50 - 100 Silver| **60 Hari** | `Profit Harian x 60` | 7 Hari | 10 Silver |
+| **Tier 5 (Murim/Sekte Inti)** | 1 Gold | **90 Hari** | `Profit Harian x 90` | 14 Hari | 20 Silver |
+| **Tier 6+ (Dewa/Max Tier)** | **Maks 2 Gold** | **120 Hari** | `Profit Harian x 120` | 30 Hari | 50 Silver |
 
-> *Contoh:* Pembuatan Asset "Toko Senjata Dasar" yang memberikan 2 Silver/hari.
-> * Tier 2. Harga Beli = 2 Silver x 30 Hari = **60 Silver**.
-> * Konstruksi membutuhkan waktu **12 Jam** real-time.
+### B. Sistem Risiko & Guard (Bandit & Bencana Alam)
+*(Fitur Mendatang)* Asset yang dibangun di Jianghu tidak 100% aman selamanya.
+1. **Risiko Kerusakan:** Ada chance harian Asset diserang Bandit atau terkena Bencana Alam.
+2. **Kondisi Rusak:** Jika diserang/terkena bencana, Asset menjadi *Rusak (Halted)* dan tidak menghasilkan profit/material sampai diperbaiki.
+3. **Biaya Perbaikan:** Butuh Material konstruksi (Kayu, Batu) atau Currency.
+4. **Sewa Guard (Pencegahan):** Pemain bisa menyewa NPC "Guard" (Penjaga) yang dibayar per hari menggunakan Currency (lihat tabel di atas) untuk mereduksi drastis peluang diserang Bandit. Pemain elit dengan banyak asset wajib mengelola biaya Guard agar profit bersih tidak tergerus.
 
-### B. Asset Tipe 3: Worker (Rantai Produksi Otomatis)
-Pemain tidak boleh menghasilkan barang dari kehampaan. Asset Worker **WAJIB** memiliki Input yang masuk akal.
-
-1. **Margin Keuntungan Produksi:** Nilai total jual (Base Price) dari Output per jam **TIDAK BOLEH** melebihi 150% dari total Nilai Jual Input per jam. (Margin Maksimal 50%).
-2. **Rantai Konsumsi Bawah-ke-Atas:**
-   * **Pengumpulan Dasar (Tier 1):** Input berupa Alat ber-durability (Kapak/Beliung) + Stamina/Makanan. Output berupa bahan mentah alam (Kayu, Batu, Air).
-   * **Pemrosesan Menengah (Tier 2):** Input bahan alam. Output berupa bahan olahan (Papan Kayu, Batang Besi).
-   * **Manufaktur & Kultivasi (Tier 3+):** Input bahan olahan + Core Monster. Output berupa Senjata/Pil.
-3. **Durability Alat:** Alat yang menjadi input worker (misal: "Kapak Besi") wajib diatur memiliki masa pakai (contoh: `durabilityHours: 72`). Ini memaksa pemain terus membeli/membuat alat, menciptakan *Sink-Hole* ekonomi.
+### C. Asset Tipe 3: Worker (Rantai Produksi Otomatis)
+Pemain tidak boleh menghasilkan barang dari kehampaan.
+1. **Margin Keuntungan:** Nilai total jual dari Output per jam **TIDAK BOLEH** melebihi 150% dari total Nilai Jual Input per jam.
+2. **Durability Alat (Tool Durability):** Alat sebagai input (misal: "Kapak Batu") **WAJIB** memiliki masa pakai (contoh: `durabilityHours: 24`). Jika 24 siklus (jam) kerja terlewati, alat hancur. Pemain harus craft/beli alat baru agar Asset tidak Halt. Ini adalah pondasi rantai konsumsi.
 
 ---
 
-## 3. ATURAN ITEM, CRAFTING, & SHOP
-Item adalah objek perputaran kekayaan. Semua entitas Item harus mematuhi aturan nilai ini:
-
-### A. Panduan Harga Base Price (Tier Item)
-Harga ini digunakan sebagai acuan Shop dan nilai jual-balik ke sistem (Sistem membeli dari pemain seharga 20% `basePrice`).
-
-* **Tier 1 (Bahan Mentah Dasar):** 1 - 10 Copper
-* **Tier 2 (Bahan Olahan):** 20 - 90 Copper
-* **Tier 3 (Alat / Perlengkapan Dasar):** 1 - 10 Silver
-* **Tier 4 (Pill / Material Langka):** 50 - 100 Silver
-* **Tier 5 (Relik / Senjata Kuat):** 5 - 20 Gold
-* **Tier 6+ (Mitos / Dewa):** 1+ Jade
+## 4. ATURAN ITEM, DESKRIPSI, & CRAFTING
+### A. Panduan Harga Base Price & Jual-Balik
+Sistem membeli dari pemain seharga 20% `basePrice`.
+* **Tier 1 (Bahan Mentah):** 1 - 10 Copper
+* **Tier 2 (Bahan Olahan/Zaman Batu):** 20 - 90 Copper
+* **Tier 3 (Alat Besi/Perlengkapan):** 1 - 10 Silver
+* **Tier 4 (Pill/Material Modern):** 50 - 100 Silver
+* **Tier 5 (Relik/Zaman Murim):** 5 - 20 Gold
+* **Tier 6+ (Dewa):** 1+ Jade
 
 ### B. Regulasi Shop Sistem
-* **Shop DILARANG menjual barang Tier 3 ke atas secara permanen.** Pemain HARUS memproduksi barang tingkat lanjut dari Asset Crafting atau transaksi dengan pemain lain (Pasar).
-* **Fungsi Shop:** Hanya untuk menjual barang awal (Tier 1), Blueprint Asset Dasar, dan Alat Pemula agar rantai produksi tidak mati (Deadlock).
-* Barang Rank *Epic* ke atas dilarang keras masuk Shop Sistem permanen.
+* **Fungsi Utama:** Mencegah Deadlock bagi pemula. Shop hanya menjual bahan/alat Tier 1 (Primitif/Batu) dan Blueprint Dasar.
+* Barang Tier 3+ (Besi ke atas) dan Rank *Epic+* **DILARANG** masuk Shop permanen. Pemain harus craft, barter, atau drop dari bos.
+
+### C. Kualitas Deskripsi Item (Lore)
+Setiap entitas (Item/Asset/Pet) wajib memiliki deskripsi yang mendalam, mencerminkan era/tier-nya, dan memiliki fungsi naratif.
+* *Buruk:* "Kapak dari batu untuk potong pohon."
+* *Standar Emas:* "[Durability: 24 Jam] Sebuah kapak kasar dari zaman batu, diikat dengan akar kuat. Meskipun tumpul dan berat, alat ini adalah fondasi awal peradaban fana untuk menaklukkan Hutan Liar."
 
 ---
 
-## 4. ATURAN PET & COMBAT VALUE
+## 5. ATURAN PET & COMBAT VALUE
 Pet memberikan multiplier pertarungan (PvP/PvE). Progresi Pet dirancang untuk dikerjakan hingga berbulan-bulan sampai level maksimal (100).
 
 ### A. Harga & Nilai Pet
@@ -75,30 +85,28 @@ Pet memberikan multiplier pertarungan (PvP/PvE). Progresi Pet dirancang untuk di
 * **Uncommon:** 2 - 5 Gold
 * **Rare:** 20 - 50 Gold
 * **Epic:** 1 - 5 Jade
-* **Legendary / Mythical:** 10+ Jade (Atau hanya via Event/Loot Spesial).
+* **Legendary / Mythical:** 10+ Jade (Via Event/Loot Spesial).
 
 ### B. Skalabilitas Stat Growth
-Pet stats meningkat per level. Semakin tinggi Rank, *Base Stat* sedikit lebih tinggi, namun perbedaannya sangat terasa di *Growth Rate*.
 * `HP Aktual = BaseHP + (Level * GrowthRate * 2.5)`
 * `ATK/DEF/SPD Aktual = Base + (Level * GrowthRate * 0.5)`
-*(Selalu tes balancing pertumbuhan ini agar pertarungan di PvP turn 20 tidak menjadi endless-loop).*
 
 ---
 
-## 5. SINK-HOLE SYSTEM (PENCEGAH INFLASI)
-Sistem ekonomi harus memiliki metode "pembuangan" agar mata uang dan barang tidak menumpuk tanpa batas yang merusak motivasi long-play.
-
-1. **Biaya Konstruksi Manual (`buildRequirements`):** Asset tingkat tinggi harus menuntut jumlah material yang masif (contoh: Butuh 5.000 Papan Kayu dan 10.000 Batu Bata). Pemain harus berkooperasi membentuk grup/sekte atau grinding berbulan-bulan.
-2. **Pill Meditasi (Time-Skip):** Menyediakan Item penambah kecepatan (Time-Skip) dengan harga Premium (Gold/Jade). Ini adalah cara terbaik membakar surplus uang bagi pemain elit.
-3. **Biaya Pajak Transfer/Market:** Selalu terapkan pajak tersembunyi/biaya lelang untuk perlahan menyedot uang keluar dari sirkulasi server.
+## 6. SINK-HOLE SYSTEM (PENCEGAH INFLASI)
+1. **Biaya Guard & Repair:** Pajak tersembunyi bagi pemilik Asset besar (lihat poin 3B).
+2. **Tool Destruction:** Alat yang pecah (`durabilityHours` habis) memaksa uang dan material terus berputar di market antar pemain.
+3. **Biaya Konstruksi Masif:** Asset tinggi butuh ribuan material mentah (menggerakkan pemain bawah untuk menjual ke pemain atas).
+4. **Pill Meditasi (Time-Skip):** Item premium (Gold/Jade) untuk skip waktu konstruksi/kultivasi.
 
 ---
 
 ## ✅ CHECKLIST REVIEW (Untuk Admin / Dev)
 Sebelum menyimpan desain baru ke Database MongoDB, pastikan:
-1. [ ] Apakah **Daily Profit** Asset sudah sesuai tabel pembatasan Tier?
-2. [ ] Apakah Asset Worker memiliki **Input**? *(Dilarang output dari kehampaan)*
-3. [ ] Apakah Item ini merusak sistem jika dimasukkan ke **Shop**? *(Haruskah ini jadi resep Crafting saja?)*
-4. [ ] Apakah relasi `basePrice` dan Rank sudah logis untuk ekonomi jangka panjang?
+1. [ ] Apakah profit Asset Max Tier di bawah batas **2 Gold/hari**?
+2. [ ] Apakah Asset Pekerja membutuhkan alat ber-durability yang bisa hancur?
+3. [ ] Apakah biaya Guard/Perbaikan masuk akal dibanding profit Asset?
+4. [ ] Apakah Item ini merusak ekosistem barter jika dijual di Shop sistem?
+5. [ ] Apakah deskripsi (Lore) item sesuai standar emas dan mencerminkan "Zaman" nya?
 
 > **Patuhi panduan ini untuk memastikan Jianghu tetap menjadi ekosistem yang sehat, menantang, dan adiktif untuk dimainkan bertahun-tahun.**
