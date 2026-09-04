@@ -11,8 +11,8 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
-import Modal from "@/components/ui/Modal";
-import { ToastContainer, toast } from "@/components/ui/ToastContainer";
+import { Modal } from '@/components/ui/Modal';
+import { ToastContainer } from '@/components/ui/ToastContainer';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface SectData {
@@ -92,14 +92,14 @@ export default function SectPage() {
     setDonateLoading(true);
     try {
        await api.post('/sect/donate', { type: donateType, amount: donateAmount });
-       toast.success(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
+       console.log(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
        setIsDonateModalOpen(false);
        setDonateAmount(1);
        setDonateType('copper');
        fetchSectData();
        queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch(err: any) {
-       toast.error(err.response?.data?.error || 'Gagal melakukan donasi.');
+       console.log(err.response?.data?.error || 'Gagal melakukan donasi.');
     } finally {
        setDonateLoading(false);
     }
@@ -111,7 +111,7 @@ export default function SectPage() {
         setSect(res.data.data.sect);
         setAssets(res.data.data.assets);
       } catch (err: any) {
-        console.error(err);
+        console.log(err);
         setError(err.response?.data?.error || 'Gagal memuat data sekte.');
       } finally {
         setLoading(false);

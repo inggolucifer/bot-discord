@@ -32,7 +32,7 @@ export default function InventoryPage() {
   const [discardModalOpen, setDiscardModalOpen] = useState(false);
   const [itemToDiscard, setItemToDiscard] = useState<InventoryItem | null>(null);
   const [discardQuantity, setDiscardQuantity] = useState(1);
-  const [actionLoading, setActionLoading] = useState(false);
+
 
   const handleDiscard = async () => {
     if (!itemToDiscard) return;
@@ -42,7 +42,7 @@ export default function InventoryPage() {
       setDiscardModalOpen(false);
       setItemToDiscard(null);
       setDiscardQuantity(1);
-      fetchInventory();
+      fetchInventoryAndRecipes();
     } catch (err: any) {
       alert(err.response?.data?.error || 'Gagal membuang item.');
     } finally {
@@ -88,6 +88,7 @@ export default function InventoryPage() {
   const [selectedStation, setSelectedStation] = useState<string>('');
   const [selectedRecipe, setSelectedRecipe] = useState<string>('');
   const [craftTimes, setCraftTimes] = useState<number>(1);
+
   const [actionLoading, setActionLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{type: 'error'|'success', text: string}|null>(null);
 

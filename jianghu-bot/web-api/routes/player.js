@@ -1249,13 +1249,13 @@ router.get('/transfer-requests', authenticateToken, async (req, res) => {
             expiresAt: { $gte: new Date() }
         }).populate('itemId').lean();
 
-        const formatted = await Promise.all(requests.map(async (req) => {
-             const sender = await Player.findOne({ discordId: req.fromUserId }).select('characterName').lean();
+        const formatted = await Promise.all(requests.map(async (requestItem) => {
+             const sender = await Player.findOne({ discordId: requestItem.fromUserId }).select('characterName').lean();
              return {
-                 id: req._id,
+                 id: requestItem._id,
                  senderName: sender ? sender.characterName : 'Unknown',
                  type: req.type,
-                 itemName: req.itemId ? req.itemId.name : null,
+                 itemName: requestItem.itemId ? requestItem.itemId.name : null,
                  quantity: req.quantity,
                  taxAmount: req.taxAmount,
                  expiresAt: req.expiresAt
