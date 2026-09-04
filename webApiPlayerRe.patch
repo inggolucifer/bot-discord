@@ -1,0 +1,280 @@
+<<<<<<< SEARCH
+module.exports = router;
+=======
+// Endpoint: POST /api/player/transfer-item-request
+router.post('/transfer-item-request', authenticateToken, async (req, res) => {
+    const { targetName, itemId, quantity } = req.body;
+    const userId = req.user.userId;
+
+    if (!targetName || !itemId || !quantity || quantity <= 0) {
+        return res.status(400).json({ error: 'Data tidak valid.' });
+    }
+
+    const lockKey = `player_transfer_req_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
+    try {
+        const TransferRequest = require('../../models/TransferRequest');
+        const Item = require('../../models/Item');
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const sender = await Player.findOne({ discordId: userId, guildId }).session(session);
+            if (!sender) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (sender.status !== 'active') throw new CustomError(`Karaktermu berstatus ${sender.status}.`, 403);
+
+            const receiver = await Player.findOne({
+                characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
+                guildId
+            }).session(session);
+            if (!receiver) throw new CustomError('Karakter penerima tidak ditemukan.', 404);
+            if (receiver.status !== 'active') throw new CustomError(`Penerima berstatus ${receiver.status}.`, 403);
+            if (receiver.discordId === userId) throw new CustomError('Tidak bisa transfer ke diri sendiri.', 400);
+
+            const item = await Item.findById(itemId).session(session);
+            if (!item) throw new CustomError('Item tidak ditemukan.', 404);
+
+            const owned = sender.inventory.find(i => i.itemId.toString() === itemId);
+            if (!owned || owned.quantity < quantity) throw new CustomError('Item tidak cukup di inventory.', 400);
+
+            const pajak = quantity; // 1 silver per item
+            if (sender.currency.silver < pajak) {
+                throw new CustomError(`Saldo Silver tidak cukup untuk bayar pajak (Butuh: ${pajak} Silver).`, 400);
+            }
+
+            const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+            await TransferRequest.create([{
+                guildId,
+                fromUserId: sender.discordId,
+                toUserId: receiver.discordId,
+                type: 'item',
+                itemId: item._id,
+                quantity,
+                taxAmount: pajak,
+                expiresAt
+            }], { session });
+
+        });
+
+        res.json({ success: true, message: `Permintaan transfer dikirim ke ${targetName}. (Berlaku 5 menit)` });
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-PLAYER] Transfer item request error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: GET /api/player/transfer-requests
+router.get('/transfer-requests', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const TransferRequest = require('../../models/TransferRequest');
+
+        // cleanup expired
+        await TransferRequest.updateMany(
+            { status: 'pending', expiresAt: { $lt: new Date() } },
+            { $set: { status: 'rejected' } }
+        );
+
+        const requests = await TransferRequest.find({
+            toUserId: userId,
+            status: 'pending',
+            expiresAt: { $gte: new Date() }
+        }).populate('itemId').lean();
+
+        const formatted = await Promise.all(requests.map(async (req) => {
+             const sender = await Player.findOne({ discordId: req.fromUserId }).select('characterName').lean();
+             return {
+                 id: req._id,
+                 senderName: sender ? sender.characterName : 'Unknown',
+                 type: req.type,
+                 itemName: req.itemId ? req.itemId.name : null,
+                 quantity: req.quantity,
+                 taxAmount: req.taxAmount,
+                 expiresAt: req.expiresAt
+             };
+        }));
+
+        res.json({ success: true, data: formatted });
+    } catch (error) {
+        console.error('[API-PLAYER] GET transfer requests error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    }
+});
+
+// Endpoint: POST /api/player/transfer-item-respond
+router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
+    const { requestId, accept } = req.body;
+    const userId = req.user.userId;
+
+    if (!requestId || accept === undefined) return res.status(400).json({ error: 'Data tidak valid.' });
+
+    const lockKey = `player_transfer_res_${requestId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
+
+    try {
+        const TransferRequest = require('../../models/TransferRequest');
+        const TransactionLog = require('../../models/TransactionLog');
+
+        let msg = '';
+        await withTransaction(async (session) => {
+            const tr = await TransferRequest.findById(requestId).populate('itemId').session(session);
+            if (!tr) throw new CustomError('Request tidak ditemukan.', 404);
+            if (tr.toUserId !== userId) throw new CustomError('Akses ditolak.', 403);
+            if (tr.status !== 'pending' || tr.expiresAt < new Date()) {
+                if (tr.status === 'pending') {
+                    tr.status = 'rejected';
+                    await tr.save({ session });
+                }
+                throw new CustomError('Request sudah kedaluwarsa atau sudah diproses.', 400);
+            }
+
+            if (!accept) {
+                tr.status = 'rejected';
+                await tr.save({ session });
+                msg = 'Permintaan transfer ditolak.';
+                return;
+            }
+
+            const sender = await Player.findOne({ discordId: tr.fromUserId, guildId: tr.guildId }).session(session);
+            const receiver = await Player.findOne({ discordId: tr.toUserId, guildId: tr.guildId }).session(session);
+
+            if (!sender || sender.status !== 'active') throw new CustomError('Pengirim tidak valid/tidak aktif.', 400);
+            if (!receiver || receiver.status !== 'active') throw new CustomError('Penerima tidak aktif.', 400);
+            if (sender.currency.silver < tr.taxAmount) throw new CustomError('Pengirim tidak memiliki cukup Silver untuk pajak.', 400);
+
+            const senderOwned = sender.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
+            if (!senderOwned || senderOwned.quantity < tr.quantity) throw new CustomError('Pengirim tidak memiliki item yang cukup.', 400);
+
+            // Deduct from sender
+            sender.currency.silver -= tr.taxAmount;
+            senderOwned.quantity -= tr.quantity;
+            if (senderOwned.quantity <= 0) {
+                sender.inventory = sender.inventory.filter(i => i.itemId.toString() !== tr.itemId._id.toString());
+            }
+
+            // Add to receiver
+            const receiverOwned = receiver.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
+            if (receiverOwned) {
+                receiverOwned.quantity += tr.quantity;
+            } else {
+                receiver.inventory.push({ itemId: tr.itemId._id, quantity: tr.quantity });
+            }
+
+            sender.markModified('currency');
+            sender.markModified('inventory');
+            receiver.markModified('inventory');
+            await sender.save({ session });
+            await receiver.save({ session });
+
+            tr.status = 'accepted';
+            await tr.save({ session });
+
+            await TransactionLog.create([{
+                guildId: tr.guildId,
+                type: 'transfer',
+                fromUserId: sender.discordId,
+                toUserId: receiver.discordId,
+                itemDescription: `[WEB] Transfer ${tr.quantity}x ${tr.itemId.name} (Pajak ${tr.taxAmount} Silver)`
+            }], { session });
+
+            msg = `Berhasil menerima ${tr.quantity}x ${tr.itemId.name}.`;
+        });
+
+        res.json({ success: true, message: msg });
+    } catch (error) {
+         if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+         console.error('[API-PLAYER] Transfer item respond error:', error);
+         res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: POST /api/player/restart-karakter
+router.post('/restart-karakter', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { confirmation } = req.body;
+
+    if (!confirmation) return res.status(400).json({ error: 'Konfirmasi tidak valid.' });
+
+    const lockKey = `player_restart_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
+    try {
+        const { withTransaction } = require('../utils/dbTransaction');
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            if (player.status !== 'dead') {
+                throw new CustomError('Karaktermu masih hidup! Command ini hanya untuk karakter yang sudah meninggal.', 400);
+            }
+
+            const expectedConfirmation = `${player.characterName} RESTART`;
+            if (confirmation !== expectedConfirmation) {
+                throw new CustomError(`Konfirmasi gagal. Ketik "${expectedConfirmation}".`, 400);
+            }
+
+            // Perform Hard Reset (simulating what the discord bot does, or typically wiping most things)
+            player.status = 'active';
+            player.inventory = [];
+            player.pets = [];
+            player.assets = [];
+            player.manuals = [];
+            player.laws = [];
+            player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+            player.stats = { baseHp: 100, baseAtk: 15, baseDef: 10, baseSpd: 10 };
+            player.systemCultivation = { realm: 'Fondasi Fana (Mortal Foundation)', stage: 0, qi: 0, lastSyncAt: new Date() };
+            player.realm = 'Mortal';
+            player.stage = '-';
+            player.age = 16;
+            player.isNormalCultivator = false;
+
+            // Keep discordId, guildId, characterName, gender, sect, characterImage, etc.
+
+            player.markModified('inventory');
+            player.markModified('pets');
+            player.markModified('assets');
+            player.markModified('manuals');
+            player.markModified('laws');
+            player.markModified('currency');
+            player.markModified('stats');
+            player.markModified('systemCultivation');
+
+            await player.save({ session });
+
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId,
+                type: 'law_reset', // Close enough type for reset
+                fromUserId: userId,
+                description: `[WEB] Karakter direstart (Reinkarnasi)`
+            }], { session });
+
+        });
+
+        res.json({ success: true, message: `Reinkarnasi berhasil. Selamat datang kembali.` });
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-PLAYER] Restart karakter error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+module.exports = router;
+>>>>>>> REPLACE
