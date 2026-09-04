@@ -3,6 +3,7 @@ const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const escapeRegex = require('../../../utils/escapeRegex');
 const { hasEnoughCurrency, payCurrency, formatCurrency } = require('../../../utils/currency');
+const { calculateDailyGuardCost } = require('../../../utils/assetCostCalculator');
 
 module.exports = {
   autocomplete: async (interaction) => {
@@ -45,36 +46,7 @@ module.exports = {
         return interaction.editReply(`Aset **${assetConfig.name}** belum selesai dibangun, tidak bisa dijaga.`);
     }
 
-    // Dynamic cost based on tier table in ECOSYSTEM_RULES.md (approximation)
-    // We base it on profit. If it's a Tipe 3 (item output), we estimate based on basePrice.
-    let dailyCostCopper = 5; // Fallback Tier 1
-
-    if (assetConfig.dailyProfit > 0) {
-        // Evaluate based on daily profit
-        const { RATE_TO_COPPER } = require('../../../utils/currencyNormalize');
-        const profitCopper = assetConfig.dailyProfit * (RATE_TO_COPPER[assetConfig.profitCurrency] || 1);
-
-        // Cost mappings from rules:
-        // T1: 20-50 copper profit -> 5 copper guard
-        // T2: 1-5 silver profit -> 20 copper guard
-        // T3: 10-20 silver profit -> 2 silver guard (200 copper)
-        // T4: 50-100 silver profit -> 10 silver guard (1000 copper)
-        // T5: 1 gold profit -> 20 silver guard (2000 copper)
-        // T6: 2 gold profit -> 50 silver guard (5000 copper)
-        if (profitCopper >= 20000) dailyCostCopper = 5000;
-        else if (profitCopper >= 10000) dailyCostCopper = 2000;
-        else if (profitCopper >= 5000) dailyCostCopper = 1000;
-        else if (profitCopper >= 1000) dailyCostCopper = 200;
-        else if (profitCopper >= 100) dailyCostCopper = 20;
-        else dailyCostCopper = 5;
-    } else {
-        // Non-currency asset (Tipe 2/3), evaluate based on base price or construction time
-        if (assetConfig.basePrice >= 1 && assetConfig.priceCurrency === 'gold') dailyCostCopper = 2000;
-        else if (assetConfig.basePrice >= 50 && assetConfig.priceCurrency === 'silver') dailyCostCopper = 1000;
-        else if (assetConfig.basePrice >= 10 && assetConfig.priceCurrency === 'silver') dailyCostCopper = 200;
-        else if (assetConfig.basePrice >= 1 && assetConfig.priceCurrency === 'silver') dailyCostCopper = 20;
-    }
-
+    const dailyCostCopper = calculateDailyGuardCost(assetConfig);
     const totalCostCopper = dailyCostCopper * hari;
 
     if (!hasEnoughCurrency(player.currency, { copper: totalCostCopper })) {

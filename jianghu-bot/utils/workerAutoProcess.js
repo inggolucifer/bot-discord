@@ -60,7 +60,11 @@ async function runWorkerAutoProcess(client) {
                     const assetConfig = assetMap.get(target.assetId.toString());
                     try {
                         const user = await client.users.fetch(player.discordId).catch(() => null);
-                        if (user) await user.send(`⚠️ **BENCANA ALAM!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** milikmu terkena bencana dan sekarang **RUSAK (Halted)**. Perbaiki aset tersebut agar bisa beroperasi kembali.`);
+                        const msg = `⚠️ **BENCANA ALAM!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** milikmu terkena bencana dan sekarang **RUSAK (Halted)**. Perbaiki aset tersebut agar bisa beroperasi kembali.`;
+                        if (user) await user.send(msg);
+                        if (client.io) {
+                            client.io.to(player.discordId).emit('user_update', { message: msg });
+                        }
                     } catch (e) {}
                 }
             }
@@ -84,7 +88,11 @@ async function runWorkerAutoProcess(client) {
                     const assetConfig = assetMap.get(target.assetId.toString());
                     try {
                         const user = await client.users.fetch(player.discordId).catch(() => null);
-                        if (user) await user.send(`⚠️ **SERANGAN BANDIT!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** diserang bandit karena tidak ada penjagaan. Aset tersebut kini **RUSAK (Halted)**.`);
+                        const msg = `⚠️ **SERANGAN BANDIT!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** diserang bandit karena tidak ada penjagaan. Aset tersebut kini **RUSAK (Halted)**.`;
+                        if (user) await user.send(msg);
+                        if (client.io) {
+                            client.io.to(player.discordId).emit('user_update', { message: msg });
+                        }
                     } catch (e) {}
                 } else if (activeAssets.length > 0) {
                     // All assets were guarded. Bandit cycle resets anyway because they tried and failed.
@@ -248,8 +256,12 @@ async function runWorkerAutoProcess(client) {
                         owned.lastWarningSentAt = new Date();
                         try {
                             const user = await client.users.fetch(player.discordId).catch(() => null);
+                            const msg = `⚠️ Pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`;
                             if (user) {
-                                await user.send(`⚠️ Pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`).catch(() => null);
+                                await user.send(msg).catch(() => null);
+                            }
+                            if (client.io) {
+                                client.io.to(player.discordId).emit('user_update', { message: msg });
                             }
                         } catch (e) {}
                     }
@@ -441,8 +453,12 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                      if (sect.leaderId) {
                          try {
                              const user = await client.users.fetch(sect.leaderId).catch(() => null);
+                             const msg = `⚠️ Pekerja di aset sekte **${assetConfig.name}** telah **berhenti bekerja** karena sekte kekurangan material: **${missingMaterialName}**! Segera isi ulang gudang sekte.`;
                              if (user) {
-                                 await user.send(`⚠️ Aset sekte **${assetConfig.name}** milik sekte **${sect.name}** telah **berhenti beroperasi** karena kekurangan material: **${missingMaterialName}**!`).catch(() => null);
+                                 await user.send(msg).catch(() => null);
+                             }
+                             if (client.io) {
+                                client.io.to(sect.leaderId).emit('user_update', { message: msg });
                              }
                          } catch (e) {}
                      }
