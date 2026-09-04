@@ -35,11 +35,11 @@ export default function SkillsClient() {
     setActionLoading(true);
     try {
       await api.post('/player/laws/learn', { lawId: selectedLawToLearn._id });
-      console.log('Berhasil mempelajari Hukum Alam.');
+      alert('Berhasil mempelajari Hukum Alam.');
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsLearnModalOpen(false);
     } catch (err: any) {
-      console.log(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
+      alert(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
     } finally {
       setActionLoading(false);
     }
@@ -48,7 +48,7 @@ export default function SkillsClient() {
   const handleResetLaw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (resetConfirmation !== 'RESET LAW') {
-      console.log('Ketik RESET LAW untuk mengkonfirmasi.');
+      alert('Ketik RESET LAW untuk mengkonfirmasi.');
       return;
     }
     setActionLoading(true);
@@ -58,18 +58,18 @@ export default function SkillsClient() {
       const resetItem = inv.find((i: any) => i.name === 'Teratai Kelahiran Kembali');
 
       if (!resetItem) {
-        console.log('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
+        alert('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
         setActionLoading(false);
         return;
       }
 
       await api.post('/player/laws/reset', { itemName: resetItem.name });
-      console.log('Berhasil mereset Hukum Alam.');
+      alert('Berhasil mereset Hukum Alam.');
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsResetModalOpen(false);
       setResetConfirmation('');
     } catch (err: any) {
-      console.log(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
+      alert(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
     } finally {
       setActionLoading(false);
     }
