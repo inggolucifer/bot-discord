@@ -640,6 +640,89 @@ async function main() {
 
   // ---------- ASSET PRIMITIF (Common) ----------
   // Profit rendah, construction cepat, material murah
+
+  await upsertAsset('6a91b15fa9e03dc91c54d001', {
+    name: 'Sumur Air Tanah',
+    rank: 'Common',
+    description: '[OUTPUT per jam: 10x Air Bersih]\nSumur galian sederhana yang mencapai mata air bawah tanah. Menyediakan pasokan air bersih yang vital tanpa input bahan, hanya butuh tenaga pekerja aktif.',
+    basePrice: 150, priceCurrency: 'copper',
+    dailyProfit: 0, profitCurrency: 'copper',
+    isCraftingStation: false,
+    buildable: true,
+    constructionTimeHours: 4,
+    buildRequirements: [
+      { itemId: oid('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 50, durabilityHours: 1 },
+      { itemId: oid('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 30, durabilityHours: 1 },
+    ],
+    workerInputMaterials: [],
+    workerOutputItemId: oid('6a91b15ba9e03dc91c54bfe3'),
+    workerOutputItemName: 'Air Bersih',
+    workerOutputQuantity: 10,
+    recipes: [],
+    imageUrl: null, createdBy: 'System Oracle',
+  });
+
+  await upsertAsset('6a91b15fa9e03dc91c54d002', {
+    name: 'Meja Pengrajin Batu',
+    rank: 'Common',
+    description: '[CRAFTING STATION]\nMeja kerja kasar dengan alat pemecah batu. Buka menu craft untuk membuat alat-alat batu dasar. Tidak memproduksi otomatis.',
+    basePrice: 200, priceCurrency: 'copper',
+    dailyProfit: 0, profitCurrency: 'copper',
+    isCraftingStation: true,
+    buildable: true,
+    constructionTimeHours: 6,
+    buildRequirements: [
+      { itemId: oid('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 80, durabilityHours: 1 },
+      { itemId: oid('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 100, durabilityHours: 1 },
+    ],
+    workerInputMaterials: [],
+    workerOutputItemId: null, workerOutputItemName: null, workerOutputQuantity: 0,
+    recipes: [
+      {
+        recipeName: 'Asah Batu Tajam',
+        resultItemId: oid('6a91b15aa9e03dc91c54bfc5'),
+        resultItemName: 'Batu Tajam',
+        resultQuantity: 1,
+        materials: [
+          { itemId: oid('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 3, durabilityHours: 1 },
+        ],
+      },
+      {
+        recipeName: 'Rakit Kapak Batu',
+        resultItemId: oid('6a91b15ba9e03dc91c54bfd1'),
+        resultItemName: 'Kapak Batu',
+        resultQuantity: 1,
+        materials: [
+          { itemId: oid('6a91b15aa9e03dc91c54bfc5'), itemName: 'Batu Tajam', quantity: 2, durabilityHours: 12 },
+          { itemId: oid('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 5, durabilityHours: 1 },
+          { itemId: oid('6a91b15ba9e03dc91c54bfd6'), itemName: 'Tali Rami', quantity: 1, durabilityHours: 48 },
+        ],
+      },
+      {
+        recipeName: 'Rakit Beliung Batu',
+        resultItemId: oid('6a91b15ba9e03dc91c54bfd2'),
+        resultItemName: 'Beliung Batu',
+        resultQuantity: 1,
+        materials: [
+          { itemId: oid('6a91b15aa9e03dc91c54bfc5'), itemName: 'Batu Tajam', quantity: 2, durabilityHours: 12 },
+          { itemId: oid('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 5, durabilityHours: 1 },
+          { itemId: oid('6a91b15ba9e03dc91c54bfd6'), itemName: 'Tali Rami', quantity: 1, durabilityHours: 48 },
+        ],
+      },
+      {
+        recipeName: 'Rakit Cangkul Kayu',
+        resultItemId: oid('6a91b15ba9e03dc91c54bfd3'),
+        resultItemName: 'Cangkul Kayu',
+        resultQuantity: 1,
+        materials: [
+          { itemId: oid('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 8, durabilityHours: 1 },
+          { itemId: oid('6a91b15aa9e03dc91c54bfc5'), itemName: 'Batu Tajam', quantity: 1, durabilityHours: 12 },
+        ],
+      },
+    ],
+    imageUrl: null, createdBy: 'System Oracle',
+  });
+
   await upsertAsset('6a91b15fa9e03dc91c54c07d', {
     name: 'Pusat Pemotongan Kayu Liar',
     rank: 'Common',
