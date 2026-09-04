@@ -1,3 +1,4 @@
+const Item = require('../../models/Item');
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
