@@ -8,6 +8,10 @@ const sectAssetSchema = new mongoose.Schema({
   constructionCompleteAt: { type: Date, default: null },
   isHalted: { type: Boolean, default: false },
   lastWarningSentAt: { type: Date, default: null },
+  isDamaged: { type: Boolean, default: false },
+  damageType: { type: String, enum: ['bandit', 'disaster', null], default: null },
+  guardEndTime: { type: Date, default: null },
+  toolDurabilityUsage: { type: Map, of: Number, default: {} },
 }, { _id: false });
 
 const sectResourceSchema = new mongoose.Schema({
@@ -38,6 +42,9 @@ const sectSchema = new mongoose.Schema({
 
   resources: { type: [sectResourceSchema], default: [] },
   assets: { type: [sectAssetSchema], default: [] },
+
+  lastDisasterHitAt: { type: Date, default: null },
+  lastBanditHitAt: { type: Date, default: null },
 
   createdBy: { type: String, required: true },
 }, { timestamps: true });

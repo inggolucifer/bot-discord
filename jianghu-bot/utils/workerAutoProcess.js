@@ -35,6 +35,64 @@ async function runWorkerAutoProcess(client) {
                 guildConfigs.set(player.guildId, guildConfig);
             }
 
+
+            // --- RISK SYSTEM (BANDIT & DISASTER) ---
+            const now = Date.now();
+            const DISASTER_CYCLE = 20 * 24 * 3600 * 1000;
+            const BANDIT_CYCLE = 5 * 24 * 3600 * 1000;
+
+            let riskTriggered = false;
+            if (!player.lastDisasterHitAt) { player.lastDisasterHitAt = new Date(); playerUpdated = true; }
+            if (!player.lastBanditHitAt) { player.lastBanditHitAt = new Date(); playerUpdated = true; }
+            const lastDisaster = player.lastDisasterHitAt.getTime();
+            if (now - lastDisaster >= DISASTER_CYCLE) {
+                // Trigger disaster
+                const activeAssets = player.assets.filter(a => a.status === 'active' && !a.isDamaged && !isUnderConstruction(a));
+                if (activeAssets.length > 0) {
+                    const target = activeAssets[Math.floor(Math.random() * activeAssets.length)];
+                    target.isDamaged = true;
+                    target.isHalted = true;
+                    target.damageType = 'disaster';
+                    player.lastDisasterHitAt = new Date();
+                    playerUpdated = true;
+                    riskTriggered = true;
+
+                    const assetConfig = assetMap.get(target.assetId.toString());
+                    try {
+                        const user = await client.users.fetch(player.discordId).catch(() => null);
+                        if (user) await user.send(`⚠️ **BENCANA ALAM!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** milikmu terkena bencana dan sekarang **RUSAK (Halted)**. Perbaiki aset tersebut agar bisa beroperasi kembali.`);
+                    } catch (e) {}
+                }
+            }
+
+            const lastBandit = player.lastBanditHitAt.getTime();
+            if (!riskTriggered && now - lastBandit >= BANDIT_CYCLE) {
+                // Trigger bandit
+                const activeAssets = player.assets.filter(a => a.status === 'active' && !a.isDamaged && !isUnderConstruction(a));
+
+                // Filter out assets guarded by valid guards
+                const vulnerableAssets = activeAssets.filter(a => !a.guardEndTime || a.guardEndTime.getTime() < now);
+
+                if (vulnerableAssets.length > 0) {
+                    const target = vulnerableAssets[Math.floor(Math.random() * vulnerableAssets.length)];
+                    target.isDamaged = true;
+                    target.isHalted = true;
+                    target.damageType = 'bandit';
+                    player.lastBanditHitAt = new Date();
+                    playerUpdated = true;
+
+                    const assetConfig = assetMap.get(target.assetId.toString());
+                    try {
+                        const user = await client.users.fetch(player.discordId).catch(() => null);
+                        if (user) await user.send(`⚠️ **SERANGAN BANDIT!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** diserang bandit karena tidak ada penjagaan. Aset tersebut kini **RUSAK (Halted)**.`);
+                    } catch (e) {}
+                } else if (activeAssets.length > 0) {
+                    // All assets were guarded. Bandit cycle resets anyway because they tried and failed.
+                    player.lastBanditHitAt = new Date();
+                    playerUpdated = true;
+                }
+            }
+
             for (const owned of player.assets) {
                 const assetConfig = assetMap.get(owned.assetId.toString());
                 if (!assetConfig) continue;
@@ -82,7 +140,15 @@ async function runWorkerAutoProcess(client) {
                 }
 
                 // --- FASE PRODUKSI ---
+
                 if (owned.status !== 'active') continue;
+                if (owned.isDamaged) {
+                    owned.isHalted = true;
+                    owned.lastProgressUpdate = new Date();
+                    playerUpdated = true;
+                    continue;
+                }
+
 
                 // Hitung active workers valid
                 let activeWorkersCount = 0;
@@ -157,10 +223,14 @@ async function runWorkerAutoProcess(client) {
                         if (durability === 1) {
                             maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
                         } else {
-                            // Untuk alat yang awet, hitung ekspektasi maksimum waktu bertahan alat
-                            // (Jumlah alat / (kebutuhan / durabilitas))
-                            const expectedBurnRatePerHour = neededPerHour / durability;
-                            maxAffordableForThisMat = Math.floor(availableQuantity / expectedBurnRatePerHour);
+                            if (!owned.toolDurabilityUsage) owned.toolDurabilityUsage = new Map();
+                            const currentUsage = owned.toolDurabilityUsage.get(input.itemId.toString()) || 0;
+                            // Deterministic tracking:
+                            // We have availableQuantity tools. Each tool lasts 'durability' hours.
+                            // We need 'neededPerHour' tools working per hour.
+                            // So total working hours we can afford = (availableQuantity * durability) - currentUsage
+                            // Since we need 'neededPerHour' per hour, we divide by it.
+                            maxAffordableForThisMat = Math.floor(Math.max(0, (availableQuantity * durability) - currentUsage) / neededPerHour);
                         }
 
                         if (maxAffordableForThisMat < affordableHours) {
@@ -202,15 +272,19 @@ async function runWorkerAutoProcess(client) {
                         if (durability === 1) {
                             totalBroken = baseNeeded * affordableHours;
                         } else {
-                            // Sistem kerusakan probabilistik
-                            // Melempar dadu per jam, per kebutuhan pekerja
-                            for (let h = 0; h < affordableHours; h++) {
-                                for (let p = 0; p < baseNeeded; p++) {
-                                    if (Math.random() < (1.0 / durability)) {
-                                        totalBroken++;
-                                    }
-                                }
-                            }
+                            if (!owned.toolDurabilityUsage) owned.toolDurabilityUsage = new Map();
+                            let currentUsage = owned.toolDurabilityUsage.get(input.itemId.toString()) || 0;
+
+                            // Calculate new usage
+                            currentUsage += (baseNeeded * affordableHours);
+
+                            // Tools broken are how many full durability cycles we crossed
+                            totalBroken = Math.floor(currentUsage / durability);
+
+                            // Remainder becomes the new usage state
+                            const remainder = currentUsage % durability;
+                            owned.toolDurabilityUsage.set(input.itemId.toString(), remainder);
+                            playerUpdated = true;
                         }
 
                         if (totalBroken > 0) {
@@ -346,8 +420,9 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                      if (durability === 1) {
                          maxAffordableForThisMat = Math.floor(availableQuantity / neededPerHour);
                      } else {
-                         const expectedBurnRatePerHour = neededPerHour / durability;
-                         maxAffordableForThisMat = Math.floor(availableQuantity / expectedBurnRatePerHour);
+                         if (!owned.toolDurabilityUsage) owned.toolDurabilityUsage = new Map();
+                         const currentUsage = owned.toolDurabilityUsage.get(input.itemId.toString()) || 0;
+                         maxAffordableForThisMat = Math.floor(Math.max(0, (availableQuantity * durability) - currentUsage) / neededPerHour);
                      }
 
                      if (maxAffordableForThisMat < affordableHours) {
@@ -387,13 +462,14 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                      if (durability === 1) {
                          totalBroken = baseNeeded * affordableHours;
                      } else {
-                         for (let h = 0; h < affordableHours; h++) {
-                             for (let p = 0; p < baseNeeded; p++) {
-                                 if (Math.random() < (1.0 / durability)) {
-                                     totalBroken++;
-                                 }
-                             }
-                         }
+                         if (!owned.toolDurabilityUsage) owned.toolDurabilityUsage = new Map();
+                         let currentUsage = owned.toolDurabilityUsage.get(input.itemId.toString()) || 0;
+
+                         currentUsage += (baseNeeded * affordableHours);
+                         totalBroken = Math.floor(currentUsage / durability);
+                         const remainder = currentUsage % durability;
+                         owned.toolDurabilityUsage.set(input.itemId.toString(), remainder);
+                         sectUpdated = true;
                      }
 
                      if (totalBroken > 0) {
