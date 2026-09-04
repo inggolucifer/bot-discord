@@ -26,7 +26,7 @@ module.exports = {
       return interaction.editReply('❌ Channel lelang belum di-set. Gunakan `/admin lelang config` terlebih dahulu.');
     }
 
-    const item = await Item.findOne({ name: new RegExp(`^${escapeRegex(itemName)}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^\\s*${escapeRegex(itemName)}\\s*$`, 'i') });
     if (!item) {
       return interaction.editReply(`❌ Item "${itemName}" tidak ditemukan di database.`);
     }

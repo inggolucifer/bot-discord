@@ -30,7 +30,7 @@ module.exports = {
     const target = interaction.options.getUser('user');
     const posisi = interaction.options.getString('posisi');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
+    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaSekte)}\\s*$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });

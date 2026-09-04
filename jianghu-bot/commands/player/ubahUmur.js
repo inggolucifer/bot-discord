@@ -8,6 +8,7 @@ module.exports = {
     .addIntegerOption((o) => o.setName('umur-baru').setDescription('Umur baru karaktermu').setRequired(true).setMinValue(1).setMaxValue(9999)),
 
   async execute(interaction) {
+    try {
     await interaction.deferReply();
 
     const umurBaru = interaction.options.getInteger('umur-baru');
@@ -25,6 +26,15 @@ module.exports = {
       .setTitle('🎂 Umur Diperbarui')
       .setDescription(`Umur **${player.characterName}** diubah dari ${umurLama} tahun menjadi **${umurBaru} tahun**.`);
     return interaction.editReply({ embeds: [embed] });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };
 

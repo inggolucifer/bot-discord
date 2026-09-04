@@ -28,6 +28,7 @@ module.exports = {
     .addIntegerOption((opt) => opt.setName('jumlah').setDescription('Jumlah').setRequired(true).setMinValue(1)),
 
   async execute(interaction) {
+    try {
     // PENTING: pesan transfer ini HARUS terlihat oleh penerima (butuh klik tombol Accept/Decline),
     // jadi defer TIDAK BOLEH ephemeral di sini (beda dengan kebanyakan command lain).
     await interaction.deferReply();
@@ -136,5 +137,14 @@ module.exports = {
         await interaction.editReply({ content: '⌛ Permintaan transfer kedaluwarsa (5 menit).', embeds: [], components: [] }).catch(() => {});
       }
     });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

@@ -30,6 +30,7 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     await interaction.deferReply();
 
     const target = interaction.options.getUser('user');
@@ -149,5 +150,14 @@ module.exports = {
         await interaction.editReply({ content: '⌛ Permintaan transfer item kedaluwarsa (5 menit).', embeds: [], components: [] }).catch(() => {});
       }
     });
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };

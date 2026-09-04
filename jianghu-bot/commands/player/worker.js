@@ -30,14 +30,24 @@ module.exports = {
   },
 
   async execute(interaction) {
+    try {
     const sub = interaction.options.getSubcommand();
-    if (sub === 'daftar') return daftarWorkerService.execute(interaction);
-    if (sub === 'batal') return batalWorkerService.execute(interaction);
-    if (sub === 'ubah') return ubahWorkerService.execute(interaction);
-    if (sub === 'pindah') return pindahWorkerService.execute(interaction);
-    if (sub === 'sewa-sistem') return sewaWorkerSistemService.execute(interaction);
-    if (sub === 'pekerja-saya') return pekerjaSayaService.execute(interaction);
-    if (sub === 'kerja-mandiri') return kerjaMandiriService.execute(interaction);
-    if (sub === 'berhenti-kerja-mandiri') return berhentiKerjaMandiriService.execute(interaction);
+    if (sub === 'daftar') return await daftarWorkerService.execute(interaction);
+    if (sub === 'batal') return await batalWorkerService.execute(interaction);
+    if (sub === 'ubah') return await ubahWorkerService.execute(interaction);
+    if (sub === 'pindah') return await pindahWorkerService.execute(interaction);
+    if (sub === 'sewa-sistem') return await sewaWorkerSistemService.execute(interaction);
+    if (sub === 'pekerja-saya') return await pekerjaSayaService.execute(interaction);
+    if (sub === 'kerja-mandiri') return await kerjaMandiriService.execute(interaction);
+    if (sub === 'berhenti-kerja-mandiri') return await berhentiKerjaMandiriService.execute(interaction);
+      } catch (error) {
+      console.error(error);
+      const msg = "Terjadi kesalahan sistem saat memproses command ini.";
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   }
 };

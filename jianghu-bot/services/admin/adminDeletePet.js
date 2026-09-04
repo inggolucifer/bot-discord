@@ -20,7 +20,7 @@ module.exports = {
 
     if (!(await isAdmin(interaction))) return interaction.editReply({ content: '❌ Kamu bukan admin.' });
     const nama = interaction.options.getString('nama');
-    const pet = await Pet.findOne({ name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
 
     const row = new ActionRowBuilder().addComponents(

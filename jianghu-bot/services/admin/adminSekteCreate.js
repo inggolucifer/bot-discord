@@ -19,7 +19,7 @@ module.exports = {
     const deskripsi = interaction.options.getString('deskripsi') || '-';
     const gambarUrl = interaction.options.getString('gambar-url') || null;
 
-    const exists = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(nama)}$`, 'i') });
+    const exists = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (exists) return interaction.editReply({ content: `❌ Sekte dengan nama "${nama}" sudah ada.` });
 
     await Sect.create({ guildId: interaction.guildId, name: nama, description: deskripsi, imageUrl: gambarUrl, createdBy: interaction.user.id });

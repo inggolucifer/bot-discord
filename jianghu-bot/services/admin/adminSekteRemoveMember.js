@@ -24,7 +24,7 @@ module.exports = {
     const namaSekte = interaction.options.getString('nama-sekte');
     const target = interaction.options.getUser('user');
 
-    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${escapeRegex(namaSekte)}$`, 'i') });
+    const sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaSekte)}\\s*$`, 'i') });
     if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
 
     const wasIn = sect.leaderId === target.id || sect.viceLeaderId === target.id || sect.elderIds.includes(target.id) || sect.memberIds.includes(target.id);
