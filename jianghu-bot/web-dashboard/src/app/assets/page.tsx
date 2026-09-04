@@ -97,7 +97,7 @@ export default function AssetsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [actionLoading, setActionLoading] = useState(false);
+
   const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
   const [activePageTab, setActivePageTab] = useState<'my-assets' | 'build-asset'>('my-assets');
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,6 +162,7 @@ export default function AssetsPage() {
   };
 
 
+
   const [actionLoading, setActionLoading] = useState(false);
   const [destroyModalOpen, setDestroyModalOpen] = useState(false);
   const [destroyConfirmText, setDestroyConfirmText] = useState("");
@@ -201,22 +202,7 @@ export default function AssetsPage() {
     }
   };
 
-  const handleMoveWorker = async () => {
-    if (!selectedWorkerForMove || !selectedTargetAssetId) return;
-    setActionLoading(true);
-    try {
-      await api.post('/player/assets/move-worker', { workerId: selectedWorkerForMove.workerId, targetAssetId: selectedTargetAssetId });
-      setMoveWorkerModalOpen(false);
-      setSelectedWorkerForMove(null);
-      setSelectedTargetAssetId("");
-      setSourceAssetIdForMove("");
-      await fetchAssets();
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Gagal memindahkan pekerja.');
-    } finally {
-      setActionLoading(false);
-    }
-  };
+
 
   const handleStopMandiri = async () => {
     if (!confirm('Berhenti kerja mandiri?')) return;
@@ -887,7 +873,7 @@ export default function AssetsPage() {
           </select>
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setMoveWorkerModalOpen(false)}>Batal</Button>
-            <Button variant="primary" onClick={handleMoveWorker} disabled={actionLoading || !selectedTargetAssetId}>Pindahkan</Button>
+            <Button variant="default" onClick={handleMoveWorker} disabled={actionLoading || !selectedTargetAssetId}>Pindahkan</Button>
           </div>
         </div>
       </Modal>

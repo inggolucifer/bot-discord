@@ -11,9 +11,9 @@ import { Badge } from '@/components/ui/Badge';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { BookOpen, Shield, Wind, Droplet, Flame, Mountain, Zap, Sun, Moon, Skull, HeartPulse, RefreshCw, AlertTriangle } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
+import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
-import { ToastContainer, toast } from '@/components/ui/ToastContainer';
+import { ToastContainer } from '@/components/ui/ToastContainer';
 import { useRouter } from 'next/navigation';
 
 export default function SkillsClient() {
@@ -35,11 +35,11 @@ export default function SkillsClient() {
     setActionLoading(true);
     try {
       await api.post('/player/laws/learn', { lawId: selectedLawToLearn._id });
-      toast.success('Berhasil mempelajari Hukum Alam.');
+      console.log('Berhasil mempelajari Hukum Alam.');
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsLearnModalOpen(false);
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
+      console.log(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
     } finally {
       setActionLoading(false);
     }
@@ -48,7 +48,7 @@ export default function SkillsClient() {
   const handleResetLaw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (resetConfirmation !== 'RESET LAW') {
-      toast.error('Ketik RESET LAW untuk mengkonfirmasi.');
+      console.log('Ketik RESET LAW untuk mengkonfirmasi.');
       return;
     }
     setActionLoading(true);
@@ -58,18 +58,18 @@ export default function SkillsClient() {
       const resetItem = inv.find((i: any) => i.name === 'Teratai Kelahiran Kembali');
 
       if (!resetItem) {
-        toast.error('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
+        console.log('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
         setActionLoading(false);
         return;
       }
 
       await api.post('/player/laws/reset', { itemName: resetItem.name });
-      toast.success('Berhasil mereset Hukum Alam.');
+      console.log('Berhasil mereset Hukum Alam.');
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsResetModalOpen(false);
       setResetConfirmation('');
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
+      console.log(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
     } finally {
       setActionLoading(false);
     }
