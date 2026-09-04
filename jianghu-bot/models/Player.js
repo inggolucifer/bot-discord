@@ -60,6 +60,10 @@ const assetOwnedSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'building', 'active'], default: 'active' },
   isHalted: { type: Boolean, default: false },
   lastWarningSentAt: { type: Date, default: null },
+  isDamaged: { type: Boolean, default: false },
+  damageType: { type: String, enum: ['bandit', 'disaster', null], default: null },
+  guardEndTime: { type: Date, default: null },
+  toolDurabilityUsage: { type: Map, of: Number, default: {} },
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
@@ -135,6 +139,9 @@ const playerSchema = new mongoose.Schema({
   registeredAt: { type: Date, default: Date.now },
 
   hasCompletedTour: { type: Boolean, default: false },
+
+  lastDisasterHitAt: { type: Date, default: null },
+  lastBanditHitAt: { type: Date, default: null },
 
   totalWealth: { type: Number, default: 0, index: true },
 }, { timestamps: true });
