@@ -1,851 +1,462 @@
-[{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0be"
+[
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0be"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc2"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.217Z"
+    },
+    "isActive": true,
+    "price": 5,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.217Z"
+    }
   },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc2"
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0bf"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc3"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.242Z"
+    },
+    "isActive": true,
+    "price": 5,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.242Z"
+    }
   },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.217Z"
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c0"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc4"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.263Z"
+    },
+    "isActive": true,
+    "price": 2,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.263Z"
+    }
   },
-  "isActive": true,
-  "price": 5,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.217Z"
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c1"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc5"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.292Z"
+    },
+    "isActive": true,
+    "price": 10,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.292Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c2"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc6"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.316Z"
+    },
+    "isActive": true,
+    "price": 4,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.316Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c3"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc7"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.340Z"
+    },
+    "isActive": true,
+    "price": 3,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.340Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c4"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc8"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.366Z"
+    },
+    "isActive": true,
+    "price": 6,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.366Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c5"
+    },
+    "refId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc9"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.389Z"
+    },
+    "isActive": true,
+    "price": 8,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.389Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c6"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd1"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.413Z"
+    },
+    "isActive": true,
+    "price": 25,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.413Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c7"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd2"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.435Z"
+    },
+    "isActive": true,
+    "price": 25,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.435Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c8"
+    },
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd3"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.458Z"
+    },
+    "isActive": true,
+    "price": 20,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.458Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0c9"
+    },
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd4"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.482Z"
+    },
+    "isActive": true,
+    "price": 30,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.482Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0ca"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd5"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.505Z"
+    },
+    "isActive": true,
+    "price": 25,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.505Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0cb"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe2"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.528Z"
+    },
+    "isActive": true,
+    "price": 15,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.528Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0cc"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe3"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.551Z"
+    },
+    "isActive": true,
+    "price": 5,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.551Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0cd"
+    },
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe4"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.573Z"
+    },
+    "isActive": true,
+    "price": 8,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.573Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0ce"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfec"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.596Z"
+    },
+    "isActive": true,
+    "price": 5,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.596Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a91b161a9e03dc91c54c0cf"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe5"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:45.618Z"
+    },
+    "isActive": true,
+    "price": 25,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1,
+    "updatedAt": {
+      "$date": "2026-08-28T16:03:45.618Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a92e38119cc607ac43c4d9b"
+    },
+    "guildId": "1504794711775514856",
+    "category": "item",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfd9"
+    },
+    "refModel": "Item",
+    "price": 22,
+    "priceCurrency": "copper",
+    "stock": -1,
+    "isActive": true,
+    "addedBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-08-29T13:49:53.977Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.977Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a93839c6c98aad22a64b687"
+    },
+    "guildId": "1504794711775514856",
+    "category": "item",
+    "refId": {
+      "$oid": "6a91b15ba9e03dc91c54bfdf"
+    },
+    "refModel": "Item",
+    "price": 40,
+    "priceCurrency": "copper",
+    "stock": -1,
+    "isActive": true,
+    "addedBy": "801512578433941565",
+    "createdAt": {
+      "$date": "2026-08-30T01:13:00.961Z"
+    },
+    "updatedAt": {
+      "$date": "2026-08-30T01:13:00.961Z"
+    },
+    "__v": 0
   }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0bf"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc3"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.242Z"
-  },
-  "isActive": true,
-  "price": 5,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.242Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c0"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc4"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.263Z"
-  },
-  "isActive": true,
-  "price": 2,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.263Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c1"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc5"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.292Z"
-  },
-  "isActive": true,
-  "price": 10,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.292Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c2"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc6"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.316Z"
-  },
-  "isActive": true,
-  "price": 4,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.316Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c3"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc7"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.340Z"
-  },
-  "isActive": true,
-  "price": 3,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.340Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c4"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc8"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.366Z"
-  },
-  "isActive": true,
-  "price": 6,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.366Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c5"
-  },
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc9"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.389Z"
-  },
-  "isActive": true,
-  "price": 8,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.389Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c6"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd1"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.413Z"
-  },
-  "isActive": true,
-  "price": 25,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.413Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c7"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd2"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.435Z"
-  },
-  "isActive": true,
-  "price": 25,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.435Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c8"
-  },
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd3"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.458Z"
-  },
-  "isActive": true,
-  "price": 20,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.458Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0c9"
-  },
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd4"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.482Z"
-  },
-  "isActive": true,
-  "price": 30,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.482Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0ca"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd5"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.505Z"
-  },
-  "isActive": true,
-  "price": 25,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.505Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0cb"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe2"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.528Z"
-  },
-  "isActive": true,
-  "price": 15,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.528Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0cc"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe3"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.551Z"
-  },
-  "isActive": true,
-  "price": 5,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.551Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0cd"
-  },
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe4"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.573Z"
-  },
-  "isActive": true,
-  "price": 8,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.573Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0ce"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfec"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.596Z"
-  },
-  "isActive": true,
-  "price": 5,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.596Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a91b161a9e03dc91c54c0cf"
-  },
-  "guildId": "DEFAULT_GUILD",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe5"
-  },
-  "__v": 0,
-  "addedBy": "System Oracle",
-  "category": "item",
-  "createdAt": {
-    "$date": "2026-08-28T16:03:45.618Z"
-  },
-  "isActive": true,
-  "price": 25,
-  "priceCurrency": "copper",
-  "refModel": "Item",
-  "stock": -1,
-  "updatedAt": {
-    "$date": "2026-08-28T16:03:45.618Z"
-  }
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d79"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc2"
-  },
-  "refModel": "Item",
-  "price": 5,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.604Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.604Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d7b"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc3"
-  },
-  "refModel": "Item",
-  "price": 5,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.635Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.635Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d7d"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc4"
-  },
-  "refModel": "Item",
-  "price": 2,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.656Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.656Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d7f"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc5"
-  },
-  "refModel": "Item",
-  "price": 12,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.677Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.677Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d81"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc6"
-  },
-  "refModel": "Item",
-  "price": 4,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.699Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.699Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d83"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc7"
-  },
-  "refModel": "Item",
-  "price": 3,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.721Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.721Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d85"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc8"
-  },
-  "refModel": "Item",
-  "price": 6,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.742Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.742Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d87"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc9"
-  },
-  "refModel": "Item",
-  "price": 8,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.764Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.764Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d89"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe3"
-  },
-  "refModel": "Item",
-  "price": 5,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.785Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.785Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d8b"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfec"
-  },
-  "refModel": "Item",
-  "price": 6,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.806Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.806Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d8d"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe2"
-  },
-  "refModel": "Item",
-  "price": 18,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.828Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.828Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d8f"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe4"
-  },
-  "refModel": "Item",
-  "price": 8,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.849Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.849Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d91"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd1"
-  },
-  "refModel": "Item",
-  "price": 30,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.871Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.871Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d93"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd2"
-  },
-  "refModel": "Item",
-  "price": 30,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.893Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.893Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d95"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd3"
-  },
-  "refModel": "Item",
-  "price": 25,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.914Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.914Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d97"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd4"
-  },
-  "refModel": "Item",
-  "price": 35,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.936Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.936Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d99"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd5"
-  },
-  "refModel": "Item",
-  "price": 28,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.957Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.957Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a92e38119cc607ac43c4d9b"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfd9"
-  },
-  "refModel": "Item",
-  "price": 22,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "System Oracle",
-  "createdAt": {
-    "$date": "2026-08-29T13:49:53.977Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.977Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6a93839c6c98aad22a64b687"
-  },
-  "guildId": "1504794711775514856",
-  "category": "item",
-  "refId": {
-    "$oid": "6a91b15ba9e03dc91c54bfdf"
-  },
-  "refModel": "Item",
-  "price": 40,
-  "priceCurrency": "copper",
-  "stock": -1,
-  "isActive": true,
-  "addedBy": "801512578433941565",
-  "createdAt": {
-    "$date": "2026-08-30T01:13:00.961Z"
-  },
-  "updatedAt": {
-    "$date": "2026-08-30T01:13:00.961Z"
-  },
-  "__v": 0
-}]
+]
