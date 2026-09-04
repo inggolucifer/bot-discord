@@ -829,6 +829,145 @@ router.post('/daily', authenticateToken, async (req, res) => {
 });
 
 
+// --- START REPAIR ASSET ---
+router.post('/assets/repair', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { assetId } = req.body;
+
+    if (!assetId) {
+        return res.status(400).json({ error: 'Data tidak lengkap.' });
+    }
+
+    const lockKey = `asset_repair_${userId}_${assetId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Sedang memproses perbaikan. Mohon tunggu." });
+
+    try {
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const assetConfig = await Asset.findById(assetId);
+        if (!assetConfig) return res.status(404).json({ error: 'Data master aset tidak ditemukan.' });
+
+        const ownedAsset = player.assets.find(a => a.assetId._id.equals(assetConfig._id) || a.assetId.equals(assetConfig._id));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+        if (!ownedAsset.isDamaged) return res.status(400).json({ error: 'Aset tersebut tidak sedang rusak.' });
+
+        const { calculateRepairCost } = require('../../utils/assetCostCalculator');
+        const { neededMaterials, repairCostInCopper } = calculateRepairCost(assetConfig);
+
+        let repairCostLog = "";
+
+        if (neededMaterials.length > 0) {
+            // Check inventory
+            for (const mat of neededMaterials) {
+                const owned = player.inventory.find(i => i.itemId.equals(mat.itemId));
+                const available = owned ? owned.quantity : 0;
+                if (available < mat.quantity) {
+                    return res.status(400).json({ error: `Kekurangan material ${mat.itemName}. Butuh: ${mat.quantity}, Milikmu: ${available}.` });
+                }
+            }
+
+            // Deduct
+            for (const mat of neededMaterials) {
+                const owned = player.inventory.find(i => i.itemId.equals(mat.itemId));
+                owned.quantity -= mat.quantity;
+                repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
+            }
+        } else {
+            if (!hasEnoughCurrency(player.currency, { copper: repairCostInCopper })) {
+                return res.status(400).json({ error: 'Tidak memiliki cukup uang untuk biaya perbaikan.' });
+            }
+            payCurrency(player.currency, { copper: repairCostInCopper });
+            const { convertFromCopper } = require('../../utils/currencyNormalize');
+            repairCostLog = formatCurrency(convertFromCopper(repairCostInCopper));
+        }
+
+        ownedAsset.isDamaged = false;
+        ownedAsset.isHalted = false;
+        ownedAsset.damageType = null;
+        ownedAsset.lastProgressUpdate = new Date();
+
+        await player.save();
+
+        const { logTransaction } = require('../../utils/logger');
+        await logTransaction(guildId, 'player_repair_asset', userId, null, null, repairCostInCopper, `Repair asset: ${assetConfig.name}. Cost: ${repairCostLog}`);
+
+        res.json({ message: 'Aset berhasil diperbaiki.', cost: repairCostLog });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error repairing asset:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan internal server saat memperbaiki aset.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+// --- END REPAIR ASSET ---
+
+// --- START GUARD ASSET ---
+router.post('/assets/guard', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { assetId, hari } = req.body;
+
+    if (!assetId || !hari || hari < 1) {
+        return res.status(400).json({ error: 'Data tidak lengkap atau durasi tidak valid.' });
+    }
+
+    const lockKey = `asset_guard_${userId}_${assetId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: "Sedang memproses penyewaan guard. Mohon tunggu." });
+
+    try {
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const assetConfig = await Asset.findById(assetId);
+        if (!assetConfig) return res.status(404).json({ error: 'Data master aset tidak ditemukan.' });
+
+        const ownedAsset = player.assets.find(a => a.assetId._id.equals(assetConfig._id) || a.assetId.equals(assetConfig._id));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+        if (ownedAsset.status !== 'active') return res.status(400).json({ error: 'Aset belum selesai dibangun, tidak bisa dijaga.' });
+
+        const { calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
+        const dailyCostCopper = calculateDailyGuardCost(assetConfig);
+        const totalCostCopper = dailyCostCopper * hari;
+
+        if (!hasEnoughCurrency(player.currency, { copper: totalCostCopper })) {
+            return res.status(400).json({ error: 'Tidak memiliki cukup uang untuk biaya guard.' });
+        }
+
+        payCurrency(player.currency, { copper: totalCostCopper });
+
+        const now = Date.now();
+        let currentEndTime = ownedAsset.guardEndTime ? ownedAsset.guardEndTime.getTime() : now;
+        if (currentEndTime < now) currentEndTime = now;
+
+        ownedAsset.guardEndTime = new Date(currentEndTime + (hari * 24 * 3600 * 1000));
+
+        await player.save();
+
+        const { logTransaction } = require('../../utils/logger');
+        const { convertFromCopper } = require('../../utils/currencyNormalize');
+        const formattedCost = formatCurrency(convertFromCopper(totalCostCopper));
+
+        await logTransaction(guildId, 'player_guard_asset', userId, null, null, totalCostCopper, `Guard asset: ${assetConfig.name} for ${hari} days. Cost: ${formattedCost}`);
+
+        res.json({ message: `Berhasil menyewa guard untuk ${hari} hari.`, guardEndTime: ownedAsset.guardEndTime });
+
+    } catch (error) {
+        console.error('[API-PLAYER] Error guarding asset:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan internal server saat menyewa guard.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+// --- END GUARD ASSET ---
 // Hancurkan Aset (Destroy Asset)
 router.post('/assets/destroy', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
