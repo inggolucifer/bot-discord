@@ -92,14 +92,14 @@ export default function SectPage() {
     setDonateLoading(true);
     try {
        await api.post('/sect/donate', { type: donateType, amount: donateAmount });
-       console.log(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
+       alert(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
        setIsDonateModalOpen(false);
        setDonateAmount(1);
        setDonateType('copper');
        fetchSectData();
        queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch(err: any) {
-       console.log(err.response?.data?.error || 'Gagal melakukan donasi.');
+       alert(err.response?.data?.error || 'Gagal melakukan donasi.');
     } finally {
        setDonateLoading(false);
     }
@@ -111,7 +111,7 @@ export default function SectPage() {
         setSect(res.data.data.sect);
         setAssets(res.data.data.assets);
       } catch (err: any) {
-        console.log(err);
+        alert(err);
         setError(err.response?.data?.error || 'Gagal memuat data sekte.');
       } finally {
         setLoading(false);
