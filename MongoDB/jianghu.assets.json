@@ -1,3710 +1,3935 @@
-[{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c07d"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pusat Pemotongan Kayu Liar",
-  "__v": 0,
-  "basePrice": 80,
-  "buildRequirements": [],
-  "buildable": true,
-  "constructionTimeHours": 4,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.353Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 1x Kapak Batu + 1x Air Bersih]\n[OUTPUT per jam: 12x Kayu Mentah]\nLahan penebangan kayu liar. Membutuhkan pekerja aktif. Fondasi semua konstruksi kayu.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.238Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd1"
-      },
-      "itemName": "Kapak Batu",
-      "quantity": 1,
-      "durabilityHours": 24
+[
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c07d"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc3"
-  },
-  "workerOutputItemName": "Kayu Mentah",
-  "workerOutputQuantity": 12
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c07e"
-  },
-  "name": "Kotak Amal Tua",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 120,
-  "buildRequirements": [],
-  "buildable": true,
-  "constructionTimeHours": 2,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.389Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 15,
-  "description": "[PROFIT per jam: 15 Copper]\nKotak kayu tua di pinggir jalan. Orang lewat sesekali memasukkan koin receh. Pure passive (tanpa input material). Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.465Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c07f"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Lahan Padi Sederhana",
-  "__v": 0,
-  "basePrice": 250,
-  "buildRequirements": [],
-  "buildable": true,
-  "constructionTimeHours": 8,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.413Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 1x Batu Tajam + 2x Air Bersih + 1x Bibit Padi]\n[OUTPUT per jam: 6x Beras Mentah]\nSawah tadah hujan primitif. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.489Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc5"
-      },
-      "itemName": "Batu Tajam",
-      "quantity": 1,
-      "durabilityHours": 12
+    "guildId": "1504794711775514856",
+    "name": "Pusat Pemotongan Kayu Liar",
+    "__v": 0,
+    "basePrice": 80,
+    "buildRequirements": [],
+    "buildable": true,
+    "constructionTimeHours": 4,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.353Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 2,
-      "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Kapak Batu + 1x Air Bersih]\n[OUTPUT per jam: 12x Kayu Mentah]\nLahan penebangan kayu liar. Membutuhkan pekerja aktif. Fondasi semua konstruksi kayu.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.238Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfec"
-      },
-      "itemName": "Bibit Padi",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bfed"
-  },
-  "workerOutputItemName": "Beras Mentah",
-  "workerOutputQuantity": 6
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c080"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Tambang Batu Dangkal",
-  "__v": 0,
-  "basePrice": 350,
-  "buildRequirements": [],
-  "buildable": true,
-  "constructionTimeHours": 10,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.442Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 1x Beliung Batu + 3x Air Bersih + 1x Daging Mentah]\n[OUTPUT per jam: 18x Batu Kasar]\nGalian dangkal untuk batu kasar. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.514Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd2"
-      },
-      "itemName": "Beliung Batu",
-      "quantity": 1,
-      "durabilityHours": 24
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 3,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe2"
-      },
-      "itemName": "Daging Mentah",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15aa9e03dc91c54bfc2"
-  },
-  "workerOutputItemName": "Batu Kasar",
-  "workerOutputQuantity": 18
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c081"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Peternakan Kelinci Liar",
-  "__v": 0,
-  "basePrice": 450,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 60,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc7"
-      },
-      "itemName": "Serat Tumbuhan",
-      "quantity": 25,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 12,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.472Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 10x Daun Kering + 2x Air Bersih]\n[OUTPUT per jam: 4x Daging Mentah]\nKandang berpagar kayu yang menampung kelinci. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.539Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc4"
-      },
-      "itemName": "Daun Kering",
-      "quantity": 10,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 2,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe2"
-  },
-  "workerOutputItemName": "Daging Mentah",
-  "workerOutputQuantity": 4
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c082"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Gubuk Anyam Penenun",
-  "__v": 0,
-  "basePrice": 550,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 120,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 60,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 16,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.497Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nTempat menenun serat menjadi tali rami. Buka menu craft untuk membuat Tali Rami. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [
-    {
-      "recipeName": "Pintal Tali Rami",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd6"
-      },
-      "resultItemName": "Tali Rami",
-      "resultQuantity": 3,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc7"
-          },
-          "itemName": "Serat Tumbuhan",
-          "quantity": 12,
-          "durabilityHours": 1
-        }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.565Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c083"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pembakaran Gerabah",
-  "__v": 0,
-  "basePrice": 650,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc6"
-      },
-      "itemName": "Tanah Liat",
-      "quantity": 180,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfce"
-      },
-      "itemName": "Lumpur Basah",
-      "quantity": 120,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 18,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.527Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nTungku tanah liat sederhana. Buka menu craft untuk membuat Wadah Tanah Liat. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [
-    {
-      "recipeName": "Bakar Wadah Tanah Liat",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd8"
-      },
-      "resultItemName": "Wadah Tanah Liat",
-      "resultQuantity": 2,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc6"
-          },
-          "itemName": "Tanah Liat",
-          "quantity": 10,
-          "durabilityHours": 1
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd1"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc3"
-          },
-          "itemName": "Kayu Mentah",
-          "quantity": 6,
-          "durabilityHours": 1
-        }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.592Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c084"
-  },
-  "name": "Bilik Pengrajin Senjata Tulang",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 900,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
+        "itemName": "Kapak Batu",
+        "quantity": 1,
+        "durabilityHours": 24
       },
-      "itemName": "Kayu Mentah",
-      "quantity": 350,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfcb"
-      },
-      "itemName": "Tulang Hewan",
-      "quantity": 60,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 24,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.555Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nRuang pengrajin senjata tulang. Buka menu craft untuk membuat Pisau Tulang / Tombak Bambu. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [
-    {
-      "recipeName": "Asah Pisau Tulang",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd5"
-      },
-      "resultItemName": "Pisau Tulang",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfcb"
-          },
-          "itemName": "Tulang Hewan",
-          "quantity": 4,
-          "durabilityHours": 1
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc5"
-          },
-          "itemName": "Batu Tajam",
-          "quantity": 1,
-          "durabilityHours": 12
-        }
-      ]
-    },
-    {
-      "recipeName": "Rakit Tombak Bambu",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfdc"
-      },
-      "resultItemName": "Tombak Bambu",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfcf"
-          },
-          "itemName": "Bambu Hijau",
-          "quantity": 6,
-          "durabilityHours": 1
-        },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bfd6"
-          },
-          "itemName": "Tali Rami",
-          "quantity": 1,
-          "durabilityHours": 1
-        },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bfd9"
-          },
-          "itemName": "Batu Api",
-          "quantity": 1,
-          "durabilityHours": 72
-        }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.614Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c085"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pemancingan Muara",
-  "__v": 0,
-  "basePrice": 550,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfcf"
-      },
-      "itemName": "Bambu Hijau",
-      "quantity": 120,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd6"
-      },
-      "itemName": "Tali Rami",
-      "quantity": 25,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 14,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.586Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 1x Pancingan Bambu + 8x Bibit Padi]\n[OUTPUT per jam: 10x Ikan Segar]\nJaring statis di muara sungai. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.638Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd4"
-      },
-      "itemName": "Pancingan Bambu",
-      "quantity": 1,
-      "durabilityHours": 36
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfec"
-      },
-      "itemName": "Bibit Padi",
-      "quantity": 8,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe6"
-  },
-  "workerOutputItemName": "Ikan Segar",
-  "workerOutputQuantity": 10
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c086"
-  },
-  "name": "Kios Buah Liar",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 15,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 40,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc4"
-      },
-      "itemName": "Daun Kering",
-      "quantity": 150,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 20,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.612Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 12,
-  "description": "[INPUT per jam: 3x Buah Liar]\n[PROFIT per jam: 12 Copper]\nTenda kecil di pinggir jalan. Pejalan kaki membeli buah hutan. Membutuhkan pekerja aktif. Lebih efisien jika Buah Liar didapat sendiri (bukan dibeli shop).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "silver",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.663Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe4"
-      },
-      "itemName": "Buah Liar",
-      "quantity": 3,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c087"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pabrik Penggergajian Papan",
-  "__v": 0,
-  "basePrice": 8,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 600,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 350,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 36,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.638Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nMengubah kayu balok menjadi papan siap bangun. Buka menu craft untuk membuat Papan Kayu. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "silver",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [
-    {
-      "recipeName": "Gergaji Papan",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "resultItemName": "Papan Kayu",
-      "resultQuantity": 3,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc3"
-          },
-          "itemName": "Kayu Mentah",
-          "quantity": 4,
-          "durabilityHours": 1
-        },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc5"
-          },
-          "itemName": "Batu Tajam",
-          "quantity": 1,
-          "durabilityHours": 24
-        }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.690Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c088"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Tungku Pembakaran Bata",
-  "__v": 0,
-  "basePrice": 5,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 800,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 24,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.673Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Memanaskan batu menjadi bata merah padat. Proses pendinginannya butuh waktu, sehingga bata yang matang hanya bisa dikeluarkan 24 jam sekali.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "silver",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [
-    {
-      "recipeName": "Bakar Batu Bata",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "resultItemName": "Batu Bata",
-      "resultQuantity": 5,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc2"
-          },
-          "itemName": "Batu Kasar",
-          "quantity": 10,
-          "durabilityHours": 1
-        },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc3"
-          },
-          "itemName": "Kayu Mentah",
-          "quantity": 5,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a53e"
+        "itemName": "Air Bersih",
+        "quantity": 1,
+        "durabilityHours": 1
       }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc3"
     },
-    {
-      "recipeName": "Bakar Bata Suhu Tinggi (Batu Bara)",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "resultItemName": "Batu Bata",
-      "resultQuantity": 15,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc2"
-          },
-          "itemName": "Batu Kasar",
-          "quantity": 25,
-          "durabilityHours": 1
+    "workerOutputItemName": "Kayu Mentah",
+    "workerOutputQuantity": 12
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c07e"
+    },
+    "name": "Kotak Amal Tua",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 120,
+    "buildRequirements": [],
+    "buildable": true,
+    "constructionTimeHours": 2,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.389Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 15,
+    "description": "[PROFIT per jam: 15 Copper]\nKotak kayu tua di pinggir jalan. Orang lewat sesekali memasukkan koin receh. Pure passive (tanpa input material). Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.465Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c07f"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Lahan Padi Sederhana",
+    "__v": 0,
+    "basePrice": 250,
+    "buildRequirements": [],
+    "buildable": true,
+    "constructionTimeHours": 8,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.413Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Batu Tajam + 2x Air Bersih + 1x Bibit Padi]\n[OUTPUT per jam: 6x Beras Mentah]\nSawah tadah hujan primitif. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.489Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc5"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff4"
-          },
-          "itemName": "Batu Bara",
-          "quantity": 5,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a53f"
+        "itemName": "Batu Tajam",
+        "quantity": 1,
+        "durabilityHours": 12
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 2,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfec"
+        },
+        "itemName": "Bibit Padi",
+        "quantity": 1,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c089"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Warung Teh Pinggir Jalan",
-  "__v": 0,
-  "basePrice": 1,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 800,
-      "durabilityHours": 1
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfed"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 48,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.714Z"
+    "workerOutputItemName": "Beras Mentah",
+    "workerOutputQuantity": 6
   },
-  "createdBy": "System Oracle",
-  "dailyProfit": 3,
-  "description": "[BUTUH: 5x Beras Mentah, 10x Air Bersih/jam] Tempat singgah pengembara dan kultivator muda. Kasir warung sibuk dan menghitung omset uang koin mereka per jam saat pertukaran shift.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.264Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfed"
-      },
-      "itemName": "Beras Mentah",
-      "quantity": 5,
-      "durabilityHours": 1
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c080"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 10,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08a"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Lorong Penambangan Bijih",
-  "__v": 0,
-  "basePrice": 2,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 1500,
-      "durabilityHours": 1
+    "guildId": "1504794711775514856",
+    "name": "Tambang Batu Dangkal",
+    "__v": 0,
+    "basePrice": 350,
+    "buildRequirements": [],
+    "buildable": true,
+    "constructionTimeHours": 10,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.442Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 800,
-      "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Beliung Batu + 3x Air Bersih + 1x Daging Mentah]\n[OUTPUT per jam: 18x Batu Kasar]\nGalian dangkal untuk batu kasar. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.514Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff6"
-      },
-      "itemName": "Paku Besi",
-      "quantity": 200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 72,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.740Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Beliung Besi, 5x Air Bersih, 1x Pil Pekerja Keras/jam] Gua buatan manusia menembus bukit batu berburu bijih besi. Para kuli berlumur debu hitam menarik kereta lori penuh bijih dari kedalaman bumi per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.290Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c002"
-      },
-      "itemName": "Beliung Besi",
-      "quantity": 1,
-      "durabilityHours": 48
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 5,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01a"
-      },
-      "itemName": "Pil Pekerja Keras",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bff3"
-  },
-  "workerOutputItemName": "Bijih Besi",
-  "workerOutputQuantity": 10
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08b"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Peleburan Besi",
-  "__v": 0,
-  "basePrice": 2,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 3000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 1000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 120,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.766Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Suhu ekstrem merubah bijih menjadi batangan besi murni. Tungku raksasa menyala mengerikan, cairan besi memerah dituang ke cetakan dan didinginkan sehari penuh (24 jam) sebelum bisa diambil.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [
-    {
-      "recipeName": "Lebur Besi",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "resultItemName": "Batangan Besi",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff3"
-          },
-          "itemName": "Bijih Besi",
-          "quantity": 5,
-          "durabilityHours": 1
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd2"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff4"
-          },
-          "itemName": "Batu Bara",
-          "quantity": 3,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a545"
+        "itemName": "Beliung Batu",
+        "quantity": 1,
+        "durabilityHours": 24
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 3,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe2"
+        },
+        "itemName": "Daging Mentah",
+        "quantity": 1,
+        "durabilityHours": 1
       }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15aa9e03dc91c54bfc2"
     },
-    {
-      "recipeName": "Tempa Pedang Besi Biasa",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54c00a"
-      },
-      "resultItemName": "Pedang Besi Biasa",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff5"
-          },
-          "itemName": "Batangan Besi",
-          "quantity": 5,
-          "durabilityHours": 1
+    "workerOutputItemName": "Batu Kasar",
+    "workerOutputQuantity": 18
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c081"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Peternakan Kelinci Liar",
+    "__v": 0,
+    "basePrice": 450,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c000"
-          },
-          "itemName": "Palu Besi",
-          "quantity": 1,
-          "durabilityHours": 48
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a546"
+        "itemName": "Kayu Mentah",
+        "quantity": 60,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc7"
+        },
+        "itemName": "Serat Tumbuhan",
+        "quantity": 25,
+        "durabilityHours": 1
       }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 12,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.472Z"
     },
-    {
-      "recipeName": "Tempa Kapak Besi",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54c001"
-      },
-      "resultItemName": "Kapak Besi",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff5"
-          },
-          "itemName": "Batangan Besi",
-          "quantity": 3,
-          "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 10x Daun Kering + 2x Air Bersih]\n[OUTPUT per jam: 4x Daging Mentah]\nKandang berpagar kayu yang menampung kelinci. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.539Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc4"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c000"
-          },
-          "itemName": "Palu Besi",
-          "quantity": 1,
-          "durabilityHours": 48
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a547"
+        "itemName": "Daun Kering",
+        "quantity": 10,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 2,
+        "durabilityHours": 1
       }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe2"
     },
-    {
-      "recipeName": "Cetak Paku Besi",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff6"
-      },
-      "resultItemName": "Paku Besi",
-      "resultQuantity": 10,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff5"
-          },
-          "itemName": "Batangan Besi",
-          "quantity": 2,
-          "durabilityHours": 1
+    "workerOutputItemName": "Daging Mentah",
+    "workerOutputQuantity": 4
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c082"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Gubuk Anyam Penenun",
+    "__v": 0,
+    "basePrice": 550,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c000"
-          },
-          "itemName": "Palu Besi",
-          "quantity": 1,
-          "durabilityHours": 48
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a548"
+        "itemName": "Kayu Mentah",
+        "quantity": 120,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 60,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08c"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Kebun Gandum Komersil",
-  "__v": 0,
-  "basePrice": 3,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 2000,
-      "durabilityHours": 1
+    ],
+    "buildable": true,
+    "constructionTimeHours": 16,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.497Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 500,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff6"
-      },
-      "itemName": "Paku Besi",
-      "quantity": 500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 96,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.797Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Cangkul Besi, 10x Air Bersih/jam] Ladang luas bersistem irigasi kincir air, dikelola untuk menyuplai bangsawan. Panen raya hanya terjadi seminggu sekali (168 jam) dan sangat meriah.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c004"
-      },
-      "itemName": "Cangkul Besi",
-      "quantity": 1,
-      "durabilityHours": 72
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 10,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ca9e03dc91c54bffb"
-  },
-  "workerOutputItemName": "Kapas",
-  "workerOutputQuantity": 15
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08d"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Butik Penjahit Kota",
-  "__v": 0,
-  "basePrice": 4,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 1200,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 800,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 60,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.821Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Rumah penenun profesional yang sibuk mengubah kapas dan sutra menjadi mahakarya. Produksi mereka selesai dalam tumpukan rapi secara berkala (48 jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [
-    {
-      "recipeName": "Pintal Benang Halus",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54bffd"
-      },
-      "resultItemName": "Benang Halus",
-      "resultQuantity": 5,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54bffb"
-          },
-          "itemName": "Kapas",
-          "quantity": 10,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a54f"
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nTempat menenun serat menjadi tali rami. Buka menu craft untuk membuat Tali Rami. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "recipeName": "Pintal Tali Rami",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd6"
+        },
+        "resultItemName": "Tali Rami",
+        "resultQuantity": 3,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc7"
+            },
+            "itemName": "Serat Tumbuhan",
+            "quantity": 12,
+            "durabilityHours": 1
+          }
+        ]
       }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.565Z"
     },
-    {
-      "recipeName": "Tenun Kain Halus",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54bffc"
-      },
-      "resultItemName": "Kain Tenun",
-      "resultQuantity": 3,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54bffd"
-          },
-          "itemName": "Benang Halus",
-          "quantity": 10,
-          "durabilityHours": 1
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c083"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pembakaran Gerabah",
+    "__v": 0,
+    "basePrice": 650,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc6"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c007"
-          },
-          "itemName": "Alat Tenun Sederhana",
-          "quantity": 1,
-          "durabilityHours": 120
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a550"
+        "itemName": "Tanah Liat",
+        "quantity": 180,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfce"
+        },
+        "itemName": "Lumpur Basah",
+        "quantity": 120,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.314Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08e"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Rumah Makan Daging Asap",
-  "__v": 0,
-  "basePrice": 5,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 2000,
-      "durabilityHours": 1
+    ],
+    "buildable": true,
+    "constructionTimeHours": 18,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.527Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 1000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54bff9"
-      },
-      "itemName": "Kaca Kasar",
-      "quantity": 100,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 80,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.850Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 5,
-  "description": "[BUTUH: 2x Daging Asap, 10x Kayu Mentah/jam] Restoran terkenal di kota lapis kedua yang khusus menyajikan hidangan dari daging yang diasap. Laporan keuangan disetorkan ke sekte tiap 12 jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c013"
-      },
-      "itemName": "Daging Asap",
-      "quantity": 2,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 10,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c08f"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Peternakan Sapi Perah",
-  "__v": 0,
-  "basePrice": 6,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 3000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff6"
-      },
-      "itemName": "Paku Besi",
-      "quantity": 1000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 1000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 100,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.878Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 5x Makanan Matang, 15x Air Bersih/jam] Barisan sapi unggulan yang diberi pakan ternak pilihan. Pemerahan massal secara hati-hati selalu di jadwal pagi dan sore (per jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.335Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe5"
-      },
-      "itemName": "Makanan Matang",
-      "quantity": 5,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 15,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ca9e03dc91c54c018"
-  },
-  "workerOutputItemName": "Susu Sapi Steril",
-  "workerOutputQuantity": 8
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c090"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Penggalian Tambang Batu Bara",
-  "__v": 0,
-  "basePrice": 7,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "itemName": "Batangan Besi",
-      "quantity": 100,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 4000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 120,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.904Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 2x Beliung Besi, 1x Pil Pemulih Tulang/jam] Lubang galian kelam yang panas dan penuh gas beracun. Pekerja shift siang dan malam menarik keluar emas hitam ke permukaan per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.358Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c002"
-      },
-      "itemName": "Beliung Besi",
-      "quantity": 2,
-      "durabilityHours": 48
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01c"
-      },
-      "itemName": "Pil Pemulih Tulang",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bff4"
-  },
-  "workerOutputItemName": "Batu Bara",
-  "workerOutputQuantity": 12
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c091"
-  },
-  "name": "Kilang Minyak Darat",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 50,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "itemName": "Batangan Besi",
-      "quantity": 5000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 2000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 10000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 336,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.930Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Alat Bor Berat, 20x Batu Bara, 1x Karet Sintetis/jam] Menyedot darah bumi dengan pompa angguk raksasa. Mesin bekerja siang dan malam menghasilkan minyak mentah yang dimuat ke tangki penampung per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.381Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02e"
-      },
-      "itemName": "Alat Bor Berat",
-      "quantity": 1,
-      "durabilityHours": 96
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff4"
-      },
-      "itemName": "Batu Bara",
-      "quantity": 20,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c024"
-      },
-      "itemName": "Karet Sintetis",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15da9e03dc91c54c020"
-  },
-  "workerOutputItemName": "Minyak Mentah",
-  "workerOutputQuantity": 10
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c092"
-  },
-  "name": "Pabrik Baja Karbon & Manufaktur",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 80,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "itemName": "Batangan Besi",
-      "quantity": 10000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 50000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 20000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 504,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.959Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Pabrik raksasa pembakar baja, mencetak alat elektronik dan senjata militer. Material super padat ini dicetak dari conveyor belt tiada henti, lalu diinspeksi keamanannya tiap 48 jam.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [
-    {
-      "recipeName": "Proses Baja Murni",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "resultItemName": "Baja Murni",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff5"
-          },
-          "itemName": "Batangan Besi",
-          "quantity": 10,
-          "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nTungku tanah liat sederhana. Buka menu craft untuk membuat Wadah Tanah Liat. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "recipeName": "Bakar Wadah Tanah Liat",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd8"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bff4"
+        "resultItemName": "Wadah Tanah Liat",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc6"
+            },
+            "itemName": "Tanah Liat",
+            "quantity": 10,
+            "durabilityHours": 1
           },
-          "itemName": "Batu Bara",
-          "quantity": 15,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a558"
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 6,
+            "durabilityHours": 1
+          }
+        ]
       }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.592Z"
     },
-    {
-      "recipeName": "Tempa Pedang Baja",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c038"
-      },
-      "resultItemName": "Pedang Baja",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c01f"
-          },
-          "itemName": "Baja Murni",
-          "quantity": 3,
-          "durabilityHours": 1
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c084"
+    },
+    "name": "Bilik Pengrajin Senjata Tulang",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 900,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c030"
-          },
-          "itemName": "Las Listrik",
-          "quantity": 1,
-          "durabilityHours": 120
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a559"
+        "itemName": "Kayu Mentah",
+        "quantity": 350,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfcb"
+        },
+        "itemName": "Tulang Hewan",
+        "quantity": 60,
+        "durabilityHours": 1
       }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 24,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.555Z"
     },
-    {
-      "recipeName": "Rakit Alat Bor Berat",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c02e"
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nRuang pengrajin senjata tulang. Buka menu craft untuk membuat Pisau Tulang / Tombak Bambu. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "recipeName": "Asah Pisau Tulang",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd5"
+        },
+        "resultItemName": "Pisau Tulang",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfcb"
+            },
+            "itemName": "Tulang Hewan",
+            "quantity": 4,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc5"
+            },
+            "itemName": "Batu Tajam",
+            "quantity": 1,
+            "durabilityHours": 12
+          }
+        ]
       },
-      "resultItemName": "Alat Bor Berat",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c01f"
-          },
-          "itemName": "Baja Murni",
-          "quantity": 15,
-          "durabilityHours": 1
+      {
+        "recipeName": "Rakit Tombak Bambu",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfdc"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c022"
+        "resultItemName": "Tombak Bambu",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfcf"
+            },
+            "itemName": "Bambu Hijau",
+            "quantity": 6,
+            "durabilityHours": 1
           },
-          "itemName": "Komponen Elektronik",
-          "quantity": 5,
-          "durabilityHours": 1
-        },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c032"
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfd6"
+            },
+            "itemName": "Tali Rami",
+            "quantity": 1,
+            "durabilityHours": 1
           },
-          "itemName": "Kunci Inggris Hidrolik",
-          "quantity": 1,
-          "durabilityHours": 150
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a55a"
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfd9"
+            },
+            "itemName": "Batu Api",
+            "quantity": 1,
+            "durabilityHours": 72
+          }
+        ]
       }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.614Z"
     },
-    {
-      "recipeName": "Cetak Peluru .45",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c03f"
-      },
-      "resultItemName": "Peluru Kaliber .45",
-      "resultQuantity": 20,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c01f"
-          },
-          "itemName": "Baja Murni",
-          "quantity": 2,
-          "durabilityHours": 1
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c085"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pemancingan Muara",
+    "__v": 0,
+    "basePrice": 550,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfcf"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c02a"
-          },
-          "itemName": "Bahan Kimia Asam",
-          "quantity": 1,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b15f75cf9e21a690a55b"
+        "itemName": "Bambu Hijau",
+        "quantity": 120,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd6"
+        },
+        "itemName": "Tali Rami",
+        "quantity": 25,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b15fa9e03dc91c54c093"
-  },
-  "name": "Fasilitas Pengeboran Laut Dalam",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 150,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 5000,
-      "durabilityHours": 1
+    ],
+    "buildable": true,
+    "constructionTimeHours": 14,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.586Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 10000,
-      "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Pancingan Bambu + 8x Bibit Padi]\n[OUTPUT per jam: 10x Ikan Segar]\nJaring statis di muara sungai. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.638Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c026"
-      },
-      "itemName": "Kawat Tembaga",
-      "quantity": 3000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 672,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:43.991Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 2x Alat Bor Berat, 10x Bahan Bakar Mesin, 5x Makanan Kemasan Instan/jam] Rig lepas pantai mutakhir yang merobek cangkang bumi di dasar samudra. Helikopter mengangkut logistik dan membawa pulang minyak kualitas tertinggi sekali dalam seminggu (168 jam).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02e"
-      },
-      "itemName": "Alat Bor Berat",
-      "quantity": 2,
-      "durabilityHours": 96
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c021"
-      },
-      "itemName": "Bahan Bakar Mesin",
-      "quantity": 10,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c041"
-      },
-      "itemName": "Makanan Kemasan Instan",
-      "quantity": 5,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15da9e03dc91c54c020"
-  },
-  "workerOutputItemName": "Minyak Mentah",
-  "workerOutputQuantity": 25
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c094"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pusat Manufaktur Elektronik",
-  "__v": 0,
-  "basePrice": 120,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 3000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c025"
-      },
-      "itemName": "Plastik Tahan Panas",
-      "quantity": 10000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c028"
-      },
-      "itemName": "Kaca Anti Peluru",
-      "quantity": 2000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 480,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.020Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Ruang steril serba putih tempat robot merakit sirkuit mikro dengan laser presisi. Batch pengiriman microchip didistribusikan ke konglomerat secara berkala (72 jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [
-    {
-      "recipeName": "Cetak Komponen Elektronik",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c022"
-      },
-      "resultItemName": "Komponen Elektronik",
-      "resultQuantity": 5,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c02b"
-          },
-          "itemName": "Silikon",
-          "quantity": 10,
-          "durabilityHours": 1
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd4"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c026"
-          },
-          "itemName": "Kawat Tembaga",
-          "quantity": 5,
-          "durabilityHours": 1
+        "itemName": "Pancingan Bambu",
+        "quantity": 1,
+        "durabilityHours": 36
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfec"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c035"
-          },
-          "itemName": "Solder Presisi",
-          "quantity": 1,
-          "durabilityHours": 100
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a562"
+        "itemName": "Bibit Padi",
+        "quantity": 8,
+        "durabilityHours": 1
       }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe6"
     },
-    {
-      "recipeName": "Rakit Baterai Lithium",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c027"
-      },
-      "resultItemName": "Baterai Lithium",
-      "resultQuantity": 2,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c02a"
-          },
-          "itemName": "Bahan Kimia Asam",
-          "quantity": 5,
-          "durabilityHours": 1
+    "workerOutputItemName": "Ikan Segar",
+    "workerOutputQuantity": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c086"
+    },
+    "name": "Kios Buah Liar",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 15,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c022"
-          },
-          "itemName": "Komponen Elektronik",
-          "quantity": 2,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a563"
-      }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.406Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c095"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Generator Pembangkit Listrik Super",
-  "__v": 0,
-  "basePrice": 100,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
+        "itemName": "Papan Kayu",
+        "quantity": 40,
+        "durabilityHours": 1
       },
-      "itemName": "Baja Murni",
-      "quantity": 8000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 15000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c026"
-      },
-      "itemName": "Kawat Tembaga",
-      "quantity": 5000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 600,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.053Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 1,
-  "description": "[BUTUH: 100x Batu Bara, 2x Cairan Pendingin/jam] Menyuplai listrik untuk seluruh kota fana modern. Uang pembayaran dari warga dipungut oleh birokrasi korup dan disetor ke kas mafia per jam di tengah malam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.428Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff4"
-      },
-      "itemName": "Batu Bara",
-      "quantity": 100,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02d"
-      },
-      "itemName": "Cairan Pendingin",
-      "quantity": 2,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c096"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Laboratorium Kimia Mutakhir",
-  "__v": 0,
-  "basePrice": 110,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c028"
-      },
-      "itemName": "Kaca Anti Peluru",
-      "quantity": 4000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c025"
-      },
-      "itemName": "Plastik Tahan Panas",
-      "quantity": 8000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 2000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 550,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.081Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Bunker rahasia bawah tanah pembuat serum dan vaksin. Tabung reaksi berputar, memisahkan zat berbahaya. Vaksin langka dirilis 1 minggu sekali.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [
-    {
-      "recipeName": "Sintesis Vaksin Virus",
-      "resultItemId": {
-        "$oid": "6a91b15ea9e03dc91c54c048"
-      },
-      "resultItemName": "Vaksin Virus",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15da9e03dc91c54c02a"
-          },
-          "itemName": "Bahan Kimia Asam",
-          "quantity": 20,
-          "durabilityHours": 1
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc4"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bfe7"
-          },
-          "itemName": "Jamur Beracun",
-          "quantity": 50,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a568"
+        "itemName": "Daun Kering",
+        "quantity": 150,
+        "durabilityHours": 1
       }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 20,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.612Z"
     },
-    {
-      "recipeName": "Ekstrak Obat Regenerasi Sel",
-      "resultItemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04a"
-      },
-      "resultItemName": "Obat Regenerasi Sel",
-      "resultQuantity": 2,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c01c"
-          },
-          "itemName": "Pil Pemulih Tulang",
-          "quantity": 10,
-          "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 12,
+    "description": "[INPUT per jam: 3x Buah Liar]\n[PROFIT per jam: 12 Copper]\nTenda kecil di pinggir jalan. Pejalan kaki membeli buah hutan. Membutuhkan pekerja aktif. Lebih efisien jika Buah Liar didapat sendiri (bukan dibeli shop).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "silver",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.663Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe4"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c047"
-          },
-          "itemName": "Daging Kloning",
-          "quantity": 10,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a569"
+        "itemName": "Buah Liar",
+        "quantity": 3,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
   },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c097"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pusat Perdagangan Saham (Stock Exchange)",
-  "__v": 0,
-  "basePrice": 90,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 20000,
-      "durabilityHours": 1
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c087"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c028"
-      },
-      "itemName": "Kaca Anti Peluru",
-      "quantity": 10000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 5000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 400,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.112Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 25,
-  "description": "[BUTUH: 1x Kopi Hitam Pekat/jam] Gedung pencakar langit tempat kaum kapitalis mengontrol pasar. Keuntungan dari transaksi digital disedot sistem dan diklaim pemegang saham setiap penutupan bursa (24 jam).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c044"
-      },
-      "itemName": "Kopi Hitam Pekat",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c098"
-  },
-  "name": "Paviliun Alkimia Langit (Heavenly Alchemy)",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 10,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 50000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 200000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c022"
-      },
-      "itemName": "Komponen Elektronik",
-      "quantity": 15000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 1080,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.138Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Bangunan ilahi yang merombak energi alam menjadi artifak pusaka sekte abadi. Suara guntur terdengar tiap kali pil tingkat dewa terbentuk (sekali setiap bulan).",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "jade",
-  "profitCurrency": "copper",
-  "rank": "Epic",
-  "recipes": [
-    {
-      "recipeName": "Tempa Pedang Hitam Mistis",
-      "resultItemId": {
-        "$oid": "6a91b15ea9e03dc91c54c066"
-      },
-      "resultItemName": "Pedang Hitam Mistis",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c04e"
-          },
-          "itemName": "Baja Hitam Mistis",
-          "quantity": 10,
-          "durabilityHours": 1
+    "guildId": "1504794711775514856",
+    "name": "Pabrik Penggergajian Papan",
+    "__v": 0,
+    "basePrice": 8,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c05c"
-          },
-          "itemName": "Palu Formasi Array",
-          "quantity": 1,
-          "durabilityHours": 168
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a56e"
-      }
-    },
-    {
-      "recipeName": "Suling Pil Pengumpul Qi",
-      "resultItemId": {
-        "$oid": "6a91b15fa9e03dc91c54c076"
+        "itemName": "Kayu Mentah",
+        "quantity": 600,
+        "durabilityHours": 1
       },
-      "resultItemName": "Pil Pengumpul Qi",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bfed"
-          },
-          "itemName": "Beras Mentah",
-          "quantity": 500,
-          "durabilityHours": 1
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c04d"
-          },
-          "itemName": "Batu Roh Kasar",
-          "quantity": 5,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a56f"
+        "itemName": "Batu Kasar",
+        "quantity": 350,
+        "durabilityHours": 1
       }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 36,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.638Z"
     },
-    {
-      "recipeName": "Rajut Sutra Langit Nirwana",
-      "resultItemId": {
-        "$oid": "6a91b15ea9e03dc91c54c057"
-      },
-      "resultItemName": "Sutra Langit Nirwana",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54bffd"
-          },
-          "itemName": "Benang Halus",
-          "quantity": 5000,
-          "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nMengubah kayu balok menjadi papan siap bangun. Buka menu craft untuk membuat Papan Kayu. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "silver",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [
+      {
+        "recipeName": "Gergaji Papan",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c065"
+        "resultItemName": "Papan Kayu",
+        "resultQuantity": 3,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 4,
+            "durabilityHours": 1
           },
-          "itemName": "Gunting Pemutus Benang Takdir",
-          "quantity": 1,
-          "durabilityHours": 168
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a570"
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc5"
+            },
+            "itemName": "Batu Tajam",
+            "quantity": 1,
+            "durabilityHours": 24
+          }
+        ]
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c099"
-  },
-  "name": "Goa Meditasi Ruang Hampa",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 20,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04e"
-      },
-      "itemName": "Baja Hitam Mistis",
-      "quantity": 1000,
-      "durabilityHours": 1
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.690Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04d"
-      },
-      "itemName": "Batu Roh Kasar",
-      "quantity": 10000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 1200,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.169Z"
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
   },
-  "createdBy": "System Oracle",
-  "dailyProfit": 30,
-  "description": "Celah dimensi buatan para sesepuh yang menghentikan waktu secara relatif. Kultivator menyerap cairan inti bumi selama seratus tahun di dalam, meski di luar baru berlalu 1 hari (24 jam).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "silver",
-  "rank": "Epic",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09a"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Formasi Pengunci Langit (Heaven Sealing Array)",
-  "__v": 0,
-  "basePrice": 50,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04e"
-      },
-      "itemName": "Baja Hitam Mistis",
-      "quantity": 5000,
-      "durabilityHours": 1
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c088"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04f"
-      },
-      "itemName": "Kayu Surga",
-      "quantity": 2500,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c050"
-      },
-      "itemName": "Cairan Inti Bumi",
-      "quantity": 1000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 1440,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.195Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 41,
-  "description": "[BUTUH: 1x Batu Roh Kasar, 1x Pil Pengumpul Qi/jam] Formasi mistis penyerap energi penjuru dunia. Menyerap Qi kosmik perlahan bagai bernapas, dan membekukannya menjadi harta karun dunia nyata. Siklus puncaknya adalah 7 hari sekali, di mana ia bersinar membutakan mata. Max profit tertingggi dunia fana: ~10 Gold/hari (41 Silver/jam).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "silver",
-  "rank": "Legendary",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04d"
-      },
-      "itemName": "Batu Roh Kasar",
-      "quantity": 1,
-      "durabilityHours": 720
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15fa9e03dc91c54c076"
-      },
-      "itemName": "Pil Pengumpul Qi",
-      "quantity": 1,
-      "durabilityHours": 168
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09b"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pemburu Hutan Lebat",
-  "__v": 0,
-  "basePrice": 200,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 50,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 6,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.221Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Belati Batu, 2x Air Bersih/jam] Markas para pemburu. Kulit mentah dijemur dan daging disembelih per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.450Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfdf"
-      },
-      "itemName": "Belati Batu",
-      "quantity": 1,
-      "durabilityHours": 25
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 2,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15aa9e03dc91c54bfca"
-  },
-  "workerOutputItemName": "Kulit Mentah",
-  "workerOutputQuantity": 5
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09c"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Perkebunan Buah Liar",
-  "__v": 0,
-  "basePrice": 150,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc4"
-      },
-      "itemName": "Daun Kering",
-      "quantity": 100,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 30,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 10,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.255Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Cangkul Kayu, 4x Air Bersih/jam] Lahan tempat semak beri merah dibudidayakan. Buah dipetik saat pagi dan sore hari (12 jam).",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfd3"
-      },
-      "itemName": "Cangkul Kayu",
-      "quantity": 1,
-      "durabilityHours": 24
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 4,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bfe4"
-  },
-  "workerOutputItemName": "Buah Liar",
-  "workerOutputQuantity": 8
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09d"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pabrik Penggilingan Batu",
-  "__v": 0,
-  "basePrice": 180,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 14,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.284Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Penggiling Batu, 1x Air Bersih/jam] Menumbuk batu hingga menjadi pasir halus yang dibawa per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:13:17.473Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfda"
-      },
-      "itemName": "Penggiling Batu",
-      "quantity": 1,
-      "durabilityHours": 96
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15aa9e03dc91c54bfcd"
-  },
-  "workerOutputItemName": "Pasir Halus",
-  "workerOutputQuantity": 10
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09e"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Gubuk Anyam Kapas",
-  "__v": 0,
-  "basePrice": 250,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc3"
-      },
-      "itemName": "Kayu Mentah",
-      "quantity": 40,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 8,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.309Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Tempat merajut serat dan kapas primitif menjadi barang jadi.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [
-    {
-      "recipeName": "Pintal Benang",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54bffd"
-      },
-      "resultItemName": "Benang Halus",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc7"
-          },
-          "itemName": "Serat Tumbuhan",
-          "quantity": 20,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a57a"
-      }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c09f"
-  },
-  "name": "Dapur Masak Umum",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 300,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 100,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 10,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.340Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Dapur bersama yang memasak daging mentah untuk pekerja desa.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "copper",
-  "profitCurrency": "copper",
-  "rank": "Common",
-  "recipes": [
-    {
-      "recipeName": "Masak Daging Matang",
-      "resultItemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe5"
-      },
-      "resultItemName": "Makanan Matang",
-      "resultQuantity": 2,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ba9e03dc91c54bfe2"
-          },
-          "itemName": "Daging Mentah",
-          "quantity": 2,
-          "durabilityHours": 1
+    "guildId": "1504794711775514856",
+    "name": "Tungku Pembakaran Bata",
+    "__v": 0,
+    "basePrice": 5,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc3"
-          },
-          "itemName": "Kayu Mentah",
-          "quantity": 1,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a57d"
-      }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a0"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Ladang Gandum Subur",
-  "__v": 0,
-  "basePrice": 2,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
+        "itemName": "Batu Kasar",
+        "quantity": 800,
+        "durabilityHours": 1
       },
-      "itemName": "Papan Kayu",
-      "quantity": 200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 48,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.368Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 1x Cangkul Besi, 5x Air Bersih/jam] Ladang emas yang menghasilkan bahan makanan pokok tiada habis.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "silver",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c004"
-      },
-      "itemName": "Cangkul Besi",
-      "quantity": 1,
-      "durabilityHours": 72
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 5,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ba9e03dc91c54bfed"
-  },
-  "workerOutputItemName": "Beras Mentah",
-  "workerOutputQuantity": 20
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a1"
-  },
-  "name": "Pengolahan Minyak Hewani",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 3,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 300,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 60,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.393Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[BUTUH: 10x Daging Mentah, 1x Wajan Besi/jam] Mengekstrak lemak babi dan sapi menjadi minyak penerangan.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "silver",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe2"
-      },
-      "itemName": "Daging Mentah",
-      "quantity": 10,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c008"
-      },
-      "itemName": "Wajan Besi",
-      "quantity": 1,
-      "durabilityHours": 150
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15ca9e03dc91c54bfff"
-  },
-  "workerOutputItemName": "Minyak Hewani",
-  "workerOutputQuantity": 5
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a2"
-  },
-  "name": "Rumah Penginapan (Inn)",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 12,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 2000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 800,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 120,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.419Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 8,
-  "description": "[INPUT per jam: 2x Makanan Matang + 5x Air Bersih]\n[PROFIT per jam: 8 Silver]\nMenyediakan tempat tidur bagi saudagar keliling. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.714Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe5"
-      },
-      "itemName": "Makanan Matang",
-      "quantity": 2,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 5,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a3"
-  },
-  "name": "Toko Senjata Pandai Besi",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 8,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 2500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 90,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.445Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 6,
-  "description": "[INPUT per jam: 1x Batu Bara + 1x Batangan Besi]\n[PROFIT per jam: 6 Silver]\nToko perlengkapan fana untuk tentara dan petualang. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Uncommon",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.739Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff4"
-      },
-      "itemName": "Batu Bara",
-      "quantity": 1,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "itemName": "Batangan Besi",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a4"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Penyamakan Kulit",
-  "__v": 0,
-  "basePrice": 6,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff2"
-      },
-      "itemName": "Papan Kayu",
-      "quantity": 900,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 48,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.471Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nMengubah kulit mentah menjadi kulit samak. Buka menu craft untuk membuat Kulit Samak. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Uncommon",
-  "recipes": [
-    {
-      "recipeName": "Samak Kulit",
-      "resultItemId": {
-        "$oid": "6a91b15ca9e03dc91c54bffa"
-      },
-      "resultItemName": "Kulit Samak",
-      "resultQuantity": 2,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfca"
-          },
-          "itemName": "Kulit Mentah",
-          "quantity": 5,
-          "durabilityHours": 1
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15aa9e03dc91c54bfc2"
-          },
-          "itemName": "Batu Kasar",
-          "quantity": 1,
-          "durabilityHours": 1
-        }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.765Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a5"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Pabrik Semen Raksasa",
-  "__v": 0,
-  "basePrice": 45,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff5"
-      },
-      "itemName": "Batangan Besi",
-      "quantity": 1800,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff1"
-      },
-      "itemName": "Batu Bata",
-      "quantity": 4500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 180,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.499Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 80x Batu Kasar + 8x Batu Bara]\n[OUTPUT per jam: 8x Semen Campuran]\nPabrik semen skala besar. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.787Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc2"
-      },
-      "itemName": "Batu Kasar",
-      "quantity": 80,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bff4"
-      },
-      "itemName": "Batu Bara",
-      "quantity": 8,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15da9e03dc91c54c023"
-  },
-  "workerOutputItemName": "Semen Campuran",
-  "workerOutputQuantity": 8
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a6"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Fasilitas Pembuatan Karet",
-  "__v": 0,
-  "basePrice": 55,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 1200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 200,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.524Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 40x Getah Pohon + 2x Bahan Kimia Asam]\n[OUTPUT per jam: 6x Karet Sintetis]\nFasilitas pengolahan getah menjadi karet. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.809Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15aa9e03dc91c54bfc8"
-      },
-      "itemName": "Getah Pohon",
-      "quantity": 40,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02a"
-      },
-      "itemName": "Bahan Kimia Asam",
-      "quantity": 2,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15da9e03dc91c54c024"
-  },
-  "workerOutputItemName": "Karet Sintetis",
-  "workerOutputQuantity": 6
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a7"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Tambang Aluminium",
-  "__v": 0,
-  "basePrice": 70,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 2200,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 220,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.549Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[INPUT per jam: 1x Alat Bor Berat + 2x Bahan Kimia Asam]\n[OUTPUT per jam: 4x Aluminium Ringan]\nTambang dan pengolahan aluminium. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.832Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02e"
-      },
-      "itemName": "Alat Bor Berat",
-      "quantity": 1,
-      "durabilityHours": 96
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c02a"
-      },
-      "itemName": "Bahan Kimia Asam",
-      "quantity": 2,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": {
-    "$oid": "6a91b15da9e03dc91c54c029"
-  },
-  "workerOutputItemName": "Aluminium Ringan",
-  "workerOutputQuantity": 4
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a8"
-  },
-  "name": "Laboratorium Senjata Api",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 85,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01f"
-      },
-      "itemName": "Baja Murni",
-      "quantity": 4000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 300,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.575Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "Ruang riset untuk menciptakan bubuk mesiu dan peluru letal.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "gold",
-  "profitCurrency": "copper",
-  "rank": "Rare",
-  "recipes": [
-    {
-      "recipeName": "Cetak Pistol",
-      "resultItemId": {
-        "$oid": "6a91b15da9e03dc91c54c039"
-      },
-      "resultItemName": "Pistol Revolver",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ca9e03dc91c54c01f"
-          },
-          "itemName": "Baja Murni",
-          "quantity": 5,
-          "durabilityHours": 1
-        }
-      ],
-      "_id": {
-        "$oid": "6a91b16075cf9e21a690a58a"
+        "itemName": "Kayu Mentah",
+        "quantity": 200,
+        "durabilityHours": 1
       }
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T13:49:53.175Z"
-  },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0a9"
-  },
-  "name": "Rumah Sakit Modern",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 80,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15da9e03dc91c54c023"
-      },
-      "itemName": "Semen Campuran",
-      "quantity": 8000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 400,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.602Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 25,
-  "description": "[INPUT per jam: 1x Pil Pemulih Tulang + 15x Air Bersih]\n[PROFIT per jam: 25 Silver]\nFasilitas medis fana tingkat lanjut. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "gold",
-  "profitCurrency": "silver",
-  "rank": "Rare",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.854Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ca9e03dc91c54c01c"
-      },
-      "itemName": "Pil Pemulih Tulang",
-      "quantity": 1,
-      "durabilityHours": 1
+    ],
+    "buildable": true,
+    "constructionTimeHours": 24,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.673Z"
     },
-    {
-      "itemId": {
-        "$oid": "6a91b15ba9e03dc91c54bfe3"
-      },
-      "itemName": "Air Bersih",
-      "quantity": 15,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0aa"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Ladang Obat Roh (Spirit Herb Garden)",
-  "__v": 0,
-  "basePrice": 8,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04d"
-      },
-      "itemName": "Batu Roh Kasar",
-      "quantity": 6000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 720,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.663Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 40,
-  "description": "[INPUT per jam: 1x Cairan Inti Bumi]\n[PROFIT per jam: 40 Silver]\nLahan sakti dengan tanah bernapas. Ginseng dan Teratai menyerap esensi alam. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "silver",
-  "rank": "Epic",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.878Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c050"
-      },
-      "itemName": "Cairan Inti Bumi",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0ab"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Tambang Kristal Jiwa",
-  "__v": 0,
-  "basePrice": 12,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04e"
-      },
-      "itemName": "Baja Hitam Mistis",
-      "quantity": 2500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 900,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.694Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 55,
-  "description": "[INPUT per jam: 1x Beliung Pelenyap Gunung]\n[PROFIT per jam: 55 Silver]\nMenembus batuan angkasa untuk mengekstrak sisa ingatan dewa kuno. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "silver",
-  "rank": "Epic",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.902Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c05d"
-      },
-      "itemName": "Beliung Pelenyap Gunung",
-      "quantity": 1,
-      "durabilityHours": 168
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0ac"
-  },
-  "name": "Istana Lelang Langit (Heavenly Auction House)",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 40,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04f"
-      },
-      "itemName": "Kayu Surga",
-      "quantity": 5000,
-      "durabilityHours": 1
-    },
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04e"
-      },
-      "itemName": "Baja Hitam Mistis",
-      "quantity": 5000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 1440,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.724Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 2,
-  "description": "[INPUT per jam: 1x Anggur Giok Berumur Seribu Tahun]\n[PROFIT per jam: 2 Gold]\nTempat bertukar harta setingkat dewa. Komisi perantara mengalir tanpa henti. Membutuhkan pekerja aktif. Asset paling prestisius.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "gold",
-  "rank": "Legendary",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.925Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c06e"
-      },
-      "itemName": "Anggur Giok Berumur Seribu Tahun",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0ad"
-  },
-  "guildId": "1504794711775514856",
-  "name": "Formasi Pengumpulan Qi",
-  "__v": 0,
-  "basePrice": 18,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04d"
-      },
-      "itemName": "Batu Roh Kasar",
-      "quantity": 1500,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 600,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.749Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 35,
-  "description": "[INPUT per jam: 1x Pil Pengumpul Qi]\n[PROFIT per jam: 35 Silver]\nLantai bercahaya rune kuno yang memadatkan aura alam. Favorit para kultivator. Membutuhkan pekerja aktif.",
-  "imageUrl": null,
-  "isCraftingStation": false,
-  "priceCurrency": "jade",
-  "profitCurrency": "silver",
-  "rank": "Epic",
-  "recipes": [],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.948Z"
-  },
-  "workerInputMaterials": [
-    {
-      "itemId": {
-        "$oid": "6a91b15fa9e03dc91c54c076"
-      },
-      "itemName": "Pil Pengumpul Qi",
-      "quantity": 1,
-      "durabilityHours": 1
-    }
-  ],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-},
-{
-  "_id": {
-    "$oid": "6a91b160a9e03dc91c54c0ae"
-  },
-  "name": "Bengkel Artefak Ilahi",
-  "guildId": "1504794711775514856",
-  "__v": 0,
-  "basePrice": 30,
-  "buildRequirements": [
-    {
-      "itemId": {
-        "$oid": "6a91b15ea9e03dc91c54c04e"
-      },
-      "itemName": "Baja Hitam Mistis",
-      "quantity": 6000,
-      "durabilityHours": 1
-    }
-  ],
-  "buildable": true,
-  "constructionTimeHours": 1000,
-  "createdAt": {
-    "$date": "2026-08-28T16:03:44.774Z"
-  },
-  "createdBy": "System Oracle",
-  "dailyProfit": 0,
-  "description": "[CRAFTING STATION]\nBara api nirwana menempa harta dunia abadi. Buka menu craft untuk membuat Pedang Petir Ilahi. Tidak memproduksi otomatis.",
-  "imageUrl": null,
-  "isCraftingStation": true,
-  "priceCurrency": "jade",
-  "profitCurrency": "copper",
-  "rank": "Epic",
-  "recipes": [
-    {
-      "recipeName": "Tempa Pedang Petir Ilahi",
-      "resultItemId": {
-        "$oid": "6a91b15ea9e03dc91c54c067"
-      },
-      "resultItemName": "Pedang Petir Ilahi",
-      "resultQuantity": 1,
-      "materials": [
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c05a"
-          },
-          "itemName": "Tulang Dewa Kuno",
-          "quantity": 12,
-          "durabilityHours": 1
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Memanaskan batu menjadi bata merah padat. Proses pendinginannya butuh waktu, sehingga bata yang matang hanya bisa dikeluarkan 24 jam sekali.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "silver",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [
+      {
+        "recipeName": "Bakar Batu Bata",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
         },
-        {
-          "itemId": {
-            "$oid": "6a91b15ea9e03dc91c54c05c"
+        "resultItemName": "Batu Bata",
+        "resultQuantity": 5,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            },
+            "itemName": "Batu Kasar",
+            "quantity": 10,
+            "durabilityHours": 1
           },
-          "itemName": "Palu Formasi Array",
-          "quantity": 1,
-          "durabilityHours": 168
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 5,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a53e"
         }
-      ]
-    }
-  ],
-  "updatedAt": {
-    "$date": "2026-08-29T14:14:08.973Z"
+      },
+      {
+        "recipeName": "Bakar Bata Suhu Tinggi (Batu Bara)",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "resultItemName": "Batu Bata",
+        "resultQuantity": 15,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            },
+            "itemName": "Batu Kasar",
+            "quantity": 25,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff4"
+            },
+            "itemName": "Batu Bara",
+            "quantity": 5,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a53f"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
   },
-  "workerInputMaterials": [],
-  "workerOutputItemId": null,
-  "workerOutputItemName": null,
-  "workerOutputQuantity": 0
-}]
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c089"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Warung Teh Pinggir Jalan",
+    "__v": 0,
+    "basePrice": 1,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 800,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 48,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.714Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 3,
+    "description": "[BUTUH: 5x Beras Mentah, 10x Air Bersih/jam] Tempat singgah pengembara dan kultivator muda. Kasir warung sibuk dan menghitung omset uang koin mereka per jam saat pertukaran shift.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.264Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfed"
+        },
+        "itemName": "Beras Mentah",
+        "quantity": 5,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 10,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08a"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Lorong Penambangan Bijih",
+    "__v": 0,
+    "basePrice": 2,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 1500,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 800,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff6"
+        },
+        "itemName": "Paku Besi",
+        "quantity": 200,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 72,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.740Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Beliung Besi, 5x Air Bersih, 1x Pil Pekerja Keras/jam] Gua buatan manusia menembus bukit batu berburu bijih besi. Para kuli berlumur debu hitam menarik kereta lori penuh bijih dari kedalaman bumi per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.290Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c002"
+        },
+        "itemName": "Beliung Besi",
+        "quantity": 1,
+        "durabilityHours": 48
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 5,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01a"
+        },
+        "itemName": "Pil Pekerja Keras",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bff3"
+    },
+    "workerOutputItemName": "Bijih Besi",
+    "workerOutputQuantity": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08b"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Peleburan Besi",
+    "__v": 0,
+    "basePrice": 2,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 3000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 1000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 120,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.766Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Suhu ekstrem merubah bijih menjadi batangan besi murni. Tungku raksasa menyala mengerikan, cairan besi memerah dituang ke cetakan dan didinginkan sehari penuh (24 jam) sebelum bisa diambil.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [
+      {
+        "recipeName": "Lebur Besi",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "resultItemName": "Batangan Besi",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff3"
+            },
+            "itemName": "Bijih Besi",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff4"
+            },
+            "itemName": "Batu Bara",
+            "quantity": 3,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a545"
+        }
+      },
+      {
+        "recipeName": "Tempa Pedang Besi Biasa",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54c00a"
+        },
+        "resultItemName": "Pedang Besi Biasa",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff5"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c000"
+            },
+            "itemName": "Palu Besi",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a546"
+        }
+      },
+      {
+        "recipeName": "Tempa Kapak Besi",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54c001"
+        },
+        "resultItemName": "Kapak Besi",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff5"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 3,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c000"
+            },
+            "itemName": "Palu Besi",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a547"
+        }
+      },
+      {
+        "recipeName": "Cetak Paku Besi",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff6"
+        },
+        "resultItemName": "Paku Besi",
+        "resultQuantity": 10,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff5"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 2,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c000"
+            },
+            "itemName": "Palu Besi",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a548"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08c"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Kebun Gandum Komersil",
+    "__v": 0,
+    "basePrice": 3,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 2000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 500,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff6"
+        },
+        "itemName": "Paku Besi",
+        "quantity": 500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 96,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.797Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Cangkul Besi, 10x Air Bersih/jam] Ladang luas bersistem irigasi kincir air, dikelola untuk menyuplai bangsawan. Panen raya hanya terjadi seminggu sekali (168 jam) dan sangat meriah.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c004"
+        },
+        "itemName": "Cangkul Besi",
+        "quantity": 1,
+        "durabilityHours": 72
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 10,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ca9e03dc91c54bffb"
+    },
+    "workerOutputItemName": "Kapas",
+    "workerOutputQuantity": 15
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08d"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Butik Penjahit Kota",
+    "__v": 0,
+    "basePrice": 4,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 1200,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 800,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 60,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.821Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Rumah penenun profesional yang sibuk mengubah kapas dan sutra menjadi mahakarya. Produksi mereka selesai dalam tumpukan rapi secara berkala (48 jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [
+      {
+        "recipeName": "Pintal Benang Halus",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54bffd"
+        },
+        "resultItemName": "Benang Halus",
+        "resultQuantity": 5,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54bffb"
+            },
+            "itemName": "Kapas",
+            "quantity": 10,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a54f"
+        }
+      },
+      {
+        "recipeName": "Tenun Kain Halus",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54bffc"
+        },
+        "resultItemName": "Kain Tenun",
+        "resultQuantity": 3,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54bffd"
+            },
+            "itemName": "Benang Halus",
+            "quantity": 10,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c007"
+            },
+            "itemName": "Alat Tenun Sederhana",
+            "quantity": 1,
+            "durabilityHours": 120
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a550"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.314Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08e"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Rumah Makan Daging Asap",
+    "__v": 0,
+    "basePrice": 5,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 2000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 1000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54bff9"
+        },
+        "itemName": "Kaca Kasar",
+        "quantity": 100,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 80,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.850Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 5,
+    "description": "[BUTUH: 2x Daging Asap, 10x Kayu Mentah/jam] Restoran terkenal di kota lapis kedua yang khusus menyajikan hidangan dari daging yang diasap. Laporan keuangan disetorkan ke sekte tiap 12 jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c013"
+        },
+        "itemName": "Daging Asap",
+        "quantity": 2,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 10,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c08f"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Peternakan Sapi Perah",
+    "__v": 0,
+    "basePrice": 6,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 3000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff6"
+        },
+        "itemName": "Paku Besi",
+        "quantity": 1000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 1000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 100,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.878Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 5x Makanan Matang, 15x Air Bersih/jam] Barisan sapi unggulan yang diberi pakan ternak pilihan. Pemerahan massal secara hati-hati selalu di jadwal pagi dan sore (per jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.335Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe5"
+        },
+        "itemName": "Makanan Matang",
+        "quantity": 5,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 15,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ca9e03dc91c54c018"
+    },
+    "workerOutputItemName": "Susu Sapi Steril",
+    "workerOutputQuantity": 8
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c090"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Penggalian Tambang Batu Bara",
+    "__v": 0,
+    "basePrice": 7,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 100,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 4000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 120,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.904Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 2x Beliung Besi, 1x Pil Pemulih Tulang/jam] Lubang galian kelam yang panas dan penuh gas beracun. Pekerja shift siang dan malam menarik keluar emas hitam ke permukaan per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.358Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c002"
+        },
+        "itemName": "Beliung Besi",
+        "quantity": 2,
+        "durabilityHours": 48
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01c"
+        },
+        "itemName": "Pil Pemulih Tulang",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bff4"
+    },
+    "workerOutputItemName": "Batu Bara",
+    "workerOutputQuantity": 12
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c091"
+    },
+    "name": "Kilang Minyak Darat",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 50,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 5000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 2000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 10000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 336,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.930Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Alat Bor Berat, 20x Batu Bara, 1x Karet Sintetis/jam] Menyedot darah bumi dengan pompa angguk raksasa. Mesin bekerja siang dan malam menghasilkan minyak mentah yang dimuat ke tangki penampung per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.381Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02e"
+        },
+        "itemName": "Alat Bor Berat",
+        "quantity": 1,
+        "durabilityHours": 96
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff4"
+        },
+        "itemName": "Batu Bara",
+        "quantity": 20,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c024"
+        },
+        "itemName": "Karet Sintetis",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15da9e03dc91c54c020"
+    },
+    "workerOutputItemName": "Minyak Mentah",
+    "workerOutputQuantity": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c092"
+    },
+    "name": "Pabrik Baja Karbon & Manufaktur",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 80,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 10000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 50000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 20000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 504,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.959Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Pabrik raksasa pembakar baja, mencetak alat elektronik dan senjata militer. Material super padat ini dicetak dari conveyor belt tiada henti, lalu diinspeksi keamanannya tiap 48 jam.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [
+      {
+        "recipeName": "Proses Baja Murni",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "resultItemName": "Baja Murni",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff5"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 10,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff4"
+            },
+            "itemName": "Batu Bara",
+            "quantity": 15,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a558"
+        }
+      },
+      {
+        "recipeName": "Tempa Pedang Baja",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c038"
+        },
+        "resultItemName": "Pedang Baja",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c01f"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 3,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c030"
+            },
+            "itemName": "Las Listrik",
+            "quantity": 1,
+            "durabilityHours": 120
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a559"
+        }
+      },
+      {
+        "recipeName": "Rakit Alat Bor Berat",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c02e"
+        },
+        "resultItemName": "Alat Bor Berat",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c01f"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 15,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c022"
+            },
+            "itemName": "Komponen Elektronik",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c032"
+            },
+            "itemName": "Kunci Inggris Hidrolik",
+            "quantity": 1,
+            "durabilityHours": 150
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a55a"
+        }
+      },
+      {
+        "recipeName": "Cetak Peluru .45",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c03f"
+        },
+        "resultItemName": "Peluru Kaliber .45",
+        "resultQuantity": 20,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c01f"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 2,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c02a"
+            },
+            "itemName": "Bahan Kimia Asam",
+            "quantity": 1,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b15f75cf9e21a690a55b"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54c093"
+    },
+    "name": "Fasilitas Pengeboran Laut Dalam",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 150,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 5000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 10000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c026"
+        },
+        "itemName": "Kawat Tembaga",
+        "quantity": 3000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 672,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:43.991Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 2x Alat Bor Berat, 10x Bahan Bakar Mesin, 5x Makanan Kemasan Instan/jam] Rig lepas pantai mutakhir yang merobek cangkang bumi di dasar samudra. Helikopter mengangkut logistik dan membawa pulang minyak kualitas tertinggi sekali dalam seminggu (168 jam).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02e"
+        },
+        "itemName": "Alat Bor Berat",
+        "quantity": 2,
+        "durabilityHours": 96
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c021"
+        },
+        "itemName": "Bahan Bakar Mesin",
+        "quantity": 10,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c041"
+        },
+        "itemName": "Makanan Kemasan Instan",
+        "quantity": 5,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15da9e03dc91c54c020"
+    },
+    "workerOutputItemName": "Minyak Mentah",
+    "workerOutputQuantity": 25
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c094"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pusat Manufaktur Elektronik",
+    "__v": 0,
+    "basePrice": 120,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 3000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c025"
+        },
+        "itemName": "Plastik Tahan Panas",
+        "quantity": 10000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c028"
+        },
+        "itemName": "Kaca Anti Peluru",
+        "quantity": 2000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 480,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.020Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Ruang steril serba putih tempat robot merakit sirkuit mikro dengan laser presisi. Batch pengiriman microchip didistribusikan ke konglomerat secara berkala (72 jam).\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [
+      {
+        "recipeName": "Cetak Komponen Elektronik",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c022"
+        },
+        "resultItemName": "Komponen Elektronik",
+        "resultQuantity": 5,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c02b"
+            },
+            "itemName": "Silikon",
+            "quantity": 10,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c026"
+            },
+            "itemName": "Kawat Tembaga",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c035"
+            },
+            "itemName": "Solder Presisi",
+            "quantity": 1,
+            "durabilityHours": 100
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a562"
+        }
+      },
+      {
+        "recipeName": "Rakit Baterai Lithium",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c027"
+        },
+        "resultItemName": "Baterai Lithium",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c02a"
+            },
+            "itemName": "Bahan Kimia Asam",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c022"
+            },
+            "itemName": "Komponen Elektronik",
+            "quantity": 2,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a563"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.406Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c095"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Generator Pembangkit Listrik Super",
+    "__v": 0,
+    "basePrice": 100,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 8000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 15000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c026"
+        },
+        "itemName": "Kawat Tembaga",
+        "quantity": 5000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 600,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.053Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 1,
+    "description": "[BUTUH: 100x Batu Bara, 2x Cairan Pendingin/jam] Menyuplai listrik untuk seluruh kota fana modern. Uang pembayaran dari warga dipungut oleh birokrasi korup dan disetor ke kas mafia per jam di tengah malam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.428Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff4"
+        },
+        "itemName": "Batu Bara",
+        "quantity": 100,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02d"
+        },
+        "itemName": "Cairan Pendingin",
+        "quantity": 2,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c096"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Laboratorium Kimia Mutakhir",
+    "__v": 0,
+    "basePrice": 110,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c028"
+        },
+        "itemName": "Kaca Anti Peluru",
+        "quantity": 4000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c025"
+        },
+        "itemName": "Plastik Tahan Panas",
+        "quantity": 8000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 2000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 550,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.081Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Bunker rahasia bawah tanah pembuat serum dan vaksin. Tabung reaksi berputar, memisahkan zat berbahaya. Vaksin langka dirilis 1 minggu sekali.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [
+      {
+        "recipeName": "Sintesis Vaksin Virus",
+        "resultItemId": {
+          "$oid": "6a91b15ea9e03dc91c54c048"
+        },
+        "resultItemName": "Vaksin Virus",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15da9e03dc91c54c02a"
+            },
+            "itemName": "Bahan Kimia Asam",
+            "quantity": 20,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfe7"
+            },
+            "itemName": "Jamur Beracun",
+            "quantity": 50,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a568"
+        }
+      },
+      {
+        "recipeName": "Ekstrak Obat Regenerasi Sel",
+        "resultItemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04a"
+        },
+        "resultItemName": "Obat Regenerasi Sel",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c01c"
+            },
+            "itemName": "Pil Pemulih Tulang",
+            "quantity": 10,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c047"
+            },
+            "itemName": "Daging Kloning",
+            "quantity": 10,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a569"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c097"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pusat Perdagangan Saham (Stock Exchange)",
+    "__v": 0,
+    "basePrice": 90,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 20000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c028"
+        },
+        "itemName": "Kaca Anti Peluru",
+        "quantity": 10000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 5000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 400,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.112Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 25,
+    "description": "[BUTUH: 1x Kopi Hitam Pekat/jam] Gedung pencakar langit tempat kaum kapitalis mengontrol pasar. Keuntungan dari transaksi digital disedot sistem dan diklaim pemegang saham setiap penutupan bursa (24 jam).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c044"
+        },
+        "itemName": "Kopi Hitam Pekat",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c098"
+    },
+    "name": "Paviliun Alkimia Langit (Heavenly Alchemy)",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 10,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 50000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 200000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c022"
+        },
+        "itemName": "Komponen Elektronik",
+        "quantity": 15000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 1080,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.138Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Bangunan ilahi yang merombak energi alam menjadi artifak pusaka sekte abadi. Suara guntur terdengar tiap kali pil tingkat dewa terbentuk (sekali setiap bulan).",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "jade",
+    "profitCurrency": "copper",
+    "rank": "Epic",
+    "recipes": [
+      {
+        "recipeName": "Tempa Pedang Hitam Mistis",
+        "resultItemId": {
+          "$oid": "6a91b15ea9e03dc91c54c066"
+        },
+        "resultItemName": "Pedang Hitam Mistis",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c04e"
+            },
+            "itemName": "Baja Hitam Mistis",
+            "quantity": 10,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c05c"
+            },
+            "itemName": "Palu Formasi Array",
+            "quantity": 1,
+            "durabilityHours": 168
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a56e"
+        }
+      },
+      {
+        "recipeName": "Suling Pil Pengumpul Qi",
+        "resultItemId": {
+          "$oid": "6a91b15fa9e03dc91c54c076"
+        },
+        "resultItemName": "Pil Pengumpul Qi",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfed"
+            },
+            "itemName": "Beras Mentah",
+            "quantity": 500,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c04d"
+            },
+            "itemName": "Batu Roh Kasar",
+            "quantity": 5,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a56f"
+        }
+      },
+      {
+        "recipeName": "Rajut Sutra Langit Nirwana",
+        "resultItemId": {
+          "$oid": "6a91b15ea9e03dc91c54c057"
+        },
+        "resultItemName": "Sutra Langit Nirwana",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54bffd"
+            },
+            "itemName": "Benang Halus",
+            "quantity": 5000,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c065"
+            },
+            "itemName": "Gunting Pemutus Benang Takdir",
+            "quantity": 1,
+            "durabilityHours": 168
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a570"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c099"
+    },
+    "name": "Goa Meditasi Ruang Hampa",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 20,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 1000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04d"
+        },
+        "itemName": "Batu Roh Kasar",
+        "quantity": 10000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 1200,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.169Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 30,
+    "description": "Celah dimensi buatan para sesepuh yang menghentikan waktu secara relatif. Kultivator menyerap cairan inti bumi selama seratus tahun di dalam, meski di luar baru berlalu 1 hari (24 jam).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "silver",
+    "rank": "Epic",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09a"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Formasi Pengunci Langit (Heaven Sealing Array)",
+    "__v": 0,
+    "basePrice": 50,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 5000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04f"
+        },
+        "itemName": "Kayu Surga",
+        "quantity": 2500,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c050"
+        },
+        "itemName": "Cairan Inti Bumi",
+        "quantity": 1000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 1440,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.195Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 41,
+    "description": "[BUTUH: 1x Batu Roh Kasar, 1x Pil Pengumpul Qi/jam] Formasi mistis penyerap energi penjuru dunia. Menyerap Qi kosmik perlahan bagai bernapas, dan membekukannya menjadi harta karun dunia nyata. Siklus puncaknya adalah 7 hari sekali, di mana ia bersinar membutakan mata. Max profit tertingggi dunia fana: ~10 Gold/hari (41 Silver/jam).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "silver",
+    "rank": "Legendary",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04d"
+        },
+        "itemName": "Batu Roh Kasar",
+        "quantity": 1,
+        "durabilityHours": 720
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15fa9e03dc91c54c076"
+        },
+        "itemName": "Pil Pengumpul Qi",
+        "quantity": 1,
+        "durabilityHours": 168
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09b"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pemburu Hutan Lebat",
+    "__v": 0,
+    "basePrice": 200,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 50,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 6,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.221Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Belati Batu, 2x Air Bersih/jam] Markas para pemburu. Kulit mentah dijemur dan daging disembelih per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.450Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfdf"
+        },
+        "itemName": "Belati Batu",
+        "quantity": 1,
+        "durabilityHours": 25
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 2,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15aa9e03dc91c54bfca"
+    },
+    "workerOutputItemName": "Kulit Mentah",
+    "workerOutputQuantity": 5
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09c"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Perkebunan Buah Liar",
+    "__v": 0,
+    "basePrice": 150,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc4"
+        },
+        "itemName": "Daun Kering",
+        "quantity": 100,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 30,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 10,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.255Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Cangkul Kayu, 4x Air Bersih/jam] Lahan tempat semak beri merah dibudidayakan. Buah dipetik saat pagi dan sore hari (12 jam).",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd3"
+        },
+        "itemName": "Cangkul Kayu",
+        "quantity": 1,
+        "durabilityHours": 24
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 4,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe4"
+    },
+    "workerOutputItemName": "Buah Liar",
+    "workerOutputQuantity": 8
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09d"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pabrik Penggilingan Batu",
+    "__v": 0,
+    "basePrice": 180,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 200,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 14,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.284Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Penggiling Batu, 1x Air Bersih/jam] Menumbuk batu hingga menjadi pasir halus yang dibawa per jam.\nMembutuhkan pekerja aktif. Produksi dihitung per jam.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:13:17.473Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfda"
+        },
+        "itemName": "Penggiling Batu",
+        "quantity": 1,
+        "durabilityHours": 96
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15aa9e03dc91c54bfcd"
+    },
+    "workerOutputItemName": "Pasir Halus",
+    "workerOutputQuantity": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09e"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Gubuk Anyam Kapas",
+    "__v": 0,
+    "basePrice": 250,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 40,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 8,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.309Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Tempat merajut serat dan kapas primitif menjadi barang jadi.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "recipeName": "Pintal Benang",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54bffd"
+        },
+        "resultItemName": "Benang Halus",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc7"
+            },
+            "itemName": "Serat Tumbuhan",
+            "quantity": 20,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a57a"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c09f"
+    },
+    "name": "Dapur Masak Umum",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 300,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 100,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 10,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.340Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Dapur bersama yang memasak daging mentah untuk pekerja desa.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "recipeName": "Masak Daging Matang",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe5"
+        },
+        "resultItemName": "Makanan Matang",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfe2"
+            },
+            "itemName": "Daging Mentah",
+            "quantity": 2,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 1,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a57d"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a0"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Ladang Gandum Subur",
+    "__v": 0,
+    "basePrice": 2,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 200,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 48,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.368Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 1x Cangkul Besi, 5x Air Bersih/jam] Ladang emas yang menghasilkan bahan makanan pokok tiada habis.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "silver",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c004"
+        },
+        "itemName": "Cangkul Besi",
+        "quantity": 1,
+        "durabilityHours": 72
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 5,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfed"
+    },
+    "workerOutputItemName": "Beras Mentah",
+    "workerOutputQuantity": 20
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a1"
+    },
+    "name": "Pengolahan Minyak Hewani",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 3,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 300,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 60,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.393Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[BUTUH: 10x Daging Mentah, 1x Wajan Besi/jam] Mengekstrak lemak babi dan sapi menjadi minyak penerangan.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "silver",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe2"
+        },
+        "itemName": "Daging Mentah",
+        "quantity": 10,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c008"
+        },
+        "itemName": "Wajan Besi",
+        "quantity": 1,
+        "durabilityHours": 150
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ca9e03dc91c54bfff"
+    },
+    "workerOutputItemName": "Minyak Hewani",
+    "workerOutputQuantity": 5
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a2"
+    },
+    "name": "Rumah Penginapan (Inn)",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 12,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 2000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 800,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 120,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.419Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 8,
+    "description": "[INPUT per jam: 2x Makanan Matang + 5x Air Bersih]\n[PROFIT per jam: 8 Silver]\nMenyediakan tempat tidur bagi saudagar keliling. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.714Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe5"
+        },
+        "itemName": "Makanan Matang",
+        "quantity": 2,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 5,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a3"
+    },
+    "name": "Toko Senjata Pandai Besi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 8,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 2500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 90,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.445Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 6,
+    "description": "[INPUT per jam: 1x Batu Bara + 1x Batangan Besi]\n[PROFIT per jam: 6 Silver]\nToko perlengkapan fana untuk tentara dan petualang. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.739Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff4"
+        },
+        "itemName": "Batu Bara",
+        "quantity": 1,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a4"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Penyamakan Kulit",
+    "__v": 0,
+    "basePrice": 6,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 900,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 48,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.471Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nMengubah kulit mentah menjadi kulit samak. Buka menu craft untuk membuat Kulit Samak. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [
+      {
+        "recipeName": "Samak Kulit",
+        "resultItemId": {
+          "$oid": "6a91b15ca9e03dc91c54bffa"
+        },
+        "resultItemName": "Kulit Samak",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfca"
+            },
+            "itemName": "Kulit Mentah",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            },
+            "itemName": "Batu Kasar",
+            "quantity": 1,
+            "durabilityHours": 1
+          }
+        ]
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.765Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a5"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Pabrik Semen Raksasa",
+    "__v": 0,
+    "basePrice": 45,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff5"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 1800,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 4500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 180,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.499Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 80x Batu Kasar + 8x Batu Bara]\n[OUTPUT per jam: 8x Semen Campuran]\nPabrik semen skala besar. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.787Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 80,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff4"
+        },
+        "itemName": "Batu Bara",
+        "quantity": 8,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15da9e03dc91c54c023"
+    },
+    "workerOutputItemName": "Semen Campuran",
+    "workerOutputQuantity": 8
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a6"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Fasilitas Pembuatan Karet",
+    "__v": 0,
+    "basePrice": 55,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 1200,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 200,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.524Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 40x Getah Pohon + 2x Bahan Kimia Asam]\n[OUTPUT per jam: 6x Karet Sintetis]\nFasilitas pengolahan getah menjadi karet. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.809Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc8"
+        },
+        "itemName": "Getah Pohon",
+        "quantity": 40,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02a"
+        },
+        "itemName": "Bahan Kimia Asam",
+        "quantity": 2,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15da9e03dc91c54c024"
+    },
+    "workerOutputItemName": "Karet Sintetis",
+    "workerOutputQuantity": 6
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a7"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Tambang Aluminium",
+    "__v": 0,
+    "basePrice": 70,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 2200,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 220,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.549Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Alat Bor Berat + 2x Bahan Kimia Asam]\n[OUTPUT per jam: 4x Aluminium Ringan]\nTambang dan pengolahan aluminium. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.832Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02e"
+        },
+        "itemName": "Alat Bor Berat",
+        "quantity": 1,
+        "durabilityHours": 96
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c02a"
+        },
+        "itemName": "Bahan Kimia Asam",
+        "quantity": 2,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "6a91b15da9e03dc91c54c029"
+    },
+    "workerOutputItemName": "Aluminium Ringan",
+    "workerOutputQuantity": 4
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a8"
+    },
+    "name": "Laboratorium Senjata Api",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 85,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01f"
+        },
+        "itemName": "Baja Murni",
+        "quantity": 4000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 300,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.575Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "Ruang riset untuk menciptakan bubuk mesiu dan peluru letal.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "copper",
+    "rank": "Rare",
+    "recipes": [
+      {
+        "recipeName": "Cetak Pistol",
+        "resultItemId": {
+          "$oid": "6a91b15da9e03dc91c54c039"
+        },
+        "resultItemName": "Pistol Revolver",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c01f"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 5,
+            "durabilityHours": 1
+          }
+        ],
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a58a"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:53.175Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0a9"
+    },
+    "name": "Rumah Sakit Modern",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 80,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 8000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 400,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.602Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 25,
+    "description": "[INPUT per jam: 1x Pil Pemulih Tulang + 15x Air Bersih]\n[PROFIT per jam: 25 Silver]\nFasilitas medis fana tingkat lanjut. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Rare",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.854Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ca9e03dc91c54c01c"
+        },
+        "itemName": "Pil Pemulih Tulang",
+        "quantity": 1,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 15,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0aa"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Ladang Obat Roh (Spirit Herb Garden)",
+    "__v": 0,
+    "basePrice": 8,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04d"
+        },
+        "itemName": "Batu Roh Kasar",
+        "quantity": 6000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 720,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.663Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 40,
+    "description": "[INPUT per jam: 1x Cairan Inti Bumi]\n[PROFIT per jam: 40 Silver]\nLahan sakti dengan tanah bernapas. Ginseng dan Teratai menyerap esensi alam. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "silver",
+    "rank": "Epic",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.878Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c050"
+        },
+        "itemName": "Cairan Inti Bumi",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0ab"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Tambang Kristal Jiwa",
+    "__v": 0,
+    "basePrice": 12,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 2500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 900,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.694Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 55,
+    "description": "[INPUT per jam: 1x Beliung Pelenyap Gunung]\n[PROFIT per jam: 55 Silver]\nMenembus batuan angkasa untuk mengekstrak sisa ingatan dewa kuno. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "silver",
+    "rank": "Epic",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.902Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c05d"
+        },
+        "itemName": "Beliung Pelenyap Gunung",
+        "quantity": 1,
+        "durabilityHours": 168
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0ac"
+    },
+    "name": "Istana Lelang Langit (Heavenly Auction House)",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 40,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04f"
+        },
+        "itemName": "Kayu Surga",
+        "quantity": 5000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 5000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 1440,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.724Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 2,
+    "description": "[INPUT per jam: 1x Anggur Giok Berumur Seribu Tahun]\n[PROFIT per jam: 2 Gold]\nTempat bertukar harta setingkat dewa. Komisi perantara mengalir tanpa henti. Membutuhkan pekerja aktif. Asset paling prestisius.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "gold",
+    "rank": "Legendary",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.925Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c06e"
+        },
+        "itemName": "Anggur Giok Berumur Seribu Tahun",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0ad"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Formasi Pengumpulan Qi",
+    "__v": 0,
+    "basePrice": 18,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04d"
+        },
+        "itemName": "Batu Roh Kasar",
+        "quantity": 1500,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 600,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.749Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 35,
+    "description": "[INPUT per jam: 1x Pil Pengumpul Qi]\n[PROFIT per jam: 35 Silver]\nLantai bercahaya rune kuno yang memadatkan aura alam. Favorit para kultivator. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "silver",
+    "rank": "Epic",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.948Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "6a91b15fa9e03dc91c54c076"
+        },
+        "itemName": "Pil Pengumpul Qi",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b160a9e03dc91c54c0ae"
+    },
+    "name": "Bengkel Artefak Ilahi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 30,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 6000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 1000,
+    "createdAt": {
+      "$date": "2026-08-28T16:03:44.774Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nBara api nirwana menempa harta dunia abadi. Buka menu craft untuk membuat Pedang Petir Ilahi. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "jade",
+    "profitCurrency": "copper",
+    "rank": "Epic",
+    "recipes": [
+      {
+        "recipeName": "Tempa Pedang Petir Ilahi",
+        "resultItemId": {
+          "$oid": "6a91b15ea9e03dc91c54c067"
+        },
+        "resultItemName": "Pedang Petir Ilahi",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c05a"
+            },
+            "itemName": "Tulang Dewa Kuno",
+            "quantity": 12,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ea9e03dc91c54c05c"
+            },
+            "itemName": "Palu Formasi Array",
+            "quantity": 1,
+            "durabilityHours": 168
+          }
+        ]
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-08-29T14:14:08.973Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54d001"
+    },
+    "name": "Sumur Air Tanah",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 150,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 50,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 30,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 4,
+    "createdAt": {
+      "$date": "2026-09-04T06:22:37.846Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[OUTPUT per jam: 10x Air Bersih]\nSumur galian sederhana yang mencapai mata air bawah tanah. Menyediakan pasokan air bersih yang vital tanpa input bahan, hanya butuh tenaga pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T06:22:37.981Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": {
+      "$oid": "6a91b15ba9e03dc91c54bfe3"
+    },
+    "workerOutputItemName": "Air Bersih",
+    "workerOutputQuantity": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15fa9e03dc91c54d002"
+    },
+    "name": "Meja Pengrajin Batu",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 200,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 80,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 100,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 6,
+    "createdAt": {
+      "$date": "2026-09-04T06:22:37.981Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[CRAFTING STATION]\nMeja kerja kasar dengan alat pemecah batu. Buka menu craft untuk membuat alat-alat batu dasar seperti Batu Tajam, Kapak Batu, Beliung Batu, dan Cangkul Kayu. Tidak memproduksi otomatis.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690d001"
+        },
+        "recipeName": "Asah Batu Tajam",
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc5"
+        },
+        "resultItemName": "Batu Tajam",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            },
+            "itemName": "Batu Kasar",
+            "quantity": 3,
+            "durabilityHours": 1
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690d002"
+        },
+        "recipeName": "Rakit Kapak Batu",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd1"
+        },
+        "resultItemName": "Kapak Batu",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc5"
+            },
+            "itemName": "Batu Tajam",
+            "quantity": 2,
+            "durabilityHours": 12
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfd6"
+            },
+            "itemName": "Tali Rami",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690d003"
+        },
+        "recipeName": "Rakit Beliung Batu",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd2"
+        },
+        "resultItemName": "Beliung Batu",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc5"
+            },
+            "itemName": "Batu Tajam",
+            "quantity": 2,
+            "durabilityHours": 12
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfd6"
+            },
+            "itemName": "Tali Rami",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690d004"
+        },
+        "recipeName": "Rakit Cangkul Kayu",
+        "resultItemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfd3"
+        },
+        "resultItemName": "Cangkul Kayu",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 8,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc5"
+            },
+            "itemName": "Batu Tajam",
+            "quantity": 1,
+            "durabilityHours": 12
+          }
+        ]
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-09-04T06:22:37.981Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  }
+]
