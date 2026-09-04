@@ -1,0 +1,4488 @@
+[{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc2"
+  },
+  "name": "Batu Kasar",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.627Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bongkahan batu alam yang belum diolah. Fondasi segala bangunan fana. Tanpa ini, peradaban takkan berdiri.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Alam Liar",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:50.982Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc3"
+  },
+  "name": "Kayu Mentah",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.656Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Batang pohon yang baru ditebang. Masih basah dan berat. Digunakan untuk bahan bakar, tiang, atau diolah menjadi papan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan Liar",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.100Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc4"
+  },
+  "name": "Daun Kering",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.679Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daun gugur yang dikumpulkan di musim kemarau. Bahan bakar termurah dan pakan hewan kecil.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.126Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc5"
+  },
+  "name": "Batu Tajam",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.704Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Batu yang diasah manual hingga tajam. Alat potong primitif sebelum adanya logam. (Durabilitas alat: 12 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Sungai",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.151Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc6"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Tanah Liat",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.728Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tanah basah elastis dari pinggir sungai. Bahan utama gerabah dan bata mentah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Tepi Sungai",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.174Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc7"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Serat Tumbuhan",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.752Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Serat kasar dari batang tanaman liar. Dipilin menjadi tali atau tenunan primitif.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Padang Rumput",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.196Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc8"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Getah Pohon",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.777Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cairan lengket dari kulit pohon. Lem alami dan bahan dasar karet di era modern.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.220Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfc9"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Bulu Hewan",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.802Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bulu hasil buruan. Hangat untuk pakaian musim dingin dan bahan isian.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.242Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfca"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kulit Mentah",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.825Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kulit hewan yang belum disamak. Masih berbau, namun sangat kuat setelah dijemur.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hasil Buruan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.264Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfcb"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Tulang Hewan",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.849Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tulang sisa perburuan. Diasah menjadi jarum, belati, atau hiasan suku.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hasil Buruan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.288Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfcc"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Biji Ek",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.873Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Biji pohon ek. Pakan hewan liar, atau dipanggang sebagai camilan darurat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.311Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfcd"
+  },
+  "name": "Pasir Halus",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.897Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Butiran pasir sungai yang diayak. Campuran dasar untuk bangunan dan kaca kasar.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Sungai",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.333Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfce"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Lumpur Basah",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.921Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Lumpur kental. Dipakai menutup celah dinding gubuk agar angin tak masuk.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Rawa",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.356Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfcf"
+  },
+  "name": "Bambu Hijau",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.969Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bambu segar yang lentur namun kuat. Ideal untuk joran, pipa air, dan tombak.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan Bambu",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.379Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15aa9e03dc91c54bfd0"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pecahan Kerang",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:38.995Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cangkang kerang yang digosok mengkilap. Dulu dipakai sebagai mata uang suku pesisir.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pantai",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.403Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd1"
+  },
+  "name": "Kapak Batu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.025Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Batu tajam diikat pada gagang kayu dengan serat. Alat tebang wajib para penebang kayu. (Durabilitas: 24 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.428Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd2"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Beliung Batu",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.049Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat tambang primitif dengan ujung batu kokoh. Lambat tapi satu-satunya cara menambang bagi pemula. (Durabilitas: 24 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.453Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd3"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Cangkul Kayu",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.073Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kayu yang ujungnya dilengkungkan untuk menggemburkan tanah. Alat dasar pertanian fana. (Durabilitas: 24 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.475Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd4"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pancingan Bambu",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.099Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Joran bambu dengan benang serat. Digunakan memancing di sungai kecil. (Durabilitas: 36 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.500Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd5"
+  },
+  "name": "Pisau Tulang",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 28,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.123Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tulang yang diasah tajam. Berguna menguliti dan memotong daging. (Durabilitas: 18 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.524Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd6"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Tali Rami",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.146Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tali dipilin dari serat tumbuhan. Cukup kuat mengikat balok kayu. (Durabilitas: 48 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.547Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd7"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Jarum Tulang",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.170Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Jarum kecil dari tulang. Dibutuhkan untuk menjahit kulit hewan. (Durabilitas: 12 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.570Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd8"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Wadah Tanah Liat",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.198Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Wadah yang dibakar di bawah matahari. Menampung air tapi mudah pecah. (Durabilitas: 48 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.593Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfd9"
+  },
+  "name": "Batu Api",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 22,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.234Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Dua batu yang digesekkan menghasilkan percikan api. Wajib untuk bertahan hidup. (Durabilitas: 72 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Alam",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.614Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfda"
+  },
+  "name": "Penggiling Batu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.272Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Dua batu datar untuk menghancurkan biji-bijian. Lambat tapi efektif. (Durabilitas: 96 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.637Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfdb"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pedang Kayu",
+  "__v": 0,
+  "basePrice": 55,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.301Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata latihan dari kayu keras. Tumpul, tapi hantamannya cukup meremukkan tulang fana. (Durabilitas: 48 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.662Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfdc"
+  },
+  "name": "Tombak Bambu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 50,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.323Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bambu diruncingkan dan dibakar agar keras. Mematikan dari jarak aman. (Durabilitas: 30 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.685Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfdd"
+  },
+  "name": "Gada Batu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 65,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.352Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Gada berat berujung batu besar. Butuh tenaga besar, daya hancurnya luar biasa. (Durabilitas: 40 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kerajinan Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.709Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfde"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Panah Kayu Sederhana",
+  "__v": 0,
+  "basePrice": 70,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.377Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Busur dari kayu lentur dengan tali serat. Mampu melumpuhkan burung dan kelinci dari kejauhan. (Durabilitas senjata: 60 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfdf"
+  },
+  "name": "Belati Batu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.399Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata lempar atau tikam jarak dekat. Ringan dan mudah disembunyikan di balik pakaian. (Durabilitas senjata: 25 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe0"
+  },
+  "name": "Tongkat Rotan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.427Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tongkat ringan yang lentur. Sering digunakan oleh petarung jalanan fana karena sulit ditebak arah serangannya. (Durabilitas senjata: 50 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe1"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Anak Panah Batu",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.452Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Amunisi untuk busur sederhana. Ujungnya menggunakan batu yang diserpih. (Sekali pakai)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe2"
+  },
+  "name": "Daging Mentah",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.474Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daging hasil buruan yang belum dimasak. Bisa dimakan darurat, tapi berisiko sakit perut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hasil Buruan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.733Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe3"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Air Bersih",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.502Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Air jernih dari mata air atau sungai yang disaring. Kebutuhan mutlak semua pekerja dan peternakan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Mata Air",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.757Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe4"
+  },
+  "name": "Buah Liar",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.529Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Buah hutan yang manis dan menyegarkan. Pakan pekerja atau dijual di kios kecil.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.783Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe5"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Makanan Matang",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.553Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Makanan sederhana yang sudah dimasak. Memberi energi lebih baik daripada bahan mentah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Dapur Suku",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.806Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe6"
+  },
+  "name": "Ikan Segar",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 14,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.577Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Ikan hasil tangkapan sungai. Segar dan bergizi, bahan baku makanan matang.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Sungai",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.830Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe7"
+  },
+  "name": "Jamur Beracun",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.600Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Jamur dengan warna cerah mencolok. Berbahaya jika dimakan namun kadang dicari untuk eksperimen mematikan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe8"
+  },
+  "name": "Umbi Hutan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.622Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Akar berdaging tebal yang mengenyangkan. Harus direbus lama agar racun alaminya hilang.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfe9"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Susu Hewan Liar",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.646Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Susu segar hasil perahan dari hewan tangkapan. Minuman yang cukup mewah di era awal.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfea"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Madu Hutan",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.670Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Madu kental manis yang diambil langsung dari sarang lebah. Makanan berenergi tinggi yang disukai siapa saja.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfeb"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Air Kelapa",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.693Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Air menyegarkan dari buah kelapa di pesisir. Mengganti cairan tubuh dengan sangat cepat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfec"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Bibit Padi",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.716Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bibit padi lokal yang tahan tadah hujan. Wajib untuk memulai lahan pertanian.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Petani Lokal",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.857Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfed"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Beras Mentah",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.738Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Padi yang sudah dipanen tapi belum digiling. Bahan pokok makanan fana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Sawah",
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.892Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfee"
+  },
+  "name": "Daun Herbal Pereda Nyeri",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.764Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daun hijau yang jika dikunyah dapat meredakan rasa sakit sementara. Bukan obat dewa, hanya penyembuh luka ringan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bfef"
+  },
+  "name": "Akar Stamina",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.787Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Akar berwarna kuning yang sangat pahit. Mengunyahnya memberikan kejutan energi untuk tidak tidur semalaman.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff0"
+  },
+  "name": "Bunga Penurun Panas",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 22,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.809Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bunga biru kecil yang biasa diseduh dengan air hangat. Sangat efektif menurunkan demam bagi pekerja yang sakit.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Common",
+  "tier": 1,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff1"
+  },
+  "name": "Batu Bata",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.844Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tanah liat yang dibakar hingga keras. Fondasi bangunan kota kecil dan dinding kokoh.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Tungku Bata",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.917Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff2"
+  },
+  "name": "Papan Kayu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 22,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.878Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kayu mentah yang sudah digergaji rata. Siap digunakan untuk lantai, dinding, dan perabot.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Penggergajian",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.945Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff3"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Bijih Besi",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.901Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bijih besi mentah dari lorong tambang. Belum dilebur, masih bercampur batuan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Tambang",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.969Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff4"
+  },
+  "name": "Batu Bara",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.923Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bahan bakar padat yang menghasilkan panas tinggi. Wajib untuk peleburan logam.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Tambang Batu Bara",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:51.990Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff5"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Batangan Besi",
+  "__v": 0,
+  "basePrice": 90,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.948Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Besi murni hasil peleburan. Bahan baku senjata, alat, dan konstruksi era besi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Peleburan Besi",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.013Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff6"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Paku Besi",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.971Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Paku-paku kecil yang memperkuat sambungan kayu. Menghilangkan kebutuhan tali rami dalam konstruksi bangunan menengah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ba9e03dc91c54bff7"
+  },
+  "name": "Kawat Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:39.995Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kawat besi yang lentur namun kuat. Digunakan untuk mengikat, membuat pagar, atau jebakan mekanik.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bff8"
+  },
+  "name": "Lembaran Seng",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.022Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Lembaran tipis logam yang tahan karat. Sangat sering digunakan untuk atap bangunan agar tidak bocor.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bff9"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kaca Kasar",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.045Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kaca tidak bening yang dilebur dari pasir. Meski buram, ia membiarkan cahaya masuk dan menahan angin dingin.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bffa"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kulit Samak",
+  "__v": 0,
+  "basePrice": 50,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.085Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kulit mentah yang sudah disamak. Lembut, kuat, dan siap dijahit menjadi baju atau pelana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Penyamakan",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.034Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bffb"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kapas",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.116Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Serat kapas hasil panen kebun. Bahan baku kain tenun yang lebih halus dari serat liar.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kebun Kapas",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.056Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bffc"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kain Tenun",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.140Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kain berkualitas yang ditenun secara teliti menggunakan alat tenun. Nyaman dipakai dan mulai menggantikan baju kulit kasar.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bffd"
+  },
+  "name": "Benang Halus",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.175Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Benang kuat yang dirajut dari serat terpilih. Tidak mudah putus dan digunakan untuk menjahit kain menjadi pakaian.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bffe"
+  },
+  "name": "Pecahan Keramik",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.202Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Sisa keramik rusak yang kadang ditumbuk untuk campuran pelapis dinding, atau disusun menjadi mosaik lantai bangsawan fana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54bfff"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Minyak Hewani",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.223Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Minyak hasil olahan lemak hewan. Digunakan untuk penerangan, memasak, dan pelumas sederhana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pengolahan",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.077Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c000"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Palu Besi",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.246Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat berat untuk menempa besi panas di atas paron. Bunyi dentumannya adalah nyanyian peradaban baru. (Durabilitas alat: 48 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c001"
+  },
+  "name": "Kapak Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.270Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kapak dengan mata pisau besi tebal. Menghancurkan batang pohon raksasa hanya dalam beberapa ayunan. (Durabilitas alat: 48 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c002"
+  },
+  "name": "Beliung Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 120,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.292Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Beliung berujung besi tempa. Jauh lebih efisien menambang bijih daripada versi batu. (Durabilitas: 72 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pandai Besi",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.099Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c003"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Gergaji Tangan Besi",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.316Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Gergaji pipih dengan gigi tajam. Memotong balok kayu menjadi papan presisi dengan tenaga minimal. (Durabilitas alat: 60 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c004"
+  },
+  "name": "Cangkul Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 100,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.339Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cangkul berujung besi. Mempercepat pengolahan lahan secara signifikan. (Durabilitas: 72 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pandai Besi",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.121Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c005"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Gunting Besi",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.362Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat pemotong kain atau wol hewan yang presisi. Sangat mempermudah para penjahit lokal. (Durabilitas alat: 80 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c006"
+  },
+  "name": "Tang Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.386Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menjepit logam panas yang baru keluar dari tungku. Tanpa ini, pandai besi akan kehilangan tangannya. (Durabilitas alat: 100 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c007"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Alat Tenun Sederhana",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.408Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mekanisme kayu dengan gigi besi ringan untuk menenun kain secara massal. (Durabilitas alat: 120 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c008"
+  },
+  "name": "Wajan Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 80,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.431Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Wajan tebal dari besi. Tahan panas tinggi, cocok untuk memasak dalam jumlah besar. (Durabilitas: 120 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pandai Besi",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.141Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c009"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Roda Gerobak",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.454Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Roda kayu berlapis besi. Membuka jalur perdagangan antara desa-desa yang berjauhan. (Durabilitas alat: 200 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00a"
+  },
+  "name": "Pedang Besi Biasa",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.478Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pedang fana tajam standar prajurit kerajaan. Bilahnya berat namun dapat mengiris daging dengan sangat rapi. (Durabilitas senjata: 150 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00b"
+  },
+  "name": "Tombak Berujung Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.503Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tombak kayu panjang dengan mata pisau besi mematikan di ujungnya. Senjata andalan pasukan barisan depan. (Durabilitas senjata: 120 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00c"
+  },
+  "name": "Kapal Perang Ringan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.526Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata atau lebih tepatnya kendaraan untuk pertempuran air ringan. Dilengkapi perisai besi di lambungnya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00d"
+  },
+  "name": "Kapak Perang Ganda",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.549Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kapak besar dengan dua sisi tajam. Membutuhkan kekuatan luar biasa untuk menggunakannya secara efektif dalam tawuran. (Durabilitas senjata: 100 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00e"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Panah Ujung Besi",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.571Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Anak panah berujung besi yang menembus baju pelindung kulit dengan mudah. Mengerikan dari jarak jauh.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c00f"
+  },
+  "name": "Busur Panjang Kayu Yew",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.594Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Busur raksasa dari kayu pilihan. Membutuhkan tenaga besar untuk ditarik namun daya tembus panahnya tiada tara. (Durabilitas senjata: 200 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c010"
+  },
+  "name": "Pisau Lempar Besi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.628Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kecil, tajam, dan mematikan. Sering dilapisi racun oleh pembunuh bayaran fana. (Durabilitas senjata: 50 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c011"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Perisai Kayu Lapis Besi",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.651Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pelindung utama dalam perang. Menahan serangan panah dan sabetan pedang ringan. (Durabilitas senjata: 80 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c012"
+  },
+  "name": "Anggur Beras",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.677Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Minuman fermentasi beras yang menghangatkan tubuh dan menaikkan semangat pejuang yang lelah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c013"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Daging Asap",
+  "__v": 0,
+  "basePrice": 45,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.701Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daging yang diasap hingga tahan lama. Makanan andalan para saudagar dan tentara dalam perjalanan jauh.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Rumah Asap",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.162Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c014"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Sup Sayur Daging",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.722Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Makanan bergizi tinggi yang dimasak dalam wajan besi. Menyembuhkan lelah dengan cepat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c015"
+  },
+  "name": "Keju Keras",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.744Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Keju fermentasi yang sangat padat. Susah digigit, namun awet disimpan berbulan-bulan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c016"
+  },
+  "name": "Roti Gandum",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.765Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Roti padat yang dipanggang sempurna. Makanan pokok warga kota besar.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c017"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Ikan Garam",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.787Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Ikan hasil tangkapan yang dilumuri garam agar tidak busuk. Sangat asin namun penting untuk pelaut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c018"
+  },
+  "name": "Susu Sapi Steril",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.808Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Susu yang direbus ringan untuk menghilangkan bakteri. Terasa sangat segar.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c019"
+  },
+  "name": "Manisan Buah",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.831Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Buah liar yang direndam madu dan gula tebu. Cemilan mewah anak bangsawan fana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01a"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pil Pekerja Keras",
+  "__v": 0,
+  "basePrice": 60,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.857Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil herbal sederhana yang menghilangkan rasa lelah pekerja tambang dan ladang selama beberapa jam.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Apotek Desa",
+  "priceCurrency": "copper",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.183Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01b"
+  },
+  "name": "Salep Luka Bakar",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.892Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Salep dingin berwarna hijau yang cepat menutup luka melepuh akibat terkena percikan tungku besi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01c"
+  },
+  "name": "Pil Pemulih Tulang",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.915Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil medis fana tingkat lanjut. Mempercepat penyembuhan patah tulang dan luka berat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Rumah Sakit",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.329Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01d"
+  },
+  "name": "Penawar Racun Biasa",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.937Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bubuk penawar racun binatang berbisa standar di hutan fana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01e"
+  },
+  "name": "Pil Tidur Lelap",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.960Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Satu butir cukup untuk membuat pria dewasa tertidur tanpa mimpi selama 10 jam. Berguna memulihkan kelelahan mental.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Uncommon",
+  "tier": 2,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ca9e03dc91c54c01f"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Baja Murni",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:40.982Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Baja hasil pemurnian tingkat tinggi. Lebih keras dan lebih ringan dari batangan besi biasa. Fondasi teknologi fana tingkat lanjut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pabrik Baja",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.203Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c020"
+  },
+  "name": "Minyak Mentah",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.006Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cairan hitam kental berbau menyengat yang disedot dari kedalaman bumi. Emas hitam penggerak mesin raksasa industri.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c021"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Bahan Bakar Mesin",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.052Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Hasil penyulingan minyak mentah. Mudah terbakar dan meledak, memberikan tenaga pada piston-piston mesin.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c022"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Komponen Elektronik",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.078Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Papan sirkuit hijau dengan chip perak. Puncak kecerdasan fana yang mampu memproses logika mekanis rumit.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c023"
+  },
+  "name": "Semen Campuran",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.108Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Campuran batu, pasir, dan zat pengikat. Digunakan membangun struktur besar yang tahan lama.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pabrik Semen",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.222Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c024"
+  },
+  "name": "Karet Sintetis",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 22,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.130Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Karet hasil olahan getah + bahan kimia. Elastis dan tahan lama, digunakan untuk berbagai keperluan industri fana.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Fasilitas Karet",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.242Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c025"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Plastik Tahan Panas",
+  "__v": 0,
+  "basePrice": 18,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.156Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Material ringan ajaib yang bisa dibentuk sesuka hati dan tidak mudah meleleh. Membungkus jutaan kabel dunia.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c026"
+  },
+  "name": "Kawat Tembaga",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 22,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.178Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kawat penghantar listrik yang sangat baik. Menyalurkan energi dari generator ke seluruh pelosok pabrik.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c027"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Baterai Lithium",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.201Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kotak penyimpanan energi bertenaga tinggi. Memungkinkan perangkat mesin berfungsi tanpa kabel listrik langsung.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c028"
+  },
+  "name": "Kaca Anti Peluru",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 50,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.227Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kaca berlapis tebal yang menahan benturan kinetik luar biasa tanpa pecah berantakan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c029"
+  },
+  "name": "Aluminium Ringan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 28,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.250Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Logam sangat ringan hasil ekstraksi bauksit. Digunakan untuk peralatan presisi dan struktur ringan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Tambang Aluminium",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.267Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02a"
+  },
+  "name": "Bahan Kimia Asam",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.276Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cairan korosif yang dihasilkan di laboratorium kimia. Digunakan untuk pemurnian logam dan proses industri.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Laboratorium Kimia",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.288Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02b"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Silikon",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.302Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Materi semikonduktor dari pemurnian pasir. Kunci utama pembuatan sirkuit memori mesin.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02c"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Baja Tungsten",
+  "__v": 0,
+  "basePrice": 60,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.326Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Baja yang diperkuat dengan elemen langka, menghasilkan mata bor atau pelindung yang tak terkalahkan oleh gesekan panas.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02d"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Cairan Pendingin",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.350Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cairan biru yang mencegah radiator mesin raksasa meledak karena kepanasan saat beroperasi 24 jam nonstop.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02e"
+  },
+  "name": "Alat Bor Berat",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 80,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.375Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mesin bor berdaya tinggi. Memungkinkan penambangan jauh lebih dalam dan efisien. (Durabilitas: 96 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Pabrik Mesin",
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.309Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c02f"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Gergaji Mesin",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.399Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Rantai bergerigi tajam yang berputar dengan kecepatan tinggi. Menumbangkan pohon raksasa hitungan detik. (Durabilitas alat: 72 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c030"
+  },
+  "name": "Las Listrik",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 80,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.440Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat yang menembakkan suhu ekstrem untuk menyambung pelat baja menjadi satu kesatuan permanen. (Durabilitas alat: 120 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c031"
+  },
+  "name": "Derek Mesin (Crane)",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.464Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mekanisme raksasa pengangkat beban berton-ton, memudahkan konstruksi gedung pencakar langit. (Durabilitas alat: 200 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c032"
+  },
+  "name": "Kunci Inggris Hidrolik",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.489Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat perkakas multi-fungsi bertenaga tekanan hidrolik. Membuka baut-baut baja kaku yang tak bisa diputar tenaga manusia. (Durabilitas alat: 150 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c033"
+  },
+  "name": "Pompa Air Tekanan Tinggi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 60,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.514Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mengeringkan tambang yang kebanjiran atau menyuplai air pabrik dalam waktu sekejap. (Durabilitas alat: 180 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c034"
+  },
+  "name": "Kompresor Udara",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 50,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.538Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Memompa udara terkompresi untuk menggerakkan berbagai alat pneumatik berat. (Durabilitas alat: 160 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c035"
+  },
+  "name": "Solder Presisi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.561Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Merakit komponen mikrokontroler rumit dengan timah cair berukuran sangat kecil. (Durabilitas alat: 100 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c036"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Mesin Pemintal Kapas",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.593Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mesin produksi massal yang merubah ribuan ton kapas menjadi benang secara instan. (Durabilitas alat: 250 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c037"
+  },
+  "name": "Detektor Logam",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 45,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.616Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Perangkat pemindai elektromagnetik untuk menemukan bijih besi atau logam berharga di dalam tanah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c038"
+  },
+  "name": "Pedang Baja",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.648Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bilah baja padat yang presisi dan dipoles sempurna. Mampu membelah balok besi tebal tanpa lecet sedikitpun. (Durabilitas senjata: 300 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c039"
+  },
+  "name": "Pistol Revolver",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.672Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata api silinder mematikan. Menghempaskan peluru timah dengan kecepatan melampaui suara.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03a"
+  },
+  "name": "Senapan Berburu",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.708Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senapan laras panjang dengan akurasi menakutkan dari kejauhan. Menghancurkan target organik.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03b"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Rompi Anti Peluru",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.731Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Rompi berbahan serat sintetis tinggi yang menahan penetrasi peluru kaliber kecil.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03c"
+  },
+  "name": "Granat Tangan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.753Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bola besi berisi bahan peledak padat. Meledak memuntahkan pecahan besi tajam ke segala arah. (Sekali pakai)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03d"
+  },
+  "name": "Senapan Mesin Ringan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.782Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menyemburkan peluru tanpa henti dengan tingkat destruktif terhadap bangunan dan prajurit luar biasa.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03e"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pisau Tempur Taktis",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.806Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pisau militer multifungsi berlapis titanium. Tahan karat dan tidak pernah tumpul meski memotong kawat baja. (Durabilitas senjata: 400 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c03f"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Peluru Kaliber .45",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.836Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kotak amunisi mematikan berlapis kuningan. Konsumsi senjata api.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c040"
+  },
+  "name": "Minuman Energi Kaleng",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.860Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Minuman ringan berkarbonasi tinggi kafein. Mengusir rasa ngantuk dengan debar jantung yang kencang.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c041"
+  },
+  "name": "Makanan Kemasan Instan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.889Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Makanan siap saji yang dikemas dalam plastik kedap udara. Rasa artifisial, namun sangat efisien.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c042"
+  },
+  "name": "Pil Vitamin Sintetis",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.918Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil penyedia seluruh kebutuhan nutrisi tubuh dalam satu telan. Menggantikan buah dan sayuran.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c043"
+  },
+  "name": "Susu Protein Konsentrat",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 35,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.940Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Minuman kental bagi tentara atau buruh kasar untuk memelihara otot dalam tekanan ekstrim.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c044"
+  },
+  "name": "Kopi Hitam Pekat",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.962Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Minuman pahit hitam legam, bahan bakar pikiran para ilmuwan gila peradaban.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15da9e03dc91c54c045"
+  },
+  "name": "Ransum Militer",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 40,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:41.984Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kotak makan berenergi sangat tinggi (MRE). Mengandung pemanas instan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c046"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Obat Penahan Nyeri Kimia",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.005Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menghilangkan rasa sakit secara instan, namun berisiko membuat ketagihan jika terlalu sering.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c047"
+  },
+  "name": "Daging Kloning",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 50,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.044Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daging yang ditumbuhkan di laboratorium. Secara mengejutkan rasanya sangat mirip dengan aslinya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "silver",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c048"
+  },
+  "name": "Vaksin Virus",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.079Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menyembuhkan berbagai penyakit pandemik yang dibawa oleh mutasi kuman di kota padat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c049"
+  },
+  "name": "Pil Adrenalin",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.105Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Suntikan hormon yang memberikan dorongan refleks super sementara. Sering disalahgunakan petarung bawah tanah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04a"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Obat Regenerasi Sel",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.127Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Obat kimia revolusioner yang mempercepat penyembuhan luka sobek parah hanya dalam hitungan hari.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04b"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Serum Anti-Toxin",
+  "__v": 0,
+  "basePrice": 1,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.150Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menetralkan racun kimia industri yang terhirup dari kebocoran pipa gas.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04c"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pil Peningkatan Otak",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.171Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil nootropik eksperimental. Meningkatkan fokus analisis hingga 200% selama 4 jam tanpa istirahat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Rare",
+  "tier": 3,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04d"
+  },
+  "name": "Batu Roh Kasar",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.194Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Batu yang mengandung sisa Qi alam. Bahan dasar formasi dan ladang obat roh. Hanya bisa dipanen di tempat dengan konsentrasi Qi tinggi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Ladang Qi",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.353Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04e"
+  },
+  "name": "Baja Hitam Mistis",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 60,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.217Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Logam yang ditempa dengan api roh. Nyaris tak bisa dihancurkan senjata fana. Bahan utama artefak tingkat lanjut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Bengkel Artefak",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.377Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c04f"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kayu Surga",
+  "__v": 0,
+  "basePrice": 55,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.241Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kayu dari pohon yang tumbuh di tempat Qi padat. Tidak pernah lapuk dan mengeluarkan aroma menenangkan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Hutan Roh",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.400Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c050"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Cairan Inti Bumi",
+  "__v": 0,
+  "basePrice": 90,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.269Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Cairan panas yang diambil dari kedalaman bumi. Memberi nutrisi ekstrem bagi tanaman roh dan formasi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Kedalaman Bumi",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.422Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c051"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pasir Waktu",
+  "__v": 0,
+  "basePrice": 100,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.291Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Butiran pasir emas mengkilap. Konon menyimpan fragmen ingatan dimensi ruang dan waktu lampau. Digunakan untuk menyempurnakan formasi tingkat dewa.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c052"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Darah Binatang Buas Ilahi",
+  "__v": 0,
+  "basePrice": 150,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.314Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Darah bergolak yang dipanen dari petir binatang mitologi. Memancarkan tekanan aura yang membuat orang biasa sesak napas.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c053"
+  },
+  "name": "Teratai Es Seribu Tahun",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 120,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.336Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Bunga yang mekar di puncak gunung salju terlarang. Suhu bekunya bisa membekukan jiwa orang lemah.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c054"
+  },
+  "name": "Bulu Phoenix Jatuh",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 200,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.357Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Sebutir bulu merah membara yang terbakar api nirwana tak kunjung padam.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c055"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Batu Roh Murni",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.388Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kekayaan ilahi murni, wujud pemadatan Batu Roh Kasar hingga batas maksimal. Dihargai dengan Jade, koin alam semesta kultivasi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c056"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Mata Naga Emas",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.409Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Permata bundar yang menyerupai pupil naga kuno. Energi menakutkan mengintip dari dalamnya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c057"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Sutra Langit Nirwana",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.434Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kain ilahi yang ditenun dari sutra ulat kosmik. Sangat ringan dan tak bisa ditembus pedang fana manapun.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c058"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Serbuk Bintang",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.458Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Debu berkilauan dari meteorit angkasa luar, menyerap aura pembunuhan surga.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c059"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kristal Jiwa",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.481Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kristal pemanggil jiwa, dapat merekam warisan teknik bela diri tingkat legendaris secara utuh.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05a"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Tulang Dewa Kuno",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.503Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tulang sisa makhluk tingkat dewa yang sudah mati ribuan tahun. Mengandung hukum alam yang belum terurai.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Reruntuhan Kuno",
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.445Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05b"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Sisik Naga Laut",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "material",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.525Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Sisik biru laut yang melindungi kultivator dari serangan magis berelemen air dan petir ekstrim.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05c"
+  },
+  "name": "Palu Formasi Array",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.548Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Palu khusus yang digunakan menempa rune formasi. Setiap pukulan meresonansi dengan hukum ruang. (Durabilitas: 168 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Bengkel Ilahi",
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.467Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05d"
+  },
+  "name": "Beliung Pelenyap Gunung",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.572Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Beliung legendaris yang mampu membelah batuan Qi paling keras. Hanya untuk penambang kristal jiwa. (Durabilitas: 168 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Bengkel Ilahi",
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.488Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05e"
+  },
+  "name": "Kapak Penembus Surga",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.596Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kapak besar bercahaya auroral. Mampu memotong pohon kosmik yang kebal terhadap gergaji mesin terbaik sekalipun. (Durabilitas alat: 168 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c05f"
+  },
+  "name": "Kuali Alkimia Ilahi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.631Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tungku pembakar pil raksasa berkaki tiga. Menyuling inti kehidupan semesta menjadi pil kultivasi tingkat akhir. (Durabilitas alat: 300 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c060"
+  },
+  "name": "Kuas Prasasti Jiwa",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.654Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kuas yang bulunya terbuat dari rambut binatang naga. Dipakai untuk menulis rune sakti penyegel energi pada pusaka. (Durabilitas alat: 150 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c061"
+  },
+  "name": "Tali Pengikat Naga",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.679Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Rantai emas yang dapat memanjang dan memendek sesuai keinginan kultivator. Untuk menangkap binatang roh. (Durabilitas alat: 200 jam)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c062"
+  },
+  "name": "Cermin Pemantul Surga",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.710Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat pengukur konsentrasi Qi lokal. Mampu menemukan titik buta energi untuk membangun paviliun dengan sempurna.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c063"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kipas Angin Kosmik",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.731Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat peleburan angin, mengendalikan api dalam Kuali Alkimia Ilahi dengan kibasan tangan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c064"
+  },
+  "name": "Jaring Bintang Runtuh",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.752Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Jaring mistis penangkap material langka yang beterbangan dalam badai kekacauan dimensi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c065"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Gunting Pemutus Benang Takdir",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "none",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.774Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Alat mistik yang menenun dan memotong Sutra Langit dengan putusan karma absolut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c066"
+  },
+  "name": "Pedang Hitam Mistis",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.797Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pusaka para ketua sekte besar. Bilahnya yang hitam pekat mampu memotong dimensi udara itu sendiri, tak tertandingi senjata fana. (Durabilitas senjata: 1000 pertempuran)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c067"
+  },
+  "name": "Pedang Petir Ilahi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 25,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.820Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata tingkat Immortal. Setiap ayunan memicu kilatan petir. Bilahnya abadi dan tak pernah tumpul. (Durabilitas: Abadi)",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Bengkel Artefak Ilahi",
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.510Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c068"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Tombak Naga Darah",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.841Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Tombak merah darah yang menyerap aura membunuh musuh dan memperkuat penggunanya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c069"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Busur Penembus Matahari",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.863Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Busur raksasa ilahi. Konon panahnya yang terbuat dari Qi murni pernah menjatuhkan matahari palsu dari langit.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06a"
+  },
+  "name": "Cincin Penghancur Ruang",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 15,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.885Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Senjata artefak tersembunyi. Sekali tembak memicu ledakan hampa udara yang merobek dada musuh tak terlihat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06b"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Jarum Hujan Bunga Pear",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.906Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Ribuan jarum aura kecil mematikan yang ditembakkan dalam satu lambaian lengan baju. Mustahil dihindari sepenuhnya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06c"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Kipas Naga Angin Giok",
+  "__v": 0,
+  "basePrice": 6,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.928Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Kipas lipat pusaka, kibasannya membangkitkan badai topan yang mengiris pegunungan.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06d"
+  },
+  "name": "Gada Pemecah Langit",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "weapon",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.950Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Gada emas sangat berat yang hanya bisa diangkat oleh kultivator pemurnian tubuh tingkat akhir.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06e"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Anggur Giok Berumur Seribu Tahun",
+  "__v": 0,
+  "basePrice": 60,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.971Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Anggur suci berkilau hijau. Membersihkan sumsum tulang dan memperpanjang umur fana. Sangat berharga di lelang langit.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Ladang Obat Roh",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.531Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15ea9e03dc91c54c06f"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Buah Tao Pencerahan",
+  "__v": 0,
+  "basePrice": 80,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:42.992Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Buah mistis semu bercahaya. Gigitan pertamanya akan membawa pengguna ke dalam pemahaman hukum alam semesta sesaat.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c070"
+  },
+  "name": "Daging Naga Panggang Ilahi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 150,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.015Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Makanan mewah para dewa yang menggelegak dengan energi Qi liar. Tubuh orang biasa akan meledak jika memakannya.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c071"
+  },
+  "name": "Air Mata Dewi Bulan",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 3,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.040Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Setetes cairan bercahaya putih murni yang sangat menyegarkan roh, membasuh semua kelelahan jiwa ratusan tahun.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c072"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Madu Bunga Neraka",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.062Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Manis namun mengandung panas membakar, menguatkan ketahanan roh terhadap api ilahi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c073"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Teh Kesunyian Daun Merah",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.083Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Daun teh yang dipetik oleh peri. Menenangkan pikiran bergejolak dan menghindari penyimpangan kultivasi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c074"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Akar Ginseng Darah Kuno",
+  "__v": 0,
+  "basePrice": 4,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.108Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Ginseng berusia puluhan ribu tahun yang sudah mulai bergerak. Dimakan hidup-hidup untuk lonjakan tenaga absolut.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c075"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Esensi Awan Surgawi",
+  "__v": 0,
+  "basePrice": 10,
+  "category": "consume",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.130Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Makanan awan ringan tak berasa, namun langsung mengisi laut Qi di perut kultivator hingga penuh.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c076"
+  },
+  "name": "Pil Pengumpul Qi",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 30,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.153Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil emas seukuran ibu jari. Membantu kultivator awal membentuk laut Qi di dalam tubuh. Input wajib Formasi Pengumpulan Qi.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": "Paviliun Alkimia",
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.552Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c077"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pil Pemecah Hambatan",
+  "__v": 0,
+  "basePrice": 100,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.189Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil ganas yang memaksa pembuluh darah melebar, menembus kemacetan kultivasi yang mandek puluhan tahun.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "gold",
+  "rank": "Epic",
+  "tier": 4,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c078"
+  },
+  "name": "Pil Kelahiran Kembali Nirwana",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 5,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.215Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil tingkat dewa. Mampu menumbuhkan kembali anggota tubuh yang terputus seolah tidak pernah terluka.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c079"
+  },
+  "name": "Pil Jiwa Es Ekstrim",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 2,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.240Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Menekan racun api jantung akibat kesalahan berlatih teknik bela diri api yang terlalu ganas.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c07a"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pil Panjang Umur Abadi",
+  "__v": 0,
+  "basePrice": 20,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.265Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Mitos para kaisar fana. Menambahkan rentang usia kultivator seribu tahun dalam satu butir.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c07b"
+  },
+  "name": "Pil Peledak Inti Emas",
+  "guildId": "1504794711775514856",
+  "__v": 0,
+  "basePrice": 8,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.298Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Pil bunuh diri, membakar inti emas kultivator untuk kekuatan setara dewa selama 1 menit, setelah itu abu.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a91b15fa9e03dc91c54c07c"
+  },
+  "guildId": "1504794711775514856",
+  "name": "Pil Siluman Pembalik Wujud",
+  "__v": 0,
+  "basePrice": 12,
+  "category": "pill",
+  "createdAt": {
+    "$date": "2026-08-28T16:03:43.322Z"
+  },
+  "createdBy": "System Oracle",
+  "description": "Memungkinkan pet binatang mitologi kesayangan mengambil wujud manusia sementara.",
+  "effect": null,
+  "imageUrl": null,
+  "origin": null,
+  "priceCurrency": "jade",
+  "rank": "Legendary",
+  "tier": 5,
+  "updatedAt": {
+    "$date": "2026-08-29T13:49:52.574Z"
+  }
+}]
