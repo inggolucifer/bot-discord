@@ -1,145 +1,132 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
-const Sect = require('../../models/Sect'); // Assuming Sect model exists
-const Asset = require('../../models/Asset'); // Assuming Sect Asset model or shared Asset model
-const Item = require('../../models/Item');
+const Sect = require('../../models/Sect');
+const Asset = require('../../models/Asset');
 const authenticateToken = require('../middleware/auth');
 const LockManager = require('../utils/lockManager');
-const mongoose = require('mongoose');
-const { checkMaterials, consumeMaterials } = require('../../utils/crafting');
-
-// Use this to fetch sect assets, items, etc.
-// For now, focusing on Deposit and Build
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/customError');
 
 router.post('/deposit-resource', authenticateToken, async (req, res) => {
     const { itemId, quantity } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     if (!itemId || !quantity || quantity <= 0) {
-        return res.status(400).json({ message: 'Parameter tidak valid.' });
+        return res.status(400).json({ error: 'Parameter tidak valid.' });
     }
 
     const lockKey = `sect_deposit_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
-    if (!releaseLock) return res.status(429).json({ message: 'Harap tunggu.' });
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    if (!releaseLock) return res.status(429).json({ error: 'Harap tunggu.' });
 
     try {
-        const player = await Player.findOne({ discordId: userId }).session(session);
-        if (!player || !player.sectId) {
-            return res.status(400).json({ message: 'Kamu tidak memiliki sekte.' });
-        }
+        let msg = '';
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player || !player.sect) throw new CustomError('Kamu tidak memiliki sekte.', 400);
 
-        const sect = await Sect.findOne({ id: player.sectId }).session(session);
-        if (!sect) {
-            return res.status(404).json({ message: 'Sekte tidak ditemukan.' });
-        }
+            const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).session(session);
+            if (!sect) throw new CustomError('Sekte tidak ditemukan.', 404);
 
-        // Deduct from player
-        const invIndex = player.inventory.findIndex(i => i.itemId === itemId);
-        if (invIndex === -1 || player.inventory[invIndex].quantity < quantity) {
-            return res.status(400).json({ message: 'Item di inventory tidak cukup.' });
-        }
+            const invItem = player.inventory.find(i => i.itemId.toString() === itemId.toString());
+            if (!invItem || invItem.quantity < quantity) {
+                throw new CustomError('Item di inventory tidak cukup.', 400);
+            }
 
-        player.inventory[invIndex].quantity -= quantity;
-        if (player.inventory[invIndex].quantity === 0) player.inventory.splice(invIndex, 1);
+            invItem.quantity -= quantity;
+            if (invItem.quantity <= 0) {
+                player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId.toString());
+            }
 
-        // Add to sect storage
-        const sectInvIndex = sect.storage.findIndex(i => i.itemId === itemId);
-        if (sectInvIndex > -1) {
-            sect.storage[sectInvIndex].quantity += quantity;
-        } else {
-            sect.storage.push({ itemId, quantity });
-        }
+            const sectInvItem = sect.storage.find(i => i.itemId.toString() === itemId.toString());
+            if (sectInvItem) {
+                sectInvItem.quantity += quantity;
+            } else {
+                sect.storage.push({ itemId: itemId, quantity });
+            }
 
-        await player.save({ session });
-        await sect.save({ session });
-        await session.commitTransaction();
+            player.markModified('inventory');
+            sect.markModified('storage');
 
-        const io = req.app.get('io');
-        if (io) io.to(userId).emit('user_update', { message: `Berhasil deposit ${quantity}x item.` });
+            await player.save({ session });
+            await sect.save({ session });
 
-        return res.json({ message: 'Deposit berhasil' });
+            msg = `Berhasil deposit ${quantity}x item ke gudang sekte.`;
+        });
+
+        return res.json({ success: true, message: msg });
     } catch (err) {
-        await session.abortTransaction();
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
         console.error(err);
-        return res.status(500).json({ message: 'Internal error' });
+        return res.status(500).json({ error: 'Internal error' });
     } finally {
-        session.endSession();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
 router.post('/build-asset', authenticateToken, async (req, res) => {
     const { assetId } = req.body;
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const lockKey = `sect_build_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
-    if (!releaseLock) return res.status(429).json({ message: 'Harap tunggu.' });
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    if (!releaseLock) return res.status(429).json({ error: 'Harap tunggu.' });
 
     try {
-        const player = await Player.findOne({ discordId: userId }).session(session);
-        if (!player || !player.sectId) return res.status(400).json({ message: 'Tidak ada sekte.' });
+        let msg = '';
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player || !player.sect) throw new CustomError('Tidak ada sekte.', 400);
 
-        // Validate role (assuming Sect model has roles or player has role)
-        const sect = await Sect.findOne({ id: player.sectId }).session(session);
-        if (!sect) return res.status(404).json({ message: 'Sekte tidak ditemukan.' });
+            const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).session(session);
+            if (!sect) throw new CustomError('Sekte tidak ditemukan.', 404);
 
-        const member = sect.members.find(m => m.discordId === userId);
-        if (!member || (member.role !== 'Ketua' && member.role !== 'Tetua')) {
-             return res.status(403).json({ message: 'Hanya Ketua atau Tetua yang dapat membangun.' });
-        }
-
-        const assetDef = await Asset.findOne({ id: assetId, guildId: player.guildId }).session(session);
-        if (!assetDef || assetDef.type !== 'sect') {
-            return res.status(400).json({ message: 'Aset tidak valid atau bukan aset sekte.' });
-        }
-
-        // Deduct from sect storage using utility (assuming utility works for sect storage as well, or implement inline)
-        const buildReqs = assetDef.buildRequirements || [];
-        for (const req of buildReqs) {
-            const hasMaterial = sect.storage.find(s => s.itemId === req.itemId && s.quantity >= req.quantity);
-            if (!hasMaterial) {
-                return res.status(400).json({ message: 'Material di sekte tidak cukup.' });
+            const member = sect.members.find(m => m.userId === userId);
+            if (!member || (member.role !== 'Ketua' && member.role !== 'Tetua')) {
+                 throw new CustomError('Hanya Ketua atau Tetua yang dapat membangun.', 403);
             }
-        }
 
-        // Deduct
-        for (const req of buildReqs) {
-            const sItem = sect.storage.find(s => s.itemId === req.itemId);
-            sItem.quantity -= req.quantity;
-        }
-        sect.storage = sect.storage.filter(s => s.quantity > 0);
+            const assetDef = await Asset.findOne({ _id: assetId, guildId: player.guildId }).session(session);
+            if (!assetDef || assetDef.type !== 'sect') {
+                throw new CustomError('Aset tidak valid atau bukan aset sekte.', 400);
+            }
 
-        // Build
-        const buildTimeMs = assetDef.buildTimeHours * 60 * 60 * 1000;
-        sect.assets.push({
-            assetId: assetDef.id,
-            status: 'building',
-            endTime: new Date(Date.now() + buildTimeMs)
+            const buildReqs = assetDef.buildRequirements || [];
+            for (const req of buildReqs) {
+                const hasMaterial = sect.storage.find(s => s.itemId.toString() === req.itemId.toString() && s.quantity >= req.quantity);
+                if (!hasMaterial) {
+                    throw new CustomError('Material di sekte tidak cukup.', 400);
+                }
+            }
+
+            for (const req of buildReqs) {
+                const sItem = sect.storage.find(s => s.itemId.toString() === req.itemId.toString());
+                sItem.quantity -= req.quantity;
+            }
+            sect.storage = sect.storage.filter(s => s.quantity > 0);
+
+            const buildTimeMs = assetDef.buildTimeHours * 60 * 60 * 1000;
+            sect.assets.push({
+                assetId: assetDef._id,
+                status: 'building',
+                assignedWorkers: [],
+                endTime: new Date(Date.now() + buildTimeMs)
+            });
+
+            sect.markModified('storage');
+            sect.markModified('assets');
+            await sect.save({ session });
+
+            msg = `Pembangunan sekte ${assetDef.name} dimulai.`;
         });
 
-        await sect.save({ session });
-        await session.commitTransaction();
-
-        const io = req.app.get('io');
-        // optionally emit to a room for the sect
-        if (io) io.to(userId).emit('user_update', { message: `Mulai membangun ${assetDef.name}` });
-
-        return res.json({ message: 'Pembangunan sekte dimulai.' });
+        return res.json({ success: true, message: msg });
     } catch (err) {
-        await session.abortTransaction();
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
         console.error(err);
-        return res.status(500).json({ message: 'Internal error' });
+        return res.status(500).json({ error: 'Internal error' });
     } finally {
-        session.endSession();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });

@@ -4,92 +4,90 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const authenticateToken = require('../middleware/auth');
 const LockManager = require('../utils/lockManager');
-const mongoose = require('mongoose');
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/customError');
 
-// Endpoint: Apply Time-Skip Item (e.g., Insight Pill)
 router.post('/use-time-skip', authenticateToken, async (req, res) => {
     const { itemId } = req.body;
-    const userId = req.user.id;
-    const guildId = req.user.guildId; // or appropriate retrieval
+    const userId = req.user.userId;
 
     if (!itemId) {
-        return res.status(400).json({ message: 'Missing itemId parameter.' });
+        return res.status(400).json({ error: 'Missing itemId parameter.' });
     }
 
     const lockKey = `inventory_use_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
-        return res.status(429).json({ message: 'Terlalu banyak permintaan berurutan. Tunggu sebentar.' });
+        return res.status(429).json({ error: 'Terlalu banyak permintaan berurutan. Tunggu sebentar.' });
     }
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
-        const player = await Player.findOne({ discordId: userId }).session(session);
-        if (!player) {
-            throw new Error('Player not found');
-        }
+        let msg = '';
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Player not found', 404);
 
-        const invItemIndex = player.inventory.findIndex(i => i.itemId === itemId);
-        if (invItemIndex === -1 || player.inventory[invItemIndex].quantity < 1) {
-            return res.status(400).json({ message: 'Item tidak ditemukan di inventarismu atau jumlah tidak cukup.' });
-        }
+            const invItem = player.inventory.find(i => i.itemId.toString() === itemId.toString());
+            if (!invItem || invItem.quantity < 1) {
+                throw new CustomError('Item tidak ditemukan di inventarismu atau jumlah tidak cukup.', 400);
+            }
 
-        // We need to fetch the Item to see if it's a time skip
-        const itemDef = await Item.findOne({ id: itemId, guildId: player.guildId }).session(session);
-        if (!itemDef) {
-            return res.status(404).json({ message: 'Definisi item tidak ditemukan.' });
-        }
+            const itemDef = await Item.findOne({ _id: itemId, guildId: player.guildId }).session(session);
+            if (!itemDef) {
+                throw new CustomError('Definisi item tidak ditemukan.', 404);
+            }
 
-        if (!itemDef.effect || !itemDef.effect.startsWith('time_skip_')) {
-            return res.status(400).json({ message: 'Item ini bukan item time-skip (konsumsi) yang valid.' });
-        }
+            if (!itemDef.effect || !itemDef.effect.startsWith('time_skip_')) {
+                throw new CustomError('Item ini bukan item time-skip (konsumsi) yang valid.', 400);
+            }
 
-        // Example format: time_skip_12
-        const hoursToSkip = parseInt(itemDef.effect.split('_')[2]);
-        if (isNaN(hoursToSkip) || hoursToSkip <= 0) {
-            return res.status(400).json({ message: 'Efek time-skip tidak valid.' });
-        }
+            const hoursToSkip = parseInt(itemDef.effect.split('_')[2]);
+            if (isNaN(hoursToSkip) || hoursToSkip <= 0) {
+                throw new CustomError('Efek time-skip tidak valid.', 400);
+            }
 
-        // Perform time skip logic. For example, if they are cultivating, adjust breakthroughEndTime or meditationEndTime.
-        // Assuming `meditationEndTime` is what time-skip applies to.
-        if (!player.meditationEndTime || player.meditationEndTime < Date.now()) {
-            return res.status(400).json({ message: 'Kamu tidak sedang bermeditasi/kultivasi.' });
-        }
+            // Using meditation timer for system cultivation
+            let isSkipping = false;
+            let currentEndTime = 0;
 
-        const currentEndTime = new Date(player.meditationEndTime).getTime();
-        const now = Date.now();
-        const msLeft = currentEndTime - now;
-        const hoursLeft = msLeft / (1000 * 60 * 60);
+            if (player.systemCultivation && player.systemCultivation.meditationEndTime && player.systemCultivation.meditationEndTime > new Date()) {
+                 currentEndTime = player.systemCultivation.meditationEndTime.getTime();
+                 isSkipping = true;
+            }
 
-        // Overkill check
-        if (hoursToSkip > hoursLeft + 2) {
-             return res.status(400).json({ message: 'Membuang-buang efek! Waktu skip melebihi sisa waktu terlalu banyak (overkill > 2 jam).' });
-        }
+            if (!isSkipping) {
+                throw new CustomError('Kamu tidak sedang bermeditasi/kultivasi.', 400);
+            }
 
-        const newEndTime = new Date(currentEndTime - (hoursToSkip * 60 * 60 * 1000));
-        player.meditationEndTime = newEndTime < now ? new Date(now - 1000) : newEndTime; // if it goes negative, finish immediately
+            const now = Date.now();
+            const msLeft = currentEndTime - now;
+            const hoursLeft = msLeft / (1000 * 60 * 60);
 
-        // Deduct item
-        player.inventory[invItemIndex].quantity -= 1;
-        if (player.inventory[invItemIndex].quantity <= 0) {
-            player.inventory.splice(invItemIndex, 1);
-        }
+            if (hoursToSkip > hoursLeft + 2) {
+                 throw new CustomError('Membuang-buang efek! Waktu skip melebihi sisa waktu terlalu banyak (overkill > 2 jam).', 400);
+            }
 
-        await player.save({ session });
-        await session.commitTransaction();
+            const newEndTime = new Date(currentEndTime - (hoursToSkip * 60 * 60 * 1000));
+            player.systemCultivation.meditationEndTime = newEndTime < now ? new Date(now - 1000) : newEndTime;
 
-        const io = req.app.get('io');
-        if (io) io.to(userId).emit('user_update', { message: `Menggunakan ${itemDef.name}, waktu terpotong ${hoursToSkip} jam!` });
+            invItem.quantity -= 1;
+            if (invItem.quantity <= 0) {
+                player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId.toString());
+            }
 
-        return res.json({ message: `Berhasil menggunakan ${itemDef.name}. Waktu kultivasi berkurang ${hoursToSkip} jam.` });
+            player.markModified('systemCultivation');
+            player.markModified('inventory');
+            await player.save({ session });
+
+            msg = `Berhasil menggunakan ${itemDef.name}. Waktu kultivasi berkurang ${hoursToSkip} jam.`;
+        });
+
+        return res.json({ success: true, message: msg });
     } catch (err) {
-        await session.abortTransaction();
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
         console.error('Error in /inventory/use-time-skip:', err);
-        return res.status(500).json({ message: 'Terjadi kesalahan internal server.' });
+        return res.status(500).json({ error: 'Terjadi kesalahan internal server.' });
     } finally {
-        session.endSession();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
