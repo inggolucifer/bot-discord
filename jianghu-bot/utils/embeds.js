@@ -262,7 +262,17 @@ function buildSectEmbed(sect, resourceDocs = [], assetDocs = []) {
   const assetLine = assetDocs.length
     ? assetDocs.map((a) => {
         const underConstruction = isUnderConstruction(a.owned);
-        return `🏠 **${a.doc.name}** x${a.quantity}${underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : ''}`;
+        let status = underConstruction ? ` 🚧 _(dibangun, ${formatRemainingTime(a.owned.constructionCompleteAt)})_` : '';
+        let guardStatus = (a.owned.guardEndTime && a.owned.guardEndTime.getTime() > Date.now()) ? ' 🛡️' : '';
+
+        if (!underConstruction && a.owned.isDamaged) {
+            let dmgStr = a.owned.damageType === 'bandit' ? 'Bandit' : 'Bencana';
+            status = ` 🔴 _(RUSAK: ${dmgStr})_`;
+        } else if (!underConstruction && a.owned.isHalted) {
+            status = ' ⏸️ _(Halted)_';
+        }
+
+        return `🏠 **${a.doc.name}** x${a.quantity}${status}${guardStatus}`;
       }).join('\n')
     : '_Belum ada aset sekte_';
   embed.addFields({ name: '🏛️ Aset Sekte', value: assetLine.slice(0, 1024) });
