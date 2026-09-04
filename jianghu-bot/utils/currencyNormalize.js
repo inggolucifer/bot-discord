@@ -51,3 +51,42 @@ function normalizeCurrency(currency) {
 
 module.exports = { normalizeCurrency };
 
+
+const RATE_TO_COPPER = {
+  copper: 1,
+  silver: 100,
+  gold: 10000,
+  jade: 1000000,
+  spirit: 100000000,
+};
+
+function convertFromCopper(totalCopper) {
+    let rem = totalCopper;
+    let spirit = Math.floor(rem / RATE_TO_COPPER.spirit);
+    rem %= RATE_TO_COPPER.spirit;
+    let jade = Math.floor(rem / RATE_TO_COPPER.jade);
+    rem %= RATE_TO_COPPER.jade;
+    let gold = Math.floor(rem / RATE_TO_COPPER.gold);
+    rem %= RATE_TO_COPPER.gold;
+    let silver = Math.floor(rem / RATE_TO_COPPER.silver);
+    rem %= RATE_TO_COPPER.silver;
+    let copper = Math.round(rem);
+    return { copper, silver, gold, jade, spirit };
+}
+
+function convertToCopper(currency) {
+    if (!currency) return 0;
+    return (currency.copper || 0) * RATE_TO_COPPER.copper +
+           (currency.silver || 0) * RATE_TO_COPPER.silver +
+           (currency.gold || 0) * RATE_TO_COPPER.gold +
+           (currency.jade || 0) * RATE_TO_COPPER.jade +
+           (currency.spirit || 0) * RATE_TO_COPPER.spirit;
+}
+
+
+
+
+
+module.exports.convertFromCopper = convertFromCopper;
+module.exports.convertToCopper = convertToCopper;
+module.exports.RATE_TO_COPPER = RATE_TO_COPPER;
