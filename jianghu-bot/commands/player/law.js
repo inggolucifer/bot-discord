@@ -12,8 +12,8 @@ module.exports = {
     .addSubcommand(sub => sub.setName('list').setDescription('Lihat daftar Hukum Alam yang tersedia di dunia ini'))
     .addSubcommand(sub => sub.setName('my_laws').setDescription('Lihat Hukum Alam yang sudah kamu pelajari'))
     .addSubcommand(sub => sub.setName('learn')
-        .setDescription('Pelajari Hukum Alam (Hanya bisa di tahap Mortal)')
-        .addStringOption(opt => opt.setName('nama_law').setDescription('Nama Hukum Alam yang ingin dipelajari').setRequired(true).setAutocomplete(true))
+        .setDescription('Pelajari Hukum Alam menggunakan kitab/item dari inventory (Hanya bisa di tahap Mortal)')
+        .addStringOption(opt => opt.setName('nama_item').setDescription('Nama item kitab Hukum Alam di inventory').setRequired(true).setAutocomplete(true))
     )
     .addSubcommand(sub => sub.setName('reset')
         .setDescription('Reset Hukum Alam (Membakar item langka)')
@@ -25,8 +25,14 @@ module.exports = {
     const sub = interaction.options.getSubcommand(false);
 
     if (sub === 'learn') {
-        const laws = await Law.find({ guildId: interaction.guildId, name: { $regex: new RegExp(escapeRegex(focusedOption.value), 'i') } }).limit(10);
-        return interaction.respond(laws.map(law => ({ name: law.name, value: law.name })));
+        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('inventory.itemId');
+        if (!player) return interaction.respond([]);
+
+        const items = player.inventory
+            .filter(inv => inv.itemId && inv.itemId.category === 'law' && new RegExp(escapeRegex(focusedOption.value), 'i').test(inv.itemId.name))
+            .map(inv => inv.itemId)
+            .slice(0, 10);
+        return interaction.respond(items.map(item => ({ name: item.name, value: item.name })));
     } else if (sub === 'reset') {
         const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('inventory.itemId');
         if (!player) return interaction.respond([]);
@@ -93,10 +99,24 @@ module.exports = {
             return interaction.editReply('❌ Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).');
         }
 
-        const lawName = interaction.options.getString('nama_law');
-        const lawToLearn = await Law.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${lawName}\\s*$`, 'i') });
+        const itemName = interaction.options.getString('nama_item');
+        await player.populate('inventory.itemId');
+        const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
 
-        if (!lawToLearn) return interaction.editReply('❌ Hukum Alam tersebut tidak ditemukan.');
+        if (inventorySlotIndex === -1 || player.inventory[inventorySlotIndex].quantity <= 0) {
+            return interaction.editReply(`❌ Kamu tidak memiliki item **${itemName}** di inventory.`);
+        }
+
+        const item = player.inventory[inventorySlotIndex].itemId;
+
+        if (item.category !== 'law' || !item.effect || !item.effect.startsWith('learn_law_')) {
+            return interaction.editReply(`❌ Item **${item.name}** tidak bisa digunakan untuk mempelajari Hukum Alam.`);
+        }
+
+        const lawName = item.effect.replace('learn_law_', '');
+        const lawToLearn = await Law.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(lawName)}\\s*$`, 'i') });
+
+        if (!lawToLearn) return interaction.editReply(`❌ Hukum Alam **${lawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`);
 
         // Limit Law to 1
         if (player.laws.length >= 1) {
@@ -104,15 +124,19 @@ module.exports = {
             return interaction.editReply(`❌ Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan **${currentLaw.name}**.`);
         }
 
-        // Check if already learned (though redundant now with the limit of 1, keeping for safety)
-        if (player.laws.some(l => l._id.equals(lawToLearn._id))) {
-            return interaction.editReply('❌ Kamu sudah memahami Hukum Alam ini.');
+        // Deduct Item
+        player.inventory[inventorySlotIndex].quantity -= 1;
+        if (player.inventory[inventorySlotIndex].quantity <= 0) {
+            player.inventory.splice(inventorySlotIndex, 1);
         }
+        player.markModified('inventory');
 
         player.laws.push(lawToLearn._id);
         await player.save();
 
-        return interaction.editReply(`🌌 Luar biasa! Kamu berhasil memahami **${lawToLearn.name}**. Fondasi jalan dewamu semakin kuat!`);
+        await logTransaction(interaction.guildId, player.discordId, 'learn_law', {}, `Digunakan: ${item.name} untuk belajar ${lawToLearn.name}`);
+
+        return interaction.editReply(`🌌 Luar biasa! Kamu menyerap intisari dari **${item.name}** dan berhasil memahami **${lawToLearn.name}**. Fondasi jalan dewamu semakin kuat!`);
       }
 
       if (sub === 'reset') {

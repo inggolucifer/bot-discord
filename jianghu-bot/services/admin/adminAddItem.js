@@ -17,7 +17,7 @@ module.exports = {
     const priceInput = new TextInputBuilder().setCustomId('priceInfo').setLabel('Harga Dasar & Currency (contoh: 500 silver)').setStyle(TextInputStyle.Short)
       .setPlaceholder('angka + silver/gold/jade/spirit. Isi 0 kalau tidak dijual.').setValue('0 silver').setRequired(true);
     const descInput = new TextInputBuilder().setCustomId('description').setLabel('Deskripsi').setStyle(TextInputStyle.Paragraph).setRequired(true);
-    const categoryInput = new TextInputBuilder().setCustomId('category').setLabel('Kategori (weapon, material, dll)').setStyle(TextInputStyle.Short).setValue('none').setRequired(false);
+    const categoryInput = new TextInputBuilder().setCustomId('category').setLabel('Kategori (weapon, law, manual, dll)').setStyle(TextInputStyle.Short).setValue('none').setRequired(false);
 
     modal.addComponents(
       new ActionRowBuilder().addComponents(nameInput),
