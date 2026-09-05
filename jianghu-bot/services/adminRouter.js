@@ -151,6 +151,16 @@ module.exports = {
             const help = require('./admin/helpAdmin');
             return help.execute(interaction);
         }
+
+        // Inline handlers logic checking in execute
+        if (key === 'lawcreate' || key === 'lawlist' || key === 'manualcreate' || key === 'manuallist') {
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
+            if (key === 'lawcreate') return handleCreateLaw(interaction);
+            if (key === 'lawlist') return handleListLaw(interaction);
+            if (key === 'manualcreate') return handleCreateManual(interaction);
+            if (key === 'manuallist') return handleListManual(interaction);
+        }
+
         await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
         return interaction.editReply({ content: `❌ Command admin \`${group ? group + ' ' : ''}${sub}\` tidak ditemukan atau belum diimplementasi (router error).` });
     }
