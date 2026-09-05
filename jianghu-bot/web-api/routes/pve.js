@@ -8,6 +8,7 @@ const LockManager = require('../utils/lockManager');
 const CustomError = require('../utils/CustomError');
 const { authenticateToken } = require('../middlewares/auth');
 const mongoose = require('mongoose');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -102,7 +103,7 @@ async function generateDrops(location, durationHours, guildId) {
                 const qty = Math.floor(Math.random() * (dropItem.max - dropItem.min + 1)) + dropItem.min;
 
                 // Cari ID Item dari DB (hanya mencari item yang ada)
-                const itemRef = await Item.findOne({ guildId, name: new RegExp('^\\s*' + dropItem.name + '\\s*$', 'i') }).select('_id');
+                const itemRef = await Item.findOne({ guildId, name: new RegExp('^\\s*' + escapeRegex(dropItem.name) + '\\s*$', 'i') }).select('_id');
                 if (itemRef) {
                     const existingItem = drops.items.find(i => i.itemId.toString() === itemRef._id.toString());
                     if (existingItem) {
