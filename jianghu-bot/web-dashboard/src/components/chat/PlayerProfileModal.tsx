@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, Coins, Shield, Swords, Activity, MapPin } from 'lucide-react';
+import { X, Loader2, Coins, Shield, Swords, Activity, MapPin, Zap } from 'lucide-react';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
 
@@ -81,18 +81,29 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
                     </div>
                 </div>
 
+                {/* System Cultivation */}
+                <div className="bg-blue-900/10 p-3 rounded border border-blue-900/30 mb-4 flex items-center gap-3">
+                    <Zap size={20} className="text-blue-400"/>
+                    <div>
+                        <p className="text-[10px] text-blue-400 uppercase tracking-wider font-bold">Kultivasi Sistem</p>
+                        <p className="text-sm font-bold text-blue-100">
+                            {profile.systemCultivation?.realm || 'Fondasi Fana'} <span className="text-blue-300 font-normal text-xs ml-1">(Tahap {profile.systemCultivation?.stage || 0})</span>
+                        </p>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-3 mb-6">
                     <div className="bg-black/50 p-2 rounded border border-[#333] flex items-center gap-2">
-                        <Activity size={16} className="text-blue-400"/>
+                        <Activity size={16} className="text-[#c5a880]"/>
                         <div>
-                            <p className="text-[10px] text-gray-500">Ranah</p>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Ranah RPG</p>
                             <p className="text-sm font-bold text-gray-200">{profile.realm}</p>
                         </div>
                     </div>
                     <div className="bg-black/50 p-2 rounded border border-[#333] flex items-center gap-2">
                         <Swords size={16} className="text-red-400"/>
                         <div>
-                            <p className="text-[10px] text-gray-500">Tahap</p>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Tahap RPG</p>
                             <p className="text-sm font-bold text-gray-200">{profile.stage}</p>
                         </div>
                     </div>

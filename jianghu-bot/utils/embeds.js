@@ -5,12 +5,16 @@ const { isUnderConstruction, formatRemainingTime } = require('./crafting');
 const { calculateProgress } = require('./assetProgress');
 
 function buildPlayerProfileEmbed(player, discordUser, itemDocs = [], petDocs = [], assetDocs = [], sectRole = null) {
+  const sysRealm = player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)';
+  const sysStage = player.systemCultivation?.stage || 0;
+
   const embed = new EmbedBuilder()
     .setColor(0x8e5b3c)
     .setTitle(`📜 Profil: ${player.characterName}`)
     .setThumbnail(discordUser?.displayAvatarURL?.() || null)
     .addFields(
-      { name: '⚔️ Ranah', value: `${player.realm}${player.stage && player.stage !== '-' ? ` — ${player.stage}` : ''}`, inline: true },
+      { name: '🌌 Kultivasi Sistem', value: `${sysRealm} — Tahap ${sysStage}`, inline: true },
+      { name: '⚔️ Ranah RPG', value: `${player.realm}${player.stage && player.stage !== '-' ? ` — ${player.stage}` : ''}`, inline: true },
       { name: '🎂 Umur', value: `${player.age} tahun`, inline: true },
       { name: '⚧ Jenis Kelamin', value: player.gender || '_(belum diisi)_', inline: true },
       { name: '🏯 Sekte/Afiliasi', value: sectRole ? `${player.sect} (${sectRole})` : player.sect, inline: true },
