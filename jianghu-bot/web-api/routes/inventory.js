@@ -193,18 +193,23 @@ router.post('/craft', authenticateToken, async (req, res) => {
             materials: recipe.materials.map(m => ({ ...m.toObject(), quantity: m.quantity * multiplier }))
         };
 
-        const check = checkMaterials(player.inventory, scaledRecipe);
+        const check = checkMaterials(player.inventory, recipe);
         if (!check.ok) {
             const missingLines = check.missing.map((m) => `${m.itemName}: butuh ${m.need}, kamu punya ${m.have}`).join(', ');
-            return res.status(400).json({ error: `Bahan tidak cukup: ${missingLines}` });
+            return res.status(400).json({ error: `Bahan awal tidak cukup: ${missingLines}` });
         }
 
-        player.inventory = consumeMaterials(player.inventory, scaledRecipe);
+        if (!owned.activeCrafts) owned.activeCrafts = [];
 
-        if (scaledRecipe.resultItemId) {
-            const resultOwned = player.inventory.find((i) => i.itemId.equals(scaledRecipe.resultItemId));
-            if (resultOwned) resultOwned.quantity += scaledRecipe.resultQuantity;
-            else player.inventory.push({ itemId: scaledRecipe.resultItemId, quantity: scaledRecipe.resultQuantity });
+        const existingCraft = owned.activeCrafts.find(c => c.recipeName === recipe.recipeName);
+        if (existingCraft) {
+            existingCraft.targetQuantity += multiplier;
+        } else {
+            owned.activeCrafts.push({
+                recipeName: recipe.recipeName,
+                targetQuantity: multiplier,
+                progressHours: 0
+            });
         }
 
         await player.save();
@@ -213,10 +218,10 @@ router.post('/craft', authenticateToken, async (req, res) => {
         await TransactionLog.create({
             guildId,
             type: 'craft',
-            description: `[${player.characterName}] craft ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName} di ${asset.name}.`
+            description: `[${player.characterName}] menugaskan pembuatan ${multiplier}x ${recipe.resultItemName} di ${asset.name}.`
         });
 
-        res.json({ success: true, message: `Berhasil membuat ${scaledRecipe.resultQuantity}x ${scaledRecipe.resultItemName}!` });
+        res.json({ success: true, message: `Berhasil mulai membuat ${multiplier}x ${recipe.resultItemName}. Butuh waktu dan pekerja.` });
     } catch (error) {
         console.error('[API-INVENTORY] Crafting error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat crafting.' });

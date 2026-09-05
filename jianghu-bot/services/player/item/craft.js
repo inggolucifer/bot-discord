@@ -10,7 +10,8 @@ module.exports = {
     .setName('craft')
     .setDescription('Buat item lewat aset crafting yang kamu miliki (mis. Tungku Tempa)')
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset crafting milikmu').setRequired(true).setAutocomplete(true))
-    .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep yang mau dibuat').setRequired(true).setAutocomplete(true)),
+    .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep yang mau dibuat').setRequired(true).setAutocomplete(true))
+    .addIntegerOption((o) => o.setName('jumlah').setDescription('Jumlah item yang akan dibuat').setMinValue(1)),
 
   async autocomplete(interaction) {
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
@@ -54,16 +55,26 @@ module.exports = {
     const recipe = asset.recipes.find((r) => r.recipeName.toLowerCase() === namaResep.toLowerCase());
     if (!recipe) return interaction.editReply({ content: `❌ Resep "${namaResep}" tidak ada di aset ini.` });
 
+    const jumlah = interaction.options.getInteger('jumlah') || 1;
+
     const check = checkMaterials(player.inventory, recipe);
     if (!check.ok) {
       const missingLines = check.missing.map((m) => `**${m.itemName}**: butuh ${m.need}, kamu punya ${m.have}`).join('\n');
-      return interaction.editReply({ content: `❌ Bahan tidak cukup:\n${missingLines}` });
+      return interaction.editReply({ content: `❌ Bahan awal tidak cukup:\n${missingLines}` });
     }
 
-    player.inventory = consumeMaterials(player.inventory, recipe);
-    const resultOwned = player.inventory.find((i) => i.itemId.equals(recipe.resultItemId));
-    if (resultOwned) resultOwned.quantity += recipe.resultQuantity;
-    else player.inventory.push({ itemId: recipe.resultItemId, quantity: recipe.resultQuantity });
+    if (!owned.activeCrafts) owned.activeCrafts = [];
+    const existingCraft = owned.activeCrafts.find(c => c.recipeName === recipe.recipeName);
+
+    if (existingCraft) {
+        existingCraft.targetQuantity += jumlah;
+    } else {
+        owned.activeCrafts.push({
+            recipeName: recipe.recipeName,
+            targetQuantity: jumlah,
+            progressHours: 0
+        });
+    }
 
     await player.save();
 
@@ -71,14 +82,14 @@ module.exports = {
       guildId: interaction.guildId,
       type: 'craft',
       fromUserId: interaction.user.id,
-      itemDescription: `Craft "${recipe.recipeName}" di ${asset.name} -> ${recipe.resultQuantity}x ${recipe.resultItemName}`,
+      itemDescription: `Mulai Craft "${recipe.recipeName}" (${jumlah}x) di ${asset.name}`,
     });
 
-    const matUsed = recipe.materials.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+    const timeReq = recipe.craftingTimeHours || 1;
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
-      .setTitle('⚒️ Crafting Berhasil!')
-      .setDescription(`Di **${asset.name}**, kamu berhasil membuat **${recipe.resultQuantity}x ${recipe.resultItemName}**!\n\nBahan terpakai: ${matUsed}`);
+      .setTitle('⚒️ Crafting Dimulai')
+      .setDescription(`Di **${asset.name}**, kamu menugaskan pembuatan **${jumlah}x ${recipe.resultQuantity} ${recipe.resultItemName}**.\n\nSetiap item membutuhkan waktu ${timeReq} jam untuk selesai (butuh Pekerja).\nBahan akan otomatis ditarik dari inventory.\nPastikan ada pekerja di aset ini!`);
     return interaction.editReply({ embeds: [embed] });
   },
 };
