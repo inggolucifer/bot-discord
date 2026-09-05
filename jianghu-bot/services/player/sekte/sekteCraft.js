@@ -4,6 +4,7 @@ const Asset = require('../../../models/Asset');
 const { isUnderConstruction, formatRemainingTime, checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
 const { getPlayerSect } = require('../../../utils/sectUtils');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,12 +18,12 @@ module.exports = {
     if (focusedOpt.name === 'nama-aset') {
       const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
       if (!sect) return interaction.respond([]);
-      const assets = await Asset.find({ _id: { $in: sect.assets.map((a) => a.assetId) }, isCraftingStation: true, name: new RegExp(focusedOpt.value, 'i') }).limit(25);
+      const assets = await Asset.find({ _id: { $in: sect.assets.map((a) => a.assetId) }, isCraftingStation: true, name: new RegExp(escapeRegex(focusedOpt.value), 'i') }).limit(25);
       return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
     }
     const namaAset = interaction.options.getString('nama-aset');
     if (!namaAset) return interaction.respond([]);
-    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset) return interaction.respond([]);
     const matches = asset.recipes.filter((r) => r.recipeName.toLowerCase().includes(focusedOpt.value.toLowerCase()));
     return interaction.respond(matches.map((r) => ({ name: r.recipeName, value: r.recipeName })).slice(0, 25));
@@ -40,7 +41,7 @@ module.exports = {
     const role = sect.getRoleOf(interaction.user.id);
     if (!role) return interaction.editReply({ content: '❌ Kamu bukan anggota sekte ini.' });
 
-    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset || !asset.isCraftingStation) return interaction.editReply({ content: `❌ "${namaAset}" bukan aset crafting yang valid.` });
 
     const owned = sect.assets.find((a) => a.assetId.equals(asset._id));

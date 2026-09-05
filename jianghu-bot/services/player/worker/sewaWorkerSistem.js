@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
@@ -16,7 +17,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const assets = await Asset.find({ _id: { $in: player.assets.map((a) => a.assetId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const assets = await Asset.find({ _id: { $in: player.assets.map((a) => a.assetId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -29,7 +30,7 @@ module.exports = {
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
 
-    const assetDoc = await Asset.findOne({ name: new RegExp(`^${assetName}$`, 'i') });
+    const assetDoc = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(assetName)}\\s*$`, 'i') });
     if (!assetDoc) return interaction.editReply({ content: '❌ Aset tidak ditemukan.' });
 
     const ownedAsset = player.assets.find((a) => a.assetId.equals(assetDoc._id));

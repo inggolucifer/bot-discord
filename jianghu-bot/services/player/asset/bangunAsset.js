@@ -3,6 +3,7 @@ const Player = require('../../../models/Player');
 const Asset = require('../../../models/Asset');
 const { checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ buildable: true, name: new RegExp(focused, 'i') }).limit(25);
+    const assets = await Asset.find({ buildable: true, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -25,7 +26,7 @@ module.exports = {
     if (!player) return interaction.editReply({ content: '❌ Kamu belum terdaftar.' });
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
-    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
     if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri. Beli lewat shop kalau tersedia.` });

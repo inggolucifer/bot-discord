@@ -3,6 +3,7 @@ const Player = require('../../../models/Player');
 const Item = require('../../../models/Item');
 const { logTransaction } = require('../../../utils/logger');
 const { getPlayerSect } = require('../../../utils/sectUtils');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -32,7 +33,7 @@ module.exports = {
     const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
     if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
-    const item = await Item.findOne({ name: new RegExp(`^${namaItem}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaItem)}\\s*$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = player.inventory.find((i) => i.itemId.equals(item._id));

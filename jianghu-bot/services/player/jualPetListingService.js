@@ -4,6 +4,7 @@ const Pet = require('../../models/Pet');
 const PlayerListing = require('../../models/PlayerListing');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 const MAX_LISTING_PER_PLAYER = 10;
 const LISTING_FEE_RATE = 0.05;
@@ -21,7 +22,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const pets = await Pet.find({ _id: { $in: player.pets.map((p) => p.petId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const pets = await Pet.find({ _id: { $in: player.pets.map((p) => p.petId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(pets.map((p) => ({ name: p.name, value: p.name })));
   },
 
@@ -41,7 +42,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}).` });
     }
 
-    const pet = await Pet.findOne({ name: new RegExp(`^${namaPet}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaPet)}\\s*$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${namaPet}" tidak ditemukan di sistem.` });
 
     const ownedIndex = player.pets.findIndex((p) => p.instanceId === instanceId && p.petId.equals(pet._id));

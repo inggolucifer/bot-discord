@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Pet = require('../../../models/Pet');
 const { buildPetEmbed } = require('../../../utils/embeds');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const pets = await Pet.find({ name: new RegExp(focused, 'i') }).limit(25);
+    const pets = await Pet.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(pets.map((p) => ({ name: p.name, value: p.name })));
   },
 
@@ -18,7 +19,7 @@ module.exports = {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
-    const pet = await Pet.findOne({ name: new RegExp(`^${nama}$`, 'i') });
+    const pet = await Pet.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!pet) return interaction.editReply({ content: `❌ Pet "${nama}" tidak ditemukan.` });
     return interaction.editReply({ embeds: [buildPetEmbed(pet)] });
   },

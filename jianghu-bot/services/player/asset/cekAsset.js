@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../../utils/escapeRegex');
 const { SlashCommandBuilder } = require('discord.js');
 const Asset = require('../../../models/Asset');
 const { buildAssetEmbed } = require('../../../utils/embeds');
@@ -10,7 +11,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const assets = await Asset.find({ name: new RegExp(focused, 'i') }).limit(25);
+    const assets = await Asset.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -18,7 +19,6 @@ module.exports = {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
-    const escapeRegex = require('../../../utils/escapeRegex');
     const asset = await Asset.findOne({ guildId: interaction.guildId, name: new RegExp("^\\s*" + escapeRegex(nama) + "\\s*$", "i") });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${nama}" tidak ditemukan.` });
 

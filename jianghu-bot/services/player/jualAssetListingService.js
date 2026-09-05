@@ -5,6 +5,7 @@ const PlayerListing = require('../../models/PlayerListing');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
 const { isUnderConstruction } = require('../../utils/crafting');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 const MAX_LISTING_PER_PLAYER = 10;
 const LISTING_FEE_RATE = 0.05;
@@ -22,7 +23,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const assets = await Asset.find({ _id: { $in: player.assets.map((a) => a.assetId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const assets = await Asset.find({ _id: { $in: player.assets.map((a) => a.assetId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(assets.map((a) => ({ name: a.name, value: a.name })));
   },
 
@@ -42,7 +43,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif.` });
     }
 
-    const asset = await Asset.findOne({ name: new RegExp(`^${namaAset}$`, 'i') });
+    const asset = await Asset.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaAset)}\\s*$`, 'i') });
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
 
     const owned = player.assets.find((a) => a.assetId.equals(asset._id));

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const crypto = require('crypto');
 const Shop = require('../../models/Shop');
@@ -32,7 +33,7 @@ module.exports = {
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**.` });
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ name: new RegExp(`^${nama}$`, 'i') });
+    const doc = await Model.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" tidak ditemukan di kategori ${kategori}.` });
 
     const listing = await Shop.findOne({ category: kategori, refId: doc._id, isActive: true });

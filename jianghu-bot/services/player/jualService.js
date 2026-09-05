@@ -6,6 +6,7 @@ const Asset = require('../../models/Asset');
 const { logTransaction } = require('../../utils/logger');
 const { CURRENCY_LABEL, CURRENCY_EMOJI } = require('../../utils/currency');
 const { isUnderConstruction } = require('../../utils/crafting');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 const SELL_RATE = 0.2; // 20% dari harga dasar
 const MODEL_MAP = { item: Item, pet: Pet, asset: Asset };
@@ -32,7 +33,7 @@ module.exports = {
     else if (kategori === 'pet') ownedIds = player.pets.map((p) => p.petId);
     else if (kategori === 'asset') ownedIds = player.assets.map((a) => a.assetId);
 
-    const docs = await Model.find({ _id: { $in: ownedIds }, name: new RegExp(focused, 'i') }).limit(25);
+    const docs = await Model.find({ _id: { $in: ownedIds }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(docs.map((d) => ({ name: d.name, value: d.name })));
   },
 
@@ -48,7 +49,7 @@ module.exports = {
     if (player.status !== 'active') return interaction.editReply({ content: `❌ Karaktermu berstatus **${player.status}**, tidak bisa menjual.` });
 
     const Model = MODEL_MAP[kategori];
-    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^${nama}$`, 'i') });
+    const doc = await Model.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!doc) return interaction.editReply({ content: `❌ "${nama}" tidak ditemukan di kategori ${kategori}.` });
 
     if (!doc.basePrice || doc.basePrice <= 0) {

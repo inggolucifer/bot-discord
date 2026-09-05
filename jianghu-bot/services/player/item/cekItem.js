@@ -3,6 +3,7 @@ const Item = require('../../../models/Item');
 const Asset = require('../../../models/Asset');
 const Shop = require('../../../models/Shop');
 const { buildItemEmbed } = require('../../../utils/embeds');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const items = await Item.find({ name: new RegExp(focused, 'i') }).limit(25);
+    const items = await Item.find({ name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     await interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -20,7 +21,7 @@ module.exports = {
     await interaction.deferReply();
 
     const nama = interaction.options.getString('nama');
-    const item = await Item.findOne({ name: new RegExp(`^${nama}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^\\s*${escapeRegex(nama)}\\s*$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${nama}" tidak ditemukan.` });
 
     // Find sources
