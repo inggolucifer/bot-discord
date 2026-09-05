@@ -9,8 +9,8 @@ module.exports = {
     .addUserOption(o => o.setName('lawan').setDescription('Pilih pemain yang ingin ditantang').setRequired(true)),
 
   async execute(interaction) {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     try {
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       const opponentUser = interaction.options.getUser('lawan');
 
       if (opponentUser.id === interaction.user.id) {
@@ -411,16 +411,21 @@ module.exports = {
 
       } catch (e) {
          if (e.code === 'InteractionCollectorError') {
-             await msg.edit({ content: `⏱️ Tantangan batal karena tidak ada respon.`, embeds: [], components: [] });
+             await msg.edit({ content: `⏱️ Tantangan batal karena tidak ada respon.`, embeds: [], components: [] }).catch(() => {});
          } else {
              console.error(e);
-             await msg.edit({ content: '❌ Terjadi kesalahan saat duel.', embeds: [], components: [] });
+             await msg.edit({ content: '❌ Terjadi kesalahan saat duel.', embeds: [], components: [] }).catch(() => {});
          }
       }
 
     } catch (e) {
       console.error(e);
-      await interaction.editReply('❌ Terjadi kesalahan pada sistem playerbattle.');
+      const msg = '❌ Terjadi kesalahan pada sistem playerbattle.';
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
     }
   }
 };
