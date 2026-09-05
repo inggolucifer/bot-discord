@@ -175,8 +175,8 @@ async function runWorkerAutoProcess(client) {
                 // Aset butuh minimal 1 pekerja per unit (jika Tipe 3, atau jg Tipe 1 yang bukan Crafting Station)
                 let productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
                 if (productiveQuantity <= 0) {
-                     // Berhenti bekerja, tidak menambah accumulated
-                     owned.lastProgressUpdate = new Date(); // Update Date agar progress tdk numpuk di old date
+                     owned.lastProgressUpdate = new Date();
+                     playerUpdated = true;
                      continue;
                 }
 
