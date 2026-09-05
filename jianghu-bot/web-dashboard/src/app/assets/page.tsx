@@ -44,6 +44,9 @@ interface Asset {
       quantity: number;
     }[];
   }[];
+  isDamaged?: boolean;
+  damageType?: string | null;
+  guardEndTime?: string | null;
 }
 
 interface BuildableAsset {
@@ -98,7 +101,11 @@ export default function AssetsPage() {
 
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'info' | 'move'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'move' | 'guard'>('info');
+  const [guardDurationDays, setGuardDurationDays] = useState<number>(1);
+  const [guardCostText, setGuardCostText] = useState<string | null>(null);
+  const [guardCostLoading, setGuardCostLoading] = useState(false);
+  const [repairCostText, setRepairCostText] = useState<string | null>(null);
   const [activePageTab, setActivePageTab] = useState<'my-assets' | 'build-asset'>('my-assets');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] = useState<string>('');
@@ -264,6 +271,64 @@ export default function AssetsPage() {
           setActionLoading(false);
       }
   }
+
+  const fetchGuardCost = async (assetId: string, days: number) => {
+      setGuardCostLoading(true);
+      try {
+          const res = await api.post('/player/assets/guard-cost', { assetId, hari: days });
+          if (res.data.success) {
+              setGuardCostText(res.data.costText);
+          }
+      } catch (err: any) {
+          console.error('Error fetching guard cost', err);
+          setGuardCostText('Gagal memuat biaya');
+      } finally {
+          setGuardCostLoading(false);
+      }
+  };
+
+  useEffect(() => {
+      if (selectedAsset && activeTab === 'guard') {
+          fetchGuardCost(selectedAsset.id, guardDurationDays);
+      }
+  }, [selectedAsset, activeTab, guardDurationDays]);
+
+  useEffect(() => {
+      if (selectedAsset && selectedAsset.isDamaged && activeTab === 'guard') {
+          api.post('/player/assets/repair-cost', { assetId: selectedAsset.id })
+             .then(res => {
+                 if (res.data.success) setRepairCostText(res.data.costText);
+             })
+             .catch(err => setRepairCostText('Gagal memuat biaya'));
+      }
+  }, [selectedAsset, activeTab]);
+
+  const handleHireGuard = async () => {
+      if (!selectedAsset) return;
+      setActionLoading(true);
+      try {
+          await api.post('/player/assets/guard', { assetId: selectedAsset.id, hari: guardDurationDays });
+          fetchAssets();
+      } catch (err: any) {
+          alert(err.response?.data?.error || 'Terjadi kesalahan saat menyewa guard.');
+      } finally {
+          setActionLoading(false);
+      }
+  };
+
+  const handleRepairAsset = async () => {
+      if (!selectedAsset) return;
+      setActionLoading(true);
+      try {
+          await api.post('/player/assets/repair', { assetId: selectedAsset.id });
+          fetchAssets();
+          setRepairCostText(null);
+      } catch (err: any) {
+          alert(err.response?.data?.error || 'Terjadi kesalahan saat memperbaiki aset.');
+      } finally {
+          setActionLoading(false);
+      }
+  };
 
   const handleMoveWorker = async () => {
       if(!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
@@ -520,6 +585,24 @@ export default function AssetsPage() {
                                 </div>
                             </div>
 
+                            {asset.isDamaged && (
+                                <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded border border-red-800 shadow animate-pulse flex items-center gap-1 z-10">
+                                    <AlertTriangle size={12} />
+                                    RUSAK
+                                </div>
+                            )}
+
+                            {asset.guardEndTime && new Date(asset.guardEndTime).getTime() > Date.now() && (
+                                <div className="absolute top-8 right-2 bg-blue-600/80 text-white text-[10px] font-bold px-2 py-1 rounded border border-blue-400 shadow z-10">
+                                    Guard: <Countdown targetDate={asset.guardEndTime} />
+                                </div>
+                            )}
+                            {!asset.guardEndTime || new Date(asset.guardEndTime).getTime() < Date.now() ? (
+                                <div className="absolute top-8 right-2 text-red-400 text-[10px] font-bold bg-black/80 px-1 py-1 rounded flex items-center gap-1 z-10">
+                                    <AlertTriangle size={10} /> Rentan
+                                </div>
+                            ) : null}
+
                             {asset.underConstruction && asset.constructionCompleteAt && (
                                 <div className="mb-4 bg-orange-900/20 p-2 rounded-md border border-orange-900/30">
                                     <div className="flex justify-between text-xs mb-1">
@@ -658,6 +741,12 @@ export default function AssetsPage() {
                           className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === 'move' ? 'text-[#c5a880] border-b-2 border-[#c5a880]' : 'text-gray-500 hover:text-gray-300'}`}
                       >
                           Pindah Pekerja
+                      </button>
+                      <button
+                          onClick={() => setActiveTab('guard')}
+                          className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === 'guard' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-500 hover:text-gray-300'}`}
+                      >
+                          Guard / Repair
                       </button>
                   </div>
 
@@ -829,6 +918,36 @@ export default function AssetsPage() {
                                       Pindahkan Pekerja
                                   </Button>
                               </div>
+                          )}
+                      </div>
+                  )}
+
+                  {activeTab === 'guard' && (
+                      <div className="space-y-6">
+                          <div className="bg-black/30 p-4 rounded-lg border border-[#333]/50">
+                             <h4 className="text-sm font-bold text-gray-300 mb-2">Sewa Penjaga (Guard)</h4>
+                             <p className="text-xs text-gray-400 mb-4">Sewa guard untuk melindungi aset dari serangan bandit dan bencana alam.</p>
+                             <div className="flex gap-2 mb-3 items-center">
+                                <input type="number" min="1" value={guardDurationDays} onChange={(e) => setGuardDurationDays(parseInt(e.target.value) || 1)} className="w-20 bg-[#111] border border-[#333] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#c5a880]" />
+                                <span className="text-sm text-gray-400">Hari</span>
+                             </div>
+                             <div className="text-sm text-[#c5a880] mb-4 font-bold">Biaya: {guardCostLoading ? 'Menghitung...' : guardCostText || '-'}</div>
+                             <Button onClick={handleHireGuard} disabled={actionLoading || guardCostLoading} className="w-full bg-blue-700 hover:bg-blue-600 text-white border-none shadow-md">
+                                Sewa Penjaga
+                             </Button>
+                          </div>
+
+                          {selectedAsset.isDamaged && (
+                             <div className="bg-red-950/20 p-4 rounded-lg border border-red-900/50 mt-4 shadow-inner">
+                                <h4 className="text-sm font-bold text-red-400 mb-2 flex items-center gap-2"><AlertTriangle size={16} /> Aset Rusak</h4>
+                                <p className="text-xs text-gray-400 mb-4">
+                                   Aset ini rusak akibat {selectedAsset.damageType === 'bandit' ? 'Serangan Bandit' : selectedAsset.damageType === 'disaster' ? 'Bencana Alam' : 'Serangan'}. Produksi terhenti hingga diperbaiki.
+                                </p>
+                                <div className="text-sm text-[#c5a880] mb-4 font-bold">Biaya Perbaikan: {repairCostText || 'Memuat...'}</div>
+                                <Button variant="destructive" onClick={handleRepairAsset} disabled={actionLoading || !repairCostText} className="w-full shadow-md">
+                                    Perbaiki Aset
+                                </Button>
+                             </div>
                           )}
                       </div>
                   )}
