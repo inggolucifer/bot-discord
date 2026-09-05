@@ -64,6 +64,7 @@ const assetOwnedSchema = new mongoose.Schema({
   damageType: { type: String, enum: ['bandit', 'disaster', null], default: null },
   guardEndTime: { type: Date, default: null },
   toolDurabilityUsage: { type: Map, of: Number, default: {} },
+  activeCrafts: { type: [{ recipeName: String, targetQuantity: Number, progressHours: { type: Number, default: 0 } }], default: [] },
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
