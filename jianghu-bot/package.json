@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "deploy": "node deploy-commands.js",
-    "dev": "node index.js"
+    "dev": "node index.js",
+    "test": "find . -name '*.js' -not -path './node_modules/*' -not -path './web-dashboard/node_modules/*' | xargs -I {} node -c {}"
   },
   "dependencies": {
     "axios": "^1.19.0",
