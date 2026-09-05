@@ -252,7 +252,18 @@ async function runWorkerAutoProcess(client) {
                                  activeCraft.progressHours = 0;
 
                                  if (activeCraft.targetQuantity <= 0) {
+                                     const finishedRecipeName = activeCraft.recipeName;
                                      owned.activeCrafts.shift();
+                                     try {
+                                         const user = await client.users.fetch(player.discordId).catch(() => null);
+                                         if (user) {
+                                             const msg = `✅ Pekerjaan crafting **${finishedRecipeName}** di aset **${assetConfig.name}** telah selesai! Item sudah masuk ke inventory.`;
+                                             await user.send(msg).catch(() => null);
+                                         }
+                                         if (client.io) {
+                                             client.io.to(player.discordId).emit('user_update', { message: `Crafting ${finishedRecipeName} selesai!` });
+                                         }
+                                     } catch (e) {}
                                  }
                              }
                          }
@@ -628,7 +639,20 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                              activeCraft.progressHours = 0;
 
                              if (activeCraft.targetQuantity <= 0) {
+                                 const finishedRecipeName = activeCraft.recipeName;
                                  owned.activeCrafts.shift();
+                                 if (sect.leaderId) {
+                                     try {
+                                         const user = await client.users.fetch(sect.leaderId).catch(() => null);
+                                         if (user) {
+                                             const msg = `✅ Pekerjaan crafting **${finishedRecipeName}** di aset sekte **${assetConfig.name}** telah selesai! Item sudah masuk ke gudang sekte.`;
+                                             await user.send(msg).catch(() => null);
+                                         }
+                                         if (client.io) {
+                                             client.io.to(sect.leaderId).emit('user_update', { message: `Crafting ${finishedRecipeName} selesai!` });
+                                         }
+                                     } catch (e) {}
+                                 }
                              }
                          }
                      }
