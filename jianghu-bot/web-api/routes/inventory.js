@@ -79,6 +79,9 @@ router.post('/discard', authenticateToken, async (req, res) => {
     // 🔒 MUTEX LOCK: Prevent race conditions (Spamming discard to trigger bugs)
     const lockKey = `inventory_discard_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) {
+         return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+    }
 
     try {
         const player = await Player.findOne({ discordId: userId });

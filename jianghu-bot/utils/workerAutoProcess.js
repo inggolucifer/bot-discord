@@ -169,6 +169,7 @@ async function runWorkerAutoProcess(client) {
                      // Tetap reset timer update supaya tidak luber ke max int
                      owned.progressAccumulated = 0;
                      owned.lastProgressUpdate = new Date();
+                     playerUpdated = true;
                      continue;
                 }
 
@@ -199,6 +200,7 @@ async function runWorkerAutoProcess(client) {
                          }
                          if (hasMaterialsForOneHour) {
                              owned.isHalted = false;
+                             playerUpdated = true;
                          }
                      }
 
@@ -414,6 +416,9 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                          sectUpdated = true;
                      }
                  }
+
+                 owned.lastClaimAt = new Date(now - progressMs);
+                 sectUpdated = true;
                  continue;
              }
 
