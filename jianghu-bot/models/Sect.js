@@ -13,6 +13,9 @@ const sectAssetSchema = new mongoose.Schema({
   damageType: { type: String, enum: ['bandit', 'disaster', null], default: null },
   guardEndTime: { type: Date, default: null },
   toolDurabilityUsage: { type: Map, of: Number, default: {} },
+  assignedWorkers: { type: [{ workerId: String, endTime: { type: Date, default: null } }], default: [] },
+  progressAccumulated: { type: Number, default: 0 },
+  lastProgressUpdate: { type: Date, default: null },
 }, { _id: false });
 
 const sectResourceSchema = new mongoose.Schema({
