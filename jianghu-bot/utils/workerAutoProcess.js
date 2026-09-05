@@ -369,6 +369,47 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
             guildConfigs.set(sect.guildId, guildConfig);
         }
 
+        // --- RISK SYSTEM (BANDIT & DISASTER) FOR SECT ---
+        const now = Date.now();
+        const DISASTER_CYCLE = 20 * 24 * 3600 * 1000;
+        const BANDIT_CYCLE = 5 * 24 * 3600 * 1000;
+
+        let riskTriggered = false;
+        if (!sect.lastDisasterHitAt) { sect.lastDisasterHitAt = new Date(); sectUpdated = true; }
+        if (!sect.lastBanditHitAt) { sect.lastBanditHitAt = new Date(); sectUpdated = true; }
+
+        const lastDisaster = sect.lastDisasterHitAt.getTime();
+        if (now - lastDisaster >= DISASTER_CYCLE) {
+            const activeAssets = sect.assets.filter(a => a.status === 'active' && !a.isDamaged && !isUnderConstruction(a));
+            if (activeAssets.length > 0) {
+                const target = activeAssets[Math.floor(Math.random() * activeAssets.length)];
+                target.isDamaged = true;
+                target.isHalted = true;
+                target.damageType = 'disaster';
+                sect.lastDisasterHitAt = new Date();
+                sectUpdated = true;
+                riskTriggered = true;
+            }
+        }
+
+        const lastBandit = sect.lastBanditHitAt.getTime();
+        if (!riskTriggered && now - lastBandit >= BANDIT_CYCLE) {
+            const activeAssets = sect.assets.filter(a => a.status === 'active' && !a.isDamaged && !isUnderConstruction(a));
+            const vulnerableAssets = activeAssets.filter(a => !a.guardEndTime || a.guardEndTime.getTime() < now);
+
+            if (vulnerableAssets.length > 0) {
+                const target = vulnerableAssets[Math.floor(Math.random() * vulnerableAssets.length)];
+                target.isDamaged = true;
+                target.isHalted = true;
+                target.damageType = 'bandit';
+                sect.lastBanditHitAt = new Date();
+                sectUpdated = true;
+            } else if (activeAssets.length > 0) {
+                sect.lastBanditHitAt = new Date();
+                sectUpdated = true;
+            }
+        }
+
         for (const owned of sect.assets) {
              const assetConfig = assetMap.get(owned.assetId.toString());
              if (!assetConfig) continue;
