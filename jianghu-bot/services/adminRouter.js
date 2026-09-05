@@ -155,10 +155,10 @@ module.exports = {
         // Inline handlers logic checking in execute
         if (key === 'lawcreate' || key === 'lawlist' || key === 'manualcreate' || key === 'manuallist') {
             await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
-            if (key === 'lawcreate') return handleCreateLaw(interaction);
-            if (key === 'lawlist') return handleListLaw(interaction);
-            if (key === 'manualcreate') return handleCreateManual(interaction);
-            if (key === 'manuallist') return handleListManual(interaction);
+            if (key === 'lawcreate') return await handleCreateLaw(interaction);
+            if (key === 'lawlist') return await handleListLaw(interaction);
+            if (key === 'manualcreate') return await handleCreateManual(interaction);
+            if (key === 'manuallist') return await handleListManual(interaction);
         }
 
         await interaction.deferReply({ flags: MessageFlags.Ephemeral }).catch(() => {});
