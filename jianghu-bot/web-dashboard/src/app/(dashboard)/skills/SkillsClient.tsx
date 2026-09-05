@@ -117,13 +117,6 @@ export default function SkillsClient() {
         enabled: !!token
     });
 
-    const profile = rawProfile?.data || rawProfile;
-
-    if (loading || isLoading) return <LoadingState text="Memuat Kitab & Hukum Alam..." />;
-
-    if (!profile) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data skill." icon={<BookOpen size={48} />} />;
-
-
     const { data: rawLaws } = useQuery({
         queryKey: ['availableLaws'],
         queryFn: async () => {
@@ -132,6 +125,13 @@ export default function SkillsClient() {
         },
         enabled: !!token
     });
+
+    const profile = rawProfile?.data || rawProfile;
+
+    if (loading || isLoading) return <LoadingState text="Memuat Kitab & Hukum Alam..." />;
+
+    if (!profile) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data skill." icon={<BookOpen size={48} />} />;
+
 
     const { laws = [], manuals = [] } = profile;
     const isMortal = profile.realm === 'Mortal' || profile.systemCultivation?.realm === 'Fondasi Fana (Mortal Foundation)';
