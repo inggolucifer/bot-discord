@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Tournament = require('../../../models/Tournament');
 const { buildTournamentEmbed } = require('../../../utils/embeds');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const list = await Tournament.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const list = await Tournament.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(list.map((t) => ({ name: `${t.name} (${t.status})`, value: t.name })));
   },
 
@@ -18,7 +19,7 @@ module.exports = {
     await interaction.deferReply(); // publik -- turnamen memang untuk ditonton semua orang
 
     const namaTurnamen = interaction.options.getString('nama-turnamen');
-    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaTurnamen}$`, 'i') });
+    const tournament = await Tournament.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaTurnamen)}\\s*$`, 'i') });
     if (!tournament) return interaction.editReply({ content: `❌ Turnamen "${namaTurnamen}" tidak ditemukan.` });
 
     return interaction.editReply({ embeds: [buildTournamentEmbed(tournament)] });

@@ -1,3 +1,4 @@
+const { escapeRegex } = require('../../utils/escapeRegex');
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -598,7 +599,7 @@ router.post('/transfer', authenticateToken, async (req, res) => {
 
         await withTransaction(async (session) => {
             const receiver = await Player.findOne({
-                characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
+                characterName: { $regex: new RegExp('^\\s*' + escapeRegex(targetName) + '\\s*$', 'i') },
                 guildId
             }).session(session);
 
@@ -1330,7 +1331,7 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
             if (sender.status !== 'active') throw new CustomError(`Karaktermu berstatus ${sender.status}.`, 403);
 
             const receiver = await Player.findOne({
-                characterName: { $regex: new RegExp('^' + targetName + '$', 'i') },
+                characterName: { $regex: new RegExp('^\\s*' + escapeRegex(targetName) + '\\s*$', 'i') },
                 guildId
             }).session(session);
             if (!receiver) throw new CustomError('Karakter penerima tidak ditemukan.', 404);

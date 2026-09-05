@@ -4,6 +4,7 @@ const Item = require('../../../models/Item');
 const Asset = require('../../../models/Asset');
 const { buildSectEmbed } = require('../../../utils/embeds');
 const { getPlayerSect } = require('../../../utils/sectUtils');
+const { escapeRegex } = require('../../../utils/escapeRegex');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,7 +14,7 @@ module.exports = {
 
   async autocomplete(interaction) {
     const focused = interaction.options.getFocused();
-    const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(focused, 'i') }).limit(25);
+    const list = await Sect.find({ guildId: interaction.guildId, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(list.map((s) => ({ name: s.name, value: s.name })));
   },
 
@@ -24,7 +25,7 @@ module.exports = {
     let sect;
 
     if (namaSekte) {
-      sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^${namaSekte}$`, 'i') });
+      sect = await Sect.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(namaSekte)}\\s*$`, 'i') });
       if (!sect) return interaction.editReply({ content: `❌ Sekte "${namaSekte}" tidak ditemukan.` });
     } else {
       sect = await getPlayerSect(interaction.guildId, interaction.user.id);

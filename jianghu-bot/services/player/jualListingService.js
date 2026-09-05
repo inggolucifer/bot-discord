@@ -4,6 +4,7 @@ const Item = require('../../models/Item');
 const PlayerListing = require('../../models/PlayerListing');
 const { CURRENCIES, CURRENCY_LABEL } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
+const { escapeRegex } = require('../../utils/escapeRegex');
 
 const MAX_LISTING_PER_PLAYER = 10;
 const LISTING_FEE_RATE = 0.05; // 5%, dipotong dari HASIL PENJUALAN saat listing laku (bukan di muka)
@@ -21,7 +22,7 @@ module.exports = {
     const focused = interaction.options.getFocused();
     const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (!player) return interaction.respond([]);
-    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(focused, 'i') }).limit(25);
+    const items = await Item.find({ _id: { $in: player.inventory.map((i) => i.itemId) }, name: new RegExp(escapeRegex(focused), 'i') }).limit(25);
     return interaction.respond(items.map((i) => ({ name: i.name, value: i.name })));
   },
 
@@ -42,7 +43,7 @@ module.exports = {
       return interaction.editReply({ content: `❌ Kamu sudah punya ${activeCount} listing aktif (maksimal ${MAX_LISTING_PER_PLAYER}). Batalkan salah satu dulu dengan \`/cancel-listing\`.` });
     }
 
-    const item = await Item.findOne({ name: new RegExp(`^${namaItem}$`, 'i') });
+    const item = await Item.findOne({ name: new RegExp(`^\\s*${escapeRegex(namaItem)}\\s*$`, 'i') });
     if (!item) return interaction.editReply({ content: `❌ Item "${namaItem}" tidak ditemukan.` });
 
     const owned = player.inventory.find((i) => i.itemId.equals(item._id));
