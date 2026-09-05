@@ -68,6 +68,7 @@ export default function Navbar() {
       { href: "/cultivation", label: "Kultivasi" },
       { href: "/skills", label: "Kitab & Hukum" },
       { href: "/arena", label: "Arena Duel" },
+      { href: "/explore", label: "Eksplorasi" },
       { href: "/inventory", label: "Inventory" },
       { href: "/pet", label: "Pet" },
       { href: "/assets", label: "Assets" },
