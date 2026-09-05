@@ -20,8 +20,8 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     try {
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       const subcommand = interaction.options.getSubcommand();
       let player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
 
@@ -230,10 +230,12 @@ Apakah kamu YAKIN ingin menerobos?`);
 
         } catch (e) {
             if (e.code === 'InteractionCollectorError') {
-                 await interaction.editReply({ content: '⏱️ Waktu untuk memilih sudah habis.', embeds: [], components: [] });
+                 if (interaction.deferred || interaction.replied) await interaction.editReply({ content: '⏱️ Waktu untuk memilih sudah habis.', embeds: [], components: [] }).catch(() => {});
+                 else await interaction.reply({ content: '⏱️ Waktu untuk memilih sudah habis.', ephemeral: true }).catch(() => {});
             } else {
                  console.error(e);
-                 await interaction.editReply({ content: '❌ Terjadi kesalahan sistem.', embeds: [], components: [] });
+                 if (interaction.deferred || interaction.replied) await interaction.editReply({ content: '❌ Terjadi kesalahan saat memproses terobosan.', embeds: [], components: [] }).catch(() => {});
+                 else await interaction.reply({ content: '❌ Terjadi kesalahan saat memproses terobosan.', ephemeral: true }).catch(() => {});
             }
         }
       }
@@ -242,9 +244,9 @@ Apakah kamu YAKIN ingin menerobos?`);
       console.error(error);
       const isReplied = interaction.replied || interaction.deferred;
       if (isReplied) {
-          await interaction.editReply('❌ Terjadi kesalahan pada perintah cultivation.');
+          await interaction.editReply('❌ Terjadi kesalahan pada perintah cultivation.').catch(() => {});
       } else {
-          await interaction.reply({ content: '❌ Terjadi kesalahan pada perintah cultivation.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: '❌ Terjadi kesalahan pada perintah cultivation.', ephemeral: true }).catch(() => {});
       }
     }
   },

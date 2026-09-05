@@ -40,8 +40,8 @@ module.exports = {
   },
 
   async execute(interaction) {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     try {
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
       const sub = interaction.options.getSubcommand();
       let player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('laws');
 
@@ -157,7 +157,12 @@ module.exports = {
         } catch (err) {
             await session.abortTransaction();
             console.error(err);
-            return interaction.editReply('❌ Terjadi kesalahan saat mencoba mereset Hukum Alam.');
+            const msg = '❌ Terjadi kesalahan saat mencoba mereset Hukum Alam.';
+            if (interaction.deferred || interaction.replied) {
+              return interaction.editReply({ content: msg }).catch(() => {});
+            } else {
+              return interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+            }
         } finally {
             session.endSession();
         }
@@ -165,7 +170,12 @@ module.exports = {
 
     } catch (e) {
       console.error(e);
-      await interaction.editReply('❌ Terjadi kesalahan.');
+      const msg = '❌ Terjadi kesalahan.';
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
     }
   }
 };
