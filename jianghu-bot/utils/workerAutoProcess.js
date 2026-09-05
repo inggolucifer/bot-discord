@@ -152,6 +152,7 @@ async function runWorkerAutoProcess(client) {
                 if (owned.status !== 'active') continue;
                 if (owned.isDamaged) {
                     owned.isHalted = true;
+                    owned.progressAccumulated = progressMs;
                     owned.lastProgressUpdate = new Date();
                     playerUpdated = true;
                     continue;
@@ -176,6 +177,7 @@ async function runWorkerAutoProcess(client) {
                 // Aset butuh minimal 1 pekerja per unit (jika Tipe 3, atau jg Tipe 1 yang bukan Crafting Station)
                 let productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
                 if (productiveQuantity <= 0) {
+                     owned.progressAccumulated = progressMs;
                      owned.lastProgressUpdate = new Date();
                      playerUpdated = true;
                      continue;
