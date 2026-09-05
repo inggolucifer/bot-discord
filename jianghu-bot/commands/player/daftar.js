@@ -18,11 +18,12 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    await interaction.deferReply();
+    try {
+      await interaction.deferReply();
 
-    const nama = interaction.options.getString('nama').trim();
-    const jenisKelamin = interaction.options.getString('jenis-kelamin');
-    const umur = interaction.options.getInteger('umur') || 16;
+      const nama = interaction.options.getString('nama').trim();
+      const jenisKelamin = interaction.options.getString('jenis-kelamin');
+      const umur = interaction.options.getInteger('umur') || 16;
 
     const existing = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
     if (existing) {
@@ -61,18 +62,27 @@ module.exports = {
     // Pasang role ranah default kalau admin sudah mapping role untuk ranah awal ini
     syncRealmRole(interaction.client, interaction.guildId, interaction.user.id, player.realm).catch((e) => console.error('[REALM-ROLE] Gagal sync saat daftar:', e.message));
 
-    const embed = new EmbedBuilder()
-      .setColor(0x27ae60)
-      .setTitle('✅ Pendaftaran Berhasil!')
-      .setDescription(
-        `Selamat datang di Jianghu, **${nama}**!\n\n` +
-        `Karaktermu telah tercatat secara permanen dan terikat ke akun Discord-mu ini. ` +
-        `Gunakan \`/profil\` untuk melihat data karaktermu, dan \`/daily\` untuk klaim hadiah harian.\n\n` +
-        `Mau ubah umur nanti? Tinggal pakai \`/ubah-umur\` kapan saja.`
-      )
-      .setFooter({ text: 'Semoga perjalananmu di dunia persilatan penuh berkah.' });
+      const embed = new EmbedBuilder()
+        .setColor(0x27ae60)
+        .setTitle('✅ Pendaftaran Berhasil!')
+        .setDescription(
+          `Selamat datang di Jianghu, **${nama}**!\n\n` +
+          `Karaktermu telah tercatat secara permanen dan terikat ke akun Discord-mu ini. ` +
+          `Gunakan \`/profil\` untuk melihat data karaktermu, dan \`/daily\` untuk klaim hadiah harian.\n\n` +
+          `Mau ubah umur nanti? Tinggal pakai \`/ubah-umur\` kapan saja.`
+        )
+        .setFooter({ text: 'Semoga perjalananmu di dunia persilatan penuh berkah.' });
 
-    return interaction.editReply({ embeds: [embed] });
+      return interaction.editReply({ embeds: [embed] });
+    } catch (e) {
+      console.error(e);
+      const msg = '❌ Terjadi kesalahan saat melakukan pendaftaran.';
+      if (interaction.deferred || interaction.replied) {
+        await interaction.editReply({ content: msg }).catch(() => {});
+      } else {
+        await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
+      }
+    }
   },
 };
 
