@@ -11,7 +11,8 @@ module.exports = {
     .setName('sekte-craft')
     .setDescription('Buat item lewat aset crafting sekte, pakai sumber daya bersama sekte')
     .addStringOption((o) => o.setName('nama-aset').setDescription('Nama aset crafting sekte').setRequired(true).setAutocomplete(true))
-    .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep').setRequired(true).setAutocomplete(true)),
+    .addStringOption((o) => o.setName('nama-resep').setDescription('Nama resep').setRequired(true).setAutocomplete(true))
+    .addIntegerOption((o) => o.setName('jumlah').setDescription('Jumlah item yang akan dibuat').setMinValue(1)),
 
   async autocomplete(interaction) {
     const focusedOpt = interaction.options.getFocused(true);
@@ -54,28 +55,39 @@ module.exports = {
     const recipe = asset.recipes.find((r) => r.recipeName.toLowerCase() === namaResep.toLowerCase());
     if (!recipe) return interaction.editReply({ content: `❌ Resep "${namaResep}" tidak ada di aset ini.` });
 
+    const jumlah = interaction.options.getInteger('jumlah') || 1;
+
     const check = checkMaterials(sect.resources, recipe);
     if (!check.ok) {
       const missingLines = check.missing.map((m) => `**${m.itemName}**: butuh ${m.need}, stok sekte ${m.have}`).join('\n');
-      return interaction.editReply({ content: `❌ Sumber daya sekte tidak cukup:\n${missingLines}` });
+      return interaction.editReply({ content: `❌ Sumber daya sekte di awal tidak cukup:\n${missingLines}` });
     }
 
-    sect.resources = consumeMaterials(sect.resources, recipe);
-    const resultOwned = sect.resources.find((r) => r.itemId.equals(recipe.resultItemId));
-    if (resultOwned) resultOwned.quantity += recipe.resultQuantity;
-    else sect.resources.push({ itemId: recipe.resultItemId, quantity: recipe.resultQuantity });
+    if (!owned.activeCrafts) owned.activeCrafts = [];
+    const existingCraft = owned.activeCrafts.find(c => c.recipeName === recipe.recipeName);
+
+    if (existingCraft) {
+        existingCraft.targetQuantity += jumlah;
+    } else {
+        owned.activeCrafts.push({
+            recipeName: recipe.recipeName,
+            targetQuantity: jumlah,
+            progressHours: 0
+        });
+    }
+
     await sect.save();
 
     await logTransaction(interaction.client, {
       guildId: interaction.guildId, type: 'sect_craft', fromUserId: interaction.user.id,
-      itemDescription: `Sekte ${sect.name} craft "${recipe.recipeName}" -> ${recipe.resultQuantity}x ${recipe.resultItemName}`,
+      itemDescription: `Sekte ${sect.name} mulai craft "${recipe.recipeName}" (${jumlah}x) di ${asset.name}`,
     });
 
-    const matUsed = recipe.materials.map((m) => `${m.quantity}x ${m.itemName}`).join(', ');
+    const timeReq = recipe.craftingTimeHours || 1;
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
-      .setTitle('⚒️ Crafting Sekte Berhasil!')
-      .setDescription(`Sekte **${sect.name}** membuat **${recipe.resultQuantity}x ${recipe.resultItemName}** di **${asset.name}**!\n\nBahan terpakai dari stok sekte: ${matUsed}\n\nHasil crafting masuk ke stok sumber daya sekte (bisa diambil admin lewat pengaturan sekte).`);
+      .setTitle('⚒️ Crafting Sekte Dimulai')
+      .setDescription(`Sekte **${sect.name}** menugaskan pembuatan **${jumlah}x ${recipe.resultQuantity} ${recipe.resultItemName}** di **${asset.name}**.\n\nSetiap item butuh ${timeReq} jam untuk selesai.\nBahan otomatis ditarik dari gudang sekte tiap jam produksi berjalan.\nPastikan ada pekerja di aset ini!`);
     return interaction.editReply({ embeds: [embed] });
   },
 };

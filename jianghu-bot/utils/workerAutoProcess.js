@@ -165,11 +165,115 @@ async function runWorkerAutoProcess(client) {
                     activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
                 }
 
-                // Crafting Station tdk memproduksi otomatis.
+                // --- Crafting Station Logic (Player) ---
                 if (assetConfig.isCraftingStation) {
-                     // Tetap reset timer update supaya tidak luber ke max int
-                     owned.progressAccumulated = 0;
-                     owned.lastProgressUpdate = new Date();
+                     let productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
+
+                     if (productiveQuantity <= 0 || !owned.activeCrafts || owned.activeCrafts.length === 0) {
+                         owned.progressAccumulated = 0;
+                         owned.lastProgressUpdate = new Date();
+                         playerUpdated = true;
+                         continue;
+                     }
+
+                     const hoursPassed = Math.floor(progressMs / (3600 * 1000));
+                     if (hoursPassed < 1) {
+                         owned.progressAccumulated = progressMs;
+                         owned.lastProgressUpdate = new Date();
+                         playerUpdated = true;
+                         continue;
+                     }
+
+                     let missingMaterialName = null;
+                     let actualHoursConsumed = 0;
+
+                     while (actualHoursConsumed < hoursPassed && owned.activeCrafts.length > 0) {
+                         let workHoursRemainingInThisTick = productiveQuantity;
+                         let canContinueThisTick = true;
+
+                         while (workHoursRemainingInThisTick > 0 && owned.activeCrafts.length > 0 && canContinueThisTick) {
+                             let activeCraft = owned.activeCrafts[0];
+                             let recipe = assetConfig.recipes.find(r => r.recipeName === activeCraft.recipeName);
+                             if (!recipe) {
+                                 owned.activeCrafts.shift();
+                                 continue;
+                             }
+                             const targetHours = recipe.craftingTimeHours || 1;
+
+                             if (activeCraft.progressHours === 0) {
+                                 let ok = true;
+                                 for (const mat of recipe.materials) {
+                                     const invItem = player.inventory.find(i => i.itemId.equals(mat.itemId));
+                                     if (!invItem || invItem.quantity < mat.quantity) {
+                                         ok = false;
+                                         missingMaterialName = mat.itemName;
+                                         break;
+                                     }
+                                 }
+
+                                 if (!ok) {
+                                     canContinueThisTick = false;
+                                     if (!owned.isHalted) {
+                                         owned.isHalted = true;
+                                         owned.lastWarningSentAt = new Date();
+                                         try {
+                                             const user = await client.users.fetch(player.discordId).catch(() => null);
+                                             if (user) {
+                                                const msg = `⚠️ Pekerja di aset **${assetConfig.name}** berhenti bekerja (Crafting) karena kekurangan material: **${missingMaterialName}**.`;
+                                                await user.send(msg).catch(() => null);
+                                             }
+                                         } catch (e) {}
+                                     }
+                                     break;
+                                 }
+
+                                 for (const mat of recipe.materials) {
+                                     const idx = player.inventory.findIndex(i => i.itemId.equals(mat.itemId));
+                                     player.inventory[idx].quantity -= mat.quantity;
+                                 }
+                                 player.inventory = player.inventory.filter(i => i.quantity > 0);
+                             }
+
+                             const neededToFinish = targetHours - activeCraft.progressHours;
+                             const workContributed = Math.min(workHoursRemainingInThisTick, neededToFinish);
+
+                             activeCraft.progressHours += workContributed;
+                             workHoursRemainingInThisTick -= workContributed;
+
+                             if (activeCraft.progressHours >= targetHours) {
+                                 const resultOwned = player.inventory.find((i) => i.itemId.equals(recipe.resultItemId));
+                                 if (resultOwned) {
+                                     resultOwned.quantity += recipe.resultQuantity;
+                                 } else {
+                                     player.inventory.push({ itemId: recipe.resultItemId, quantity: recipe.resultQuantity });
+                                 }
+
+                                 activeCraft.targetQuantity -= 1;
+                                 activeCraft.progressHours = 0;
+
+                                 if (activeCraft.targetQuantity <= 0) {
+                                     owned.activeCrafts.shift();
+                                 }
+                             }
+                         }
+
+                         if (!canContinueThisTick && workHoursRemainingInThisTick === productiveQuantity) {
+                             break;
+                         }
+
+                         actualHoursConsumed += 1;
+                     }
+
+                     if (actualHoursConsumed === 0 && missingMaterialName) {
+                         owned.progressAccumulated = 0;
+                         owned.lastProgressUpdate = new Date();
+                     } else {
+                         if (owned.isHalted) owned.isHalted = false;
+                         const advanceMs = actualHoursConsumed * 3600 * 1000;
+                         owned.progressAccumulated = progressMs - advanceMs;
+                         owned.lastProgressUpdate = new Date();
+                     }
+
                      playerUpdated = true;
                      continue;
                 }
@@ -433,10 +537,120 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                   }
              }
 
+             // --- Crafting Station Logic (Sect) ---
              if (assetConfig.isCraftingStation) {
-                  owned.lastClaimAt = new Date(); // Tetap update time state biar ga overflow
-                  sectUpdated = true;
-                  continue;
+                 let activeWorkersCount = 0;
+                 if (owned.assignedWorkers && owned.assignedWorkers.length > 0) {
+                     activeWorkersCount = owned.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
+                 }
+                 let productiveQuantity = Math.min(activeWorkersCount, owned.quantity);
+
+                 if (productiveQuantity <= 0 || !owned.activeCrafts || owned.activeCrafts.length === 0) {
+                     owned.lastClaimAt = new Date();
+                     sectUpdated = true;
+                     continue;
+                 }
+
+                 const hoursPassed = Math.floor(progressMs / (3600 * 1000));
+                 if (hoursPassed < 1) {
+                     owned.lastClaimAt = new Date(now - progressMs);
+                     sectUpdated = true;
+                     continue;
+                 }
+
+                 let missingMaterialName = null;
+                 let actualHoursConsumed = 0;
+
+                 while (actualHoursConsumed < hoursPassed && owned.activeCrafts.length > 0) {
+                     let workHoursRemainingInThisTick = productiveQuantity;
+                     let canContinueThisTick = true;
+
+                     while (workHoursRemainingInThisTick > 0 && owned.activeCrafts.length > 0 && canContinueThisTick) {
+                         let activeCraft = owned.activeCrafts[0];
+                         let recipe = assetConfig.recipes.find(r => r.recipeName === activeCraft.recipeName);
+                         if (!recipe) {
+                             owned.activeCrafts.shift();
+                             continue;
+                         }
+                         const targetHours = recipe.craftingTimeHours || 1;
+
+                         if (activeCraft.progressHours === 0) {
+                             let ok = true;
+                             for (const mat of recipe.materials) {
+                                 const invItem = sect.resources.find(i => i.itemId.equals(mat.itemId));
+                                 if (!invItem || invItem.quantity < mat.quantity) {
+                                     ok = false;
+                                     missingMaterialName = mat.itemName;
+                                     break;
+                                 }
+                             }
+
+                             if (!ok) {
+                                 canContinueThisTick = false;
+                                 if (!owned.isHalted) {
+                                     owned.isHalted = true;
+                                     owned.lastWarningSentAt = new Date();
+                                     if (sect.leaderId) {
+                                         try {
+                                             const user = await client.users.fetch(sect.leaderId).catch(() => null);
+                                             if (user) {
+                                                 const msg = `⚠️ Pekerja di aset sekte **${assetConfig.name}** berhenti bekerja (Crafting) karena kekurangan material: **${missingMaterialName}**.`;
+                                                 await user.send(msg).catch(() => null);
+                                             }
+                                         } catch (e) {}
+                                     }
+                                 }
+                                 break;
+                             }
+
+                             for (const mat of recipe.materials) {
+                                 const idx = sect.resources.findIndex(i => i.itemId.equals(mat.itemId));
+                                 sect.resources[idx].quantity -= mat.quantity;
+                             }
+                             sect.resources = sect.resources.filter(i => i.quantity > 0);
+                         }
+
+                         const neededToFinish = targetHours - activeCraft.progressHours;
+                         const workContributed = Math.min(workHoursRemainingInThisTick, neededToFinish);
+
+                         activeCraft.progressHours += workContributed;
+                         workHoursRemainingInThisTick -= workContributed;
+
+                         if (activeCraft.progressHours >= targetHours) {
+                             const resultOwned = sect.resources.find((i) => i.itemId.equals(recipe.resultItemId));
+                             if (resultOwned) {
+                                 resultOwned.quantity += recipe.resultQuantity;
+                             } else {
+                                 sect.resources.push({ itemId: recipe.resultItemId, quantity: recipe.resultQuantity });
+                             }
+
+                             activeCraft.targetQuantity -= 1;
+                             activeCraft.progressHours = 0;
+
+                             if (activeCraft.targetQuantity <= 0) {
+                                 owned.activeCrafts.shift();
+                             }
+                         }
+                     }
+
+                     if (!canContinueThisTick && workHoursRemainingInThisTick === productiveQuantity) {
+                         break;
+                     }
+
+                     actualHoursConsumed += 1;
+                 }
+
+                 if (actualHoursConsumed === 0 && missingMaterialName) {
+                     owned.lastClaimAt = new Date();
+                 } else {
+                     if (owned.isHalted) owned.isHalted = false;
+                     const advanceMs = actualHoursConsumed * 3600 * 1000;
+                     const sectLastUpdate = owned.lastClaimAt ? owned.lastClaimAt.getTime() : (sect.createdAt.getTime());
+                     owned.lastClaimAt = new Date(sectLastUpdate + advanceMs);
+                 }
+
+                 sectUpdated = true;
+                 continue;
              }
 
              const hoursPassed = Math.floor(progressMs / (3600 * 1000));

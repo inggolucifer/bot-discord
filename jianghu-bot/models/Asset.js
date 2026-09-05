@@ -16,6 +16,7 @@ const recipeSchema = new mongoose.Schema({
   resultItemName: { type: String, required: true },
   resultQuantity: { type: Number, default: 1, min: 1 },
   materials: { type: [recipeMaterialSchema], default: [] },
+  craftingTimeHours: { type: Number, default: 1, min: 1 },
 });
 
 const assetSchema = new mongoose.Schema({
