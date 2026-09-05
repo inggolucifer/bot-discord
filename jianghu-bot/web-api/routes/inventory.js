@@ -44,6 +44,7 @@ router.get('/', authenticateToken, async (req, res) => {
             name: slot.itemId.name,
             description: slot.itemId.description,
             type: slot.itemId.category,
+            category: slot.itemId.category,
             rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
             quantity: slot.quantity,
             price: slot.itemId.basePrice, // Changed to match DB schema
