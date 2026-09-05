@@ -3931,5 +3931,414 @@
     "workerOutputItemId": null,
     "workerOutputItemName": null,
     "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "22ab18abd80ae98639376b6b"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Kamp Pemburu Primitif",
+    "__v": 0,
+    "basePrice": 350,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc3"
+        },
+        "itemName": "Kayu Mentah",
+        "quantity": 50,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc4"
+        },
+        "itemName": "Daun Kering",
+        "quantity": 30,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 8,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Tombak Kayu Rapuh, 2x Kantong Daun]\n[OUTPUT per jam: 5x Kulit Hewan Tebal]\nTempat peristirahatan para pemburu awal. Mengajarkan manusia menguliti hewan dengan benar.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Common",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "5ab78a4b5f191c248570fca0"
+        },
+        "itemName": "Tombak Kayu Rapuh",
+        "quantity": 1,
+        "durabilityHours": 24
+      },
+      {
+        "itemId": {
+          "$oid": "b37dd1d60a4963d6e0dc943f"
+        },
+        "itemName": "Kantong Daun",
+        "quantity": 2,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "61d0cf18f3eb14cfe124d0f3"
+    },
+    "workerOutputItemName": "Kulit Hewan Tebal",
+    "workerOutputQuantity": 5
+  },
+  {
+    "_id": {
+      "$oid": "5af3142a147782c2a12d135e"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Penambangan Batu Dalam",
+    "__v": 0,
+    "basePrice": 400,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15aa9e03dc91c54bfc2"
+        },
+        "itemName": "Batu Kasar",
+        "quantity": 100,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 12,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Palu Batu Godam, 2x Obor Getah, 3x Air Bersih]\n[OUTPUT per jam: 20x Tulang Beruang]\nGua gelap hasil pahatan leluhur. Pekerja menemukan sisa tulang hewan raksasa di kedalaman.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "copper",
+    "profitCurrency": "copper",
+    "rank": "Uncommon",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "074efe87b790780278fd159f"
+        },
+        "itemName": "Palu Batu Godam",
+        "quantity": 1,
+        "durabilityHours": 24
+      },
+      {
+        "itemId": {
+          "$oid": "f00b3777991d5723cbca123c"
+        },
+        "itemName": "Obor Getah",
+        "quantity": 2,
+        "durabilityHours": 24
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bfe3"
+        },
+        "itemName": "Air Bersih",
+        "quantity": 3,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "bc2fd0966ce0e2588b668934"
+    },
+    "workerOutputItemName": "Tulang Beruang",
+    "workerOutputQuantity": 20
+  },
+  {
+    "_id": {
+      "$oid": "65aa51e253b548b65364d25b"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Fasilitas Latihan Ksatria Besi",
+    "__v": 0,
+    "basePrice": 15,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff2"
+        },
+        "itemName": "Papan Kayu",
+        "quantity": 200,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ba9e03dc91c54bff1"
+        },
+        "itemName": "Batu Bata",
+        "quantity": 300,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "f8437bf22e2f763243db6934"
+        },
+        "itemName": "Baja Tahan Karat",
+        "quantity": 50,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 48,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "CRAFTING STATION. Buka menu craft untuk menempa senjata ksatria. Sebuah arena berdebu dimana pandai besi dan ksatria fana bertemu.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "silver",
+    "profitCurrency": "silver",
+    "rank": "Rare",
+    "recipes": [
+      {
+        "recipeName": "Tempa Pedang Baja Refined",
+        "resultItemId": {
+          "$oid": "6e4a3f4aaeb0a7bf06bf2ad9"
+        },
+        "resultItemName": "Pedang Baja Refined",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "f8437bf22e2f763243db6934"
+            },
+            "itemName": "Baja Tahan Karat",
+            "quantity": 5,
+            "durabilityHours": 1
+          },
+          {
+            "itemId": {
+              "$oid": "6a91b15ca9e03dc91c54c000"
+            },
+            "itemName": "Palu Besi",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ],
+        "_id": {
+          "$oid": "6185a8888083230a1d096c12"
+        }
+      }
+    ],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "f07f12abd24a8911928f7a91"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Kasino Dunia Fana",
+    "__v": 0,
+    "basePrice": 30,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "f8437bf22e2f763243db6934"
+        },
+        "itemName": "Baja Tahan Karat",
+        "quantity": 500,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15da9e03dc91c54c023"
+        },
+        "itemName": "Semen Campuran",
+        "quantity": 1000,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 120,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 50,
+    "description": "[PROFIT per jam: 50 Silver]\nPusat hiburan di jantung kota. Bangsawan menghabiskan hartanya di sini setiap malam. Menghasilkan uang pasif murni. Membutuhkan pekerja aktif.",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "gold",
+    "profitCurrency": "silver",
+    "rank": "Epic",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "a8a1ae27bb3b32987c892d63"
+        },
+        "itemName": "Kaca Optik Presisi",
+        "quantity": 1,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "3ab954661aa890a3c4a73358"
+        },
+        "itemName": "Batu Asah Baja",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "bd1d59384acfc721c3c045a7"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Altar Gacha Mistis",
+    "__v": 0,
+    "basePrice": 15,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04e"
+        },
+        "itemName": "Baja Hitam Mistis",
+        "quantity": 500,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c050"
+        },
+        "itemName": "Cairan Inti Bumi",
+        "quantity": 100,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 336,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 0,
+    "description": "[INPUT per jam: 1x Batu Jiwa Murni, 5x Serbuk Bintang Jatuh]\n[OUTPUT per jam: 1x Gacha Box: Harta Karun Sekte Kuno]\nAltar kuno bercahaya merah yang menukar nyawa dan material berharga dengan kotak gacha rahasia peninggalan sekte.",
+    "imageUrl": null,
+    "isCraftingStation": false,
+    "priceCurrency": "jade",
+    "profitCurrency": "gold",
+    "rank": "Legendary",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "8da8142bf0e642f58b84e1ab"
+        },
+        "itemName": "Batu Jiwa Murni",
+        "quantity": 1,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "e21fefb6232dd028a52a7300"
+        },
+        "itemName": "Serbuk Bintang Jatuh",
+        "quantity": 5,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": {
+      "$oid": "43f65fdb5ea6760c58ad74e2"
+    },
+    "workerOutputItemName": "Gacha Box: Harta Karun Sekte Kuno",
+    "workerOutputQuantity": 1
+  },
+  {
+    "_id": {
+      "$oid": "c6f5cc84bfb33b21482039d7"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Menara Dewa Abadi",
+    "__v": 0,
+    "basePrice": 100,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "6a91b15ea9e03dc91c54c04f"
+        },
+        "itemName": "Kayu Surga",
+        "quantity": 2000,
+        "durabilityHours": 1
+      },
+      {
+        "itemId": {
+          "$oid": "ed6d987172e22769b5ef8f74"
+        },
+        "itemName": "Inti Matahari Primordial",
+        "quantity": 50,
+        "durabilityHours": 1
+      }
+    ],
+    "buildable": true,
+    "constructionTimeHours": 720,
+    "createdAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "createdBy": "System Oracle",
+    "dailyProfit": 2,
+    "description": "[PROFIT per jam: 2 Gold]\nBangunan tertinggi yang menembus langit. Energi roh terkumpul dan diubah menjadi bongkahan emas ilahi. Ini adalah batas maksimal kekayaan di alam fana (Asset End-Game).",
+    "imageUrl": null,
+    "isCraftingStation": true,
+    "priceCurrency": "jade",
+    "profitCurrency": "gold",
+    "rank": "Mythical",
+    "recipes": [],
+    "updatedAt": {
+      "$date": "2026-09-04T23:55:05.823Z"
+    },
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "19f0593d15b1cb93987ebae9"
+        },
+        "itemName": "Pil Terobosan Surga",
+        "quantity": 1,
+        "durabilityHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0
   }
 ]
