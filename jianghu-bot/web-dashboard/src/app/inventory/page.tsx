@@ -11,6 +11,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { Modal } from "@/components/ui/Modal";
+import { toast } from '@/components/ui/Toast';
 
 // Interface for API data
 interface InventoryItem {
@@ -18,6 +19,7 @@ interface InventoryItem {
   name: string;
   description: string;
   type: string;
+  category: string;
   rarity: string;
   quantity: number;
   price: number;
@@ -55,14 +57,14 @@ export default function InventoryPage() {
     try {
       if (item.category === 'law') {
         const res = await api.post('/inventory/use-law', { itemId: item.id });
-        toast.success(res.data.message || 'Berhasil mempelajari Hukum Alam');
+        toast.show({ message: res.data.message || 'Berhasil mempelajari Hukum Alam', type: 'success' });
       } else if (item.category === 'manual') {
         const res = await api.post('/inventory/use-manual', { itemId: item.id });
-        toast.success(res.data.message || 'Berhasil mulai membaca Manual');
+        toast.show({ message: res.data.message || 'Berhasil mulai membaca Manual', type: 'success' });
       }
-      fetchInventory();
+      fetchInventoryAndRecipes();
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Gagal mempelajari kitab');
+      toast.show({ message: err.response?.data?.error || 'Gagal mempelajari kitab', type: 'error' });
     } finally {
       setActionLoading(false);
     }
