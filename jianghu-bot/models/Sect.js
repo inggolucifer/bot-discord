@@ -7,6 +7,7 @@ const sectAssetSchema = new mongoose.Schema({
   lastClaimAt: { type: Date, default: null },
   constructionCompleteAt: { type: Date, default: null },
   isHalted: { type: Boolean, default: false },
+  status: { type: String, enum: ['pending', 'building', 'active'], default: 'active' },
   lastWarningSentAt: { type: Date, default: null },
   isDamaged: { type: Boolean, default: false },
   damageType: { type: String, enum: ['bandit', 'disaster', null], default: null },

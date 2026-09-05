@@ -375,10 +375,17 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
              const lastUpdate = owned.lastClaimAt ? owned.lastClaimAt.getTime() : (sect.createdAt.getTime());
              const progressMs = now - lastUpdate;
 
-             if (owned.constructionCompleteAt && owned.constructionCompleteAt.getTime() > now) {
+             if (owned.status === 'pending' || owned.status === 'building' || (owned.constructionCompleteAt && owned.constructionCompleteAt.getTime() > now)) {
                   // Sekte construction tidak pakai pekerja (saat ini) jadi progress fix.
-                  // Belum kelar, jgn proses.
-                  continue;
+                  if (owned.constructionCompleteAt && owned.constructionCompleteAt.getTime() <= now) {
+                      owned.status = 'active';
+                      owned.constructionCompleteAt = null;
+                      owned.lastClaimAt = new Date();
+                      sectUpdated = true;
+                      continue; // Skip the rest of the loop for this hour so it doesn't instantly produce materials
+                  } else {
+                      continue;
+                  }
              }
 
              if (assetConfig.isCraftingStation) {
