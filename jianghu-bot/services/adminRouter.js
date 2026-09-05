@@ -3,6 +3,7 @@ const path = require('path');
 const { MessageFlags } = require('discord.js');
 const Law = require('../models/Law');
 const Manual = require('../models/Manual');
+const Item = require('../models/Item');
 
 
 const services = {};
@@ -187,7 +188,26 @@ async function handleCreateLaw(interaction) {
         flatBonus: { hp: hpFlat, atk: atkFlat, def: 0, spd: 0 },
         createdBy: interaction.user.id
     });
-    return interaction.editReply(`✅ Law ${name} berhasil dibuat.`);
+
+    // Auto-create item for this law
+    try {
+        await Item.create({
+            guildId: interaction.guildId,
+            name: `Kitab Hukum ${name}`,
+            rank: 'Legendary',
+            tier: 1,
+            description: `Kitab yang menyimpan rahasia Hukum Alam ${name}.`,
+            category: 'law',
+            effect: `learn_law_${name}`,
+            basePrice: 1000,
+            priceCurrency: 'gold',
+            createdBy: interaction.user.id
+        });
+    } catch (e) {
+        console.log('[ADMIN] Item creation for Law skipped (possibly already exists)', e.message);
+    }
+
+    return interaction.editReply(`✅ Law ${name} berhasil dibuat, dan item 'Kitab Hukum ${name}' telah ditambahkan.`);
 }
 
 async function handleListLaw(interaction) {
@@ -218,7 +238,26 @@ async function handleCreateManual(interaction) {
         multiplierBonusPerLevel: { hp: 0, atk: atkMultLvl, def: 0, spd: 0 },
         createdBy: interaction.user.id
     });
-    return interaction.editReply(`✅ Manual ${name} berhasil dibuat.`);
+
+    // Auto-create item for this manual
+    try {
+        await Item.create({
+            guildId: interaction.guildId,
+            name: `Jurus ${name}`,
+            rank: 'Rare',
+            tier: 1,
+            description: `Buku manual yang mengajarkan ${name}.`,
+            category: 'manual',
+            effect: `learn_manual_${name}`,
+            basePrice: 500,
+            priceCurrency: 'gold',
+            createdBy: interaction.user.id
+        });
+    } catch (e) {
+        console.log('[ADMIN] Item creation for Manual skipped (possibly already exists)', e.message);
+    }
+
+    return interaction.editReply(`✅ Manual ${name} berhasil dibuat, dan item 'Jurus ${name}' telah ditambahkan.`);
 }
 
 async function handleListManual(interaction) {
