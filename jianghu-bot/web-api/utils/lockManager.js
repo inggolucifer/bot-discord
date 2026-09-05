@@ -4,8 +4,9 @@ const locks = new Map();
 
 class LockManager {
   static async acquire(key, timeoutMs = 5000) {
-    if (!locks.has(key)) {
-      locks.set(key, Promise.resolve());
+    if (locks.has(key)) {
+      // Lock is already held by someone else, return false to trigger 429
+      return false;
     }
 
     let release;
@@ -13,14 +14,7 @@ class LockManager {
       release = resolve;
     });
 
-    const previousLock = locks.get(key);
-
-    // Chain the new lock
-    const nextLock = previousLock.then(() => lockPromise);
-    locks.set(key, nextLock);
-
-    // Wait for the previous lock to release
-    await previousLock;
+    locks.set(key, lockPromise);
 
     // Timeout fallback just in case something gets permanently stuck
     const timeout = setTimeout(() => {
@@ -35,9 +29,9 @@ class LockManager {
   }
 
   static release(key, releaseFunction) {
-      if (locks.get(key) instanceof Promise) {
-          releaseFunction();
-          // Cleanup if queue is empty (optional optimization)
+      if (locks.has(key)) {
+          locks.delete(key);
+          if (typeof releaseFunction === 'function') releaseFunction();
       }
   }
 }
