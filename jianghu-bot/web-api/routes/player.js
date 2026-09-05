@@ -524,7 +524,7 @@ router.get('/public-profile/:discordId', async (req, res) => {
     try {
         const { discordId } = req.params;
         const player = await Player.findOne({ discordId })
-            .select('characterName characterImage sect status realm stage totalWealth assets pets customStatus')
+            .select('characterName characterImage sect status realm stage totalWealth assets pets customStatus systemCultivation')
             .lean();
 
         if (!player) {
@@ -543,6 +543,7 @@ router.get('/public-profile/:discordId', async (req, res) => {
                 status: player.status,
                 realm: player.realm,
                 stage: player.stage,
+                systemCultivation: player.systemCultivation,
                 totalWealth: player.totalWealth,
                 totalAssets,
                 totalPets,
