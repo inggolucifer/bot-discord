@@ -91,7 +91,9 @@ const setupServer = (client) => {
         '/api/player/laws/reset',
         '/api/sect/donate',
         '/api/pet/heal',
-        '/api/pet/battle'
+        '/api/pet/battle',
+        '/api/pve/start',
+        '/api/pve/claim'
     ];
     app.use((req, res, next) => {
         if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
@@ -121,6 +123,7 @@ const setupServer = (client) => {
     const cultivationRoutes = require('./routes/cultivation');
     const battleRoutes = require('./routes/battle');
     const adminRoutes = require('./routes/admin');
+    const pveRoutes = require('./routes/pve');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -135,6 +138,7 @@ const setupServer = (client) => {
     app.use('/api/cultivation', cultivationRoutes);
     app.use('/api/battle', battleRoutes);
     app.use('/api/admin', adminRoutes);
+    app.use('/api/pve', pveRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
