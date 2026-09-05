@@ -142,7 +142,10 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 progressHours: progressHours,
                 rank: asset.assetId ? asset.assetId.rank : 'Common',
                 isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false,
-                recipes: asset.assetId ? asset.assetId.recipes : []
+                recipes: asset.assetId ? asset.assetId.recipes : [],
+                isDamaged: asset.isDamaged,
+                damageType: asset.damageType,
+                guardEndTime: asset.guardEndTime
             };
         });
 
@@ -970,6 +973,67 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
     }
 });
 // --- END GUARD ASSET ---
+
+// --- START GUARD COST ---
+router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
+    const { assetId, hari } = req.body;
+    let hariParsed = parseInt(hari);
+    if (!assetId || isNaN(hariParsed) || hariParsed < 1) {
+        return res.status(400).json({ error: 'Data tidak lengkap atau durasi tidak valid.' });
+    }
+    try {
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+        const player = await Player.findOne({ discordId: req.user.userId, guildId }).populate('assets.assetId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+
+        const dailyCostCopper = calculateDailyGuardCost(ownedAsset.assetId);
+        const totalCostCopper = dailyCostCopper * hariParsed;
+        const formattedCost = formatCurrency(convertFromCopper(totalCostCopper));
+
+        res.json({ success: true, costText: formattedCost, costCopper: totalCostCopper });
+    } catch (error) {
+        console.error('[API-PLAYER] Error fetching guard cost:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan internal server saat menghitung biaya guard.' });
+    }
+});
+// --- END GUARD COST ---
+
+// --- START REPAIR COST ---
+router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
+    const { assetId } = req.body;
+    if (!assetId) {
+        return res.status(400).json({ error: 'Data tidak lengkap.' });
+    }
+    try {
+        const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+        const player = await Player.findOne({ discordId: req.user.userId, guildId }).populate('assets.assetId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
+        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
+
+        const { neededMaterials, repairCostInCopper } = calculateRepairCost(ownedAsset.assetId);
+
+        let repairCostLog = "";
+        if (neededMaterials.length > 0) {
+            neededMaterials.forEach(mat => {
+                repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
+            });
+            repairCostLog = repairCostLog.replace(/, $/, ""); // trim trailing comma and space
+        } else {
+            repairCostLog = formatCurrency(convertFromCopper(repairCostInCopper));
+        }
+        res.json({ success: true, costText: repairCostLog });
+    } catch (error) {
+        console.error('[API-PLAYER] Error fetching repair cost:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan internal server saat menghitung biaya perbaikan.' });
+    }
+});
+// --- END REPAIR COST ---
+
 // Hancurkan Aset (Destroy Asset)
 router.post('/assets/destroy', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
