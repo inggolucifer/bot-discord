@@ -167,7 +167,7 @@ async function handleModal(interaction) {
     const description = interaction.fields.getTextInputValue('description').trim();
     let categoryInput = 'none';
     try { categoryInput = interaction.fields.getTextInputValue('category').trim().toLowerCase(); } catch (e) {}
-    const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+    const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'none'];
     const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
     const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));
@@ -194,7 +194,7 @@ async function handleModal(interaction) {
     const description = interaction.fields.getTextInputValue('description').trim();
     let categoryInput = 'none';
     try { categoryInput = interaction.fields.getTextInputValue('category').trim().toLowerCase(); } catch (e) {}
-    const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'none'];
+    const allowedCategories = ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'none'];
     const category = allowedCategories.includes(categoryInput) ? categoryInput : 'none';
 
     const rt = parseRankTier(interaction.fields.getTextInputValue('rankTier'));

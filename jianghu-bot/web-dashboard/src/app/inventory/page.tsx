@@ -50,6 +50,24 @@ export default function InventoryPage() {
     }
   };
 
+  const handleUseLawManual = async (item: InventoryItem) => {
+    setActionLoading(true);
+    try {
+      if (item.category === 'law') {
+        const res = await api.post('/inventory/use-law', { itemId: item.id });
+        toast.success(res.data.message || 'Berhasil mempelajari Hukum Alam');
+      } else if (item.category === 'manual') {
+        const res = await api.post('/inventory/use-manual', { itemId: item.id });
+        toast.success(res.data.message || 'Berhasil mulai membaca Manual');
+      }
+      fetchInventory();
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Gagal mempelajari kitab');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -260,7 +278,14 @@ export default function InventoryPage() {
                 x{item.quantity}
               </div>
 
-              <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+              {(item.category === 'law' || item.category === 'manual') ? (
+                <div className="absolute bottom-2 right-2 flex gap-1">
+                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
+                </div>
+              ) : (
+                <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+              )}
 
               {/* Item Icon or Image */}
               <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center mb-2 drop-shadow-md">

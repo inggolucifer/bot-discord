@@ -12,8 +12,8 @@ module.exports = {
     .addSubcommand(sub => sub.setName('list').setDescription('Lihat daftar Manual yang tersedia di dunia ini'))
     .addSubcommand(sub => sub.setName('my_manuals').setDescription('Lihat Manual yang sedang kamu pelajari'))
     .addSubcommand(sub => sub.setName('learn')
-        .setDescription('Mulai pelajari Manual baru (Gratis level 0)')
-        .addStringOption(opt => opt.setName('nama_manual').setDescription('Nama Manual').setRequired(true).setAutocomplete(true))
+        .setDescription('Mulai pelajari Manual baru menggunakan kitab dari inventory (Gratis level 0)')
+        .addStringOption(opt => opt.setName('nama_item').setDescription('Nama kitab Manual di inventory').setRequired(true).setAutocomplete(true))
     )
     .addSubcommand(sub => sub.setName('comprehend')
         .setDescription('Mulai meditasi/comprehend untuk menaikkan level Manual')
@@ -43,9 +43,17 @@ module.exports = {
         return interaction.respond(items);
     }
 
-    if (sub === 'learn' || sub === 'list') {
+    if (sub === 'list') {
        const manuals = await Manual.find({ guildId: interaction.guildId, name: { $regex: new RegExp(focusedValue.value, 'i') } }).limit(10);
        return interaction.respond(manuals.map(m => ({ name: m.name, value: m.name })));
+    } else if (sub === 'learn') {
+       const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('inventory.itemId');
+       if (!player) return interaction.respond([]);
+       const items = player.inventory
+            .filter(inv => inv.itemId && inv.quantity > 0 && inv.itemId.category === 'manual' && inv.itemId.name.match(new RegExp(focusedValue.value, 'i')))
+            .map(inv => ({ name: `${inv.itemId.name} (${inv.quantity}x)`, value: inv.itemId.name }))
+            .slice(0, 10);
+       return interaction.respond(items);
     } else {
        // my_manuals, comprehend, upgrade, accelerate
        const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId }).populate('manuals.manualId');
@@ -109,14 +117,35 @@ module.exports = {
       }
 
       if (sub === 'learn') {
-        const manualName = interaction.options.getString('nama_manual');
+        const itemName = interaction.options.getString('nama_item');
+        await player.populate('inventory.itemId');
+        const inventorySlotIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId.name.toLowerCase() === itemName.toLowerCase());
+
+        if (inventorySlotIndex === -1 || player.inventory[inventorySlotIndex].quantity <= 0) {
+            return interaction.editReply(`❌ Kamu tidak memiliki item **${itemName}** di inventory.`);
+        }
+
+        const item = player.inventory[inventorySlotIndex].itemId;
+
+        if (item.category !== 'manual' || !item.effect || !item.effect.startsWith('learn_manual_')) {
+            return interaction.editReply(`❌ Item **${item.name}** tidak bisa digunakan untuk mempelajari Manual.`);
+        }
+
+        const manualName = item.effect.replace('learn_manual_', '');
         const manualToLearn = await Manual.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${manualName}\\s*$`, 'i') });
 
-        if (!manualToLearn) return interaction.editReply('❌ Manual tersebut tidak ditemukan.');
+        if (!manualToLearn) return interaction.editReply(`❌ Manual **${manualName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`);
 
         if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {
             return interaction.editReply('❌ Kamu sudah memiliki Manual ini.');
         }
+
+        // Deduct Item
+        player.inventory[inventorySlotIndex].quantity -= 1;
+        if (player.inventory[inventorySlotIndex].quantity <= 0) {
+            player.inventory.splice(inventorySlotIndex, 1);
+        }
+        player.markModified('inventory');
 
         player.manuals.push({
             manualId: manualToLearn._id,
@@ -126,7 +155,9 @@ module.exports = {
         });
         await player.save();
 
-        return interaction.editReply(`📖 Kamu mulai membaca **${manualToLearn.name}**. Gunakan \`/manual comprehend\` untuk menaikkan levelnya.`);
+        await logTransaction(interaction.guildId, player.discordId, 'learn_manual', {}, `Digunakan: ${item.name} untuk belajar ${manualToLearn.name}`);
+
+        return interaction.editReply(`📖 Kamu membuka **${item.name}** dan mulai membaca **${manualToLearn.name}**. Gunakan \`/manual comprehend\` untuk menaikkan levelnya.`);
       }
 
       if (sub === 'comprehend') {

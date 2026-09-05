@@ -323,3 +323,169 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+
+// Endpoint: POST /api/inventory/use-law
+router.post('/use-law', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemId } = req.body;
+
+    if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
+
+    const lockKey = `inventory_use_law_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
+    try {
+        const { withTransaction } = require('../utils/dbTransaction');
+        const CustomError = require('../utils/CustomError');
+        const TransactionLog = require('../../models/TransactionLog');
+        const Law = require('../../models/Law');
+        const { getRealmIndex } = require('../../utils/cultivation');
+        let lawName = '';
+        let messageResponse = '';
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('laws').populate('inventory.itemId').session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+
+            const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            if (player.isNormalCultivator || realmIdx > 0) {
+                throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
+            }
+
+            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
+                throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
+            }
+
+            const item = player.inventory[inventoryIndex].itemId;
+            if (item.category !== 'law' || !item.effect || !item.effect.startsWith('learn_law_')) {
+                throw new CustomError(`Item **${item.name}** tidak bisa digunakan untuk mempelajari Hukum Alam.`, 400);
+            }
+
+            const extractLawName = item.effect.replace('learn_law_', '');
+            const { escapeRegex } = require('../../utils/escapeRegex');
+            const lawToLearn = await Law.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractLawName)}\\s*$`, 'i') }).session(session);
+
+            if (!lawToLearn) throw new CustomError(`Hukum Alam **${extractLawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+
+            if (player.laws.length >= 1) {
+                const currentLaw = player.laws[0];
+                throw new CustomError(`Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan **${currentLaw.name}**.`, 400);
+            }
+
+            player.inventory[inventoryIndex].quantity -= 1;
+            if (player.inventory[inventoryIndex].quantity <= 0) {
+                player.inventory.splice(inventoryIndex, 1);
+            }
+            player.markModified('inventory');
+
+            player.laws.push(lawToLearn._id);
+            await player.save({ session });
+
+            lawName = lawToLearn.name;
+            messageResponse = `Luar biasa! Kamu menyerap intisari dari **${item.name}** dan berhasil memahami **${lawName}**.`;
+
+            await TransactionLog.create([{
+                guildId,
+                type: 'learn_law',
+                fromUserId: userId,
+                note: `[WEB] Digunakan: ${item.name} untuk belajar ${lawName}`
+            }], { session });
+        });
+
+        res.json({ success: true, message: messageResponse });
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-INVENTORY] Use law error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: POST /api/inventory/use-manual
+router.post('/use-manual', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemId } = req.body;
+
+    if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
+
+    const lockKey = `inventory_use_manual_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
+    try {
+        const { withTransaction } = require('../utils/dbTransaction');
+        const CustomError = require('../utils/CustomError');
+        const TransactionLog = require('../../models/TransactionLog');
+        const Manual = require('../../models/Manual');
+        let manualName = '';
+        let messageResponse = '';
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId').populate('inventory.itemId').session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+
+            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
+                throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
+            }
+
+            const item = player.inventory[inventoryIndex].itemId;
+            if (item.category !== 'manual' || !item.effect || !item.effect.startsWith('learn_manual_')) {
+                throw new CustomError(`Item **${item.name}** tidak bisa digunakan untuk mempelajari Manual.`, 400);
+            }
+
+            const extractManualName = item.effect.replace('learn_manual_', '');
+            const { escapeRegex } = require('../../utils/escapeRegex');
+            const manualToLearn = await Manual.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractManualName)}\\s*$`, 'i') }).session(session);
+
+            if (!manualToLearn) throw new CustomError(`Manual **${extractManualName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+
+            if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {
+                throw new CustomError('Kamu sudah memiliki Manual ini.', 400);
+            }
+
+            player.inventory[inventoryIndex].quantity -= 1;
+            if (player.inventory[inventoryIndex].quantity <= 0) {
+                player.inventory.splice(inventoryIndex, 1);
+            }
+            player.markModified('inventory');
+
+            player.manuals.push({
+                manualId: manualToLearn._id,
+                level: 0,
+                isComprehending: false,
+                comprehendStartTime: null
+            });
+            await player.save({ session });
+
+            manualName = manualToLearn.name;
+            messageResponse = `Kamu membuka **${item.name}** dan mulai membaca **${manualName}**.`;
+
+            await TransactionLog.create([{
+                guildId,
+                type: 'learn_manual',
+                fromUserId: userId,
+                note: `[WEB] Digunakan: ${item.name} untuk belajar ${manualName}`
+            }], { session });
+        });
+
+        res.json({ success: true, message: messageResponse });
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-INVENTORY] Use manual error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
