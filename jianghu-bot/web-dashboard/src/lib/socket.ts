@@ -22,4 +22,5 @@ export const socket = io(BASE_URL, {
   autoConnect: false,
   transports: ['websocket', 'polling'], // Fallback mechanism for better stability behind proxies
   reconnectionAttempts: 5,
+  withCredentials: true,
 });
