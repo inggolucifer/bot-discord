@@ -11,12 +11,8 @@ const setupServer = (client) => {
     const server = http.createServer(app);
 
     const cookieParser = require('cookie-parser');
-    // Security middlewares
-    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-    app.use(cookieParser());
 
     // Konfigurasi asal yang lebih aman
-
     const allowedOrigins = [
         'http://localhost:3000',
         'https://immortal-x.online',
@@ -27,12 +23,28 @@ const setupServer = (client) => {
         allowedOrigins.push(process.env.FRONTEND_URL);
     }
 
-    app.use(cors({
-        origin: allowedOrigins,
+    const corsOptions = {
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
-    }));
+    };
+
+    // Apply CORS before other middlewares
+    app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions)); // Handle preflight for all routes
+
+    // Security middlewares
+    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+    app.use(cookieParser());
     app.use(express.json());
 
     const io = new Server(server, {
