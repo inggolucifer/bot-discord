@@ -232,6 +232,21 @@ export default function ExplorePage() {
                 Pilih durasi perjalanan. Semakin lama, semakin banyak hadiah yang bisa didapatkan.
               </p>
 
+              <div className="bg-[#1a1a1a] p-4 rounded-lg mb-6 border border-[#333]">
+                  <h4 className="text-sm font-bold text-gray-300 mb-2 border-b border-[#333] pb-1">Persyaratan Perjalanan:</h4>
+                  <ul className="text-sm text-gray-400 space-y-2">
+                      <li className="flex justify-between">
+                          <span>Biaya Retribusi (Copper):</span>
+                          <span className="font-mono text-amber-500">{selectedDuration ? selectedDuration * 100 : '?'}</span>
+                      </li>
+                      <li className="flex justify-between">
+                          <span>Item Bekal:</span>
+                          <span className="font-mono text-red-400">1x Ransum</span>
+                      </li>
+                      <li className="text-xs italic text-gray-500 mt-2">*Karakter tidak boleh sedang bekerja.</li>
+                  </ul>
+              </div>
+
               <div className="space-y-3 mb-8">
                 {selectedLocation.durations.map((hrs: number) => (
                   <label
