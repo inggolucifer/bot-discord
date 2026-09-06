@@ -9,6 +9,161 @@ const RECIPES = require('../../utils/professionsRecipes');
 
 const PROFESSION_COST_COPPER = 50 * RATE_TO_COPPER.silver; // 50 Silver
 
+router.post('/farming/unlock-slot', verifyToken, async (req, res) => {
+    const lockKey = `farming_unlock_slot_${req.user.userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses, harap tunggu...' });
+
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        if (!player.professions || !player.professions.farming || !player.professions.farming.isUnlocked) {
+            return res.status(403).json({ error: 'Profesi farming belum terbuka.' });
+        }
+
+        const currentSlots = player.professions.farming.farmPlots.length;
+        if (currentSlots >= 20) {
+            return res.status(400).json({ error: 'Sudah mencapai batas maksimal 20 petak.' });
+        }
+
+        let costInCopper = 0;
+        const nextSlot = currentSlots + 1;
+
+        if (nextSlot >= 2 && nextSlot <= 5) {
+            costInCopper = 50 * RATE_TO_COPPER.silver; // 50 Silver
+        } else if (nextSlot >= 6 && nextSlot <= 10) {
+            costInCopper = 5 * RATE_TO_COPPER.gold; // 5 Gold
+        } else if (nextSlot >= 11 && nextSlot <= 15) {
+            costInCopper = 20 * RATE_TO_COPPER.gold; // 20 Gold
+        } else if (nextSlot >= 16 && nextSlot <= 20) {
+            costInCopper = 1 * RATE_TO_COPPER.jade; // 1 Jade
+        }
+
+        const c = player.currency;
+        const totalCopper = c.copper + c.silver * RATE_TO_COPPER.silver + c.gold * RATE_TO_COPPER.gold + c.jade * RATE_TO_COPPER.jade + c.spirit * RATE_TO_COPPER.spirit;
+
+        if (totalCopper < costInCopper) {
+            return res.status(400).json({ error: 'Uang tidak cukup untuk membuka petak ini.' });
+        }
+
+        player.currency.copper -= costInCopper;
+        player.professions.farming.farmPlots.push({ isUnlocked: true });
+
+        await player.save();
+
+        res.json({ message: `Berhasil membuka petak ke-${nextSlot}!`, farmPlots: player.professions.farming.farmPlots });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+router.post('/farming/bypass-depletion', verifyToken, async (req, res) => {
+    const { plotIndex } = req.body;
+
+    if (plotIndex === undefined) {
+        return res.status(400).json({ error: 'Parameter tidak valid.' });
+    }
+
+    const lockKey = `farming_bypass_depletion_${req.user.userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses, harap tunggu...' });
+
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId }).populate('inventory.itemId');
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        if (!player.professions || !player.professions.farming || !player.professions.farming.isUnlocked) {
+            return res.status(403).json({ error: 'Profesi farming belum terbuka.' });
+        }
+
+        const plots = player.professions.farming.farmPlots;
+        if (!plots || !plots[plotIndex]) {
+            return res.status(400).json({ error: 'Petak tidak ditemukan.' });
+        }
+
+        const plot = plots[plotIndex];
+        if (!plot.isDepleted || (plot.depletedUntil && plot.depletedUntil < new Date())) {
+            plot.isDepleted = false;
+            await player.save();
+            return res.status(400).json({ error: 'Petak ini sudah siap digunakan.' });
+        }
+
+        const pupukIndex = player.inventory.findIndex(i => i.itemId.name === 'Pupuk Alkimia' || i.itemId.name === 'Pupuk Tulang');
+        if (pupukIndex === -1 || player.inventory[pupukIndex].quantity <= 0) {
+            return res.status(400).json({ error: 'Tidak memiliki Pupuk (Alkimia/Tulang) di inventory.' });
+        }
+
+        player.inventory[pupukIndex].quantity -= 1;
+        if (player.inventory[pupukIndex].quantity <= 0) {
+            player.inventory.splice(pupukIndex, 1);
+        }
+
+        plot.isDepleted = false;
+        plot.depletedUntil = null;
+
+        await player.save();
+
+        res.json({ message: 'Tanah kembali subur!', farmPlots: player.professions.farming.farmPlots });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+router.post('/fishing/unlock-zone', verifyToken, async (req, res) => {
+    const { zoneId } = req.body; // Expects 2 or 3
+
+    if (![2, 3].includes(zoneId)) {
+        return res.status(400).json({ error: 'Zona tidak valid. Hanya zona 2 dan 3 yang bisa di-unlock.' });
+    }
+
+    const lockKey = `fishing_unlock_zone_${req.user.userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses, harap tunggu...' });
+
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId });
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        if (!player.professions || !player.professions.fishing || !player.professions.fishing.isUnlocked) {
+            return res.status(403).json({ error: 'Profesi fishing belum terbuka.' });
+        }
+
+        if (player.professions.fishing.unlockedFishingZones.includes(zoneId)) {
+            return res.status(400).json({ error: `Zona ${zoneId} sudah terbuka.` });
+        }
+
+        let costInCopper = 0;
+        if (zoneId === 2) costInCopper = 5 * RATE_TO_COPPER.gold; // 5 Gold
+        else if (zoneId === 3) costInCopper = 20 * RATE_TO_COPPER.gold; // 20 Gold
+
+        const c = player.currency;
+        const totalCopper = c.copper + c.silver * RATE_TO_COPPER.silver + c.gold * RATE_TO_COPPER.gold + c.jade * RATE_TO_COPPER.jade + c.spirit * RATE_TO_COPPER.spirit;
+
+        if (totalCopper < costInCopper) {
+            return res.status(400).json({ error: `Uang tidak cukup. Butuh ${zoneId === 2 ? '5 Gold' : '20 Gold'}.` });
+        }
+
+        player.currency.copper -= costInCopper;
+        player.professions.fishing.unlockedFishingZones.push(zoneId);
+
+        await player.save();
+
+        res.json({ message: `Berhasil membuka Zona Memancing ${zoneId}!`, unlockedZones: player.professions.fishing.unlockedFishingZones });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
 router.post('/unlock', verifyToken, async (req, res) => {
     const { profession } = req.body;
     const validProfessions = ['farming', 'fishing', 'cooking', 'alchemy', 'smithing'];
@@ -57,7 +212,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
 const activeSessions = new Map();
 
 router.post('/start', verifyToken, async (req, res) => {
-    const { profession, recipeId, toolItemId } = req.body;
+    const { profession, recipeId, toolItemId, zoneId, plotIndex } = req.body;
 
     const lockKey = `professions_start_${req.user.userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
@@ -69,6 +224,31 @@ router.post('/start', verifyToken, async (req, res) => {
 
         if (!player.professions || !player.professions[profession] || !player.professions[profession].isUnlocked) {
             return res.status(403).json({ error: `Kamu belum membuka profesi ${profession}.` });
+        }
+
+        if (profession === 'farming') {
+            if (plotIndex === undefined || plotIndex < 0) {
+                 return res.status(400).json({ error: 'Kamu harus memilih petak lahan untuk bertani.' });
+            }
+            const plots = player.professions.farming.farmPlots;
+            if (!plots || !plots[plotIndex]) {
+                 return res.status(400).json({ error: 'Petak lahan tidak ditemukan.' });
+            }
+            if (!plots[plotIndex].isUnlocked) {
+                 return res.status(403).json({ error: 'Petak lahan belum terbuka.' });
+            }
+            if (plots[plotIndex].isDepleted && plots[plotIndex].depletedUntil > new Date()) {
+                 return res.status(400).json({ error: 'Tanah ini masih kelelahan (Depleted).' });
+            }
+        }
+
+        if (profession === 'fishing' && zoneId !== undefined) {
+            if (![1, 2, 3].includes(zoneId)) {
+                return res.status(400).json({ error: 'Zona memancing tidak valid.' });
+            }
+            if (!player.professions.fishing.unlockedFishingZones.includes(zoneId)) {
+                return res.status(403).json({ error: `Kamu belum membuka zona memancing ${zoneId}.` });
+            }
         }
 
         // Energy Check (Moved to point 4, but doing basic check here to integrate smoothly)
@@ -134,6 +314,7 @@ router.post('/start', verifyToken, async (req, res) => {
              profession,
              recipeId,
              toolItemId: toolInInventory.itemId._id.toString(),
+             plotIndex,
              startTime: Date.now()
         });
 
@@ -193,7 +374,16 @@ router.post('/complete', verifyToken, async (req, res) => {
              telemetryBonus = telemetryData.accuracy * 0.1;
         }
 
-        const isSuccess = Math.random() < (baseChance + telemetryBonus);
+        let weatherBonus = 0;
+        if (session.profession === 'farming') {
+             const WeatherConfig = require('../../models/WeatherConfig');
+             const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+             if (weatherConfig && weatherConfig.currentWeather === 'Hujan') {
+                  weatherBonus = 0.2; // Buff farming success/speed pseudo-representation
+             }
+        }
+
+        const isSuccess = Math.random() < (baseChance + telemetryBonus + weatherBonus);
 
         if (isSuccess) {
             // Masterpiece calculation
@@ -236,6 +426,16 @@ router.post('/complete', verifyToken, async (req, res) => {
             if (player.professions[session.profession].exp >= profLevel * 100) {
                 player.professions[session.profession].level += 1;
                 player.professions[session.profession].exp = 0;
+            }
+
+            if (session.profession === 'farming' && session.plotIndex !== undefined) {
+                const plot = player.professions.farming.farmPlots[session.plotIndex];
+                if (plot) {
+                    plot.isDepleted = true;
+                    // Soil depletion 2 - 4 hours
+                    const depletionHours = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
+                    plot.depletedUntil = new Date(Date.now() + depletionHours * 60 * 60 * 1000);
+                }
             }
 
             await player.save();
