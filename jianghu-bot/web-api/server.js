@@ -40,7 +40,6 @@ const setupServer = (client) => {
 
     // Apply CORS before other middlewares
     app.use(cors(corsOptions));
-    app.options('*', cors(corsOptions)); // Handle preflight for all routes
 
     // Security middlewares
     app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
