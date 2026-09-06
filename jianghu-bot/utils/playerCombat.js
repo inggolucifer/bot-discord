@@ -120,6 +120,14 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
   totals.def = Math.floor((totals.def + flat.def) * mult.def);
   totals.spd = Math.floor((totals.spd + flat.spd) * mult.spd);
 
+  // 4. Flawed Foundation Penalty (-5%)
+  if (player.systemCultivation && player.systemCultivation.isFlawedFoundation) {
+    totals.hp = Math.floor(totals.hp * 0.95);
+    totals.atk = Math.floor(totals.atk * 0.95);
+    totals.def = Math.floor(totals.def * 0.95);
+    totals.spd = Math.floor(totals.spd * 0.95);
+  }
+
   return totals;
 }
 
