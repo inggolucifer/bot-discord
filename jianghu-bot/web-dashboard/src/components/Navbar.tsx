@@ -73,6 +73,7 @@ export default function Navbar() {
       { href: "/inventory", label: "Inventory" },
       { href: "/pet", label: "Pet" },
       { href: "/assets", label: "Assets" },
+      { href: "/professions", label: "Profesi (Crafting)" },
     ],
     ekonomi: [
       { href: "/market", label: "Pasar" },

@@ -13,6 +13,18 @@ const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
 const { RATE_TO_COPPER } = require('../../utils/currency');
 
+function formatCurrencyString(currencyObj) {
+    if (!currencyObj) return '0 Copper';
+    const parts = [];
+    if (currencyObj.spirit) parts.push(currencyObj.spirit + ' Spirit');
+    if (currencyObj.jade) parts.push(currencyObj.jade + ' Jade');
+    if (currencyObj.gold) parts.push(currencyObj.gold + ' Gold');
+    if (currencyObj.silver) parts.push(currencyObj.silver + ' Silver');
+    if (currencyObj.copper) parts.push(currencyObj.copper + ' Copper');
+    return parts.length > 0 ? parts.join(', ') : '0 Copper';
+}
+
+
 // Endpoint: GET /api/player/transactions
 router.get('/transactions', authenticateToken, async (req, res) => {
     try {
@@ -82,10 +94,15 @@ router.get('/profile', authenticateToken, async (req, res) => {
             };
         }).filter(m => m !== null);
 
+
+        const { calculatePlayerStats } = require('../../utils/playerCombat');
+        const combatStats = calculatePlayerStats(player, player.laws, player.manuals);
+
         res.json({
             success: true,
             data: {
                 ...player,
+                combatStats,
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,
                 hasCompletedTour: player.hasCompletedTour || false
@@ -889,7 +906,7 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
             }
             payCurrency(player.currency, { copper: repairCostInCopper });
             const { convertFromCopper } = require('../../utils/currencyNormalize');
-            repairCostLog = formatCurrency(convertFromCopper(repairCostInCopper));
+            repairCostLog = formatCurrencyString(convertFromCopper(repairCostInCopper));
         }
 
         ownedAsset.isDamaged = false;
@@ -960,7 +977,7 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
 
         const { logTransaction } = require('../../utils/logger');
         const { convertFromCopper } = require('../../utils/currencyNormalize');
-        const formattedCost = formatCurrency(convertFromCopper(totalCostCopper));
+        const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
 
         await logTransaction(guildId, 'player_guard_asset', userId, null, null, totalCostCopper, `Guard asset: ${assetConfig.name} for ${hari} days. Cost: ${formattedCost}`);
 
@@ -992,7 +1009,7 @@ router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
 
         const dailyCostCopper = calculateDailyGuardCost(ownedAsset.assetId);
         const totalCostCopper = dailyCostCopper * hariParsed;
-        const formattedCost = formatCurrency(convertFromCopper(totalCostCopper));
+        const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
 
         res.json({ success: true, costText: formattedCost, costCopper: totalCostCopper });
     } catch (error) {
@@ -1025,7 +1042,7 @@ router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
             });
             repairCostLog = repairCostLog.replace(/, $/, ""); // trim trailing comma and space
         } else {
-            repairCostLog = formatCurrency(convertFromCopper(repairCostInCopper));
+            repairCostLog = formatCurrencyString(convertFromCopper(repairCostInCopper));
         }
         res.json({ success: true, costText: repairCostLog });
     } catch (error) {
