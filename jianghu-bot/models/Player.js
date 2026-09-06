@@ -20,6 +20,25 @@ const playerStatsSchema = new mongoose.Schema({
 const inventoryItemSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
   quantity: { type: Number, default: 1 },
+  // Fields for crafted items / tools
+  creatorName: { type: String, default: null },
+  qualityMultiplier: { type: Number, default: 1.0 },
+  durability: { type: Number, default: null }, // Current durability for tools
+  maxDurability: { type: Number, default: null },
+}, { _id: false });
+
+const professionSchema = new mongoose.Schema({
+  isUnlocked: { type: Boolean, default: false },
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 }
+}, { _id: false });
+
+const professionsSchema = new mongoose.Schema({
+  farming: { type: professionSchema, default: () => ({}) },
+  fishing: { type: professionSchema, default: () => ({}) },
+  cooking: { type: professionSchema, default: () => ({}) },
+  alchemy: { type: professionSchema, default: () => ({}) },
+  smithing: { type: professionSchema, default: () => ({}) }
 }, { _id: false });
 
 const petOwnedSchema = new mongoose.Schema({
@@ -143,6 +162,8 @@ const playerSchema = new mongoose.Schema({
 
   lastDisasterHitAt: { type: Date, default: null },
   lastBanditHitAt: { type: Date, default: null },
+
+  professions: { type: professionsSchema, default: () => ({}) },
 
   totalWealth: { type: Number, default: 0, index: true },
 }, { timestamps: true });
