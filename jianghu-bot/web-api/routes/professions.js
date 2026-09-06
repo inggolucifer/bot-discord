@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require('../middlewares/auth');
+const { authenticateToken: verifyToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
