@@ -64,7 +64,8 @@ export default function Navbar() {
 
   const navLinks = {
     utama: [
-      { href: "/", label: "Karakter" },
+      { href: "/", label: "Home" },
+      { href: "/profile", label: "Karakter" },
       { href: "/cultivation", label: "Kultivasi" },
       { href: "/skills", label: "Kitab & Hukum" },
       { href: "/arena", label: "Arena Duel" },

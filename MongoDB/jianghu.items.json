@@ -6219,5 +6219,81 @@
     "tier": 3,
     "origin": "Alchemy",
     "effect": "buff_anti_poison_0_24h"
+  },
+  {
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "createdBy": "System Oracle",
+    "imageUrl": null,
+    "_id": {
+      "$oid": "6a91b15aa9e03dc91c54c000"
+    },
+    "name": "Topi Jerami Pemula",
+    "description": "[Durability: -] Topi jerami lusuh yang memberikan perlindungan dasar dari terik matahari.",
+    "category": "helmet",
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "tier": 1,
+    "origin": "Toko / Crafting",
+    "baseHp": 10,
+    "baseDef": 2
+  },
+  {
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "createdBy": "System Oracle",
+    "imageUrl": null,
+    "_id": {
+      "$oid": "6a91b15aa9e03dc91c54c001"
+    },
+    "name": "Celana Kain Kasar",
+    "description": "[Durability: -] Celana dari kain kasar, tidak nyaman tapi lebih baik dari telanjang.",
+    "category": "pants",
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "tier": 1,
+    "origin": "Toko / Crafting",
+    "baseHp": 15,
+    "baseDef": 1,
+    "baseSpd": 2
+  },
+  {
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T06:06:35.288Z"
+    },
+    "createdBy": "System Oracle",
+    "imageUrl": null,
+    "_id": {
+      "$oid": "6a91b15aa9e03dc91c54c002"
+    },
+    "name": "Sandal Jerami",
+    "description": "[Durability: -] Sandal ringan yang meningkatkan kecepatan lari sedikit.",
+    "category": "boots",
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "tier": 1,
+    "origin": "Toko / Crafting",
+    "baseHp": 5,
+    "baseSpd": 5
   }
 ]

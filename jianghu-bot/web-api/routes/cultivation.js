@@ -79,7 +79,8 @@ router.get('/', authenticateToken, async (req, res) => {
 // Endpoint: POST /api/cultivation/breakthrough
 // Memproses aksi breakthrough dengan atau tanpa pil dari web
 const breakthroughSchema = z.object({
-    usePill: z.boolean().optional().default(false)
+    usePill: z.boolean().optional().default(false),
+    forceBreakthrough: z.boolean().optional().default(false)
 });
 
 router.post('/breakthrough', authenticateToken, async (req, res) => {
@@ -89,7 +90,7 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
     if (!validation.success) {
          return res.status(400).json({ error: 'Payload tidak valid.' });
     }
-    const { usePill } = validation.data;
+    const { usePill, forceBreakthrough } = validation.data;
 
     const lockKey = `cultivation_breakthrough_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
@@ -120,6 +121,14 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
             }
 
             const realmData = SYSTEM_REALMS[calcResult.realmIdx];
+
+            if (player.systemCultivation.realm === 'Fondasi Fana (Mortal Foundation)' && player.systemCultivation.stage === 9) {
+                if (!player.laws || player.laws.length === 0) {
+                    if (!forceBreakthrough) {
+                        throw new CustomError('PERINGATAN SURGAWI: Begitu tubuhmu dialiri Qi sejati, fondasi fanamu akan hancur dan Hukum Alam (Law) akan menolakmu selamanya. Kamu belum mengikat Hukum Alam apapun! Kirim ulang permintaan breakthrough dengan flag konfirmasi jika kamu bersedia melepas kesempatan langka ini.', 400);
+                    }
+                }
+            }
             if (calcResult.realmIdx === SYSTEM_REALMS.length - 1 && player.systemCultivation.stage === realmData.maxStage) {
                 throw new CustomError('Kamu telah mencapai puncak kultivasi alam semesta!', 400);
             }
