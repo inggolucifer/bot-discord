@@ -24,7 +24,17 @@ function calculateEnergy(player) {
     const hoursElapsed = Math.floor(elapsedMs / MS_PER_HOUR);
 
     if (hoursElapsed > 0) {
-        const energyGained = hoursElapsed * ENERGY_PER_HOUR;
+        let energyRegenRate = ENERGY_PER_HOUR;
+        // Check for active energy_regen buff
+        if (player.activeBuffs && player.activeBuffs.length > 0) {
+            const nowTime = new Date();
+            const regenBuff = player.activeBuffs.find(b => b.buffType === 'energy_regen' && b.expiresAt > nowTime);
+            if (regenBuff) {
+                energyRegenRate += regenBuff.value;
+            }
+        }
+
+        const energyGained = hoursElapsed * energyRegenRate;
         let newEnergy = player.energy.current + energyGained;
 
         if (newEnergy >= MAX_ENERGY) {

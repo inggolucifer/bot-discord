@@ -15,6 +15,26 @@ async function runWorkerAutoProcess(client) {
     isProcessing = true;
     try {
         // Ambil semua aset yang bisa memproduksi baik itu currency (dailyProfit > 0) atau item (workerOutputQuantity > 0)
+        // Weather cycle process (Update every 24 hours)
+        const WeatherConfig = require('../models/WeatherConfig');
+        let weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+        if (!weatherConfig) {
+             const now = new Date();
+             weatherConfig = await WeatherConfig.create({
+                 configId: 'global',
+                 currentWeather: 'Cerah',
+                 nextChangeAt: new Date(now.getTime() + 24 * 60 * 60 * 1000)
+             });
+        } else if (new Date() >= weatherConfig.nextChangeAt) {
+             const weatherTypes = ['Cerah', 'Hujan', 'Badai Beracun', 'Mendung'];
+             const randomWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+             weatherConfig.currentWeather = randomWeather;
+             weatherConfig.nextChangeAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+             await weatherConfig.save();
+
+             // Emit global announcement (Optional if socket access available, omitting for safety)
+        }
+
         // Dan aset yang sedang dibangun juga akan diproses agar progress update-nya real-time (karena tidak ada filter disini)
         const allAssets = await Asset.find({});
         const assetMap = new Map();
