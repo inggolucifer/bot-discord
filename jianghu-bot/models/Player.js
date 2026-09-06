@@ -123,7 +123,8 @@ const playerSchema = new mongoose.Schema({
     realm: { type: String, default: 'Fondasi Fana (Mortal Foundation)' },
     stage: { type: Number, default: 0 }, // 1-9 untuk realm selain Mortal
     qi: { type: Number, default: 0 },
-    lastSyncAt: { type: Date, default: Date.now }
+    lastSyncAt: { type: Date, default: Date.now },
+    isFlawedFoundation: { type: Boolean, default: false }
   },
 
   age: { type: Number, default: 16 },

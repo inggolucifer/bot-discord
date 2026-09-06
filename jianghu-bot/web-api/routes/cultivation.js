@@ -126,6 +126,8 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 if (!player.laws || player.laws.length === 0) {
                     if (!forceBreakthrough) {
                         throw new CustomError('PERINGATAN SURGAWI: Begitu tubuhmu dialiri Qi sejati, fondasi fanamu akan hancur dan Hukum Alam (Law) akan menolakmu selamanya. Kamu belum mengikat Hukum Alam apapun! Kirim ulang permintaan breakthrough dengan flag konfirmasi jika kamu bersedia melepas kesempatan langka ini.', 400);
+                    } else {
+                        player.systemCultivation.isFlawedFoundation = true;
                     }
                 }
             }
