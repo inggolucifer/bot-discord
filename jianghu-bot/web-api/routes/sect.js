@@ -68,7 +68,15 @@ router.get('/assets', authenticateToken, async (req, res) => {
             return res.json({ success: true, data: [] });
         }
 
-        const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).populate('assets.assetId').lean();
+        const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId })
+            .populate({
+                path: 'assets.assetId',
+                populate: {
+                    path: 'workerInputMaterials.itemId',
+                    model: 'Item'
+                }
+            })
+            .lean();
         if (!sect) return res.json({ success: true, data: [] });
 
         const assets = sect.assets.map(asset => {
@@ -100,7 +108,13 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 constructionCompleteAt: asset.constructionCompleteAt,
                 profitAvailable: profitAvailable,
                 lastClaimAt: asset.lastClaimAt,
-                isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false
+                isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false,
+                recipes: asset.assetId ? asset.assetId.recipes : [],
+                workerInputMaterials: asset.assetId ? asset.assetId.workerInputMaterials : [],
+                isDamaged: asset.isDamaged,
+                damageType: asset.damageType,
+                guardEndTime: asset.guardEndTime,
+                toolDurabilityUsage: asset.toolDurabilityUsage ? Object.fromEntries(asset.toolDurabilityUsage) : {}
             };
         });
 
