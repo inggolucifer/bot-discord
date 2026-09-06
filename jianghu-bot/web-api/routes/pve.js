@@ -78,7 +78,20 @@ const LOCATIONS = [
 ];
 
 // Helper to generate drops
-async function generateDrops(location, durationHours, guildId) {
+async function generateDrops(location, durationHours, guildId, player) {
+    const WeatherConfig = require('../../models/WeatherConfig');
+    const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+    let isBadWeather = weatherConfig && weatherConfig.currentWeather === 'Badai Beracun';
+
+    let failChanceModifier = 0;
+    if (isBadWeather) {
+        // Check if player has anti-poison buff (can be checked via activeBuffs, assuming we added a buff_anti_poison later, or just a flag)
+        const hasAntiPoison = player.activeBuffs && player.activeBuffs.some(b => b.buffType === 'anti_poison' && b.expiresAt > new Date());
+        if (!hasAntiPoison) {
+            failChanceModifier = 0.3; // 30% failure chance increase
+        }
+    }
+
     const drops = { copper: 0, silver: 0, gold: 0, items: [] };
 
     // Calculate currency based on duration multiplier
@@ -98,6 +111,10 @@ async function generateDrops(location, durationHours, guildId) {
 
     // Items
     for (let i = 0; i < durationHours; i++) {
+        // Apply weather fail chance to whole hour
+        if (Math.random() < failChanceModifier) {
+            continue; // Skipped hour due to bad weather
+        }
         for (const dropItem of location.drops.items) {
             if (Math.random() <= dropItem.chance) {
                 const qty = Math.floor(Math.random() * (dropItem.max - dropItem.min + 1)) + dropItem.min;
@@ -165,13 +182,34 @@ router.post('/start', authenticateToken, async (req, res) => {
                  throw new CustomError(`Kultivasi tidak cukup kuat untuk wilayah ini.`, 403);
             }
 
+            // Retribusi & Syarat Ransum
+            const copperCost = 100 * durationHours;
+            const c = player.currency;
+            const totalCopper = c.copper + c.silver * 100 + c.gold * 10000 + c.jade * 1000000 + c.spirit * 100000000;
+            if (totalCopper < copperCost) {
+                throw new CustomError(`Kamu butuh ${copperCost} Copper untuk membiayai perjalanan ini.`, 400);
+            }
+
+            const ransumIndex = player.inventory.findIndex(i => i.itemId.name === 'Ransum');
+            if (ransumIndex === -1 || player.inventory[ransumIndex].quantity < 1) {
+                throw new CustomError(`Kamu harus membawa minimal 1 Ransum untuk eksplorasi.`, 400);
+            }
+
+            // Deduct cost and item
+            player.currency.copper -= copperCost;
+            // The negative copper will be handled by the normalizeCurrency hook on player.save()
+            player.inventory[ransumIndex].quantity -= 1;
+            if (player.inventory[ransumIndex].quantity <= 0) {
+                player.inventory.splice(ransumIndex, 1);
+            }
+
             const activeExp = await Exploration.findOne({ discordId: userId, status: 'exploring' }).session(session);
             if (activeExp) throw new CustomError('Kamu sudah memiliki eksplorasi aktif.', 400);
 
             const now = new Date();
             const endTime = new Date(now.getTime() + (durationHours * 60 * 60 * 1000));
 
-            const generatedDrops = await generateDrops(location, durationHours, guildId);
+            const generatedDrops = await generateDrops(location, durationHours, guildId, player);
 
             const exploration = new Exploration({
                 guildId,

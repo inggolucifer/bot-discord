@@ -94,6 +94,24 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     }
   }
 
+  // 2d. Active Buffs
+  if (player.activeBuffs && player.activeBuffs.length > 0) {
+    const now = new Date();
+    let buffsUpdated = false;
+
+    for (let i = player.activeBuffs.length - 1; i >= 0; i--) {
+      const buff = player.activeBuffs[i];
+      if (buff.expiresAt > now) {
+        if (buff.buffType === 'hp_boost') flat.hp += buff.value;
+        else if (buff.buffType === 'atk_boost') flat.atk += buff.value;
+        else if (buff.buffType === 'def_boost') flat.def += buff.value;
+      } else {
+        // Option to splice here if we wanted to mutate, but usually we just ignore expired ones during calculation
+        // and let a separate process or the save hook clean them up.
+      }
+    }
+  }
+
   // 3. Final Calculation: (Base + Flat) * Multiplier
   totals.hp = Math.floor((totals.hp + flat.hp) * mult.hp);
   totals.atk = Math.floor((totals.atk + flat.atk) * mult.atk);
