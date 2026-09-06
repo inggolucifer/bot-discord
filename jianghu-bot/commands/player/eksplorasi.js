@@ -4,58 +4,7 @@ const Exploration = require('../../models/Exploration');
 const Item = require('../../models/Item');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const mongoose = require('mongoose');
-
-// Helper to match Web API LOCATIONS config
-const LOCATIONS = [
-    {
-        id: 'hutan_rimba',
-        name: 'Hutan Rimba Tepi Desa',
-        description: 'Hutan biasa yang relatif aman. Cocok untuk pemula mencari resource dasar.',
-        minRealmLevel: 0,
-        durations: [1, 2, 4],
-        drops: {
-            currency: { copper: [5, 15] },
-            items: [
-                { name: 'Rumput Kering', chance: 0.8, min: 1, max: 3 },
-                { name: 'Kayu Mentah', chance: 0.8, min: 1, max: 3 },
-                { name: 'Daun Herbal Pereda Nyeri', chance: 0.4, min: 1, max: 2 },
-                { name: 'Buah Liar', chance: 0.6, min: 1, max: 2 }
-            ]
-        }
-    },
-    {
-        id: 'lembah_iblis',
-        name: 'Lembah Iblis Beracun',
-        description: 'Tempat berbahaya yang penuh dengan racun dan monster. Risiko tinggi, hadiah tinggi.',
-        minRealmLevel: 1,
-        durations: [3, 6, 12],
-        drops: {
-            currency: { copper: [20, 50], silver: [0, 1] },
-            items: [
-                { name: 'Jamur Beracun', chance: 0.7, min: 1, max: 4 },
-                { name: 'Tulang Hewan', chance: 0.6, min: 1, max: 2 },
-                { name: 'Akar Stamina', chance: 0.3, min: 1, max: 2 },
-                { name: 'Kulit Mentah', chance: 0.5, min: 1, max: 2 }
-            ]
-        }
-    },
-    {
-        id: 'gua_kristal',
-        name: 'Gua Kristal Roh',
-        description: 'Gua kuno yang mengandung energi Qi tebal. Sangat langka materialnya.',
-        minRealmLevel: 2,
-        durations: [6, 12, 24],
-        drops: {
-            currency: { silver: [1, 3] },
-            items: [
-                { name: 'Batu Bara', chance: 0.6, min: 2, max: 5 },
-                { name: 'Bijih Besi', chance: 0.5, min: 1, max: 3 },
-                { name: 'Batu Roh Kasar', chance: 0.1, min: 1, max: 1 },
-                { name: 'Bunga Penurun Panas', chance: 0.4, min: 1, max: 2 }
-            ]
-        }
-    }
-];
+const { EXPLORATION_LOCATIONS: LOCATIONS } = require('../../config/explorationLocations');
 
 module.exports = {
   data: new SlashCommandBuilder()

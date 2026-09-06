@@ -9,6 +9,7 @@ const CustomError = require('../utils/CustomError');
 const { authenticateToken } = require('../middlewares/auth');
 const mongoose = require('mongoose');
 const { escapeRegex } = require('../../utils/escapeRegex');
+const { EXPLORATION_LOCATIONS: LOCATIONS } = require('../../config/explorationLocations');
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -25,57 +26,6 @@ const withTransaction = async (callback) => {
         session.endSession();
     }
 };
-
-const LOCATIONS = [
-    {
-        id: 'hutan_bambu',
-        name: 'Hutan Bambu Pinggiran',
-        description: 'Area aman untuk pemula. Cocok untuk mencari material dasar.',
-        minRealmLevel: 0,
-        durations: [1, 3, 6], // in hours
-        drops: {
-            currency: { copper: [5, 15] },
-            items: [
-                { name: 'Batu Kasar', chance: 0.8, min: 1, max: 3 },
-                { name: 'Kayu Mentah', chance: 0.8, min: 1, max: 3 },
-                { name: 'Daun Herbal Pereda Nyeri', chance: 0.4, min: 1, max: 2 },
-                { name: 'Buah Liar', chance: 0.6, min: 1, max: 2 }
-            ]
-        }
-    },
-    {
-        id: 'lembah_iblis',
-        name: 'Lembah Iblis Beracun',
-        description: 'Tempat berbahaya yang penuh dengan racun dan monster. Risiko tinggi, hadiah tinggi.',
-        minRealmLevel: 1,
-        durations: [3, 6, 12],
-        drops: {
-            currency: { copper: [20, 50], silver: [0, 1] }, // low chance for 1 silver
-            items: [
-                { name: 'Jamur Beracun', chance: 0.7, min: 1, max: 4 },
-                { name: 'Tulang Hewan', chance: 0.6, min: 1, max: 2 },
-                { name: 'Akar Stamina', chance: 0.3, min: 1, max: 2 },
-                { name: 'Kulit Mentah', chance: 0.5, min: 1, max: 2 }
-            ]
-        }
-    },
-    {
-        id: 'gua_kristal',
-        name: 'Gua Kristal Roh',
-        description: 'Gua kuno yang mengandung energi Qi tebal. Sangat langka materialnya.',
-        minRealmLevel: 2,
-        durations: [6, 12, 24],
-        drops: {
-            currency: { silver: [1, 3] },
-            items: [
-                { name: 'Batu Bara', chance: 0.6, min: 2, max: 5 },
-                { name: 'Bijih Besi', chance: 0.5, min: 1, max: 3 },
-                { name: 'Batu Roh Kasar', chance: 0.1, min: 1, max: 1 },
-                { name: 'Bunga Penurun Panas', chance: 0.4, min: 1, max: 2 }
-            ]
-        }
-    }
-];
 
 // Helper to generate drops
 async function generateDrops(location, durationHours, guildId, player) {
