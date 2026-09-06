@@ -370,6 +370,35 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
 
             itemName = item.name;
             let effect = item.effect || 'Tidak ada efek khusus.';
+            let buffMessage = '';
+
+            // Handle buff effect parsing: buff_atk_boost_50_1h
+            if (effect.startsWith('buff_')) {
+                const parts = effect.split('_');
+                // buff_hp_boost_100_2h
+                if (parts.length >= 5) {
+                    const buffTypeStr = `${parts[1]}_${parts[2]}`; // hp_boost, atk_boost, def_boost, exp_bonus, energy_regen
+                    const buffValue = parseInt(parts[3], 10);
+                    const durationStr = parts[4]; // 1h, 2h, etc
+                    let durationHours = parseInt(durationStr.replace('h', ''), 10);
+                    if (isNaN(durationHours)) durationHours = 1;
+
+                    if (!player.activeBuffs) player.activeBuffs = [];
+
+                    // Remove existing buff of same type to overwrite, or we could let them stack. Let's overwrite for simplicity/balance.
+                    player.activeBuffs = player.activeBuffs.filter(b => b.buffType !== buffTypeStr || b.expiresAt <= new Date());
+
+                    const expiresAt = new Date(Date.now() + durationHours * 60 * 60 * 1000);
+                    player.activeBuffs.push({
+                        buffType: buffTypeStr,
+                        value: buffValue,
+                        expiresAt
+                    });
+
+                    player.markModified('activeBuffs');
+                    buffMessage = ` Mendapatkan efek ${buffTypeStr} +${buffValue} selama ${durationHours} jam.`;
+                }
+            }
 
             await TransactionLog.create([{
                 guildId,
@@ -378,7 +407,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                 note: `[WEB] Digunakan: ${itemName} (${effect})`
             }], { session });
 
-            messageResponse = `Kamu menggunakan **${itemName}**. Efek: ${effect}`;
+            messageResponse = `Kamu menggunakan **${itemName}**. Efek: ${effect}.${buffMessage}`;
         });
 
         res.json({ success: true, message: messageResponse });

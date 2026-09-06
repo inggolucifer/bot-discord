@@ -33,9 +33,32 @@ const professionSchema = new mongoose.Schema({
   exp: { type: Number, default: 0 }
 }, { _id: false });
 
+const farmPlotSchema = new mongoose.Schema({
+  isUnlocked: { type: Boolean, default: false },
+  cropId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+  plantedAt: { type: Date, default: null },
+  harvestAt: { type: Date, default: null },
+  isDepleted: { type: Boolean, default: false },
+  depletedUntil: { type: Date, default: null }
+}, { _id: false });
+
+const farmingProfessionSchema = new mongoose.Schema({
+  isUnlocked: { type: Boolean, default: false },
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
+  farmPlots: { type: [farmPlotSchema], default: () => [{ isUnlocked: true }] } // Default 1 slot terbuka
+}, { _id: false });
+
+const fishingProfessionSchema = new mongoose.Schema({
+  isUnlocked: { type: Boolean, default: false },
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
+  unlockedFishingZones: { type: [Number], default: [1] } // Default zona 1 terbuka
+}, { _id: false });
+
 const professionsSchema = new mongoose.Schema({
-  farming: { type: professionSchema, default: () => ({}) },
-  fishing: { type: professionSchema, default: () => ({}) },
+  farming: { type: farmingProfessionSchema, default: () => ({}) },
+  fishing: { type: fishingProfessionSchema, default: () => ({}) },
   cooking: { type: professionSchema, default: () => ({}) },
   alchemy: { type: professionSchema, default: () => ({}) },
   smithing: { type: professionSchema, default: () => ({}) }
@@ -167,6 +190,15 @@ const playerSchema = new mongoose.Schema({
   professions: { type: professionsSchema, default: () => ({}) },
 
   totalWealth: { type: Number, default: 0, index: true },
+
+  activeBuffs: {
+    type: [{
+      buffType: { type: String, enum: ['hp_boost', 'atk_boost', 'def_boost', 'exp_bonus', 'energy_regen', 'anti_poison'] },
+      value: { type: Number },
+      expiresAt: { type: Date }
+    }],
+    default: []
+  },
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
