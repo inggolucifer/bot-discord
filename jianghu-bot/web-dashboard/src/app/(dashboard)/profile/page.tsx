@@ -7,6 +7,8 @@ import FallbackImage from '@/components/FallbackImage';
 import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { motion } from 'framer-motion';
+import { getRarityBorderClass } from './components/RarityHelpers';
+import { StatDeltaHover } from './components/StatDeltaHover';
 
 export default function ProfilePage() {
   const queryClient = useQueryClient();
@@ -118,8 +120,16 @@ export default function ProfilePage() {
                       <Zap size={16} className="text-blue-400" />
                       <span className="text-xs text-blue-400 uppercase font-bold tracking-wider">Kultivasi Sistem</span>
                    </div>
-                   <div className="text-gray-200 font-bold">
-                      {profile.systemCultivation?.realm || 'Fondasi Fana'} <span className="text-blue-300 font-normal text-sm ml-1">(Tahap {profile.systemCultivation?.stage || 0})</span>
+                   <div className="text-gray-200 font-bold flex items-center flex-wrap gap-2">
+                      <span>{profile.systemCultivation?.realm || 'Fondasi Fana'} <span className="text-blue-300 font-normal text-sm ml-1">(Tahap {profile.systemCultivation?.stage || 0})</span></span>
+                      {profile.systemCultivation?.isFlawedFoundation && (
+                          <span
+                             className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
+                             title="Penalti -5% All Stats karena menghancurkan fondasi fana secara paksa."
+                          >
+                             Fondasi Cacat
+                          </span>
+                      )}
                    </div>
                 </div>
 
@@ -168,7 +178,7 @@ export default function ProfilePage() {
                    <motion.div
                       key={slot.id}
                       whileHover={{ scale: 1.02 }}
-                      className="relative bg-black/60 border border-[#444] rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer hover:border-[#c5a880]/70 group transition-colors"
+                      className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
                       onClick={() => equippedId && handleUnequip(slot.id)}
                    >
                      {equippedInvItem ? (
@@ -207,29 +217,36 @@ export default function ProfilePage() {
                      Tidak ada equipment yang bisa dipakai di inventory.
                   </div>
                ) : (
-                  equipableItems.map((inv: any) => (
-                     <motion.div
-                        key={inv._id}
-                        whileHover={{ x: 4 }}
-                        className="bg-black/40 border border-[#333] rounded p-3 hover:border-[#c5a880]/50 transition-colors flex justify-between items-center group cursor-pointer"
-                        onClick={() => handleEquip(inv._id)}
-                     >
-                        <div className="flex items-center gap-3 overflow-hidden">
-                           <div className="w-10 h-10 bg-black rounded border border-[#444] flex items-center justify-center text-xl shrink-0">
-                              {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : '📦'}
-                           </div>
-                           <div className="min-w-0">
-                              <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
-                              <p className="text-xs text-gray-500 capitalize">{inv.itemId?.category === 'cloth' ? 'armor' : inv.itemId?.category}</p>
-                           </div>
-                        </div>
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
-                           <button className="bg-[#c5a880] text-black text-xs font-bold px-3 py-1.5 rounded hover:bg-[#d8c09d]">
-                              Equip
-                           </button>
-                        </div>
-                     </motion.div>
-                  ))
+                  equipableItems.map((inv: any) => {
+                     const slotKey = inv.itemId?.category === 'cloth' ? 'armor' : inv.itemId?.category;
+                     const equippedId = equipment[slotKey];
+                     const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+
+                     return (
+                        <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
+                           <motion.div
+                              whileHover={{ x: 4 }}
+                              className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${getRarityBorderClass(inv.itemId?.rank)}`}
+                              onClick={() => handleEquip(inv._id)}
+                           >
+                              <div className="flex items-center gap-3 overflow-hidden">
+                                 <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${getRarityBorderClass(inv.itemId?.rank)}`}>
+                                    {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : '📦'}
+                                 </div>
+                                 <div className="min-w-0">
+                                    <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
+                                    <p className="text-xs text-gray-500 capitalize">{slotKey}</p>
+                                 </div>
+                              </div>
+                              <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+                                 <button className="bg-[#c5a880] text-black text-xs font-bold px-3 py-1.5 rounded hover:bg-[#d8c09d]">
+                                    Equip
+                                 </button>
+                              </div>
+                           </motion.div>
+                        </StatDeltaHover>
+                     );
+                  })
                )}
             </div>
         </div>
