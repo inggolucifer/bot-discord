@@ -4403,5 +4403,1464 @@
     "workerOutputItemId": null,
     "workerOutputItemName": null,
     "workerOutputQuantity": 0
+  },
+  {
+    "_id": {
+      "$oid": "907d41e19dd71c01f4a0f58b"
+    },
+    "guildId": "GLOBAL",
+    "name": "Hutan Pinggiran",
+    "description": "[Pekerja] Penebangan kayu awal.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Kayu Keras",
+    "workerOutputQuantity": 5,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "0481569ec24cfa00c03aa086"
+        },
+        "itemName": "Kapak Batu Primitif",
+        "quantity": 1,
+        "durabilityHours": 6
+      }
+    ],
+    "basePrice": 20,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c027c35e63a0bfaa5ffe51d0"
+    },
+    "guildId": "GLOBAL",
+    "name": "Gua Batuan Dangkal",
+    "description": "[Pekerja] Tambang batu dasar pinggir desa.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Batu Kasar Mentah",
+    "workerOutputQuantity": 5,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "d0273cd89fc8528ad2f99e19"
+        },
+        "itemName": "Beliung Batu Primitif",
+        "quantity": 1,
+        "durabilityHours": 6
+      }
+    ],
+    "basePrice": 20,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a2dd98a5bbd2aac0de5c356c"
+    },
+    "guildId": "GLOBAL",
+    "name": "Lahan Tani Kecil",
+    "description": "[Pekerja] Menghasilkan gandum.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Gandum Liar",
+    "workerOutputQuantity": 10,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "61c9792ebdc2285e4b8066c9"
+        },
+        "itemName": "Cangkul Kayu Primitif",
+        "quantity": 1,
+        "durabilityHours": 6
+      },
+      {
+        "itemId": {
+          "$oid": "cb849e2bca4463e7f477febe"
+        },
+        "itemName": "Bibit Padi Liar",
+        "quantity": 2
+      }
+    ],
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c10081488aaf1cbb38ce2c64"
+    },
+    "guildId": "GLOBAL",
+    "name": "Meja Pembuatan Alat Batu",
+    "description": "[Crafting] Membuat alat tier 1 dan 2 dari batu dan kayu.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Buat Kapak Batu Asah",
+        "resultItemId": {
+          "$oid": "c2119e8238073f791a7d0bce"
+        },
+        "resultItemName": "Kapak Batu Asah",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "78c4ff9d2cbb92760b75b8bd"
+            },
+            "itemName": "Kayu Keras",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "9f6fdbe395d7e4a4cc008924"
+            },
+            "itemName": "Batu Asah",
+            "quantity": 2
+          }
+        ],
+        "craftingTimeHours": 2
+      },
+      {
+        "recipeName": "Buat Beliung Batu Keras",
+        "resultItemId": {
+          "$oid": "e8cc21bbf7ad10a6d1f9b910"
+        },
+        "resultItemName": "Beliung Batu Keras",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "78c4ff9d2cbb92760b75b8bd"
+            },
+            "itemName": "Kayu Keras",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "9f6fdbe395d7e4a4cc008924"
+            },
+            "itemName": "Batu Asah",
+            "quantity": 2
+          }
+        ],
+        "craftingTimeHours": 2
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 100,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "78c4ff9d2cbb92760b75b8bd"
+        },
+        "itemName": "Kayu Keras",
+        "quantity": 50
+      },
+      {
+        "itemId": {
+          "$oid": "bdd8f30838bc28e8a120370e"
+        },
+        "itemName": "Batu Kasar Mentah",
+        "quantity": 50
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "edf66a3b1cd9c8ba0f2123ac"
+    },
+    "guildId": "GLOBAL",
+    "name": "Warung Kopi Desa (T1)",
+    "description": "[Income] Usaha kecil T1. Maks 50 Copper/hari.",
+    "imageUrl": null,
+    "dailyProfit": 50,
+    "profitCurrency": "copper",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 1000,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 4,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "bedc6faf272b822f7b55f132"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sungai Jernih",
+    "description": "[Pekerja] Memancing Ikan Ekor Api.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Ikan Ekor Api",
+    "workerOutputQuantity": 3,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "c84b8a7f30bdb6063a2e5db9"
+        },
+        "itemName": "Joran Kayu Kuat",
+        "quantity": 1,
+        "durabilityHours": 12
+      },
+      {
+        "itemId": {
+          "$oid": "59a761ca37d1c0cc5db33c74"
+        },
+        "itemName": "Umpan Tepung",
+        "quantity": 3
+      }
+    ],
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "bdd8f30838bc28e8a120370e"
+        },
+        "itemName": "Batu Kasar Mentah",
+        "quantity": 200
+      },
+      {
+        "itemId": {
+          "$oid": "78c4ff9d2cbb92760b75b8bd"
+        },
+        "itemName": "Kayu Keras",
+        "quantity": 100
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "95bcc397f1377f440a792427"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kuali Obat Tanah Liat",
+    "description": "[Crafting] Meracik pil dasar.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Racik Pil Api Kecil",
+        "resultItemId": {
+          "$oid": "98543f03a1a1f6fb9dd9f982"
+        },
+        "resultItemName": "Pil Api Kecil",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6b0620b04f18ba90b14c8ace"
+            },
+            "itemName": "Ikan Ekor Api",
+            "quantity": 2
+          },
+          {
+            "itemId": {
+              "$oid": "2143b78c8fcd7427946e0c80"
+            },
+            "itemName": "Daun Mint Hutan",
+            "quantity": 5
+          }
+        ],
+        "craftingTimeHours": 3
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "bdd8f30838bc28e8a120370e"
+        },
+        "itemName": "Batu Kasar Mentah",
+        "quantity": 300
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "99b107c1ca9a7acfb0cccbb0"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tambang Bijih Besi",
+    "description": "[Pekerja] Menambang Biji Besi Mentah.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Biji Besi Mentah",
+    "workerOutputQuantity": 4,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "e8cc21bbf7ad10a6d1f9b910"
+        },
+        "itemName": "Beliung Batu Keras",
+        "quantity": 1,
+        "durabilityHours": 12
+      }
+    ],
+    "basePrice": 400,
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "77b7d8c99cb5219b1d6a4970"
+        },
+        "itemName": "Kayu Jati",
+        "quantity": 100
+      },
+      {
+        "itemId": {
+          "$oid": "9f6fdbe395d7e4a4cc008924"
+        },
+        "itemName": "Batu Asah",
+        "quantity": 50
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "85c0e17b89b21dbac00d9d83"
+    },
+    "guildId": "GLOBAL",
+    "name": "Toko Kelontong Batu (T2)",
+    "description": "[Income] Toko kelontong T2. Maks 5 Silver/hari.",
+    "imageUrl": null,
+    "dailyProfit": 5,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 150,
+    "priceCurrency": "silver",
+    "rank": "Uncommon",
+    "constructionTimeHours": 24,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a9cef8e562fd8a1db2d48aec"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tungku Peleburan Besi",
+    "description": "[Crafting] Melebur biji besi menjadi Batangan Besi, butuh Pil Api sebagai booster panas.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Peleburan Batangan Besi",
+        "resultItemId": {
+          "$oid": "f443f7ae8ccc0162b0abbbc3"
+        },
+        "resultItemName": "Batangan Besi",
+        "resultQuantity": 5,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "037a6f287f121fb67d301f56"
+            },
+            "itemName": "Biji Besi Mentah",
+            "quantity": 10
+          },
+          {
+            "itemId": {
+              "$oid": "516a1e879f84c6e89ed1d09d"
+            },
+            "itemName": "Arang Bakar",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "98543f03a1a1f6fb9dd9f982"
+            },
+            "itemName": "Pil Api Kecil",
+            "quantity": 1
+          }
+        ],
+        "craftingTimeHours": 6
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 1000,
+    "priceCurrency": "copper",
+    "rank": "Rare",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "bdd8f30838bc28e8a120370e"
+        },
+        "itemName": "Batu Kasar Mentah",
+        "quantity": 1000
+      },
+      {
+        "itemId": {
+          "$oid": "77b7d8c99cb5219b1d6a4970"
+        },
+        "itemName": "Kayu Jati",
+        "quantity": 300
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f60e1b9b0b6ea2d56cfb6376"
+    },
+    "guildId": "GLOBAL",
+    "name": "Anvil Pandai Besi Kota",
+    "description": "[Crafting] Menempa equipment tier 3.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Tempa Pedang Besi Tempa",
+        "resultItemId": {
+          "$oid": "55b5db3533f60211d0461351"
+        },
+        "resultItemName": "Pedang Besi Tempa",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 20
+          },
+          {
+            "itemId": {
+              "$oid": "1dd623deeeb82ed8db028fd4"
+            },
+            "itemName": "Palu Besi Hitam",
+            "quantity": 1,
+            "durabilityHours": 24
+          }
+        ],
+        "craftingTimeHours": 8
+      },
+      {
+        "recipeName": "Tempa Zirah Besi Berat",
+        "resultItemId": {
+          "$oid": "04e05d2ec5f2a9e04d9a5044"
+        },
+        "resultItemName": "Zirah Besi Berat",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 30
+          },
+          {
+            "itemId": {
+              "$oid": "1dd623deeeb82ed8db028fd4"
+            },
+            "itemName": "Palu Besi Hitam",
+            "quantity": 1,
+            "durabilityHours": 24
+          }
+        ],
+        "craftingTimeHours": 10
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 1500,
+    "priceCurrency": "copper",
+    "rank": "Rare",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "f443f7ae8ccc0162b0abbbc3"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 50
+      },
+      {
+        "itemId": {
+          "$oid": "77b7d8c99cb5219b1d6a4970"
+        },
+        "itemName": "Kayu Jati",
+        "quantity": 200
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f8a715aaa52e58672ae8e376"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pabrik Tembaga Kecil (T3)",
+    "description": "[Income] Pabrik pengolahan T3. Maks 20 Silver/hari.",
+    "imageUrl": null,
+    "dailyProfit": 20,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 900,
+    "priceCurrency": "silver",
+    "rank": "Rare",
+    "constructionTimeHours": 72,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "230a2dd60509d2c493a1178a"
+    },
+    "guildId": "GLOBAL",
+    "name": "Altar Pemurnian Sekte Luar",
+    "description": "[Crafting] Membuat Baja Murni dan kristal.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Refine Baja Murni",
+        "resultItemId": {
+          "$oid": "97bb2693130cdf6082a8b751"
+        },
+        "resultItemName": "Baja Murni",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
+            },
+            "itemName": "Batangan Besi",
+            "quantity": 20
+          },
+          {
+            "itemId": {
+              "$oid": "1c2bcb2a65664c8b847d8405"
+            },
+            "itemName": "Biji Baja Api",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "b182e3cda6bb91abda5193a8"
+            },
+            "itemName": "Pil Pelebaran Meridian",
+            "quantity": 1
+          }
+        ],
+        "craftingTimeHours": 12
+      },
+      {
+        "recipeName": "Tempa Pedang Baja Terbang",
+        "resultItemId": {
+          "$oid": "3b1b467406ccbaef281e8bad"
+        },
+        "resultItemName": "Pedang Baja Terbang",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "97bb2693130cdf6082a8b751"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 15
+          },
+          {
+            "itemId": {
+              "$oid": "9bed7a7d6a0324a855d9c851"
+            },
+            "itemName": "Inti Monster Udara",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "450805503cd09171393a5a25"
+            },
+            "itemName": "Palu Baja Otomatis",
+            "quantity": 1,
+            "durabilityHours": 48
+          }
+        ],
+        "craftingTimeHours": 24
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 50,
+    "priceCurrency": "silver",
+    "rank": "Epic",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "1c2bcb2a65664c8b847d8405"
+        },
+        "itemName": "Biji Baja Api",
+        "quantity": 100
+      },
+      {
+        "itemId": {
+          "$oid": "4ec6fff3313b764d5b1c1082"
+        },
+        "itemName": "Kayu Hitam Seribu Tahun",
+        "quantity": 50
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "028f3108d51fffab2d9c0c8b"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sekte Cabang Luar (T4)",
+    "description": "[Income] Markas sekte luar T4. Maks 1 Gold/hari.",
+    "imageUrl": null,
+    "dailyProfit": 1,
+    "profitCurrency": "gold",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 60,
+    "priceCurrency": "gold",
+    "rank": "Epic",
+    "constructionTimeHours": 168,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "e05fe4fa83f37322b7dcd902"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tungku Inti Bumi",
+    "description": "[Crafting] Fasilitas sekte inti untuk item mitos.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Tempa Tsunami Edge Sword",
+        "resultItemId": {
+          "$oid": "6323f79fe9f0a7402e414873"
+        },
+        "resultItemName": "Tsunami Edge Sword",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "32bb5bdd7749ae061d001747"
+            },
+            "itemName": "Baja Meteorit",
+            "quantity": 50
+          },
+          {
+            "itemId": {
+              "$oid": "a464d58fc125a4e843402446"
+            },
+            "itemName": "Palu Api Neraka",
+            "quantity": 1,
+            "durabilityHours": 72
+          }
+        ],
+        "craftingTimeHours": 120
+      },
+      {
+        "recipeName": "Racik Pil Reinkarnasi Nirwana",
+        "resultItemId": {
+          "$oid": "6afe8440796e326f15237d07"
+        },
+        "resultItemName": "Pil Reinkarnasi Nirwana",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "9081018eee0bc84a8415d4cd"
+            },
+            "itemName": "Teratai Surgawi",
+            "quantity": 10
+          },
+          {
+            "itemId": {
+              "$oid": "929b3d9efd89e4b22c9a54b3"
+            },
+            "itemName": "Darah Naga Bumi",
+            "quantity": 5
+          }
+        ],
+        "craftingTimeHours": 168
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 200,
+    "priceCurrency": "gold",
+    "rank": "Legendary",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "32bb5bdd7749ae061d001747"
+        },
+        "itemName": "Baja Meteorit",
+        "quantity": 20
+      },
+      {
+        "itemId": {
+          "$oid": "5728b5c27fac237087351e2d"
+        },
+        "itemName": "Kristal Energi Spiritual",
+        "quantity": 100
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c025e7944856171127041ece"
+    },
+    "guildId": "GLOBAL",
+    "name": "Puncak Sekte Inti (T5)",
+    "description": "[Income] Puncak elit sekte T5. Maks 1 Gold/hari.",
+    "imageUrl": null,
+    "dailyProfit": 1,
+    "profitCurrency": "gold",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 90,
+    "priceCurrency": "gold",
+    "rank": "Legendary",
+    "constructionTimeHours": 336,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c1f66aa944869fa6a2e3d6eb"
+    },
+    "guildId": "GLOBAL",
+    "name": "Formasi Penciptaan Surga",
+    "description": "[Crafting] Alat para dewa menciptakan dunia.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Tempa Pedang Pemecah Langit",
+        "resultItemId": {
+          "$oid": "8519c1c8d296dece94e62f50"
+        },
+        "resultItemName": "Pedang Pemecah Langit",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "415ab5637fc96d2a72608a62"
+            },
+            "itemName": "Inti Bintang Runtuh",
+            "quantity": 50
+          },
+          {
+            "itemId": {
+              "$oid": "76e6de5b06a3c85f9d575288"
+            },
+            "itemName": "Esensi Primordial",
+            "quantity": 20
+          },
+          {
+            "itemId": {
+              "$oid": "707dc377278ff0b8d99531ff"
+            },
+            "itemName": "Palu Pencipta Kosmos",
+            "quantity": 1,
+            "durabilityHours": 168
+          }
+        ],
+        "craftingTimeHours": 480
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 50,
+    "priceCurrency": "jade",
+    "rank": "Mythical",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "415ab5637fc96d2a72608a62"
+        },
+        "itemName": "Inti Bintang Runtuh",
+        "quantity": 10
+      },
+      {
+        "itemId": {
+          "$oid": "374d12d48de0e6ebe4004a9b"
+        },
+        "itemName": "Kayu Pohon Dunia",
+        "quantity": 20
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4bbed909de835d6fc8259655"
+    },
+    "guildId": "GLOBAL",
+    "name": "Istana Kaisar Surgawi (T6)",
+    "description": "[Income] Tahta tertinggi fana. Max profit mutlak 2 Gold/hari (ROI 120 Hari).",
+    "imageUrl": null,
+    "dailyProfit": 2,
+    "profitCurrency": "gold",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 240,
+    "priceCurrency": "gold",
+    "rank": "Mythical",
+    "constructionTimeHours": 720,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.301Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0f7dff0a346ec00b2257e6f7"
+    },
+    "guildId": "GLOBAL",
+    "name": "Meja Jahit Sederhana",
+    "description": "[Crafting] Membuat perlengkapan kain awal.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Jahit Baju Kain Kasar",
+        "resultItemId": {
+          "$oid": "961deb96d1a9dfa6713fa26d"
+        },
+        "resultItemName": "Baju Kain Kasar",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "8afcf95c651df36c84d5a404"
+            },
+            "itemName": "Kain Usang",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "add1f602ad6f768ec68c6224"
+            },
+            "itemName": "Jarum Tulang",
+            "quantity": 1,
+            "durabilityHours": 6
+          }
+        ],
+        "craftingTimeHours": 1
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "78c4ff9d2cbb92760b75b8bd"
+        },
+        "itemName": "Kayu Keras",
+        "quantity": 20
+      },
+      {
+        "itemId": {
+          "$oid": "1f658d45af61065613d1ec0c"
+        },
+        "itemName": "Tali Akar",
+        "quantity": 10
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3221bf5b5012ce610b643967"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sumur Air Tua",
+    "description": "[Pekerja] Menimba air segar.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Air Embun Hutan",
+    "workerOutputQuantity": 5,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "1f658d45af61065613d1ec0c"
+        },
+        "itemName": "Tali Akar",
+        "quantity": 1,
+        "durabilityHours": 10
+      }
+    ],
+    "basePrice": 30,
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "constructionTimeHours": 0,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f079de45f1ceadd56167edc8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Meja Penyamak Kulit",
+    "description": "[Crafting] Memproses kulit dan membuat armor kulit.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Buat Zirah Kulit Binatang",
+        "resultItemId": {
+          "$oid": "fc7be735618985ac48c43132"
+        },
+        "resultItemName": "Zirah Kulit Binatang",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "01724b776064d9ce3b2d9a68"
+            },
+            "itemName": "Kulit Serigala Liar",
+            "quantity": 5
+          },
+          {
+            "itemId": {
+              "$oid": "1df3866407669b3eb14ad604"
+            },
+            "itemName": "Taring Babi Hutan",
+            "quantity": 2
+          },
+          {
+            "itemId": {
+              "$oid": "add1f602ad6f768ec68c6224"
+            },
+            "itemName": "Jarum Tulang",
+            "quantity": 1,
+            "durabilityHours": 12
+          }
+        ],
+        "craftingTimeHours": 4
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 350,
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "77b7d8c99cb5219b1d6a4970"
+        },
+        "itemName": "Kayu Jati",
+        "quantity": 100
+      },
+      {
+        "itemId": {
+          "$oid": "bdd8f30838bc28e8a120370e"
+        },
+        "itemName": "Batu Kasar Mentah",
+        "quantity": 100
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "bd7a7a2c7ced1f88594d2882"
+    },
+    "guildId": "GLOBAL",
+    "name": "Hutan Perburuan (T2)",
+    "description": "[Pekerja] Berburu binatang liar.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Kulit Serigala Liar",
+    "workerOutputQuantity": 2,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "30d4d4de2fbcdf762cdd33bb"
+        },
+        "itemName": "Pedang Batu Tajam",
+        "quantity": 1,
+        "durabilityHours": 24
+      }
+    ],
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "77b7d8c99cb5219b1d6a4970"
+        },
+        "itemName": "Kayu Jati",
+        "quantity": 150
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "b9e148846a266d4babe34fd8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Penginapan Desa (T2)",
+    "description": "[Income] Penginapan persinggahan T2. Maks 8 Silver/hari.",
+    "imageUrl": null,
+    "dailyProfit": 8,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 250,
+    "priceCurrency": "silver",
+    "rank": "Uncommon",
+    "constructionTimeHours": 24,
+    "buildable": false,
+    "buildRequirements": [],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c8f481a1d9b8282e757d73fb"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tambang Tembaga Dalam",
+    "description": "[Pekerja] Menambang tembaga mentah.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": false,
+    "recipes": [],
+    "workerOutputItemId": null,
+    "workerOutputItemName": "Tembaga Murni",
+    "workerOutputQuantity": 2,
+    "workerInputMaterials": [
+      {
+        "itemId": {
+          "$oid": "5420cb129352e069c79a2add"
+        },
+        "itemName": "Beliung Besi",
+        "quantity": 1,
+        "durabilityHours": 24
+      }
+    ],
+    "basePrice": 800,
+    "priceCurrency": "copper",
+    "rank": "Rare",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "4ec6fff3313b764d5b1c1082"
+        },
+        "itemName": "Kayu Hitam Seribu Tahun",
+        "quantity": 20
+      },
+      {
+        "itemId": {
+          "$oid": "f443f7ae8ccc0162b0abbbc3"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 20
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0a3481fa77a4c4df1d8ce6b1"
+    },
+    "guildId": "GLOBAL",
+    "name": "Paviliun Kitab (T3)",
+    "description": "[Crafting] Menyalin kitab bela diri luar.",
+    "imageUrl": null,
+    "dailyProfit": 0,
+    "profitCurrency": "silver",
+    "isCraftingStation": true,
+    "recipes": [
+      {
+        "recipeName": "Salin Kitab Pedang Angin Runtuh",
+        "resultItemId": {
+          "$oid": "ff762246c0aacdcfddb8880d"
+        },
+        "resultItemName": "Kitab Pedang Angin Runtuh",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "516a1e879f84c6e89ed1d09d"
+            },
+            "itemName": "Arang Bakar",
+            "quantity": 20
+          },
+          {
+            "itemId": {
+              "$oid": "3540fdfc3cfed13ab93a7523"
+            },
+            "itemName": "Tembaga Murni",
+            "quantity": 10
+          }
+        ],
+        "craftingTimeHours": 24
+      }
+    ],
+    "workerOutputItemId": null,
+    "workerOutputItemName": null,
+    "workerOutputQuantity": 0,
+    "workerInputMaterials": [],
+    "basePrice": 1200,
+    "priceCurrency": "silver",
+    "rank": "Rare",
+    "constructionTimeHours": 0,
+    "buildable": true,
+    "buildRequirements": [
+      {
+        "itemId": {
+          "$oid": "4ec6fff3313b764d5b1c1082"
+        },
+        "itemName": "Kayu Hitam Seribu Tahun",
+        "quantity": 100
+      },
+      {
+        "itemId": {
+          "$oid": "f443f7ae8ccc0162b0abbbc3"
+        },
+        "itemName": "Batangan Besi",
+        "quantity": 50
+      }
+    ],
+    "createdBy": "System",
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.371Z"
+    },
+    "__v": 0
   }
 ]
