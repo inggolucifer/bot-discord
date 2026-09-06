@@ -20,7 +20,7 @@ export default function ExplorePage() {
   const { data: locData, isLoading: isLoadingLocs } = useQuery({
     queryKey: ['exploreLocations'],
     queryFn: async () => {
-      const res = await api.get('/api/pve/locations');
+      const res = await api.get('/pve/locations');
       return res.data.data;
     }
   });
@@ -29,7 +29,7 @@ export default function ExplorePage() {
   const { data: statusData, isLoading: isLoadingStatus } = useQuery({
     queryKey: ['exploreStatus'],
     queryFn: async () => {
-      const res = await api.get('/api/pve/status');
+      const res = await api.get('/pve/status');
       return res.data.data;
     }
   });
@@ -37,7 +37,7 @@ export default function ExplorePage() {
   // Start exploration mutation
   const startExpMutation = useMutation({
     mutationFn: async ({ locationId, durationHours }: { locationId: string, durationHours: number }) => {
-      const res = await api.post('/api/pve/start', { locationId, durationHours });
+      const res = await api.post('/pve/start', { locationId, durationHours });
       return res.data;
     },
     onSuccess: (data) => {
@@ -54,7 +54,7 @@ export default function ExplorePage() {
   // Claim exploration mutation
   const claimExpMutation = useMutation({
     mutationFn: async () => {
-      const res = await api.post('/api/pve/claim');
+      const res = await api.post('/pve/claim');
       return res.data;
     },
     onSuccess: (data) => {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/store';
 import api from '@/lib/api';
-import { Shield, Sword, Scroll, Users, Coins, Flame, BookOpen, Gift, RefreshCcw, Send, Sparkles, Loader2, Footprints, History, Zap } from 'lucide-react';
+import { Shield, Sword, Scroll, Users, Coins, Flame, BookOpen, Gift, RefreshCcw, Send, Sparkles, Loader2, Footprints, History, Zap, Compass } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -327,7 +327,7 @@ export default function Home() {
       )}
 
       {/* Quick Actions / Shortcuts */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
         <a href="/inventory" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-[#c5a880] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(197,168,128,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-[#c5a880]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <div className="p-3 sm:p-4 bg-black rounded-full text-[#c5a880] group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(197,168,128,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-[#c5a880]/50">
@@ -363,6 +363,25 @@ export default function Home() {
           <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-blue-400 transition-colors">Pet Spiritual</h3>
           <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Rawat, beri makan, dan ikuti battle dengan pet spiritualmu.</p>
         </a>
+
+        <a href="/explore" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-purple-900 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(88,28,135,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="p-3 sm:p-4 bg-black rounded-full text-purple-600 group-hover:text-purple-400 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(88,28,135,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-purple-900">
+            <Compass size={28} className="sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-purple-400 transition-colors">Eksplorasi</h3>
+          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Jelajahi dunia luar untuk mencari material dan harta karun.</p>
+        </a>
+
+        <a href="/professions" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-orange-900 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(234,88,12,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-orange-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="p-3 sm:p-4 bg-black rounded-full text-orange-600 group-hover:text-orange-400 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(234,88,12,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-orange-900">
+            <Flame size={28} className="sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-orange-400 transition-colors">Profesi & Crafting</h3>
+          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Lakukan minigame profesi seperti Blacksmith, Fishing, dll.</p>
+        </a>
+
       </section>
 
       {/* Transfer Modal */}
