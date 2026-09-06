@@ -323,6 +323,74 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
     }
 });
 
+
+// Endpoint: POST /api/inventory/use-consumable
+router.post('/use-consumable', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { itemId } = req.body;
+
+    if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
+
+    const lockKey = `inventory_use_consumable_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
+    try {
+        const { withTransaction } = require('../utils/dbTransaction');
+        const CustomError = require('../utils/CustomError');
+        const TransactionLog = require('../../models/TransactionLog');
+        let itemName = '';
+        let messageResponse = '';
+
+        await withTransaction(async (session) => {
+            const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+            const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+
+            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
+                throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
+            }
+
+            const item = player.inventory[inventoryIndex].itemId;
+            if (item.category !== 'consume' && item.category !== 'pill' && item.category !== 'herb') {
+                throw new CustomError(`Item **${item.name}** tidak bisa digunakan.`, 400);
+            }
+
+            player.inventory[inventoryIndex].quantity -= 1;
+            if (player.inventory[inventoryIndex].quantity <= 0) {
+                player.inventory.splice(inventoryIndex, 1);
+            }
+            player.markModified('inventory');
+
+            await player.save({ session });
+
+            itemName = item.name;
+            let effect = item.effect || 'Tidak ada efek khusus.';
+
+            await TransactionLog.create([{
+                guildId,
+                type: 'use_item',
+                fromUserId: userId,
+                note: `[WEB] Digunakan: ${itemName} (${effect})`
+            }], { session });
+
+            messageResponse = `Kamu menggunakan **${itemName}**. Efek: ${effect}`;
+        });
+
+        res.json({ success: true, message: messageResponse });
+    } catch (error) {
+        if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-INVENTORY] Use consumable error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
 module.exports = router;
 
 // Endpoint: POST /api/inventory/use-law
