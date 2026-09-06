@@ -6295,5 +6295,3485 @@
     "origin": "Toko / Crafting",
     "baseHp": 5,
     "baseSpd": 5
+  },
+  {
+    "_id": {
+      "$oid": "07d6ecdc0e490bd791ba577a"
+    },
+    "guildId": "GLOBAL",
+    "name": "Ranting Patah",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ranting pohon biasa yang patah. Berguna untuk membuat alat darurat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 2,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.232Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "e8a5cfc1aaa9e2d9989608e9"
+    },
+    "guildId": "GLOBAL",
+    "name": "Batu Kali",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Batu sungai yang keras, bisa diasah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 2,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "318e56bb61747da1d9d96a8c"
+    },
+    "guildId": "GLOBAL",
+    "name": "Akar Kuat",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Akar pohon menjalar, bisa digunakan sebagai tali alami.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 3,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0481569ec24cfa00c03aa086"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kapak Batu Primitif",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "woodcutting_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 6,
+    "description": "[Durability: 6 Jam] Kapak rapuh dari batu dan ranting. Fondasi para penebang kayu awal.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d0273cd89fc8528ad2f99e19"
+    },
+    "guildId": "GLOBAL",
+    "name": "Beliung Batu Primitif",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "mining_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 6,
+    "description": "[Durability: 6 Jam] Beliung yang mudah patah, digunakan untuk menambang batu di gua dangkal.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "61c9792ebdc2285e4b8066c9"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cangkul Kayu Primitif",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "farming_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 6,
+    "description": "[Durability: 6 Jam] Alat tani paling dasar. Cepat rusak.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a1cf2b8e878544ceeab3482"
+    },
+    "guildId": "GLOBAL",
+    "name": "Joran Bambu Primitif",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "fishing_rod",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 6,
+    "description": "[Durability: 6 Jam] Bambu dengan tali akar. Hanya cukup untuk ikan kecil.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "78c4ff9d2cbb92760b75b8bd"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kayu Keras",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kayu hasil tebangan yang lebih solid dari ranting.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 10,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "bdd8f30838bc28e8a120370e"
+    },
+    "guildId": "GLOBAL",
+    "name": "Batu Kasar Mentah",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Hasil tambang batu pertama. Pondasi bangunan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 10,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "cb849e2bca4463e7f477febe"
+    },
+    "guildId": "GLOBAL",
+    "name": "Bibit Padi Liar",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Bibit padi yang didapat dari alam.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "bc30a853efc986941958ab9a"
+    },
+    "guildId": "GLOBAL",
+    "name": "Gandum Liar",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Hasil tani dasar, bisa diolah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 8,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "59a761ca37d1c0cc5db33c74"
+    },
+    "guildId": "GLOBAL",
+    "name": "Umpan Tepung",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Umpan mancing dari gandum tumbuk.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 12,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "2143b78c8fcd7427946e0c80"
+    },
+    "guildId": "GLOBAL",
+    "name": "Daun Mint Hutan",
+    "rank": "Common",
+    "category": "herb",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Herba dasar yang mendinginkan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6b0620b04f18ba90b14c8ace"
+    },
+    "guildId": "GLOBAL",
+    "name": "Ikan Ekor Api",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ikan kecil dengan energi hangat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 20,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "98543f03a1a1f6fb9dd9f982"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Api Kecil",
+    "rank": "Uncommon",
+    "category": "pill",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pil sederhana penghangat tubuh. (ATK+5 1 Jam)",
+    "effect": "buff_atk_boost_5_1h",
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c13930070465a3ba5d576356"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tongkat Kayu Latihan",
+    "rank": "Common",
+    "category": "weapon",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 5,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Senjata bagi para pemula di dunia persilatan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "961deb96d1a9dfa6713fa26d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Baju Kain Kasar",
+    "rank": "Common",
+    "category": "armor",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 5,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pakaian biasa, sedikit melindung dari dingin.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9f6fdbe395d7e4a4cc008924"
+    },
+    "guildId": "GLOBAL",
+    "name": "Batu Asah",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Batu khusus untuk mempertajam alat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 30,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "77b7d8c99cb5219b1d6a4970"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kayu Jati",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kayu kuat, bahan utama peradaban batu.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c2119e8238073f791a7d0bce"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kapak Batu Asah",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "woodcutting_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Kapak batu yang telah ditajamkan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "e8cc21bbf7ad10a6d1f9b910"
+    },
+    "guildId": "GLOBAL",
+    "name": "Beliung Batu Keras",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "mining_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Beliung yang lebih solid untuk tambang.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4d4b783905fc33d0411989b0"
+    },
+    "guildId": "GLOBAL",
+    "name": "Palu Batu",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "forge",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Palu keras untuk menempa benda kasar.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3777e3146e2cfc5bb13c8106"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cangkul Batu",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "farming_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Cangkul yang bisa menggali tanah lebih cepat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c84b8a7f30bdb6063a2e5db9"
+    },
+    "guildId": "GLOBAL",
+    "name": "Joran Kayu Kuat",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "fishing_rod",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Joran memancing dari kayu jati.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "037a6f287f121fb67d301f56"
+    },
+    "guildId": "GLOBAL",
+    "name": "Biji Besi Mentah",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Biji mentah dari kedalaman gua batu.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "31fb80a6e032b6e44e6f45ea"
+    },
+    "guildId": "GLOBAL",
+    "name": "Herba Darah",
+    "rank": "Uncommon",
+    "category": "herb",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Herba berbau anyir, berguna menutrisi darah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 60,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "c3385d84e27ebb5cd34658d9"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Pemulih Darah",
+    "rank": "Uncommon",
+    "category": "pill",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pil merah yang memulihkan vitalitas dasar. (HP+20 1 Jam)",
+    "effect": "buff_hp_boost_20_1h",
+    "origin": null,
+    "basePrice": 150,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "30d4d4de2fbcdf762cdd33bb"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pedang Batu Tajam",
+    "rank": "Uncommon",
+    "category": "weapon",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 15,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pedang primitif namun mematikan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "fc7be735618985ac48c43132"
+    },
+    "guildId": "GLOBAL",
+    "name": "Zirah Kulit Binatang",
+    "rank": "Uncommon",
+    "category": "armor",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 12,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Baju zirah dari kulit tebal.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f443f7ae8ccc0162b0abbbc3"
+    },
+    "guildId": "GLOBAL",
+    "name": "Batangan Besi",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Besi yang telah dilebur dengan sempurna.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 150,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.299Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "516a1e879f84c6e89ed1d09d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Arang Bakar",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Bahan bakar efektif dari kayu jati.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 90,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "5be673f6b14cd153f28be409"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kapak Besi",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "woodcutting_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 24,
+    "description": "[Durability: 24 Jam] Kapak berat yang bisa merobohkan pohon besar dengan mudah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "5420cb129352e069c79a2add"
+    },
+    "guildId": "GLOBAL",
+    "name": "Beliung Besi",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "mining_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 24,
+    "description": "[Durability: 24 Jam] Menembus batuan keras mencari bijih mulia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "1dd623deeeb82ed8db028fd4"
+    },
+    "guildId": "GLOBAL",
+    "name": "Palu Besi Hitam",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "forge",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 24,
+    "description": "[Durability: 24 Jam] Alat wajib pandai besi sejati.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a1327f2f93c6cd16b0d0b7b"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cangkul Besi",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "farming_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 24,
+    "description": "[Durability: 24 Jam] Cangkul yang membelah bumi, hasil tani meningkat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0e73d4172ca80b354644d451"
+    },
+    "guildId": "GLOBAL",
+    "name": "Joran Besi Lentur",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "fishing_rod",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 24,
+    "description": "[Durability: 24 Jam] Mampu menahan tarikan ikan monster.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4ec6fff3313b764d5b1c1082"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kayu Hitam Seribu Tahun",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kayu langka dengan ketangguhan setara besi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 500,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "1c2bcb2a65664c8b847d8405"
+    },
+    "guildId": "GLOBAL",
+    "name": "Biji Baja Api",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Biji tambang yang mengeluarkan hawa panas.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 600,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "fb48698d17e0abd3412c5ad8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Teratai Es",
+    "rank": "Rare",
+    "category": "herb",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Tumbuh di air dingin ekstrem, mengendalikan Qi berlebih.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 700,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "b182e3cda6bb91abda5193a8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Pelebaran Meridian",
+    "rank": "Rare",
+    "category": "pill",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Membuka meridian sementara. (ATK+30 2 Jam)",
+    "effect": "buff_atk_boost_30_2h",
+    "origin": null,
+    "basePrice": 1500,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "55b5db3533f60211d0461351"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pedang Besi Tempa",
+    "rank": "Rare",
+    "category": "weapon",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 45,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pedang standar sekte bela diri luar.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 2000,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "04e05d2ec5f2a9e04d9a5044"
+    },
+    "guildId": "GLOBAL",
+    "name": "Zirah Besi Berat",
+    "rank": "Rare",
+    "category": "armor",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 40,
+    "baseHp": 0,
+    "baseSpd": -5,
+    "maxDurability": null,
+    "description": "Kuat menahan tebasan, namun menghambat gerakan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 2000,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "82d18a8bee5feb27c2b3d8b5"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sepatu Bot Besi",
+    "rank": "Rare",
+    "category": "boots",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 10,
+    "baseHp": 0,
+    "baseSpd": 5,
+    "maxDurability": null,
+    "description": "Melindungi kaki dari jebakan rahasia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 1200,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "97bb2693130cdf6082a8b751"
+    },
+    "guildId": "GLOBAL",
+    "name": "Baja Murni",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Baja kualitas tinggi dengan rasio karbon sempurna.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 25,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9bed7a7d6a0324a855d9c851"
+    },
+    "guildId": "GLOBAL",
+    "name": "Inti Monster Udara",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Batu kristal dari monster elemen angin.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "b248220fc6bf50bf67ea3450"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kapak Baja Mekanis",
+    "rank": "Epic",
+    "category": "tool",
+    "tier": 4,
+    "toolType": "woodcutting_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 48,
+    "description": "[Durability: 48 Jam] Mesin pemotong canggih sekte teknologi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 75,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "7ddd45940fde0484e34786ed"
+    },
+    "guildId": "GLOBAL",
+    "name": "Beliung Baja Bor",
+    "rank": "Epic",
+    "category": "tool",
+    "tier": 4,
+    "toolType": "mining_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 48,
+    "description": "[Durability: 48 Jam] Menembus tambang kristal sekte.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 75,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "450805503cd09171393a5a25"
+    },
+    "guildId": "GLOBAL",
+    "name": "Palu Baja Otomatis",
+    "rank": "Epic",
+    "category": "tool",
+    "tier": 4,
+    "toolType": "forge",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 48,
+    "description": "[Durability: 48 Jam] Menempa tanpa henti dengan presisi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 75,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "7d73d4152fb616eef5d98ed6"
+    },
+    "guildId": "GLOBAL",
+    "name": "Traktor Mini Formasi",
+    "rank": "Epic",
+    "category": "tool",
+    "tier": 4,
+    "toolType": "farming_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 48,
+    "description": "[Durability: 48 Jam] Alat tanam digerakkan formasi batu spiritual bawah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 75,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "5728b5c27fac237087351e2d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kristal Energi Spiritual",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Sumber daya penting untuk formasi dan sekte.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 90,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4d1d0a313683d2ba78f73c55"
+    },
+    "guildId": "GLOBAL",
+    "name": "Ginseng Seratus Tahun",
+    "rank": "Epic",
+    "category": "herb",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Bahan utama obat kultivator.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 120,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3c440c30f4e92fdc8dca9ce3"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Pemusat Qi",
+    "rank": "Epic",
+    "category": "pill",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Meningkatkan daya tampung Qi. (HP+100 3 Jam)",
+    "effect": "buff_hp_boost_100_3h",
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3b1b467406ccbaef281e8bad"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pedang Baja Terbang",
+    "rank": "Epic",
+    "category": "weapon",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 120,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 20,
+    "maxDurability": null,
+    "description": "Senjata andalan murid elit sekte.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 500,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3fcd845cf3ab1096c19383b6"
+    },
+    "guildId": "GLOBAL",
+    "name": "Jubah Angin Mistis",
+    "rank": "Epic",
+    "category": "armor",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 80,
+    "baseHp": 0,
+    "baseSpd": 30,
+    "maxDurability": null,
+    "description": "Jubah ringan yang ditenun dengan Inti Monster Udara.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 500,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "32bb5bdd7749ae061d001747"
+    },
+    "guildId": "GLOBAL",
+    "name": "Baja Meteorit",
+    "rank": "Legendary",
+    "category": "material",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Baja yang jatuh dari langit. Sangat keras dan menyerap Qi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "929b3d9efd89e4b22c9a54b3"
+    },
+    "guildId": "GLOBAL",
+    "name": "Darah Naga Bumi",
+    "rank": "Legendary",
+    "category": "material",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ekstrak dari garis keturunan naga.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 8,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a464d58fc125a4e843402446"
+    },
+    "guildId": "GLOBAL",
+    "name": "Palu Api Neraka",
+    "rank": "Legendary",
+    "category": "tool",
+    "tier": 5,
+    "toolType": "forge",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 72,
+    "description": "[Durability: 72 Jam] Ditempa di lahar, satu-satunya alat penempa material mitos.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 12,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "14a40415788b3f3762d41b61"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cangkul Penghancur Bumi",
+    "rank": "Legendary",
+    "category": "tool",
+    "tier": 5,
+    "toolType": "farming_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 72,
+    "description": "[Durability: 72 Jam] Menggarap ladang spiritual keras.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 12,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "374d12d48de0e6ebe4004a9b"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kayu Pohon Dunia",
+    "rank": "Legendary",
+    "category": "material",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Cabang pohon kosmik penyangga dunia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9081018eee0bc84a8415d4cd"
+    },
+    "guildId": "GLOBAL",
+    "name": "Teratai Surgawi",
+    "rank": "Legendary",
+    "category": "herb",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Herba tertinggi penyembuh jiwa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 20,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6afe8440796e326f15237d07"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Reinkarnasi Nirwana",
+    "rank": "Legendary",
+    "category": "pill",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Melampaui batas mortal. (ATK+200 12 Jam)",
+    "effect": "buff_atk_boost_200_12h",
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6323f79fe9f0a7402e414873"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tsunami Edge Sword",
+    "rank": "Legendary",
+    "category": "weapon",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 350,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 50,
+    "maxDurability": null,
+    "description": "Pedang yang mengendalikan lautan Qi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "d6b1b16fc31a66bff0c54396"
+    },
+    "guildId": "GLOBAL",
+    "name": "Armor Skala Naga",
+    "rank": "Legendary",
+    "category": "armor",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 300,
+    "baseHp": 500,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Zirah tak tertembus dari sisik Naga Bumi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "415ab5637fc96d2a72608a62"
+    },
+    "guildId": "GLOBAL",
+    "name": "Inti Bintang Runtuh",
+    "rank": "Mythical",
+    "category": "material",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Material absolut dari rasi bintang yang mati.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 2,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "76e6de5b06a3c85f9d575288"
+    },
+    "guildId": "GLOBAL",
+    "name": "Esensi Primordial",
+    "rank": "Mythical",
+    "category": "material",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Energi penciptaan dunia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 3,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "707dc377278ff0b8d99531ff"
+    },
+    "guildId": "GLOBAL",
+    "name": "Palu Pencipta Kosmos",
+    "rank": "Mythical",
+    "category": "tool",
+    "tier": 6,
+    "toolType": "forge",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 168,
+    "description": "[Durability: 168 Jam] Artefak sejati pencipta senjata dewa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "758a5ea8685aefc7f658153d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Keabadian Kaisar",
+    "rank": "Mythical",
+    "category": "pill",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pil legendaris bagi mereka yang menentang surga. (HP+2000 24 Jam)",
+    "effect": "buff_hp_boost_2000_24h",
+    "origin": null,
+    "basePrice": 20,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "8519c1c8d296dece94e62f50"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pedang Pemecah Langit",
+    "rank": "Mythical",
+    "category": "weapon",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 1500,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 200,
+    "maxDurability": null,
+    "description": "Satu tebasan membelah benua, mahakarya puncak fana.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "cd40e5b8dfc6cfe3288b91ca"
+    },
+    "guildId": "GLOBAL",
+    "name": "Jubah Kaisar Ilahi",
+    "rank": "Mythical",
+    "category": "armor",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 1200,
+    "baseHp": 3000,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pakaian mereka yang menguasai Hukum Alam semesta.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "94395b16d3b8c400bd013947"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kitab Dasar Qi",
+    "rank": "Uncommon",
+    "category": "manual",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Jurus pernapasan dasar sekte luar.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6726584e4365886317005bc1"
+    },
+    "guildId": "GLOBAL",
+    "name": "Hukum Alam: Angin Berhembus",
+    "rank": "Epic",
+    "category": "law",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Hukum alam pengendali angin kencang.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 1000,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "04bfe413329b17e4377b0f8f"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kitab Ilahi Penakluk Naga",
+    "rank": "Legendary",
+    "category": "manual",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Jurus penghancur dengan kekuatan murni Naga.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 20,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:17:39.300Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "8afcf95c651df36c84d5a404"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kain Usang",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Potongan kain tak terpakai.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.369Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "71c841a347d58e761cc943bf"
+    },
+    "guildId": "GLOBAL",
+    "name": "Topi Jerami Pudar",
+    "rank": "Common",
+    "category": "helmet",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 2,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Menahan panas matahari.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 20,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f9046e402bbdb2e8b2aeacc3"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Petani",
+    "rank": "Common",
+    "category": "pants",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Celana kain biasa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 25,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "51d9555643ac974f4918e7d2"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sandal Anyaman",
+    "rank": "Common",
+    "category": "boots",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 2,
+    "maxDurability": null,
+    "description": "Sandal yang cepat putus.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 15,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "1f658d45af61065613d1ec0c"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tali Akar",
+    "rank": "Common",
+    "category": "material",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Akar yang dipelintir menjadi tali kuat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "693e6c6fbd1633199a729252"
+    },
+    "guildId": "GLOBAL",
+    "name": "Jamur Racun Lemah",
+    "rank": "Common",
+    "category": "herb",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Sedikit beracun, tapi bisa jadi obat jika diracik benar.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 10,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "043dedbb6f8b2057eeb38435"
+    },
+    "guildId": "GLOBAL",
+    "name": "Air Embun Hutan",
+    "rank": "Common",
+    "category": "consume",
+    "tier": 1,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Menyegarkan tenggorokan.",
+    "effect": "buff_hp_boost_5_1h",
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "add1f602ad6f768ec68c6224"
+    },
+    "guildId": "GLOBAL",
+    "name": "Jarum Tulang",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "kitchen_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 6,
+    "description": "[Durability: 6 Jam] Untuk menjahit kulit kecil.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 10,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "01724b776064d9ce3b2d9a68"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kulit Serigala Liar",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kulit keras dari serigala biasa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "1df3866407669b3eb14ad604"
+    },
+    "guildId": "GLOBAL",
+    "name": "Taring Babi Hutan",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Bisa diasah menjadi belati tulang.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 35,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6cf61c818e7d91e6ce8a6b60"
+    },
+    "guildId": "GLOBAL",
+    "name": "Helm Kulit Serigala",
+    "rank": "Uncommon",
+    "category": "helmet",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 8,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Helm dari kepala serigala.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 100,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "2d7ce67aed4350d08793d393"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Kulit Tebal",
+    "rank": "Uncommon",
+    "category": "pants",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 10,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Celana yang lebih hangat dan aman.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 120,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a751f6bb5d73f1a3daa65a47"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sepatu Bot Kulit",
+    "rank": "Uncommon",
+    "category": "boots",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 4,
+    "baseHp": 0,
+    "baseSpd": 5,
+    "maxDurability": null,
+    "description": "Sepatu untuk medan bebatuan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 100,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a238ef8db4965aeafbd2db72"
+    },
+    "guildId": "GLOBAL",
+    "name": "Amulet Batu",
+    "rank": "Uncommon",
+    "category": "accessories",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 50,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Amulet dengan ukiran doa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 150,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "bdc6461b5a5b618d4a649bc5"
+    },
+    "guildId": "GLOBAL",
+    "name": "Racun Kelumpuhan Kecil",
+    "rank": "Uncommon",
+    "category": "pill",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Melawan racun lemah.",
+    "effect": "buff_anti_poison_1h",
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "fe75b32d69becff95764901e"
+    },
+    "guildId": "GLOBAL",
+    "name": "Daging Asap",
+    "rank": "Uncommon",
+    "category": "consume",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Daging yang diawetkan.",
+    "effect": "buff_hp_boost_30_1h",
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "20b4ed4ac8bdc45eb6b8cdff"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pisau Dapur Tulang",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 2,
+    "toolType": "kitchen_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 12,
+    "description": "[Durability: 12 Jam] Alat pengolah daging.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 60,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3540fdfc3cfed13ab93a7523"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tembaga Murni",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Logam konduktor Qi yang baik.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 120,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "3009b8f914dab86114b35bef"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kawat Baja Liat",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kawat sangat kuat untuk senjata rahasia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 200,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "dc72e30e4e409c5b246b2b24"
+    },
+    "guildId": "GLOBAL",
+    "name": "Helm Besi Berat",
+    "rank": "Rare",
+    "category": "helmet",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 25,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Pelindung kepala prajurit sekte.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 800,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "832fe56b69ba3649658b3a74"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Plat Besi",
+    "rank": "Rare",
+    "category": "pants",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 30,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Melindungi paha dari serangan bawah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 1000,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "30f9f267d96a4c658c7544ee"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cincin Perak Tembaga",
+    "rank": "Rare",
+    "category": "accessories",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 10,
+    "baseDef": 0,
+    "baseHp": 100,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Cincin yang mengalirkan Qi tipis.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 1500,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "905ff2db372a53aec2b2e871"
+    },
+    "guildId": "GLOBAL",
+    "name": "Pil Pembersihan Sumsum",
+    "rank": "Rare",
+    "category": "pill",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Meningkatkan ketahanan tubuh. (DEF+20 2 Jam)",
+    "effect": "buff_def_boost_20_2h",
+    "origin": null,
+    "basePrice": 1000,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "ff762246c0aacdcfddb8880d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kitab Pedang Angin Runtuh",
+    "rank": "Rare",
+    "category": "manual",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Teknik pedang cepat sekte udara.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 800,
+    "priceCurrency": "copper",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "414155ae9c37bfec602969cf"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sutra Laba-Laba Setan",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Bahan tenun pakaian sakti.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 60,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "a715b45dbed064f2b453820f"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kristal Air Mata Duyung",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Menenangkan Qi beringas.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "8f909df5d70dc9ceb24da672"
+    },
+    "guildId": "GLOBAL",
+    "name": "Topi Bambu Penyamar",
+    "rank": "Epic",
+    "category": "helmet",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 40,
+    "baseHp": 0,
+    "baseSpd": 10,
+    "maxDurability": null,
+    "description": "Menyembunyikan aura kultivasi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 300,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0e7b8d64fc17686c43428331"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Angin Puyuh",
+    "rank": "Epic",
+    "category": "pants",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 50,
+    "baseHp": 0,
+    "baseSpd": 25,
+    "maxDurability": null,
+    "description": "Membuat langkah seringan angin.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 400,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "2d27878461a22a76163121b3"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sepatu Awan Terbang",
+    "rank": "Epic",
+    "category": "boots",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 20,
+    "baseHp": 0,
+    "baseSpd": 40,
+    "maxDurability": null,
+    "description": "Bisa menapak di atas air.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 350,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f2799220fe1a1ad22d222147"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kalung Inti Monster",
+    "rank": "Epic",
+    "category": "accessories",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 50,
+    "baseDef": 0,
+    "baseHp": 500,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Kalung yang meningkatkan daya hancur.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 600,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "0b338a3d7bd906fbc78a85ac"
+    },
+    "guildId": "GLOBAL",
+    "name": "Hukum Alam: Air Tenang",
+    "rank": "Epic",
+    "category": "law",
+    "tier": 4,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Hukum mengendalikan lautan.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 1200,
+    "priceCurrency": "silver",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9a2546673ad88c0d42f9de7d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sisik Naga Hitam",
+    "rank": "Legendary",
+    "category": "material",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Mustahil ditembus senjata biasa.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 12,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "e1d76c440f26868e6d1270d8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Api Jiwa Phoenix",
+    "rank": "Legendary",
+    "category": "material",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Api yang tak pernah padam.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 18,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "343a7a966cdf9e5dd06b27c6"
+    },
+    "guildId": "GLOBAL",
+    "name": "Helm Tanduk Naga",
+    "rank": "Legendary",
+    "category": "helmet",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 50,
+    "baseDef": 150,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Helm dari tulang naga asli.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 60,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "117c9fea0ffa31e5eca251e2"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Sisik Hitam",
+    "rank": "Legendary",
+    "category": "pants",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 200,
+    "baseHp": 800,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Tahan akan lahar panas.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 70,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "b77517c1bd15b02e1804903e"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sepatu Langkah Kekosongan",
+    "rank": "Legendary",
+    "category": "boots",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 80,
+    "baseHp": 0,
+    "baseSpd": 100,
+    "maxDurability": null,
+    "description": "Bisa merobek dimensi spasial jarak dekat.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 60,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "9799570fdd7ff746b5b99028"
+    },
+    "guildId": "GLOBAL",
+    "name": "Cincin Simpanan Spasial",
+    "rank": "Legendary",
+    "category": "accessories",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 100,
+    "baseDef": 0,
+    "baseHp": 2000,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Berisi miniatur dunia kecil.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 100,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "ff295b293bcd816121380d6d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Kitab Penghancur Bintang",
+    "rank": "Legendary",
+    "category": "manual",
+    "tier": 5,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Jurus yang dilarang surga.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 50,
+    "priceCurrency": "gold",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4abebe448a97fa76e48f480f"
+    },
+    "guildId": "GLOBAL",
+    "name": "Air Mata Surga",
+    "rank": "Mythical",
+    "category": "material",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Embun yang jatuh saat dewa menangis.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 4,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "377ec7de7a8374bd4bb3f8c0"
+    },
+    "guildId": "GLOBAL",
+    "name": "Tulang Dewa Kuno",
+    "rank": "Mythical",
+    "category": "material",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Menahan hukum alam semesta.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 5,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "f8ef07dd88671e85854b56c9"
+    },
+    "guildId": "GLOBAL",
+    "name": "Mahkota Penguasa Surga",
+    "rank": "Mythical",
+    "category": "helmet",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 300,
+    "baseDef": 600,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Lambang absolut dari penguasa dimensi.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 40,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "4e65fe9c37ac8418b8200bb8"
+    },
+    "guildId": "GLOBAL",
+    "name": "Celana Takdir Emas",
+    "rank": "Mythical",
+    "category": "pants",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 800,
+    "baseHp": 5000,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ditenun dari benang takdir dunia.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 45,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "acce6de5ee1dbb3750eaa95d"
+    },
+    "guildId": "GLOBAL",
+    "name": "Sepatu Penginjak Dao",
+    "rank": "Mythical",
+    "category": "boots",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 300,
+    "baseHp": 0,
+    "baseSpd": 400,
+    "maxDurability": null,
+    "description": "Menginjak hukum alam dengan satu langkah.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 35,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "e862da226d4a9656afb64573"
+    },
+    "guildId": "GLOBAL",
+    "name": "Liontin Dao Kosmik",
+    "rank": "Mythical",
+    "category": "accessories",
+    "tier": 6,
+    "toolType": null,
+    "baseAtk": 500,
+    "baseDef": 500,
+    "baseHp": 10000,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Liontin yang setara dengan nyawa kedua.",
+    "effect": null,
+    "origin": null,
+    "basePrice": 80,
+    "priceCurrency": "jade",
+    "createdBy": "System",
+    "imageUrl": null,
+    "createdAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T09:18:23.370Z"
+    },
+    "__v": 0
   }
 ]
