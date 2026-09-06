@@ -4,7 +4,7 @@ const Player = require('../models/Player');
 const SYSTEM_REALMS = [
   {
     name: 'Fondasi Fana (Mortal Foundation)',
-    maxStage: 0,
+    maxStage: 9,
     baseQiCapacity: 1000,
     qiRatePerMinute: 1,
     baseSuccessRate: 100 // Mortal ke Qi Refining 100% success
