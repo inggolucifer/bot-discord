@@ -2747,6 +2747,69 @@
         "_id": {
           "$oid": "6a91b16075cf9e21a690a57a"
         }
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a57b"
+        },
+        "recipeName": "Rajut Topi Jerami",
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54c000"
+        },
+        "resultItemName": "Topi Jerami Pemula",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc7"
+            },
+            "itemName": "Serat Tumbuhan",
+            "quantity": 8,
+            "durabilityHours": 1
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a57c"
+        },
+        "recipeName": "Jahit Celana Kasar",
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54c001"
+        },
+        "resultItemName": "Celana Kain Kasar",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 10,
+            "durabilityHours": 1
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "6a91b16075cf9e21a690a57e"
+        },
+        "recipeName": "Rajut Sandal Jerami",
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54c002"
+        },
+        "resultItemName": "Sandal Jerami",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc7"
+            },
+            "itemName": "Serat Tumbuhan",
+            "quantity": 5,
+            "durabilityHours": 1
+          }
+        ]
       }
     ],
     "updatedAt": {
