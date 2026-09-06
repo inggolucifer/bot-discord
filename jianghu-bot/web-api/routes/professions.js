@@ -173,7 +173,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
     }
 
     const lockKey = `professions_unlock_${req.user.userId}`;
-    const releaseLock = LockManager.acquire(lockKey);
+    const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
         return res.status(429).json({ error: 'Transaksi sedang diproses, harap tunggu...' });
     }
@@ -197,7 +197,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
         if (!player.professions) player.professions = {};
         if (!player.professions[profession]) player.professions[profession] = {};
 
-        player.professions[profession].isUnlocked = true;
+        player.set(`professions.${profession}.isUnlocked`, true);
         await player.save();
 
         res.json({ message: `Profesi ${profession} berhasil dibuka!`, professions: player.professions });
