@@ -124,6 +124,7 @@ const setupServer = (client) => {
     const battleRoutes = require('./routes/battle');
     const adminRoutes = require('./routes/admin');
     const pveRoutes = require('./routes/pve');
+    const professionRoutes = require('./routes/professions');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
@@ -139,6 +140,7 @@ const setupServer = (client) => {
     app.use('/api/battle', battleRoutes);
     app.use('/api/admin', adminRoutes);
     app.use('/api/pve', pveRoutes);
+    app.use('/api/professions', professionRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
