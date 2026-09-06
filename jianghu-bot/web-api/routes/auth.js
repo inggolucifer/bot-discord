@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
         };
 
         const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' });
 
         const cookieOptions = {
             httpOnly: true,
@@ -80,7 +80,7 @@ router.post('/login', async (req, res) => {
 
         res.cookie('refreshToken', refreshToken, {
             ...cookieOptions,
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 
         res.json({
@@ -156,7 +156,7 @@ router.post('/migrate', (req, res) => {
         };
 
         const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' });
 
         const cookieOptions = {
             httpOnly: true,
@@ -172,7 +172,7 @@ router.post('/migrate', (req, res) => {
 
         res.cookie('refreshToken', refreshToken, {
             ...cookieOptions,
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 
         res.json({ success: true, token: accessToken });
