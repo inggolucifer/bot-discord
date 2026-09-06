@@ -621,7 +621,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.662Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -645,7 +646,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.685Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -669,7 +671,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.709Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -693,7 +696,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -717,7 +721,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -741,7 +746,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -765,7 +771,8 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 10
   },
   {
     "_id": {
@@ -1749,7 +1756,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1773,7 +1781,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1797,7 +1806,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1821,7 +1831,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1845,7 +1856,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1869,7 +1881,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1893,7 +1906,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -1917,7 +1931,8 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 25
   },
   {
     "_id": {
@@ -2853,7 +2868,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2877,7 +2893,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2901,7 +2918,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2925,7 +2943,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2949,7 +2968,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2973,7 +2993,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -2997,7 +3018,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -3021,7 +3043,8 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 50
   },
   {
     "_id": {
@@ -3957,7 +3980,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -3981,7 +4005,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.510Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4005,7 +4030,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4029,7 +4055,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4053,7 +4080,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4077,7 +4105,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4101,7 +4130,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -4125,7 +4155,8 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "baseAtk": 250
   },
   {
     "_id": {
@@ -6294,7 +6325,8 @@
     "tier": 1,
     "origin": "Toko / Crafting",
     "baseHp": 5,
-    "baseSpd": 5
+    "baseSpd": 5,
+    "baseDef": 5
   },
   {
     "_id": {
@@ -8557,7 +8589,7 @@
     "tier": 1,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 0,
+    "baseDef": 5,
     "baseHp": 0,
     "baseSpd": 2,
     "maxDurability": null,
@@ -9775,5 +9807,35 @@
       "$date": "2026-09-06T09:18:23.370Z"
     },
     "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a91b15aa9e03dc91c54bfff"
+    },
+    "name": "Pedang Bambu",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 10,
+    "category": "weapon",
+    "createdAt": {
+      "$date": "2026-08-28T16:03:39.300Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Pedang latihan sederhana dari bambu.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Kerajinan",
+    "priceCurrency": "copper",
+    "rank": "Common",
+    "tier": 1,
+    "updatedAt": {
+      "$date": "2026-08-29T13:49:51.379Z"
+    },
+    "baseAtk": 8,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "toolType": null,
+    "maxDurability": null
   }
 ]
