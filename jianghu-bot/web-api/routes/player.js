@@ -119,7 +119,13 @@ router.get('/assets', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const player = await Player.findOne({ discordId: userId })
-            .populate('assets.assetId')
+            .populate({
+                path: 'assets.assetId',
+                populate: {
+                    path: 'workerInputMaterials.itemId',
+                    model: 'Item'
+                }
+            })
             .lean();
 
         if (!player) {
@@ -161,9 +167,11 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 rank: asset.assetId ? asset.assetId.rank : 'Common',
                 isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false,
                 recipes: asset.assetId ? asset.assetId.recipes : [],
+                workerInputMaterials: asset.assetId ? asset.assetId.workerInputMaterials : [],
                 isDamaged: asset.isDamaged,
                 damageType: asset.damageType,
-                guardEndTime: asset.guardEndTime
+                guardEndTime: asset.guardEndTime,
+                toolDurabilityUsage: asset.toolDurabilityUsage ? Object.fromEntries(asset.toolDurabilityUsage) : {}
             };
         });
 
