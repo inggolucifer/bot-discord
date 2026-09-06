@@ -5806,5 +5806,91 @@
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     }
+  },
+  {
+    "_id": {
+      "$oid": "60a1b15aa9e03dc91c54bfc0"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Cangkul Pemula",
+    "rank": "Common",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "farming_tool",
+    "maxDurability": 50,
+    "description": "Cangkul kayu kasar untuk bertani. Durability: 50",
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "60a1b15aa9e03dc91c54bfc3"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Tungku Alkimia Dasar",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "furnace",
+    "maxDurability": 20,
+    "description": "Tungku kecil untuk meracik pil. Rentan meledak jika salah suhu. Durability: 20",
+    "basePrice": 5,
+    "priceCurrency": "silver",
+    "createdAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "60a1b15aa9e03dc91c54bfc4"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Palu Tempa Besi",
+    "rank": "Uncommon",
+    "category": "tool",
+    "tier": 1,
+    "toolType": "forge",
+    "maxDurability": 40,
+    "description": "Palu berat untuk membentuk logam. Durability: 40",
+    "basePrice": 5,
+    "priceCurrency": "silver",
+    "createdAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "60a1b15aa9e03dc91c54bfc5"
+    },
+    "guildId": "1504794711775514856",
+    "name": "Junk (Sampah)",
+    "rank": "Common",
+    "category": "none",
+    "tier": 1,
+    "description": "Sisa-sisa material yang gagal diolah.",
+    "basePrice": 1,
+    "priceCurrency": "copper",
+    "createdAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-06T03:16:04.523Z"
+    },
+    "__v": 0
   }
 ]

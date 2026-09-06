@@ -11,6 +11,10 @@ const itemSchema = new mongoose.Schema({
   category: { type: String, enum: ['weapon', 'cloth', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'tool', 'none'], default: 'none' },
   tier: { type: Number, min: 1, max: 9, default: 1 },
   toolType: { type: String, enum: ['fishing_rod', 'furnace', 'forge', 'kitchen_tool', 'farming_tool', null], default: null },
+  baseAtk: { type: Number, default: 0 },
+  baseDef: { type: Number, default: 0 },
+  baseHp: { type: Number, default: 0 },
+  baseSpd: { type: Number, default: 0 },
   maxDurability: { type: Number, default: null }, // Used when generating an inventory instance of this tool
   description: { type: String, default: '-' },
   imageUrl: { type: String, default: null },

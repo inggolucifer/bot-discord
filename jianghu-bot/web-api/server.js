@@ -93,6 +93,8 @@ const setupServer = (client) => {
         '/api/pet/heal',
         '/api/pet/battle',
         '/api/pve/start',
+        '/api/professions/start',
+        '/api/professions/complete',
         '/api/pve/claim'
     ];
     app.use((req, res, next) => {

@@ -22,6 +22,20 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
   let mult = { hp: 1, atk: 1, def: 1, spd: 1 };
   let flat = { hp: 0, atk: 0, def: 0, spd: 0 };
 
+  // 2-Eq. Equipment Stats from Inventory (Quality Multiplier applied)
+  if (player.inventory && player.inventory.length > 0) {
+    for (const invItem of player.inventory) {
+      const item = invItem.itemId;
+      if (item && (item.category === 'weapon' || item.category === 'cloth' || item.category === 'accessories')) {
+        const quality = invItem.qualityMultiplier || 1.0;
+        flat.hp += Math.floor((item.baseHp || 0) * quality);
+        flat.atk += Math.floor((item.baseAtk || 0) * quality);
+        flat.def += Math.floor((item.baseDef || 0) * quality);
+        flat.spd += Math.floor((item.baseSpd || 0) * quality);
+      }
+    }
+  }
+
   // 2a. System Cultivation Multiplier (if not a normal cultivator)
   if (!player.isNormalCultivator && player.systemCultivation) {
     const realmIdx = getRealmIndex(player.systemCultivation.realm);

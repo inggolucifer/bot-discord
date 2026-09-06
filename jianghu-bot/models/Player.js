@@ -161,6 +161,7 @@ const playerSchema = new mongoose.Schema({
   hasCompletedTour: { type: Boolean, default: false },
 
   lastDisasterHitAt: { type: Date, default: null },
+  energy: { current: { type: Number, default: 100 }, lastUpdated: { type: Date, default: Date.now } },
   lastBanditHitAt: { type: Date, default: null },
 
   professions: { type: professionsSchema, default: () => ({}) },
