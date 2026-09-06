@@ -12,7 +12,7 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { toast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';
-import { Flame, ArrowUpCircle } from 'lucide-react';
+import { Flame, ArrowUpCircle, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CultivationData, BreakthroughResponse } from '@/lib/schemas';
 import { AxiosError } from 'axios';
@@ -26,6 +26,8 @@ export default function CultivationClient() {
     const [breakthroughModalOpen, setBreakthroughModalOpen] = useState(false);
     const [showBreakthroughAnim, setShowBreakthroughAnim] = useState(false);
     const [breakthroughResult, setBreakthroughResult] = useState<any>(null);
+    const [loreWarningText, setLoreWarningText] = useState<string | null>(null);
+    const [currentUsePill, setCurrentUsePill] = useState<boolean>(false);
     const queryClient = useQueryClient();
 
     useEffect(() => {
@@ -46,9 +48,9 @@ export default function CultivationClient() {
 
     const cultivationData: CultivationData = rawData?.data || (rawData as any);
 
-    const breakthroughMutation = useMutation<BreakthroughResponse, AxiosError<{error: string}>, boolean>({
-        mutationFn: async (usePill: boolean) => {
-            const { data } = await api.post('/cultivation/breakthrough', { usePill });
+    const breakthroughMutation = useMutation<BreakthroughResponse, AxiosError<{error: string}>, {usePill: boolean, forceBreakthrough: boolean}>({
+        mutationFn: async ({ usePill, forceBreakthrough }) => {
+            const { data } = await api.post('/cultivation/breakthrough', { usePill, forceBreakthrough });
             return data;
         },
         onSuccess: (data) => {
@@ -73,9 +75,10 @@ export default function CultivationClient() {
         }
     });
 
-    const handleBreakthrough = (usePill: boolean) => {
+    const handleBreakthrough = (usePill: boolean, forceBreakthrough: boolean = false) => {
         setActionLoading(true);
-        breakthroughMutation.mutate(usePill);
+        setCurrentUsePill(usePill);
+        breakthroughMutation.mutate({ usePill, forceBreakthrough });
     };
 
     if (loading || isCultivationLoading) return <LoadingState text="Menghubungkan ke Dantian..." />;
@@ -149,45 +152,81 @@ export default function CultivationClient() {
             {/* Breakthrough Modal */}
             <Modal
                 isOpen={breakthroughModalOpen}
-                onClose={() => !actionLoading && setBreakthroughModalOpen(false)}
+                onClose={() => {
+                    if (!actionLoading) {
+                        setBreakthroughModalOpen(false);
+                        setLoreWarningText(null);
+                    }
+                }}
                 title="Konfirmasi Terobosan"
             >
                 <div className="space-y-4">
-                    <p className="text-sm text-gray-300">
-                        Kamu akan mencoba menerobos batas ke tingkat selanjutnya. Proses ini memiliki risiko kegagalan yang dapat mengurangi Qi kamu secara drastis jika pondasimu tidak stabil.
-                    </p>
-                    <div className="bg-black/50 border border-[#333] rounded-lg p-4 space-y-2">
-                        <div className="flex justify-between">
-                            <span className="text-gray-400">Realm Saat Ini:</span>
-                            <span className="font-bold text-white">{realm} (Tahap {stage})</span>
+                    {loreWarningText ? (
+                        <div className="bg-red-900/30 border border-red-900/50 p-4 rounded mb-4">
+                            <h4 className="text-red-500 font-bold mb-2">⚠️ Peringatan Surgawi</h4>
+                            <p className="text-sm text-red-200">{loreWarningText}</p>
+                            <div className="flex justify-end mt-4 gap-2">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        setLoreWarningText(null);
+                                        setBreakthroughModalOpen(false);
+                                    }}
+                                    disabled={actionLoading}
+                                >
+                                    Batal
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={() => {
+                                        setLoreWarningText(null);
+                                        handleBreakthrough(currentUsePill, true);
+                                    }}
+                                    disabled={actionLoading}
+                                >
+                                    {actionLoading ? <Loader2 size={16} className="animate-spin" /> : 'Saya Mengerti, Hancurkan Pondasi'}
+                                </Button>
+                            </div>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-400">Peluang Sukses Dasar:</span>
-                            <span className="font-bold text-yellow-500">{baseSuccessRate}%</span>
-                        </div>
-                    </div>
+                    ) : (
+                        <>
+                            <p className="text-sm text-gray-300">
+                                Kamu akan mencoba menerobos batas ke tingkat selanjutnya. Proses ini memiliki risiko kegagalan yang dapat mengurangi Qi kamu secara drastis jika pondasimu tidak stabil.
+                            </p>
+                            <div className="bg-black/50 border border-[#333] rounded-lg p-4 space-y-2">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Realm Saat Ini:</span>
+                                    <span className="font-bold text-white">{realm} (Tahap {stage})</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Peluang Sukses Dasar:</span>
+                                    <span className="font-bold text-yellow-500">{baseSuccessRate}%</span>
+                                </div>
+                            </div>
 
-                    {pill && pill.itemId && (
-                        <div className="bg-[#1f402e]/30 border border-green-800 rounded-lg p-4 mt-4">
-                            <p className="text-sm text-gray-300 mb-2">Kamu memiliki <span className="font-bold text-green-400">{pill.name}</span> (x{pill.count}). Menggunakan pil ini akan meningkatkan peluang sukses sebesar 25%.</p>
+                            {pill && pill.itemId && (
+                                <div className="bg-[#1f402e]/30 border border-green-800 rounded-lg p-4 mt-4">
+                                    <p className="text-sm text-gray-300 mb-2">Kamu memiliki <span className="font-bold text-green-400">{pill.name}</span> (x{pill.count}). Menggunakan pil ini akan meningkatkan peluang sukses sebesar 25%.</p>
+                                    <Button
+                                        onClick={() => handleBreakthrough(true)}
+                                        disabled={actionLoading || pill.count < 1}
+                                        className="w-full bg-green-700 hover:bg-green-600 mb-2"
+                                    >
+                                        Gunakan Pil & Terobosan
+                                    </Button>
+                                </div>
+                            )}
+
                             <Button
-                                onClick={() => handleBreakthrough(true)}
-                                disabled={actionLoading || pill.count < 1}
-                                className="w-full bg-green-700 hover:bg-green-600 mb-2"
+                                onClick={() => handleBreakthrough(false)}
+                                disabled={actionLoading}
+                                variant="outline"
+                                className="w-full"
                             >
-                                Gunakan Pil & Terobosan
+                                Terobosan Tanpa Pil
                             </Button>
-                        </div>
+                        </>
                     )}
-
-                    <Button
-                        onClick={() => handleBreakthrough(false)}
-                        disabled={actionLoading}
-                        variant="outline"
-                        className="w-full"
-                    >
-                        Terobosan Tanpa Pil
-                    </Button>
                 </div>
             </Modal>
         </div>

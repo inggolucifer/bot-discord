@@ -25,7 +25,8 @@ const inventoryItemSchema = new mongoose.Schema({
   qualityMultiplier: { type: Number, default: 1.0 },
   durability: { type: Number, default: null }, // Current durability for tools
   maxDurability: { type: Number, default: null },
-}, { _id: false });
+  isEquipped: { type: Boolean, default: false },
+});
 
 const professionSchema = new mongoose.Schema({
   isUnlocked: { type: Boolean, default: false },
@@ -144,6 +145,15 @@ const playerSchema = new mongoose.Schema({
     gold: { type: Number, default: 0 },
     jade: { type: Number, default: 0 },
     spirit: { type: Number, default: 0 },
+  },
+
+  equipment: {
+    weapon: { type: mongoose.Schema.Types.ObjectId, default: null },
+    armor: { type: mongoose.Schema.Types.ObjectId, default: null },
+    helmet: { type: mongoose.Schema.Types.ObjectId, default: null },
+    pants: { type: mongoose.Schema.Types.ObjectId, default: null },
+    boots: { type: mongoose.Schema.Types.ObjectId, default: null },
+    accessory: { type: mongoose.Schema.Types.ObjectId, default: null }
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
