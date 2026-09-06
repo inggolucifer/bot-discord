@@ -54,7 +54,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId })
             .populate('laws')
             .populate('manuals.manualId')
-            .select('-inventory -pets -assets') // Exclude heavy arrays for the simple profile view
+            .populate('inventory.itemId')
+            .select('-pets -assets') // Exclude heavy arrays for the simple profile view
             .lean();
 
         if (!player) {
