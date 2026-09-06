@@ -117,7 +117,7 @@ router.post('/start', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
         await withTransaction(async (session) => {
-            const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError('Karakter tidak aktif.', 403);
             if (player.customStatus && player.customStatus.toLowerCase().includes('bekerja')) {
@@ -199,7 +199,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
         const result = await withTransaction(async (session) => {
-            const player = await Player.findOne({ discordId: userId, guildId }).session(session);
+            const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
             const exploration = await Exploration.findOne({ discordId: userId, status: 'exploring' }).session(session);
@@ -215,7 +215,10 @@ router.post('/claim', authenticateToken, async (req, res) => {
             player.currency.gold += exploration.drops.gold;
 
             for (const dropItem of exploration.drops.items) {
-                const invItem = player.inventory.find(i => i.itemId.toString() === dropItem.itemId.toString());
+                const invItem = player.inventory.find(i => {
+                     const id = i.itemId && i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
+                     return id === dropItem.itemId.toString();
+                });
                 if (invItem) {
                     invItem.quantity += dropItem.quantity;
                 } else {
