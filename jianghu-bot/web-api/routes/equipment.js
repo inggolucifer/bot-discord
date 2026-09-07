@@ -4,6 +4,7 @@ const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
+const { calculatePlayerStats } = require('../../utils/playerCombat');
 
 // POST /api/equipment/equip
 router.post('/equip', authenticateToken, async (req, res) => {
@@ -58,11 +59,13 @@ router.post('/equip', authenticateToken, async (req, res) => {
 
         await player.save();
 
+        const combatStats = calculatePlayerStats(player);
+
         if (req.io) {
             req.io.emit('user_update', { userId: player.discordId, type: 'EQUIPMENT_UPDATED' });
         }
 
-        res.json({ message: 'Item equipped successfully', equipment: player.equipment });
+        res.json({ message: 'Item equipped successfully', equipment: player.equipment, combatStats });
     } catch (error) {
         console.error('[API] Equip error:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -110,11 +113,13 @@ router.post('/unequip', authenticateToken, async (req, res) => {
 
         await player.save();
 
+        const combatStats = calculatePlayerStats(player);
+
         if (req.io) {
             req.io.emit('user_update', { userId: player.discordId, type: 'EQUIPMENT_UPDATED' });
         }
 
-        res.json({ message: 'Item unequipped successfully', equipment: player.equipment });
+        res.json({ message: 'Item unequipped successfully', equipment: player.equipment, combatStats });
     } catch (error) {
         console.error('[API] Unequip error:', error);
         res.status(500).json({ error: 'Internal server error' });

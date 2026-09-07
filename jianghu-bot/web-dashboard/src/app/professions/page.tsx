@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { motion } from 'framer-motion';
+import { getPlayerFromProfileResponse } from '@/lib/profileHelper';
 
 type PlayerData = any;
 
@@ -21,33 +22,44 @@ export default function ProfessionsPage() {
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    const { data: profile, isLoading } = useQuery<PlayerData>({
+    const { data: profileRaw, isLoading } = useQuery<PlayerData>({
         queryKey: ['profile'],
         queryFn: () => api.get('/player/profile').then(res => res.data),
     });
 
     const unlockMutation = useMutation({
         mutationFn: (prof: string) => api.post('/professions/unlock', { profession: prof }),
-        onSuccess: () => {
+        onSuccess: (data) => {
+            // Optimistic update
+            if (data.data?.professions) {
+                queryClient.setQueryData(['profile'], (oldData: any) => {
+                    if (!oldData) return oldData;
+                    // Handle both wrapped and unwrapped oldData just in case
+                    if (oldData.data) {
+                        return { ...oldData, data: { ...oldData.data, professions: data.data.professions } };
+                    }
+                    return { ...oldData, professions: data.data.professions };
+                });
+            }
             queryClient.invalidateQueries({ queryKey: ['profile'] });
             queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
-            alert('Profesi berhasil dibuka!');
         },
         onError: (err: any) => {
             alert(err.response?.data?.error || 'Gagal membuka profesi.');
         }
     });
 
-    if (isLoading || !profile) return <div className="p-8 text-center text-white">Memuat...</div>;
+    if (isLoading || !profileRaw) return <div className="p-8 text-center text-white">Memuat...</div>;
 
-    const playerProfs = profile.professions || {};
+    const player = getPlayerFromProfileResponse(profileRaw);
+    const playerProfs = player?.professions || {};
 
     return (
         <div className="container mx-auto p-4 max-w-6xl text-gray-100">
             <h1 className="text-3xl font-bold mb-6 text-amber-500 tracking-wider">Sistem Profesi & Kemahiran</h1>
 
             <div className="bg-gray-800 p-4 rounded mb-6 border border-gray-700">
-                <p>Energy: <span className="text-amber-400 font-bold">{profile.energy?.current || 100}</span> / 100</p>
+                <p>Energy: <span className="text-amber-400 font-bold">{player?.energy?.current || 100}</span> / 100</p>
                 <p className="text-sm text-gray-400">Setiap minigame membutuhkan 10 Energy.</p>
             </div>
 
@@ -73,7 +85,7 @@ export default function ProfessionsPage() {
                             <h2 className="text-xl font-bold text-white mb-2">{prof.name}</h2>
                             <p className="text-sm text-gray-400 mb-4">{prof.desc}</p>
 
-                            {isUnlocked ? (
+                            {isUnlocked === true ? (
                                 <div>
                                     <div className="flex justify-between text-sm mb-1">
                                         <span>Level {level}</span>
@@ -94,9 +106,9 @@ export default function ProfessionsPage() {
                                             unlockMutation.mutate(prof.id);
                                         }}
                                         disabled={unlockMutation.isPending}
-                                        className="w-full bg-amber-600/20 text-amber-500 hover:bg-amber-600 hover:text-white border border-amber-600/50 py-2 rounded transition"
+                                        className="w-full bg-amber-600/20 text-amber-500 hover:bg-amber-600 hover:text-white border border-amber-600/50 py-2 rounded transition disabled:opacity-50"
                                     >
-                                        Buka (50 Silver)
+                                        {unlockMutation.isPending ? 'Membuka...' : 'Buka (50 Silver)'}
                                     </button>
                                 </div>
                             )}
