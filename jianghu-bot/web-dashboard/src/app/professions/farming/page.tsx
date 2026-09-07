@@ -12,6 +12,7 @@ export default function FarmingPage() {
     const queryClient = useQueryClient();
     const [recipeId, setRecipeId] = useState('');
     const [toolItemId, setToolItemId] = useState('');
+    const [plotIndex, setPlotIndex] = useState<number>(0);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
 
     const { data: profile, isLoading } = useQuery({
@@ -20,7 +21,7 @@ export default function FarmingPage() {
     });
 
     const startMutation = useMutation({
-        mutationFn: (data: { profession: string, recipeId: string, toolItemId: string }) => api.post('/professions/start', data),
+        mutationFn: (data: { profession: string, recipeId: string, toolItemId: string, plotIndex: number }) => api.post('/professions/start', data),
         onSuccess: (data) => {
             setActiveSessionId(data.data.sessionId);
         },
@@ -77,6 +78,10 @@ export default function FarmingPage() {
 
                     <div className="space-y-4 mb-6">
                         <div>
+                            <label className="block text-sm text-gray-400 mb-1">Plot Index</label>
+                            <input type="number" value={plotIndex} onChange={e => setPlotIndex(Number(e.target.value))} className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white" placeholder="0" />
+                        </div>
+                        <div>
                             <label className="block text-sm text-gray-400 mb-1">Nama Resep</label>
                             <input type="text" value={recipeId} onChange={e => setRecipeId(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded p-2 text-white" placeholder="Biji Padi" />
                         </div>
@@ -87,7 +92,7 @@ export default function FarmingPage() {
                     </div>
 
                     <div className="flex justify-end gap-4">
-                        <button onClick={() => startMutation.mutate({ profession: 'farming', recipeId, toolItemId })} disabled={startMutation.isPending} className="px-6 py-2 rounded bg-amber-600 hover:bg-amber-500 text-black font-bold transition">
+                        <button onClick={() => startMutation.mutate({ profession: 'farming', recipeId, toolItemId, plotIndex })} disabled={startMutation.isPending} className="px-6 py-2 rounded bg-amber-600 hover:bg-amber-500 text-black font-bold transition">
                             {startMutation.isPending ? 'Memulai...' : 'Mulai Bertani (-10 Energy)'}
                         </button>
                     </div>
