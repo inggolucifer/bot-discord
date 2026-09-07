@@ -135,6 +135,12 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     totals.spd = Math.floor(totals.spd * 0.95);
   }
 
+  // Note: we can return base, equip/flat, and totals if needed, but since it's used across the bot
+  // and expects { hp, atk, def, spd }, we'll attach `_base` and `_equip` as hidden properties
+  // so the frontend can access them, without breaking legacy bot logic that expects numbers.
+  totals._base = base;
+  totals._equip = flat; // Only flat equipment/items bonuses for now
+
   return totals;
 }
 
