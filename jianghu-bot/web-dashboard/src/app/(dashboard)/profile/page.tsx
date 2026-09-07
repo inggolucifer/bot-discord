@@ -134,23 +134,43 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="bg-black/40 p-4 rounded border border-[#333]">
-                   <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats (Total)</h3>
-                   <div className="grid grid-cols-2 gap-y-3 gap-x-4">
-                      <div className="flex justify-between">
-                         <span className="text-gray-500">HP</span>
-                         <span className="font-bold text-green-400">{combatStats.hp?.toLocaleString()}</span>
+                   <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
+                   <div className="grid grid-cols-1 gap-y-3">
+                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                         <span className="text-gray-400 font-bold w-12">HP</span>
+                         <div className="flex flex-col items-end text-sm">
+                            <span className="font-bold text-green-400 text-lg">{combatStats.hp?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-500">
+                               (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? `+ Equip ${combatStats._equip.hp}` : ''})
+                            </span>
+                         </div>
                       </div>
-                      <div className="flex justify-between">
-                         <span className="text-gray-500">ATK</span>
-                         <span className="font-bold text-red-400">{combatStats.atk?.toLocaleString()}</span>
+                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                         <span className="text-gray-400 font-bold w-12">ATK</span>
+                         <div className="flex flex-col items-end text-sm">
+                            <span className="font-bold text-red-400 text-lg">{combatStats.atk?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-500">
+                               (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? `+ Equip ${combatStats._equip.atk}` : ''})
+                            </span>
+                         </div>
                       </div>
-                      <div className="flex justify-between">
-                         <span className="text-gray-500">DEF</span>
-                         <span className="font-bold text-blue-400">{combatStats.def?.toLocaleString()}</span>
+                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                         <span className="text-gray-400 font-bold w-12">DEF</span>
+                         <div className="flex flex-col items-end text-sm">
+                            <span className="font-bold text-blue-400 text-lg">{combatStats.def?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-500">
+                               (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? `+ Equip ${combatStats._equip.def}` : ''})
+                            </span>
+                         </div>
                       </div>
-                      <div className="flex justify-between">
-                         <span className="text-gray-500">SPD</span>
-                         <span className="font-bold text-yellow-400">{combatStats.spd?.toLocaleString()}</span>
+                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                         <span className="text-gray-400 font-bold w-12">SPD</span>
+                         <div className="flex flex-col items-end text-sm">
+                            <span className="font-bold text-yellow-400 text-lg">{combatStats.spd?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-500">
+                               (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? `+ Equip ${combatStats._equip.spd}` : ''})
+                            </span>
+                         </div>
                       </div>
                    </div>
                    <p className="text-xs text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
