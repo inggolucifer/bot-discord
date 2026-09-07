@@ -24,15 +24,22 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
 
   // 2-Eq. Equipment Stats from Equipped Items (Quality Multiplier applied)
   if (player.inventory && player.inventory.length > 0) {
+    // Check equipped items robustly (by isEquipped flag OR if it exists in the equipment slots)
+    const equipmentSlotValues = player.equipment
+      ? Object.values(player.equipment).filter(v => v !== null).map(v => v.toString())
+      : [];
+
     for (const invItem of player.inventory) {
-      if (invItem.isEquipped) {
+      const isActuallyEquipped = invItem.isEquipped || (invItem._id && equipmentSlotValues.includes(invItem._id.toString()));
+
+      if (isActuallyEquipped) {
         const item = invItem.itemId;
         if (item) {
           const quality = invItem.qualityMultiplier || 1.0;
-          flat.hp += Math.floor((item.baseHp || 0) * quality);
-          flat.atk += Math.floor((item.baseAtk || 0) * quality);
-          flat.def += Math.floor((item.baseDef || 0) * quality);
-          flat.spd += Math.floor((item.baseSpd || 0) * quality);
+          flat.hp += Math.floor((Number(item.baseHp) || 0) * quality);
+          flat.atk += Math.floor((Number(item.baseAtk) || 0) * quality);
+          flat.def += Math.floor((Number(item.baseDef) || 0) * quality);
+          flat.spd += Math.floor((Number(item.baseSpd) || 0) * quality);
         }
       }
     }
