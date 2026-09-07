@@ -106,6 +106,7 @@ const setupServer = (client) => {
         '/api/pve/start',
         '/api/professions/start',
         '/api/professions/complete',
+        '/api/professions/unlock',
         '/api/pve/claim'
     ];
     app.use((req, res, next) => {
