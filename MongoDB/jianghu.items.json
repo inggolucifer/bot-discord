@@ -622,7 +622,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.662Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -647,7 +647,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.685Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -672,7 +672,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.709Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -697,7 +697,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -722,7 +722,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -747,7 +747,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -772,7 +772,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 15
   },
   {
     "_id": {
@@ -1757,7 +1757,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1782,7 +1782,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1807,7 +1807,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1832,7 +1832,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1857,7 +1857,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1882,7 +1882,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1907,7 +1907,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -1932,7 +1932,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 40
   },
   {
     "_id": {
@@ -2869,7 +2869,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -2894,7 +2894,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -2919,7 +2919,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -2944,7 +2944,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -2969,7 +2969,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -2994,7 +2994,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -3019,7 +3019,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -3044,7 +3044,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 112
   },
   {
     "_id": {
@@ -3981,7 +3981,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4006,7 +4006,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.510Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4031,7 +4031,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4056,7 +4056,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4081,7 +4081,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4106,7 +4106,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4131,7 +4131,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -4156,7 +4156,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 1050
   },
   {
     "_id": {
@@ -6273,8 +6273,8 @@
     "rank": "Common",
     "tier": 1,
     "origin": "Toko / Crafting",
-    "baseHp": 10,
-    "baseDef": 2
+    "baseHp": 40,
+    "baseDef": 5
   },
   {
     "guildId": "1504794711775514856",
@@ -6298,8 +6298,8 @@
     "rank": "Common",
     "tier": 1,
     "origin": "Toko / Crafting",
-    "baseHp": 15,
-    "baseDef": 1,
+    "baseHp": 50,
+    "baseDef": 6,
     "baseSpd": 2
   },
   {
@@ -6324,9 +6324,9 @@
     "rank": "Common",
     "tier": 1,
     "origin": "Toko / Crafting",
-    "baseHp": 5,
-    "baseSpd": 5,
-    "baseDef": 5
+    "baseHp": 30,
+    "baseSpd": 3,
+    "baseDef": 4
   },
   {
     "_id": {
@@ -6788,7 +6788,7 @@
     "category": "weapon",
     "tier": 1,
     "toolType": null,
-    "baseAtk": 5,
+    "baseAtk": 15,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
@@ -6819,8 +6819,8 @@
     "tier": 1,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 5,
-    "baseHp": 50,
+    "baseDef": 8,
+    "baseHp": 80,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Pakaian biasa, sedikit melindung dari dingin.",
@@ -7148,7 +7148,7 @@
     "category": "weapon",
     "tier": 2,
     "toolType": null,
-    "baseAtk": 15,
+    "baseAtk": 40,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
@@ -7179,8 +7179,8 @@
     "tier": 2,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 10,
-    "baseHp": 100,
+    "baseDef": 21,
+    "baseHp": 216,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Baju zirah dari kulit tebal.",
@@ -7538,7 +7538,7 @@
     "category": "weapon",
     "tier": 3,
     "toolType": null,
-    "baseAtk": 45,
+    "baseAtk": 112,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
@@ -7569,8 +7569,8 @@
     "tier": 3,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 20,
-    "baseHp": 200,
+    "baseDef": 60,
+    "baseHp": 600,
     "baseSpd": -5,
     "maxDurability": null,
     "description": "Kuat menahan tebasan, namun menghambat gerakan.",
@@ -7599,9 +7599,9 @@
     "tier": 3,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 10,
-    "baseHp": 0,
-    "baseSpd": 5,
+    "baseDef": 30,
+    "baseHp": 225,
+    "baseSpd": 22,
     "maxDurability": null,
     "description": "Melindungi kaki dari jebakan rahasia.",
     "effect": null,
@@ -7898,7 +7898,7 @@
     "category": "weapon",
     "tier": 4,
     "toolType": null,
-    "baseAtk": 120,
+    "baseAtk": 330,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 20,
@@ -7929,8 +7929,8 @@
     "tier": 4,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 7,
-    "baseHp": 75,
+    "baseDef": 176,
+    "baseHp": 1760,
     "baseSpd": 30,
     "maxDurability": null,
     "description": "Jubah ringan yang ditenun dengan Inti Monster Udara.",
@@ -8168,7 +8168,7 @@
     "category": "weapon",
     "tier": 5,
     "toolType": null,
-    "baseAtk": 350,
+    "baseAtk": 1050,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 50,
@@ -8199,8 +8199,8 @@
     "tier": 5,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 300,
-    "baseHp": 500,
+    "baseDef": 560,
+    "baseHp": 5600,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Zirah tak tertembus dari sisik Naga Bumi.",
@@ -8348,7 +8348,7 @@
     "category": "weapon",
     "tier": 6,
     "toolType": null,
-    "baseAtk": 1500,
+    "baseAtk": 180,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 200,
@@ -8379,8 +8379,8 @@
     "tier": 6,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 1200,
-    "baseHp": 3000,
+    "baseDef": 96,
+    "baseHp": 960,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Pakaian mereka yang menguasai Hukum Alam semesta.",
@@ -8529,8 +8529,8 @@
     "tier": 1,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 2,
-    "baseHp": 0,
+    "baseDef": 5,
+    "baseHp": 40,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Menahan panas matahari.",
@@ -8559,8 +8559,8 @@
     "tier": 1,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 3,
-    "baseHp": 0,
+    "baseDef": 6,
+    "baseHp": 50,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Celana kain biasa.",
@@ -8589,9 +8589,9 @@
     "tier": 1,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 5,
-    "baseHp": 0,
-    "baseSpd": 2,
+    "baseDef": 4,
+    "baseHp": 30,
+    "baseSpd": 3,
     "maxDurability": null,
     "description": "Sandal yang cepat putus.",
     "effect": null,
@@ -8799,8 +8799,8 @@
     "tier": 2,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 8,
-    "baseHp": 0,
+    "baseDef": 13,
+    "baseHp": 108,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Helm dari kepala serigala.",
@@ -8829,8 +8829,8 @@
     "tier": 2,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 10,
-    "baseHp": 0,
+    "baseDef": 16,
+    "baseHp": 135,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Celana yang lebih hangat dan aman.",
@@ -8859,9 +8859,9 @@
     "tier": 2,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 4,
-    "baseHp": 0,
-    "baseSpd": 5,
+    "baseDef": 10,
+    "baseHp": 81,
+    "baseSpd": 8,
     "maxDurability": null,
     "description": "Sepatu untuk medan bebatuan.",
     "effect": null,
@@ -8888,10 +8888,10 @@
     "category": "accessories",
     "tier": 2,
     "toolType": null,
-    "baseAtk": 0,
-    "baseDef": 6,
-    "baseHp": 40,
-    "baseSpd": 0,
+    "baseAtk": 13,
+    "baseDef": 8,
+    "baseHp": 67,
+    "baseSpd": 5,
     "maxDurability": null,
     "description": "Amulet dengan ukiran doa.",
     "effect": null,
@@ -9069,8 +9069,8 @@
     "tier": 3,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 25,
-    "baseHp": 0,
+    "baseDef": 37,
+    "baseHp": 300,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Pelindung kepala prajurit sekte.",
@@ -9099,8 +9099,8 @@
     "tier": 3,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 30,
-    "baseHp": 0,
+    "baseDef": 45,
+    "baseHp": 375,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Melindungi paha dari serangan bawah.",
@@ -9128,10 +9128,10 @@
     "category": "accessories",
     "tier": 3,
     "toolType": null,
-    "baseAtk": 10,
-    "baseDef": 12,
-    "baseHp": 80,
-    "baseSpd": 0,
+    "baseAtk": 37,
+    "baseDef": 22,
+    "baseHp": 187,
+    "baseSpd": 15,
     "maxDurability": null,
     "description": "Cincin yang mengalirkan Qi tipis.",
     "effect": null,
@@ -9279,8 +9279,8 @@
     "tier": 4,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 40,
-    "baseHp": 0,
+    "baseDef": 110,
+    "baseHp": 880,
     "baseSpd": 10,
     "maxDurability": null,
     "description": "Menyembunyikan aura kultivasi.",
@@ -9309,8 +9309,8 @@
     "tier": 4,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 50,
-    "baseHp": 0,
+    "baseDef": 132,
+    "baseHp": 1100,
     "baseSpd": 25,
     "maxDurability": null,
     "description": "Membuat langkah seringan angin.",
@@ -9339,9 +9339,9 @@
     "tier": 4,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 20,
-    "baseHp": 0,
-    "baseSpd": 40,
+    "baseDef": 88,
+    "baseHp": 660,
+    "baseSpd": 66,
     "maxDurability": null,
     "description": "Bisa menapak di atas air.",
     "effect": null,
@@ -9368,10 +9368,10 @@
     "category": "accessories",
     "tier": 4,
     "toolType": null,
-    "baseAtk": 50,
-    "baseDef": 4,
-    "baseHp": 30,
-    "baseSpd": 0,
+    "baseAtk": 110,
+    "baseDef": 66,
+    "baseHp": 550,
+    "baseSpd": 44,
     "maxDurability": null,
     "description": "Kalung yang meningkatkan daya hancur.",
     "effect": null,
@@ -9489,8 +9489,8 @@
     "tier": 5,
     "toolType": null,
     "baseAtk": 50,
-    "baseDef": 150,
-    "baseHp": 0,
+    "baseDef": 350,
+    "baseHp": 2800,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Helm dari tulang naga asli.",
@@ -9519,8 +9519,8 @@
     "tier": 5,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 200,
-    "baseHp": 800,
+    "baseDef": 420,
+    "baseHp": 3500,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Tahan akan lahar panas.",
@@ -9549,9 +9549,9 @@
     "tier": 5,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 80,
-    "baseHp": 0,
-    "baseSpd": 100,
+    "baseDef": 280,
+    "baseHp": 2100,
+    "baseSpd": 210,
     "maxDurability": null,
     "description": "Bisa merobek dimensi spasial jarak dekat.",
     "effect": null,
@@ -9578,10 +9578,10 @@
     "category": "accessories",
     "tier": 5,
     "toolType": null,
-    "baseAtk": 100,
-    "baseDef": 4,
-    "baseHp": 30,
-    "baseSpd": 0,
+    "baseAtk": 350,
+    "baseDef": 210,
+    "baseHp": 1750,
+    "baseSpd": 140,
     "maxDurability": null,
     "description": "Berisi miniatur dunia kecil.",
     "effect": null,
@@ -9699,8 +9699,8 @@
     "tier": 6,
     "toolType": null,
     "baseAtk": 300,
-    "baseDef": 600,
-    "baseHp": 0,
+    "baseDef": 60,
+    "baseHp": 480,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Lambang absolut dari penguasa dimensi.",
@@ -9729,8 +9729,8 @@
     "tier": 6,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 800,
-    "baseHp": 5000,
+    "baseDef": 72,
+    "baseHp": 600,
     "baseSpd": 0,
     "maxDurability": null,
     "description": "Ditenun dari benang takdir dunia.",
@@ -9759,9 +9759,9 @@
     "tier": 6,
     "toolType": null,
     "baseAtk": 0,
-    "baseDef": 300,
-    "baseHp": 0,
-    "baseSpd": 400,
+    "baseDef": 48,
+    "baseHp": 360,
+    "baseSpd": 36,
     "maxDurability": null,
     "description": "Menginjak hukum alam dengan satu langkah.",
     "effect": null,
@@ -9788,10 +9788,10 @@
     "category": "accessories",
     "tier": 6,
     "toolType": null,
-    "baseAtk": 500,
-    "baseDef": 500,
-    "baseHp": 10000,
-    "baseSpd": 0,
+    "baseAtk": 60,
+    "baseDef": 36,
+    "baseHp": 300,
+    "baseSpd": 24,
     "maxDurability": null,
     "description": "Liontin yang setara dengan nyawa kedua.",
     "effect": null,
@@ -9831,7 +9831,7 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.379Z"
     },
-    "baseAtk": 8,
+    "baseAtk": 15,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
