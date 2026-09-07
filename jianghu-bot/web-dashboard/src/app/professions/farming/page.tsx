@@ -1,5 +1,8 @@
-
 "use client";
+
+import { getPlayerFromProfileResponse } from '@/lib/profileHelper';
+
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,10 +18,12 @@ export default function FarmingPage() {
     const [plotIndex, setPlotIndex] = useState<number>(0);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
 
-    const { data: profile, isLoading } = useQuery({
+    const { data: profileRaw, isLoading } = useQuery({
         queryKey: ['profile'],
         queryFn: () => api.get('/player/profile').then(res => res.data),
     });
+
+    const profile = getPlayerFromProfileResponse(profileRaw);
 
     const startMutation = useMutation({
         mutationFn: (data: { profession: string, recipeId: string, toolItemId: string, plotIndex: number }) => api.post('/professions/start', data),

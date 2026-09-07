@@ -183,7 +183,11 @@ router.post('/unlock', verifyToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
         if (player.professions && player.professions[profession] && player.professions[profession].isUnlocked) {
-            return res.status(400).json({ error: `Profesi ${profession} sudah terbuka.` });
+            return res.status(200).json({
+                success: true,
+                message: `Profesi ${profession} sudah terbuka.`,
+                professions: player.professions
+            });
         }
 
         const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
@@ -215,7 +219,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
         player.markModified('professions');
         await player.save();
 
-        res.json({ message: `Profesi ${profession} berhasil dibuka!`, professions: player.professions });
+        res.json({ success: true, message: `Profesi ${profession} berhasil dibuka!`, professions: player.professions });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
