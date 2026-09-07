@@ -53,6 +53,8 @@ router.post('/equip', authenticateToken, async (req, res) => {
         if (!player.equipment) player.equipment = {};
         player.equipment[slot] = invItem._id;
         invItem.isEquipped = true;
+        player.markModified('inventory');
+        player.markModified('equipment');
 
         await player.save();
 
@@ -103,6 +105,8 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         }
 
         player.equipment[slot] = null;
+        player.markModified('inventory');
+        player.markModified('equipment');
 
         await player.save();
 

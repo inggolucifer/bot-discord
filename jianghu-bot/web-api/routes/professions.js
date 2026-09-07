@@ -186,18 +186,33 @@ router.post('/unlock', verifyToken, async (req, res) => {
             return res.status(400).json({ error: `Profesi ${profession} sudah terbuka.` });
         }
 
-        player.currency.copper -= PROFESSION_COST_COPPER;
+        const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+        const totalCopperAvailable = c.copper + (c.silver * 100) + (c.gold * 10000) + (c.jade * 1000000) + (c.spirit * 100000000);
 
-        const c = player.currency;
-        const totalCopper = c.copper + c.silver * 100 + c.gold * 10000 + c.jade * 1000000 + c.spirit * 100000000;
-        if (totalCopper < 0) {
+        if (totalCopperAvailable < PROFESSION_COST_COPPER) {
              return res.status(400).json({ error: `Uang tidak cukup. Butuh 50 Silver.` });
         }
+
+        // Proper deduction
+        let remainingToDeduct = PROFESSION_COST_COPPER;
+        let pool = totalCopperAvailable - PROFESSION_COST_COPPER;
+
+        player.currency.spirit = Math.floor(pool / 100000000);
+        pool %= 100000000;
+        player.currency.jade = Math.floor(pool / 1000000);
+        pool %= 1000000;
+        player.currency.gold = Math.floor(pool / 10000);
+        pool %= 10000;
+        player.currency.silver = Math.floor(pool / 100);
+        player.currency.copper = pool % 100;
+
+        player.markModified('currency');
 
         if (!player.professions) player.professions = {};
         if (!player.professions[profession]) player.professions[profession] = {};
 
         player.set(`professions.${profession}.isUnlocked`, true);
+        player.markModified('professions');
         await player.save();
 
         res.json({ message: `Profesi ${profession} berhasil dibuka!`, professions: player.professions });

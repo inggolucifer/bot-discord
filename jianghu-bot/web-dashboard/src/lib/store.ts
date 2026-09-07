@@ -20,9 +20,9 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: typeof window !== 'undefined' ? localStorage.getItem('jianghu_token') : null,
-  user: typeof window !== 'undefined' && localStorage.getItem('jianghu_user') ? JSON.parse(localStorage.getItem('jianghu_user') || '{}') : null,
-  hasCharacter: typeof window !== 'undefined' && localStorage.getItem('jianghu_user') ? JSON.parse(localStorage.getItem('jianghu_user') || '{}').hasCharacter || false : false,
+  token: null,
+  user: null,
+  hasCharacter: false,
 
   initialize: async () => {
     if (typeof window !== 'undefined') {
