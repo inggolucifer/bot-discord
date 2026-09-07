@@ -622,7 +622,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.662Z"
     },
-    "baseAtk": 10
+    "baseAtk": 18,
+    "baseDef": 1,
+    "baseHp": 0,
+    "baseSpd": 3
   },
   {
     "_id": {
@@ -647,7 +650,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.685Z"
     },
-    "baseAtk": 10
+    "baseAtk": 17,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 4
   },
   {
     "_id": {
@@ -672,7 +678,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.709Z"
     },
-    "baseAtk": 10
+    "baseAtk": 23,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": -2
   },
   {
     "_id": {
@@ -697,7 +706,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 20,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -722,7 +734,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 10,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 9
   },
   {
     "_id": {
@@ -747,7 +762,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 14,
+    "baseDef": 1,
+    "baseHp": 0,
+    "baseSpd": 2
   },
   {
     "_id": {
@@ -772,7 +790,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 10
+    "baseAtk": 7,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 2
   },
   {
     "_id": {
@@ -1757,7 +1778,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 22,
+    "baseDef": 1,
+    "baseHp": 0,
+    "baseSpd": 3
   },
   {
     "_id": {
@@ -1782,7 +1806,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 21,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 5
   },
   {
     "_id": {
@@ -1792,7 +1819,7 @@
     "guildId": "1504794711775514856",
     "__v": 0,
     "basePrice": 20,
-    "category": "weapon",
+    "category": "none",
     "createdAt": {
       "$date": "2026-08-28T16:03:40.526Z"
     },
@@ -1807,7 +1834,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
   },
   {
     "_id": {
@@ -1832,7 +1862,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 25,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": -2
   },
   {
     "_id": {
@@ -1857,7 +1890,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 21,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -1882,7 +1918,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 20,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -1907,7 +1946,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 16,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 13
   },
   {
     "_id": {
@@ -1917,7 +1959,7 @@
     "name": "Perisai Kayu Lapis Besi",
     "__v": 0,
     "basePrice": 20,
-    "category": "weapon",
+    "category": "armor",
     "createdAt": {
       "$date": "2026-08-28T16:03:40.651Z"
     },
@@ -1932,7 +1974,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 25
+    "baseAtk": 0,
+    "baseDef": 15,
+    "baseHp": 76,
+    "baseSpd": -2
   },
   {
     "_id": {
@@ -2869,7 +2914,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 43,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -2894,7 +2942,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 44,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -2919,7 +2970,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 44,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -2929,7 +2983,7 @@
     "name": "Rompi Anti Peluru",
     "__v": 0,
     "basePrice": 1,
-    "category": "weapon",
+    "category": "armor",
     "createdAt": {
       "$date": "2026-08-28T16:03:41.731Z"
     },
@@ -2944,7 +2998,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 0,
+    "baseDef": 26,
+    "baseHp": 174,
+    "baseSpd": 0
   },
   {
     "_id": {
@@ -2954,7 +3011,7 @@
     "guildId": "1504794711775514856",
     "__v": 0,
     "basePrice": 1,
-    "category": "weapon",
+    "category": "consume",
     "createdAt": {
       "$date": "2026-08-28T16:03:41.753Z"
     },
@@ -2969,7 +3026,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
   },
   {
     "_id": {
@@ -2994,7 +3054,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 43,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 6
   },
   {
     "_id": {
@@ -3019,7 +3082,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 32,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 26
   },
   {
     "_id": {
@@ -3029,7 +3095,7 @@
     "name": "Peluru Kaliber .45",
     "__v": 0,
     "basePrice": 10,
-    "category": "weapon",
+    "category": "consume",
     "createdAt": {
       "$date": "2026-08-28T16:03:41.836Z"
     },
@@ -3044,7 +3110,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 50
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
   },
   {
     "_id": {
@@ -3981,7 +4050,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 252,
+    "baseDef": 15,
+    "baseHp": 0,
+    "baseSpd": 37
   },
   {
     "_id": {
@@ -4006,7 +4078,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.510Z"
     },
-    "baseAtk": 250
+    "baseAtk": 251,
+    "baseDef": 15,
+    "baseHp": 0,
+    "baseSpd": 37
   },
   {
     "_id": {
@@ -4031,7 +4106,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 249,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 55
   },
   {
     "_id": {
@@ -4056,7 +4134,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 228,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 71
   },
   {
     "_id": {
@@ -4066,7 +4147,7 @@
     "guildId": "1504794711775514856",
     "__v": 0,
     "basePrice": 5,
-    "category": "weapon",
+    "category": "accessories",
     "createdAt": {
       "$date": "2026-08-28T16:03:42.885Z"
     },
@@ -4081,7 +4162,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 71,
+    "baseDef": 71,
+    "baseHp": 476,
+    "baseSpd": 89
   },
   {
     "_id": {
@@ -4106,7 +4190,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 241,
+    "baseDef": 14,
+    "baseHp": 0,
+    "baseSpd": 35
   },
   {
     "_id": {
@@ -4131,7 +4218,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 240,
+    "baseDef": 14,
+    "baseHp": 0,
+    "baseSpd": 35
   },
   {
     "_id": {
@@ -4156,7 +4246,10 @@
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
     },
-    "baseAtk": 250
+    "baseAtk": 282,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": -19
   },
   {
     "_id": {
@@ -5006,7 +5099,7 @@
     "name": "Pedang Baja Refined",
     "__v": 0,
     "basePrice": 5,
-    "category": "tool",
+    "category": "weapon",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5020,7 +5113,11 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 56,
+    "baseDef": 3,
+    "baseHp": 0,
+    "baseSpd": 8
   },
   {
     "_id": {
@@ -5054,7 +5151,7 @@
     "name": "Armor Besi Skala",
     "__v": 0,
     "basePrice": 8,
-    "category": "tool",
+    "category": "armor",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5068,7 +5165,11 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 0,
+    "baseDef": 44,
+    "baseHp": 222,
+    "baseSpd": -5
   },
   {
     "_id": {
@@ -5102,7 +5203,7 @@
     "name": "Kapak Kapten Besi",
     "__v": 0,
     "basePrice": 6,
-    "category": "tool",
+    "category": "weapon",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5116,7 +5217,11 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 64,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": -4
   },
   {
     "_id": {
@@ -5126,7 +5231,7 @@
     "name": "Tameng Ksatria Besi",
     "__v": 0,
     "basePrice": 7,
-    "category": "tool",
+    "category": "armor",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5140,7 +5245,11 @@
     "tier": 3,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 0,
+    "baseDef": 43,
+    "baseHp": 215,
+    "baseSpd": -4
   },
   {
     "_id": {
@@ -5246,7 +5355,7 @@
     "name": "Senapan Api Ringan",
     "__v": 0,
     "basePrice": 60,
-    "category": "tool",
+    "category": "weapon",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5260,7 +5369,11 @@
     "tier": 4,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 107,
+    "baseDef": 6,
+    "baseHp": 0,
+    "baseSpd": 16
   },
   {
     "_id": {
@@ -5366,7 +5479,7 @@
     "name": "Pakaian Anti Radiasi",
     "__v": 0,
     "basePrice": 85,
-    "category": "tool",
+    "category": "armor",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5380,7 +5493,11 @@
     "tier": 4,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 0,
+    "baseDef": 63,
+    "baseHp": 422,
+    "baseSpd": 0
   },
   {
     "_id": {
@@ -5486,7 +5603,7 @@
     "name": "Pedang Terbang Giok Hitam",
     "__v": 0,
     "basePrice": 8,
-    "category": "tool",
+    "category": "weapon",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5500,7 +5617,11 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 256,
+    "baseDef": 15,
+    "baseHp": 0,
+    "baseSpd": 38
   },
   {
     "_id": {
@@ -5750,7 +5871,7 @@
     "name": "Pedang Pemutus Takdir Abadi",
     "__v": 0,
     "basePrice": 10,
-    "category": "tool",
+    "category": "weapon",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
@@ -5764,7 +5885,11 @@
     "tier": 6,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "baseAtk": 813,
+    "baseDef": 48,
+    "baseHp": 0,
+    "baseSpd": 120
   },
   {
     "_id": {
@@ -6274,7 +6399,9 @@
     "tier": 1,
     "origin": "Toko / Crafting",
     "baseHp": 10,
-    "baseDef": 2
+    "baseDef": 2,
+    "baseAtk": 0,
+    "baseSpd": 0
   },
   {
     "guildId": "1504794711775514856",
@@ -6300,7 +6427,8 @@
     "origin": "Toko / Crafting",
     "baseHp": 15,
     "baseDef": 1,
-    "baseSpd": 2
+    "baseSpd": 2,
+    "baseAtk": 0
   },
   {
     "guildId": "1504794711775514856",
@@ -6326,7 +6454,8 @@
     "origin": "Toko / Crafting",
     "baseHp": 5,
     "baseSpd": 5,
-    "baseDef": 5
+    "baseDef": 5,
+    "baseAtk": 0
   },
   {
     "_id": {
@@ -6788,10 +6917,10 @@
     "category": "weapon",
     "tier": 1,
     "toolType": null,
-    "baseAtk": 5,
-    "baseDef": 0,
+    "baseAtk": 15,
+    "baseDef": 1,
     "baseHp": 0,
-    "baseSpd": 0,
+    "baseSpd": 2,
     "maxDurability": null,
     "description": "Senjata bagi para pemula di dunia persilatan.",
     "effect": null,
@@ -7148,7 +7277,7 @@
     "category": "weapon",
     "tier": 2,
     "toolType": null,
-    "baseAtk": 15,
+    "baseAtk": 25,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
@@ -7538,7 +7667,7 @@
     "category": "weapon",
     "tier": 3,
     "toolType": null,
-    "baseAtk": 45,
+    "baseAtk": 50,
     "baseDef": 0,
     "baseHp": 0,
     "baseSpd": 0,
@@ -7570,7 +7699,7 @@
     "toolType": null,
     "baseAtk": 0,
     "baseDef": 20,
-    "baseHp": 200,
+    "baseHp": 227,
     "baseSpd": -5,
     "maxDurability": null,
     "description": "Kuat menahan tebasan, namun menghambat gerakan.",
@@ -7930,7 +8059,7 @@
     "toolType": null,
     "baseAtk": 0,
     "baseDef": 7,
-    "baseHp": 75,
+    "baseHp": 593,
     "baseSpd": 30,
     "maxDurability": null,
     "description": "Jubah ringan yang ditenun dengan Inti Monster Udara.",
@@ -9834,7 +9963,7 @@
     "baseAtk": 8,
     "baseDef": 0,
     "baseHp": 0,
-    "baseSpd": 0,
+    "baseSpd": 1,
     "toolType": null,
     "maxDurability": null
   }
