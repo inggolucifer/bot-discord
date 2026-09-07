@@ -34,6 +34,7 @@ export default function ProfessionsPage() {
         mutationFn: (prof: string) => api.post('/professions/unlock', { profession: prof }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
+            queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
             alert('Profesi berhasil dibuka!');
         },
         onError: (err: any) => {
@@ -56,6 +57,7 @@ export default function ProfessionsPage() {
         mutationFn: (data: { sessionId: string, telemetryData: any }) => api.post('/professions/complete', data),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['profile'] });
+            queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
             const d = res.data;
             if (d.success) {
                 if (d.isMasterpiece) {
