@@ -10024,5 +10024,208 @@
     "updatedAt": {
       "$date": "2026-09-08T11:22:08.981Z"
     }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c31fe8a3508aedaff6"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Pisau Dapur Besi",
+    "rank": "Rare",
+    "category": "tool",
+    "tier": 3,
+    "toolType": "kitchen_tool",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": 40,
+    "description": "[Durability: 40 Jam] Pisau dapur dari baja murni. Sangat tajam, ideal untuk memotong bahan makanan tingkat menengah.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 5,
+    "priceCurrency": "silver",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.301Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c37f84fbab82a173ae"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Hidangan Ikan Asap",
+    "rank": "Rare",
+    "category": "consume",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Hidangan lezat dari daging ikan pilihan yang diasap. Memberikan energi yang banyak.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 2,
+    "priceCurrency": "silver",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.301Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.301Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c3c3cd065817545566"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Gandum Kualitas Tinggi",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Gandum yang dirawat dengan teknik bertani lanjut. Menghasilkan bahan pangan premium.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c3752b891bbcad1b17"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Bait Serangga Langka",
+    "rank": "Uncommon",
+    "category": "material",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Serangga berkilau yang menarik ikan langka di sungai.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 20,
+    "priceCurrency": "copper",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c3c6fdccbc0bc78520"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Ikan Sungai",
+    "rank": "Uncommon",
+    "category": "consume",
+    "tier": 2,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ikan sungai berukuran sedang, rasanya lebih lezat dari ikan segar biasa.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 50,
+    "priceCurrency": "copper",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c34026f2248ffa3d3e"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Bait Serangga Emas",
+    "rank": "Rare",
+    "category": "material",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Serangga khusus berwarna keemasan, sangat disukai oleh ikan spiritual.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 2,
+    "priceCurrency": "silver",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa007c35fead8f4d57f6e83"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "name": "Ikan Mas Spiritual",
+    "rank": "Rare",
+    "category": "consume",
+    "tier": 3,
+    "toolType": null,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "maxDurability": null,
+    "description": "Ikan langka bercorak keemasan, konon mengandung qi murni di dalam dagingnya.",
+    "imageUrl": null,
+    "effect": null,
+    "origin": "Crafting",
+    "basePrice": 3,
+    "priceCurrency": "silver",
+    "createdBy": "System Oracle",
+    "createdAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-08T13:04:03.302Z"
+    }
   }
 ]
