@@ -132,6 +132,52 @@ const RECIPES = {
         ],
         output: { name: "Ikan Segar", quantity: 1 }
     }
+,
+    // Fishing T2 & T3
+    "Ikan Sungai Menengah": {
+        profession: "fishing",
+        toolType: "fishing_rod",
+        minToolTier: 2,
+        materials: [
+            { name: "Bait Serangga Langka", quantity: 1 }
+        ],
+        output: { name: "Ikan Sungai", quantity: 1 }
+    },
+    "Ikan Mas Spiritual (T3)": {
+        profession: "fishing",
+        toolType: "fishing_rod",
+        minToolTier: 3,
+        materials: [
+            { name: "Bait Serangga Emas", quantity: 1 }
+        ],
+        output: { name: "Ikan Mas Spiritual", quantity: 1 }
+    },
+
+    // Cooking T3
+    "Hidangan Ikan Asap (T3)": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 3,
+        materials: [
+            { name: "Ikan Sungai", quantity: 1 },
+            { name: "Air Bersih", quantity: 2 },
+            { name: "Kayu Mentah", quantity: 2 }
+        ],
+        output: { name: "Hidangan Ikan Asap", quantity: 1 }
+    },
+
+    // Farming T3
+    "Gandum Kualitas Tinggi (T3)": {
+        profession: "farming",
+        toolType: "farming_tool",
+        minToolTier: 3,
+        materials: [
+            { name: "Bibit Padi Liar", quantity: 2 },
+            { name: "Air Bersih", quantity: 4 }
+        ],
+        output: { name: "Gandum Kualitas Tinggi", quantity: 3 }
+    }
+
 };
 
 module.exports = RECIPES;
