@@ -8,6 +8,7 @@ const Pet = require('../../models/Pet');
 const Asset = require('../../models/Asset');
 const { logTransaction } = require('../../utils/logger');
 const { CURRENCY_LABEL } = require('../../utils/currency');
+const { isToolItem, buildToolInventoryEntry, ensureToolDurability } = require('../../utils/inventoryToolHelper');
 
 const MODEL_MAP = { item: Item, pet: Pet, asset: Asset };
 
@@ -58,8 +59,16 @@ module.exports = {
     }
 
     if (kategori === 'item') {
-      const owned = player.inventory.find((i) => i.itemId.equals(doc._id));
-      if (owned) owned.quantity += jumlah; else player.inventory.push({ itemId: doc._id, quantity: jumlah });
+      if (isToolItem(doc)) {
+        // For tools, we should ideally push individual entries or at least ensure durability is initialized.
+        // Pushing individual entries is safer to not stack durabilities of multiple tools.
+        for (let i = 0; i < jumlah; i++) {
+          player.inventory.push(buildToolInventoryEntry(doc, 1));
+        }
+      } else {
+        const owned = player.inventory.find((i) => i.itemId.equals(doc._id));
+        if (owned) owned.quantity += jumlah; else player.inventory.push({ itemId: doc._id, quantity: jumlah });
+      }
     } else if (kategori === 'pet') {
       // Pet doesn't stack in quantity according to the schema (but old logic assumed it did)
       // Since max pet is 6, limit the total pet count

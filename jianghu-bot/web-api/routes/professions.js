@@ -6,6 +6,7 @@ const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
 const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
 const RECIPES = require('../../utils/professionsRecipes');
+const { ensureToolDurability, canUseTool } = require('../../utils/inventoryToolHelper');
 
 const PROFESSION_COST_COPPER = 50 * RATE_TO_COPPER.silver; // 50 Silver
 
@@ -319,18 +320,16 @@ router.post('/start', verifyToken, async (req, res) => {
              return res.status(400).json({ error: `Alat tidak ditemukan di inventory.` });
         }
 
-        if (toolInInventory.itemId.toolType !== recipe.toolType) {
-             return res.status(400).json({ error: `Alat tidak cocok untuk resep ini.` });
-        }
+        // Auto-heal / Ensure Durability for existing null durability tools
+        ensureToolDurability(toolInInventory, toolInInventory.itemId);
 
-        if (toolInInventory.durability <= 0) {
-             return res.status(400).json({ error: `Alat ini sudah rusak dan tidak bisa digunakan.` });
-        }
+        const toolValidation = canUseTool(toolInInventory, toolInInventory.itemId, {
+            requiredToolType: recipe.toolType,
+            minToolTier: recipe.minToolTier || 1
+        });
 
-        const requiredToolTier = recipe.minToolTier || 1;
-        const playerToolTier = toolInInventory.itemId.tier || 1;
-        if (playerToolTier < requiredToolTier) {
-             return res.status(400).json({ error: `Alat terlalu rendah. Resep ini membutuhkan alat minimal Tier ${requiredToolTier} (Alatmu Tier ${playerToolTier}).` });
+        if (!toolValidation.valid) {
+            return res.status(400).json({ error: toolValidation.error });
         }
 
         // Validate Materials
@@ -411,8 +410,15 @@ router.post('/complete', verifyToken, async (req, res) => {
         let toolBroken = false;
         const toolIndex = player.inventory.findIndex(i => i.itemId.toString() === session.toolItemId);
         if (toolIndex !== -1) {
-             player.inventory[toolIndex].durability -= 1;
-             if (player.inventory[toolIndex].durability <= 0) {
+             const toolEntry = player.inventory[toolIndex];
+             // In case it somehow bypassed /start initialization, we ensure it's a number
+             if (toolEntry.durability == null) {
+                  toolEntry.durability = (toolEntry.maxDurability || 20); // max default fallback
+             }
+
+             toolEntry.durability -= 1;
+
+             if (toolEntry.durability <= 0) {
                  player.inventory.splice(toolIndex, 1);
                  toolBroken = true;
              }
