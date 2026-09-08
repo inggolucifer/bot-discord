@@ -24,6 +24,7 @@ router.get('/recipes', verifyToken, async (req, res) => {
                     name: id,
                     profession: recipe.profession,
                     toolType: recipe.toolType,
+                    minToolTier: recipe.minToolTier || 1,
                     materials: recipe.materials,
                     output: recipe.output
                 });
@@ -324,6 +325,12 @@ router.post('/start', verifyToken, async (req, res) => {
 
         if (toolInInventory.durability <= 0) {
              return res.status(400).json({ error: `Alat ini sudah rusak dan tidak bisa digunakan.` });
+        }
+
+        const requiredToolTier = recipe.minToolTier || 1;
+        const playerToolTier = toolInInventory.itemId.tier || 1;
+        if (playerToolTier < requiredToolTier) {
+             return res.status(400).json({ error: `Alat terlalu rendah. Resep ini membutuhkan alat minimal Tier ${requiredToolTier} (Alatmu Tier ${playerToolTier}).` });
         }
 
         // Validate Materials
