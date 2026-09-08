@@ -10,6 +10,7 @@ interface Recipe {
     name: string;
     profession: string;
     toolType: string;
+    minToolTier?: number;
     materials: Material[];
     output: { name: string; quantity: number };
 }
@@ -45,7 +46,7 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
                             Bahan: {recipe.materials.length > 0 ? recipe.materials.map(m => `${m.name} x${m.quantity}`).join(', ') : 'Tidak ada'}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
-                            Alat: <span className="capitalize">{recipe.toolType.replace('_', ' ')}</span>
+                            Alat: <span className="capitalize">{recipe.toolType.replace('_', ' ')}</span> (Min Tier {recipe.minToolTier || 1})
                         </div>
                         {recipe.output && (
                             <div className="text-xs text-amber-500/80 mt-1">

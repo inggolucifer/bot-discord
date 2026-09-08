@@ -9,6 +9,7 @@ const RECIPES = {
     "Besi Murni": {
         profession: "smithing",
         toolType: "forge",
+        minToolTier: 1,
         materials: [
             { name: "Bijih Besi", quantity: 2 }
         ],
@@ -17,6 +18,7 @@ const RECIPES = {
     "Baja Murni": {
         profession: "smithing",
         toolType: "forge",
+        minToolTier: 2,
         materials: [
             { name: "Batangan Besi", quantity: 2 },
             { name: "Batu Bara", quantity: 1 }
@@ -26,6 +28,7 @@ const RECIPES = {
     "Pedang Baja": {
         profession: "smithing",
         toolType: "forge",
+        minToolTier: 3,
         materials: [
             { name: "Baja Murni", quantity: 3 },
             { name: "Papan Kayu", quantity: 1 }
@@ -37,6 +40,7 @@ const RECIPES = {
     "Pil Pekerja Keras": {
         profession: "alchemy",
         toolType: "furnace",
+        minToolTier: 1,
         materials: [
             { name: "Akar Stamina", quantity: 2 },
             { name: "Air Bersih", quantity: 1 }
@@ -46,6 +50,7 @@ const RECIPES = {
     "Obat Luka Bakar Besi": {
         profession: "alchemy",
         toolType: "furnace",
+        minToolTier: 2,
         materials: [
             { name: "Daun Herbal Pereda Nyeri", quantity: 2 },
             { name: "Getah Pohon", quantity: 1 }
@@ -55,6 +60,7 @@ const RECIPES = {
     "Pil Pengumpul Qi": {
         profession: "alchemy",
         toolType: "furnace",
+        minToolTier: 3,
         materials: [
             { name: "Batu Roh Kasar", quantity: 2 },
             { name: "Teratai Es Seribu Tahun", quantity: 1 }
@@ -66,6 +72,7 @@ const RECIPES = {
     "Makanan Matang": {
         profession: "cooking",
         toolType: "kitchen_tool",
+        minToolTier: 1,
         materials: [
             { name: "Daging Mentah", quantity: 1 },
             { name: "Air Bersih", quantity: 1 }
@@ -75,6 +82,7 @@ const RECIPES = {
     "Sup Sayur Daging": {
         profession: "cooking",
         toolType: "kitchen_tool",
+        minToolTier: 2,
         materials: [
             { name: "Daging Mentah", quantity: 1 },
             { name: "Jamur Hutan Liar", quantity: 2 },
@@ -85,6 +93,7 @@ const RECIPES = {
     "Daging Asap": {
         profession: "cooking",
         toolType: "kitchen_tool",
+        minToolTier: 2,
         materials: [
             { name: "Daging Mentah", quantity: 2 },
             { name: "Kayu Mentah", quantity: 1 } // Used for smoking
@@ -96,6 +105,7 @@ const RECIPES = {
     "Bibit Padi -> Beras": {
         profession: "farming",
         toolType: "farming_tool",
+        minToolTier: 1,
         materials: [
             { name: "Bibit Padi", quantity: 5 },
             { name: "Air Bersih", quantity: 2 }
@@ -105,6 +115,7 @@ const RECIPES = {
     "Kapas Mentah": {
         profession: "farming",
         toolType: "farming_tool",
+        minToolTier: 2,
         materials: [
             { name: "Air Bersih", quantity: 3 }
         ],
@@ -115,6 +126,7 @@ const RECIPES = {
     "Ikan Segar Dasar": {
         profession: "fishing",
         toolType: "fishing_rod",
+        minToolTier: 1,
         materials: [
             { name: "Serangga Tanah", quantity: 3 } // Bait
         ],
