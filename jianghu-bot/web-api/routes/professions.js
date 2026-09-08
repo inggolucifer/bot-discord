@@ -9,6 +9,34 @@ const RECIPES = require('../../utils/professionsRecipes');
 
 const PROFESSION_COST_COPPER = 50 * RATE_TO_COPPER.silver; // 50 Silver
 
+router.get('/recipes', verifyToken, async (req, res) => {
+    try {
+        const { profession } = req.query;
+        if (!profession) {
+            return res.status(400).json({ error: 'Profesi harus disertakan.' });
+        }
+
+        const filteredRecipes = [];
+        for (const [id, recipe] of Object.entries(RECIPES)) {
+            if (recipe.profession === profession) {
+                filteredRecipes.push({
+                    id,
+                    name: id,
+                    profession: recipe.profession,
+                    toolType: recipe.toolType,
+                    materials: recipe.materials,
+                    output: recipe.output
+                });
+            }
+        }
+
+        res.json({ data: filteredRecipes });
+    } catch (error) {
+        console.error("Error fetching recipes:", error);
+        res.status(500).json({ error: 'Server error saat mengambil resep' });
+    }
+});
+
 router.post('/farming/unlock-slot', verifyToken, async (req, res) => {
     const lockKey = `farming_unlock_slot_${req.user.userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
