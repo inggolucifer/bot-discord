@@ -175,7 +175,7 @@ const RECIPES = {
             { name: "Bibit Padi Liar", quantity: 2 },
             { name: "Air Bersih", quantity: 4 }
         ],
-        output: { name: "Gandum Kualitas Tinggi", quantity: 3 }
+        output: { name: "Padi Kualitas Tinggi", quantity: 3 }
     }
 
 };

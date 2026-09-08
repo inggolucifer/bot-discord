@@ -5982,7 +5982,8 @@
     "updatedAt": {
       "$date": "2026-09-06T03:16:04.523Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6003,7 +6004,8 @@
     "updatedAt": {
       "$date": "2026-09-06T03:16:04.523Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6024,7 +6026,8 @@
     "updatedAt": {
       "$date": "2026-09-06T03:16:04.523Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6571,7 +6574,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6600,7 +6604,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6629,7 +6634,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -6658,7 +6664,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7047,7 +7054,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7076,7 +7084,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7105,7 +7114,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7134,7 +7144,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7163,7 +7174,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.299Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7402,7 +7414,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7431,7 +7444,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7460,7 +7474,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7489,7 +7504,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7518,7 +7534,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7817,7 +7834,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7846,7 +7864,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7875,7 +7894,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -7904,7 +7924,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -8143,7 +8164,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -8172,7 +8194,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -8411,7 +8434,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -8830,7 +8854,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:18:23.370Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -9099,7 +9124,8 @@
     "updatedAt": {
       "$date": "2026-09-06T09:18:23.370Z"
     },
-    "__v": 0
+    "__v": 0,
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -9967,7 +9993,8 @@
     },
     "updatedAt": {
       "$date": "2026-09-08T11:22:08.981Z"
-    }
+    },
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -9995,7 +10022,8 @@
     },
     "updatedAt": {
       "$date": "2026-09-08T11:22:08.981Z"
-    }
+    },
+    "priceCurrency": "copper"
   },
   {
     "_id": {
@@ -10023,7 +10051,8 @@
     },
     "updatedAt": {
       "$date": "2026-09-08T13:04:03.301Z"
-    }
+    },
+    "priceCurrency": "copper"
   },
   {
     "_id": {
