@@ -145,6 +145,7 @@ export default function FishingPage() {
                                 <ToolPicker
                                     inventory={profile.inventory || []}
                                     toolType={selectedRecipe.toolType}
+                                    minToolTier={selectedRecipe.minToolTier}
                                     selectedToolId={toolItemId}
                                     onSelect={setToolItemId}
                                 />
@@ -152,6 +153,8 @@ export default function FishingPage() {
                                     currentEnergy={profile.energy?.current || 0}
                                     requiredMaterials={selectedRecipe.materials}
                                     inventory={profile.inventory || []}
+                                    minToolTier={selectedRecipe.minToolTier}
+                                    selectedToolId={toolItemId}
                                 />
                             </div>
                         )}
