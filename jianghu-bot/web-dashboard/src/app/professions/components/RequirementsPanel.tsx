@@ -10,9 +10,11 @@ interface RequirementsPanelProps {
     energyCost?: number;
     requiredMaterials: Material[];
     inventory: any[];
+    minToolTier?: number;
+    selectedToolId?: string;
 }
 
-export default function RequirementsPanel({ currentEnergy, energyCost = 10, requiredMaterials, inventory }: RequirementsPanelProps) {
+export default function RequirementsPanel({ currentEnergy, energyCost = 10, requiredMaterials, inventory, minToolTier, selectedToolId }: RequirementsPanelProps) {
     const energySufficient = currentEnergy >= energyCost;
 
     const materialsStatus = requiredMaterials.map(req => {
@@ -26,14 +28,28 @@ export default function RequirementsPanel({ currentEnergy, energyCost = 10, requ
         };
     });
 
+    const selectedTool = selectedToolId ? inventory?.find(i => i.itemId?._id === selectedToolId) : null;
+    const toolTierSufficient = selectedTool ? (selectedTool.itemId?.tier || 1) >= (minToolTier || 1) : false;
+
     const allMaterialsSufficient = materialsStatus.every(m => m.sufficient);
-    const isReady = energySufficient && allMaterialsSufficient;
+    const isReady = energySufficient && allMaterialsSufficient && (minToolTier === undefined || toolTierSufficient);
 
     return (
         <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
             <h4 className="text-sm font-bold text-gray-300 mb-3 border-b border-gray-700 pb-2">Persyaratan</h4>
 
             <div className="space-y-3">
+                {minToolTier !== undefined && (
+                    <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-400">Tool Tier (Min {minToolTier})</span>
+                        <span className={`font-bold ${toolTierSufficient ? 'text-green-400' : 'text-red-400'}`}>
+                            {selectedTool ? (
+                                toolTierSufficient ? 'Memenuhi' : `Tidak Cukup (T${selectedTool.itemId?.tier || 1})`
+                            ) : 'Belum Dipilih'}
+                        </span>
+                    </div>
+                )}
+
                 <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-400">Energy Cost</span>
                     <span className={`font-bold ${energySufficient ? 'text-green-400' : 'text-red-400'}`}>
