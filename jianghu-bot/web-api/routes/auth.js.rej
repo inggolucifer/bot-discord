@@ -1,0 +1,17 @@
+--- auth.js
++++ auth.js
+@@ -3,6 +3,14 @@
+ const jwt = require('jsonwebtoken');
+ const Player = require('../../models/Player');
+
++router.get('/test-login', async (req, res) => {
++    const player = await Player.findOne();
++    if (!player) return res.send('No player found');
++    const token = jwt.sign({ userId: player.discordId }, process.env.JWT_SECRET || 'secret', { expiresIn: '1d' });
++    res.cookie('accessToken', token, { httpOnly: false, sameSite: 'lax', path: '/' });
++    res.json({ token, userId: player.discordId });
++});
++
+ // ==========================================
+ // 1. Discord OAuth2 Config
+ // ==========================================
