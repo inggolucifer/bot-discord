@@ -11,6 +11,7 @@ const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
 const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
+const { isToolItem, buildToolInventoryEntry } = require('../../utils/inventoryToolHelper');
 
 // Helper to determine emoji based on item/asset type
 function getEmojiForShopItem(itemType, category) {
@@ -319,9 +320,17 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
 
             // Add to player inventory
             if (shopItem.category === 'item') {
-                const existingItem = player.inventory.find(i => i.itemId.equals(shopItem.refId));
-                if (existingItem) existingItem.quantity += quantity;
-                else player.inventory.push({ itemId: shopItem.refId, quantity: quantity });
+                const doc = await Item.findById(shopItem.refId).session(session);
+
+                if (doc && isToolItem(doc)) {
+                    for (let i = 0; i < quantity; i++) {
+                        player.inventory.push(buildToolInventoryEntry(doc, 1));
+                    }
+                } else {
+                    const existingItem = player.inventory.find(i => i.itemId.equals(shopItem.refId));
+                    if (existingItem) existingItem.quantity += quantity;
+                    else player.inventory.push({ itemId: shopItem.refId, quantity: quantity });
+                }
             } else if (shopItem.category === 'asset') {
                 const existingAsset = player.assets.find(a => a.assetId.equals(shopItem.refId));
                 if (existingAsset) existingAsset.quantity += quantity;
