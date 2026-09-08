@@ -167,7 +167,7 @@ const RECIPES = {
     },
 
     // Farming T3
-    "Gandum Kualitas Tinggi (T3)": {
+    "Padi Kualitas Tinggi (T3)": {
         profession: "farming",
         toolType: "farming_tool",
         minToolTier: 3,
