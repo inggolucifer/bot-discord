@@ -28,7 +28,7 @@ export default function RequirementsPanel({ currentEnergy, energyCost = 10, requ
         };
     });
 
-    const selectedTool = selectedToolId ? inventory?.find(i => i.itemId?._id === selectedToolId) : null;
+    const selectedTool = selectedToolId ? inventory?.find(i => String(i.itemId?._id) === String(selectedToolId)) : null;
     const toolTierSufficient = selectedTool ? (selectedTool.itemId?.tier || 1) >= (minToolTier || 1) : false;
 
     const allMaterialsSufficient = materialsStatus.every(m => m.sufficient);
