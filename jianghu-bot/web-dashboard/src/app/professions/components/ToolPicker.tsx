@@ -14,11 +14,11 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
     }
 
     const availableTools = inventory?.filter((item: any) =>
-        item.itemId?.toolType === toolType && item.durability > 0
+        item.itemId?.toolType === toolType && (item.durability == null || item.durability > 0)
     ) || [];
 
     if (availableTools.length === 0) {
-        return <div className="text-red-400 text-sm bg-red-900/20 p-2 rounded border border-red-900/50">Kamu tidak memiliki alat bertipe '{toolType.replace('_', ' ')}' yang bisa digunakan (durability &gt; 0).</div>;
+        return <div className="text-red-400 text-sm bg-red-900/20 p-2 rounded border border-red-900/50">Kamu tidak memiliki alat bertipe '{toolType.replace('_', ' ')}' yang bisa digunakan.</div>;
     }
 
     return (
@@ -50,10 +50,14 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
                                     <div className="text-[10px] text-red-400 font-bold mt-1">Tier tidak mencukupi (Butuh T{minToolTier})</div>
                                 )}
                             </div>
-                        <div className="text-right">
-                            <div className={`text-sm font-bold ${tool.durability < 10 ? 'text-red-400' : 'text-green-400'}`}>
-                                {tool.durability} / {tool.itemId.maxDurability || '?'}
-                            </div>
+                        <div className="text-right flex flex-col justify-end h-full mt-1">
+                            {tool.durability == null ? (
+                                <div className="text-[10px] text-green-400 italic">Siap pakai</div>
+                            ) : (
+                                <div className={`text-sm font-bold ${tool.durability < 10 ? 'text-red-400' : 'text-green-400'}`}>
+                                    {tool.durability} / {tool.itemId.maxDurability || '?'}
+                                </div>
+                            )}
                             <div className="text-[10px] text-gray-500 uppercase tracking-wider">Durability</div>
                         </div>
                     </div>
