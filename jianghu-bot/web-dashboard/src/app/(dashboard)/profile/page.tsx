@@ -177,6 +177,60 @@ export default function ProfilePage() {
                       <Info size={12}/> Sudah termasuk buff, equipment, dan kultivasi.
                    </p>
                 </div>
+
+                {/* Profession Skills Section */}
+                <div className="bg-black/40 p-4 rounded border border-[#333] mt-6">
+                   <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Kemahiran Profesi</h3>
+                   <div className="grid grid-cols-1 gap-y-3">
+                      {[
+                          { id: 'farming', name: 'Bertani', icon: '🌾' },
+                          { id: 'fishing', name: 'Memancing', icon: '🎣' },
+                          { id: 'cooking', name: 'Memasak', icon: '🍳' },
+                          { id: 'alchemy', name: 'Alkimia', icon: '⚗️' },
+                          { id: 'smithing', name: 'Menempa', icon: '🔨' }
+                      ].map(prof => {
+                          const profData = profile.professions?.[prof.id];
+                          const isUnlocked = profData?.isUnlocked;
+                          const level = profData?.level || 1;
+                          const exp = profData?.exp || 0;
+                          const maxExp = level * 100;
+                          const progress = Math.min(100, (exp / maxExp) * 100);
+
+                          return (
+                              <div key={prof.id} className="bg-gray-800/30 p-2.5 rounded border border-gray-700/50 flex flex-col justify-center">
+                                  <div className="flex justify-between items-center mb-1.5">
+                                      <div className="flex items-center gap-2">
+                                          <span className="text-lg">{prof.icon}</span>
+                                          <span className="text-sm font-bold text-gray-300">{prof.name}</span>
+                                      </div>
+                                      {isUnlocked ? (
+                                          <span className="text-xs font-bold text-amber-500">Lv. {level}</span>
+                                      ) : (
+                                          <span className="text-xs font-bold text-gray-500 bg-gray-900 px-2 py-0.5 rounded border border-gray-700">Terkunci</span>
+                                      )}
+                                  </div>
+
+                                  {isUnlocked ? (
+                                      <div className="w-full">
+                                          <div className="flex justify-between text-[10px] text-gray-400 mb-0.5 px-1">
+                                              <span>EXP</span>
+                                              <span>{exp} / {maxExp}</span>
+                                          </div>
+                                          <div className="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden border border-gray-700/50">
+                                              <div
+                                                  className="bg-amber-500 h-1.5 transition-all duration-500"
+                                                  style={{ width: `${progress}%` }}
+                                              ></div>
+                                          </div>
+                                      </div>
+                                  ) : (
+                                      <div className="text-[10px] text-gray-500 italic mt-1 px-1">Buka di menu Profesi (50 Silver)</div>
+                                  )}
+                              </div>
+                          );
+                      })}
+                   </div>
+                </div>
              </div>
           </div>
         </div>

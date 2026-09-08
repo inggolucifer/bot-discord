@@ -3,23 +3,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-export default function SmithingMinigame({ onComplete, onCancel }: { onComplete: (score: number, telemetry: any) => void, onCancel: () => void }) {
+export default function SmithingMinigame({ onComplete, onCancel }: { onComplete: (telemetry: any) => void, onCancel: () => void }) {
     const [needlePos, setNeedlePos] = useState(0); // 0 to 100
     const [hits, setHits] = useState(0);
-    const maxHits = 5;
+    const maxHits = 6;
+
+    const [feedback, setFeedback] = useState<{text: string, color: string, id: number} | null>(null);
+    const feedbackId = useRef(0);
 
     const requestRef = useRef<number>(0);
     const lastTime = useRef(performance.now());
     const direction = useRef(1); // 1 right, -1 left
     const speed = useRef(120); // speed increases over time
     const posRef = useRef(0);
-    const [telemetry, setTelemetry] = useState<number[]>([]);
 
-    const targetZoneStart = 40;
-    const targetZoneEnd = 60;
+    const telemetryRef = useRef({
+        scores: [] as number[],
+        perfectCount: 0,
+        goodCount: 0,
+        missCount: 0,
+        startTime: performance.now()
+    });
+
+    // Dynamic zone logic
+    const [zone, setZone] = useState({ start: 40, end: 60 });
+    const targetZoneStart = zone.start;
+    const targetZoneEnd = zone.end;
+    const center = (targetZoneStart + targetZoneEnd) / 2;
+    const width = targetZoneEnd - targetZoneStart;
+    const perfectWidth = width * 0.2; // 20% of zone is perfect
 
     useEffect(() => {
         const loop = (time: number) => {
+            if (hits >= maxHits) return;
             const deltaTime = (time - lastTime.current) / 1000;
             lastTime.current = time;
 
@@ -39,48 +55,105 @@ export default function SmithingMinigame({ onComplete, onCancel }: { onComplete:
 
         requestRef.current = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(requestRef.current!);
-    }, []);
+    }, [hits]);
 
     const handleHit = () => {
+        if (hits >= maxHits) return;
         const currentPos = posRef.current;
-        const isHit = currentPos >= targetZoneStart && currentPos <= targetZoneEnd;
 
+        const distFromCenter = Math.abs(center - currentPos);
         let score = 0;
-        if (isHit) {
-            // center is 50, closer to 50 is better
-            const distFromCenter = Math.abs(50 - currentPos);
-            score = 1 - (distFromCenter / 10); // 1 is perfect, drops to 0 at edges
-            if (score < 0) score = 0;
+        let hitType = 'Miss';
+
+        if (distFromCenter <= perfectWidth / 2) {
+            score = 1.0;
+            hitType = 'Perfect';
+            telemetryRef.current.perfectCount++;
+        } else if (currentPos >= targetZoneStart && currentPos <= targetZoneEnd) {
+            score = 0.6;
+            hitType = 'Good';
+            telemetryRef.current.goodCount++;
+        } else {
+            score = 0;
+            hitType = 'Miss';
+            telemetryRef.current.missCount++;
         }
 
-        const newTelemetry = [...telemetry, score];
-        setTelemetry(newTelemetry);
-        setHits(prev => prev + 1);
+        telemetryRef.current.scores.push(score);
 
-        speed.current += 30; // gets faster!
+        const nextHits = hits + 1;
+        setHits(nextHits);
 
-        if (hits + 1 >= maxHits) {
+        // Show feedback
+        feedbackId.current++;
+        let fText = "Melenceng";
+        let fColor = "text-red-500";
+        if (hitType === 'Perfect') { fText = "Sempurna!"; fColor = "text-amber-400"; }
+        if (hitType === 'Good') { fText = "Bagus"; fColor = "text-green-400"; }
+        setFeedback({ text: fText, color: fColor, id: feedbackId.current });
+
+        // Update difficulty for next hit
+        speed.current = Math.min(speed.current + 40, 350); // cap speed
+
+        // Sometimes shrink zone slightly
+        if (hitType === 'Perfect' || hitType === 'Good') {
+            const newWidth = Math.max(width - 2, 8); // cap minimum width
+            const newStart = center - (newWidth / 2);
+            setZone({ start: newStart, end: newStart + newWidth });
+        }
+
+        if (nextHits >= maxHits) {
             cancelAnimationFrame(requestRef.current!);
-            // Compute average accuracy
-            const accuracy = newTelemetry.reduce((a, b) => a + b, 0) / maxHits;
+            const tel = telemetryRef.current;
+            const accuracy = tel.scores.length > 0 ? tel.scores.reduce((a,b)=>a+b,0) / maxHits : 0;
+            const finalScore = Math.round(accuracy * 100);
+
             setTimeout(() => {
-                onComplete(100, { accuracy, type: 'smithing' });
-            }, 500);
+                onComplete({
+                    type: 'smithing',
+                    accuracy: accuracy,
+                    score: finalScore,
+                    perfectCount: tel.perfectCount,
+                    missCount: tel.missCount,
+                    durationMs: performance.now() - tel.startTime
+                });
+            }, 800);
         }
     };
 
     return (
         <div className="flex flex-col items-center justify-center p-4">
-            <h3 className="text-xl text-amber-500 font-bold mb-2">Pukul tepat di area merah!</h3>
-            <p className="text-gray-400 mb-8">Sisa Pukulan: {maxHits - hits}</p>
+            <h3 className="text-xl text-amber-500 font-bold mb-2">Pukul tepat di tengah area!</h3>
+            <p className="text-gray-400 mb-6">Sisa Pukulan: {maxHits - hits}</p>
 
-            <div className="relative w-full max-w-md h-12 bg-gray-800 rounded-lg overflow-hidden border border-gray-600 shadow-inner">
+            <div className="h-8 mb-2 flex items-center justify-center">
+                {feedback && (
+                    <motion.div
+                        key={feedback.id}
+                        initial={{ opacity: 1, y: 0, scale: 1.2 }}
+                        animate={{ opacity: 0, y: -20, scale: 1 }}
+                        transition={{ duration: 0.8 }}
+                        className={`text-lg font-bold ${feedback.color} drop-shadow-md`}
+                    >
+                        {feedback.text}
+                    </motion.div>
+                )}
+            </div>
+
+            <div
+                className="relative w-full max-w-md h-16 bg-gray-900 rounded-lg overflow-hidden border-2 border-gray-700 shadow-inner cursor-pointer"
+                onClick={handleHit} // Allow clicking the bar
+            >
                 {/* Target Zone */}
                 <div
-                    className="absolute h-full bg-red-600/80"
-                    style={{ left: `${targetZoneStart}%`, right: `${100 - targetZoneEnd}%` }}
+                    className="absolute h-full bg-orange-600/50"
+                    style={{ left: `${targetZoneStart}%`, width: `${width}%` }}
                 >
-                    <div className="absolute left-1/2 top-0 h-full w-0.5 bg-yellow-400 -translate-x-1/2"></div>
+                    {/* Perfect Center */}
+                    <div
+                        className="absolute top-0 h-full bg-amber-400/80"
+                        style={{ left: `50%`, width: `${(perfectWidth / width) * 100}%`, transform: 'translateX(-50%)' }}
+                    ></div>
                 </div>
 
                 {/* The Needle */}
@@ -98,7 +171,7 @@ export default function SmithingMinigame({ onComplete, onCancel }: { onComplete:
                     Batal
                 </button>
                 <button
-                    className="px-8 py-3 bg-amber-600 hover:bg-amber-500 rounded text-black text-xl font-bold shadow-lg transform active:scale-95 transition"
+                    className="px-8 py-3 bg-amber-600 hover:bg-amber-500 rounded text-black text-xl font-bold shadow-lg transform active:scale-95 transition disabled:opacity-50"
                     onClick={handleHit}
                     disabled={hits >= maxHits}
                 >
