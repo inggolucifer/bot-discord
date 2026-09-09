@@ -5,6 +5,177 @@
  */
 
 const RECIPES = {
+
+    "Sup Ikan Mas (Blueprint)": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 3,
+        requiresBlueprint: true,
+        blueprintKey: "Blueprint: Sup Ikan Mas",
+        materials: [
+            { name: "Ikan Mas Spiritual", quantity: 1 },
+            { name: "Air Bersih", quantity: 5 }
+        ],
+        output: { name: "Sup Ikan Mas", quantity: 1 }
+    },
+    "Palu Forge Meteorit (Blueprint)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 5,
+        requiresBlueprint: true,
+        blueprintKey: "Blueprint: Palu Forge Meteorit",
+        materials: [
+            { name: "Baja Keras", quantity: 5 },
+            { name: "Kayu Dewa", quantity: 2 }
+        ],
+        output: { name: "Palu Forge Meteorit", quantity: 1 }
+    },
+    "Pesta Istana Naga (Blueprint)": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 6,
+        requiresBlueprint: true,
+        blueprintKey: "Blueprint: Pesta Istana Naga",
+        materials: [
+            { name: "Ikan Naga Emas", quantity: 1 },
+            { name: "Rempah Nirwana", quantity: 5 },
+            { name: "Bunga Teratai Sembilan Warna", quantity: 1 }
+        ],
+        output: { name: "Pesta Istana Naga", quantity: 1 }
+    },
+    "Cangkul Baja (T3)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 3,
+        materials: [
+            { name: "Baja Murni", quantity: 3 },
+            { name: "Papan Kayu", quantity: 2 }
+        ],
+        output: { name: "Cangkul Baja", quantity: 1 }
+    },
+    "Alat Pancing Baja (T3)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 3,
+        materials: [
+            { name: "Baja Murni", quantity: 2 },
+            { name: "Tali Rami", quantity: 2 }
+        ],
+        output: { name: "Alat Pancing Baja", quantity: 1 }
+    },
+    "Pisau Dapur Baja (T3)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 3,
+        materials: [
+            { name: "Baja Murni", quantity: 2 },
+            { name: "Papan Kayu", quantity: 1 }
+        ],
+        output: { name: "Pisau Dapur Baja", quantity: 1 }
+    },
+    "Tungku Baja Keras (T4)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 4,
+        materials: [
+            { name: "Baja Keras", quantity: 5 },
+            { name: "Batu Bata", quantity: 10 }
+        ],
+        output: { name: "Tungku Baja Keras", quantity: 1 }
+    },
+    "Cangkul Baja Keras (T4)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 4,
+        materials: [
+            { name: "Baja Keras", quantity: 3 },
+            { name: "Kayu Spiritual", quantity: 2 }
+        ],
+        output: { name: "Cangkul Baja Keras", quantity: 1 }
+    },
+    "Cangkul Nirwana (T6)": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 6,
+        materials: [
+            { name: "Baja Nirwana", quantity: 3 },
+            { name: "Kayu Dewa", quantity: 3 }
+        ],
+        output: { name: "Cangkul Nirwana", quantity: 1 }
+    },
+    "Panen Gandum Spiritual (T4)": {
+        profession: "farming",
+        toolType: "farming_tool",
+        minToolTier: 4,
+        growTimeHours: 24,
+        materials: [
+            { name: "Biji Gandum Spiritual", quantity: 1 },
+            { name: "Air Bersih", quantity: 10 }
+        ],
+        output: { name: "Gandum Spiritual", quantity: 5 }
+    },
+    "Ekstrak Biji Gandum Spiritual (T4)": {
+        profession: "farming",
+        toolType: "farming_tool",
+        minToolTier: 4,
+        growTimeHours: 1,
+        materials: [
+            { name: "Gandum Spiritual", quantity: 1 }
+        ],
+        output: { name: "Biji Gandum Spiritual", quantity: 3 }
+    },
+    "Roti Gandum Spiritual": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 4,
+        materials: [
+            { name: "Gandum Spiritual", quantity: 2 },
+            { name: "Air Bersih", quantity: 1 }
+        ],
+        output: { name: "Roti Gandum Spiritual", quantity: 1 }
+    },
+    "Rempah Api (T5)": {
+        profession: "farming",
+        toolType: "farming_tool",
+        minToolTier: 5,
+        growTimeHours: 48,
+        materials: [
+            { name: "Rempah Api", quantity: 1 },
+            { name: "Air Bersih", quantity: 10 }
+        ],
+        output: { name: "Rempah Api", quantity: 3 }
+    },
+    "Rempah Nirwana (T6)": {
+        profession: "farming",
+        toolType: "farming_tool",
+        minToolTier: 6,
+        growTimeHours: 72,
+        materials: [
+            { name: "Rempah Nirwana", quantity: 1 },
+            { name: "Air Bersih", quantity: 20 }
+        ],
+        output: { name: "Rempah Nirwana", quantity: 2 }
+    },
+    "Steik Daging Naga Tanah (T5)": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 5,
+        materials: [
+            { name: "Ikan Koi Api", quantity: 1 },
+            { name: "Rempah Api", quantity: 2 }
+        ],
+        output: { name: "Steik Daging Naga Tanah", quantity: 1 }
+    },
+    "Ekstrak Esensi Ikan Api": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 5,
+        materials: [
+            { name: "Ikan Koi Api", quantity: 1 },
+            { name: "Air Bersih", quantity: 5 }
+        ],
+        output: { name: "Esensi Ikan Api", quantity: 1 }
+    },
     // ==========================================
     // SMITHING (forge)
     // ==========================================
@@ -16,7 +187,7 @@ const RECIPES = {
         requiresBlueprint: true,
         blueprintKey: "Blueprint: Pedang Bintang Emas",
         materials: [
-            { name: "Besi Hitam", quantity: 2 },
+            { name: "Batangan Besi", quantity: 2 },
             { name: "Papan Kayu", quantity: 1 }
         ],
         output: { name: "Pedang Baja", quantity: 1 }
@@ -437,7 +608,7 @@ const RECIPES = {
         minToolTier: 4,
         materials: [
             { name: "Ikan Mas Spiritual", quantity: 1 },
-            { name: "Garam Roh", quantity: 1 },
+            { name: "Padi Kualitas Tinggi", quantity: 2 },
             { name: "Air Bersih", quantity: 2 }
         ],
         output: { name: "Sop Daging Ikan Mas", quantity: 1 }
@@ -586,7 +757,7 @@ const RECIPES = {
         growTimeHours: 96, // 96 hours (4 days)
         materials: [
             { name: "Bibit Teratai Surgawi", quantity: 1 },
-            { name: "Air Mata Air Spiritual", quantity: 5 }
+            { name: "Air Bersih", quantity: 10 }
         ],
         output: { name: "Bunga Teratai Sembilan Warna", quantity: 1 }
     }
