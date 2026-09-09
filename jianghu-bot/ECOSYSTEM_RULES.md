@@ -122,3 +122,12 @@ Sebelum menyimpan desain baru ke Database MongoDB, pastikan:
 6. [ ] Apakah deskripsi (Lore) item sesuai standar emas dan mencerminkan "Zaman" nya?
 
 > **Patuhi panduan ini untuk memastikan Jianghu tetap menjadi ekosistem yang sehat, menantang, dan adiktif untuk dimainkan bertahun-tahun.**
+
+## 7. PROFESSION CHAINS & DEMAND
+Setiap output dari profesi tier tinggi (T4-T6) tidak boleh menjadi "dead item". Semuanya harus memiliki sink.
+1. **Gate Craft:** Output T_n menjadi bahan untuk recipe T_{n+1} atau lintas profesi (Farming -> Cooking/Alchemy, Fishing -> Cooking, Smithing -> Semua tools).
+2. **Buff/Consume:** Makanan dan pill tingkat tinggi memberikan buff energy, stats (sementara), exp, dan breakthrough chance. Sistem buff dapat mengevaluasi field `effectType` dan `effectValue`.
+3. **Asset Industry Input:** Station tinggi membutuhkan materi intermediate batch processing, misalnya Baja Keras dari Tungku, atau Mass Pupuk Dasar dari Lahan Tani Kecil.
+4. **Tools Gate:** Recipe tier tinggi tidak bisa berjalan tanpa tool minTier yang di-craft dari Smithing.
+
+*Catatan Implementasi Buff:* Jika hook runtime system buff belum ada di backend `battle.js` atau `energyManager.js`, maka field `effectType`, `effectValue`, dan `effectDurationMinutes` pada item harus diparsing minimal untuk tampil secara tekstual di deskripsi item, menunggu integrasi sistem buff live.

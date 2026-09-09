@@ -12,7 +12,7 @@ interface Recipe {
     toolType: string;
     minToolTier?: number;
     materials: Material[];
-    output: { name: string; quantity: number };
+    output: { name: string; quantity: number; effectInfo?: { type: string; value: number; desc: string } };
     requiresBlueprint?: boolean;
     unlocked?: boolean;
 }
@@ -52,15 +52,22 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
                             )}
                         </div>
                         <div className="text-xs text-gray-400 mt-1">
-                            {recipe.minToolTier && <span className="inline-block bg-blue-900/50 text-blue-200 text-[10px] px-1 py-0.5 rounded mr-1">T{recipe.minToolTier}</span>}
+                            {recipe.minToolTier ? <span className={`inline-block text-[10px] px-1.5 py-0.5 rounded mr-1 ${recipe.minToolTier >= 6 ? 'bg-red-900/50 text-red-200' : recipe.minToolTier === 5 ? 'bg-yellow-900/50 text-yellow-200' : recipe.minToolTier === 4 ? 'bg-purple-900/50 text-purple-200' : recipe.minToolTier === 3 ? 'bg-blue-900/50 text-blue-200' : recipe.minToolTier === 2 ? 'bg-green-900/50 text-green-200' : 'bg-gray-700 text-gray-300'}`}>T{recipe.minToolTier}</span> : <span className="inline-block bg-gray-700 text-gray-300 text-[10px] px-1.5 py-0.5 rounded mr-1">T1</span>}
                             Bahan: {recipe.materials.length > 0 ? recipe.materials.map(m => `${m.name} x${m.quantity}`).join(', ') : 'Tidak ada'}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                             Alat: <span className="capitalize">{recipe.toolType.replace('_', ' ')}</span> (Min Tier {recipe.minToolTier || 1})
                         </div>
                         {recipe.output && (
-                            <div className="text-xs text-amber-500/80 mt-1">
-                                Hasil: {recipe.output.name} x{recipe.output.quantity}
+                            <div className="mt-2 space-y-1">
+                                <div className="text-xs font-bold text-amber-500/80">
+                                    Hasil: {recipe.output.name} x{recipe.output.quantity}
+                                </div>
+                                {recipe.output.effectInfo && (
+                                    <div className="text-[10px] text-gray-400 bg-gray-900/50 p-1 rounded border border-gray-700/50">
+                                        <span className="text-cyan-400">Efek ({recipe.output.effectInfo.type}):</span> {recipe.output.effectInfo.value > 0 ? `+${recipe.output.effectInfo.value}` : ''}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

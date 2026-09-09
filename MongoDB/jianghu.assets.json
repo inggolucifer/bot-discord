@@ -2394,6 +2394,27 @@
             "quantity": 5
           }
         ]
+      },
+      {
+        "recipeName": "Batch Pil Terobosan Surga",
+        "hoursToComplete": 12,
+        "inputMaterials": [
+          {
+            "name": "Pil Pemecah Hambatan",
+            "quantity": 3
+          },
+          {
+            "name": "Akar Darah Naga",
+            "quantity": 3
+          }
+        ],
+        "outputMaterials": [
+          {
+            "name": "Pil Terobosan Surga",
+            "quantity": 3
+          }
+        ],
+        "durabilityHours": 12
       }
     ],
     "updatedAt": {
@@ -3777,6 +3798,27 @@
             "durabilityHours": 168
           }
         ]
+      },
+      {
+        "recipeName": "Riset Blueprint Meteorit",
+        "hoursToComplete": 12,
+        "inputMaterials": [
+          {
+            "name": "Kayu Dewa",
+            "quantity": 5
+          },
+          {
+            "name": "Esensi Ikan Api",
+            "quantity": 1
+          }
+        ],
+        "outputMaterials": [
+          {
+            "name": "Blueprint: Palu Forge Meteorit",
+            "quantity": 1
+          }
+        ],
+        "durabilityHours": 12
       }
     ],
     "updatedAt": {
@@ -4510,7 +4552,29 @@
     "dailyProfit": 0,
     "profitCurrency": "silver",
     "isCraftingStation": false,
-    "recipes": [],
+    "recipes": [
+      {
+        "recipeName": "Pupuk Dasar Massal",
+        "hoursToComplete": 2,
+        "inputMaterials": [
+          {
+            "name": "Kayu Mentah",
+            "quantity": 10
+          },
+          {
+            "name": "Batu Kasar",
+            "quantity": 5
+          }
+        ],
+        "outputMaterials": [
+          {
+            "name": "Pupuk Dasar",
+            "quantity": 5
+          }
+        ],
+        "durabilityHours": 2
+      }
+    ],
     "workerOutputItemId": null,
     "workerOutputItemName": "Gandum Liar",
     "workerOutputQuantity": 10,
@@ -4802,6 +4866,27 @@
             "quantity": 2
           }
         ]
+      },
+      {
+        "recipeName": "Batch Pil Terobosan Fana",
+        "hoursToComplete": 4,
+        "inputMaterials": [
+          {
+            "name": "Akar Stamina",
+            "quantity": 5
+          },
+          {
+            "name": "Daun Herbal Pereda Nyeri",
+            "quantity": 5
+          }
+        ],
+        "outputMaterials": [
+          {
+            "name": "Pil Terobosan Fana",
+            "quantity": 3
+          }
+        ],
+        "durabilityHours": 4
       }
     ],
     "workerOutputItemId": null,
@@ -4960,6 +5045,27 @@
           }
         ],
         "craftingTimeHours": 6
+      },
+      {
+        "recipeName": "Batch Baja Keras",
+        "hoursToComplete": 4,
+        "inputMaterials": [
+          {
+            "name": "Baja",
+            "quantity": 10
+          },
+          {
+            "name": "Batu Bara",
+            "quantity": 5
+          }
+        ],
+        "outputMaterials": [
+          {
+            "name": "Baja Keras",
+            "quantity": 3
+          }
+        ],
+        "durabilityHours": 4
       }
     ],
     "workerOutputItemId": null,
