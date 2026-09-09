@@ -43,7 +43,7 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
                     >
                         <div className="font-bold text-gray-200">{recipe.name}</div>
                         <div className="text-xs text-gray-400 mt-1">
-                            Bahan: {recipe.materials.length > 0 ? recipe.materials.map(m => `${m.name} x${m.quantity}`).join(', ') : 'Tidak ada'}
+                            {recipe.minToolTier && <span className="inline-block bg-blue-900/50 text-blue-200 text-[10px] px-1 py-0.5 rounded mr-1">T{recipe.minToolTier}</span>} Bahan: {recipe.materials.length > 0 ? recipe.materials.map(m => `${m.name} x${m.quantity}`).join(', ') : 'Tidak ada'}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                             Alat: <span className="capitalize">{recipe.toolType.replace('_', ' ')}</span> (Min Tier {recipe.minToolTier || 1})

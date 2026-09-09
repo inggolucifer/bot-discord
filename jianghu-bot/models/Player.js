@@ -37,6 +37,7 @@ const professionSchema = new mongoose.Schema({
 const farmPlotSchema = new mongoose.Schema({
   isUnlocked: { type: Boolean, default: false },
   cropId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+  recipeKey: { type: String, default: null },
   plantedAt: { type: Date, default: null },
   harvestAt: { type: Date, default: null },
   isDepleted: { type: Boolean, default: false },
