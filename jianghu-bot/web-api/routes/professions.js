@@ -21,10 +21,21 @@ router.get('/recipes', verifyToken, async (req, res) => {
         const unlockedBlueprints = player?.professions?.unlockedBlueprints || [];
 
         const filteredRecipes = [];
+        const itemNames = Object.values(RECIPES).filter(r => r.profession === profession).map(r => r.output.name);
+        const itemDocs = await Item.find({ name: { $in: itemNames } }).lean();
+        const itemMap = {};
+        itemDocs.forEach(doc => { itemMap[doc.name] = doc; });
+
         for (const [id, recipe] of Object.entries(RECIPES)) {
             if (recipe.profession === profession) {
                 const requiresBlueprint = !!recipe.requiresBlueprint;
                 const unlocked = !requiresBlueprint || unlockedBlueprints.includes(recipe.blueprintKey);
+
+                const itemDoc = itemMap[recipe.output.name];
+                let outputEffect = null;
+                if (itemDoc && itemDoc.effectType) {
+                     outputEffect = { type: itemDoc.effectType, value: itemDoc.effectValue, desc: itemDoc.description };
+                }
 
                 filteredRecipes.push({
                     id,
@@ -33,7 +44,7 @@ router.get('/recipes', verifyToken, async (req, res) => {
                     toolType: recipe.toolType,
                     minToolTier: recipe.minToolTier || 1,
                     materials: recipe.materials,
-                    output: recipe.output,
+                    output: { ...recipe.output, effectInfo: outputEffect },
                     requiresBlueprint,
                     blueprintKey: recipe.blueprintKey,
                     unlocked

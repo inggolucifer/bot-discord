@@ -481,5 +481,28 @@
       "$date": "2026-09-08T13:04:37.609Z"
     },
     "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "ab3a5328e72268ec927cf178"
+    },
+    "guildId": "DEFAULT_GUILD",
+    "refId": {
+      "$oid": "b01f9eb98053258c0ca98a56"
+    },
+    "__v": 0,
+    "addedBy": "System Oracle",
+    "category": "item",
+    "createdAt": {
+      "$date": "2026-09-09T14:30:07.613Z"
+    },
+    "updatedAt": {
+      "$date": "2026-09-09T14:30:07.613Z"
+    },
+    "isActive": true,
+    "price": 10,
+    "priceCurrency": "copper",
+    "refModel": "Item",
+    "stock": -1
   }
 ]
