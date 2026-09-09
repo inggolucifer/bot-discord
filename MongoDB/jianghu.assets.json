@@ -1011,7 +1011,7 @@
       {
         "recipeName": "Lebur Besi",
         "resultItemId": {
-          "$oid": "6a91b15ba9e03dc91c54bff5"
+          "$oid": "f443f7ae8ccc0162b0abbbc3"
         },
         "resultItemName": "Batangan Besi",
         "resultQuantity": 1,
@@ -1047,7 +1047,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ba9e03dc91c54bff5"
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
             },
             "itemName": "Batangan Besi",
             "quantity": 5,
@@ -1069,14 +1069,14 @@
       {
         "recipeName": "Tempa Kapak Besi",
         "resultItemId": {
-          "$oid": "6a91b15ca9e03dc91c54c001"
+          "$oid": "5be673f6b14cd153f28be409"
         },
         "resultItemName": "Kapak Besi",
         "resultQuantity": 1,
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ba9e03dc91c54bff5"
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
             },
             "itemName": "Batangan Besi",
             "quantity": 3,
@@ -1105,7 +1105,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ba9e03dc91c54bff5"
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
             },
             "itemName": "Batangan Besi",
             "quantity": 2,
@@ -1656,14 +1656,14 @@
       {
         "recipeName": "Proses Baja Murni",
         "resultItemId": {
-          "$oid": "6a91b15ca9e03dc91c54c01f"
+          "$oid": "97bb2693130cdf6082a8b751"
         },
         "resultItemName": "Baja Murni",
         "resultQuantity": 1,
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ba9e03dc91c54bff5"
+              "$oid": "f443f7ae8ccc0162b0abbbc3"
             },
             "itemName": "Batangan Besi",
             "quantity": 10,
@@ -1692,7 +1692,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ca9e03dc91c54c01f"
+              "$oid": "97bb2693130cdf6082a8b751"
             },
             "itemName": "Baja Murni",
             "quantity": 3,
@@ -1721,7 +1721,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ca9e03dc91c54c01f"
+              "$oid": "97bb2693130cdf6082a8b751"
             },
             "itemName": "Baja Murni",
             "quantity": 15,
@@ -1758,7 +1758,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ca9e03dc91c54c01f"
+              "$oid": "97bb2693130cdf6082a8b751"
             },
             "itemName": "Baja Murni",
             "quantity": 2,
@@ -2387,34 +2387,50 @@
         "materials": [
           {
             "itemName": "Daun Herbal Pereda Nyeri",
-            "quantity": 10
+            "quantity": 10,
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfee"
+            }
           },
           {
             "itemName": "Air Bersih",
-            "quantity": 5
+            "quantity": 5,
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfe3"
+            }
           }
-        ]
+        ],
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54bff3"
+        }
       },
       {
         "recipeName": "Batch Pil Terobosan Surga",
         "hoursToComplete": 12,
-        "inputMaterials": [
+        "durabilityHours": 12,
+        "resultItemName": "Pil Terobosan Surga",
+        "resultQuantity": 1,
+        "materials": [
           {
-            "name": "Pil Pemecah Hambatan",
-            "quantity": 3
+            "itemId": {
+              "$oid": "6a91b15fa9e03dc91c54c077"
+            },
+            "itemName": "Pil Pemecah Hambatan",
+            "quantity": 3,
+            "durabilityHours": 12
           },
           {
-            "name": "Akar Darah Naga",
-            "quantity": 3
+            "itemId": {
+              "$oid": "868975087f012fa21e760e99"
+            },
+            "itemName": "Akar Darah Naga",
+            "quantity": 3,
+            "durabilityHours": 12
           }
         ],
-        "outputMaterials": [
-          {
-            "name": "Pil Terobosan Surga",
-            "quantity": 3
-          }
-        ],
-        "durabilityHours": 12
+        "resultItemId": {
+          "$oid": "19f0593d15b1cb93987ebae9"
+        }
       }
     ],
     "updatedAt": {
@@ -2916,6 +2932,44 @@
         "_id": {
           "$oid": "6a91b16075cf9e21a690a57d"
         }
+      },
+      {
+        "recipeName": "Eksperimen Resep Ikan Mas",
+        "resultItemId": {
+          "$oid": "f23407175c5a4cd4018c771f"
+        },
+        "resultItemName": "Blueprint: Sup Ikan Mas",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "6aa007c35fead8f4d57f6e83"
+            },
+            "itemName": "Ikan Mas Spiritual",
+            "quantity": 2,
+            "durabilityHours": 12
+          }
+        ],
+        "hoursToComplete": 12
+      },
+      {
+        "recipeName": "Mencatat Pesta Legendaris",
+        "resultItemId": {
+          "$oid": "d1db70ca4ef149600d52b1cb"
+        },
+        "resultItemName": "Blueprint: Pesta Istana Naga",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemId": {
+              "$oid": "f100272af381bbdb857257c4"
+            },
+            "itemName": "Ikan Naga Emas",
+            "quantity": 1,
+            "durabilityHours": 24
+          }
+        ],
+        "hoursToComplete": 24
       }
     ],
     "updatedAt": {
@@ -3460,7 +3514,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ca9e03dc91c54c01f"
+              "$oid": "97bb2693130cdf6082a8b751"
             },
             "itemName": "Baja Murni",
             "quantity": 5,
@@ -3783,7 +3837,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "6a91b15ea9e03dc91c54c05a"
+              "$oid": "377ec7de7a8374bd4bb3f8c0"
             },
             "itemName": "Tulang Dewa Kuno",
             "quantity": 12,
@@ -3802,23 +3856,49 @@
       {
         "recipeName": "Riset Blueprint Meteorit",
         "hoursToComplete": 12,
-        "inputMaterials": [
+        "durabilityHours": 12,
+        "resultItemName": "Blueprint: Palu Forge Meteorit",
+        "resultQuantity": 1,
+        "materials": [
           {
-            "name": "Kayu Dewa",
-            "quantity": 5
+            "itemId": {
+              "$oid": "3edcb0856e42285a722d30bc"
+            },
+            "itemName": "Kayu Dewa",
+            "quantity": 5,
+            "durabilityHours": 12
           },
           {
-            "name": "Esensi Ikan Api",
-            "quantity": 1
+            "itemId": {
+              "$oid": "4721fdd8d62d9aa332f006ed"
+            },
+            "itemName": "Esensi Ikan Api",
+            "quantity": 1,
+            "durabilityHours": 12
           }
         ],
-        "outputMaterials": [
+        "resultItemId": {
+          "$oid": "6f1fbc507497a1cd8b0181ba"
+        }
+      },
+      {
+        "recipeName": "Riset Pedang Bintang",
+        "resultItemId": {
+          "$oid": "a74337151b0e010c6f5b4f18"
+        },
+        "resultItemName": "Blueprint: Pedang Bintang Emas",
+        "resultQuantity": 1,
+        "materials": [
           {
-            "name": "Blueprint: Palu Forge Meteorit",
-            "quantity": 1
+            "itemId": {
+              "$oid": "785ccc5931acc6a0b288fe8f"
+            },
+            "itemName": "Baja Meteorit",
+            "quantity": 5,
+            "durabilityHours": 24
           }
         ],
-        "durabilityHours": 12
+        "hoursToComplete": 24
       }
     ],
     "updatedAt": {
@@ -4556,23 +4636,30 @@
       {
         "recipeName": "Pupuk Dasar Massal",
         "hoursToComplete": 2,
-        "inputMaterials": [
+        "durabilityHours": 2,
+        "resultItemName": "Pupuk Dasar",
+        "resultQuantity": 5,
+        "materials": [
           {
-            "name": "Kayu Mentah",
-            "quantity": 10
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc3"
+            },
+            "itemName": "Kayu Mentah",
+            "quantity": 10,
+            "durabilityHours": 2
           },
           {
-            "name": "Batu Kasar",
-            "quantity": 5
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            },
+            "itemName": "Batu Kasar",
+            "quantity": 5,
+            "durabilityHours": 2
           }
         ],
-        "outputMaterials": [
-          {
-            "name": "Pupuk Dasar",
-            "quantity": 5
-          }
-        ],
-        "durabilityHours": 2
+        "resultItemId": {
+          "$oid": "b01f9eb98053258c0ca98a56"
+        }
       }
     ],
     "workerOutputItemId": null,
@@ -4671,21 +4758,6 @@
           }
         ],
         "craftingTimeHours": 2
-      },
-      {
-        "recipeName": "Perakitan Panci Besi Kasar",
-        "resultItemName": "Panci Besi Kasar",
-        "resultQuantity": 1,
-        "materials": [
-          {
-            "itemName": "Batangan Besi",
-            "quantity": 2
-          },
-          {
-            "itemName": "Batu Kasar",
-            "quantity": 2
-          }
-        ]
       }
     ],
     "workerOutputItemId": null,
@@ -4859,34 +4931,50 @@
         "materials": [
           {
             "itemName": "Batu Kasar",
-            "quantity": 5
+            "quantity": 5,
+            "itemId": {
+              "$oid": "6a91b15aa9e03dc91c54bfc2"
+            }
           },
           {
             "itemName": "Air Bersih",
-            "quantity": 2
+            "quantity": 2,
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfe3"
+            }
           }
-        ]
+        ],
+        "resultItemId": {
+          "$oid": "6a91b15aa9e03dc91c54bffa"
+        }
       },
       {
         "recipeName": "Batch Pil Terobosan Fana",
         "hoursToComplete": 4,
-        "inputMaterials": [
+        "durabilityHours": 4,
+        "resultItemName": "Pil Terobosan Fana",
+        "resultQuantity": 3,
+        "materials": [
           {
-            "name": "Akar Stamina",
-            "quantity": 5
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfef"
+            },
+            "itemName": "Akar Stamina",
+            "quantity": 5,
+            "durabilityHours": 4
           },
           {
-            "name": "Daun Herbal Pereda Nyeri",
-            "quantity": 5
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bfee"
+            },
+            "itemName": "Daun Herbal Pereda Nyeri",
+            "quantity": 5,
+            "durabilityHours": 4
           }
         ],
-        "outputMaterials": [
-          {
-            "name": "Pil Terobosan Fana",
-            "quantity": 3
-          }
-        ],
-        "durabilityHours": 4
+        "resultItemId": {
+          "$oid": "eb0b5fd30880719bd5e0c497"
+        }
       }
     ],
     "workerOutputItemId": null,
@@ -5049,23 +5137,30 @@
       {
         "recipeName": "Batch Baja Keras",
         "hoursToComplete": 4,
-        "inputMaterials": [
+        "durabilityHours": 4,
+        "resultItemName": "Baja Keras",
+        "resultQuantity": 3,
+        "materials": [
           {
-            "name": "Baja",
-            "quantity": 10
+            "itemId": {
+              "$oid": "97bb2693130cdf6082a8b751"
+            },
+            "itemName": "Baja Murni",
+            "quantity": 10,
+            "durabilityHours": 4
           },
           {
-            "name": "Batu Bara",
-            "quantity": 5
+            "itemId": {
+              "$oid": "6a91b15ba9e03dc91c54bff4"
+            },
+            "itemName": "Batu Bara",
+            "quantity": 5,
+            "durabilityHours": 4
           }
         ],
-        "outputMaterials": [
-          {
-            "name": "Baja Keras",
-            "quantity": 3
-          }
-        ],
-        "durabilityHours": 4
+        "resultItemId": {
+          "$oid": "cfb365268f86df85fe2a3471"
+        }
       }
     ],
     "workerOutputItemId": null,
@@ -5397,7 +5492,7 @@
         "materials": [
           {
             "itemId": {
-              "$oid": "32bb5bdd7749ae061d001747"
+              "$oid": "785ccc5931acc6a0b288fe8f"
             },
             "itemName": "Baja Meteorit",
             "quantity": 50
