@@ -8,6 +8,19 @@ const RECIPES = {
     // ==========================================
     // SMITHING (forge)
     // ==========================================
+
+    "Blueprint: Pedang Bintang Emas Demo": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 4,
+        requiresBlueprint: true,
+        blueprintKey: "Blueprint: Pedang Bintang Emas",
+        materials: [
+            { name: "Besi Hitam", quantity: 2 },
+            { name: "Papan Kayu", quantity: 1 }
+        ],
+        output: { name: "Pedang Baja", quantity: 1 }
+    },
     "Besi Murni": {
         profession: "smithing",
         toolType: "forge",
@@ -77,7 +90,7 @@ const RECIPES = {
         ],
         output: { name: "Pedang Baja Keras", quantity: 1 }
     },
-    "Peralatan T4 (Joran)": {
+    "Joran Besi Hitam": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 4,
@@ -87,7 +100,7 @@ const RECIPES = {
         ],
         output: { name: "Joran Baja Keras", quantity: 1 }
     },
-    "Peralatan T4 (Cangkul)": {
+    "Cangkul Besi Hitam": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 4,
@@ -97,7 +110,7 @@ const RECIPES = {
         ],
         output: { name: "Cangkul Baja Keras", quantity: 1 }
     },
-    "Peralatan T4 (Tungku)": {
+    "Tungku Besi Hitam": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 4,
@@ -127,7 +140,7 @@ const RECIPES = {
         ],
         output: { name: "Baja Meteorit", quantity: 1 }
     },
-    "Peralatan T5 (Joran)": {
+    "Joran Giok Biru": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 5,
@@ -137,7 +150,7 @@ const RECIPES = {
         ],
         output: { name: "Alat Pancing Meteorit", quantity: 1 }
     },
-    "Peralatan T5 (Cangkul)": {
+    "Cangkul Giok Bumi": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 5,
@@ -147,7 +160,7 @@ const RECIPES = {
         ],
         output: { name: "Cangkul Meteorit", quantity: 1 }
     },
-    "Peralatan T5 (Tungku)": {
+    "Tungku Giok Ungu": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 5,
@@ -197,7 +210,7 @@ const RECIPES = {
         ],
         output: { name: "Pedang Nirwana", quantity: 1 }
     },
-    "Peralatan T6 (Joran)": {
+    "Joran Naga Surgawi": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 6,
@@ -207,7 +220,7 @@ const RECIPES = {
         ],
         output: { name: "Alat Pancing Nirwana", quantity: 1 }
     },
-    "Peralatan T6 (Cangkul)": {
+    "Cangkul Emas Surgawi": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 6,
@@ -217,7 +230,7 @@ const RECIPES = {
         ],
         output: { name: "Cangkul Nirwana", quantity: 1 }
     },
-    "Peralatan T6 (Tungku)": {
+    "Tungku Dewa Surgawi": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 6,
@@ -271,6 +284,67 @@ const RECIPES = {
         ],
         output: { name: "Obat Luka Bakar Besi", quantity: 1 }
     },
+
+    "Pil Terobosan Fana": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 1,
+        materials: [
+            { name: "Akar Stamina", quantity: 1 },
+            { name: "Daun Herbal Pereda Nyeri", quantity: 1 }
+        ],
+        output: { name: "Pil Terobosan Fana", quantity: 1 }
+    },
+    "Pil Pembersih Akar": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 2,
+        materials: [
+            { name: "Pil Terobosan Fana", quantity: 1 },
+            { name: "Batu Roh Kasar", quantity: 1 }
+        ],
+        output: { name: "Pil Pembersih Akar", quantity: 1 }
+    },
+    "Pil Pelebaran Meridian": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 3,
+        materials: [
+            { name: "Pil Pembersih Akar", quantity: 1 },
+            { name: "Daun Teratai Es", quantity: 1 }
+        ],
+        output: { name: "Pil Pelebaran Meridian", quantity: 1 }
+    },
+    "Pil Pemecah Hambatan": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 4,
+        materials: [
+            { name: "Pil Pelebaran Meridian", quantity: 1 },
+            { name: "Batu Roh Halus", quantity: 1 }
+        ],
+        output: { name: "Pil Pemecah Hambatan", quantity: 1 }
+    },
+    "Pil Terobosan Surga": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 5,
+        materials: [
+            { name: "Pil Pemecah Hambatan", quantity: 1 },
+            { name: "Akar Darah Naga", quantity: 1 }
+        ],
+        output: { name: "Pil Terobosan Surga", quantity: 1 }
+    },
+    "Pil Kebangkitan Nirwana Surgawi": {
+        profession: "alchemy",
+        toolType: "furnace",
+        minToolTier: 6,
+        materials: [
+            { name: "Pil Terobosan Surga", quantity: 1 },
+            { name: "Kristal Roh Surgawi", quantity: 1 }
+        ],
+        output: { name: "Pil Kebangkitan Nirwana Surgawi", quantity: 1 }
+    },
     "Pil Pengumpul Qi": {
         profession: "alchemy",
         toolType: "furnace",
@@ -281,7 +355,7 @@ const RECIPES = {
         ],
         output: { name: "Pil Pengumpul Qi", quantity: 1 }
     },
-    "Pil Pemadatan Qi (T4)": {
+    "Pil Pemadatan Qi": {
         profession: "alchemy",
         toolType: "furnace",
         minToolTier: 4,
@@ -291,7 +365,7 @@ const RECIPES = {
         ],
         output: { name: "Pil Pemadatan Qi", quantity: 1 }
     },
-    "Pil Formasi Inti (T5)": {
+    "Pil Formasi Inti": {
         profession: "alchemy",
         toolType: "furnace",
         minToolTier: 5,
@@ -301,7 +375,7 @@ const RECIPES = {
         ],
         output: { name: "Pil Formasi Inti", quantity: 1 }
     },
-    "Pil Kesengsaraan Surgawi (T6)": {
+    "Pil Kesengsaraan Surgawi": {
         profession: "alchemy",
         toolType: "furnace",
         minToolTier: 6,

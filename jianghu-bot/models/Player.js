@@ -41,7 +41,9 @@ const farmPlotSchema = new mongoose.Schema({
   plantedAt: { type: Date, default: null },
   harvestAt: { type: Date, default: null },
   isDepleted: { type: Boolean, default: false },
-  depletedUntil: { type: Date, default: null }
+  depletedUntil: { type: Date, default: null },
+  fertilizerApplied: { type: Boolean, default: false },
+  fertilizerItemName: { type: String, default: null }
 }, { _id: false });
 
 const farmingProfessionSchema = new mongoose.Schema({
@@ -63,7 +65,8 @@ const professionsSchema = new mongoose.Schema({
   fishing: { type: fishingProfessionSchema, default: () => ({}) },
   cooking: { type: professionSchema, default: () => ({}) },
   alchemy: { type: professionSchema, default: () => ({}) },
-  smithing: { type: professionSchema, default: () => ({}) }
+  smithing: { type: professionSchema, default: () => ({}) },
+  unlockedBlueprints: { type: [String], default: [] }
 }, { _id: false });
 
 const petOwnedSchema = new mongoose.Schema({
