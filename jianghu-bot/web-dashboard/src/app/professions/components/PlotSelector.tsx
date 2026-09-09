@@ -121,8 +121,8 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect }: Plo
                                 {label} {timeLeftStr && `(${timeLeftStr})`}
                             </div>
                             {plot.fertilizerApplied && (
-                                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] px-1 py-0.5 rounded-full">
-                                    ★
+                                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] px-1 py-0.5 rounded-full shadow" title="Sudah Dipupuk">
+                                    ✨ Pupuk
                                 </div>
                             )}
                         </button>
