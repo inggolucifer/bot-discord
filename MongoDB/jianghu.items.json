@@ -10227,5 +10227,1745 @@
     "updatedAt": {
       "$date": "2026-09-08T13:04:03.302Z"
     }
+  },
+  {
+    "_id": {
+      "$oid": "5f4227d3580d285f56984878"
+    },
+    "name": "Joran Baja",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 300,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.870Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Joran tangguh dari baja murni.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Rare",
+    "tier": 3,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "fishing_rod",
+    "maxDurability": 60,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "9c624c7a6af3bb8ea8bd31ae"
+    },
+    "name": "Cangkul Baja",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 300,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Cangkul kuat dari baja.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Rare",
+    "tier": 3,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 60,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "3a1bbe0af1577b2cfe5d6de9"
+    },
+    "name": "Joran Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Joran dari baja keras, tidak mudah patah.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "fishing_rod",
+    "maxDurability": 100,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "7618e77831cb5e54d332d0d1"
+    },
+    "name": "Cangkul Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Cangkul untuk bertani di tanah spiritual.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 100,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "67ea56d3d84688649946a9cc"
+    },
+    "name": "Tungku Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Tungku penyulingan tingkat tinggi.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "furnace",
+    "maxDurability": 100,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "0238fc1f03ce0a5292855c98"
+    },
+    "name": "Peralatan Dapur Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Peralatan masak kualitas restoran bintang lima.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "kitchen_tool",
+    "maxDurability": 100,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "f43425009f51fe7bef874da8"
+    },
+    "name": "Pedang Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1000,
+    "category": "weapon",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Pedang kuat.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 120,
+    "baseDef": 10,
+    "baseHp": 50,
+    "baseSpd": 5
+  },
+  {
+    "_id": {
+      "$oid": "5aeb13dbc83965228f780819"
+    },
+    "name": "Kotak Peralatan Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat serba guna dari meteorit. Bisa dipakai bertani.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "45c62e79ab11722826b9acb6"
+    },
+    "name": "Alat Pancing Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat pancing T5.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "fishing_rod",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "1c40fbe6e1ad47ea97b0a598"
+    },
+    "name": "Cangkul Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Cangkul T5.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "63dfd55cb4b1d6ffb92cfaac"
+    },
+    "name": "Tungku Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Tungku T5.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "furnace",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "2aa2ea9802a44ae9c09b8ad1"
+    },
+    "name": "Peralatan Dapur Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat dapur T5.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "kitchen_tool",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "d64a69b857151cb4f93c631a"
+    },
+    "name": "Palu Forge Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Palu pandai besi T5.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "forge",
+    "maxDurability": 200,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "c1c68379772e0e65cd834841"
+    },
+    "name": "Kotak Peralatan Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat dewa. Bisa untuk bertani.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "75e5f1c5eafb6a4415dda36f"
+    },
+    "name": "Alat Pancing Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat pancing T6.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "fishing_rod",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "9c3eb331f73d2fd45c5bc689"
+    },
+    "name": "Cangkul Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Cangkul T6.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "farming_tool",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "75c4a8954011235fc1f6c4a1"
+    },
+    "name": "Tungku Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Tungku T6.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "furnace",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "b6ff665b3e0d8d908a04f3ea"
+    },
+    "name": "Peralatan Dapur Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Alat dapur T6.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "kitchen_tool",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "7aa707cc5cddc31cbd2cdaf5"
+    },
+    "name": "Palu Forge Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 5000,
+    "category": "tool",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Palu pandai besi T6.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": "forge",
+    "maxDurability": 500,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "8153b60203a8dcf5eb591cce"
+    },
+    "name": "Pedang Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 6000,
+    "category": "weapon",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Pedang dewa.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 400,
+    "baseDef": 50,
+    "baseHp": 200,
+    "baseSpd": 20
+  },
+  {
+    "_id": {
+      "$oid": "cfb365268f86df85fe2a3471"
+    },
+    "name": "Baja Keras",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 250,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Baja Keras.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "dfc31e701a3772530e22de1a"
+    },
+    "name": "Arang Spiritual",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 150,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Arang Spiritual.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "0b14b618c04fa8bc972b5ff7"
+    },
+    "name": "Kayu Spiritual",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 200,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Kayu Spiritual.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "548c0f9f51810a7bfdd0bdb0"
+    },
+    "name": "Batu Bata Roh",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 200,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Batu Bata Roh.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "2604fde712d5ed67dc92b80a"
+    },
+    "name": "Pil Pemadatan Qi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 400,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Pil Pemadatan Qi.",
+    "effect": "buff_exp_bonus_50_2h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "05b7e7b533f243dddd2f1147"
+    },
+    "name": "Batu Roh Halus",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 200,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.871Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Batu Roh Halus.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "9536aebef921d229e60a6140"
+    },
+    "name": "Daun Teratai Es",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 150,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Daun Teratai Es.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "340a86f9445c46509b37f65c"
+    },
+    "name": "Sop Daging Ikan Mas",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 300,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Sop Daging Ikan Mas.",
+    "effect": "buff_hp_boost_100_1h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "c83deb84e220d50c9575ab53"
+    },
+    "name": "Garam Roh",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 100,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Garam Roh.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "2bc3215d8657d8cc1ef07e34"
+    },
+    "name": "Ikan Perak Giok",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 250,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Ikan Perak Giok.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "fa4687f4f52ee1ff262e07c1"
+    },
+    "name": "Bait Cacing Roh",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 50,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bait Cacing Roh.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "5a33ff804f1f68e69a94a577"
+    },
+    "name": "Bibit Bambu Spiritual",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 100,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bibit Bambu Spiritual.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Epic",
+    "tier": 4,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "856afefcf5fb2775a7663a1e"
+    },
+    "name": "Pecahan Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Pecahan Meteorit.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "e7c95e27fa49ad1e3f1a5dcf"
+    },
+    "name": "Kayu Api Besi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 700,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Kayu Api Besi.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "785ccc5931acc6a0b288fe8f"
+    },
+    "name": "Baja Meteorit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1000,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Baja Meteorit.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "d20f12ea01a9c2d4e8380f42"
+    },
+    "name": "Pil Formasi Inti",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1500,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Pil Formasi Inti.",
+    "effect": "buff_atk_boost_150_2h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "719bd7f8f675836fa8a8e220"
+    },
+    "name": "Batu Roh Murni",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Batu Roh Murni.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "868975087f012fa21e760e99"
+    },
+    "name": "Akar Darah Naga",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Akar Darah Naga.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "febc9a78d6e2bbf4a29a8244"
+    },
+    "name": "Steik Daging Naga Tanah",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1200,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Steik Daging Naga Tanah.",
+    "effect": "buff_atk_boost_100_2h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "7f89d349699bec7fc2f8b014"
+    },
+    "name": "Daging Naga Tanah",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 600,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Daging Naga Tanah.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "ac88260e992395a8d2cbd19b"
+    },
+    "name": "Rempah Api",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 400,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Rempah Api.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "1c6a4f415dd6196c3e50ca1e"
+    },
+    "name": "Ikan Koi Api",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 700,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Ikan Koi Api.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "c908a76912742ce72c0d98a0"
+    },
+    "name": "Bait Belalang Api",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 150,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bait Belalang Api.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "439507ec80a7aa1e45a8b9ce"
+    },
+    "name": "Bibit Ginseng Merah",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 300,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bibit Ginseng Merah.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Legendary",
+    "tier": 5,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "94781d28a307100031df0f86"
+    },
+    "name": "Baja Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2500,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Baja Nirwana.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "b631ad3566e919681457f855"
+    },
+    "name": "Batu Es Abadi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Batu Es Abadi.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "761e257d71bfa9c84d508e79"
+    },
+    "name": "Kayu Pohon Dunia",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Kayu Pohon Dunia.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "0483cfd2a8dd14759ae37ca1"
+    },
+    "name": "Pil Kesengsaraan Surgawi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 4000,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Pil Kesengsaraan Surgawi.",
+    "effect": "buff_exp_bonus_100_4h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "6389060be66e1f92fe3eae5a"
+    },
+    "name": "Kristal Roh Surgawi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1500,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Kristal Roh Surgawi.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "be644c6dfe5f11c7b0c71440"
+    },
+    "name": "Bunga Teratai Sembilan Warna",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 2000,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bunga Teratai Sembilan Warna.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "2c8b690a8cc7d1b108486eea"
+    },
+    "name": "Pesta Istana Naga",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 3500,
+    "category": "consume",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Pesta Istana Naga.",
+    "effect": "buff_hp_boost_500_4h",
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "41990f91fc427381a246544c"
+    },
+    "name": "Daging Raja Laut",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1500,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Daging Raja Laut.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "1565b80b3bcff67e2a1e2bd2"
+    },
+    "name": "Rempah Nirwana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1000,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Rempah Nirwana.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "f100272af381bbdb857257c4"
+    },
+    "name": "Ikan Naga Emas",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 1800,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Ikan Naga Emas.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "692778a4b145706034961124"
+    },
+    "name": "Bait Ulat Sutra Langit",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 400,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bait Ulat Sutra Langit.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "563934d3bc838651d0b7a8a9"
+    },
+    "name": "Bibit Teratai Surgawi",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 800,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bibit Teratai Surgawi.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "df3fc371b670da96d4f59564"
+    },
+    "name": "Air Mata Air Spiritual",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 500,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Air Mata Air Spiritual.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Mythical",
+    "tier": 6,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "343b3b1cd9d6ef21ff540415"
+    },
+    "name": "Bibit Kapas",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "basePrice": 20,
+    "category": "material",
+    "createdAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Material Bibit Kapas.",
+    "effect": null,
+    "imageUrl": null,
+    "origin": "Dunia Jianghu",
+    "priceCurrency": "copper",
+    "rank": "Uncommon",
+    "tier": 2,
+    "updatedAt": {
+      "$date": "2026-09-09T07:51:51.872Z"
+    },
+    "toolType": null,
+    "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
   }
 ]

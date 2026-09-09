@@ -6,7 +6,7 @@ interface ProfessionSkillBadgeProps {
 }
 
 export default function ProfessionSkillBadge({ level, exp }: ProfessionSkillBadgeProps) {
-    const maxExp = level * 100;
+    const maxExp = Math.floor(50 * level + 15 * level * level);
     const progress = Math.min(100, Math.max(0, (exp / maxExp) * 100));
 
     return (
