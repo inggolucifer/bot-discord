@@ -2379,6 +2379,21 @@
         "_id": {
           "$oid": "6a91b16075cf9e21a690a570"
         }
+      },
+      {
+        "recipeName": "Produksi Pupuk Alkimia",
+        "resultItemName": "Pupuk Alkimia",
+        "resultQuantity": 5,
+        "materials": [
+          {
+            "itemName": "Daun Herbal Pereda Nyeri",
+            "quantity": 10
+          },
+          {
+            "itemName": "Air Bersih",
+            "quantity": 5
+          }
+        ]
       }
     ],
     "updatedAt": {
@@ -4592,6 +4607,21 @@
           }
         ],
         "craftingTimeHours": 2
+      },
+      {
+        "recipeName": "Perakitan Panci Besi Kasar",
+        "resultItemName": "Panci Besi Kasar",
+        "resultQuantity": 1,
+        "materials": [
+          {
+            "itemName": "Batangan Besi",
+            "quantity": 2
+          },
+          {
+            "itemName": "Batu Kasar",
+            "quantity": 2
+          }
+        ]
       }
     ],
     "workerOutputItemId": null,
@@ -4757,6 +4787,21 @@
           }
         ],
         "craftingTimeHours": 3
+      },
+      {
+        "recipeName": "Pembuatan Pupuk Tulang",
+        "resultItemName": "Pupuk Tulang",
+        "resultQuantity": 2,
+        "materials": [
+          {
+            "itemName": "Batu Kasar",
+            "quantity": 5
+          },
+          {
+            "itemName": "Air Bersih",
+            "quantity": 2
+          }
+        ]
       }
     ],
     "workerOutputItemId": null,

@@ -94,6 +94,7 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect }: Plo
                             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
                             timeLeftStr = hours > 0 ? `${hours}j ${minutes}m` : `${minutes}m`;
                             label = "TUMBUH";
+                            isReady = true; // Make it clickable so we can show fertilizer button
                         } else {
                             isReady = true;
                             label = "PANEN";
@@ -105,10 +106,10 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect }: Plo
                     return (
                         <button
                             key={idx}
-                            disabled={!isReady}
+                            disabled={!isReady && label === "GERSANG"}
                             onClick={() => isReady && onSelect(idx)}
-                            className={`px-4 py-2 rounded border text-sm font-bold transition-colors ${
-                                !isReady
+                            className={`relative px-4 py-2 rounded border text-sm font-bold transition-colors ${
+                                (!isReady && label === "GERSANG")
                                     ? 'bg-gray-800 border-gray-700 text-gray-600 cursor-not-allowed opacity-50'
                                     : selectedPlotIndex === idx
                                         ? 'bg-amber-900/50 border-amber-500 text-amber-100'
@@ -116,9 +117,14 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect }: Plo
                             }`}
                         >
                             Plot ${idx + 1}
-                            <div className={`text-[10px] font-normal mt-1 ${!isReady ? 'text-red-400' : 'text-green-400'}`}>
+                            <div className={`text-[10px] font-normal mt-1 ${label === 'GERSANG' ? 'text-red-400' : label === 'TUMBUH' ? 'text-blue-400' : 'text-green-400'}`}>
                                 {label} {timeLeftStr && `(${timeLeftStr})`}
                             </div>
+                            {plot.fertilizerApplied && (
+                                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] px-1 py-0.5 rounded-full">
+                                    ★
+                                </div>
+                            )}
                         </button>
                     );
                 })}

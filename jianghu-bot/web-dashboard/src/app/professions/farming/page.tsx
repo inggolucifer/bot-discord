@@ -13,6 +13,7 @@ import RequirementsPanel from '../components/RequirementsPanel';
 import PlotSelector from '../components/PlotSelector';
 import ProfessionSkillBadge from '../components/ProfessionSkillBadge';
 import FarmingMinigame from '../components/FarmingMinigame';
+import FertilizerModal from './FertilizerModal';
 
 export default function FarmingPage() {
     const router = useRouter();
@@ -21,6 +22,7 @@ export default function FarmingPage() {
     const [toolItemId, setToolItemId] = useState('');
     const [plotIndex, setPlotIndex] = useState<number>(0);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+    const [showFertilizerModal, setShowFertilizerModal] = useState(false);
 
     const { data: profileRaw, isLoading } = useQuery({
         queryKey: ['profile'],
@@ -155,6 +157,17 @@ export default function FarmingPage() {
                             onSelect={setPlotIndex}
                         />
 
+                        {farmingProf.farmPlots && farmingProf.farmPlots[plotIndex] && farmingProf.farmPlots[plotIndex].cropId && new Date(farmingProf.farmPlots[plotIndex].harvestAt) > new Date() && !farmingProf.farmPlots[plotIndex].fertilizerApplied && (
+                            <div className="flex justify-start">
+                                <button
+                                    onClick={() => setShowFertilizerModal(true)}
+                                    className="bg-green-700/80 hover:bg-green-600 text-green-100 px-4 py-2 rounded text-sm font-bold shadow-lg border border-green-500 transition-colors"
+                                >
+                                    🧪 Pakai Pupuk pada Plot #{plotIndex + 1}
+                                </button>
+                            </div>
+                        )}
+
                         <RecipePicker
                             recipes={recipes}
                             selectedRecipeId={recipeId}
@@ -199,6 +212,14 @@ export default function FarmingPage() {
                         onCancel={() => setActiveSessionId(null)}
                     />
                 </div>
+            )}
+
+            {showFertilizerModal && (
+                <FertilizerModal
+                    plotIndex={plotIndex}
+                    inventory={profile.inventory || []}
+                    onClose={() => setShowFertilizerModal(false)}
+                />
             )}
         </div>
     );

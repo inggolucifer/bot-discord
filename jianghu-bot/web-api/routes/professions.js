@@ -17,9 +17,15 @@ router.get('/recipes', verifyToken, async (req, res) => {
             return res.status(400).json({ error: 'Profesi harus disertakan.' });
         }
 
+        const player = await Player.findOne({ discordId: req.user.userId }).lean();
+        const unlockedBlueprints = player?.professions?.unlockedBlueprints || [];
+
         const filteredRecipes = [];
         for (const [id, recipe] of Object.entries(RECIPES)) {
             if (recipe.profession === profession) {
+                const requiresBlueprint = !!recipe.requiresBlueprint;
+                const unlocked = !requiresBlueprint || unlockedBlueprints.includes(recipe.blueprintKey);
+
                 filteredRecipes.push({
                     id,
                     name: id,
@@ -27,7 +33,10 @@ router.get('/recipes', verifyToken, async (req, res) => {
                     toolType: recipe.toolType,
                     minToolTier: recipe.minToolTier || 1,
                     materials: recipe.materials,
-                    output: recipe.output
+                    output: recipe.output,
+                    requiresBlueprint,
+                    blueprintKey: recipe.blueprintKey,
+                    unlocked
                 });
             }
         }
@@ -307,6 +316,12 @@ router.post('/start', verifyToken, async (req, res) => {
             recipe = RECIPES[recipeId];
             if (!recipe || recipe.profession !== profession) {
                 return res.status(400).json({ error: 'Resep tidak valid untuk profesi ini.' });
+            }
+            if (recipe.requiresBlueprint) {
+                const unlockedBlueprints = player.professions.unlockedBlueprints || [];
+                if (!unlockedBlueprints.includes(recipe.blueprintKey)) {
+                    return res.status(403).json({ error: `Resep terkunci. Butuh blueprint: ${recipe.blueprintKey}` });
+                }
             }
         }
 
@@ -608,5 +623,140 @@ router.post('/complete', verifyToken, async (req, res) => {
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
+
+router.post('/farming/apply-fertilizer', verifyToken, async (req, res) => {
+    const { plotIndex, inventoryItemId } = req.body;
+
+    if (plotIndex === undefined || !inventoryItemId) {
+        return res.status(400).json({ error: 'Data tidak lengkap' });
+    }
+
+    const lockKey = `professions_fertilizer_${req.user.userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses, harap tunggu...' });
+
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId }).populate('inventory.itemId');
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        if (!player.professions?.farming?.isUnlocked) {
+            return res.status(403).json({ error: 'Kamu belum membuka profesi Farming.' });
+        }
+
+        const plot = player.professions.farming.farmPlots[plotIndex];
+        if (!plot || !plot.isUnlocked) {
+            return res.status(400).json({ error: 'Plot tidak valid atau belum terbuka' });
+        }
+
+        if (!plot.cropId || !plot.harvestAt || plot.harvestAt <= new Date()) {
+            return res.status(400).json({ error: 'Plot tidak sedang ditanami atau sudah siap panen.' });
+        }
+
+        if (plot.fertilizerApplied) {
+            return res.status(400).json({ error: 'Tanaman ini sudah dipupuk!' });
+        }
+
+        const fertilizerItem = player.inventory.find(i => i._id.toString() === inventoryItemId);
+        if (!fertilizerItem) {
+            return res.status(400).json({ error: 'Pupuk tidak ditemukan di inventory.' });
+        }
+
+        const itemRef = fertilizerItem.itemId;
+        if (itemRef.effectType !== 'farm_grow_speed' || !itemRef.effectValue) {
+            return res.status(400).json({ error: 'Item ini bukan pupuk yang valid.' });
+        }
+
+        if (fertilizerItem.quantity < 1) {
+            return res.status(400).json({ error: 'Pupuk habis.' });
+        }
+
+        // Apply fertilizer effect
+        const now = new Date();
+        const timeRemainingMs = plot.harvestAt.getTime() - now.getTime();
+        const reduceMultiplier = itemRef.effectValue; // e.g. 0.20
+
+        let newTimeRemainingMs = timeRemainingMs * (1 - reduceMultiplier);
+        // Minimum 10 minutes, but don't increase the time if it was already below 10 mins
+        newTimeRemainingMs = Math.min(timeRemainingMs, Math.max(10 * 60 * 1000, newTimeRemainingMs));
+
+        plot.harvestAt = new Date(now.getTime() + newTimeRemainingMs);
+        plot.fertilizerApplied = true;
+        plot.fertilizerItemName = itemRef.name;
+
+        // Consume 1 fertilizer
+        fertilizerItem.quantity -= 1;
+        if (fertilizerItem.quantity <= 0) {
+            player.inventory = player.inventory.filter(i => i._id.toString() !== inventoryItemId);
+        }
+
+        player.markModified('professions.farming.farmPlots');
+        player.markModified('inventory');
+        await player.save();
+
+        res.json({
+            message: `Pupuk ${itemRef.name} berhasil digunakan. Waktu panen dipercepat!`,
+            plot: plot
+        });
+    } catch (error) {
+        console.error("Error applying fertilizer:", error);
+        res.status(500).json({ error: 'Server error saat menggunakan pupuk' });
+    } finally {
+        releaseLock();
+    }
+});
+
+router.post('/blueprints/unlock', verifyToken, async (req, res) => {
+    const { blueprintKey, inventoryItemId } = req.body;
+
+    if (!inventoryItemId) {
+        return res.status(400).json({ error: 'Data item inventory tidak disertakan.' });
+    }
+
+    const lockKey = `professions_blueprint_${req.user.userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses...' });
+
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId }).populate('inventory.itemId');
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        const blueprintItem = player.inventory.find(i => i._id.toString() === inventoryItemId);
+        if (!blueprintItem) {
+            return res.status(400).json({ error: 'Item tidak ditemukan di inventory.' });
+        }
+
+        const bKeyToUnlock = blueprintKey || blueprintItem.itemId.name;
+
+        if (!player.professions.unlockedBlueprints) {
+            player.professions.unlockedBlueprints = [];
+        }
+
+        if (player.professions.unlockedBlueprints.includes(bKeyToUnlock)) {
+            return res.status(400).json({ error: 'Kamu sudah mempelajari blueprint ini.' });
+        }
+
+        // Consume blueprint
+        blueprintItem.quantity -= 1;
+        if (blueprintItem.quantity <= 0) {
+            player.inventory = player.inventory.filter(i => i._id.toString() !== inventoryItemId);
+        }
+
+        player.professions.unlockedBlueprints.push(bKeyToUnlock);
+        player.markModified('professions.unlockedBlueprints');
+        player.markModified('inventory');
+        await player.save();
+
+        res.json({
+            message: `Blueprint ${bKeyToUnlock} berhasil dipelajari! Resep baru sekarang tersedia.`,
+            unlockedBlueprints: player.professions.unlockedBlueprints
+        });
+    } catch (error) {
+        console.error("Error unlocking blueprint:", error);
+        res.status(500).json({ error: 'Server error saat mempelajari blueprint' });
+    } finally {
+        releaseLock();
+    }
+});
+
 
 module.exports = router;
