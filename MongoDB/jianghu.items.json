@@ -4474,22 +4474,25 @@
     "guildId": "1504794711775514856",
     "name": "Pil Pemecah Hambatan",
     "__v": 0,
-    "basePrice": 50,
+    "basePrice": 40,
     "category": "pill",
     "createdAt": {
       "$date": "2026-08-28T16:03:43.189Z"
     },
     "createdBy": "System Oracle",
-    "description": "Pil ganas yang memaksa pembuluh darah melebar, menembus kemacetan kultivasi yang mandek puluhan tahun.",
+    "description": "Memiliki daya dobrak luar biasa untuk memecah kebuntuan kultivasi di ranah menengah.",
     "effect": null,
     "imageUrl": null,
     "origin": null,
-    "priceCurrency": "silver",
+    "priceCurrency": "gold",
     "rank": "Epic",
     "tier": 4,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.12,
+    "effectTierGate": 4
   },
   {
     "_id": {
@@ -5654,13 +5657,13 @@
     "guildId": "1504794711775514856",
     "name": "Pil Terobosan Surga",
     "__v": 0,
-    "basePrice": 15,
+    "basePrice": 50,
     "category": "pill",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
     "createdBy": "System Oracle",
-    "description": "[Time-Skip: 24 Jam] Pil legendaris yang bersinar terang, membantu kultivator menerobos kemacetan kultivasi puluhan tahun, hemat waktu seharian penuh.",
+    "description": "Membantu menembus rintangan langit, meningkatkan peluang terobosan tingkat tinggi.",
     "effect": "time_skip_24",
     "imageUrl": null,
     "origin": "Unknown",
@@ -5669,7 +5672,10 @@
     "tier": 5,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.15,
+    "effectTierGate": 5
   },
   {
     "_id": {
@@ -5922,22 +5928,25 @@
     "guildId": "1504794711775514856",
     "name": "Pil Kebangkitan Nirwana Surgawi",
     "__v": 0,
-    "basePrice": 8,
+    "basePrice": 60,
     "category": "pill",
     "createdAt": {
       "$date": "2026-09-04T23:54:15.566Z"
     },
     "createdBy": "System Oracle",
-    "description": "[Time-Skip: 168 Jam] Mukjizat di alam fana. Membakar seluruh darah dewa untuk memajukan hukum kultivasi sejauh 7 hari tanpa henti. Legenda.",
+    "description": "Pil legendaris yang mengundang keajaiban nirwana, menolong terobosan ke ranah puncak.",
     "effect": "time_skip_168",
     "imageUrl": null,
     "origin": "Unknown",
-    "priceCurrency": "jade",
+    "priceCurrency": "gold",
     "rank": "Mythical",
     "tier": 6,
     "updatedAt": {
       "$date": "2026-09-04T23:54:15.566Z"
-    }
+    },
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.2,
+    "effectTierGate": 6
   },
   {
     "_id": {
@@ -6183,7 +6192,9 @@
     },
     "name": "Pupuk Tulang",
     "description": "Katalis kuat yang menyuburkan tanah instan. Dapat mengatasi kelelahan lahan (Soil Depletion).",
-    "category": "material",
+    "category": "consume",
+    "effectType": "farm_grow_speed",
+    "effectValue": 0.2,
     "basePrice": 5,
     "priceCurrency": "gold",
     "rank": "Uncommon",
@@ -6345,11 +6356,13 @@
     },
     "name": "Pupuk Alkimia",
     "description": "Ramuan alkimia untuk menyegarkan tanah secara instan.",
-    "category": "material",
+    "category": "consume",
+    "effectType": "farm_grow_speed",
+    "effectValue": 0.3,
     "basePrice": 2,
     "priceCurrency": "gold",
-    "rank": "Uncommon",
-    "tier": 2,
+    "rank": "Rare",
+    "tier": 3,
     "origin": "Alchemy"
   },
   {
@@ -7642,11 +7655,11 @@
     "baseHp": 0,
     "baseSpd": 0,
     "maxDurability": null,
-    "description": "Membuka meridian sementara. (ATK+30 2 Jam)",
+    "description": "Memperlebar aliran Qi dalam tubuh, meningkatkan keberhasilan terobosan.",
     "effect": "buff_atk_boost_30_2h",
     "origin": null,
-    "basePrice": 1500,
-    "priceCurrency": "copper",
+    "basePrice": 30,
+    "priceCurrency": "gold",
     "createdBy": "System",
     "imageUrl": null,
     "createdAt": {
@@ -7655,7 +7668,10 @@
     "updatedAt": {
       "$date": "2026-09-06T09:17:39.300Z"
     },
-    "__v": 0
+    "__v": 0,
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.08,
+    "effectTierGate": 3
   },
   {
     "_id": {
@@ -11963,6 +11979,78 @@
     },
     "toolType": null,
     "maxDurability": 0,
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0
+  },
+  {
+    "_id": {
+      "$oid": "eb0b5fd30880719bd5e0c497"
+    },
+    "name": "Pil Terobosan Fana",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-09T09:08:26.207Z"
+    },
+    "createdBy": "System Oracle",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "category": "pill",
+    "tier": 1,
+    "rank": "Uncommon",
+    "description": "Pil pembuka pintu awal kultivasi, membantu menerobos batas tubuh manusia biasa.",
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.02,
+    "effectTierGate": 1,
+    "priceCurrency": "gold",
+    "basePrice": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a69f294d35092f90452b913"
+    },
+    "name": "Pil Pembersih Akar",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-09T09:08:26.277Z"
+    },
+    "createdBy": "System Oracle",
+    "baseAtk": 0,
+    "baseDef": 0,
+    "baseHp": 0,
+    "baseSpd": 0,
+    "category": "pill",
+    "tier": 2,
+    "rank": "Uncommon",
+    "description": "Pil untuk membersihkan akar roh, membantu proses Foundation (Membangun Fondasi).",
+    "effectType": "breakthrough_success_bonus",
+    "effectValue": 0.05,
+    "effectTierGate": 2,
+    "priceCurrency": "gold",
+    "basePrice": 20
+  },
+  {
+    "_id": {
+      "$oid": "a74337151b0e010c6f5b4f18"
+    },
+    "name": "Blueprint: Pedang Bintang Emas",
+    "guildId": "1504794711775514856",
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-09-09T09:08:26.277Z"
+    },
+    "createdBy": "System Oracle",
+    "description": "Gulungan rahasia untuk membuat Pedang Bintang Emas.",
+    "category": "consume",
+    "tier": 4,
+    "rank": "Epic",
+    "priceCurrency": "gold",
+    "basePrice": 50,
     "baseAtk": 0,
     "baseDef": 0,
     "baseHp": 0,

@@ -19,6 +19,9 @@ const itemSchema = new mongoose.Schema({
   description: { type: String, default: '-' },
   imageUrl: { type: String, default: null },
   effect: { type: String, default: null },
+  effectType: { type: String, default: null },
+  effectValue: { type: Number, default: null },
+  effectTierGate: { type: Number, default: null },
   origin: { type: String, default: null },
 
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
