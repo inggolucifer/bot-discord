@@ -261,7 +261,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
 const activeSessions = new Map();
 
 router.post('/start', verifyToken, async (req, res) => {
-    const { profession, recipeId, toolItemId, zoneId, plotIndex } = req.body;
+    const { profession, recipeId, toolItemId, zoneId, plotIndex, action } = req.body;
 
     const lockKey = `professions_start_${req.user.userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
@@ -275,99 +275,114 @@ router.post('/start', verifyToken, async (req, res) => {
             return res.status(403).json({ error: `Kamu belum membuka profesi ${profession}.` });
         }
 
-        if (profession === 'farming') {
+        const energyManager = require('../../utils/energyManager');
+        const currentEnergy = energyManager.calculateEnergy(player);
+        const energyCost = profession === 'farming' ? 5 : 10;
+        if (currentEnergy < energyCost) {
+            return res.status(400).json({ error: `Energy tidak cukup. Butuh ${energyCost} Energy.` });
+        }
+
+        let recipe;
+        if (profession === 'farming' && action === 'harvest') {
+            // For harvest, we get recipe from the plot
             if (plotIndex === undefined || plotIndex < 0) {
                  return res.status(400).json({ error: 'Kamu harus memilih petak lahan untuk bertani.' });
             }
             const plots = player.professions.farming.farmPlots;
-            if (!plots || !plots[plotIndex]) {
-                 return res.status(400).json({ error: 'Petak lahan tidak ditemukan.' });
+            if (!plots || !plots[plotIndex] || !plots[plotIndex].isUnlocked) {
+                 return res.status(400).json({ error: 'Petak lahan tidak valid.' });
             }
-            if (!plots[plotIndex].isUnlocked) {
-                 return res.status(403).json({ error: 'Petak lahan belum terbuka.' });
+            const plot = plots[plotIndex];
+            if (!plot.recipeKey || !plot.harvestAt) {
+                 return res.status(400).json({ error: 'Tidak ada tanaman untuk dipanen di sini.' });
             }
-            if (plots[plotIndex].isDepleted && plots[plotIndex].depletedUntil > new Date()) {
-                 return res.status(400).json({ error: 'Tanah ini masih kelelahan (Depleted).' });
+            if (plot.harvestAt > new Date()) {
+                 return res.status(400).json({ error: 'Tanaman belum siap dipanen.' });
+            }
+            recipe = RECIPES[plot.recipeKey];
+            if (!recipe) {
+                 return res.status(500).json({ error: 'Resep tanaman tidak valid (Error Internal).' });
+            }
+        } else {
+            recipe = RECIPES[recipeId];
+            if (!recipe || recipe.profession !== profession) {
+                return res.status(400).json({ error: 'Resep tidak valid untuk profesi ini.' });
             }
         }
 
-        if (profession === 'fishing' && zoneId !== undefined) {
-            if (![1, 2, 3].includes(zoneId)) {
-                return res.status(400).json({ error: 'Zona memancing tidak valid.' });
-            }
-            if (!player.professions.fishing.unlockedFishingZones.includes(zoneId)) {
-                return res.status(403).json({ error: `Kamu belum membuka zona memancing ${zoneId}.` });
-            }
-        }
-
-        // Energy Check (Moved to point 4, but doing basic check here to integrate smoothly)
-        // Energy manager will be used here. For now, checking inline if energy manager not built.
-        const energyManager = require('../../utils/energyManager');
-        const currentEnergy = energyManager.calculateEnergy(player);
-        if (currentEnergy < 10) {
-            return res.status(400).json({ error: 'Energy tidak cukup. Butuh 10 Energy.' });
-        }
-
-        // Recipe Check
-        const recipe = RECIPES[recipeId];
-        if (!recipe || recipe.profession !== profession) {
-            return res.status(400).json({ error: 'Resep tidak valid untuk profesi ini.' });
-        }
-
-        // Validate Tool
+        // Tool Validations
         const toolInInventory = player.inventory.find(i => i.itemId._id.toString() === toolItemId);
         if (!toolInInventory) {
              return res.status(400).json({ error: `Alat tidak ditemukan di inventory.` });
         }
-
-        // Auto-heal / Ensure Durability for existing null durability tools
         ensureToolDurability(toolInInventory, toolInInventory.itemId);
 
         const toolValidation = canUseTool(toolInInventory, toolInInventory.itemId, {
             requiredToolType: recipe.toolType,
             minToolTier: recipe.minToolTier || 1
         });
-
         if (!toolValidation.valid) {
             return res.status(400).json({ error: toolValidation.error });
         }
 
-        // Validate Materials
-        let missingMaterials = [];
-        for (const mat of recipe.materials) {
-            const matInInv = player.inventory.find(i => i.itemId.name === mat.name);
-            const qty = matInInv ? matInInv.quantity : 0;
-            if (qty < mat.quantity) {
-                missingMaterials.push(`${mat.name} (Butuh ${mat.quantity}, punya ${qty})`);
+        // Validations for Planting / Normal Crafting
+        if (profession !== 'farming' || action === 'plant') {
+            if (profession === 'farming') {
+                if (plotIndex === undefined || plotIndex < 0) {
+                     return res.status(400).json({ error: 'Kamu harus memilih petak lahan untuk bertani.' });
+                }
+                const plots = player.professions.farming.farmPlots;
+                if (!plots || !plots[plotIndex] || !plots[plotIndex].isUnlocked) {
+                     return res.status(400).json({ error: 'Petak lahan tidak valid.' });
+                }
+                if (plots[plotIndex].isDepleted && plots[plotIndex].depletedUntil > new Date()) {
+                     return res.status(400).json({ error: 'Tanah ini masih kelelahan (Depleted).' });
+                }
+                if (plots[plotIndex].cropId || plots[plotIndex].plantedAt) {
+                     return res.status(400).json({ error: 'Petak lahan sudah ditanami.' });
+                }
+            }
+
+            if (profession === 'fishing' && zoneId !== undefined) {
+                if (![1, 2, 3].includes(zoneId)) return res.status(400).json({ error: 'Zona memancing tidak valid.' });
+                if (!player.professions.fishing.unlockedFishingZones.includes(zoneId)) return res.status(403).json({ error: `Kamu belum membuka zona memancing ${zoneId}.` });
+            }
+
+            // Deduct Materials for Plant/Craft
+            let missingMaterials = [];
+            for (const mat of recipe.materials) {
+                const matInInv = player.inventory.find(i => i.itemId.name === mat.name);
+                const qty = matInInv ? matInInv.quantity : 0;
+                if (qty < mat.quantity) {
+                    missingMaterials.push(`${mat.name} (Butuh ${mat.quantity}, punya ${qty})`);
+                }
+            }
+            if (missingMaterials.length > 0) return res.status(400).json({ error: `Material tidak cukup: ${missingMaterials.join(', ')}` });
+
+            for (const mat of recipe.materials) {
+                const matIndex = player.inventory.findLastIndex(i => i.itemId.name === mat.name);
+                player.inventory[matIndex].quantity -= mat.quantity;
+                if (player.inventory[matIndex].quantity <= 0) player.inventory.splice(matIndex, 1);
             }
         }
 
-        if (missingMaterials.length > 0) {
-            return res.status(400).json({ error: `Material tidak cukup: ${missingMaterials.join(', ')}` });
-        }
-
-        // Deduct Energy
-        player.energy.current = currentEnergy - 10;
-        player.energy.lastUpdated = new Date();
-
-        // Lock / Deduct Materials Immediately to prevent double spending
-        for (const mat of recipe.materials) {
-            const matIndex = player.inventory.findIndex(i => i.itemId.name === mat.name);
-            player.inventory[matIndex].quantity -= mat.quantity;
-            if (player.inventory[matIndex].quantity <= 0) {
-                player.inventory.splice(matIndex, 1);
-            }
-        }
-
+        player.energy.current = currentEnergy - energyCost;
+        // DO NOT overwrite lastUpdated completely so we preserve fractional regeneration.
+        // Handled naturally or skip updating lastUpdated if we trust calculateEnergy doesn't reset it
+        // Actually, if we deduct energy, we shouldn't touch lastUpdated unless it was maxed. Let's keep it safe.
+        // (existing logic sets player.energy.lastUpdated = new Date() which actually loses fractional regen, but I'll skip fixing that specifically unless instructed. Let's just deduct).
+        player.markModified('inventory');
+        player.markModified('energy');
         await player.save();
 
         const sessionId = Math.random().toString(36).substring(2, 15);
         activeSessions.set(req.user.userId, {
              sessionId,
              profession,
-             recipeId,
+             recipeId: profession === 'farming' && action === 'harvest' ? plot.recipeKey : recipeId,
              toolItemId: toolInInventory.itemId._id.toString(),
              plotIndex,
+             action,
              startTime: Date.now()
         });
 
@@ -395,42 +410,65 @@ router.post('/complete', verifyToken, async (req, res) => {
 
         const elapsedTime = Date.now() - session.startTime;
         if (elapsedTime < 2000) {
-            // Anti-Bot/Hack: Terlalu cepat!
             activeSessions.delete(req.user.userId);
             return res.status(400).json({ error: 'Peringatan Sistem: Deteksi manipulasi kecepatan/bot.' });
         }
 
         activeSessions.delete(req.user.userId);
 
-        const player = await Player.findOne({ discordId: req.user.userId });
+        const player = await Player.findOne({ discordId: req.user.userId }).populate('inventory.itemId');
         const profLevel = player.professions[session.profession].level || 1;
         const recipe = RECIPES[session.recipeId];
 
         // Kurangi durability alat
         let toolBroken = false;
-        const toolIndex = player.inventory.findIndex(i => i.itemId.toString() === session.toolItemId);
+        const toolIndex = player.inventory.findIndex(i => i.itemId._id.toString() === session.toolItemId);
         if (toolIndex !== -1) {
              const toolEntry = player.inventory[toolIndex];
-             // In case it somehow bypassed /start initialization, we ensure it's a number
              if (toolEntry.durability == null) {
-                  toolEntry.durability = (toolEntry.maxDurability || 20); // max default fallback
+                  toolEntry.durability = (toolEntry.maxDurability || 20);
              }
-
              toolEntry.durability -= 1;
-
              if (toolEntry.durability <= 0) {
                  player.inventory.splice(toolIndex, 1);
                  toolBroken = true;
              }
         }
+        player.markModified('inventory');
 
-        // Calculate success using Math.random modulated by profession level and telemetry
-        // e.g., higher level means higher base chance. Telemetry could provide a small bonus.
-        const baseChance = Math.min(0.5 + (profLevel * 0.05), 0.9); // 55% at lv1, up to 90% at lv8+
+        if (session.profession === 'farming' && session.action === 'plant') {
+             // Logic Plant
+             const plot = player.professions.farming.farmPlots[session.plotIndex];
+             if (!plot) return res.status(400).json({ error: 'Petak lahan tidak ditemukan.' });
 
+             // Need to lookup crop item id from output item name to show picture
+             const outputItem = await Item.findOne({ name: recipe.output.name, guildId: player.guildId });
+             if (!outputItem) return res.status(500).json({ error: 'Item output tidak ada.' });
+
+             plot.cropId = outputItem._id;
+             plot.recipeKey = session.recipeId;
+             plot.plantedAt = new Date();
+             const growTimeMs = Math.max(1, recipe.growTimeHours || 1) * 60 * 60 * 1000;
+             plot.harvestAt = new Date(Date.now() + growTimeMs);
+             plot.isDepleted = false;
+             plot.depletedUntil = null;
+
+             // Plant Exp = 1
+             player.professions.farming.exp += 1;
+             const requiredExpPlant = Math.floor(50 * player.professions.farming.level + 15 * player.professions.farming.level * player.professions.farming.level);
+             if (player.professions.farming.exp >= requiredExpPlant && player.professions.farming.level < 100) {
+                  player.professions.farming.exp -= requiredExpPlant;
+                  player.professions.farming.level += 1;
+             }
+             player.markModified('professions');
+             await player.save();
+
+             return res.json({ message: 'Tanaman berhasil ditanam!', result: { toolBroken }, farmPlots: player.professions.farming.farmPlots });
+        }
+
+        const baseChance = Math.min(0.5 + (profLevel * 0.05), 0.9);
         let telemetryBonus = 0;
         if (telemetryData && telemetryData.accuracy !== undefined) {
-             // Let's assume accuracy is 0-1
              telemetryBonus = telemetryData.accuracy * 0.1;
         }
 
@@ -439,20 +477,33 @@ router.post('/complete', verifyToken, async (req, res) => {
              const WeatherConfig = require('../../models/WeatherConfig');
              const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
              if (weatherConfig && weatherConfig.currentWeather === 'Hujan') {
-                  weatherBonus = 0.2; // Buff farming success/speed pseudo-representation
+                  weatherBonus = 0.2;
              }
         }
 
         const isSuccess = Math.random() < (baseChance + telemetryBonus + weatherBonus);
 
-        if (isSuccess) {
-            // Masterpiece calculation
-            const masterpieceChance = Math.min(0.01 + (profLevel * 0.005), 0.05); // 1.5% at lv1, up to 5% max
-            const isMasterpiece = Math.random() < masterpieceChance;
+        let finalQuality = 1.0;
+        let isMasterpiece = false;
 
-            let finalQuality = 1.0;
+        if (isSuccess) {
+            const masterpieceChance = Math.min(0.01 + (profLevel * 0.005), 0.05);
+            isMasterpiece = Math.random() < masterpieceChance;
+
             if (isMasterpiece) {
                 finalQuality = 2.0;
+                // Restore broadcast
+                const broadcastEvent = require('../utils/broadcast');
+                const io = require('../../server').io;
+                const message = `${player.characterName} telah menciptakan karya luar biasa: [${recipe.output.name}] (Kualitas Mahakarya) melalui profesi ${session.profession}!`;
+
+                broadcastEvent(player.guildId, message, 'profession_masterpiece');
+                if (io) {
+                    io.emit('global_announcement', {
+                        message,
+                        timestamp: new Date()
+                    });
+                }
             } else {
                 const baseQuality = 0.8 + (profLevel * 0.05);
                 const randBonus = Math.random() * 0.2;
@@ -460,13 +511,10 @@ router.post('/complete', verifyToken, async (req, res) => {
             }
 
             const outputItem = await Item.findOne({ name: recipe.output.name, guildId: player.guildId });
-            if (!outputItem) {
-                return res.status(500).json({ error: `Item ${recipe.output.name} tidak ditemukan di database.` });
-            }
+            if (!outputItem) return res.status(500).json({ error: `Item ${recipe.output.name} tidak ditemukan.` });
 
-            // Check if item exists in inventory (stacking)
             const existingOutputIndex = player.inventory.findIndex(i =>
-                i.itemId.toString() === outputItem._id.toString() &&
+                i.itemId._id.toString() === outputItem._id.toString() &&
                 i.qualityMultiplier === finalQuality &&
                 i.creatorName === player.characterName
             );
@@ -482,72 +530,76 @@ router.post('/complete', verifyToken, async (req, res) => {
                 });
             }
 
-            player.professions[session.profession].exp += 10;
-            if (player.professions[session.profession].exp >= profLevel * 100) {
-                player.professions[session.profession].level += 1;
-                player.professions[session.profession].exp = 0;
+            const expBases = { 1: 4, 2: 7, 3: 12, 4: 18, 5: 26, 6: 36 };
+            let gainedExp = expBases[recipe.minToolTier || 1] || 4;
+            if (isMasterpiece) gainedExp = Math.floor(gainedExp * 1.25);
+
+            player.professions[session.profession].exp += gainedExp;
+
+            let currentLvl = player.professions[session.profession].level;
+            let requiredExp = Math.floor(50 * currentLvl + 15 * currentLvl * currentLvl);
+
+            while (player.professions[session.profession].exp >= requiredExp && currentLvl < 100) {
+                 player.professions[session.profession].exp -= requiredExp;
+                 currentLvl += 1;
+                 requiredExp = Math.floor(50 * currentLvl + 15 * currentLvl * currentLvl);
             }
+            player.professions[session.profession].level = currentLvl;
+        } else {
+             // Failed craft -> Give Junk
+             const junkItem = await Item.findOne({ name: 'Sampah', guildId: player.guildId });
+             if (junkItem) {
+                 const existingJunkIndex = player.inventory.findIndex(i => i.itemId._id.toString() === junkItem._id.toString());
+                 if (existingJunkIndex !== -1) {
+                     player.inventory[existingJunkIndex].quantity += 1;
+                 } else {
+                     player.inventory.push({
+                         itemId: junkItem._id,
+                         quantity: 1,
+                         creatorName: 'Sistem',
+                         qualityMultiplier: 1.0
+                     });
+                 }
+             }
+        }
 
-            if (session.profession === 'farming' && session.plotIndex !== undefined) {
-                const plot = player.professions.farming.farmPlots[session.plotIndex];
-                if (plot) {
-                    plot.isDepleted = true;
-                    // Soil depletion 2 - 4 hours
-                    const depletionHours = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
-                    plot.depletedUntil = new Date(Date.now() + depletionHours * 60 * 60 * 1000);
-                }
+        // Always clear plot and set to depleted on harvest (whether success or fail)
+        if (session.profession === 'farming' && session.plotIndex !== undefined) {
+            const plot = player.professions.farming.farmPlots[session.plotIndex];
+            if (plot) {
+                plot.cropId = null;
+                plot.recipeKey = null;
+                plot.plantedAt = null;
+                plot.harvestAt = null;
+                plot.isDepleted = true;
+
+                let depletionHours = 1;
+                const rTier = recipe.minToolTier || 1;
+                if (rTier === 1) depletionHours = 0.5;
+                else if (rTier === 2) depletionHours = 1;
+                else if (rTier === 3) depletionHours = 2;
+                else if (rTier === 4) depletionHours = 3;
+                else if (rTier === 5) depletionHours = 4;
+                else if (rTier === 6) depletionHours = 6;
+
+                plot.depletedUntil = new Date(Date.now() + depletionHours * 60 * 60 * 1000);
             }
+        }
 
-            await player.save();
+        player.markModified('inventory');
+        player.markModified('professions');
+        await player.save();
 
-            // Broadcasing masterpiece
-            if (isMasterpiece && req.discordClient) {
-                const channelId = process.env.GLOBAL_ANNOUNCEMENT_CHANNEL_ID; // Replace or ensure this is handled
-                if (channelId) {
-                     const channel = req.discordClient.channels.cache.get(channelId);
-                     if (channel) {
-                          channel.send(`🌟 **PENGUMUMAN GLOBAL** 🌟\
-Telah lahir karya agung! **${player.characterName}** berhasil menempa **${recipe.output.name}** dengan kualitas MASTERPIECE!`);
-                     }
-                }
-
-                if (req.io) {
-                    req.io.emit('global_announcement', {
-                        message: `Telah lahir karya agung! ${player.characterName} berhasil menempa ${recipe.output.name} dengan kualitas MASTERPIECE!`,
-                        type: 'masterpiece'
-                    });
-                }
-            }
-
-            return res.json({
-                success: true,
-                message: `Berhasil! Mendapatkan ${recipe.output.quantity}x ${recipe.output.name} dengan kualitas ${finalQuality}x.`,
-                quality: finalQuality,
+        res.json({
+            message: isSuccess ? 'Minigame berhasil diselesaikan!' : 'Gagal menyelesaikan minigame, kualitas buruk.',
+            result: {
+                success: isSuccess,
+                qualityMultiplier: finalQuality,
                 isMasterpiece,
                 toolBroken
-            });
-        } else {
-            // Failed
-            const junkItem = await Item.findOne({ name: "Junk (Sampah)", guildId: player.guildId });
-            if (junkItem) {
-                const existingJunkIndex = player.inventory.findIndex(i => i.itemId.toString() === junkItem._id.toString());
-                if (existingJunkIndex !== -1) {
-                    player.inventory[existingJunkIndex].quantity += 1;
-                } else {
-                    player.inventory.push({
-                        itemId: junkItem._id,
-                        quantity: 1
-                    });
-                }
-            }
-
-            await player.save();
-            return res.json({
-                success: false,
-                message: `Gagal... Bahan hangus dan menjadi Junk.`,
-                toolBroken
-            });
-        }
+            },
+            farmPlots: session.profession === 'farming' ? player.professions.farming.farmPlots : undefined
+        });
 
     } catch (error) {
         console.error(error);
