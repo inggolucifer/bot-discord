@@ -36,7 +36,7 @@ export default function FarmingPage() {
     const recipes = recipesRaw?.data || recipesRaw || [];
 
     const startMutation = useMutation({
-        mutationFn: (data: { profession: string, recipeId: string, toolItemId: string, plotIndex: number }) => api.post('/professions/start', data),
+        mutationFn: (data: { profession: string, recipeId?: string, toolItemId: string, plotIndex: number, action: 'plant' | 'harvest' }) => api.post('/professions/start', data),
         onSuccess: (data) => {
             const payload = data.data?.data ?? data.data;
             if (payload && payload.sessionId) {
@@ -95,13 +95,37 @@ export default function FarmingPage() {
 
     const selectedRecipe = recipes.find((r: any) => r.id === recipeId);
 
+
     const handleStart = () => {
-        if (!recipeId || !toolItemId) {
-            alert("Pilih resep dan alat terlebih dahulu!");
+        const selectedPlot = profile?.professions?.farming?.farmPlots?.[plotIndex];
+        if (!selectedPlot) {
+             alert('Pilih petak yang valid.');
+             return;
+        }
+
+        const isHarvest = selectedPlot.cropId && selectedPlot.harvestAt && new Date(selectedPlot.harvestAt).getTime() <= new Date().getTime();
+
+        if (!isHarvest && !recipeId) {
+            alert('Pilih resep yang ingin ditanam!');
             return;
         }
-        startMutation.mutate({ profession: 'farming', recipeId, toolItemId, plotIndex });
+        if (!toolItemId) {
+            alert('Pilih alat pertanian!');
+            return;
+        }
+
+        startMutation.mutate({
+            profession: 'farming',
+            recipeId: isHarvest ? undefined : recipeId,
+            toolItemId,
+            plotIndex,
+            action: isHarvest ? 'harvest' : 'plant'
+        });
     };
+
+    const activePlot = profile?.professions?.farming?.farmPlots?.[plotIndex];
+    const isHarvestReady = activePlot && activePlot.cropId && activePlot.harvestAt && new Date(activePlot.harvestAt).getTime() <= new Date().getTime();
+
 
     const handleMinigameComplete = (telemetryData: any) => {
         if (activeSessionId) {
@@ -161,10 +185,10 @@ export default function FarmingPage() {
                     <div className="flex justify-end gap-4 border-t border-gray-800 pt-6">
                         <button
                             onClick={handleStart}
-                            disabled={startMutation.isPending || !recipeId || !toolItemId}
+                            disabled={(!isHarvestReady && !recipeId) || !toolItemId || startMutation.isPending}
                             className="px-8 py-3 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-bold text-lg shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {startMutation.isPending ? 'Memulai...' : 'Mulai Bertani (-10 Energy)'}
+                            {startMutation.isPending ? 'Memulai...' : (isHarvestReady ? 'Panen Sekarang (-5 Energy)' : 'Tanam Sekarang (-5 Energy)')}
                         </button>
                     </div>
                 </div>
