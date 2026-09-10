@@ -1,0 +1,86 @@
+--- jianghu-bot/web-dashboard/src/app/inventory/page.tsx
++++ jianghu-bot/web-dashboard/src/app/inventory/page.tsx
+@@ -20,6 +20,7 @@
+   price: number;
+   imageUrl: string | null;
+   emoji: string;
++  effectType?: string;
++  effectValue?: number;
+ }
+
+ export default function InventoryPage() {
+@@ -42,6 +43,26 @@
+       setActionLoading(false);
+     }
+   };
++
++  const [useConfirmModalOpen, setUseConfirmModalOpen] = useState(false);
++  const [itemToUse, setItemToUse] = useState<InventoryItem | null>(null);
++
++  const handleUseItem = async () => {
++    if (!itemToUse) return;
++    setActionLoading(true);
++    try {
++      const res = await api.post('/inventory/use-consumable', { itemId: itemToUse.id });
++      toast.show({ message: res.data.message || 'Item berhasil digunakan.', type: 'success' });
++      setUseConfirmModalOpen(false);
++      setItemToUse(null);
++      fetchInventoryAndRecipes();
++    } catch (err: any) {
++      toast.show({ message: err.response?.data?.error || 'Gagal menggunakan item.', type: 'error' });
++    } finally {
++      setActionLoading(false);
++    }
++  };
+
+   const handleUseLawManual = async (item: InventoryItem) => {
+     setActionLoading(true);
+@@ -193,8 +214,30 @@
+                 x{item.quantity}
+               </div>
+
+-              {(item.category === 'law' || item.category === 'manual') ? (
++              {(() => {
++                const isUsableConsumable = item.category === 'consume' || item.category === 'pill' || item.effectType || item.name.startsWith('Blueprint:');
++                const isLawOrManual = item.category === 'law' || item.category === 'manual';
++
++                if (isLawOrManual) {
++                  return (
++                    <div className="absolute bottom-2 right-2 flex gap-1">
++                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
++                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
++                    </div>
++                  );
++                } else if (isUsableConsumable) {
++                  return (
++                    <div className="absolute bottom-2 right-2 flex gap-1">
++                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
++                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-blue-400 border-blue-400/50 hover:bg-blue-400/20" onClick={(e) => { e.stopPropagation(); setItemToUse(item); setUseConfirmModalOpen(true); }} disabled={actionLoading}>Gunakan</Button>
++                    </div>
++                  );
++                } else {
++                  return (
++                    <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
++                  );
++                }
++              })()}
+-                <div className="absolute bottom-2 right-2 flex gap-1">
+-                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+-                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
+-                </div>
+-              ) : (
+-                <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+-              )}
+
+               {/* Item Icon or Image */}
+               <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center mb-2 drop-shadow-md">
+@@ -213,6 +256,10 @@
+               <div className="w-full mt-auto pt-2 border-t border-white/10 group-hover:border-white/30 transition-colors">
+                 <p className={`text-[10px] sm:text-xs font-bold truncate px-1 ${getRarityTextClass(item.rarity)}`} title={item.name}>{item.name}</p>
+                 <p className="text-[9px] sm:text-[10px] text-gray-500 capitalize mt-0.5 group-hover:text-gray-300 truncate">{item.type}</p>
++                {item.effectType && (
++                  <p className="text-[9px] sm:text-[10px] text-blue-400 capitalize mt-0.5 truncate" title={`${item.effectType} ${item.effectValue ? '+'+item.effectValue : ''}`}>{item.effectType.replace(/_/g, ' ')} {item.effectValue ? `+${item.effectValue}` : ''}</p>
++                )}
+               </div>
+             </div>
+           ))}

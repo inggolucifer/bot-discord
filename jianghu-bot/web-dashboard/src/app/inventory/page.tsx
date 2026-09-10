@@ -25,6 +25,8 @@ interface InventoryItem {
   price: number;
   imageUrl: string | null;
   emoji: string;
+  effectType?: string;
+  effectValue?: number;
 }
 
 export default function InventoryPage() {
@@ -35,6 +37,30 @@ export default function InventoryPage() {
   const [itemToDiscard, setItemToDiscard] = useState<InventoryItem | null>(null);
   const [discardQuantity, setDiscardQuantity] = useState(1);
 
+
+  const [useConfirmModalOpen, setUseConfirmModalOpen] = useState(false);
+  const [itemToUse, setItemToUse] = useState<InventoryItem | null>(null);
+
+  const handleUseItem = async () => {
+    if (!itemToUse) return;
+    setActionLoading(true);
+    try {
+      // For this specific API (use-consumable, use-law, use-manual), we use the object's ID in MongoDB (which in the frontend is mapped to id)
+      // The backend uses `inv.itemId._id.toString() === itemId` to find the inventory entry, so it expects the item's reference ID, not the inventory entry ID. Let's verify the backend:
+      // const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+      // It matches! The backend uses the referenced Item's ID, not the inventory slot's ID.
+      // Thus passing `itemId: itemToUse.id` is CORRECT because the formatting maps the reference ID to `id`.
+      const res = await api.post('/inventory/use-consumable', { itemId: itemToUse.id });
+      toast.show({ message: res.data.message || 'Item berhasil digunakan.', type: 'success' });
+      setUseConfirmModalOpen(false);
+      setItemToUse(null);
+      fetchInventoryAndRecipes();
+    } catch (err: any) {
+      toast.show({ message: err.response?.data?.error || 'Gagal menggunakan item.', type: 'error' });
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   const handleDiscard = async () => {
     if (!itemToDiscard) return;
@@ -280,14 +306,30 @@ export default function InventoryPage() {
                 x{item.quantity}
               </div>
 
-              {(item.category === 'law' || item.category === 'manual') ? (
-                <div className="absolute bottom-2 right-2 flex gap-1">
-                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
-                  <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
-                </div>
-              ) : (
-                <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
-              )}
+              {(() => {
+                const isUsableConsumable = item.category === 'consume' || item.category === 'pill' || item.effectType || item.name.startsWith('Blueprint:');
+                const isLawOrManual = item.category === 'law' || item.category === 'manual';
+
+                if (isLawOrManual) {
+                  return (
+                    <div className="absolute bottom-2 right-2 flex gap-1">
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
+                    </div>
+                  );
+                } else if (isUsableConsumable) {
+                  return (
+                    <div className="absolute bottom-2 right-2 flex gap-1">
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-blue-400 border-blue-400/50 hover:bg-blue-400/20" onClick={(e) => { e.stopPropagation(); setItemToUse(item); setUseConfirmModalOpen(true); }} disabled={actionLoading}>Gunakan</Button>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20 absolute bottom-2 right-2" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+                  );
+                }
+              })()}
 
               {/* Item Icon or Image */}
               <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center mb-2 drop-shadow-md">
@@ -307,6 +349,9 @@ export default function InventoryPage() {
               <div className="w-full mt-auto pt-2 border-t border-white/10 group-hover:border-white/30 transition-colors">
                 <p className={`text-[10px] sm:text-xs font-bold truncate px-1 ${getRarityTextClass(item.rarity)}`} title={item.name}>{item.name}</p>
                 <p className="text-[9px] sm:text-[10px] text-gray-500 capitalize mt-0.5 group-hover:text-gray-300 truncate">{item.type}</p>
+                {item.effectType && (
+                  <p className="text-[9px] sm:text-[10px] text-blue-400 capitalize mt-0.5 truncate" title={`${item.effectType} ${item.effectValue ? '+'+item.effectValue : ''}`}>{item.effectType.replace(/_/g, ' ')} {item.effectValue ? `+${item.effectValue}` : ''}</p>
+                )}
               </div>
             </div>
           ))}
@@ -440,6 +485,17 @@ export default function InventoryPage() {
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setDiscardModalOpen(false)}>Batal</Button>
             <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500/10" onClick={handleDiscard} disabled={actionLoading}>Buang</Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Use Confirm Modal */}
+      <Modal isOpen={useConfirmModalOpen} onClose={() => setUseConfirmModalOpen(false)} title="Gunakan Item">
+        <div className="space-y-4">
+          <p className="text-gray-300">Gunakan <strong>{itemToUse?.name}</strong>?</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setUseConfirmModalOpen(false)}>Batal</Button>
+            <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500/10" onClick={handleUseItem} disabled={actionLoading}>Gunakan</Button>
           </div>
         </div>
       </Modal>

@@ -341,6 +341,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
         const TransactionLog = require('../../models/TransactionLog');
         let itemName = '';
         let messageResponse = '';
+        let finalEffectsApplied = [];
 
         await withTransaction(async (session) => {
             const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
@@ -371,6 +372,26 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             itemName = item.name;
             let effect = item.effect || 'Tidak ada efek khusus.';
             let buffMessage = '';
+            let effectsApplied = [];
+
+            // Reject farm_grow_speed items
+            if (item.effectType === 'farm_grow_speed') {
+                throw new CustomError('Pakai pupuk dari halaman Farming pada plot yang sedang tumbuh.', 400);
+            }
+
+            // Handle Blueprints
+            if (item.name.startsWith('Blueprint:')) {
+                if (!player.professions) player.professions = {};
+                if (!player.professions.unlockedBlueprints) player.professions.unlockedBlueprints = [];
+
+                if (player.professions.unlockedBlueprints.includes(item.name)) {
+                    throw new CustomError('Kamu sudah mempelajari blueprint ini.', 400);
+                }
+                player.professions.unlockedBlueprints.push(item.name);
+                player.markModified('professions.unlockedBlueprints');
+                buffMessage = ` Blueprint ${item.name} berhasil dipelajari! Resep baru sekarang tersedia.`;
+                effectsApplied.push('blueprint_unlocked');
+            }
 
             // 1. Process new effectType structure if present
             if (item.effectType && item.effectValue) {
@@ -379,6 +400,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                     player.energy.current = Math.min(100, player.energy.current + item.effectValue);
                     player.markModified('energy');
                     buffMessage = ` Memulihkan ${item.effectValue} Energy.`;
+                    effectsApplied.push(`energy_restored_${item.effectValue}`);
                 } else if (item.effectType.startsWith('combat_buff_')) {
                     // e.g., combat_buff_atk, combat_buff_def
                     const buffTypeMap = {
@@ -400,6 +422,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                         });
                         player.markModified('activeBuffs');
                         buffMessage = ` Mendapatkan efek ${mappedBuffType} +${item.effectValue} selama ${durationHours} jam.`;
+                        effectsApplied.push(`${mappedBuffType}_${item.effectValue}_${durationHours}h`);
                     }
                 } else if (item.effectType === 'exp_bonus_short') {
                     if (!player.activeBuffs) player.activeBuffs = [];
@@ -413,9 +436,11 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                     });
                     player.markModified('activeBuffs');
                     buffMessage = ` Mendapatkan efek exp_bonus +${item.effectValue}% selama ${durationHours} jam.`;
+                    effectsApplied.push(`exp_bonus_${item.effectValue}_${durationHours}h`);
                 } else {
                     // framework ready, runtime not wired yet for other types (e.g. breakthrough_success_bonus, profession_success_bonus)
                     buffMessage = ` (Efek ${item.effectType} siap, namun belum diimplementasikan di runtime)`;
+                    effectsApplied.push(item.effectType);
                 }
             }
             // 2. Fallback to legacy effect string parsing
@@ -443,6 +468,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
 
                     player.markModified('activeBuffs');
                     buffMessage = ` Mendapatkan efek ${buffTypeStr} +${buffValue} selama ${durationHours} jam.`;
+                    effectsApplied.push(`${buffTypeStr}_${buffValue}_${durationHours}h`);
                 }
             }
 
@@ -455,10 +481,13 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                 note: `[WEB] Digunakan: ${itemName} (${logEffectMsg})`
             }], { session });
 
+            await player.save({ session }); // Note: Need to save again to persist effects
+
+            finalEffectsApplied = effectsApplied;
             messageResponse = `Kamu menggunakan **${itemName}**.${buffMessage ? buffMessage : ` Efek: ${effect}.`}`;
         });
 
-        res.json({ success: true, message: messageResponse });
+        res.json({ success: true, message: messageResponse, effectsApplied: finalEffectsApplied });
     } catch (error) {
         if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
         console.error('[API-INVENTORY] Use consumable error:', error);
