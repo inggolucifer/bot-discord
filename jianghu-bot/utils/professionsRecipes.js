@@ -6,6 +6,17 @@
 
 const RECIPES = {
 
+    // Added Sinks for Orphans
+    "Sup Esensi Ikan Api": {
+        profession: "cooking",
+        toolType: "kitchen_tool",
+        minToolTier: 5,
+        materials: [
+            { name: "Esensi Ikan Api", quantity: 1 },
+            { name: "Air Bersih", quantity: 5 }
+        ],
+        output: { name: "Sup Ikan Mas", quantity: 1 }
+    },
     "Sup Ikan Mas (Blueprint)": {
         profession: "cooking",
         toolType: "kitchen_tool",

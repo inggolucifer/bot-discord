@@ -880,7 +880,7 @@
       "$date": "2026-08-28T16:03:39.553Z"
     },
     "createdBy": "System Oracle",
-    "description": "Makanan sederhana yang sudah dimasak. Memberi energi lebih baik daripada bahan mentah.",
+    "description": "Makanan sederhana yang sudah dimasak. Memberi energi lebih baik daripada bahan mentah. Memulihkan 15 Energy.",
     "effect": null,
     "imageUrl": null,
     "origin": "Dapur Suku",
@@ -889,7 +889,9 @@
     "tier": 1,
     "updatedAt": {
       "$date": "2026-08-29T13:49:51.806Z"
-    }
+    },
+    "effectType": "energy_restore",
+    "effectValue": 15
   },
   {
     "_id": {
@@ -2016,7 +2018,7 @@
       "$date": "2026-08-28T16:03:40.701Z"
     },
     "createdBy": "System Oracle",
-    "description": "Daging yang diasap hingga tahan lama. Makanan andalan para saudagar dan tentara dalam perjalanan jauh.",
+    "description": "Daging yang diasap hingga tahan lama. Makanan andalan para saudagar dan tentara dalam perjalanan jauh. Memulihkan 15 Energy.",
     "effect": null,
     "imageUrl": null,
     "origin": "Rumah Asap",
@@ -2025,7 +2027,9 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.162Z"
-    }
+    },
+    "effectType": "energy_restore",
+    "effectValue": 15
   },
   {
     "_id": {
@@ -2040,7 +2044,7 @@
       "$date": "2026-08-28T16:03:40.722Z"
     },
     "createdBy": "System Oracle",
-    "description": "Makanan bergizi tinggi yang dimasak dalam wajan besi. Menyembuhkan lelah dengan cepat.",
+    "description": "Makanan bergizi tinggi yang dimasak dalam wajan besi. Menyembuhkan lelah dengan cepat. Memulihkan 30 Energy.",
     "effect": null,
     "imageUrl": null,
     "origin": null,
@@ -2049,7 +2053,9 @@
     "tier": 2,
     "updatedAt": {
       "$date": "2026-08-29T13:49:52.574Z"
-    }
+    },
+    "effectType": "energy_restore",
+    "effectValue": 30
   },
   {
     "_id": {
@@ -6119,7 +6125,7 @@
       "$oid": "6a91b15aa9e03dc91c54bffd"
     },
     "name": "Sup Ikan Mas",
-    "description": "Sup hangat yang sangat memulihkan tenaga. (Efek: Memulihkan Energy)",
+    "description": "Sup lezat. Memulihkan 40 Energy.",
     "category": "consume",
     "basePrice": 50,
     "priceCurrency": "silver",
@@ -6128,7 +6134,7 @@
     "origin": "Cooking",
     "effect": "buff_energy_regen_10_2h",
     "effectType": "energy_restore",
-    "effectValue": 30
+    "effectValue": 40
   },
   {
     "guildId": "1504794711775514856",
@@ -6193,7 +6199,7 @@
       "$oid": "6a91b15aa9e03dc91c54bffa"
     },
     "name": "Pupuk Tulang",
-    "description": "Katalis kuat yang menyuburkan tanah instan. Dapat mengatasi kelelahan lahan (Soil Depletion).",
+    "description": "Katalis kuat yang menyuburkan tanah instan. Dapat mengatasi kelelahan lahan (Soil Depletion). Mempercepat pertumbuhan tanaman 20%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
     "effectValue": 0.2,
@@ -6357,7 +6363,7 @@
       "$oid": "6a91b15aa9e03dc91c54bff3"
     },
     "name": "Pupuk Alkimia",
-    "description": "Ramuan alkimia untuk menyegarkan tanah secara instan.",
+    "description": "Ramuan alkimia untuk menyegarkan tanah secara instan. Mempercepat pertumbuhan tanaman 30%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
     "effectValue": 0.3,
@@ -9100,7 +9106,7 @@
     "baseHp": 0,
     "baseSpd": 0,
     "maxDurability": null,
-    "description": "Daging yang diawetkan.",
+    "description": "Daging yang diawetkan. Memulihkan 15 Energy.",
     "effect": "buff_hp_boost_30_1h",
     "origin": null,
     "basePrice": 50,
@@ -9113,7 +9119,9 @@
     "updatedAt": {
       "$date": "2026-09-06T09:18:23.370Z"
     },
-    "__v": 0
+    "__v": 0,
+    "effectType": "energy_restore",
+    "effectValue": 15
   },
   {
     "_id": {
@@ -10087,7 +10095,7 @@
     "baseHp": 0,
     "baseSpd": 0,
     "maxDurability": null,
-    "description": "Hidangan lezat dari daging ikan pilihan yang diasap. Memberikan energi yang banyak.",
+    "description": "Hidangan lezat dari daging ikan pilihan yang diasap. Memberikan energi yang banyak. Meningkatkan peluang sukses profesi 2% selama 30 menit.",
     "imageUrl": null,
     "effect": null,
     "origin": "Crafting",
@@ -10099,7 +10107,10 @@
     },
     "updatedAt": {
       "$date": "2026-09-08T13:04:03.301Z"
-    }
+    },
+    "effectType": "profession_success_bonus",
+    "effectValue": 0.02,
+    "effectDurationMinutes": 30
   },
   {
     "_id": {
@@ -11069,7 +11080,7 @@
       "$date": "2026-09-09T07:51:51.872Z"
     },
     "createdBy": "System Oracle",
-    "description": "Material Sop Daging Ikan Mas.",
+    "description": "Material Sop Daging Ikan Mas. Memberikan buff serangan sebesar 20 selama 30 menit.",
     "effect": "buff_hp_boost_100_1h",
     "imageUrl": null,
     "origin": "Dunia Jianghu",
@@ -11084,7 +11095,10 @@
     "baseAtk": 0,
     "baseDef": 0,
     "baseHp": 0,
-    "baseSpd": 0
+    "baseSpd": 0,
+    "effectType": "combat_buff_atk",
+    "effectValue": 20,
+    "effectDurationMinutes": 30
   },
   {
     "_id": {
@@ -11399,7 +11413,7 @@
       "$date": "2026-09-09T07:51:51.872Z"
     },
     "createdBy": "System Oracle",
-    "description": "Material Steik Daging Naga Tanah.",
+    "description": "Material Steik Daging Naga Tanah. Memberikan buff pertahanan sebesar 40 selama 45 menit.",
     "effect": "buff_atk_boost_100_2h",
     "imageUrl": null,
     "origin": "Dunia Jianghu",
@@ -11416,7 +11430,8 @@
     "baseHp": 0,
     "baseSpd": 0,
     "effectType": "combat_buff_def",
-    "effectValue": 300
+    "effectValue": 40,
+    "effectDurationMinutes": 45
   },
   {
     "_id": {
@@ -11761,7 +11776,7 @@
       "$date": "2026-09-09T07:51:51.872Z"
     },
     "createdBy": "System Oracle",
-    "description": "Material Pesta Istana Naga.",
+    "description": "Material Pesta Istana Naga. Pesta besar yang memberikan bonus EXP 50% selama 60 menit.",
     "effect": "buff_hp_boost_500_4h",
     "imageUrl": null,
     "origin": "Dunia Jianghu",
@@ -11778,7 +11793,8 @@
     "baseHp": 0,
     "baseSpd": 0,
     "effectType": "exp_bonus_short",
-    "effectValue": 50
+    "effectValue": 0.5,
+    "effectDurationMinutes": 60
   },
   {
     "_id": {
@@ -12051,7 +12067,7 @@
       "$date": "2026-09-09T09:08:26.277Z"
     },
     "createdBy": "System Oracle",
-    "description": "Gulungan rahasia untuk membuat Pedang Bintang Emas.",
+    "description": "Blueprint resep khusus. Gunakan/unlock di sistem profesi.",
     "category": "consume",
     "tier": 4,
     "rank": "Epic",
@@ -12076,7 +12092,7 @@
     },
     "createdBy": "System Oracle",
     "name": "Pupuk Dasar",
-    "description": "Pupuk sederhana dari sisa bahan organik.",
+    "description": "Pupuk sederhana dari sisa bahan organik. Mempercepat pertumbuhan tanaman 10%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
     "effectValue": 0.1,
@@ -12106,10 +12122,10 @@
     },
     "createdBy": "System Oracle",
     "name": "Pupuk Spiritual",
-    "description": "Pupuk mengandung qi spiritual.",
+    "description": "Pupuk mengandung qi spiritual. Mempercepat pertumbuhan tanaman 40%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
-    "effectValue": 0.35,
+    "effectValue": 0.4,
     "basePrice": 1,
     "priceCurrency": "silver",
     "rank": "Epic",
@@ -12136,10 +12152,10 @@
     },
     "createdBy": "System Oracle",
     "name": "Pupuk Tianji",
-    "description": "Pupuk rahasia dari sekte papan atas.",
+    "description": "Pupuk rahasia dari sekte papan atas. Mempercepat pertumbuhan tanaman 50%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
-    "effectValue": 0.45,
+    "effectValue": 0.5,
     "basePrice": 10,
     "priceCurrency": "silver",
     "rank": "Legendary",
@@ -12166,10 +12182,10 @@
     },
     "createdBy": "System Oracle",
     "name": "Pupuk Inti Bumi",
-    "description": "Pupuk legendaris dari inti bumi.",
+    "description": "Pupuk legendaris dari inti bumi. Mempercepat pertumbuhan tanaman 60%.",
     "category": "consume",
     "effectType": "farm_grow_speed",
-    "effectValue": 0.5,
+    "effectValue": 0.6,
     "basePrice": 2,
     "priceCurrency": "gold",
     "rank": "Mythical",
@@ -12226,7 +12242,7 @@
     },
     "createdBy": "System Oracle",
     "name": "Roti Gandum Spiritual",
-    "description": "Makanan dari gandum spiritual.",
+    "description": "Roti bernutrisi. Memulihkan 50 Energy.",
     "category": "consume",
     "effectType": "energy_restore",
     "effectValue": 50,
@@ -12316,8 +12332,8 @@
     },
     "createdBy": "System Oracle",
     "name": "Blueprint: Sup Ikan Mas",
-    "description": "Resep masakan kuno.",
-    "category": "none",
+    "description": "Blueprint resep khusus. Gunakan/unlock di sistem profesi.",
+    "category": "consume",
     "basePrice": 1,
     "priceCurrency": "silver",
     "rank": "Rare",
@@ -12346,8 +12362,8 @@
     },
     "createdBy": "System Oracle",
     "name": "Blueprint: Palu Forge Meteorit",
-    "description": "Desain cetak biru.",
-    "category": "none",
+    "description": "Blueprint resep khusus. Gunakan/unlock di sistem profesi.",
+    "category": "consume",
     "basePrice": 10,
     "priceCurrency": "silver",
     "rank": "Legendary",
@@ -12376,8 +12392,8 @@
     },
     "createdBy": "System Oracle",
     "name": "Blueprint: Pesta Istana Naga",
-    "description": "Cetak biru rahasia.",
-    "category": "none",
+    "description": "Blueprint resep khusus. Gunakan/unlock di sistem profesi.",
+    "category": "consume",
     "basePrice": 1,
     "priceCurrency": "gold",
     "rank": "Mythical",
