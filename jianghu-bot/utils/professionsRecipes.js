@@ -191,17 +191,18 @@ const RECIPES = {
     // SMITHING (forge)
     // ==========================================
 
-    "Blueprint: Pedang Bintang Emas Demo": {
+    "Pedang Bintang Emas (Blueprint)": {
         profession: "smithing",
         toolType: "forge",
         minToolTier: 4,
         requiresBlueprint: true,
         blueprintKey: "Blueprint: Pedang Bintang Emas",
         materials: [
-            { name: "Batangan Besi", quantity: 2 },
-            { name: "Papan Kayu", quantity: 1 }
+            { name: "Baja Murni", quantity: 3 },
+            { name: "Baja Keras", quantity: 2 },
+            { name: "Kayu Spiritual", quantity: 1 }
         ],
-        output: { name: "Pedang Baja", quantity: 1 }
+        output: { name: "Pedang Bintang Emas", quantity: 1 }
     },
     "Besi Murni": {
         profession: "smithing",

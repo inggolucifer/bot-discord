@@ -14,6 +14,7 @@ interface Recipe {
     materials: Material[];
     output: { name: string; quantity: number; effectInfo?: { type: string; value: number; desc: string } };
     requiresBlueprint?: boolean;
+    blueprintKey?: string;
     unlocked?: boolean;
 }
 
@@ -48,7 +49,7 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
                         <div className="flex justify-between items-start">
                             <div className="font-bold text-gray-200">{recipe.name}</div>
                             {isLocked && (
-                                <span className="inline-block bg-red-900/50 text-red-200 text-[10px] px-1.5 py-0.5 rounded flex-shrink-0">🔒 Terkunci (Blueprint)</span>
+                                <span className="inline-block bg-red-900/50 text-red-200 text-[10px] px-1.5 py-0.5 rounded flex-shrink-0">🔒 Terkunci — butuh {recipe.blueprintKey}</span>
                             )}
                         </div>
                         <div className="text-xs text-gray-400 mt-1">

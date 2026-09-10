@@ -372,8 +372,54 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             let effect = item.effect || 'Tidak ada efek khusus.';
             let buffMessage = '';
 
-            // Handle buff effect parsing: buff_atk_boost_50_1h
-            if (effect.startsWith('buff_')) {
+            // 1. Process new effectType structure if present
+            if (item.effectType && item.effectValue) {
+                if (item.effectType === 'energy_restore') {
+                    if (!player.energy) player.energy = { current: 100, lastUpdated: new Date() };
+                    player.energy.current = Math.min(100, player.energy.current + item.effectValue);
+                    player.markModified('energy');
+                    buffMessage = ` Memulihkan ${item.effectValue} Energy.`;
+                } else if (item.effectType.startsWith('combat_buff_')) {
+                    // e.g., combat_buff_atk, combat_buff_def
+                    const buffTypeMap = {
+                        'combat_buff_atk': 'atk_boost',
+                        'combat_buff_def': 'def_boost',
+                        'combat_buff_hp': 'hp_boost'
+                    };
+                    const mappedBuffType = buffTypeMap[item.effectType];
+                    if (mappedBuffType) {
+                        if (!player.activeBuffs) player.activeBuffs = [];
+                        player.activeBuffs = player.activeBuffs.filter(b => b.buffType !== mappedBuffType || b.expiresAt <= new Date());
+                        // Default to 2 hours duration for new mapped buffs
+                        const durationHours = 2;
+                        const expiresAt = new Date(Date.now() + durationHours * 60 * 60 * 1000);
+                        player.activeBuffs.push({
+                            buffType: mappedBuffType,
+                            value: item.effectValue,
+                            expiresAt
+                        });
+                        player.markModified('activeBuffs');
+                        buffMessage = ` Mendapatkan efek ${mappedBuffType} +${item.effectValue} selama ${durationHours} jam.`;
+                    }
+                } else if (item.effectType === 'exp_bonus_short') {
+                    if (!player.activeBuffs) player.activeBuffs = [];
+                    player.activeBuffs = player.activeBuffs.filter(b => b.buffType !== 'exp_bonus' || b.expiresAt <= new Date());
+                    const durationHours = 1;
+                    const expiresAt = new Date(Date.now() + durationHours * 60 * 60 * 1000);
+                    player.activeBuffs.push({
+                        buffType: 'exp_bonus',
+                        value: item.effectValue, // e.g. 50 (%)
+                        expiresAt
+                    });
+                    player.markModified('activeBuffs');
+                    buffMessage = ` Mendapatkan efek exp_bonus +${item.effectValue}% selama ${durationHours} jam.`;
+                } else {
+                    // framework ready, runtime not wired yet for other types (e.g. breakthrough_success_bonus, profession_success_bonus)
+                    buffMessage = ` (Efek ${item.effectType} siap, namun belum diimplementasikan di runtime)`;
+                }
+            }
+            // 2. Fallback to legacy effect string parsing
+            else if (effect.startsWith('buff_')) {
                 const parts = effect.split('_');
                 // buff_hp_boost_100_2h
                 if (parts.length >= 5) {
@@ -400,14 +446,16 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                 }
             }
 
+            const logEffectMsg = (item.effectType) ? `${item.effectType} : ${item.effectValue}` : effect;
+
             await TransactionLog.create([{
                 guildId,
                 type: 'use_item',
                 fromUserId: userId,
-                note: `[WEB] Digunakan: ${itemName} (${effect})`
+                note: `[WEB] Digunakan: ${itemName} (${logEffectMsg})`
             }], { session });
 
-            messageResponse = `Kamu menggunakan **${itemName}**. Efek: ${effect}.${buffMessage}`;
+            messageResponse = `Kamu menggunakan **${itemName}**.${buffMessage ? buffMessage : ` Efek: ${effect}.`}`;
         });
 
         res.json({ success: true, message: messageResponse });
