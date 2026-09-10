@@ -31,19 +31,20 @@ router.get('/', authenticateToken, async (req, res) => {
         const stage = player.systemCultivation.stage;
         const realmData = SYSTEM_REALMS[calcResult.realmIdx];
 
-        // Cari Pill yang sesuai dengan Realm saat ini di Inventory
-        const pillName = `Pil Terobosan: ${realmName}`;
-        let pillCount = 0;
-        let pillItemId = null;
+        // Fetch and filter usable pills
+        await player.populate({
+            path: 'inventory.itemId',
+            select: 'name effectType effectValue effectTierGate'
+        });
 
-        const pillItem = await Item.findOne({ name: pillName, guildId });
-        if (pillItem) {
-            const inventoryPill = player.inventory.find(i => i.itemId.equals(pillItem._id));
-            if (inventoryPill) {
-                pillCount = inventoryPill.quantity;
-            }
-            pillItemId = pillItem._id;
-        }
+        const usablePills = player.inventory
+            .filter(inv => inv.itemId && inv.itemId.effectType === 'breakthrough_success_bonus' && inv.itemId.effectTierGate >= (calcResult.realmIdx + 1) && inv.quantity > 0)
+            .map(inv => ({
+                itemId: inv.itemId._id,
+                name: inv.itemId.name,
+                count: inv.quantity,
+                effectValue: inv.itemId.effectValue || 0
+            }));
 
         let baseSuccessRate = realmData.baseSuccessRate;
         if (stage > 0) baseSuccessRate -= (stage * 2);
@@ -61,11 +62,7 @@ router.get('/', authenticateToken, async (req, res) => {
                 baseSuccessRate: baseSuccessRate,
                 maxStage: realmData.maxStage,
                 isMaxLevel: calcResult.realmIdx === SYSTEM_REALMS.length - 1 && stage === realmData.maxStage,
-                pill: {
-                    name: pillName,
-                    count: pillCount,
-                    itemId: pillItemId
-                }
+                usablePills: usablePills
             }
         });
 
@@ -79,7 +76,7 @@ router.get('/', authenticateToken, async (req, res) => {
 // Endpoint: POST /api/cultivation/breakthrough
 // Memproses aksi breakthrough dengan atau tanpa pil dari web
 const breakthroughSchema = z.object({
-    usePill: z.boolean().optional().default(false),
+    pillId: z.string().nullable().optional().default(null),
     forceBreakthrough: z.boolean().optional().default(false)
 });
 
@@ -90,7 +87,7 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
     if (!validation.success) {
          return res.status(400).json({ error: 'Payload tidak valid.' });
     }
-    const { usePill, forceBreakthrough } = validation.data;
+    const { pillId, forceBreakthrough } = validation.data;
 
     const lockKey = `cultivation_breakthrough_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
@@ -135,23 +132,34 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 throw new CustomError('Kamu telah mencapai puncak kultivasi alam semesta!', 400);
             }
 
-            if (usePill) {
-                const pillName = `Pil Terobosan: ${player.systemCultivation.realm}`;
-                const pillItem = await Item.findOne({ name: pillName, guildId }).session(session);
-
-                if (!pillItem) {
-                     throw new CustomError('Item Pil tidak ditemukan di sistem database.', 404);
-                }
-
-                const currentPill = player.inventory.find(i => i.itemId.equals(pillItem._id));
+            let successBonus = 0;
+            if (pillId) {
+                const currentPill = player.inventory.find(i => i.itemId.toString() === pillId);
                 if (!currentPill || currentPill.quantity < 1) {
-                     throw new CustomError('Kamu tidak memiliki Pil Terobosan tersebut di inventory.', 400);
+                    throw new CustomError('Pil tersebut tidak ditemukan di inventory Anda.', 400);
                 }
+
+                const pillItem = await Item.findById(pillId).session(session);
+                if (!pillItem || pillItem.effectType !== 'breakthrough_success_bonus') {
+                    throw new CustomError('Item ini tidak bisa digunakan untuk breakthrough.', 400);
+                }
+
+                if (pillItem.effectTierGate < (calcResult.realmIdx + 1)) {
+                    throw new CustomError('Pil ini terlalu lemah untuk tahapan kultivasimu saat ini.', 400);
+                }
+
+                // Normalisasi fraksi (contoh: 0.25 -> 25)
+                let bonus = pillItem.effectValue || 0;
+                if (bonus > 0 && bonus <= 1) {
+                    bonus = bonus * 100;
+                }
+                successBonus = Math.floor(bonus);
+
                 currentPill.quantity -= 1;
                 player.markModified('inventory');
             }
 
-            const attempt = attemptBreakthrough(calcResult.realmIdx, player.systemCultivation.stage, usePill);
+            const attempt = attemptBreakthrough(calcResult.realmIdx, player.systemCultivation.stage, successBonus);
             isSuccess = attempt.success;
 
             if (isSuccess) {

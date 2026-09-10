@@ -6,6 +6,13 @@ export const PillSchema = z.object({
   count: z.number()
 }).nullable();
 
+export const UsablePillSchema = z.object({
+  itemId: z.string(),
+  name: z.string(),
+  count: z.number(),
+  effectValue: z.number()
+});
+
 export const CultivationDataSchema = z.object({
   realm: z.string(),
   stage: z.number().or(z.string()),
@@ -15,7 +22,7 @@ export const CultivationDataSchema = z.object({
   isReadyForBreakthrough: z.boolean(),
   baseSuccessRate: z.number(),
   isMaxLevel: z.boolean(),
-  pill: PillSchema.optional()
+  usablePills: z.array(UsablePillSchema).optional()
 });
 
 export const BreakthroughResponseSchema = z.object({
