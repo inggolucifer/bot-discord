@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Material {
     name: string;
@@ -26,6 +26,8 @@ interface RecipePickerProps {
 }
 
 export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLoading }: RecipePickerProps) {
+    const [selectedTier, setSelectedTier] = useState<string>('all');
+
     if (isLoading) {
         return <div className="text-gray-400 text-sm">Memuat resep...</div>;
     }
@@ -34,11 +36,33 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
         return <div className="text-gray-400 text-sm">Tidak ada resep yang tersedia.</div>;
     }
 
+    const filteredRecipes = recipes.filter(recipe => {
+        if (selectedTier === 'all') return true;
+        const tierStr = (recipe.minToolTier || 1).toString();
+        return tierStr === selectedTier;
+    });
+
     return (
         <div>
-            <label className="block text-sm text-gray-400 mb-2">Pilih Resep</label>
+            <div className="flex justify-between items-end mb-2">
+                <label className="block text-sm text-gray-400">Pilih Resep</label>
+                <div className="flex gap-1">
+                    {['all', '1', '2', '3', '4', '5', '6'].map(tier => (
+                        <button
+                            key={tier}
+                            onClick={() => setSelectedTier(tier)}
+                            className={`px-2 py-1 text-xs rounded border transition-colors ${selectedTier === tier ? 'bg-amber-900/50 border-amber-500 text-amber-200' : 'bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-gray-200'}`}
+                        >
+                            {tier === 'all' ? 'Semua' : `T${tier}`}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {filteredRecipes.length === 0 && (
+                 <div className="text-gray-500 text-sm italic">Tidak ada resep untuk tier ini.</div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {recipes.map((recipe) => {
+                {filteredRecipes.map((recipe) => {
                     const isLocked = recipe.requiresBlueprint && !recipe.unlocked;
                     return (
                     <div
@@ -64,10 +88,17 @@ export default function RecipePicker({ recipes, selectedRecipeId, onSelect, isLo
                                 <div className="text-xs font-bold text-amber-500/80">
                                     Hasil: {recipe.output.name} x{recipe.output.quantity}
                                 </div>
-                                {recipe.output.effectInfo && (
-                                    <div className="text-[10px] text-gray-400 bg-gray-900/50 p-1 rounded border border-gray-700/50">
+                                {recipe.output.effectInfo ? (
+                                    <div className="text-[10px] text-gray-400 bg-gray-900/50 p-1.5 rounded border border-gray-700/50">
                                         <span className="text-cyan-400">Efek ({recipe.output.effectInfo.type}):</span> {recipe.output.effectInfo.value > 0 ? `+${recipe.output.effectInfo.value}` : ''}
+                                        {recipe.output.effectInfo.desc && <div className="mt-0.5 text-gray-500">{recipe.output.effectInfo.desc}</div>}
                                     </div>
+                                ) : (
+                                    (recipe.output as any).effectType && (
+                                        <div className="text-[10px] text-gray-400 bg-gray-900/50 p-1.5 rounded border border-gray-700/50">
+                                            <span className="text-cyan-400">Efek ({(recipe.output as any).effectType}):</span> {(recipe.output as any).effectValue > 0 ? `+${(recipe.output as any).effectValue}` : ''}
+                                        </div>
+                                    )
                                 )}
                             </div>
                         )}
