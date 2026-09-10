@@ -27,7 +27,7 @@ export default function CultivationClient() {
     const [showBreakthroughAnim, setShowBreakthroughAnim] = useState(false);
     const [breakthroughResult, setBreakthroughResult] = useState<any>(null);
     const [loreWarningText, setLoreWarningText] = useState<string | null>(null);
-    const [currentUsePill, setCurrentUsePill] = useState<boolean>(false);
+    const [currentUsePillId, setCurrentUsePillId] = useState<string | null>(null);
     const queryClient = useQueryClient();
 
     useEffect(() => {
@@ -48,9 +48,9 @@ export default function CultivationClient() {
 
     const cultivationData: CultivationData = rawData?.data || (rawData as any);
 
-    const breakthroughMutation = useMutation<BreakthroughResponse, AxiosError<{error: string}>, {usePill: boolean, forceBreakthrough: boolean}>({
-        mutationFn: async ({ usePill, forceBreakthrough }) => {
-            const { data } = await api.post('/cultivation/breakthrough', { usePill, forceBreakthrough });
+    const breakthroughMutation = useMutation<BreakthroughResponse, AxiosError<{error: string}>, {pillId: string | null, forceBreakthrough: boolean}>({
+        mutationFn: async ({ pillId, forceBreakthrough }) => {
+            const { data } = await api.post('/cultivation/breakthrough', { pillId, forceBreakthrough });
             return data;
         },
         onSuccess: (data) => {
@@ -75,17 +75,17 @@ export default function CultivationClient() {
         }
     });
 
-    const handleBreakthrough = (usePill: boolean, forceBreakthrough: boolean = false) => {
+    const handleBreakthrough = (pillId: string | null, forceBreakthrough: boolean = false) => {
         setActionLoading(true);
-        setCurrentUsePill(usePill);
-        breakthroughMutation.mutate({ usePill, forceBreakthrough });
+        setCurrentUsePillId(pillId);
+        breakthroughMutation.mutate({ pillId, forceBreakthrough });
     };
 
     if (loading || isCultivationLoading) return <LoadingState text="Menghubungkan ke Dantian..." />;
 
     if (!cultivationData) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data kultivasi." icon={<Flame size={48} />} />;
 
-    const { realm, stage, currentQi, maxQi, ratePerMinute, isReadyForBreakthrough, baseSuccessRate, isMaxLevel, pill } = cultivationData;
+    const { realm, stage, currentQi, maxQi, ratePerMinute, isReadyForBreakthrough, baseSuccessRate, isMaxLevel, usablePills } = cultivationData;
     const progressPercent = Math.min(100, Math.max(0, (currentQi / maxQi) * 100));
 
     return (
@@ -180,7 +180,7 @@ export default function CultivationClient() {
                                     variant="destructive"
                                     onClick={() => {
                                         setLoreWarningText(null);
-                                        handleBreakthrough(currentUsePill, true);
+                                        handleBreakthrough(currentUsePillId, true);
                                     }}
                                     disabled={actionLoading}
                                 >
@@ -191,7 +191,7 @@ export default function CultivationClient() {
                     ) : (
                         <>
                             <p className="text-sm text-gray-300">
-                                Kamu akan mencoba menerobos batas ke tingkat selanjutnya. Proses ini memiliki risiko kegagalan yang dapat mengurangi Qi kamu secara drastis jika pondasimu tidak stabil.
+                                Kamu akan mencoba menerobos batas ke tingkat selanjutnya. Proses ini memiliki risiko kegagalan jika pondasimu tidak stabil.
                             </p>
                             <div className="bg-black/50 border border-[#333] rounded-lg p-4 space-y-2">
                                 <div className="flex justify-between">
@@ -204,26 +204,51 @@ export default function CultivationClient() {
                                 </div>
                             </div>
 
-                            {pill && pill.itemId && (
-                                <div className="bg-[#1f402e]/30 border border-green-800 rounded-lg p-4 mt-4">
-                                    <p className="text-sm text-gray-300 mb-2">Kamu memiliki <span className="font-bold text-green-400">{pill.name}</span> (x{pill.count}). Menggunakan pil ini akan meningkatkan peluang sukses sebesar 25%.</p>
-                                    <Button
-                                        onClick={() => handleBreakthrough(true)}
-                                        disabled={actionLoading || pill.count < 1}
-                                        className="w-full bg-green-700 hover:bg-green-600 mb-2"
-                                    >
-                                        Gunakan Pil & Terobosan
-                                    </Button>
+                            {usablePills && usablePills.length > 0 && (
+                                <div className="bg-[#111] border border-[#333] rounded-lg p-4 mt-4 space-y-3">
+                                    <p className="text-sm text-gray-300 font-bold mb-2">Pilih Pil Terobosan:</p>
+
+                                    <label className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-[#222]">
+                                        <input
+                                            type="radio"
+                                            name="pillSelection"
+                                            value="none"
+                                            checked={currentUsePillId === null}
+                                            onChange={() => setCurrentUsePillId(null)}
+                                            className="w-4 h-4 text-yellow-600 bg-gray-800 border-gray-600 focus:ring-yellow-600 focus:ring-2"
+                                        />
+                                        <span className="text-gray-300">Tanpa Pil</span>
+                                    </label>
+
+                                    {usablePills.map(p => (
+                                        <label key={p.itemId} className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-[#222]">
+                                            <input
+                                                type="radio"
+                                                name="pillSelection"
+                                                value={p.itemId}
+                                                checked={currentUsePillId === p.itemId}
+                                                onChange={() => setCurrentUsePillId(p.itemId)}
+                                                className="w-4 h-4 text-green-600 bg-gray-800 border-gray-600 focus:ring-green-600 focus:ring-2"
+                                            />
+                                            <div className="flex flex-col">
+                                                <span className="text-green-400 font-bold">{p.name} (x{p.count})</span>
+                                                <span className="text-xs text-green-200">+{(p.effectValue * 100).toFixed(0)}% Peluang Sukses</span>
+                                            </div>
+                                        </label>
+                                    ))}
                                 </div>
                             )}
 
+                            <p className="text-xs text-red-400 mt-2 text-center">
+                                Risiko Gagal: Kehilangan ~{Math.floor(maxQi * 0.25).toLocaleString()} Qi (25% max Qi)
+                            </p>
+
                             <Button
-                                onClick={() => handleBreakthrough(false)}
+                                onClick={() => handleBreakthrough(currentUsePillId)}
                                 disabled={actionLoading}
-                                variant="outline"
-                                className="w-full"
+                                className="w-full bg-[#1e3a5f] hover:bg-blue-900 border border-blue-800 text-white font-bold mt-4"
                             >
-                                Terobosan Tanpa Pil
+                                {actionLoading ? <Loader2 size={16} className="animate-spin" /> : 'Lakukan Terobosan'}
                             </Button>
                         </>
                     )}
