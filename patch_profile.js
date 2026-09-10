@@ -1,4 +1,9 @@
-"use client";
+const fs = require('fs');
+const filepath = 'jianghu-bot/web-dashboard/src/app/(dashboard)/profile/page.tsx';
+let content = fs.readFileSync(filepath, 'utf8');
+
+// The replacement content
+const newContent = `"use client";
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -200,7 +205,7 @@ export default function ProfilePage() {
                       <span className="text-xs text-gray-300 font-bold">{Math.floor(currentEnergy)} / {maxEnergy}</span>
                    </div>
                    <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-700/50">
-                       <div className="bg-green-500 h-2 transition-all duration-500" style={{ width: `${energyPercent}%` }}></div>
+                       <div className="bg-green-500 h-2 transition-all duration-500" style={{ width: \`\${energyPercent}%\` }}></div>
                    </div>
                 </div>
 
@@ -229,7 +234,7 @@ export default function ProfilePage() {
                              return (
                                  <div key={idx} className="bg-indigo-900/30 border border-indigo-500/30 rounded px-2 py-1.5 flex justify-between items-center text-xs">
                                      <span className="text-indigo-200 font-medium capitalize">{buff.buffType.replace('_', ' ')} <span className="text-green-400 font-bold ml-1">+{buff.value}</span></span>
-                                     <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> {hours > 0 ? `${hours}j ${mins}m` : `${mins}m`}</span>
+                                     <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> {hours > 0 ? \`\${hours}j \${mins}m\` : \`\${mins}m\`}</span>
                                  </div>
                              );
                           })}
@@ -286,7 +291,7 @@ export default function ProfilePage() {
                        <motion.div
                           key={slot.id}
                           whileHover={{ scale: 1.02 }}
-                          className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
+                          className={\`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors \${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}\`}
                           onClick={() => equippedId && handleUnequip(slot.id)}
                        >
                          {equippedInvItem ? (
@@ -319,7 +324,7 @@ export default function ProfilePage() {
                          <div className="flex flex-col items-end text-sm">
                             <span className="font-bold text-green-400 text-lg">{combatStats.hp?.toLocaleString()}</span>
                             <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? `+ Equip ${combatStats._equip.hp}` : ''})
+                               (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? \`+ Equip \${combatStats._equip.hp}\` : ''})
                             </span>
                          </div>
                       </div>
@@ -328,7 +333,7 @@ export default function ProfilePage() {
                          <div className="flex flex-col items-end text-sm">
                             <span className="font-bold text-red-400 text-lg">{combatStats.atk?.toLocaleString()}</span>
                             <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? `+ Equip ${combatStats._equip.atk}` : ''})
+                               (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? \`+ Equip \${combatStats._equip.atk}\` : ''})
                             </span>
                          </div>
                       </div>
@@ -337,7 +342,7 @@ export default function ProfilePage() {
                          <div className="flex flex-col items-end text-sm">
                             <span className="font-bold text-blue-400 text-lg">{combatStats.def?.toLocaleString()}</span>
                             <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? `+ Equip ${combatStats._equip.def}` : ''})
+                               (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? \`+ Equip \${combatStats._equip.def}\` : ''})
                             </span>
                          </div>
                       </div>
@@ -346,7 +351,7 @@ export default function ProfilePage() {
                          <div className="flex flex-col items-end text-sm">
                             <span className="font-bold text-yellow-400 text-lg">{combatStats.spd?.toLocaleString()}</span>
                             <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? `+ Equip ${combatStats._equip.spd}` : ''})
+                               (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? \`+ Equip \${combatStats._equip.spd}\` : ''})
                             </span>
                          </div>
                       </div>
@@ -403,7 +408,7 @@ export default function ProfilePage() {
                                       <div className="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden border border-gray-700/50">
                                           <div
                                               className="bg-amber-500 h-1.5 transition-all duration-500"
-                                              style={{ width: `${progress}%` }}
+                                              style={{ width: \`\${progress}%\` }}
                                           ></div>
                                       </div>
                                   </div>
@@ -438,11 +443,11 @@ export default function ProfilePage() {
                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
                                <motion.div
                                   whileHover={{ x: 4 }}
-                                  className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${getRarityBorderClass(inv.itemId?.rank)}`}
+                                  className={\`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer \${getRarityBorderClass(inv.itemId?.rank)}\`}
                                   onClick={() => handleEquip(inv._id)}
                                >
                                   <div className="flex items-center gap-3 overflow-hidden">
-                                     <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${getRarityBorderClass(inv.itemId?.rank)}`}>
+                                     <div className={\`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 \${getRarityBorderClass(inv.itemId?.rank)}\`}>
                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : '📦'}
                                      </div>
                                      <div className="min-w-0">
@@ -469,3 +474,7 @@ export default function ProfilePage() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync(filepath, newContent, 'utf8');
+console.log('Profile page replaced successfully');
