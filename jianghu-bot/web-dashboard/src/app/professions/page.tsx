@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { motion } from 'framer-motion';
 import { getPlayerFromProfileResponse } from '@/lib/profileHelper';
+import React, { useState } from 'react';
 
 type PlayerData = any;
 
@@ -21,6 +22,7 @@ const PROFESSIONS = [
 export default function ProfessionsPage() {
     const router = useRouter();
     const queryClient = useQueryClient();
+    const [isGuideOpen, setIsGuideOpen] = useState(true);
 
     const { data: profileRaw, isLoading } = useQuery<PlayerData>({
         queryKey: ['profile'],
@@ -54,9 +56,55 @@ export default function ProfessionsPage() {
     const player = getPlayerFromProfileResponse(profileRaw);
     const playerProfs = player?.professions || {};
 
+    // Check if player is a beginner (farming not unlocked or low level)
+    const isBeginner = !playerProfs.farming?.isUnlocked || (playerProfs.farming?.level || 1) < 2;
+
     return (
         <div className="container mx-auto p-4 max-w-6xl text-gray-100">
             <h1 className="text-3xl font-bold mb-6 text-amber-500 tracking-wider">Sistem Profesi & Kemahiran</h1>
+
+            {isBeginner && (
+                <div className="mb-6 bg-gray-900 border border-amber-600/50 rounded-lg overflow-hidden">
+                    <button
+                        onClick={() => setIsGuideOpen(!isGuideOpen)}
+                        className="w-full flex justify-between items-center p-4 bg-amber-900/30 hover:bg-amber-900/50 transition-colors"
+                    >
+                        <h2 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                            <span>🔰</span> Panduan Pemula: Memulai Profesi
+                        </h2>
+                        <span className="text-amber-500">{isGuideOpen ? '▼' : '▲'}</span>
+                    </button>
+
+                    {isGuideOpen && (
+                        <div className="p-5 border-t border-amber-900/30 text-gray-300">
+                            <p className="mb-4">Ikuti langkah-langkah berikut untuk memulai karir profesimu di Jianghu:</p>
+                            <ul className="space-y-3">
+                                <li className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-800 border border-gray-600 flex items-center justify-center text-xs text-gray-400 mt-0.5">{playerProfs.farming?.isUnlocked ? '✓' : '1'}</span>
+                                    <div>
+                                        <strong className="block text-white">Buka Profesi Bertani</strong>
+                                        <span className="text-sm text-gray-400">Klik tombol "Buka (50 Silver)" pada kartu Bertani di bawah.</span>
+                                    </div>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-800 border border-gray-600 flex items-center justify-center text-xs text-gray-400 mt-0.5">2</span>
+                                    <div>
+                                        <strong className="block text-white">Beli Alat Tani (Cangkul)</strong>
+                                        <span className="text-sm text-gray-400">Pergi ke menu Market atau Assets untuk membeli cangkul Tier 1.</span>
+                                    </div>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-800 border border-gray-600 flex items-center justify-center text-xs text-gray-400 mt-0.5">3</span>
+                                    <div>
+                                        <strong className="block text-white">Mulai Bertani</strong>
+                                        <span className="text-sm text-gray-400">Masuk ke halaman Bertani, pilih petak, resep (misal: Bibit Herbal), pilih alat, lalu klik "Tanam Sekarang". Tunggu hingga siap panen, lalu klik "Panen".</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            )}
 
             <div className="bg-gray-800 p-4 rounded mb-6 border border-gray-700">
                 <p>Energy: <span className="text-amber-400 font-bold">{player?.energy?.current || 100}</span> / 100</p>
