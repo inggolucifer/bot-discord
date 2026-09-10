@@ -155,6 +155,12 @@ export default function FarmingPage() {
                             plots={farmingProf.farmPlots || []}
                             selectedPlotIndex={plotIndex}
                             onSelect={setPlotIndex}
+                            playerCurrency={{
+                                copper: profile.currency?.copper || 0,
+                                silver: profile.currency?.silver || 0,
+                                gold: profile.currency?.gold || 0,
+                                jade: profile.currency?.jade || 0
+                            }}
                         />
 
                         {farmingProf.farmPlots && farmingProf.farmPlots[plotIndex] && farmingProf.farmPlots[plotIndex].cropId && new Date(farmingProf.farmPlots[plotIndex].harvestAt) > new Date() && !farmingProf.farmPlots[plotIndex].fertilizerApplied && (

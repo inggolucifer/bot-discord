@@ -50,15 +50,26 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
                                     <div className="text-[10px] text-red-400 font-bold mt-1">Tier tidak mencukupi (Butuh T{minToolTier})</div>
                                 )}
                             </div>
-                        <div className="text-right flex flex-col justify-end h-full mt-1">
+                        <div className="text-right flex flex-col justify-end h-full mt-1 w-24">
                             {tool.durability == null ? (
-                                <div className="text-[10px] text-green-400 italic">Siap pakai</div>
+                                <div className="text-[10px] text-green-400 italic text-right">Siap pakai</div>
                             ) : (
-                                <div className={`text-sm font-bold ${tool.durability < 10 ? 'text-red-400' : 'text-green-400'}`}>
-                                    {tool.durability} / {tool.itemId.maxDurability || '?'}
+                                <div className="flex flex-col items-end w-full">
+                                    <div className={`text-xs font-bold mb-1 ${tool.durability < 10 ? 'text-red-400' : 'text-gray-300'}`}>
+                                        {tool.durability} / {tool.itemId.maxDurability || '?'}
+                                    </div>
+                                    <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full ${
+                                                tool.durability / (tool.itemId.maxDurability || 100) > 0.5 ? 'bg-green-500' :
+                                                tool.durability / (tool.itemId.maxDurability || 100) > 0.2 ? 'bg-yellow-500' : 'bg-red-500'
+                                            }`}
+                                            style={{ width: `${Math.min(100, Math.max(0, (tool.durability / (tool.itemId.maxDurability || 100)) * 100))}%` }}
+                                        ></div>
+                                    </div>
                                 </div>
                             )}
-                            <div className="text-[10px] text-gray-500 uppercase tracking-wider">Durability</div>
+                            <div className="text-[10px] text-gray-500 uppercase tracking-wider mt-1 text-right">Durability</div>
                         </div>
                     </div>
                     );
