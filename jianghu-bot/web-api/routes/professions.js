@@ -684,7 +684,8 @@ router.post('/farming/apply-fertilizer', verifyToken, async (req, res) => {
         // Apply fertilizer effect
         const now = new Date();
         const timeRemainingMs = plot.harvestAt.getTime() - now.getTime();
-        const reduceMultiplier = itemRef.effectValue; // e.g. 0.20
+        // Cap max reduction multiplier at 0.5 (50%) to prevent instant harvests
+        const reduceMultiplier = Math.min(0.5, itemRef.effectValue); // e.g. capped at 0.5
 
         let newTimeRemainingMs = timeRemainingMs * (1 - reduceMultiplier);
         // Minimum 10 minutes, but don't increase the time if it was already below 10 mins
