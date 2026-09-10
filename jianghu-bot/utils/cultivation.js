@@ -160,8 +160,11 @@ function attemptBreakthrough(realmIndex, stage, usedPill = false) {
         successRate -= (stage * 2); // kurangi 2% per stage
     }
 
-    // Pil memberikan flat +5%
-    if (usedPill) {
+    // Tambahkan bonus pil jika ada
+    if (typeof usedPill === 'number') {
+        successRate += usedPill;
+    } else if (usedPill === true) {
+        // Fallback untuk legacy Discord bot (hardcoded 5%)
         successRate += 5;
     }
 
