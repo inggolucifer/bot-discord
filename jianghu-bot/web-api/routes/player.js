@@ -6,6 +6,7 @@ const Asset = require('../../models/Asset');
 const { authenticateToken } = require('../middlewares/auth');
 const { calculateProgress } = require('../../utils/assetProgress');
 const { isUnderConstruction } = require('../../utils/crafting');
+const { calculateEnergy, MAX_ENERGY } = require('../../utils/energyManager');
 const { syncWorkerContracts } = require('../../utils/workerManager');
 const { isClaimedToday, isClaimedYesterday } = require('../../utils/timezone');
 const LockManager = require('../utils/lockManager');
@@ -98,10 +99,15 @@ router.get('/profile', authenticateToken, async (req, res) => {
         const { calculatePlayerStats } = require('../../utils/playerCombat');
         const combatStats = calculatePlayerStats(player, player.laws, player.manuals);
 
+        // Calculate real-time energy
+        const currentEnergy = calculateEnergy(player);
+
         res.json({
             success: true,
             data: {
                 ...player,
+                energy: { current: currentEnergy, lastUpdated: player.energy ? player.energy.lastUpdated : new Date() },
+                maxEnergy: MAX_ENERGY,
                 combatStats,
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,
