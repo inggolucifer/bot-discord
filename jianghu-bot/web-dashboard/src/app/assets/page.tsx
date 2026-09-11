@@ -13,7 +13,26 @@ import {
   Users,
   Search,
   PackageOpen,
+  Filter,
 } from "lucide-react";
+
+const FILTER_CATEGORIES = ["Semua", "Pertanian", "Pertukangan", "Alkimia", "Dapur", "Blueprint/Riset", "Lainnya"];
+
+const getAssetCategory = (assetName: string, assetType: string, recipes?: any[]) => {
+  const name = (assetName || "").toLowerCase();
+  const type = (assetType || "").toLowerCase();
+  let recipeOutputs = "";
+  if (recipes && recipes.length > 0) {
+    recipeOutputs = recipes.map((r: any) => (r.resultItemName || "").toLowerCase()).join(" ");
+  }
+  const matches = (keywords: string[]) => keywords.some(kw => name.includes(kw) || type.includes(kw) || recipeOutputs.includes(kw));
+  if (matches(["lahan", "tani", "pupuk", "kebun", "bibit", "farm", "pertanian", "ladang"])) return "Pertanian";
+  if (matches(["tungku", "peleburan", "anvil", "baja", "batangan", "besi", "smith", "forge", "pertukangan", "pandai besi"])) return "Pertukangan";
+  if (matches(["kuali", "alkimia", "pil", "elixir", "alchemy", "paviliun"])) return "Alkimia";
+  if (matches(["dapur", "masak", "kitchen", "panci", "resep", "makanan"])) return "Dapur";
+  if (matches(["blueprint", "riset", "penelitian", "meja kerja", "buku"])) return "Blueprint/Riset";
+  return "Lainnya";
+};
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
@@ -132,6 +151,7 @@ export default function AssetsPage() {
   const [activePageTab, setActivePageTab] = useState<
     "my-assets" | "build-asset"
   >("my-assets");
+  const [activeFilter, setActiveFilter] = useState("Semua");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] =
     useState<string>("");
@@ -143,6 +163,7 @@ export default function AssetsPage() {
   const [actionMessage, setActionMessage] = useState<{
     type: "success" | "error";
     text: string;
+    cta?: { text: string; link: string; link2?: string; text2?: string }
   } | null>(null);
 
   const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
@@ -372,6 +393,8 @@ export default function AssetsPage() {
     }
   }, [selectedAsset, activeTab]);
 
+  const filteredMyAssets = assets.filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, asset.recipes) === activeFilter);
+
   const handleHireGuard = async () => {
     if (!selectedAsset) return;
     setActionLoading(true);
@@ -470,6 +493,7 @@ export default function AssetsPage() {
         (asset.description &&
           asset.description.toLowerCase().includes(searchQuery.toLowerCase())),
     )
+    .filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, []) === activeFilter)
     .map((asset) => {
       let canBuild = true;
       if (asset.buildRequirements && asset.buildRequirements.length > 0) {
@@ -513,12 +537,22 @@ export default function AssetsPage() {
     }
   };
 
-  const handleCompleteConstruction = async (assetId: string) => {
+  const handleCompleteConstruction = async (asset: Asset) => {
     setActionLoading(true);
     setActionMessage(null);
     try {
-      const res = await api.post("/player/assets/claim-progress", { assetId });
-      setActionMessage({ type: "success", text: res.data.message });
+      const res = await api.post("/player/assets/claim-progress", { assetId: asset.id });
+
+      let cta = undefined;
+      const category = getAssetCategory(asset.name, asset.type, asset.recipes);
+      if (category === "Pertanian") cta = { text: "Buka Farming", link: "/professions/farming", text2: "Buka Inventory", link2: "/inventory" };
+      else if (category === "Pertukangan") cta = { text: "Buka Smithing", link: "/professions/smithing", text2: "Buka Inventory", link2: "/inventory" };
+      else if (category === "Alkimia") cta = { text: "Buka Alkimia", link: "/professions/alchemy", text2: "Buka Inventory", link2: "/inventory" };
+      else if (category === "Dapur") cta = { text: "Buka Dapur", link: "/professions/cooking", text2: "Buka Inventory", link2: "/inventory" };
+      else if (category === "Blueprint/Riset") cta = { text: "Buka Inventory", link: "/inventory" };
+      else cta = { text: "Buka Profesi", link: "/professions", text2: "Buka Inventory", link2: "/inventory" };
+
+      setActionMessage({ type: "success", text: res.data.message, cta });
       await setTimeout(() => fetchAssets(), 0);
     } catch (err) {
       setActionMessage({
@@ -574,36 +608,53 @@ export default function AssetsPage() {
         />
       ) : (
         <>
-          <div className="flex border-b border-[#333] gap-4 sm:gap-6 overflow-x-auto custom-scrollbar justify-between items-center">
-            <div className="flex gap-4 sm:gap-6">
-              <button
-                className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "my-assets" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                onClick={() => {
-                  setActivePageTab("my-assets");
-                  setActionMessage(null);
-                }}
+          <div className="flex flex-col gap-4 border-b border-[#333]">
+            <div className="flex gap-4 sm:gap-6 overflow-x-auto custom-scrollbar justify-between items-center w-full">
+              <div className="flex gap-4 sm:gap-6">
+                <button
+                  className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "my-assets" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
+                  onClick={() => {
+                    setActivePageTab("my-assets");
+                    setActionMessage(null);
+                  }}
+                >
+                  <Map size={16} /> Aset Saya ({assets.length})
+                </button>
+                <button
+                  className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "build-asset" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
+                  onClick={() => {
+                    setActivePageTab("build-asset");
+                    setActionMessage(null);
+                  }}
+                >
+                  <Hammer size={16} /> Bangun Aset
+                </button>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBuySlotModalOpen(true)}
+                disabled={assetSlots >= 5}
+                className={`mb-3 ${assetSlots >= 5 ? "opacity-50 cursor-not-allowed" : "hover:border-[#c5a880] hover:text-[#c5a880]"}`}
               >
-                <Map size={16} /> Aset Saya ({assets.length})
-              </button>
-              <button
-                className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "build-asset" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                onClick={() => {
-                  setActivePageTab("build-asset");
-                  setActionMessage(null);
-                }}
-              >
-                <Hammer size={16} /> Bangun Aset
-              </button>
+                Slot Lahan: {assetSlots}/5 {assetSlots < 5 ? "+" : "(Max)"}
+              </Button>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setBuySlotModalOpen(true)}
-              disabled={assetSlots >= 5}
-              className={`mb-3 ${assetSlots >= 5 ? "opacity-50 cursor-not-allowed" : "hover:border-[#c5a880] hover:text-[#c5a880]"}`}
-            >
-              Slot Lahan: {assetSlots}/5 {assetSlots < 5 ? "+" : "(Max)"}
-            </Button>
+            <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-3 mb-1">
+              {FILTER_CATEGORIES.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setActiveFilter(category)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-full border whitespace-nowrap transition-colors ${
+                    activeFilter === category
+                      ? "bg-[#c5a880] text-black border-[#c5a880]"
+                      : "bg-[#111] text-gray-400 border-[#333] hover:border-[#666] hover:text-white"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
 
           <Modal
@@ -658,12 +709,36 @@ export default function AssetsPage() {
 
           {actionMessage && (
             <div
-              className={`p-4 rounded-lg flex items-center justify-between border ${actionMessage.type === "success" ? "bg-green-900/20 border-green-900/50 text-green-400" : "bg-red-900/20 border-red-900/50 text-red-400"}`}
+              className={`p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-3 border ${actionMessage.type === "success" ? "bg-green-900/20 border-green-900/50 text-green-400" : "bg-red-900/20 border-red-900/50 text-red-400"}`}
             >
-              <span className="text-sm">{actionMessage.text}</span>
-              <button onClick={() => setActionMessage(null)}>
-                <X size={16} />
-              </button>
+              <span className="text-sm flex-1">{actionMessage.text}</span>
+              <div className="flex gap-2 items-center">
+                {actionMessage.cta && (
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-green-600/50 text-green-400 hover:bg-green-900/30"
+                      onClick={() => router.push(actionMessage.cta!.link)}
+                    >
+                      {actionMessage.cta.text} <ArrowRight className="w-3 h-3 ml-1" />
+                    </Button>
+                    {actionMessage.cta.link2 && actionMessage.cta.text2 && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-green-600/50 text-green-400 hover:bg-green-900/30"
+                        onClick={() => router.push(actionMessage.cta!.link2!)}
+                      >
+                        {actionMessage.cta.text2} <ArrowRight className="w-3 h-3 ml-1" />
+                      </Button>
+                    )}
+                  </div>
+                )}
+                <button onClick={() => setActionMessage(null)} className="p-1 hover:bg-black/20 rounded">
+                  <X size={16} />
+                </button>
+              </div>
             </div>
           )}
 
@@ -679,16 +754,51 @@ export default function AssetsPage() {
               )}
 
               {user && !loading && assets.length === 0 && !error && (
+                <div className="flex flex-col items-center text-center p-8 bg-[#111] border border-[#333] rounded-lg w-full">
+                  <Hammer size={48} className="text-gray-600 mb-4" />
+                  <h3 className="text-xl font-bold text-white mb-2">Belum Ada Aset (Industri Pasif)</h3>
+                  <p className="text-gray-400 mb-6 max-w-xl">
+                    Aset adalah industri pasif yang menghasilkan bahan-bahan penting secara otomatis.
+                    Bangun aset pertama Anda untuk mendukung kemajuan Profesi:
+                  </p>
+                  <ul className="text-sm text-gray-300 text-left space-y-3 mb-8 w-full max-w-sm mx-auto">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500 font-bold">1.</span>
+                      <div><b>Lahan Tani</b> → Menghasilkan <i>Pupuk Dasar</i></div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-500 font-bold">2.</span>
+                      <div><b>Peleburan/Anvil</b> → Menghasilkan <i>Batangan & Baja</i></div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-orange-500 font-bold">3.</span>
+                      <div><b>Dapur/Bengkel</b> → Menghasilkan <i>Bahan Masak & Blueprint</i></div>
+                    </li>
+                  </ul>
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      setActivePageTab("build-asset");
+                      setActionMessage(null);
+                    }}
+                    className="bg-[#c5a880] hover:bg-[#b09570] text-black font-bold"
+                  >
+                    Buka Katalog Bangun Aset <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              )}
+
+              {user && !loading && assets.length > 0 && filteredMyAssets.length === 0 && !error && (
                 <EmptyState
-                  icon={<Hammer />}
-                  title="Belum Ada Aset"
-                  description="Anda belum memiliki aset apapun. Buka tab 'Bangun Aset' untuk membangun aset baru menggunakan item Blueprint (Cetak Biru)."
+                  icon={<Filter />}
+                  title="Aset Tidak Ditemukan"
+                  description={`Tidak ada aset yang cocok dengan kategori '${activeFilter}'.`}
                 />
               )}
 
-              {user && !loading && assets.length > 0 && (
+              {user && !loading && filteredMyAssets.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {assets.map((asset) => (
+                  {filteredMyAssets.map((asset) => (
                     <div
                       key={asset.id}
                       className={`relative flex flex-col rounded-lg border p-4 sm:p-5 transition-all duration-300 hover:shadow-lg ${asset.underConstruction ? "bg-[#1a110a] border-orange-900/40 hover:border-orange-700/60" : "bg-[#111] border-[#333] hover:border-[#8b0000]/50"}`}
@@ -784,16 +894,18 @@ export default function AssetsPage() {
                       <div className="mt-auto pt-4 border-t border-[#333]/50 flex justify-end">
                         {asset.underConstruction &&
                         asset.progressPercent >= 100 ? (
-                          <Button
-                            size="sm"
-                            variant="default"
-                            onClick={() => handleCompleteConstruction(asset.id)}
-                            disabled={actionLoading}
-                            className="w-full sm:w-auto bg-green-700 hover:bg-green-600 text-white"
-                          >
-                            <CheckCircle2 className="w-4 h-4 mr-1" /> Selesaikan
-                            Bangunan
-                          </Button>
+                          <div className="flex flex-col gap-2 w-full">
+                            <span className="text-xs text-green-400 text-center font-bold animate-pulse">Hasil siap diambil!</span>
+                            <Button
+                              size="sm"
+                              variant="default"
+                              onClick={() => handleCompleteConstruction(asset)}
+                              disabled={actionLoading}
+                              className="w-full bg-green-600 hover:bg-green-500 text-white shadow-[0_0_10px_rgba(34,197,94,0.4)]"
+                            >
+                              <CheckCircle2 className="w-4 h-4 mr-1" /> Klaim Sekarang
+                            </Button>
+                          </div>
                         ) : (
                           <Button
                             size="sm"
@@ -1072,9 +1184,9 @@ export default function AssetsPage() {
                         </div>
                       )}
 
-                    {selectedAsset.isCraftingStation &&
+                    {selectedAsset.isCraftingStation && (
                       selectedAsset.recipes &&
-                      selectedAsset.recipes.length > 0 && (
+                      selectedAsset.recipes.length > 0 ? (
                         <div>
                           <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
                             Resep Crafting
@@ -1085,14 +1197,20 @@ export default function AssetsPage() {
                                 key={i}
                                 className="bg-[#111] border border-[#333] p-3 rounded-md"
                               >
-                                <div className="text-xs sm:text-sm text-white font-medium mb-2">
-                                  <span className="text-blue-400">
+                                <div className="text-xs sm:text-sm text-white font-medium mb-2 flex items-center flex-wrap gap-2">
+                                  <span className="text-blue-400 border border-blue-400/30 px-2 py-0.5 rounded bg-blue-900/10">
                                     {recipe.recipeName}
-                                  </span>{" "}
-                                  → {recipe.resultQuantity}x{" "}
-                                  <span className="text-purple-400">
-                                    {recipe.resultItemName}
                                   </span>
+                                  <span className="text-gray-400">→</span>
+                                  {recipe.resultItemName ? (
+                                    <span className="text-purple-400 font-bold">
+                                      {recipe.resultQuantity}x {recipe.resultItemName}
+                                    </span>
+                                  ) : (
+                                    <span className="text-red-400 text-[10px] uppercase font-bold flex items-center gap-1 border border-red-500/30 px-1 py-0.5 rounded bg-red-900/20">
+                                      <AlertTriangle size={12} /> Output tidak terkonfigurasi
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                   {recipe.materials &&
@@ -1114,7 +1232,17 @@ export default function AssetsPage() {
                             ))}
                           </div>
                         </div>
-                      )}
+                      ) : (
+                        <div>
+                          <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
+                            Resep Crafting
+                          </h3>
+                          <div className="bg-[#111] border border-[#333] p-4 rounded-md text-center">
+                            <p className="text-sm text-gray-500 italic">Station ini belum punya recipe industri</p>
+                          </div>
+                        </div>
+                      )
+                    )}
 
                     <div>
                       <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
