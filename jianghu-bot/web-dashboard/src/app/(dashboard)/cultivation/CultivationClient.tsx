@@ -220,7 +220,9 @@ export default function CultivationClient() {
                                         <span className="text-gray-300">Tanpa Pil</span>
                                     </label>
 
-                                    {usablePills.map(p => (
+                                    {usablePills.map(p => {
+                                        const totalRate = Math.min(100, baseSuccessRate + p.bonusPercent);
+                                        return (
                                         <label key={p.itemId} className="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-[#222]">
                                             <input
                                                 type="radio"
@@ -232,15 +234,16 @@ export default function CultivationClient() {
                                             />
                                             <div className="flex flex-col">
                                                 <span className="text-green-400 font-bold">{p.name} (x{p.count})</span>
-                                                <span className="text-xs text-green-200">+{(p.effectValue * 100).toFixed(0)}% Peluang Sukses</span>
+                                                <span className="text-xs text-green-200">+{p.bonusPercent}% Peluang (Total: {totalRate}%)</span>
                                             </div>
                                         </label>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             )}
 
                             <p className="text-xs text-red-400 mt-2 text-center">
-                                Risiko Gagal: Kehilangan ~{Math.floor(maxQi * 0.25).toLocaleString()} Qi (25% max Qi)
+                                Risiko Gagal: Kehilangan ~{cultivationData.penaltyPreview ? cultivationData.penaltyPreview.qiAmount.toLocaleString() : Math.floor(maxQi * 0.25).toLocaleString()} Qi ({cultivationData.penaltyPreview ? cultivationData.penaltyPreview.percent : 25}% max Qi)
                             </p>
 
                             <Button
