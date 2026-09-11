@@ -5,6 +5,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
 const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
+const { payCurrency } = require('../../utils/currency');
 const RECIPES = require('../../utils/professionsRecipes');
 const { ensureToolDurability, canUseTool } = require('../../utils/inventoryToolHelper');
 
@@ -90,14 +91,18 @@ router.post('/farming/unlock-slot', verifyToken, async (req, res) => {
             costInCopper = 1 * RATE_TO_COPPER.jade; // 1 Jade
         }
 
-        const c = player.currency;
-        const totalCopper = c.copper + c.silver * RATE_TO_COPPER.silver + c.gold * RATE_TO_COPPER.gold + c.jade * RATE_TO_COPPER.jade + c.spirit * RATE_TO_COPPER.spirit;
-
-        if (totalCopper < costInCopper) {
-            return res.status(400).json({ error: 'Uang tidak cukup untuk membuka petak ini.' });
+        if (!payCurrency(player.currency, costInCopper, 'copper')) {
+            const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+            const totalCopper = c.copper + (c.silver * RATE_TO_COPPER.silver) + (c.gold * RATE_TO_COPPER.gold) + (c.jade * RATE_TO_COPPER.jade) + (c.spirit * RATE_TO_COPPER.spirit);
+            let costStr = "";
+            if (nextSlot >= 2 && nextSlot <= 5) costStr = "50 Silver";
+            else if (nextSlot >= 6 && nextSlot <= 10) costStr = "5 Gold";
+            else if (nextSlot >= 11 && nextSlot <= 15) costStr = "20 Gold";
+            else if (nextSlot >= 16 && nextSlot <= 20) costStr = "1 Jade";
+            return res.status(400).json({ error: `Uang tidak cukup. Butuh: ${costStr} (setara ${costInCopper} copper). Saldo setara: ${totalCopper} copper.` });
         }
 
-        player.currency.copper -= costInCopper;
+        player.markModified('currency');
         player.professions.farming.farmPlots.push({ isUnlocked: true });
 
         await player.save();
@@ -193,14 +198,13 @@ router.post('/fishing/unlock-zone', verifyToken, async (req, res) => {
         if (zoneId === 2) costInCopper = 5 * RATE_TO_COPPER.gold; // 5 Gold
         else if (zoneId === 3) costInCopper = 20 * RATE_TO_COPPER.gold; // 20 Gold
 
-        const c = player.currency;
-        const totalCopper = c.copper + c.silver * RATE_TO_COPPER.silver + c.gold * RATE_TO_COPPER.gold + c.jade * RATE_TO_COPPER.jade + c.spirit * RATE_TO_COPPER.spirit;
-
-        if (totalCopper < costInCopper) {
-            return res.status(400).json({ error: `Uang tidak cukup. Butuh ${zoneId === 2 ? '5 Gold' : '20 Gold'}.` });
+        if (!payCurrency(player.currency, costInCopper, 'copper')) {
+            const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+            const totalCopper = c.copper + (c.silver * RATE_TO_COPPER.silver) + (c.gold * RATE_TO_COPPER.gold) + (c.jade * RATE_TO_COPPER.jade) + (c.spirit * RATE_TO_COPPER.spirit);
+            return res.status(400).json({ error: `Uang tidak cukup. Butuh: ${zoneId === 2 ? '5 Gold' : '20 Gold'} (setara ${costInCopper} copper). Saldo setara: ${totalCopper} copper.` });
         }
 
-        player.currency.copper -= costInCopper;
+        player.markModified('currency');
         player.professions.fishing.unlockedFishingZones.push(zoneId);
 
         await player.save();
@@ -240,25 +244,11 @@ router.post('/unlock', verifyToken, async (req, res) => {
             });
         }
 
-        const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
-        const totalCopperAvailable = c.copper + (c.silver * 100) + (c.gold * 10000) + (c.jade * 1000000) + (c.spirit * 100000000);
-
-        if (totalCopperAvailable < PROFESSION_COST_COPPER) {
-             return res.status(400).json({ error: `Uang tidak cukup. Butuh 50 Silver.` });
+        if (!payCurrency(player.currency, PROFESSION_COST_COPPER, 'copper')) {
+            const c = player.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+            const totalCopperAvailable = c.copper + (c.silver * RATE_TO_COPPER.silver) + (c.gold * RATE_TO_COPPER.gold) + (c.jade * RATE_TO_COPPER.jade) + (c.spirit * RATE_TO_COPPER.spirit);
+            return res.status(400).json({ error: `Uang tidak cukup. Butuh: 50 Silver (setara ${PROFESSION_COST_COPPER} copper). Saldo setara: ${totalCopperAvailable} copper.` });
         }
-
-        // Proper deduction
-        let remainingToDeduct = PROFESSION_COST_COPPER;
-        let pool = totalCopperAvailable - PROFESSION_COST_COPPER;
-
-        player.currency.spirit = Math.floor(pool / 100000000);
-        pool %= 100000000;
-        player.currency.jade = Math.floor(pool / 1000000);
-        pool %= 1000000;
-        player.currency.gold = Math.floor(pool / 10000);
-        pool %= 10000;
-        player.currency.silver = Math.floor(pool / 100);
-        player.currency.copper = pool % 100;
 
         player.markModified('currency');
 
