@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { toast } from '@/components/ui/Toast';
+import { getTotalCopperEquivalent, RATE_TO_COPPER } from '@/lib/currency';
+
 
 interface Plot {
     isDepleted: boolean;
@@ -64,18 +66,25 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect, playe
     let costText = "";
     let hasEnoughCurrency = true;
     const nextSlot = currentSlots + 1;
+    let costCopper = 0;
+
     if (nextSlot >= 2 && nextSlot <= 5) {
         costText = "50 Silver";
-        hasEnoughCurrency = playerCurrency ? playerCurrency.silver >= 50 : true;
+        costCopper = 50 * RATE_TO_COPPER.silver;
     } else if (nextSlot >= 6 && nextSlot <= 10) {
         costText = "5 Gold";
-        hasEnoughCurrency = playerCurrency ? playerCurrency.gold >= 5 : true;
+        costCopper = 5 * RATE_TO_COPPER.gold;
     } else if (nextSlot >= 11 && nextSlot <= 15) {
         costText = "20 Gold";
-        hasEnoughCurrency = playerCurrency ? playerCurrency.gold >= 20 : true;
+        costCopper = 20 * RATE_TO_COPPER.gold;
     } else if (nextSlot >= 16 && nextSlot <= 20) {
         costText = "1 Jade";
-        hasEnoughCurrency = playerCurrency ? playerCurrency.jade >= 1 : true;
+        costCopper = 1 * RATE_TO_COPPER.jade;
+    }
+
+    if (playerCurrency) {
+        const totalEquivalent = getTotalCopperEquivalent(playerCurrency);
+        hasEnoughCurrency = totalEquivalent >= costCopper;
     }
 
     return (
