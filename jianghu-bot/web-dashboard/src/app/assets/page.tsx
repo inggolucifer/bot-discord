@@ -148,6 +148,7 @@ export default function AssetsPage() {
   const [guardCostText, setGuardCostText] = useState<string | null>(null);
   const [guardCostLoading, setGuardCostLoading] = useState(false);
   const [repairCostText, setRepairCostText] = useState<string | null>(null);
+  const [repairCanAfford, setRepairCanAfford] = useState<boolean | null>(null);
   const [activePageTab, setActivePageTab] = useState<
     "my-assets" | "build-asset"
   >("my-assets");
@@ -383,15 +384,21 @@ export default function AssetsPage() {
   }, [selectedAsset, activeTab, guardDurationDays]);
 
   useEffect(() => {
-    if (selectedAsset && selectedAsset.isDamaged && activeTab === "guard") {
+    if (selectedAsset && selectedAsset.isDamaged) {
       api
         .post("/player/assets/repair-cost", { assetId: selectedAsset.id })
         .then((res) => {
-          if (res.data.success) setRepairCostText(res.data.costText);
+          if (res.data.success) {
+             setRepairCostText(res.data.costText);
+             setRepairCanAfford(res.data.playerCanAfford);
+          }
         })
-        .catch((err) => setRepairCostText("Gagal memuat biaya"));
+        .catch((err) => {
+            setRepairCostText("Gagal memuat biaya");
+            setRepairCanAfford(false);
+        });
     }
-  }, [selectedAsset, activeTab]);
+  }, [selectedAsset]);
 
   const filteredMyAssets = assets.filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, asset.recipes) === activeFilter);
 
@@ -1141,6 +1148,33 @@ export default function AssetsPage() {
                   </button>
                 </div>
 
+
+                {/* Banner Rusak */}
+                {selectedAsset.isDamaged && (
+                  <div className="bg-red-950/40 border border-red-500/50 p-4 mb-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                      <h4 className="text-red-400 font-bold flex items-center gap-2 mb-1">
+                        <AlertTriangle size={16} /> Aset Rusak — perbaiki sebelum produksi
+                      </h4>
+                      <p className="text-xs text-gray-300">
+                        Aset ini mengalami kerusakan (Jenis: {selectedAsset.damageType || 'Tidak diketahui'}).
+                        <br />
+                        Biaya Perbaikan: <span className="font-semibold text-[#c5a880]">{repairCostText || "Memuat..."}</span>
+                      </p>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      onClick={handleRepairAsset}
+                      disabled={actionLoading || !repairCostText || repairCanAfford === false}
+                    >
+                      Perbaiki Sekarang
+                    </Button>
+                  </div>
+                )}
+
+
+
+
                 {activeTab === "info" && (
                   <div className="space-y-6">
                     <p className="text-sm text-gray-300 bg-black/30 p-3 rounded-lg border border-[#333]/50 leading-relaxed">
@@ -1514,33 +1548,7 @@ export default function AssetsPage() {
                       </Button>
                     </div>
 
-                    {selectedAsset.isDamaged && (
-                      <div className="bg-red-950/20 p-4 rounded-lg border border-red-900/50 mt-4 shadow-inner">
-                        <h4 className="text-sm font-bold text-red-400 mb-2 flex items-center gap-2">
-                          <AlertTriangle size={16} /> Aset Rusak
-                        </h4>
-                        <p className="text-xs text-gray-400 mb-4">
-                          Aset ini rusak akibat{" "}
-                          {selectedAsset.damageType === "bandit"
-                            ? "Serangan Bandit"
-                            : selectedAsset.damageType === "disaster"
-                              ? "Bencana Alam"
-                              : "Serangan"}
-                          . Produksi terhenti hingga diperbaiki.
-                        </p>
-                        <div className="text-sm text-[#c5a880] mb-4 font-bold">
-                          Biaya Perbaikan: {repairCostText || "Memuat..."}
-                        </div>
-                        <Button
-                          variant="destructive"
-                          onClick={handleRepairAsset}
-                          disabled={actionLoading || !repairCostText}
-                          className="w-full shadow-md"
-                        >
-                          Perbaiki Aset
-                        </Button>
-                      </div>
-                    )}
+
                   </div>
                 )}
               </div>
