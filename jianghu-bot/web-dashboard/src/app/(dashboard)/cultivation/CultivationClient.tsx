@@ -202,6 +202,12 @@ export default function CultivationClient() {
                                     <span className="text-gray-400">Peluang Sukses Dasar:</span>
                                     <span className="font-bold text-yellow-500">{baseSuccessRate}%</span>
                                 </div>
+                                <div className="flex justify-between border-t border-[#333] pt-2 mt-2">
+                                    <span className="text-gray-300 font-bold">Projected Rate:</span>
+                                    <span className="font-bold text-green-400">
+                                        {Math.min(100, baseSuccessRate + (currentUsePillId && usablePills ? (usablePills.find(p => p.itemId === currentUsePillId)?.bonusPercent || 0) : 0))}%
+                                    </span>
+                                </div>
                             </div>
 
                             {usablePills && usablePills.length > 0 && (
@@ -242,8 +248,8 @@ export default function CultivationClient() {
                                 </div>
                             )}
 
-                            <p className="text-xs text-red-400 mt-2 text-center">
-                                Risiko Gagal: Kehilangan ~{cultivationData.penaltyPreview ? cultivationData.penaltyPreview.qiAmount.toLocaleString() : Math.floor(maxQi * 0.25).toLocaleString()} Qi ({cultivationData.penaltyPreview ? cultivationData.penaltyPreview.percent : 25}% max Qi)
+                            <p className="text-xs text-red-400 mt-2 text-center bg-red-900/10 p-2 rounded border border-red-900/30">
+                                Risiko Gagal: Kehilangan {cultivationData.penaltyPreview ? cultivationData.penaltyPreview.percent : 25}% max Qi ≈ <span className="font-bold">{cultivationData.penaltyPreview ? cultivationData.penaltyPreview.qiAmount.toLocaleString() : Math.floor(maxQi * 0.25).toLocaleString()} Qi</span>
                             </p>
 
                             <Button

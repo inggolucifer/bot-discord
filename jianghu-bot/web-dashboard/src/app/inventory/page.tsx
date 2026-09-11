@@ -3,6 +3,7 @@
 import { Package, Search, Filter, Hammer, Loader2, XCircle } from "lucide-react";
 import FallbackImage from "@/components/FallbackImage";
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
@@ -48,6 +49,7 @@ const getHumanReadableEffect = (item: InventoryItem) => {
 
 export default function InventoryPage() {
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
 
   const [discardModalOpen, setDiscardModalOpen] = useState(false);
@@ -83,6 +85,7 @@ export default function InventoryPage() {
       setUseConfirmModalOpen(false);
       setItemToUse(null);
       fetchInventoryAndRecipes();
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     } catch (err: any) {
       toast.show({ message: err.response?.data?.error || 'Gagal menggunakan item.', type: 'error' });
     } finally {

@@ -18,6 +18,13 @@ const getGuidance = (itemName: string) => {
     return 'Gunakan di Profesi';
 };
 
+
+  const getChanceLabel = (chance: number) => {
+    if (chance >= 0.7) return 'Tinggi';
+    if (chance >= 0.4) return 'Sedang';
+    return 'Rendah';
+  };
+
 export default function ExplorePage() {
   const queryClient = useQueryClient();
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
@@ -328,6 +335,25 @@ export default function ExplorePage() {
                   </ul>
               </div>
 
+
+              <div className="bg-[#1a1a1a] p-4 rounded-lg mb-6 border border-[#333]">
+                  <h4 className="text-sm font-bold text-gray-300 mb-2 border-b border-[#333] pb-1">Hint Reward (Peluang):</h4>
+                  {selectedLocation.drops?.items?.length > 0 ? (
+                      <ul className="text-sm text-gray-400 space-y-1 grid grid-cols-2 gap-x-4">
+                          {selectedLocation.drops.items.map((drop: any, idx: number) => (
+                              <li key={idx} className="flex justify-between items-center bg-black/40 px-2 py-1 rounded">
+                                  <span className="truncate" title={drop.name}>{drop.name}</span>
+                                  <span className={`text-xs ${getChanceLabel(drop.chance) === 'Tinggi' ? 'text-green-400' : getChanceLabel(drop.chance) === 'Sedang' ? 'text-yellow-400' : 'text-red-400'}`}>
+                                      {getChanceLabel(drop.chance)}
+                                  </span>
+                              </li>
+                          ))}
+                      </ul>
+                  ) : (
+                      <p className="text-sm text-gray-500 italic">Reward dibuka saat klaim.</p>
+                  )}
+              </div>
+
               <div className="space-y-3 mb-8">
                 {selectedLocation.durations.map((hrs: number) => (
                   <label
@@ -384,7 +410,7 @@ export default function ExplorePage() {
                  <div className="bg-green-500/20 p-4 rounded-full inline-block mb-4">
                     <PackageOpen className="w-12 h-12 text-green-400" />
                  </div>
-                 <h2 className="text-3xl font-bold text-white mb-2">Eksplorasi Selesai!</h2>
+                 <h2 className="text-3xl font-bold text-[#c5a880] mb-2">Hasil Eksplorasi</h2>
                  <p className="text-gray-400">Berikut adalah item dan resource yang kamu temukan.</p>
               </div>
 
