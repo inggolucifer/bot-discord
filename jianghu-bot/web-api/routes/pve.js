@@ -202,7 +202,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
             const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
-            const exploration = await Exploration.findOne({ discordId: userId, status: 'exploring' }).session(session);
+            const exploration = await Exploration.findOne({ discordId: userId, status: 'exploring' }).populate('drops.items.itemId').session(session);
             if (!exploration) throw new CustomError('Tidak ada eksplorasi aktif.', 404);
 
             if (new Date() < exploration.endTime) {
@@ -217,12 +217,12 @@ router.post('/claim', authenticateToken, async (req, res) => {
             for (const dropItem of exploration.drops.items) {
                 const invItem = player.inventory.find(i => {
                      const id = i.itemId && i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
-                     return id === dropItem.itemId.toString();
+                     return id === (dropItem.itemId && dropItem.itemId._id ? dropItem.itemId._id.toString() : dropItem.itemId.toString());
                 });
                 if (invItem) {
                     invItem.quantity += dropItem.quantity;
                 } else {
-                    player.inventory.push({ itemId: dropItem.itemId, quantity: dropItem.quantity });
+                    player.inventory.push({ itemId: dropItem.itemId._id || dropItem.itemId, quantity: dropItem.quantity });
                 }
             }
 

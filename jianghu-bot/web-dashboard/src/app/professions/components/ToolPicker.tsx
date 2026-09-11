@@ -60,13 +60,13 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
                             ) : (
                                 <div className="flex flex-col items-end w-full">
                                     <div className={`text-xs font-bold mb-1 ${tool.durability < 10 ? 'text-red-400' : 'text-gray-300'}`}>
-                                        {tool.durability} / {tool.itemId.maxDurability || '?'}
+                                        {tool.durability} / {tool.itemId.maxDurability || "?"} Durability
                                     </div>
                                     <div className="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full ${
-                                                tool.durability / (tool.itemId.maxDurability || 100) > 0.5 ? 'bg-green-500' :
-                                                tool.durability / (tool.itemId.maxDurability || 100) > 0.2 ? 'bg-yellow-500' : 'bg-red-500'
+                                                tool.durability / (tool.itemId.maxDurability || 100) >= 0.6 ? 'bg-green-500' :
+                                                tool.durability / (tool.itemId.maxDurability || 100) >= 0.3 ? 'bg-yellow-500' : 'bg-red-500'
                                             }`}
                                             style={{ width: `${Math.min(100, Math.max(0, (tool.durability / (tool.itemId.maxDurability || 100)) * 100))}%` }}
                                         ></div>
