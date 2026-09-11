@@ -9,15 +9,19 @@ function calculateRepairCost(assetConfig) {
     const neededMaterials = [];
     let repairCostInCopper = 0;
 
+    const MIN_REPAIR_COPPER = 30;
+
     // Logic repair: 20% of build requirements OR 20% of base price
     if (assetConfig.buildable && assetConfig.buildRequirements && assetConfig.buildRequirements.length > 0) {
         for (const req of assetConfig.buildRequirements) {
             const repairQty = Math.max(1, Math.floor(req.quantity * 0.2));
             neededMaterials.push({ itemId: req.itemId, itemName: req.itemName, quantity: repairQty });
         }
+        repairCostInCopper = 0; // Mode materials
     } else {
         const totalBasePriceInCopper = (assetConfig.basePrice || 0) * (RATE_TO_COPPER[assetConfig.priceCurrency] || 0);
-        repairCostInCopper = Math.max(1, Math.floor(totalBasePriceInCopper * 0.2));
+        const raw = Math.floor(totalBasePriceInCopper * 0.2);
+        repairCostInCopper = Math.max(MIN_REPAIR_COPPER, raw, 1);
     }
 
     return { neededMaterials, repairCostInCopper };
