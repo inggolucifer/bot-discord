@@ -996,16 +996,23 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
         const ownedAsset = player.assets.find(a => a.assetId._id.equals(assetConfig._id) || a.assetId.equals(assetConfig._id));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
         if (ownedAsset.status !== 'active') return res.status(400).json({ error: 'Aset belum selesai dibangun, tidak bisa dijaga.' });
+        // Guard allowed while damaged for protection
 
         const { calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
+        const { convertFromCopper } = require('../../utils/currencyNormalize');
+        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+
         const dailyCostCopper = calculateDailyGuardCost(assetConfig);
         const totalCostCopper = dailyCostCopper * hari;
+        const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
 
-        if (!hasEnoughCurrency(player.currency, { copper: totalCostCopper })) {
-            return res.status(400).json({ error: 'Tidak memiliki cukup uang untuk biaya guard.' });
+        if (!hasEnoughCurrency(player.currency, totalCostCopper, 'copper')) {
+            return res.status(400).json({ error: `Tidak memiliki cukup uang untuk biaya guard. Butuh ${formattedCost}.` });
         }
 
-        payCurrency(player.currency, { copper: totalCostCopper });
+        if (!payCurrency(player.currency, totalCostCopper, 'copper')) {
+            return res.status(400).json({ error: 'Gagal memotong biaya uang.' });
+        }
 
         const now = Date.now();
         let currentEndTime = ownedAsset.guardEndTime ? ownedAsset.guardEndTime.getTime() : now;
@@ -1016,12 +1023,23 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
         await player.save();
 
         const { logTransaction } = require('../../utils/logger');
-        const { convertFromCopper } = require('../../utils/currencyNormalize');
-        const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
+        try {
+            const client = req.app.get('client');
+            if (client) {
+                await logTransaction(client, {
+                    guildId,
+                    type: 'player_guard_asset',
+                    fromUserId: userId,
+                    amount: totalCostCopper,
+                    currency: 'copper',
+                    itemDescription: `Guard asset: ${assetConfig.name} for ${hari} days. Cost: ${formattedCost}`
+                });
+            }
+        } catch (logError) {
+            console.error('[API-PLAYER] Warning: Failed to log transaction for asset guard:', logError);
+        }
 
-        await logTransaction(guildId, 'player_guard_asset', userId, null, null, totalCostCopper, `Guard asset: ${assetConfig.name} for ${hari} days. Cost: ${formattedCost}`);
-
-        res.json({ message: `Berhasil menyewa guard untuk ${hari} hari.`, guardEndTime: ownedAsset.guardEndTime });
+        res.json({ message: `Berhasil menyewa guard untuk ${hari} hari.`, guardEndTime: ownedAsset.guardEndTime, cost: formattedCost });
 
     } catch (error) {
         console.error('[API-PLAYER] Error guarding asset:', error);
@@ -1047,11 +1065,19 @@ router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
+        const { calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
+        const { convertFromCopper } = require('../../utils/currencyNormalize');
+
         const dailyCostCopper = calculateDailyGuardCost(ownedAsset.assetId);
         const totalCostCopper = dailyCostCopper * hariParsed;
         const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
 
-        res.json({ success: true, costText: formattedCost, costCopper: totalCostCopper });
+        res.json({
+            success: true,
+            costText: formattedCost,
+            costCopper: totalCostCopper,
+            dailyCostCopper: dailyCostCopper
+        });
     } catch (error) {
         console.error('[API-PLAYER] Error fetching guard cost:', error);
         res.status(500).json({ error: 'Terjadi kesalahan internal server saat menghitung biaya guard.' });

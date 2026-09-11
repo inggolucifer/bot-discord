@@ -391,7 +391,7 @@ export default function AssetsPage() {
       }
     } catch (err: any) {
       console.error("Error fetching guard cost", err);
-      setGuardCostText("Gagal memuat biaya");
+      setGuardCostText(err.response?.data?.error || "Gagal memuat biaya");
     } finally {
       setGuardCostLoading(false);
     }
