@@ -51,7 +51,13 @@ router.get('/', authenticateToken, async (req, res) => {
             priceCurrency: slot.itemId.priceCurrency || 'copper',
             imageUrl: slot.itemId.imageUrl, // Include image URL
             emoji: getEmojiForShopItem(slot.itemId.category, 'item'),
-            effect: slot.itemId.effect
+            effect: slot.itemId.effect,
+            effectType: slot.itemId.effectType,
+            effectValue: slot.itemId.effectValue,
+            effectDurationMinutes: slot.itemId.effectDurationMinutes,
+            effectTierGate: slot.itemId.effectTierGate,
+            toolType: slot.itemId.toolType,
+            durability: slot.durability
         }));
 
         res.json({
@@ -390,7 +396,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                 player.professions.unlockedBlueprints.push(item.name);
                 player.markModified('professions.unlockedBlueprints');
                 buffMessage = ` Blueprint ${item.name} berhasil dipelajari! Resep baru sekarang tersedia.`;
-                effectsApplied.push('blueprint_unlocked');
+                effectsApplied.push(`blueprint_unlocked:${item.name}`);
             }
 
             // 1. Process new effectType structure if present
