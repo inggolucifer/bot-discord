@@ -149,6 +149,7 @@ export default function AssetsPage() {
   const [guardCostLoading, setGuardCostLoading] = useState(false);
   const [repairCostText, setRepairCostText] = useState<string | null>(null);
   const [repairCanAfford, setRepairCanAfford] = useState<boolean | null>(null);
+  const [repairCostLoading, setRepairCostLoading] = useState(false);
   const [activePageTab, setActivePageTab] = useState<
     "my-assets" | "build-asset"
   >("my-assets");
@@ -189,6 +190,17 @@ export default function AssetsPage() {
       setAssets(res.data.data);
       if (res.data.assetSlots) {
         setAssetSlots(res.data.assetSlots);
+      }
+
+      // Sync selectedAsset if it's currently open
+      if (selectedAsset) {
+        const updatedSelectedAsset = res.data.data.find((a: Asset) => a.id === selectedAsset.id);
+        if (updatedSelectedAsset) {
+          setSelectedAsset(updatedSelectedAsset);
+        } else {
+          // If the asset was deleted, clear the selection
+          setSelectedAsset(null);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -293,6 +305,10 @@ export default function AssetsPage() {
 
   const handleWorkSelf = async () => {
     if (!selectedAsset) return;
+    if (selectedAsset.isDamaged) {
+      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum bekerja." });
+      return;
+    }
     setActionLoading(true);
     setActionMessage(null);
     try {
@@ -337,6 +353,10 @@ export default function AssetsPage() {
 
   const handleHireNpc = async () => {
     if (!selectedAsset) return;
+    if (selectedAsset.isDamaged) {
+      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum bekerja." });
+      return;
+    }
     setActionLoading(true);
     setActionMessage(null);
     try {
@@ -385,6 +405,9 @@ export default function AssetsPage() {
 
   useEffect(() => {
     if (selectedAsset && selectedAsset.isDamaged) {
+      setRepairCostText(null);
+      setRepairCanAfford(null);
+      setRepairCostLoading(true);
       api
         .post("/player/assets/repair-cost", { assetId: selectedAsset.id })
         .then((res) => {
@@ -394,11 +417,19 @@ export default function AssetsPage() {
           }
         })
         .catch((err) => {
-            setRepairCostText("Gagal memuat biaya");
+            setRepairCostText(
+              err.response?.data?.error || "Gagal memuat biaya"
+            );
             setRepairCanAfford(false);
+        })
+        .finally(() => {
+            setRepairCostLoading(false);
         });
+    } else {
+      setRepairCostText(null);
+      setRepairCanAfford(null);
     }
-  }, [selectedAsset]);
+  }, [selectedAsset?.id, selectedAsset?.isDamaged]);
 
   const filteredMyAssets = assets.filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, asset.recipes) === activeFilter);
 
@@ -423,14 +454,18 @@ export default function AssetsPage() {
   const handleRepairAsset = async () => {
     if (!selectedAsset) return;
     setActionLoading(true);
+    setActionMessage(null);
     try {
-      await api.post("/player/assets/repair", { assetId: selectedAsset.id });
-      fetchAssets();
+      const res = await api.post("/player/assets/repair", { assetId: selectedAsset.id });
+      setActionMessage({ type: "success", text: res.data.message || "Aset berhasil diperbaiki." });
+      await fetchAssets();
       setRepairCostText(null);
+      setRepairCanAfford(null);
     } catch (err: any) {
-      alert(
-        err.response?.data?.error || "Terjadi kesalahan saat memperbaiki aset.",
-      );
+      setActionMessage({
+        type: "error",
+        text: err.response?.data?.error || "Terjadi kesalahan saat memperbaiki aset.",
+      });
     } finally {
       setActionLoading(false);
     }
@@ -438,6 +473,10 @@ export default function AssetsPage() {
 
   const handleMoveWorker = async () => {
     if (!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
+    if (selectedAsset.isDamaged) {
+      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum memindahkan pekerja." });
+      return;
+    }
     setMoveLoading(true);
     setActionMessage(null);
     try {
@@ -545,6 +584,10 @@ export default function AssetsPage() {
   };
 
   const handleCompleteConstruction = async (asset: Asset) => {
+    if (asset.isDamaged) {
+      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum mengambil hasil." });
+      return;
+    }
     setActionLoading(true);
     setActionMessage(null);
     try {
@@ -858,7 +901,7 @@ export default function AssetsPage() {
                         </div>
                       </div>
 
-                      {asset.isDamaged && (
+                      {(asset.isDamaged || asset.status === 'Rusak') && (
                         <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded border border-red-800 shadow animate-pulse flex items-center gap-1 z-10">
                           <AlertTriangle size={12} />
                           RUSAK
@@ -907,7 +950,7 @@ export default function AssetsPage() {
                               size="sm"
                               variant="default"
                               onClick={() => handleCompleteConstruction(asset)}
-                              disabled={actionLoading}
+                              disabled={actionLoading || asset.isDamaged}
                               className="w-full bg-green-600 hover:bg-green-500 text-white shadow-[0_0_10px_rgba(34,197,94,0.4)]"
                             >
                               <CheckCircle2 className="w-4 h-4 mr-1" /> Klaim Sekarang
@@ -1165,7 +1208,7 @@ export default function AssetsPage() {
                     <Button
                       variant="destructive"
                       onClick={handleRepairAsset}
-                      disabled={actionLoading || !repairCostText || repairCanAfford === false}
+                      disabled={actionLoading || repairCostLoading || !repairCostText || repairCanAfford === false}
                     >
                       Perbaiki Sekarang
                     </Button>
@@ -1333,6 +1376,7 @@ export default function AssetsPage() {
                           onClick={handleWorkSelf}
                           disabled={
                             actionLoading ||
+                            selectedAsset.isDamaged ||
                             (!selectedAsset.underConstruction &&
                               selectedAsset.status === "active" &&
                               selectedAsset.assignedWorkers.length >=
@@ -1341,6 +1385,7 @@ export default function AssetsPage() {
                               selectedAsset.status !== "active") &&
                               selectedAsset.assignedWorkers.length >= 4)
                           }
+                          title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum bekerja." : undefined}
                         >
                           <Pickaxe className="mr-2 h-4 w-4" /> Kerja Mandiri di
                           Aset Ini
@@ -1351,6 +1396,8 @@ export default function AssetsPage() {
                         variant="secondary"
                         className="w-full"
                         onClick={() => router.push("/worker")}
+                        disabled={selectedAsset.isDamaged}
+                        title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum menyewa pekerja." : undefined}
                       >
                         <Users className="mr-2 h-4 w-4" /> Sewa Pekerja dari
                         Papan
@@ -1384,6 +1431,7 @@ export default function AssetsPage() {
                             onClick={handleHireNpc}
                             disabled={
                               actionLoading ||
+                              selectedAsset.isDamaged ||
                               (!selectedAsset.underConstruction &&
                                 selectedAsset.status === "active" &&
                                 selectedAsset.assignedWorkers.length >=
@@ -1392,6 +1440,7 @@ export default function AssetsPage() {
                                 selectedAsset.status !== "active") &&
                                 selectedAsset.assignedWorkers.length >= 4)
                             }
+                            title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum bekerja." : undefined}
                           >
                             Sewa NPC ({npcDuration * 5} Silver)
                           </Button>
@@ -1426,7 +1475,8 @@ export default function AssetsPage() {
                             onChange={(e) =>
                               setSelectedWorkerIdToMove(e.target.value)
                             }
-                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none"
+                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={selectedAsset.isDamaged}
                           >
                             <option value="" disabled>
                               -- Pilih Pekerja --
@@ -1448,7 +1498,8 @@ export default function AssetsPage() {
                           <select
                             value={targetAssetId}
                             onChange={(e) => setTargetAssetId(e.target.value)}
-                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none"
+                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={selectedAsset.isDamaged}
                           >
                             <option value="" disabled>
                               -- Pilih Aset --
@@ -1489,9 +1540,11 @@ export default function AssetsPage() {
                           onClick={handleMoveWorker}
                           disabled={
                             moveLoading ||
+                            selectedAsset.isDamaged ||
                             !selectedWorkerIdToMove ||
                             !targetAssetId
                           }
+                          title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum memindahkan pekerja." : undefined}
                           className="w-full mt-4"
                           variant="default"
                         >
