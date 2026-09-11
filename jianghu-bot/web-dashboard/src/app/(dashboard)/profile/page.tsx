@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -131,8 +131,32 @@ export default function ProfilePage() {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6">
 
-      {/* Top CTA Row */}
-      <div className="flex flex-wrap gap-4 mb-6 border-b border-[#333] pb-6">
+      {/* Header Identitas */}
+      <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-4">
+         <div className="w-20 h-20 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0">
+            <FallbackImage src={profile.characterImage || ''} alt={profile.characterName} fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">👤</div>} />
+         </div>
+         <div className="text-center md:text-left flex-1">
+            <h2 className="text-2xl font-bold text-gray-200">{profile.characterName}</h2>
+            <p className="text-sm text-gray-400 mb-2">{profile.sect || 'Tanpa Sekte'}</p>
+            <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+               <span className="inline-flex items-center gap-1 bg-blue-900/40 border border-blue-900/50 rounded px-2 py-1 text-xs text-blue-300 font-bold">
+                  <Zap size={12} /> {profile.systemCultivation?.realm || 'Fondasi Fana'} (Tahap {profile.systemCultivation?.stage || 0})
+               </span>
+               {profile.systemCultivation?.isFlawedFoundation && (
+                   <span
+                      className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
+                      title="Penalti -5% All Stats karena menghancurkan fondasi fana secara paksa."
+                   >
+                      Fondasi Cacat
+                   </span>
+               )}
+            </div>
+         </div>
+      </div>
+
+      {/* CTA Navigation Row */}
+      <div className="flex flex-wrap gap-4 mb-6">
           <Link href="/inventory" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
               <Backpack className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
               <span className="text-sm font-bold text-gray-300">Inventory</span>
@@ -150,7 +174,7 @@ export default function ProfilePage() {
                 <Sprout className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
                 {farmSummary.ready > 0 && (
                     <span className="absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                        {farmSummary.ready}
+                        Panen x{farmSummary.ready}
                     </span>
                 )}
               </div>
@@ -160,206 +184,143 @@ export default function ProfilePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        {/* Left Column: Identity, Cultivation, Energy, Currency, Buffs, Farming Summary (Span 4) */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg">
-             <div className="flex items-center gap-4 mb-6">
-                <div className="w-20 h-20 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0">
-                   <FallbackImage src={profile.characterImage || ''} alt={profile.characterName} fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">👤</div>} />
-                </div>
-                <div>
-                   <h2 className="text-xl font-bold text-gray-200">{profile.characterName}</h2>
-                   <p className="text-sm text-gray-400">{profile.sect || 'Tanpa Sekte'}</p>
-                </div>
-             </div>
+        {/* Left Column: Resources, Combat Stats, Equipment (Span 6) */}
+        <div className="lg:col-span-6 space-y-6 flex flex-col">
+          {/* Resources */}
+          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg space-y-4">
+            <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider border-b border-[#333] pb-2">Resources</h3>
+            {/* Energy */}
+            <div className="bg-black/40 p-3 rounded border border-[#333]">
+               <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs text-green-400 uppercase font-bold tracking-wider flex items-center gap-1"><Activity size={14}/> Energy</span>
+                  <span className="text-xs text-gray-300 font-bold">{Math.floor(currentEnergy)} / {maxEnergy}</span>
+               </div>
+               <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-700/50">
+                   <div className="bg-green-500 h-2 transition-all duration-500" style={{ width: `${energyPercent}%` }}></div>
+               </div>
+            </div>
 
-             <div className="space-y-4">
-                {/* Cultivation */}
-                <div className="bg-blue-900/20 p-3 rounded border border-blue-900/50">
-                   <div className="flex items-center gap-2 mb-1">
-                      <Zap size={16} className="text-blue-400" />
-                      <span className="text-xs text-blue-400 uppercase font-bold tracking-wider">Kultivasi Sistem</span>
-                   </div>
-                   <div className="text-gray-200 font-bold flex items-center flex-wrap gap-2">
-                      <span>{profile.systemCultivation?.realm || 'Fondasi Fana'} <span className="text-blue-300 font-normal text-sm ml-1">(Tahap {profile.systemCultivation?.stage || 0})</span></span>
-                      {profile.systemCultivation?.isFlawedFoundation && (
-                          <span
-                             className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
-                             title="Penalti -5% All Stats karena menghancurkan fondasi fana secara paksa."
-                          >
-                             Fondasi Cacat
+            {/* Currency */}
+            <div className="bg-black/40 p-3 rounded border border-[#333]">
+               <h3 className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-2 flex items-center gap-1"><Coins size={14}/> Kekayaan</h3>
+               <div className="flex flex-wrap gap-3 text-sm font-bold text-gray-200">
+                  <span className="flex items-center gap-1"><span className="text-cyan-400">💎</span> {currency.spirit?.toLocaleString() || 0}</span>
+                  <span className="flex items-center gap-1"><span className="text-emerald-400">🟢</span> {currency.jade?.toLocaleString() || 0}</span>
+                  <span className="flex items-center gap-1"><span className="text-yellow-400">🟡</span> {currency.gold?.toLocaleString() || 0}</span>
+                  <span className="flex items-center gap-1"><span className="text-gray-300">⚪</span> {currency.silver?.toLocaleString() || 0}</span>
+                  <span className="flex items-center gap-1"><span className="text-amber-600">🟤</span> {currency.copper?.toLocaleString() || 0}</span>
+               </div>
+            </div>
+          </div>
+
+          {/* Combat Stats & Equipment */}
+          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col items-center flex-1">
+              <h3 className="text-lg font-bold text-[#c5a880] mb-6 w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
+              <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-8">
+                 {/* Decorative center line */}
+                 <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
+                 {equipmentSlots.map(slot => {
+                   const equippedId = equipment[slot.id];
+                   const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                   const itemData = equippedInvItem?.itemId;
+
+                   return (
+                     <motion.div
+                        key={slot.id}
+                        whileHover={{ scale: 1.02 }}
+                        className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
+                        onClick={() => equippedId && handleUnequip(slot.id)}
+                     >
+                       {equippedInvItem ? (
+                          <>
+                             <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
+                             <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name || 'Unknown'}</div>
+                             <div className="text-[10px] text-gray-500 mt-1 capitalize">{slot.id}</div>
+                             <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <span className="text-xs font-bold text-red-100">Click to Unequip</span>
+                             </div>
+                          </>
+                       ) : (
+                          <>
+                             <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
+                             <div className="text-xs text-gray-600 font-bold uppercase tracking-wide">{slot.label}</div>
+                          </>
+                       )}
+                     </motion.div>
+                   );
+                 })}
+              </div>
+
+              <div className="w-full bg-black/40 p-4 rounded border border-[#333]">
+                 <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
+                 <div className="grid grid-cols-1 gap-y-3">
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">HP</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-green-400 text-lg">{combatStats.hp?.toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? `+ Equip ${combatStats._equip.hp}` : ''})
                           </span>
-                      )}
-                   </div>
-                </div>
-
-                {/* Energy */}
-                <div className="bg-black/40 p-3 rounded border border-[#333]">
-                   <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-green-400 uppercase font-bold tracking-wider flex items-center gap-1"><Activity size={14}/> Energy</span>
-                      <span className="text-xs text-gray-300 font-bold">{Math.floor(currentEnergy)} / {maxEnergy}</span>
-                   </div>
-                   <div className="w-full bg-gray-900 rounded-full h-2 overflow-hidden border border-gray-700/50">
-                       <div className="bg-green-500 h-2 transition-all duration-500" style={{ width: `${energyPercent}%` }}></div>
-                   </div>
-                </div>
-
-                {/* Currency */}
-                <div className="bg-black/40 p-3 rounded border border-[#333]">
-                   <h3 className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-2 flex items-center gap-1"><Coins size={14}/> Kekayaan</h3>
-                   <div className="flex flex-wrap gap-3 text-sm font-bold text-gray-200">
-                      {currency.spirit > 0 && <span className="flex items-center gap-1"><span className="text-cyan-400">💎</span> {currency.spirit.toLocaleString()}</span>}
-                      {currency.jade > 0 && <span className="flex items-center gap-1"><span className="text-emerald-400">🟢</span> {currency.jade.toLocaleString()}</span>}
-                      <span className="flex items-center gap-1"><span className="text-yellow-400">🟡</span> {currency.gold.toLocaleString()}</span>
-                      <span className="flex items-center gap-1"><span className="text-gray-300">⚪</span> {currency.silver.toLocaleString()}</span>
-                      <span className="flex items-center gap-1"><span className="text-amber-600">🟤</span> {currency.copper.toLocaleString()}</span>
-                   </div>
-                </div>
-
-                {/* Buffs */}
-                {activeBuffs.length > 0 && (
-                    <div className="bg-black/40 p-3 rounded border border-[#333]">
-                       <h3 className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-2">Active Buffs</h3>
-                       <div className="flex flex-col gap-2">
-                          {activeBuffs.map((buff: any, idx: number) => {
-                             const timeLeft = Math.max(0, new Date(buff.expiresAt).getTime() - now.getTime());
-                             const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                             const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-
-                             return (
-                                 <div key={idx} className="bg-indigo-900/30 border border-indigo-500/30 rounded px-2 py-1.5 flex justify-between items-center text-xs">
-                                     <span className="text-indigo-200 font-medium capitalize">{buff.buffType.replace('_', ' ')} <span className="text-green-400 font-bold ml-1">+{buff.value}</span></span>
-                                     <span className="text-gray-400 flex items-center gap-1"><Clock size={10}/> {hours > 0 ? `${hours}j ${mins}m` : `${mins}m`}</span>
-                                 </div>
-                             );
-                          })}
                        </div>
                     </div>
-                )}
-
-                {/* Farming Summary */}
-                {profile.professions?.farming?.isUnlocked && (
-                    <div className="bg-black/40 p-3 rounded border border-[#333]">
-                       <div className="flex justify-between items-center mb-2">
-                           <h3 className="text-xs text-gray-400 uppercase font-bold tracking-wider">Status Ladang</h3>
-                           <Link href="/professions/farming" className="text-[10px] text-[#c5a880] hover:underline">Kelola &rarr;</Link>
-                       </div>
-                       <div className="grid grid-cols-4 gap-1 text-center text-xs font-bold">
-                           <div className="bg-green-900/30 border border-green-700/50 rounded py-1 text-green-400">
-                               <div className="text-lg">{farmSummary.ready}</div>
-                               <div className="text-[9px] uppercase">Ready</div>
-                           </div>
-                           <div className="bg-blue-900/30 border border-blue-700/50 rounded py-1 text-blue-400">
-                               <div className="text-lg">{farmSummary.growing}</div>
-                               <div className="text-[9px] uppercase">Tumbuh</div>
-                           </div>
-                           <div className="bg-gray-800/50 border border-gray-600/50 rounded py-1 text-gray-300">
-                               <div className="text-lg">{farmSummary.empty}</div>
-                               <div className="text-[9px] uppercase">Kosong</div>
-                           </div>
-                           <div className="bg-red-900/30 border border-red-700/50 rounded py-1 text-red-400">
-                               <div className="text-lg">{farmSummary.depleted}</div>
-                               <div className="text-[9px] uppercase">Gersang</div>
-                           </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">ATK</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-red-400 text-lg">{combatStats.atk?.toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? `+ Equip ${combatStats._equip.atk}` : ''})
+                          </span>
                        </div>
                     </div>
-                )}
-             </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">DEF</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-blue-400 text-lg">{combatStats.def?.toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? `+ Equip ${combatStats._equip.def}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">SPD</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-yellow-400 text-lg">{combatStats.spd?.toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? `+ Equip ${combatStats._equip.spd}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                 </div>
+                 <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
+                    <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
+                 </p>
+              </div>
           </div>
         </div>
 
-        {/* Middle Column: Paperdoll & Combat Stats (Span 4) */}
-        <div className="lg:col-span-4 space-y-6">
-            <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col items-center">
-                <h3 className="text-lg font-bold text-[#c5a880] mb-6 w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
+        {/* Right Column: Active Buffs, Professions, Farming Summary, Available Equip (Span 6) */}
+        <div className="lg:col-span-6 space-y-6 flex flex-col">
 
-                <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-8">
-                   {/* Decorative center line */}
-                   <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
+            {/* Buffs */}
+            {activeBuffs.length > 0 && (
+                <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg">
+                   <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Active Buffs</h3>
+                   <div className="flex flex-col gap-2">
+                      {activeBuffs.map((buff: any, idx: number) => {
+                         const timeLeft = Math.max(0, new Date(buff.expiresAt).getTime() - now.getTime());
+                         const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                         const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 
-                   {equipmentSlots.map(slot => {
-                     const equippedId = equipment[slot.id];
-                     const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
-                     const itemData = equippedInvItem?.itemId;
-
-                     return (
-                       <motion.div
-                          key={slot.id}
-                          whileHover={{ scale: 1.02 }}
-                          className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
-                          onClick={() => equippedId && handleUnequip(slot.id)}
-                       >
-                         {equippedInvItem ? (
-                            <>
-                               <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
-                               <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name || 'Unknown'}</div>
-                               <div className="text-[10px] text-gray-500 mt-1 capitalize">{slot.id}</div>
-
-                               {/* Hover tooltip hint */}
-                               <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                  <span className="text-xs font-bold text-red-100">Click to Unequip</span>
-                               </div>
-                            </>
-                         ) : (
-                            <>
-                               <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
-                               <div className="text-xs text-gray-600 font-bold uppercase tracking-wide">{slot.label}</div>
-                            </>
-                         )}
-                       </motion.div>
-                     );
-                   })}
-                </div>
-
-                <div className="w-full bg-black/40 p-4 rounded border border-[#333]">
-                   <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
-                   <div className="grid grid-cols-1 gap-y-3">
-                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                         <span className="text-gray-400 font-bold w-12">HP</span>
-                         <div className="flex flex-col items-end text-sm">
-                            <span className="font-bold text-green-400 text-lg">{combatStats.hp?.toLocaleString()}</span>
-                            <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? `+ Equip ${combatStats._equip.hp}` : ''})
-                            </span>
-                         </div>
-                      </div>
-                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                         <span className="text-gray-400 font-bold w-12">ATK</span>
-                         <div className="flex flex-col items-end text-sm">
-                            <span className="font-bold text-red-400 text-lg">{combatStats.atk?.toLocaleString()}</span>
-                            <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? `+ Equip ${combatStats._equip.atk}` : ''})
-                            </span>
-                         </div>
-                      </div>
-                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                         <span className="text-gray-400 font-bold w-12">DEF</span>
-                         <div className="flex flex-col items-end text-sm">
-                            <span className="font-bold text-blue-400 text-lg">{combatStats.def?.toLocaleString()}</span>
-                            <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? `+ Equip ${combatStats._equip.def}` : ''})
-                            </span>
-                         </div>
-                      </div>
-                      <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                         <span className="text-gray-400 font-bold w-12">SPD</span>
-                         <div className="flex flex-col items-end text-sm">
-                            <span className="font-bold text-yellow-400 text-lg">{combatStats.spd?.toLocaleString()}</span>
-                            <span className="text-[10px] text-gray-500">
-                               (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? `+ Equip ${combatStats._equip.spd}` : ''})
-                            </span>
-                         </div>
-                      </div>
+                         return (
+                             <div key={idx} className="bg-indigo-900/30 border border-indigo-500/30 rounded px-3 py-2 flex justify-between items-center text-sm">
+                                 <span className="text-indigo-200 font-medium capitalize">{buff.buffType.replace('_', ' ')} <span className="text-green-400 font-bold ml-1">+{buff.value}</span></span>
+                                 <span className="text-gray-400 flex items-center gap-1"><Clock size={12}/> {hours > 0 ? `${hours}j ${mins}m` : `${mins}m`}</span>
+                             </div>
+                         );
+                      })}
                    </div>
-                   <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
-                      <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
-                   </p>
                 </div>
-            </div>
-        </div>
-
-        {/* Right Column: Professions & Available Equipment (Span 4) */}
-        <div className="lg:col-span-4 space-y-6 flex flex-col">
+            )}
 
             {/* Profession Skills Section */}
             <div className="bg-[#1a1a1a] border border-[#c5a880]/30 p-5 rounded-lg shadow-lg">
@@ -415,6 +376,42 @@ export default function ProfilePage() {
                   })}
                </div>
             </div>
+
+            {/* Farming Summary */}
+            {profile.professions?.farming?.isUnlocked && (
+                <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg">
+                   <div className="flex justify-between items-center mb-3 border-b border-[#333] pb-2">
+                       <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider">Status Ladang</h3>
+                       <Link href="/professions/farming" className="text-xs text-[#c5a880] hover:underline">Kelola &rarr;</Link>
+                   </div>
+
+                   {farmSummary.ready > 0 && (
+                      <div className="mb-3 bg-green-900/40 border border-green-500/50 rounded p-2 text-center">
+                          <span className="text-green-400 font-bold text-sm">Ada tanaman siap panen!</span>
+                          <Link href="/professions/farming" className="ml-2 text-xs bg-green-700 hover:bg-green-600 text-white px-2 py-1 rounded transition">Panen Sekarang</Link>
+                      </div>
+                   )}
+
+                   <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
+                       <div className="bg-green-900/30 border border-green-700/50 rounded py-2 text-green-400">
+                           <div className="text-xl mb-1">{farmSummary.ready}</div>
+                           <div className="text-[10px] uppercase">Ready</div>
+                       </div>
+                       <div className="bg-blue-900/30 border border-blue-700/50 rounded py-2 text-blue-400">
+                           <div className="text-xl mb-1">{farmSummary.growing}</div>
+                           <div className="text-[10px] uppercase">Tumbuh</div>
+                       </div>
+                       <div className="bg-gray-800/50 border border-gray-600/50 rounded py-2 text-gray-300">
+                           <div className="text-xl mb-1">{farmSummary.empty}</div>
+                           <div className="text-[10px] uppercase">Kosong</div>
+                       </div>
+                       <div className="bg-red-900/30 border border-red-700/50 rounded py-2 text-red-400">
+                           <div className="text-xl mb-1">{farmSummary.depleted}</div>
+                           <div className="text-[10px] uppercase">Gersang</div>
+                       </div>
+                   </div>
+                </div>
+            )}
 
             {/* Inventory to Equip */}
             <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg flex flex-col flex-1 min-h-[300px]">
