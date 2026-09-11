@@ -27,7 +27,24 @@ interface InventoryItem {
   emoji: string;
   effectType?: string;
   effectValue?: number;
+  effectDurationMinutes?: number;
+  effectTierGate?: number;
+  toolType?: string;
+  durability?: number;
 }
+
+const getHumanReadableEffect = (item: InventoryItem) => {
+  if (item.name.startsWith('Blueprint:')) return "Unlock resep signature di Profesi";
+  if (item.effectType === 'energy_restore') return `Memulihkan ${item.effectValue || ''} Energy`;
+  if (item.effectType === 'combat_buff_atk') return `Buff ATK ${item.effectValue ? '+'+item.effectValue : ''}`;
+  if (item.effectType === 'combat_buff_def') return `Buff DEF ${item.effectValue ? '+'+item.effectValue : ''}`;
+  if (item.effectType === 'combat_buff_hp') return `Buff HP ${item.effectValue ? '+'+item.effectValue : ''}`;
+  if (item.effectType === 'breakthrough_success_bonus') return `Bonus peluang terobosan ${item.effectValue ? '+'+item.effectValue+'%' : ''}`;
+  if (item.effectType === 'farm_grow_speed') return "Percepat pertumbuhan tanaman (pakai di Farming)";
+  if (item.effectType === 'exp_bonus_short') return `Bonus EXP ${item.effectValue ? '+'+item.effectValue+'%' : ''}`;
+  if (item.effectType) return `${item.effectType.replace(/_/g, ' ')} ${item.effectValue ? '+'+item.effectValue : ''}`;
+  return '';
+};
 
 export default function InventoryPage() {
   const { user } = useAuthStore();
@@ -40,18 +57,29 @@ export default function InventoryPage() {
 
   const [useConfirmModalOpen, setUseConfirmModalOpen] = useState(false);
   const [itemToUse, setItemToUse] = useState<InventoryItem | null>(null);
+  const [itemDetailModalOpen, setItemDetailModalOpen] = useState(false);
+  const [selectedItemDetail, setSelectedItemDetail] = useState<InventoryItem | null>(null);
 
   const handleUseItem = async () => {
     if (!itemToUse) return;
     setActionLoading(true);
     try {
-      // For this specific API (use-consumable, use-law, use-manual), we use the object's ID in MongoDB (which in the frontend is mapped to id)
-      // The backend uses `inv.itemId._id.toString() === itemId` to find the inventory entry, so it expects the item's reference ID, not the inventory entry ID. Let's verify the backend:
-      // const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
-      // It matches! The backend uses the referenced Item's ID, not the inventory slot's ID.
-      // Thus passing `itemId: itemToUse.id` is CORRECT because the formatting maps the reference ID to `id`.
       const res = await api.post('/inventory/use-consumable', { itemId: itemToUse.id });
-      toast.show({ message: res.data.message || 'Item berhasil digunakan.', type: 'success' });
+      let extraMessage = '';
+      if (res.data.effectsApplied && res.data.effectsApplied.length > 0) {
+        const blueprintEffect = res.data.effectsApplied.find((e: string) => e.startsWith('blueprint_unlocked:'));
+        if (blueprintEffect) {
+           const blueprintName = blueprintEffect.split(':')[1];
+           extraMessage = `\nResep terbuka: ${blueprintName.replace('Blueprint: ', '')}`;
+        } else {
+           const energyEffect = res.data.effectsApplied.find((e: string) => e.startsWith('energy_restored_'));
+           if (energyEffect) {
+              const energyVal = energyEffect.split('_')[2];
+              extraMessage = `\n(Energy bertambah ${energyVal})`;
+           }
+        }
+      }
+      toast.show({ message: (res.data.message || 'Item berhasil digunakan.') + extraMessage, type: 'success' });
       setUseConfirmModalOpen(false);
       setItemToUse(null);
       fetchInventoryAndRecipes();
@@ -178,14 +206,22 @@ export default function InventoryPage() {
       matchesRank = (item.rarity || "").toLowerCase() === activeRank.toLowerCase();
     }
     if (activeCategory !== 'all') {
+        const isBlueprint = item.name.startsWith('Blueprint:');
+        const isPupuk = item.effectType === 'farm_grow_speed';
+        const isUsableConsumable = !isPupuk && !!(item.category === 'consume' || item.category === 'pill' || item.effectType || isBlueprint);
+        const isLawOrManual = item.category === 'law' || item.category === 'manual';
+        const isTool = item.category === 'tool' || item.toolType != null;
+
         if (activeCategory === 'material') {
-             matchesCategory = item.type === 'material' || item.type === 'herb';
+             matchesCategory = item.category === 'material' || item.category === 'herb' || item.category === 'other' || (!isUsableConsumable && !isLawOrManual && !isTool && !['weapon','cloth','accessories','artifact'].includes(item.category));
         } else if (activeCategory === 'consumable') {
-             matchesCategory = item.type === 'pill' || item.type === 'consume';
+             matchesCategory = isUsableConsumable || isPupuk || isLawOrManual;
+        } else if (activeCategory === 'blueprint') {
+             matchesCategory = isBlueprint;
         } else if (activeCategory === 'tools') {
-             matchesCategory = item.type === 'none' || !item.type; // Assuming default none/tools
+             matchesCategory = isTool;
         } else if (activeCategory === 'equipment') {
-             matchesCategory = item.type === 'weapon' || item.type === 'cloth' || item.type === 'accessories' || item.type === 'artifact';
+             matchesCategory = ['weapon','cloth','accessories','artifact'].includes(item.category);
         }
     }
 
@@ -241,9 +277,10 @@ export default function InventoryPage() {
       <div className="flex flex-wrap justify-between items-center gap-4 bg-[#111] border border-[#333] p-4 rounded-lg shadow-md">
         <div className="flex gap-2 w-full overflow-x-auto pb-2 sm:pb-0 custom-scrollbar sm:w-auto">
              <Button size="sm" variant={activeCategory === 'all' ? 'default' : 'ghost'} onClick={() => setActiveCategory('all')} className="whitespace-nowrap">Semua</Button>
+             <Button size="sm" variant={activeCategory === 'consumable' ? 'default' : 'ghost'} onClick={() => setActiveCategory('consumable')} className="whitespace-nowrap">Consumable</Button>
+             <Button size="sm" variant={activeCategory === 'blueprint' ? 'default' : 'ghost'} onClick={() => setActiveCategory('blueprint')} className="whitespace-nowrap">Blueprint</Button>
+             <Button size="sm" variant={activeCategory === 'tools' ? 'default' : 'ghost'} onClick={() => setActiveCategory('tools')} className="whitespace-nowrap">Tool</Button>
              <Button size="sm" variant={activeCategory === 'material' ? 'default' : 'ghost'} onClick={() => setActiveCategory('material')} className="whitespace-nowrap">Material</Button>
-             <Button size="sm" variant={activeCategory === 'consumable' ? 'default' : 'ghost'} onClick={() => setActiveCategory('consumable')} className="whitespace-nowrap">Konsumsi</Button>
-             <Button size="sm" variant={activeCategory === 'equipment' ? 'default' : 'ghost'} onClick={() => setActiveCategory('equipment')} className="whitespace-nowrap">Equipment</Button>
         </div>
 
         <div className="flex gap-3 w-full sm:w-auto">
@@ -300,21 +337,31 @@ export default function InventoryPage() {
           )}
 
           {user && !loading && filteredInventory.map((item) => (
-            <div key={item.id} className={`group relative bg-black/60 border rounded-lg p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(197,168,128,0.15)] transition-all duration-300 ${getRarityColor(item.rarity)}`}>
+            <div key={item.id} onClick={() => { setSelectedItemDetail(item); setItemDetailModalOpen(true); }} className={`group relative bg-black/60 border rounded-lg p-3 flex flex-col items-center justify-center text-center cursor-pointer hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(197,168,128,0.15)] transition-all duration-300 ${getRarityColor(item.rarity)}`}>
               {/* Quantity Badge */}
               <div className="absolute -top-2 -right-2 bg-black border border-current text-xs px-2 py-0.5 rounded-full z-10 text-white shadow-lg font-bold font-mono">
                 x{item.quantity}
               </div>
 
               {(() => {
-                const isUsableConsumable = item.category === 'consume' || item.category === 'pill' || item.effectType || item.name.startsWith('Blueprint:');
+                const isBlueprint = item.name.startsWith('Blueprint:');
+                const isPupuk = item.effectType === 'farm_grow_speed';
+                const isUsableConsumable = !isPupuk && (item.category === 'consume' || item.category === 'pill' || item.effectType || isBlueprint);
                 const isLawOrManual = item.category === 'law' || item.category === 'manual';
+                const isTool = item.category === 'tool' || item.toolType != null;
 
                 if (isLawOrManual) {
                   return (
                     <div className="absolute bottom-2 right-2 flex gap-1">
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-emerald-400 border-emerald-400/50 hover:bg-emerald-400/20" onClick={(e) => { e.stopPropagation(); handleUseLawManual(item); }} disabled={actionLoading}>Pelajari</Button>
+                    </div>
+                  );
+                } else if (isPupuk) {
+                  return (
+                    <div className="absolute bottom-2 right-2 flex gap-1">
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/20" onClick={(e) => { e.stopPropagation(); window.location.href = '/professions/farming'; }} disabled={actionLoading}>Pakai di Farming</Button>
                     </div>
                   );
                 } else if (isUsableConsumable) {
@@ -492,12 +539,87 @@ export default function InventoryPage() {
       {/* Use Confirm Modal */}
       <Modal isOpen={useConfirmModalOpen} onClose={() => setUseConfirmModalOpen(false)} title="Gunakan Item">
         <div className="space-y-4">
-          <p className="text-gray-300">Gunakan <strong>{itemToUse?.name}</strong>?</p>
+          <p className="text-gray-300">
+            {itemToUse?.name.startsWith('Blueprint:')
+              ? `Gunakan blueprint ini untuk membuka resep signature? Item akan dikonsumsi.`
+              : (['S','SS','SSS','Mythic','Divine'].includes(itemToUse?.rarity || '') || (itemToUse?.price && itemToUse.price > 1000)
+                ? `Pakai item mahal ini sekarang?`
+                : `Gunakan ${itemToUse?.name}?`
+              )}
+          </p>
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={() => setUseConfirmModalOpen(false)}>Batal</Button>
             <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500/10" onClick={handleUseItem} disabled={actionLoading}>Gunakan</Button>
           </div>
         </div>
+      </Modal>
+
+      {/* Item Detail Modal */}
+      <Modal isOpen={itemDetailModalOpen} onClose={() => setItemDetailModalOpen(false)} title="Detail Item">
+        {selectedItemDetail && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className={`w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-lg border bg-black/40 ${getRarityColor(selectedItemDetail.rarity)}`}>
+                {selectedItemDetail.imageUrl ? (
+                  <FallbackImage src={selectedItemDetail.imageUrl} alt={selectedItemDetail.name} className="max-h-full max-w-full object-contain p-2" fallbackNode={<span className="text-3xl sm:text-4xl">{selectedItemDetail.emoji}</span>} />
+                ) : (
+                  <span className="text-3xl sm:text-4xl">{selectedItemDetail.emoji}</span>
+                )}
+              </div>
+              <div>
+                <h3 className={`text-lg font-bold ${getRarityTextClass(selectedItemDetail.rarity)}`}>{selectedItemDetail.name}</h3>
+                <p className="text-sm text-gray-400 capitalize">{selectedItemDetail.type} • {selectedItemDetail.rarity || 'Common'}</p>
+                <p className="text-sm text-gray-400">Dimiliki: <span className="text-white font-mono">{selectedItemDetail.quantity}</span></p>
+              </div>
+            </div>
+            <div className="bg-[#111] p-3 rounded-lg border border-[#333]">
+              <p className="text-sm text-gray-300 italic mb-2">"{selectedItemDetail.description}"</p>
+
+              {/* Effect Block */}
+              {(selectedItemDetail.effectType || selectedItemDetail.name.startsWith('Blueprint:')) && (
+                <div className="mt-3 pt-3 border-t border-[#333]">
+                  <p className="text-xs text-blue-400 font-semibold mb-1">Efek Penggunaan:</p>
+                  <p className="text-sm text-gray-300 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                    {getHumanReadableEffect(selectedItemDetail)}
+                  </p>
+                  {selectedItemDetail.effectDurationMinutes && (
+                    <p className="text-sm text-gray-300 flex items-center gap-2 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                      Durasi: {selectedItemDetail.effectDurationMinutes} menit
+                    </p>
+                  )}
+                  {selectedItemDetail.effectTierGate && (
+                    <p className="text-sm text-gray-300 flex items-center gap-2 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                      Minimal Tier: {selectedItemDetail.effectTierGate}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Tool Block */}
+              {(selectedItemDetail.category === 'tool' || selectedItemDetail.toolType) && (
+                <div className="mt-3 pt-3 border-t border-[#333]">
+                  <p className="text-xs text-yellow-500 font-semibold mb-1">Informasi Tool:</p>
+                  <p className="text-sm text-gray-300 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                    Tipe: <span className="capitalize">{selectedItemDetail.toolType?.replace(/_/g, ' ') || 'Alat Biasa'}</span>
+                  </p>
+                  {selectedItemDetail.durability !== undefined && selectedItemDetail.durability !== null && (
+                    <p className="text-sm text-gray-300 flex items-center gap-2 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                      Durability: {selectedItemDetail.durability}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end gap-2 mt-4 pt-2 border-t border-[#333]">
+              <Button variant="ghost" onClick={() => setItemDetailModalOpen(false)}>Tutup</Button>
+            </div>
+          </div>
+        )}
       </Modal>
 
     </div>
