@@ -10,18 +10,25 @@ export const UsablePillSchema = z.object({
   itemId: z.string(),
   name: z.string(),
   count: z.number(),
-  effectValue: z.number()
+  effectValue: z.number(),
+  effectTierGate: z.number(),
+  bonusPercent: z.number()
 });
 
 export const CultivationDataSchema = z.object({
   realm: z.string(),
   stage: z.number().or(z.string()),
+  realmIdx: z.number().optional(),
   currentQi: z.number(),
   maxQi: z.number(),
   ratePerMinute: z.number(),
   isReadyForBreakthrough: z.boolean(),
   baseSuccessRate: z.number(),
   isMaxLevel: z.boolean(),
+  penaltyPreview: z.object({
+    percent: z.number(),
+    qiAmount: z.number()
+  }).optional(),
   usablePills: z.array(UsablePillSchema).optional()
 });
 
