@@ -18,7 +18,11 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
     ) || [];
 
     if (availableTools.length === 0) {
-        return <div className="text-red-400 text-sm bg-red-900/20 p-2 rounded border border-red-900/50">Kamu tidak memiliki alat bertipe '{toolType.replace('_', ' ')}' yang bisa digunakan.</div>;
+        return <div className="text-red-400 text-sm bg-red-900/20 p-3 rounded border border-red-900/50">
+            <p className="font-bold mb-1">Tidak ada alat yang bisa digunakan!</p>
+            <p>Kamu butuh alat bertipe <span className="capitalize font-bold text-red-300">'{toolType.replace('_', ' ')}'</span> dengan durability &gt; 0 (minimal Tier {minToolTier}).</p>
+            <p className="mt-2 text-xs text-red-300">Beli tool T1 di <a href="/market" className="underline hover:text-white">Market</a> atau craft sendiri via profesi <a href="/professions/smithing" className="underline hover:text-white">Menempa</a>.</p>
+        </div>;
     }
 
     return (

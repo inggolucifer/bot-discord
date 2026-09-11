@@ -76,7 +76,10 @@ export default function RequirementsPanel({ currentEnergy, energyCost = 10, requ
 
             {!isReady && (
                 <div className="mt-4 p-2 bg-red-900/20 rounded border border-red-900/50 text-xs text-red-400">
-                    Kamu tidak memenuhi persyaratan untuk memulai.
+                    Kamu tidak memenuhi persyaratan untuk memulai.<br/>
+                    {!allMaterialsSufficient && (
+                        <span className="text-red-300 mt-1 block">Bahan kurang? Cari material di fitur Explore, Market, atau kumpulkan via profesi lain.</span>
+                    )}
                 </div>
             )}
         </div>
