@@ -1,16 +1,16 @@
+
 "use client";
 
-import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { useRouter } from 'next/navigation';
-import { PageHeader } from '@/components/ui/PageHeader';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getPlayerFromProfileResponse } from '@/lib/profileHelper';
-
+import { PageHeader } from '@/components/ui/PageHeader';
+import PlotSelector from '../components/PlotSelector';
 import RecipePicker from '../components/RecipePicker';
 import ToolPicker from '../components/ToolPicker';
 import RequirementsPanel from '../components/RequirementsPanel';
-import PlotSelector from '../components/PlotSelector';
 import ProfessionSkillBadge from '../components/ProfessionSkillBadge';
 import FarmingMinigame from '../components/FarmingMinigame';
 import FertilizerModal from './FertilizerModal';
@@ -23,6 +23,14 @@ export default function FarmingPage() {
     const [plotIndex, setPlotIndex] = useState<number>(0);
     const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
     const [showFertilizerModal, setShowFertilizerModal] = useState(false);
+
+    const [currentTime, setCurrentTime] = useState(new Date().getTime());
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date().getTime());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const { data: profileRaw, isLoading } = useQuery({
         queryKey: ['profile'],
@@ -80,6 +88,34 @@ export default function FarmingPage() {
         }
     });
 
+    const farmStats = useMemo(() => {
+        let readyCount = 0;
+        let growingCount = 0;
+        let depletedCount = 0;
+        let emptyCount = 0;
+        if (profile?.professions?.farming?.farmPlots) {
+            const now = currentTime;
+            profile.professions.farming.farmPlots.forEach((plot: any) => {
+                if (plot.isDepleted && plot.depletedUntil) {
+                    if (now < new Date(plot.depletedUntil).getTime()) {
+                        depletedCount++;
+                    } else {
+                        emptyCount++;
+                    }
+                } else if (plot.cropId && plot.harvestAt) {
+                    if (now < new Date(plot.harvestAt).getTime()) {
+                        growingCount++;
+                    } else {
+                        readyCount++;
+                    }
+                } else {
+                    emptyCount++;
+                }
+            });
+        }
+        return { readyCount, growingCount, depletedCount, emptyCount };
+    }, [profile?.professions?.farming?.farmPlots, currentTime]);
+
     if (isLoading || !profile) return <div className="p-8 text-center text-white">Memuat...</div>;
 
     const farmingProf = profile.professions?.farming;
@@ -96,38 +132,46 @@ export default function FarmingPage() {
     }
 
     const selectedRecipe = recipes.find((r: any) => r.id === recipeId);
+    const activePlot = farmingProf.farmPlots?.[plotIndex];
 
+    let activePlotState = 'EMPTY';
+    if (activePlot) {
+        if (activePlot.isDepleted && activePlot.depletedUntil && currentTime < new Date(activePlot.depletedUntil).getTime()) {
+            activePlotState = 'DEPLETED';
+        } else if (activePlot.cropId && activePlot.harvestAt) {
+            if (currentTime < new Date(activePlot.harvestAt).getTime()) {
+                activePlotState = 'GROWING';
+            } else {
+                activePlotState = 'READY';
+            }
+        }
+    }
+
+    const isHarvestReady = activePlotState === 'READY';
 
     const handleStart = () => {
-        const selectedPlot = profile?.professions?.farming?.farmPlots?.[plotIndex];
-        if (!selectedPlot) {
+        if (!activePlot) {
              alert('Pilih petak yang valid.');
              return;
         }
 
-        const isHarvest = selectedPlot.cropId && selectedPlot.harvestAt && new Date(selectedPlot.harvestAt).getTime() <= new Date().getTime();
-
-        if (!isHarvest && !recipeId) {
+        if (!isHarvestReady && !recipeId) {
             alert('Pilih resep yang ingin ditanam!');
             return;
         }
-        if (!toolItemId) {
+        if (activePlotState !== 'DEPLETED' && !toolItemId) {
             alert('Pilih alat pertanian!');
             return;
         }
 
         startMutation.mutate({
             profession: 'farming',
-            recipeId: isHarvest ? undefined : recipeId,
+            recipeId: isHarvestReady ? undefined : recipeId,
             toolItemId,
             plotIndex,
-            action: isHarvest ? 'harvest' : 'plant'
+            action: isHarvestReady ? 'harvest' : 'plant'
         });
     };
-
-    const activePlot = profile?.professions?.farming?.farmPlots?.[plotIndex];
-    const isHarvestReady = activePlot && activePlot.cropId && activePlot.harvestAt && new Date(activePlot.harvestAt).getTime() <= new Date().getTime();
-
 
     const handleMinigameComplete = (telemetryData: any) => {
         if (activeSessionId) {
@@ -146,6 +190,25 @@ export default function FarmingPage() {
 
             <PageHeader title="Bertani" description="Tanam dan panen material alam." />
 
+            {farmStats.readyCount > 0 && (
+                <div className="mb-6 mt-4 p-4 bg-green-900/40 border border-green-500 rounded-lg flex items-center justify-between shadow-lg shadow-green-900/20">
+                    <div className="flex items-center gap-3">
+                        <span className="text-3xl">🌾</span>
+                        <div>
+                            <h3 className="text-xl font-bold text-green-400">Ada {farmStats.readyCount} plot siap panen!</h3>
+                            <p className="text-sm text-green-200">Hasil panenmu sudah menunggu untuk diambil.</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {farmStats.readyCount === 0 && farmStats.growingCount > 0 && (
+                <div className="mb-6 mt-4 p-3 bg-blue-900/30 border border-blue-500/50 rounded-lg flex items-center gap-3">
+                    <span className="text-xl">🌱</span>
+                    <span className="text-blue-200">{farmStats.growingCount} plot sedang tumbuh...</span>
+                </div>
+            )}
+
             {!activeSessionId ? (
                 <div className="bg-gray-900 border border-amber-500/50 p-8 rounded-xl shadow-2xl mt-8">
                     <h2 className="text-2xl font-bold mb-6 text-amber-500 border-b border-gray-700 pb-2">Persiapan Bertani</h2>
@@ -163,7 +226,7 @@ export default function FarmingPage() {
                             }}
                         />
 
-                        {farmingProf.farmPlots && farmingProf.farmPlots[plotIndex] && farmingProf.farmPlots[plotIndex].cropId && new Date(farmingProf.farmPlots[plotIndex].harvestAt) > new Date() && !farmingProf.farmPlots[plotIndex].fertilizerApplied && (
+                        {activePlotState === 'GROWING' && !activePlot.fertilizerApplied && (
                             <div className="flex justify-start">
                                 <button
                                     onClick={() => setShowFertilizerModal(true)}
@@ -174,14 +237,28 @@ export default function FarmingPage() {
                             </div>
                         )}
 
-                        <RecipePicker
-                            recipes={recipes}
-                            selectedRecipeId={recipeId}
-                            onSelect={(id) => { setRecipeId(id); setToolItemId(''); }}
-                            isLoading={isLoadingRecipes}
-                        />
+                        {activePlotState === 'GROWING' && (
+                            <div className="p-4 bg-blue-900/20 border border-blue-900/50 rounded-lg text-blue-200 text-center">
+                                Tanaman sedang tumbuh. Tunggu hingga siap dipanen.
+                            </div>
+                        )}
 
-                        {selectedRecipe && (
+                        {activePlotState === 'DEPLETED' && (
+                            <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-red-200 text-center">
+                                Tanah sedang lelah (depleted). Tunggu waktu pemulihan selesai.
+                            </div>
+                        )}
+
+                        {activePlotState === 'EMPTY' && (
+                            <RecipePicker
+                                recipes={recipes}
+                                selectedRecipeId={recipeId}
+                                onSelect={(id) => { setRecipeId(id); setToolItemId(''); }}
+                                isLoading={isLoadingRecipes}
+                            />
+                        )}
+
+                        {(activePlotState === 'EMPTY' && selectedRecipe) && (
                             <div className="grid md:grid-cols-2 gap-8">
                                 <ToolPicker
                                     inventory={profile.inventory || []}
@@ -199,12 +276,38 @@ export default function FarmingPage() {
                                 />
                             </div>
                         )}
+
+                        {activePlotState === 'READY' && (
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <ToolPicker
+                                    inventory={profile.inventory || []}
+                                    toolType="farming_tool"
+                                    minToolTier={1}
+                                    selectedToolId={toolItemId}
+                                    onSelect={setToolItemId}
+                                />
+                                <RequirementsPanel
+                                    currentEnergy={profile.energy?.current || 0}
+                                    energyCost={5}
+                                    requiredMaterials={[]}
+                                    inventory={profile.inventory || []}
+                                    minToolTier={1}
+                                    selectedToolId={toolItemId}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex justify-end gap-4 border-t border-gray-800 pt-6">
                         <button
                             onClick={handleStart}
-                            disabled={(!isHarvestReady && !recipeId) || !toolItemId || startMutation.isPending}
+                            disabled={
+                                startMutation.isPending ||
+                                activePlotState === 'DEPLETED' ||
+                                activePlotState === 'GROWING' ||
+                                (activePlotState === 'EMPTY' && (!recipeId || !toolItemId)) ||
+                                (activePlotState === 'READY' && !toolItemId)
+                            }
                             className="px-8 py-3 rounded-lg bg-amber-600 hover:bg-amber-500 text-black font-bold text-lg shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {startMutation.isPending ? 'Memulai...' : (isHarvestReady ? 'Panen Sekarang (-5 Energy)' : 'Tanam Sekarang (-5 Energy)')}
