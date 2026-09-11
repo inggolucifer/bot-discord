@@ -37,14 +37,25 @@ router.get('/', authenticateToken, async (req, res) => {
             select: 'name effectType effectValue effectTierGate'
         });
 
+        const normalizeEffectValue = (v) => {
+            if (v == null) return 0;
+            if (v > 0 && v <= 1) return v * 100;
+            if (v > 1 && v <= 100) return v;
+            return 0; // fallback or clamp
+        };
+
         const usablePills = player.inventory
-            .filter(inv => inv.itemId && inv.itemId.effectType === 'breakthrough_success_bonus' && inv.itemId.effectTierGate >= (calcResult.realmIdx + 1) && inv.quantity > 0)
-            .map(inv => ({
-                itemId: inv.itemId._id,
-                name: inv.itemId.name,
-                count: inv.quantity,
-                effectValue: inv.itemId.effectValue || 0
-            }));
+            .filter(inv => inv.itemId && inv.itemId.effectType === 'breakthrough_success_bonus' && inv.itemId.effectTierGate === (calcResult.realmIdx + 1) && inv.quantity > 0)
+            .map(inv => {
+                return {
+                    itemId: inv.itemId._id,
+                    name: inv.itemId.name,
+                    count: inv.quantity,
+                    effectValue: inv.itemId.effectValue || 0,
+                    effectTierGate: inv.itemId.effectTierGate,
+                    bonusPercent: normalizeEffectValue(inv.itemId.effectValue)
+                };
+            });
 
         let baseSuccessRate = realmData.baseSuccessRate;
         if (stage > 0) baseSuccessRate -= (stage * 2);
@@ -62,6 +73,10 @@ router.get('/', authenticateToken, async (req, res) => {
                 baseSuccessRate: baseSuccessRate,
                 maxStage: realmData.maxStage,
                 isMaxLevel: calcResult.realmIdx === SYSTEM_REALMS.length - 1 && stage === realmData.maxStage,
+                penaltyPreview: {
+                    percent: 25,
+                    qiAmount: Math.floor(calcResult.maxQi * 0.25)
+                },
                 usablePills: usablePills
             }
         });
@@ -144,16 +159,18 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                     throw new CustomError('Item ini tidak bisa digunakan untuk breakthrough.', 400);
                 }
 
-                if (pillItem.effectTierGate < (calcResult.realmIdx + 1)) {
-                    throw new CustomError('Pil ini terlalu lemah untuk tahapan kultivasimu saat ini.', 400);
+                if (pillItem.effectTierGate !== (calcResult.realmIdx + 1)) {
+                    throw new CustomError('Pil ini tidak cocok untuk tahapan kultivasimu saat ini.', 400);
                 }
 
-                // Normalisasi fraksi (contoh: 0.25 -> 25)
-                let bonus = pillItem.effectValue || 0;
-                if (bonus > 0 && bonus <= 1) {
-                    bonus = bonus * 100;
-                }
-                successBonus = Math.floor(bonus);
+                const normalizeEffectValue = (v) => {
+                    if (v == null) return 0;
+                    if (v > 0 && v <= 1) return v * 100;
+                    if (v > 1 && v <= 100) return v;
+                    return 0; // fallback or clamp
+                };
+
+                successBonus = Math.floor(normalizeEffectValue(pillItem.effectValue));
 
                 currentPill.quantity -= 1;
                 player.markModified('inventory');
@@ -221,7 +238,9 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
             data: {
                 realm: resultRealm,
                 stage: resultStage,
-                penalty: penaltyAmount
+                penalty: penaltyAmount,
+                usedBonus: successBonus,
+                pillConsumed: !!pillId
             }
         });
 
