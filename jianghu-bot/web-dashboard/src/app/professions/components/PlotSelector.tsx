@@ -32,7 +32,7 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect, playe
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date().getTime());
-        }, 30000); // 30s
+        }, 1000); // 1s
         return () => clearInterval(interval);
     }, []);
 
@@ -110,7 +110,12 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect, playe
                             const diffMs = depletedUntil - now;
                             const hours = Math.floor(diffMs / (1000 * 60 * 60));
                             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                            timeLeftStr = hours > 0 ? `${hours}j ${minutes}m` : `${minutes}m`;
+                            const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+                            if (hours > 0) {
+                                timeLeftStr = `${hours}j ${minutes}m`;
+                            } else {
+                                timeLeftStr = `${minutes}m ${seconds}s`;
+                            }
                             label = "DEPLETED";
                         } else {
                             isReady = true;
@@ -121,7 +126,12 @@ export default function PlotSelector({ plots, selectedPlotIndex, onSelect, playe
                             const diffMs = harvestAt - now;
                             const hours = Math.floor(diffMs / (1000 * 60 * 60));
                             const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                            timeLeftStr = hours > 0 ? `${hours}j ${minutes}m` : `${minutes}m`;
+                            const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+                            if (hours > 0) {
+                                timeLeftStr = `${hours}j ${minutes}m`;
+                            } else {
+                                timeLeftStr = `${minutes}m ${seconds}s`;
+                            }
                             label = "GROWING";
                             isReady = true; // Make it clickable so we can show fertilizer button
                         } else {
