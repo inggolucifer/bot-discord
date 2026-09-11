@@ -148,6 +148,8 @@ export default function AssetsPage() {
   const [guardCostText, setGuardCostText] = useState<string | null>(null);
   const [guardCostLoading, setGuardCostLoading] = useState(false);
   const [repairCostText, setRepairCostText] = useState<string | null>(null);
+  const [repairCostLoading, setRepairCostLoading] = useState(false);
+  const [repairCanAfford, setRepairCanAfford] = useState<boolean>(true);
   const [activePageTab, setActivePageTab] = useState<
     "my-assets" | "build-asset"
   >("my-assets");
@@ -383,15 +385,25 @@ export default function AssetsPage() {
   }, [selectedAsset, activeTab, guardDurationDays]);
 
   useEffect(() => {
-    if (selectedAsset && selectedAsset.isDamaged && activeTab === "guard") {
+    if (selectedAsset && selectedAsset.isDamaged) {
+      setRepairCostLoading(true);
       api
         .post("/player/assets/repair-cost", { assetId: selectedAsset.id })
         .then((res) => {
-          if (res.data.success) setRepairCostText(res.data.costText);
+          if (res.data.success) {
+            setRepairCostText(res.data.costText);
+            setRepairCanAfford(res.data.playerCanAfford !== undefined ? res.data.playerCanAfford : true);
+          }
         })
-        .catch((err) => setRepairCostText("Gagal memuat biaya"));
+        .catch((err) => {
+           setRepairCostText("Gagal memuat biaya");
+           setRepairCanAfford(false);
+        })
+        .finally(() => {
+           setRepairCostLoading(false);
+        });
     }
-  }, [selectedAsset, activeTab]);
+  }, [selectedAsset]);
 
   const filteredMyAssets = assets.filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, asset.recipes) === activeFilter);
 
@@ -1120,6 +1132,38 @@ export default function AssetsPage() {
           >
             {selectedAsset && (
               <div>
+                {selectedAsset.isDamaged && (
+                  <div className="bg-red-950/20 p-4 rounded-lg border border-red-900/50 mb-4 shadow-inner">
+                    <h4 className="text-sm font-bold text-red-400 mb-2 flex items-center gap-2">
+                      <AlertTriangle size={16} /> Aset Rusak &mdash; Produksi Terhenti. Perbaiki Dulu.
+                    </h4>
+                    <p className="text-xs text-gray-400 mb-4">
+                      Aset ini rusak akibat{" "}
+                      {selectedAsset.damageType === "bandit"
+                        ? "Serangan Bandit"
+                        : selectedAsset.damageType === "disaster"
+                          ? "Bencana Alam"
+                          : "Serangan"}
+                      . Produksi terhenti hingga diperbaiki.
+                    </p>
+                    <div className="text-sm text-[#c5a880] mb-4 font-bold flex flex-col gap-1">
+                      Biaya Perbaikan: {repairCostLoading ? "Memuat..." : repairCostText || "Gagal memuat"}
+                      {!repairCanAfford && repairCostText && (
+                         <span className="text-red-400 font-normal text-xs mt-1">
+                            Kamu tidak memiliki resource yang cukup untuk perbaikan ini.
+                         </span>
+                      )}
+                    </div>
+                    <Button
+                      variant="destructive"
+                      onClick={handleRepairAsset}
+                      disabled={actionLoading || repairCostLoading || !repairCanAfford || !repairCostText}
+                      className="w-full shadow-md"
+                    >
+                      {actionLoading ? "Memperbaiki..." : "Perbaiki Aset"}
+                    </Button>
+                  </div>
+                )}
                 <div className="flex border-b border-[#333] mb-4 overflow-x-auto">
                   <button
                     onClick={() => setActiveTab("info")}
@@ -1137,7 +1181,7 @@ export default function AssetsPage() {
                     onClick={() => setActiveTab("guard")}
                     className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === "guard" ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-500 hover:text-gray-300"}`}
                   >
-                    Guard / Repair
+                    Guard
                   </button>
                 </div>
 
@@ -1299,6 +1343,7 @@ export default function AssetsPage() {
                           onClick={handleWorkSelf}
                           disabled={
                             actionLoading ||
+                            selectedAsset.isDamaged ||
                             (!selectedAsset.underConstruction &&
                               selectedAsset.status === "active" &&
                               selectedAsset.assignedWorkers.length >=
@@ -1350,6 +1395,7 @@ export default function AssetsPage() {
                             onClick={handleHireNpc}
                             disabled={
                               actionLoading ||
+                              selectedAsset.isDamaged ||
                               (!selectedAsset.underConstruction &&
                                 selectedAsset.status === "active" &&
                                 selectedAsset.assignedWorkers.length >=
@@ -1373,6 +1419,12 @@ export default function AssetsPage() {
                       Pindahkan pekerja dari aset ini ke aset lain milikmu untuk
                       mengoptimalkan produksi.
                     </p>
+
+                    {selectedAsset.isDamaged && (
+                      <p className="text-red-400 text-xs mb-3 font-semibold">
+                        Tidak dapat memindahkan pekerja saat aset rusak.
+                      </p>
+                    )}
 
                     {selectedAsset.assignedWorkers.length === 0 ? (
                       <div className="text-center py-8">
@@ -1456,7 +1508,8 @@ export default function AssetsPage() {
                           disabled={
                             moveLoading ||
                             !selectedWorkerIdToMove ||
-                            !targetAssetId
+                            !targetAssetId ||
+                            selectedAsset.isDamaged
                           }
                           className="w-full mt-4"
                           variant="default"
@@ -1514,33 +1567,6 @@ export default function AssetsPage() {
                       </Button>
                     </div>
 
-                    {selectedAsset.isDamaged && (
-                      <div className="bg-red-950/20 p-4 rounded-lg border border-red-900/50 mt-4 shadow-inner">
-                        <h4 className="text-sm font-bold text-red-400 mb-2 flex items-center gap-2">
-                          <AlertTriangle size={16} /> Aset Rusak
-                        </h4>
-                        <p className="text-xs text-gray-400 mb-4">
-                          Aset ini rusak akibat{" "}
-                          {selectedAsset.damageType === "bandit"
-                            ? "Serangan Bandit"
-                            : selectedAsset.damageType === "disaster"
-                              ? "Bencana Alam"
-                              : "Serangan"}
-                          . Produksi terhenti hingga diperbaiki.
-                        </p>
-                        <div className="text-sm text-[#c5a880] mb-4 font-bold">
-                          Biaya Perbaikan: {repairCostText || "Memuat..."}
-                        </div>
-                        <Button
-                          variant="destructive"
-                          onClick={handleRepairAsset}
-                          disabled={actionLoading || !repairCostText}
-                          className="w-full shadow-md"
-                        >
-                          Perbaiki Aset
-                        </Button>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>

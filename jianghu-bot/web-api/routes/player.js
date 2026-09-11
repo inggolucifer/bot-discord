@@ -142,7 +142,10 @@ router.get('/assets', authenticateToken, async (req, res) => {
             let statusLabel = 'Aktif';
             let underConstruction = false;
 
-            if (isUnderConstruction(asset)) {
+            if (asset.isDamaged) {
+                statusLabel = 'Rusak';
+                underConstruction = isUnderConstruction(asset);
+            } else if (isUnderConstruction(asset)) {
                 underConstruction = true;
                 statusLabel = 'Dalam Pembangunan';
             } else if (asset.status === 'pending') {
@@ -895,13 +898,16 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
 
         const { calculateRepairCost } = require('../../utils/assetCostCalculator');
         const { neededMaterials, repairCostInCopper } = calculateRepairCost(assetConfig);
+        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+        const { convertFromCopper } = require('../../utils/currencyNormalize');
+        const { logTransaction } = require('../../utils/logger');
 
         let repairCostLog = "";
 
         if (neededMaterials.length > 0) {
             // Check inventory
             for (const mat of neededMaterials) {
-                const owned = player.inventory.find(i => i.itemId.equals(mat.itemId));
+                const owned = player.inventory.find(i => i.itemId && String(i.itemId._id || i.itemId) === String(mat.itemId));
                 const available = owned ? owned.quantity : 0;
                 if (available < mat.quantity) {
                     return res.status(400).json({ error: `Kekurangan material ${mat.itemName}. Butuh: ${mat.quantity}, Milikmu: ${available}.` });
@@ -910,16 +916,20 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
 
             // Deduct
             for (const mat of neededMaterials) {
-                const owned = player.inventory.find(i => i.itemId.equals(mat.itemId));
-                owned.quantity -= mat.quantity;
-                repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
+                const ownedIndex = player.inventory.findIndex(i => i.itemId && String(i.itemId._id || i.itemId) === String(mat.itemId));
+                if (ownedIndex !== -1) {
+                    player.inventory[ownedIndex].quantity -= mat.quantity;
+                    repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
+                }
             }
+            repairCostLog = repairCostLog.replace(/, $/, ""); // trim trailing comma and space
         } else {
-            if (!hasEnoughCurrency(player.currency, { copper: repairCostInCopper })) {
-                return res.status(400).json({ error: 'Tidak memiliki cukup uang untuk biaya perbaikan.' });
+            if (!hasEnoughCurrency(player.currency, repairCostInCopper, 'copper')) {
+                return res.status(400).json({ error: `Tidak memiliki cukup uang untuk biaya perbaikan. Butuh: ${formatCurrencyString(convertFromCopper(repairCostInCopper))}.` });
             }
-            payCurrency(player.currency, { copper: repairCostInCopper });
-            const { convertFromCopper } = require('../../utils/currencyNormalize');
+            const paid = payCurrency(player.currency, repairCostInCopper, 'copper');
+            if (!paid) return res.status(400).json({ error: 'Uang tidak cukup.' });
+
             repairCostLog = formatCurrencyString(convertFromCopper(repairCostInCopper));
         }
 
@@ -930,10 +940,22 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
 
         await player.save();
 
-        const { logTransaction } = require('../../utils/logger');
-        await logTransaction(guildId, 'player_repair_asset', userId, null, null, repairCostInCopper, `Repair asset: ${assetConfig.name}. Cost: ${repairCostLog}`);
+        try {
+            await logTransaction(req.app.get('client') || { channels: { fetch: async () => null } }, {
+                guildId,
+                type: 'player_repair_asset',
+                fromUserId: userId,
+                currency: 'copper',
+                amount: repairCostInCopper,
+                itemDescription: `Repair asset: ${assetConfig.name}`,
+                note: `Cost: ${repairCostLog}`
+            });
+        } catch (logErr) {
+            console.error('[API-PLAYER] repair log failed', logErr);
+            // Non-blocking log
+        }
 
-        res.json({ message: 'Aset berhasil diperbaiki.', cost: repairCostLog });
+        res.json({ success: true, message: 'Aset berhasil diperbaiki.', cost: repairCostLog });
 
     } catch (error) {
         console.error('[API-PLAYER] Error repairing asset:', error);
@@ -1047,18 +1069,49 @@ router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
+        const { calculateRepairCost } = require('../../utils/assetCostCalculator');
+        const { hasEnoughCurrency } = require('../../utils/currency');
+        const { convertFromCopper } = require('../../utils/currencyNormalize');
+
         const { neededMaterials, repairCostInCopper } = calculateRepairCost(ownedAsset.assetId);
 
         let repairCostLog = "";
+        let playerCanAfford = false;
+        let mode = 'currency';
+        let enrichedMaterials = [];
+
         if (neededMaterials.length > 0) {
+            mode = 'materials';
+            let allEnough = true;
+
             neededMaterials.forEach(mat => {
+                const owned = player.inventory.find(i => i.itemId && String(i.itemId._id || i.itemId) === String(mat.itemId));
+                const ownedQuantity = owned ? owned.quantity : 0;
+                const enough = ownedQuantity >= mat.quantity;
+                if (!enough) allEnough = false;
+
+                enrichedMaterials.push({
+                    ...mat,
+                    ownedQuantity,
+                    enough
+                });
                 repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
             });
             repairCostLog = repairCostLog.replace(/, $/, ""); // trim trailing comma and space
+            playerCanAfford = allEnough;
         } else {
             repairCostLog = formatCurrencyString(convertFromCopper(repairCostInCopper));
+            playerCanAfford = hasEnoughCurrency(player.currency, repairCostInCopper, 'copper');
         }
-        res.json({ success: true, costText: repairCostLog });
+
+        res.json({
+            success: true,
+            costText: repairCostLog,
+            mode,
+            neededMaterials: enrichedMaterials.length > 0 ? enrichedMaterials : undefined,
+            repairCostInCopper,
+            playerCanAfford
+        });
     } catch (error) {
         console.error('[API-PLAYER] Error fetching repair cost:', error);
         res.status(500).json({ error: 'Terjadi kesalahan internal server saat menghitung biaya perbaikan.' });
