@@ -181,10 +181,7 @@ export default function Home() {
                     <h2 className="text-xl sm:text-2xl font-bold text-white font-serif mb-1">{profile.characterName as string}</h2>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2">
                         <Badge variant="outline" className="text-xs bg-blue-900/20 border-blue-500/30 gap-1 text-blue-200">
-                            <Zap size={12} className="text-blue-400" /> {(profile.systemCultivation as any)?.realm || 'Fondasi Fana'} (Tahap {(profile.systemCultivation as any)?.stage || 0})
-                        </Badge>
-                        <Badge variant="outline" className="text-xs bg-[#c5a880]/10 border-[#c5a880]/30 gap-1">
-                            <Flame size={12} className="text-[#c5a880]" /> {profile.realm as string} ({profile.stage as string})
+                            <Zap size={12} className="text-blue-400" /> {profile.realm as string} (Tahap {profile.stage as string})
                         </Badge>
                         <Badge variant="secondary" className="text-xs bg-[#1f402e]/30 border-[#1f402e] text-green-300 gap-1">
                             <Users size={12} /> {profile.sect as string}
