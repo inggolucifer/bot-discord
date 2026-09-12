@@ -5,6 +5,7 @@ const Pet = require('../../models/Pet');
 const Asset = require('../../models/Asset');
 const Sect = require('../../models/Sect');
 const { buildPlayerProfileEmbed } = require('../../utils/embeds');
+const { syncPlayerCultivation } = require('../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -55,6 +56,9 @@ module.exports = {
       quantity: a.quantity,
       owned: a, // subdokumen asli, dibutuhkan buildPlayerProfileEmbed untuk cek status pembangunan
     })).filter((x) => x.doc);
+
+    // Sync status kultivasi player secara real-time
+    await syncPlayerCultivation(player);
 
     // Cari jabatan player di sekte (kalau dia anggota sekte manapun) untuk ditampilkan di profil
     const sect = await Sect.findOne({

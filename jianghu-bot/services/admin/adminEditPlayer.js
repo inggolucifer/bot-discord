@@ -19,8 +19,8 @@ module.exports = {
 
     const modal = new ModalBuilder().setCustomId(`modal_edit_player_${target.id}`).setTitle(`Edit: ${player.characterName}`.slice(0, 45));
     modal.addComponents(
-      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('realm').setLabel('Ranah (nama saja, tanpa tier)').setStyle(TextInputStyle.Short).setValue(player.realm).setRequired(true)),
-      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('stage').setLabel('Stage (mis. Menengah/Puncak, opsional)').setStyle(TextInputStyle.Short).setValue(player.stage || '-').setRequired(false)),
+      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('realm').setLabel('Ranah Kultivasi').setStyle(TextInputStyle.Short).setValue(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)').setRequired(true)),
+      new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('stage').setLabel('Tahap (Angka 0-9)').setStyle(TextInputStyle.Short).setValue(String(player.systemCultivation?.stage || 0)).setRequired(true)),
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('age').setLabel('Umur').setStyle(TextInputStyle.Short).setValue(String(player.age)).setRequired(true)),
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('gender').setLabel('Jenis Kelamin (Laki-laki/Perempuan)').setStyle(TextInputStyle.Short).setValue(player.gender || '').setRequired(false)),
       new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('characterImage').setLabel('URL Gambar Karakter').setStyle(TextInputStyle.Short).setValue(player.characterImage || '').setRequired(false)),

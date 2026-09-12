@@ -60,7 +60,7 @@ module.exports = {
     }
 
     // Pasang role ranah default kalau admin sudah mapping role untuk ranah awal ini
-    syncRealmRole(interaction.client, interaction.guildId, interaction.user.id, player.realm).catch((e) => console.error('[REALM-ROLE] Gagal sync saat daftar:', e.message));
+    syncRealmRole(interaction.client, interaction.guildId, interaction.user.id, player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)').catch((e) => console.error('[REALM-ROLE] Gagal sync saat daftar:', e.message));
 
       const embed = new EmbedBuilder()
         .setColor(0x27ae60)
