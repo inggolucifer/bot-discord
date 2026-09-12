@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Player = require('../../models/Player');
 const Law = require('../../models/Law');
-const { getRealmIndex } = require('../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const { logTransaction } = require('../../utils/logger');
 const { escapeRegex } = require('../../utils/escapeRegex');
 
@@ -95,12 +95,6 @@ module.exports = {
         // Validation: Only Mortal can learn Law!
         const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
 
-        if (player.isNormalCultivator || realmIdx > 0) {
-            // Kita sudah tidak membatasi ini hanya ke Mortal, karena sekarang ada minRealmIndex.
-            // Biarkan lewat dan dicek minRealmIndex-nya nanti
-            // (Tapi kalau design lama beneran maunya cuma Mortal, user perlu adjust di luar prompt ini).
-            // Tapi karena instruksi bilang "Setiap Law punya batas realm", kita ganti validasi-nya.
-        }
 
         const itemName = interaction.options.getString('nama_item');
         await player.populate('inventory.itemId');

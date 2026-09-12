@@ -5,7 +5,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
-const { getRealmIndex } = require('../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 
 // POST /api/equipment/equip
 router.post('/equip', authenticateToken, async (req, res) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
-const { getRealmIndex } = require('../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const Item = require('../../models/Item');
 const Exploration = require('../../models/Exploration');
 const TransactionLog = require('../../models/TransactionLog');

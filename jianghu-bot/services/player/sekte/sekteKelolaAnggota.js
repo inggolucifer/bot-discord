@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'
 const Sect = require('../../../models/Sect');
 const Player = require('../../../models/Player');
 const { syncPlayerSectLabel } = require('../../../utils/sectSync');
-const { getRealmIndex } = require('../../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()
