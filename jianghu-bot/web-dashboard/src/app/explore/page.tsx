@@ -176,7 +176,7 @@ export default function ExplorePage() {
                   <strong>Eksplorasi</strong> adalah sumber utama bahan baku di Jianghu. Item yang didapat dari alam liar digunakan untuk berbagai <strong className="text-[#c5a880]">Profesi</strong> seperti Alkimia, Pertukangan, dan Memasak.
                 </p>
                 <ul className="list-disc pl-5 space-y-1 text-gray-400">
-                  <li><strong>Biaya:</strong> Tiap perjalanan butuh <span className="text-amber-500 font-medium">100 Copper per jam</span> dan <span className="text-red-400 font-medium">1x Ransum</span> (beli di Pasar).</li>
+                  <li><strong>Biaya:</strong> Tiap perjalanan butuh <span className="text-amber-500 font-medium">biaya Copper/Silver</span> dan <span className="text-red-400 font-medium">bekal makanan</span> (sesuai tier lokasi dan durasi).</li>
                   <li><strong>Energi:</strong> Karaktermu tidak boleh sedang bekerja. Kamu harus memiliki waktu yang pas untuk melakukan eksplorasi.</li>
                   <li><strong>Hasil:</strong> Material yang kamu dapat berbeda tiap lokasi. Cocokkan lokasi dengan Profesi yang ingin kamu latih.</li>
                 </ul>
@@ -325,13 +325,27 @@ export default function ExplorePage() {
                   <ul className="text-sm text-gray-400 space-y-2">
                       <li className="flex justify-between items-center">
                           <span>Biaya Retribusi:</span>
-                          <span className="font-mono text-amber-500 font-semibold bg-amber-500/10 px-2 py-0.5 rounded">{selectedDuration ? selectedDuration * 100 : '?'} Copper</span>
+                          <span className="font-mono text-amber-500 font-semibold bg-amber-500/10 px-2 py-0.5 rounded">
+                            {selectedDuration && selectedLocation.entryCostHelper ? (
+                                <>
+                                  {(selectedLocation.entryCostHelper.silverCostPerHour * selectedDuration > 0) && (
+                                    <span className="text-gray-300 mr-1">{selectedLocation.entryCostHelper.silverCostPerHour * selectedDuration} Silver + </span>
+                                  )}
+                                  {selectedLocation.entryCostHelper.copperCostPerHour * selectedDuration} Copper
+                                </>
+                            ) : '?'}
+                          </span>
                       </li>
-                      <li className="flex justify-between items-center">
-                          <span>Item Bekal:</span>
-                          <span className="font-mono text-red-400 font-semibold bg-red-400/10 px-2 py-0.5 rounded">1x Ransum</span>
+                      <li className="flex justify-between items-start text-right">
+                          <span className="whitespace-nowrap mr-4 mt-1">Item Bekal:</span>
+                          <span className="font-mono text-red-400 font-semibold bg-red-400/10 px-2 py-0.5 rounded text-xs break-words max-w-[200px]">
+                            {selectedDuration && selectedLocation.entryCostHelper ? (
+                              `${Math.max(selectedLocation.entryCostHelper.provisions.minQty, Math.ceil(selectedDuration * selectedLocation.entryCostHelper.provisions.qtyPerHour))}x (${selectedLocation.entryCostHelper.provisions.acceptedItemNames.join(' atau ')})`
+                            ) : '1x Ransum'}
+                          </span>
                       </li>
-                      <li className="text-xs italic text-gray-500 mt-2 text-center">*Karakter tidak boleh sedang bekerja.</li>
+                      <li className="text-xs italic text-amber-500/70 mt-2 text-center">* Lokasi lebih tinggi memerlukan biaya & bekal kualitas lebih tinggi.</li>
+                      <li className="text-xs italic text-gray-500 text-center">* Karakter tidak boleh sedang bekerja.</li>
                   </ul>
               </div>
 
