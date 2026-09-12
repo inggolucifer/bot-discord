@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Player = require('../../models/Player');
 const Law = require('../../models/Law');
-const { getRealmIndex } = require('../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const { logTransaction } = require('../../utils/logger');
 const { escapeRegex } = require('../../utils/escapeRegex');
 
@@ -95,9 +95,6 @@ module.exports = {
         // Validation: Only Mortal can learn Law!
         const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
 
-        if (player.isNormalCultivator || realmIdx > 0) {
-            return interaction.editReply('❌ Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).');
-        }
 
         const itemName = interaction.options.getString('nama_item');
         await player.populate('inventory.itemId');
@@ -117,6 +114,11 @@ module.exports = {
         const lawToLearn = await Law.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(lawName)}\\s*$`, 'i') });
 
         if (!lawToLearn) return interaction.editReply(`❌ Hukum Alam **${lawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`);
+
+        const minRealmIdx = lawToLearn.minRealmIndex || 0;
+        if (realmIdx < minRealmIdx) {
+            return interaction.editReply(`❌ Hukum Alam **${lawToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`);
+        }
 
         // Limit Law to 1
         if (player.laws.length >= 1) {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const Item = require('../../models/Item');
 const Exploration = require('../../models/Exploration');
 const TransactionLog = require('../../models/TransactionLog');
@@ -139,9 +140,10 @@ router.post('/start', authenticateToken, async (req, res) => {
                 throw new CustomError('Kamu sedang melakukan eksplorasi lain.', 400);
             }
 
-            // Validasi realm level sederhana
-            if (player.systemCultivation.stage < location.minRealmLevel) {
-                 throw new CustomError(`Kultivasi tidak cukup kuat untuk wilayah ini.`, 403);
+            // Validasi realm level
+            const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            if (playerRealmIdx < location.minRealmLevel) {
+                 throw new CustomError(`Kultivasi tidak cukup kuat untuk wilayah ini. Butuh minimal Realm Index ${location.minRealmLevel}.`, 403);
             }
 
             // Retribusi & Syarat Ransum

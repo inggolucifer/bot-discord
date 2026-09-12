@@ -4,6 +4,7 @@ const Asset = require('../../../models/Asset');
 const { checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
 const { escapeRegex } = require('../../../utils/escapeRegex');
+const { getRealmIndex, getRealmName } = require('../../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -30,6 +31,12 @@ module.exports = {
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
     if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri. Beli lewat shop kalau tersedia.` });
+    }
+
+    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const minRealmIdx = asset.minRealmIndex || 0;
+    if (playerRealmIdx < minRealmIdx) {
+        return interaction.editReply({ content: `❌ "${asset.name}" membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.` });
     }
 
     const currentTotalAssets = player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0);

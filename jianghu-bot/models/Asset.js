@@ -24,6 +24,7 @@ const assetSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: '-' },
   imageUrl: { type: String, default: null },
+  minRealmIndex: { type: Number, default: 0 },
 
   // === Tipe 1: Income (claim currency harian) ===
   dailyProfit: { type: Number, default: 0 },

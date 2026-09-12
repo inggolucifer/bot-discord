@@ -232,3 +232,10 @@ module.exports = {
     attemptBreakthrough,
     updateCultivationRole
 };
+
+function getRealmName(idx) {
+  const realm = SYSTEM_REALMS[idx];
+  if (realm) return realm.name;
+  return 'Unknown Realm';
+}
+module.exports.getRealmName = getRealmName;
