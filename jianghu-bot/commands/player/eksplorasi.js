@@ -34,18 +34,21 @@ module.exports = {
       const discordId = interaction.user.id;
 
       if (subcommand === 'lokasi') {
+
         const embed = new EmbedBuilder()
           .setTitle('🗺️ Daftar Lokasi Eksplorasi')
           .setColor(0x3498db)
-          .setDescription('Berikut adalah lokasi yang bisa kamu eksplorasi:');
+          .setDescription('Berikut adalah lokasi (Provinsi) yang bisa kamu eksplorasi:');
 
         LOCATIONS.forEach(loc => {
+          let m = loc.drops?.monsters ? loc.drops.monsters.map(x => x.name).join(', ') : 'Tidak ada catatan monster';
           embed.addFields({
              name: loc.name,
-             value: `*Realm Min:* ${loc.minRealmLevel}\n*Durasi:* ${loc.durations.join(', ')} Jam\n*Info:* ${loc.description}`,
+             value: `*Realm Min:* ${loc.minRealmLevel}\n*Durasi:* ${loc.durations.join(', ')} Jam\n*Info:* ${loc.description}\n*Penghuni:* ${m}`,
              inline: false
           });
         });
+
 
         embed.setFooter({ text: 'Untuk mulai eksplorasi, kunjungi Web Dashboard!' });
         return interaction.editReply({ embeds: [embed] });
@@ -79,9 +82,92 @@ module.exports = {
          return interaction.editReply({ embeds: [embed] });
       }
 
+
       if (subcommand === 'klaim') {
-          return interaction.editReply({ content: '💡 **Untuk mendapatkan notifikasi visual loot yang lebih baik**, silahkan klaim melalui [Web Dashboard](https://immortal-x.online/explore).' });
+         const userId = interaction.user.id;
+         const player = await Player.findOne({ discordId: userId, guildId: interaction.guildId }).populate('inventory.itemId');
+         if (!player) return interaction.editReply({ content: '❌ Karakter tidak ditemukan.' });
+
+         const activeExp = await Exploration.findOne({ discordId: userId, status: 'exploring' }).populate('drops.items.itemId');
+         if (!activeExp) return interaction.editReply({ content: '❌ Kamu tidak memiliki eksplorasi yang aktif.' });
+
+         if (new Date() < activeExp.endTime) {
+            return interaction.editReply({ content: '❌ Waktu eksplorasi belum selesai.' });
+         }
+
+         // Ambil detail lokasi untuk bestiary/world-building info
+         const locationData = LOCATIONS.find(l => l.name === activeExp.location);
+
+         // Process drops
+         player.currency.copper += activeExp.drops.copper || 0;
+         player.currency.silver += activeExp.drops.silver || 0;
+         player.currency.gold += activeExp.drops.gold || 0;
+
+         let itemDropText = [];
+         for (const dropItem of activeExp.drops.items) {
+             if (!dropItem.itemId) continue;
+             const invItem = player.inventory.find(i => {
+                  const id = i.itemId && i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
+                  return id === dropItem.itemId._id.toString();
+             });
+             if (invItem) {
+                 invItem.quantity += dropItem.quantity;
+             } else {
+                 player.inventory.push({ itemId: dropItem.itemId._id, quantity: dropItem.quantity });
+             }
+             const style = require('../../utils/dramatic').getRankStyle(dropItem.itemId.rank || 'Common');
+             itemDropText.push(`${style.emoji} **${dropItem.itemId.name}** x${dropItem.quantity}`);
+         }
+
+         player.customStatus = null;
+         await player.save();
+         activeExp.status = 'claimed';
+         await activeExp.save();
+
+         // Log Transaction
+         const TransactionLog = require('../../models/TransactionLog');
+         await TransactionLog.create([{
+             guildId: interaction.guildId,
+             type: 'exploration_claim',
+             description: `[${player.characterName}] klaim hadiah eksplorasi ${activeExp.location}. (+${activeExp.drops.copper} Copper, +${activeExp.drops.silver} Silver)`
+         }]);
+
+         // Lore / Dramatic embed
+         const { dramaticTitle, ansiColorize } = require('../../utils/dramatic');
+         const embed = new EmbedBuilder()
+            .setColor(0x2ecc71)
+            .setTitle(`🗺️ Eksplorasi Selesai: ${activeExp.location}`);
+
+         let desc = `Kamu berhasil kembali dengan selamat dari **${activeExp.location}**.
+`;
+
+         if (locationData && locationData.drops?.monsters && locationData.drops?.monsters.length > 0) {
+             const randomMonster = locationData.drops?.monsters[Math.floor(Math.random() * locationData.drops?.monsters.length)];
+             desc += `\n⚔️ *Dalam perjalananmu, kamu sempat berhadapan dengan ${randomMonster.name} (${randomMonster.desc}). Berkat ketangkasanmu, kamu berhasil selamat dan membawa pulang barang berharga!*
+`;
+         }
+
+         desc += `\n**💰 Perolehan Uang:**
+`;
+         if (activeExp.drops.copper) desc += `- ${activeExp.drops.copper} Copper Coins\n`;
+         if (activeExp.drops.silver) desc += `- ${activeExp.drops.silver} Silver Taels\n`;
+         if (activeExp.drops.gold) desc += `- ${activeExp.drops.gold} Gold Ingots\n`;
+         if (!activeExp.drops.copper && !activeExp.drops.silver && !activeExp.drops.gold) desc += `- *Tidak ada*
+`;
+
+         desc += `\n**🎒 Perolehan Item:**
+`;
+         if (itemDropText.length > 0) {
+             desc += itemDropText.join('\n');
+         } else {
+             desc += `- *Tidak ada*`;
+         }
+
+         embed.setDescription(desc);
+
+         return interaction.editReply({ embeds: [embed] });
       }
+
 
       if (subcommand === 'mulai') {
           return interaction.editReply({ content: '💡 **Fitur ini eksklusif di Website!**\nSilahkan kunjungi [Web Dashboard](https://immortal-x.online/explore) untuk memilih lokasi, durasi, dan memulai Eksplorasi dengan tampilan UI yang lebih lengkap dan estetik.' });

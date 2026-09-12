@@ -408,14 +408,19 @@ module.exports = {
              loser = p1Hp > 0 ? opponent : challenger;
          }
 
+         const { dramaticTitle } = require('../../utils/dramatic');
          battleLog += `\n🏆 **${winner.characterName}** memenangkan duel ini!`;
 
          const resultEmbed = new EmbedBuilder()
             .setColor(0xe67e22)
-            .setTitle(`⚔️ Hasil Duel: ${challenger.characterName} vs ${opponent.characterName}`)
-            .setDescription(battleLog);
+            .setTitle(`⚔️ Pertarungan Sengit: ${challenger.characterName} vs ${opponent.characterName}`)
+            .setDescription(battleLog)
+            .addFields(
+               { name: '🎉 Pemenang', value: `**${winner.characterName}** membuktikan kekuatan kultivasinya lebih unggul di medan pertempuran!` }
+            );
 
          await msg.edit({ content: null, embeds: [resultEmbed], components: [] });
+
 
       } catch (e) {
          if (e.code === 'InteractionCollectorError') {
