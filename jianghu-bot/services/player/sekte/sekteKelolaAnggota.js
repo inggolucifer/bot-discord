@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'
 const Sect = require('../../../models/Sect');
 const Player = require('../../../models/Player');
 const { syncPlayerSectLabel } = require('../../../utils/sectSync');
+const { getRealmIndex } = require('../../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -27,6 +28,15 @@ module.exports = {
 
     const targetPlayer = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!targetPlayer) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar sebagai karakter.` });
+
+    // Validasi Realm Index untuk jabatan
+    const targetRealmIdx = getRealmIndex(targetPlayer.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    if (posisi === 'Wakil Ketua' && targetRealmIdx < 3) {
+        return interaction.editReply({ content: `❌ Jabatan Wakil Ketua membutuhkan minimal Realm Index 3. ${target.username} saat ini berada di Realm Index ${targetRealmIdx}.` });
+    }
+    if (posisi === 'Tetua' && targetRealmIdx < 2) {
+        return interaction.editReply({ content: `❌ Jabatan Tetua membutuhkan minimal Realm Index 2. ${target.username} saat ini berada di Realm Index ${targetRealmIdx}.` });
+    }
 
     // Cek target sedang di sekte lain atau tidak -- kalau di sekte lain, tolak (harus keluar dulu / kick dulu dari sekte lama)
     const targetOtherSect = await Sect.findOne({

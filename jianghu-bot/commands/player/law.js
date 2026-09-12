@@ -96,7 +96,10 @@ module.exports = {
         const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
 
         if (player.isNormalCultivator || realmIdx > 0) {
-            return interaction.editReply('❌ Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).');
+            // Kita sudah tidak membatasi ini hanya ke Mortal, karena sekarang ada minRealmIndex.
+            // Biarkan lewat dan dicek minRealmIndex-nya nanti
+            // (Tapi kalau design lama beneran maunya cuma Mortal, user perlu adjust di luar prompt ini).
+            // Tapi karena instruksi bilang "Setiap Law punya batas realm", kita ganti validasi-nya.
         }
 
         const itemName = interaction.options.getString('nama_item');
@@ -117,6 +120,11 @@ module.exports = {
         const lawToLearn = await Law.findOne({ guildId: interaction.guildId, name: new RegExp(`^\\s*${escapeRegex(lawName)}\\s*$`, 'i') });
 
         if (!lawToLearn) return interaction.editReply(`❌ Hukum Alam **${lawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`);
+
+        const minRealmIdx = lawToLearn.minRealmIndex || 0;
+        if (realmIdx < minRealmIdx) {
+            return interaction.editReply(`❌ Hukum Alam **${lawToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`);
+        }
 
         // Limit Law to 1
         if (player.laws.length >= 1) {

@@ -136,6 +136,12 @@ module.exports = {
 
         if (!manualToLearn) return interaction.editReply(`❌ Manual **${manualName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`);
 
+        const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+        const minRealmIdx = manualToLearn.minRealmIndex || 0;
+        if (realmIdx < minRealmIdx) {
+            return interaction.editReply(`❌ Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`);
+        }
+
         if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {
             return interaction.editReply('❌ Kamu sudah memiliki Manual ini.');
         }
