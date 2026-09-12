@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Player = require('../models/Player');
+const AdminLog = require('../models/AdminLog');
 const { SYSTEM_REALMS } = require('../utils/cultivation');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/jianghu';
@@ -129,6 +130,13 @@ async function migrate() {
                 if (!isDryRun) {
                     player.markModified('systemCultivation');
                     await player.save();
+
+                    await AdminLog.create({
+                        guildId: player.guildId,
+                        adminId: 'SYSTEM_MIGRATION_SCRIPT',
+                        action: 'MIGRATE_NARRATIVE_REALM',
+                        details: `${player.characterName}: ${narrativeRealm} (${narrativeStage}) -> ${mappedRealm} (Tahap ${mappedStage})`
+                    });
                 }
 
                 migratedCount++;
