@@ -25,6 +25,7 @@ const itemSchema = new mongoose.Schema({
   origin: { type: String, default: null },
 
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
+  minRealmIndex: { type: Number, default: 0 },
   basePrice: { type: Number, default: 0, min: 0 },
   priceCurrency: { type: String, enum: CURRENCY_ENUM, default: 'silver' },
 

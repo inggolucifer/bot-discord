@@ -5,6 +5,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
+const { getRealmIndex } = require('../../utils/cultivation');
 
 // POST /api/equipment/equip
 router.post('/equip', authenticateToken, async (req, res) => {
@@ -28,6 +29,12 @@ router.post('/equip', authenticateToken, async (req, res) => {
 
         const item = invItem.itemId;
         if (!item) return res.status(404).json({ error: 'Item details not found' });
+
+        const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+        const minRealmIdx = item.minRealmIndex || 0;
+        if (playerRealmIdx < minRealmIdx) {
+            return res.status(400).json({ error: `Item ini membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.` });
+        }
 
         // Map item category to equipment slot
         let slot = null;

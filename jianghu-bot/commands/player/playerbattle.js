@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const Player = require('../../models/Player');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
+const { getRealmIndex } = require('../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,7 +36,14 @@ module.exports = {
 
       if (!opponent) return interaction.editReply('❌ Lawan belum terdaftar di dunia ini.');
 
-      // 3. Stats Calculation
+      // 3. Realm Matchmaking Validation
+      const p1RealmIdx = getRealmIndex(challenger.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+      const p2RealmIdx = getRealmIndex(opponent.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+      if (Math.abs(p1RealmIdx - p2RealmIdx) > 1) {
+          return interaction.editReply(`❌ Perbedaan ranah kultivasi terlalu jauh untuk berduel secara adil. (Batas maksimal beda 1 Realm)`);
+      }
+
+      // 4. Stats Calculation
       const p1Stats = calculatePlayerStats(challenger, challenger.laws, challenger.manuals);
       const p2Stats = calculatePlayerStats(opponent, opponent.laws, opponent.manuals);
 

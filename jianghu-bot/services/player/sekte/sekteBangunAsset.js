@@ -5,6 +5,8 @@ const { checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
 const { getPlayerSect } = require('../../../utils/sectUtils');
 const { escapeRegex } = require('../../../utils/escapeRegex');
+const { getRealmIndex } = require('../../../utils/cultivation');
+const Player = require('../../../models/Player');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -38,6 +40,13 @@ module.exports = {
     if (!asset) return interaction.editReply({ content: `❌ Aset "${namaAset}" tidak ditemukan.` });
     if (!asset.buildable) {
       return interaction.editReply({ content: `❌ "${asset.name}" tidak bisa dibangun mandiri.` });
+    }
+
+    const player = await Player.findOne({ discordId: interaction.user.id, guildId: interaction.guildId });
+    const playerRealmIdx = getRealmIndex(player?.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const minRealmIdx = asset.minRealmIndex || 0;
+    if (playerRealmIdx < minRealmIdx) {
+        return interaction.editReply({ content: `❌ "${asset.name}" membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.` });
     }
 
     const fakeRecipe = { materials: asset.buildRequirements || [] };

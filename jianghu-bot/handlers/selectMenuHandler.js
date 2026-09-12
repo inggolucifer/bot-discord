@@ -117,6 +117,9 @@ async function handleSelectMenu(interaction) {
     const { getRealmIndex } = require('../utils/cultivation');
     const p1RealmIdx = p1.systemCultivation ? getRealmIndex(p1.systemCultivation.realm) : 0;
     const p2RealmIdx = p2.systemCultivation ? getRealmIndex(p2.systemCultivation.realm) : 0;
+    if (Math.abs(p1RealmIdx - p2RealmIdx) > 1) {
+        return interaction.reply({ content: '❌ Perbedaan ranah kultivasi pemilik terlalu jauh untuk berduel secara adil. (Batas maksimal beda 1 Realm)', flags: MessageFlags.Ephemeral });
+    }
 
     pet2.isLocked = true;
     p2.markModified('pets');

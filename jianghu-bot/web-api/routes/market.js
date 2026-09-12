@@ -3,6 +3,7 @@ const router = express.Router();
 const Shop = require('../../models/Shop');
 const Auction = require('../../models/Auction');
 const Player = require('../../models/Player');
+const { getRealmIndex } = require('../../utils/cultivation');
 const Item = require('../../models/Item');
 const Pet = require('../../models/Pet');
 const Asset = require('../../models/Asset');
@@ -141,6 +142,18 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
             // Cek jika penjual mencoba menawar barangnya sendiri
             if (auction.sellerId && auction.sellerId.toString() === player._id.toString()) {
                 throw new CustomError('Anda tidak bisa menawar barang lelang sendiri.', 400);
+            }
+
+            if (auction) {
+                const Item = require('../../models/Item');
+                const itemDef = await Item.findById(auction.itemId);
+                if (itemDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = itemDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx - 1) {
+                        throw new CustomError(`Barang ini terlalu tinggi tingkatannya. Butuh minimal Realm Index ${minRealmIdx - 1} untuk menawar.`, 400);
+                    }
+                }
             }
 
             const minBid = auction.highestBid > 0 ? auction.highestBid + 1 : auction.startingBid;
@@ -305,6 +318,28 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             const player = await Player.findOne({ discordId: userId }).session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
+            if (shopItem.refModel === 'Item') {
+                const Item = require('../../models/Item');
+                const itemDef = await Item.findById(shopItem.refId);
+                if (itemDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = itemDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx - 1) {
+                        throw new CustomError(`Barang ini terlalu tinggi tingkatannya. Butuh minimal Realm Index ${minRealmIdx - 1} untuk membeli.`, 400);
+                    }
+                }
+            } else if (shopItem.refModel === 'Asset') {
+                const Asset = require('../../models/Asset');
+                const assetDef = await Asset.findById(shopItem.refId);
+                if (assetDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = assetDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx) {
+                        throw new CustomError(`Aset ini membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.`, 400);
+                    }
+                }
+            }
+
             const { payCurrency } = require('../../utils/currency');
             if (!payCurrency(player.currency, totalPrice, currencyType)) {
                  throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
@@ -418,6 +453,28 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
 
             const player = await Player.findOne({ discordId: userId }).session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            if (listing.type === 'item') {
+                const Item = require('../../models/Item');
+                const itemDef = await Item.findById(listing.refId || listing.itemId);
+                if (itemDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = itemDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx - 1) {
+                        throw new CustomError(`Barang ini terlalu tinggi tingkatannya. Butuh minimal Realm Index ${minRealmIdx - 1} untuk membeli.`, 400);
+                    }
+                }
+            } else if (listing.type === 'asset') {
+                const Asset = require('../../models/Asset');
+                const assetDef = await Asset.findById(listing.refId);
+                if (assetDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = assetDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx) {
+                        throw new CustomError(`Aset ini membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.`, 400);
+                    }
+                }
+            }
 
             const { payCurrency } = require('../../utils/currency');
             if (!payCurrency(player.currency, totalPrice, currencyType)) {
@@ -708,6 +765,19 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
             if (bidAmount <= auction.currentBid) throw new CustomError('Tawaran harus lebih tinggi dari penawaran saat ini.', 400);
 
             const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+
+            if (auction) {
+                const Item = require('../../models/Item');
+                const itemDef = await Item.findById(auction.itemId);
+                if (itemDef) {
+                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const minRealmIdx = itemDef.minRealmIndex || 0;
+                    if (playerRealmIdx < minRealmIdx - 1) {
+                        throw new CustomError(`Barang ini terlalu tinggi tingkatannya. Butuh minimal Realm Index ${minRealmIdx - 1} untuk menawar.`, 400);
+                    }
+                }
+            }
             if (player.currency[auction.currencyType] < bidAmount) {
                  throw new CustomError('Uang tidak cukup.', 400);
             }

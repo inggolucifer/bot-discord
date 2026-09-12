@@ -11,6 +11,7 @@ const lawSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },
   name: { type: String, required: true },
   element: { type: String, default: 'Netral' },
+  minRealmIndex: { type: Number, default: 0 },
   description: { type: String, default: '-' },
 
   // Flat stat bonuses granted by understanding this Law
