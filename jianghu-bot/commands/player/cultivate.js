@@ -204,12 +204,12 @@ Apakah kamu YAKIN ingin menerobos?`);
 
                  resultEmbed.setColor(0x2ecc71)
                     .setTitle('🌟 Terobosan Berhasil!')
-                    .setDescription(`Selamat! Kamu berhasil menerobos hambatan spiritualmu.\n\nKamu sekarang berada di tingkat:\n**${player.systemCultivation.realm}** (Tahap ${newStage})`);
+                    .setDescription(`Selamat! Kamu berhasil menerobos hambatan spiritualmu.\n\nTubuhmu memancarkan cahaya menyilaukan saat aliran Qi membasuh sumsum tulangmu. Kamu merasakan kekuatan baru mengalir deras di pembuluh darahmu!\n\nKamu sekarang berada di tingkat:\n**${player.systemCultivation.realm}** (Tahap ${newStage})`);
 
                  if (isNewRealm) {
                      // Update Role discord kalau realm ganti
                      await updateCultivationRole(interaction, player.systemCultivation.realm);
-                     resultEmbed.addFields({ name: '🎉 Naik Realm', value: `Kamu mendapatkan role khusus **${player.systemCultivation.realm}** di server!` });
+                     resultEmbed.addFields({ name: '🎉 Naik Realm', value: `Langit bergemuruh menyambut kelahiran seorang ahli baru! Kamu mendapatkan role khusus **${player.systemCultivation.realm}** di server!` });
                  }
             } else {
                  // Gagal
@@ -219,7 +219,7 @@ Apakah kamu YAKIN ingin menerobos?`);
 
                  resultEmbed.setColor(0xe74c3c)
                     .setTitle('💥 Terobosan Gagal!')
-                    .setDescription(`Pondasi spiritualmu tidak cukup kuat menahan gejolak energi.\n\nKamu kehilangan **${penalty.toLocaleString()}** Qi (25%).\nKamu harus bermeditasi lagi sebelum bisa mencoba menerobos.`);
+                    .setDescription(`Pondasi spiritualmu tidak cukup kuat menahan gejolak energi.\n\nDarah segar menyembur dari mulutmu saat sirkulasi Qi menjadi kacau dan melukai organ dalammu!\n\nKamu kehilangan **${penalty.toLocaleString()}** Qi (25%).\nKamu harus memulihkan diri dan bermeditasi lagi sebelum bisa mencoba menerobos.`);
             }
 
             player.markModified('systemCultivation');
