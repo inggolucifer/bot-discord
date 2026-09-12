@@ -578,8 +578,8 @@ router.get('/public-profile/:discordId', async (req, res) => {
                 characterImage: player.characterImage,
                 sect: player.sect,
                 status: player.status,
-                realm: player.realm,
-                stage: player.stage,
+                realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+                stage: String(player.systemCultivation?.stage || 0),
                 systemCultivation: player.systemCultivation,
                 totalWealth: player.totalWealth,
                 totalAssets,
@@ -1718,8 +1718,6 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
             player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
             player.stats = { baseHp: 100, baseAtk: 15, baseDef: 10, baseSpd: 10 };
             player.systemCultivation = { realm: 'Fondasi Fana (Mortal Foundation)', stage: 0, qi: 0, lastSyncAt: new Date() };
-            player.realm = 'Mortal';
-            player.stage = '-';
             player.age = 16;
             player.isNormalCultivator = false;
 
