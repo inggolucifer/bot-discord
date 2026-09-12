@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
 export const metadata: Metadata = {
-  title: "Jianghu RP - Meta Economy Dashboard",
-  description: "Web Dashboard for Jianghu RP Discord Bot",
+  title: "Jianghu World - Player Dashboard",
+  description: "Web Dashboard for Jianghu World Discord RPG Bot",
 };
 
 import Navbar from "@/components/Navbar";
@@ -42,7 +42,7 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="bg-black/90 border-t border-[#333] p-6 text-center text-xs text-gray-500 mt-auto relative z-10">
-          <p>© {new Date().getFullYear()} Jianghu Roleplay Server. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Jianghu World RPG. All Rights Reserved.</p>
         </footer>
         <GlobalChatWrapper />
         <ToastContainer />

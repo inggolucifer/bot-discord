@@ -5,7 +5,7 @@ const { syncRealmRole } = require('../../utils/realmRole');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('daftar')
-    .setDescription('Daftar karakter baru untuk memulai roleplay di Jianghu World')
+    .setDescription('Daftar karakter baru untuk memulai petualangan di Jianghu World')
     .addStringOption((opt) =>
       opt.setName('nama').setDescription('Nama karakter kamu').setRequired(true).setMaxLength(32)
     )
