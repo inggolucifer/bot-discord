@@ -4,7 +4,7 @@ const Asset = require('../../../models/Asset');
 const { checkMaterials, consumeMaterials } = require('../../../utils/crafting');
 const { logTransaction } = require('../../../utils/logger');
 const { escapeRegex } = require('../../../utils/escapeRegex');
-const { getRealmIndex } = require('../../../utils/cultivation');
+const { getRealmIndex, getRealmName } = require('../../../utils/cultivation');
 
 module.exports = {
   data: new SlashCommandBuilder()

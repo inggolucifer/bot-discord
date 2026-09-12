@@ -521,7 +521,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
         const CustomError = require('../utils/CustomError');
         const TransactionLog = require('../../models/TransactionLog');
         const Law = require('../../models/Law');
-        const { getRealmIndex } = require('../../utils/cultivation');
+        const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
         let lawName = '';
         let messageResponse = '';
 
@@ -534,9 +534,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-            // if (player.isNormalCultivator || realmIdx > 0) {
             //    throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
-            // }
 
             const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
