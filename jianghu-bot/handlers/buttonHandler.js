@@ -68,8 +68,13 @@ async function handleButton(interaction) {
     player.pets = [];
     player.assets = [];
     player.currency = { silver: 0, gold: 0, jade: 0, spirit: 0 };
-    player.realm = 'Mortal';
-    player.stage = '-';
+    player.systemCultivation = {
+        realm: 'Fondasi Fana (Mortal Foundation)',
+        stage: 0,
+        qi: 0,
+        lastSyncAt: new Date(),
+        isFlawedFoundation: false
+    };
     player.sect = 'Tanpa Sekte (Rogue Cultivator)';
     player.age = 16;
     player.totalWealth = 0; // it gets recalculated anyway but let's reset it to be clean

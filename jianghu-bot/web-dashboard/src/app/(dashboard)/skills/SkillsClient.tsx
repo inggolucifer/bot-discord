@@ -134,7 +134,7 @@ export default function SkillsClient() {
 
 
     const { laws = [], manuals = [] } = profile;
-    const isMortal = profile.realm === 'Mortal' || profile.systemCultivation?.realm === 'Fondasi Fana (Mortal Foundation)';
+    const isMortal = profile.realm === 'Fondasi Fana (Mortal Foundation)';
 
     const getElementIcon = (element: string) => {
         switch (element?.toLowerCase()) {

@@ -334,8 +334,11 @@ async function handleModal(interaction) {
     const rt = parseRealm(interaction.fields.getTextInputValue('realm'));
     if (rt.error) return interaction.reply({ content: `❌ ${rt.error}`, flags: MessageFlags.Ephemeral });
 
-    let stage = '-';
-    try { stage = interaction.fields.getTextInputValue('stage')?.trim() || '-'; } catch (e) {}
+    let stage = 0;
+    try {
+      const parsedStage = parseInt(interaction.fields.getTextInputValue('stage')?.trim(), 10);
+      if (!isNaN(parsedStage)) stage = parsedStage;
+    } catch (e) {}
     const ageRaw = interaction.fields.getTextInputValue('age').trim();
     let genderRaw = '';
     try { genderRaw = interaction.fields.getTextInputValue('gender')?.trim() || ''; } catch (e) {}
@@ -352,9 +355,23 @@ async function handleModal(interaction) {
       gender = normalized;
     }
 
-    player.realm = rt.realm; player.stage = stage; player.age = age; player.gender = gender; player.characterImage = characterImage;
+    if (!player.systemCultivation) {
+      player.systemCultivation = {
+        realm: rt.realm,
+        stage: stage,
+        qi: 0,
+        lastSyncAt: new Date(),
+        isFlawedFoundation: false
+      };
+    } else {
+      player.systemCultivation.realm = rt.realm;
+      player.systemCultivation.stage = stage;
+    }
+
+    player.age = age; player.gender = gender; player.characterImage = characterImage;
+    player.markModified('systemCultivation');
     await player.save();
-    await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PLAYER', targetUserId: discordId, details: `Ranah: ${rt.realm}, Umur: ${age}` });
+    await logAdminAction(interaction.client, { guildId: interaction.guildId, adminId: interaction.user.id, action: 'EDIT_PLAYER', targetUserId: discordId, details: `Ranah: ${rt.realm}, Tahap: ${stage}, Umur: ${age}` });
 
     syncRealmRole(interaction.client, interaction.guildId, discordId, rt.realm).catch((e) => console.error('[REALM-ROLE] Gagal sync:', e.message));
     return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x2980b9).setTitle('✅ Data Player Diperbarui').setDescription(`Profil **${player.characterName}** berhasil diupdate.`)] });

@@ -12,11 +12,17 @@ router.get('/', authenticateToken, async (req, res) => {
              return res.status(400).json({ error: 'Guild ID tidak ditemukan di sesi Anda.' });
         }
 
-        const topPlayers = await Player.find({ guildId, status: 'active' })
-            .select('discordId characterName currency totalWealth characterImage sect stage realm')
+        const topPlayersRaw = await Player.find({ guildId, status: 'active' })
+            .select('discordId characterName currency totalWealth characterImage sect systemCultivation')
             .sort({ totalWealth: -1 })
             .limit(10)
             .lean();
+
+        const topPlayers = topPlayersRaw.map((p) => ({
+             ...p,
+             realm: p.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+             stage: String(p.systemCultivation?.stage || 0)
+        }));
 
         res.json(topPlayers);
     } catch (error) {

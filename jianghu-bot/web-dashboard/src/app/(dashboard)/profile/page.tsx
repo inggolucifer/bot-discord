@@ -141,7 +141,7 @@ export default function ProfilePage() {
             <p className="text-sm text-gray-400 mb-2">{profile.sect || 'Tanpa Sekte'}</p>
             <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
                <span className="inline-flex items-center gap-1 bg-blue-900/40 border border-blue-900/50 rounded px-2 py-1 text-xs text-blue-300 font-bold">
-                  <Zap size={12} /> {profile.systemCultivation?.realm || 'Fondasi Fana'} (Tahap {profile.systemCultivation?.stage || 0})
+                  <Zap size={12} /> {profile.realm} (Tahap {profile.stage})
                </span>
                {profile.systemCultivation?.isFlawedFoundation && (
                    <span
