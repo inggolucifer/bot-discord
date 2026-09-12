@@ -120,8 +120,9 @@ const playerSchema = new mongoose.Schema({
 
   characterName: { type: String, required: true },
 
-  realm: { type: String, default: 'Mortal' },
-  stage: { type: String, default: '-' },
+  // DEPRECATED — data historis narasi lama, sudah tidak dipakai logika manapun. Jangan tulis ke sini lagi.
+  legacyRealm: { type: String, default: 'Mortal' },
+  legacyStage: { type: String, default: '-' },
 
   systemCultivation: {
     realm: { type: String, default: 'Fondasi Fana (Mortal Foundation)' },

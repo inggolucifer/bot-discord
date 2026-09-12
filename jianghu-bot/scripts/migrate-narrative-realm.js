@@ -40,6 +40,13 @@ async function migrate() {
 
         if (isDryRun) {
             console.log('--- MODE DRY-RUN AKTIF. TIDAK ADA PERUBAHAN YANG DISIMPAN KE DATABASE ---');
+        } else {
+            console.log('Melakukan rename field collection realm -> legacyRealm, stage -> legacyStage...');
+            const result = await mongoose.connection.collection('players').updateMany(
+                {},
+                { $rename: { 'realm': 'legacyRealm', 'stage': 'legacyStage' } }
+            );
+            console.log(`Rename field selesai. Modified ${result.modifiedCount} documents.`);
         }
 
         const players = await Player.find({});
@@ -65,7 +72,7 @@ async function migrate() {
                 }
 
                 // Skip if narrative realm is just Mortal (default)
-                if (!player.realm || player.realm === 'Mortal' || player.realm.toLowerCase() === 'mortal' || player.realm.toLowerCase() === 'fana') {
+                if (!player.legacyRealm || player.legacyRealm === 'Mortal' || player.legacyRealm.toLowerCase() === 'mortal' || player.legacyRealm.toLowerCase() === 'fana') {
                     skippedCount++;
                     continue;
                 }
@@ -74,8 +81,8 @@ async function migrate() {
                 let mappedRealm = 'Pemurnian Qi (Qi Refining)';
                 let mappedStage = 1;
 
-                const narrativeRealm = player.realm;
-                const narrativeStage = player.stage || '-';
+                const narrativeRealm = player.legacyRealm;
+                const narrativeStage = player.legacyStage || '-';
 
                 // Coba cocokkan dengan nama realm terdekat (kasar)
                 if (narrativeToSystemMapping[narrativeRealm]) {
@@ -109,7 +116,7 @@ async function migrate() {
                     mappedStage = 9; // 9
                 }
 
-                console.log(`Migrasi: [${player.characterName}] ${player.realm} (${player.stage}) -> ${mappedRealm} (Tahap ${mappedStage})`);
+                console.log(`Migrasi: [${player.characterName}] ${player.legacyRealm} (${player.legacyStage}) -> ${mappedRealm} (Tahap ${mappedStage})`);
 
                 player.systemCultivation = {
                     realm: mappedRealm,
