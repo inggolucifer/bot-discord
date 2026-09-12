@@ -88,8 +88,8 @@ module.exports = {
     const timeReq = recipe.craftingTimeHours || 1;
     const embed = new EmbedBuilder()
       .setColor(0x27ae60)
-      .setTitle('⚒️ Crafting Dimulai')
-      .setDescription(`Di **${asset.name}**, kamu menugaskan pembuatan **${jumlah}x ${recipe.resultQuantity} ${recipe.resultItemName}**.\n\nSetiap item membutuhkan waktu ${timeReq} jam untuk selesai (butuh Pekerja).\nBahan akan otomatis ditarik dari inventory.\nPastikan ada pekerja di aset ini!`);
+      .setTitle('⚒️ Memulai Proses Crafting')
+      .setDescription(`Api tungku menyala terang! Di **${asset.name}**, kamu mulai memproses material alam.\n\nKamu menugaskan pembuatan **${jumlah}x ${recipe.resultQuantity} ${recipe.resultItemName}**.\n\n*Setiap item membutuhkan waktu ${timeReq} jam untuk disempurnakan. Pastikan ada pekerja yang menjaga proses ini agar tidak gagal!*\nBahan baku telah diserap dari inventory-mu.`);
     return interaction.editReply({ embeds: [embed] });
   },
 };
