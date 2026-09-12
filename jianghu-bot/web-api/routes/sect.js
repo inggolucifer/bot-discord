@@ -3,6 +3,7 @@ const router = express.Router();
 const Player = require('../../models/Player');
 const Sect = require('../../models/Sect');
 const Asset = require('../../models/Asset');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const { authenticateToken } = require('../middlewares/auth');
 const { isUnderConstruction } = require('../../utils/crafting');
 const { isClaimedToday } = require('../../utils/timezone');
@@ -316,6 +317,12 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
             const assetDef = await Asset.findOne({ _id: assetId, guildId: player.guildId }).session(session);
             if (!assetDef || assetDef.type !== 'sect') {
                 throw new CustomError('Aset tidak valid atau bukan aset sekte.', 400);
+            }
+
+            const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            const minRealmIdx = assetDef.minRealmIndex || 0;
+            if (playerRealmIdx < minRealmIdx) {
+                throw new CustomError(`Aset ini membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.`, 403);
             }
 
             const buildReqs = assetDef.buildRequirements || [];

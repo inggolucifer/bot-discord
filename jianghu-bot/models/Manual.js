@@ -13,6 +13,8 @@ const manualSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: '-' },
 
+  minRealmIndex: { type: Number, default: 0 },
+
   maxLevel: { type: Number, default: 10 },
 
   // Base duration required to comprehend 1 level (in hours)

@@ -521,7 +521,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
         const CustomError = require('../utils/CustomError');
         const TransactionLog = require('../../models/TransactionLog');
         const Law = require('../../models/Law');
-        const { getRealmIndex } = require('../../utils/cultivation');
+        const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
         let lawName = '';
         let messageResponse = '';
 
@@ -534,9 +534,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-            if (player.isNormalCultivator || realmIdx > 0) {
-                throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
-            }
+            //    throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
 
             const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
@@ -553,6 +551,11 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             const lawToLearn = await Law.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractLawName)}\\s*$`, 'i') }).session(session);
 
             if (!lawToLearn) throw new CustomError(`Hukum Alam **${extractLawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+
+            const minRealmIdx = lawToLearn.minRealmIndex || 0;
+            if (realmIdx < minRealmIdx) {
+                throw new CustomError(`Hukum Alam **${lawToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
+            }
 
             if (player.laws.length >= 1) {
                 const currentLaw = player.laws[0];
@@ -631,6 +634,12 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             const manualToLearn = await Manual.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractManualName)}\\s*$`, 'i') }).session(session);
 
             if (!manualToLearn) throw new CustomError(`Manual **${extractManualName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+
+            const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            const minRealmIdx = manualToLearn.minRealmIndex || 0;
+            if (realmIdx < minRealmIdx) {
+                throw new CustomError(`Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
+            }
 
             if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {
                 throw new CustomError('Kamu sudah memiliki Manual ini.', 400);
