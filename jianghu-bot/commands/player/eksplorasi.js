@@ -41,7 +41,7 @@ module.exports = {
           .setDescription('Berikut adalah lokasi (Provinsi) yang bisa kamu eksplorasi:');
 
         LOCATIONS.forEach(loc => {
-          let m = loc.monsters ? loc.monsters.map(x => x.name).join(', ') : 'Tidak ada catatan monster';
+          let m = loc.drops?.monsters ? loc.drops.monsters.map(x => x.name).join(', ') : 'Tidak ada catatan monster';
           embed.addFields({
              name: loc.name,
              value: `*Realm Min:* ${loc.minRealmLevel}\n*Durasi:* ${loc.durations.join(', ')} Jam\n*Info:* ${loc.description}\n*Penghuni:* ${m}`,
@@ -128,7 +128,7 @@ module.exports = {
          const TransactionLog = require('../../models/TransactionLog');
          await TransactionLog.create([{
              guildId: interaction.guildId,
-             type: 'admin_grant',
+             type: 'exploration_claim',
              description: `[${player.characterName}] klaim hadiah eksplorasi ${activeExp.location}. (+${activeExp.drops.copper} Copper, +${activeExp.drops.silver} Silver)`
          }]);
 
@@ -141,8 +141,8 @@ module.exports = {
          let desc = `Kamu berhasil kembali dengan selamat dari **${activeExp.location}**.
 `;
 
-         if (locationData && locationData.monsters && locationData.monsters.length > 0) {
-             const randomMonster = locationData.monsters[Math.floor(Math.random() * locationData.monsters.length)];
+         if (locationData && locationData.drops?.monsters && locationData.drops?.monsters.length > 0) {
+             const randomMonster = locationData.drops?.monsters[Math.floor(Math.random() * locationData.drops?.monsters.length)];
              desc += `\n⚔️ *Dalam perjalananmu, kamu sempat berhadapan dengan ${randomMonster.name} (${randomMonster.desc}). Berkat ketangkasanmu, kamu berhasil selamat dan membawa pulang barang berharga!*
 `;
          }
