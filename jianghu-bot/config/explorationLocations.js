@@ -4,6 +4,14 @@ const EXPLORATION_LOCATIONS = [
         name: 'Hutan Bambu Pinggiran',
         description: 'Area aman untuk pemula. Cocok untuk mencari material dasar.',
         minRealmLevel: 0,
+        tier: 0,
+        copperCostPerHour: 50,
+        silverCostPerHour: 0,
+        provisions: {
+            acceptedItemNames: ["Makanan Matang", "Ransum Militer"],
+            minQty: 1,
+            qtyPerHour: 1 / 3
+        },
         durations: [1, 3, 6], // in hours
         drops: {
             currency: { copper: [5, 20] },
@@ -24,6 +32,14 @@ const EXPLORATION_LOCATIONS = [
         name: 'Danau Teratai Hitam',
         description: 'Danau yang tenang namun menyimpan bahaya tersembunyi. Sumber air dan material tanah.',
         minRealmLevel: 1,
+        tier: 1,
+        copperCostPerHour: 100,
+        silverCostPerHour: 0,
+        provisions: {
+            acceptedItemNames: ["Makanan Matang", "Sup Sayur Daging", "Daging Asap"],
+            minQty: 1,
+            qtyPerHour: 1 / 3
+        },
         durations: [2, 4, 8],
         drops: {
             currency: { copper: [15, 30] },
@@ -42,6 +58,14 @@ const EXPLORATION_LOCATIONS = [
         name: 'Lembah Iblis Beracun',
         description: 'Tempat berbahaya yang penuh dengan racun dan monster. Risiko tinggi, hadiah tinggi.',
         minRealmLevel: 1,
+        tier: 1,
+        copperCostPerHour: 150,
+        silverCostPerHour: 0,
+        provisions: {
+            acceptedItemNames: ["Daging Asap", "Sup Sayur Daging", "Makanan Matang"],
+            minQty: 1,
+            qtyPerHour: 1 / 3
+        },
         durations: [3, 6, 12],
         drops: {
             currency: { copper: [30, 60], silver: [0, 1] }, // low chance for 1 silver
@@ -61,6 +85,14 @@ const EXPLORATION_LOCATIONS = [
         name: 'Gua Kristal Roh',
         description: 'Gua kuno yang mengandung energi Qi tebal. Sangat langka materialnya.',
         minRealmLevel: 2,
+        tier: 2,
+        copperCostPerHour: 250,
+        silverCostPerHour: 0,
+        provisions: {
+            acceptedItemNames: ["Daging Asap", "Sup Sayur Daging", "Hidangan Ikan Asap"],
+            minQty: 1,
+            qtyPerHour: 0.5
+        },
         durations: [6, 12, 24],
         drops: {
             currency: { silver: [1, 4] },
@@ -79,6 +111,14 @@ const EXPLORATION_LOCATIONS = [
         name: 'Puncak Surga Runtuh',
         description: 'Area kultivator tingkat tinggi. Mengandung material langka sisa-sisa pertempuran para dewa.',
         minRealmLevel: 4,
+        tier: 3,
+        copperCostPerHour: 500,
+        silverCostPerHour: 0,
+        provisions: {
+            acceptedItemNames: ["Steik Daging Naga Tanah", "Pesta Istana Naga"],
+            minQty: 2,
+            qtyPerHour: 0.5
+        },
         durations: [12, 24, 48],
         drops: {
             currency: { silver: [5, 15], gold: [0, 1] },
@@ -93,4 +133,16 @@ const EXPLORATION_LOCATIONS = [
     }
 ];
 
-module.exports = { EXPLORATION_LOCATIONS };
+function getExplorationEntryCost(location, durationHours) {
+  return {
+    copperCost: (location.copperCostPerHour || 0) * durationHours,
+    silverCost: (location.silverCostPerHour || 0) * durationHours,
+    foodQty: Math.max(
+      location.provisions?.minQty || 0,
+      Math.ceil(durationHours * (location.provisions?.qtyPerHour || 0))
+    ),
+    acceptedItemNames: location.provisions?.acceptedItemNames || []
+  };
+}
+
+module.exports = { EXPLORATION_LOCATIONS, getExplorationEntryCost };

@@ -9,7 +9,8 @@ const CustomError = require('../utils/CustomError');
 const { authenticateToken } = require('../middlewares/auth');
 const mongoose = require('mongoose');
 const { escapeRegex } = require('../../utils/escapeRegex');
-const { EXPLORATION_LOCATIONS: LOCATIONS } = require('../../config/explorationLocations');
+const { EXPLORATION_LOCATIONS: LOCATIONS, getExplorationEntryCost } = require('../../config/explorationLocations');
+const { getTotalCopper, hasEnoughCurrency, payCurrency, RATE_TO_COPPER } = require('../../utils/currency');
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -86,7 +87,18 @@ async function generateDrops(location, durationHours, guildId, player) {
 }
 
 router.get('/locations', authenticateToken, (req, res) => {
-    res.json({ success: true, data: LOCATIONS });
+    // Add cost helper calculation for UI directly on locations array
+    const locationsWithCost = LOCATIONS.map(loc => {
+        return {
+            ...loc,
+            entryCostHelper: {
+                copperCostPerHour: loc.copperCostPerHour || 0,
+                silverCostPerHour: loc.silverCostPerHour || 0,
+                provisions: loc.provisions || null
+            }
+        };
+    });
+    res.json({ success: true, data: locationsWithCost });
 });
 
 router.get('/status', authenticateToken, async (req, res) => {
@@ -133,24 +145,33 @@ router.post('/start', authenticateToken, async (req, res) => {
             }
 
             // Retribusi & Syarat Ransum
-            const copperCost = 100 * durationHours;
-            const c = player.currency;
-            const totalCopper = c.copper + c.silver * 100 + c.gold * 10000 + c.jade * 1000000 + c.spirit * 100000000;
-            if (totalCopper < copperCost) {
-                throw new CustomError(`Kamu butuh ${copperCost} Copper untuk membiayai perjalanan ini.`, 400);
+            const { copperCost, silverCost, foodQty, acceptedItemNames } = getExplorationEntryCost(location, durationHours);
+            const totalCopperCost = copperCost + (silverCost * (RATE_TO_COPPER.silver || 100));
+
+            if (!hasEnoughCurrency(player.currency, totalCopperCost, 'copper')) {
+                let errorCostMsg = `${copperCost} Copper`;
+                if (silverCost > 0) errorCostMsg = `${silverCost} Silver dan ${copperCost} Copper`;
+                throw new CustomError(`Butuh biaya ${errorCostMsg} (lokasi ${location.name}, ${durationHours} jam). Uangmu tidak cukup.`, 400);
             }
 
-            const ransumIndex = player.inventory.findIndex(i => i.itemId.name === 'Ransum');
-            if (ransumIndex === -1 || player.inventory[ransumIndex].quantity < 1) {
-                throw new CustomError(`Kamu harus membawa minimal 1 Ransum untuk eksplorasi.`, 400);
+            let foundInvIndex = -1;
+            for (const acceptedName of acceptedItemNames) {
+                foundInvIndex = player.inventory.findIndex(i => i.itemId.name === acceptedName && i.quantity >= foodQty);
+                if (foundInvIndex !== -1) break; // found an item that has enough quantity
+            }
+
+            if (foundInvIndex === -1) {
+                throw new CustomError(`Butuh bekal ${foodQty}x (${acceptedItemNames.join(' / ')}). Milikmu tidak cukup.`, 400);
             }
 
             // Deduct cost and item
-            player.currency.copper -= copperCost;
-            // The negative copper will be handled by the normalizeCurrency hook on player.save()
-            player.inventory[ransumIndex].quantity -= 1;
-            if (player.inventory[ransumIndex].quantity <= 0) {
-                player.inventory.splice(ransumIndex, 1);
+            if (!payCurrency(player.currency, totalCopperCost, 'copper')) {
+                throw new CustomError('Gagal memotong biaya uang, ada kesalahan.', 500);
+            }
+
+            player.inventory[foundInvIndex].quantity -= foodQty;
+            if (player.inventory[foundInvIndex].quantity <= 0) {
+                player.inventory.splice(foundInvIndex, 1);
             }
 
             const activeExp = await Exploration.findOne({ discordId: userId, status: 'exploring' }).session(session);
