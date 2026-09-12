@@ -13,7 +13,7 @@ Sistem ekonomi berbasis hierarki kelipatan 100.
 * **100 Jade (🟢) = 1 Spirit (🔵)**
 
 > **Golden Rule Pendapatan:** Desain semua harga mengacu pada F2P Baseline Income (`/daily`), yang rata-rata menghasilkan **1 Silver per hari** (di luar event). Jika sebuah item berharga 10 Silver, artinya pemain butuh perjuangan login 10 hari tanpa pengeluaran.
-> **Sistem Barter:** Sangat didorong bagi pemain untuk menggunakan sistem Trade/Barter (tukar item dengan item) untuk mengurangi kebergantungan murni pada sistem uang bot, terutama dalam membangun Asset yang membutuhkan banyak bahan alam (kayu, batu).
+> **Sistem Barter:** Sangat didorong bagi pemain untuk menggunakan sistem Trade/Barter (tukar item dengan item/market) untuk mengurangi kebergantungan murni pada sistem uang bot, terutama dalam membangun Asset yang membutuhkan banyak bahan alam (kayu, batu).
 
 ---
 
@@ -43,7 +43,7 @@ Asset adalah jantung dari long-play. Untuk mencegah inflasi brutal, Asset pengha
 | **Tier 6+ (Dewa/Max Tier)** | **Maks 2 Gold** | **120 Hari** | `Profit Harian x 120` | 30 Hari | 50 Silver |
 
 ### B. Sistem Risiko & Guard (Bandit & Bencana Alam)
-*(Fitur Mendatang)* Asset yang dibangun di Jianghu tidak 100% aman selamanya.
+Asset yang dibangun di Jianghu tidak 100% aman selamanya.
 1. **Risiko Kerusakan:** Ada chance harian Asset diserang Bandit atau terkena Bencana Alam.
 2. **Kondisi Rusak:** Jika diserang/terkena bencana, Asset menjadi *Rusak (Halted)* dan tidak menghasilkan profit/material sampai diperbaiki.
 3. **Biaya Perbaikan:** Butuh Material konstruksi (Kayu, Batu) atau Currency.
@@ -79,17 +79,17 @@ Sama seperti Asset, pembuatan Item tidak boleh instan agar selaras dengan siklus
 
 ### C. Regulasi Shop Sistem
 * **Fungsi Utama:** Mencegah Deadlock bagi pemula. Shop hanya menjual bahan/alat Tier 1 (Primitif/Batu) dan Blueprint Dasar.
-* Barang Tier 3+ (Besi ke atas) dan Rank *Epic+* **DILARANG** masuk Shop permanen. Pemain harus craft, barter, atau drop dari bos.
+* Barang Tier 3+ (Besi ke atas) dan Rank *Epic+* **DILARANG** masuk Shop permanen. Pemain harus craft, barter, atau drop dari eksplorasi.
 
 ### D. Kualitas Deskripsi Item (Lore)
-Setiap entitas (Item/Asset/Pet) wajib memiliki deskripsi yang mendalam, mencerminkan era/tier-nya, dan memiliki fungsi naratif.
+Setiap entitas (Item/Asset/Pet) wajib memiliki deskripsi yang mendalam, mencerminkan era/tier-nya.
 * *Buruk:* "Kapak dari batu untuk potong pohon."
 * *Standar Emas:* "[Durability: 24 Jam] Sebuah kapak kasar dari zaman batu, diikat dengan akar kuat. Meskipun tumpul dan berat, alat ini adalah fondasi awal peradaban fana untuk menaklukkan Hutan Liar."
 
 ---
 
 ## 5. ATURAN PET & COMBAT VALUE
-Pet memberikan multiplier pertarungan (PvP/PvE). Progresi Pet dirancang untuk dikerjakan hingga berbulan-bulan sampai level maksimal (100).
+Pet memberikan multiplier pertarungan (PvP/PvE). Progresi Pet dirancang untuk dikerjakan perlahan hingga mencapai level maksimal.
 
 ### A. Harga & Nilai Pet
 * **Common:** 50 - 100 Silver
@@ -108,7 +108,7 @@ Pet memberikan multiplier pertarungan (PvP/PvE). Progresi Pet dirancang untuk di
 1. **Biaya Guard & Repair:** Pajak tersembunyi bagi pemilik Asset besar (lihat poin 3B).
 2. **Tool Destruction:** Alat yang pecah (`durabilityHours` habis) memaksa uang dan material terus berputar di market antar pemain.
 3. **Biaya Konstruksi Masif:** Asset tinggi butuh ribuan material mentah (menggerakkan pemain bawah untuk menjual ke pemain atas).
-4. **Pill Meditasi (Time-Skip):** Item premium (Gold/Jade) untuk skip waktu konstruksi/kultivasi.
+4. **Pill Meditasi (Time-Skip):** Item premium (Gold/Jade) untuk mempercepat waktu konstruksi/kultivasi.
 
 ---
 
@@ -130,4 +130,4 @@ Setiap output dari profesi tier tinggi (T4-T6) tidak boleh menjadi "dead item". 
 3. **Asset Industry Input:** Station tinggi membutuhkan materi intermediate batch processing, misalnya Baja Keras dari Tungku, atau Mass Pupuk Dasar dari Lahan Tani Kecil.
 4. **Tools Gate:** Recipe tier tinggi tidak bisa berjalan tanpa tool minTier yang di-craft dari Smithing.
 
-*Catatan Implementasi Buff:* Jika hook runtime system buff belum ada di backend `battle.js` atau `energyManager.js`, maka field `effectType`, `effectValue`, dan `effectDurationMinutes` pada item harus diparsing minimal untuk tampil secara tekstual di deskripsi item, menunggu integrasi sistem buff live.
+*Catatan Implementasi Buff:* Sistem buff mengevaluasi `effectType`, `effectValue`, dan `effectDurationMinutes` pada item yang di-consume untuk memberikan efek real-time kepada pemain.
