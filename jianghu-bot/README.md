@@ -1,6 +1,6 @@
 # Jianghu World Discord Bot
 
-Jianghu World adalah bot Discord untuk permainan Roleplay Xianxia/Wuxia dengan sistem ekonomi, item, pet, asset, dan turnamen.
+Jianghu World adalah bot Discord game RPG Xianxia/Wuxia mandiri dengan sistem kultivasi, ekonomi, profesi, item, pet, asset, eksplorasi, dan turnamen.
 
 ## Instalasi
 1. Pastikan memiliki Node.js v16+
