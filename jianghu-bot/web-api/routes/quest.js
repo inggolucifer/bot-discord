@@ -363,6 +363,16 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
                 details: `Player ${player.username} claimed quest ${quest.key}. Rewards: ${grantMessage.join(', ')}`
             }], { session });
 
+            const TransactionLog = require('../../models/TransactionLog');
+            await TransactionLog.create([{
+                guildId: player.guildId,
+                userId: player.discordId,
+                type: 'quest_reward',
+                amount: addedCopper, // Equivalent copper value of standard currencies added
+                currency: 'copper',
+                details: `Claimed quest ${quest.key}. Rewards: ${grantMessage.join(', ')}`
+            }], { session });
+
             res.json({ message: 'Reward berhasil diklaim!', rewardsStr: grantMessage.join(', '), questLog: player.questLog });
         });
     } catch (err) {

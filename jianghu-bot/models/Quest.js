@@ -16,15 +16,19 @@ const questSchema = new mongoose.Schema({
         'reach_settlement',
         'reach_building',
         'submit_item',
-        'wait_time'
+        'wait_time',
+        'kill_beast',
+        'defeat_bandit'
       ]
     },
     targetNpcId: mongoose.Schema.Types.ObjectId,
     targetSettlementName: String,
     targetBuildingName: String,
+    target: String, // generic target name (e.g. beast name or 'bandit')
     itemName: String,
     itemId: mongoose.Schema.Types.ObjectId,
     quantity: { type: Number, default: 1 },
+    amount: { type: Number, default: 1 },
     durationHours: { type: Number, default: 1 },
     description: String
   }],
