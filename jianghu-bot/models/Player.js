@@ -115,6 +115,23 @@ const assetOwnedSchema = new mongoose.Schema({
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
+
+  questLog: [{
+    questId: { type: mongoose.Schema.Types.ObjectId, ref: 'Quest' },
+    questKey: { type: String },
+    status: { type: String, enum: ['active', 'completed', 'claimed', 'failed'], default: 'active' },
+    startedAt: { type: Date, default: Date.now },
+    completedAt: { type: Date, default: null },
+    claimedAt: { type: Date, default: null },
+    objectiveProgress: [{
+      index: Number,
+      done: { type: Boolean, default: false },
+      waitStartedAt: Date,
+      waitDeadlineAt: Date,
+      submittedQty: { type: Number, default: 0 }
+    }],
+    lastTouchedAt: Date
+  }],
   discordId: { type: String, required: true, index: true },
   guildId: { type: String, required: true, index: true },
 

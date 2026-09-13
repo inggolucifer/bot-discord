@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
-import { Map, MapPin, Building, Activity, Navigation, ExternalLink, RefreshCw, Sun, Shield } from "lucide-react";
+import { Map, MapPin, Building, Activity, Navigation, ExternalLink, RefreshCw, Sun, Shield, User, MessageCircle, FileText, CheckCircle } from "lucide-react";
+import NpcPanel from './NpcPanel';
+import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 
 export default function WorldPage() {
@@ -22,12 +24,30 @@ export default function WorldPage() {
   // Sect Exam State
   const [selectedExamSectId, setSelectedExamSectId] = useState<string | null>(null);
   const [isExamModalOpen, setIsExamModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'location' | 'npcs' | 'quests'>('location');
+  const [questLog, setQuestLog] = useState<any[]>([]);
+  const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
 
   useEffect(() => {
     fetchData();
     const interval = setInterval(fetchTravelStatus, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const fetchQuests = async () => {
+    try {
+        const res = await api.get('/world/quests');
+        if (res.data.questLog) setQuestLog(res.data.questLog);
+    } catch (err) {
+        console.error('Gagal memuat quest:', err);
+    }
+  };
+
+  useEffect(() => {
+      if (!loading && (!travelStatus || travelStatus.status !== 'traveling')) {
+          fetchQuests();
+      }
+  }, [loading, travelStatus]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -89,6 +109,10 @@ export default function WorldPage() {
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal keluar bangunan');
     }
+  };
+
+  const handleTalkToNpc = (npc: any) => {
+      setSelectedNpc(npc);
   };
 
   const handleStartTravel = async () => {
@@ -166,8 +190,32 @@ export default function WorldPage() {
         </div>
       )}
 
-      {/* Current Location */}
+      {/* Tabs */}
       {!travelStatus || travelStatus.status !== 'traveling' ? (
+        <div className="flex gap-4 mb-6 border-b border-[#2a3142] pb-2">
+            <button
+                onClick={() => setActiveTab('location')}
+                className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${activeTab === 'location' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-gray-200'}`}
+            >
+                <MapPin className="w-5 h-5" /> Lokasi
+            </button>
+            <button
+                onClick={() => setActiveTab('npcs')}
+                className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${activeTab === 'npcs' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-gray-200'}`}
+            >
+                <User className="w-5 h-5" /> NPC ({locationData?.npcsHere?.length || 0})
+            </button>
+            <button
+                onClick={() => setActiveTab('quests')}
+                className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${activeTab === 'quests' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-gray-200'}`}
+            >
+                <FileText className="w-5 h-5" /> Quest Log
+            </button>
+        </div>
+      ) : null}
+
+      {/* Tab Content */}
+      {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'location' && (
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-[#1a1f2e]/80 border border-[#2a3142] rounded-xl p-6 shadow-xl backdrop-blur-sm">
             <div className="flex justify-between items-start mb-4">
@@ -283,7 +331,58 @@ export default function WorldPage() {
             </div>
           )}
         </div>
-      ) : null}
+      )}
+
+      {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'npcs' && (
+          <div className="bg-[#1a1f2e]/80 border border-[#2a3142] rounded-xl p-6 shadow-xl backdrop-blur-sm min-h-[400px]">
+              <h2 className="text-xl font-serif font-bold text-[#c5a880] mb-6 flex items-center gap-2">
+                  <MessageCircle className="w-6 h-6 text-blue-400" /> Orang-Orang di Sekitar
+              </h2>
+
+              {!selectedNpc ? (
+                  <div>
+                      {locationData?.npcsHere && locationData.npcsHere.length > 0 ? (
+                          <div className="grid md:grid-cols-2 gap-4">
+                              {locationData.npcsHere.map((npc: any) => (
+                                  <div key={npc._id} className="bg-[#1e2532] border border-[#2a3142] rounded-lg p-4 flex justify-between items-center hover:border-blue-500/50 transition-colors">
+                                      <div>
+                                          <h3 className="text-lg font-bold text-gray-200">{npc.name}</h3>
+                                          {npc.title && <p className="text-sm text-gray-400">{npc.title}</p>}
+                                      </div>
+                                      <button
+                                          onClick={() => handleTalkToNpc(npc)}
+                                          className="bg-blue-900/50 hover:bg-blue-800 text-blue-200 px-4 py-2 rounded-lg border border-blue-700/50 transition-colors"
+                                      >
+                                          Sapa
+                                      </button>
+                                  </div>
+                              ))}
+                          </div>
+                      ) : (
+                          <p className="text-gray-500 italic text-center py-8">Tidak ada siapa-siapa di sini.</p>
+                      )}
+                  </div>
+              ) : (
+                  <NpcPanel
+                      npcId={selectedNpc._id}
+                      onBack={() => setSelectedNpc(null)}
+                      onQuestAccepted={() => {
+                          fetchQuests();
+                      }}
+                  />
+              )}
+          </div>
+      )}
+
+      {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'quests' && (
+          <QuestLog
+              questLog={questLog}
+              onQuestUpdated={() => {
+                  fetchQuests();
+              }}
+          />
+      )}
+
       {/* Sect Exam Modal */}
       {isExamModalOpen && selectedExamSectId && (
           <SectExamModal
