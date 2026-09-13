@@ -23,6 +23,8 @@ const itemSchema = new mongoose.Schema({
   effectValue: { type: Number, default: null },
   effectTierGate: { type: Number, default: null },
   origin: { type: String, default: null },
+  coldResistance: { type: Number, default: 0, min: 0 },
+  heatResistance: { type: Number, default: 0, min: 0 },
 
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
   minRealmIndex: { type: Number, default: 0 },
