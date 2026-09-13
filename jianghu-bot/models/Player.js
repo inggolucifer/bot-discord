@@ -120,6 +120,12 @@ const playerSchema = new mongoose.Schema({
 
   characterName: { type: String, required: true },
 
+  currentLocation: {
+    regionSlug: { type: String, default: 'central_plains' },
+    settlementName: { type: String, default: 'Desa Xingcun' },
+    buildingName: { type: String, default: null }
+  },
+
   // DEPRECATED — data historis narasi lama, sudah tidak dipakai logika manapun. Jangan tulis ke sini lagi.
   legacyRealm: { type: String, default: 'Mortal' },
   legacyStage: { type: String, default: '-' },
