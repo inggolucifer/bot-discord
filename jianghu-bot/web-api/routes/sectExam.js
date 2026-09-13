@@ -19,13 +19,14 @@ router.get('/:sectId/examInfo', authenticateToken, async (req, res) => {
     }
 
     const exam = sect.entranceTest;
-    const player = await Player.findOne({ discordId: req.user.discordId, guildId: req.user.guildId });
+    const player = await Player.findOne({ discordId: req.user.userId, guildId: req.user.guildId });
+    if(!player) return res.status(404).json({ message: 'Player tidak ditemukan.' });
 
     // Check cooldown
     let isOnCooldown = false;
     let cooldownRemaining = 0;
     if (player.sectExamState && player.sectExamState.lastAttempts) {
-      const attempt = player.sectExamState.lastAttempts.find(a => a.sectId.toString() === sect._id.toString());
+      const attempt = player.sectExamState.lastAttempts.find(a => a.sectId && a.sectId.toString() === sect._id.toString());
       if (attempt) {
         const timeSince = Date.now() - attempt.at.getTime();
         const cdMs = (exam.cooldownHours || 24) * 60 * 60 * 1000;
@@ -60,15 +61,17 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'Ujian masuk tidak tersedia untuk sekte ini.' });
     }
 
-    const player = await Player.findOne({ discordId: req.user.discordId, guildId: req.user.guildId });
+    const player = await Player.findOne({ discordId: req.user.userId, guildId: req.user.guildId });
+
+    if(!player) return res.status(404).json({ message: 'Player tidak ditemukan.'});
 
     // 1. Validations
     if (player.status !== 'active') return res.status(400).json({ message: 'Status pemain tidak aktif.' });
 
     // Member check
-    const currentSectRole = await sect.getRoleOf(req.user.discordId);
-    if (currentSectRole) {
-      return res.status(400).json({ message: 'Anda sudah menjadi anggota sekte ini.' });
+    const existingSect = await getPlayerSect(player.guildId, player.discordId);
+    if (existingSect) {
+      return res.status(400).json({ message: 'Anda sudah menjadi anggota sekte.' });
     }
 
     // Realm check
@@ -78,7 +81,9 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
     }
 
     // Traveling check
-    if (player.currentLocation.isTraveling) {
+    const Travel = require('../../models/Travel');
+    const activeTravel = await Travel.findOne({ discordId: player.discordId, status: 'traveling' });
+    if (activeTravel) {
       return res.status(400).json({ message: 'Anda sedang dalam perjalanan dan tidak bisa memulai ujian.' });
     }
 
@@ -101,7 +106,7 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
 
     // Cooldown check
     if (player.sectExamState && player.sectExamState.lastAttempts) {
-      const attempt = player.sectExamState.lastAttempts.find(a => a.sectId.toString() === sect._id.toString());
+      const attempt = player.sectExamState.lastAttempts.find(a => a.sectId && a.sectId.toString() === sect._id.toString());
       if (attempt) {
         const cdMs = (sect.entranceTest.cooldownHours || 24) * 60 * 60 * 1000;
         if (Date.now() - attempt.at.getTime() < cdMs) {
@@ -119,7 +124,7 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
       const combatResult = simulateExamCombat(playerStats, exam.guardianStatBlock);
 
       if (!player.sectExamState) player.sectExamState = { lastAttempts: [] };
-      const attempts = player.sectExamState.lastAttempts.filter(a => a.sectId.toString() !== sect._id.toString());
+      const attempts = player.sectExamState.lastAttempts.filter(a => a.sectId && a.sectId.toString() !== sect._id.toString());
       attempts.push({ sectId: sect._id, at: new Date(), result: combatResult.won ? 'success' : 'fail' });
       player.sectExamState.lastAttempts = attempts;
 
@@ -171,7 +176,8 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
 // GET /api/sect/exam/status
 router.get('/exam/status', authenticateToken, async (req, res) => {
   try {
-    const player = await Player.findOne({ discordId: req.user.discordId, guildId: req.user.guildId });
+    const player = await Player.findOne({ discordId: req.user.userId, guildId: req.user.guildId });
+    if(!player) return res.status(404).json({ message: 'Player tidak ditemukan.' });
     if (!player.sectExamState || !player.sectExamState.activeType) {
       return res.json({ active: false });
     }
@@ -196,7 +202,7 @@ router.get('/exam/status', authenticateToken, async (req, res) => {
 // POST /api/sect/exam/complete
 router.post('/exam/complete', authenticateToken, async (req, res) => {
   try {
-    const player = await Player.findOne({ discordId: req.user.discordId, guildId: req.user.guildId });
+    const player = await Player.findOne({ discordId: req.user.userId, guildId: req.user.guildId });
     if (!player.sectExamState || !player.sectExamState.activeType) {
       return res.status(400).json({ message: 'Tidak ada ujian aktif yang bisa diselesaikan.' });
     }
@@ -219,7 +225,7 @@ router.post('/exam/complete', authenticateToken, async (req, res) => {
       // Clear state and log success
       player.sectExamState.activeSectId = null;
       player.sectExamState.activeType = null;
-      const attempts = player.sectExamState.lastAttempts.filter(a => a.sectId.toString() !== sect._id.toString());
+      const attempts = player.sectExamState.lastAttempts.filter(a => a.sectId && a.sectId.toString() !== sect._id.toString());
       attempts.push({ sectId: sect._id, at: new Date(), result: 'success' });
       player.sectExamState.lastAttempts = attempts;
 
