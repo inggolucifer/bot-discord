@@ -477,7 +477,7 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const travel = await Travel.findOne({ userId });
+        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
         if (travel && travel.status === 'traveling') {
             return res.status(400).json({ error: 'Tidak bisa berbicara saat dalam perjalanan.' });
         }
