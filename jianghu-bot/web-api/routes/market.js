@@ -318,6 +318,27 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             const player = await Player.findOne({ discordId: userId }).session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
+            const activeTravel = await require('../../models/Travel').findOne({ discordId: userId, status: 'traveling' });
+            if (activeTravel) throw new CustomError('Kamu sedang dalam perjalanan.', 400);
+
+            if (shopItem.locationTag) {
+                const location = player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null };
+
+                if (!location.buildingName) {
+                    throw new CustomError('Kamu harus masuk ke bangunan di settlement ini untuk membeli dari toko ini.', 400);
+                }
+
+                const building = await require('../../models/Location').findOne({
+                    guildId: player.guildId,
+                    settlementName: location.settlementName,
+                    buildingName: location.buildingName
+                }).session(session);
+
+                if (!building || building.shopTag !== shopItem.locationTag) {
+                    throw new CustomError('Kamu harus masuk ke bangunan yang tepat di settlement ini untuk membeli dari toko ini.', 400);
+                }
+            }
+
             if (shopItem.refModel === 'Item') {
                 const Item = require('../../models/Item');
                 const itemDef = await Item.findById(shopItem.refId);
