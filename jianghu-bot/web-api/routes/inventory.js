@@ -6,6 +6,7 @@ const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
 const Asset = require('../../models/Asset');
 const { isUnderConstruction, checkMaterials, consumeMaterials } = require('../../utils/crafting');
+const { getPlayerSect } = require('../../utils/sectUtils');
 
 // Endpoint to fetch player's inventory
 router.get('/', authenticateToken, async (req, res) => {
@@ -639,6 +640,15 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             const minRealmIdx = manualToLearn.minRealmIndex || 0;
             if (realmIdx < minRealmIdx) {
                 throw new CustomError(`Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
+            }
+
+            if (manualToLearn.requiredSectId) {
+                const playerSect = await getPlayerSect(guildId, player.discordId);
+                if (!playerSect || !playerSect._id.equals(manualToLearn.requiredSectId)) {
+                    await manualToLearn.populate('requiredSectId');
+                    const sectName = manualToLearn.requiredSectId ? manualToLearn.requiredSectId.name : 'Sekte Tersembunyi';
+                    throw new CustomError(`Manual ini hanya bisa dipelajari anggota sekte **${sectName}**.`, 400);
+                }
             }
 
             if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {

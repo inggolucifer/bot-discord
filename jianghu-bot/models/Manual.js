@@ -35,6 +35,8 @@ const manualSchema = new mongoose.Schema({
   effectValue: { type: Number, default: 1.2 },
   triggerChance: { type: Number, default: 0.5, min: 0, max: 1 },
 
+  requiredSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
+
   createdBy: { type: String, default: null }
 }, { timestamps: true });
 

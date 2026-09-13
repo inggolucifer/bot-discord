@@ -4,6 +4,7 @@ const Manual = require('../../models/Manual');
 const { hasEnoughCurrency, payCurrency, formatCurrency } = require('../../utils/currency');
 const { logTransaction } = require('../../utils/logger');
 const ms = require('ms');
+const { getPlayerSect } = require('../../utils/sectUtils');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -140,6 +141,15 @@ module.exports = {
         const minRealmIdx = manualToLearn.minRealmIndex || 0;
         if (realmIdx < minRealmIdx) {
             return interaction.editReply(`❌ Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`);
+        }
+
+        if (manualToLearn.requiredSectId) {
+            const playerSect = await getPlayerSect(interaction.guildId, player.discordId);
+            if (!playerSect || !playerSect._id.equals(manualToLearn.requiredSectId)) {
+                await manualToLearn.populate('requiredSectId');
+                const sectName = manualToLearn.requiredSectId ? manualToLearn.requiredSectId.name : 'Sekte Tersembunyi';
+                return interaction.editReply(`❌ Manual ini hanya bisa dipelajari anggota sekte **${sectName}**.`);
+            }
         }
 
         if (player.manuals.some(m => m.manualId && m.manualId.equals(manualToLearn._id))) {
