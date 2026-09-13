@@ -63,7 +63,7 @@ async function evaluateQuestProgress(player, quest, questLogEntry, context = {})
 
 
       case 'kill_beast':
-        if (context.killedBeastName && objective.target && context.killedBeastName.toLowerCase() === objective.target.toLowerCase()) {
+        if (context.killedBeastName && objective.target && context.killedBeastName.toLowerCase().includes(objective.target.toLowerCase())) {
            progress.submittedQty = (progress.submittedQty || 0) + (context.amount || 1);
            if (progress.submittedQty >= (objective.amount || objective.quantity || 1)) {
               progress.done = true;
