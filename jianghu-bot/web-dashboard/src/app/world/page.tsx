@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Button } from "@/components/ui/Button";
+import { Map, MapPin, Building, Activity, Navigation, ExternalLink, RefreshCw, Sun, Shield } from "lucide-react";
+import SectExamModal from './SectExamModal';
 
 export default function WorldPage() {
   const [locationData, setLocationData] = useState<any>(null);
@@ -15,6 +18,10 @@ export default function WorldPage() {
   const [climateData, setClimateData] = useState<any>(null);
   const [travelDestination, setTravelDestination] = useState<string>('');
   const [useEscort, setUseEscort] = useState(false);
+
+  // Sect Exam State
+  const [selectedExamSectId, setSelectedExamSectId] = useState<string | null>(null);
+  const [isExamModalOpen, setIsExamModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -184,12 +191,25 @@ export default function WorldPage() {
             )}
 
             {locationData?.currentLocation?.buildingName ? (
-              <button
-                onClick={handleExit}
-                className="w-full bg-red-900/50 hover:bg-red-800/80 text-red-200 px-4 py-3 rounded-lg transition-colors border border-red-700/50 font-medium"
-              >
-                Keluar ke Jalanan
-              </button>
+              <div className="flex flex-col gap-3">
+                  {['sect_hall', 'dojo'].includes(locationData.currentLocation.buildingType) && locationData.currentLocation.linkedSectId && (
+                      <Button
+                          onClick={() => {
+                              setSelectedExamSectId(locationData.currentLocation.linkedSectId);
+                              setIsExamModalOpen(true);
+                          }}
+                          className="w-full bg-blue-900/50 hover:bg-blue-800/80 text-blue-200 border-blue-700/50"
+                      >
+                          <Shield className="w-4 h-4 mr-2" /> Ujian Masuk Sekte
+                      </Button>
+                  )}
+                  <button
+                    onClick={handleExit}
+                    className="w-full bg-red-900/50 hover:bg-red-800/80 text-red-200 px-4 py-3 rounded-lg transition-colors border border-red-700/50 font-medium"
+                  >
+                    Keluar ke Jalanan
+                  </button>
+              </div>
             ) : (
               <div>
                 <h3 className="font-semibold mb-3 text-gray-300">Bangunan yang tersedia:</h3>
@@ -202,12 +222,14 @@ export default function WorldPage() {
                         <span className="text-gray-200 block">{b.buildingName}</span>
                         <span className="text-xs text-gray-500 capitalize">{b.buildingType}</span>
                       </div>
-                      <button
-                        onClick={() => handleEnter(b.buildingName)}
-                        className="bg-[#2d3748] hover:bg-[#4a5568] text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-[#4a5568]"
-                      >
-                        Masuk
-                      </button>
+                      <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEnter(b.buildingName)}
+                            className="bg-[#2d3748] hover:bg-[#4a5568] text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-[#4a5568]"
+                          >
+                            Masuk
+                          </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -262,6 +284,17 @@ export default function WorldPage() {
           )}
         </div>
       ) : null}
+      {/* Sect Exam Modal */}
+      {isExamModalOpen && selectedExamSectId && (
+          <SectExamModal
+              sectId={selectedExamSectId}
+              onClose={() => {
+                  setIsExamModalOpen(false);
+                  setSelectedExamSectId(null);
+                  fetchData();
+              }}
+          />
+      )}
     </div>
   );
 }
