@@ -36,7 +36,7 @@ router.get('/location', authenticateToken, async (req, res) => {
         }
 
         res.json({
-            currentLocation: location,
+            currentLocation: currentLocationData,
             buildings: buildings
         });
     } catch (error) {
