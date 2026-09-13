@@ -272,6 +272,63 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
     }
 });
 
+router.get('/climate', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId }).populate('inventory.itemId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const location = player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null };
+        const regionSlug = location.regionSlug;
+
+        const WeatherConfig = require('../../models/WeatherConfig');
+        const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+
+        const { getClimatePenalties, getPlayerClimateResistance } = require('../../utils/climate');
+
+        const resistance = await getPlayerClimateResistance(player);
+
+        const penalties = getClimatePenalties(regionSlug, resistance, { weatherConfig });
+
+        let message = '';
+        if (penalties.inComfort) {
+            message = 'Suhu terasa nyaman.';
+            if (penalties.rawTemp < penalties.effectiveTemp) {
+                message = 'Suhu nyaman berkat perlengkapan penahan dingin.';
+            } else if (penalties.rawTemp > penalties.effectiveTemp) {
+                message = 'Suhu nyaman berkat perlengkapan penahan panas.';
+            }
+        } else {
+             message = penalties.reason;
+        }
+
+        res.json({
+            regionSlug: regionSlug,
+            settlementName: location.settlementName,
+            temperature: penalties.rawTemp,
+            effectiveTemperature: penalties.effectiveTemp,
+            comfortMin: 10, // Matching config
+            comfortMax: 30, // Matching config
+            inComfort: penalties.inComfort,
+            weather: weatherConfig ? weatherConfig.currentWeather : 'Cerah',
+            resistance: {
+                cold: resistance.coldResistance,
+                heat: resistance.heatResistance
+            },
+            penalties: {
+                qiRegenMultiplier: penalties.qiRegenMultiplier,
+                combatStatMultiplier: penalties.combatStatMultiplier,
+                reason: penalties.reason
+            },
+            message: message
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Gagal memuat status cuaca dan suhu' });
+    }
+});
+
 router.get('/shops', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;

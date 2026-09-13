@@ -98,8 +98,14 @@ function getQiRatePerMinute(realmIndex, stage) {
     return Math.floor(realm.qiRatePerMinute * stageMultiplier);
 }
 
+const { getClimatePenalties, getPlayerClimateResistance } = require('./climate');
+
 // Menghitung Qi aktual berdasarkan waktu berlalu sejak lastSyncAt
-function calculateCurrentQi(player) {
+// Memerlukan argument resistance dan/atau config cuaca agar sinkron.
+// Karena syncPlayerCultivation async, kita bisa merubah ini menjadi async,
+// Tapi untuk menghindari breaking changes pada pemanggil sync, kita buat ini menerima params
+// Kita bisa buat syncPlayerCultivation yang akan menghandle logic climate-nya.
+function calculateCurrentQi(player, climateRegenMultiplier = 1.0) {
     if (!player.systemCultivation) {
          player.systemCultivation = {
             realm: 'Fondasi Fana (Mortal Foundation)',
@@ -118,7 +124,9 @@ function calculateCurrentQi(player) {
     const lastSync = new Date(sysCult.lastSyncAt);
     const minutesPassed = Math.max(0, (now - lastSync) / (1000 * 60));
 
-    let generatedQi = Math.floor(minutesPassed * ratePerMinute);
+    // Apply climate penalty if outside comfort zone
+    let effectiveRate = ratePerMinute * climateRegenMultiplier;
+    let generatedQi = Math.floor(minutesPassed * effectiveRate);
     let newQi = Math.floor(sysCult.qi + generatedQi);
 
     if (newQi > maxQi) {
@@ -136,7 +144,19 @@ function calculateCurrentQi(player) {
 
 // Fungsi utama sinkronisasi database (dipanggil saat mau update atau read penting)
 async function syncPlayerCultivation(player) {
-    const calc = calculateCurrentQi(player);
+    // 1. Dapatkan WeatherConfig (opsional, jika tidak ada = cerah/default)
+    const WeatherConfig = require('../models/WeatherConfig');
+    const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+
+    // 2. Dapatkan resistance
+    const resistance = await getPlayerClimateResistance(player);
+
+    // 3. Kalkulasi penalti climate
+    const regionSlug = player.currentLocation?.regionSlug || 'central_plains';
+    const penalties = getClimatePenalties(regionSlug, resistance, { weatherConfig });
+
+    const calc = calculateCurrentQi(player, penalties.qiRegenMultiplier);
+
     player.systemCultivation.qi = calc.currentQi;
     player.systemCultivation.lastSyncAt = new Date();
     // Tidak di-save disini untuk efisiensi, caller yang akan .save()
