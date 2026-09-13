@@ -129,7 +129,7 @@ const setupServer = (client) => {
     const inventoryRoutes = require('./routes/inventory');
     const marketRoutes = require('./routes/market');
     const sectRoutes = require('./routes/sect');
-const sectExamRoutes = require('./routes/sectExam');
+    const sectExamRoutes = require('./routes/sectExam');
     const workerRoutes = require('./routes/worker');
     const almanackRoutes = require('./routes/almanack');
     const petRoutes = require('./routes/pet');
@@ -148,7 +148,7 @@ const sectExamRoutes = require('./routes/sectExam');
     app.use('/api/inventory', inventoryRoutes);
     app.use('/api/market', marketRoutes);
     app.use('/api/sect', sectExamRoutes);
-app.use('/api/sect', sectRoutes);
+    app.use('/api/sect', sectRoutes);
     app.use('/api/worker', workerRoutes);
     app.use('/api/almanack', almanackRoutes);
     app.use('/api/pet', petRoutes);
