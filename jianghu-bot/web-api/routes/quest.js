@@ -9,7 +9,7 @@ const AdminLog = require('../../models/AdminLog');
 const { authenticateToken } = require('../middlewares/auth');
 const { evaluateQuestProgress } = require('../../utils/questProgress');
 const { getRealmIndex, syncPlayerCultivation } = require('../../utils/cultivation');
-const { payCurrency } = require('../../utils/currency');
+const { payCurrency, getTotalCopper } = require('../../utils/currency');
 const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
 const { MAX_ACTIVE_QUESTS, DEFAULT_WAIT_DURATION_HOURS } = require('../../config/questConfig');
@@ -364,6 +364,7 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
             }], { session });
 
             const TransactionLog = require('../../models/TransactionLog');
+            const addedCopper = getTotalCopper(rewards);
             await TransactionLog.create([{
                 guildId: player.guildId,
                 userId: player.discordId,

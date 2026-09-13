@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const { EXPLORATION_LOCATIONS: LOCATIONS, getExplorationEntryCost } = require('../../config/explorationLocations');
 const { getTotalCopper, hasEnoughCurrency, payCurrency, RATE_TO_COPPER } = require('../../utils/currency');
+const { evaluateQuestProgress } = require('../../utils/questProgress');
+const Quest = require('../../models/Quest');
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -247,6 +249,26 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 } else {
                     player.inventory.push({ itemId: dropItem.itemId._id || dropItem.itemId, quantity: dropItem.quantity });
                 }
+            }
+
+            // Quest Hook: kill_beast
+            let questsUpdated = false;
+            for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+                 const quest = await Quest.findById(questEntry.questId).session(session);
+                 if (!quest) continue;
+
+                 const context = { killedBeastName: exploration.location, amount: 1 };
+                 const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+                 if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
+                     questEntry.objectiveProgress = updatedProgress;
+                     questEntry.lastTouchedAt = new Date();
+                     if (allDone) {
+                         questEntry.status = 'completed';
+                         questEntry.completedAt = new Date();
+                     }
+                     questsUpdated = true;
+                 }
             }
 
             player.customStatus = null; // Clear status
