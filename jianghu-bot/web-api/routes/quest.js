@@ -11,6 +11,7 @@ const { evaluateQuestProgress } = require('../../utils/questProgress');
 const { getRealmIndex, syncPlayerCultivation } = require('../../utils/cultivation');
 const { payCurrency } = require('../../utils/currency');
 const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/CustomError');
 const { MAX_ACTIVE_QUESTS, DEFAULT_WAIT_DURATION_HOURS } = require('../../config/questConfig');
 
 // This will be mounted under /api/world/quests
@@ -37,7 +38,7 @@ router.post('/:questId/accept', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const travel = await Travel.findOne({ userId });
+        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
         if (travel && travel.status === 'traveling') {
             return res.status(400).json({ error: 'Tidak bisa menerima quest saat dalam perjalanan.' });
         }
@@ -51,7 +52,12 @@ router.post('/:questId/accept', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Kamu tidak berada di lokasi yang sama dengan NPC ini.' });
         }
 
+        if (!npcId) return res.status(400).json({ error: 'npcId tidak valid.' });
+
         const quest = await Quest.findById(questId);
+        if (quest && quest.giverNpcId && quest.giverNpcId.toString() !== npcId.toString()) {
+            return res.status(400).json({ error: 'NPC giver tidak sesuai.' });
+        }
         if (!quest || !quest.isActive) return res.status(404).json({ error: 'Quest tidak ditemukan atau tidak aktif.' });
 
         // validasi realm
@@ -86,13 +92,39 @@ router.post('/:questId/accept', authenticateToken, async (req, res) => {
                  existingQuest.startedAt = new Date();
                  existingQuest.completedAt = null;
                  existingQuest.claimedAt = null;
-                 existingQuest.objectiveProgress = [];
+
+                 const objectiveProgress = [];
+                 quest.objectives.forEach((obj, idx) => {
+                     const prog = { index: idx, done: false };
+                     if (obj.type === 'wait_time') {
+                         const waitStartedAt = new Date();
+                         const waitDeadlineAt = new Date(waitStartedAt);
+                         waitDeadlineAt.setHours(waitDeadlineAt.getHours() + (obj.durationHours || DEFAULT_WAIT_DURATION_HOURS));
+                         prog.waitStartedAt = waitStartedAt;
+                         prog.waitDeadlineAt = waitDeadlineAt;
+                     }
+                     objectiveProgress.push(prog);
+                 });
+                 existingQuest.objectiveProgress = objectiveProgress;
              } else if (existingQuest.status === 'failed') {
                 existingQuest.status = 'active';
                 existingQuest.startedAt = new Date();
                 existingQuest.completedAt = null;
                 existingQuest.claimedAt = null;
-                existingQuest.objectiveProgress = [];
+
+                const objectiveProgress = [];
+                 quest.objectives.forEach((obj, idx) => {
+                     const prog = { index: idx, done: false };
+                     if (obj.type === 'wait_time') {
+                         const waitStartedAt = new Date();
+                         const waitDeadlineAt = new Date(waitStartedAt);
+                         waitDeadlineAt.setHours(waitDeadlineAt.getHours() + (obj.durationHours || DEFAULT_WAIT_DURATION_HOURS));
+                         prog.waitStartedAt = waitStartedAt;
+                         prog.waitDeadlineAt = waitDeadlineAt;
+                     }
+                     objectiveProgress.push(prog);
+                 });
+                 existingQuest.objectiveProgress = objectiveProgress;
              }
         } else {
              // Prerequisites check
@@ -147,7 +179,7 @@ router.post('/:questId/submit-item', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const travel = await Travel.findOne({ userId });
+        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
         if (travel && travel.status === 'traveling') {
             return res.status(400).json({ error: 'Tidak bisa serahkan item saat dalam perjalanan.' });
         }
@@ -186,18 +218,18 @@ router.post('/:questId/submit-item', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Item di inventory tidak cukup.' });
         }
 
-        player.inventory[inventoryItemIndex].quantity -= qtyToSubmit;
-        if (player.inventory[inventoryItemIndex].quantity <= 0) {
-            player.inventory.splice(inventoryItemIndex, 1);
-        }
-
-        // Eval progress
+        // Eval progress before potentially splicing
         const context = {
             submittedItems: {
                 itemId: objective.itemId || (player.inventory[inventoryItemIndex] ? player.inventory[inventoryItemIndex].itemId : null),
                 quantity: qtyToSubmit
             }
         };
+
+        player.inventory[inventoryItemIndex].quantity -= qtyToSubmit;
+        if (player.inventory[inventoryItemIndex].quantity <= 0) {
+            player.inventory.splice(inventoryItemIndex, 1);
+        }
 
         const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
 
@@ -232,7 +264,7 @@ router.post('/:questId/evaluate', authenticateToken, async (req, res) => {
         const questEntry = player.questLog.find(q => q.questId.toString() === questId && q.status === 'active');
         if (!questEntry) return res.status(400).json({ error: 'Quest ini tidak aktif.' });
 
-        const travel = await Travel.findOne({ userId });
+        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
         const context = { isTraveling: travel && travel.status === 'traveling' };
 
         const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
@@ -263,7 +295,7 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
             let player = await Player.findOne({ discordId: userId }).session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan', 404);
 
-            const travel = await Travel.findOne({ userId }).session(session);
+            const travel = await Travel.findOne({ discordId: userId, status: 'traveling' }).session(session);
             if (travel && travel.status === 'traveling') {
                 throw new CustomError('Tidak bisa claim reward saat dalam perjalanan.', 400);
             }
@@ -294,7 +326,7 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
             if (rewards.spirit) { player.currency.spirit += rewards.spirit; grantMessage.push(`${rewards.spirit} Spirit Stones`); }
 
             if (rewards.qiBonus > 0) {
-                syncPlayerCultivation(player);
+                await syncPlayerCultivation(player);
                 const maxQi = player.systemCultivation.stage * 1000 + 1000; // approximation if we don't have getCultivationRequirement
                 player.systemCultivation.qi = Math.min(maxQi, player.systemCultivation.qi + rewards.qiBonus);
                 grantMessage.push(`${rewards.qiBonus} Qi`);
