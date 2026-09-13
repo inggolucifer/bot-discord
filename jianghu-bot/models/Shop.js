@@ -9,6 +9,7 @@ const shopSchema = new mongoose.Schema({
   priceCurrency: { type: String, enum: ['copper', 'silver', 'gold', 'jade', 'spirit'], default: 'silver' },
   stock: { type: Number, default: -1 }, // -1 = unlimited
   isActive: { type: Boolean, default: true },
+  locationTag: { type: String, default: null },
   addedBy: { type: String, default: null },
 }, { timestamps: true });
 
