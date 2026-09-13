@@ -374,10 +374,17 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 }
 
                 if (drops.copper > 0 || drops.silver > 0 || drops.items.length > 0) {
+                    const addedCopper = (drops.copper || 0) + (drops.silver || 0) * 100 + (drops.gold || 0) * 10000;
+                    const itemDesc = drops.items && drops.items.length > 0
+                        ? ` serta item (${drops.items.reduce((acc, i) => acc + i.quantity, 0)} pcs)`
+                        : '';
+
                     await TransactionLog.create([{
                         guildId,
-                        type: 'loot_claim',
-                        description: `[${player.characterName}] menang eksplorasi di ${exploration.location}${encounterResult.monsterName ? ` (vs ${encounterResult.monsterName})` : ''}. (+${drops.copper} Copper, +${drops.silver} Silver)`
+                        type: 'exploration_loot',
+                        description: `[${player.characterName}] menang eksplorasi di ${exploration.location}${encounterResult.monsterName ? ` (vs ${encounterResult.monsterName})` : ''}. (+${addedCopper} Copper eq${itemDesc})`,
+                        amount: addedCopper,
+                        currency: 'copper'
                     }], { session });
                 }
             }

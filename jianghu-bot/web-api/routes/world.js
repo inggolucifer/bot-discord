@@ -349,7 +349,30 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                 if (battleResult.winnerIdx === 1) {
                     won = true;
-                    travel.ambushResult.message = `Kamu berhasil mengalahkan kelompok bandit tersebut!`;
+
+                    // Drop from generic bandit (using fallback values or from db)
+                    let lootCopper = 0;
+                    if (banditMonster && banditMonster.currencyDrop) {
+                        const { copperMin, copperMax } = banditMonster.currencyDrop;
+                        lootCopper = Math.floor(Math.random() * (copperMax - copperMin + 1)) + copperMin;
+                        // Multiply loosely based on group size
+                        lootCopper = Math.floor(lootCopper * (1 + 0.5 * (groupSize - 1)));
+                    }
+
+                    if (lootCopper > 0) {
+                        player.currency.copper += lootCopper;
+                        travel.ambushResult.message = `Kamu berhasil mengalahkan kelompok bandit tersebut dan merampas harta senilai ${lootCopper} Copper!`;
+
+                        await TransactionLog.create([{
+                            guildId: player.guildId,
+                            type: 'ambush_win_loot',
+                            description: `[${player.characterName}] menang melawan kelompok bandit (${groupSize} orang). (+${lootCopper} Copper)`,
+                            amount: lootCopper,
+                            currency: 'copper'
+                        }], { session });
+                    } else {
+                        travel.ambushResult.message = `Kamu berhasil mengalahkan kelompok bandit tersebut!`;
+                    }
 
                     // Quest Hook
                     const { evaluateQuestProgress } = require('../../utils/questProgress');
