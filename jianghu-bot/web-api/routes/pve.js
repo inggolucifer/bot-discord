@@ -256,6 +256,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
             let encounterResult = {
                 won: true, // Default to true if no monsters exist to preserve old behavior
                 monsterName: null,
+                monsterKey: null,
                 combatLogs: []
             };
 
@@ -265,6 +266,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 // Pick one random monster
                 const monster = monsters[Math.floor(Math.random() * monsters.length)];
                 encounterResult.monsterName = monster.name;
+                encounterResult.monsterKey = monster.key;
 
                 // Mock monster opponent for simulateBattle
                 const opponent = {
@@ -352,7 +354,12 @@ router.post('/claim', authenticateToken, async (req, res) => {
                      const quest = await Quest.findById(questEntry.questId).session(session);
                      if (!quest) continue;
 
-                     const context = { killedBeastName: encounterResult.monsterName || exploration.location, amount: 1 };
+                     const context = {
+                         killedBeastName: encounterResult.monsterName || exploration.location,
+                         killedBeastKey: encounterResult.monsterKey,
+                         explorationLocation: exploration.location,
+                         amount: 1
+                     };
                      const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
 
                      if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
