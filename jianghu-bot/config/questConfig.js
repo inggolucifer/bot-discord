@@ -1,0 +1,4 @@
+module.exports = {
+  MAX_ACTIVE_QUESTS: 3,
+  DEFAULT_WAIT_DURATION_HOURS: 1
+};

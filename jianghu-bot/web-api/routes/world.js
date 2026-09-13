@@ -35,9 +35,18 @@ router.get('/location', authenticateToken, async (req, res) => {
             }
         }
 
+                // Find NPCs in the current settlement and building
+        const npcsHere = await require('../../models/Npc').find({
+            guildId: player.guildId,
+            settlementName: location.settlementName,
+            buildingName: location.buildingName || null,
+            isActive: true
+        }).select('_id name title portraitUrl greeting dialogLines minRealmIndexToTalk questIds');
+
         res.json({
             currentLocation: currentLocationData,
-            buildings: buildings
+            buildings: buildings,
+            npcsHere: npcsHere
         });
     } catch (error) {
         console.error(error);
@@ -261,6 +270,30 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
                         } else {
                             travel.ambushResult.message = `Kamu disergap oleh bandit, tapi kamu tidak memiliki harta untuk dirampas.`;
                         }
+
+                        // Quest Hook: defeat_bandit
+                        // Since they lose money, it means they 'survived/defeated' the ambush encounter.
+                        const { evaluateQuestProgress } = require('../../utils/questProgress');
+                        const Quest = require('../../models/Quest');
+
+                        let questsUpdated = false;
+                        for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+                             const quest = await Quest.findById(questEntry.questId).session(session);
+                             if (!quest) continue;
+
+                             const context = { defeatedBandit: true, amount: travel.ambushResult.banditGroupSize };
+                             const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+                             if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
+                                 questEntry.objectiveProgress = updatedProgress;
+                                 questEntry.lastTouchedAt = new Date();
+                                 if (allDone) {
+                                     questEntry.status = 'completed';
+                                     questEntry.completedAt = new Date();
+                                 }
+                                 questsUpdated = true;
+                             }
+                        }
                     }
                 }
 
@@ -377,3 +410,152 @@ router.get('/shops', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+
+
+// --- NPC and Quests Phase 5 Routes ---
+
+router.get('/npcs', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const Npc = require('../../models/Npc');
+        const location = player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null };
+
+        const npcs = await Npc.find({
+            guildId: player.guildId,
+            settlementName: location.settlementName,
+            buildingName: location.buildingName || null,
+            isActive: true
+        });
+
+        res.json({ npcs });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Terjadi kesalahan internal.' });
+    }
+});
+
+router.get('/npc/:npcId', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { npcId } = req.params;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const Npc = require('../../models/Npc');
+        const Quest = require('../../models/Quest');
+        const { getRealmIndex } = require('../../utils/cultivation');
+
+        const npc = await Npc.findById(npcId).populate('questIds');
+        if (!npc || !npc.isActive) return res.status(404).json({ error: 'NPC tidak ditemukan.' });
+
+        const realmIndex = getRealmIndex(player.systemCultivation.realm);
+        if (realmIndex < npc.minRealmIndexToTalk) {
+            return res.status(403).json({ error: 'Ranah Kultivasi belum mencukupi untuk berbicara dengan NPC ini.' });
+        }
+
+        // Filter valid quests
+        const validQuests = npc.questIds.filter(quest => {
+            if (!quest.isActive) return false;
+            if (realmIndex < quest.minRealmIndex) return false;
+
+            // Check prerequisites
+            if (quest.requiresQuestKeysCompleted && quest.requiresQuestKeysCompleted.length > 0) {
+                 for (const reqKey of quest.requiresQuestKeysCompleted) {
+                     const reqQuest = player.questLog.find(q => q.questKey === reqKey && (q.status === 'completed' || q.status === 'claimed'));
+                     if (!reqQuest) return false;
+                 }
+            }
+
+            // Check repeat logic
+            const existingQuest = player.questLog.find(q => q.questId.toString() === quest._id.toString());
+            if (existingQuest) {
+                if (existingQuest.status === 'active') return false; // Already active, shown in quest log
+                if (!quest.repeatable && (existingQuest.status === 'completed' || existingQuest.status === 'claimed')) return false; // Already done
+                if (quest.repeatable && existingQuest.status === 'claimed') {
+                     const cooldownDate = new Date(existingQuest.claimedAt);
+                     cooldownDate.setHours(cooldownDate.getHours() + quest.cooldownHours);
+                     if (new Date() < cooldownDate) return false; // Still on cooldown
+                }
+            }
+
+            return true;
+        });
+
+        res.json({ npc, availableQuests: validQuests });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Terjadi kesalahan internal.' });
+    }
+});
+
+router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { npcId } = req.params;
+        const { dialogId } = req.body;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
+        if (travel && travel.status === 'traveling') {
+            return res.status(400).json({ error: 'Tidak bisa berbicara saat dalam perjalanan.' });
+        }
+
+        const Npc = require('../../models/Npc');
+        const Quest = require('../../models/Quest');
+        const { getRealmIndex } = require('../../utils/cultivation');
+        const { evaluateQuestProgress } = require('../../utils/questProgress');
+
+        const npc = await Npc.findById(npcId);
+        if (!npc || !npc.isActive) return res.status(404).json({ error: 'NPC tidak ditemukan.' });
+
+        const location = player.currentLocation || { settlementName: 'Desa Xingcun', buildingName: null };
+        if (npc.settlementName !== location.settlementName || (npc.buildingName || null) !== (location.buildingName || null)) {
+            return res.status(400).json({ error: 'Kamu tidak berada di lokasi yang sama dengan NPC ini.' });
+        }
+
+        const realmIndex = getRealmIndex(player.systemCultivation.realm);
+        if (realmIndex < npc.minRealmIndexToTalk) {
+            return res.status(403).json({ error: 'Ranah Kultivasi belum mencukupi.' });
+        }
+
+        let dialogResponse = npc.greeting;
+        if (dialogId) {
+            const line = npc.dialogLines.find(dl => dl.id === dialogId);
+            if (line) dialogResponse = line.text;
+        }
+
+        // Evaluate quest progress for talk_to_npc
+        let updatedQuests = false;
+        for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+            const quest = await Quest.findById(questEntry.questId);
+            if (!quest) continue;
+
+            const context = { npcIdTalked: npc._id, isTraveling: false };
+            const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+            questEntry.objectiveProgress = updatedProgress;
+            questEntry.lastTouchedAt = new Date();
+
+            if (allDone) {
+                questEntry.status = 'completed';
+                questEntry.completedAt = new Date();
+            }
+            updatedQuests = true;
+        }
+
+        if (updatedQuests) {
+            await player.save();
+        }
+
+        res.json({ message: dialogResponse, dialogResponse, questLog: player.questLog });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Terjadi kesalahan internal.' });
+    }
+});
