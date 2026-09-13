@@ -12,8 +12,8 @@ const WEALTH_AFFECTING_TYPES = new Set([
   'sell_to_system', 'asset_profit_claim', 'admin_grant', 'admin_revoke', 'loot_claim',
 ]);
 
-async function logTransaction(client, { guildId, type, fromUserId = null, toUserId = null, currency = null, amount = 0, itemDescription = null, balanceAfter = null, note = null }) {
-  const entry = await TransactionLog.create({ guildId, type, fromUserId, toUserId, currency, amount, itemDescription, balanceAfter, note });
+async function logTransaction(client, { guildId, type, fromUserId = null, toUserId = null, currency = null, amount = 0, itemDescription = null, balanceAfter = null, note = null, session = null }) {
+  const entry = await TransactionLog.create([{ guildId, type, fromUserId, toUserId, currency, amount, itemDescription, balanceAfter, note }], { session });
 
   try {
     const config = await GuildConfig.findOne({ guildId });
