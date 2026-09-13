@@ -289,11 +289,12 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     travel.ambushResult.currencyLost.copper = finalLossCopper;
                     travel.ambushResult.message = `Kamu menyerah dan membayar upeti sebesar ${Math.floor(finalLossCopper/100)} silver.`;
 
-                    await AdminLog.create([{
+                    await TransactionLog.create([{
                         guildId: player.guildId,
-                        adminId: 'SYSTEM',
-                        action: 'travel_ambush',
-                        details: `Player ${player.discordId} ambushed, surrendered ${finalLossCopper} copper equivalent.`
+                        type: 'ambush_loss',
+                        description: `[${player.characterName}] menyerah pada penyergapan bandit. Kehilangan ${finalLossCopper} Copper eq.`,
+                        amount: finalLossCopper,
+                        currency: 'copper'
                     }], { session });
 
                 } else {
@@ -383,11 +384,12 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                         travel.ambushResult.currencyLost.copper = finalLossCopper;
                         travel.ambushResult.message = `Kamu kalah melawan bandit dan dirampok secara paksa senilai ${Math.floor(finalLossCopper/100)} silver.`;
 
-                        await AdminLog.create([{
+                        await TransactionLog.create([{
                             guildId: player.guildId,
-                            adminId: 'SYSTEM',
-                            action: 'travel_ambush',
-                            details: `Player ${player.discordId} ambushed, defeated in combat, lost ${finalLossCopper} copper equivalent.`
+                            type: 'ambush_loss',
+                            description: `[${player.characterName}] kalah melawan bandit dan kehilangan harta senilai ${finalLossCopper} Copper eq.`,
+                            amount: finalLossCopper,
+                            currency: 'copper'
                         }], { session });
 
                     } else {
