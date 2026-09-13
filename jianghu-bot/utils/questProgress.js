@@ -61,6 +61,37 @@ async function evaluateQuestProgress(player, quest, questLogEntry, context = {})
         }
         break;
 
+
+      case 'kill_beast':
+        if (context.killedBeastName && objective.target && context.killedBeastName.toLowerCase() === objective.target.toLowerCase()) {
+           progress.submittedQty = (progress.submittedQty || 0) + (context.amount || 1);
+           if (progress.submittedQty >= (objective.amount || objective.quantity || 1)) {
+              progress.done = true;
+           } else {
+              allDone = false;
+           }
+        } else {
+           if ((progress.submittedQty || 0) < (objective.amount || objective.quantity || 1)) {
+               allDone = false;
+           }
+        }
+        break;
+
+      case 'defeat_bandit':
+        if (context.defeatedBandit) {
+           progress.submittedQty = (progress.submittedQty || 0) + (context.amount || 1);
+           if (progress.submittedQty >= (objective.amount || objective.quantity || 1)) {
+              progress.done = true;
+           } else {
+              allDone = false;
+           }
+        } else {
+           if ((progress.submittedQty || 0) < (objective.amount || objective.quantity || 1)) {
+               allDone = false;
+           }
+        }
+        break;
+
       case 'wait_time':
         const now = new Date();
         if (progress.waitDeadlineAt && now >= progress.waitDeadlineAt) {

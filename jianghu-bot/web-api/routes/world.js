@@ -270,6 +270,30 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
                         } else {
                             travel.ambushResult.message = `Kamu disergap oleh bandit, tapi kamu tidak memiliki harta untuk dirampas.`;
                         }
+
+                        // Quest Hook: defeat_bandit
+                        // Since they lose money, it means they 'survived/defeated' the ambush encounter.
+                        const { evaluateQuestProgress } = require('../../utils/questProgress');
+                        const Quest = require('../../models/Quest');
+
+                        let questsUpdated = false;
+                        for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+                             const quest = await Quest.findById(questEntry.questId).session(session);
+                             if (!quest) continue;
+
+                             const context = { defeatedBandit: true, amount: travel.ambushResult.banditGroupSize };
+                             const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+                             if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
+                                 questEntry.objectiveProgress = updatedProgress;
+                                 questEntry.lastTouchedAt = new Date();
+                                 if (allDone) {
+                                     questEntry.status = 'completed';
+                                     questEntry.completedAt = new Date();
+                                 }
+                                 questsUpdated = true;
+                             }
+                        }
                     }
                 }
 

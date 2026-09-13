@@ -126,6 +126,9 @@ export default function QuestLog({ questLog, onQuestUpdated }: { questLog: any[]
                                         <div className="flex-1">
                                             <span className={`text-sm ${done ? 'text-gray-500 line-through' : 'text-gray-300'}`}>
                                                 {obj.description}
+                                                {['kill_beast', 'defeat_bandit'].includes(obj.type) && !done && (
+                                                    <span className="text-blue-400 ml-2">({prog?.submittedQty || 0} / {obj.amount || obj.quantity || 1})</span>
+                                                )}
                                             </span>
 
                                             {!done && obj.type === 'submit_item' && (
