@@ -126,7 +126,7 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-            const calcResult = calculateCurrentQi(player);
+            const calcResult = await syncPlayerCultivation(player);
 
             if (!calcResult.isReadyForBreakthrough) {
                 throw new CustomError('Qi kamu belum mencukupi untuk menerobos batas!', 400);
