@@ -107,11 +107,7 @@ const setupServer = (client) => {
         '/api/professions/start',
         '/api/professions/complete',
         '/api/professions/unlock',
-        '/api/pve/claim',
-        '/api/barter/offer',
-        '/api/barter/accept',
-        '/api/barter/reject',
-        '/api/barter/cancel'
+        '/api/pve/claim'
     ];
     app.use((req, res, next) => {
         if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
@@ -147,11 +143,9 @@ const setupServer = (client) => {
     const questRoutes = require('./routes/quest');
     const professionRoutes = require('./routes/professions');
     const equipmentRoutes = require('./routes/equipment');
-    const barterRoutes = require('./routes/barter');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/player', playerRoutes);
-    app.use('/api/barter', barterRoutes);
     app.use('/api/inventory', inventoryRoutes);
     app.use('/api/market', marketRoutes);
     app.use('/api/sect', sectExamRoutes);
