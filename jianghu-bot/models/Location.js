@@ -13,6 +13,7 @@ const locationSchema = new mongoose.Schema({
   npcIds: [{ type: mongoose.Schema.Types.ObjectId }],
   linkedShopIds: [{ type: mongoose.Schema.Types.ObjectId }],
   linkedAssetId: { type: mongoose.Schema.Types.ObjectId, default: null },
+  linkedSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
   description: { type: String, default: '' },
   isActive: { type: Boolean, default: true },
   shopTag: { type: String, default: null }
