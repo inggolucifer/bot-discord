@@ -10,7 +10,7 @@ const locationSchema = new mongoose.Schema({
     enum: ['shop', 'dojo', 'sect_hall', 'blacksmith', 'residence', 'farm', 'tavern', 'npc_house', 'plaza'],
     required: true
   },
-  npcIds: [{ type: mongoose.Schema.Types.ObjectId }],
+  npcIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Npc' }],
   linkedShopIds: [{ type: mongoose.Schema.Types.ObjectId }],
   linkedAssetId: { type: mongoose.Schema.Types.ObjectId, default: null },
   linkedSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
