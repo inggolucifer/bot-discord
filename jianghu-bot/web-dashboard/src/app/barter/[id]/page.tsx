@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { toast as toastManager } from "@/components/ui/Toast";
 import { ArrowLeft, Check, X, Ban } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
 import api from "@/lib/api";
 
 interface ItemDetail {
@@ -154,9 +155,9 @@ export default function BarterDetailPage() {
                             const val = offerData.currency?.[c];
                             if (val) {
                                 return (
-                                    <span key={c} className="text-xs bg-black/40 px-2 py-1 rounded border border-white/5">
+                                    <Badge key={c} variant="outline" className="px-2 py-1 text-amber-50/80">
                                         <span className="font-bold text-amber-50">{val}</span> <span className="capitalize">{c}</span>
-                                    </span>
+                                    </Badge>
                                 );
                             }
                             return null;

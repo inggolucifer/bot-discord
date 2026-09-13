@@ -10,6 +10,7 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { toast as toastManager } from "@/components/ui/Toast";
 import { Modal } from "@/components/ui/Modal";
 import { ArrowRightLeft, Search, X } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
 import api from "@/lib/api";
 
 interface ItemOffer {
@@ -207,9 +208,7 @@ export default function BarterPage() {
                     {offers.map((offer) => (
                         <Card key={offer._id} className="p-4 hover:border-primary/50 transition-colors">
                             <div className="flex justify-between items-center mb-4">
-                                <span className="text-xs font-medium px-2 py-1 bg-primary/20 text-primary rounded-full">
-                                    {offer.isInitiator ? "Anda Mengajukan" : "Tawaran Masuk"}
-                                </span>
+                                <Badge variant={offer.isInitiator ? "default" : "secondary"}>{offer.isInitiator ? "Anda Mengajukan" : "Tawaran Masuk"}</Badge>
                                 <span className="text-xs text-muted-foreground">
                                     {new Date(offer.createdAt).toLocaleDateString()}
                                 </span>
@@ -260,7 +259,7 @@ export default function BarterPage() {
                         <label className="text-sm font-medium text-amber-50">Target Pemain (Discord ID)</label>
                         <input
                             type="text"
-                            className="w-full bg-black/40 border border-white/10 rounded-md p-2 text-amber-50 focus:border-primary focus:outline-none"
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             placeholder="Masukkan Discord ID target..."
                             value={selectedTargetId}
                             onChange={(e) => setSelectedTargetId(e.target.value)}
@@ -282,7 +281,7 @@ export default function BarterPage() {
                                             <input
                                                 type="number"
                                                 min="0"
-                                                className="w-full bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50 focus:border-primary"
+                                                className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                                 value={initiatorCurrency[curr] || ''}
                                                 onChange={(e) => setInitiatorCurrency({ ...initiatorCurrency, [curr]: parseInt(e.target.value) || 0 })}
                                             />
@@ -299,7 +298,7 @@ export default function BarterPage() {
                                 {initiatorItems.map((item, idx) => (
                                     <div key={idx} className="flex gap-2 items-center">
                                         <select
-                                            className="flex-1 bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50"
+                                            className="flex h-8 w-full flex-1 rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                             value={item.itemId}
                                             onChange={(e) => handleItemChange(idx, 'itemId', e.target.value, 'initiator')}
                                         >
@@ -311,7 +310,7 @@ export default function BarterPage() {
                                         <input
                                             type="number"
                                             min="1"
-                                            className="w-16 bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50"
+                                            className="flex h-8 w-16 rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                             value={item.quantity}
                                             onChange={(e) => handleItemChange(idx, 'quantity', parseInt(e.target.value) || 1, 'initiator')}
                                         />
@@ -334,7 +333,7 @@ export default function BarterPage() {
                                             <input
                                                 type="number"
                                                 min="0"
-                                                className="w-full bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50 focus:border-blue-400"
+                                                className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-blue-500/50 focus-visible:ring-blue-500"
                                                 value={targetCurrency[curr] || ''}
                                                 onChange={(e) => setTargetCurrency({ ...targetCurrency, [curr]: parseInt(e.target.value) || 0 })}
                                             />
@@ -351,7 +350,7 @@ export default function BarterPage() {
                                 {targetItems.map((item, idx) => (
                                     <div key={idx} className="flex gap-2 items-center">
                                         <select
-                                            className="flex-1 bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50"
+                                            className="flex h-8 w-full flex-1 rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                             value={item.itemId}
                                             onChange={(e) => handleItemChange(idx, 'itemId', e.target.value, 'target')}
                                         >
@@ -363,7 +362,7 @@ export default function BarterPage() {
                                         <input
                                             type="number"
                                             min="1"
-                                            className="w-16 bg-black/40 border border-white/10 rounded px-2 py-1 text-xs text-amber-50"
+                                            className="flex h-8 w-16 rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                             value={item.quantity}
                                             onChange={(e) => handleItemChange(idx, 'quantity', parseInt(e.target.value) || 1, 'target')}
                                         />

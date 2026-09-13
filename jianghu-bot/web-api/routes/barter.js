@@ -19,10 +19,10 @@ function isSameLocation(loc1, loc2) {
 }
 
 // Helper to check if a player has enough of an item in inventory
-function hasEnoughItem(inventory, itemId, quantity) {
+function getInventoryItemQuantity(inventory, itemId) {
     const itemStr = itemId.toString();
-    const inventoryItem = inventory.find(i => i.itemId && i.itemId.toString() === itemStr);
-    return inventoryItem && inventoryItem.quantity >= quantity;
+    const inventoryItem = inventory.find(i => i.itemId && (i.itemId._id ? i.itemId._id.toString() : i.itemId.toString()) === itemStr);
+    return inventoryItem ? inventoryItem.quantity : 0;
 }
 
 // Helper to validate offer structure and check if empty
@@ -109,8 +109,9 @@ router.post('/offer', authenticateToken, async (req, res) => {
             // Item check
             if (initiatorOffer.items && initiatorOffer.items.length > 0) {
                 for (const item of initiatorOffer.items) {
-                    if (!hasEnoughItem(initiator.inventory, item.itemId, item.quantity)) {
-                        return res.status(400).json({ error: `Anda tidak memiliki cukup item (ID: ${item.itemId}).` });
+                    const availableQty = getInventoryItemQuantity(initiator.inventory, item.itemId);
+                    if (availableQty < item.quantity) {
+                        return res.status(400).json({ error: `Jumlah item (ID: ${item.itemId}) yang ditawarkan melebihi jumlah yang kamu miliki (${availableQty}).` });
                     }
                 }
             }
@@ -282,8 +283,9 @@ router.post('/accept/:id', authenticateToken, async (req, res) => {
 
             if (targetOffer && targetOffer.items && targetOffer.items.length > 0) {
                 for (const item of targetOffer.items) {
-                    if (!hasEnoughItem(target.inventory, item.itemId, item.quantity)) {
-                        throw new CustomError(400, `Anda tidak memiliki cukup item untuk memenuhi permintaan.`);
+                    const availableQty = getInventoryItemQuantity(target.inventory, item.itemId);
+                    if (availableQty < item.quantity) {
+                        throw new CustomError(400, `Jumlah item (ID: ${item.itemId}) yang ditawarkan melebihi jumlah yang kamu miliki (${availableQty}).`);
                     }
                 }
             }
@@ -308,8 +310,9 @@ router.post('/accept/:id', authenticateToken, async (req, res) => {
 
             if (initiatorOffer && initiatorOffer.items && initiatorOffer.items.length > 0) {
                 for (const item of initiatorOffer.items) {
-                    if (!hasEnoughItem(initiator.inventory, item.itemId, item.quantity)) {
-                        throw new CustomError(400, `Initiator sudah tidak memiliki cukup item (ID: ${item.itemId}).`);
+                    const availableQty = getInventoryItemQuantity(initiator.inventory, item.itemId);
+                    if (availableQty < item.quantity) {
+                        throw new CustomError(400, `Jumlah item (ID: ${item.itemId}) yang ditawarkan melebihi jumlah yang dimiliki initiator.`);
                     }
                 }
             }
