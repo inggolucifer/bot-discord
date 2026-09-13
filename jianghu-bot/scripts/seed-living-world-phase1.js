@@ -4,7 +4,6 @@ const Manual = require('../models/Manual');
 const Shop = require('../models/Shop');
 const Item = require('../models/Item');
 const Sect = require('../models/Sect');
-const { AdminLog } = require('../models/AdminLog');
 
 async function seedPhase1() {
   const args = process.argv.slice(2);
@@ -189,7 +188,9 @@ async function seedPhase1() {
       });
 
       // Asset Worker
-      const workerName = `Lahan Produksi ${region.name}`;
+      const workerName = region.slug === 'northern_desolate_territory'
+          ? `Pos Perburuan ${region.name}`
+          : `Lahan Produksi ${region.name}`;
       const outputItem = regionOutputs[region.slug];
       await ensureAsset(workerName, {
           description: region.workerDesc,
