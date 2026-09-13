@@ -167,6 +167,12 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         await travel.save();
 
+        // Remove player from building when traveling
+        if (player.currentLocation) {
+             player.currentLocation.buildingName = null;
+             await player.save();
+        }
+
         res.json({ success: true, travel: travel });
     } catch (error) {
         console.error(error);
@@ -214,6 +220,7 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
                             // Deduct using existing utility
                             payCurrency(player.currency, finalLossCopper, 'copper');
 
+                            travel.ambushResult.currencyLost.copper = finalLossCopper;
                             travel.ambushResult.message = `Kamu disergap oleh ${travel.ambushResult.banditGroupSize} bandit dan kehilangan harta setara dengan ${Math.floor(finalLossCopper/100)} silver.`;
 
                             try {
