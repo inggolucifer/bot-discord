@@ -12,6 +12,7 @@ export default function WorldPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [climateData, setClimateData] = useState<any>(null);
   const [travelDestination, setTravelDestination] = useState<string>('');
   const [useEscort, setUseEscort] = useState(false);
 
@@ -24,16 +25,20 @@ export default function WorldPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [locRes, travelRes, setRes] = await Promise.all([
+      const [locRes, travelRes, setRes, climateRes] = await Promise.all([
         api.get('/world/location'),
         api.get('/world/travel/status'),
-        api.get('/world/settlements')
+        api.get('/world/settlements'),
+        api.get('/world/climate').catch(() => ({ data: null }))
       ]);
       setLocationData(locRes.data);
       if (travelRes.data.travel) {
         setTravelStatus(travelRes.data.travel);
       }
       setSettlements(setRes.data.settlements || []);
+      if (climateRes.data) {
+        setClimateData(climateRes.data);
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal memuat data dunia');
     } finally {
@@ -137,11 +142,38 @@ export default function WorldPage() {
         </div>
       )}
 
+      {/* Climate Banner */}
+      {climateData && !climateData.inComfort && (!travelStatus || travelStatus.status !== 'traveling') && (
+        <div className="bg-orange-900/50 border border-orange-500/50 text-orange-200 p-4 rounded-lg shadow-md flex items-center gap-4">
+           <div className="text-2xl">⚠️</div>
+           <div>
+              <p className="font-bold">Peringatan Suhu Ekstrem: {climateData.effectiveTemperature}°C</p>
+              <p className="text-sm opacity-90">{climateData.message}</p>
+              {climateData.penalties && (
+                  <p className="text-sm font-semibold mt-1">
+                      Efek: Qi Regenerasi -{Math.round((1 - climateData.penalties.qiRegenMultiplier) * 100)}%
+                      {climateData.penalties.combatStatMultiplier < 1 && `, Stat Combat -${Math.round((1 - climateData.penalties.combatStatMultiplier) * 100)}%`}
+                  </p>
+              )}
+           </div>
+        </div>
+      )}
+
       {/* Current Location */}
       {!travelStatus || travelStatus.status !== 'traveling' ? (
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-[#1a1f2e]/80 border border-[#2a3142] rounded-xl p-6 shadow-xl backdrop-blur-sm">
-            <h2 className="text-xl font-serif font-bold mb-4 text-[#c5a880]">Lokasi Saat Ini</h2>
+            <div className="flex justify-between items-start mb-4">
+                <h2 className="text-xl font-serif font-bold text-[#c5a880]">Lokasi Saat Ini</h2>
+                {climateData && (
+                    <div className="text-right">
+                        <span className={`text-sm font-bold ${climateData.inComfort ? 'text-green-400' : 'text-orange-400'}`}>
+                            Suhu: {climateData.effectiveTemperature}°C
+                        </span>
+                        <span className="block text-xs text-gray-400">Cuaca: {climateData.weather}</span>
+                    </div>
+                )}
+            </div>
 
             {locationData?.currentLocation && (
               <div className="mb-6 space-y-2 bg-[#0f131c] p-4 rounded-lg border border-[#2a3142]">

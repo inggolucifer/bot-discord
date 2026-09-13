@@ -1,4 +1,5 @@
 const { getRealmIndex } = require('./cultivation');
+const { getClimatePenalties } = require('./climate');
 
 /**
  * Calculates the total combat stats of a player.
@@ -133,6 +134,34 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     totals.atk = Math.floor(totals.atk * 0.95);
     totals.def = Math.floor(totals.def * 0.95);
     totals.spd = Math.floor(totals.spd * 0.95);
+  }
+
+  // 5. Climate / Comfort Penalty
+  // Karena playerCombat.js ini mungkin dipanggil sinkron di berbagai tempat,
+  // dan kita tidak bisa memanggil fungsi async `getPlayerClimateResistance`,
+  // kita akan hitung resistance secara sinkron seadanya (tanpa populate dari DB jika belum ter-populate)
+  let coldResistance = 0;
+  let heatResistance = 0;
+
+  if (player.inventory && player.equipment) {
+    const equipmentSlotValues = Object.values(player.equipment).filter(v => v !== null).map(v => v.toString());
+    for (const invItem of player.inventory) {
+      const isActuallyEquipped = invItem.isEquipped || (invItem._id && equipmentSlotValues.includes(invItem._id.toString()));
+      if (isActuallyEquipped && invItem.itemId) {
+        // Jika sudah di-populate
+        if (invItem.itemId.coldResistance) coldResistance += invItem.itemId.coldResistance;
+        if (invItem.itemId.heatResistance) heatResistance += invItem.itemId.heatResistance;
+      }
+    }
+  }
+
+  const regionSlug = player.currentLocation?.regionSlug || 'central_plains';
+  // Untuk synchronous call, weather config kita skip (dianggap base weather/cerah)
+  const penalties = getClimatePenalties(regionSlug, { coldResistance, heatResistance });
+
+  if (penalties.combatStatMultiplier !== 1.0) {
+     totals.atk = Math.floor(totals.atk * penalties.combatStatMultiplier);
+     totals.def = Math.floor(totals.def * penalties.combatStatMultiplier);
   }
 
   // Note: we can return base, equip/flat, and totals if needed, but since it's used across the bot
