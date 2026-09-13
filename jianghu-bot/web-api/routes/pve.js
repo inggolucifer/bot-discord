@@ -14,6 +14,9 @@ const { EXPLORATION_LOCATIONS: LOCATIONS, getExplorationEntryCost } = require('.
 const { getTotalCopper, hasEnoughCurrency, payCurrency, RATE_TO_COPPER } = require('../../utils/currency');
 const { evaluateQuestProgress } = require('../../utils/questProgress');
 const Quest = require('../../models/Quest');
+const Monster = require('../../models/Monster');
+const { simulateBattle } = require('../../utils/simulateBattle');
+const { syncPlayerCultivation } = require('../../utils/cultivation');
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -234,59 +237,176 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 throw new CustomError('Waktu eksplorasi belum selesai.', 400);
             }
 
-            // Claim rewards
-            player.currency.copper += exploration.drops.copper;
-            player.currency.silver += exploration.drops.silver;
-            player.currency.gold += exploration.drops.gold;
+            await syncPlayerCultivation(player);
 
-            for (const dropItem of exploration.drops.items) {
-                const invItem = player.inventory.find(i => {
-                     const id = i.itemId && i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
-                     return id === (dropItem.itemId && dropItem.itemId._id ? dropItem.itemId._id.toString() : dropItem.itemId.toString());
-                });
-                if (invItem) {
-                    invItem.quantity += dropItem.quantity;
+            // Map location to region slug
+            const locObj = LOCATIONS.find(l => l.name === exploration.location);
+            const regionSlug = locObj ? locObj.id : 'central_plains';
+
+            const playerRealmIndex = getRealmIndex(player.systemCultivation.realm);
+
+            // Fetch eligible monsters
+            const monsters = await Monster.find({
+                guildId,
+                regionSlug,
+                isActive: true,
+                minRealmIndex: { $lte: playerRealmIndex }
+            }).session(session);
+
+            let encounterResult = {
+                won: true, // Default to true if no monsters exist to preserve old behavior
+                monsterName: null,
+                monsterKey: null,
+                combatLogs: []
+            };
+
+            let drops = exploration.drops; // Default to pre-calculated drops
+
+            if (monsters && monsters.length > 0) {
+                // Pick one random monster
+                const monster = monsters[Math.floor(Math.random() * monsters.length)];
+                encounterResult.monsterName = monster.name;
+                encounterResult.monsterKey = monster.key;
+
+                // Mock monster opponent for simulateBattle
+                const opponent = {
+                    characterName: monster.name,
+                    stats: {
+                        baseHp: monster.statBlock.hp,
+                        baseAtk: monster.statBlock.atk,
+                        baseDef: monster.statBlock.def,
+                        baseSpd: monster.statBlock.spd
+                    },
+                    laws: [],
+                    manuals: [],
+                    activeBuffs: [],
+                    equipment: {},
+                    inventory: [],
+                    systemCultivation: null
+                };
+
+                // Re-populate laws and manuals for player combat stats
+                await player.populate('laws manuals.manualId');
+
+                // Simulate Battle
+                const battleResult = simulateBattle(player, opponent);
+                encounterResult.combatLogs = battleResult.logs;
+
+                if (battleResult.winnerIdx === 1) {
+                    encounterResult.won = true;
+                    // Generate drops from monster
+                    drops = { copper: 0, silver: 0, gold: 0, items: [] };
+
+                    if (monster.currencyDrop) {
+                        const c = monster.currencyDrop;
+                        drops.copper = Math.floor(Math.random() * (c.copperMax - c.copperMin + 1)) + c.copperMin;
+                        drops.silver = Math.floor(Math.random() * (c.silverMax - c.silverMin + 1)) + c.silverMin;
+                    }
+
+                    for (const drop of monster.dropTable) {
+                        if (Math.random() <= drop.chance) {
+                            const qty = Math.floor(Math.random() * (drop.quantityMax - drop.quantityMin + 1)) + drop.quantityMin;
+
+                            // If itemId is null, we try to find it by name or skip
+                            let finalItemId = drop.itemId;
+                            if (!finalItemId && drop.itemName) {
+                                const matchedItem = await Item.findOne({ guildId, name: drop.itemName }).session(session);
+                                if (matchedItem) finalItemId = matchedItem._id;
+                            }
+
+                            if (finalItemId) {
+                                const existingItem = drops.items.find(i => i.itemId.toString() === finalItemId.toString());
+                                if (existingItem) {
+                                    existingItem.quantity += qty;
+                                } else {
+                                    drops.items.push({ itemId: finalItemId, quantity: qty });
+                                }
+                            }
+                        }
+                    }
                 } else {
-                    player.inventory.push({ itemId: dropItem.itemId._id || dropItem.itemId, quantity: dropItem.quantity });
+                    encounterResult.won = false;
+                    drops = { copper: 0, silver: 0, gold: 0, items: [] }; // No drops if defeated
                 }
             }
 
-            // Quest Hook: kill_beast
-            let questsUpdated = false;
-            for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
-                 const quest = await Quest.findById(questEntry.questId).session(session);
-                 if (!quest) continue;
+            if (encounterResult.won) {
+                // Claim rewards
+                player.currency.copper += drops.copper;
+                player.currency.silver += drops.silver;
+                player.currency.gold += drops.gold;
 
-                 const context = { killedBeastName: exploration.location, amount: 1 };
-                 const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+                for (const dropItem of drops.items) {
+                    const invItem = player.inventory.find(i => {
+                         const id = i.itemId && i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
+                         return id === (dropItem.itemId && dropItem.itemId._id ? dropItem.itemId._id.toString() : dropItem.itemId.toString());
+                    });
+                    if (invItem) {
+                        invItem.quantity += dropItem.quantity;
+                    } else {
+                        player.inventory.push({ itemId: dropItem.itemId._id || dropItem.itemId, quantity: dropItem.quantity });
+                    }
+                }
 
-                 if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
-                     questEntry.objectiveProgress = updatedProgress;
-                     questEntry.lastTouchedAt = new Date();
-                     if (allDone) {
-                         questEntry.status = 'completed';
-                         questEntry.completedAt = new Date();
+                // Quest Hook: kill_beast
+                let questsUpdated = false;
+                for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+                     const quest = await Quest.findById(questEntry.questId).session(session);
+                     if (!quest) continue;
+
+                     const context = {
+                         killedBeastName: encounterResult.monsterName || exploration.location,
+                         killedBeastKey: encounterResult.monsterKey,
+                         explorationLocation: exploration.location,
+                         amount: 1
+                     };
+                     const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+                     if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
+                         questEntry.objectiveProgress = updatedProgress;
+                         questEntry.lastTouchedAt = new Date();
+                         if (allDone) {
+                             questEntry.status = 'completed';
+                             questEntry.completedAt = new Date();
+                         }
+                         questsUpdated = true;
                      }
-                     questsUpdated = true;
-                 }
+                }
+
+                if (drops.copper > 0 || drops.silver > 0 || drops.items.length > 0) {
+                    const addedCopper = (drops.copper || 0) + (drops.silver || 0) * 100 + (drops.gold || 0) * 10000;
+                    const itemDesc = drops.items && drops.items.length > 0
+                        ? ` serta item (${drops.items.reduce((acc, i) => acc + i.quantity, 0)} pcs)`
+                        : '';
+
+                    await TransactionLog.create([{
+                        guildId,
+                        type: 'exploration_loot',
+                        description: `[${player.characterName}] menang eksplorasi di ${exploration.location}${encounterResult.monsterName ? ` (vs ${encounterResult.monsterName})` : ''}. (+${addedCopper} Copper eq${itemDesc})`,
+                        amount: addedCopper,
+                        currency: 'copper'
+                    }], { session });
+                }
             }
 
             player.customStatus = null; // Clear status
             await player.save({ session });
 
             exploration.status = 'claimed';
+            exploration.drops = drops; // Update with actual drops gained (or empty if lost)
             await exploration.save({ session });
 
-            await TransactionLog.create([{
-                guildId,
-                type: 'admin_grant', // Using existing enum to log the drops
-                description: `[${player.characterName}] klaim hadiah eksplorasi ${exploration.location}. (+${exploration.drops.copper} Copper, +${exploration.drops.silver} Silver)`
-            }], { session });
-
-            return exploration.drops;
+            return { drops, encounterResult };
         });
 
-        res.json({ success: true, message: 'Berhasil mengklaim hasil eksplorasi.', drops: result });
+        res.json({
+            success: true,
+            message: result.encounterResult.won
+                ? 'Berhasil mengklaim hasil eksplorasi.'
+                : 'Kamu kalah melawan monster, eksplorasi selesai tanpa hasil.',
+            drops: result.drops,
+            encounter: result.encounterResult
+        });
     } catch (error) {
         if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
         console.error('[API-PVE] Claim exploration error:', error);
