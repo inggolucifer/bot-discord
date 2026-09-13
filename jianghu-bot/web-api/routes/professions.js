@@ -293,6 +293,7 @@ router.post('/start', verifyToken, async (req, res) => {
         }
 
         let recipe;
+        let harvestRecipeKey = null;
         if (profession === 'farming' && action === 'harvest') {
             // For harvest, we get recipe from the plot
             if (plotIndex === undefined || plotIndex < 0) {
@@ -309,6 +310,7 @@ router.post('/start', verifyToken, async (req, res) => {
             if (plot.harvestAt > new Date()) {
                  return res.status(400).json({ error: 'Tanaman belum siap dipanen.' });
             }
+            harvestRecipeKey = plot.recipeKey;
             recipe = RECIPES[plot.recipeKey];
             if (!recipe) {
                  return res.status(500).json({ error: 'Resep tanaman tidak valid (Error Internal).' });
@@ -327,7 +329,15 @@ router.post('/start', verifyToken, async (req, res) => {
         }
 
         // Tool Validations
-        const toolInInventory = player.inventory.find(i => i.itemId._id.toString() === toolItemId);
+        if (!toolItemId) {
+            return res.status(400).json({ error: 'Alat wajib dipilih untuk aksi ini.' });
+        }
+
+        const toolInInventory = player.inventory.find(i => {
+            if (!i.itemId) return false;
+            const id = i.itemId._id ? i.itemId._id.toString() : i.itemId.toString();
+            return id === toolItemId.toString();
+        });
         if (!toolInInventory) {
              return res.status(400).json({ error: `Alat tidak ditemukan di inventory.` });
         }
@@ -395,8 +405,8 @@ router.post('/start', verifyToken, async (req, res) => {
         activeSessions.set(req.user.userId, {
              sessionId,
              profession,
-             recipeId: profession === 'farming' && action === 'harvest' ? plot.recipeKey : recipeId,
-             toolItemId: toolInInventory.itemId._id.toString(),
+             recipeId: harvestRecipeKey || recipeId,
+             toolItemId: toolInInventory.itemId._id ? toolInInventory.itemId._id.toString() : toolInInventory.itemId.toString(),
              plotIndex,
              action,
              startTime: Date.now()
