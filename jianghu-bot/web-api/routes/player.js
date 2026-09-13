@@ -108,6 +108,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 ...player,
                 energy: { current: currentEnergy, lastUpdated: player.energy ? player.energy.lastUpdated : new Date() },
                 maxEnergy: MAX_ENERGY,
+                currentLocation: player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },
                 combatStats,
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,

@@ -138,6 +138,7 @@ const setupServer = (client) => {
     const battleRoutes = require('./routes/battle');
     const adminRoutes = require('./routes/admin');
     const pveRoutes = require('./routes/pve');
+    const worldRoutes = require('./routes/world');
     const professionRoutes = require('./routes/professions');
     const equipmentRoutes = require('./routes/equipment');
 
@@ -155,6 +156,7 @@ const setupServer = (client) => {
     app.use('/api/battle', battleRoutes);
     app.use('/api/admin', adminRoutes);
     app.use('/api/pve', pveRoutes);
+    app.use('/api/world', worldRoutes);
     app.use('/api/professions', professionRoutes);
     app.use('/api/equipment', equipmentRoutes);
 
