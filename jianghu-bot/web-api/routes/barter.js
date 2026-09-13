@@ -244,7 +244,9 @@ router.post('/accept/:id', authenticateToken, async (req, res) => {
         releaseLock2 = await LockManager.acquire(lockKey2);
         if (!releaseLock2) return res.status(429).json({ error: 'Pemain lain sedang sibuk. Coba lagi.' });
 
-        await withTransaction(async (session) => {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
             const initiator = await Player.findOne({ discordId: offer.initiatorId }).session(session);
             const target = await Player.findOne({ discordId: offer.targetId }).session(session);
 
@@ -370,8 +372,8 @@ router.post('/accept/:id', authenticateToken, async (req, res) => {
                         type: 'barter',
                         fromUserId: initiator.discordId,
                         toUserId: target.discordId,
-                        currency: 'copper', // Using copper as base for logs
-                        amount: targetTotalCopperCost, // target giving
+                        currency: 'copper',
+                        amount: targetTotalCopperCost,
                         itemDescription: `Barter sukses. Initiator -> Target: ${initiatorTotalCopperCost}c & ${initiatorOffer.items?.length||0} items. Target -> Initiator: ${targetTotalCopperCost}c & ${targetOffer.items?.length||0} items.`,
                         note: `Offer ID: ${offer._id}`,
                         session
@@ -382,14 +384,20 @@ router.post('/accept/:id', authenticateToken, async (req, res) => {
                         fromUserId: target.discordId,
                         toUserId: initiator.discordId,
                         currency: 'copper',
-                        amount: initiatorTotalCopperCost, // initiator giving
+                        amount: initiatorTotalCopperCost,
                         itemDescription: `Barter refund log for clarity.`,
                         note: `Offer ID: ${offer._id}`,
                         session
                     });
                 } catch(e) { console.error('Failed to log barter tx:', e); }
             }
-        });
+            await session.commitTransaction();
+            session.endSession();
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
 
         res.json({ success: true, message: 'Barter berhasil dilakukan!' });
 

@@ -37,6 +37,11 @@ interface BarterOffer {
     isInitiator: boolean;
     status: string;
     createdAt: string;
+    locationSnapshot?: {
+        regionSlug: string;
+        settlementName: string;
+        buildingName: string | null;
+    };
 }
 
 interface PlayerSearch {
@@ -209,6 +214,21 @@ export default function BarterPage() {
                                     {new Date(offer.createdAt).toLocaleDateString()}
                                 </span>
                             </div>
+                            {playerLocation && offer.locationSnapshot && (
+                                (() => {
+                                    const isSameLoc = playerLocation.regionSlug === offer.locationSnapshot.regionSlug &&
+                                                      playerLocation.settlementName === offer.locationSnapshot.settlementName &&
+                                                      (playerLocation.buildingName || null) === (offer.locationSnapshot.buildingName || null);
+                                    if (!isSameLoc) {
+                                        return (
+                                            <div className="mb-4 text-xs text-red-400 bg-red-500/10 border border-red-500/50 p-2 rounded">
+                                                ⚠ Lokasi Berbeda (Batal jika diterima)
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()
+                            )}
 
                             <div className="space-y-2 mb-6">
                                 <div className="flex items-center gap-2 text-sm">
