@@ -26,8 +26,17 @@ router.get('/location', authenticateToken, async (req, res) => {
             settlementName: location.settlementName
         });
 
+        let currentLocationData = { ...location };
+        if (location.buildingName) {
+            const currentBuilding = buildings.find(b => b.buildingName === location.buildingName);
+            if (currentBuilding) {
+                currentLocationData.buildingType = currentBuilding.buildingType;
+                currentLocationData.linkedSectId = currentBuilding.linkedSectId;
+            }
+        }
+
         res.json({
-            currentLocation: location,
+            currentLocation: currentLocationData,
             buildings: buildings
         });
     } catch (error) {
