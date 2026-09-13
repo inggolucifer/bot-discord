@@ -140,6 +140,7 @@ const setupServer = (client) => {
     const adminRoutes = require('./routes/admin');
     const pveRoutes = require('./routes/pve');
     const worldRoutes = require('./routes/world');
+    const questRoutes = require('./routes/quest');
     const professionRoutes = require('./routes/professions');
     const equipmentRoutes = require('./routes/equipment');
 
@@ -159,6 +160,7 @@ const setupServer = (client) => {
     app.use('/api/admin', adminRoutes);
     app.use('/api/pve', pveRoutes);
     app.use('/api/world', worldRoutes);
+    app.use('/api/world/quests', questRoutes);
     app.use('/api/professions', professionRoutes);
     app.use('/api/equipment', equipmentRoutes);
 
