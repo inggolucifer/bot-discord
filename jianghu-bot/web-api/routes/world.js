@@ -201,103 +201,42 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 router.get('/travel/status', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const travel = await Travel.findOne({ discordId: userId, status: 'traveling' });
+        const travel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
 
         if (!travel) return res.json({ travel: null });
 
-        if (Date.now() >= travel.arrivalTime.getTime()) {
+        if (travel.status === 'traveling' && Date.now() >= travel.arrivalTime.getTime()) {
             await withTransaction(async (session) => {
-                travel.status = 'arrived';
                 const player = await Player.findOne({ discordId: userId }).session(session);
                 if (!player) throw new CustomError('Karakter tidak ditemukan', 404);
 
-                player.currentLocation = {
-                    regionSlug: travel.toLocation.regionSlug,
-                    settlementName: travel.toLocation.settlementName,
-                    buildingName: null
-                };
-
-                let ambushData = null;
+                let isAmbushed = false;
                 if (!travel.ambushResolved) {
-                    travel.ambushResolved = true;
-                    // Ambush logic
+                    // Phase 6: Ambush logic modified to pending state
                     let ambushChance = 0.15; // default base
                     if (travel.usedEscortLetter) ambushChance *= 0.3;
 
                     if (Math.random() < ambushChance) {
+                        isAmbushed = true;
+                        travel.status = 'ambushed';
                         travel.ambushResult.happened = true;
                         travel.ambushResult.banditGroupSize = Math.floor(Math.random() * 3) + 3; // 3-5
-
-                        const { getTotalCopper, payCurrency } = require('../../utils/currency');
-                        const totalCopperEq = getTotalCopper(player.currency);
-                        const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT);
-                        const capCopper = travelConfig.AMBUSH_LOSS_CAP_SILVER_EQ * 100;
-                        const finalLossCopper = Math.min(lossCopper, capCopper);
-
-                        if (finalLossCopper > 0) {
-                            // Deduct using existing utility
-                            payCurrency(player.currency, finalLossCopper, 'copper');
-
-                            travel.ambushResult.currencyLost.copper = finalLossCopper;
-                            travel.ambushResult.message = `Kamu disergap oleh ${travel.ambushResult.banditGroupSize} bandit dan kehilangan harta setara dengan ${Math.floor(finalLossCopper/100)} silver.`;
-
-                            try {
-                                const client = req.app.get('client');
-                                if (client) {
-                                    const { logTransaction } = require('../../utils/logger'); // or whichever file has it
-                                    if (logTransaction) {
-                                        logTransaction(client, {
-                                            guildId: player.guildId,
-                                            userId: player.discordId,
-                                            type: 'travel_ambush',
-                                            description: `Ambushed during travel, lost ${finalLossCopper} copper equivalent`,
-                                            currencyType: 'copper',
-                                            amount: finalLossCopper
-                                        });
-                                    }
-                                }
-                            } catch (e) {
-                                // Ignore if economyLogger not found or client not set up fully
-                            }
-
-                            await AdminLog.create([{
-                                guildId: player.guildId,
-                                adminId: 'SYSTEM',
-                                action: 'travel_ambush',
-                                details: `Player ${player.discordId} ambushed, lost ${finalLossCopper} copper equivalent.`
-                            }], { session });
-
-                        } else {
-                            travel.ambushResult.message = `Kamu disergap oleh bandit, tapi kamu tidak memiliki harta untuk dirampas.`;
-                        }
-
-                        // Quest Hook: defeat_bandit
-                        // Since they lose money, it means they 'survived/defeated' the ambush encounter.
-                        const { evaluateQuestProgress } = require('../../utils/questProgress');
-                        const Quest = require('../../models/Quest');
-
-                        let questsUpdated = false;
-                        for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
-                             const quest = await Quest.findById(questEntry.questId).session(session);
-                             if (!quest) continue;
-
-                             const context = { defeatedBandit: true, amount: travel.ambushResult.banditGroupSize };
-                             const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
-
-                             if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
-                                 questEntry.objectiveProgress = updatedProgress;
-                                 questEntry.lastTouchedAt = new Date();
-                                 if (allDone) {
-                                     questEntry.status = 'completed';
-                                     questEntry.completedAt = new Date();
-                                 }
-                                 questsUpdated = true;
-                             }
-                        }
+                        travel.ambushResult.message = `Kamu disergap oleh ${travel.ambushResult.banditGroupSize} bandit! Apa yang akan kamu lakukan?`;
+                    } else {
+                        travel.ambushResolved = true;
                     }
                 }
 
-                await player.save({ session });
+                if (!isAmbushed) {
+                    travel.status = 'arrived';
+                    player.currentLocation = {
+                        regionSlug: travel.toLocation.regionSlug,
+                        settlementName: travel.toLocation.settlementName,
+                        buildingName: null
+                    };
+                    await player.save({ session });
+                }
+
                 await travel.save({ session });
             });
 
@@ -311,6 +250,198 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Gagal memuat status perjalanan' });
+    }
+});
+
+router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { choice } = req.body; // 'fight' | 'surrender'
+
+    if (!['fight', 'surrender'].includes(choice)) {
+        return res.status(400).json({ error: 'Pilihan tidak valid.' });
+    }
+
+    const LockManager = require('../utils/lockManager');
+    const lockKey = `ambush_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Permintaan sedang diproses.' });
+
+    try {
+        const result = await withTransaction(async (session) => {
+            const travel = await Travel.findOne({ discordId: userId, status: 'ambushed' }).session(session);
+            if (!travel) throw new CustomError('Tidak ada ambush yang aktif.', 404);
+
+            const player = await Player.findOne({ discordId: userId }).session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan', 404);
+
+            let ambushLogs = [];
+            let won = false;
+
+            if (choice === 'surrender') {
+                const { getTotalCopper, payCurrency } = require('../../utils/currency');
+                const totalCopperEq = getTotalCopper(player.currency);
+                const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT);
+                const capCopper = travelConfig.AMBUSH_LOSS_CAP_SILVER_EQ * 100;
+                const finalLossCopper = Math.min(lossCopper, capCopper);
+
+                if (finalLossCopper > 0) {
+                    payCurrency(player.currency, finalLossCopper, 'copper');
+                    travel.ambushResult.currencyLost.copper = finalLossCopper;
+                    travel.ambushResult.message = `Kamu menyerah dan membayar upeti sebesar ${Math.floor(finalLossCopper/100)} silver.`;
+
+                    await TransactionLog.create([{
+                        guildId: player.guildId,
+                        type: 'ambush_loss',
+                        description: `[${player.characterName}] menyerah pada penyergapan bandit. Kehilangan ${finalLossCopper} Copper eq.`,
+                        amount: finalLossCopper,
+                        currency: 'copper'
+                    }], { session });
+
+                } else {
+                    travel.ambushResult.message = `Kamu menyerah, namun tidak memiliki harta yang bisa dirampas.`;
+                }
+
+                won = false;
+            } else if (choice === 'fight') {
+                const Monster = require('../../models/Monster');
+                const { simulateBattle } = require('../../utils/simulateBattle');
+                const { syncPlayerCultivation } = require('../../utils/cultivation');
+
+                await syncPlayerCultivation(player);
+                await player.populate('laws manuals.manualId');
+
+                // Get generic bandit stats
+                let banditMonster = await Monster.findOne({ guildId: player.guildId, key: 'bandit_generic' }).session(session);
+
+                // Fallback basic stats if seed is missing for some reason
+                let baseHp = banditMonster ? banditMonster.statBlock.hp : 120;
+                let baseAtk = banditMonster ? banditMonster.statBlock.atk : 12;
+                let baseDef = banditMonster ? banditMonster.statBlock.def : 5;
+                let baseSpd = banditMonster ? banditMonster.statBlock.spd : 8;
+                let banditName = banditMonster ? banditMonster.name : 'Bandit Jalanan';
+
+                const groupSize = travel.ambushResult.banditGroupSize || 3;
+
+                // Submultiplicative scaling
+                const totalHp = Math.floor(baseHp * (1 + 0.5 * (groupSize - 1)));
+                const totalAtk = Math.floor(baseAtk * (1 + 0.6 * (groupSize - 1)));
+                const totalDef = Math.floor(baseDef * (1 + 0.4 * (groupSize - 1)));
+                const totalSpd = Math.floor(baseSpd * (1 + 0.2 * (groupSize - 1)));
+
+                const opponent = {
+                    characterName: `Kelompok ${banditName} (${groupSize} orang)`,
+                    stats: {
+                        baseHp: totalHp,
+                        baseAtk: totalAtk,
+                        baseDef: totalDef,
+                        baseSpd: totalSpd
+                    },
+                    laws: [],
+                    manuals: [],
+                    activeBuffs: [],
+                    equipment: {},
+                    inventory: [],
+                    systemCultivation: null
+                };
+
+                const battleResult = simulateBattle(player, opponent);
+                ambushLogs = battleResult.logs;
+
+                if (battleResult.winnerIdx === 1) {
+                    won = true;
+
+                    // Drop from generic bandit (using fallback values or from db)
+                    let lootCopper = 0;
+                    if (banditMonster && banditMonster.currencyDrop) {
+                        const { copperMin, copperMax } = banditMonster.currencyDrop;
+                        lootCopper = Math.floor(Math.random() * (copperMax - copperMin + 1)) + copperMin;
+                        // Multiply loosely based on group size
+                        lootCopper = Math.floor(lootCopper * (1 + 0.5 * (groupSize - 1)));
+                    }
+
+                    if (lootCopper > 0) {
+                        player.currency.copper += lootCopper;
+                        travel.ambushResult.message = `Kamu berhasil mengalahkan kelompok bandit tersebut dan merampas harta senilai ${lootCopper} Copper!`;
+
+                        await TransactionLog.create([{
+                            guildId: player.guildId,
+                            type: 'ambush_win_loot',
+                            description: `[${player.characterName}] menang melawan kelompok bandit (${groupSize} orang). (+${lootCopper} Copper)`,
+                            amount: lootCopper,
+                            currency: 'copper'
+                        }], { session });
+                    } else {
+                        travel.ambushResult.message = `Kamu berhasil mengalahkan kelompok bandit tersebut!`;
+                    }
+
+                    // Quest Hook
+                    const { evaluateQuestProgress } = require('../../utils/questProgress');
+                    const Quest = require('../../models/Quest');
+                    for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
+                         const quest = await Quest.findById(questEntry.questId).session(session);
+                         if (!quest) continue;
+
+                         const context = { defeatedBandit: true, amount: groupSize };
+                         const { updatedProgress, allDone } = await evaluateQuestProgress(player, quest, questEntry, context);
+
+                         if (JSON.stringify(questEntry.objectiveProgress) !== JSON.stringify(updatedProgress)) {
+                             questEntry.objectiveProgress = updatedProgress;
+                             questEntry.lastTouchedAt = new Date();
+                             if (allDone) {
+                                 questEntry.status = 'completed';
+                                 questEntry.completedAt = new Date();
+                             }
+                         }
+                    }
+                } else {
+                    won = false;
+                    const { getTotalCopper, payCurrency } = require('../../utils/currency');
+                    const totalCopperEq = getTotalCopper(player.currency);
+
+                    const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT * 1.5);
+                    const capCopper = travelConfig.AMBUSH_LOSS_CAP_SILVER_EQ * 150;
+                    const finalLossCopper = Math.min(lossCopper, capCopper);
+
+                    if (finalLossCopper > 0) {
+                        payCurrency(player.currency, finalLossCopper, 'copper');
+                        travel.ambushResult.currencyLost.copper = finalLossCopper;
+                        travel.ambushResult.message = `Kamu kalah melawan bandit dan dirampok secara paksa senilai ${Math.floor(finalLossCopper/100)} silver.`;
+
+                        await TransactionLog.create([{
+                            guildId: player.guildId,
+                            type: 'ambush_loss',
+                            description: `[${player.characterName}] kalah melawan bandit dan kehilangan harta senilai ${finalLossCopper} Copper eq.`,
+                            amount: finalLossCopper,
+                            currency: 'copper'
+                        }], { session });
+
+                    } else {
+                        travel.ambushResult.message = `Kamu kalah melawan bandit, tapi untungnya mereka tidak menemukan apa-apa.`;
+                    }
+                }
+            }
+
+            travel.ambushResolved = true;
+            travel.status = 'arrived';
+            player.currentLocation = {
+                regionSlug: travel.toLocation.regionSlug,
+                settlementName: travel.toLocation.settlementName,
+                buildingName: null
+            };
+
+            await player.save({ session });
+            await travel.save({ session });
+
+            return { travel, currentLocation: player.currentLocation, ambushLogs, won };
+        });
+
+        res.json({ success: true, ...result });
+    } catch (error) {
+        if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+        console.error('[API-WORLD] Resolve ambush error:', error);
+        res.status(500).json({ error: 'Gagal meresolve ambush.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
