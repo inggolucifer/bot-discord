@@ -203,6 +203,7 @@ router.get('/exam/status', authenticateToken, async (req, res) => {
 router.post('/exam/complete', authenticateToken, async (req, res) => {
   try {
     const player = await Player.findOne({ discordId: req.user.userId, guildId: req.user.guildId });
+    if (!player) return res.status(404).json({ message: 'Player tidak ditemukan.' });
     if (!player.sectExamState || !player.sectExamState.activeType) {
       return res.status(400).json({ message: 'Tidak ada ujian aktif yang bisa diselesaikan.' });
     }
