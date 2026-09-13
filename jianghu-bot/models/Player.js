@@ -149,6 +149,18 @@ const playerSchema = new mongoose.Schema({
 
   sect: { type: String, default: 'Tanpa Sekte (Rogue Cultivator)' },
 
+  sectExamState: {
+    activeSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
+    activeType: { type: String, enum: ['combat', 'trial_task', null], default: null },
+    trialAssignedAt: { type: Date, default: null },
+    trialDeadlineAt: { type: Date, default: null },
+    lastAttempts: [{
+      sectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect' },
+      at: { type: Date },
+      result: { type: String, enum: ['success', 'fail'] }
+    }]
+  },
+
   characterImage: { type: String, default: null },
 
   currency: {

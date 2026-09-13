@@ -36,6 +36,27 @@ const sectSchema = new mongoose.Schema({
   elderIds: { type: [String], default: [] },
   memberIds: { type: [String], default: [] },
 
+  entranceTest: {
+    enabled: { type: Boolean, default: false },
+    type: { type: String, enum: ['combat', 'trial_task'], default: 'combat' },
+    minRealmIndex: { type: Number, default: 0 },
+    guardianStatBlock: {
+      hp: { type: Number, default: 100 },
+      atk: { type: Number, default: 15 },
+      def: { type: Number, default: 10 },
+      spd: { type: Number, default: 10 },
+      name: { type: String, default: 'Penjaga Gerbang' }
+    },
+    trialTask: {
+      description: { type: String, default: '' },
+      objectiveType: { type: String, enum: ['hold_location', 'wait_time'], default: 'wait_time' },
+      targetSettlementName: { type: String, default: null },
+      targetBuildingName: { type: String, default: null },
+      durationHours: { type: Number, default: 1 }
+    },
+    cooldownHours: { type: Number, default: 24 }
+  },
+
   // Kekayaan sekte (dari donasi player + hasil lain di masa depan) -- TIDAK BISA diklaim balik ke pribadi.
   currency: {
     copper: { type: Number, default: 0 },
