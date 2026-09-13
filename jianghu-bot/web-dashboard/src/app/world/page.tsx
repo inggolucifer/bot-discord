@@ -153,15 +153,55 @@ export default function WorldPage() {
         </div>
       )}
 
+      {travelStatus && travelStatus.status === 'ambushed' && (
+        <div className="bg-red-950/80 border border-red-500/50 rounded-xl p-6 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+          <h2 className="text-xl font-serif font-bold text-red-400 mb-2">Penyergapan Bandit!</h2>
+          <p className="text-red-200 mb-4">{travelStatus.ambushResult?.message}</p>
+
+          <div className="flex gap-4">
+            <button
+              onClick={async () => {
+                try {
+                  const res = await api.post('/world/travel/resolve-ambush', { choice: 'fight' });
+                  setTravelStatus(res.data.travel);
+                  if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
+                  fetchData(); // Refresh to update currency / quest log
+                } catch (e: any) {
+                  setError(e.response?.data?.error || 'Gagal meresolve ambush.');
+                }
+              }}
+              className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition-colors"
+            >
+              Melawan (Risiko Tinggi)
+            </button>
+            <button
+              onClick={async () => {
+                try {
+                  const res = await api.post('/world/travel/resolve-ambush', { choice: 'surrender' });
+                  setTravelStatus(res.data.travel);
+                  if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
+                  fetchData(); // Refresh to update currency
+                } catch (e: any) {
+                  setError(e.response?.data?.error || 'Gagal meresolve ambush.');
+                }
+              }}
+              className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold py-2 px-6 rounded transition-colors"
+            >
+              Menyerah (Bayar Upeti)
+            </button>
+          </div>
+        </div>
+      )}
+
       {travelStatus && travelStatus.status === 'arrived' && (
         <div className="bg-[#1a202c]/80 border border-green-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
           <h2 className="text-xl font-serif font-bold text-green-400 mb-2">Tiba di Tujuan!</h2>
           <p className="text-gray-300 mb-4">Kamu telah tiba di {travelStatus.toLocation.settlementName}.</p>
 
           {travelStatus.ambushResult?.happened && (
-            <div className="mb-4 p-4 bg-red-950/50 rounded-lg border border-red-500/30">
-               <p className="text-red-400 font-bold mb-1">Terjadi Penyergapan!</p>
-               <p className="text-red-200/80">{travelStatus.ambushResult.message}</p>
+            <div className="mb-4 p-4 bg-gray-800/80 rounded-lg border border-gray-600/50">
+               <p className="text-gray-300 font-bold mb-1">Hasil Penyergapan:</p>
+               <p className="text-gray-400">{travelStatus.ambushResult.message}</p>
             </div>
           )}
           <button
