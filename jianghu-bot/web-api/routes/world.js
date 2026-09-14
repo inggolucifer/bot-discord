@@ -156,7 +156,25 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         let baseHours = distance / travelConfig.LI_PER_HOUR;
         let realmIndex = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-        let finalHours = baseHours * (1 - Math.min(0.5, realmIndex * 0.03));
+
+        let realmDiscount = Math.min(0.5, realmIndex * 0.03);
+        let horseSpeedBonus = 0;
+        const Item = require('../../models/Item');
+
+        if (player.equipment && player.equipment.accessory) {
+            const accInvItem = player.inventory.id(player.equipment.accessory);
+            if (accInvItem && accInvItem.itemId) {
+                const accItem = await Item.findById(accInvItem.itemId);
+                if (accItem && accItem.capacityType === 'horse') {
+                    horseSpeedBonus = accItem.travelSpeedBonus || 0;
+                }
+            }
+        }
+
+        const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
+        const totalDiscount = Math.min(realmDiscount + horseSpeedBonus, MAX_TRAVEL_SPEED_DISCOUNT);
+
+        let finalHours = baseHours * (1 - totalDiscount);
         let arrivalTime = new Date(Date.now() + finalHours * 3600 * 1000);
 
         let escortUsed = false;
