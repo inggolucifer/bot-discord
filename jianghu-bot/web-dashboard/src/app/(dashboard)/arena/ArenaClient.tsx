@@ -221,12 +221,12 @@ export default function ArenaClient() {
                                         <div className="h-4 bg-[#222] rounded-full overflow-hidden border border-[#444] w-full">
                                             <motion.div
         className="h-full bg-green-500"
-        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p1Hp / battleData.result.p1MaxHp) * 100)}%` }}
+        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.hpAfter?.p1 / battleData.result.p1MaxHp) * 100)}%` }}
         transition={{ duration: 0.5, ease: "easeOut" }}
      />
                                         </div>
                                         <div className="text-xs text-right text-gray-400 font-mono">
-                                            {battleData.logs[currentLogIndex]?.p1Hp} / {battleData.result.p1MaxHp}
+                                            {battleData.logs[currentLogIndex]?.hpAfter?.p1} / {battleData.result.p1MaxHp}
                                         </div>
                                     </div>
 
@@ -240,12 +240,12 @@ export default function ArenaClient() {
                                         <div className="h-4 bg-[#222] rounded-full overflow-hidden border border-[#444] w-full flex justify-end">
                                             <motion.div
         className="h-full bg-red-500"
-        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.p2Hp / battleData.result.p2MaxHp) * 100)}%` }}
+        animate={{ width: `${Math.max(0, (battleData.logs[currentLogIndex]?.hpAfter?.p2 / battleData.result.p2MaxHp) * 100)}%` }}
         transition={{ duration: 0.5, ease: "easeOut" }}
      />
                                         </div>
                                         <div className="text-xs text-left text-gray-400 font-mono">
-                                            {battleData.logs[currentLogIndex]?.p2Hp} / {battleData.result.p2MaxHp}
+                                            {battleData.logs[currentLogIndex]?.hpAfter?.p2} / {battleData.result.p2MaxHp}
                                         </div>
                                     </div>
                                 </div>
@@ -293,7 +293,7 @@ export default function ArenaClient() {
                             <div className="col-span-1 bg-[#111] rounded-lg border border-[#333] flex flex-col max-h-[500px]">
                                 <div className="p-3 border-b border-[#333] font-bold text-[#c5a880] flex justify-between items-center">
                                     <span>Combat Log</span>
-                                    <Badge variant="outline">Round {battleData.logs[currentLogIndex]?.round || 1}</Badge>
+                                    <Badge variant="outline">Round {battleData.logs[currentLogIndex]?.turn || 1}</Badge>
                                 </div>
                                 <div className="p-4 flex-1 overflow-y-auto custom-scrollbar space-y-3" ref={logContainerRef}>
                                     {battleData.logs.slice(0, currentLogIndex + 1).map((log: any, idx: number) => (

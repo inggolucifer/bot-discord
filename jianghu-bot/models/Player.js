@@ -172,6 +172,14 @@ const playerSchema = new mongoose.Schema({
   nickname: { type: String, default: null },
 
   currentHp: { type: Number, default: null },
+  combatConditions: [{
+    type: {
+      type: String,
+      enum: ['poison', 'injury', 'bleed', 'intox', 'frozen', 'psychosis', 'burn', 'knockback']
+    },
+    severity: { type: Number, default: 1 },
+    remainingTurns: { type: Number, default: 0 }
+  }],
   currentMp: { type: Number, default: null },
 
   kungfuSkills: {
