@@ -562,6 +562,12 @@ router.post('/complete', verifyToken, async (req, res) => {
 
             player.professions[session.profession].exp += gainedExp;
 
+            // Phase 10: Increase forging kungfu skill on success if smithing
+            if (session.profession === 'smithing') {
+                if (!player.kungfuSkills) player.kungfuSkills = {};
+                player.kungfuSkills.forging = (player.kungfuSkills.forging || 0) + 1;
+            }
+
             let currentLvl = player.professions[session.profession].level;
             let requiredExp = Math.floor(50 * currentLvl + 15 * currentLvl * currentLvl);
 
