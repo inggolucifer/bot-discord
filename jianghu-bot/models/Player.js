@@ -198,6 +198,12 @@ const playerSchema = new mongoose.Schema({
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
+
+  marriage: {
+    status: { type: String, enum: ['single', 'proposed', 'married'], default: 'single' },
+    spouseId: { type: String, default: null },
+    marriageId: { type: mongoose.Schema.Types.ObjectId, ref: 'Marriage', default: null }
+  },
   petSlots: { type: Number, default: 2 },
   pets: {
     type: [petOwnedSchema],

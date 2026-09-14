@@ -145,6 +145,7 @@ const barterRoutes = require('./routes/barter');
     const questRoutes = require('./routes/quest');
     const professionRoutes = require('./routes/professions');
     const equipmentRoutes = require('./routes/equipment');
+    const marriageRoutes = require('./routes/marriage');
 
     app.use('/api/auth', authRoutes);
 app.use('/api/barter', barterRoutes);
@@ -166,6 +167,7 @@ app.use('/api/barter', barterRoutes);
     app.use('/api/world/quests', questRoutes);
     app.use('/api/professions', professionRoutes);
     app.use('/api/equipment', equipmentRoutes);
+    app.use('/api/marriage', marriageRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
