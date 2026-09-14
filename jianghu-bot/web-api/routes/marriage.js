@@ -16,28 +16,22 @@ async function isPlayerBusy(discordId, guildId) {
 }
 
 // Reusable function to log transactions
-async function logMarriageTransaction(req, type, fromUserId, toUserId, amountCopper, description, guildId) {
-  try {
-    const client = req.app.get('client');
-    await TransactionLog.create({
-      guildId,
-      type,
-      fromUserId,
-      toUserId,
-      currency: 'copper',
-      amount: amountCopper,
-      itemDescription: description,
-      timestamp: new Date()
-    });
-  } catch (error) {
-    console.error('Failed to log marriage transaction:', error);
-  }
+async function logMarriageTransaction(session, type, fromUserId, toUserId, amountCopper, description, guildId) {
+  await TransactionLog.create([{
+    guildId,
+    type,
+    fromUserId: fromUserId === 'SYSTEM' ? null : fromUserId,
+    toUserId: toUserId === 'SYSTEM' ? null : toUserId,
+    currency: 'copper',
+    amount: amountCopper,
+    note: description
+  }], { session });
 }
 
 // 1. Me - Get my marriage status & proposals
 router.get('/me', authenticateToken, async (req, res) => {
   try {
-    const { discordId, guildId } = req.user;
+    const { userId: discordId, guildId } = req.user;
     const player = await Player.findOne({ discordId, guildId });
     if (!player) return res.status(404).json({ message: 'Player tidak ditemukan' });
 
@@ -93,7 +87,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 // 2. Eligible Nearby - Get list of single players in the same location
 router.get('/eligible-nearby', authenticateToken, async (req, res) => {
   try {
-    const { discordId, guildId } = req.user;
+    const { userId: discordId, guildId } = req.user;
     const player = await Player.findOne({ discordId, guildId }).lean();
     if (!player) return res.status(404).json({ message: 'Player tidak ditemukan' });
 
@@ -110,7 +104,7 @@ router.get('/eligible-nearby', authenticateToken, async (req, res) => {
       'currentLocation.regionSlug': regionSlug,
       'currentLocation.settlementName': settlementName,
       'marriage.status': 'single'
-    }).select('discordId name legacyRealm legacyStage').lean();
+    }).select('discordId characterName systemCultivation').lean();
 
     // Filter out busy players (traveling/ambushed)
     const eligible = [];
@@ -131,7 +125,7 @@ router.get('/eligible-nearby', authenticateToken, async (req, res) => {
 // 3. Propose
 router.post('/propose', authenticateToken, async (req, res) => {
   const { toUserId, dowry } = req.body;
-  const { discordId: fromUserId, guildId } = req.user;
+  const { userId: fromUserId, guildId } = req.user;
 
   if (fromUserId === toUserId) return res.status(400).json({ message: 'Tidak bisa melamar diri sendiri.' });
 
@@ -160,6 +154,11 @@ router.post('/propose', authenticateToken, async (req, res) => {
 
     if (await isPlayerBusy(fromUserId, guildId) || await isPlayerBusy(toUserId, guildId)) {
       return res.status(400).json({ message: 'Salah satu pihak sedang bepergian atau disergap.' });
+    }
+
+    // validate dowry items
+    if (dowry?.items && dowry.items.length > 0) {
+      return res.status(400).json({ message: 'Mahar berupa item belum didukung saat ini. Harap gunakan mata uang.' });
     }
 
     // validate cooldown
@@ -236,7 +235,7 @@ router.post('/propose', authenticateToken, async (req, res) => {
 // 4. Accept Proposal
 router.post('/proposals/:id/accept', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { discordId, guildId } = req.user;
+  const { userId: discordId, guildId } = req.user;
 
   // We only lock the acceptor initially, then lock the proposer
   const lockKeyAcceptor = `marriage_${guildId}_${discordId}`;
@@ -324,11 +323,11 @@ router.post('/proposals/:id/accept', authenticateToken, async (req, res) => {
 
         await playerA.save({ session });
         await playerB.save({ session });
-      });
 
-      // Log transactions
-      await logMarriageTransaction(req, 'marriage_dowry', proposerId, discordId, dowryCopperEquivalent, 'Mahar pernikahan', guildId);
-      await logMarriageTransaction(req, 'marriage_ceremony_fee', proposerId, 'SYSTEM', proposal.ceremonyFeeCopper, 'Biaya upacara pernikahan', guildId);
+        // Log transactions atomically inside the block
+        await logMarriageTransaction(session, 'marriage_dowry', proposerId, discordId, dowryCopperEquivalent, 'Mahar pernikahan', guildId);
+        await logMarriageTransaction(session, 'marriage_ceremony_fee', proposerId, 'SYSTEM', proposal.ceremonyFeeCopper, 'Biaya upacara pernikahan', guildId);
+      });
 
       res.json({ message: 'Pernikahan berhasil dilangsungkan!' });
     } finally {
@@ -345,7 +344,7 @@ router.post('/proposals/:id/accept', authenticateToken, async (req, res) => {
 // 5. Reject Proposal
 router.post('/proposals/:id/reject', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { discordId, guildId } = req.user;
+  const { userId: discordId, guildId } = req.user;
 
   try {
     const proposal = await Marriage.findById(id);
@@ -353,7 +352,7 @@ router.post('/proposals/:id/reject', authenticateToken, async (req, res) => {
     if (proposal.partnerB !== discordId) return res.status(403).json({ message: 'Hanya pihak yang dilamar yang bisa menolak.' });
 
     await withTransaction(async (session) => {
-      proposal.status = 'cancelled';
+      proposal.status = 'rejected';
       await proposal.save({ session });
 
       await Player.updateMany(
@@ -373,7 +372,7 @@ router.post('/proposals/:id/reject', authenticateToken, async (req, res) => {
 // 6. Cancel Proposal (by proposer)
 router.post('/proposals/:id/cancel', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { discordId, guildId } = req.user;
+  const { userId: discordId, guildId } = req.user;
 
   try {
     const proposal = await Marriage.findById(id);
@@ -400,7 +399,7 @@ router.post('/proposals/:id/cancel', authenticateToken, async (req, res) => {
 
 // 7. Divorce
 router.post('/divorce', authenticateToken, async (req, res) => {
-  const { discordId, guildId } = req.user;
+  const { userId: discordId, guildId } = req.user;
 
   const lockKey = `marriage_divorce_${guildId}_${discordId}`;
   if (!lockManager.acquire(lockKey)) return res.status(429).json({ message: 'Sedang memproses.' });
@@ -440,9 +439,9 @@ router.post('/divorce', authenticateToken, async (req, res) => {
         spouse.cooldowns.remarry = new Date(Date.now() + config.REMARRY_COOLDOWN_HOURS * 3600000);
         await spouse.save({ session });
       }
-    });
 
-    await logMarriageTransaction(req, 'marriage_divorce_fee', discordId, 'SYSTEM', config.DIVORCE_FEE_COPPER, 'Biaya perceraian', guildId);
+      await logMarriageTransaction(session, 'marriage_divorce_fee', discordId, 'SYSTEM', config.DIVORCE_FEE_COPPER, 'Biaya perceraian', guildId);
+    });
 
     res.json({ message: 'Anda telah resmi bercerai.' });
   } catch (err) {

@@ -207,7 +207,7 @@ export default function MarriagePage() {
                           <option value="">-- Pilih Pemain --</option>
                           {eligiblePlayers.map(p => (
                               <option key={p.discordId} value={p.discordId}>
-                                  {p.name} (ID: {p.discordId}) - {p.legacyRealm}
+                                  {p.characterName} (ID: {p.discordId}) - {p.systemCultivation?.realm || 'Mortal'}
                               </option>
                           ))}
                       </select>

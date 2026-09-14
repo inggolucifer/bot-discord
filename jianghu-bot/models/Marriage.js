@@ -7,7 +7,7 @@ const marriageSchema = new Schema({
   partnerB: { type: String, required: true, index: true }, // discordId
   status: {
     type: String,
-    enum: ['proposed', 'married', 'divorced', 'cancelled', 'expired'],
+    enum: ['proposed', 'married', 'divorced', 'cancelled', 'expired', 'rejected'],
     default: 'proposed',
     index: true
   },
