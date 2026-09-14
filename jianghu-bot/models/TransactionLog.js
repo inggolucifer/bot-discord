@@ -14,17 +14,19 @@ const transactionLogSchema = new mongoose.Schema({
       'sect_donate', 'sect_war_loot', 'worker_claim', 'sect_worker_claim',
       'player_build_asset', 'player_build_asset_web', 'player_destroy_asset', 'player_repair_asset', 'player_guard_asset', 'sect_build_asset', 'hire_worker', 'worker_salary',
       'auction_bid', 'auction_refund', 'auction_win', 'auction_profit', 'auction_request', 'comprehend_manual', 'use_insight_pill', 'law_reset', 'use_item', 'quest_reward',
-      'ambush_loss', 'ambush_win_loot', 'exploration_loot',
+      'ambush_loss', 'ambush_win_loot', 'exploration_loot', 'steal_pve',
       'marriage_dowry', 'marriage_ceremony_fee', 'marriage_divorce_fee'
     ],
     required: true,
   },
-  fromUserId: { type: String, default: null },   // null jika dari sistem (mis. daily)
+  userId: { type: String, default: null }, // MIGRATED: replaced fromUserId/toUserId based on code usage
+  fromUserId: { type: String, default: null },
   toUserId: { type: String, default: null },
   currency: { type: String, enum: ['copper', 'silver', 'gold', 'jade', 'spirit', null], default: null },
   amount: { type: Number, default: 0 },
-  itemDescription: { type: String, default: null }, // untuk transaksi item/pet/asset
-  balanceAfter: { type: mongoose.Schema.Types.Mixed, default: null }, // snapshot saldo setelah transaksi (anti-cheat)
+  description: { type: String, default: null }, // MIGRATED: replaced itemDescription/note
+  itemDescription: { type: String, default: null },
+  balanceAfter: { type: mongoose.Schema.Types.Mixed, default: null },
   note: { type: String, default: null },
 }, { timestamps: true });
 
