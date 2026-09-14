@@ -102,6 +102,28 @@ router.get('/profile', authenticateToken, async (req, res) => {
         // Calculate real-time energy
         const currentEnergy = calculateEnergy(player);
 
+        const { getInventoryWeight, getCarryCapacity } = require('../../utils/inventoryWeight');
+
+        let inventoryWeight = 0;
+        let carryCapacity = 50;
+
+        const mutablePlayer = await Player.findOne({ discordId: userId }).populate('inventory.itemId').lean();
+        if (mutablePlayer) {
+            const equippedItems = [];
+            if (mutablePlayer.equipment && mutablePlayer.equipment.accessory) {
+                const accInvItem = mutablePlayer.inventory.find(i => i._id.toString() === mutablePlayer.equipment.accessory.toString());
+                if (accInvItem && accInvItem.itemId && accInvItem.itemId.capacityBonus) {
+                    equippedItems.push(accInvItem.itemId);
+                }
+            }
+            const Travel = require('../../models/Travel');
+            const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
+            const isTraveling = !!activeTravel;
+
+            inventoryWeight = getInventoryWeight(mutablePlayer);
+            carryCapacity = getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
+        }
+
         res.json({
             success: true,
             data: {
@@ -112,7 +134,9 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 combatStats,
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,
-                hasCompletedTour: player.hasCompletedTour || false
+                hasCompletedTour: player.hasCompletedTour || false,
+                inventoryWeight,
+                carryCapacity
             }
         });
     } catch (error) {

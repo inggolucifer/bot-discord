@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
+const { canAddToInventory } = require('../../utils/inventoryWeight');
 const LockManager = require('../utils/lockManager');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
@@ -110,7 +111,41 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         const equippedInvId = player.equipment[slot];
         const invItem = player.inventory.id(equippedInvId);
 
-        if (invItem) {
+        if (invItem && invItem.itemId) {
+            const itemDoc = await Item.findById(invItem.itemId);
+
+            // Check if unequipping will put us over capacity (capacity drops because we lose accessory, or we just need to ensure weight fits in new capacity)
+            // But wait, the item is ALREADY in the inventory array (just marked isEquipped = true).
+            // getInventoryWeight calculates weight for all items in inventory array.
+            // But if it's an accessory that gives capacity (e.g. Storage Ring), removing it might reduce capacity so much that current weight > new capacity.
+            // If the item provides capacity, let's see if unequipping it causes overflow.
+
+            // Calculate hypothetical capacity without this item
+            const equippedItems = [];
+            for (const key of ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory']) {
+                if (key !== slot && player.equipment[key]) {
+                    const eInvItem = player.inventory.id(player.equipment[key]);
+                    if (eInvItem && eInvItem.itemId) {
+                        const eItemDoc = await Item.findById(eInvItem.itemId);
+                        if (eItemDoc) equippedItems.push(eItemDoc);
+                    }
+                }
+            }
+
+            const Travel = require('../../models/Travel');
+            const activeTravel = await Travel.findOne({ discordId: req.user.userId, status: { $in: ['traveling', 'ambushed'] } });
+            const { getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
+            const newCapacity = getCarryCapacity(player, { isTraveling: !!activeTravel }, equippedItems);
+
+            // Note: The item is already in player.inventory, so getInventoryWeight already includes its weight.
+            // We just need to check if current weight exceeds the new capacity.
+            const currentWeight = getInventoryWeight(player);
+
+            if (currentWeight > newCapacity) {
+                return res.status(400).json({ error: `Inventory penuh (berat ${currentWeight}/${newCapacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat melepaskan perlengkapan.` });
+            }
+
             invItem.isEquipped = false;
         }
 
