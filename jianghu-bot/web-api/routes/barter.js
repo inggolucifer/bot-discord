@@ -417,15 +417,12 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
             const requestedSummary = [reqCurrText !== '0 Copper' ? reqCurrText : '', reqItemText].filter(x => x).join(' dan ');
 
             // Logs
-            await TransactionLog.create([{
+                        await TransactionLog.create([{
                 guildId: offer.guildId,
                 type: 'barter_transfer',
-                fromUserId: offer.fromUserId,
-                toUserId: offer.toUserId,
-                currency: null,
-                amount: 0,
-                itemDescription: `[Barter] ${offer.fromUserId} memberikan (${offeredSummary || 'Tidak ada'}) ditukar dengan (${requestedSummary || 'Tidak ada'}) dari ${offer.toUserId}`,
-                note: `Barter completed for Offer ${offer._id}`
+                userId: offer.fromUserId,
+                description: `[Barter Offer ${offer._id}] ${offer.fromUserId} memberikan (${offeredSummary || 'Tidak ada'}) ditukar dengan (${requestedSummary || 'Tidak ada'}) dari ${offer.toUserId}`,
+                amount: offerCopper || reqCopper || 0
             }], { session });
 
         });
