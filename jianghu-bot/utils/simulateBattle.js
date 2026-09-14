@@ -74,7 +74,8 @@ function simulateBattle(challenger, opponent, options = {}) {
     let p1ConsecutiveTurns = 0;
     let p2ConsecutiveTurns = 0;
 
-    let hasStolen = false;
+    let stealAttempted = false;
+    let stealSuccess = false;
 
     function pushLog(text, type, actionData = {}) {
         let hpAfter = { p1: p1Hp, p2: p2Hp };
@@ -134,10 +135,20 @@ function simulateBattle(challenger, opponent, options = {}) {
 
             } else if (cond.type === 'intox') {
                 missMultiplier += cond.severity * COMBAT_COND.INTOX_MISS_RATE_PER_SEVERITY;
-                // Intox does not auto-decay
+                cond.severity -= COMBAT_COND.INTOX_REDUCTION_PER_TURN;
+                if (cond.severity <= 0) pConditions.splice(i, 1);
             } else if (cond.type === 'injury') {
                 atkMod *= (1 - (cond.severity * COMBAT_COND.INJURY_ATK_DEF_REDUCTION_PERCENT));
                 defMod *= (1 - (cond.severity * COMBAT_COND.INJURY_ATK_DEF_REDUCTION_PERCENT));
+                // Reduksi maxMp by injury severity (hanya di context battle)
+                if (pStats.currentMp !== undefined) {
+                    let mpReduction = Math.floor(pStats.maxMp * (cond.severity * COMBAT_COND.INJURY_MAX_MP_REDUCTION_PERCENT));
+                    pStats.maxMpEffective = Math.max(0, pStats.maxMp - mpReduction);
+                    pStats.currentMp = Math.min(pStats.currentMp, pStats.maxMpEffective);
+                }
+
+                cond.severity = Math.max(0, cond.severity - COMBAT_COND.INJURY_REDUCTION_PER_TURN);
+                if (cond.severity <= 0) pConditions.splice(i, 1);
             } else if (cond.type === 'psychosis') {
                 cond.remainingTurns--;
                 if (cond.remainingTurns <= 0) pConditions.splice(i, 1);
@@ -217,15 +228,15 @@ function simulateBattle(challenger, opponent, options = {}) {
         }
 
         // Steal check (only p1 PvE)
-        if (currentAttacker === 1 && options.allowSteal && !hasStolen && challenger.kungfuSkills?.stealing > 0) {
-            let stealChance = 0.3 + (challenger.kungfuSkills.stealing * 0.05); // Base formula
+        if (currentAttacker === 1 && options.allowSteal && !stealAttempted && challenger.kungfuSkills?.stealing > 0) {
+            let stealChance = COMBAT_COND.STEAL_BASE_CHANCE + (challenger.kungfuSkills.stealing * COMBAT_COND.STEAL_PER_SKILL);
+            stealAttempted = true;
             if (Math.random() < stealChance) {
                 pushLog(`🕵️ **${attacker.characterName}** mencoba mencuri dan berhasil!`, 'steal_success');
-                hasStolen = true; // Mark as successful to process in caller
-                // Not actually moving items here, let the route handler do it based on this flag
+                stealSuccess = true;
             } else {
                 pushLog(`🕵️ **${attacker.characterName}** mencoba mencuri tapi gagal.`, 'steal_fail');
-                hasStolen = 'failed';
+                stealSuccess = false;
             }
         }
 
@@ -422,7 +433,7 @@ function simulateBattle(challenger, opponent, options = {}) {
         p2Stats,
         p1Conditions,
         p2Conditions,
-        stealSuccess: hasStolen === true
+        stealSuccess, stealAttempted
     };
 }
 

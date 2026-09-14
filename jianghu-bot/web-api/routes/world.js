@@ -387,11 +387,9 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                              await TransactionLog.create({
                                  guildId: player.guildId,
-                                 playerId: player.discordId,
-                                 transactionType: 'steal_pve',
-                                 currencyChange: { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 },
-                                 itemChange: [{ itemName: itemDoc.name, quantity: stolenItem.qty }],
-                                 details: `Berhasil mencuri dari ${opponent.name}`
+                                 userId: player.discordId,
+                                 type: 'steal_pve',
+                                 description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
                              });
                          }
                     } else if (stolenCopper > 0 || stolenSilver > 0) {
@@ -404,11 +402,11 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                          await TransactionLog.create({
                                  guildId: player.guildId,
-                                 playerId: player.discordId,
-                                 transactionType: 'steal_pve',
-                                 currencyChange: { copper: stolenCopper, silver: stolenSilver, gold: 0, jade: 0, spirit: 0 },
-                                 itemChange: [],
-                                 details: `Berhasil mencuri dari ${opponent.name}`
+                                 userId: player.discordId,
+                                 type: 'steal_pve',
+                                 description: `Berhasil mencuri dari ${opponent.name}`,
+                                 amount: stolenCopper + (stolenSilver * 100),
+                                 currency: 'copper'
                          });
                     }
                 }
