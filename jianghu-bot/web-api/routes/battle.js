@@ -34,7 +34,15 @@ router.post('/simulate', authenticateToken, async (req, res) => {
         if (opponent.status !== 'active') throw new CustomError('Lawan tidak aktif.', 403);
 
         // Simulasi Battle
-        const simResult = simulateBattle(challenger, opponent);
+        const simResult = simulateBattle(challenger, opponent, { isPvE: false });
+
+        challenger.currentHp = simResult.p1Hp;
+        challenger.combatConditions = simResult.p1Conditions;
+        await challenger.save();
+
+        opponent.currentHp = simResult.p2Hp;
+        opponent.combatConditions = simResult.p2Conditions;
+        await opponent.save();
 
         res.json({
             success: true,

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
+const { normalizeCurrency } = require('../../utils/currencyNormalize');
+const TransactionLog = require('../../models/TransactionLog');
+
 const Location = require('../../models/Location');
 const Travel = require('../../models/Travel');
 const Shop = require('../../models/Shop');
@@ -344,7 +347,69 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     systemCultivation: null
                 };
 
-                const battleResult = simulateBattle(player, opponent);
+                const battleResult = simulateBattle(player, opponent, { isPvE: true, allowSteal: true });
+                player.currentHp = battleResult.p1Hp;
+                player.combatConditions = battleResult.p1Conditions;
+
+                if (battleResult.stealSuccess) {
+                    player.kungfuSkills.stealing = (player.kungfuSkills.stealing || 0) + 1;
+
+                    let stolenItem = null;
+                    let stolenCopper = 0;
+                    let stolenSilver = 0;
+
+                    if (opponent.dropTable && opponent.dropTable.length > 0) {
+                         const validDrops = opponent.dropTable.filter(d => Math.random() < d.chance);
+                         if (validDrops.length > 0) {
+                              const drop = validDrops[Math.floor(Math.random() * validDrops.length)];
+                              const qty = Math.floor(Math.random() * (drop.quantityMax - drop.quantityMin + 1)) + drop.quantityMin;
+                              if (qty > 0) {
+                                  stolenItem = { id: drop.itemId, name: drop.itemName, qty };
+                              }
+                         }
+                    }
+
+                    if (!stolenItem && opponent.currencyDrop) {
+                         stolenCopper = Math.floor((Math.floor(Math.random() * (opponent.currencyDrop.copperMax - opponent.currencyDrop.copperMin + 1)) + opponent.currencyDrop.copperMin) * 0.2);
+                         stolenSilver = Math.floor((Math.floor(Math.random() * (opponent.currencyDrop.silverMax - opponent.currencyDrop.silverMin + 1)) + opponent.currencyDrop.silverMin) * 0.2);
+                    }
+
+                    if (stolenItem) {
+
+                         const itemDoc = await Item.findById(stolenItem.id);
+                         if (itemDoc) {
+                             const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
+                             if (existing) {
+                                 existing.quantity += stolenItem.qty;
+                             } else {
+                                 player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                             }
+
+                             await TransactionLog.create({
+                                 guildId: player.guildId,
+                                 userId: player.discordId,
+                                 type: 'steal_pve',
+                                 description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
+                             });
+                         }
+                    } else if (stolenCopper > 0 || stolenSilver > 0) {
+
+                         player.currency.copper += stolenCopper;
+                         player.currency.silver += stolenSilver;
+
+
+                         player.currency = normalizeCurrency(player.currency);
+
+                         await TransactionLog.create({
+                                 guildId: player.guildId,
+                                 userId: player.discordId,
+                                 type: 'steal_pve',
+                                 description: `Berhasil mencuri dari ${opponent.name}`,
+                                 amount: stolenCopper + (stolenSilver * 100),
+                                 currency: 'copper'
+                         });
+                    }
+                }
                 ambushLogs = battleResult.logs;
 
                 if (battleResult.winnerIdx === 1) {
