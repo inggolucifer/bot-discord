@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { getRarityBorderClass } from './components/RarityHelpers';
 import { StatDeltaHover } from './components/StatDeltaHover';
 import Link from 'next/link';
+import { Phase10Stats } from './components/Phase10Stats';
 
 export default function ProfilePage() {
   const queryClient = useQueryClient();
@@ -186,6 +187,9 @@ export default function ProfilePage() {
 
         {/* Left Column: Resources, Combat Stats, Equipment (Span 6) */}
         <div className="lg:col-span-6 space-y-6 flex flex-col">
+          {/* Phase 10 Stats UI */}
+          <Phase10Stats />
+
           {/* Resources */}
           <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg space-y-4">
             <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider border-b border-[#333] pb-2">Resources</h3>
