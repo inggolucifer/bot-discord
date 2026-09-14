@@ -256,6 +256,10 @@ const playerSchema = new mongoose.Schema({
     }],
     default: []
   },
+
+  cooldowns: {
+    remarry: { type: Date, default: null }
+  }
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
