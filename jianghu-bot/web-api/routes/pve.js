@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
+const { normalizeCurrency } = require('../../utils/currencyNormalize');
+const TransactionLog = require('../../models/TransactionLog');
+
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const Item = require('../../models/Item');
 const Exploration = require('../../models/Exploration');
-const TransactionLog = require('../../models/TransactionLog');
+
 const LockManager = require('../utils/lockManager');
 const CustomError = require('../utils/CustomError');
 const { authenticateToken } = require('../middlewares/auth');
@@ -289,7 +292,72 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 await player.populate('laws manuals.manualId');
 
                 // Simulate Battle
-                const battleResult = simulateBattle(player, opponent);
+                const battleResult = simulateBattle(player, opponent, { isPvE: true, allowSteal: true });
+                player.currentHp = battleResult.p1Hp;
+                player.combatConditions = battleResult.p1Conditions;
+
+                if (battleResult.stealSuccess) {
+                    player.kungfuSkills.stealing = (player.kungfuSkills.stealing || 0) + 1;
+
+                    let stolenItem = null;
+                    let stolenCopper = 0;
+                    let stolenSilver = 0;
+
+                    // Try item first
+                    if (opponent.dropTable && opponent.dropTable.length > 0) {
+                         const validDrops = opponent.dropTable.filter(d => Math.random() < d.chance);
+                         if (validDrops.length > 0) {
+                              const drop = validDrops[Math.floor(Math.random() * validDrops.length)];
+                              const qty = Math.floor(Math.random() * (drop.quantityMax - drop.quantityMin + 1)) + drop.quantityMin;
+                              if (qty > 0) {
+                                  stolenItem = { id: drop.itemId, name: drop.itemName, qty };
+                              }
+                         }
+                    }
+
+                    if (!stolenItem && opponent.currencyDrop) {
+                         stolenCopper = Math.floor((Math.floor(Math.random() * (opponent.currencyDrop.copperMax - opponent.currencyDrop.copperMin + 1)) + opponent.currencyDrop.copperMin) * 0.2); // Steal 20%
+                         stolenSilver = Math.floor((Math.floor(Math.random() * (opponent.currencyDrop.silverMax - opponent.currencyDrop.silverMin + 1)) + opponent.currencyDrop.silverMin) * 0.2);
+                    }
+
+                    if (stolenItem) {
+
+                         const itemDoc = await Item.findById(stolenItem.id);
+                         if (itemDoc) {
+                             const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
+                             if (existing) {
+                                 existing.quantity += stolenItem.qty;
+                             } else {
+                                 player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                             }
+
+                             await TransactionLog.create({
+                                 guildId: player.guildId,
+                                 playerId: player.discordId,
+                                 transactionType: 'steal_pve',
+                                 currencyChange: { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 },
+                                 itemChange: [{ itemName: itemDoc.name, quantity: stolenItem.qty }],
+                                 details: `Berhasil mencuri dari ${opponent.name}`
+                             });
+                         }
+                    } else if (stolenCopper > 0 || stolenSilver > 0) {
+
+                         player.currency.copper += stolenCopper;
+                         player.currency.silver += stolenSilver;
+
+
+                         player.currency = normalizeCurrency(player.currency);
+
+                         await TransactionLog.create({
+                                 guildId: player.guildId,
+                                 playerId: player.discordId,
+                                 transactionType: 'steal_pve',
+                                 currencyChange: { copper: stolenCopper, silver: stolenSilver, gold: 0, jade: 0, spirit: 0 },
+                                 itemChange: [],
+                                 details: `Berhasil mencuri dari ${opponent.name}`
+                         });
+                    }
+                }
                 encounterResult.combatLogs = battleResult.logs;
 
                 if (battleResult.winnerIdx === 1) {
