@@ -155,8 +155,58 @@ const playerSchema = new mongoose.Schema({
     isFlawedFoundation: { type: Boolean, default: false }
   },
 
+  talents: {
+    str: { type: Number, default: 5 },
+    agi: { type: Number, default: 5 },
+    sta: { type: Number, default: 5 },
+    pow: { type: Number, default: 5 },
+    int: { type: Number, default: 5 },
+    mor: { type: Number, default: 5 }
+  },
+  unallocatedTalentPoints: { type: Number, default: 0 },
+
+  level: { type: Number, default: 1 },
+  exp: { type: Number, default: 0 },
+
+  biography: { type: String, default: '', maxlength: 500 },
+  nickname: { type: String, default: null },
+
+  currentHp: { type: Number, default: null },
+  currentMp: { type: Number, default: null },
+
+  kungfuSkills: {
+    sword: { type: Number, default: 0 },
+    saber: { type: Number, default: 0 },
+    staff: { type: Number, default: 0 },
+    fist: { type: Number, default: 0 },
+    finger: { type: Number, default: 0 },
+    special: { type: Number, default: 0 },
+    forging: { type: Number, default: 0 },
+    qimen: { type: Number, default: 0 },
+    melody: { type: Number, default: 0 },
+    healing: { type: Number, default: 0 },
+    wineArt: { type: Number, default: 0 },
+    hiddenWeapon: { type: Number, default: 0 },
+    stealing: { type: Number, default: 0 },
+    core: { type: Number, default: 0 },
+    practiceStartedAt: { type: Date, default: null },
+    lastPracticeAt: { type: Date, default: null },
+    activePracticeSkill: { type: String, default: null }
+  },
+
+  body: {
+    face: { type: String, default: 'default_face_01' },
+    hair: { type: String, default: 'default_hair_01' },
+    cloth: { type: String, default: 'default_cloth_01' },
+    mask: { type: String, default: null },
+    spellAvatar: { type: String, default: null },
+    title: { type: String, default: null },
+    avatarBorder: { type: String, default: null },
+    chatBorder: { type: String, default: null }
+  },
+
   age: { type: Number, default: 16 },
-  gender: { type: String, enum: ['Laki-laki', 'Perempuan', null], default: null },
+  gender: { type: String, enum: ['Pria', 'Wanita', null], default: null },
 
 
   stats: { type: playerStatsSchema, default: () => ({}) },

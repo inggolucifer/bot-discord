@@ -350,6 +350,24 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                 if (battleResult.winnerIdx === 1) {
                     won = true;
 
+                    // Award EXP and check level up
+                    const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+                    const { TALENT_EFFECTS } = require('../../config/talentEffects');
+
+                    let expGain = 60; // Mock base exp from bandit
+                    if (player.talents && player.talents.int) {
+                        expGain = Math.floor(expGain * (1 + (player.talents.int * TALENT_EFFECTS.int.expMultiplier)));
+                    }
+                    player.exp = (player.exp || 0) + expGain;
+
+                    let requiredExp = getRequiredExpForLevel(player.level || 1);
+                    while (player.exp >= requiredExp && (player.level || 1) < 100) {
+                         player.exp -= requiredExp;
+                         player.level = (player.level || 1) + 1;
+                         player.unallocatedTalentPoints = (player.unallocatedTalentPoints || 0) + POINTS_PER_LEVEL;
+                         requiredExp = getRequiredExpForLevel(player.level);
+                    }
+
                     // Drop from generic bandit (using fallback values or from db)
                     let lootCopper = 0;
                     if (banditMonster && banditMonster.currencyDrop) {
