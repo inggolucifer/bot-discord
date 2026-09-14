@@ -95,6 +95,7 @@ const setupServer = (client) => {
         '/api/worker/hire',
         '/api/inventory/craft',
         '/api/player/transfer',
+        '/api/barter/offers',
         '/api/player/daily',
         '/api/player/loot',
         '/api/pet/feed',
@@ -125,6 +126,7 @@ const setupServer = (client) => {
 
     // API Routes
     const authRoutes = require('./routes/auth');
+const barterRoutes = require('./routes/barter');
     const playerRoutes = require('./routes/player');
     const inventoryRoutes = require('./routes/inventory');
     const marketRoutes = require('./routes/market');
@@ -145,6 +147,7 @@ const setupServer = (client) => {
     const equipmentRoutes = require('./routes/equipment');
 
     app.use('/api/auth', authRoutes);
+app.use('/api/barter', barterRoutes);
     app.use('/api/player', playerRoutes);
     app.use('/api/inventory', inventoryRoutes);
     app.use('/api/market', marketRoutes);
