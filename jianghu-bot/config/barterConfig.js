@@ -1,0 +1,5 @@
+module.exports = {
+  MAX_PENDING_OFFERS_PER_PLAYER: 5,
+  DEFAULT_EXPIRY_HOURS: 24,
+  ALLOW_ONE_SIDED_GIFT: true
+};
