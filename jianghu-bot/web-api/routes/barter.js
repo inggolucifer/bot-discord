@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken } = require('../middlewares/auth');
 const LockManager = require('../utils/lockManager');
 const { withTransaction } = require('../utils/dbTransaction');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const BarterOffer = require('../../models/BarterOffer');
+const Travel = require('../../models/Travel');
 const TransactionLog = require('../../models/TransactionLog');
 const CustomError = require('../utils/CustomError');
 const barterConfig = require('../../config/barterConfig');
@@ -89,9 +90,19 @@ router.get('/nearby-players', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId }).lean();
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
+        if (!player.currentLocation || !player.currentLocation.regionSlug || !player.currentLocation.settlementName) {
+            return res.status(400).json({ error: 'Lokasi saat ini tidak valid.' });
+        }
+
+        const travelingPlayers = await Travel.find({
+            guildId: player.guildId,
+            status: { $in: ['traveling', 'ambushed'] }
+        }).select('discordId').lean();
+        const travelingIds = travelingPlayers.map(t => t.discordId);
+
         const nearby = await Player.find({
             guildId: player.guildId,
-            discordId: { $ne: userId },
+            discordId: { $ne: userId, $nin: travelingIds },
             'currentLocation.regionSlug': player.currentLocation.regionSlug,
             'currentLocation.settlementName': player.currentLocation.settlementName,
             status: 'active'
@@ -159,6 +170,16 @@ router.post('/offers', authenticateToken, async (req, res) => {
             if (player1.currentLocation.regionSlug !== player2.currentLocation.regionSlug ||
                 player1.currentLocation.settlementName !== player2.currentLocation.settlementName) {
                 throw new CustomError('Kalian tidak berada di lokasi yang sama.', 400);
+            }
+
+            const activeTravel = await Travel.findOne({
+                discordId: { $in: [userId, toUserId] },
+                status: { $in: ['traveling', 'ambushed'] }
+            }).session(session);
+
+            if (activeTravel) {
+                const who = activeTravel.discordId === userId ? 'Kamu' : 'Target pemain';
+                throw new CustomError(`${who} sedang dalam perjalanan atau disergap (traveling/ambushed).`, 400);
             }
 
             const pendingOffers = await BarterOffer.countDocuments({ fromUserId: userId, status: 'pending' }).session(session);
@@ -326,6 +347,16 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 throw new CustomError('Lokasi tidak sesuai (salah satu pemain sudah pindah).', 400);
             }
 
+            const activeTravel = await Travel.findOne({
+                discordId: { $in: [fromPlayer.discordId, toPlayer.discordId] },
+                status: { $in: ['traveling', 'ambushed'] }
+            }).session(session);
+
+            if (activeTravel) {
+                const who = activeTravel.discordId === toPlayer.discordId ? 'Kamu' : 'Pemain lain';
+                throw new CustomError(`${who} sedang dalam perjalanan atau disergap (traveling/ambushed).`, 400);
+            }
+
             // Check and process request from Player 2 (the one accepting) FIRST
             // This ensures if they don't have enough, we fail early
             const reqCopper = getOfferCopperValue(offer.request);
@@ -391,6 +422,8 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 type: 'barter_transfer',
                 fromUserId: offer.fromUserId,
                 toUserId: offer.toUserId,
+                currency: null,
+                amount: 0,
                 itemDescription: `[Barter] ${offer.fromUserId} memberikan (${offeredSummary || 'Tidak ada'}) ditukar dengan (${requestedSummary || 'Tidak ada'}) dari ${offer.toUserId}`,
                 note: `Barter completed for Offer ${offer._id}`
             }], { session });
