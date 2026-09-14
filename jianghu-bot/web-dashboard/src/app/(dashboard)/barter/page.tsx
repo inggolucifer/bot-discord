@@ -6,26 +6,26 @@ import { useRouter } from 'next/navigation';
 export default function BarterPage() {
     const router = useRouter();
 
-    const [players, setPlayers] = useState([]);
-    const [offers, setOffers] = useState([]);
+    const [players, setPlayers] = useState<any[]>([]);
+    const [offers, setOffers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     // Offer form state
     const [targetPlayer, setTargetPlayer] = useState('');
-    const [offerCopper, setOfferCopper] = useState(0);
-    const [offerSilver, setOfferSilver] = useState(0);
-    const [requestCopper, setRequestCopper] = useState(0);
-    const [requestSilver, setRequestSilver] = useState(0);
+    const [offerCopper, setOfferCopper] = useState<number | string>(0);
+    const [offerSilver, setOfferSilver] = useState<number | string>(0);
+    const [requestCopper, setRequestCopper] = useState<number | string>(0);
+    const [requestSilver, setRequestSilver] = useState<number | string>(0);
 
     // Future expansion: Items
-    const [offerItems, setOfferItems] = useState([]);
-    const [requestItems, setRequestItems] = useState([]);
+    const [offerItems, setOfferItems] = useState<any[]>([]);
+    const [requestItems, setRequestItems] = useState<any[]>([]);
 
-    const [actionMessage, setActionMessage] = useState(null);
+    const [actionMessage, setActionMessage] = useState<{ type: string, text: string } | null>(null);
 
     // For auth info
-    const [myUserId, setMyUserId] = useState(null);
+    const [myUserId, setMyUserId] = useState<string | null>(null);
 
     useEffect(() => {
         // Fetch current user details quickly to know our own ID
@@ -70,7 +70,7 @@ export default function BarterPage() {
         setLoading(false);
     };
 
-    const handleCreateOffer = async (e) => {
+    const handleCreateOffer = async (e: React.FormEvent) => {
         e.preventDefault();
         setActionMessage(null);
         if (!targetPlayer) {
@@ -107,7 +107,7 @@ export default function BarterPage() {
         }
     };
 
-    const handleAction = async (offerId, action) => {
+    const handleAction = async (offerId: string, action: string) => {
         setActionMessage(null);
         try {
             const res = await fetch(`/api/barter/offers/${offerId}/${action}`, { method: 'POST' });
@@ -196,9 +196,9 @@ export default function BarterPage() {
                             const isIncoming = myUserId ? offer.toUserId === myUserId : false;
                             const isOutgoing = myUserId ? offer.fromUserId === myUserId : false;
 
-                            const formatItems = (items) => {
+                            const formatItems = (items: any[]) => {
                                 if (!items || items.length === 0) return null;
-                                return items.map(i => `${i.quantity}x ${i.itemName}`).join(', ');
+                                return items.map((i: any) => `${i.quantity}x ${i.itemName}`).join(', ');
                             };
 
                             return (
