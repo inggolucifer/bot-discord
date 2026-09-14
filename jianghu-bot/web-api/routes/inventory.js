@@ -642,6 +642,14 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 throw new CustomError(`Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
             }
 
+            // Phase 10: Check kungfu skill requirements
+            if (manualToLearn.requiredSkillType && manualToLearn.requiredSkillPoints > 0) {
+                const playerSkillPoints = player.kungfuSkills ? (player.kungfuSkills[manualToLearn.requiredSkillType] || 0) : 0;
+                if (playerSkillPoints < manualToLearn.requiredSkillPoints) {
+                    throw new CustomError(`Manual ini membutuhkan setidaknya ${manualToLearn.requiredSkillPoints} poin pada skill ${manualToLearn.requiredSkillType}. Poin skillmu saat ini: ${playerSkillPoints}.`, 400);
+                }
+            }
+
             if (manualToLearn.requiredSectId) {
                 const playerSect = await getPlayerSect(guildId, player.discordId);
                 if (!playerSect || !playerSect._id.equals(manualToLearn.requiredSectId)) {

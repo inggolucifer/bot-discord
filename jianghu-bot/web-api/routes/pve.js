@@ -294,6 +294,25 @@ router.post('/claim', authenticateToken, async (req, res) => {
 
                 if (battleResult.winnerIdx === 1) {
                     encounterResult.won = true;
+
+                    // Award EXP and check level up
+                    const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+                    const { TALENT_EFFECTS } = require('../../config/talentEffects');
+
+                    let expGain = 50; // Mock base exp from monster
+                    if (player.talents && player.talents.int) {
+                        expGain = Math.floor(expGain * (1 + (player.talents.int * TALENT_EFFECTS.int.expMultiplier)));
+                    }
+                    player.exp = (player.exp || 0) + expGain;
+
+                    let requiredExp = getRequiredExpForLevel(player.level || 1);
+                    while (player.exp >= requiredExp && (player.level || 1) < 100) {
+                         player.exp -= requiredExp;
+                         player.level = (player.level || 1) + 1;
+                         player.unallocatedTalentPoints = (player.unallocatedTalentPoints || 0) + POINTS_PER_LEVEL;
+                         requiredExp = getRequiredExpForLevel(player.level);
+                    }
+
                     // Generate drops from monster
                     drops = { copper: 0, silver: 0, gold: 0, items: [] };
 
