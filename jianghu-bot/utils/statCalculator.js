@@ -1,6 +1,6 @@
 const { calculatePlayerStats } = require('./playerCombat');
 const { TALENT_EFFECTS } = require('../config/talentEffects');
-const { BASE_CRIT_RATE, BASE_CRIT_DMG, BASE_COMBO_RATE } = require('../config/combatRates');
+const { BASE_CRIT_RATE, BASE_CRIT_DMG, BASE_COMBO_RATE, BASE_MAX_MP } = require('../config/combatRates');
 
 /**
  * Computes all the core stats for a player, combining realm stats, equipment, laws, manuals, and talents.
@@ -14,7 +14,7 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
     const baseStats = calculatePlayerStats(player, populatedLaws, populatedManuals);
 
     let maxHp = baseStats.hp;
-    let maxMp = 50; // Base max MP placeholder if none from baseStats
+    let maxMp = BASE_MAX_MP; // Base max MP placeholder if none from baseStats
     let atk = baseStats.atk;
     let def = baseStats.def;
     let spd = baseStats.spd;

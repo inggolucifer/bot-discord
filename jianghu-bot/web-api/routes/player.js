@@ -1907,13 +1907,11 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 
         if (biography !== undefined) player.biography = biography.substring(0, 500);
         if (age !== undefined) player.age = parseInt(age);
-        if (gender !== undefined && ['Laki-laki', 'Perempuan', 'Pria', 'Wanita'].includes(gender)) player.gender = gender;
 
-        if (nickname !== undefined) {
-             if (nickname !== player.characterName) {
-                 player.nickname = nickname;
-             }
-        }
+        let mappedGender = gender;
+        if (gender === 'Laki-laki') mappedGender = 'Pria';
+        if (gender === 'Perempuan') mappedGender = 'Wanita';
+        if (mappedGender !== undefined && ['Pria', 'Wanita'].includes(mappedGender)) player.gender = mappedGender;
 
         if (body !== undefined && typeof body === 'object') {
              if (!player.body) player.body = {};
@@ -1934,6 +1932,59 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         res.json({ success: true, message: 'Profil berhasil diperbarui.', data: { biography: player.biography, age: player.age, gender: player.gender, nickname: player.nickname, body: player.body } });
     } catch (error) {
         console.error('[API-PLAYER] PATCH profile error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    } finally {
+        if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+
+// Endpoint: POST /api/player/kungfu/practice-claim
+router.post('/kungfu/practice-claim', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+
+    const lockKey = `player_kungfu_claim_${userId}`;
+    const releaseLock = await LockManager.acquire(lockKey);
+    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
+
+    try {
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        if (!player.kungfuSkills || !player.kungfuSkills.activePracticeSkill) {
+            return res.status(400).json({ error: 'Kamu tidak sedang berlatih skill apapun.' });
+        }
+
+        const activeSkill = player.kungfuSkills.activePracticeSkill;
+        const lastPracticeTime = player.kungfuSkills.lastPracticeAt || player.kungfuSkills.practiceStartedAt;
+        if (!lastPracticeTime) {
+            return res.status(400).json({ error: 'Waktu mulai latihan tidak valid.' });
+        }
+
+        const now = new Date();
+        const hoursPassed = (now.getTime() - new Date(lastPracticeTime).getTime()) / (1000 * 60 * 60);
+
+        if (hoursPassed < 0.1) {
+             return res.status(400).json({ error: 'Terlalu cepat untuk claim (minimal 6 menit).' });
+        }
+
+        const { TALENT_EFFECTS } = require('../../config/talentEffects');
+        const baseSkillGainPerHour = 5; // e.g., 5 skill points per hour
+        const intMultiplier = 1 + ((player.talents && player.talents.int ? player.talents.int : 0) * TALENT_EFFECTS.int.expMultiplier);
+
+        let gainedSkillPoints = Math.floor(hoursPassed * baseSkillGainPerHour * intMultiplier);
+
+        if (gainedSkillPoints < 1) gainedSkillPoints = 1;
+
+        player.kungfuSkills[activeSkill] = (player.kungfuSkills[activeSkill] || 0) + gainedSkillPoints;
+        player.kungfuSkills.lastPracticeAt = now;
+
+        player.markModified('kungfuSkills');
+        await player.save();
+
+        res.json({ success: true, message: `Berhasil mendapatkan ${gainedSkillPoints} poin skill ${activeSkill}.` });
+    } catch (error) {
+        console.error('[API-PLAYER] POST kungfu practice claim error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan server.' });
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
