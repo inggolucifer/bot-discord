@@ -35,6 +35,9 @@ const manualSchema = new mongoose.Schema({
   effectValue: { type: Number, default: 1.2 },
   triggerChance: { type: Number, default: 0.5, min: 0, max: 1 },
 
+  requiredSkillType: { type: String, enum: ['sword', 'saber', 'staff', 'fist', 'finger', 'special', 'forging', 'qimen', 'melody', 'healing', 'wineArt', 'hiddenWeapon', 'stealing', 'core', null], default: null },
+  requiredSkillPoints: { type: Number, default: 0 },
+
   requiredSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
 
   createdBy: { type: String, default: null }

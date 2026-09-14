@@ -1,8 +1,12 @@
-const { calculatePlayerStats } = require('./playerCombat');
+const { getComputedStats } = require('./statCalculator');
 
 function simulateBattle(challenger, opponent) {
-    const p1Stats = calculatePlayerStats(challenger, challenger.laws, challenger.manuals);
-    const p2Stats = calculatePlayerStats(opponent, opponent.laws, opponent.manuals);
+    const p1StatsRaw = getComputedStats(challenger, challenger.laws, challenger.manuals);
+    const p2StatsRaw = getComputedStats(opponent, opponent.laws, opponent.manuals);
+
+    // Map maxHp to hp for backward compatibility within simulateBattle logic
+    const p1Stats = { ...p1StatsRaw, hp: p1StatsRaw.maxHp };
+    const p2Stats = { ...p2StatsRaw, hp: p2StatsRaw.maxHp };
 
     let p1Hp = p1Stats.hp;
     let p2Hp = p2Stats.hp;
