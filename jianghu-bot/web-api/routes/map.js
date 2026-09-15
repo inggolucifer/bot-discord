@@ -8,6 +8,7 @@ const Quest = require('../../models/Quest');
 const Travel = require('../../models/Travel');
 const { authenticateToken } = require('../middlewares/auth');
 const travelDistances = require('../../config/travelDistances');
+const { worldMapImageUrl } = require('../../config/worldMapImage');
 
 router.get('/world', authenticateToken, async (req, res) => {
     try {
@@ -22,24 +23,26 @@ router.get('/world', authenticateToken, async (req, res) => {
 
         const regionsWithDiscovery = regions.map(region => ({
             ...region,
-            discovered: player.discoveredRegions.includes(region.regionSlug)
+            discovered: (player.discoveredRegions || []).includes(region.regionSlug)
         }));
 
         let activeTravel = null;
-        if (player.currentLocation === null) {
-            const travel = await Travel.findOne({ userId, status: { $in: ['traveling', 'ambushed'] } }).lean();
-            if (travel) {
-                activeTravel = {
-                    status: travel.status,
-                    from: travel.fromLocation,
-                    to: travel.toLocation,
-                    startTime: travel.startTime,
-                    arrivalTime: travel.arrivalTime
-                };
-            }
+        const travel = await Travel.findOne({
+            discordId: userId,
+            status: { $in: ['traveling', 'ambushed'] }
+        }).lean();
+        if (travel) {
+            activeTravel = {
+                status: travel.status,
+                from: travel.fromLocation,
+                to: travel.toLocation,
+                startTime: travel.startTime,
+                arrivalTime: travel.arrivalTime
+            };
         }
 
         res.json({
+            worldMapImageUrl: worldMapImageUrl || null,
             regions: regionsWithDiscovery,
             player: {
                 discoveredRegions: player.discoveredRegions,
@@ -112,7 +115,7 @@ router.get('/region/:regionSlug', authenticateToken, async (req, res) => {
                 mapY: plaza.mapY,
                 mapIconType: plaza.mapIconType,
                 minRealmIndex: settlementConfig ? settlementConfig.minRealmIndex : 0,
-                discovered: player.discoveredLocations.includes(key),
+                discovered: (player.discoveredLocations || []).includes(key),
                 key
             };
         });
@@ -144,17 +147,18 @@ router.get('/region/:regionSlug', authenticateToken, async (req, res) => {
         }
 
         let activeTravel = null;
-        if (player.currentLocation === null) {
-            const travel = await Travel.findOne({ userId, status: { $in: ['traveling', 'ambushed'] } }).lean();
-            if (travel) {
-                activeTravel = {
-                    status: travel.status,
-                    from: travel.fromLocation,
-                    to: travel.toLocation,
-                    startTime: travel.startTime,
-                    arrivalTime: travel.arrivalTime
-                };
-            }
+        const travel = await Travel.findOne({
+            discordId: userId,
+            status: { $in: ['traveling', 'ambushed'] }
+        }).lean();
+        if (travel) {
+            activeTravel = {
+                status: travel.status,
+                from: travel.fromLocation,
+                to: travel.toLocation,
+                startTime: travel.startTime,
+                arrivalTime: travel.arrivalTime
+            };
         }
 
         res.json({
