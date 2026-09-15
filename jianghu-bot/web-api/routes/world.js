@@ -227,9 +227,32 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 router.get('/travel/status', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const travel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
 
-        if (!travel) { const playerFallback = await Player.findOne({ discordId: userId }); return res.json({ travel: null, currentStamina: getCurrentStamina(playerFallback), maxStamina: getMaxStamina(playerFallback) }); }
+        let travel = await Travel.findOne({ discordId: userId, status: { $in: ["traveling", "ambushed"] } });
+
+        if (travel) {
+            const playerPre = await Player.findOne({ discordId: userId });
+            if (playerPre) {
+                applyTravelDrain(playerPre, travel);
+                if (travel.exhausted && !travel.exhaustPenaltyApplied && travel.status === "traveling") {
+                    const nowTime = Date.now();
+                    if (nowTime < travel.arrivalTime.getTime()) {
+                        const remainingTime = travel.arrivalTime.getTime() - nowTime;
+                        const extraTime = remainingTime * (staminaConfig.EXHAUSTED_TRAVEL_TIME_MULTIPLIER - 1);
+                        travel.arrivalTime = new Date(travel.arrivalTime.getTime() + extraTime);
+                    }
+                    travel.exhaustPenaltyApplied = true;
+                }
+                await travel.save();
+                await playerPre.save();
+            }
+        }
+
+        if (!travel) {
+            const playerFallback = await Player.findOne({ discordId: userId });
+            if (!playerFallback) return res.json({ travel: null });
+            return res.json({ travel: null, currentStamina: getCurrentStamina(playerFallback), maxStamina: getMaxStamina(playerFallback) });
+        }
 
         if (travel.status === 'traveling' && Date.now() >= travel.arrivalTime.getTime()) {
             await withTransaction(async (session) => {
