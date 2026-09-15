@@ -30,7 +30,8 @@ const monsterSchema = new mongoose.Schema({
   },
   affiliation: { type: String, default: null },
   description: { type: String, default: '' },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
+  imageUrl: { type: String, default: null }
 }, { timestamps: true });
 
 monsterSchema.index({ guildId: 1, regionSlug: 1 });

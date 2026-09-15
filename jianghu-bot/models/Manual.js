@@ -40,7 +40,8 @@ const manualSchema = new mongoose.Schema({
 
   requiredSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
 
-  createdBy: { type: String, default: null }
+  createdBy: { type: String, default: null },
+  imageUrl: { type: String, default: null }
 }, { timestamps: true });
 
 manualSchema.index({ guildId: 1, name: 1 }, { unique: true });

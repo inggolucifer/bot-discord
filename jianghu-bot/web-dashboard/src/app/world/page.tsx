@@ -1,3 +1,4 @@
+import FallbackImage from "@/components/FallbackImage";
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -484,7 +485,7 @@ export default function WorldPage() {
                               {locationData.npcsHere.map((npc: any) => (
                                   <div key={npc._id} className="bg-[#1e2532] border border-[#2a3142] rounded-lg p-4 flex justify-between items-center hover:border-blue-500/50 transition-colors">
                                       <div>
-                                          <h3 className="text-lg font-bold text-gray-200">{npc.name}</h3>
+                                          <h3 className="text-lg font-bold text-gray-200">{npc.imageUrl ? <FallbackImage src={npc.imageUrl} alt={npc.name} className="w-8 h-8 rounded-full inline-block mr-2" fallbackNode={<span className="mr-2">{npc.imageEmoji || '🧙'}</span>} /> : <span className="mr-2">{npc.imageEmoji || '🧙'}</span>} {npc.name}</h3>
                                           {npc.title && <p className="text-sm text-gray-400">{npc.title}</p>}
                                       </div>
                                       <button

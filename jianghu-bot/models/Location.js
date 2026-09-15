@@ -16,6 +16,7 @@ const locationSchema = new mongoose.Schema({
   linkedSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
   description: { type: String, default: '' },
   isActive: { type: Boolean, default: true },
+  imageUrl: { type: String, default: null },
   shopTag: { type: String, default: null }
 }, { timestamps: true });
 

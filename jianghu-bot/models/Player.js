@@ -248,6 +248,7 @@ const playerSchema = new mongoose.Schema({
   },
 
   characterImage: { type: String, default: null },
+  avatarUrl: { type: String, default: null },
 
   currency: {
     copper: { type: Number, default: 0 },
