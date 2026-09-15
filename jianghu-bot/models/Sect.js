@@ -31,6 +31,9 @@ const sectSchema = new mongoose.Schema({
   description: { type: String, default: '-' },
   imageUrl: { type: String, default: null },
 
+  hallSettlementName: { type: String, default: null },
+  hallRegionSlug: { type: String, default: null },
+
   leaderId: { type: String, default: null },
   viceLeaderId: { type: String, default: null },
   elderIds: { type: [String], default: [] },

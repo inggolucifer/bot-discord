@@ -1,5 +1,5 @@
-import FallbackImage from "@/components/FallbackImage";
 'use client';
+import FallbackImage from "@/components/FallbackImage";
 
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
