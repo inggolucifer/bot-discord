@@ -22,6 +22,7 @@ interface SectData {
   memberCount: number;
   totalWealth: number;
   imageUrl: string;
+  hallSettlementName?: string;
   role: string; // role user saat ini
   currency: { copper: number; silver: number; gold: number; jade: number; spirit: number; }
 }
@@ -105,6 +106,27 @@ export default function SectPage() {
     }
   };
 
+
+  const handleEnterHall = async () => {
+    try {
+       await api.post('/sect/hall/enter');
+       alert('Berhasil memasuki Balai Sekte.');
+       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+       alert(err.response?.data?.error || 'Gagal memasuki balai sekte.');
+    }
+  };
+
+  const handleLeaveHall = async () => {
+    try {
+       await api.post('/sect/hall/leave');
+       alert('Berhasil keluar dari Balai Sekte.');
+       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+       alert(err.response?.data?.error || 'Gagal keluar dari balai sekte.');
+    }
+  };
+
   const fetchSectData = async () => {
       try {
         const res = await api.get('/sect');
@@ -182,6 +204,11 @@ export default function SectPage() {
                     <Button variant="outline" className="border-green-700 text-green-400 hover:bg-green-700/20" onClick={() => setIsDonateModalOpen(true)}>
                         <DollarSign size={16} className="mr-1"/> Donasi Kekayaan
                     </Button>
+                    {sect.hallSettlementName && (
+                        <Button variant="outline" className="border-blue-700 text-blue-400 hover:bg-blue-700/20" onClick={handleEnterHall}>
+                            <Map size={16} className="mr-1"/> Memasuki Balai Sekte
+                        </Button>
+                    )}
                  </div>
 
                  <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">

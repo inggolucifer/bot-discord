@@ -46,6 +46,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 name: sect.name,
                 description: sect.description,
                 imageUrl: sect.imageUrl,
+                hallSettlementName: sect.hallSettlementName,
                 role: role,
                 currency: sect.currency,
                 totalWealth: sect.totalWealth,
@@ -257,6 +258,12 @@ router.post('/deposit-resource', authenticateToken, async (req, res) => {
             const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).session(session);
             if (!sect) throw new CustomError('Sekte tidak ditemukan.', 404);
 
+            const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+            const rank = getPlayerSectRank(sect, userId);
+            if (!can(rank, 'deposit_sect_warehouse')) {
+                 throw new CustomError(`Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses ini.`, 403);
+            }
+
             const invItem = player.inventory.find(i => i.itemId.toString() === itemId.toString());
             if (!invItem || invItem.quantity < quantity) {
                 throw new CustomError('Item di inventory tidak cukup.', 400);
@@ -310,9 +317,10 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
             const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).session(session);
             if (!sect) throw new CustomError('Sekte tidak ditemukan.', 404);
 
-            const member = sect.members.find(m => m.userId === userId);
-            if (!member || (member.role !== 'Ketua' && member.role !== 'Tetua')) {
-                 throw new CustomError('Hanya Ketua atau Tetua yang dapat membangun.', 403);
+            const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+            const rank = getPlayerSectRank(sect, userId);
+            if (!can(rank, 'manage_asset')) {
+                 throw new CustomError(`Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses ini.`, 403);
             }
 
             const assetDef = await Asset.findOne({ _id: assetId, guildId: player.guildId }).session(session);
@@ -365,5 +373,58 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
     }
 });
 
+
+
+// Endpoint: POST /api/sect/hall/enter
+router.post('/hall/enter', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    try {
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player.sect || player.sect === 'Tanpa Sekte (Rogue Cultivator)') return res.status(400).json({ error: 'Kamu tidak memiliki sekte.' });
+
+        const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId });
+        if (!sect) return res.status(404).json({ error: 'Sekte tidak ditemukan.' });
+
+        if (!sect.hallSettlementName) {
+            return res.status(400).json({ error: 'Sektemu belum memiliki Balai Sekte (Hall) yang dibangun di suatu pemukiman.' });
+        }
+
+        if (player.currentLocation.settlementName !== sect.hallSettlementName) {
+            return res.status(400).json({ error: `Kamu harus berada di ${sect.hallSettlementName} untuk memasuki Balai Sekte.` });
+        }
+
+        if (player.status !== 'active') return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
+
+        player.currentLocation.buildingName = 'Balai Sekte';
+        await player.save();
+
+        res.json({ success: true, message: `Berhasil memasuki Balai Sekte ${sect.name}.` });
+    } catch (err) {
+        console.error('[API-SECT] Enter hall error:', err);
+        res.status(500).json({ error: 'Internal error' });
+    }
+});
+
+// Endpoint: POST /api/sect/hall/leave
+router.post('/hall/leave', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    try {
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        if (player.currentLocation.buildingName !== 'Balai Sekte') {
+            return res.status(400).json({ error: 'Kamu tidak sedang berada di dalam Balai Sekte.' });
+        }
+
+        player.currentLocation.buildingName = null;
+        await player.save();
+
+        res.json({ success: true, message: 'Berhasil keluar dari Balai Sekte.' });
+    } catch (err) {
+        console.error('[API-SECT] Leave hall error:', err);
+        res.status(500).json({ error: 'Internal error' });
+    }
+});
 
 module.exports = router;

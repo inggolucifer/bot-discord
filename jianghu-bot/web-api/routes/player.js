@@ -93,6 +93,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 effectType: pm.manualId.effectType,
                 effectValue: pm.manualId.effectValue,
                 triggerChance: pm.manualId.triggerChance,
+                sectLocked: pm.manualId.requiredSectId ? true : false,
+                requiredSectId: pm.manualId.requiredSectId,
                 isComprehending: pm.isComprehending,
                 comprehendStartTime: pm.comprehendStartTime
             };
@@ -1282,6 +1284,22 @@ router.post('/skills/comprehend', authenticateToken, async (req, res) => {
         const pm = player.manuals.find(m => m.manualId && m.manualId.equals(manualId));
         if (!pm) return res.status(400).json({ error: 'Kamu tidak memiliki manual ini.' });
 
+                if (pm.manualId.requiredSectId) {
+            const { getPlayerSect } = require('../../utils/sectUtils');
+            const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+            const playerSect = await getPlayerSect(guildId, player.discordId);
+
+            if (!playerSect || !playerSect._id.equals(pm.manualId.requiredSectId)) {
+                await pm.manualId.populate('requiredSectId');
+                const sectName = pm.manualId.requiredSectId ? pm.manualId.requiredSectId.name : 'Sekte Tersembunyi';
+                return res.status(403).json({ error: `Manual ini eksklusif anggota sekte ${sectName}.` });
+            }
+            const rank = getPlayerSectRank(playerSect, player.discordId);
+            if (!can(rank, 'learn_sect_manual')) {
+                return res.status(403).json({ error: `Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses untuk memediasikan manual ini.` });
+            }
+        }
+
         // Phase 10: Check kungfu skill requirements
         if (pm.manualId.requiredSkillType && pm.manualId.requiredSkillPoints > 0) {
             const playerSkillPoints = player.kungfuSkills ? (player.kungfuSkills[pm.manualId.requiredSkillType] || 0) : 0;
@@ -1335,7 +1353,24 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             if (!pm) throw new CustomError('Kamu tidak memiliki manual ini.', 400);
             if (!pm.isComprehending) throw new CustomError('Kamu belum memulai comprehend untuk manual ini.', 400);
 
-            const m = pm.manualId;
+                        const m = pm.manualId;
+
+            if (m.requiredSectId) {
+                const { getPlayerSect } = require('../../utils/sectUtils');
+                const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+                const playerSect = await getPlayerSect(guildId, player.discordId);
+
+                if (!playerSect || !playerSect._id.equals(m.requiredSectId)) {
+                    await m.populate('requiredSectId');
+                    const sectName = m.requiredSectId ? m.requiredSectId.name : 'Sekte Tersembunyi';
+                    throw new CustomError(`Manual ini eksklusif anggota sekte ${sectName}.`, 403);
+                }
+                const rank = getPlayerSectRank(playerSect, player.discordId);
+                if (!can(rank, 'learn_sect_manual')) {
+                    throw new CustomError(`Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses untuk upgrade manual sekte.`, 403);
+                }
+            }
+
             const msPassed = Date.now() - new Date(pm.comprehendStartTime).getTime();
             const hoursPassed = msPassed / (1000 * 60 * 60);
 

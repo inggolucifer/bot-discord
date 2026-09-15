@@ -652,11 +652,16 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             }
 
             if (manualToLearn.requiredSectId) {
+                const { getPlayerSectRank, can } = require('../../utils/sectAccess');
                 const playerSect = await getPlayerSect(guildId, player.discordId);
                 if (!playerSect || !playerSect._id.equals(manualToLearn.requiredSectId)) {
                     await manualToLearn.populate('requiredSectId');
                     const sectName = manualToLearn.requiredSectId ? manualToLearn.requiredSectId.name : 'Sekte Tersembunyi';
                     throw new CustomError(`Manual ini hanya bisa dipelajari anggota sekte **${sectName}**.`, 400);
+                }
+                const rank = getPlayerSectRank(playerSect, player.discordId);
+                if (!can(rank, 'learn_sect_manual')) {
+                    throw new CustomError(`Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses ini.`, 403);
                 }
             }
 
