@@ -66,6 +66,8 @@ const professionsSchema = new mongoose.Schema({
   cooking: { type: professionSchema, default: () => ({}) },
   alchemy: { type: professionSchema, default: () => ({}) },
   smithing: { type: professionSchema, default: () => ({}) },
+  woodcutting: { type: professionSchema, default: () => ({}) },
+  mining: { type: professionSchema, default: () => ({}) },
   unlockedBlueprints: { type: [String], default: [] }
 }, { _id: false });
 
@@ -112,6 +114,13 @@ const assetOwnedSchema = new mongoose.Schema({
   guardEndTime: { type: Date, default: null },
   toolDurabilityUsage: { type: Map, of: Number, default: {} },
   activeCrafts: { type: [{ recipeName: String, targetQuantity: Number, progressHours: { type: Number, default: 0 } }], default: [] },
+  placement: {
+    zoneId: { type: String, default: null },
+    tileX: { type: Number, default: null },
+    tileY: { type: Number, default: null },
+  },
+  isOpenToPublic: { type: Boolean, default: true },
+  isPubliclyVisible: { type: Boolean, default: true },
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
@@ -142,6 +151,28 @@ const playerSchema = new mongoose.Schema({
     settlementName: { type: String, default: 'Desa Xingcun' },
     buildingName: { type: String, default: null }
   },
+
+  gridPosition: {
+    zoneId: { type: String, default: 'central_plains_bamboo_forest' },
+    tileX: { type: Number, default: 0 },
+    tileY: { type: Number, default: 0 }
+  },
+
+  exploredTiles: [{
+    zoneId: { type: String, required: true },
+    tileIndexes: { type: [Number], default: [] }
+  }],
+
+  gridMove: {
+    targetX: { type: Number, default: null },
+    targetY: { type: Number, default: null },
+    targetZoneId: { type: String, default: null },
+    moveStartedAt: { type: Date, default: null },
+    moveArrivesAt: { type: Date, default: null }
+  },
+
+  discoveredSecretTileIds: { type: [String], default: [] },
+  lastGridSearchAt: { type: Date, default: null },
 
   // DEPRECATED — data historis narasi lama, sudah tidak dipakai logika manapun. Jangan tulis ke sini lagi.
   legacyRealm: { type: String, default: 'Mortal' },
@@ -331,11 +362,33 @@ const playerSchema = new mongoose.Schema({
 
   cooldowns: {
     remarry: { type: Date, default: null }
-  }
+  },
+
+  // Grid World Overhaul Fields (FASE G1 - G8)
+  gridPosition: {
+    zoneId: { type: String, default: 'central_plains_bamboo_forest' },
+    tileX: { type: Number, default: 0 },
+    tileY: { type: Number, default: 0 }
+  },
+  exploredTiles: [{
+    zoneId: { type: String },
+    tileIndexes: { type: [Number], default: [] }
+  }],
+  gridMove: {
+    targetX: { type: Number, default: null },
+    targetY: { type: Number, default: null },
+    targetZoneId: { type: String, default: null },
+    moveStartedAt: { type: Date, default: null },
+    moveArrivesAt: { type: Date, default: null }
+  },
+  discoveredSecretTileIds: { type: [String], default: [] },
+  lastGridSearchAt: { type: Date, default: null }
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
 playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencarian pet instance yang efisien
+playerSchema.index({ guildId: 1, 'gridPosition.zoneId': 1, 'gridPosition.tileX': 1, 'gridPosition.tileY': 1 });
+
 
 // Setiap kali player disimpan: (1) currency dinormalisasi otomatis (100 Silver->1 Gold, dst),
 // (2) totalWealth dihitung ulang dari currency yang SUDAH dinormalisasi.

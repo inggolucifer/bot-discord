@@ -139,15 +139,17 @@ export default function BarterPage() {
                 <h2 className="text-xl font-semibold mb-3">Buat Tawaran Baru</h2>
                 <form onSubmit={handleCreateOffer}>
                     <div className="mb-3">
-                        <label className="block text-sm text-gray-300 mb-1">Target Pemain (Di Lokasi yang Sama)</label>
+                        <label className="block text-sm text-gray-300 mb-1">Target Pemain (Di Dekatmu / Grid &le; 2 Tile)</label>
                         <select
                             className="w-full bg-gray-700 text-white p-2 rounded"
                             value={targetPlayer}
                             onChange={(e) => setTargetPlayer(e.target.value)}
                         >
                             <option value="">-- Pilih Pemain --</option>
-                            {players.map(p => (
-                                <option key={p.discordId} value={p.discordId}>{p.characterName}</option>
+                            {players.map((p: any) => (
+                                <option key={p.discordId} value={p.discordId}>
+                                    {p.characterName} {p.gridPosition ? `(Grid: ${p.gridPosition.tileX}, ${p.gridPosition.tileY})` : ''}
+                                </option>
                             ))}
                         </select>
                     </div>

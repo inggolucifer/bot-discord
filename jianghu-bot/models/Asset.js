@@ -52,6 +52,15 @@ const assetSchema = new mongoose.Schema({
   buildable: { type: Boolean, default: false },
   buildRequirements: { type: [recipeMaterialSchema], default: [] },
 
+  placement: {
+    zoneId: { type: String, default: null },
+    tileX: { type: Number, default: null },
+    tileY: { type: Number, default: null },
+    ownerType: { type: String, enum: ['player', 'sect', null], default: null },
+    ownerId: { type: mongoose.Schema.Types.ObjectId, default: null }
+  },
+  isPubliclyVisible: { type: Boolean, default: true },
+
   createdBy: { type: String, default: null },
 }, { timestamps: true });
 

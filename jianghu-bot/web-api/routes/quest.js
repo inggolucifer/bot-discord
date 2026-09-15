@@ -49,9 +49,52 @@ router.post('/:questId/accept', authenticateToken, async (req, res) => {
         const npc = await Npc.findById(npcId);
         if (!npc) return res.status(404).json({ error: 'NPC giver tidak ditemukan.' });
 
-        const location = player.currentLocation || { settlementName: 'Desa Xingcun', buildingName: null };
-        if (npc.settlementName !== location.settlementName || (npc.buildingName || null) !== (location.buildingName || null)) {
-            return res.status(400).json({ error: 'Kamu tidak berada di lokasi yang sama dengan NPC ini.' });
+        // Validasi kedekatan NPC (Grid Chebyshev <= 2 atau Settlement Legacy)
+        if (player.gridPosition?.zoneId) {
+            let npcZone = npc.zoneId;
+            let npcX = npc.tileX;
+            let npcY = npc.tileY;
+
+            if (npcZone == null || npcX == null || npcY == null) {
+                const ZoneTile = require('../../models/ZoneTile');
+                const tile = await ZoneTile.findOne({
+                    guildId: player.guildId,
+                    zoneId: player.gridPosition.zoneId,
+                    tileType: 'npc_spawn',
+                    $or: [
+                        { linkedRefId: npc._id },
+                        { label: new RegExp(npc.name, 'i') }
+                    ]
+                });
+                if (tile) {
+                    npcZone = tile.zoneId;
+                    npcX = tile.tileX;
+                    npcY = tile.tileY;
+                }
+            }
+
+            if (npcZone != null && npcX != null && npcY != null) {
+                if (npcZone !== player.gridPosition.zoneId) {
+                    return res.status(400).json({ error: 'NPC berada di zona yang berbeda.' });
+                }
+                const dist = Math.max(
+                    Math.abs((player.gridPosition.tileX || 0) - npcX),
+                    Math.abs((player.gridPosition.tileY || 0) - npcY)
+                );
+                if (dist > 2) {
+                    return res.status(400).json({ error: `Kamu terlalu jauh dari NPC ini untuk menerima quest (jarak: ${dist} tile, maksimal: 2 tile).` });
+                }
+            } else {
+                const location = player.currentLocation || { settlementName: 'Desa Xingcun', buildingName: null };
+                if (npc.settlementName !== location.settlementName || (npc.buildingName || null) !== (location.buildingName || null)) {
+                    return res.status(400).json({ error: 'Kamu tidak berada di lokasi yang sama dengan NPC ini.' });
+                }
+            }
+        } else {
+            const location = player.currentLocation || { settlementName: 'Desa Xingcun', buildingName: null };
+            if (npc.settlementName !== location.settlementName || (npc.buildingName || null) !== (location.buildingName || null)) {
+                return res.status(400).json({ error: 'Kamu tidak berada di lokasi yang sama dengan NPC ini.' });
+            }
         }
 
         if (!npcId) return res.status(400).json({ error: 'npcId tidak valid.' });
