@@ -9,6 +9,8 @@ import { Map, MapPin, Building, Activity, Navigation, ExternalLink, RefreshCw, S
 import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
+import WorldMapView from "@/components/map/WorldMapView";
+import RegionMapView from "@/components/map/RegionMapView";
 
 export default function WorldPage() {
   const [locationData, setLocationData] = useState<any>(null);
@@ -34,6 +36,10 @@ export default function WorldPage() {
   const [activeTab, setActiveTab] = useState<'location' | 'npcs' | 'quests'>('location');
   const [questLog, setQuestLog] = useState<any[]>([]);
   const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
+
+  // Map View State
+  const [mapView, setMapView] = useState<'world' | 'region'>('world');
+  const [selectedRegionSlug, setSelectedRegionSlug] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -97,6 +103,10 @@ export default function WorldPage() {
       }
       if (res.data.currentLocation) {
          setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
+         if (!selectedRegionSlug) {
+             setSelectedRegionSlug(res.data.currentLocation.regionSlug);
+             setMapView('region');
+         }
       }
     } catch (e) {
       console.error(e);
@@ -182,10 +192,25 @@ export default function WorldPage() {
     }
   };
 
+  const handleStartTravelTo = async (destinationName: string) => {
+      try {
+          const res = await api.post('/world/travel/start', {
+              toSettlementName: destinationName,
+              useEscortLetter: false // Default to false from map UI click for now
+          });
+          setTravelStatus(res.data.travel);
+          if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+          if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+          setMessage(`Perjalanan ke ${destinationName} dimulai!`);
+      } catch (err: any) {
+          setError(err.response?.data?.error || 'Gagal memulai perjalanan');
+      }
+  };
+
   if (loading) return <div className="p-4 sm:p-6 lg:p-8 pt-20">Memuat dunia...</div>;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 pt-20 max-w-7xl mx-auto space-y-8 min-h-screen pb-24">
+    <div className={`p-4 sm:p-6 lg:p-8 pt-20 max-w-7xl mx-auto space-y-8 min-h-screen pb-24 relative ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
       <PageHeader
         title="Dunia Jianghu"
         description="Jelajahi berbagai wilayah, masuki bangunan di pemukiman, atau mulai perjalanan ke tempat lain."
@@ -338,6 +363,33 @@ export default function WorldPage() {
             </button>
         </div>
       ) : null}
+
+      {/* Main Map Area */}
+      <div className="w-full relative transition-opacity duration-300 mb-6">
+        {mapView === 'world' ? (
+          <div className="animate-in fade-in zoom-in-95 duration-300">
+            <WorldMapView
+              onSelectRegion={(regionSlug: string) => {
+                setSelectedRegionSlug(regionSlug);
+                setMapView('region');
+              }}
+            />
+          </div>
+        ) : (
+          <div className="animate-in fade-in zoom-in-95 duration-300">
+            {selectedRegionSlug && (
+              <RegionMapView
+                regionSlug={selectedRegionSlug}
+                onBackToWorld={() => setMapView('world')}
+                onSelectSettlement={(settlementName: string) => setActiveTab('location')}
+                onStartTravelTo={handleStartTravelTo}
+                currentLocationName={locationData?.currentLocation?.settlementName || null}
+                travelStatus={travelStatus}
+              />
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Tab Content */}
       {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'location' && (
