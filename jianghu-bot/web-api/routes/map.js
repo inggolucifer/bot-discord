@@ -3,6 +3,8 @@ const router = express.Router();
 const RegionMap = require('../../models/RegionMap');
 const Location = require('../../models/Location');
 const Player = require('../../models/Player');
+const Npc = require('../../models/Npc');
+const Quest = require('../../models/Quest');
 const Travel = require('../../models/Travel');
 const { authenticateToken } = require('../middlewares/auth');
 const travelDistances = require('../../config/travelDistances');
@@ -76,6 +78,8 @@ router.get('/region/:regionSlug', authenticateToken, async (req, res) => {
             buildingType: 'plaza'
         }).lean();
 
+        const npcs = await Npc.find({ guildId: player.guildId, regionSlug }).populate('questIds').lean();
+
         const settlements = plazas.map(plaza => {
             const settlementConfig = travelDistances.settlements.find(
                 s => s.regionSlug === regionSlug && s.name === plaza.settlementName
@@ -83,7 +87,25 @@ router.get('/region/:regionSlug', authenticateToken, async (req, res) => {
 
             const key = `${regionSlug}|${plaza.settlementName}`;
 
+
+            let hasActiveQuest = false;
+            const npcsInSettlement = npcs.filter(n => n.settlementName === plaza.settlementName && n.isActive);
+            for (const npc of npcsInSettlement) {
+                 for (const q of (npc.questIds || [])) {
+                      if (!q.isActive) continue;
+                      const isCompleted = player.completedQuests && player.completedQuests.includes(q.key);
+                      const isActive = player.questLog && player.questLog.some(ql => ql.questId.toString() === q._id.toString());
+
+                      if (!isCompleted && !isActive) {
+                          hasActiveQuest = true;
+                          break;
+                      }
+                 }
+                 if (hasActiveQuest) break;
+            }
+
             return {
+                hasActiveQuest,
                 name: plaza.settlementName,
                 regionSlug: plaza.regionSlug,
                 mapX: plaza.mapX,
