@@ -17,6 +17,8 @@ export default function WorldPage() {
   const [maxStamina, setMaxStamina] = useState<number>(100);
   const [restHours, setRestHours] = useState<number>(1);
   const [settlements, setSettlements] = useState<any[]>([]);
+  const [edges, setEdges] = useState<any>({});
+  const [playerRealmIndex, setPlayerRealmIndex] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,6 +72,8 @@ export default function WorldPage() {
         if (travelRes.data.maxStamina !== undefined) setMaxStamina(travelRes.data.maxStamina);
       }
       setSettlements(setRes.data.settlements || []);
+      setEdges(setRes.data.edges || {});
+      setPlayerRealmIndex(setRes.data.playerRealmIndex || 0);
       if (climateRes.data) {
         setClimateData(climateRes.data);
       }
@@ -419,10 +423,24 @@ export default function WorldPage() {
                     onChange={(e) => setTravelDestination(e.target.value)}
                   >
                     <option value="">Pilih Settlement Tujuan...</option>
-                    {settlements.filter(s => s.name !== locationData?.currentLocation?.settlementName).map(s => (
-                      <option key={s.name} value={s.name}>{s.name} ({s.regionSlug})</option>
-                    ))}
+                    {settlements
+                      .filter(s =>
+                        s.name !== locationData?.currentLocation?.settlementName &&
+                        edges[locationData?.currentLocation?.settlementName] &&
+                        edges[locationData?.currentLocation?.settlementName][s.name]
+                      )
+                      .map(s => {
+                         const distance = edges[locationData?.currentLocation?.settlementName][s.name];
+                         const isLocked = s.minRealmIndex !== undefined && playerRealmIndex < s.minRealmIndex;
+                         return (
+                           <option key={s.name} value={s.name} disabled={isLocked}>
+                             {s.name} ({distance} Li) {isLocked ? '(Ranah Belum Cukup)' : ''}
+                           </option>
+                         );
+                      })
+                    }
                   </select>
+                  <p className="text-xs text-gray-500 mt-2">Hanya menampilkan pemukiman yang terhubung langsung dan terbuka untuk tingkat Ranah (Realm) kultivasimu.</p>
                 </div>
 
                 <div className="bg-[#0f131c] p-4 rounded-lg border border-[#2a3142]">
