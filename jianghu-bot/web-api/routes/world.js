@@ -293,7 +293,7 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
             // Re-fetch travel to get updated ambush result
             const updatedTravel = await Travel.findById(travel._id);
             const playerAfter = await Player.findOne({ discordId: userId });
-            return res.json({ travel: updatedTravel, currentLocation: playerAfter.currentLocation, currentStamina: getCurrentStamina(playerAfter), maxStamina: getMaxStamina(playerAfter) });
+            if (!playerAfter) return res.json({ travel: updatedTravel }); return res.json({ travel: updatedTravel, currentLocation: playerAfter.currentLocation, currentStamina: getCurrentStamina(playerAfter), maxStamina: getMaxStamina(playerAfter) });
         }
 
         res.json({ travel: travel });
