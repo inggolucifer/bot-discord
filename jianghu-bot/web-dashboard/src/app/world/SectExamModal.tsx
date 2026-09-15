@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { Shield, Swords, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/Card";

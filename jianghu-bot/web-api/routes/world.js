@@ -190,7 +190,17 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
         }
 
         const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
-        const totalDiscount = Math.min(realmDiscount + horseSpeedBonus, MAX_TRAVEL_SPEED_DISCOUNT);
+
+        let sectHomeDiscount = 0;
+        if (player.sect && player.sect !== 'Tanpa Sekte (Rogue Cultivator)') {
+             const Sect = require('../../models/Sect');
+             const playerSect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).lean();
+             if (playerSect && playerSect.hallSettlementName === settlementName) {
+                 sectHomeDiscount = 0.1; // 10% discount for traveling home
+             }
+        }
+
+        const totalDiscount = Math.min(realmDiscount + horseSpeedBonus + sectHomeDiscount, MAX_TRAVEL_SPEED_DISCOUNT);
 
         let finalHours = baseHours * (1 - totalDiscount);
         let arrivalTime = new Date(Date.now() + finalHours * 3600 * 1000);

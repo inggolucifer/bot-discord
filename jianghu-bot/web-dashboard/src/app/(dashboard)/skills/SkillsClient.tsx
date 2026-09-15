@@ -284,6 +284,11 @@ export default function SkillsClient() {
                                         <h3 className="text-xl font-bold text-white">{m.name}</h3>
                                         <Badge variant="default" className="text-xs">Level {m.level} / {m.maxLevel}</Badge>
                                     </div>
+                                    {m.sectLocked && m.requiredSectId && (
+                                       <Badge variant="outline" className="border-red-900 text-red-400 text-[10px] mb-2 inline-flex items-center gap-1 w-fit">
+                                           <Shield size={10} /> Eksklusif Sekte
+                                       </Badge>
+                                    )}
                                     <p className="text-sm text-gray-400 mb-4 flex-grow">{m.description || 'Kitab kuno.'}</p>
 
                                     <div className="mt-auto pt-4 border-t border-[#333]">
