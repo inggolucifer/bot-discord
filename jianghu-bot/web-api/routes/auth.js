@@ -3,6 +3,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const Player = require('../../models/Player');
 const { JWT_SECRET } = require('../utils/jwtSecret');
+const { authenticateToken } = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -89,7 +90,12 @@ router.post('/login', async (req, res) => {
                 id: userId,
                 username: discordUser.username,
                 avatar: avatarUrl,
-                hasCharacter
+                hasCharacter,
+                character: player ? {
+                    characterName: player.characterName,
+                    realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+                    guildId: player.guildId
+                } : null
             }
         });
 
@@ -184,6 +190,111 @@ router.post('/logout', (req, res) => {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     res.json({ success: true });
+});
+
+// Route to check current authenticated session & character status
+router.get('/me', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId }).lean();
+
+        res.json({
+            success: true,
+            user: {
+                id: userId,
+                username: req.user.username,
+                avatar: req.user.avatar,
+                hasCharacter: !!player,
+                character: player ? {
+                    characterName: player.characterName,
+                    realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+                    guildId: player.guildId,
+                    totalWealth: player.totalWealth || 0
+                } : null
+            }
+        });
+    } catch (err) {
+        console.error('[API-AUTH] Error in /me:', err);
+        res.status(500).json({ error: 'Gagal mengambil status sesi.' });
+    }
+});
+
+// Route to register a character directly from Web
+router.post('/register-character', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { characterName, gender, age, guildId } = req.body;
+
+        if (!characterName || typeof characterName !== 'string' || characterName.trim().length === 0) {
+            return res.status(400).json({ error: 'Nama karakter wajib diisi.' });
+        }
+
+        const trimmedName = characterName.trim();
+        if (trimmedName.length > 32) {
+            return res.status(400).json({ error: 'Nama karakter maksimal 32 karakter.' });
+        }
+
+        const targetGuildId = guildId || process.env.GUILD_ID || 'DEFAULT_GUILD';
+
+        // Check if user already has a character
+        const existingPlayer = await Player.findOne({ discordId: userId, guildId: targetGuildId });
+        if (existingPlayer) {
+            return res.status(400).json({
+                error: `Kamu sudah memiliki karakter bernama ${existingPlayer.characterName} di server ini.`
+            });
+        }
+
+        // Check if character name is already taken
+        const nameTaken = await Player.findOne({ guildId: targetGuildId, characterName: trimmedName });
+        if (nameTaken) {
+            return res.status(400).json({ error: 'Nama karakter sudah digunakan oleh pendekar lain. Silakan pilih nama lain.' });
+        }
+
+        const validGender = (gender === 'Perempuan') ? 'Perempuan' : 'Laki-laki';
+        const parsedAge = Math.min(9999, Math.max(1, parseInt(age, 10) || 16));
+
+        const newPlayer = await Player.create({
+            discordId: userId,
+            guildId: targetGuildId,
+            characterName: trimmedName,
+            gender: validGender,
+            age: parsedAge,
+            schemaVersion: 2,
+            avatarUrl: req.user.avatar || null,
+            currentLocation: {
+                regionSlug: 'central_plains',
+                settlementName: 'Desa Xingcun',
+                buildingName: null
+            },
+            gridPosition: {
+                zoneId: 'central_plains_bamboo_forest',
+                tileX: 0,
+                tileY: 0
+            },
+            systemCultivation: {
+                realm: 'Fondasi Fana (Mortal Foundation)',
+                stage: 0,
+                qi: 0,
+                lastSyncAt: new Date(),
+                isFlawedFoundation: false
+            }
+        });
+
+        res.json({
+            success: true,
+            message: `Karakter ${newPlayer.characterName} berhasil didaftarkan! Selamat datang di Jianghu World.`,
+            character: {
+                characterName: newPlayer.characterName,
+                realm: newPlayer.systemCultivation.realm,
+                guildId: newPlayer.guildId,
+                gender: newPlayer.gender,
+                age: newPlayer.age
+            }
+        });
+    } catch (err) {
+        console.error('[API-AUTH] Error in /register-character:', err);
+        res.status(500).json({ error: 'Gagal membuat karakter baru.' });
+    }
 });
 
 module.exports = router;

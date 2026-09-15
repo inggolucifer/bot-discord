@@ -184,6 +184,18 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     }
   };
 
+  const handleBuyPlot = async (tileX: number, tileY: number) => {
+    try {
+      const res = await api.post('/world/zone/buy-plot', { tileX, tileY });
+      setActionMessage(res.data.message || 'Berhasil membeli plot tanah!');
+      fetchZoneData();
+      setTimeout(() => setActionMessage(null), 4000);
+    } catch (err: any) {
+      setActionMessage(err.response?.data?.error || 'Gagal membeli plot tanah');
+      setTimeout(() => setActionMessage(null), 3000);
+    }
+  };
+
   // Derive visible tiles for virtualization
   const visibleGrid = useMemo(() => {
     if (!zoneConfig || !playerGrid?.position) return null;
@@ -402,6 +414,15 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
                    className="bg-blue-900/80 hover:bg-blue-800 text-blue-200 px-3 py-1.5 rounded-lg border border-blue-700/50 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
                  >
                    <DoorOpen className="w-3.5 h-3.5" /> Masuk Bangunan
+                 </button>
+               )}
+
+               {selectedTile.specialTile?.tileType === 'buildable_plot' && !selectedTile.specialTile.isOccupied && selectedDist <= 1 && (
+                 <button
+                   onClick={() => handleBuyPlot(selectedTile.x, selectedTile.y)}
+                   className="bg-amber-900/90 hover:bg-amber-800 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
+                 >
+                   <Sparkles className="w-3.5 h-3.5" /> Beli Plot ({selectedTile.specialTile.plotPriceSilver || 500} Silver)
                  </button>
                )}
 

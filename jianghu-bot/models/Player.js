@@ -290,12 +290,12 @@ const playerSchema = new mongoose.Schema({
   },
 
   equipment: {
-    weapon: { type: mongoose.Schema.Types.ObjectId, default: null },
-    armor: { type: mongoose.Schema.Types.ObjectId, default: null },
-    helmet: { type: mongoose.Schema.Types.ObjectId, default: null },
-    pants: { type: mongoose.Schema.Types.ObjectId, default: null },
-    boots: { type: mongoose.Schema.Types.ObjectId, default: null },
-    accessory: { type: mongoose.Schema.Types.ObjectId, default: null }
+    weapon: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    armor: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    helmet: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    pants: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    boots: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    accessory: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
@@ -364,25 +364,8 @@ const playerSchema = new mongoose.Schema({
     remarry: { type: Date, default: null }
   },
 
-  // Grid World Overhaul Fields (FASE G1 - G8)
-  gridPosition: {
-    zoneId: { type: String, default: 'central_plains_bamboo_forest' },
-    tileX: { type: Number, default: 0 },
-    tileY: { type: Number, default: 0 }
-  },
-  exploredTiles: [{
-    zoneId: { type: String },
-    tileIndexes: { type: [Number], default: [] }
-  }],
-  gridMove: {
-    targetX: { type: Number, default: null },
-    targetY: { type: Number, default: null },
-    targetZoneId: { type: String, default: null },
-    moveStartedAt: { type: Date, default: null },
-    moveArrivesAt: { type: Date, default: null }
-  },
-  discoveredSecretTileIds: { type: [String], default: [] },
-  lastGridSearchAt: { type: Date, default: null }
+  // Schema version for migrations & integrity
+  schemaVersion: { type: Number, default: 2, index: true },
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
