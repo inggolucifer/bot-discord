@@ -159,7 +159,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
         if (!targetSettlement) return res.status(400).json({ error: 'Tujuan tidak valid.' });
 
         const playerRealmIndex = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-        if (targetSettlement.minRealmIndex && playerRealmIndex < targetSettlement.minRealmIndex) {
+        if (targetSettlement.minRealmIndex != null && playerRealmIndex < targetSettlement.minRealmIndex) {
             return res.status(400).json({ error: 'Ranah Kultivasi (Realm) kamu belum cukup untuk memasuki wilayah ini.' });
         }
 
