@@ -195,7 +195,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
         if (player.sect && player.sect !== 'Tanpa Sekte (Rogue Cultivator)') {
              const Sect = require('../../models/Sect');
              const playerSect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).lean();
-             if (playerSect && playerSect.hallSettlementName === settlementName) {
+             if (playerSect && playerSect.hallSettlementName === toSettlementName) {
                  sectHomeDiscount = 0.1; // 10% discount for traveling home
              }
         }
