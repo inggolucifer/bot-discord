@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const TransactionLog = require('../../models/TransactionLog');
@@ -396,19 +398,26 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                          const itemDoc = await Item.findById(stolenItem.id);
                          if (itemDoc) {
-                             const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
-                             if (existing) {
-                                 existing.quantity += stolenItem.qty;
+                             const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: stolenItem.qty }]);
+                             if (!invCheck.ok) {
+                                 stolenItem = null;
                              } else {
-                                 player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
+                                 if (existing) {
+                                     existing.quantity += stolenItem.qty;
+                                 } else {
+                                     player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 }
                              }
 
-                             await TransactionLog.create({
-                                 guildId: player.guildId,
-                                 userId: player.discordId,
-                                 type: 'steal_pve',
-                                 description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
-                             });
+                             if (stolenItem) {
+                                 await TransactionLog.create({
+                                     guildId: player.guildId,
+                                     userId: player.discordId,
+                                     type: 'steal_pve',
+                                     description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
+                                 });
+                             }
                          }
                     } else if (stolenCopper > 0 || stolenSilver > 0) {
 

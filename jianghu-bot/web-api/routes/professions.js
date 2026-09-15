@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const { authenticateToken: verifyToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
@@ -544,6 +546,11 @@ router.post('/complete', verifyToken, async (req, res) => {
                 i.qualityMultiplier === finalQuality &&
                 i.creatorName === player.characterName
             );
+
+            const invCheck = await canAddToInventory(player, [{ itemDoc: outputItem, quantity: recipe.output.quantity }]);
+            if (!invCheck.ok) {
+                throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat claim hasil craft.`, 400);
+            }
 
             if (existingOutputIndex !== -1) {
                 player.inventory[existingOutputIndex].quantity += recipe.output.quantity;

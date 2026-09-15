@@ -1,6 +1,8 @@
 const { escapeRegex } = require('../../utils/escapeRegex');
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
 const { authenticateToken } = require('../middlewares/auth');
@@ -121,7 +123,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             const isTraveling = !!activeTravel;
 
             inventoryWeight = getInventoryWeight(mutablePlayer);
-            carryCapacity = getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
+            carryCapacity = await getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
         }
 
         res.json({
@@ -782,6 +784,11 @@ router.post('/loot', authenticateToken, async (req, res) => {
             }
 
             for (const it of pool.inventory) {
+                const itemDoc = await Item.findById(it.itemId).session(session);
+                const invCheck = await canAddToInventory(player, [{ itemDoc, quantity: it.quantity }]);
+                if (!invCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart.`, 400);
+                }
                 const owned = player.inventory.find((i) => i.itemId.equals(it.itemId));
                 if (owned) owned.quantity += it.quantity;
                 else player.inventory.push({ itemId: it.itemId, quantity: it.quantity });
