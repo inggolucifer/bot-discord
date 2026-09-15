@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
-import { Shield, Home, Sword, MapPin, Map as MapIcon, Compass } from 'lucide-react';
+import { Shield, Home, Sword, MapPin, Map as MapIcon, Compass, Settings } from 'lucide-react';
 
 interface Settlement {
   name: string;
@@ -11,6 +11,7 @@ interface Settlement {
   minRealmIndex: number;
   discovered: boolean;
   key: string;
+  hasActiveQuest?: boolean;
 }
 
 interface Edge {
@@ -45,7 +46,11 @@ export default function RegionMapView({
 
   // For travel animation
   const [playerPos, setPlayerPos] = useState<{x: number, y: number} | null>(null);
+  const [hoveredEdge, setHoveredEdge] = useState<{x: number, y: number, edge: Edge} | null>(null);
   const animationRef = useRef<number>(0);
+
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchRegionData = async () => {
@@ -68,6 +73,16 @@ export default function RegionMapView({
     };
 
     fetchRegionData();
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const saved = localStorage.getItem('jianghu_reduce_motion');
+    if (saved === 'true') {
+      setReduceMotion(true);
+    } else if (saved === 'false') {
+      setReduceMotion(false);
+    } else if (mediaQuery.matches) {
+      setReduceMotion(true);
+    }
   }, [regionSlug]);
 
   useEffect(() => {
@@ -112,6 +127,27 @@ export default function RegionMapView({
     };
   }, [travelStatus, settlements, currentLocationName, regionSlug]);
 
+  const toggleReduceMotion = () => {
+    const newVal = !reduceMotion;
+    setReduceMotion(newVal);
+    localStorage.setItem('jianghu_reduce_motion', String(newVal));
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (reduceMotion || !mapRef.current) return;
+    const { left, top, width, height } = mapRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
+    mapRef.current.style.setProperty('--mouse-x', x.toString());
+    mapRef.current.style.setProperty('--mouse-y', y.toString());
+  };
+
+  const handleMouseLeave = () => {
+    if (!mapRef.current) return;
+    mapRef.current.style.setProperty('--mouse-x', '0');
+    mapRef.current.style.setProperty('--mouse-y', '0');
+  };
+
   const getIconForType = (type: string | null) => {
     switch (type) {
       case 'city': return <Home className="w-4 h-4" />;
@@ -148,6 +184,16 @@ export default function RegionMapView({
 
   return (
     <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-[#2a3142] shadow-2xl bg-black">
+      {/* Settings Toggle */}
+      <button
+        onClick={toggleReduceMotion}
+        className="absolute top-14 left-4 z-30 bg-black/60 hover:bg-black/80 text-gray-300 px-3 py-1.5 rounded-lg border border-gray-600 flex items-center gap-2 backdrop-blur-sm transition-colors text-xs"
+        title="Kurangi Animasi (Parallax)"
+      >
+        <Settings className="w-4 h-4" />
+        {reduceMotion ? 'Animasi: OFF' : 'Animasi: ON'}
+      </button>
+
       {/* Back Button */}
       <button
         onClick={onBackToWorld}
@@ -163,84 +209,146 @@ export default function RegionMapView({
          </h3>
       </div>
 
-      {/* Background */}
-      <img
-        src={region?.regionMapImageUrl || 'https://placehold.co/1920x1080/2a3142/fff?text=Region+Map'}
-        alt="Region Map"
-        className="absolute inset-0 w-full h-full object-cover opacity-60"
-      />
+      <div
+        ref={mapRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="absolute inset-0 w-full h-full overflow-hidden"
+      >
+        <div
+          className="absolute inset-0 w-full h-full transition-transform duration-200 ease-out"
+          style={
+            !reduceMotion ? {
+              transform: 'translate(calc(var(--mouse-x, 0) * -20px), calc(var(--mouse-y, 0) * -20px)) scale(1.05)'
+            } : {}
+          }
+        >
+          {/* Background */}
+          <img
+            src={region?.regionMapImageUrl || 'https://placehold.co/1920x1080/2a3142/fff?text=Region+Map'}
+            alt="Region Map"
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
+          />
 
-      {/* SVG Overlay for Lines */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))' }}>
-        {edges.map((edge, idx) => {
-          const fromNode = settlements.find(s => s.name === edge.from);
-          const toNode = settlements.find(s => s.name === edge.to);
-          if (!fromNode || !toNode) return null;
 
-          // Determine danger visually (just basic styling for now, if region danger is high)
-          const isDanger = (region?.dangerTier || 1) >= 3;
+          {/* SVG Overlay for Lines */}
+          <svg className="absolute inset-0 w-full h-full z-10" style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.8))' }}>
+            {edges.map((edge, idx) => {
+              const fromNode = settlements.find(s => s.name === edge.from);
+              const toNode = settlements.find(s => s.name === edge.to);
+              if (!fromNode || !toNode) return null;
 
-          return (
-            <line
-              key={`edge-${idx}`}
-              x1={`${fromNode.mapX}%`}
-              y1={`${fromNode.mapY}%`}
-              x2={`${toNode.mapX}%`}
-              y2={`${toNode.mapY}%`}
-              stroke={isDanger ? '#ef4444' : '#b45309'}
-              strokeWidth="2"
-              className={isDanger ? "animate-pulse" : ""}
-              strokeDasharray={isDanger ? "4 4" : "none"}
-              opacity="0.6"
-            />
-          );
-        })}
-      </svg>
+              const isDanger = (region?.dangerTier || 1) >= 3;
 
-      {/* Settlements Pins */}
-      {settlements.map((settlement) => {
-        const isDiscovered = settlement.discovered;
-        const isCurrent = settlement.name === currentLocationName;
+              return (
+                <g
+                  key={`edge-${idx}`}
+                  onMouseEnter={(e) => {
+                    const rect = (e.target as Element).getBoundingClientRect();
+                    setHoveredEdge({ x: e.clientX - rect.left, y: e.clientY - rect.top, edge });
+                  }}
+                  onMouseMove={(e) => {
+                    const svg = e.currentTarget.ownerSVGElement;
+                    if (!svg) return;
+                    const rect = svg.getBoundingClientRect();
+                    setHoveredEdge({ x: e.clientX - rect.left, y: e.clientY - rect.top, edge });
+                  }}
+                  onMouseLeave={() => setHoveredEdge(null)}
+                  style={{ cursor: 'help' }}
+                >
+                  {/* Invisible thicker line for easier hover */}
+                  <line
+                    x1={`${fromNode.mapX}%`}
+                    y1={`${fromNode.mapY}%`}
+                    x2={`${toNode.mapX}%`}
+                    y2={`${toNode.mapY}%`}
+                    stroke="transparent"
+                    strokeWidth="15"
+                  />
+                  {/* Visible line */}
+                  <line
+                    x1={`${fromNode.mapX}%`}
+                    y1={`${fromNode.mapY}%`}
+                    x2={`${toNode.mapX}%`}
+                    y2={`${toNode.mapY}%`}
+                    stroke={isDanger ? '#ef4444' : '#b45309'}
+                    strokeWidth="2"
+                    className={isDanger && !reduceMotion ? "animate-pulse" : ""}
+                    strokeDasharray={isDanger ? "4 4" : "none"}
+                    opacity="0.6"
+                    pointerEvents="none"
+                  />
+                </g>
+              );
+            })}
+          </svg>
 
-        return (
-          <div
-            key={settlement.key}
-            className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110 z-10 flex flex-col items-center
-              ${!isDiscovered ? 'opacity-40 grayscale hover:opacity-80' : ''}`}
-            style={{
-              left: `${settlement.mapX}%`,
-              top: `${settlement.mapY}%`
-            }}
-            onClick={() => handleSettlementClick(settlement)}
-          >
-            <div className={`w-8 h-8 rounded-full border-2 shadow-lg flex items-center justify-center
-              ${isCurrent ? 'bg-green-600/80 border-green-300 animate-pulse' :
-                isDiscovered ? 'bg-amber-900/80 border-amber-500' : 'bg-gray-800 border-gray-600'}`}
+
+          {/* Edge Tooltip */}
+          {hoveredEdge && (
+            <div
+              className="absolute z-50 bg-black/90 border border-gray-600 rounded px-3 py-2 text-xs text-gray-200 pointer-events-none drop-shadow-xl backdrop-blur-md transform -translate-x-1/2 -translate-y-[120%]"
+              style={{ left: hoveredEdge.x, top: hoveredEdge.y }}
             >
-               {getIconForType(settlement.mapIconType)}
+              <div className="font-semibold text-amber-400 mb-1">{hoveredEdge.edge.from} ↔ {hoveredEdge.edge.to}</div>
+              <div>Jarak: {hoveredEdge.edge.distanceLi} Li</div>
+              <div className="text-gray-400">Estimasi: {Math.max(1, Math.round(hoveredEdge.edge.distanceLi / 100))} jam</div>
             </div>
-            <div className="mt-1 px-2 py-0.5 bg-black/80 border border-gray-700/50 rounded text-[10px] font-semibold whitespace-nowrap text-gray-200 backdrop-blur-sm pointer-events-none drop-shadow-md text-center leading-tight">
-              {isDiscovered ? settlement.name : '???'}
-              {settlement.minRealmIndex > playerRealmIndex && !isDiscovered && (
-                <span className="block text-red-400 text-[9px]">(Terkunci)</span>
-              )}
-            </div>
-          </div>
-        );
-      })}
+          )}
 
-      {/* Player Marker (Moving or Idle) */}
-      {playerPos && (
-         <div
-           className="absolute transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-75"
-           style={{ left: `${playerPos.x}%`, top: `${playerPos.y}%` }}
-         >
-           <div className="relative">
-              <div className="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-[0_0_10px_rgba(59,130,246,0.8)] z-10 relative animate-bounce"></div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500/40 rounded-full animate-ping"></div>
-           </div>
-         </div>
-      )}
+          {/* Settlements Pins */}
+          {settlements.map((settlement) => {
+            const isDiscovered = settlement.discovered;
+            const isCurrent = settlement.name === currentLocationName;
+
+            return (
+              <div
+                key={settlement.key}
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all hover:scale-110 z-10 flex flex-col items-center
+                  ${!isDiscovered ? 'opacity-40 grayscale hover:opacity-80' : ''}`}
+                style={{
+                  left: `${settlement.mapX}%`,
+                  top: `${settlement.mapY}%`
+                }}
+                onClick={() => handleSettlementClick(settlement)}
+              >
+                <div className={`w-8 h-8 rounded-full border-2 shadow-lg flex items-center justify-center relative
+                  ${settlement.hasActiveQuest && isDiscovered && !reduceMotion ? 'shadow-[0_0_15px_rgba(250,204,21,0.6)]' : ''}
+                  ${isCurrent ? 'bg-green-600/80 border-green-300' :
+                    isDiscovered ? 'bg-amber-900/80 border-amber-500' : 'bg-gray-800 border-gray-600'}
+                  ${isCurrent && !reduceMotion ? 'animate-pulse' : ''}`}
+                >
+                   {getIconForType(settlement.mapIconType)}
+                </div>
+                <div className="mt-1 px-2 py-0.5 bg-black/80 border border-gray-700/50 rounded text-[10px] font-semibold whitespace-nowrap text-gray-200 backdrop-blur-sm pointer-events-none drop-shadow-md text-center leading-tight">
+                  {isDiscovered ? settlement.name : '???'}
+                  {settlement.hasActiveQuest && isDiscovered && (
+                    <span className="absolute -top-3 -right-3 w-4 h-4 bg-yellow-400 text-black rounded-full flex items-center justify-center text-[10px] font-bold animate-bounce shadow-md">!</span>
+                  )}
+                  {settlement.minRealmIndex > playerRealmIndex && !isDiscovered && (
+                    <span className="block text-red-400 text-[9px]">(Terkunci)</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Player Marker (Moving or Idle) */}
+          {playerPos && (
+             <div
+               className="absolute transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none transition-all duration-75"
+               style={{ left: `${playerPos.x}%`, top: `${playerPos.y}%` }}
+             >
+               <div className="relative">
+                  <div className={`w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-[0_0_10px_rgba(59,130,246,0.8)] z-10 relative ${!reduceMotion ? 'animate-bounce' : ''}`}></div>
+                  {!reduceMotion && (
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500/40 rounded-full animate-ping"></div>
+                  )}
+               </div>
+             </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
