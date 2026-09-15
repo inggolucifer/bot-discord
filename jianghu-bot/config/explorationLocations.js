@@ -1,6 +1,7 @@
 const EXPLORATION_LOCATIONS = [
     {
         id: 'provinsi_qingzhou',
+        regionSlug: 'central_plains',
         name: 'Provinsi Qingzhou (Tepi Luar)',
         description: 'Wilayah luar Provinsi Qingzhou yang damai namun sesekali didatangi bandit atau binatang liar kecil. Cocok untuk Kultivator pemula mengumpulkan sumber daya dasar.',
         minRealmLevel: 0,
@@ -34,6 +35,7 @@ const EXPLORATION_LOCATIONS = [
     },
     {
         id: 'provinsi_yanzhou',
+        regionSlug: 'azure_mountain_range',
         name: 'Provinsi Yanzhou (Hutan Kabut Berdarah)',
         description: 'Provinsi yang dipenuhi kabut merah abadi. Tempat ini penuh dengan monster buas yang telah bermutasi akibat energi jahat.',
         minRealmLevel: 1,
@@ -67,6 +69,7 @@ const EXPLORATION_LOCATIONS = [
     },
     {
         id: 'provinsi_xuzhou',
+        regionSlug: 'eastern_sea_region',
         name: 'Provinsi Xuzhou (Lembah Seratus Racun)',
         description: 'Sekte-sekte aliran sesat sering membuang racun eksperimen mereka di sini. Sangat berbahaya namun kaya akan material alkimia langkah.',
         minRealmLevel: 2,
@@ -99,6 +102,7 @@ const EXPLORATION_LOCATIONS = [
     },
     {
         id: 'provinsi_jingzhou',
+        regionSlug: 'southern_demon_domain',
         name: 'Provinsi Jingzhou (Gua Naga Kristal)',
         description: 'Dikatakan seekor naga tanah tertidur di gua ini. Energi spiritual sangat pekat sehingga material di dalamnya bermutasi.',
         minRealmLevel: 3,
@@ -128,6 +132,7 @@ const EXPLORATION_LOCATIONS = [
     },
     {
         id: 'provinsi_liangzhou',
+        regionSlug: 'western_sacred_deserts',
         name: 'Provinsi Liangzhou (Padang Pasir Kematian)',
         description: 'Padang pasir luas yang menyedot kelembapan dan Qi dari udara. Hanya kultivator kuat yang mampu bertahan dari badai pasirnya.',
         minRealmLevel: 4,
@@ -158,6 +163,7 @@ const EXPLORATION_LOCATIONS = [
     },
     {
         id: 'provinsi_zhongzhou',
+        regionSlug: 'northern_desolate_territory',
         name: 'Provinsi Zhongzhou (Reruntuhan Istana Langit)',
         description: 'Pusat benua yang berisi peninggalan era Dewa. Mengandung harta karun luar biasa, namun dijaga oleh eksistensi di luar nalar.',
         minRealmLevel: 5,

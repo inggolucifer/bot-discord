@@ -63,7 +63,15 @@ router.get('/location', authenticateToken, async (req, res) => {
 
 router.get('/settlements', authenticateToken, async (req, res) => {
     try {
-        res.json({ settlements: travelConfig.settlements });
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        const playerRealmIndex = player ? getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)') : 0;
+
+        res.json({
+            settlements: travelConfig.settlements,
+            edges: travelConfig.distancesLi,
+            playerRealmIndex: playerRealmIndex
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Gagal memuat settlement' });
@@ -149,6 +157,11 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         const targetSettlement = travelConfig.settlements.find(s => s.name === toSettlementName);
         if (!targetSettlement) return res.status(400).json({ error: 'Tujuan tidak valid.' });
+
+        const playerRealmIndex = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+        if (targetSettlement.minRealmIndex && playerRealmIndex < targetSettlement.minRealmIndex) {
+            return res.status(400).json({ error: 'Ranah Kultivasi (Realm) kamu belum cukup untuk memasuki wilayah ini.' });
+        }
 
         // Calculate distance
         let distance = null;
