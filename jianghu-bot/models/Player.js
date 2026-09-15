@@ -174,6 +174,15 @@ const playerSchema = new mongoose.Schema({
   nickname: { type: String, default: null },
 
   currentHp: { type: Number, default: null },
+  currentStamina: { type: Number, default: null },
+  rest: {
+    status: { type: String, enum: ["idle", "resting"], default: "idle" },
+    mode: { type: String, enum: ["tent", "open", null], default: null },
+    startedAt: { type: Date, default: null },
+    endsAt: { type: Date, default: null },
+    lastAppliedAt: { type: Date, default: null },
+    usedTentItem: { type: Boolean, default: false }
+  },
   combatConditions: [{
     type: {
       type: String,
