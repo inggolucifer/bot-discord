@@ -1,4 +1,4 @@
-const { resolveBodyPart } = require('../../utils/imageResolve');
+const { resolveBodyPart, getEmoji } = require('../../utils/imageResolve');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const express = require('express');
 const router = express.Router();
@@ -1955,7 +1955,7 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 
         if (body !== undefined && typeof body === 'object') {
              const catalog = require('../../config/imageCatalog');
-             const validKeys = (part, key) => key === null || (catalog.body[part] && catalog.body[part][key]);
+             const validKeys = (part, key) => key === null || key === '' || (catalog.body[part] && catalog.body[part][key] !== undefined);
              if (!player.body) player.body = {};
              // Simple key string updates as per Phase 10
              if (body.face !== undefined && validKeys('face', body.face)) player.body.face = body.face;
@@ -1973,6 +1973,7 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 
         res.json({ success: true, message: 'Profil berhasil diperbarui.', data: { biography: player.biography, age: player.age, gender: player.gender,
             avatarUrl: player.avatarUrl,
+            imageEmoji: getEmoji('avatar'),
             resolvedBody: {
               face: resolveBodyPart('face', player.body?.face),
               hair: resolveBodyPart('hair', player.body?.hair),

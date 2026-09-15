@@ -5,7 +5,17 @@ const Monster = require('../models/Monster');
 const Npc = require('../models/Npc');
 const Location = require('../models/Location');
 const Manual = require('../models/Manual');
+const catalog = require('../config/imageCatalog');
+const { isUsableUrl } = require('../utils/imageResolve');
 
+/**
+ * Phase 15 - Admin Image Sync Script
+ *
+ * Isi dulu config/imageCatalog.js lalu jalankan seed untuk sync ke DB (opsional).
+ * Script ini tidak memaksa memasukkan placeholder ke database.
+ *
+ * Usage: node scripts/seed-images-phase15.js --guildId <ID> [--dry-run]
+ */
 async function run() {
   const args = process.argv.slice(2);
   const isDryRun = args.includes('--dry-run');
@@ -20,46 +30,75 @@ async function run() {
 
   await connectDB();
 
-  console.log(`Starting Image backfill (Phase 15) for guild: ${guildId} | Dry Run: ${isDryRun}`);
+  console.log(`Starting Image Sync (Phase 15) for guild: ${guildId} | Dry Run: ${isDryRun}`);
 
-  const items = await Item.find({ guildId, imageUrl: null }).limit(5);
-  for (let item of items) {
-    console.log(`Setting placeholder for Item: ${item.name}`);
-    if (!isDryRun) {
-      item.imageUrl = 'https://placehold.co/100x100/png?text=' + encodeURIComponent(item.name);
-      await item.save();
+  // Sync Items
+  for (const [key, url] of Object.entries(catalog.items)) {
+    if (!isUsableUrl(url)) continue;
+
+    // We assume key can be item name
+    const items = await Item.find({ guildId, name: key });
+    for (let item of items) {
+      if (item.imageUrl !== url) {
+        console.log(`Updating Item ${item.name} imageUrl -> ${url}`);
+        if (!isDryRun) {
+          item.imageUrl = url;
+          await item.save();
+        }
+      }
     }
   }
 
-  const monsters = await Monster.find({ guildId, imageUrl: null }).limit(5);
-  for (let mon of monsters) {
-    console.log(`Setting placeholder for Monster: ${mon.name}`);
-    if (!isDryRun) {
-      mon.imageUrl = 'https://placehold.co/100x100/png?text=' + encodeURIComponent(mon.name);
-      await mon.save();
+  // Sync Monsters
+  for (const [key, url] of Object.entries(catalog.monsters)) {
+    if (!isUsableUrl(url)) continue;
+
+    const monsters = await Monster.find({ guildId, $or: [{ name: key }, { key: key }] });
+    for (let mon of monsters) {
+      if (mon.imageUrl !== url) {
+        console.log(`Updating Monster ${mon.name} imageUrl -> ${url}`);
+        if (!isDryRun) {
+          mon.imageUrl = url;
+          await mon.save();
+        }
+      }
     }
   }
 
-  const npcs = await Npc.find({ guildId, imageUrl: null, portraitUrl: null }).limit(5);
-  for (let npc of npcs) {
-    console.log(`Setting placeholder for NPC: ${npc.name}`);
-    if (!isDryRun) {
-      npc.imageUrl = 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + encodeURIComponent(npc.name);
-      npc.portraitUrl = npc.imageUrl;
-      await npc.save();
+  // Sync NPCs
+  for (const [key, url] of Object.entries(catalog.npcs)) {
+    if (!isUsableUrl(url)) continue;
+
+    const npcs = await Npc.find({ guildId, name: key });
+    for (let npc of npcs) {
+      if (npc.portraitUrl !== url || npc.imageUrl !== url) {
+        console.log(`Updating NPC ${npc.name} imageUrl -> ${url}`);
+        if (!isDryRun) {
+          npc.portraitUrl = url;
+          npc.imageUrl = url;
+          await npc.save();
+        }
+      }
     }
   }
 
-  const locations = await Location.find({ guildId, imageUrl: null }).limit(5);
-  for (let loc of locations) {
-    console.log(`Setting placeholder for Location: ${loc.settlementName} - ${loc.buildingName}`);
-    if (!isDryRun) {
-      loc.imageUrl = 'https://placehold.co/400x200/png?text=' + encodeURIComponent(loc.buildingName);
-      await loc.save();
+  // Sync Locations
+  for (const [key, url] of Object.entries(catalog.locations)) {
+    if (!isUsableUrl(url)) continue;
+
+    const locations = await Location.find({ guildId, $or: [{ settlementName: key }, { regionSlug: key }] });
+    for (let loc of locations) {
+      if (loc.imageUrl !== url) {
+        console.log(`Updating Location ${loc.settlementName} imageUrl -> ${url}`);
+        if (!isDryRun) {
+          loc.imageUrl = url;
+          await loc.save();
+        }
+      }
     }
   }
 
-  console.log("Image backfill script complete.");
+  console.log("Image sync complete.");
   process.exit(0);
 }
 

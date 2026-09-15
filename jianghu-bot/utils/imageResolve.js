@@ -1,43 +1,64 @@
 const catalog = require('../config/imageCatalog');
 
+function isUsableUrl(url) {
+  return typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
+}
+
+function getEmoji(kind) {
+  return catalog.emoji[kind] || catalog.emoji.default;
+}
+
 function resolveBodyPart(part, key) {
   if (!catalog.body[part]) return null;
-  return catalog.body[part][key] || null;
+  const url = catalog.body[part][key];
+  return isUsableUrl(url) ? url : null;
 }
 
 function resolveItemImage(item) {
-  if (!item) return catalog.ui.placeholder_item;
-  if (item.imageUrl && item.imageUrl.startsWith('http')) return item.imageUrl;
-  return catalog.items[item.key || item.name] || catalog.ui.placeholder_item;
+  if (!item) return null;
+  if (isUsableUrl(item.imageUrl)) return item.imageUrl;
+
+  const catalogUrl = catalog.items[item.key || item.name];
+  return isUsableUrl(catalogUrl) ? catalogUrl : null;
 }
 
 function resolveMonsterImage(monster) {
-  if (!monster) return catalog.ui.placeholder_monster;
-  if (monster.imageUrl && monster.imageUrl.startsWith('http')) return monster.imageUrl;
-  if (monster.portraitUrl && monster.portraitUrl.startsWith('http')) return monster.portraitUrl;
-  return catalog.monsters[monster.key || monster.name] || catalog.ui.placeholder_monster;
+  if (!monster) return null;
+  if (isUsableUrl(monster.imageUrl)) return monster.imageUrl;
+  if (isUsableUrl(monster.portraitUrl)) return monster.portraitUrl;
+
+  const catalogUrl = catalog.monsters[monster.key || monster.name];
+  return isUsableUrl(catalogUrl) ? catalogUrl : null;
 }
 
 function resolveNpcImage(npc) {
-  if (!npc) return catalog.ui.placeholder_npc;
-  if (npc.portraitUrl && npc.portraitUrl.startsWith('http')) return npc.portraitUrl;
-  if (npc.imageUrl && npc.imageUrl.startsWith('http')) return npc.imageUrl;
-  return catalog.npcs[npc.name] || catalog.ui.placeholder_npc;
+  if (!npc) return null;
+  if (isUsableUrl(npc.portraitUrl)) return npc.portraitUrl;
+  if (isUsableUrl(npc.imageUrl)) return npc.imageUrl;
+
+  const catalogUrl = catalog.npcs[npc.name];
+  return isUsableUrl(catalogUrl) ? catalogUrl : null;
 }
 
 function resolveLocationImage(location) {
-  if (!location) return catalog.ui.placeholder_location;
-  if (location.imageUrl && location.imageUrl.startsWith('http')) return location.imageUrl;
-  return catalog.locations[location.settlementName] || catalog.locations[location.regionSlug] || catalog.ui.placeholder_location;
+  if (!location) return null;
+  if (isUsableUrl(location.imageUrl)) return location.imageUrl;
+
+  const catalogUrl = catalog.locations[location.settlementName] || catalog.locations[location.regionSlug];
+  return isUsableUrl(catalogUrl) ? catalogUrl : null;
 }
 
 function resolveManualImage(manual) {
-  if (!manual) return catalog.ui.placeholder_manual;
-  if (manual.imageUrl && manual.imageUrl.startsWith('http')) return manual.imageUrl;
-  return catalog.ui.placeholder_manual;
+  if (!manual) return null;
+  if (isUsableUrl(manual.imageUrl)) return manual.imageUrl;
+
+  const catalogUrl = catalog.manuals?.[manual.name];
+  return isUsableUrl(catalogUrl) ? catalogUrl : null;
 }
 
 module.exports = {
+  isUsableUrl,
+  getEmoji,
   resolveBodyPart,
   resolveItemImage,
   resolveMonsterImage,

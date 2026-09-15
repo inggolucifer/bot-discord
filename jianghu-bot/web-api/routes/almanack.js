@@ -1,4 +1,4 @@
-const { resolveItemImage, resolveMonsterImage, resolveNpcImage, resolveManualImage } = require('../../utils/imageResolve');
+const { resolveItemImage, resolveMonsterImage, resolveNpcImage, resolveManualImage, getEmoji } = require('../../utils/imageResolve');
 const express = require('express');
 const router = express.Router();
 const Item = require('../../models/Item');

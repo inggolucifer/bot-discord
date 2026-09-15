@@ -1,4 +1,4 @@
-const { resolveNpcImage, resolveLocationImage } = require('../../utils/imageResolve');
+const { resolveNpcImage, resolveLocationImage, getEmoji } = require('../../utils/imageResolve');
 const express = require('express');
 const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
