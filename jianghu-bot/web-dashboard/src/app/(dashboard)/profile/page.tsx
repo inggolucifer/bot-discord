@@ -135,7 +135,19 @@ export default function ProfilePage() {
       {/* Header Identitas */}
       <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-4">
          <div className="w-20 h-20 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0">
-            <FallbackImage src={profile.characterImage || ''} alt={profile.characterName} fallbackNode={<div className="w-full h-full flex items-center justify-center text-3xl">👤</div>} />
+            {profile.avatarUrl || profile.characterImage ? (
+              <FallbackImage src={profile.avatarUrl || profile.characterImage || ''} alt={profile.characterName} fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>} />
+            ) : profile.resolvedBody ? (
+              <div className="relative w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                {profile.resolvedBody.cloth && <img src={profile.resolvedBody.cloth} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 1}} />}
+                {profile.resolvedBody.face && <img src={profile.resolvedBody.face} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 2}} />}
+                {profile.resolvedBody.hair && <img src={profile.resolvedBody.hair} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 3}} />}
+                {profile.resolvedBody.mask && <img src={profile.resolvedBody.mask} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 4}} />}
+                {!profile.resolvedBody.face && !profile.resolvedBody.hair && !profile.resolvedBody.cloth && <div className="text-5xl">{profile.imageEmoji || '👤'}</div>}
+              </div>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>
+            )}
          </div>
          <div className="text-center md:text-left flex-1">
             <h2 className="text-2xl font-bold text-gray-200">{profile.characterName}</h2>

@@ -15,6 +15,7 @@ interface BaseEntity {
   name: string;
   description: string;
   imageUrl?: string;
+  imageEmoji?: string;
   rank: string;
 }
 

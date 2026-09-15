@@ -1,3 +1,4 @@
+const { resolveBodyPart, getEmoji } = require('../../utils/imageResolve');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const express = require('express');
 const router = express.Router();
@@ -1953,22 +1954,36 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         if (mappedGender !== undefined && ['Pria', 'Wanita'].includes(mappedGender)) player.gender = mappedGender;
 
         if (body !== undefined && typeof body === 'object') {
+             const catalog = require('../../config/imageCatalog');
+             const validKeys = (part, key) => key === null || key === '' || (catalog.body[part] && catalog.body[part][key] !== undefined);
              if (!player.body) player.body = {};
              // Simple key string updates as per Phase 10
-             if (body.face !== undefined) player.body.face = body.face;
-             if (body.hair !== undefined) player.body.hair = body.hair;
-             if (body.cloth !== undefined) player.body.cloth = body.cloth;
-             if (body.mask !== undefined) player.body.mask = body.mask;
-             if (body.spellAvatar !== undefined) player.body.spellAvatar = body.spellAvatar;
-             if (body.title !== undefined) player.body.title = body.title;
-             if (body.avatarBorder !== undefined) player.body.avatarBorder = body.avatarBorder;
-             if (body.chatBorder !== undefined) player.body.chatBorder = body.chatBorder;
+             if (body.face !== undefined && validKeys('face', body.face)) player.body.face = body.face;
+             if (body.hair !== undefined && validKeys('hair', body.hair)) player.body.hair = body.hair;
+             if (body.cloth !== undefined && validKeys('cloth', body.cloth)) player.body.cloth = body.cloth;
+             if (body.mask !== undefined && validKeys('mask', body.mask)) player.body.mask = body.mask;
+             if (body.spellAvatar !== undefined && validKeys('spellAvatar', body.spellAvatar)) player.body.spellAvatar = body.spellAvatar;
+             if (body.title !== undefined && validKeys('title', body.title)) player.body.title = body.title;
+             if (body.avatarBorder !== undefined && validKeys('avatarBorder', body.avatarBorder)) player.body.avatarBorder = body.avatarBorder;
+             if (body.chatBorder !== undefined && validKeys('chatBorder', body.chatBorder)) player.body.chatBorder = body.chatBorder;
              player.markModified('body');
         }
 
         await player.save();
 
-        res.json({ success: true, message: 'Profil berhasil diperbarui.', data: { biography: player.biography, age: player.age, gender: player.gender, nickname: player.nickname, body: player.body } });
+        res.json({ success: true, message: 'Profil berhasil diperbarui.', data: { biography: player.biography, age: player.age, gender: player.gender,
+            avatarUrl: player.avatarUrl,
+            imageEmoji: getEmoji('avatar'),
+            resolvedBody: {
+              face: resolveBodyPart('face', player.body?.face),
+              hair: resolveBodyPart('hair', player.body?.hair),
+              cloth: resolveBodyPart('cloth', player.body?.cloth),
+              mask: resolveBodyPart('mask', player.body?.mask),
+              spellAvatar: resolveBodyPart('spellAvatar', player.body?.spellAvatar),
+              title: resolveBodyPart('title', player.body?.title),
+              avatarBorder: resolveBodyPart('avatarBorder', player.body?.avatarBorder),
+              chatBorder: resolveBodyPart('chatBorder', player.body?.chatBorder)
+            }, nickname: player.nickname, body: player.body } });
     } catch (error) {
         console.error('[API-PLAYER] PATCH profile error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan server.' });

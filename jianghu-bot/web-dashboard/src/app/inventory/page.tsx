@@ -390,16 +390,7 @@ export default function InventoryPage() {
 
               {/* Item Icon or Image */}
               <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center mb-2 drop-shadow-md">
-                {item.imageUrl ? (
-                  <FallbackImage
-                    src={item.imageUrl}
-                    alt={item.name}
-                    className="max-h-full max-w-full object-contain"
-                    fallbackNode={<span className="text-2xl sm:text-4xl">{item.emoji}</span>}
-                  />
-                ) : (
-                  <span className="text-2xl sm:text-4xl">{item.emoji}</span>
-                )}
+                <FallbackImage src={item.imageUrl || ''} alt={item.name} className="w-10 h-10 object-contain mr-3" fallbackNode={<span className="text-3xl mr-3">{item.emoji}</span>} />
               </div>
 
               {/* Item Details */}
