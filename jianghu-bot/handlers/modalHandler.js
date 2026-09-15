@@ -148,9 +148,6 @@ async function handleModal(interaction) {
           console.error('[WorkerHire] Failed to send warning to worker channel:', e);
         }
       }
-      try {
-        await interaction.user.send(`⚠️ **Pekerja Menganggur!** Pekerja **${contract.workerName}** yang baru kamu sewa tidak bisa ditempatkan karena semua asetmu penuh. Ia sedang menganggur!`);
-      } catch(e) {}
     }
 
     const replyMsg = targetAsset

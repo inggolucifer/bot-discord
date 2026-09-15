@@ -79,18 +79,22 @@ async function runWorkerAutoProcess(client) {
 
                     const assetConfig = assetMap.get(target.assetId.toString());
                     try {
-                        const user = await client.users.fetch(player.discordId).catch(() => null);
                         const msg = `⚠️ **BENCANA ALAM!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** milikmu terkena bencana dan sekarang **RUSAK (Halted)**. Perbaiki aset tersebut agar bisa beroperasi kembali.`;
-                        if (user) await user.send(msg);
                         if (client.io) {
                             client.io.to(player.discordId).emit('user_update', { message: msg });
                         }
                     } catch (e) {}
+                } else {
+                    player.lastDisasterHitAt = new Date();
+                    playerUpdated = true;
                 }
             }
 
             const lastBandit = player.lastBanditHitAt.getTime();
             if (!riskTriggered && now - lastBandit >= BANDIT_CYCLE) {
+                player.lastBanditHitAt = new Date();
+                playerUpdated = true;
+
                 // Trigger bandit
                 const activeAssets = player.assets.filter(a => a.status === 'active' && !a.isDamaged && !isUnderConstruction(a));
 
@@ -102,22 +106,14 @@ async function runWorkerAutoProcess(client) {
                     target.isDamaged = true;
                     target.isHalted = true;
                     target.damageType = 'bandit';
-                    player.lastBanditHitAt = new Date();
-                    playerUpdated = true;
 
                     const assetConfig = assetMap.get(target.assetId.toString());
                     try {
-                        const user = await client.users.fetch(player.discordId).catch(() => null);
                         const msg = `⚠️ **SERANGAN BANDIT!** Aset **${assetConfig ? assetConfig.name : 'Unknown'}** diserang bandit karena tidak ada penjagaan. Aset tersebut kini **RUSAK (Halted)**.`;
-                        if (user) await user.send(msg);
                         if (client.io) {
                             client.io.to(player.discordId).emit('user_update', { message: msg });
                         }
                     } catch (e) {}
-                } else if (activeAssets.length > 0) {
-                    // All assets were guarded. Bandit cycle resets anyway because they tried and failed.
-                    player.lastBanditHitAt = new Date();
-                    playerUpdated = true;
                 }
             }
 
@@ -145,12 +141,9 @@ async function runWorkerAutoProcess(client) {
                         owned.lastProgressUpdate = new Date();
                         playerUpdated = true;
 
-                        try {
-                            const user = await client.users.fetch(player.discordId).catch(() => null);
-                            if (user) {
-                                await user.send(`🎉 Pembangunan aset **${assetConfig.name}** milikmu telah selesai dan langsung beroperasi!`).catch(() => null);
-                            }
-                        } catch (e) {}
+                        if (client.io) {
+                            client.io.to(player.discordId).emit('user_update', { message: `🎉 Pembangunan aset ${assetConfig.name} milikmu telah selesai dan langsung beroperasi!` });
+                        }
                     } else {
                         // Masih proses, simpan progress, update last update
                         owned.progressAccumulated = progressMs;
@@ -236,13 +229,9 @@ async function runWorkerAutoProcess(client) {
                                      if (!owned.isHalted) {
                                          owned.isHalted = true;
                                          owned.lastWarningSentAt = new Date();
-                                         try {
-                                             const user = await client.users.fetch(player.discordId).catch(() => null);
-                                             if (user) {
-                                                const msg = `⚠️ Pekerja di aset **${assetConfig.name}** berhenti bekerja (Crafting) karena kekurangan material: **${missingMaterialName}**.`;
-                                                await user.send(msg).catch(() => null);
-                                             }
-                                         } catch (e) {}
+                                         if (client.io) {
+                                             client.io.to(player.discordId).emit('user_update', { message: `Pekerja di aset ${assetConfig.name} berhenti bekerja karena kekurangan material.` });
+                                         }
                                      }
                                      break;
                                  }
@@ -274,16 +263,9 @@ async function runWorkerAutoProcess(client) {
                                  if (activeCraft.targetQuantity <= 0) {
                                      const finishedRecipeName = activeCraft.recipeName;
                                      owned.activeCrafts.shift();
-                                     try {
-                                         const user = await client.users.fetch(player.discordId).catch(() => null);
-                                         if (user) {
-                                             const msg = `✅ Pekerjaan crafting **${finishedRecipeName}** di aset **${assetConfig.name}** telah selesai! Item sudah masuk ke inventory.`;
-                                             await user.send(msg).catch(() => null);
-                                         }
-                                         if (client.io) {
-                                             client.io.to(player.discordId).emit('user_update', { message: `Crafting ${finishedRecipeName} selesai!` });
-                                         }
-                                     } catch (e) {}
+                                     if (client.io) {
+                                         client.io.to(player.discordId).emit('user_update', { message: `Crafting ${finishedRecipeName} di ${assetConfig.name} selesai!` });
+                                     }
                                  }
                              }
                          }
@@ -393,16 +375,9 @@ async function runWorkerAutoProcess(client) {
                     if (!owned.isHalted) {
                         owned.isHalted = true;
                         owned.lastWarningSentAt = new Date();
-                        try {
-                            const user = await client.users.fetch(player.discordId).catch(() => null);
-                            const msg = `⚠️ Pekerja di aset **${assetConfig.name}** milikmu telah **berhenti bekerja** karena kekurangan material: **${missingMaterialName}**! Segera isi ulang inventory-mu.`;
-                            if (user) {
-                                await user.send(msg).catch(() => null);
-                            }
-                            if (client.io) {
-                                client.io.to(player.discordId).emit('user_update', { message: msg });
-                            }
-                        } catch (e) {}
+                        if (client.io) {
+                            client.io.to(player.discordId).emit('user_update', { message: `Pekerja di aset ${assetConfig.name} berhenti bekerja karena kekurangan material: ${missingMaterialName}.` });
+                        }
                     }
                     owned.progressAccumulated = 0; // Halted, rugi waktu
                     owned.lastProgressUpdate = new Date();
@@ -621,14 +596,8 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                                  if (!owned.isHalted) {
                                      owned.isHalted = true;
                                      owned.lastWarningSentAt = new Date();
-                                     if (sect.leaderId) {
-                                         try {
-                                             const user = await client.users.fetch(sect.leaderId).catch(() => null);
-                                             if (user) {
-                                                 const msg = `⚠️ Pekerja di aset sekte **${assetConfig.name}** berhenti bekerja (Crafting) karena kekurangan material: **${missingMaterialName}**.`;
-                                                 await user.send(msg).catch(() => null);
-                                             }
-                                         } catch (e) {}
+                                     if (sect.leaderId && client.io) {
+                                         client.io.to(sect.leaderId).emit('user_update', { message: `Pekerja di aset sekte ${assetConfig.name} berhenti bekerja karena kekurangan material.` });
                                      }
                                  }
                                  break;
@@ -661,17 +630,8 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                              if (activeCraft.targetQuantity <= 0) {
                                  const finishedRecipeName = activeCraft.recipeName;
                                  owned.activeCrafts.shift();
-                                 if (sect.leaderId) {
-                                     try {
-                                         const user = await client.users.fetch(sect.leaderId).catch(() => null);
-                                         if (user) {
-                                             const msg = `✅ Pekerjaan crafting **${finishedRecipeName}** di aset sekte **${assetConfig.name}** telah selesai! Item sudah masuk ke gudang sekte.`;
-                                             await user.send(msg).catch(() => null);
-                                         }
-                                         if (client.io) {
-                                             client.io.to(sect.leaderId).emit('user_update', { message: `Crafting ${finishedRecipeName} selesai!` });
-                                         }
-                                     } catch (e) {}
+                                 if (sect.leaderId && client.io) {
+                                     client.io.to(sect.leaderId).emit('user_update', { message: `Crafting ${finishedRecipeName} di sekte selesai!` });
                                  }
                              }
                          }
@@ -763,17 +723,9 @@ async function runWorkerAutoProcessSects(client, allAssets, assetMap, guildConfi
                  if (!owned.isHalted) {
                      owned.isHalted = true;
                      owned.lastWarningSentAt = new Date();
-                     if (sect.leaderId) {
-                         try {
-                             const user = await client.users.fetch(sect.leaderId).catch(() => null);
-                             const msg = `⚠️ Pekerja di aset sekte **${assetConfig.name}** telah **berhenti bekerja** karena sekte kekurangan material: **${missingMaterialName}**! Segera isi ulang gudang sekte.`;
-                             if (user) {
-                                 await user.send(msg).catch(() => null);
-                             }
-                             if (client.io) {
-                                client.io.to(sect.leaderId).emit('user_update', { message: msg });
-                             }
-                         } catch (e) {}
+                     if (sect.leaderId && client.io) {
+                         const msg = `⚠️ Pekerja di aset sekte **${assetConfig.name}** telah **berhenti bekerja** karena sekte kekurangan material: **${missingMaterialName}**! Segera isi ulang gudang sekte.`;
+                         client.io.to(sect.leaderId).emit('user_update', { message: msg });
                      }
                  }
                  owned.lastClaimAt = new Date();
