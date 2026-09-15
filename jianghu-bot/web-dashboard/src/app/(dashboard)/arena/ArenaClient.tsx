@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import FallbackImage from '@/components/FallbackImage';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
@@ -164,7 +165,7 @@ export default function ArenaClient() {
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border border-[#444] overflow-hidden">
-                                                {p.characterImage ? <img src={p.characterImage} alt="" className="w-full h-full object-cover"/> : <User size={16} className="text-gray-400"/>}
+                                                <FallbackImage src={p.characterImage || ''} alt={p.name} className="w-full h-full object-cover" fallbackNode={<User size={16} className="text-gray-400"/>} />
                                             </div>
                                             <div>
                                                 <div className="font-bold text-gray-200 text-sm">{p.characterName}</div>

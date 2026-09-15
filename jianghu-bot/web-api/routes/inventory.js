@@ -1,3 +1,4 @@
+const { resolveItemImage } = require('../../utils/imageResolve');
 const Item = require('../../models/Item');
 const express = require('express');
 const router = express.Router();
@@ -50,7 +51,7 @@ router.get('/', authenticateToken, async (req, res) => {
             quantity: slot.quantity,
             price: slot.itemId.basePrice, // Changed to match DB schema
             priceCurrency: slot.itemId.priceCurrency || 'copper',
-            imageUrl: slot.itemId.imageUrl, // Include image URL
+            imageUrl: resolveItemImage(slot.itemId), // Include image URL
             emoji: getEmojiForShopItem(slot.itemId.category, 'item'),
             effect: slot.itemId.effect,
             effectType: slot.itemId.effectType,

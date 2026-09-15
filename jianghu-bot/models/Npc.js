@@ -9,6 +9,7 @@ const npcSchema = new mongoose.Schema({
   settlementName: { type: String, required: true },
   buildingName: { type: String, default: null },
   portraitUrl: { type: String, default: null },
+  imageUrl: { type: String, default: null },
   greeting: { type: String, default: 'Ada perlu, pengembara?' },
   dialogLines: [{
     id: { type: String },
