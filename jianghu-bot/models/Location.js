@@ -17,7 +17,14 @@ const locationSchema = new mongoose.Schema({
   description: { type: String, default: '' },
   isActive: { type: Boolean, default: true },
   imageUrl: { type: String, default: null },
-  shopTag: { type: String, default: null }
+  shopTag: { type: String, default: null },
+  mapX: { type: Number, min: 0, max: 100, default: null },
+  mapY: { type: Number, min: 0, max: 100, default: null },
+  mapIconType: {
+    type: String,
+    enum: ['city', 'village', 'sect_hall', 'dojo', 'danger_zone', 'landmark', null],
+    default: null
+  }
 }, { timestamps: true });
 
 locationSchema.index({ guildId: 1, regionSlug: 1, settlementName: 1, buildingName: 1 });
