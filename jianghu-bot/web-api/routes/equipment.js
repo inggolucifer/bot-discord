@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
-const { canAddToInventory } = require('../../utils/inventoryWeight');
 const LockManager = require('../utils/lockManager');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
@@ -136,11 +137,12 @@ router.post('/unequip', authenticateToken, async (req, res) => {
             const activeTravel = await Travel.findOne({ discordId: req.user.userId, status: { $in: ['traveling', 'ambushed'] } });
             const { getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
 
-            const newCapacity = getCarryCapacity(player, { isTraveling: !!activeTravel }, equippedItems);
+            const newCapacity = await getCarryCapacity(player, { isTraveling: !!activeTravel }, equippedItems);
 
             // Note: The item is already in player.inventory, so getInventoryWeight already includes its weight.
             // We just need to check if current weight exceeds the new capacity.
-            const currentWeight = getInventoryWeight(player);
+            const itemMapWeight = await buildInventoryItemMap(player);
+            const currentWeight = getInventoryWeight(player, itemMapWeight);
 
             if (currentWeight > newCapacity) {
                 return res.status(400).json({ error: `Inventory penuh (berat ${currentWeight}/${newCapacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat melepaskan perlengkapan.` });

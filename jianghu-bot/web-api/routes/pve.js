@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const TransactionLog = require('../../models/TransactionLog');
@@ -324,19 +326,26 @@ router.post('/claim', authenticateToken, async (req, res) => {
 
                          const itemDoc = await Item.findById(stolenItem.id);
                          if (itemDoc) {
-                             const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
-                             if (existing) {
-                                 existing.quantity += stolenItem.qty;
+                             const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: stolenItem.qty }]);
+                             if (!invCheck.ok) {
+                                 stolenItem = null;
                              } else {
-                                 player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
+                                 if (existing) {
+                                     existing.quantity += stolenItem.qty;
+                                 } else {
+                                     player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 }
                              }
 
-                             await TransactionLog.create({
-                                 guildId: player.guildId,
-                                 userId: player.discordId,
-                                 type: 'steal_pve',
-                                 description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
-                             });
+                             if (stolenItem) {
+                                 await TransactionLog.create({
+                                     guildId: player.guildId,
+                                     userId: player.discordId,
+                                     type: 'steal_pve',
+                                     description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
+                                 });
+                             }
                          }
                     } else if (stolenCopper > 0 || stolenSilver > 0) {
 
@@ -420,6 +429,18 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 player.currency.copper += drops.copper;
                 player.currency.silver += drops.silver;
                 player.currency.gold += drops.gold;
+
+                const itemIds = drops.items.map(d => d.itemId._id || d.itemId);
+                const itemDocs = await Item.find({ _id: { $in: itemIds } }).session(session);
+                const dropsToAdd = drops.items.map(drop => {
+                     const doc = itemDocs.find(d => d._id.equals(drop.itemId._id || drop.itemId));
+                     return { itemDoc: doc || { weight: 1, category: 'material' }, quantity: drop.quantity };
+                });
+                const itemMapdropCheck = await buildInventoryItemMap(player);
+                const dropCheck = await canAddToInventory(player, dropsToAdd, { itemMap: itemMapdropCheck });
+                if (!dropCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${dropCheck.currentWeight}/${dropCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat claim loot.`, 400);
+                }
 
                 for (const dropItem of drops.items) {
                     const invItem = player.inventory.find(i => {

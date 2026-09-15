@@ -26,6 +26,12 @@ const itemSchema = new mongoose.Schema({
   coldResistance: { type: Number, default: 0, min: 0 },
   heatResistance: { type: Number, default: 0, min: 0 },
 
+  weight: { type: Number, default: 1, min: 0 },
+  capacityBonus: { type: Number, default: 0 },
+  capacityMode: { type: String, enum: ['always', 'travel_only', null], default: null },
+  travelSpeedBonus: { type: Number, default: 0 },
+  capacityType: { type: String, enum: ['cart', 'horse', 'storage_ring', null], default: null },
+
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
   minRealmIndex: { type: Number, default: 0 },
   basePrice: { type: Number, default: 0, min: 0 },

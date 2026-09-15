@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Shop = require('../../models/Shop');
 const Auction = require('../../models/Auction');
 const Player = require('../../models/Player');
@@ -378,6 +380,11 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             if (shopItem.category === 'item') {
                 const doc = await Item.findById(shopItem.refId).session(session);
 
+                const invCheck = await canAddToInventory(player, [{ itemDoc: doc, quantity }]);
+                if (!invCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart.`, 400);
+                }
+
                 if (doc && isToolItem(doc)) {
                     for (let i = 0; i < quantity; i++) {
                         player.inventory.push(buildToolInventoryEntry(doc, 1));
@@ -516,6 +523,11 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
 
             // Proses Pindah Barang
             if (listing.type === 'item') {
+                const doc = await Item.findById(listing.itemId).session(session);
+                const invCheck = await canAddToInventory(player, [{ itemDoc: doc, quantity }]);
+                if (!invCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart.`, 400);
+                }
                 const existingItem = player.inventory.find(i => i.itemId.equals(listing.itemId));
                 if (existingItem) existingItem.quantity += quantity;
                 else player.inventory.push({ itemId: listing.itemId, quantity: quantity });
@@ -631,6 +643,12 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
 
             if (target.type === 'item') {
                 if (!targetId) throw new CustomError('Data listing tidak memiliki ID item/ref.', 400);
+
+                const doc = await Item.findById(targetId).session(session);
+                const invCheck = await canAddToInventory(player, [{ itemDoc: doc, quantity: target.quantity }]);
+                if (!invCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart.`, 400);
+                }
                 const owned = player.inventory.find((i) => i.itemId && i.itemId.equals(targetId));
                 if (owned) owned.quantity += target.quantity;
                 else player.inventory.push({ itemId: targetId, quantity: target.quantity });

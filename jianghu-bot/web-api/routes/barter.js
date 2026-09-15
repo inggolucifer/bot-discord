@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const mongoose = require('mongoose');
 const { authenticateToken } = require('../middlewares/auth');
 const LockManager = require('../utils/lockManager');
@@ -7,7 +9,6 @@ const { withTransaction } = require('../utils/dbTransaction');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const BarterOffer = require('../../models/BarterOffer');
-const { canAddToInventory } = require('../../utils/inventoryWeight');
 const Travel = require('../../models/Travel');
 const TransactionLog = require('../../models/TransactionLog');
 const CustomError = require('../utils/CustomError');
@@ -393,7 +394,8 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
                 toPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
             }
-            const toCheck = canAddToInventory(toPlayer, toPlayerItemsToAdd);
+            const itemMaptoCheck = await buildInventoryItemMap(toPlayer);
+                const toCheck = await canAddToInventory(toPlayer, toPlayerItemsToAdd, { itemMap: itemMaptoCheck });
             if (!toCheck.ok) throw new CustomError(`Inventorymu penuh (berat ${toCheck.currentWeight}/${toCheck.capacity}).`, 400);
 
             const fromPlayerItemsToAdd = offer.request.items.map(i => ({ itemDoc: { _id: i.itemId, category: 'material', weight: 1 }, quantity: i.quantity }));
@@ -402,7 +404,8 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
                 fromPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
             }
-            const fromCheck = canAddToInventory(fromPlayer, fromPlayerItemsToAdd);
+            const itemMapfromCheck = await buildInventoryItemMap(fromPlayer);
+                const fromCheck = await canAddToInventory(fromPlayer, fromPlayerItemsToAdd, { itemMap: itemMapfromCheck });
             if (!fromCheck.ok) throw new CustomError(`Inventory ${fromPlayer.characterName} penuh (berat ${fromCheck.currentWeight}/${fromCheck.capacity}).`, 400);
 
             // Perform Additions
