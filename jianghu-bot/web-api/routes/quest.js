@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const Npc = require('../../models/Npc');
 const Quest = require('../../models/Quest');
@@ -339,6 +341,12 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
                      if (dbItem) itemId = dbItem._id;
                  }
                  if (itemId) {
+                     const itemDoc = await Item.findById(itemId).session(session);
+                     const invCheck = await canAddToInventory(player, [{ itemDoc, quantity: itemReward.quantity }]);
+                     if (!invCheck.ok) {
+                         throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat claim reward.`, 400);
+                     }
+
                      const invItem = player.inventory.find(i => i.itemId.toString() === itemId.toString());
                      if (invItem) {
                          invItem.quantity += itemReward.quantity;

@@ -1,6 +1,8 @@
 const { escapeRegex } = require('../../utils/escapeRegex');
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const Asset = require('../../models/Asset');
 const { authenticateToken } = require('../middlewares/auth');
@@ -102,6 +104,29 @@ router.get('/profile', authenticateToken, async (req, res) => {
         // Calculate real-time energy
         const currentEnergy = calculateEnergy(player);
 
+        const { getInventoryWeight, getCarryCapacity } = require('../../utils/inventoryWeight');
+
+        let inventoryWeight = 0;
+        let carryCapacity = 50;
+
+        const mutablePlayer = await Player.findOne({ discordId: userId }).populate('inventory.itemId').lean();
+        if (mutablePlayer) {
+            const equippedItems = [];
+            if (mutablePlayer.equipment && mutablePlayer.equipment.accessory) {
+                const accInvItem = mutablePlayer.inventory.find(i => i._id.toString() === mutablePlayer.equipment.accessory.toString());
+                if (accInvItem && accInvItem.itemId && accInvItem.itemId.capacityBonus) {
+                    equippedItems.push(accInvItem.itemId);
+                }
+            }
+            const Travel = require('../../models/Travel');
+            const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
+            const isTraveling = !!activeTravel;
+
+            const itemMapWeight = await buildInventoryItemMap(mutablePlayer);
+            inventoryWeight = getInventoryWeight(mutablePlayer, itemMapWeight);
+            carryCapacity = await getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
+        }
+
         res.json({
             success: true,
             data: {
@@ -112,7 +137,9 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 combatStats,
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,
-                hasCompletedTour: player.hasCompletedTour || false
+                hasCompletedTour: player.hasCompletedTour || false,
+                inventoryWeight,
+                carryCapacity
             }
         });
     } catch (error) {
@@ -758,6 +785,11 @@ router.post('/loot', authenticateToken, async (req, res) => {
             }
 
             for (const it of pool.inventory) {
+                const itemDoc = await Item.findById(it.itemId).session(session);
+                const invCheck = await canAddToInventory(player, [{ itemDoc, quantity: it.quantity }]);
+                if (!invCheck.ok) {
+                    throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart.`, 400);
+                }
                 const owned = player.inventory.find((i) => i.itemId.equals(it.itemId));
                 if (owned) owned.quantity += it.quantity;
                 else player.inventory.push({ itemId: it.itemId, quantity: it.quantity });
@@ -1656,6 +1688,13 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
             }
 
             // Add to receiver
+            const Item = require('../../models/Item');
+            const itemDoc = await Item.findById(tr.itemId._id).session(session);
+            const invCheck = await canAddToInventory(receiver, [{ itemDoc, quantity: tr.quantity }]);
+            if (!invCheck.ok) {
+                throw new CustomError(`Inventory penerima penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}).`, 400);
+            }
+
             const receiverOwned = receiver.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
             if (receiverOwned) {
                 receiverOwned.quantity += tr.quantity;

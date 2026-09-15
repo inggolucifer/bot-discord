@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const { authenticateToken: verifyToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
@@ -545,6 +547,11 @@ router.post('/complete', verifyToken, async (req, res) => {
                 i.creatorName === player.characterName
             );
 
+            const invCheck = await canAddToInventory(player, [{ itemDoc: outputItem, quantity: recipe.output.quantity }]);
+            if (!invCheck.ok) {
+                throw new CustomError(`Inventory penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat claim hasil craft.`, 400);
+            }
+
             if (existingOutputIndex !== -1) {
                 player.inventory[existingOutputIndex].quantity += recipe.output.quantity;
             } else {
@@ -581,16 +588,19 @@ router.post('/complete', verifyToken, async (req, res) => {
              // Failed craft -> Give Junk
              const junkItem = await Item.findOne({ name: 'Sampah', guildId: player.guildId });
              if (junkItem) {
-                 const existingJunkIndex = player.inventory.findIndex(i => i.itemId._id.toString() === junkItem._id.toString());
-                 if (existingJunkIndex !== -1) {
+                 const invCheckJunk = await canAddToInventory(player, [{ itemDoc: junkItem, quantity: 1 }]);
+                 if (invCheckJunk.ok) {
+                     const existingJunkIndex = player.inventory.findIndex(i => i.itemId._id.toString() === junkItem._id.toString());
+                     if (existingJunkIndex !== -1) {
                      player.inventory[existingJunkIndex].quantity += 1;
-                 } else {
-                     player.inventory.push({
-                         itemId: junkItem._id,
-                         quantity: 1,
-                         creatorName: 'Sistem',
-                         qualityMultiplier: 1.0
-                     });
+                     } else {
+                         player.inventory.push({
+                             itemId: junkItem._id,
+                             quantity: 1,
+                             creatorName: 'Sistem',
+                             qualityMultiplier: 1.0
+                         });
+                     }
                  }
              }
         }

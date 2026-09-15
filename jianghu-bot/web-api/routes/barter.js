@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const mongoose = require('mongoose');
 const { authenticateToken } = require('../middlewares/auth');
 const LockManager = require('../utils/lockManager');
@@ -383,6 +385,26 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                     throw new CustomError(`Pengirim tidak memiliki cukup item.`, 400);
                 }
             }
+
+            // Weight validation
+            const toPlayerItemsToAdd = offer.offer.items.map(i => ({ itemDoc: { _id: i.itemId, category: 'material', weight: 1 }, quantity: i.quantity }));
+            if (toPlayerItemsToAdd.length > 0) {
+                // Fetch actual items
+                const itemIds = toPlayerItemsToAdd.map(i => i.itemDoc._id);
+                const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
+                toPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
+            }
+            const toCheck = await canAddToInventory(toPlayer, toPlayerItemsToAdd);
+            if (!toCheck.ok) throw new CustomError(`Inventorymu penuh (berat ${toCheck.currentWeight}/${toCheck.capacity}).`, 400);
+
+            const fromPlayerItemsToAdd = offer.request.items.map(i => ({ itemDoc: { _id: i.itemId, category: 'material', weight: 1 }, quantity: i.quantity }));
+            if (fromPlayerItemsToAdd.length > 0) {
+                const itemIds = fromPlayerItemsToAdd.map(i => i.itemDoc._id);
+                const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
+                fromPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
+            }
+            const fromCheck = await canAddToInventory(fromPlayer, fromPlayerItemsToAdd);
+            if (!fromCheck.ok) throw new CustomError(`Inventory ${fromPlayer.characterName} penuh (berat ${fromCheck.currentWeight}/${fromCheck.capacity}).`, 400);
 
             // Perform Additions
             if (offerCopper > 0) addCurrency(toPlayer.currency, offer.offer);
