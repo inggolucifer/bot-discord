@@ -12,6 +12,9 @@ interface Tile {
   resourceType?: string;
   nodeRespawnAt?: string;
   ownerName?: string;
+  ownerId?: string;
+  ownerType?: string;
+  plotPriceSilver?: number;
   isOccupied?: boolean;
   isUnderConstruction?: boolean;
   buildingName?: string;
