@@ -18,8 +18,9 @@ const locationSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   imageUrl: { type: String, default: null },
   shopTag: { type: String, default: null },
-  mapX: { type: Number, min: 0, max: 100, default: null },
-  mapY: { type: Number, min: 0, max: 100, default: null },
+  mapX: { type: Number, min: 0, default: null },
+  mapY: { type: Number, min: 0, default: null },
+  zoneId: { type: String, default: null, index: true },
   mapIconType: {
     type: String,
     enum: ['city', 'village', 'sect_hall', 'dojo', 'danger_zone', 'landmark', null],

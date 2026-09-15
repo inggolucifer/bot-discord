@@ -92,23 +92,35 @@ router.get('/nearby-players', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId }).lean();
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
-        if (!player.currentLocation || !player.currentLocation.regionSlug || !player.currentLocation.settlementName) {
-            return res.status(400).json({ error: 'Lokasi saat ini tidak valid.' });
-        }
-
         const travelingPlayers = await Travel.find({
             guildId: player.guildId,
             status: { $in: ['traveling', 'ambushed'] }
         }).select('discordId').lean();
         const travelingIds = travelingPlayers.map(t => t.discordId);
 
-        const nearby = await Player.find({
-            guildId: player.guildId,
-            discordId: { $ne: userId, $nin: travelingIds },
-            'currentLocation.regionSlug': player.currentLocation.regionSlug,
-            'currentLocation.settlementName': player.currentLocation.settlementName,
-            status: 'active'
-        }).select('discordId characterName guildId characterImage').lean();
+        let nearby = [];
+        if (player.gridPosition && player.gridPosition.zoneId) {
+            const px = player.gridPosition.tileX || 0;
+            const py = player.gridPosition.tileY || 0;
+            nearby = await Player.find({
+                guildId: player.guildId,
+                discordId: { $ne: userId, $nin: travelingIds },
+                'gridPosition.zoneId': player.gridPosition.zoneId,
+                'gridPosition.tileX': { $gte: px - 2, $lte: px + 2 },
+                'gridPosition.tileY': { $gte: py - 2, $lte: py + 2 },
+                status: 'active'
+            }).select('discordId characterName guildId characterImage gridPosition').lean();
+        } else if (player.currentLocation && player.currentLocation.regionSlug && player.currentLocation.settlementName) {
+            nearby = await Player.find({
+                guildId: player.guildId,
+                discordId: { $ne: userId, $nin: travelingIds },
+                'currentLocation.regionSlug': player.currentLocation.regionSlug,
+                'currentLocation.settlementName': player.currentLocation.settlementName,
+                status: 'active'
+            }).select('discordId characterName guildId characterImage').lean();
+        } else {
+            return res.status(400).json({ error: 'Lokasi saat ini tidak valid.' });
+        }
 
         res.json({ success: true, data: nearby });
     } catch (error) {
@@ -169,8 +181,22 @@ router.post('/offers', authenticateToken, async (req, res) => {
             if (!player2) throw new CustomError('Target pemain tidak ditemukan.', 404);
             if (player1.status !== 'active' || player2.status !== 'active') throw new CustomError('Pemain tidak aktif.', 400);
 
-            if (player1.currentLocation.regionSlug !== player2.currentLocation.regionSlug ||
-                player1.currentLocation.settlementName !== player2.currentLocation.settlementName) {
+            // Validasi kedekatan jarak (Grid Chebyshev <= 2 atau Settlement Legacy)
+            if (player1.gridPosition?.zoneId || player2.gridPosition?.zoneId) {
+                if (player1.gridPosition?.zoneId !== player2.gridPosition?.zoneId) {
+                    throw new CustomError('Kalian tidak berada di zona grid yang sama.', 400);
+                }
+                const dist = Math.max(
+                    Math.abs((player1.gridPosition?.tileX || 0) - (player2.gridPosition?.tileX || 0)),
+                    Math.abs((player1.gridPosition?.tileY || 0) - (player2.gridPosition?.tileY || 0))
+                );
+                if (dist > 2) {
+                    throw new CustomError(`Jarak terlalu jauh untuk barter (jarak: ${dist} tile, maksimal: 2 tile).`, 400);
+                }
+            } else if (
+                player1.currentLocation?.regionSlug !== player2.currentLocation?.regionSlug ||
+                player1.currentLocation?.settlementName !== player2.currentLocation?.settlementName
+            ) {
                 throw new CustomError('Kalian tidak berada di lokasi yang sama.', 400);
             }
 
@@ -225,7 +251,9 @@ router.post('/offers', authenticateToken, async (req, res) => {
             }
 
             const expiresAt = new Date(Date.now() + barterConfig.DEFAULT_EXPIRY_HOURS * 3600 * 1000);
-            const locationKey = `${player1.currentLocation.regionSlug}_${player1.currentLocation.settlementName}`;
+            const locationKey = player1.gridPosition?.zoneId
+                ? `grid_${player1.gridPosition.zoneId}`
+                : `${player1.currentLocation?.regionSlug || 'unknown'}_${player1.currentLocation?.settlementName || 'unknown'}`;
 
             await BarterOffer.create([{
                 guildId: player1.guildId,
@@ -343,10 +371,23 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
             if (!fromPlayer || !toPlayer) throw new CustomError('Pemain tidak valid.', 400);
             if (fromPlayer.status !== 'active' || toPlayer.status !== 'active') throw new CustomError('Salah satu pemain tidak aktif/ambushed/mati.', 400);
 
-            const locationKeyFrom = `${fromPlayer.currentLocation.regionSlug}_${fromPlayer.currentLocation.settlementName}`;
-            const locationKeyTo = `${toPlayer.currentLocation.regionSlug}_${toPlayer.currentLocation.settlementName}`;
-            if (locationKeyFrom !== locationKeyTo || locationKeyFrom !== offer.locationKey) {
-                throw new CustomError('Lokasi tidak sesuai (salah satu pemain sudah pindah).', 400);
+            if (fromPlayer.gridPosition?.zoneId || toPlayer.gridPosition?.zoneId) {
+                if (fromPlayer.gridPosition?.zoneId !== toPlayer.gridPosition?.zoneId) {
+                    throw new CustomError('Kalian tidak berada di zona grid yang sama.', 400);
+                }
+                const dist = Math.max(
+                    Math.abs((fromPlayer.gridPosition?.tileX || 0) - (toPlayer.gridPosition?.tileX || 0)),
+                    Math.abs((fromPlayer.gridPosition?.tileY || 0) - (toPlayer.gridPosition?.tileY || 0))
+                );
+                if (dist > 2) {
+                    throw new CustomError(`Jarak terlalu jauh untuk barter (jarak: ${dist} tile, maksimal: 2 tile).`, 400);
+                }
+            } else {
+                const locationKeyFrom = `${fromPlayer.currentLocation?.regionSlug}_${fromPlayer.currentLocation?.settlementName}`;
+                const locationKeyTo = `${toPlayer.currentLocation?.regionSlug}_${toPlayer.currentLocation?.settlementName}`;
+                if (locationKeyFrom !== locationKeyTo || locationKeyFrom !== offer.locationKey) {
+                    throw new CustomError('Lokasi tidak sesuai (salah satu pemain sudah pindah).', 400);
+                }
             }
 
             const activeTravel = await Travel.findOne({

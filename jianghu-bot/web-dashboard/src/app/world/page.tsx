@@ -10,7 +10,7 @@ import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 import WorldMapView from "@/components/map/WorldMapView";
-import RegionMapView from "@/components/map/RegionMapView";
+import ZoneGridView from "@/components/map/ZoneGridView";
 
 export default function WorldPage() {
   const [locationData, setLocationData] = useState<any>(null);
@@ -377,16 +377,10 @@ export default function WorldPage() {
           </div>
         ) : (
           <div className="animate-in fade-in zoom-in-110 slide-in-from-top-4 duration-500 ease-out">
-            {selectedRegionSlug && (
-              <RegionMapView
-                regionSlug={selectedRegionSlug}
-                onBackToWorld={() => setMapView('world')}
-                onSelectSettlement={(settlementName: string) => setActiveTab('location')}
-                onStartTravelTo={handleStartTravelTo}
-                currentLocationName={locationData?.currentLocation?.settlementName || null}
-                travelStatus={travelStatus}
-              />
-            )}
+            <ZoneGridView
+              zoneId={locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
+              onBackToWorld={() => setMapView('world')}
+            />
           </div>
         )}
       </div>
