@@ -51,6 +51,8 @@ export default function InventoryPage() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [inventoryWeight, setInventoryWeight] = useState<number>(0);
+  const [carryCapacity, setCarryCapacity] = useState<number>(0);
 
   const [discardModalOpen, setDiscardModalOpen] = useState(false);
   const [itemToDiscard, setItemToDiscard] = useState<InventoryItem | null>(null);
@@ -171,10 +173,15 @@ export default function InventoryPage() {
 
   const fetchInventoryAndRecipes = async () => {
       try {
-        const [invRes, craftRes] = await Promise.all([
+        const [invRes, craftRes, profileRes] = await Promise.all([
             api.get('/inventory'),
-            api.get('/inventory/craft-recipes').catch(() => ({ data: { data: [] } }))
+            api.get('/inventory/craft-recipes').catch(() => ({ data: { data: [] } })),
+            api.get('/player/profile').catch(() => ({ data: { data: {} } }))
         ]);
+        if (profileRes.data && profileRes.data.data) {
+            setInventoryWeight(profileRes.data.data.inventoryWeight || 0);
+            setCarryCapacity(profileRes.data.data.carryCapacity || 0);
+        }
 
         setInventory(invRes.data.data);
         if (invRes.data.meta) {
@@ -263,7 +270,7 @@ export default function InventoryPage() {
 
       <PageHeader
         title="Gudang Penyimpanan"
-        description={`Kapasitas: ${totalSlots} / ${maxSlots} Slot`}
+        description={`Kapasitas Berat: ${inventoryWeight} / ${carryCapacity || 'N/A'}`}
         action={
             <Button
                 variant="outline"

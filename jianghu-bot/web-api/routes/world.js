@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const TransactionLog = require('../../models/TransactionLog');
@@ -156,7 +158,25 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         let baseHours = distance / travelConfig.LI_PER_HOUR;
         let realmIndex = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-        let finalHours = baseHours * (1 - Math.min(0.5, realmIndex * 0.03));
+
+        let realmDiscount = Math.min(0.5, realmIndex * 0.03);
+        let horseSpeedBonus = 0;
+        const Item = require('../../models/Item');
+
+        if (player.equipment && player.equipment.accessory) {
+            const accInvItem = player.inventory.id(player.equipment.accessory);
+            if (accInvItem && accInvItem.itemId) {
+                const accItem = await Item.findById(accInvItem.itemId);
+                if (accItem && accItem.capacityType === 'horse') {
+                    horseSpeedBonus = accItem.travelSpeedBonus || 0;
+                }
+            }
+        }
+
+        const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
+        const totalDiscount = Math.min(realmDiscount + horseSpeedBonus, MAX_TRAVEL_SPEED_DISCOUNT);
+
+        let finalHours = baseHours * (1 - totalDiscount);
         let arrivalTime = new Date(Date.now() + finalHours * 3600 * 1000);
 
         let escortUsed = false;
@@ -378,19 +398,26 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                          const itemDoc = await Item.findById(stolenItem.id);
                          if (itemDoc) {
-                             const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
-                             if (existing) {
-                                 existing.quantity += stolenItem.qty;
+                             const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: stolenItem.qty }], { isTraveling: true });
+                             if (!invCheck.ok) {
+                                 stolenItem = null;
                              } else {
-                                 player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 const existing = player.inventory.find(i => i.itemId.toString() === stolenItem.id.toString());
+                                 if (existing) {
+                                     existing.quantity += stolenItem.qty;
+                                 } else {
+                                     player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
+                                 }
                              }
 
-                             await TransactionLog.create({
-                                 guildId: player.guildId,
-                                 userId: player.discordId,
-                                 type: 'steal_pve',
-                                 description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
-                             });
+                             if (stolenItem) {
+                                 await TransactionLog.create({
+                                     guildId: player.guildId,
+                                     userId: player.discordId,
+                                     type: 'steal_pve',
+                                     description: `Berhasil mencuri ${stolenItem.qty}x ${itemDoc.name} dari ${opponent.name}`
+                                 });
+                             }
                          }
                     } else if (stolenCopper > 0 || stolenSilver > 0) {
 
