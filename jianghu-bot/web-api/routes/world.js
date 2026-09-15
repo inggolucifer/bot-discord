@@ -19,6 +19,7 @@ const { getRealmIndex } = require('../../utils/cultivation');
 const { calculateEnergy } = require('../../utils/energyManager');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
+const { markArrived } = require('../../utils/mapDiscovery');
 
 router.get('/location', authenticateToken, async (req, res) => {
     try {
@@ -308,6 +309,9 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
                         settlementName: travel.toLocation.settlementName,
                         buildingName: null
                     };
+
+                    markArrived(player, travel.toLocation.regionSlug, travel.toLocation.settlementName);
+
                     await player.save({ session });
                 }
 
@@ -589,6 +593,8 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                 settlementName: travel.toLocation.settlementName,
                 buildingName: null
             };
+
+            markArrived(player, travel.toLocation.regionSlug, travel.toLocation.settlementName);
 
             await player.save({ session });
             await travel.save({ session });

@@ -268,6 +268,8 @@ const playerSchema = new mongoose.Schema({
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
+  discoveredLocations: { type: [String], default: ['central_plains|Desa Xingcun'] },
+  discoveredRegions: { type: [String], default: ['central_plains'] },
 
   marriage: {
     status: { type: String, enum: ['single', 'proposed', 'married'], default: 'single' },
