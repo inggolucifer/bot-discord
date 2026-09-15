@@ -30,6 +30,9 @@ export default function WorldMapView({ onSelectRegion }: WorldMapViewProps) {
       try {
         const res = await api.get('/map/world');
         setRegions(res.data.regions || []);
+        if (res.data.worldMapImageUrl) {
+          setWorldMapUrl(res.data.worldMapImageUrl);
+        }
         setLoading(false);
       } catch (err: any) {
         console.error('Failed to fetch world map', err);
