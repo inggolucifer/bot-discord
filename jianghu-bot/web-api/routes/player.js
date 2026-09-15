@@ -122,7 +122,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
             const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
             const isTraveling = !!activeTravel;
 
-            inventoryWeight = getInventoryWeight(mutablePlayer);
+            const itemMapWeight = await buildInventoryItemMap(mutablePlayer);
+            inventoryWeight = getInventoryWeight(mutablePlayer, itemMapWeight);
             carryCapacity = await getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
         }
 
@@ -1687,6 +1688,13 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
             }
 
             // Add to receiver
+            const Item = require('../../models/Item');
+            const itemDoc = await Item.findById(tr.itemId._id).session(session);
+            const invCheck = await canAddToInventory(receiver, [{ itemDoc, quantity: tr.quantity }]);
+            if (!invCheck.ok) {
+                throw new CustomError(`Inventory penerima penuh (berat ${invCheck.currentWeight}/${invCheck.capacity}).`, 400);
+            }
+
             const receiverOwned = receiver.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
             if (receiverOwned) {
                 receiverOwned.quantity += tr.quantity;

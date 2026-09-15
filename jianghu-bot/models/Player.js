@@ -145,6 +145,8 @@ const playerSchema = new mongoose.Schema({
 
   // DEPRECATED — data historis narasi lama, sudah tidak dipakai logika manapun. Jangan tulis ke sini lagi.
   legacyRealm: { type: String, default: 'Mortal' },
+
+  baseCarryCapacity: { type: Number, default: null },
   legacyStage: { type: String, default: '-' },
 
   systemCultivation: {

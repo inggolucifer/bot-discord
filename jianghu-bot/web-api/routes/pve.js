@@ -436,8 +436,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
                      const doc = itemDocs.find(d => d._id.equals(drop.itemId._id || drop.itemId));
                      return { itemDoc: doc || { weight: 1, category: 'material' }, quantity: drop.quantity };
                 });
-                const itemMapdropCheck = await buildInventoryItemMap(player);
-                const dropCheck = await canAddToInventory(player, dropsToAdd, { itemMap: itemMapdropCheck });
+                const dropCheck = await canAddToInventory(player, dropsToAdd);
                 if (!dropCheck.ok) {
                     throw new CustomError(`Inventory penuh (berat ${dropCheck.currentWeight}/${dropCheck.capacity}). Kurangi beban atau pakai Storage Ring/Cart. Tidak dapat claim loot.`, 400);
                 }

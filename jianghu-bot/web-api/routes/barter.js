@@ -394,8 +394,7 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
                 toPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
             }
-            const itemMaptoCheck = await buildInventoryItemMap(toPlayer);
-                const toCheck = await canAddToInventory(toPlayer, toPlayerItemsToAdd, { itemMap: itemMaptoCheck });
+            const toCheck = await canAddToInventory(toPlayer, toPlayerItemsToAdd);
             if (!toCheck.ok) throw new CustomError(`Inventorymu penuh (berat ${toCheck.currentWeight}/${toCheck.capacity}).`, 400);
 
             const fromPlayerItemsToAdd = offer.request.items.map(i => ({ itemDoc: { _id: i.itemId, category: 'material', weight: 1 }, quantity: i.quantity }));
@@ -404,8 +403,7 @@ router.post('/offers/:id/accept', authenticateToken, async (req, res) => {
                 const docs = await Item.find({ _id: { $in: itemIds } }).session(session);
                 fromPlayerItemsToAdd.forEach(i => i.itemDoc = docs.find(d => d._id.equals(i.itemDoc._id)) || i.itemDoc);
             }
-            const itemMapfromCheck = await buildInventoryItemMap(fromPlayer);
-                const fromCheck = await canAddToInventory(fromPlayer, fromPlayerItemsToAdd, { itemMap: itemMapfromCheck });
+            const fromCheck = await canAddToInventory(fromPlayer, fromPlayerItemsToAdd);
             if (!fromCheck.ok) throw new CustomError(`Inventory ${fromPlayer.characterName} penuh (berat ${fromCheck.currentWeight}/${fromCheck.capacity}).`, 400);
 
             // Perform Additions

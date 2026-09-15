@@ -398,7 +398,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                          const itemDoc = await Item.findById(stolenItem.id);
                          if (itemDoc) {
-                             const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: stolenItem.qty }]);
+                             const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: stolenItem.qty }], { isTraveling: true });
                              if (!invCheck.ok) {
                                  stolenItem = null;
                              } else {

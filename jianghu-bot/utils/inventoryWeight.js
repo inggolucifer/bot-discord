@@ -13,7 +13,7 @@ const {
  */
 function getItemWeight(itemDocOrLean) {
   if (!itemDocOrLean) return 1;
-  if (itemDocOrLean.weight !== undefined && itemDocOrLean.weight !== 1) {
+  if (itemDocOrLean.weight !== null && itemDocOrLean.weight !== undefined) {
     return itemDocOrLean.weight;
   }
   return CATEGORY_DEFAULT_WEIGHT[itemDocOrLean.category] ?? 1;
@@ -100,6 +100,9 @@ async function getCarryCapacity(player, options = {}, equippedItemDocs = []) {
  * @returns {{ ok: boolean, currentWeight: number, capacity: number, overflow: number }}
  */
 async function canAddToInventory(player, itemsToAdd, options = {}) {
+  if (!options.itemMap) {
+      options.itemMap = await buildInventoryItemMap(player);
+  }
   const currentWeight = getInventoryWeight(player, options.itemMap);
   const capacity = await getCarryCapacity(player, options, options.equippedItems);
 
