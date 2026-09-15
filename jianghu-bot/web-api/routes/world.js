@@ -203,6 +203,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
             toLocation: { regionSlug: targetSettlement.regionSlug, settlementName: targetSettlement.name },
             startTime: new Date(),
             arrivalTime: arrivalTime,
+            staminaLastAppliedAt: new Date(),
             usedEscortLetter: escortUsed
         });
 
@@ -226,7 +227,7 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
         const userId = req.user.userId;
         const travel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
 
-        if (!travel) return res.json({ travel: null });
+        if (!travel) { const playerFallback = await Player.findOne({ discordId: userId }); return res.json({ travel: null, currentStamina: getCurrentStamina(playerFallback), maxStamina: getMaxStamina(playerFallback) }); }
 
         if (travel.status === 'traveling' && Date.now() >= travel.arrivalTime.getTime()) {
             await withTransaction(async (session) => {
