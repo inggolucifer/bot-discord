@@ -15,12 +15,12 @@ if (!guildIdArg) {
 const guildId = guildIdArg.split('=')[1];
 
 const regions = [
-  { regionSlug: 'central_plains', displayName: 'Central Plains', worldMapX: 50, worldMapY: 50, themeColor: '#d4a373', dangerTier: 1 },
-  { regionSlug: 'azure_mountain_range', displayName: 'Azure Mountain Range', worldMapX: 25, worldMapY: 30, themeColor: '#7a9e9f', dangerTier: 2 },
-  { regionSlug: 'eastern_sea_region', displayName: 'Eastern Sea Region', worldMapX: 80, worldMapY: 45, themeColor: '#4ea8de', dangerTier: 3 },
-  { regionSlug: 'southern_demon_domain', displayName: 'Southern Demon Domain', worldMapX: 60, worldMapY: 80, themeColor: '#9d0208', dangerTier: 4 },
-  { regionSlug: 'western_sacred_deserts', displayName: 'Western Sacred Deserts', worldMapX: 20, worldMapY: 70, themeColor: '#ffba08', dangerTier: 4 },
-  { regionSlug: 'northern_desolate_territory', displayName: 'Northern Desolate Territory', worldMapX: 45, worldMapY: 15, themeColor: '#cad2c5', dangerTier: 5 }
+  { regionSlug: 'central_plains', displayName: 'Central Plains', worldMapX: 50, worldMapY: 50, themeColor: '#d4a373', dangerTier: 1, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Central+Plains' },
+  { regionSlug: 'azure_mountain_range', displayName: 'Azure Mountain Range', worldMapX: 25, worldMapY: 30, themeColor: '#7a9e9f', dangerTier: 2, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Azure+Mountain+Range' },
+  { regionSlug: 'eastern_sea_region', displayName: 'Eastern Sea Region', worldMapX: 80, worldMapY: 45, themeColor: '#4ea8de', dangerTier: 3, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Eastern+Sea+Region' },
+  { regionSlug: 'southern_demon_domain', displayName: 'Southern Demon Domain', worldMapX: 60, worldMapY: 80, themeColor: '#9d0208', dangerTier: 4, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Southern+Demon+Domain' },
+  { regionSlug: 'western_sacred_deserts', displayName: 'Western Sacred Deserts', worldMapX: 20, worldMapY: 70, themeColor: '#ffba08', dangerTier: 4, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Western+Sacred+Deserts' },
+  { regionSlug: 'northern_desolate_territory', displayName: 'Northern Desolate Territory', worldMapX: 45, worldMapY: 15, themeColor: '#cad2c5', dangerTier: 5, regionMapImageUrl: 'https://placehold.co/1920x1080/png?text=Northern+Desolate+Territory' }
 ];
 
 const settlementCoordinates = {
