@@ -16,9 +16,6 @@ const travelSchema = new mongoose.Schema({
   mode: { type: String, default: 'jalan_kaki' },
   status: { type: String, enum: ['traveling', 'ambushed', 'arrived', 'cancelled'], default: 'traveling' },
   usedEscortLetter: { type: Boolean, default: false },
-  staminaLastAppliedAt: { type: Date, default: null },
-  exhausted: { type: Boolean, default: false },
-  exhaustPenaltyApplied: { type: Boolean, default: false },
   ambushResolved: { type: Boolean, default: false },
   ambushResult: {
     happened: { type: Boolean, default: false },
