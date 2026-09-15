@@ -12,6 +12,8 @@ const Shop = require('../../models/Shop');
 const AdminLog = require('../../models/AdminLog');
 const { authenticateToken } = require('../middlewares/auth'); // assuming it's in auth based on other files
 const travelConfig = require('../../config/travelDistances');
+const { applyTravelDrain, getCurrentStamina, getMaxStamina } = require('../../utils/stamina');
+const staminaConfig = require('../../config/stamina');
 const { getRealmIndex } = require('../../utils/cultivation');
 const { calculateEnergy } = require('../../utils/energyManager');
 const CustomError = require('../utils/CustomError');
@@ -203,6 +205,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
             toLocation: { regionSlug: targetSettlement.regionSlug, settlementName: targetSettlement.name },
             startTime: new Date(),
             arrivalTime: arrivalTime,
+            staminaLastAppliedAt: new Date(),
             usedEscortLetter: escortUsed
         });
 
@@ -224,9 +227,32 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 router.get('/travel/status', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const travel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
 
-        if (!travel) return res.json({ travel: null });
+        let travel = await Travel.findOne({ discordId: userId, status: { $in: ["traveling", "ambushed"] } });
+
+        if (travel) {
+            const playerPre = await Player.findOne({ discordId: userId });
+            if (playerPre) {
+                applyTravelDrain(playerPre, travel);
+                if (travel.exhausted && !travel.exhaustPenaltyApplied && travel.status === "traveling") {
+                    const nowTime = Date.now();
+                    if (nowTime < travel.arrivalTime.getTime()) {
+                        const remainingTime = travel.arrivalTime.getTime() - nowTime;
+                        const extraTime = remainingTime * (staminaConfig.EXHAUSTED_TRAVEL_TIME_MULTIPLIER - 1);
+                        travel.arrivalTime = new Date(travel.arrivalTime.getTime() + extraTime);
+                    }
+                    travel.exhaustPenaltyApplied = true;
+                }
+                await travel.save();
+                await playerPre.save();
+            }
+        }
+
+        if (!travel) {
+            const playerFallback = await Player.findOne({ discordId: userId });
+            if (!playerFallback) return res.json({ travel: null });
+            return res.json({ travel: null, currentStamina: getCurrentStamina(playerFallback), maxStamina: getMaxStamina(playerFallback) });
+        }
 
         if (travel.status === 'traveling' && Date.now() >= travel.arrivalTime.getTime()) {
             await withTransaction(async (session) => {
@@ -238,6 +264,7 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
                     // Phase 6: Ambush logic modified to pending state
                     let ambushChance = 0.15; // default base
                     if (travel.usedEscortLetter) ambushChance *= 0.3;
+                    if (travel.exhausted) ambushChance += staminaConfig.EXHAUSTED_AMBUSH_CHANCE_BONUS;
 
                     if (Math.random() < ambushChance) {
                         isAmbushed = true;
@@ -266,7 +293,7 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
             // Re-fetch travel to get updated ambush result
             const updatedTravel = await Travel.findById(travel._id);
             const playerAfter = await Player.findOne({ discordId: userId });
-            return res.json({ travel: updatedTravel, currentLocation: playerAfter.currentLocation });
+            if (!playerAfter) return res.json({ travel: updatedTravel }); return res.json({ travel: updatedTravel, currentLocation: playerAfter.currentLocation, currentStamina: getCurrentStamina(playerAfter), maxStamina: getMaxStamina(playerAfter) });
         }
 
         res.json({ travel: travel });
@@ -647,6 +674,237 @@ router.get('/shops', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Gagal memuat toko' });
+    }
+});
+
+
+// --- Rest System Phase 13 ---
+
+router.post('/rest/start', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { mode, hours } = req.body;
+
+        if (!['tent', 'open'].includes(mode)) {
+            return res.status(400).json({ error: 'Mode istirahat tidak valid (tent/open)' });
+        }
+
+        if (!hours || isNaN(hours) || hours < staminaConfig.MIN_REST_HOURS || hours > staminaConfig.MAX_REST_HOURS) {
+            return res.status(400).json({ error: `Durasi harus antara ${staminaConfig.MIN_REST_HOURS} dan ${staminaConfig.MAX_REST_HOURS} jam` });
+        }
+
+        await withTransaction(async (session) => {
+            const player = await Player.findOne({ discordId: userId }).populate('inventory.itemId').session(session);
+            if (!player) throw new CustomError('Karakter tidak ditemukan', 404);
+
+            const travel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } }).session(session);
+            if (travel) throw new CustomError('Tidak bisa istirahat saat dalam perjalanan', 400);
+
+            if (player.rest && player.rest.status === 'resting') {
+                throw new CustomError('Kamu sedang beristirahat', 400);
+            }
+
+            let usedTent = false;
+            if (mode === 'tent') {
+                const tentIndex = player.inventory.findIndex(i => i.itemId && i.itemId.name === staminaConfig.TENT_ITEM_NAME);
+                if (tentIndex === -1) {
+                    throw new CustomError('Kamu tidak memiliki Tenda Sederhana', 400);
+                }
+
+                player.inventory[tentIndex].quantity -= 1;
+                if (player.inventory[tentIndex].quantity <= 0) {
+                     player.inventory.splice(tentIndex, 1);
+                }
+                usedTent = true;
+
+                await TransactionLog.create([{
+                    guildId: player.guildId,
+                    type: 'use_item',
+                    description: `[${player.characterName}] memakai 1x Tenda Sederhana`,
+                    amount: 0,
+                    currency: 'copper'
+                }], { session });
+            }
+
+            const now = new Date();
+            const endsAt = new Date(now.getTime() + (hours * 3600000));
+
+            player.rest = {
+                status: 'resting',
+                mode: mode,
+                startedAt: now,
+                endsAt: endsAt,
+                lastAppliedAt: now,
+                usedTentItem: usedTent
+            };
+
+            if (player.currentStamina === null || player.currentStamina === undefined) {
+                 player.currentStamina = getMaxStamina(player);
+            }
+
+            await player.save({ session });
+        });
+
+        const updatedPlayer = await Player.findOne({ discordId: userId });
+        res.json({ rest: updatedPlayer.rest, currentStamina: getCurrentStamina(updatedPlayer), maxStamina: getMaxStamina(updatedPlayer) });
+
+    } catch (error) {
+        if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ error: 'Gagal memulai istirahat' });
+    }
+});
+
+router.get('/rest/status', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        if (!player.rest || player.rest.status !== 'resting') {
+             return res.json({ rest: null, currentStamina: getCurrentStamina(player), maxStamina: getMaxStamina(player) });
+        }
+
+        const now = new Date();
+        const lastApplied = player.rest.lastAppliedAt ? player.rest.lastAppliedAt.getTime() : player.rest.startedAt.getTime();
+        const effectiveEnd = Math.min(now.getTime(), player.rest.endsAt.getTime());
+
+        if (effectiveEnd > lastApplied) {
+            const hoursElapsed = (effectiveEnd - lastApplied) / 3600000;
+
+            const isTent = player.rest.mode === 'tent';
+            const staminaRate = isTent ? staminaConfig.REST_STAMINA_PER_HOUR_TENT : staminaConfig.REST_STAMINA_PER_HOUR_OPEN;
+            const hpRate = isTent ? staminaConfig.REST_HP_PERCENT_PER_HOUR_TENT : staminaConfig.REST_HP_PERCENT_PER_HOUR_OPEN;
+
+            const maxStam = getMaxStamina(player);
+            player.currentStamina = Math.min(maxStam, getCurrentStamina(player) + (staminaRate * hoursElapsed));
+
+            if (player.currentHp !== null && player.currentHp !== undefined) {
+                const { getComputedStats } = require('../../utils/statCalculator');
+                const maxHp = getComputedStats(player).maxHp;
+                const hpGain = maxHp * hpRate * hoursElapsed;
+                player.currentHp = Math.min(maxHp, Math.floor(player.currentHp + hpGain));
+            }
+
+            const ambushChancePerHour = isTent ? staminaConfig.REST_AMBUSH_CHANCE_PER_HOUR_TENT : staminaConfig.REST_AMBUSH_CHANCE_PER_HOUR_OPEN;
+            const fullHours = Math.floor(hoursElapsed);
+            let ambushed = false;
+
+            for (let i = 0; i < fullHours; i++) {
+                 if (Math.random() < ambushChancePerHour) {
+                      ambushed = true;
+                      break;
+                 }
+            }
+
+            if (ambushed) {
+                 player.rest.status = 'idle';
+                 player.rest.mode = null;
+
+                 const { payCurrency } = require('../../utils/currency');
+                 const penaltyCopper = 250;
+                 if (player.currency.copper >= penaltyCopper) {
+                      payCurrency(player.currency, penaltyCopper, 'copper');
+                 } else {
+                      player.currency.copper = 0;
+                 }
+
+                 await TransactionLog.create([{
+                      guildId: player.guildId,
+                      type: 'ambush_loss',
+                      description: `[${player.characterName}] diganggu saat istirahat dan kehilangan sebagian harta.`,
+                      amount: penaltyCopper,
+                      currency: 'copper'
+                 }]);
+            } else {
+                player.rest.lastAppliedAt = new Date(effectiveEnd);
+
+                if (now.getTime() >= player.rest.endsAt.getTime()) {
+                    player.rest.status = 'idle';
+                    player.rest.mode = null;
+                }
+            }
+
+            await player.save();
+        }
+
+        res.json({ rest: player.rest.status === 'resting' ? player.rest : null, currentStamina: getCurrentStamina(player), maxStamina: getMaxStamina(player) });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Gagal memuat status istirahat' });
+    }
+});
+
+router.post('/rest/cancel', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        if (!player.rest || player.rest.status !== 'resting') {
+             return res.status(400).json({ error: 'Kamu tidak sedang istirahat' });
+        }
+
+        const now = new Date();
+        const lastApplied = player.rest.lastAppliedAt ? player.rest.lastAppliedAt.getTime() : player.rest.startedAt.getTime();
+        const effectiveEnd = Math.min(now.getTime(), player.rest.endsAt.getTime());
+
+        if (effectiveEnd > lastApplied) {
+            const hoursElapsed = (effectiveEnd - lastApplied) / 3600000;
+            const isTent = player.rest.mode === 'tent';
+            const staminaRate = isTent ? staminaConfig.REST_STAMINA_PER_HOUR_TENT : staminaConfig.REST_STAMINA_PER_HOUR_OPEN;
+            const hpRate = isTent ? staminaConfig.REST_HP_PERCENT_PER_HOUR_TENT : staminaConfig.REST_HP_PERCENT_PER_HOUR_OPEN;
+
+            const maxStam = getMaxStamina(player);
+            player.currentStamina = Math.min(maxStam, getCurrentStamina(player) + (staminaRate * hoursElapsed));
+
+            if (player.currentHp !== null && player.currentHp !== undefined) {
+                const { getComputedStats } = require('../../utils/statCalculator');
+                const maxHp = getComputedStats(player).maxHp;
+                const hpGain = maxHp * hpRate * hoursElapsed;
+                player.currentHp = Math.min(maxHp, Math.floor(player.currentHp + hpGain));
+            }
+
+            const ambushChancePerHour = isTent ? staminaConfig.REST_AMBUSH_CHANCE_PER_HOUR_TENT : staminaConfig.REST_AMBUSH_CHANCE_PER_HOUR_OPEN;
+            const fullHours = Math.floor(hoursElapsed);
+            let ambushed = false;
+
+            for (let i = 0; i < fullHours; i++) {
+                 if (Math.random() < ambushChancePerHour) {
+                      ambushed = true;
+                      break;
+                 }
+            }
+
+            if (ambushed) {
+                 const { payCurrency } = require('../../utils/currency');
+                 const penaltyCopper = 250;
+                 if (player.currency.copper >= penaltyCopper) {
+                      payCurrency(player.currency, penaltyCopper, 'copper');
+                 } else {
+                      player.currency.copper = 0;
+                 }
+
+                 await TransactionLog.create([{
+                      guildId: player.guildId,
+                      type: 'ambush_loss',
+                      description: `[${player.characterName}] diganggu saat istirahat dan kehilangan sebagian harta.`,
+                      amount: penaltyCopper,
+                      currency: 'copper'
+                 }]);
+            }
+        }
+
+        player.rest.status = 'idle';
+        player.rest.mode = null;
+        await player.save();
+
+        res.json({ rest: null, currentStamina: getCurrentStamina(player), maxStamina: getMaxStamina(player) });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Gagal membatalkan istirahat' });
     }
 });
 
