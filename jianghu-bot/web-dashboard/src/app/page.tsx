@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/Badge';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Modal } from '@/components/ui/Modal';
 import { EmptyState } from '@/components/ui/EmptyState';
+import CreateCharacterCard from '@/components/character/CreateCharacterCard';
 
 interface Currency {
     copper: number;
@@ -178,32 +179,66 @@ export default function Home() {
               <div className="flex-grow w-full">
                 <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-2 sm:gap-0 mb-3">
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-white font-serif mb-1">{profile.characterName as string}</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white font-serif mb-1">{profile.characterName}</h2>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-                        <Badge variant="outline" className="text-xs bg-blue-900/20 border-blue-500/30 gap-1 text-blue-200">
-                            <Zap size={12} className="text-blue-400" /> {profile.realm as string} (Tahap {profile.stage as string})
+                        <Badge variant="outline" className="text-xs bg-amber-900/30 border-amber-600/40 gap-1 text-amber-200">
+                            <Zap size={12} className="text-amber-400" /> {profile.systemCultivation?.realm || profile.realm || 'Fondasi Fana'} {profile.systemCultivation?.stage ? `(Tahap ${profile.systemCultivation.stage})` : ''}
                         </Badge>
-                        <Badge variant="secondary" className="text-xs bg-[#1f402e]/30 border-[#1f402e] text-green-300 gap-1">
-                            <Users size={12} /> {profile.sect as string}
+                        <Badge variant="secondary" className="text-xs bg-[#1f402e]/40 border-[#1f402e] text-green-300 gap-1">
+                            <Users size={12} /> {profile.sect || 'Tanpa Sekte (Rogue)'}
                         </Badge>
+                        {profile.currentLocation && (
+                          <Badge variant="outline" className="text-xs bg-blue-950/40 border-blue-800/40 text-blue-300 gap-1">
+                            <Compass size={12} /> {profile.currentLocation.settlementName || 'Desa Xingcun'}
+                          </Badge>
+                        )}
                     </div>
                   </div>
+
+                  {/* Currency Pills */}
+                  {profile.currency && (
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 bg-black/50 p-2 rounded-lg border border-[#333]">
+                      <span className="text-xs font-mono text-amber-100 flex items-center gap-1">
+                        <span className="text-amber-500 font-bold">🥇</span> {profile.currency.gold || 0}
+                      </span>
+                      <span className="text-xs font-mono text-gray-300 flex items-center gap-1">
+                        <span className="text-gray-400 font-bold">🥈</span> {profile.currency.silver || 0}
+                      </span>
+                      <span className="text-xs font-mono text-amber-700 flex items-center gap-1">
+                        <span className="text-amber-700 font-bold">🟤</span> {profile.currency.copper || 0}
+                      </span>
+                      {(profile.currency.spirit > 0 || profile.currency.jade > 0) && (
+                        <span className="text-xs font-mono text-purple-300 flex items-center gap-1">
+                          <span>🔮</span> {profile.currency.spirit || 0}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                <div className="w-full bg-[#222] rounded-full h-2 mt-4 border border-[#333] overflow-hidden">
-                  <div className="bg-gradient-to-r from-yellow-700 to-[#c5a880] h-full rounded-full relative" style={{width: '60%'}}>
+                <div className="w-full bg-[#222] rounded-full h-2.5 mt-3 border border-[#333] overflow-hidden">
+                  <div
+                    className="bg-gradient-to-r from-amber-600 to-[#dfb76c] h-full rounded-full relative transition-all duration-700"
+                    style={{
+                      width: `${Math.min(100, Math.max(5, Math.round(((profile.systemCultivation?.qi || 0) / Math.max(1, ((profile.systemCultivation?.stage || 0) + 1) * 100)) * 100)))}%`
+                    }}
+                  >
                      <div className="absolute inset-0 bg-white/20 w-full animate-[shimmer_2s_infinite]"></div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center mt-2 gap-2 gap-2">
-                    <p className="text-[10px] sm:text-xs text-gray-500">Progress menuju terobosan selanjutnya</p>
-                    <p className="text-[10px] sm:text-xs font-mono text-[#c5a880]">60%</p>
+                <div className="flex justify-between items-center mt-1.5">
+                    <p className="text-[10px] sm:text-xs text-gray-400">
+                      Qi Terkumpul: <span className="text-amber-300 font-mono">{profile.systemCultivation?.qi || 0}</span> / {Math.max(1, ((profile.systemCultivation?.stage || 0) + 1) * 100)} Qi
+                    </p>
+                    <p className="text-[10px] sm:text-xs font-mono text-[#c5a880]">
+                      {Math.min(100, Math.round(((profile.systemCultivation?.qi || 0) / Math.max(1, ((profile.systemCultivation?.stage || 0) + 1) * 100)) * 100))}%
+                    </p>
                 </div>
               </div>
             </>
           ) : user ? (
-            <div className="w-full text-center py-6 sm:py-8 flex flex-col items-center justify-center gap-4">
-               <p className="text-gray-400 text-sm sm:text-base">Anda sudah login, namun karakter belum ditemukan. Silakan buat karakter di Discord.</p>
+            <div className="w-full py-2">
+               <CreateCharacterCard onCreated={() => fetchProfile()} />
             </div>
           ) : (
              <div className="w-full text-center py-6 sm:py-8 flex flex-col items-center justify-center gap-4">

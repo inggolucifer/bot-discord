@@ -14,6 +14,7 @@ import { BookOpen, Shield, Wind, Droplet, Flame, Mountain, Zap, Sun, Moon, Skull
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { ToastContainer } from '@/components/ui/ToastContainer';
+import { toast } from '@/components/ui/Toast';
 import { useRouter } from 'next/navigation';
 
 export default function SkillsClient() {
@@ -35,11 +36,11 @@ export default function SkillsClient() {
     setActionLoading(true);
     try {
       await api.post('/player/laws/learn', { lawId: selectedLawToLearn._id });
-      alert('Berhasil mempelajari Hukum Alam.');
+      toast.show({ message: 'Berhasil mempelajari Hukum Alam.', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsLearnModalOpen(false);
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal mempelajari Hukum Alam.');
+      toast.show({ message: err.response?.data?.error || 'Gagal mempelajari Hukum Alam.', type: 'error' });
     } finally {
       setActionLoading(false);
     }
@@ -48,7 +49,7 @@ export default function SkillsClient() {
   const handleResetLaw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (resetConfirmation !== 'RESET LAW') {
-      alert('Ketik RESET LAW untuk mengkonfirmasi.');
+      toast.show({ message: 'Ketik RESET LAW untuk mengkonfirmasi.', type: 'error' });
       return;
     }
     setActionLoading(true);
@@ -58,18 +59,18 @@ export default function SkillsClient() {
       const resetItem = inv.find((i: any) => i.name === 'Teratai Kelahiran Kembali');
 
       if (!resetItem) {
-        alert('Kamu tidak memiliki item Teratai Kelahiran Kembali.');
+        toast.show({ message: 'Kamu tidak memiliki item Teratai Kelahiran Kembali.', type: 'error' });
         setActionLoading(false);
         return;
       }
 
       await api.post('/player/laws/reset', { itemName: resetItem.name });
-      alert('Berhasil mereset Hukum Alam.');
+      toast.show({ message: 'Berhasil mereset Hukum Alam.', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
       setIsResetModalOpen(false);
       setResetConfirmation('');
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal mereset Hukum Alam.');
+      toast.show({ message: err.response?.data?.error || 'Gagal mereset Hukum Alam.', type: 'error' });
     } finally {
       setActionLoading(false);
     }

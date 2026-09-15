@@ -63,30 +63,33 @@ export default function Navbar() {
   };
 
   const navLinks = {
-    utama: [
-      { href: "/", label: "Home" },
-      { href: "/profile", label: "Karakter" },
-      { href: "/cultivation", label: "Kultivasi" },
-      { href: "/skills", label: "Kitab & Hukum" },
-      { href: "/arena", label: "Arena Duel" },
-      { href: "/explore", label: "Eksplorasi" },
-      { href: "/inventory", label: "Inventory" },
-      { href: "/pet", label: "Pet" },
-      { href: "/assets", label: "Assets" },
-      { href: "/professions", label: "Profesi (Crafting)" },
-      { href: "/marriage", label: "Pernikahan" },
+    kultivasi: [
+      { href: "/profile", label: "Profil Karakter" },
+      { href: "/cultivation", label: "Kultivasi & Ranah" },
+      { href: "/skills", label: "Kitab & Jurus" },
     ],
-    ekonomi: [
-      { href: "/market", label: "Pasar" },
-      { href: "/worker", label: "Pekerja" },
+    dunia: [
+      { href: "/world", label: "Peta Dunia & Grid" },
+      { href: "/explore", label: "Ekspedisi Luar" },
+      { href: "/arena", label: "Arena Pertarungan" },
     ],
-    komunitas: [
-      { href: "/sect", label: "Sekte" },
-      { href: "/leaderboard", label: "Leaderboard" },
-      { href: "/tournament", label: "Turnamen" },
+    aset: [
+      { href: "/inventory", label: "Tas / Inventory" },
+      { href: "/assets", label: "Lahan & Properti" },
+      { href: "/professions", label: "Profesi & Crafting" },
+      { href: "/pet", label: "Pet Spiritual" },
+      { href: "/marriage", label: "Pasangan Taois" },
+    ],
+    sosial: [
+      { href: "/market", label: "Pasar Lelang" },
+      { href: "/barter", label: "Barter Langsung" },
+      { href: "/sect", label: "Balai Sekte" },
+      { href: "/worker", label: "Pekerja Tambang" },
+      { href: "/leaderboard", label: "Peringkat Dunia" },
+      { href: "/tournament", label: "Turnamen Jianghu" },
     ],
     referensi: [
-      { href: "/almanack", label: "Almanack" }
+      { href: "/almanack", label: "Almanack & Lore" }
     ]
   };
 
@@ -102,25 +105,22 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
-          {navLinks.utama.map(link => (
-            <Link key={link.href} href={link.href} id={`nav-${link.href.replace('/', '') || 'profile'}`} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
-              {link.label}
-            </Link>
-          ))}
+          <Link href="/" className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors font-medium">
+            Beranda
+          </Link>
 
-          {/* Dropdown Ekonomi */}
+          {/* Dropdown Kultivasi */}
           <div className="relative">
             <button
-              id="nav-ekonomi"
-              onClick={() => toggleDropdown('ekonomi')}
+              onClick={() => toggleDropdown('kultivasi')}
               className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
             >
-              Ekonomi <ChevronDown className="w-4 h-4" />
+              Karakter <ChevronDown className="w-3.5 h-3.5 opacity-70" />
             </button>
-            {openDropdown === 'ekonomi' && (
-              <div className="absolute top-full left-0 mt-1 w-40 bg-[#111] border border-[#333] rounded-md shadow-xl py-1 z-50">
-                {navLinks.ekonomi.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880]">
+            {openDropdown === 'kultivasi' && (
+              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                {navLinks.kultivasi.map(link => (
+                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
                     {link.label}
                   </Link>
                 ))}
@@ -128,18 +128,56 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Dropdown Komunitas */}
+          {/* Dropdown Dunia */}
           <div className="relative">
             <button
-              onClick={() => toggleDropdown('komunitas')}
+              onClick={() => toggleDropdown('dunia')}
               className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
             >
-              Komunitas <ChevronDown className="w-4 h-4" />
+              Dunia <ChevronDown className="w-3.5 h-3.5 opacity-70" />
             </button>
-            {openDropdown === 'komunitas' && (
-              <div className="absolute top-full left-0 mt-1 w-40 bg-[#111] border border-[#333] rounded-md shadow-xl py-1 z-50">
-                {navLinks.komunitas.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880]">
+            {openDropdown === 'dunia' && (
+              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                {navLinks.dunia.map(link => (
+                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Dropdown Aset & Tas */}
+          <div className="relative">
+            <button
+              onClick={() => toggleDropdown('aset')}
+              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+            >
+              Aset & Tas <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+            </button>
+            {openDropdown === 'aset' && (
+              <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                {navLinks.aset.map(link => (
+                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Dropdown Pasar & Aliansi */}
+          <div className="relative">
+            <button
+              onClick={() => toggleDropdown('sosial')}
+              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+            >
+              Pasar & Sekte <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+            </button>
+            {openDropdown === 'sosial' && (
+              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                {navLinks.sosial.map(link => (
+                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
                     {link.label}
                   </Link>
                 ))}
@@ -215,56 +253,80 @@ export default function Navbar() {
             </div>
           )}
 
-          <div className="space-y-1 mb-6">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">Utama</div>
-            {navLinks.utama.map(link => (
+          <div className="space-y-1 mb-4">
+            <Link
+              href="/"
+              onClick={closeMobileMenu}
+              className="block px-3 py-2.5 text-base font-medium text-amber-200 hover:bg-[#c5a880]/10 rounded-md"
+            >
+              Beranda
+            </Link>
+          </div>
+
+          <div className="space-y-1 mb-4">
+            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Karakter & Ranah</div>
+            {navLinks.kultivasi.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={closeMobileMenu}
-                className="block px-3 py-3 text-base text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
+                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="space-y-1 mb-6">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">Ekonomi</div>
-            {navLinks.ekonomi.map(link => (
+          <div className="space-y-1 mb-4">
+            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Dunia Jianghu</div>
+            {navLinks.dunia.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={closeMobileMenu}
-                className="block px-3 py-3 text-base text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
+                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="space-y-1 mb-6">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">Komunitas</div>
-            {navLinks.komunitas.map(link => (
+          <div className="space-y-1 mb-4">
+            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Aset & Tas</div>
+            {navLinks.aset.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={closeMobileMenu}
-                className="block px-3 py-3 text-base text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
+                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="space-y-1 mb-6">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">Referensi</div>
+          <div className="space-y-1 mb-4">
+            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Pasar & Sekte</div>
+            {navLinks.sosial.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMobileMenu}
+                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="space-y-1 mb-4">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 px-3">Referensi</div>
             {navLinks.referensi.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={closeMobileMenu}
-                className="block px-3 py-3 text-base text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
+                className="block px-3 py-2 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
               >
                 {link.label}
               </Link>
