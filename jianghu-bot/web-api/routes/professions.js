@@ -588,16 +588,19 @@ router.post('/complete', verifyToken, async (req, res) => {
              // Failed craft -> Give Junk
              const junkItem = await Item.findOne({ name: 'Sampah', guildId: player.guildId });
              if (junkItem) {
-                 const existingJunkIndex = player.inventory.findIndex(i => i.itemId._id.toString() === junkItem._id.toString());
-                 if (existingJunkIndex !== -1) {
+                 const invCheckJunk = await canAddToInventory(player, [{ itemDoc: junkItem, quantity: 1 }]);
+                 if (invCheckJunk.ok) {
+                     const existingJunkIndex = player.inventory.findIndex(i => i.itemId._id.toString() === junkItem._id.toString());
+                     if (existingJunkIndex !== -1) {
                      player.inventory[existingJunkIndex].quantity += 1;
-                 } else {
-                     player.inventory.push({
-                         itemId: junkItem._id,
-                         quantity: 1,
-                         creatorName: 'Sistem',
-                         qualityMultiplier: 1.0
-                     });
+                     } else {
+                         player.inventory.push({
+                             itemId: junkItem._id,
+                             quantity: 1,
+                             creatorName: 'Sistem',
+                             qualityMultiplier: 1.0
+                         });
+                     }
                  }
              }
         }
