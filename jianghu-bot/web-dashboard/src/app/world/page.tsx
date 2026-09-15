@@ -365,9 +365,9 @@ export default function WorldPage() {
       ) : null}
 
       {/* Main Map Area */}
-      <div className="w-full relative transition-opacity duration-300 mb-6">
+      <div className="w-full relative transition-all duration-500 ease-in-out mb-6" style={{ perspective: '1000px' }}>
         {mapView === 'world' ? (
-          <div className="animate-in fade-in zoom-in-95 duration-300">
+          <div className="animate-in fade-in zoom-in-90 slide-in-from-bottom-4 duration-500 ease-out">
             <WorldMapView
               onSelectRegion={(regionSlug: string) => {
                 setSelectedRegionSlug(regionSlug);
@@ -376,7 +376,7 @@ export default function WorldPage() {
             />
           </div>
         ) : (
-          <div className="animate-in fade-in zoom-in-95 duration-300">
+          <div className="animate-in fade-in zoom-in-110 slide-in-from-top-4 duration-500 ease-out">
             {selectedRegionSlug && (
               <RegionMapView
                 regionSlug={selectedRegionSlug}
