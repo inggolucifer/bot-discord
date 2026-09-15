@@ -12,6 +12,10 @@ import SectExamModal from './SectExamModal';
 export default function WorldPage() {
   const [locationData, setLocationData] = useState<any>(null);
   const [travelStatus, setTravelStatus] = useState<any>(null);
+  const [restData, setRestData] = useState<any>(null);
+  const [currentStamina, setCurrentStamina] = useState<number>(0);
+  const [maxStamina, setMaxStamina] = useState<number>(100);
+  const [restHours, setRestHours] = useState<number>(1);
   const [settlements, setSettlements] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -30,7 +34,8 @@ export default function WorldPage() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchTravelStatus, 5000);
+    const interval = setInterval(() => { fetchTravelStatus(); fetchRestStatus(); }, 5000);
+    fetchRestStatus();
     return () => clearInterval(interval);
   }, []);
 
@@ -61,6 +66,8 @@ export default function WorldPage() {
       setLocationData(locRes.data);
       if (travelRes.data.travel) {
         setTravelStatus(travelRes.data.travel);
+        if (travelRes.data.currentStamina !== undefined) setCurrentStamina(travelRes.data.currentStamina);
+        if (travelRes.data.maxStamina !== undefined) setMaxStamina(travelRes.data.maxStamina);
       }
       setSettlements(setRes.data.settlements || []);
       if (climateRes.data) {
@@ -78,6 +85,8 @@ export default function WorldPage() {
       const res = await api.get('/world/travel/status');
       if (res.data.travel) {
         setTravelStatus(res.data.travel);
+        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
       } else {
         setTravelStatus(null);
       }
@@ -111,6 +120,42 @@ export default function WorldPage() {
     }
   };
 
+
+  const fetchRestStatus = async () => {
+    try {
+      const res = await api.get("/world/rest/status");
+      setRestData(res.data.rest);
+      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+    } catch (err) {
+      console.error("Failed to fetch rest status", err);
+    }
+  };
+
+  const handleStartRest = async (mode: "tent" | "open") => {
+    try {
+      const res = await api.post("/world/rest/start", { mode, hours: restHours });
+      setRestData(res.data.rest);
+      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      setMessage("Mulai beristirahat.");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Gagal mulai istirahat.");
+    }
+  };
+
+  const handleCancelRest = async () => {
+    try {
+      const res = await api.post("/world/rest/cancel");
+      setRestData(res.data.rest);
+      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      setMessage("Berhenti beristirahat.");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Gagal membatalkan istirahat.");
+    }
+  };
+
   const handleTalkToNpc = (npc: any) => {
       setSelectedNpc(npc);
   };
@@ -124,6 +169,8 @@ export default function WorldPage() {
         useEscortLetter: useEscort
       });
       setTravelStatus(res.data.travel);
+        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
       setMessage('Perjalanan dimulai!');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal memulai perjalanan');
@@ -142,12 +189,41 @@ export default function WorldPage() {
       {error && <div className="bg-red-900/50 border border-red-500/50 text-red-200 p-4 rounded-lg">{error}</div>}
       {message && <div className="bg-green-900/50 border border-green-500/50 text-green-200 p-4 rounded-lg">{message}</div>}
 
+
+      {/* Stamina & Rest Status */}
+      <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 mb-6">
+          <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-300">Stamina</span>
+              <span className="text-sm font-medium text-yellow-400">{Math.floor(currentStamina)} / {maxStamina}</span>
+          </div>
+          <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+              <div className="bg-yellow-400 h-2.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100))}%` }}></div>
+          </div>
+
+          {restData && restData.status === "resting" ? (
+              <div className="bg-blue-900/30 border border-blue-800/50 rounded p-3 text-sm text-blue-200">
+                  <p className="mb-2">Sedang beristirahat ({restData.mode === "tent" ? "Tenda" : "Terbuka"}). Selesai: {new Date(restData.endsAt).toLocaleTimeString()}</p>
+                  <Button size="sm" variant="destructive" onClick={handleCancelRest}>Berhenti Istirahat</Button>
+              </div>
+          ) : (
+              (!travelStatus || travelStatus.status !== "traveling") && (
+                 <div className="flex items-center gap-4">
+                     <input type="number" min="1" max="8" value={restHours} onChange={(e) => setRestHours(parseInt(e.target.value) || 1)} className="w-16 bg-gray-900 border border-gray-700 text-white rounded p-1 text-center" />
+                     <span className="text-sm text-gray-400">Jam</span>
+                     <Button size="sm" variant="outline" onClick={() => handleStartRest("open")}>Istirahat Terbuka</Button>
+                     <Button size="sm" variant="outline" onClick={() => handleStartRest("tent")} className="text-yellow-500 border-yellow-700/50 hover:bg-yellow-900/20">Gunakan Tenda</Button>
+                 </div>
+              )
+          )}
+      </div>
+
       {/* Travel Status Banner */}
       {travelStatus && travelStatus.status === 'traveling' && (
         <div className="bg-[#1a202c]/80 border border-blue-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
           <h2 className="text-xl font-serif font-bold text-blue-400 mb-2">Sedang Dalam Perjalanan</h2>
           <div className="text-gray-300 space-y-1">
             <p><span className="text-gray-500">Tujuan:</span> {travelStatus.toLocation.settlementName}</p>
+            {travelStatus.exhausted && <p className="text-yellow-400 mb-2 mt-2">Pemain kelelahan! Waktu tempuh dan peluang diserang bertambah.</p>}
             <p><span className="text-gray-500">Tiba:</span> {new Date(travelStatus.arrivalTime).toLocaleString()}</p>
           </div>
         </div>
@@ -164,6 +240,8 @@ export default function WorldPage() {
                 try {
                   const res = await api.post('/world/travel/resolve-ambush', { choice: 'fight' });
                   setTravelStatus(res.data.travel);
+        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
                   if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
                   fetchData(); // Refresh to update currency / quest log
                 } catch (e: any) {
@@ -179,6 +257,8 @@ export default function WorldPage() {
                 try {
                   const res = await api.post('/world/travel/resolve-ambush', { choice: 'surrender' });
                   setTravelStatus(res.data.travel);
+        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
                   if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
                   fetchData(); // Refresh to update currency
                 } catch (e: any) {
