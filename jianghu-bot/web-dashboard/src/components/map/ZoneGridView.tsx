@@ -428,7 +428,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
                     width={VIEWPORT_WIDTH_TILES * TILE_SIZE}
                     height={VIEWPORT_HEIGHT_TILES * TILE_SIZE}
                     onClick={handleCanvasClick}
-                    className="cursor-pointer border border-[#1a2333] rounded-lg shadow-2xl"
+                    className="cursor-pointer border border-[#1a2333] rounded-lg shadow-2xl max-w-full max-h-full object-contain"
                 />
             </div>
 
