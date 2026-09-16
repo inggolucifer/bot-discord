@@ -335,7 +335,13 @@ export default function TaleOfImmortalCanvas({
             const bw = currentTileSize * 0.7;
             const bh = currentTileSize * 0.7;
 
-            if (tile.isUnderConstruction) {
+            const isCurrentlyBuilding = Boolean(
+              tile.isUnderConstruction && 
+              tile.constructionCompleteAt &&
+              new Date(tile.constructionCompleteAt).getTime() > Date.now()
+            );
+
+            if (isCurrentlyBuilding) {
               // Scaffolding kayu perancah
               ctx.strokeStyle = '#d97706';
               ctx.lineWidth = Math.max(1, 2 * camera.zoom);
@@ -350,19 +356,84 @@ export default function TaleOfImmortalCanvas({
               ctx.textAlign = 'center';
               ctx.fillText('🔨 Membangun', sx + currentTileSize / 2, sy + currentTileSize * 0.85);
             } else {
+              // Bangunan Selesai (Completed Building)
               let assetImg = (loadedImages.assets as any)?.[tile.buildingName || ''];
               if (assetImg) {
                 ctx.drawImage(assetImg, bx, by, bw, bh);
               } else {
-                ctx.fillStyle = '#78350f';
-                ctx.fillRect(bx, by + bh * 0.3, bw, bh * 0.7);
+                // Gambar Arsitektur Paviliun Wuxia Oriental Artistik
+                // 1. Fondasi batu
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(bx - bw * 0.05, by + bh * 0.7, bw * 1.1, bh * 0.3);
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = Math.max(1, 1 * camera.zoom);
+                ctx.strokeRect(bx - bw * 0.05, by + bh * 0.7, bw * 1.1, bh * 0.3);
+
+                // 2. Dinding kayu merah/vermilion
+                ctx.fillStyle = '#7f1d1d';
+                ctx.fillRect(bx + bw * 0.1, by + bh * 0.32, bw * 0.8, bh * 0.42);
+
+                // 3. Jendela lentera emas bercahaya
+                ctx.fillStyle = '#fef08a';
+                ctx.fillRect(bx + bw * 0.35, by + bh * 0.44, bw * 0.3, bh * 0.22);
+                ctx.strokeStyle = '#b45309';
+                ctx.strokeRect(bx + bw * 0.35, by + bh * 0.44, bw * 0.3, bh * 0.22);
+
+                // 4. Atap Genteng Bersayap (Swept Pagoda Eaves)
                 ctx.fillStyle = '#b45309';
                 ctx.beginPath();
-                ctx.moveTo(bx - 2, by + bh * 0.3);
-                ctx.lineTo(bx + bw / 2, by);
-                ctx.lineTo(bx + bw + 2, by + bh * 0.3);
+                ctx.moveTo(bx - bw * 0.15, by + bh * 0.35);
+                ctx.quadraticCurveTo(bx + bw * 0.1, by + bh * 0.18, bx + bw * 0.5, by + bh * 0.02);
+                ctx.quadraticCurveTo(bx + bw * 0.9, by + bh * 0.18, bx + bw * 1.15, by + bh * 0.35);
+                ctx.lineTo(bx + bw * 0.95, by + bh * 0.35);
+                ctx.lineTo(bx + bw * 0.5, by + bh * 0.15);
+                ctx.lineTo(bx + bw * 0.05, by + bh * 0.35);
+                ctx.closePath();
                 ctx.fill();
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = Math.max(1, 1.5 * camera.zoom);
+                ctx.stroke();
+
+                // 5. Ikon Profesi / Fasilitas
+                const n = (tile.buildingName || '').toLowerCase();
+                const t = (tile.buildingType || '').toLowerCase();
+                let bIcon = '🏛️';
+                if (n.includes('tempa') || n.includes('bengkel') || n.includes('besi') || t === 'blacksmith') bIcon = '⚒️';
+                else if (n.includes('rumah') || n.includes('kediaman') || n.includes('gubuk') || t === 'residence') bIcon = '🏡';
+                else if (n.includes('obat') || n.includes('apotek') || n.includes('alkimia') || n.includes('kuali')) bIcon = '🏺';
+                else if (n.includes('dojo') || n.includes('perguruan') || n.includes('latihan') || t === 'dojo') bIcon = '🥋';
+                else if (n.includes('dapur') || n.includes('masak') || n.includes('makan')) bIcon = '🍲';
+                else if (n.includes('padi') || n.includes('gandum') || n.includes('lahan') || n.includes('kebun') || t === 'farm_barn') bIcon = '🌾';
+                else if (n.includes('tambang') || n.includes('batu')) bIcon = '⛏️';
+                else if (n.includes('kayu') || n.includes('pemotongan')) bIcon = '🪓';
+                else if (n.includes('ikan') || n.includes('pemancingan') || n.includes('tambak') || t === 'fish_pond') bIcon = '🐟';
+                else if (n.includes('toko') || n.includes('kios') || n.includes('warung') || t === 'shop') bIcon = '🏪';
+
+                ctx.font = `${Math.max(10, 13 * camera.zoom)}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(bIcon, sx + currentTileSize / 2, by + bh * 0.6);
               }
+
+              // Label Nama Bangunan Selesai
+              const bLabel = tile.buildingName || 'Bangunan';
+              ctx.font = `bold ${Math.max(7, 8.5 * camera.zoom)}px sans-serif`;
+              ctx.textAlign = 'center';
+              const textMetrics = ctx.measureText(bLabel);
+              const textW = textMetrics.width;
+              const pillW = textW + 8 * camera.zoom;
+              const pillH = 11 * camera.zoom;
+              const pillX = sx + (currentTileSize - pillW) / 2;
+              const pillY = sy + currentTileSize * 0.88 - pillH;
+
+              ctx.fillStyle = 'rgba(10, 14, 23, 0.85)';
+              ctx.fillRect(pillX, pillY, pillW, pillH);
+              ctx.strokeStyle = '#d97706';
+              ctx.lineWidth = 1;
+              ctx.strokeRect(pillX, pillY, pillW, pillH);
+
+              ctx.fillStyle = '#fef08a';
+              ctx.fillText(bLabel, sx + currentTileSize / 2, pillY + pillH - 2.5 * camera.zoom);
+
               // Mini HP bar
               const hpPercent = Math.max(0, Math.min(1, (tile.assetHp ?? 100) / (tile.assetMaxHp ?? 100)));
               ctx.fillStyle = 'rgba(0,0,0,0.6)';

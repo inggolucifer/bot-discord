@@ -17,7 +17,9 @@ import {
   Gift,
   Swords,
   Sparkles,
-  ShieldAlert
+  ShieldAlert,
+  Coins,
+  Loader2
 } from 'lucide-react';
 
 interface SettlementPanoramaViewProps {
@@ -52,6 +54,45 @@ export default function SettlementPanoramaView({
     };
     fetchSettlement();
   }, [settlementName]);
+
+  const [realShopItems, setRealShopItems] = useState<any[]>([]);
+  const [shopLoading, setShopLoading] = useState<boolean>(false);
+  const [buyingId, setBuyingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedBuilding?.id === 'market') {
+      const fetchShop = async () => {
+        try {
+          setShopLoading(true);
+          const res = await api.get('/market/shop');
+          if (res.data?.success && Array.isArray(res.data?.data)) {
+            setRealShopItems(res.data.data);
+          }
+        } catch (e: any) {
+          console.warn('Gagal memuat barang toko MongoDB:', e.message);
+        } finally {
+          setShopLoading(false);
+        }
+      };
+      fetchShop();
+    }
+  }, [selectedBuilding]);
+
+  const handleBuyShopItem = async (shopItem: any) => {
+    try {
+      setBuyingId(shopItem.id);
+      const res = await api.post('/market/shop/buy', { shopId: shopItem.id, quantity: 1 });
+      if (res.data?.success || res.status === 200) {
+        showNotice(`🎉 Berhasil membeli 1x ${shopItem.name} seharga ${shopItem.price} ${shopItem.currency || 'Perak'}!`);
+      } else {
+        showNotice(`❌ ${res.data?.error || 'Gagal membeli barang.'}`);
+      }
+    } catch (err: any) {
+      showNotice(`❌ ${err.response?.data?.error || 'Gagal membeli barang toko.'}`);
+    } finally {
+      setBuyingId(null);
+    }
+  };
 
   const showNotice = (msg: string) => {
     setActionNotice(msg);
@@ -216,30 +257,47 @@ export default function SettlementPanoramaView({
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               {selectedBuilding.id === 'market' && (
                 <div className="space-y-2 text-xs">
-                  <div className="text-amber-300 font-semibold mb-1">Barang Dagangan Toko Spiritual:</div>
-                  {[
-                    { name: 'Pil Pengumpul Qi', price: '10 Perak', effect: 'Pulihkan 30 Poin Qi', icon: '⚗️' },
-                    { name: 'Ransum Perjalanan Kering', price: '5 Perak', effect: 'Pulihkan 25 Poin Stamina', icon: '🍞' },
-                    { name: 'Umpan Cacing Tanah', price: '2 Perak', effect: 'Bahan untuk memancing di tambak/sungai', icon: '🪱' },
-                    { name: 'Jimat Pelindung Miasma', price: '15 Perak', effect: 'Tahan racun kabur rawa selama 2 jam', icon: '📜' },
-                    { name: 'Batu Api Tempa', price: '8 Perak', effect: 'Material penting penempaan senjata', icon: '🔥' }
-                  ].map((item, idx) => (
-                    <div key={idx} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{item.icon}</span>
-                        <div>
-                          <div className="font-semibold text-gray-200">{item.name}</div>
-                          <div className="text-[10px] text-gray-400">{item.effect}</div>
+                  <div className="flex items-center justify-between text-amber-300 font-semibold mb-1">
+                    <span>Barang Dagangan Toko Spiritual (MongoDB):</span>
+                    {shopLoading && <span className="text-gray-400 text-[10px] flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> Memuat...</span>}
+                  </div>
+
+                  {shopLoading ? (
+                    <div className="py-6 text-center text-gray-500 italic text-xs">Memuat katalog toko resmi dari database...</div>
+                  ) : realShopItems.length === 0 ? (
+                    <div className="py-6 text-center text-gray-500 italic text-xs">Tidak ada barang yang dijual saat ini.</div>
+                  ) : (
+                    realShopItems.map((item) => (
+                      <div key={item.id} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60 transition-all">
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                          <span className="text-lg flex-shrink-0">{item.emoji || '📦'}</span>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-gray-200 truncate flex items-center gap-1.5">
+                              <span>{item.name}</span>
+                              <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/60 font-mono">
+                                {item.rank || item.type || 'Item'}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-gray-400">
+                              Stok: {item.stock === -1 ? 'Tak Terbatas' : `${item.stock} unit`}
+                            </div>
+                          </div>
                         </div>
+                        <button
+                          onClick={() => handleBuyShopItem(item)}
+                          disabled={buyingId === item.id}
+                          className="px-3 py-1 bg-gradient-to-r from-amber-800 to-amber-700 hover:from-amber-700 hover:to-amber-600 text-amber-100 rounded text-[11px] font-serif font-bold transition-all ml-2 flex-shrink-0 disabled:opacity-50 flex items-center gap-1 shadow"
+                        >
+                          {buyingId === item.id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Coins className="w-3 h-3 text-amber-300" />
+                          )}
+                          <span>Beli ({item.price} {item.currency || 'Perak'})</span>
+                        </button>
                       </div>
-                      <button
-                        onClick={() => showNotice(`Berhasil membeli 1x ${item.name} seharga ${item.price}!`)}
-                        className="px-3 py-1 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded text-[11px] font-serif font-bold transition-all"
-                      >
-                        Beli ({item.price})
-                      </button>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               )}
 

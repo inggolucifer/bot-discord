@@ -46,6 +46,7 @@ interface GridTileInspectorCardProps {
     ownedPlotsCount: number;
     nextPrice?: LandPriceInfo;
   };
+  onConstructionFinished?: () => void;
   onClose: () => void;
 }
 
@@ -68,6 +69,7 @@ export default function GridTileInspectorCard({
   onHarvestCrop,
   onSearchArea,
   playerLandStats,
+  onConstructionFinished,
   onClose
 }: GridTileInspectorCardProps) {
   const dist = Math.max(Math.abs(playerPos.x - tile.tileX), Math.abs(playerPos.y - tile.tileY));
@@ -76,9 +78,16 @@ export default function GridTileInspectorCard({
 
   const currentLandPrice = playerLandStats?.nextPrice || getLandPriceForPlayer(playerLandStats?.ownedPlotsCount || 0);
 
-  // Real-time countdown timer jika sedang dibangun
+  // Status timer konstruksi jika petak sedang dibangun
   const [timeLeft, setTimeLeft] = useState<string>('');
   const [progressPercent, setProgressPercent] = useState<number>(45);
+  const [isBuildingActive, setIsBuildingActive] = useState<boolean>(() => {
+    return Boolean(
+      tile.isUnderConstruction && 
+      tile.constructionCompleteAt && 
+      new Date(tile.constructionCompleteAt).getTime() > Date.now()
+    );
+  });
 
   useEffect(() => {
     if (!tile.isUnderConstruction || !tile.constructionCompleteAt) return;
@@ -88,7 +97,11 @@ export default function GridTileInspectorCard({
       if (diff <= 0) {
         setTimeLeft('Selesai Dibangun!');
         setProgressPercent(100);
+        setIsBuildingActive(false);
+        tile.isUnderConstruction = false;
+        onConstructionFinished?.();
       } else {
+        setIsBuildingActive(true);
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const mins = Math.floor((diff / (1000 * 60)) % 60);
         const secs = Math.floor((diff / 1000) % 60);
@@ -179,7 +192,7 @@ export default function GridTileInspectorCard({
           <div className="bg-[#121926] border border-amber-700/50 rounded-lg p-3 space-y-2.5">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-lg bg-[#0b0e14] border border-amber-500/40 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-inner">
-                {tile.isUnderConstruction ? (
+                {isBuildingActive ? (
                   <Hammer className="w-6 h-6 text-amber-400 animate-bounce" />
                 ) : assetImage ? (
                   <img src={assetImage} alt={assetName || 'Aset'} className="w-full h-full object-cover" />
@@ -202,7 +215,7 @@ export default function GridTileInspectorCard({
             </div>
 
             {/* Countdown Jika Sedang Dibangun */}
-            {tile.isUnderConstruction ? (
+            {isBuildingActive ? (
               <div className="bg-black/60 p-2 rounded border border-amber-600/40 space-y-1.5">
                 <div className="flex justify-between items-center text-[10px]">
                   <span className="text-amber-300 font-semibold flex items-center gap-1">
@@ -361,12 +374,12 @@ export default function GridTileInspectorCard({
           {(tile.buildingName || tile.isDoor || tile.propertyStructureId) && onEnterBuilding && (
             <button
               onClick={() => onEnterBuilding(tile)}
-              disabled={!isAdjacentOrOn || tile.isUnderConstruction}
+              disabled={!isAdjacentOrOn || isBuildingActive}
               className="w-full py-2 bg-gradient-to-r from-teal-800 to-teal-700 hover:from-teal-700 hover:to-teal-600 text-white font-serif font-bold rounded-lg shadow-md border border-teal-500/60 flex items-center justify-center gap-2 transition-all active:scale-98 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <DoorOpen className="w-3.5 h-3.5 text-teal-300" />
               <span>
-                {tile.isUnderConstruction
+                {isBuildingActive
                   ? 'Sedang Dibangun (Belum Bisa Masuk)'
                   : isAdjacentOrOn
                   ? `Masuk ke ${tile.buildingName || 'Bangunan'}`
