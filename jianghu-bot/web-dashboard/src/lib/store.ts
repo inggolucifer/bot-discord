@@ -91,7 +91,7 @@ interface UIState {
 }
 
 export const useUIStore = create<UIState>((set) => ({
-  activeModal: 'dashboard', // Default shows the dashboard
+  activeModal: null, // Default shows no modal (hidden)
   setActiveModal: (modal) => set({ activeModal: modal }),
   closeModal: () => set({ activeModal: null }),
   isMapFullscreen: true,
