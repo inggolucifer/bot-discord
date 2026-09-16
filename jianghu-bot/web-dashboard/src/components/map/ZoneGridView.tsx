@@ -68,13 +68,16 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
 
     const fetchZoneData = async () => {
         try {
-            const res = await api.get(`/world/zone/${zoneId}`);
+            const activeZone = zoneId || 'central_plains_bamboo_forest';
+            const res = await api.get(`/world/zone/${activeZone}`);
             if (res.data.config) setZoneConfig(res.data.config);
             if (res.data.tiles) setTiles(res.data.tiles);
             if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
+            setError(null);
             setLoading(false);
         } catch (err: any) {
-            setError(err.response?.data?.error || 'Gagal memuat zona');
+            console.error('[ZoneGridView] Error fetching zone:', err);
+            setError(err.response?.data?.error || err.message || 'Gagal memuat zona');
             setLoading(false);
         }
     };
@@ -367,8 +370,19 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
         }
     };
 
-    if (loading) return <div className="w-full h-96 flex items-center justify-center text-gray-400">Memuat Zona...</div>;
-    if (error) return <div className="w-full h-96 flex items-center justify-center text-red-500">{error}</div>;
+    if (error) {
+        return (
+            <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
+                <span className="text-red-400 font-medium text-sm max-w-md">{error}</span>
+                <button
+                    onClick={() => { setError(null); setLoading(true); fetchZoneData(); }}
+                    className="px-4 py-1.5 bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-600/50 rounded-lg text-xs font-semibold shadow-md transition-colors"
+                >
+                    Coba Muat Ulang
+                </button>
+            </div>
+        );
+    }
 
     // Jika sedang berada di dalam interior properti
     if (interiorData) {
