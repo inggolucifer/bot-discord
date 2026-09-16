@@ -12,12 +12,20 @@ function simulateBattle(challenger, opponent, options = {}) {
     let p1EquippedWeapon = null;
     if (challenger.inventory && challenger.equipment?.weapon) {
         const wId = challenger.equipment.weapon.toString();
-        const invW = challenger.inventory.find(i => (i._id && i._id.toString() === wId) || (i.id && i.id.toString() === wId));
+        const invW = challenger.inventory.find(i => (i._id && i._id.toString() === wId) || (i.id && i.id.toString() === wId) || (i.itemId && i.itemId._id && i.itemId._id.toString() === wId));
+        if (invW && invW.itemId) {
+            p1EquippedWeapon = invW.itemId;
+        }
+    } else if (challenger.inventory) {
+        const invW = challenger.inventory.find(i => i.isEquipped && (i.itemId?.category === 'weapon' || i.itemId?.type === 'weapon'));
         if (invW && invW.itemId) {
             p1EquippedWeapon = invW.itemId;
         }
     }
-    const p1WeaponDiscipline = resolveWeaponDiscipline(p1EquippedWeapon);
+
+    const hasP1Weapon = !!(p1EquippedWeapon && typeof p1EquippedWeapon === 'object' && p1EquippedWeapon.name);
+    // Jika tidak ada weapon atau bukan weapon valid, disiplin murni adalah fist (tinju tangan kosong)
+    const p1WeaponDiscipline = hasP1Weapon ? resolveWeaponDiscipline(p1EquippedWeapon) : 'fist';
 
     const p1StatsRaw = getComputedStats(challenger, challenger.laws, challenger.manuals);
     // Opponents may not have currentHp saved
@@ -43,18 +51,36 @@ function simulateBattle(challenger, opponent, options = {}) {
     let round = 1;
     let combatLogs = [];
 
-    const p1Skills = (challenger.manuals || []).filter(m => m?.manualId).map(m => ({
-        name: m.manualId?.name || 'Jurus Pendekar',
-        type: m.manualId?.effectType || 'damage',
-        value: m.manualId?.effectValue || 1.2,
-        triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5
-    }));
+    // Filter skill agar jurus senjata (pedang, golok, tongkat, senjata rahasia) HANYA bisa digunakan jika senjata terkait sedang di-equip!
+    const isSkillUsable = (manualDoc, weaponDisc, hasWeapon) => {
+        const reqType = manualDoc?.requiredSkillType;
+        if (!reqType) return true;
+        const weaponDisciplines = ['sword', 'saber', 'staff', 'hiddenWeapon'];
+        if (weaponDisciplines.includes(reqType)) {
+            return hasWeapon && weaponDisc === reqType;
+        }
+        return true;
+    };
+
+    const p1Skills = (challenger.manuals || [])
+        .filter(m => m?.manualId && isSkillUsable(m.manualId, p1WeaponDiscipline, hasP1Weapon))
+        .map(m => ({
+            name: m.manualId?.name || 'Jurus Pendekar',
+            type: m.manualId?.effectType || 'damage',
+            value: m.manualId?.effectValue || 1.2,
+            triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5,
+            requiredSkillType: m.manualId?.requiredSkillType || null
+        }));
     const p2Skills = (opponent.manuals || []).filter(m => m?.manualId).map(m => ({
         name: m.manualId?.name || 'Jurus Lawan',
         type: m.manualId?.effectType || 'damage',
         value: m.manualId?.effectValue || 1.2,
-        triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5
+        triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5,
+        requiredSkillType: m.manualId?.requiredSkillType || null
     }));
+
+    const p1UsedSkillTypes = new Set();
+    p1UsedSkillTypes.add(p1WeaponDiscipline);
 
     const getElement = (playerObj) => (playerObj?.laws && playerObj.laws.length > 0 && playerObj.laws[0]?.element && typeof playerObj.laws[0].element === 'string') ? playerObj.laws[0].element.toLowerCase() : 'netral';
     const p1Element = getElement(challenger);
@@ -280,6 +306,10 @@ function simulateBattle(challenger, opponent, options = {}) {
             }
         }
 
+        if (activeSkill && currentAttacker === 1 && activeSkill.requiredSkillType) {
+            p1UsedSkillTypes.add(activeSkill.requiredSkillType);
+        }
+
         let effectiveDefSpd = Math.max(0, defStats.spd - (atkStats.atk * 0.1));
         let baseDodgeChance = effectiveDefSpd / (effectiveDefSpd + 50000);
         let totalDodgeChance = baseDodgeChance + missMultiplier;
@@ -443,9 +473,14 @@ function simulateBattle(challenger, opponent, options = {}) {
         stealingExp = stealSuccess ? 25 : 10;
     }
 
+    // EXP disiplin senjata HANYA diberikan sesuai senjata yang benar-benar dibawa/diequip.
+    // Jika tidak membawa senjata, p1WeaponDiscipline = 'fist' (tinju tangan kosong).
+    // Disiplin sword HANYA diperoleh jika pemain benar-benar membawa/equip pedang!
     const kungfuGains = {
         weaponDiscipline: p1WeaponDiscipline,
         weaponExp: baseCombatExp,
+        weaponItemName: hasP1Weapon ? (p1EquippedWeapon.name || 'Senjata') : null,
+        usedSkills: Array.from(p1UsedSkillTypes),
         stealingExp
     };
 

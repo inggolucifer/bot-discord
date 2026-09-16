@@ -291,8 +291,8 @@ router.post('/claim', authenticateToken, async (req, res) => {
                     systemCultivation: null
                 };
 
-                // Re-populate laws and manuals for player combat stats
-                await player.populate('laws manuals.manualId');
+                // Re-populate laws, manuals, and inventory for accurate weapon discipline resolution
+                await player.populate('laws manuals.manualId inventory.itemId');
 
                 // Simulate Battle
                 const battleResult = simulateBattle(player, opponent, { isPvE: true, allowSteal: true });
@@ -319,6 +319,17 @@ router.post('/claim', authenticateToken, async (req, res) => {
                             opponentRealmIdx: oppRealmIdx,
                             isPvE: true
                         });
+                    }
+                    if (Array.isArray(battleResult.kungfuGains.usedSkills)) {
+                        for (const usedSkill of battleResult.kungfuGains.usedSkills) {
+                            if (usedSkill !== battleResult.kungfuGains.weaponDiscipline && ['finger', 'fist', 'special', 'wineArt'].includes(usedSkill)) {
+                                awardKungfuExp(player, usedSkill, Math.max(5, Math.floor(battleResult.kungfuGains.weaponExp * 0.5)), {
+                                    playerRealmIdx,
+                                    opponentRealmIdx: oppRealmIdx,
+                                    isPvE: true
+                                });
+                            }
+                        }
                     }
                 }
 

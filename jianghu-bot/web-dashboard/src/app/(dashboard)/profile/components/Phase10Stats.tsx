@@ -3,14 +3,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
-import { Loader2, Swords, ShieldCheck, HelpCircle, Dumbbell } from 'lucide-react';
+import { Loader2, Swords, ShieldCheck, HelpCircle } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { KUNGFU_SKILLS_META, getKungfuLevel, getKungfuBonusSummary } from '@/lib/kungfu';
 
 export function Phase10Stats() {
     const queryClient = useQueryClient();
     const [allocatePoints, setAllocatePoints] = useState({ str: 0, agi: 0, sta: 0, pow: 0, int: 0, mor: 0 });
-    const [selectedSparSkill, setSelectedSparSkill] = useState('sword');
 
     const { data: statsData, isLoading } = useQuery({
         queryKey: ['player-stats'],
@@ -32,26 +31,6 @@ export function Phase10Stats() {
         },
         onError: (err: any) => {
             toast.show({ message: err.response?.data?.error || 'Gagal mengalokasikan poin', type: 'error' });
-        }
-    });
-
-    const sparMutation = useMutation({
-        mutationFn: async (skill: string) => {
-            const res = await api.post('/battle/spar', { skill });
-            return res.data;
-        },
-        onSuccess: (data) => {
-            const sparInfo = data.data;
-            const levelUpMsg = sparInfo?.levelUp ? ` 🌟 Naik ke Tingkat ${sparInfo.newSkillLevel}!` : '';
-            toast.show({ 
-                message: `Latihan tanding selesai (+${sparInfo?.expGained} XP ${sparInfo?.skill?.toUpperCase()}).${levelUpMsg} (${sparInfo?.returnTier})`, 
-                type: 'success' 
-            });
-            queryClient.invalidateQueries({ queryKey: ['player-stats'] });
-            queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
-        },
-        onError: (err: any) => {
-            toast.show({ message: err.response?.data?.error || 'Gagal melakukan sparring', type: 'error' });
         }
     });
 
@@ -158,31 +137,12 @@ export function Phase10Stats() {
                             Penguasaan Kungfu & Kemahiran Alat
                         </h3>
                         <p className="text-xs text-slate-400 mt-1">
-                            Kemahiran meningkat bertahap dan berjangka panjang melalui pertempuran nyata memakai senjata/tinju, aksi mencuri, penempaan, serta sparring di sasana.
+                            Kemahiran hanya meningkat secara menantang melalui <strong className="text-amber-300">pertempuran turn-based RPG nyata</strong> menggunakan senjata/alat yang di-equip atau jurus manual terkait. Tanpa membawa/memasang senjata (contoh Pedang), EXP Pedang tidak akan bertambah.
                         </p>
                     </div>
 
-                    {/* Sparing Launcher Widget */}
-                    <div className="flex items-center gap-2 bg-slate-800/90 border border-amber-500/30 p-2 rounded-lg shrink-0">
-                        <select
-                            value={selectedSparSkill}
-                            onChange={(e) => setSelectedSparSkill(e.target.value)}
-                            className="bg-slate-900 text-slate-200 text-xs px-2 py-1.5 rounded border border-slate-700 focus:outline-none"
-                        >
-                            <option value="sword">🗡️ Pedang</option>
-                            <option value="saber">⚔️ Golok</option>
-                            <option value="staff">🥢 Tongkat</option>
-                            <option value="fist">👊 Tinju</option>
-                            <option value="hiddenWeapon">🎯 Senjata Rahasia</option>
-                        </select>
-                        <button
-                            onClick={() => sparMutation.mutate(selectedSparSkill)}
-                            disabled={sparMutation.isPending}
-                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1 shadow disabled:opacity-50"
-                        >
-                            {sparMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Dumbbell size={12} />}
-                            Sparring (10 Stamina)
-                        </button>
+                    <div className="flex items-center gap-2 bg-slate-800/60 border border-slate-700/60 px-3 py-1.5 rounded-lg shrink-0 text-[11px] text-slate-300">
+                        <span className="text-amber-400 font-semibold">⚔️ Turn-Based Combat Only</span>
                     </div>
                 </div>
 
