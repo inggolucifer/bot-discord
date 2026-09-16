@@ -136,6 +136,7 @@ class LandService {
     player.currency = convertFromCopper(newCopperBalance);
     await player.save();
 
+    const priceSilver = Math.floor(priceInfo.priceInCopper / 100);
     const remainingSilverEq = Math.floor(newCopperBalance / 100);
 
     // 5. Catat ke ActivityLog (Audit Trail Anti-Cheat)
@@ -157,9 +158,73 @@ class LandService {
       ok: true,
       plot: claimedPlot,
       pricePaid: priceSilver,
+      priceLabel: priceInfo.label,
       remainingSilver: remainingSilverEq,
-      totalOwnedPlots: ownedCount + 1
+      totalOwnedPlots: ownedPlotsCount + 1
     };
+  }
+
+  /**
+   * Auto-resolusi status konstruksi bangunan yang telah melewati waktu pengerjaan
+   * Mengubah isUnderConstruction -> false, isOccupied -> true, dan aset player -> active
+   */
+  async resolveZoneConstruction(zoneId, guildId) {
+    try {
+      const now = new Date();
+      const query = {
+        zoneId,
+        isUnderConstruction: true,
+        $or: [
+          { constructionCompleteAt: { $lte: now } },
+          { constructionCompleteAt: null }
+        ]
+      };
+      if (guildId) {
+        query.$or.push({ guildId, isUnderConstruction: true, constructionCompleteAt: { $lte: now } });
+      }
+
+      const expiredPlots = await ZoneTile.find(query);
+      if (expiredPlots.length > 0) {
+        for (const plot of expiredPlots) {
+          plot.isUnderConstruction = false;
+          plot.isOccupied = true;
+          if (plot.buildingName) {
+            plot.label = `${plot.buildingName} (${plot.ownerName || 'Pemain'})`;
+          }
+          await plot.save();
+        }
+
+        const Player = require('../models/Player');
+        await Player.updateMany(
+          {
+            'assets.placement.zoneId': zoneId,
+            'assets.status': 'building',
+            $or: [
+              { 'assets.constructionCompleteAt': { $lte: now } },
+              { 'assets.constructionCompleteAt': null }
+            ]
+          },
+          {
+            $set: { 'assets.$[elem].status': 'active' }
+          },
+          {
+            arrayFilters: [
+              {
+                'elem.status': 'building',
+                $or: [
+                  { 'elem.constructionCompleteAt': { $lte: now } },
+                  { 'elem.constructionCompleteAt': null }
+                ]
+              }
+            ]
+          }
+        );
+      }
+      return { resolvedCount: expiredPlots.length };
+    } catch (err) {
+      console.warn('[LAND-SERVICE] resolveZoneConstruction warning:', err.message);
+      return { resolvedCount: 0, error: err.message };
+    }
   }
 }
 

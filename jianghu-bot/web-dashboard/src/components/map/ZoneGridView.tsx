@@ -147,6 +147,32 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
     }
   }, [targetFocusTile, tiles]);
 
+  // Auto-refresh data zona saat ada bangunan yang selesai konstruksi
+  useEffect(() => {
+    const underConstructionTiles = tiles.filter(t => t.isUnderConstruction && t.constructionCompleteAt);
+    if (underConstructionTiles.length === 0) return;
+
+    const now = Date.now();
+    let minWaitMs = Infinity;
+    for (const t of underConstructionTiles) {
+      const finishTime = new Date(t.constructionCompleteAt!).getTime();
+      const diff = finishTime - now;
+      if (diff <= 0) {
+        minWaitMs = 500;
+        break;
+      } else if (diff < minWaitMs) {
+        minWaitMs = diff;
+      }
+    }
+
+    if (minWaitMs !== Infinity && minWaitMs < 3600000) {
+      const timer = setTimeout(() => {
+        fetchZoneData();
+      }, Math.max(1000, minWaitMs + 600));
+      return () => clearTimeout(timer);
+    }
+  }, [tiles]);
+
   const handleToggleBgm = () => {
     if (isBgmOn) {
       sound.stopBgm();
@@ -335,13 +361,14 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   };
 
   // Bangun Aset / Profesi di Tanah Milik
-  const handleStartBuildAsset = async (assetName: string) => {
+  const handleStartBuildAsset = async (assetName: string, assetBlueprintId?: string) => {
     if (!buildModalTile) return;
     try {
       const res = await api.post('/world/zone/build', {
         tileX: buildModalTile.tileX,
         tileY: buildModalTile.tileY,
         assetName: assetName,
+        assetBlueprintId: assetBlueprintId,
         isOpenToPublic: true
       });
       if (res.data?.success) {
@@ -659,6 +686,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
             onHarvestCrop={handleHarvestCrop}
             onSearchArea={handleSearch}
             playerLandStats={playerLandStats || undefined}
+            onConstructionFinished={() => fetchZoneData()}
             onClose={() => {
               setSelectedTile(null);
               setActivePath([]);

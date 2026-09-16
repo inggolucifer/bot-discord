@@ -1292,6 +1292,126 @@ router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
 });
 
 // ==========================================
+// DAFTAR PILIHAN ASET & BANGUNAN ASLI DARI MONGODB
+// ==========================================
+router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId }).lean();
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const Asset = require('../../models/Asset');
+        const Blueprint = require('../../models/Blueprint');
+
+        const [assets, blueprints] = await Promise.all([
+            Asset.find({ buildable: true }).lean(),
+            Blueprint.find({ isActive: true }).lean()
+        ]);
+
+        const inventory = player.inventory || [];
+
+        // Helper untuk mencocokkan stok material pemain dari inventory MongoDB
+        const getPlayerMaterialStock = (itemName, itemId) => {
+            const found = inventory.find(inv => {
+                if (itemId && inv.itemId && String(inv.itemId) === String(itemId)) return true;
+                if (itemName && inv.name && inv.name.toLowerCase().trim() === itemName.toLowerCase().trim()) return true;
+                return false;
+            });
+            return found ? (found.quantity || 0) : 0;
+        };
+
+        const { convertToCopper } = require('../../utils/currencyNormalize');
+        const playerCopper = convertToCopper(player.currency);
+
+        const options = [];
+
+        // 1. Blueprints Asli MongoDB
+        for (const bp of blueprints) {
+            const materials = (bp.requiredMaterials || []).map(m => {
+                const have = getPlayerMaterialStock(m.itemName, m.itemId);
+                return {
+                    itemId: m.itemId ? m.itemId.toString() : null,
+                    itemName: m.itemName,
+                    quantity: m.quantity,
+                    have,
+                    isMet: have >= m.quantity
+                };
+            });
+
+            const costSilver = bp.requiredSilver || 0;
+            const costInCopper = costSilver * 100;
+            const canAffordCurrency = playerCopper >= costInCopper;
+            const canAffordMaterials = materials.length === 0 || materials.every(m => m.isMet);
+
+            options.push({
+                id: bp._id.toString(),
+                refType: 'blueprint',
+                blueprintId: bp.blueprintId,
+                name: bp.name,
+                category: bp.category === 'blacksmith' ? 'profession' : bp.category === 'residence' ? 'residence' : 'production',
+                subCategory: bp.category,
+                desc: bp.description || 'Bangunan cetak biru resmi Jianghu.',
+                costSilver,
+                timeSeconds: bp.buildDurationSeconds || 300,
+                timeMinutes: Math.ceil((bp.buildDurationSeconds || 300) / 60),
+                materials,
+                canBuild: canAffordCurrency && canAffordMaterials
+            });
+        }
+
+        // 2. Assets Asli MongoDB (Buildable)
+        for (const ast of assets) {
+            const materials = (ast.buildRequirements || []).map(m => {
+                const have = getPlayerMaterialStock(m.itemName, m.itemId);
+                return {
+                    itemId: m.itemId ? m.itemId.toString() : null,
+                    itemName: m.itemName,
+                    quantity: m.quantity,
+                    have,
+                    isMet: have >= m.quantity
+                };
+            });
+
+            const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
+            const rate = RATE_TO_COPPER[ast.priceCurrency] || 100;
+            const costInCopper = (ast.basePrice || 0) * rate;
+            const costSilver = Math.floor(costInCopper / 100);
+
+            const canAffordCurrency = playerCopper >= costInCopper;
+            const canAffordMaterials = materials.length === 0 || materials.every(m => m.isMet);
+
+            let category = 'production';
+            if (ast.isCraftingStation) category = 'profession';
+            else if (ast.name.toLowerCase().includes('rumah') || ast.name.toLowerCase().includes('kediaman') || ast.name.toLowerCase().includes('gubuk')) category = 'residence';
+
+            options.push({
+                id: ast._id.toString(),
+                refType: 'asset',
+                name: ast.name,
+                rank: ast.rank || 'Common',
+                category,
+                subCategory: ast.isCraftingStation ? 'crafting_station' : 'production',
+                desc: ast.description || 'Fasilitas aset resmi Jianghu.',
+                costSilver,
+                timeSeconds: (ast.constructionTimeHours || 1) * 3600,
+                timeMinutes: (ast.constructionTimeHours || 1) * 60,
+                materials,
+                canBuild: canAffordCurrency && canAffordMaterials
+            });
+        }
+
+        return res.json({
+            success: true,
+            total: options.length,
+            options
+        });
+    } catch (error) {
+        console.error('[API-BUILDABLE-OPTIONS] Error:', error);
+        return res.status(500).json({ error: 'Gagal memuat opsi bangunan: ' + error.message });
+    }
+});
+
+// ==========================================
 // DATA GRID SPASIAL ZONA
 // ==========================================
 router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
@@ -1370,6 +1490,14 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
         const px = player.gridPosition.tileX;
         const py = player.gridPosition.tileY;
+
+        // Auto-resolusi konstruksi bangunan yang sudah selesai saat peta dimuat
+        try {
+            const landService = require('../../services/landService');
+            await landService.resolveZoneConstruction(zoneId, player.guildId);
+        } catch (resolveErr) {
+            console.warn('[API-ZONE] Auto-resolve construction warning:', resolveErr.message);
+        }
 
         let visibleTiles = [];
 
@@ -2330,24 +2458,95 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         }
 
         const Asset = require('../../models/Asset');
+        const Blueprint = require('../../models/Blueprint');
         let assetDoc = null;
+        let bpDoc = null;
+
         if (assetBlueprintId) {
             assetDoc = await Asset.findById(assetBlueprintId);
+            if (!assetDoc) {
+                bpDoc = await Blueprint.findById(assetBlueprintId);
+            }
         }
-        if (!assetDoc && assetName) {
-            assetDoc = await Asset.findOne({ guildId: player.guildId, name: assetName }) || await Asset.findOne({ name: assetName });
+        if (!assetDoc && !bpDoc && assetName) {
+            assetDoc = await Asset.findOne({ name: assetName });
+            if (!assetDoc) {
+                bpDoc = await Blueprint.findOne({ name: assetName });
+            }
         }
 
-        const buildingName = assetDoc?.name || assetName || 'Kediaman Kultivator';
+        if (!assetDoc && !bpDoc) {
+            return res.status(404).json({ error: 'Aset atau blueprint bangunan tidak ditemukan dalam database resmi.' });
+        }
+
+        const buildingName = bpDoc ? bpDoc.name : assetDoc.name;
+        const buildingType = bpDoc ? bpDoc.category : (assetDoc.isCraftingStation ? 'crafting_station' : 'facility');
         const buildingImageUrl = assetDoc?.imageUrl || null;
-        const buildingType = assetDoc?.buildingType || 'residence';
-        const constructionMinutes = Math.max(1, (assetDoc?.constructionTimeHours || 1) * 2);
-        const completeAt = new Date(Date.now() + constructionMinutes * 60 * 1000);
+
+        // Validasi dan potong material asli dari player.inventory
+        const requiredMaterials = bpDoc ? (bpDoc.requiredMaterials || []) : (assetDoc.buildRequirements || []);
+        const missingMaterials = [];
+        for (const reqMat of requiredMaterials) {
+            const invItem = (player.inventory || []).find(inv =>
+                (inv.name && inv.name.toLowerCase().trim() === reqMat.itemName.toLowerCase().trim()) ||
+                (inv.itemId && reqMat.itemId && String(inv.itemId) === String(reqMat.itemId))
+            );
+            const have = invItem ? invItem.quantity : 0;
+            if (have < reqMat.quantity) {
+                missingMaterials.push(`${reqMat.itemName} (kurang ${reqMat.quantity - have})`);
+            }
+        }
+
+        if (missingMaterials.length > 0) {
+            return res.status(400).json({
+                error: `Material tidak mencukupi untuk membangun ${buildingName}! Kurang: ${missingMaterials.join(', ')}`
+            });
+        }
+
+        // Validasi dan potong biaya perak/uang
+        const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
+        let costSilver = 0;
+        if (bpDoc) {
+            costSilver = bpDoc.requiredSilver || 0;
+        } else {
+            if (assetDoc.priceCurrency === 'silver') costSilver = assetDoc.basePrice || 0;
+            else if (assetDoc.priceCurrency === 'copper') costSilver = Math.ceil((assetDoc.basePrice || 0) / 100);
+            else if (assetDoc.priceCurrency === 'gold') costSilver = (assetDoc.basePrice || 0) * 100;
+        }
+
+        const costInCopper = costSilver * 100;
+        const playerCopper = convertToCopper(player.currency);
+        if (playerCopper < costInCopper) {
+            return res.status(400).json({
+                error: `Dana tidak mencukupi! Dibutuhkan ${costSilver} Perak untuk izin & tukang bangunan.`
+            });
+        }
+
+        // Potong material dari inventory
+        for (const reqMat of requiredMaterials) {
+            const invIndex = player.inventory.findIndex(inv =>
+                (inv.name && inv.name.toLowerCase().trim() === reqMat.itemName.toLowerCase().trim()) ||
+                (inv.itemId && reqMat.itemId && String(inv.itemId) === String(reqMat.itemId))
+            );
+            if (invIndex !== -1) {
+                player.inventory[invIndex].quantity -= reqMat.quantity;
+            }
+        }
+        player.inventory = player.inventory.filter(inv => inv.quantity > 0);
+
+        // Potong biaya currency jika ada
+        if (costInCopper > 0) {
+            player.currency = convertFromCopper(playerCopper - costInCopper);
+        }
+
+        // Hitung durasi konstruksi
+        const constructionSeconds = bpDoc ? (bpDoc.buildDurationSeconds || 300) : ((assetDoc.constructionTimeHours || 1) * 3600);
+        const completeAt = new Date(Date.now() + constructionSeconds * 1000);
 
         tile.buildingName = buildingName;
         tile.buildingImageUrl = buildingImageUrl;
         tile.buildingType = buildingType;
-        tile.linkedRefId = assetDoc?._id || null;
+        tile.linkedRefId = bpDoc ? bpDoc._id : assetDoc._id;
         tile.isUnderConstruction = true;
         tile.constructionCompleteAt = completeAt;
         tile.isOpenToPublic = isOpenToPublic !== undefined ? Boolean(isOpenToPublic) : true;
@@ -2356,7 +2555,8 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
 
         if (!player.assets) player.assets = [];
         player.assets.push({
-            assetId: assetDoc?._id || new (require('mongoose').Types.ObjectId)(),
+            assetId: bpDoc ? bpDoc._id : assetDoc._id,
+            name: buildingName,
             quantity: 1,
             status: 'building',
             constructionCompleteAt: completeAt,
@@ -2368,12 +2568,12 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
 
         res.json({
             success: true,
-            message: `Konstruksi ${buildingName} dimulai! Status sedang dibangun kini dapat dilihat oleh seluruh pemain yang melewati zona ini.`,
+            message: `Konstruksi ${buildingName} dimulai! Status pengerjaan dapat dilihat di atas petak tanah.`,
             tile
         });
     } catch (error) {
         console.error('[API-BUILD] Error:', error);
-        res.status(500).json({ error: 'Gagal memulai pembangunan' });
+        res.status(500).json({ error: 'Gagal memulai pembangunan: ' + (error.message || String(error)) });
     }
 });
 
