@@ -1369,6 +1369,40 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             });
         }
 
+        // Blueprint: Validasi Obstruksi Medan & Konsumsi Stamina
+        const { calculateEnergyCost, calculateTravelSpeed, isTileObstructed } = require('../../utils/explorationMath');
+        const ZoneTile = require('../../models/ZoneTile');
+        const destTile = await ZoneTile.findOne({
+            guildId: player.guildId,
+            zoneId: currentZoneId,
+            tileX: targetX,
+            tileY: targetY
+        });
+
+        const targetTerrain = destTile?.terrainType || 'plains';
+        if (isTileObstructed({ terrainType: targetTerrain, mountType: player.equippedMount })) {
+            return res.status(400).json({
+                error: `Jalur terhalang rintangan tebing batu yang mustahil ditembus! Dibutuhkan artefak terbang spiritual.`
+            });
+        }
+
+        const staminaCost = calculateEnergyCost({
+            terrainType: targetTerrain,
+            currentWeight: player.inventory?.length || 10,
+            maxWeight: player.baseCarryCapacity || 50,
+            mountType: player.equippedMount,
+            bodyTemperingLevel: player.bodyTemperingLevel || 0
+        });
+
+        if (player.currentStamina !== null && player.currentStamina !== undefined && player.currentStamina < staminaCost) {
+            return res.status(400).json({
+                error: `Tenaga fisikmu habis! Membutuhkan ${staminaCost} Stamina untuk melangkah ke medan ini.`
+            });
+        }
+        if (player.currentStamina !== null && player.currentStamina !== undefined) {
+            player.currentStamina = Math.max(0, player.currentStamina - staminaCost);
+        }
+
         // Cek apakah tujuan adalah travelGateTiles (pemicu Travel JARAK JAUH)
         const travelGate = (zoneConfig.travelGateTiles || []).find(g => g.tileX === targetX && g.tileY === targetY);
         if (travelGate) {
@@ -1383,10 +1417,13 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             }
         }
 
-        // Hitung durasi pergerakan singkat
-        const durationSeconds = Math.max(3, distance * gridConfig.SECONDS_PER_TILE);
+        // Hitung durasi pergerakan dinamis berdasarkan tunggangan & medan
+        const tileSpeedMs = calculateTravelSpeed({ terrainType: targetTerrain, mountType: player.equippedMount });
+        const totalDurationMs = Math.max(1000, distance * tileSpeedMs);
+        const durationSeconds = Math.ceil(totalDurationMs / 1000);
+
         const startedAt = new Date();
-        const arrivesAt = new Date(startedAt.getTime() + durationSeconds * 1000);
+        const arrivesAt = new Date(startedAt.getTime() + totalDurationMs);
 
         player.gridMove = {
             targetX: targetX,
@@ -1438,6 +1475,7 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
         const status = resolvePlayerGridMove(player, zoneConfig);
         let encounterResult = null;
 
+        let thermalReport = null;
         if (status && status.justArrived) {
             const ZoneTile = require('../../models/ZoneTile');
             const destTile = await ZoneTile.findOne({
@@ -1447,8 +1485,61 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
                 tileY: player.gridPosition.tileY
             });
             const isHazard = Boolean(destTile && destTile.tileType === 'hazard');
-            const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
-            encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
+
+            // 1. Ambush Evaluation
+            const { evaluateAmbush } = require('../../utils/explorationMath');
+            const ambushEval = evaluateAmbush({
+                terrainType: destTile?.terrainType || 'plains',
+                stealthRating: (player.kungfuSkills?.qinggong || 0) * 0.01,
+                mountType: player.equippedMount,
+                dangerLevel: zoneConfig?.ambientDangerTier || 1.0
+            });
+
+            if (ambushEval.triggered || isHazard) {
+                const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+                encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
+            }
+
+            // 2. Blueprint: Termodinamika Lingkungan & Fisiologi Karakter
+            const { calculateGridTemperature, evaluateThermalBreach } = require('../../utils/thermodynamicsEngine');
+            const currentHour = new Date().getHours();
+            const gridTemp = calculateGridTemperature({
+                baseTemperature: destTile?.baseTemperature || 20,
+                season: 'spring',
+                hourOfDay: currentHour,
+                weather: 'clear',
+                spiritualVeinTier: destTile?.spiritualQiDensity ? Math.floor(destTile.spiritualQiDensity / 10) : 0
+            });
+
+            if (!player.thermalState) {
+                player.thermalState = { consecutiveBreachTicks: 0, hasMeridianDamage: false };
+            }
+
+            const thermalResult = evaluateThermalBreach({
+                envTemperature: gridTemp,
+                cultivationRealm: player.systemCultivation?.realm || 'mortal',
+                hpMax: player.playerStats?.baseHp || 100,
+                thermalResistanceRatio: 0.1,
+                consecutiveBreachTicks: player.thermalState.consecutiveBreachTicks || 0
+            });
+
+            player.thermalState.consecutiveBreachTicks = thermalResult.consecutiveBreachTicks;
+            if (thermalResult.hasMeridianDamage) {
+                player.thermalState.hasMeridianDamage = true;
+            }
+            if (thermalResult.hpLoss > 0 && player.currentHp !== null && player.currentHp !== undefined) {
+                player.currentHp = Math.max(1, player.currentHp - thermalResult.hpLoss);
+            }
+
+            thermalReport = {
+                gridTemperature: gridTemp,
+                inComfortZone: thermalResult.inComfortZone,
+                breachType: thermalResult.breachType,
+                activeCondition: thermalResult.activeCondition,
+                hpLoss: thermalResult.hpLoss,
+                hasMeridianDamage: player.thermalState.hasMeridianDamage,
+                realmLimits: thermalResult.realmLimits
+            };
         }
 
         await player.save();
@@ -1459,6 +1550,7 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
             gridPosition: player.gridPosition,
             gridMove: player.gridMove,
             encounter: encounterResult,
+            thermalStatus: thermalReport,
             exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === currentZoneId)?.tileIndexes) || [],
             playerGrid: {
                 position: player.gridPosition,
@@ -1968,6 +2060,273 @@ router.post('/zone/gather', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[API-WORLD-GATHER] Error:', error);
         res.status(500).json({ error: 'Gagal mengumpulkan sumber daya.' });
+    }
+});
+
+// ==========================================
+// BLUEPRINT: SISTEM PROPERTI & INTERIOR 12x12
+// ==========================================
+
+router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const ZoneTile = require('../../models/ZoneTile');
+        const tile = await ZoneTile.findOne({
+            guildId: player.guildId,
+            zoneId: currentZoneId,
+            tileX: player.gridPosition?.tileX ?? 0,
+            tileY: player.gridPosition?.tileY ?? 0
+        });
+
+        const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
+        const currentHour = new Date().getHours();
+        const gridTemp = calculateGridTemperature({
+            baseTemperature: tile?.baseTemperature || 20,
+            season: 'spring',
+            hourOfDay: currentHour,
+            weather: 'clear',
+            spiritualVeinTier: tile?.spiritualQiDensity ? Math.floor(tile.spiritualQiDensity / 10) : 0
+        });
+
+        const realmLimits = resolveRealmTolerance(player.systemCultivation?.realm || 'mortal');
+        const thermalResult = evaluateThermalBreach({
+            envTemperature: gridTemp,
+            cultivationRealm: player.systemCultivation?.realm || 'mortal',
+            hpMax: player.playerStats?.baseHp || 100,
+            thermalResistanceRatio: 0.1,
+            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
+        });
+
+        res.json({
+            success: true,
+            gridTemperature: gridTemp,
+            realm: player.systemCultivation?.realm || 'mortal',
+            realmLimits: {
+                minTemp: realmLimits.minTemp,
+                maxTemp: realmLimits.maxTemp,
+                realmName: realmLimits.name
+            },
+            inComfortZone: thermalResult.inComfortZone,
+            breachType: thermalResult.breachType,
+            activeCondition: thermalResult.activeCondition,
+            hpLoss: thermalResult.hpLoss,
+            hasMeridianDamage: Boolean(player.thermalState?.hasMeridianDamage),
+            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
+        });
+    } catch (error) {
+        console.error('[API-THERMAL-STATUS] Error:', error);
+        res.status(500).json({ error: 'Gagal memuat status termal' });
+    }
+});
+
+router.post('/zone/enter-property', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { tileX, tileY } = req.body;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const targetX = parseInt(tileX !== undefined ? tileX : player.gridPosition?.tileX ?? 0);
+        const targetY = parseInt(tileY !== undefined ? tileY : player.gridPosition?.tileY ?? 0);
+
+        const currentX = player.gridPosition?.tileX ?? 0;
+        const currentY = player.gridPosition?.tileY ?? 0;
+        const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
+        if (dist > 1) {
+            return res.status(400).json({ error: 'Kamu harus berada di dekat pintu masuk kediaman!' });
+        }
+
+        const ZoneTile = require('../../models/ZoneTile');
+        const tile = await ZoneTile.findOne({
+            guildId: player.guildId,
+            zoneId: currentZoneId,
+            tileX: targetX,
+            tileY: targetY
+        });
+
+        if (!tile || (!tile.isOccupied && !tile.buildingName && tile.tileType !== 'buildable_plot')) {
+            return res.status(400).json({ error: 'Tidak ada kediaman atau properti di koordinat ini.' });
+        }
+
+        const PropertyStructure = require('../../models/PropertyStructure');
+        const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
+
+        let property = null;
+        if (tile.propertyStructureId) {
+            property = await PropertyStructure.findById(tile.propertyStructureId);
+        }
+        if (!property) {
+            property = await PropertyStructure.findOne({
+                guildId: player.guildId,
+                zoneId: currentZoneId,
+                tileX: targetX,
+                tileY: targetY
+            });
+        }
+
+        // Jika belum ada record PropertyStructure, inisialisasi default 12x12
+        if (!property) {
+            const compressedLayout = generateDefaultEstateLayout(12, 12);
+            property = await PropertyStructure.create({
+                guildId: player.guildId,
+                zoneId: currentZoneId,
+                tileX: targetX,
+                tileY: targetY,
+                ownerId: tile.ownerId || player.discordId,
+                ownerName: tile.ownerName || player.characterName,
+                structureName: tile.buildingName || `Kediaman ${tile.ownerName || player.characterName}`,
+                interiorLayoutCompressed: compressedLayout,
+                subGridWidth: 12,
+                subGridHeight: 12,
+                isOpenToPublic: tile.isOpenToPublic !== undefined ? tile.isOpenToPublic : true
+            });
+            tile.propertyStructureId = property._id;
+            await tile.save();
+        }
+
+        // Cek izin akses jika properti privat
+        if (!property.isOpenToPublic && property.ownerId !== player.discordId) {
+            return res.status(403).json({
+                error: `Pintu gerbang ${property.structureName} terkunci rapat. Pemiliknya (${property.ownerName}) tidak mengizinkan tamu asing masuk.`
+            });
+        }
+
+        // Set interior instance state pada player
+        if (!player.gridPosition) player.gridPosition = {};
+        player.gridPosition.interiorInstanceId = property._id;
+        await player.save();
+
+        const decompressedLayout = decompressLayoutRLE(property.interiorLayoutCompressed);
+
+        res.json({
+            success: true,
+            message: `Kamu melangkah masuk ke dalam ${property.structureName} milik ${property.ownerName}.`,
+            property: {
+                id: property._id,
+                name: property.structureName,
+                ownerId: property.ownerId,
+                ownerName: property.ownerName,
+                isOwner: property.ownerId === player.discordId,
+                subGridWidth: property.subGridWidth || 12,
+                subGridHeight: property.subGridHeight || 12,
+                facilities: {
+                    qiGatheringArrayTier: property.qiGatheringArrayTier || 1,
+                    alchemyCrucibleTier: property.alchemyCrucibleTier || 1,
+                    forgeAnvilTier: property.forgeAnvilTier || 1,
+                    herbPlotsUnlocked: property.herbPlotsUnlocked || 2
+                },
+                layout: decompressedLayout,
+                tileMetadata: TILE_METADATA
+            }
+        });
+    } catch (error) {
+        console.error('[API-ENTER-PROPERTY] Error:', error);
+        res.status(500).json({ error: 'Gagal memasuki interior properti' });
+    }
+});
+
+router.post('/zone/exit-property', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        if (player.gridPosition) {
+            player.gridPosition.interiorInstanceId = null;
+        }
+        await player.save();
+
+        res.json({
+            success: true,
+            message: 'Kamu melangkah keluar dari kediaman kembali ke alam bebas Jianghu.',
+            playerGrid: {
+                position: player.gridPosition,
+                move: player.gridMove
+            }
+        });
+    } catch (error) {
+        console.error('[API-EXIT-PROPERTY] Error:', error);
+        res.status(500).json({ error: 'Gagal keluar dari properti' });
+    }
+});
+
+router.post('/zone/upgrade-property-facility', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { propertyId, facilityType } = req.body;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const PropertyStructure = require('../../models/PropertyStructure');
+        const property = await PropertyStructure.findById(propertyId);
+        if (!property) return res.status(404).json({ error: 'Properti tidak ditemukan' });
+
+        if (property.ownerId !== player.discordId) {
+            return res.status(403).json({ error: 'Hanya pemilik sah kediaman yang dapat memperbarui fasilitas!' });
+        }
+
+        const validFacilities = ['qi_array', 'crucible', 'forge', 'herb_plots'];
+        if (!validFacilities.includes(facilityType)) {
+            return res.status(400).json({ error: 'Tipe fasilitas tidak valid' });
+        }
+
+        let currentTier = 1;
+        let upgradeCostSilver = 500;
+        let facilityName = '';
+
+        if (facilityType === 'qi_array') {
+            currentTier = property.qiGatheringArrayTier || 1;
+            facilityName = 'Formasi Pengumpul Qi';
+            upgradeCostSilver = currentTier * 800;
+            if (currentTier >= 5) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkatan maksimal (Tier 5)!` });
+            property.qiGatheringArrayTier = currentTier + 1;
+        } else if (facilityType === 'crucible') {
+            currentTier = property.alchemyCrucibleTier || 1;
+            facilityName = 'Tungku Alkimia Kuno';
+            upgradeCostSilver = currentTier * 600;
+            if (currentTier >= 5) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkatan maksimal (Tier 5)!` });
+            property.alchemyCrucibleTier = currentTier + 1;
+        } else if (facilityType === 'forge') {
+            currentTier = property.forgeAnvilTier || 1;
+            facilityName = 'Landasan Tempa Baja Meteor';
+            upgradeCostSilver = currentTier * 600;
+            if (currentTier >= 5) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkatan maksimal (Tier 5)!` });
+            property.forgeAnvilTier = currentTier + 1;
+        } else if (facilityType === 'herb_plots') {
+            currentTier = property.herbPlotsUnlocked || 2;
+            facilityName = 'Petak Tanah Tanaman Rohani';
+            upgradeCostSilver = currentTier * 400;
+            if (currentTier >= 8) return res.status(400).json({ error: `${facilityName} sudah mencapai batas maksimal 8 petak!` });
+            property.herbPlotsUnlocked = currentTier + 1;
+        }
+
+        const { payCurrency } = require('../../utils/currency');
+        if (!payCurrency(player.currency, upgradeCostSilver, 'silver')) {
+            return res.status(400).json({ error: `Dana tidak mencukupi. Diperlukan ${upgradeCostSilver} Silver untuk memperbarui ${facilityName}.` });
+        }
+
+        property.lastUpgradedAt = new Date();
+        await property.save();
+        await player.save();
+
+        res.json({
+            success: true,
+            message: `Berhasil memperbarui ${facilityName} ke tingkatan ${currentTier + 1}!`,
+            facilities: {
+                qiGatheringArrayTier: property.qiGatheringArrayTier,
+                alchemyCrucibleTier: property.alchemyCrucibleTier,
+                forgeAnvilTier: property.forgeAnvilTier,
+                herbPlotsUnlocked: property.herbPlotsUnlocked
+            }
+        });
+    } catch (error) {
+        console.error('[API-UPGRADE-FACILITY] Error:', error);
+        res.status(500).json({ error: 'Gagal memperbarui fasilitas' });
     }
 });
 

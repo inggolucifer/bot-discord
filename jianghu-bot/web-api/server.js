@@ -108,7 +108,12 @@ const setupServer = (client) => {
         '/api/professions/start',
         '/api/professions/complete',
         '/api/professions/unlock',
-        '/api/pve/claim'
+        '/api/pve/claim',
+        '/api/minigame/acupoint/submit',
+        '/api/minigame/kata/submit',
+        '/api/minigame/crucible/submit',
+        '/api/world/zone/enter-property',
+        '/api/world/zone/upgrade-property-facility'
     ];
     app.use((req, res, next) => {
         if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
@@ -126,7 +131,7 @@ const setupServer = (client) => {
 
     // API Routes
     const authRoutes = require('./routes/auth');
-const barterRoutes = require('./routes/barter');
+    const barterRoutes = require('./routes/barter');
     const playerRoutes = require('./routes/player');
     const inventoryRoutes = require('./routes/inventory');
     const marketRoutes = require('./routes/market');
@@ -148,9 +153,10 @@ const barterRoutes = require('./routes/barter');
     const professionRoutes = require('./routes/professions');
     const equipmentRoutes = require('./routes/equipment');
     const marriageRoutes = require('./routes/marriage');
+    const minigameRoutes = require('./routes/minigame');
 
     app.use('/api/auth', authRoutes);
-app.use('/api/barter', barterRoutes);
+    app.use('/api/barter', barterRoutes);
     app.use('/api/player', playerRoutes);
     app.use('/api/inventory', inventoryRoutes);
     app.use('/api/market', marketRoutes);
@@ -172,6 +178,7 @@ app.use('/api/barter', barterRoutes);
     app.use('/api/professions', professionRoutes);
     app.use('/api/equipment', equipmentRoutes);
     app.use('/api/marriage', marriageRoutes);
+    app.use('/api/minigame', minigameRoutes);
 
     // Root test endpoint
     app.get('/api/health', (req, res) => {
