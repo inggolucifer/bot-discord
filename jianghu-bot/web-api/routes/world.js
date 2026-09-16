@@ -1219,50 +1219,73 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         }
 
         // Resolusi pergerakan lazy timestamp
-        const moveStatus = resolvePlayerGridMove(player, zoneConfig);
+        let moveStatus = { resolved: false, moving: false };
         let encounterResult = null;
+        try {
+            moveStatus = resolvePlayerGridMove(player, zoneConfig);
 
-        if (moveStatus && moveStatus.justArrived) {
-            const ZoneTile = require('../../models/ZoneTile');
-            const destTile = await ZoneTile.findOne({
-                guildId: player.guildId,
-                zoneId: zoneId,
-                tileX: player.gridPosition.tileX,
-                tileY: player.gridPosition.tileY
-            });
-            const isHazard = Boolean(destTile && destTile.tileType === 'hazard');
-            const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
-            encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
-        }
-
-        // Pastikan ada initial reveal jika baru pertama kali memasuki zona ini
-        const exploredEntry = (player.exploredTiles || []).find(e => e.zoneId === zoneId);
-        if (!exploredEntry || !exploredEntry.tileIndexes || exploredEntry.tileIndexes.length === 0) {
-            revealTilesForPlayer(
-                player,
-                zoneId,
-                player.gridPosition.tileX || 0,
-                player.gridPosition.tileY || 0,
-                gridConfig.DEFAULT_REVEAL_RADIUS,
-                zoneConfig.gridWidth,
-                zoneConfig.gridHeight
-            );
-        }
-
-        await player.save();
-
-        const ZoneTile = require('../../models/ZoneTile');
-        const allTiles = await ZoneTile.find({ guildId: player.guildId, zoneId: zoneId });
-
-        // Auto-resolusi konstruksi yang telah rampung agar langsung terlihat semua pemain
-        const nowMs = Date.now();
-        for (const t of allTiles) {
-            if (t.isUnderConstruction && t.constructionCompleteAt && nowMs >= new Date(t.constructionCompleteAt).getTime()) {
-                t.isUnderConstruction = false;
-                t.isOccupied = true;
-                t.label = `${t.buildingName} (${t.ownerName || 'Pemain'})`;
-                await t.save();
+            if (moveStatus && moveStatus.justArrived) {
+                const ZoneTile = require('../../models/ZoneTile');
+                const destTile = await ZoneTile.findOne({
+                    zoneId: zoneId,
+                    tileX: player.gridPosition.tileX,
+                    tileY: player.gridPosition.tileY
+                });
+                const isHazard = Boolean(destTile && destTile.tileType === 'hazard');
+                const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+                encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
             }
+
+            // Pastikan ada initial reveal jika baru pertama kali memasuki zona ini
+            const exploredEntry = (player.exploredTiles || []).find(e => e.zoneId === zoneId);
+            if (!exploredEntry || !exploredEntry.tileIndexes || exploredEntry.tileIndexes.length === 0) {
+                revealTilesForPlayer(
+                    player,
+                    zoneId,
+                    player.gridPosition.tileX || 0,
+                    player.gridPosition.tileY || 0,
+                    gridConfig.DEFAULT_REVEAL_RADIUS,
+                    zoneConfig.gridWidth,
+                    zoneConfig.gridHeight
+                );
+            }
+
+            await player.save();
+        } catch (stateErr) {
+            console.warn('[API-ZONE] State update warning (non-fatal):', stateErr.message);
+        }
+
+        let allTiles = [];
+        try {
+            const ZoneTile = require('../../models/ZoneTile');
+            const tileQuery = player.guildId
+                ? { $or: [{ guildId: player.guildId, zoneId }, { zoneId }] }
+                : { zoneId };
+            allTiles = await ZoneTile.find(tileQuery);
+
+            // Auto-resolusi konstruksi yang telah rampung agar langsung terlihat semua pemain
+            const nowMs = Date.now();
+            for (const t of allTiles) {
+                if (t.isUnderConstruction && t.constructionCompleteAt && nowMs >= new Date(t.constructionCompleteAt).getTime()) {
+                    t.isUnderConstruction = false;
+                    t.isOccupied = true;
+                    t.label = `${t.buildingName} (${t.ownerName || 'Pemain'})`;
+                    await t.save().catch(() => {});
+                }
+            }
+        } catch (tileQueryErr) {
+            console.warn('[API-ZONE] Tile query warning (non-fatal):', tileQueryErr.message);
+        }
+
+        // Fallback starter tiles jika belum ada tile di database untuk zona ini
+        if (!allTiles || allTiles.length === 0) {
+            allTiles = [
+                { tileX: 5, tileY: 5, tileType: 'resource_node', resourceType: 'wood', label: 'Pohon Bambu Tua', terrainType: 'forest' },
+                { tileX: 7, tileY: 7, tileType: 'npc_spawn', label: 'Tetua Hutan Bambu', terrainType: 'settlement' },
+                { tileX: 12, tileY: 8, tileType: 'poi', label: 'Mata Air Spiritual', terrainType: 'plains' },
+                { tileX: 10, tileY: 12, tileType: 'buildable_plot', plotPriceSilver: 50, isOccupied: false, terrainType: 'claimable' },
+                { tileX: 15, tileY: 10, tileType: 'poi', label: 'Gerbang Tianjing', terrainType: 'plains' }
+            ];
         }
 
         // Filter tile hidden: hanya tampil jika sudah pernah ditemukan pemain via aksi 'Cari Sekitar'
@@ -1270,8 +1293,21 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         const discoveredIds = new Set(player.discoveredSecretTileIds || []);
         const visibleTiles = allTiles.filter(tile => {
             if (tile.isPubliclyVisible === false) return false;
-            return !tile.hidden || discoveredIds.has(tile._id.toString());
+            return !tile.hidden || (tile._id && discoveredIds.has(tile._id.toString()));
         });
+
+        // Ensure exploredTileIndexes contains at least player's initial Chebyshev box
+        let exploredIndexes = (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [];
+        if (exploredIndexes.length === 0) {
+            const { getTilesInRevealRadius } = require('../../utils/gridManager');
+            exploredIndexes = getTilesInRevealRadius(
+                player.gridPosition?.tileX || 0,
+                player.gridPosition?.tileY || 0,
+                gridConfig.DEFAULT_REVEAL_RADIUS,
+                zoneConfig.gridWidth || 30,
+                zoneConfig.gridHeight || 20
+            );
+        }
 
         res.json({
             success: true,
@@ -1282,7 +1318,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 move: player.gridMove,
                 moveStatus: moveStatus,
                 encounter: encounterResult,
-                exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [],
+                exploredTileIndexes: exploredIndexes,
                 lastGridSearchAt: player.lastGridSearchAt || null,
                 searchCooldownSeconds: gridConfig.SEARCH_COOLDOWN_SECONDS,
                 searchRadius: gridConfig.SEARCH_RADIUS
@@ -1290,7 +1326,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         });
     } catch (error) {
         console.error('[API-ZONE] Error fetching zone:', error);
-        res.status(500).json({ error: 'Gagal memuat data zona' });
+        res.status(500).json({ error: 'Gagal memuat data zona: ' + (error.message || error) });
     }
 });
 
