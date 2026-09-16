@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
-import { Map, MapPin, Building, Activity, Navigation, ExternalLink, RefreshCw, Sun, Shield, User, MessageCircle, FileText, CheckCircle } from "lucide-react";
+import { Map, MapPin, Building, Activity, Navigation, Compass, ExternalLink, RefreshCw, Sun, Shield, User, MessageCircle, FileText, CheckCircle } from "lucide-react";
 import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
@@ -38,7 +38,7 @@ export default function WorldPage() {
   const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
 
   // Map View State
-  const [mapView, setMapView] = useState<'world' | 'region'>('world');
+  const [mapView, setMapView] = useState<'grid' | 'world'>('grid');
   const [selectedRegionSlug, setSelectedRegionSlug] = useState<string | null>(null);
 
   useEffect(() => {
@@ -364,19 +364,44 @@ export default function WorldPage() {
         </div>
       ) : null}
 
-      {/* Main Map Area */}
-      <div className="w-full relative transition-all duration-500 ease-in-out mb-6" style={{ perspective: '1000px' }}>
+      {/* Main Map View Area with Switcher */}
+      <div className="w-full relative transition-all duration-300 ease-in-out mb-6">
+        {/* Top View Mode Switcher */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5 bg-[#0e131d] p-1.5 rounded-xl border border-gray-800 shadow-md">
+            <button
+              onClick={() => setMapView('grid')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+            >
+              <Compass className="w-3.5 h-3.5 text-amber-300" /> Grid Spasial Eksplorasi (Aktif)
+            </button>
+            <button
+              onClick={() => setMapView('world')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'world' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+            >
+              <Map className="w-3.5 h-3.5 text-amber-300" /> Peta Makro Benua
+            </button>
+          </div>
+
+          <div className="text-xs text-gray-400 font-mono hidden sm:flex items-center gap-2">
+            <span>Mode Peta:</span>
+            <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-900/60 text-amber-300 font-bold">
+              {mapView === 'grid' ? '🗺️ Kisi Koordinat 2D' : '🌏 Peta Makro Wilayah'}
+            </span>
+          </div>
+        </div>
+
         {mapView === 'world' ? (
-          <div className="animate-in fade-in zoom-in-90 slide-in-from-bottom-4 duration-500 ease-out">
+          <div className="animate-in fade-in zoom-in-95 duration-300 ease-out">
             <WorldMapView
               onSelectRegion={(regionSlug: string) => {
                 setSelectedRegionSlug(regionSlug);
-                setMapView('region');
+                setMapView('grid');
               }}
             />
           </div>
         ) : (
-          <div className="animate-in fade-in zoom-in-110 slide-in-from-top-4 duration-500 ease-out">
+          <div className="animate-in fade-in zoom-in-95 duration-300 ease-out">
             <ZoneGridView
               zoneId={locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
               onBackToWorld={() => setMapView('world')}
