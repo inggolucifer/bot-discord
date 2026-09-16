@@ -152,81 +152,103 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     showMessage(`Mulai meluncur ke (${selectedTile?.tileX}, ${selectedTile?.tileY})...`);
 
     // Potong titik awal karena pemain sudah berada di sana
-    const waypoints = activePath.slice(1);
+    const allWaypoints = activePath.slice(1);
     let stepIndex = 0;
-    
-    // Track the latest sync promise so we don't race against it at the end
-    let lastSyncPromise: Promise<any> | null = null;
 
     if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
 
-    // Langkah kontinu per 240ms (halus dan tidak terasa kaku)
+    // Animasi lokal per 240ms — TANPA sinkronisasi server di tengah jalan
     walkIntervalRef.current = setInterval(async () => {
-      if (stepIndex >= waypoints.length) {
-        // Tiba di tujuan
+      if (stepIndex >= allWaypoints.length) {
+        // Animasi selesai — kirim SEMUA waypoints ke server dalam satu request
         clearInterval(walkIntervalRef.current);
-        
-        // Tunggu hingga sinkronisasi terakhir ke database server selesai
-        if (lastSyncPromise) {
-          try {
-            await lastSyncPromise;
-          } catch (e) {
-            console.error('Final sync error:', e);
+        walkIntervalRef.current = null;
+
+        try {
+          const res = await api.post('/world/zone/step-move', {
+            waypoints: allWaypoints,
+            zoneId: activeZoneId
+          });
+
+          if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+
+          if (res.data.arrivedPosition) {
+            setPlayerGrid((prev: any) => ({
+              ...prev,
+              position: { ...prev?.position, tileX: res.data.arrivedPosition.tileX, tileY: res.data.arrivedPosition.tileY }
+            }));
           }
+
+          if (res.data.stoppedEarly) {
+            showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
+            if (res.data.arrivedPosition) {
+              fetchZoneData(res.data.arrivedPosition.tileX, res.data.arrivedPosition.tileY);
+            } else {
+              fetchZoneData();
+            }
+          } else if (res.data.encounter?.encountered) {
+            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName}!`);
+            fetchZoneData(res.data.arrivedPosition?.tileX, res.data.arrivedPosition?.tileY);
+          } else {
+            const finalPoint = allWaypoints[allWaypoints.length - 1];
+            showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
+            fetchZoneData(res.data.arrivedPosition?.tileX ?? finalPoint.x, res.data.arrivedPosition?.tileY ?? finalPoint.y);
+          }
+        } catch (err: any) {
+          console.error('[StepMove] Final sync error:', err);
+          fetchZoneData();
         }
-        
+
         setIsWalking(false);
         setActivePath([]);
-
-        const finalPoint = waypoints[waypoints.length - 1];
-        showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
-        fetchZoneData(finalPoint.x, finalPoint.y);
-        
         return;
       }
 
-      const currentStep = waypoints[stepIndex];
+      const currentStep = allWaypoints[stepIndex];
       stepIndex++;
 
-      // Update posisi pemain di UI secara lokal instan
+      // Update posisi pemain di UI secara lokal instan (hanya visual)
       setPlayerGrid((prev: any) => ({
         ...prev,
         position: { ...prev?.position, tileX: currentStep.x, tileY: currentStep.y }
       }));
-
-      // Kirim sinkronisasi langkah ke server tiap 5 langkah atau langkah terakhir
-      if (stepIndex % 5 === 0 || stepIndex === waypoints.length) {
-        const batchWaypoints = waypoints.slice(Math.max(0, stepIndex - 5), stepIndex);
-        
-        lastSyncPromise = api.post('/world/zone/step-move', {
-          waypoints: batchWaypoints,
-          zoneId: activeZoneId
-        }).then((res) => {
-          if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
-
-          // Jika terhenti lebih awal (stamina habis atau disergap musuh)
-          if (res.data.stoppedEarly) {
-            clearInterval(walkIntervalRef.current);
-            setIsWalking(false);
-            setActivePath([]);
-            showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
-            fetchZoneData(currentStep.x, currentStep.y);
-          }
-          return res;
-        }).catch((err) => {
-          console.error('[StepMove] Sync error:', err);
-        });
-      }
     }, 240);
   };
 
-  // Batalkan perjalanan
+  // Batalkan perjalanan (kirim progress yang sudah dilalui saja)
   const handleStopWalking = async () => {
     if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
+    walkIntervalRef.current = null;
+
+    // Kirim waypoints yang sudah dilalui secara visual ke server
+    const walkedWaypoints = activePath.slice(1).filter((_, i) => {
+      const currentPos = playerGrid?.position;
+      if (!currentPos) return false;
+      // Ambil semua waypoint sampai posisi pemain saat ini
+      return true;
+    });
+
+    // Hitung berapa langkah yang sudah diambil berdasarkan posisi pemain saat ini
+    const currentX = playerGrid?.position?.tileX;
+    const currentY = playerGrid?.position?.tileY;
+    const stoppedIndex = activePath.findIndex(p => p.x === currentX && p.y === currentY);
+    const completedWaypoints = stoppedIndex > 0 ? activePath.slice(1, stoppedIndex + 1) : [];
+
+    if (completedWaypoints.length > 0) {
+      try {
+        await api.post('/world/zone/step-move', {
+          waypoints: completedWaypoints,
+          zoneId: activeZoneId
+        });
+      } catch (err) {
+        console.error('[StepMove] Stop sync error:', err);
+      }
+    }
+
     setIsWalking(false);
     setActivePath([]);
     showMessage('Perjalanan dihentikan.');
-    fetchZoneData();
+    fetchZoneData(currentX, currentY);
   };
 
   // Masuk ke Pemukiman / Kota (Gambar 4)
