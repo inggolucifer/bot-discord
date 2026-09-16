@@ -8,6 +8,10 @@
     "start": "node index.js",
     "deploy": "node deploy-commands.js",
     "dev": "node index.js",
+    "web": "node web-api/server.js",
+    "web:dev": "npm --prefix web-dashboard run dev",
+    "web:build": "npm --prefix web-dashboard run build",
+    "web:start": "npm --prefix web-dashboard run start",
     "test": "find . -name '*.js' -not -path './node_modules/*' -not -path './web-dashboard/node_modules/*' | xargs -I {} node -c {}"
   },
   "dependencies": {

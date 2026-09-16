@@ -22,9 +22,14 @@ interface Currency {
 }
 
 export default function Home() {
-  const { user } = useAuthStore();
+  const { user, login } = useAuthStore();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  // Standalone Web Direct Login
+  const [webCharacterName, setWebCharacterName] = useState('');
+  const [webGender, setWebGender] = useState('Laki-laki');
+  const [webLoginLoading, setWebLoginLoading] = useState(false);
 
   // Modals for new features
   const [actionLoading, setActionLoading] = useState(false);
@@ -131,6 +136,31 @@ export default function Home() {
           setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal mengambil loot.' });
       } finally {
           setActionLoading(false);
+      }
+  };
+
+  const handleWebLogin = async (e?: React.FormEvent) => {
+      if (e) e.preventDefault();
+      if (!webCharacterName.trim()) {
+          setActionMessage({ type: 'error', text: 'Silakan masukkan nama pendekar Anda.' });
+          return;
+      }
+      setWebLoginLoading(true);
+      setActionMessage(null);
+      try {
+          const res = await api.post('/auth/web-login', {
+              characterName: webCharacterName.trim(),
+              gender: webGender
+          });
+          if (res.data.success && res.data.token) {
+              login(res.data.token, res.data.user);
+              setActionMessage({ type: 'success', text: `Selamat datang di Jianghu, Pendekar ${res.data.user.username}!` });
+              await fetchProfile();
+          }
+      } catch (err: any) {
+          setActionMessage({ type: 'error', text: err.response?.data?.error || 'Gagal masuk ke Jianghu.' });
+      } finally {
+          setWebLoginLoading(false);
       }
   };
 
@@ -241,26 +271,95 @@ export default function Home() {
                <CreateCharacterCard onCreated={() => fetchProfile()} />
             </div>
           ) : (
-             <div className="w-full text-center py-6 sm:py-8 flex flex-col items-center justify-center gap-4">
-                <p className="text-gray-400 text-sm sm:text-base">Anda belum login. Silakan login untuk mengelola karakter, kultivasi, inventory, dan aset Anda.</p>
-                <Button
-                   onClick={() => {
-                     const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
-                     if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
-                       alert("Konfigurasi login belum lengkap (NEXT_PUBLIC_DISCORD_CLIENT_ID belum diatur). Hubungi admin.");
-                       return;
-                     }
-                     const redirectUri = encodeURIComponent(
-                       process.env.NEXT_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_URL}/auth/callback` : 'http://localhost:3000/auth/callback'
-                     );
-                     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
-                   }}
-                   variant="destructive"
-                   size="lg"
-                   className="shadow-[0_0_15px_rgba(139,0,0,0.6)] animate-[pulse_2s_infinite]"
-                >
-                   Login via Discord
-                </Button>
+             <div className="w-full text-center py-4 sm:py-6 flex flex-col items-center justify-center gap-5">
+                <div className="max-w-md w-full bg-gradient-to-b from-amber-950/30 to-black/60 border border-amber-800/40 rounded-xl p-5 sm:p-6 shadow-2xl backdrop-blur-md">
+                   <h3 className="text-lg font-serif font-bold text-amber-200 mb-1 flex items-center justify-center gap-2">
+                     <Sparkles className="w-4 h-4 text-amber-400" /> Masuk Dunia Jianghu (Web Direct)
+                   </h3>
+                   <p className="text-xs text-gray-400 mb-4">
+                     Main langsung di browser tanpa memerlukan akun bot Discord. Masukkan nama pendekar Anda:
+                   </p>
+
+                   <form onSubmit={handleWebLogin} className="space-y-3.5 text-left">
+                     <div>
+                       <label className="block text-[11px] font-medium text-amber-300 mb-1">Nama Pendekar / Karakter</label>
+                       <input
+                         type="text"
+                         value={webCharacterName}
+                         onChange={(e) => setWebCharacterName(e.target.value)}
+                         placeholder="Contoh: Pendekar Pedang Awan"
+                         maxLength={32}
+                         className="w-full px-3.5 py-2 bg-black/80 border border-amber-900/60 rounded-lg text-sm text-amber-100 placeholder-gray-600 focus:outline-none focus:border-amber-500 transition-colors"
+                         disabled={webLoginLoading}
+                       />
+                     </div>
+
+                     <div>
+                       <label className="block text-[11px] font-medium text-amber-300 mb-1">Jenis Kelamin</label>
+                       <div className="grid grid-cols-2 gap-2">
+                         <button
+                           type="button"
+                           onClick={() => setWebGender('Laki-laki')}
+                           className={`py-1.5 text-xs rounded-lg border font-medium transition-all ${
+                             webGender === 'Laki-laki'
+                               ? 'bg-amber-950/80 border-amber-500 text-amber-200'
+                               : 'bg-black/50 border-gray-800 text-gray-400 hover:border-gray-700'
+                           }`}
+                         >
+                           Laki-laki
+                         </button>
+                         <button
+                           type="button"
+                           onClick={() => setWebGender('Perempuan')}
+                           className={`py-1.5 text-xs rounded-lg border font-medium transition-all ${
+                             webGender === 'Perempuan'
+                               ? 'bg-amber-950/80 border-amber-500 text-amber-200'
+                               : 'bg-black/50 border-gray-800 text-gray-400 hover:border-gray-700'
+                           }`}
+                         >
+                           Perempuan
+                         </button>
+                       </div>
+                     </div>
+
+                     <Button
+                       type="submit"
+                       disabled={webLoginLoading || !webCharacterName.trim()}
+                       className="w-full bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-500 text-white font-serif font-bold text-xs sm:text-sm py-2.5 rounded-lg border border-amber-500/60 shadow-[0_0_20px_rgba(217,119,6,0.3)] transition-all"
+                     >
+                       {webLoginLoading ? (
+                         <span className="flex items-center justify-center gap-2">
+                           <Loader2 size={16} className="animate-spin" /> Membuka Gerbang Jianghu...
+                         </span>
+                       ) : (
+                         <span className="flex items-center justify-center gap-2">
+                           <Sword size={16} className="text-amber-200" /> Masuk / Buat Karakter
+                         </span>
+                       )}
+                     </Button>
+                   </form>
+
+                   <div className="mt-4 pt-3 border-t border-gray-800/80 flex flex-col items-center gap-2">
+                     <span className="text-[11px] text-gray-500">Punya akun lama via Discord?</span>
+                     <button
+                       type="button"
+                       onClick={() => {
+                         const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+                         if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
+                           alert("Konfigurasi login Discord belum diatur di server. Silakan gunakan Masuk Langsung di atas.");
+                           return;
+                         }
+                         const redirectUri = encodeURIComponent(
+                           process.env.NEXT_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_URL}/auth/callback` : 'http://localhost:3000/auth/callback'
+                         );
+                         window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
+                       }}
+                       className="text-xs text-gray-400 hover:text-amber-300 underline transition-colors"
+                     >
+                       Login via Discord (Akun Lama)
+                     </button>
+                   </div>
+                </div>
              </div>
           )}
         </div>
