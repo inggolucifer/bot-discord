@@ -2663,6 +2663,24 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
     }
 });
 
+router.get('/macro-map', authenticateToken, async (req, res) => {
+    try {
+        const landmarks = [
+            { x: 2500, y: 2500, name: 'XiTong City', type: 'city', region: 'central_plains' },
+            { x: 2600, y: 2550, name: 'Tianjing Capital', type: 'city', region: 'central_plains' },
+            { x: 2450, y: 2480, name: 'Desa Xingcun', type: 'village', region: 'central_plains' },
+            { x: 1200, y: 4200, name: 'Sekte Kunlun', type: 'sect', region: 'glacial' },
+            { x: 2100, y: 1100, name: 'Lembah Miasma', type: 'danger', region: 'swamp' },
+            { x: 3800, y: 1500, name: 'Kawah Vulkanik', type: 'danger', region: 'mountain' },
+            { x: 4200, y: 3500, name: 'Pulau Teratai Emas', type: 'sect', region: 'river' }
+        ];
+        res.json({ success: true, landmarks, worldSize: 5000 });
+    } catch (error) {
+        console.error('[API-MACRO-MAP] Error:', error);
+        res.status(500).json({ error: 'Gagal memuat peta makro' });
+    }
+});
+
 module.exports = router;
 
 

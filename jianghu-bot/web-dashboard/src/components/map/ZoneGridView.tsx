@@ -20,6 +20,7 @@ import PropertyInteriorView from './PropertyInteriorView';
 import TaleOfImmortalCanvas, { TileData } from './TaleOfImmortalCanvas';
 import SettlementPanoramaView from './SettlementPanoramaView';
 import ScenicCourtyardView from './ScenicCourtyardView';
+import WorldScrollMapView from './WorldScrollMapView';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
 
 interface ZoneGridViewProps {
@@ -53,6 +54,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
   const [isBgmOn, setIsBgmOn] = useState(false);
   const [interiorData, setInteriorData] = useState<any | null>(null);
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
+  const [showMacroMap, setShowMacroMap] = useState(false);
 
   const walkIntervalRef = useRef<any>(null);
 
@@ -317,7 +319,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
       <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto">
           <button
-            onClick={onBackToWorld}
+            onClick={() => setShowMacroMap(true)}
             className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
           >
             <MapIcon className="w-4 h-4 text-amber-400" />
@@ -364,8 +366,22 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
           exploredChunks={exploredChunks}
           isWalking={isWalking}
           onTileClick={handleTileClick}
+          onActionWalk={handleStartWalking}
+          onActionHarvest={(tx, ty) => handleGather(tx, ty)}
+          onActionInspect={handleSearch}
+          onClearTarget={() => {
+            setSelectedTile(null);
+            setActivePath([]);
+          }}
         />
       </div>
+
+      {showMacroMap && (
+        <WorldScrollMapView
+          playerPos={{ x: px, y: py }}
+          onClose={() => setShowMacroMap(false)}
+        />
+      )}
 
       {/* Bottom HUD: Action Bar, Navigasi & Inspektur */}
       <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
@@ -407,17 +423,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             </button>
           )}
 
-          {/* Tombol Mulai Melangkah Jalur A* */}
-          {selectedTile && !isWalking && distToSelected !== null && distToSelected > 0 && pathSteps > 0 && (
-            <button
-              onClick={handleStartWalking}
-              className="bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white px-4 py-1.5 rounded-lg border border-amber-400/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)] transition-all active:scale-95"
-            >
-              <Footprints className="w-3.5 h-3.5 text-amber-200" />
-              <span>Mulai Melangkah ({pathSteps} Langkah)</span>
-            </button>
-          )}
-
           {/* Tombol Masuk Kota (Gambar 4) jika berada di settlement */}
           {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
             <button
@@ -437,16 +442,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>Masuk Taman Paviliun</span>
-            </button>
-          )}
-
-          {/* Tombol Panen Sumber Daya */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.tileType === 'resource_node' && (
-            <button
-              onClick={() => handleGather(selectedTile.tileX, selectedTile.tileY)}
-              className="bg-emerald-900/90 hover:bg-emerald-800 text-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-all"
-            >
-              <Pickaxe className="w-3.5 h-3.5" /> Panen Bahan
             </button>
           )}
 
