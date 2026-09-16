@@ -1180,6 +1180,8 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
 });
 
 const gridConfig = require('../../config/gridConfig');
+const proceduralWorldEngine = require('../../utils/proceduralWorldEngine');
+const sparseFogManager = require('../../utils/sparseFogManager');
 const {
     getTileIndex,
     getCoordinatesFromIndex,
@@ -1268,19 +1270,27 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         }
 
         const zoneConfig = require(configPath);
+        const isMacro = Boolean(zoneConfig.isMacroGrid || zoneConfig.gridWidth >= 1000);
 
-        // Inisialisasi gridPosition jika belum ada
+        // Inisialisasi gridPosition jika belum ada atau jika baru masuk macro grid
         if (!player.gridPosition || typeof player.gridPosition !== 'object') {
             player.gridPosition = {
                 zoneId: zoneConfig.zoneId || zoneId,
-                tileX: 0,
-                tileY: 0
+                tileX: isMacro ? 2455 : 0,
+                tileY: isMacro ? 2485 : 0
             };
         } else if (!player.gridPosition.zoneId) {
             player.gridPosition.zoneId = zoneConfig.zoneId || zoneId;
         }
-        if (typeof player.gridPosition.tileX !== 'number') player.gridPosition.tileX = 0;
-        if (typeof player.gridPosition.tileY !== 'number') player.gridPosition.tileY = 0;
+
+        if (typeof player.gridPosition.tileX !== 'number') player.gridPosition.tileX = isMacro ? 2455 : 0;
+        if (typeof player.gridPosition.tileY !== 'number') player.gridPosition.tileY = isMacro ? 2485 : 0;
+
+        // Auto-relocate jika pemain masuk ke tianyuan_world_map tapi posisinya masih di default 0,0
+        if (isMacro && player.gridPosition.tileX === 0 && player.gridPosition.tileY === 0) {
+            player.gridPosition.tileX = 2455;
+            player.gridPosition.tileY = 2485;
+        }
 
         // Resolusi pergerakan lazy timestamp
         let moveStatus = { resolved: false, moving: false };
@@ -1288,32 +1298,23 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         try {
             moveStatus = resolvePlayerGridMove(player, zoneConfig);
 
-            if (moveStatus && moveStatus.justArrived) {
-                const ZoneTile = require('../../models/ZoneTile');
-                const destTile = await ZoneTile.findOne({
-                    zoneId: zoneId,
-                    tileX: player.gridPosition.tileX,
-                    tileY: player.gridPosition.tileY
-                });
-                const isHazard = Boolean(destTile && destTile.tileType === 'hazard');
-                const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
-                encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
-            }
-
-            // Pastikan ada initial reveal jika baru pertama kali memasuki zona ini
-            let exploredEntry = Array.isArray(player.exploredTiles)
-                ? player.exploredTiles.find(e => e && e.zoneId === zoneId)
-                : null;
-            if (!exploredEntry || !Array.isArray(exploredEntry.tileIndexes) || exploredEntry.tileIndexes.length === 0) {
-                revealTilesForPlayer(
-                    player,
-                    zoneId,
-                    player.gridPosition.tileX || 0,
-                    player.gridPosition.tileY || 0,
-                    gridConfig.DEFAULT_REVEAL_RADIUS || 3,
-                    zoneConfig.gridWidth || 30,
-                    zoneConfig.gridHeight || 20
-                );
+            if (isMacro) {
+                sparseFogManager.revealFogAtPosition(player, player.gridPosition.tileX, player.gridPosition.tileY, 5);
+            } else {
+                let exploredEntry = Array.isArray(player.exploredTiles)
+                    ? player.exploredTiles.find(e => e && e.zoneId === zoneId)
+                    : null;
+                if (!exploredEntry || !Array.isArray(exploredEntry.tileIndexes) || exploredEntry.tileIndexes.length === 0) {
+                    revealTilesForPlayer(
+                        player,
+                        zoneId,
+                        player.gridPosition.tileX || 0,
+                        player.gridPosition.tileY || 0,
+                        gridConfig.DEFAULT_REVEAL_RADIUS || 3,
+                        zoneConfig.gridWidth || 30,
+                        zoneConfig.gridHeight || 20
+                    );
+                }
             }
 
             if (typeof player.save === 'function') {
@@ -1323,81 +1324,70 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             console.warn('[API-ZONE] State update warning (non-fatal):', stateErr.message);
         }
 
-        let allTiles = [];
-        try {
+        const px = player.gridPosition.tileX;
+        const py = player.gridPosition.tileY;
+
+        let visibleTiles = [];
+
+        if (isMacro) {
+            // Tentukan viewport window (radius query)
+            const viewRadius = Math.min(30, Math.max(10, parseInt(req.query.radius) || 18));
+            const centerX = parseInt(req.query.centerX) || px;
+            const centerY = parseInt(req.query.centerY) || py;
+
+            // Gunakan Procedural World Engine untuk streaming medan 5000x5000 dalam O(1)
+            const viewport = proceduralWorldEngine.getViewportTiles(centerX, centerY, viewRadius);
+            const proceduralTileMap = new Map();
+            for (const t of viewport.tiles) {
+                proceduralTileMap.set(`${t.tileX},${t.tileY}`, t);
+            }
+
+            // Overlay dengan POI / plot custom yang ada di MongoDB
+            const ZoneTile = require('../../models/ZoneTile');
+            const customDbTiles = await ZoneTile.find({
+                zoneId: zoneId,
+                tileX: { $gte: viewport.bounds.minX, $lte: viewport.bounds.maxX },
+                tileY: { $gte: viewport.bounds.minY, $lte: viewport.bounds.maxY }
+            }).lean();
+
+            for (const custom of customDbTiles) {
+                const key = `${custom.tileX},${custom.tileY}`;
+                if (proceduralTileMap.has(key)) {
+                    proceduralTileMap.set(key, { ...proceduralTileMap.get(key), ...custom });
+                } else {
+                    proceduralTileMap.set(key, custom);
+                }
+            }
+
+            visibleTiles = Array.from(proceduralTileMap.values());
+        } else {
+            // Legacy zone small grid
             const ZoneTile = require('../../models/ZoneTile');
             const tileQuery = player.guildId
                 ? { $or: [{ guildId: player.guildId, zoneId }, { zoneId }] }
                 : { zoneId };
-            const dbTiles = await ZoneTile.find(tileQuery).lean();
-            if (Array.isArray(dbTiles)) {
-                allTiles = dbTiles;
-            }
+            const allTiles = await ZoneTile.find(tileQuery).lean();
 
-            // Auto-resolusi konstruksi yang telah rampung agar langsung terlihat semua pemain
-            const nowMs = Date.now();
-            for (const t of allTiles) {
-                if (t.isUnderConstruction && t.constructionCompleteAt && nowMs >= new Date(t.constructionCompleteAt).getTime()) {
-                    t.isUnderConstruction = false;
-                    t.isOccupied = true;
-                    t.label = `${t.buildingName} (${t.ownerName || 'Pemain'})`;
-                    await ZoneTile.updateOne({ _id: t._id }, {
-                        $set: { isUnderConstruction: false, isOccupied: true, label: t.label }
-                    }).catch(() => {});
-                }
-            }
-        } catch (tileQueryErr) {
-            console.warn('[API-ZONE] Tile query warning (non-fatal):', tileQueryErr.message);
-        }
-
-        // Fallback starter tiles jika belum ada tile di database untuk zona ini
-        if (!allTiles || allTiles.length === 0) {
-            allTiles = [
-                { tileX: 5, tileY: 5, tileType: 'resource_node', resourceType: 'wood', label: 'Pohon Bambu Tua', terrainType: 'forest' },
-                { tileX: 7, tileY: 7, tileType: 'npc_spawn', label: 'Tetua Hutan Bambu', terrainType: 'settlement' },
-                { tileX: 12, tileY: 8, tileType: 'poi', label: 'Mata Air Spiritual', terrainType: 'plains' },
-                { tileX: 10, tileY: 12, tileType: 'buildable_plot', plotPriceSilver: 50, isOccupied: false, terrainType: 'claimable' },
-                { tileX: 15, tileY: 10, tileType: 'poi', label: 'Gerbang Tianjing', terrainType: 'plains' }
-            ];
-        }
-
-        // Filter tile hidden: hanya tampil jika sudah pernah ditemukan pemain via aksi 'Cari Sekitar'
-        // Filter tile public visibility: hanya tampil jika isPubliclyVisible !== false
-        const rawDiscovered = Array.isArray(player.discoveredSecretTileIds) ? player.discoveredSecretTileIds : [];
-        const discoveredIds = new Set(rawDiscovered.map(id => String(id)));
-        const visibleTiles = allTiles.filter(tile => {
-            if (tile.isPubliclyVisible === false) return false;
-            return !tile.hidden || (tile._id && discoveredIds.has(tile._id.toString()));
-        });
-
-        // Ensure exploredTileIndexes contains at least player's initial Chebyshev box
-        let exploredIndexes = [];
-        if (Array.isArray(player.exploredTiles)) {
-            const entry = player.exploredTiles.find(e => e && e.zoneId === zoneId);
-            if (entry && Array.isArray(entry.tileIndexes)) {
-                exploredIndexes = entry.tileIndexes;
-            }
-        }
-        if (exploredIndexes.length === 0) {
-            exploredIndexes = getTilesInRevealRadius(
-                player.gridPosition?.tileX || 0,
-                player.gridPosition?.tileY || 0,
-                gridConfig.DEFAULT_REVEAL_RADIUS || 3,
-                zoneConfig.gridWidth || 30,
-                zoneConfig.gridHeight || 20
-            );
+            const rawDiscovered = Array.isArray(player.discoveredSecretTileIds) ? player.discoveredSecretTileIds : [];
+            const discoveredIds = new Set(rawDiscovered.map(id => String(id)));
+            visibleTiles = (allTiles || []).filter(tile => {
+                if (tile.isPubliclyVisible === false) return false;
+                return !tile.hidden || (tile._id && discoveredIds.has(tile._id.toString()));
+            });
         }
 
         return res.json({
             success: true,
             config: zoneConfig,
             tiles: visibleTiles,
+            anchorSettlements: proceduralWorldEngine.ANCHOR_SETTLEMENTS,
+            exploredChunks: player.exploredChunks || [],
             playerGrid: {
                 position: player.gridPosition,
                 move: player.gridMove || null,
                 moveStatus: moveStatus,
                 encounter: encounterResult,
-                exploredTileIndexes: exploredIndexes,
+                exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [],
                 lastGridSearchAt: player.lastGridSearchAt || null,
                 searchCooldownSeconds: gridConfig.SEARCH_COOLDOWN_SECONDS || 10,
                 searchRadius: gridConfig.SEARCH_RADIUS || 2
@@ -1409,6 +1399,299 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             error: 'Gagal memuat data zona: ' + (error.message || String(error)),
             details: process.env.NODE_ENV !== 'production' ? error.stack : undefined
         });
+    }
+});
+
+// ==========================================
+// STEP-BY-STEP PATH TRAVEL ENGINE (TALE OF IMMORTAL STYLE)
+// Mendukung pergerakan multi-tile kontinu, stamina drain, no teleportation
+// ==========================================
+router.post('/zone/step-move', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { waypoints, zoneId } = req.body;
+
+        if (!Array.isArray(waypoints) || waypoints.length === 0) {
+            return res.status(400).json({ error: 'Rute langkah (waypoints) tidak valid.' });
+        }
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
+        const fs = require('fs');
+        const path = require('path');
+        const configPath = path.join(__dirname, '../../config/zones', `${activeZoneId}.js`);
+        if (!fs.existsSync(configPath)) {
+            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        }
+        const zoneConfig = require(configPath);
+
+        const { calculateEnergyCost } = require('../../utils/explorationMath');
+        const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+
+        let currentX = player.gridPosition?.tileX ?? 2455;
+        let currentY = player.gridPosition?.tileY ?? 2485;
+
+        let totalStaminaCost = 0;
+        let stepsTaken = 0;
+        let stoppedEarly = false;
+        let stopReason = null;
+        let encounterResult = null;
+
+        for (const wp of waypoints) {
+            const targetX = parseInt(wp.x);
+            const targetY = parseInt(wp.y);
+
+            if (isNaN(targetX) || isNaN(targetY)) continue;
+            if (targetX < 0 || targetX >= zoneConfig.gridWidth || targetY < 0 || targetY >= zoneConfig.gridHeight) {
+                stoppedEarly = true;
+                stopReason = 'Mencapai batas wilayah benua!';
+                break;
+            }
+
+            // Validasi langkah bertetangga (jarak Chebyshev = 1)
+            const dx = Math.abs(targetX - currentX);
+            const dy = Math.abs(targetY - currentY);
+            if (Math.max(dx, dy) > 1) {
+                continue;
+            }
+
+            // Dapatkan info medan tile
+            const tileInfo = proceduralWorldEngine.getTileAt(targetX, targetY);
+
+            // Obstruksi tebing batu tanpa pedang terbang
+            if (tileInfo.isSolid && player.equippedMount !== 'flying_sword') {
+                stoppedEarly = true;
+                stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
+                break;
+            }
+
+            // Konsumsi Stamina
+            const stepCost = calculateEnergyCost({
+                terrainType: tileInfo.terrainType || 'plains',
+                currentWeight: player.inventory?.length || 10,
+                maxWeight: player.baseCarryCapacity || 50,
+                mountType: player.equippedMount,
+                bodyTemperingLevel: player.bodyTemperingLevel || 0
+            });
+
+            if (player.currentStamina !== null && player.currentStamina !== undefined && player.currentStamina < stepCost) {
+                stoppedEarly = true;
+                stopReason = 'Tenaga fisikmu (Stamina) telah terkuras habis! Perlu beristirahat di penginapan.';
+                break;
+            }
+
+            if (player.currentStamina !== null && player.currentStamina !== undefined) {
+                player.currentStamina = Math.max(0, player.currentStamina - stepCost);
+                totalStaminaCost += stepCost;
+            }
+
+            // Maju ke tile ini
+            currentX = targetX;
+            currentY = targetY;
+            stepsTaken++;
+
+            // Ungkap kabut di sekitar langkah baru
+            sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
+
+            // Peluang Ambush Encounter
+            const encounterRoll = Math.random();
+            if (encounterRoll < (tileInfo.ambushRiskRate || 0.05)) {
+                encounterResult = checkAndRunGridEncounter(player, zoneConfig, tileInfo.terrainType === 'swamp');
+                if (encounterResult && encounterResult.encountered) {
+                    stoppedEarly = true;
+                    stopReason = `Disergap oleh ${encounterResult.enemyName} di tengah perjalanan!`;
+                    break;
+                }
+            }
+        }
+
+        // Simpan posisi akhir pemain
+        if (!player.gridPosition) player.gridPosition = {};
+        player.gridPosition.zoneId = activeZoneId;
+        player.gridPosition.tileX = currentX;
+        player.gridPosition.tileY = currentY;
+
+        // Reset gridMove
+        player.gridMove = {
+            targetX: null,
+            targetY: null,
+            targetZoneId: null,
+            moveStartedAt: null,
+            moveArrivesAt: null
+        };
+
+        await player.save();
+
+        return res.json({
+            success: true,
+            stepsTaken,
+            totalStaminaCost,
+            currentStamina: player.currentStamina,
+            arrivedPosition: { tileX: currentX, tileY: currentY },
+            stoppedEarly,
+            stopReason,
+            encounter: encounterResult,
+            exploredChunks: player.exploredChunks || []
+        });
+    } catch (error) {
+        console.error('[API-STEP-MOVE] Error:', error);
+        return res.status(500).json({ error: 'Gagal melakukan perjalanan: ' + error.message });
+    }
+});
+
+// ==========================================
+// SETTLEMENT & ENTERABLE BUILDINGS PANORAMA VIEW (TALE OF IMMORTAL)
+// ==========================================
+router.get('/settlement/:settlementName', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { settlementName } = req.params;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        // Cari settlement dari landmark anchor atau config
+        const settlement = proceduralWorldEngine.ANCHOR_SETTLEMENTS.find(
+            s => s.name.toLowerCase() === settlementName.toLowerCase()
+        ) || {
+            name: settlementName,
+            chineseName: '坊市',
+            type: 'settlement',
+            description: 'Pemukiman tempat bernaungnya para kultivator dan penduduk lokal.'
+        };
+
+        // Bangunan Fungsional Kota Sesuai Referensi Gambar 4
+        const buildings = [
+            {
+                id: 'inn',
+                name: 'Penginapan (Inn)',
+                chineseName: '客栈',
+                desc: 'Pulihkan stamina dan HP dengan beristirahat di kamar sewaan, serta dengarkan gosip hangat para pengelana.',
+                type: 'inn',
+                icon: 'BedDouble'
+            },
+            {
+                id: 'tavern',
+                name: 'Kedai Minuman (Tavern)',
+                chineseName: '酒馆',
+                desc: 'Meneguk arak spiritual penghangat meridian untuk mendapatkan berkah Qi dan merekrut rekan pengembara.',
+                type: 'tavern',
+                icon: 'Wine'
+            },
+            {
+                id: 'market',
+                name: 'Pasar Spiritual (Market)',
+                chineseName: '坊市',
+                desc: 'Beli & jual herba mentah, pil pemulih, bijih tambang, dan perlengkapan pengembara dengan harga wajar.',
+                type: 'market',
+                icon: 'ShoppingBag'
+            },
+            {
+                id: 'workshop',
+                name: 'Bengkel Tempa & Alkimia (Workshop)',
+                chineseName: '工坊',
+                desc: 'Fasilitas penempaan senjata spiritual dan tungku peracikan pil kultivasi.',
+                type: 'workshop',
+                icon: 'Hammer'
+            },
+            {
+                id: 'manual_pavilion',
+                name: 'Paviliun Kitab (Manual Pavilion)',
+                chineseName: '藏经阁',
+                desc: 'Pelajari kitab jurus pedang, tinju, langkah qinggong, dan metode batin esoterik.',
+                type: 'manual_pavilion',
+                icon: 'BookOpen'
+            },
+            {
+                id: 'bounty_board',
+                name: 'Papan Sayembara (Bounty Board)',
+                chineseName: '悬赏榜',
+                desc: 'Ambil misi perburuan siluman pembuat onar atau pengawalan kargo berhadiah batu spiritual.',
+                type: 'bounty_board',
+                icon: 'FileText'
+            },
+            {
+                id: 'courier_stables',
+                name: 'Pos Kereta & Paviliun Pengelana (Courier Stables)',
+                chineseName: '驿站',
+                desc: 'Beli pakan kuda spiritual, ransum perjalanan, dan peta wilayah sekitar (Bukan Teleportasi).',
+                type: 'courier_stables',
+                icon: 'Compass'
+            },
+            {
+                id: 'vault',
+                name: 'Gudang Harta (Tree Vault)',
+                chineseName: '储物阁',
+                desc: 'Titipkan barang berlebih agar beban ransel tidak memperlambat perjalananmu di alam liar.',
+                type: 'vault',
+                icon: 'Archive'
+            }
+        ];
+
+        // Ambil daftar NPC yang berada di pemukiman ini dari database
+        const Npc = require('../../models/Npc');
+        let npcs = await Npc.find({
+            settlementName: { $regex: new RegExp(`^${settlementName}$`, 'i') },
+            isActive: true
+        }).select('_id name title portraitUrl greeting dialogLines minRealmIndexToTalk questIds').lean();
+
+        // Fallback jika belum ada NPC di DB untuk pemukiman ini (Generated Xianxia NPCs ala Tale of Immortal)
+        if (!npcs || npcs.length === 0) {
+            npcs = [
+                {
+                    _id: 'npc_shuang_ke',
+                    name: 'Shuang Ke',
+                    title: 'Pendekar Pedang Bayangan',
+                    realm: 'Ranah Fondasi (Foundation)',
+                    sect: 'Sekte Awan Pedang',
+                    relationship: 'Stranger',
+                    relationshipPoints: 10,
+                    greeting: 'Salam, rekan kultivator. Apakah jalan pedangmu seimbang dengan hatimu?'
+                },
+                {
+                    _id: 'npc_wu_binglin',
+                    name: 'Wu Binglin',
+                    title: 'Saudagar Herba Gunung',
+                    realm: 'Ranah Kondensasi Qi',
+                    sect: 'Rogue Cultivator',
+                    relationship: 'Stranger',
+                    relationshipPoints: 25,
+                    greeting: 'Herba liar dari pegunungan utara sangat berkhasiat untuk memurnikan Qi!'
+                },
+                {
+                    _id: 'npc_yin_ci',
+                    name: 'Yin Ci',
+                    title: 'Penjaga Paviliun Kitab',
+                    realm: 'Ranah Inti Emas (Core)',
+                    sect: 'XiTong City Guard',
+                    relationship: 'Stranger',
+                    relationshipPoints: 15,
+                    greeting: 'Membaca sutra suci menuntut kejernihan akal budi.'
+                },
+                {
+                    _id: 'npc_li_keke',
+                    name: 'Li Keke',
+                    title: 'Murid Alkimia Bunga Persik',
+                    realm: 'Ranah Fondasi',
+                    sect: 'Lembah Tabib Suci',
+                    relationship: 'Friend',
+                    relationshipPoints: 65,
+                    greeting: 'Senang melihatmu kembali dalam keadaan sehat, kawan!'
+                }
+            ];
+        }
+
+        return res.json({
+            success: true,
+            settlement,
+            buildings,
+            npcs
+        });
+    } catch (error) {
+        console.error('[API-SETTLEMENT] Error:', error);
+        return res.status(500).json({ error: 'Gagal memuat data pemukiman: ' + error.message });
     }
 });
 
@@ -1519,20 +1802,6 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
         }
         if (player.currentStamina !== null && player.currentStamina !== undefined) {
             player.currentStamina = Math.max(0, player.currentStamina - staminaCost);
-        }
-
-        // Cek apakah tujuan adalah travelGateTiles (pemicu Travel JARAK JAUH)
-        const travelGate = (zoneConfig.travelGateTiles || []).find(g => g.tileX === targetX && g.tileY === targetY);
-        if (travelGate) {
-            if (initiateTravel) {
-                // Alihkan ke alur Travel jarak jauh yang sudah ada
-                return res.json({
-                    success: true,
-                    isTravelGate: true,
-                    leadsToSettlement: travelGate.leadsToSettlement,
-                    message: `Memasuki gerbang perjalanan menuju ${travelGate.leadsToSettlement}.`
-                });
-            }
         }
 
         // Hitung durasi pergerakan dinamis berdasarkan tunggangan & medan

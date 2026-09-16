@@ -171,6 +171,7 @@ const playerSchema = new mongoose.Schema({
     zoneId: { type: String, required: true },
     tileIndexes: { type: [Number], default: [] }
   }],
+  exploredChunks: { type: [String], default: [] },
 
   gridMove: {
     targetX: { type: Number, default: null },
