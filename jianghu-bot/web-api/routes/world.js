@@ -1420,12 +1420,21 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             });
         }
 
+        const ZoneTileModel = require('../../models/ZoneTile');
+        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+        const ownedPlotsCount = await ZoneTileModel.countDocuments({ ownerId: player.discordId });
+        const nextLandPrice = getLandPriceForPlayer(ownedPlotsCount);
+
         return res.json({
             success: true,
             config: zoneConfig,
             tiles: visibleTiles,
             anchorSettlements: proceduralWorldEngine.ANCHOR_SETTLEMENTS,
             exploredChunks: player.exploredChunks || [],
+            playerLandStats: {
+                ownedPlotsCount,
+                nextPrice: nextLandPrice
+            },
             playerGrid: {
                 position: player.gridPosition,
                 move: player.gridMove || null,
@@ -2223,30 +2232,68 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: `Plot tanah ini sudah menjadi milik ${tile.ownerName || 'pemain lain'}!` });
         }
 
-        const priceSilver = tile.plotPriceSilver || 100;
-        const { payCurrency } = require('../../utils/currency');
+        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+        const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
 
-        if (!payCurrency(player.currency, priceSilver, 'silver')) {
-            return res.status(400).json({ error: `Dana tidak mencukupi. Diperlukan setara ${priceSilver} Silver untuk membeli tanah ini.` });
+        const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
+        const priceInfo = getLandPriceForPlayer(ownedPlotsCount);
+
+        const playerTotalCopper = convertToCopper(player.currency);
+        if (playerTotalCopper < priceInfo.priceInCopper) {
+            return res.status(400).json({
+                error: `Dana tidak mencukupi! Dibutuhkan ${priceInfo.label} untuk membeli tanah ke-${priceInfo.plotNumber}. Kekayaanmu belum mencukupi.`
+            });
         }
+
+        // Potong biaya pembelian
+        const remainingCopper = playerTotalCopper - priceInfo.priceInCopper;
+        player.currency = convertFromCopper(remainingCopper);
 
         tile.ownerType = 'player';
         tile.ownerId = player.discordId;
         tile.ownerName = player.characterName;
-        tile.plotPriceSilver = priceSilver;
+        tile.plotPriceLabel = priceInfo.label;
+        tile.plotPriceSilver = Math.floor(priceInfo.priceInCopper / 100);
         tile.isOccupied = true;
         tile.label = `Lahan Milik ${player.characterName}`;
         await tile.save();
         await player.save();
 
+        const nextPrice = getLandPriceForPlayer(ownedPlotsCount + 1);
+
         res.json({
             success: true,
-            message: `Selamat! Kamu telah resmi membeli plot tanah di (${targetX}, ${targetY}) seharga ${priceSilver} Silver.`,
+            message: `Selamat! Kamu telah resmi membeli kavling tanah ke-${priceInfo.plotNumber} di (${targetX}, ${targetY}) seharga ${priceInfo.label}.`,
+            priceLabel: priceInfo.label,
+            ownedPlotsCount: ownedPlotsCount + 1,
+            nextPrice,
             tile
         });
     } catch (error) {
         console.error('[API-BUY-PLOT] Error:', error);
-        res.status(500).json({ error: 'Gagal membeli plot tanah' });
+        res.status(500).json({ error: 'Gagal membeli plot tanah: ' + (error.message || String(error)) });
+    }
+});
+
+// Endpoint ringan untuk mengecek harga tanah pemain saat ini
+router.get('/zone/land-price', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const ZoneTile = require('../../models/ZoneTile');
+        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+        const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
+        const nextPrice = getLandPriceForPlayer(ownedPlotsCount);
+
+        return res.json({
+            success: true,
+            ownedPlotsCount,
+            nextPrice
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
     }
 });
 

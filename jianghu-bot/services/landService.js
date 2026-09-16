@@ -88,16 +88,17 @@ class LandService {
       return { ok: false, error: `Petak tanah ini sudah dimiliki oleh ${ownerLabel}.` };
     }
 
+    const { getLandPriceForPlayer } = require('../utils/landPriceEngine');
     const { convertToCopper, convertFromCopper } = require('../utils/currencyNormalize');
-    const priceSilver = tile.plotPriceSilver || 100;
-    const priceInCopper = priceSilver * 100;
-    const playerTotalCopper = convertToCopper(player.currency);
 
-    if (playerTotalCopper < priceInCopper) {
-      const currentSilverEq = Math.floor(playerTotalCopper / 100);
+    const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: discordId });
+    const priceInfo = getLandPriceForPlayer(ownedPlotsCount);
+
+    const playerTotalCopper = convertToCopper(player.currency);
+    if (playerTotalCopper < priceInfo.priceInCopper) {
       return {
         ok: false,
-        error: `Perak tidak mencukupi! Harga tanah: ${priceSilver} Perak, Kekayaan milikmu: ${currentSilverEq} Perak.`
+        error: `Dana tidak mencukupi! Dibutuhkan ${priceInfo.label} untuk membeli tanah ke-${priceInfo.plotNumber}. Kekayaanmu belum mencukupi.`
       };
     }
 
@@ -114,6 +115,8 @@ class LandService {
           ownerType: 'player',
           ownerName: player.characterName,
           label: `Kavling Milik ${player.characterName}`,
+          plotPriceLabel: priceInfo.label,
+          plotPriceSilver: Math.floor(priceInfo.priceInCopper / 100),
           isOpenToPublic: true
         }
       },
@@ -129,7 +132,7 @@ class LandService {
     }
 
     // 4. Potong Kekayaan Pemain secara presisi
-    const newCopperBalance = playerTotalCopper - priceInCopper;
+    const newCopperBalance = playerTotalCopper - priceInfo.priceInCopper;
     player.currency = convertFromCopper(newCopperBalance);
     await player.save();
 
