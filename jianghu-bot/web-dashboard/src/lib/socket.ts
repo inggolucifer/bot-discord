@@ -20,7 +20,7 @@ const BASE_URL: string = getBaseUrl();
 export const socket = io(BASE_URL, {
   path: '/api/socket.io',
   autoConnect: false,
-  transports: ['websocket', 'polling'], // Fallback mechanism for better stability behind proxies
+  transports: ['polling', 'websocket'], // Robust order: connects via HTTP polling first, then upgrades to websocket
   reconnectionAttempts: 5,
   withCredentials: true,
 });
