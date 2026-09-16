@@ -250,6 +250,9 @@ function getStealingSuccessBonus(stealingLevel = 0) {
 function resolveWeaponDiscipline(item) {
     if (!item) return 'fist'; // Tanpa senjata = Tangan kosong (fist)
 
+    // Jika item tidak valid atau tidak memiliki informasi nama/tipe
+    if (typeof item !== 'object') return 'fist';
+
     if (item.weaponType && KUNGFU_SKILLS[item.weaponType]) {
         return item.weaponType;
     }
@@ -261,7 +264,7 @@ function resolveWeaponDiscipline(item) {
     if (nameLower.includes('sarung tangan') || nameLower.includes('tinju') || nameLower.includes('cakar') || nameLower.includes('fist') || nameLower.includes('gauntlet')) return 'fist';
     if (nameLower.includes('jarum') || nameLower.includes('panah') || nameLower.includes('belati terbang') || nameLower.includes('shuriken') || nameLower.includes('hidden')) return 'hiddenWeapon';
 
-    return 'sword'; // default fallback untuk kategori weapon
+    return 'fist'; // Default fallback aman untuk pertarungan tanpa senjata spesifik adalah fist (tinju/unarmed)
 }
 
 /**

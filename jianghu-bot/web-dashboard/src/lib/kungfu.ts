@@ -14,7 +14,7 @@ export const KUNGFU_SKILLS_META: Record<string, KungfuSkillMeta> = {
         category: 'weapon',
         icon: '🗡️',
         description: 'Kemahiran menggunakan pedang tajam dalam pertempuran.',
-        trainHint: 'Gunakan pedang dalam pertempuran nyata atau sparring di sasana.'
+        trainHint: 'Equip dan bertarunglah menggunakan pedang dalam pertempuran turn-based RPG nyata.'
     },
     saber: {
         id: 'saber',
@@ -22,7 +22,7 @@ export const KUNGFU_SKILLS_META: Record<string, KungfuSkillMeta> = {
         category: 'weapon',
         icon: '⚔️',
         description: 'Kemahiran menggunakan golok berdaya tebas tinggi.',
-        trainHint: 'Gunakan golok dalam pertempuran nyata atau sparring di sasana.'
+        trainHint: 'Equip dan bertarunglah menggunakan golok dalam pertempuran turn-based RPG nyata.'
     },
     staff: {
         id: 'staff',

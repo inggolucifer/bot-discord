@@ -397,7 +397,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                 const { syncPlayerCultivation } = require('../../utils/cultivation');
 
                 await syncPlayerCultivation(player);
-                await player.populate('laws manuals.manualId');
+                await player.populate('laws manuals.manualId inventory.itemId');
 
                 // Get generic bandit stats
                 let banditMonster = await Monster.findOne({ guildId: player.guildId, key: 'bandit_generic' }).session(session);
@@ -457,6 +457,17 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                             opponentRealmIdx: oppRealmIdx,
                             isPvE: true
                         });
+                    }
+                    if (Array.isArray(battleResult.kungfuGains.usedSkills)) {
+                        for (const usedSkill of battleResult.kungfuGains.usedSkills) {
+                            if (usedSkill !== battleResult.kungfuGains.weaponDiscipline && ['finger', 'fist', 'special', 'wineArt'].includes(usedSkill)) {
+                                awardKungfuExp(player, usedSkill, Math.max(5, Math.floor(battleResult.kungfuGains.weaponExp * 0.5)), {
+                                    playerRealmIdx,
+                                    opponentRealmIdx: oppRealmIdx,
+                                    isPvE: true
+                                });
+                            }
+                        }
                     }
                 }
 

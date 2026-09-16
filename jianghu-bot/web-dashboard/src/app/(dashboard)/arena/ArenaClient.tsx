@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import FallbackImage from '@/components/FallbackImage';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -18,8 +18,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ArenaClient() {
     const { token, user } = useAuthStore();
     const router = useRouter();
+    const queryClient = useQueryClient();
 
-        const [selectedOpponentId, setSelectedOpponentId] = useState('');
+    const [selectedOpponentId, setSelectedOpponentId] = useState('');
 
     const { data: rawOpponents, isLoading: isOpponentsLoading } = useQuery({
         queryKey: ['arenaOpponents'],
@@ -78,6 +79,8 @@ export default function ArenaClient() {
 
             if (res.data.success) {
                 setBattleData(res.data.data);
+                queryClient.invalidateQueries({ queryKey: ['player-stats'] });
+                queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
                 // Start log playback
                 playBattleAnimation(res.data.data.logs);
             }
@@ -269,8 +272,25 @@ export default function ArenaClient() {
                                                     {battleData.logs[currentLogIndex].text.replace(/\*\*/g, '')}
                                                 </div>
                                             ) : battleData.logs[currentLogIndex].type === 'battle_end' ? (
-                                                <div className="text-3xl font-bold text-green-400 uppercase tracking-widest bg-black/80 p-8 rounded-lg border-2 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.3)]">
-                                                    {battleData.logs[currentLogIndex].text.replace(/\*\*/g, '')}
+                                                <div className="text-2xl sm:text-3xl font-bold text-green-400 uppercase tracking-widest bg-black/90 p-6 rounded-lg border-2 border-green-500 shadow-[0_0_50px_rgba(34,197,94,0.3)] max-w-lg mx-auto">
+                                                    <div>{battleData.logs[currentLogIndex].text.replace(/\*\*/g, '')}</div>
+                                                    {battleData.result?.kungfuRewards && battleData.result.kungfuRewards.length > 0 && (
+                                                        <div className="mt-4 pt-3 border-t border-green-500/30 text-left normal-case text-xs font-normal space-y-1.5">
+                                                            <div className="text-amber-400 font-bold tracking-normal flex items-center gap-1.5 text-xs">
+                                                                🥋 Hasil Penguasaan Kungfu (Turn-Based RPG):
+                                                            </div>
+                                                            {battleData.result.kungfuRewards.map((reward: any, rIdx: number) => (
+                                                                <div key={rIdx} className="text-slate-200 flex items-center justify-between text-[11px] bg-slate-950/80 px-2.5 py-1.5 rounded border border-slate-800">
+                                                                    <span>
+                                                                        <strong className="text-amber-300 uppercase">{reward.skill}</strong> <span className="text-slate-400">({reward.weaponName})</span>
+                                                                    </span>
+                                                                    <span className="font-bold text-emerald-400">
+                                                                        +{reward.expGained} XP {reward.levelUp ? `🌟 Tingkat ${reward.newLevel}!` : ''}
+                                                                    </span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="text-xl font-medium text-white max-w-lg mx-auto bg-black/40 p-4 rounded backdrop-blur-sm border border-[#333]">
