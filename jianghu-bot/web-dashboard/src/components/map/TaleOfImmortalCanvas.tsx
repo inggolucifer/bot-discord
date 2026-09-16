@@ -206,21 +206,7 @@ export default function TaleOfImmortalCanvas({
       const toScreenX = (wx: number) => (wx - camera.x + viewTilesX / 2) * currentTileSize;
       const toScreenY = (wy: number) => (wy - camera.y + viewTilesY / 2) * currentTileSize;
 
-      // 1. Gambar Garis Grid Semi-transparan (Estetik)
-      ctx.strokeStyle = 'rgba(120, 100, 70, 0.15)'; // Warna emas/tinta pudar
-      ctx.lineWidth = 1;
-      ctx.globalCompositeOperation = 'multiply';
-      for (let tx = minTileX; tx <= maxTileX; tx++) {
-        const sx = toScreenX(tx);
-        ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, height); ctx.stroke();
-      }
-      for (let ty = minTileY; ty <= maxTileY; ty++) {
-        const sy = toScreenY(ty);
-        ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(width, sy); ctx.stroke();
-      }
-      ctx.globalCompositeOperation = 'source-over';
-
-      // 2. Gambar Medan Dasar dengan Gaya Lukisan Tinta
+      // 1. Gambar Medan Dasar dengan Gaya Lukisan Tinta & Global Assets
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
           const tile = tileMap.get(`${tx},${ty}`);
@@ -318,35 +304,12 @@ export default function TaleOfImmortalCanvas({
              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           }
 
-          // 2.5B Kavling Tanah Siap Bangun (Claimable Plots) & Tanah Milik Pemain
-          if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction) {
-            if (!tile.ownerId) {
-              // Kavling belum bertuan (Border emas tipis putus-putus)
-              ctx.strokeStyle = 'rgba(217, 119, 6, 0.6)';
-              ctx.lineWidth = Math.max(1, 1.5 * camera.zoom);
-              ctx.setLineDash([4 * camera.zoom, 4 * camera.zoom]);
-              ctx.strokeRect(sx + 2, sy + 2, currentTileSize - 4, currentTileSize - 4);
-              ctx.setLineDash([]);
-
-              // Patok tanah kayu kecil
-              ctx.fillStyle = '#b45309';
-              ctx.fillRect(sx + currentTileSize * 0.45, sy + currentTileSize * 0.6, currentTileSize * 0.1, currentTileSize * 0.25);
-              ctx.fillStyle = '#f59e0b';
-              ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
-              ctx.textAlign = 'center';
-              ctx.fillText('🏷️', sx + currentTileSize / 2, sy + currentTileSize * 0.5);
-            } else {
-              // Tanah milik pemain (Border hijau/cyan solid)
-              ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)';
-              ctx.lineWidth = Math.max(1.5, 2 * camera.zoom);
-              ctx.strokeRect(sx + 2, sy + 2, currentTileSize - 4, currentTileSize - 4);
-
-              // Bendera kepemilikan
-              ctx.fillStyle = '#10b981';
-              ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
-              ctx.textAlign = 'center';
-              ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
-            }
+          // 2.5B Indikator Tanah Milik Pemain (Hanya jika sudah dibeli)
+          if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction && tile.ownerId) {
+            ctx.fillStyle = '#10b981';
+            ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
           }
 
           // 2.5C Spot Memancing (Ikan di Air)
@@ -428,6 +391,34 @@ export default function TaleOfImmortalCanvas({
           ctx.restore();
         }
       }
+
+      // 2.8 Garis Grid Presisi: Hitam Tipis Satu Garis (Single-Pass, Tidak Menimpa Yang Lain)
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)'; // Hitam tipis tegas & elegan
+      ctx.lineWidth = 1;
+
+      // Garis grid vertikal (tx dari minTileX sampai maxTileX + 1)
+      for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
+        const sx = Math.floor(toScreenX(tx)) + 0.5;
+        const startY = Math.max(0, Math.floor(toScreenY(minTileY)));
+        const endY = Math.min(height, Math.floor(toScreenY(maxTileY + 1)));
+        ctx.beginPath();
+        ctx.moveTo(sx, startY);
+        ctx.lineTo(sx, endY);
+        ctx.stroke();
+      }
+
+      // Garis grid horizontal (ty dari minTileY sampai maxTileY + 1)
+      for (let ty = minTileY; ty <= maxTileY + 1; ty++) {
+        const sy = Math.floor(toScreenY(ty)) + 0.5;
+        const startX = Math.max(0, Math.floor(toScreenX(minTileX)));
+        const endX = Math.min(width, Math.floor(toScreenX(maxTileX + 1)));
+        ctx.beginPath();
+        ctx.moveTo(startX, sy);
+        ctx.lineTo(endX, sy);
+        ctx.stroke();
+      }
+      ctx.restore();
 
       // 3. Landmark Kota Besar
       for (const t of tiles) {

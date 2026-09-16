@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { TileData } from './TaleOfImmortalCanvas';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
+import { getLandPriceForPlayer, LandPriceInfo } from '@/lib/landPrice';
 
 interface GridTileInspectorCardProps {
   tile: TileData;
@@ -41,6 +42,10 @@ interface GridTileInspectorCardProps {
   onPlantCrop?: (tile: TileData) => void;
   onHarvestCrop?: (tile: TileData) => void;
   onSearchArea?: () => void;
+  playerLandStats?: {
+    ownedPlotsCount: number;
+    nextPrice?: LandPriceInfo;
+  };
   onClose: () => void;
 }
 
@@ -62,11 +67,14 @@ export default function GridTileInspectorCard({
   onPlantCrop,
   onHarvestCrop,
   onSearchArea,
+  playerLandStats,
   onClose
 }: GridTileInspectorCardProps) {
   const dist = Math.max(Math.abs(playerPos.x - tile.tileX), Math.abs(playerPos.y - tile.tileY));
   const isAdjacentOrOn = dist <= 1;
   const isDirectlyOn = dist === 0;
+
+  const currentLandPrice = playerLandStats?.nextPrice || getLandPriceForPlayer(playerLandStats?.ownedPlotsCount || 0);
 
   // Real-time countdown timer jika sedang dibangun
   const [timeLeft, setTimeLeft] = useState<string>('');
@@ -250,10 +258,11 @@ export default function GridTileInspectorCard({
             </div>
 
             {!tile.ownerId && (
-              <div className="flex items-center justify-between text-[11px] bg-black/40 px-2.5 py-1 rounded border border-amber-900/40">
-                <span className="text-gray-400">Harga Kavling:</span>
-                <span className="font-bold text-amber-300 font-mono flex items-center gap-1">
-                  <Coins className="w-3 h-3 text-amber-400" /> {tile.plotPriceSilver || 100} Perak
+              <div className="flex items-center justify-between text-[11px] bg-black/40 px-2.5 py-1.5 rounded border border-amber-900/40">
+                <span className="text-gray-400">Tarif Kavling ke-{currentLandPrice.plotNumber}:</span>
+                <span className="font-bold text-amber-300 font-mono flex items-center gap-1.5">
+                  <span>{currentLandPrice.currency === 'gold' ? '🪙' : '🟢'}</span>
+                  {currentLandPrice.label}
                 </span>
               </div>
             )}
@@ -333,7 +342,7 @@ export default function GridTileInspectorCard({
               className="w-full py-2 bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 text-white font-serif font-bold rounded-lg shadow-md border border-emerald-500/60 flex items-center justify-center gap-2 transition-all active:scale-98"
             >
               <Coins className="w-3.5 h-3.5 text-amber-300" />
-              <span>Beli Kavling Tanah (100 Perak)</span>
+              <span>Beli Kavling Tanah ({currentLandPrice.label})</span>
             </button>
           )}
 

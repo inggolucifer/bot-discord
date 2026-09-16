@@ -33,6 +33,7 @@ import GridAssetDetailCard from './modals/GridAssetDetailCard';
 import GridAssetBuildModal from './modals/GridAssetBuildModal';
 import GridProfessionWorkbench from './modals/GridProfessionWorkbench';
 import GridExpeditionModal from './modals/GridExpeditionModal';
+import { LandPriceInfo } from '@/lib/landPrice';
 import GridSectHallModal from './modals/GridSectHallModal';
 import GridAmbushCombatModal from './modals/GridAmbushCombatModal';
 import GridTileInspectorCard from './GridTileInspectorCard';
@@ -51,6 +52,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   const [tiles, setTiles] = useState<TileData[]>([]);
   const [playerGrid, setPlayerGrid] = useState<any>(null);
   const [exploredChunks, setExploredChunks] = useState<string[]>([]);
+  const [playerLandStats, setPlayerLandStats] = useState<{ ownedPlotsCount: number; nextPrice?: LandPriceInfo } | null>(null);
 
   // Selection & Navigasi
   const [selectedTile, setSelectedTile] = useState<TileData | null>(null);
@@ -112,6 +114,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
       if (res.data.tiles) setTiles(res.data.tiles);
       if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
       if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+      if (res.data.playerLandStats) setPlayerLandStats(res.data.playerLandStats);
 
       setError(null);
       setLoading(false);
@@ -444,7 +447,14 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
         });
       }
       if (res.data.success || res.data.ok) {
-        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga 100 Perak!`);
+        const priceLabel = res.data.priceLabel || res.data.message || 'sesuai tarif';
+        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga ${priceLabel}!`);
+        if (res.data.ownedPlotsCount !== undefined) {
+          setPlayerLandStats({
+            ownedPlotsCount: res.data.ownedPlotsCount,
+            nextPrice: res.data.nextPrice
+          });
+        }
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error || 'Gagal membeli tanah'}`);
@@ -648,6 +658,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
             onPlantCrop={handlePlantCrop}
             onHarvestCrop={handleHarvestCrop}
             onSearchArea={handleSearch}
+            playerLandStats={playerLandStats || undefined}
             onClose={() => {
               setSelectedTile(null);
               setActivePath([]);
