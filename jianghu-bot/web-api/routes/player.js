@@ -141,6 +141,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 manuals: formattedManuals,
                 discordAvatar: discordAvatarUrl || null,
                 hasCompletedTour: player.hasCompletedTour || false,
+                prologueCompleted: player.prologueCompleted || false,
                 inventoryWeight,
                 carryCapacity
             }
@@ -2043,5 +2044,22 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 
 
 
+
+// Endpoint: POST /api/player/finish-prologue
+router.post('/finish-prologue', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        player.prologueCompleted = true;
+        await player.save();
+
+        res.json({ success: true, message: 'Prologue selesai.' });
+    } catch (error) {
+        console.error('[API-PLAYER] POST /finish-prologue error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    }
+});
 
 module.exports = router;

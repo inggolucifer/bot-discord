@@ -79,3 +79,21 @@ export const useAuthStore = create<AuthState>((set) => ({
     window.location.href = '/';
   }
 }));
+
+type UIModal = 'dashboard' | 'inventory' | 'sect' | 'cultivation' | 'pet' | 'assets' | null;
+
+interface UIState {
+  activeModal: UIModal;
+  setActiveModal: (modal: UIModal) => void;
+  closeModal: () => void;
+  isMapFullscreen: boolean;
+  setMapFullscreen: (val: boolean) => void;
+}
+
+export const useUIStore = create<UIState>((set) => ({
+  activeModal: 'dashboard', // Default shows the dashboard
+  setActiveModal: (modal) => set({ activeModal: modal }),
+  closeModal: () => set({ activeModal: null }),
+  isMapFullscreen: true,
+  setMapFullscreen: (val) => set({ isMapFullscreen: val })
+}));
