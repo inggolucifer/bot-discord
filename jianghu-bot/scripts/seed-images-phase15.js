@@ -5,13 +5,13 @@ const Monster = require('../models/Monster');
 const Npc = require('../models/Npc');
 const Location = require('../models/Location');
 const Manual = require('../models/Manual');
-const catalog = require('../config/imageCatalog');
-const { isUsableUrl } = require('../utils/imageResolve');
+const { isUsableUrl, getGlobalAssets } = require('../utils/imageResolve');
+const catalog = getGlobalAssets();
 
 /**
  * Phase 15 - Admin Image Sync Script
  *
- * Isi dulu config/imageCatalog.js lalu jalankan seed untuk sync ke DB (opsional).
+ * Isi dulu web-dashboard/src/config/globalAssets.ts lalu jalankan seed untuk sync ke DB (opsional).
  * Script ini tidak memaksa memasukkan placeholder ke database.
  *
  * Usage: node scripts/seed-images-phase15.js --guildId <ID> [--dry-run]

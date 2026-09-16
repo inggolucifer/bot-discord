@@ -1989,8 +1989,9 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         if (mappedGender !== undefined && ['Pria', 'Wanita'].includes(mappedGender)) player.gender = mappedGender;
 
         if (body !== undefined && typeof body === 'object') {
-             const catalog = require('../../config/imageCatalog');
-             const validKeys = (part, key) => key === null || key === '' || (catalog.body[part] && catalog.body[part][key] !== undefined);
+             const { getGlobalAssets } = require('../../utils/imageResolve');
+             const catalog = getGlobalAssets();
+             const validKeys = (part, key) => key === null || key === '' || (catalog.body && catalog.body[part] && catalog.body[part][key] !== undefined);
              if (!player.body) player.body = {};
              // Simple key string updates as per Phase 10
              if (body.face !== undefined && validKeys('face', body.face)) player.body.face = body.face;
