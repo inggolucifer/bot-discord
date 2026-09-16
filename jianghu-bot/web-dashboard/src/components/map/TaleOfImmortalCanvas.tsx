@@ -56,7 +56,6 @@ export default function TaleOfImmortalCanvas({
   onTileClick,
   onTileHover,
   onActionWalk,
-  onActionHarvest,
   onActionInspect,
   onClearTarget,
   weather = 'none',
