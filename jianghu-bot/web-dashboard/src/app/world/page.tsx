@@ -38,7 +38,7 @@ export default function WorldPage() {
   const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
 
   // Map View State
-  const [mapView, setMapView] = useState<'grid' | 'world'>('grid');
+  const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
   const [selectedRegionSlug, setSelectedRegionSlug] = useState<string | null>(null);
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export default function WorldPage() {
          setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
          if (!selectedRegionSlug) {
              setSelectedRegionSlug(res.data.currentLocation.regionSlug);
-             setMapView('region');
+             setMapView('grid');
          }
       }
     } catch (e) {
