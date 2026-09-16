@@ -404,6 +404,24 @@ function getTileAt(tileX, tileY) {
   const territoryInfo = getTerritoryInfo(tileX, tileY, terrainType, false);
   spiritualQiDensity = Math.round(spiritualQiDensity * region.qiDensityModifier);
 
+  // Penentuan Resource Node Spasial
+  let resourceType = null;
+  if (terrainType === 'river' || terrainType === 'ocean') {
+    resourceType = 'fish';
+  } else if (terrainType === 'forest' || terrainType === 'bamboo_forest') {
+    resourceType = ((tileX * 31 + tileY * 17) % 2 === 0) ? 'herb' : 'wood';
+  } else if (terrainType === 'mountain' || terrainType === 'azure_mountain') {
+    if (elevation > 0.65) resourceType = 'ore';
+  }
+
+  // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable)
+  // Dataran rumput (plains) terbuka di luar pemukiman yang tidak solid dapat dibeli dan dibangun oleh pemain
+  const isClaimable = terrainType === 'plains' && !isSolid && !isSettlementTile;
+  if (isClaimable) {
+    tileType = 'buildable_plot';
+    if (!label) label = 'Kavling Tanah Siap Bangun';
+  }
+
   return {
     tileX,
     tileY,
@@ -411,6 +429,9 @@ function getTileAt(tileX, tileY) {
     tileType,
     isSolid,
     label,
+    resourceType,
+    isClaimable,
+    plotPriceSilver: isClaimable ? 100 : 0,
     baseTemperature,
     spiritualQiDensity,
     regionId: region.id,

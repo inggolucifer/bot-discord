@@ -2196,15 +2196,34 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
             tileY: targetY
         });
 
-        if (!tile || tile.tileType !== 'buildable_plot') {
-            return res.status(400).json({ error: 'Tile ini bukan plot tanah yang dapat dibeli (bukan buildable_plot).' });
+        // Jika tile belum ada di MongoDB (pada Procedural World Map 5000x5000), periksa dari Procedural World Engine
+        if (!tile) {
+            const pEngine = require('../../utils/proceduralWorldEngine');
+            const pTile = pEngine.getTileAt(targetX, targetY);
+            if (pTile && pTile.isClaimable && !pTile.isSolid) {
+                tile = new ZoneTile({
+                    guildId: player.guildId,
+                    zoneId: currentZoneId,
+                    tileX: targetX,
+                    tileY: targetY,
+                    tileType: 'buildable_plot',
+                    terrainType: pTile.terrainType || 'plains',
+                    isClaimable: true,
+                    isSolid: false,
+                    plotPriceSilver: 100
+                });
+            }
+        }
+
+        if (!tile || (!tile.isClaimable && tile.tileType !== 'buildable_plot')) {
+            return res.status(400).json({ error: 'Tile ini bukan plot tanah yang dapat dibeli (bukan kavling tanah).' });
         }
 
         if (tile.isOccupied || tile.ownerId) {
             return res.status(400).json({ error: `Plot tanah ini sudah menjadi milik ${tile.ownerName || 'pemain lain'}!` });
         }
 
-        const priceSilver = tile.plotPriceSilver || (gridConfig.BASE_PLOT_PRICE_SILVER * (zoneConfig.ambientDangerTier || 1));
+        const priceSilver = tile.plotPriceSilver || 100;
         const { payCurrency } = require('../../utils/currency');
 
         if (!payCurrency(player.currency, priceSilver, 'silver')) {
@@ -2251,7 +2270,7 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             tileY: targetY
         });
 
-        if (!tile || tile.tileType !== 'buildable_plot') {
+        if (!tile || (!tile.isClaimable && tile.tileType !== 'buildable_plot')) {
             return res.status(400).json({ error: 'Tile bukan plot pembangunan yang valid.' });
         }
 

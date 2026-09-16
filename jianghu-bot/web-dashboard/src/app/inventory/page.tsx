@@ -374,7 +374,7 @@ export default function InventoryPage() {
                   return (
                     <div className="absolute bottom-2 right-2 flex gap-1">
                       <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-red-500 border-red-500/50 hover:bg-red-500/20" onClick={(e) => { e.stopPropagation(); setItemToDiscard(item); setDiscardQuantity(1); setDiscardModalOpen(true); }}>Buang</Button>
-                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/20" onClick={(e) => { e.stopPropagation(); window.location.href = '/professions/farming'; }} disabled={actionLoading}>Pakai di Farming</Button>
+                      <Button size="sm" variant="outline" className="h-6 px-2 text-[10px] text-yellow-400 border-yellow-400/50 hover:bg-yellow-400/20" onClick={(e) => { e.stopPropagation(); window.location.href = '/world'; }} disabled={actionLoading}>Pakai di Lahan Dunia</Button>
                     </div>
                   );
                 } else if (isUsableConsumable) {

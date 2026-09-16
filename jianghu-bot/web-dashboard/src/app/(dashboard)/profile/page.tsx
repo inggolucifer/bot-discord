@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
-import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, Backpack, Compass, Hammer, Sprout, Lock } from 'lucide-react';
+import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, Backpack, Compass, Hammer, Sprout, Lock, Home } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { motion } from 'framer-motion';
 import { getRarityBorderClass } from './components/RarityHelpers';
@@ -175,24 +175,24 @@ export default function ProfilePage() {
               <Backpack className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
               <span className="text-sm font-bold text-gray-300">Inventory</span>
           </Link>
-          <Link href="/professions" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
-              <Hammer className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
-              <span className="text-sm font-bold text-gray-300">Profesi</span>
+          <Link href="/world" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+              <MapPin className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
+              <span className="text-sm font-bold text-gray-300">Peta Dunia</span>
           </Link>
           <Link href="/cultivation" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
               <Compass className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
               <span className="text-sm font-bold text-gray-300">Kultivasi</span>
           </Link>
-          <Link href="/professions/farming" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+          <Link href="/assets" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
               <div className="relative inline-block">
-                <Sprout className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
+                <Home className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
                 {farmSummary.ready > 0 && (
                     <span className="absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                         Panen x{farmSummary.ready}
                     </span>
                 )}
               </div>
-              <span className="text-sm font-bold text-gray-300 block">Farming</span>
+              <span className="text-sm font-bold text-gray-300 block">Lahan & Aset</span>
           </Link>
       </div>
 
@@ -386,7 +386,7 @@ export default function ProfilePage() {
                                       </div>
                                   </div>
                               ) : (
-                                  <div className="text-[10px] text-gray-500 italic mt-1 px-1">Buka di menu Profesi</div>
+                                  <div className="text-[10px] text-gray-500 italic mt-1 px-1">Tingkatkan di Peta Spasial Dunia</div>
                               )}
                           </div>
                       );
@@ -399,13 +399,13 @@ export default function ProfilePage() {
                 <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg">
                    <div className="flex justify-between items-center mb-3 border-b border-[#333] pb-2">
                        <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider">Status Ladang</h3>
-                       <Link href="/professions/farming" className="text-xs text-[#c5a880] hover:underline">Kelola &rarr;</Link>
+                       <Link href="/world" className="text-xs text-[#c5a880] hover:underline">Kelola di Peta &rarr;</Link>
                    </div>
 
                    {farmSummary.ready > 0 && (
                       <div className="mb-3 bg-green-900/40 border border-green-500/50 rounded p-2 text-center">
                           <span className="text-green-400 font-bold text-sm">Ada tanaman siap panen!</span>
-                          <Link href="/professions/farming" className="ml-2 text-xs bg-green-700 hover:bg-green-600 text-white px-2 py-1 rounded transition">Panen Sekarang</Link>
+                          <Link href="/world" className="ml-2 text-xs bg-green-700 hover:bg-green-600 text-white px-2 py-1 rounded transition">Panen di Peta</Link>
                       </div>
                    )}
 
