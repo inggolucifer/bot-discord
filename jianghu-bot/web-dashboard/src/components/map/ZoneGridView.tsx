@@ -166,29 +166,13 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
         setActivePath([]);
 
         const finalPoint = waypoints[waypoints.length - 1];
-        try {
-          const res = await api.post('/world/zone/step-move', {
-            waypoints: [finalPoint],
-            zoneId: activeZoneId
-          });
-
-          if (res.data.arrivedPosition) {
-            setPlayerGrid((prev: any) => ({
-              ...prev,
-              position: { ...prev?.position, tileX: res.data.arrivedPosition.tileX, tileY: res.data.arrivedPosition.tileY }
-            }));
-          }
-          if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
-
-          if (res.data.encounter?.encountered) {
-            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName}!`);
-          } else {
-            showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
-          }
+        
+        // Sinkronisasi langkah terakhir sudah dieksekusi di tick sebelumnya (saat stepIndex === waypoints.length).
+        // Kita hanya perlu menunggu sejenak agar request tersebut selesai di database, lalu refresh data.
+        setTimeout(() => {
+          showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
           fetchZoneData(finalPoint.x, finalPoint.y);
-        } catch {
-          fetchZoneData();
-        }
+        }, 500);
         return;
       }
 
