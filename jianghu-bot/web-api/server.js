@@ -12,9 +12,12 @@ const setupServer = (client) => {
 
     const cookieParser = require('cookie-parser');
 
-    // Konfigurasi asal yang lebih aman
+    // Konfigurasi asal yang lebih aman & fleksibel
     const allowedOrigins = [
         'http://localhost:3000',
+        'http://localhost:3001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3001',
         'https://immortal-x.online',
         'https://www.immortal-x.online',
         'https://api.immortal-x.online'
@@ -23,23 +26,48 @@ const setupServer = (client) => {
         allowedOrigins.push(process.env.FRONTEND_URL);
     }
 
-    const corsOptions = {
-        origin: function (origin, callback) {
-            // Allow requests with no origin (like mobile apps or curl requests)
-            if (!origin) return callback(null, true);
-            if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+    const isAllowedOrigin = (origin) => {
+        if (!origin) return true;
+        const normalized = origin.trim().replace(/\/$/, '').toLowerCase();
+        if (allowedOrigins.some(o => o.toLowerCase() === normalized)) return true;
+        if (allowedOrigins.includes('*')) return true;
+        if (normalized.endsWith('immortal-x.online')) return true;
+        if (normalized.includes('localhost') || normalized.includes('127.0.0.1')) return true;
+        return false;
     };
 
-    // Apply CORS before other middlewares
+    const corsOptions = {
+        origin: function (origin, callback) {
+            if (isAllowedOrigin(origin)) {
+                return callback(null, true);
+            }
+            // Return false instead of throwing Error to prevent 500 crashes
+            return callback(null, false);
+        },
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With', 'Accept', 'Origin'],
+        exposedHeaders: ['Set-Cookie']
+    };
+
+    // Apply CORS before other middlewares & handle preflight OPTIONS
     app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions));
+
+    // Fallback explicit CORS preflight response
+    app.use((req, res, next) => {
+        const origin = req.headers.origin;
+        if (origin && isAllowedOrigin(origin)) {
+            res.header('Access-Control-Allow-Origin', origin);
+            res.header('Access-Control-Allow-Credentials', 'true');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie, X-Requested-With, Accept, Origin');
+        }
+        if (req.method === 'OPTIONS') {
+            return res.sendStatus(204);
+        }
+        next();
+    });
 
     // Security middlewares
     app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
@@ -49,11 +77,18 @@ const setupServer = (client) => {
     const io = new Server(server, {
         path: '/api/socket.io',
         cors: {
-            origin: allowedOrigins,
+            origin: function (origin, callback) {
+                if (isAllowedOrigin(origin)) {
+                    callback(null, true);
+                } else {
+                    callback(null, false);
+                }
+            },
             methods: ["GET", "POST", "OPTIONS"],
             credentials: true
         },
-        transports: ['websocket', 'polling']
+        transports: ['polling', 'websocket'],
+        allowEIO3: true
     });
 
 
