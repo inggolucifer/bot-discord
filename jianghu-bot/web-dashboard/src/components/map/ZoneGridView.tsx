@@ -13,7 +13,11 @@ import {
   ShieldAlert,
   Building2,
   Trees,
-  SquareX
+  SquareX,
+  Fish,
+  Wheat,
+  Home,
+  Coins
 } from 'lucide-react';
 import ThermalStatusBadge from '../ui/ThermalStatusBadge';
 import PropertyInteriorView from './PropertyInteriorView';
@@ -278,6 +282,143 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     }
   };
 
+  // Masuk Interior Bangunan (Toko / Rumah)
+  const handleEnterBuilding = async (tile: TileData) => {
+    try {
+      const res = await api.post('/grid/building/enter', {
+        zoneId: activeZoneId,
+        x: tile.tileX,
+        y: tile.tileY
+      });
+      if (!res.data.ok) {
+        showMessage(`❌ ${res.data.error || 'Gagal masuk bangunan'}`);
+        return;
+      }
+      const layoutRes = await api.get(`/grid/interior/${res.data.structureId}`);
+      if (layoutRes.data.ok) {
+        const layout1D: number[] = [];
+        for (const row of layoutRes.data.matrix) {
+          for (const cell of row) {
+            layout1D.push(cell.tileId);
+          }
+        }
+        setInteriorData({
+          id: res.data.structureId,
+          name: res.data.structureName,
+          ownerId: res.data.ownerName,
+          ownerName: res.data.ownerName,
+          isOwner: true,
+          subGridWidth: layoutRes.data.width,
+          subGridHeight: layoutRes.data.height,
+          facilities: {
+            qiGatheringArrayTier: 1,
+            alchemyCrucibleTier: 1,
+            forgeAnvilTier: 1,
+            herbPlotsUnlocked: 2
+          },
+          layout: layout1D,
+          tileMetadata: {
+            0: { name: 'Lantai Kayu', isSolid: false, interactable: false },
+            1: { name: 'Dinding Kayu', isSolid: true, interactable: false },
+            2: { name: 'Meja Teh', isSolid: true, interactable: true, action: 'reception_chat' },
+            3: { name: 'Bantal Semadi', isSolid: false, interactable: true, action: 'minigame_acupoint' },
+            4: { name: 'Kuali Alkimia', isSolid: true, interactable: true, action: 'minigame_crucible' },
+            5: { name: 'Landasan Tempa', isSolid: true, interactable: true, action: 'minigame_kata' },
+            6: { name: 'Petak Herbal', isSolid: false, interactable: true, action: 'harvest_herbs' },
+            7: { name: 'Pintu Keluar', isSolid: false, interactable: true, action: 'exit_property' }
+          }
+        });
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal masuk bangunan');
+    }
+  };
+
+  // Beli Kavling Tanah
+  const handlePurchaseLand = async (tile: TileData) => {
+    try {
+      const res = await api.post('/grid/land/purchase', {
+        x: tile.tileX,
+        y: tile.tileY,
+        zoneId: activeZoneId
+      });
+      if (res.data.ok) {
+        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga ${res.data.pricePaid} Perak!`);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data.error}`);
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal membeli tanah');
+    }
+  };
+
+  // Memancing
+  const handleFish = async () => {
+    try {
+      const res = await api.post('/grid/profession/fish', { zoneId: activeZoneId });
+      if (res.data.ok) {
+        showMessage(`🎣 Strike! Mendapatkan 1x ${res.data.fishName} (Level Pancing: ${res.data.fishingLevel})`);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data.error}`);
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal memancing');
+    }
+  };
+
+  // Meramu / Panen Alam
+  const handleForage = async () => {
+    try {
+      const res = await api.post('/grid/profession/forage', { zoneId: activeZoneId });
+      if (res.data.ok) {
+        showMessage(`🌿 Berhasil memanen ${res.data.quantity}x ${res.data.itemName}!`);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data.error}`);
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal meramu');
+    }
+  };
+
+  // Tanam & Panen
+  const handlePlantCrop = async (tile: TileData) => {
+    try {
+      const res = await api.post('/grid/profession/farm/plant', {
+        x: tile.tileX,
+        y: tile.tileY,
+        cropName: 'Gandum Emas'
+      });
+      if (res.data.ok) {
+        showMessage(`🌱 Berhasil menanam Gandum Emas di petak (${tile.tileX}, ${tile.tileY})!`);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data.error}`);
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal menanam bibit');
+    }
+  };
+
+  const handleHarvestCrop = async (tile: TileData) => {
+    try {
+      const res = await api.post('/grid/profession/farm/harvest', {
+        x: tile.tileX,
+        y: tile.tileY
+      });
+      if (res.data.ok) {
+        showMessage(`🌾 Berhasil memanen ${res.data.quantity}x ${res.data.cropName}!`);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data.error}`);
+      }
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal memanen tanaman');
+    }
+  };
+
   if (error) {
     return (
       <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
@@ -468,7 +609,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             </button>
           )}
 
-          {/* Tombol Masuk Paviliun Meditasi (Gambar 5) jika berada di scenic courtyard */}
+          {/* Tombol Masuk Paviliun Meditasi jika berada di scenic courtyard */}
           {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
             <button
               onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
@@ -476,6 +617,72 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>Masuk Taman Paviliun</span>
+            </button>
+          )}
+
+          {/* Tombol Masuk Bangunan Interior (Rumah / Toko) */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
+            <button
+              onClick={() => handleEnterBuilding(selectedTile)}
+              className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-3.5 py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <DoorOpen className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Masuk {selectedTile.buildingName || 'Bangunan'}</span>
+            </button>
+          )}
+
+          {/* Tombol Beli Kavling Tanah */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && !selectedTile.ownerId && (
+            <button
+              onClick={() => handlePurchaseLand(selectedTile)}
+              className="bg-amber-900/90 hover:bg-amber-800 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-500/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+            >
+              <Coins className="w-3.5 h-3.5 text-amber-300" />
+              <span>Klaim Tanah (100 Perak)</span>
+            </button>
+          )}
+
+          {/* Tombol Tanam Tanaman */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && !selectedTile.cropType && (
+            <button
+              onClick={() => handlePlantCrop(selectedTile)}
+              className="bg-lime-950 hover:bg-lime-900 text-lime-200 px-3.5 py-1.5 rounded-lg border border-lime-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+            >
+              <Wheat className="w-3.5 h-3.5 text-lime-400" />
+              <span>Tanam Gandum</span>
+            </button>
+          )}
+
+          {/* Tombol Panen Tanaman */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.cropType && (
+            <button
+              onClick={() => handleHarvestCrop(selectedTile)}
+              className="bg-yellow-950 hover:bg-yellow-900 text-yellow-200 px-3.5 py-1.5 rounded-lg border border-yellow-500/70 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+            >
+              <Wheat className="w-3.5 h-3.5 text-yellow-400" />
+              <span>Panen {selectedTile.cropType}</span>
+            </button>
+          )}
+
+          {/* Tombol Mancing */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.resourceType === 'fish' || selectedTile.terrainType === 'water' || selectedTile.terrainType === 'river') && (
+            <button
+              onClick={handleFish}
+              className="bg-cyan-950 hover:bg-cyan-900 text-cyan-200 px-3.5 py-1.5 rounded-lg border border-cyan-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+            >
+              <Fish className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Mancing</span>
+            </button>
+          )}
+
+          {/* Tombol Panen Sumber Daya Alam (Forage) */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.resourceType && selectedTile.resourceType !== 'fish' && (
+            <button
+              onClick={handleForage}
+              className="bg-teal-950 hover:bg-teal-900 text-teal-200 px-3.5 py-1.5 rounded-lg border border-teal-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+            >
+              <Trees className="w-3.5 h-3.5 text-teal-400" />
+              <span>Ambil Sumber Daya</span>
             </button>
           )}
 
