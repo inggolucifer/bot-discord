@@ -266,7 +266,7 @@ const playerSchema = new mongoose.Schema({
   },
 
   age: { type: Number, default: 16 },
-  gender: { type: String, enum: ['Pria', 'Wanita', null], default: null },
+  gender: { type: String, enum: ['Pria', 'Wanita', 'Laki-laki', 'Perempuan', null], default: null },
 
 
   stats: { type: playerStatsSchema, default: () => ({}) },

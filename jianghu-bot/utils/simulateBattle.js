@@ -33,19 +33,19 @@ function simulateBattle(challenger, opponent, options = {}) {
     let combatLogs = [];
 
     const p1Skills = (challenger.manuals || []).filter(m => m?.manualId).map(m => ({
-        name: m.manualId.name,
-        type: m.manualId.effectType || 'damage',
-        value: m.manualId.effectValue || 1.2,
-        triggerChance: m.manualId.triggerChance !== undefined ? m.manualId.triggerChance : 0.5
+        name: m.manualId?.name || 'Jurus Pendekar',
+        type: m.manualId?.effectType || 'damage',
+        value: m.manualId?.effectValue || 1.2,
+        triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5
     }));
     const p2Skills = (opponent.manuals || []).filter(m => m?.manualId).map(m => ({
-        name: m.manualId.name,
-        type: m.manualId.effectType || 'damage',
-        value: m.manualId.effectValue || 1.2,
-        triggerChance: m.manualId.triggerChance !== undefined ? m.manualId.triggerChance : 0.5
+        name: m.manualId?.name || 'Jurus Lawan',
+        type: m.manualId?.effectType || 'damage',
+        value: m.manualId?.effectValue || 1.2,
+        triggerChance: m.manualId?.triggerChance !== undefined ? m.manualId?.triggerChance : 0.5
     }));
 
-    const getElement = (playerObj) => playerObj.laws && playerObj.laws.length > 0 ? playerObj.laws[0].element.toLowerCase() : 'netral';
+    const getElement = (playerObj) => (playerObj?.laws && playerObj.laws.length > 0 && playerObj.laws[0]?.element && typeof playerObj.laws[0].element === 'string') ? playerObj.laws[0].element.toLowerCase() : 'netral';
     const p1Element = getElement(challenger);
     const p2Element = getElement(opponent);
 

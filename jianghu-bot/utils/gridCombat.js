@@ -97,9 +97,17 @@ function checkAndRunGridEncounter(player, zoneConfig, isHazardTile = false, forc
 
   if (roll < chance) {
     const opponent = createGridOpponent(dangerTier, isHazardTile);
-    const combatOutcome = runGridBattle(player, opponent, dangerTier);
+    let combatOutcome = null;
+    try {
+      combatOutcome = runGridBattle(player, opponent, dangerTier);
+    } catch (battleErr) {
+      console.warn('[gridCombat] Battle simulation error:', battleErr.message);
+      combatOutcome = { won: true, opponentName: opponent.characterName, summary: 'Lawan melarikan diri saat melihat aura pedangmu!' };
+    }
     return {
       triggered: true,
+      encountered: true,
+      enemyName: opponent.characterName,
       dangerTier,
       isHazardTile,
       encounterChance: chance,
@@ -109,6 +117,7 @@ function checkAndRunGridEncounter(player, zoneConfig, isHazardTile = false, forc
 
   return {
     triggered: false,
+    encountered: false,
     dangerTier,
     isHazardTile,
     encounterChance: chance

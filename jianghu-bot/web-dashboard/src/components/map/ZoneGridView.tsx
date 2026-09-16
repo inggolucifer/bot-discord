@@ -186,8 +186,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             } else {
               fetchZoneData();
             }
-          } else if (res.data.encounter?.encountered) {
-            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName}!`);
+          } else if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
+            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
             fetchZoneData(res.data.arrivedPosition?.tileX, res.data.arrivedPosition?.tileY);
           } else {
             const finalPoint = allWaypoints[allWaypoints.length - 1];
@@ -195,8 +195,11 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             fetchZoneData(res.data.arrivedPosition?.tileX ?? finalPoint.x, res.data.arrivedPosition?.tileY ?? finalPoint.y);
           }
         } catch (err: any) {
-          console.error('[StepMove] Final sync error:', err);
-          fetchZoneData();
+          const errMsg = err?.response?.data?.error || err?.message || 'Gagal sinkronisasi pergerakan ke server.';
+          console.error('[StepMove] Final sync error:', err?.response?.data || err);
+          showMessage(`⚠️ ${errMsg}`);
+          const finalPoint = allWaypoints[allWaypoints.length - 1];
+          fetchZoneData(finalPoint?.x, finalPoint?.y);
         }
 
         setIsWalking(false);
