@@ -1,6 +1,7 @@
 const { getComputedStats } = require('./statCalculator');
 const { COMBO_HIT_MULTIPLIER, BASE_CRIT_RATE, BASE_COMBO_RATE } = require('../config/combatRates');
 const COMBAT_COND = require('../config/combatConditions');
+const { resolveWeaponDiscipline, getKungfuLevel, getStealingSuccessBonus } = require('./kungfuMastery');
 
 function cloneConditions(conds) {
     if (!conds || !Array.isArray(conds)) return [];
@@ -8,6 +9,16 @@ function cloneConditions(conds) {
 }
 
 function simulateBattle(challenger, opponent, options = {}) {
+    let p1EquippedWeapon = null;
+    if (challenger.inventory && challenger.equipment?.weapon) {
+        const wId = challenger.equipment.weapon.toString();
+        const invW = challenger.inventory.find(i => (i._id && i._id.toString() === wId) || (i.id && i.id.toString() === wId));
+        if (invW && invW.itemId) {
+            p1EquippedWeapon = invW.itemId;
+        }
+    }
+    const p1WeaponDiscipline = resolveWeaponDiscipline(p1EquippedWeapon);
+
     const p1StatsRaw = getComputedStats(challenger, challenger.laws, challenger.manuals);
     // Opponents may not have currentHp saved
     let p2StatsRaw = opponent.statBlock ? { maxHp: opponent.statBlock.hp, atk: opponent.statBlock.atk, def: opponent.statBlock.def, spd: opponent.statBlock.spd, critHitRate: 0.05, critDmgRate: 1.5, comboRate: 0.05 } : getComputedStats(opponent, opponent.laws, opponent.manuals);
@@ -228,14 +239,16 @@ function simulateBattle(challenger, opponent, options = {}) {
         }
 
         // Steal check (only p1 PvE)
-        if (currentAttacker === 1 && options.allowSteal && !stealAttempted && challenger.kungfuSkills?.stealing > 0) {
-            let stealChance = COMBAT_COND.STEAL_BASE_CHANCE + (challenger.kungfuSkills.stealing * COMBAT_COND.STEAL_PER_SKILL);
+        if (currentAttacker === 1 && options.allowSteal && !stealAttempted) {
+            const stealExp = challenger.kungfuSkills?.stealing || 0;
+            const stealLevel = getKungfuLevel(stealExp).level;
+            const stealChance = COMBAT_COND.STEAL_BASE_CHANCE + getStealingSuccessBonus(stealLevel);
             stealAttempted = true;
             if (Math.random() < stealChance) {
-                pushLog(`🕵️ **${attacker.characterName}** mencoba mencuri dan berhasil!`, 'steal_success');
+                pushLog(`🕵️ **${attacker.characterName}** memanfaatkan kelengahan lawan dan berhasil mencuri!`, 'steal_success');
                 stealSuccess = true;
             } else {
-                pushLog(`🕵️ **${attacker.characterName}** mencoba mencuri tapi gagal.`, 'steal_fail');
+                pushLog(`🕵️ **${attacker.characterName}** mencoba mencuri tapi lawan waspada.`, 'steal_fail');
                 stealSuccess = false;
             }
         }
@@ -422,6 +435,20 @@ function simulateBattle(challenger, opponent, options = {}) {
 
     pushLog(`🏆 **${winnerIdx === 1 ? challenger.characterName : opponent.characterName}** memenangkan duel ini!`, 'battle_end', { winner: winnerIdx });
 
+    // Hitung perolehan Kungfu XP dari aksi nyata dalam pertarungan
+    let baseCombatExp = Math.min(50, 15 + (round * 2));
+    if (winnerIdx === 1) baseCombatExp += 10;
+    let stealingExp = 0;
+    if (stealAttempted) {
+        stealingExp = stealSuccess ? 25 : 10;
+    }
+
+    const kungfuGains = {
+        weaponDiscipline: p1WeaponDiscipline,
+        weaponExp: baseCombatExp,
+        stealingExp
+    };
+
     return {
         logs: combatLogs,
         winnerIdx,
@@ -433,7 +460,9 @@ function simulateBattle(challenger, opponent, options = {}) {
         p2Stats,
         p1Conditions,
         p2Conditions,
-        stealSuccess, stealAttempted
+        stealSuccess,
+        stealAttempted,
+        kungfuGains
     };
 }
 

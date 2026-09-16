@@ -23,7 +23,10 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
   let mult = { hp: 1, atk: 1, def: 1, spd: 1 };
   let flat = { hp: 0, atk: 0, def: 0, spd: 0 };
 
-  // 2-Eq. Equipment Stats from Equipped Items (Quality Multiplier applied)
+  // 2-Eq. Equipment Stats from Equipped Items (Quality Multiplier & Kungfu Mastery applied)
+  const { resolveWeaponDiscipline, getKungfuLevel, getWeaponMasteryMultiplier, getUnarmedBonus } = require('./kungfuMastery');
+  let hasEquippedWeapon = false;
+
   if (player.inventory && player.inventory.length > 0) {
     // Check equipped items robustly (by isEquipped flag OR if it exists in the equipment slots)
     const equipmentSlotValues = player.equipment
@@ -37,13 +40,32 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         const item = invItem.itemId;
         if (item) {
           const quality = invItem.qualityMultiplier || 1.0;
+          let masteryMult = 1.0;
+
+          if (item.category === 'weapon') {
+            hasEquippedWeapon = true;
+            const discipline = resolveWeaponDiscipline(item);
+            const kungfuExp = player.kungfuSkills ? (player.kungfuSkills[discipline] || 0) : 0;
+            const kungfuLevel = getKungfuLevel(kungfuExp).level;
+            masteryMult = getWeaponMasteryMultiplier(kungfuLevel);
+          }
+
           flat.hp += Math.floor((Number(item.baseHp) || 0) * quality);
-          flat.atk += Math.floor((Number(item.baseAtk) || 0) * quality);
-          flat.def += Math.floor((Number(item.baseDef) || 0) * quality);
+          flat.atk += Math.floor((Number(item.baseAtk) || 0) * quality * masteryMult);
+          flat.def += Math.floor((Number(item.baseDef) || 0) * quality * masteryMult);
           flat.spd += Math.floor((Number(item.baseSpd) || 0) * quality);
         }
       }
     }
+  }
+
+  // Jika bertarung tangan kosong (tanpa senjata), terapkan bonus kemahiran tinju (fist)
+  let unarmedBonus = { bonusAtk: 0, bonusComboRate: 0, bonusCritRate: 0 };
+  if (!hasEquippedWeapon) {
+    const fistExp = player.kungfuSkills ? (player.kungfuSkills.fist || 0) : 0;
+    const fistLevel = getKungfuLevel(fistExp).level;
+    unarmedBonus = getUnarmedBonus(fistLevel);
+    flat.atk += unarmedBonus.bonusAtk;
   }
 
   // 2a. System Cultivation Multiplier (if not a normal cultivator)
@@ -169,6 +191,8 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
   // so the frontend can access them, without breaking legacy bot logic that expects numbers.
   totals._base = base;
   totals._equip = flat; // Only flat equipment/items bonuses for now
+  totals._unarmedBonus = unarmedBonus;
+  totals._hasEquippedWeapon = hasEquippedWeapon;
 
   return totals;
 }

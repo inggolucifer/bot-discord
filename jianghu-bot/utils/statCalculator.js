@@ -38,6 +38,14 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
     // Apply Kungfu Skill flat bonuses (if any are defined later, keeping it 0 for now as per instructions)
     // if (player.kungfuSkills) { ... }
 
+    let critHitRate = BASE_CRIT_RATE;
+    let comboRate = BASE_COMBO_RATE;
+
+    if (baseStats._unarmedBonus) {
+        critHitRate = Number((critHitRate + (baseStats._unarmedBonus.bonusCritRate || 0)).toFixed(4));
+        comboRate = Number((comboRate + (baseStats._unarmedBonus.bonusComboRate || 0)).toFixed(4));
+    }
+
     return {
         maxHp,
         maxMp,
@@ -46,11 +54,13 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         atk,
         def,
         spd,
-        critHitRate: BASE_CRIT_RATE,
+        critHitRate,
         critDmgRate: BASE_CRIT_DMG,
-        comboRate: BASE_COMBO_RATE,
+        comboRate,
         _base: baseStats._base,
-        _equip: baseStats._equip
+        _equip: baseStats._equip,
+        _unarmedBonus: baseStats._unarmedBonus,
+        _hasEquippedWeapon: baseStats._hasEquippedWeapon
     };
 }
 

@@ -299,8 +299,30 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 player.currentHp = battleResult.p1Hp;
                 player.combatConditions = battleResult.p1Conditions;
 
+                // Terapkan perolehan Kungfu XP organik dari pertarungan
+                const { awardKungfuExp } = require('../../utils/kungfuMastery');
+                const { getRealmIndex } = require('../../utils/cultivation');
+                const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                const oppRealmIdx = opponent.statBlock?.realmIndex !== undefined ? opponent.statBlock.realmIndex : playerRealmIdx;
+
+                if (battleResult.kungfuGains) {
+                    if (battleResult.kungfuGains.weaponDiscipline && battleResult.kungfuGains.weaponExp > 0) {
+                        awardKungfuExp(player, battleResult.kungfuGains.weaponDiscipline, battleResult.kungfuGains.weaponExp, {
+                            playerRealmIdx,
+                            opponentRealmIdx: oppRealmIdx,
+                            isPvE: true
+                        });
+                    }
+                    if (battleResult.kungfuGains.stealingExp > 0) {
+                        awardKungfuExp(player, 'stealing', battleResult.kungfuGains.stealingExp, {
+                            playerRealmIdx,
+                            opponentRealmIdx: oppRealmIdx,
+                            isPvE: true
+                        });
+                    }
+                }
+
                 if (battleResult.stealSuccess) {
-                    player.kungfuSkills.stealing = (player.kungfuSkills.stealing || 0) + 1;
 
                     let stolenItem = null;
                     let stolenCopper = 0;

@@ -39,6 +39,9 @@ export interface ItemData {
   category: ItemCategory;
   tier: number;
   toolType?: 'fishing_rod' | 'furnace' | 'forge' | 'kitchen_tool' | 'farming_tool' | null;
+  weaponType?: string | null;
+  requiredKungfuSkill?: string | null;
+  requiredKungfuLevel?: number;
   baseAtk?: number;
   baseDef?: number;
   baseHp?: number;

@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
-import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, Backpack, Compass, Hammer, Sprout } from 'lucide-react';
+import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, Backpack, Compass, Hammer, Sprout, Lock } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { motion } from 'framer-motion';
 import { getRarityBorderClass } from './components/RarityHelpers';
 import { StatDeltaHover } from './components/StatDeltaHover';
 import Link from 'next/link';
 import { Phase10Stats } from './components/Phase10Stats';
+import { checkClientKungfuRequirement } from '@/lib/kungfu';
 
 export default function ProfilePage() {
   const queryClient = useQueryClient();
@@ -446,26 +447,43 @@ export default function ProfilePage() {
                          const slotKey = inv.itemId?.category === 'cloth' ? 'armor' : inv.itemId?.category;
                          const equippedId = equipment[slotKey];
                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                         const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
 
                          return (
                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
                                <motion.div
                                   whileHover={{ x: 4 }}
-                                  className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${getRarityBorderClass(inv.itemId?.rank)}`}
-                                  onClick={() => handleEquip(inv._id)}
+                                  className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
+                                  onClick={() => {
+                                     if (!kungfuCheck.allowed) {
+                                        toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
+                                        return;
+                                     }
+                                     handleEquip(inv._id);
+                                  }}
                                >
                                   <div className="flex items-center gap-3 overflow-hidden">
-                                     <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${getRarityBorderClass(inv.itemId?.rank)}`}>
+                                     <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : '📦'}
                                      </div>
                                      <div className="min-w-0">
                                         <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
                                         <p className="text-xs text-gray-500 capitalize">{slotKey}</p>
+                                        {!kungfuCheck.allowed && (
+                                           <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
+                                              <Lock size={10} className="shrink-0" />
+                                              <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
+                                           </div>
+                                        )}
                                      </div>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
-                                     <button className="bg-[#c5a880] text-black text-xs font-bold px-3 py-1.5 rounded hover:bg-[#d8c09d]">
-                                        Equip
+                                     <button 
+                                        disabled={!kungfuCheck.allowed}
+                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1`}
+                                     >
+                                        {!kungfuCheck.allowed && <Lock size={12} />}
+                                        {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
                                      </button>
                                   </div>
                                </motion.div>

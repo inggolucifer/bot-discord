@@ -168,7 +168,7 @@ class ForageTrainingService {
       createdAt: { $gte: todayStart }
     });
 
-    let baseExpGain = 10;
+    let baseExpGain = 25;
     let efficiencyRate = 1.0;
     let returnTier = 'Efisiensi Penuh (100%)';
 
@@ -182,15 +182,14 @@ class ForageTrainingService {
       returnTier = 'Kelelahan Sedang (50%)';
     }
 
-    const finalExpGain = Math.max(1, Math.round(baseExpGain * efficiencyRate));
+    const finalExpGain = Math.max(2, Math.round(baseExpGain * efficiencyRate));
 
     // Konsumsi Stamina
     player.currentStamina = Math.max(0, currentStamina - 10);
 
-    // Tambahkan Skill Mastery Kungfu
-    if (!player.kungfuSkills) player.kungfuSkills = {};
-    const oldLevel = player.kungfuSkills[cleanSkill] || 0;
-    player.kungfuSkills[cleanSkill] = oldLevel + finalExpGain;
+    // Tambahkan Skill Mastery Kungfu via awardKungfuExp
+    const { awardKungfuExp, getKungfuLevel } = require('../utils/kungfuMastery');
+    const resultExp = awardKungfuExp(player, cleanSkill, finalExpGain);
     await player.save();
 
     await ActivityLog.create({
@@ -201,11 +200,17 @@ class ForageTrainingService {
       serverValidated: true
     });
 
+    const masteryInfo = getKungfuLevel(player.kungfuSkills[cleanSkill]);
+
     return {
       ok: true,
       skill: cleanSkill,
       expGained: finalExpGain,
-      newSkillLevel: player.kungfuSkills[cleanSkill],
+      newSkillExp: player.kungfuSkills[cleanSkill],
+      newSkillLevel: masteryInfo.level,
+      rankTitle: masteryInfo.rankTitle,
+      progressPercent: masteryInfo.progressPercent,
+      levelUp: resultExp.levelUp,
       sessionToday: trainingCountToday + 1,
       returnTier,
       remainingStamina: player.currentStamina
