@@ -6,7 +6,7 @@ import api from '@/lib/api';
 interface GridAmbushCombatModalProps {
   enemyName?: string;
   encounterMessage?: string;
-  onResolved: (resultMsg: string) => void;
+  onResolved: (resultMsg: string, isBattle?: boolean) => void;
   onClose: () => void;
 }
 
@@ -23,10 +23,20 @@ export default function GridAmbushCombatModal({
     setLoading(true);
     setError(null);
     try {
-      const res = await api.post('/world/travel/resolve-ambush', { choice });
-      const msg = res.data?.travel?.ambushResult?.message || res.data?.message || 'Pertempuran selesai.';
-      onResolved(msg);
-      onClose();
+      if (choice === 'fight') {
+        // Trigger Interactive Battle
+        const res = await api.post('/battle/start', { 
+            targetType: 'ambush', 
+            enemyName: enemyName
+        });
+        onResolved(res.data.battleId, true); // true = isBattle
+        onClose();
+      } else {
+        const res = await api.post('/world/travel/resolve-ambush', { choice });
+        const msg = res.data?.travel?.ambushResult?.message || res.data?.message || 'Pertempuran selesai.';
+        onResolved(msg, false);
+        onClose();
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal menyelesaikan penyergapan.');
     } finally {

@@ -141,8 +141,13 @@ const playerSchema = new mongoose.Schema({
     }],
     lastTouchedAt: Date
   }],
-  discordId: { type: String, required: true, index: true },
-  guildId: { type: String, required: true, index: true },
+  discordId: { type: String, required: false, index: true, default: null },
+  guildId: { type: String, required: false, index: true, default: null },
+  email: { type: String, index: { unique: true, sparse: true }, default: null },
+  passwordHash: { type: String, default: null },
+  username: { type: String, index: { unique: true, sparse: true }, default: null },
+  prologueCompleted: { type: Boolean, default: false },
+
 
   characterName: { type: String, required: true },
 
@@ -352,6 +357,7 @@ const playerSchema = new mongoose.Schema({
   registeredAt: { type: Date, default: Date.now },
 
   hasCompletedTour: { type: Boolean, default: false },
+  prologueCompleted: { type: Boolean, default: false },
 
   lastDisasterHitAt: { type: Date, default: null },
   energy: { current: { type: Number, default: 100 }, lastUpdated: { type: Date, default: Date.now } },
@@ -378,7 +384,7 @@ const playerSchema = new mongoose.Schema({
   schemaVersion: { type: Number, default: 2, index: true },
 }, { timestamps: true });
 
-playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true });
+playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true, sparse: true });
 playerSchema.index({ guildId: 1, "pets.instanceId": 1 }); // Index untuk pencarian pet instance yang efisien
 playerSchema.index({ guildId: 1, 'gridPosition.zoneId': 1, 'gridPosition.tileX': 1, 'gridPosition.tileY': 1 });
 

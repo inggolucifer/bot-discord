@@ -69,7 +69,9 @@ const zoneTileSchema = new mongoose.Schema({
   spiritualQiDensity: { type: Number, default: 10 },
   ambushRiskRate: { type: Number, default: 0.05 },
   propertyStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null },
-  targetInteriorStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null }
+  targetInteriorStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null },
+  locationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', default: null },
+  isBuildingEntrance: { type: Boolean, default: false }
 }, { timestamps: true });
 
 zoneTileSchema.index({ guildId: 1, zoneId: 1, tileX: 1, tileY: 1 }, { unique: true });

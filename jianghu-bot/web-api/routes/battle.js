@@ -136,4 +136,159 @@ router.post('/spar', authenticateToken, (req, res) => {
     });
 });
 
+// --- NEW INTERACTIVE ATB BATTLE ENDPOINTS ---
+const InteractiveBattleService = require('../../services/InteractiveBattleService');
+const BattleSession = require('../../models/BattleSession');
+const Monster = require('../../models/Monster');
+
+// POST /api/battle/start
+router.post('/start', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { targetId, targetType, zoneId } = req.body;
+
+        const player = await Player.findOne({ discordId: userId }).populate('manuals.manualId');
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        if (player.currentHp <= 0) {
+            return res.status(400).json({ error: 'Karaktermu sedang pingsan dan butuh pemulihan sebelum bertarung.' });
+        }
+
+        let enemies = [];
+        let battleType = 'pve';
+
+        if (targetType === 'monster') {
+            const monster = await Monster.findOne({ id: targetId });
+            if (!monster) return res.status(404).json({ error: 'Monster tidak ditemukan' });
+            
+            enemies = [{
+                id: monster.id,
+                name: monster.name,
+                level: monster.level,
+                imageUrl: monster.imageUrl,
+                hp: monster.stats?.hp || 50,
+                maxHp: monster.stats?.hp || 50,
+                attack: monster.stats?.attack || 10,
+                defense: monster.stats?.defense || 5,
+                speed: monster.stats?.speed || 5,
+                skills: [
+                    { skillId: 'basic_attack', name: 'Serangan Buas', type: 'attack', power: 15, qiCost: 0, cooldown: 0, currentCooldown: 0 }
+                ]
+            }];
+        } else if (targetType === 'ambush') {
+            enemies = [{
+                id: `ambush_${Date.now()}`,
+                name: req.body.enemyName || 'Musuh Ambush',
+                level: player.level || 1,
+                imageUrl: null,
+                hp: player.maxHp * 0.8,
+                maxHp: player.maxHp * 0.8,
+                attack: player.stats?.attack * 0.8 || 10,
+                defense: player.stats?.defense * 0.8 || 5,
+                speed: player.stats?.speed * 0.8 || 5,
+                skills: [
+                    { skillId: 'basic_attack', name: 'Serangan Brutal', type: 'attack', power: 15, qiCost: 0, cooldown: 0, currentCooldown: 0 }
+                ]
+            }];
+        } else if (targetType === 'player') {
+            const targetPlayer = await Player.findOne({ discordId: targetId }).populate('manuals.manualId');
+            if (!targetPlayer) return res.status(404).json({ error: 'Target player tidak ditemukan' });
+            
+            battleType = 'pvp';
+            enemies = [{
+                id: targetPlayer.discordId,
+                name: targetPlayer.characterName || 'Pendekar',
+                level: targetPlayer.level,
+                imageUrl: targetPlayer.characterImage || null,
+                hp: targetPlayer.currentHp || targetPlayer.maxHp,
+                maxHp: targetPlayer.maxHp,
+                attack: targetPlayer.stats?.attack || 10,
+                defense: targetPlayer.stats?.defense || 10,
+                speed: targetPlayer.stats?.speed || 10,
+                qi: targetPlayer.currentQi,
+                maxQi: targetPlayer.maxQi,
+                stance: targetPlayer.stats?.stance || 100,
+                skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
+            }];
+        } else {
+            return res.status(400).json({ error: 'Tipe target tidak valid.' });
+        }
+
+        const session = await InteractiveBattleService.startBattle(player, enemies, battleType, zoneId);
+        
+        res.json({ success: true, battleId: session.battleId, session });
+    } catch (err) {
+        console.error('[API-BATTLE] Start Error:', err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// GET /api/battle/state/:battleId
+router.get('/state/:battleId', authenticateToken, async (req, res) => {
+    try {
+        const session = await BattleSession.findOne({ battleId: req.params.battleId });
+        if (!session) return res.status(404).json({ error: 'Pertempuran tidak ditemukan' });
+
+        // Verifikasi kepemilikan
+        if (session.player.entityId !== req.user.userId) {
+            return res.status(403).json({ error: 'Tidak memiliki akses ke pertempuran ini' });
+        }
+
+        res.json({ success: true, session });
+    } catch (err) {
+        console.error('[API-BATTLE] State Error:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// POST /api/battle/action/:battleId
+router.post('/action/:battleId', authenticateToken, async (req, res) => {
+    try {
+        const { actionType, skillId, targetId } = req.body;
+        const battleId = req.params.battleId;
+        const userId = req.user.userId;
+
+        let session = await InteractiveBattleService.executeAction(battleId, userId, actionType, skillId, targetId);
+        
+        // Cek jika status menjadi won atau lost, bagikan reward
+        if (session.status === 'won') {
+             const player = await Player.findOne({ discordId: userId });
+             if (player && session.rewards) {
+                 player.exp = (player.exp || 0) + session.rewards.exp;
+                 player.silver = (player.silver || 0) + session.rewards.silver;
+                 player.currentHp = session.player.hp;
+                 player.currentQi = session.player.qi;
+                 await player.save();
+             }
+        }
+
+        res.json({ success: true, session });
+    } catch (err) {
+        console.error('[API-BATTLE] Action Error:', err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// POST /api/battle/tick/:battleId
+router.post('/tick/:battleId', authenticateToken, async (req, res) => {
+    try {
+        const battleId = req.params.battleId;
+        const userId = req.user.userId;
+
+        const sessionCheck = await BattleSession.findOne({ battleId });
+        if (!sessionCheck) return res.status(404).json({ error: 'Battle not found' });
+        if (sessionCheck.player.entityId !== userId) return res.status(403).json({ error: 'Unauthorized' });
+
+        if (sessionCheck.turnQueue.length === 0 && sessionCheck.status === 'ongoing') {
+            const updatedSession = await InteractiveBattleService.processTick(battleId);
+            return res.json({ success: true, session: updatedSession });
+        }
+
+        return res.json({ success: true, session: sessionCheck });
+    } catch (err) {
+        console.error('[API-BATTLE] Tick Error:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

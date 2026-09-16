@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Jianghu World - Player Dashboard",
   description: "Web Dashboard for Jianghu World Discord RPG Bot",
+  manifest: "/manifest.json",
 };
 
 import Navbar from "@/components/Navbar";
@@ -37,14 +38,10 @@ export default function RootLayout({
         <Navbar />
 
         {/* Main Content Area */}
-        <main className="flex-grow container mx-auto p-4 md:p-8 relative z-10">
+        <main className="flex-grow w-full h-full relative z-10">
           {children}
         </main>
 
-        {/* Footer */}
-        <footer className="bg-black/90 border-t border-[#333] p-6 text-center text-xs text-gray-500 mt-auto relative z-10">
-          <p>© {new Date().getFullYear()} Jianghu World RPG. All Rights Reserved.</p>
-        </footer>
         <GlobalChatWrapper />
         <ToastContainer />
         <ProductTour />

@@ -94,6 +94,9 @@ export default function TaleOfImmortalCanvas({
   // Track overlay position
   const [overlayPos, setOverlayPos] = useState<{x: number, y: number} | null>(null);
 
+  // Client-Side Prediction / Tweening state
+  const animatedPlayerPos = useRef({ x: playerPos.x, y: playerPos.y });
+
   const BASE_TILE_SIZE = 54;
   const exploredChunkSet = React.useMemo(() => new Set(exploredChunks), [exploredChunks]);
   const tileMap = React.useMemo(() => {
@@ -123,6 +126,7 @@ export default function TaleOfImmortalCanvas({
       );
       if (dist > 3) {
         setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
+        animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
       }
     }
     prevPlayerPos.current = playerPos;
@@ -598,8 +602,12 @@ export default function TaleOfImmortalCanvas({
       }
 
       // 7. Avatar Karakter Utama (Spiritual Aura)
-      const px = toScreenX(playerPos.x) + currentTileSize/2;
-      const py = toScreenY(playerPos.y) + currentTileSize/2;
+      // Client-Side Prediction (Tweening) untuk pergerakan map yang smooth
+      animatedPlayerPos.current.x += (playerPos.x - animatedPlayerPos.current.x) * 0.15;
+      animatedPlayerPos.current.y += (playerPos.y - animatedPlayerPos.current.y) * 0.15;
+
+      const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize/2;
+      const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize/2;
       
       ctx.save();
       if (loadedImages.sprites?.player_default) {

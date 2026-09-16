@@ -27,6 +27,8 @@ import TaleOfImmortalCanvas, { TileData } from './TaleOfImmortalCanvas';
 import SettlementPanoramaView from './SettlementPanoramaView';
 import ScenicCourtyardView from './ScenicCourtyardView';
 import WorldScrollMapView from './WorldScrollMapView';
+import BattleArena from '../battle/BattleArena';
+import VirtualDPad from '../ui/VirtualDPad';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
 import { useAuthStore } from '@/lib/store';
 import GridAssetDetailCard from './modals/GridAssetDetailCard';
@@ -86,6 +88,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   const [isBgmOn, setIsBgmOn] = useState(false);
   const [interiorData, setInteriorData] = useState<any | null>(null);
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
+  const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
 
   const walkIntervalRef = useRef<any>(null);
@@ -298,6 +301,58 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
         position: { ...prev?.position, tileX: currentStep.x, tileY: currentStep.y }
       }));
     }, 240);
+  };
+
+  const handleDirectionalMove = async (dx: number, dy: number) => {
+    if (isWalking) return;
+    const px = playerGrid?.position?.tileX ?? 2455;
+    const py = playerGrid?.position?.tileY ?? 2485;
+    const nextX = px + dx;
+    const nextY = py + dy;
+
+    // Cek rintangan
+    if (solidTilesSet.has(`${nextX},${nextY}`)) {
+        showMessage('Jalur terhalang!');
+        return;
+    }
+
+    // Prediksi lokal
+    setPlayerGrid((prev: any) => ({
+      ...prev,
+      position: { ...prev?.position, tileX: nextX, tileY: nextY }
+    }));
+
+    try {
+      const res = await api.post('/world/zone/step-move', {
+        waypoints: [{ x: nextX, y: nextY }],
+        zoneId: activeZoneId
+      });
+
+      if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+
+      if (res.data.arrivedPosition) {
+        setPlayerGrid((prev: any) => ({
+          ...prev,
+          position: { ...prev?.position, tileX: res.data.arrivedPosition.tileX, tileY: res.data.arrivedPosition.tileY }
+        }));
+      }
+
+      if (res.data.staminaDepleted) {
+        showMessage('Peringatan: Stamina habis!');
+      }
+
+      if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
+        showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
+        setAmbushModalData({
+          enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
+          encounterMessage: 'Disergap oleh musuh di zona bahaya!'
+        });
+      }
+    } catch (err: any) {
+      const errMsg = err?.response?.data?.error || err?.message || 'Gagal sinkronisasi.';
+      showMessage(`⚠️ ${errMsg}`);
+      fetchZoneData(px, py); // rollback
+    }
   };
 
   // Batalkan perjalanan (kirim progress yang sudah dilalui saja)
@@ -591,11 +646,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
     );
   }
 
-  // Render Interior Properti Rumah Pemain
-  if (interiorData) {
-    return <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />;
-  }
-
   const isMacro = activeZoneId === 'tianyuan_world_map';
   const defaultX = targetFocusTile?.x ?? (isMacro ? 2455 : 10);
   const defaultY = targetFocusTile?.y ?? (isMacro ? 2485 : 10);
@@ -604,50 +654,54 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#080b11] select-none flex flex-col">
-      {/* HUD Top Bar */}
-      <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <button
-            onClick={() => setShowMacroMap(true)}
-            className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
-          >
-            <MapIcon className="w-4 h-4 text-amber-400" />
-            <span>Peta Benua</span>
-          </button>
+    <div className="relative w-full h-full overflow-hidden bg-[#080b11] select-none flex flex-col">
+      
+      {/* Background layer which gets blurred if an interior is open */}
+      <div className={`absolute inset-0 flex flex-col transition-all duration-500 ${interiorData ? 'blur-md pointer-events-none scale-105 opacity-60' : ''}`}>
+        
+        {/* HUD Top Bar */}
+        <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center pointer-events-none">
+          <div className="flex items-center gap-2 pointer-events-auto">
+            <button
+              onClick={() => setShowMacroMap(true)}
+              className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <MapIcon className="w-4 h-4 text-amber-400" />
+              <span>Peta Benua</span>
+            </button>
 
-          <button
-            onClick={handleToggleBgm}
-            className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-xs font-semibold shadow-lg transition-all ${
-              isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
-            }`}
-          >
-            <Music className="w-3.5 h-3.5" />
-            <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
-          </button>
-        </div>
+            <button
+              onClick={handleToggleBgm}
+              className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-xs font-semibold shadow-lg transition-all ${
+                isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
+              }`}
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
+            </button>
+          </div>
 
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <ThermalStatusBadge initialThermalData={thermalStatus} />
-          <div className="bg-black/85 border border-amber-900/70 px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-xl flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wider">
-              {zoneConfig?.chineseName || '天元'} {zoneConfig?.displayName || 'Benua Jianghu'}
-            </h3>
-            <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
+          <div className="flex items-center gap-2 pointer-events-auto">
+            <ThermalStatusBadge initialThermalData={thermalStatus} />
+            <div className="bg-black/85 border border-amber-900/70 px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-xl flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wider">
+                {zoneConfig?.chineseName || '天元'} {zoneConfig?.displayName || 'Benua Jianghu'}
+              </h3>
+              <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Floating Action Notice Alert */}
-      {actionMessage && (
-        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/80 text-amber-200 px-5 py-2.5 rounded-lg shadow-2xl font-medium text-xs backdrop-blur-md animate-in fade-in">
-          {actionMessage}
-        </div>
-      )}
+        {/* Floating Action Notice Alert */}
+        {actionMessage && (
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/80 text-amber-200 px-5 py-2.5 rounded-lg shadow-2xl font-medium text-xs backdrop-blur-md animate-in fade-in">
+            {actionMessage}
+          </div>
+        )}
 
-      {/* TALE OF IMMORTAL SHAN SHUI CANVAS ENGINE */}
-      <div className="flex-1 w-full h-full relative">
+        {/* TALE OF IMMORTAL SHAN SHUI CANVAS ENGINE */}
+        <div className="flex-1 w-full h-full relative">
         <TaleOfImmortalCanvas
           tiles={tiles}
           playerPos={{ x: px, y: py }}
@@ -969,10 +1023,52 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
         <GridAmbushCombatModal
           enemyName={ambushModalData.enemyName}
           encounterMessage={ambushModalData.encounterMessage}
-          onResolved={(resMsg) => showMessage(resMsg)}
+          onResolved={(resMsg, isBattle) => {
+             if (isBattle) {
+                 setActiveBattleId(resMsg); // resMsg is battleId in this case
+             } else {
+                 showMessage(resMsg);
+             }
+          }}
           onClose={() => setAmbushModalData(null)}
         />
       )}
+      </div>
+
+      {/* Render Battle Arena Fullscreen Modal */}
+      {activeBattleId && (
+        <div className="absolute inset-0 z-[60] flex items-center justify-center p-2 sm:p-8 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+           <div className="w-full max-w-6xl max-h-full flex shadow-2xl">
+             <BattleArena 
+                 battleId={activeBattleId} 
+                 onBattleEnd={(result, rewards) => {
+                     setActiveBattleId(null);
+                     if (result === 'won') {
+                         showMessage(`Menang! Mendapatkan ${rewards?.exp || 0} EXP`);
+                     } else {
+                         showMessage(`Pertarungan selesai dengan status: ${result}`);
+                     }
+                 }} 
+             />
+           </div>
+        </div>
+      )}
+
+      {/* Render Interior Properti Rumah Pemain as a Modal Overlay */}
+      {interiorData && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/40 backdrop-blur-sm animate-in zoom-in-95 fade-in duration-300">
+           <div className="w-full max-w-4xl max-h-full flex shadow-2xl ring-1 ring-amber-500/50 rounded-xl">
+             <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />
+           </div>
+        </div>
+      )}
+
+      {/* Virtual D-Pad untuk Mobile */}
+      <VirtualDPad 
+        onDirection={handleDirectionalMove} 
+        disabled={isWalking || !!activeBattleId || !!interiorData || !!ambushModalData || !!assetDetailTile || !!sectModalTile || !!buildModalTile || !!expeditionModalTile} 
+      />
+
     </div>
   );
 }
