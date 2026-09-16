@@ -91,6 +91,35 @@ export default function WorldScrollMapView({ playerPos, onClose }: WorldScrollMa
       ctx.lineWidth = 4;
       ctx.strokeRect(minX, minY, maxX - minX, maxY - minY);
 
+      // Gambar Region Overlays
+      const regions = [
+        { id: 'central_plains', name: 'Central Plains', bounds: { minX: 2000, maxX: 3500, minY: 2000, maxY: 3200 }, color: 'rgba(76, 175, 80, 0.15)' },
+        { id: 'azure_mountain', name: 'Azure Mountain Range', bounds: { minX: 1000, maxX: 2200, minY: 2000, maxY: 3500 }, color: 'rgba(0, 150, 136, 0.15)' },
+        { id: 'southern_demon', name: 'Southern Demon Domain', bounds: { minX: 1800, maxX: 3200, minY: 1000, maxY: 2000 }, color: 'rgba(103, 58, 183, 0.15)' },
+        { id: 'eastern_sea', name: 'Eastern Sea Region', bounds: { minX: 3500, maxX: 5000, minY: 1500, maxY: 3500 }, color: 'rgba(33, 150, 243, 0.15)' },
+        { id: 'northern_desolate', name: 'Northern Desolate Territory', bounds: { minX: 1000, maxX: 4000, minY: 3200, maxY: 5000 }, color: 'rgba(255, 255, 255, 0.15)' },
+        { id: 'western_desert', name: 'Western Sacred Deserts', bounds: { minX: 0, maxX: 1500, minY: 1500, maxY: 4000 }, color: 'rgba(255, 193, 7, 0.15)' }
+      ];
+
+      ctx.save();
+      regions.forEach(reg => {
+        const rMinX = toScreenX(reg.bounds.minX);
+        const rMinY = toScreenY(reg.bounds.minY);
+        const rMaxX = toScreenX(reg.bounds.maxX);
+        const rMaxY = toScreenY(reg.bounds.maxY);
+
+        ctx.fillStyle = reg.color;
+        ctx.fillRect(rMinX, rMinY, rMaxX - rMinX, rMaxY - rMinY);
+
+        // Region Label
+        ctx.fillStyle = 'rgba(82, 69, 48, 0.5)';
+        ctx.font = 'bold 24px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(reg.name.toUpperCase(), (rMinX + rMaxX) / 2, (rMinY + rMaxY) / 2);
+      });
+      ctx.restore();
+
       // Gambar Topografi Abstrak (Garis kontur)
       ctx.save();
       ctx.strokeStyle = 'rgba(100, 80, 50, 0.15)';

@@ -53,6 +53,36 @@ module.exports = {
     // 'Manual Name': 'https://...',
   },
 
+  // UI & Environment Overlays
+  environments: {
+    // rain: 'https://...',
+    // snow: 'https://...',
+    // miasma: 'https://...',
+    // night: 'https://...',
+    // danger_zone_overlay: 'https://...',
+  },
+
+  // Terrains for World Map
+  terrains: {
+    // ocean: 'https://...',
+    // western_desert: 'https://...',
+    // demonic_swamp: 'https://...',
+    // northern_glacial: 'https://...',
+    // plains: 'https://...',
+    // forest: 'https://...',
+    // bamboo_forest: 'https://...',
+    // mountain: 'https://...',
+    // river: 'https://...',
+  },
+
+  // Life Simulator Assets (Crafting Stations, Gardens, Mines)
+  assets: {
+    // 'Ladang Padi Sederhana': 'https://...',
+    // 'Tambang Batu Dangkal': 'https://...',
+    // 'Paviliun Alkimia Langit': 'https://...',
+    // 'Istana Lelang Langit (Heavenly Auction House)': 'https://...',
+  },
+
   // Emoji fallback (bukan URL) — dipakai UI jika URL kosong
   emoji: {
     avatar: '👤',

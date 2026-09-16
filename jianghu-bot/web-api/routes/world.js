@@ -1116,6 +1116,7 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
         const userId = req.user.userId;
         const { npcId } = req.params;
         const { dialogId } = req.body;
+        // Endpoint '/zone/gather' DIHAPUS. Gathering sekarang dilakukan melalui asset khusus (Life Simulator).
 
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
@@ -1473,21 +1474,26 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Dapatkan info medan tile
             const tileInfo = proceduralWorldEngine.getTileAt(targetX, targetY);
 
-            // Obstruksi tebing batu tanpa pedang terbang
-            if (tileInfo.isSolid && player.equippedMount !== 'flying_sword') {
-                stoppedEarly = true;
-                stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
-                break;
+            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal
+            if (tileInfo.isSolid) {
+                if (tileInfo.terrainType === 'ocean' && player.equippedMount !== 'ship') {
+                    stoppedEarly = true;
+                    stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Lautan Dalam'}! Membutuhkan perahu atau kapal layar.`;
+                    break;
+                } else if (tileInfo.terrainType !== 'ocean' && player.equippedMount !== 'flying_sword') {
+                    stoppedEarly = true;
+                    stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
+                    break;
+                }
             }
 
-            // Konsumsi Stamina
-            const stepCost = calculateEnergyCost({
-                terrainType: tileInfo.terrainType || 'plains',
-                currentWeight: player.inventory?.length || 10,
-                maxWeight: player.baseCarryCapacity || 50,
-                mountType: player.equippedMount,
-                bodyTemperingLevel: player.bodyTemperingLevel || 0
-            });
+            // Konsumsi Stamina berdasarkan Terrain dan region
+            let stepCost = tileInfo.staminaCost || 1;
+            
+            // Efek meringankan jika punya mount darat
+            if (player.equippedMount && player.equippedMount !== 'none' && player.equippedMount !== 'ship' && player.equippedMount !== 'flying_sword') {
+                stepCost = Math.max(0.5, stepCost - 0.5);
+            }
 
             if (player.currentStamina !== null && player.currentStamina !== undefined && player.currentStamina < stepCost) {
                 stoppedEarly = true;
@@ -2336,152 +2342,7 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
     }
 });
 
-router.post('/zone/gather', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const { tileX, tileY, zoneId } = req.body;
-
-        if (tileX == null || tileY == null || !zoneId) {
-            return res.status(400).json({ error: 'Koordinat atau zoneId tidak lengkap.' });
-        }
-
-        const LockManager = require('../utils/lockManager');
-        const lockKey = `gather_${userId}`;
-        const releaseLock = await LockManager.acquire(lockKey);
-        if (!releaseLock) return res.status(429).json({ error: 'Permintaan sedang diproses.' });
-
-        try {
-            const player = await Player.findOne({ discordId: userId }).populate('inventory.itemId');
-            if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
-
-            const targetX = parseInt(tileX, 10);
-            const targetY = parseInt(tileY, 10);
-            const currentX = player.gridPosition?.tileX ?? 0;
-            const currentY = player.gridPosition?.tileY ?? 0;
-            const dist = Math.max(Math.abs(currentX - targetX), Math.abs(currentY - targetY));
-
-            if (player.gridPosition?.zoneId !== zoneId || dist > 1) {
-                return res.status(400).json({ error: 'Kamu terlalu jauh dari sumber daya tersebut (maksimal 1 tile).' });
-            }
-
-            const ZoneTile = require('../../models/ZoneTile');
-            const tile = await ZoneTile.findOne({
-                guildId: player.guildId,
-                zoneId: zoneId,
-                tileX: targetX,
-                tileY: targetY
-            });
-
-            if (!tile || tile.tileType !== 'resource_node') {
-                return res.status(400).json({ error: 'Tidak ada sumber daya yang bisa dikumpulkan di sini.' });
-            }
-
-            if (tile.nodeRespawnAt && Date.now() < new Date(tile.nodeRespawnAt).getTime()) {
-                const remainingMinutes = Math.ceil((new Date(tile.nodeRespawnAt).getTime() - Date.now()) / 60000);
-                return res.status(400).json({ error: `Sumber daya ini sedang habis. Tunggu ${remainingMinutes} menit lagi.` });
-            }
-
-            const Item = require('../../models/Item');
-            
-            let itemName = 'Kayu Biasa';
-            let expType = 'woodcutting';
-            
-            if (tile.resourceType === 'ore') {
-                itemName = 'Bijih Besi';
-                expType = 'mining';
-            } else if (tile.resourceType === 'herb') {
-                itemName = 'Herbal Dasar';
-                expType = 'alchemy';
-            } else if (tile.label && tile.label.toLowerCase().includes('bambu')) {
-                itemName = 'Bambu'; // Fallback for the bambu trees
-                expType = 'woodcutting';
-            }
-
-            let itemDoc = await Item.findOne({ name: { $regex: new RegExp(itemName, 'i') } });
-            
-            if (!itemDoc) {
-                // Try finding any material
-                itemDoc = await Item.findOne({ type: 'material' });
-            }
-            
-            if (!itemDoc) {
-                itemDoc = await Item.create({
-                    name: itemName,
-                    type: 'material',
-                    rarity: 'common',
-                    description: `Bahan baku ${itemName} yang diperoleh dari alam.`,
-                    value: 5,
-                    maxStack: 99
-                });
-            }
-
-            const gatherQty = Math.floor(Math.random() * 3) + 1; // 1 to 3 items
-            const invCheck = await canAddToInventory(player, [{ itemDoc: itemDoc, quantity: gatherQty }]);
-            if (!invCheck.ok) {
-                return res.status(400).json({ error: `Inventory penuh atau berat melebihi kapasitas. (${invCheck.reason})` });
-            }
-
-            const existing = player.inventory.find(i => i.itemId._id.toString() === itemDoc._id.toString());
-            if (existing) {
-                existing.quantity += gatherQty;
-            } else {
-                player.inventory.push({ itemId: itemDoc._id, quantity: gatherQty });
-            }
-
-            // Award EXP
-            const expGain = 10;
-            if (!player.professions) player.professions = {};
-            if (!player.professions[expType]) player.professions[expType] = { level: 1, exp: 0, isUnlocked: true };
-            player.professions[expType].isUnlocked = true;
-            player.professions[expType].exp += expGain;
-            
-            // Simple level up logic for profession
-            let reqExp = player.professions[expType].level * 100;
-            while (player.professions[expType].exp >= reqExp) {
-                player.professions[expType].exp -= reqExp;
-                player.professions[expType].level += 1;
-                reqExp = player.professions[expType].level * 100;
-            }
-
-            // Set Cooldown (e.g. 15 minutes)
-            tile.nodeRespawnAt = new Date(Date.now() + 15 * 60000);
-            
-            player.markModified('professions');
-            player.markModified('inventory');
-            await tile.save();
-            await player.save();
-
-            res.json({
-                success: true,
-                message: `Berhasil mengumpulkan ${gatherQty}x ${itemDoc.name}! (+${expGain} EXP ${expType})`,
-                itemGathered: {
-                    name: itemDoc.name,
-                    quantity: gatherQty
-                },
-                profession: {
-                    type: expType,
-                    level: player.professions[expType].level,
-                    exp: player.professions[expType].exp
-                },
-                nodeRespawnAt: tile.nodeRespawnAt,
-                playerGrid: {
-                    position: player.gridPosition,
-                    move: player.gridMove,
-                    exploredTileIndexes: (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [],
-                    lastGridSearchAt: player.lastGridSearchAt || null,
-                    searchCooldownSeconds: gridConfig.SEARCH_COOLDOWN_SECONDS,
-                    searchRadius: gridConfig.SEARCH_RADIUS
-                }
-            });
-
-        } finally {
-            if (typeof releaseLock === 'function') releaseLock();
-        }
-    } catch (error) {
-        console.error('[API-WORLD-GATHER] Error:', error);
-        res.status(500).json({ error: 'Gagal mengumpulkan sumber daya.' });
-    }
-});
+// Endpoint '/zone/gather' dihapus. Gathering menggunakan fitur Life Simulator via aset.
 
 // ==========================================
 // BLUEPRINT: SISTEM PROPERTI & INTERIOR 12x12
