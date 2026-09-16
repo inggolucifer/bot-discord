@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Navigate to the dashboard directory (adjust path if needed)
-DASHBOARD_DIR="/root/bot-discord/jianghu-bot/web-dashboard"
+# Navigate to the base directory
+BASE_DIR="/root/bot-discord/jianghu-bot"
+DASHBOARD_DIR="$BASE_DIR/web-dashboard"
+
+# Restart Backend API & Bot
+if [ -d "$BASE_DIR" ]; then
+    echo "Restarting backend API & Discord bot (jianghu-bot)..."
+    cd "$BASE_DIR"
+    pm2 restart jianghu-bot || pm2 start ecosystem.config.js --only jianghu-bot
+fi
 
 if [ -d "$DASHBOARD_DIR" ]; then
     echo "Navigating to $DASHBOARD_DIR..."
@@ -30,8 +38,9 @@ if [ $? -eq 0 ]; then
     echo "Build successful! Restarting PM2 process..."
     pm2 start web-frontend
     pm2 save
-    echo "Web frontend successfully force-restarted."
+    echo "All services (jianghu-bot & web-frontend) successfully force-restarted."
 else
     echo "Build failed. Please check the logs."
     exit 1
 fi
+

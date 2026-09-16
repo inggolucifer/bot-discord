@@ -1188,6 +1188,66 @@ const {
     resolvePlayerGridMove
 } = require('../../utils/gridManager');
 
+// ==========================================
+// STATUS TERMAL ZONA AKTIF (Wajib sebelum /zone/:zoneId wildcard)
+// ==========================================
+router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const ZoneTile = require('../../models/ZoneTile');
+        const tileQuery = player.guildId
+            ? { guildId: player.guildId, zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 }
+            : { zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 };
+        const tile = await ZoneTile.findOne(tileQuery).lean();
+
+        const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
+        const currentHour = new Date().getHours();
+        const gridTemp = calculateGridTemperature({
+            baseTemperature: tile?.baseTemperature || 20,
+            season: 'spring',
+            hourOfDay: currentHour,
+            weather: 'clear',
+            spiritualVeinTier: tile?.spiritualQiDensity ? Math.floor(tile.spiritualQiDensity / 10) : 0
+        });
+
+        const realmLimits = resolveRealmTolerance(player.systemCultivation?.realm || 'mortal');
+        const thermalResult = evaluateThermalBreach({
+            envTemperature: gridTemp,
+            cultivationRealm: player.systemCultivation?.realm || 'mortal',
+            hpMax: player.playerStats?.baseHp || 100,
+            thermalResistanceRatio: 0.1,
+            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
+        });
+
+        return res.json({
+            success: true,
+            gridTemperature: gridTemp,
+            realm: player.systemCultivation?.realm || 'mortal',
+            realmLimits: {
+                minTemp: realmLimits.minTemp,
+                maxTemp: realmLimits.maxTemp,
+                realmName: realmLimits.name
+            },
+            inComfortZone: thermalResult.inComfortZone,
+            breachType: thermalResult.breachType,
+            activeCondition: thermalResult.activeCondition,
+            hpLoss: thermalResult.hpLoss,
+            hasMeridianDamage: Boolean(player.thermalState?.hasMeridianDamage),
+            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
+        });
+    } catch (error) {
+        console.error('[API-THERMAL-STATUS] Error:', error);
+        return res.status(500).json({ error: 'Gagal memuat status termal: ' + (error.message || String(error)) });
+    }
+});
+
+// ==========================================
+// DATA GRID SPASIAL ZONA
+// ==========================================
 router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1210,13 +1270,17 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         const zoneConfig = require(configPath);
 
         // Inisialisasi gridPosition jika belum ada
-        if (!player.gridPosition || !player.gridPosition.zoneId) {
+        if (!player.gridPosition || typeof player.gridPosition !== 'object') {
             player.gridPosition = {
-                zoneId: zoneConfig.zoneId,
+                zoneId: zoneConfig.zoneId || zoneId,
                 tileX: 0,
                 tileY: 0
             };
+        } else if (!player.gridPosition.zoneId) {
+            player.gridPosition.zoneId = zoneConfig.zoneId || zoneId;
         }
+        if (typeof player.gridPosition.tileX !== 'number') player.gridPosition.tileX = 0;
+        if (typeof player.gridPosition.tileY !== 'number') player.gridPosition.tileY = 0;
 
         // Resolusi pergerakan lazy timestamp
         let moveStatus = { resolved: false, moving: false };
@@ -1237,20 +1301,24 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             }
 
             // Pastikan ada initial reveal jika baru pertama kali memasuki zona ini
-            const exploredEntry = (player.exploredTiles || []).find(e => e.zoneId === zoneId);
-            if (!exploredEntry || !exploredEntry.tileIndexes || exploredEntry.tileIndexes.length === 0) {
+            let exploredEntry = Array.isArray(player.exploredTiles)
+                ? player.exploredTiles.find(e => e && e.zoneId === zoneId)
+                : null;
+            if (!exploredEntry || !Array.isArray(exploredEntry.tileIndexes) || exploredEntry.tileIndexes.length === 0) {
                 revealTilesForPlayer(
                     player,
                     zoneId,
                     player.gridPosition.tileX || 0,
                     player.gridPosition.tileY || 0,
-                    gridConfig.DEFAULT_REVEAL_RADIUS,
-                    zoneConfig.gridWidth,
-                    zoneConfig.gridHeight
+                    gridConfig.DEFAULT_REVEAL_RADIUS || 3,
+                    zoneConfig.gridWidth || 30,
+                    zoneConfig.gridHeight || 20
                 );
             }
 
-            await player.save();
+            if (typeof player.save === 'function') {
+                await player.save();
+            }
         } catch (stateErr) {
             console.warn('[API-ZONE] State update warning (non-fatal):', stateErr.message);
         }
@@ -1261,7 +1329,10 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             const tileQuery = player.guildId
                 ? { $or: [{ guildId: player.guildId, zoneId }, { zoneId }] }
                 : { zoneId };
-            allTiles = await ZoneTile.find(tileQuery);
+            const dbTiles = await ZoneTile.find(tileQuery).lean();
+            if (Array.isArray(dbTiles)) {
+                allTiles = dbTiles;
+            }
 
             // Auto-resolusi konstruksi yang telah rampung agar langsung terlihat semua pemain
             const nowMs = Date.now();
@@ -1270,7 +1341,9 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                     t.isUnderConstruction = false;
                     t.isOccupied = true;
                     t.label = `${t.buildingName} (${t.ownerName || 'Pemain'})`;
-                    await t.save().catch(() => {});
+                    await ZoneTile.updateOne({ _id: t._id }, {
+                        $set: { isUnderConstruction: false, isOccupied: true, label: t.label }
+                    }).catch(() => {});
                 }
             }
         } catch (tileQueryErr) {
@@ -1290,43 +1363,52 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
         // Filter tile hidden: hanya tampil jika sudah pernah ditemukan pemain via aksi 'Cari Sekitar'
         // Filter tile public visibility: hanya tampil jika isPubliclyVisible !== false
-        const discoveredIds = new Set(player.discoveredSecretTileIds || []);
+        const rawDiscovered = Array.isArray(player.discoveredSecretTileIds) ? player.discoveredSecretTileIds : [];
+        const discoveredIds = new Set(rawDiscovered.map(id => String(id)));
         const visibleTiles = allTiles.filter(tile => {
             if (tile.isPubliclyVisible === false) return false;
             return !tile.hidden || (tile._id && discoveredIds.has(tile._id.toString()));
         });
 
         // Ensure exploredTileIndexes contains at least player's initial Chebyshev box
-        let exploredIndexes = (player.exploredTiles?.find(e => e.zoneId === zoneId)?.tileIndexes) || [];
+        let exploredIndexes = [];
+        if (Array.isArray(player.exploredTiles)) {
+            const entry = player.exploredTiles.find(e => e && e.zoneId === zoneId);
+            if (entry && Array.isArray(entry.tileIndexes)) {
+                exploredIndexes = entry.tileIndexes;
+            }
+        }
         if (exploredIndexes.length === 0) {
-            const { getTilesInRevealRadius } = require('../../utils/gridManager');
             exploredIndexes = getTilesInRevealRadius(
                 player.gridPosition?.tileX || 0,
                 player.gridPosition?.tileY || 0,
-                gridConfig.DEFAULT_REVEAL_RADIUS,
+                gridConfig.DEFAULT_REVEAL_RADIUS || 3,
                 zoneConfig.gridWidth || 30,
                 zoneConfig.gridHeight || 20
             );
         }
 
-        res.json({
+        return res.json({
             success: true,
             config: zoneConfig,
             tiles: visibleTiles,
             playerGrid: {
                 position: player.gridPosition,
-                move: player.gridMove,
+                move: player.gridMove || null,
                 moveStatus: moveStatus,
                 encounter: encounterResult,
                 exploredTileIndexes: exploredIndexes,
                 lastGridSearchAt: player.lastGridSearchAt || null,
-                searchCooldownSeconds: gridConfig.SEARCH_COOLDOWN_SECONDS,
-                searchRadius: gridConfig.SEARCH_RADIUS
+                searchCooldownSeconds: gridConfig.SEARCH_COOLDOWN_SECONDS || 10,
+                searchRadius: gridConfig.SEARCH_RADIUS || 2
             }
         });
     } catch (error) {
         console.error('[API-ZONE] Error fetching zone:', error);
-        res.status(500).json({ error: 'Gagal memuat data zona: ' + (error.message || error) });
+        return res.status(500).json({
+            error: 'Gagal memuat data zona: ' + (error.message || String(error)),
+            details: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+        });
     }
 });
 
@@ -2103,61 +2185,7 @@ router.post('/zone/gather', authenticateToken, async (req, res) => {
 // BLUEPRINT: SISTEM PROPERTI & INTERIOR 12x12
 // ==========================================
 
-router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
-
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
-        const ZoneTile = require('../../models/ZoneTile');
-        const tile = await ZoneTile.findOne({
-            guildId: player.guildId,
-            zoneId: currentZoneId,
-            tileX: player.gridPosition?.tileX ?? 0,
-            tileY: player.gridPosition?.tileY ?? 0
-        });
-
-        const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
-        const currentHour = new Date().getHours();
-        const gridTemp = calculateGridTemperature({
-            baseTemperature: tile?.baseTemperature || 20,
-            season: 'spring',
-            hourOfDay: currentHour,
-            weather: 'clear',
-            spiritualVeinTier: tile?.spiritualQiDensity ? Math.floor(tile.spiritualQiDensity / 10) : 0
-        });
-
-        const realmLimits = resolveRealmTolerance(player.systemCultivation?.realm || 'mortal');
-        const thermalResult = evaluateThermalBreach({
-            envTemperature: gridTemp,
-            cultivationRealm: player.systemCultivation?.realm || 'mortal',
-            hpMax: player.playerStats?.baseHp || 100,
-            thermalResistanceRatio: 0.1,
-            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
-        });
-
-        res.json({
-            success: true,
-            gridTemperature: gridTemp,
-            realm: player.systemCultivation?.realm || 'mortal',
-            realmLimits: {
-                minTemp: realmLimits.minTemp,
-                maxTemp: realmLimits.maxTemp,
-                realmName: realmLimits.name
-            },
-            inComfortZone: thermalResult.inComfortZone,
-            breachType: thermalResult.breachType,
-            activeCondition: thermalResult.activeCondition,
-            hpLoss: thermalResult.hpLoss,
-            hasMeridianDamage: Boolean(player.thermalState?.hasMeridianDamage),
-            consecutiveBreachTicks: player.thermalState?.consecutiveBreachTicks || 0
-        });
-    } catch (error) {
-        console.error('[API-THERMAL-STATUS] Error:', error);
-        res.status(500).json({ error: 'Gagal memuat status termal' });
-    }
-});
+// (thermal-status route dipindahkan ke atas sebelum wildcard :zoneId)
 
 router.post('/zone/enter-property', authenticateToken, async (req, res) => {
     try {
