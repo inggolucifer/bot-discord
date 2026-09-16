@@ -1415,7 +1415,9 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Rute langkah (waypoints) tidak valid.' });
         }
 
-        const player = await Player.findOne({ discordId: userId });
+        const player = await Player.findOne({ discordId: userId })
+            .populate('laws')
+            .populate('manuals.manualId');
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
@@ -1432,6 +1434,10 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
 
         let currentX = player.gridPosition?.tileX ?? 2455;
         let currentY = player.gridPosition?.tileY ?? 2485;
+        if (currentX === 0 && currentY === 0 && activeZoneId === 'tianyuan_world_map') {
+            currentX = 2455;
+            currentY = 2485;
+        }
 
         let totalStaminaCost = 0;
         let stepsTaken = 0;
@@ -1454,6 +1460,13 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             const dx = Math.abs(targetX - currentX);
             const dy = Math.abs(targetY - currentY);
             if (Math.max(dx, dy) > 1) {
+                // Jika langkah pertama sedikit tidak sinkron dengan DB (toleransi <= 3 tile), sinkronkan
+                if (stepsTaken === 0 && Math.max(dx, dy) <= 3) {
+                    currentX = targetX;
+                    currentY = targetY;
+                    stepsTaken++;
+                    continue;
+                }
                 continue;
             }
 
@@ -1498,11 +1511,15 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Peluang Ambush Encounter
             const encounterRoll = Math.random();
             if (encounterRoll < (tileInfo.ambushRiskRate || 0.05)) {
-                encounterResult = checkAndRunGridEncounter(player, zoneConfig, tileInfo.terrainType === 'swamp');
-                if (encounterResult && encounterResult.encountered) {
-                    stoppedEarly = true;
-                    stopReason = `Disergap oleh ${encounterResult.enemyName} di tengah perjalanan!`;
-                    break;
+                try {
+                    encounterResult = checkAndRunGridEncounter(player, zoneConfig, tileInfo.terrainType === 'swamp');
+                    if (encounterResult && (encounterResult.encountered || encounterResult.triggered)) {
+                        stoppedEarly = true;
+                        stopReason = `Disergap oleh ${encounterResult.enemyName || 'Lawan Tangguh'} di tengah perjalanan!`;
+                        break;
+                    }
+                } catch (encounterErr) {
+                    console.warn('[API-STEP-MOVE] Encounter error (non-fatal):', encounterErr.message);
                 }
             }
         }
@@ -1522,7 +1539,23 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             moveArrivesAt: null
         };
 
-        await player.save();
+        try {
+            await player.save();
+        } catch (saveErr) {
+            console.warn('[API-STEP-MOVE] player.save() validation failed, using updateOne fallback:', saveErr.message);
+            await Player.updateOne(
+                { _id: player._id },
+                {
+                    $set: {
+                        gridPosition: player.gridPosition,
+                        gridMove: player.gridMove,
+                        exploredChunks: player.exploredChunks,
+                        ...(player.currentStamina !== null && player.currentStamina !== undefined ? { currentStamina: player.currentStamina } : {}),
+                        ...(player.currentHp !== null && player.currentHp !== undefined ? { currentHp: player.currentHp } : {})
+                    }
+                }
+            );
+        }
 
         return res.json({
             success: true,
