@@ -50,11 +50,10 @@ const setupServer = (client) => {
         exposedHeaders: ['Set-Cookie']
     };
 
-    // Apply CORS before other middlewares & handle preflight OPTIONS
+    // Apply CORS before other middlewares
     app.use(cors(corsOptions));
-    app.options('*', cors(corsOptions));
 
-    // Fallback explicit CORS preflight response
+    // Handle preflight OPTIONS explicitly for all routes (Express 5 safe)
     app.use((req, res, next) => {
         const origin = req.headers.origin;
         if (origin && isAllowedOrigin(origin)) {
