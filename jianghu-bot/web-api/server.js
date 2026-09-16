@@ -180,6 +180,9 @@ const setupServer = (client) => {
     app.use('/api/marriage', marriageRoutes);
     app.use('/api/minigame', minigameRoutes);
 
+    const gridSimulationRoutes = require('./routes/gridSimulation');
+    app.use('/api/grid', gridSimulationRoutes);
+
     // Root test endpoint
     app.get('/api/health', (req, res) => {
         res.json({ status: 'OK', message: 'Jianghu API Server is running', antiCheat: 'Active' });
