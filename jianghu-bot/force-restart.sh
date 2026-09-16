@@ -6,8 +6,11 @@ DASHBOARD_DIR="$BASE_DIR/web-dashboard"
 
 # Restart Backend API & Bot
 if [ -d "$BASE_DIR" ]; then
-    echo "Restarting backend API & Discord bot (jianghu-bot)..."
+    echo "Updating codebase and dependencies for backend API & Discord bot (jianghu-bot)..."
     cd "$BASE_DIR"
+    git pull
+    npm install
+    echo "Restarting backend API & Discord bot (jianghu-bot)..."
     pm2 restart jianghu-bot || pm2 start ecosystem.config.js --only jianghu-bot
 fi
 
