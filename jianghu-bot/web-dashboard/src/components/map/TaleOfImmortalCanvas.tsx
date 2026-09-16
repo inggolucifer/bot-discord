@@ -97,7 +97,7 @@ export default function TaleOfImmortalCanvas({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number = 0;
 
     const render = () => {
       const width = canvas.width;
@@ -470,7 +470,9 @@ export default function TaleOfImmortalCanvas({
     };
 
     render();
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, [camera, tiles, playerPos, targetTile, activePath, exploredChunkSet, isWalking, tileMap]);
 
   // ============================================================================

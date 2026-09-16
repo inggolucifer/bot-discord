@@ -23,7 +23,7 @@ export default function ScenicCourtyardView({ locationName, onExit }: ScenicCour
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationId: number;
+    let animationId: number = 0;
 
     // Inisialisasi daun ginkgo emas berguguran
     const leaves: Array<{ x: number; y: number; size: number; speedY: number; speedX: number; rot: number; rotSpeed: number }> = [];
@@ -224,7 +224,9 @@ export default function ScenicCourtyardView({ locationName, onExit }: ScenicCour
     };
 
     render();
-    return () => cancelAnimationFrame(animationId);
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
   }, [characterPos, isMeditating]);
 
   // Handle Klik Halaman untuk Berjalan
