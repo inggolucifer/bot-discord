@@ -1,9 +1,24 @@
 'use client';
 
-import { Store, ShoppingBag, Coins, Gavel, LogOut, ArrowRight, X } from "lucide-react";
+import {
+  ShoppingBag,
+  Coins,
+  Gavel,
+  LogOut,
+  ArrowRight,
+  Map,
+  Building2,
+  Store,
+  Info,
+  ExternalLink,
+  Sparkles,
+  Search,
+  Plus,
+} from "lucide-react";
 import FallbackImage from "@/components/FallbackImage";
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
@@ -13,29 +28,17 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 
-interface ShopItem {
+interface PlayerListing {
   id: string;
+  kodeListing: string;
   name: string;
-  description: string;
-  type: string;
   price: number;
   currency: string;
   emoji: string;
+  quantity: number;
+  type: string;
   rank?: string;
-  stock?: number;
-}
-
-interface PlayerListing {
-    id: string;
-    kodeListing: string;
-    name: string;
-    price: number;
-    currency: string;
-    emoji: string;
-    quantity: number;
-    type: string;
-    rank?: string;
-    sellerName: string;
+  sellerName: string;
 }
 
 interface AuctionItem {
@@ -47,52 +50,54 @@ interface AuctionItem {
   emoji: string;
   timeLeft: string;
   rank?: string;
+  hostCity?: string;
+  zoneId?: string;
 }
 
 const ranks = ['All', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 
 export default function MarketClient() {
   const { user } = useAuthStore();
+  const router = useRouter();
   const queryClient = useQueryClient();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { data: rawShop, isLoading: shopLoading } = useQuery<{data: ShopItem[]}>({
-      queryKey: ['market_shop'],
-      queryFn: async () => { const { data } = await api.get('/market/shop'); return data; },
-      enabled: !!user
-  });
-  const { data: rawAuctions, isLoading: auctionsLoading } = useQuery<{data: AuctionItem[]}>({
-      queryKey: ['market_auctions'],
-      queryFn: async () => { const { data } = await api.get('/market/auctions'); return data; },
-      enabled: !!user
-  });
-  const { data: rawListings, isLoading: listingsLoading } = useQuery<{data: PlayerListing[]}>({
-      queryKey: ['market_listings'],
-      queryFn: async () => { const { data } = await api.get('/market/player-shop'); return data; },
-      enabled: !!user
-  });
-  const { data: rawMyListings, isLoading: myListingsLoading } = useQuery<{data: PlayerListing[]}>({
-      queryKey: ['market_my_listings'],
-      queryFn: async () => { const { data } = await api.get('/market/player-shop/my-listings'); return data; },
-      enabled: !!user
+  const { data: rawAuctions, isLoading: auctionsLoading } = useQuery<{ data: AuctionItem[] }>({
+    queryKey: ['market_auctions'],
+    queryFn: async () => {
+      const { data } = await api.get('/market/auctions');
+      return data;
+    },
+    enabled: !!user,
   });
 
-  const shopItems: ShopItem[] = rawShop?.data || [];
+  const { data: rawListings, isLoading: listingsLoading } = useQuery<{ data: PlayerListing[] }>({
+    queryKey: ['market_listings'],
+    queryFn: async () => {
+      const { data } = await api.get('/market/player-shop');
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const { data: rawMyListings, isLoading: myListingsLoading } = useQuery<{ data: PlayerListing[] }>({
+    queryKey: ['market_my_listings'],
+    queryFn: async () => {
+      const { data } = await api.get('/market/player-shop/my-listings');
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const auctions: AuctionItem[] = rawAuctions?.data || [];
   const playerShopItems: PlayerListing[] = rawListings?.data || [];
   const myListings: PlayerListing[] = rawMyListings?.data || [];
-  const isMarketLoading = shopLoading || auctionsLoading || listingsLoading || myListingsLoading;
 
-  const [activeTab, setActiveTab] = useState<'shop' | 'player' | 'auction' | 'my-shop'>('shop');
+  // Default active tab: 'player' (Toko Pemain & Barter)
+  const [activeTab, setActiveTab] = useState<'player' | 'my-shop' | 'auction' | 'settlement-npc'>('player');
   const [activeRank, setActiveRank] = useState<string>('all');
   const [actionLoading, setActionLoading] = useState(false);
-
-  const [sellSystemModalOpen, setSellSystemModalOpen] = useState(false);
-  const [sellSystemItemId, setSellSystemItemId] = useState('');
-  const [sellSystemQuantity, setSellSystemQuantity] = useState(1);
-
-
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Sell Modal states
   const [sellModalOpen, setSellModalOpen] = useState(false);
@@ -100,641 +105,732 @@ export default function MarketClient() {
   const [sellItemId, setSellItemId] = useState('');
   const [sellQuantity, setSellQuantity] = useState(1);
   const [sellPrice, setSellPrice] = useState(10);
-  const [sellCurrency, setSellCurrency] = useState('copper');
+  const [sellCurrency, setSellCurrency] = useState('silver');
 
   // Buy Modal states
   const [buyModalOpen, setBuyModalOpen] = useState(false);
-  const [buyModalItem, setBuyModalItem] = useState<{id: string, name: string, isPlayerShop: boolean, maxQuantity?: number} | null>(null);
+  const [buyModalItem, setBuyModalItem] = useState<{ id: string; name: string; maxQuantity?: number } | null>(null);
   const [buyQuantity, setBuyQuantity] = useState(1);
   const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
 
-
-
-
-
-
-  const handleSellToSystem = async () => {
-      if (!sellSystemItemId || sellSystemQuantity <= 0) return;
-      setActionLoading(true);
-      try {
-          const res = await api.post('/market/shop/sell-to-system', {
-              itemId: sellSystemItemId,
-              quantity: sellSystemQuantity
-          });
-          alert(res.data.message || 'Item berhasil dijual ke sistem.');
-          setSellSystemModalOpen(false);
-          setSellSystemItemId('');
-          setSellSystemQuantity(1);
-          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
-queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
-queryClient.invalidateQueries({ queryKey: ['market_listings'] });
-              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
-
-      } catch(err: any) {
-          setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item ke sistem.');
-      } finally {
-          setActionLoading(false);
-      }
-  };
-
-  const handleOpenBuyModal = (id: string, name: string, isPlayerShop: boolean, maxQuantity?: number) => {
-      setBuyModalItem({ id, name, isPlayerShop, maxQuantity });
-      setBuyQuantity(1);
-      setBuyModalOpen(true);
+  const handleOpenBuyModal = (id: string, name: string, maxQuantity?: number) => {
+    setBuyModalItem({ id, name, maxQuantity });
+    setBuyQuantity(1);
+    setBuyModalOpen(true);
   };
 
   const handleBuy = async () => {
-      if(!buyModalItem) return;
-      setActionLoading(true);
-      try {
-          const endpoint = buyModalItem.isPlayerShop ? '/market/player-shop/buy' : '/market/shop/buy';
-          const payload = buyModalItem.isPlayerShop
-             ? { listingId: buyModalItem.id, quantity: buyQuantity }
-             : { shopId: buyModalItem.id, quantity: buyQuantity };
-
-          const res = await api.post(endpoint, payload);
-          alert(res.data.message);
-          setBuyModalOpen(false);
-          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
-queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
-queryClient.invalidateQueries({ queryKey: ['market_listings'] });
-              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
-
-      } catch (err) {
-          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membeli item.');
-      } finally {
-          setActionLoading(false);
-      }
+    if (!buyModalItem) return;
+    setActionLoading(true);
+    try {
+      const res = await api.post('/market/player-shop/buy', {
+        listingId: buyModalItem.id,
+        quantity: buyQuantity,
+      });
+      alert(res.data.message || 'Pembelian berhasil!');
+      setBuyModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+      queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Gagal membeli item dari pemain.');
+    } finally {
+      setActionLoading(false);
+    }
   };
-
-  const handleBid = async (auctionId: string, currentBid: number) => {
-      const bidAmount = currentBid + 1; // Simplify for UI
-      if(!confirm(`Lakukan penawaran sebesar ${bidAmount} Silver?`)) return;
-
-      setActionLoading(true);
-      try {
-          const res = await api.post('/market/auction/bid', { auctionId, bidAmount });
-          alert(res.data.message);
-          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
-queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
-queryClient.invalidateQueries({ queryKey: ['market_listings'] });
-              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
-
-      } catch (err) {
-          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal melakukan bid.');
-      } finally {
-          setActionLoading(false);
-      }
-  };
-
 
   const fetchInventory = async () => {
     try {
-        const res = await api.get('/inventory');
-        setInventory(res.data.data || []);
+      const res = await api.get('/inventory');
+      setInventory(res.data.data || []);
     } catch (err) {
-        console.error("Failed to load inventory for selling.", err);
+      console.error('Failed to load inventory for selling.', err);
     }
-  };
-
-  const handleOpenSellSystemModal = async () => {
-      await fetchInventory();
-      setSellSystemModalOpen(true);
-      setSellSystemItemId('');
-      setSellSystemQuantity(1);
   };
 
   const handleOpenSellModal = async () => {
-      await fetchInventory();
-      setSellModalOpen(true);
-      setSellItemId('');
-      setSellQuantity(1);
-      setSellPrice(10);
-      setSellCurrency('copper');
+    await fetchInventory();
+    setSellModalOpen(true);
+    setSellItemId('');
+    setSellQuantity(1);
+    setSellPrice(10);
+    setSellCurrency('silver');
   };
 
   const handleSell = async () => {
-      if(!sellItemId || sellQuantity <= 0 || sellPrice <= 0) return;
-      setActionLoading(true);
-      try {
-          const res = await api.post('/market/player-shop/my-listings/sell', {
-              itemId: sellItemId,
-              quantity: sellQuantity,
-              pricePerUnit: sellPrice,
-              currency: sellCurrency
-          });
-          // No success message state exists in this component, just closing the modal is fine. (Or could add a state if needed)
-          setSellModalOpen(false);
-          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
-queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
-queryClient.invalidateQueries({ queryKey: ['market_listings'] });
-              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
-
-      } catch(err: any) {
-          setError((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal menjual item.');
-      } finally {
-          setActionLoading(false);
-      }
+    if (!sellItemId || sellQuantity <= 0 || sellPrice <= 0) return;
+    setActionLoading(true);
+    try {
+      const res = await api.post('/market/player-shop/my-listings/sell', {
+        itemId: sellItemId,
+        quantity: sellQuantity,
+        pricePerUnit: sellPrice,
+        currency: sellCurrency,
+      });
+      setSellModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+      queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Gagal menggelar lapak jualan.');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const handleCancelListing = async (listingId: string) => {
-      setActionLoading(true);
-      try {
-          const res = await api.post('/market/player-shop/my-listings/cancel', { listingId });
-          alert(res.data.message);
-          setConfirmCancelId(null);
-          queryClient.invalidateQueries({ queryKey: ['market_shop'] });
-queryClient.invalidateQueries({ queryKey: ['market_auctions'] });
-queryClient.invalidateQueries({ queryKey: ['market_listings'] });
-              queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
-
-      } catch (err) {
-          alert((err as Error & { response?: { data?: { error?: string } } })?.response?.data?.error || 'Gagal membatalkan listing.');
-      } finally {
-          setActionLoading(false);
-      }
+    setActionLoading(true);
+    try {
+      const res = await api.post('/market/player-shop/my-listings/cancel', { listingId });
+      alert(res.data.message || 'Listing berhasil dibatalkan.');
+      setConfirmCancelId(null);
+      queryClient.invalidateQueries({ queryKey: ['market_listings'] });
+      queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Gagal membatalkan listing.');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
-  const CurrencyIcon = ({ currency, className }: { currency: string, className?: string }) => {
+  const CurrencyIcon = ({ currency, className }: { currency: string; className?: string }) => {
     switch (currency) {
-      case 'gold': return <Coins className={`text-yellow-500 ${className}`} />;
-      case 'jade': return <Coins className={`text-green-400 ${className}`} />;
-      case 'spirit': return <Coins className={`text-blue-300 ${className}`} />;
-      case 'copper': return <Coins className={`text-[#cd7f32] ${className}`} />;
-      default: return <Coins className={`text-gray-400 ${className}`} />;
+      case 'gold':
+        return <Coins className={`text-yellow-500 ${className}`} />;
+      case 'jade':
+        return <Coins className={`text-green-400 ${className}`} />;
+      case 'spirit':
+        return <Coins className={`text-blue-300 ${className}`} />;
+      case 'copper':
+        return <Coins className={`text-[#cd7f32] ${className}`} />;
+      default:
+        return <Coins className={`text-slate-300 ${className}`} />;
     }
-  }
+  };
 
   const renderCurrency = (price: number, currency: string) => {
-    let colorClass = 'text-gray-400';
+    let colorClass = 'text-slate-200';
     let label = 'Silver';
-    if (currency === 'gold') { colorClass = 'text-yellow-500'; label = 'Gold'; }
-    if (currency === 'jade') { colorClass = 'text-green-400'; label = 'Jade'; }
-    if (currency === 'spirit') { colorClass = 'text-blue-400'; label = 'Spirit'; }
-    if (currency === 'copper') { colorClass = 'text-[#cd7f32]'; label = 'Copper'; }
+    if (currency === 'gold') {
+      colorClass = 'text-yellow-400';
+      label = 'Gold';
+    }
+    if (currency === 'jade') {
+      colorClass = 'text-green-400';
+      label = 'Jade';
+    }
+    if (currency === 'spirit') {
+      colorClass = 'text-blue-400';
+      label = 'Spirit';
+    }
+    if (currency === 'copper') {
+      colorClass = 'text-amber-600';
+      label = 'Copper';
+    }
 
     return (
       <div className="flex items-center gap-1 font-mono">
-        <span className={colorClass} title={label}>{price}</span>
-        <CurrencyIcon currency={currency} className="w-3 h-3 sm:w-4 sm:h-4" />
+        <span className={`font-semibold ${colorClass}`} title={label}>
+          {price.toLocaleString()}
+        </span>
+        <CurrencyIcon currency={currency} className="w-3.5 h-3.5" />
       </div>
     );
-  }
+  };
+
+  const filteredPlayerItems = playerShopItems.filter((item) => {
+    const matchesRank =
+      activeRank === 'all' || (item.rank || 'common').toLowerCase() === activeRank.toLowerCase();
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.sellerName || '').toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRank && matchesSearch;
+  });
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0 py-6">
+      {/* Header */}
       <PageHeader
-        title="Pasar Sentral"
-        description="Beli, jual, dan lelang item di Jianghu."
+        title="Bursa Perdagangan Jianghu"
+        description="Pusat transaksi antarpemain (Player Stalls & Barter), serta warta lelang dan informasi saudagar pemukiman."
         action={
-          <select
-            className="w-full sm:w-auto bg-[#111] border border-[#444] rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] appearance-none"
-            value={activeRank}
-            onChange={(e) => setActiveRank(e.target.value)}
-          >
-            {ranks.map(r => <option key={r} value={r.toLowerCase()}>{r === 'All' ? 'Filter: Semua Rank' : `Filter: ${r}`}</option>)}
-          </select>
+          <div className="flex items-center gap-2">
+            <select
+              className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500 appearance-none"
+              value={activeRank}
+              onChange={(e) => setActiveRank(e.target.value)}
+            >
+              {ranks.map((r) => (
+                <option key={r} value={r.toLowerCase()}>
+                  {r === 'All' ? 'Semua Kualitas' : `Kualitas: ${r}`}
+                </option>
+              ))}
+            </select>
+          </div>
         }
       />
 
+      {/* Spatial Settlement Integration Notice */}
+      <div className="rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 p-4 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-amber-400">
+            <Building2 className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-amber-300 flex items-center gap-1.5">
+              Sentralisasi Fisik Toko NPC & Balai Lelang
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-normal">
+                Sistem Spasial
+              </span>
+            </h4>
+            <p className="text-xs text-slate-300 mt-0.5 max-w-2xl leading-relaxed">
+              Sesuai tata tertib Jianghu, transaksi barang spiritual dengan Saudagar NPC serta penawaran di Balai Lelang resmi kini dilangsungkan secara fisik di dalam **Kota & Pemukiman** pada Peta Dunia. Tab ini melayani khusus **Bursa Antarpemain (Player Stalls & Barter)**.
+            </p>
+          </div>
+        </div>
+        <Button
+          onClick={() => router.push('/world')}
+          className="w-full md:w-auto shrink-0 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl flex items-center justify-center gap-1.5 border border-amber-400/30"
+        >
+          <Map className="w-3.5 h-3.5" />
+          Kunjungi Kota di Peta
+        </Button>
+      </div>
+
       {/* Main Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-
         {/* Categories Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-[#111] border border-[#333] rounded-lg overflow-hidden flex flex-col sm:flex-row lg:flex-col shadow-md">
-            <button
-              onClick={() => setActiveTab('shop')}
-              className={`flex-1 lg:w-full text-left px-3 py-3 sm:px-4 sm:py-4 transition-colors flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-3 ${activeTab === 'shop' ? 'bg-[#c5a880]/10 text-[#c5a880] lg:border-l-4 lg:border-b-0 border-b-4 border-[#c5a880]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}
-            >
-              <Store size={20} className="shrink-0" /> <span className="text-[10px] sm:text-sm font-semibold whitespace-nowrap">Toko Sistem</span>
-            </button>
+        <div className="lg:col-span-1 space-y-3">
+          <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden flex flex-row lg:flex-col shadow-lg p-1.5 gap-1.5">
             <button
               onClick={() => setActiveTab('player')}
-              className={`flex-1 lg:w-full text-left px-3 py-3 sm:px-4 sm:py-4 transition-colors flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-3 ${activeTab === 'player' ? 'bg-blue-900/20 text-blue-400 lg:border-l-4 lg:border-b-0 border-b-4 border-blue-500' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}
+              className={`flex-1 lg:w-full text-left px-3.5 py-3 rounded-lg transition-colors flex items-center gap-2.5 text-xs font-semibold ${
+                activeTab === 'player'
+                  ? 'bg-blue-600/20 text-blue-300 border border-blue-500/40 shadow-sm'
+                  : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+              }`}
             >
-              <ShoppingBag size={20} className="shrink-0" /> <span className="text-[10px] sm:text-sm font-semibold whitespace-nowrap">Toko Player</span>
+              <ShoppingBag className="w-4 h-4 text-blue-400 shrink-0" />
+              <div className="truncate">
+                <span>Toko Pemain</span>
+                <span className="block text-[10px] font-normal text-slate-500">Lapak & Barter</span>
+              </div>
             </button>
-            <button
-              onClick={() => setActiveTab('auction')}
-              className={`flex-1 lg:w-full text-left px-3 py-3 sm:px-4 sm:py-4 transition-colors flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-3 ${activeTab === 'auction' ? 'bg-[#8b0000]/20 text-red-400 lg:border-l-4 lg:border-b-0 border-b-4 border-[#8b0000]' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}
-            >
-              <Gavel size={20} className="shrink-0" /> <span className="text-[10px] sm:text-sm font-semibold whitespace-nowrap">Lelang Live</span>
-            </button>
+
             {user && (
               <button
                 onClick={() => setActiveTab('my-shop')}
-                className={`flex-1 lg:w-full text-left px-3 py-3 sm:px-4 sm:py-4 transition-colors flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-3 ${activeTab === 'my-shop' ? 'bg-green-900/20 text-green-400 lg:border-l-4 lg:border-b-0 border-b-4 border-green-500' : 'text-gray-400 hover:bg-black/50 hover:text-white'}`}
+                className={`flex-1 lg:w-full text-left px-3.5 py-3 rounded-lg transition-colors flex items-center gap-2.5 text-xs font-semibold ${
+                  activeTab === 'my-shop'
+                    ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                    : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                }`}
               >
-                <LogOut size={20} className="shrink-0" /> <span className="text-[10px] sm:text-sm font-semibold whitespace-nowrap">Jualan Saya</span>
+                <LogOut className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="truncate">
+                  <span>Lapak Saya</span>
+                  <span className="block text-[10px] font-normal text-slate-500">Kelola Jualan</span>
+                </div>
               </button>
             )}
+
+            <button
+              onClick={() => setActiveTab('auction')}
+              className={`flex-1 lg:w-full text-left px-3.5 py-3 rounded-lg transition-colors flex items-center gap-2.5 text-xs font-semibold ${
+                activeTab === 'auction'
+                  ? 'bg-rose-600/20 text-rose-300 border border-rose-500/40 shadow-sm'
+                  : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+              }`}
+            >
+              <Gavel className="w-4 h-4 text-rose-400 shrink-0" />
+              <div className="truncate">
+                <span>Warta Balai Lelang</span>
+                <span className="block text-[10px] font-normal text-slate-500">Pengumuman Kota</span>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('settlement-npc')}
+              className={`flex-1 lg:w-full text-left px-3.5 py-3 rounded-lg transition-colors flex items-center gap-2.5 text-xs font-semibold ${
+                activeTab === 'settlement-npc'
+                  ? 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+              }`}
+            >
+              <Store className="w-4 h-4 text-amber-400 shrink-0" />
+              <div className="truncate">
+                <span>Saudagar NPC</span>
+                <span className="block text-[10px] font-normal text-slate-500">Pasar Pemukiman</span>
+              </div>
+            </button>
           </div>
         </div>
 
         {/* Content Area */}
         <div className="lg:col-span-3">
-          {loading ? (
-             <LoadingState text="Menghubungkan ke Pasar Sentral..." />
+          {listingsLoading && activeTab === 'player' ? (
+            <LoadingState text="Menghubungkan ke Toko Pemain Jianghu..." />
           ) : error ? (
-             <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-center text-red-400">
-               {error}
-             </div>
+            <div className="p-4 bg-rose-950/30 border border-rose-800/50 rounded-xl text-center text-xs text-rose-300">
+              {error}
+            </div>
           ) : (
             <>
-              {/* System Shop Section */}
-              {activeTab === 'shop' && (
-              <section className="bg-[#111] border border-[#333] rounded-xl overflow-hidden flex flex-col shadow-md">
-                <div className="bg-[#c5a880]/10 border-b border-[#c5a880]/30 p-4 sm:p-5 flex items-center justify-between">
-                  <h2 className="text-lg sm:text-xl font-bold font-serif text-[#c5a880] flex items-center gap-2">
-                    <Store className="text-[#c5a880] w-5 h-5 sm:w-6 sm:h-6" /> Toko Sistem
-                  </h2>
-                  <Button onClick={handleOpenSellSystemModal} size="sm" className="bg-[#c5a880] hover:bg-[#a68a65] text-black border-0">
-                      Jual ke Sistem
-                  </Button>
-                </div>
-
-                <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {shopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
-                    <div className="col-span-full py-8 text-center text-gray-500">
-                      Toko sedang kosong atau tidak ada item dengan rank tersebut.
-                    </div>
-                  ) : shopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
-                    <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 hover:shadow-md ${getRarityColor(item.rank || "common")}`}>
-                      <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                        <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
-                          {item.emoji}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className={`font-bold text-sm sm:text-base leading-tight truncate ${getRarityTextClass(item.rank || "common")}`} title={item.name}>{item.name}</h3>
-                          <div className="flex gap-2 mt-1 items-center">
-                            <span className="text-[10px] text-gray-500 capitalize">{item.type}</span>
-                            {item.stock !== -1 && (
-                                <span className="text-[10px] text-gray-400 bg-[#222] px-1.5 py-0.5 rounded">Stok: {item.stock}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
-                        {renderCurrency(item.price, item.currency)}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={actionLoading}
-                          onClick={() => handleOpenBuyModal(item.id, item.name, false, item.stock !== -1 ? item.stock : undefined)}
-                          className="h-8 text-xs border-[#c5a880] text-[#c5a880] hover:bg-[#c5a880]/20 w-full sm:w-auto"
-                        >
-                          Beli
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-              )}
-
-              {/* My Listings Section */}
-              {activeTab === 'my-shop' && (
-              <section className="bg-[#111] border border-[#1f402e]/50 rounded-xl overflow-hidden flex flex-col shadow-[0_0_15px_rgba(31,64,46,0.1)]">
-                <div className="bg-[#1f402e]/30 border-b border-[#1f402e]/50 p-4 sm:p-5 flex items-center">
-                  <div className="flex items-center justify-between w-full">
-                    <h2 className="text-lg sm:text-xl font-bold font-serif text-green-400 flex items-center gap-2">
-                      <LogOut className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" /> Jualan Saya
-                    </h2>
-                    <Button onClick={handleOpenSellModal} size="sm" className="bg-green-600 hover:bg-green-500 text-white border-0">
-                        + Jual Item
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {myListings?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
-                    <div className="col-span-full py-8 text-center text-gray-500 bg-black/30 rounded-lg border border-dashed border-[#333]">
-                      Kamu belum memiliki jualan aktif di Toko Player. Gunakan command Discord <code className="bg-black text-gray-300 px-1 rounded">/market jual</code> untuk mulai berjualan.
-                    </div>
-                  ) : myListings?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
-                    <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 ${getRarityColor(item.rank || "common")}`}>
-                      <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                        <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
-                          {item.emoji}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className={`font-bold text-sm sm:text-base leading-tight truncate ${getRarityTextClass(item.rank || "common")}`} title={item.name}>{item.name}</h3>
-                          <div className="flex flex-col gap-0.5 mt-1">
-                            <p className="text-[10px] text-green-500/80 font-mono">Kode: {item.kodeListing}</p>
-                            <p className="text-[10px] text-gray-400">Stok: {item.quantity}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
-                        {renderCurrency(item.price, item.currency)}
-
-                        {confirmCancelId === item.id ? (
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-red-400 ">Yakin?</span>
-                            <Button size="sm" variant="destructive" className="h-7 px-2 text-[10px]" disabled={actionLoading} onClick={() => handleCancelListing(item.id)}>Ya</Button>
-                            <Button size="sm" variant="outline" className="h-7 px-2 text-[10px]" disabled={actionLoading} onClick={() => setConfirmCancelId(null)}>Batal</Button>
-                          </div>
-                        ) : (
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            disabled={actionLoading}
-                            onClick={() => setConfirmCancelId(item.id)}
-                            className="h-8 text-xs w-full sm:w-auto bg-[#8b0000] hover:bg-red-800"
-                          >
-                            Batalkan
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-              )}
-
-
-              {/* Player Shop Section */}
+              {/* 1. Player Shop Section (Active default) */}
               {activeTab === 'player' && (
-              <section className="bg-[#111] border border-[#1e3a5f]/50 rounded-xl overflow-hidden flex flex-col shadow-[0_0_15px_rgba(30,58,95,0.1)]">
-                <div className="bg-[#1e3a5f]/20 border-b border-[#1e3a5f]/50 p-4 sm:p-5 flex items-center justify-between">
-                  <h2 className="text-lg sm:text-xl font-bold font-serif text-blue-400 flex items-center gap-2">
-                    <ShoppingBag className="text-blue-500 w-5 h-5 sm:w-6 sm:h-6" /> Toko Player
-                  </h2>
-                </div>
-
-                <div className="p-4 sm:p-6 grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {playerShopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase()).length === 0 ? (
-                    <div className="col-span-full py-8 text-center text-gray-500">Toko Player sedang kosong.</div>
-                  ) : playerShopItems?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((item: any) => (
-                    <div key={item.id} className={`bg-black/40 border rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-black/60 ${getRarityColor(item.rank || "common")}`}>
-                      <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                        <div className="text-2xl sm:text-3xl w-12 h-12 sm:w-14 sm:h-14 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner">
-                          {item.emoji}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h3 className={`font-bold text-sm sm:text-base leading-tight truncate ${getRarityTextClass(item.rank || "common")}`} title={item.name}>{item.name}</h3>
-                          <div className="flex flex-col gap-0.5 mt-1">
-                            <p className="text-[10px] text-blue-400/80">Penjual: {item.sellerName}</p>
-                            <p className="text-[10px] text-gray-400">Stok: {item.quantity}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap sm:flex-col items-center sm:items-end justify-center sm:justify-between w-full sm:w-auto gap-3 sm:gap-2 border-t sm:border-t-0 border-[#333] pt-3 sm:pt-0">
-                        {renderCurrency(item.price, item.currency)}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={actionLoading}
-                          onClick={() => handleOpenBuyModal(item.id, item.name, true, item.quantity)}
-                          className="h-8 text-xs border-blue-900 text-blue-400 hover:bg-blue-900/30 w-full sm:w-auto"
-                        >
-                          Beli
-                        </Button>
-                      </div>
+                <section className="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-xl backdrop-blur-sm">
+                  <div className="bg-blue-950/20 border-b border-blue-900/30 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h2 className="text-base font-bold text-blue-300 flex items-center gap-2">
+                        <ShoppingBag className="w-4 h-4 text-blue-400" />
+                        Bursa Lapak & Barter Pemain
+                      </h2>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Item yang dijual langsung oleh kultivator lain di seluruh benua.
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </section>
-              )}
 
-              {/* Live Auction Section */}
-              {activeTab === 'auction' && (
-              <section className="bg-[#111] border border-[#8b0000]/50 rounded-xl overflow-hidden flex flex-col shadow-[0_0_15px_rgba(139,0,0,0.1)]">
-                <div className="bg-[#8b0000]/20 border-b border-[#8b0000]/50 p-4 sm:p-5 flex items-center justify-between">
-                  <h2 className="text-lg sm:text-xl font-bold font-serif text-red-400 flex items-center gap-2">
-                    <Gavel className="text-red-500 w-5 h-5 sm:w-6 sm:h-6" /> Lelang Terbuka (Live)
-                  </h2>
-                  <span className="flex h-2.5 w-2.5 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                  </span>
-                </div>
+                    <div className="relative w-full sm:w-56">
+                      <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Cari item / penjual..."
+                        className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
 
-                <div className="p-4 sm:p-6 grid gap-4 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                  {auctions?.filter((item: any) => activeRank === 'all' || (item.rank || "common").toLowerCase() === activeRank.toLowerCase())?.map((auction: any) => (
-                    <div key={auction.id} className={`bg-black/60 border rounded-lg p-4 transition-all relative overflow-hidden group hover:shadow-md ${getRarityColor(auction.rank || "common")}`}>
-                      <div className="absolute top-0 right-0 bg-red-900/80 text-[9px] sm:text-[10px] px-2 py-1 rounded-bl-md text-red-100 font-mono">
-                        Sisa: {new Date(auction.timeLeft).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                  <div className="p-4 sm:p-5 grid gap-3.5 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto">
+                    {filteredPlayerItems.length === 0 ? (
+                      <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
+                        <ShoppingBag className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                        <p className="text-xs font-semibold">Tidak ada barang dagangan yang ditemukan.</p>
+                        <p className="text-[11px] text-slate-600 mt-1">
+                          Kultivator belum menggelar lapak atau kriteria filter tidak cocok.
+                        </p>
                       </div>
-
-                      <div className="flex gap-3 sm:gap-4 mt-2">
-                        <div className="text-2xl sm:text-3xl w-14 h-14 sm:w-16 sm:h-16 bg-[#111] rounded-md border border-[#333] flex items-center justify-center shrink-0 shadow-inner mt-1">
-                          {auction.emoji}
-                        </div>
-                        <div className="flex-1 min-w-0 flex flex-col">
-                          <h3 className={`font-bold text-sm sm:text-base leading-tight truncate ${getRarityTextClass(auction.rank || "common")}`} title={auction.name}>{auction.name}</h3>
-                          <p className="text-[10px] text-gray-500 mt-1 mb-2">Penjual: <span className="text-gray-400">{auction.seller}</span></p>
-
-                          <div className="flex justify-between items-end mt-auto pt-2 border-t border-[#333]/50">
-                            <div>
-                              <p className="text-[9px] text-gray-500 uppercase tracking-wide mb-0.5">Penawaran Tertinggi</p>
-                              {renderCurrency(auction.currentBid, auction.currency)}
+                    ) : (
+                      filteredPlayerItems.map((item) => (
+                        <div
+                          key={item.id}
+                          className={`bg-slate-950/70 border rounded-xl p-3.5 flex flex-col justify-between gap-3 transition-all hover:border-blue-500/40 hover:bg-slate-900/60 ${getRarityColor(
+                            item.rank || 'common'
+                          )}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="text-2xl w-12 h-12 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-center shrink-0 shadow-inner">
+                              {item.emoji}
                             </div>
+                            <div className="min-w-0 flex-1">
+                              <h3
+                                className={`font-bold text-sm truncate ${getRarityTextClass(
+                                  item.rank || 'common'
+                                )}`}
+                                title={item.name}
+                              >
+                                {item.name}
+                              </h3>
+                              <div className="flex flex-col gap-0.5 mt-1 text-[11px]">
+                                <span className="text-slate-400">
+                                  Penjual: <span className="text-blue-300 font-semibold">{item.sellerName}</span>
+                                </span>
+                                <span className="text-slate-500">Stok: {item.quantity} unit</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/80">
+                            {renderCurrency(item.price, item.currency)}
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
                               disabled={actionLoading}
-                              onClick={() => handleBid(auction.id, auction.currentBid)}
-                              className="h-7 sm:h-8 text-[10px] sm:text-xs px-2 sm:px-3 bg-[#8b0000] hover:bg-red-800"
+                              onClick={() => handleOpenBuyModal(item.id, item.name, item.quantity)}
+                              className="h-7 text-xs border-blue-600/40 text-blue-300 hover:bg-blue-900/30 px-3.5 rounded-lg"
                             >
-                              Tawar (+1)
+                              Beli
                             </Button>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      ))
+                    )}
+                  </div>
+                </section>
+              )}
 
-                  {auctions?.length === 0 && (
-                      <div className="col-span-full border border-dashed border-[#333] bg-black/20 rounded-lg p-6 text-center text-gray-500 text-sm">
-                        Tidak ada item lelang saat ini.
+              {/* 2. My Listings Section */}
+              {activeTab === 'my-shop' && (
+                <section className="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-xl backdrop-blur-sm">
+                  <div className="bg-emerald-950/20 border-b border-emerald-900/30 p-4 flex items-center justify-between">
+                    <div>
+                      <h2 className="text-base font-bold text-emerald-300 flex items-center gap-2">
+                        <LogOut className="w-4 h-4 text-emerald-400" />
+                        Lapak Jualan Saya
+                      </h2>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Kelola barang dagangan yang kamu gelar di bursa pasar bebas.
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleOpenSellModal}
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Gelar Jualan
+                    </Button>
+                  </div>
+
+                  <div className="p-4 sm:p-5 grid gap-3.5 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto">
+                    {myListings.length === 0 ? (
+                      <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
+                        <LogOut className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                        <p className="text-xs font-semibold">Kamu belum menggelar dagangan.</p>
+                        <p className="text-[11px] text-slate-600 mt-1">
+                          Klik tombol &quot;Gelar Jualan&quot; di atas untuk menjual barang dari inventarismu.
+                        </p>
                       </div>
-                  )}
-                </div>
-              </section>
+                    ) : (
+                      myListings.map((item) => (
+                        <div
+                          key={item.id}
+                          className={`bg-slate-950/70 border rounded-xl p-3.5 flex flex-col justify-between gap-3 transition-all hover:border-emerald-500/40 hover:bg-slate-900/60 ${getRarityColor(
+                            item.rank || 'common'
+                          )}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="text-2xl w-12 h-12 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-center shrink-0 shadow-inner">
+                              {item.emoji}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3
+                                className={`font-bold text-sm truncate ${getRarityTextClass(
+                                  item.rank || 'common'
+                                )}`}
+                                title={item.name}
+                              >
+                                {item.name}
+                              </h3>
+                              <div className="flex flex-col gap-0.5 mt-1 text-[11px]">
+                                <span className="font-mono text-emerald-400/90">Kode: {item.kodeListing}</span>
+                                <span className="text-slate-400">Stok Dijual: {item.quantity} unit</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2.5 border-t border-slate-800/80">
+                            {renderCurrency(item.price, item.currency)}
+                            {confirmCancelId === item.id ? (
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[10px] text-rose-400">Tarik?</span>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  className="h-6 px-2 text-[10px]"
+                                  disabled={actionLoading}
+                                  onClick={() => handleCancelListing(item.id)}
+                                >
+                                  Ya
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-6 px-2 text-[10px]"
+                                  disabled={actionLoading}
+                                  onClick={() => setConfirmCancelId(null)}
+                                >
+                                  Batal
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                disabled={actionLoading}
+                                onClick={() => setConfirmCancelId(item.id)}
+                                className="h-7 text-xs px-3 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800/40 rounded-lg"
+                              >
+                                Tarik Dagangan
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* 3. Auction Announcements Section */}
+              {activeTab === 'auction' && (
+                <section className="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-xl backdrop-blur-sm">
+                  <div className="bg-rose-950/20 border-b border-rose-900/30 p-4 flex items-center justify-between">
+                    <div>
+                      <h2 className="text-base font-bold text-rose-300 flex items-center gap-2">
+                        <Gavel className="w-4 h-4 text-rose-400" />
+                        Warta Balai Lelang Dunia
+                      </h2>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Jadwal dan daftar lot lelang resmi yang sedang berlangsung di kota-kota Jianghu.
+                      </p>
+                    </div>
+                    <span className="flex h-2.5 w-2.5 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                    </span>
+                  </div>
+
+                  <div className="p-4 bg-amber-950/20 border-b border-amber-900/30 text-xs text-amber-200/90 flex items-start gap-2">
+                    <Info className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
+                    <span>
+                      <strong>Peraturan Lelang:</strong> Sesuai titah perserikatan pedagang, penawaran resmi hanya dapat diajukan secara fisik di Balai Lelang kota tempat lelang diselenggarakan.
+                    </span>
+                  </div>
+
+                  <div className="p-4 sm:p-5 grid gap-3.5 grid-cols-1 md:grid-cols-2 max-h-[70vh] overflow-y-auto">
+                    {auctions.length === 0 ? (
+                      <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-800 rounded-xl">
+                        <Gavel className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                        <p className="text-xs font-semibold">Tidak ada lelang aktif saat ini.</p>
+                        <p className="text-[11px] text-slate-600 mt-1">
+                          Nantikan warta lelang langka berikutnya yang akan diumumkan di kota-kota besar.
+                        </p>
+                      </div>
+                    ) : (
+                      auctions.map((auction) => {
+                        const hostCity = auction.hostCity || 'Kota Pedagang Pusat';
+                        return (
+                          <div
+                            key={auction.id}
+                            className={`bg-slate-950/70 border rounded-xl p-4 flex flex-col justify-between gap-3 relative transition-all hover:border-rose-500/40 ${getRarityColor(
+                              auction.rank || 'common'
+                            )}`}
+                          >
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-[10px] font-semibold bg-rose-950/50 text-rose-300 px-2 py-0.5 rounded border border-rose-800/40 flex items-center gap-1">
+                                  <Building2 className="w-3 h-3" />
+                                  {hostCity}
+                                </span>
+                                <span className="text-[10px] font-mono text-slate-400">
+                                  Batas: {new Date(auction.timeLeft).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+
+                              <div className="flex items-start gap-3">
+                                <div className="text-2xl w-12 h-12 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-center shrink-0 shadow-inner">
+                                  {auction.emoji}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <h3
+                                    className={`font-bold text-sm truncate ${getRarityTextClass(
+                                      auction.rank || 'common'
+                                    )}`}
+                                    title={auction.name}
+                                  >
+                                    {auction.name}
+                                  </h3>
+                                  <p className="text-[11px] text-slate-400 mt-0.5">
+                                    Pelelang: <span className="text-slate-300 font-medium">{auction.seller}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="pt-2.5 border-t border-slate-800/80 flex items-center justify-between">
+                              <div>
+                                <p className="text-[10px] text-slate-500">Tawaran Tertinggi</p>
+                                {renderCurrency(auction.currentBid, auction.currency)}
+                              </div>
+                              <Button
+                                onClick={() => router.push('/world')}
+                                className="h-7 text-xs bg-rose-600 hover:bg-rose-500 text-slate-100 font-semibold px-3 rounded-lg flex items-center gap-1"
+                              >
+                                Ke Balai Lelang
+                                <ArrowRight className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* 4. Settlement NPC Directory */}
+              {activeTab === 'settlement-npc' && (
+                <section className="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-xl backdrop-blur-sm p-6 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center mx-auto mb-4 text-amber-400 shadow-inner">
+                    <Store className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-100">
+                    Saudagar NPC & Toko Khusus Pemukiman
+                  </h3>
+                  <p className="text-xs text-slate-400 max-w-md mx-auto mt-1 leading-relaxed">
+                    Setiap pemukiman dan kota di benua Jianghu memiliki toko saudagar fisik yang menjual pil kultivasi, material langka, serta kitab beladiri sesuai wilayahnya.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 my-6 text-left">
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                      <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
+                        <Building2 className="w-3.5 h-3.5" />
+                        Desa Nelayan Pemula
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        Menyediakan umpan pancing, jaring ikan, cangkul pemula, dan ransum perjalanan.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                      <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
+                        <Building2 className="w-3.5 h-3.5" />
+                        Kota Pedagang Sentral
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        Pusat perbekalan spiritual, bijih logam tempa bermutu tinggi, dan bibit tanaman obat.
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                      <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
+                        <Building2 className="w-3.5 h-3.5" />
+                        Paviliun Kitab & Sekte
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        Manual seni beladiri, jurus pedang kultivasi, serta blueprint bangunan langka.
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => router.push('/world')}
+                    className="mx-auto bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs px-6 py-2.5 rounded-xl shadow-lg flex items-center gap-2"
+                  >
+                    Buka Peta Dunia & Masuk Pemukiman
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </section>
               )}
             </>
           )}
         </div>
       </div>
 
-      {/* Purchase Modal */}
+      {/* Buy from Player Modal */}
       <Modal
         isOpen={buyModalOpen}
         onClose={() => setBuyModalOpen(false)}
-        title="Beli Barang"
+        title="Beli dari Lapak Pemain"
         maxWidth="sm"
       >
         {buyModalItem && (
-          <div className="space-y-4">
-            <p className="text-gray-300 text-sm">Anda akan membeli <span className="text-[#c5a880] font-bold">{buyModalItem.name}</span>.</p>
+          <div className="space-y-4 p-1">
+            <p className="text-slate-300 text-xs">
+              Membeli <span className="text-blue-300 font-bold">{buyModalItem.name}</span> dari kultivator.
+            </p>
 
-            <div className="bg-black/40 p-4 rounded-lg border border-[#333]">
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                Jumlah Beli {buyModalItem.maxQuantity && `(Max: ${buyModalItem.maxQuantity})`}
+            <div className="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                Jumlah Beli {buyModalItem.maxQuantity && `(Tersedia: ${buyModalItem.maxQuantity})`}
               </label>
               <input
                 type="number"
                 min="1"
                 max={buyModalItem.maxQuantity || 999}
                 value={buyQuantity}
-                onChange={(e) => setBuyQuantity(Number(e.target.value))}
-                className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2 text-white focus:outline-none focus:border-[#c5a880] text-center text-lg font-mono"
+                onChange={(e) => setBuyQuantity(Math.max(1, Number(e.target.value)))}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500 text-center text-base font-mono"
               />
             </div>
 
             <Button
-              variant="default"
-              className="w-full"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-slate-950 font-bold text-xs py-2 rounded-xl"
               disabled={actionLoading || buyQuantity < 1}
               onClick={handleBuy}
             >
-              {actionLoading ? 'Memproses...' : 'Konfirmasi Pembelian'}
+              {actionLoading ? 'Memproses Transaksi...' : 'Konfirmasi Pembelian'}
             </Button>
           </div>
         )}
       </Modal>
 
-
-
-      {/* Sell To System Modal */}
-      <Modal isOpen={sellSystemModalOpen} onClose={() => setSellSystemModalOpen(false)} title="Jual ke Sistem" maxWidth="sm">
-          <div className="space-y-4">
-              <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Pilih Item (yang memiliki harga dasar)</label>
-                  <select
-                      value={sellSystemItemId}
-                      onChange={(e) => {
-                          setSellSystemItemId(e.target.value);
-                          setSellSystemQuantity(1);
-                      }}
-                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none"
-                  >
-                      <option value="">-- Pilih Item --</option>
-                      {inventory.filter((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => item.price && item.price > 0).map((item: any) => (
-                          <option key={item.id} value={item.id}>
-                              {item.name} (Stok: {item.quantity}) - {Math.floor(item.price * 0.2)} {item.priceCurrency || 'copper'}/unit
-                          </option>
-                      ))}
-                  </select>
-                  {inventory.filter((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => item.price && item.price > 0).length === 0 && (
-                      <p className="text-xs text-red-400 mt-2">Tidak ada item dengan harga dasar di inventory kamu.</p>
-                  )}
-              </div>
-
-              {sellSystemItemId && (
-                <>
-                  <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Jumlah Dijual</label>
-                      <input
-                          type="number"
-                          min="1"
-                          max={inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellSystemItemId)?.quantity || 1}
-                          value={sellSystemQuantity}
-                          onChange={(e) => setSellSystemQuantity(parseInt(e.target.value) || 1)}
-                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm font-mono"
-                      />
-                  </div>
-                  <div className="bg-black/40 p-3 rounded-lg border border-[#333] text-center">
-                    <p className="text-xs text-gray-400">Total Didapat (20% Harga Dasar):</p>
-                    <p className="text-lg font-bold text-[#c5a880] flex items-center justify-center gap-2 mt-1">
-                      {(() => {
-                         const item = inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellSystemItemId);
-                         if (!item) return '-';
-                         const total = Math.floor(item.price * sellSystemQuantity * 0.2);
-                         return renderCurrency(total, item.priceCurrency || 'copper');
-                      })()}
-                    </p>
-                  </div>
-                </>
-              )}
-
-              <Button
-                  onClick={handleSellToSystem}
-                  disabled={actionLoading || !sellSystemItemId || sellSystemQuantity <= 0}
-                  className="w-full bg-[#c5a880] hover:bg-[#a68a65] text-black mt-2 border-0"
-              >
-                  {actionLoading ? 'Memproses...' : 'Konfirmasi Jual'}
-              </Button>
-          </div>
-      </Modal>
-
       {/* Sell Modal */}
-      <Modal isOpen={sellModalOpen} onClose={() => setSellModalOpen(false)} title="Jual Item" maxWidth="sm">
-          <div className="space-y-4">
-              <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Pilih Item</label>
-                  <select
-                      value={sellItemId}
-                      onChange={(e) => {
-                          setSellItemId(e.target.value);
-                          setSellQuantity(1);
-                      }}
-                      className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
-                  >
-                      <option value="">-- Pilih Item --</option>
-                      {inventory.map((item: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => (
-                          <option key={item.id} value={item.id}>
-                              {item.name} (Stok: {item.quantity})
-                          </option>
-                      ))}
-                  </select>
+      <Modal
+        isOpen={sellModalOpen}
+        onClose={() => setSellModalOpen(false)}
+        title="Gelar Lapak Dagangan Baru"
+        maxWidth="sm"
+      >
+        <div className="space-y-4 p-1">
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              Pilih Item dari Inventaris
+            </label>
+            <select
+              value={sellItemId}
+              onChange={(e) => {
+                setSellItemId(e.target.value);
+                setSellQuantity(1);
+              }}
+              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs focus:outline-none focus:border-emerald-500"
+            >
+              <option value="">-- Pilih Item --</option>
+              {inventory.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} (Stok: {item.quantity})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {sellItemId && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Jumlah Dijual
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max={inventory.find((i) => i.id === sellItemId)?.quantity || 1}
+                    value={sellQuantity}
+                    onChange={(e) => setSellQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Harga Per Unit (Silver)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={sellPrice}
+                    onChange={(e) => setSellPrice(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono"
+                  />
+                </div>
               </div>
 
-              {sellItemId && (
-                <>
-                  <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Jumlah Dijual</label>
-                      <input
-                          type="number"
-                          min="1"
-                          max={inventory.find((i: { id: string; name: string; quantity: number; price?: number; priceCurrency?: string }) => i.id === sellItemId)?.quantity || 1}
-                          value={sellQuantity}
-                          onChange={(e) => setSellQuantity(parseInt(e.target.value) || 1)}
-                          className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"
-                      />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                      <div>
-                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Harga / Unit</label>
-                          <input
-                              type="number"
-                              min="1"
-                              value={sellPrice}
-                              onChange={(e) => setSellPrice(parseInt(e.target.value) || 1)}
-                              className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm font-mono"
-                          />
-                      </div>
-                      <div>
-                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Mata Uang</label>
-                          <select
-                              value={sellCurrency}
-                              onChange={(e) => setSellCurrency(e.target.value)}
-                              className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-green-500 text-sm appearance-none"
-                          >
-                              <option value="copper">Copper 🟤</option>
-                              <option value="silver">Silver 🥈</option>
-                              <option value="gold">Gold 🥇</option>
-                              <option value="jade">Jade 💎</option>
-                              <option value="spirit">Spirit 🔮</option>
-                          </select>
-                      </div>
-                  </div>
-                </>
-              )}
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center text-xs">
+                <span className="text-slate-500">Estimasi Total Pendapatan: </span>
+                <span className="text-emerald-400 font-bold font-mono">
+                  {(sellPrice * sellQuantity).toLocaleString()} Silver
+                </span>
+              </div>
+            </>
+          )}
 
-              <Button
-                  onClick={handleSell}
-                  disabled={actionLoading || !sellItemId || sellQuantity <= 0 || sellPrice <= 0}
-                  className="w-full bg-green-700 hover:bg-green-600 mt-2 border-0"
-              >
-                  {actionLoading ? 'Memproses...' : 'Pasang di Toko'}
-              </Button>
-          </div>
+          <Button
+            className="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2 rounded-xl"
+            disabled={actionLoading || !sellItemId}
+            onClick={handleSell}
+          >
+            {actionLoading ? 'Mendaftarkan Lapak...' : 'Gelar Lapak Sekarang'}
+          </Button>
+        </div>
       </Modal>
     </div>
   );

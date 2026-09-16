@@ -22,6 +22,7 @@ export interface TileData {
   propertyStructureId?: string | null;
   isClaimable?: boolean;
   ownerId?: string | null;
+  ownerName?: string | null;
   cropType?: string | null;
   baseTemperature?: number;
   spiritualQiDensity?: number;
@@ -32,6 +33,11 @@ export interface TileData {
   ambushRiskRate?: number;
   factionName?: string | null;
   staminaCost?: number;
+  isUnderConstruction?: boolean;
+  constructionCompleteAt?: string | null;
+  assetHp?: number;
+  assetMaxHp?: number;
+  isExpeditionNode?: boolean;
 }
 
 interface TaleOfImmortalCanvasProps {
@@ -46,6 +52,7 @@ interface TaleOfImmortalCanvasProps {
   onActionWalk?: () => void;
   onActionInspect?: () => void;
   onClearTarget?: () => void;
+  focusTile?: Point | null;
   weather?: 'rain' | 'snow' | 'miasma' | 'none';
   isNight?: boolean;
 }
@@ -62,6 +69,7 @@ export default function TaleOfImmortalCanvas({
   onActionWalk,
   onActionInspect,
   onClearTarget,
+  focusTile = null,
   weather = 'none',
   isNight = false
 }: TaleOfImmortalCanvasProps) {
@@ -69,8 +77,8 @@ export default function TaleOfImmortalCanvas({
 
   // Camera State
   const [camera, setCamera] = useState<{ x: number; y: number; zoom: number }>({
-    x: playerPos.x,
-    y: playerPos.y,
+    x: focusTile ? focusTile.x : playerPos.x,
+    y: focusTile ? focusTile.y : playerPos.y,
     zoom: 1.0
   });
 
@@ -95,6 +103,28 @@ export default function TaleOfImmortalCanvas({
   const centerOnPlayer = useCallback(() => {
     setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
   }, [playerPos.x, playerPos.y]);
+
+  // Recenter if focusTile is supplied or changes
+  useEffect(() => {
+    if (focusTile) {
+      setCamera(prev => ({ ...prev, x: focusTile.x, y: focusTile.y }));
+    }
+  }, [focusTile?.x, focusTile?.y]);
+
+  // Auto-sync camera if player position jumps (e.g. on initial data load)
+  const prevPlayerPos = useRef(playerPos);
+  useEffect(() => {
+    if (!isWalking && !focusTile) {
+      const dist = Math.max(
+        Math.abs(playerPos.x - prevPlayerPos.current.x),
+        Math.abs(playerPos.y - prevPlayerPos.current.y)
+      );
+      if (dist > 3) {
+        setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
+      }
+    }
+    prevPlayerPos.current = playerPos;
+  }, [playerPos.x, playerPos.y, isWalking, focusTile]);
 
   useEffect(() => {
     if (isWalking) {
@@ -285,6 +315,67 @@ export default function TaleOfImmortalCanvas({
              // Let's add a small icon or just a very faint orange tint
              ctx.fillStyle = 'rgba(255, 165, 0, 0.05)'; 
              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+          }
+
+          // 2.6 Player Asset / Construction / Scaffolding Overlay
+          if (tile.buildingName || tile.isUnderConstruction || tile.propertyStructureId) {
+            const bx = sx + currentTileSize * 0.15;
+            const by = sy + currentTileSize * 0.15;
+            const bw = currentTileSize * 0.7;
+            const bh = currentTileSize * 0.7;
+
+            if (tile.isUnderConstruction) {
+              // Scaffolding kayu perancah
+              ctx.strokeStyle = '#d97706';
+              ctx.lineWidth = Math.max(1, 2 * camera.zoom);
+              ctx.strokeRect(bx, by, bw, bh);
+              ctx.beginPath();
+              ctx.moveTo(bx, by); ctx.lineTo(bx + bw, by + bh);
+              ctx.moveTo(bx + bw, by); ctx.lineTo(bx, by + bh);
+              ctx.stroke();
+
+              ctx.fillStyle = '#f59e0b';
+              ctx.font = `bold ${Math.max(8, 10 * camera.zoom)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.fillText('🔨 Membangun', sx + currentTileSize / 2, sy + currentTileSize * 0.85);
+            } else {
+              let assetImg = (loadedImages.assets as any)?.[tile.buildingName || ''];
+              if (assetImg) {
+                ctx.drawImage(assetImg, bx, by, bw, bh);
+              } else {
+                ctx.fillStyle = '#78350f';
+                ctx.fillRect(bx, by + bh * 0.3, bw, bh * 0.7);
+                ctx.fillStyle = '#b45309';
+                ctx.beginPath();
+                ctx.moveTo(bx - 2, by + bh * 0.3);
+                ctx.lineTo(bx + bw / 2, by);
+                ctx.lineTo(bx + bw + 2, by + bh * 0.3);
+                ctx.fill();
+              }
+              // Mini HP bar
+              const hpPercent = Math.max(0, Math.min(1, (tile.assetHp ?? 100) / (tile.assetMaxHp ?? 100)));
+              ctx.fillStyle = 'rgba(0,0,0,0.6)';
+              ctx.fillRect(bx, by - 4 * camera.zoom, bw, 3 * camera.zoom);
+              ctx.fillStyle = hpPercent > 0.5 ? '#22c55e' : hpPercent > 0.2 ? '#eab308' : '#ef4444';
+              ctx.fillRect(bx, by - 4 * camera.zoom, bw * hpPercent, 3 * camera.zoom);
+            }
+          }
+
+          // 2.7 Landmark Ekspedisi / Dungeon Gate
+          if (tile.isExpeditionNode || tile.label?.toLowerCase().includes('gua') || tile.label?.toLowerCase().includes('makam') || tile.label?.toLowerCase().includes('ekspedisi')) {
+            const ex = sx + currentTileSize * 0.2;
+            const ey = sy + currentTileSize * 0.2;
+            const ew = currentTileSize * 0.6;
+            const eh = currentTileSize * 0.6;
+            ctx.fillStyle = 'rgba(79, 70, 229, 0.25)';
+            ctx.fillRect(ex, ey, ew, eh);
+            ctx.strokeStyle = '#818cf8';
+            ctx.lineWidth = Math.max(1, 1.5 * camera.zoom);
+            ctx.strokeRect(ex, ey, ew, eh);
+            ctx.fillStyle = '#c7d2fe';
+            ctx.font = `bold ${Math.max(8, 10 * camera.zoom)}px serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText('🌀 Dungeon', sx + currentTileSize / 2, sy + currentTileSize * 0.85);
           }
           ctx.restore();
         }
@@ -574,12 +665,22 @@ export default function TaleOfImmortalCanvas({
     }
   };
 
+  // Nonaktifkan zoom mouse wheel per instruksi user (hanya pakai tombol + dan -)
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
     e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.12 : 0.89;
+  };
+
+  const handleZoomIn = () => {
     setCamera(prev => ({
       ...prev,
-      zoom: Math.max(0.45, Math.min(2.5, prev.zoom * zoomFactor))
+      zoom: Math.min(2.5, +(prev.zoom + 0.15).toFixed(2))
+    }));
+  };
+
+  const handleZoomOut = () => {
+    setCamera(prev => ({
+      ...prev,
+      zoom: Math.max(0.45, +(prev.zoom - 0.15).toFixed(2))
     }));
   };
 
@@ -610,19 +711,35 @@ export default function TaleOfImmortalCanvas({
         />
       )}
 
-      {/* HUD Controls */}
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2 pointer-events-auto">
+      {/* HUD Controls (+ dan - Zoom Spasial) */}
+      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 pointer-events-auto">
         <button
           onClick={centerOnPlayer}
           className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-3 py-1.5 rounded-sm text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95"
+          title="Pusatkan Karakter"
         >
-          <span>🎯 Pusatkan Karakter</span>
+          <span>🎯 Pusatkan</span>
+        </button>
+        <button
+          onClick={handleZoomOut}
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-sm text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          title="Perkecil Peta (-)"
+        >
+          -
         </button>
         <button
           onClick={() => setCamera(prev => ({ ...prev, zoom: 1.0 }))}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#8c7a5f] border border-[#524530] px-2.5 py-1.5 rounded-sm text-xs font-mono shadow-lg backdrop-blur-md"
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#8c7a5f] border border-[#524530] px-2 py-1 rounded-sm text-xs font-mono shadow-lg backdrop-blur-md"
+          title="Reset Zoom 100%"
         >
           {Math.round(camera.zoom * 100)}%
+        </button>
+        <button
+          onClick={handleZoomIn}
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-sm text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          title="Perbesar Peta (+)"
+        >
+          +
         </button>
       </div>
 

@@ -210,7 +210,10 @@ router.get('/assets', authenticateToken, async (req, res) => {
                 isDamaged: asset.isDamaged,
                 damageType: asset.damageType,
                 guardEndTime: asset.guardEndTime,
-                toolDurabilityUsage: asset.toolDurabilityUsage ? Object.fromEntries(asset.toolDurabilityUsage) : {}
+                toolDurabilityUsage: asset.toolDurabilityUsage ? Object.fromEntries(asset.toolDurabilityUsage) : {},
+                placement: asset.placement || null,
+                hp: asset.hp !== undefined ? asset.hp : (asset.isDamaged ? 30 : 100),
+                maxHp: asset.maxHp || 100
             };
         });
 
