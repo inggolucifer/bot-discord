@@ -8,7 +8,7 @@ interface MapActionOverlayProps {
   y: number;
   onWalk: () => void;
   onInspect: () => void;
-  onHarvest: () => void;
+
   onClose: () => void;
 }
 
@@ -18,7 +18,7 @@ export default function MapActionOverlay({
   y,
   onWalk,
   onInspect,
-  onHarvest,
+
   onClose
 }: MapActionOverlayProps) {
   return (
@@ -58,15 +58,6 @@ export default function MapActionOverlay({
           >
             <span>👁️</span> Periksa Area
           </button>
-
-          {tile.resourceType && (
-            <button
-              onClick={onHarvest}
-              className="px-4 py-1.5 text-left text-sm text-[#eab308] hover:bg-[#3d3324] hover:text-[#fde047] transition-colors flex items-center gap-2 font-semibold"
-            >
-              <span>{tile.resourceType === 'ore' ? '⛏' : tile.resourceType === 'herb' ? '🌿' : '🪓'}</span> Panen / Ambil
-            </button>
-          )}
         </div>
       </div>
     </div>

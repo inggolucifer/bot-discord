@@ -21,6 +21,13 @@ export interface TileData {
   buildingName?: string | null;
   baseTemperature?: number;
   spiritualQiDensity?: number;
+  regionId?: string;
+  regionName?: string;
+  territoryType?: string;
+  dangerTier?: number;
+  ambushRiskRate?: number;
+  factionName?: string | null;
+  staminaCost?: number;
 }
 
 interface TaleOfImmortalCanvasProps {
@@ -33,7 +40,6 @@ interface TaleOfImmortalCanvasProps {
   onTileClick: (tile: TileData) => void;
   onTileHover?: (tile: TileData | null) => void;
   onActionWalk?: () => void;
-  onActionHarvest?: (tileX: number, tileY: number) => void;
   onActionInspect?: () => void;
   onClearTarget?: () => void;
   weather?: 'rain' | 'snow' | 'miasma' | 'none';
@@ -265,28 +271,17 @@ export default function TaleOfImmortalCanvas({
             }
           }
 
-          // Resource Node
-          if (tile.tileType === 'resource_node') {
-            const cx = sx + currentTileSize / 2;
-            const cy = sy + currentTileSize / 2;
-            const resType = tile.resourceType;
-            let resImg: HTMLImageElement | null | undefined = undefined;
-            if (resType === 'ore') resImg = loadedImages.resources?.ore_iron;
-            else if (resType === 'herb') resImg = loadedImages.resources?.herb_mortal;
-            else if (resType === 'wood') resImg = loadedImages.resources?.wood_bamboo;
-
-            const bounce = Math.sin(time * 3) * 2;
-            if (resImg) {
-              const rw = currentTileSize * 0.6;
-              ctx.drawImage(resImg, cx - rw/2, cy - rw/2 + bounce, rw, rw);
-            } else {
-              ctx.fillStyle = '#0f766e';
-              ctx.beginPath(); ctx.arc(cx, cy + bounce, 8 * camera.zoom, 0, Math.PI * 2); ctx.fill();
-              ctx.fillStyle = '#ffffff';
-              ctx.font = `bold ${Math.max(10, 12 * camera.zoom)}px sans-serif`;
-              ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-              ctx.fillText(resType === 'ore' ? '⛏' : resType === 'herb' ? '🌿' : '🪓', cx, cy + bounce);
-            }
+          // 2.5 Territory Overlays
+          if (tile.territoryType === 'danger_zone') {
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.15)'; // Red tint for danger
+            ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+          } else if (tile.territoryType === 'sect_territory') {
+            ctx.fillStyle = 'rgba(128, 0, 128, 0.1)'; // Purple tint for sect
+            ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+          } else if (tile.territoryType === 'monster_zone') {
+             // Let's add a small icon or just a very faint orange tint
+             ctx.fillStyle = 'rgba(255, 165, 0, 0.05)'; 
+             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           }
           ctx.restore();
         }
@@ -608,7 +603,6 @@ export default function TaleOfImmortalCanvas({
           tile={selectedTileData}
           onWalk={onActionWalk}
           onInspect={onActionInspect || (() => {})}
-          onHarvest={() => onActionHarvest && onActionHarvest(selectedTileData.tileX, selectedTileData.tileY)}
           onClose={() => onClearTarget && onClearTarget()}
         />
       )}

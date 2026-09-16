@@ -266,16 +266,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     setViewMode('courtyard');
   };
 
-  // Panen Sumber Daya (Anti-OP)
-  const handleGather = async (tileX: number, tileY: number) => {
-    try {
-      const res = await api.post('/world/zone/gather', { tileX, tileY, zoneId: activeZoneId });
-      showMessage(res.data.message || 'Berhasil mengumpulkan bahan mentah!');
-      fetchZoneData();
-    } catch (err: any) {
-      showMessage(err.response?.data?.error || 'Gagal memanen');
-    }
-  };
 
   // Cari Sekitar
   const handleSearch = async () => {
@@ -385,7 +375,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
           isWalking={isWalking}
           onTileClick={handleTileClick}
           onActionWalk={handleStartWalking}
-          onActionHarvest={(tx, ty) => handleGather(tx, ty)}
           onActionInspect={handleSearch}
           onClearTarget={() => {
             setSelectedTile(null);
@@ -414,10 +403,37 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
                 Jarak: <strong className="text-gray-200">{distToSelected}</strong> tile
                 {pathSteps > 0 && ` (~${pathSteps} langkah)`}
               </span>
+              <span className="text-gray-600">|</span>
+              <span className="text-blue-300 font-medium">
+                {selectedTile.regionName || 'Central Plains'}
+              </span>
+              <span className="text-gray-600">|</span>
+              <span className={
+                selectedTile.territoryType === 'danger_zone' ? 'text-red-400 font-bold' :
+                selectedTile.territoryType === 'monster_zone' ? 'text-orange-400 font-medium' :
+                selectedTile.territoryType === 'sect_territory' ? 'text-purple-400 font-medium' :
+                selectedTile.territoryType === 'locked_zone' ? 'text-gray-500 font-medium' :
+                'text-emerald-400 font-medium'
+              }>
+                {selectedTile.territoryType === 'danger_zone' ? 'Zona Bahaya' :
+                 selectedTile.territoryType === 'monster_zone' ? 'Zona Monster' :
+                 selectedTile.territoryType === 'sect_territory' ? 'Wilayah Sekte' :
+                 selectedTile.territoryType === 'locked_zone' ? 'Area Terlarang' :
+                 selectedTile.territoryType === 'settlement' ? 'Pemukiman' :
+                 'Alam Liar'}
+              </span>
+              {selectedTile.dangerTier && (
+                <>
+                  <span className="text-gray-600">|</span>
+                  <span className="text-amber-500 font-medium text-[11px] px-1 bg-amber-900/30 rounded border border-amber-900/50">
+                    Tier {selectedTile.dangerTier}
+                  </span>
+                </>
+              )}
               {selectedTile.label && (
                 <>
                   <span className="text-gray-600">|</span>
-                  <span className="text-emerald-400 font-medium">
+                  <span className="text-gray-300 font-medium">
                     {selectedTile.label}
                   </span>
                 </>
