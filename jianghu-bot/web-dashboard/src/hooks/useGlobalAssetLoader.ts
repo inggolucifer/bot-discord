@@ -13,22 +13,22 @@ export function useGlobalAssetLoader() {
 
   useEffect(() => {
     let isMounted = true;
-    const newLoadedImages: LoadedImagesMap = {};
+    const newLoadedImages: any = {};
     const promises: Promise<void>[] = [];
 
     // Iterate through categories (terrain, sects, resources, etc.)
     for (const [categoryStr, items] of Object.entries(GLOBAL_ASSETS)) {
-      const category = categoryStr as keyof typeof GLOBAL_ASSETS;
+      const category = categoryStr;
       newLoadedImages[category] = {};
 
       // Iterate through each item inside the category
       for (const [keyStr, urlStr] of Object.entries(items)) {
-        const key = keyStr as keyof typeof GLOBAL_ASSETS[typeof category];
+        const key = keyStr;
         const url = urlStr as string;
 
         if (!url || url.trim() === "") {
           // If no URL is provided, explicitly set to null so the canvas knows to fallback
-          newLoadedImages[category]![key] = null;
+          newLoadedImages[category][key] = null;
         } else {
           // Attempt to preload the image
           promises.push(
@@ -36,12 +36,12 @@ export function useGlobalAssetLoader() {
               const img = new Image();
               img.crossOrigin = "anonymous"; // Enable CORS for external images
               img.onload = () => {
-                if (isMounted) newLoadedImages[category]![key] = img;
+                if (isMounted) newLoadedImages[category][key] = img;
                 resolve();
               };
               img.onerror = () => {
                 console.warn(`Failed to load asset [${category}.${key}] from URL: ${url}`);
-                if (isMounted) newLoadedImages[category]![key] = null;
+                if (isMounted) newLoadedImages[category][key] = null;
                 resolve();
               };
               img.src = url;
@@ -53,7 +53,7 @@ export function useGlobalAssetLoader() {
 
     Promise.all(promises).then(() => {
       if (isMounted) {
-        setLoadedImages(newLoadedImages);
+        setLoadedImages(newLoadedImages as LoadedImagesMap);
         setIsReady(true);
       }
     });
