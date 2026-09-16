@@ -77,7 +77,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             setLoading(false);
         } catch (err: any) {
             console.error('[ZoneGridView] Error fetching zone:', err);
-            setError(err.response?.data?.error || err.message || 'Gagal memuat zona');
+            console.error('[ZoneGridView] Error response data:', err.response?.data);
+            const serverMsg = err.response?.data?.error || err.response?.data?.message || err.message;
+            setError(serverMsg || 'Gagal memuat zona');
             setLoading(false);
         }
     };
