@@ -1,131 +1,263 @@
 /**
  * WUXIAN WORLD - GLOBAL ASSET REGISTRY
- * PUSAT PENGATURAN VISUAL LORE (TERSINKRONISASI DENGAN CORE REPO)
+ * PUSAT PENGATURAN VISUAL LORE TERPADU (SATU-SATUNYA SUMBER ASSET GAMBAR)
  * 
  * Cara Penggunaan:
- * 1. Tempel URL gambar (PNG transparan disarankan) pada masing-masing entri.
- * 2. Jika URL dikosongkan (""), sistem akan otomatis merender lukisan kuas/tinta prosedural (Fallback).
+ * 1. Tempel URL gambar (https://...) langsung pada entri yang diinginkan.
+ * 2. Biarkan kosong ("") jika belum ada gambar → Sistem otomatis memakai procedural canvas / emoji fallback.
+ * 3. Perhatikan panduan Rasio & Ukuran Pas pada masing-masing kategori agar tampilan presisi dan tidak pecah.
  */
 
 export const GLOBAL_ASSETS = {
   
-    // =========================================================================
-    // 1. KONDISI ALAM & CUACA (ENVIRONMENTAL CONDITIONS)
-    // Deskripsi: Filter/efek cuaca global yang melayang di atas peta.
-    // =========================================================================
-    conditions: {
-      weather_rain: "",         // Overlay hujan (Pattern/GIF)
-      weather_snow: "",         // Overlay salju (untuk Northern Desolate)
-      weather_miasma: "",       // Kabut beracun (untuk Southern Demon Domain)
-      time_night: "",           // Filter malam hari
+  // =========================================================================
+  // 1. KONDISI ALAM & CUACA (ENVIRONMENTAL CONDITIONS)
+  // Deskripsi: Filter visual & efek cuaca global yang melayang di atas peta.
+  // Format: PNG Transparan / GIF Looping
+  // =========================================================================
+  conditions: {
+    weather_rain: "",         // Overlay hujan
+    weather_snow: "",         // Overlay salju (Northern Desolate)
+    weather_miasma: "",       // Kabut racun ungu (Southern Demon Domain)
+    time_night: "",           // Filter gelap malam hari
+    danger_zone_overlay: "",  // Partikel merah peringatan zona bahaya
+  },
+
+  // =========================================================================
+  // 2. BIOMA TERRAIN BERDASARKAN 6 WILAYAH LORE (1x1 GRID MAP)
+  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG)
+  // =========================================================================
+  terrain: {
+    // Wilayah Umum
+    plains: "",              // Dataran Central Plains (Padang rumput)
+    forest: "",              // Rimba hijau biasa
+    bamboo_forest: "",       // Hutan Bambu khusus
+    river: "",               // Aliran sungai / air tawar
+    settlement_floor: "",    // Lantai paving batu kota/desa
+    
+    // Wilayah Khusus (Core Lore)
+    azure_mountain: "",      // Tebing batu terjal (Azure Mountain Range)
+    demonic_swamp: "",       // Rawa racun tanah ungu (Southern Demon Domain)
+    eastern_sea: "",         // Lautan dalam tanpa batas (Eastern Sea Region)
+    northern_glacial: "",    // Dataran es dan gletser (Northern Desolate Territory)
+    western_desert: "",      // Padang pasir terik (Western Sacred Deserts)
+  },
+
+  // =========================================================================
+  // 3. LANDMARKS: 24 SEKTE, DOJO & ORGANISASI (MULTI-GRID 2x2 ATAU 3x3)
+  // Deskripsi: Markas sekte raksasa di atas grid map.
+  // Ukuran Pas: 256x256 px (2x2 tile) atau 384x384 px (3x3 tile)
+  // Format: PNG Transparan (Wajib)
+  // =========================================================================
+  sects: {
+    // Central Plains (中原)
+    "Heavenly Sword Pavilion": "",
+    "Profound Heaven Sect": "",
+    "Silver Rain Sword School": "",
+    "Dojo Bunga Aprikot": "",
+    "Dojo Godam Besi": "",
+
+    // Azure Mountain Range (碧山)
+    "Golden Bell Monastery": "",
+    "Dojo Pahat Naga": "",
+
+    // Southern Demon Domain (南魔域)
+    "Demonic Flame Palace": "",
+    "Nine Serpent Den": "",
+    "Seven Sins Cult": "",
+    "Blood Shadow Alliance": "",
+    "Dojo Bayangan Kelam": "",
+
+    // Eastern Sea Region (东海)
+    "Jade Purity Palace": "",
+    "Dojo Ombak Tenang": "",
+
+    // Northern Desolate Territory (北荒)
+    "Whitecloud Medicine Hall": "",
+    "Ghost Valley Sect": "",
+    "Dojo Cakar Serigala": "",
+
+    // Western Sacred Deserts (西圣漠)
+    "Azure Cloud Temple": "",
+    "Dojo Mata Elang Pasir": "",
+    
+    // Faksi Lintas Wilayah
+    "Perkumpulan Pisau Sunyi": "",
+    "Serambi Seribu Bisik": "",
+    "Rumah Gadai Giok Sejuk": "",
+  },
+
+  // =========================================================================
+  // 4. LANDMARKS: KOTA & FASILITAS KHUSUS
+  // Deskripsi: Gerbang kota atau arsitektur pemukiman besar di peta.
+  // Ukuran: 256x256 px s/d 512x512 px (Format: PNG Transparan)
+  // =========================================================================
+  cities: {
+    "Tianjing Capital": "",  // Ibu kota dunia (Ukuran terbesar: 512x512 px)
+    "XiTong City": "",       // Kota faksi utama (384x384 px)
+    "default_city": "",      // Fallback untuk kota standar (256x256 px)
+    "default_village": "",   // Fallback untuk desa kecil (192x192 px)
+  },
+
+  // =========================================================================
+  // 5. ECONOMY & RESOURCES (OBJEK DI TANAH / ITEM GATHERING)
+  // Rasio Wajib: 1:1. Ukuran Pas: 64x64 px (Format: PNG Transparan)
+  // =========================================================================
+  resources: {
+    spirit_stone: "",        // Batu roh / Lingshi bersinar
+    herb_mortal: "",         // Herba tier fana
+    herb_spirit: "",         // Herba tier tinggi / spiritual
+    ore_iron: "",            // Bongkahan bijih besi
+    ore_meteor: "",          // Baja meteor langka
+    wood_bamboo: "",         // Rebung / Bambu roh
+  },
+
+  // =========================================================================
+  // 6. LIFE SIMULATOR ASSETS (PROPERTI & BANGUNAN KERJA)
+  // Deskripsi: Fasilitas yang dapat dibangun dan dikelola pemain.
+  // Rasio Wajib: 1:1. Ukuran Pas: 256x256 px (Format: PNG Transparan)
+  // =========================================================================
+  assets: {
+    "Pusat Pemotongan Kayu Liar": "",
+    "Kotak Amal Tua": "",
+    "Lahan Padi Sederhana": "",
+    "Tambang Batu Dangkal": "",
+    "Paviliun Alkimia Langit": "",
+    "Bengkel Tempa Senjata": "",
+    "Dapur Masak Kedai": "",
+    "Kolam Ikan Koi Spiritual": "",
+    "Istana Lelang Langit (Heavenly Auction House)": "",
+  },
+
+  // =========================================================================
+  // 7. BODY & KOSMETIK PENDEKAR (PLAYER CUSTOMIZATION)
+  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG Transparan)
+  // =========================================================================
+  body: {
+    face: {
+      default_face_01: "",   // Wajah pendekar pemuda
+      default_face_02: "",   // Wajah pendekar pemudi
     },
-  
-    // =========================================================================
-    // 2. BIOMA TERRAIN BERDASARKAN 7 WILAYAH (1x1 GRID MAP)
-    // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG)
-    // =========================================================================
-    terrain: {
-      // Wilayah Umum
-      plains: "",              // Dataran Central Plains
-      forest: "",              // Rimba biasa
-      bamboo_forest: "",       // Hutan Bambu khusus
-      river: "",               // Aliran sungai / laut
-      settlement_floor: "",    // Lantai paving kota/desa
-      
-      // Wilayah Khusus
-      azure_mountain: "",      // Pegunungan batu (Azure Mountain Range)
-      demonic_swamp: "",       // Rawa / Tanah Ungu (Southern Demon Domain)
-      eastern_sea: "",         // Lautan dalam (Eastern Sea Region)
-      northern_glacial: "",    // Dataran es (Northern Desolate Territory)
-      western_desert: "",      // Padang pasir (Western Sacred Deserts)
+    hair: {
+      default_hair_01: "",   // Gaya rambut kuncir kuda pendekar
+      default_hair_02: "",   // Gaya rambut panjang terurai
     },
-  
-    // =========================================================================
-    // 3. LANDMARKS: 24 SEKTE, DOJO & ORGANISASI (MULTI-GRID)
-    // Deskripsi: Markas sekte raksasa. Ukuran: 256x256 px (2x2) atau 384x384 px (3x3)
-    // Format: PNG Transparan (Harus)
-    // =========================================================================
-    sects: {
-      // Central Plains
-      "Heavenly Sword Pavilion": "",
-      "Profound Heaven Sect": "",
-      "Silver Rain Sword School": "",
-      "Dojo Bunga Aprikot": "",
-      "Dojo Godam Besi": "",
-  
-      // Azure Mountain Range
-      "Golden Bell Monastery": "",
-      "Dojo Pahat Naga": "",
-  
-      // Southern Demon Domain
-      "Demonic Flame Palace": "",
-      "Nine Serpent Den": "",
-      "Seven Sins Cult": "",
-      "Blood Shadow Alliance": "",
-      "Dojo Bayangan Kelam": "",
-  
-      // Eastern Sea Region
-      "Jade Purity Palace": "",
-      "Dojo Ombak Tenang": "",
-  
-      // Northern Desolate Territory
-      "Whitecloud Medicine Hall": "",
-      "Ghost Valley Sect": "",
-      "Dojo Cakar Serigala": "",
-  
-      // Western Sacred Deserts
-      "Azure Cloud Temple": "",
-      "Dojo Mata Elang Pasir": "",
-      
-      // Faksi Lintas Wilayah
-      "Perkumpulan Pisau Sunyi": "",
-      "Serambi Seribu Bisik": "",
-      "Rumah Gadai Giok Sejuk": "",
+    cloth: {
+      default_cloth_01: "",  // Jubah hanfu biru pemula
+      default_cloth_02: "",  // Jubah hanfu putih sulam perak
     },
-  
-    // =========================================================================
-    // 4. LANDMARKS: KOTA & FASILITAS KHUSUS
-    // =========================================================================
-    cities: {
-      "Tianjing Capital": "",  // Ibu kota dunia (Paling Besar, misal 512x512 px)
-      "XiTong City": "",       // Kota faksi utama
-      "default_city": "",      // Fallback untuk kota biasa
-      "default_village": "",   // Fallback untuk desa kecil
+    mask: {},                // Topeng misterius (128x128 px)
+    spellAvatar: {},         // Efek aura avatar khusus (128x128 px)
+    title: {},               // Badge visual gelar
+    avatarBorder: {          // Bingkai lingkaran avatar (Ukuran Pas: 144x144 px)
+      // default_gold_border: "",
     },
-  
-    // =========================================================================
-    // 5. ECONOMY & RESOURCES (OBJEK DI TANAH / ITEM)
-    // Referensi: 10_ECONOMY_SYSTEM.md
-    // Rasio Wajib: 1:1. Ukuran Pas: 64x64 px (Format: PNG Transparan)
-    // =========================================================================
-    resources: {
-      spirit_stone: "",        // Batu roh / Lingshi
-      herb_mortal: "",         // Herba tier rendah
-      herb_spirit: "",         // Herba tier tinggi bersinar
-      ore_iron: "",            // Bijih besi
-      ore_meteor: "",          // Baja meteor (Langka)
-      wood_bamboo: "",         // Rebung / Bambu roh
-    },
-  
-    // =========================================================================
-    // 6. BESTIARY & CHARACTERS (SPRITES)
-    // Referensi: 13_BESTIARY.md
-    // Ukuran: 80x120 px (Karakter) | 128x128 px (Spirit Beast/Monster)
-    // =========================================================================
-    sprites: {
-      player_default: "",      // Avatar pendekar bawaan
-      monster_beast: "",       // Monster generic (Bisa diperbanyak ke depannya)
-      flying_sword_aura: "",   // Efek saat bergerak terbang
-    },
-  
-    // =========================================================================
-    // 7. UI ELEMENTS & BACKGROUNDS (ANTARMUKA)
-    // Ukuran Pas: 1920x1080 px (Format: JPG/PNG/WebP)
-    // =========================================================================
-    ui: {
-      parchment_bg: "",       // Latar kanvas gulungan kertas tua
-      macro_map_bg: "",       // Latar peta dunia 5000x5000
-    }
-  };
-  
-  export type GlobalAssetKey = keyof typeof GLOBAL_ASSETS;
+    chatBorder: {}           // Dekorasi balon obrolan
+  },
+
+  // =========================================================================
+  // 8. ITEMS & EQUIPMENT (INVENTORY & SHOP)
+  // Rasio Wajib: 1:1. Ukuran Pas: 64x64 px atau 128x128 px (Format: PNG Transparan)
+  // Key = Nama Item persis di Database (Item.name) atau Item.key
+  // =========================================================================
+  items: {
+    // Kendaraan & Alat Transportasi
+    "Gerobak Kayu": "",
+    "Kuda Jinak": "",
+    "Kapal Kayu Ek": "",         // Dibutuhkan untuk melintasi Eastern Sea
+    "Pedang Terbang Bambu": "",  // Dibutuhkan untuk melintasi Azure Mountain Range
+    "Cincin Penyimpanan": "",
+    "Tenda Sederhana": "",
+  },
+
+  // =========================================================================
+  // 9. BESTIARY & MONSTERS (AMBUSH & COMBAT)
+  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px atau 256x256 px (Format: PNG Transparan)
+  // Key = Monster.key atau Monster.name
+  // =========================================================================
+  monsters: {
+    // Central Plains
+    "wolf_azure": "",             // Serigala Azure
+    "golden_eagle": "",           // Elang Emas
+    "bandit_leader": "",          // Pemimpin Bandit
+
+    // Azure Mountain Range
+    "white_tiger": "",            // Harimau Putih Pegunungan
+    "ghost_sparrow": "",          // Burung Pipit Hantu
+    "rock_golem": "",             // Golem Batu Kuno
+
+    // Southern Demon Domain
+    "swamp_python": "",           // Ular Piton Rawa Iblis
+    "miasma_fiend": "",           // Iblis Kabut Beracun
+
+    // Eastern Sea Region
+    "abyssal_serpent": "",        // Ular Naga Laut Dalam
+
+    // Northern Desolate Territory
+    "frost_demon": "",            // Iblis Es Abadi
+
+    // Western Sacred Deserts
+    "sand_scorpion": "",          // Kalajengking Raksasa Pasir
+  },
+
+  // =========================================================================
+  // 10. NPC & TOKOH DUNIA (PORTRAITS)
+  // Ukuran Pas: 128x128 px atau 80x120 px (Format: PNG Transparan)
+  // Key = NPC.name
+  // =========================================================================
+  npcs: {
+    "Penjaga Gerbang": "",
+    "Ketua Sekte Pedang Langit": "",
+    "Tetua Alkimia Bai": "",
+    "Pedagang Keliling": "",
+  },
+
+  // =========================================================================
+  // 11. MANUALS & KITAB KULTIVASI
+  // Rasio Wajib: 1:1. Ukuran Pas: 64x64 px (Format: PNG Transparan)
+  // Key = Manual.name
+  // =========================================================================
+  manuals: {
+    // "Kitab Pedang Sembilan Bayangan": "",
+    // "Manual Hati Murni": "",
+  },
+
+  // =========================================================================
+  // 12. SPRITES & VISUAL ACTION
+  // Ukuran: 80x120 px (Karakter) | 128x128 px (Spirit Beast/Aura)
+  // =========================================================================
+  sprites: {
+    player_default: "",      // Sprite karakter saat berdiri/berjalan di peta
+    monster_beast: "",       // Sprite monster saat ambush muncul di grid
+    flying_sword_aura: "",   // Visual pedang terbang di bawah kaki karakter
+  },
+
+  // =========================================================================
+  // 13. UI ELEMENTS & BACKGROUNDS (ANTARMUKA LENGKAP)
+  // Ukuran Pas: 1920x1080 px (Format: JPG / PNG / WebP)
+  // =========================================================================
+  ui: {
+    parchment_bg: "",        // Kanvas gulungan kertas tua (Latar belakang peta)
+    macro_map_bg: "",        // Gambar peta benua utuh (World Scroll 5000x5000)
+    login_screen_bg: "",     // Latar belakang menu utama
+  },
+
+  // =========================================================================
+  // 14. EMOJI FALLBACK
+  // Tampilan cadangan otomatis jika URL di atas belum diisi
+  // =========================================================================
+  emoji: {
+    avatar: "👤",
+    item: "🎒",
+    monster: "👹",
+    npc: "🧙",
+    location: "🏞️",
+    manual: "📜",
+    face: "🙂",
+    hair: "💇",
+    cloth: "👘",
+    default: "🖼️"
+  }
+};
+
+export type GlobalAssetKey = keyof typeof GLOBAL_ASSETS;

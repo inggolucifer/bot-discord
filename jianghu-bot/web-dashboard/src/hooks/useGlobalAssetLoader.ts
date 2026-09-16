@@ -19,35 +19,44 @@ export function useGlobalAssetLoader() {
     // Iterate through categories (terrain, sects, resources, etc.)
     for (const [categoryStr, items] of Object.entries(GLOBAL_ASSETS)) {
       const category = categoryStr;
+      if (category === 'emoji') continue;
       newLoadedImages[category] = {};
 
-      // Iterate through each item inside the category
-      for (const [keyStr, urlStr] of Object.entries(items)) {
-        const key = keyStr;
-        const url = urlStr as string;
-
-        if (!url || url.trim() === "") {
-          // If no URL is provided, explicitly set to null so the canvas knows to fallback
-          newLoadedImages[category][key] = null;
-        } else {
-          // Attempt to preload the image
-          promises.push(
-            new Promise<void>((resolve) => {
-              const img = new Image();
-              img.crossOrigin = "anonymous"; // Enable CORS for external images
-              img.onload = () => {
-                if (isMounted) newLoadedImages[category][key] = img;
-                resolve();
-              };
-              img.onerror = () => {
-                console.warn(`Failed to load asset [${category}.${key}] from URL: ${url}`);
-                if (isMounted) newLoadedImages[category][key] = null;
-                resolve();
-              };
-              img.src = url;
-            })
-          );
+      const processEntry = (key: string, urlVal: any, targetMap: any) => {
+        if (typeof urlVal === 'object' && urlVal !== null) {
+          targetMap[key] = {};
+          for (const [subKey, subVal] of Object.entries(urlVal)) {
+            processEntry(subKey, subVal, targetMap[key]);
+          }
+          return;
         }
+
+        const url = typeof urlVal === 'string' ? urlVal.trim() : '';
+        if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+          targetMap[key] = null;
+          return;
+        }
+
+        promises.push(
+          new Promise<void>((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => {
+              if (isMounted) targetMap[key] = img;
+              resolve();
+            };
+            img.onerror = () => {
+              console.warn(`Failed to load asset [${category}.${key}] from URL: ${url}`);
+              if (isMounted) targetMap[key] = null;
+              resolve();
+            };
+            img.src = url;
+          })
+        );
+      };
+
+      for (const [keyStr, urlStr] of Object.entries(items as Record<string, any>)) {
+        processEntry(keyStr, urlStr, newLoadedImages[category]);
       }
     }
 
