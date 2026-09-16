@@ -16,9 +16,13 @@ export interface TileData {
   chineseName?: string | null;
   isSettlementOrigin?: boolean;
   settlementData?: any;
-  plotPriceSilver?: number;
   isOccupied?: boolean;
   buildingName?: string | null;
+  isDoor?: boolean;
+  propertyStructureId?: string | null;
+  isClaimable?: boolean;
+  ownerId?: string | null;
+  cropType?: string | null;
   baseTemperature?: number;
   spiritualQiDensity?: number;
   regionId?: string;

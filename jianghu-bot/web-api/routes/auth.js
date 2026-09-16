@@ -7,6 +7,113 @@ const { authenticateToken } = require('../middlewares/auth');
 
 const router = express.Router();
 
+// Standalone Web Direct Login & Character Registration (Discord-Independent)
+router.post('/web-login', async (req, res) => {
+    try {
+        const { characterName, gender } = req.body;
+        if (!characterName || typeof characterName !== 'string' || characterName.trim().length === 0) {
+            return res.status(400).json({ error: 'Nama pendekar wajib diisi.' });
+        }
+
+        const trimmedName = characterName.trim();
+        const targetGuildId = process.env.GUILD_ID || '1169651733470126100';
+
+        // 1. Cari apakah karakter sudah ada
+        let player = await Player.findOne({ characterName: trimmedName });
+
+        if (!player) {
+            const webUserId = `web_${trimmedName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+            player = await Player.findOne({ discordId: webUserId });
+        }
+
+        if (!player) {
+            // Buat Karakter Pendekar Baru langsung di Web
+            const webUserId = `web_${trimmedName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+            const validGender = (gender === 'Perempuan') ? 'Perempuan' : 'Laki-laki';
+
+            player = await Player.create({
+                discordId: webUserId,
+                guildId: targetGuildId,
+                characterName: trimmedName,
+                gender: validGender,
+                age: 18,
+                schemaVersion: 2,
+                avatarUrl: null,
+                currentLocation: {
+                    regionSlug: 'central_plains',
+                    settlementName: 'Desa Xingcun',
+                    buildingName: null
+                },
+                gridPosition: {
+                    zoneId: 'xingcun_village',
+                    tileX: 16,
+                    tileY: 16
+                },
+                systemCultivation: {
+                    realm: 'Fondasi Fana (Mortal Foundation)',
+                    stage: 0,
+                    qi: 0,
+                    lastSyncAt: new Date(),
+                    isFlawedFoundation: false
+                },
+                currency: {
+                    copper: 1000,
+                    silver: 50,
+                    gold: 1,
+                    spirit: 0,
+                    jade: 0
+                }
+            });
+        }
+
+        // Generate token JWT
+        const tokenPayload = {
+            userId: player.discordId,
+            username: player.characterName,
+            avatar: player.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png'
+        };
+
+        const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' });
+
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        };
+
+        res.cookie('accessToken', accessToken, {
+            ...cookieOptions,
+            maxAge: 15 * 60 * 1000
+        });
+
+        res.cookie('refreshToken', refreshToken, {
+            ...cookieOptions,
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+
+        res.json({
+            success: true,
+            token: accessToken,
+            user: {
+                id: player.discordId,
+                username: player.characterName,
+                avatar: player.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png',
+                hasCharacter: true,
+                character: {
+                    characterName: player.characterName,
+                    realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+                    guildId: player.guildId
+                }
+            }
+        });
+    } catch (err) {
+        console.error('[API-AUTH] Web login error:', err);
+        res.status(500).json({ error: 'Gagal memproses login web: ' + err.message });
+    }
+});
+
 // Route for the frontend to exchange a Discord OAuth code for a JWT
 router.post('/login', async (req, res) => {
     const { code, redirectUri } = req.body;

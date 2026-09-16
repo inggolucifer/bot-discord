@@ -295,3 +295,28 @@ const setupServer = (client) => {
 };
 
 module.exports = setupServer;
+
+if (require.main === module) {
+    require('dotenv').config();
+    const { connectDB } = require('../config/database');
+    const dns = require('dns');
+    try {
+        dns.setServers(['8.8.8.8', '1.1.1.1']);
+    } catch (e) {}
+
+    (async () => {
+        try {
+            await connectDB();
+            const dummyClient = {
+                guilds: { cache: new Map() },
+                user: { username: 'Jianghu-System' },
+                channels: { fetch: async () => null }
+            };
+            setupServer(dummyClient);
+            console.log('[API] Server running independently in Standalone Web-First Mode.');
+        } catch (err) {
+            console.error('[API] Failed to start standalone API server:', err);
+            process.exit(1);
+        }
+    })();
+}
