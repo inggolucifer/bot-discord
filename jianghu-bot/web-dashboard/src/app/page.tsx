@@ -495,22 +495,22 @@ export default function Home() {
           <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Rawat, beri makan, dan ikuti battle dengan pet spiritualmu.</p>
         </a>
 
-        <a href="/explore" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-purple-900 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(88,28,135,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="p-3 sm:p-4 bg-black rounded-full text-purple-600 group-hover:text-purple-400 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(88,28,135,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-purple-900">
+        <a href="/world" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-amber-700 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(245,158,11,0.15)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-amber-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="p-3 sm:p-4 bg-black rounded-full text-amber-500 group-hover:text-amber-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-amber-800">
             <Compass size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-purple-400 transition-colors">Eksplorasi</h3>
-          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Jelajahi dunia luar untuk mencari material dan harta karun.</p>
+          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-amber-400 transition-colors">Peta Dunia & Lahan Grid</h3>
+          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Jelajahi peta spasial 5000x5000, klaim tanah, bangun fasilitas profesi, dan masuki ekspedisi.</p>
         </a>
 
-        <a href="/professions" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-orange-900 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(234,88,12,0.1)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-orange-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="p-3 sm:p-4 bg-black rounded-full text-orange-600 group-hover:text-orange-400 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(234,88,12,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-orange-900">
-            <Flame size={28} className="sm:w-8 sm:h-8" />
+        <a href="/cultivation" className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-purple-800 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(147,51,234,0.15)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="p-3 sm:p-4 bg-black rounded-full text-purple-400 group-hover:text-purple-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(147,51,234,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-purple-800">
+            <Sparkles size={28} className="sm:w-8 sm:h-8" />
           </div>
-          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-orange-400 transition-colors">Profesi & Crafting</h3>
-          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Lakukan minigame profesi seperti Blacksmith, Fishing, dll.</p>
+          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-purple-300 transition-colors">Kultivasi & Ranah</h3>
+          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Kumpulkan Qi, hadapi Kesengsaraan Langit (Tribulation), dan tembus ranah kultivasi abadi.</p>
         </a>
 
       </section>

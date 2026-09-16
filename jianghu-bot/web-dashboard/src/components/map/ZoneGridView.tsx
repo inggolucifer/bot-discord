@@ -35,6 +35,7 @@ import GridProfessionWorkbench from './modals/GridProfessionWorkbench';
 import GridExpeditionModal from './modals/GridExpeditionModal';
 import GridSectHallModal from './modals/GridSectHallModal';
 import GridAmbushCombatModal from './modals/GridAmbushCombatModal';
+import GridTileInspectorCard from './GridTileInspectorCard';
 
 interface ZoneGridViewProps {
   zoneId: string;
@@ -168,11 +169,6 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
     setSelectedTile(tile);
     const px = playerGrid?.position?.tileX ?? 2455;
     const py = playerGrid?.position?.tileY ?? 2485;
-
-    // Jika tile yang diklik memiliki aset/bangunan (atau sedang dibangun), buka Asset Inspector Card
-    if (tile.buildingName || tile.isUnderConstruction || tile.propertyStructureId) {
-      setAssetDetailTile(tile);
-    }
 
     // Hitung pathfinding A* ke target
     const result = findAStarPath(px, py, tile.tileX, tile.tileY, solidTilesSet, 60);
@@ -434,19 +430,27 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   // Beli Kavling Tanah
   const handlePurchaseLand = async (tile: TileData) => {
     try {
-      const res = await api.post('/grid/land/purchase', {
-        x: tile.tileX,
-        y: tile.tileY,
-        zoneId: activeZoneId
-      });
-      if (res.data.ok) {
-        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga ${res.data.pricePaid} Perak!`);
+      let res;
+      try {
+        res = await api.post('/world/zone/buy-plot', {
+          tileX: tile.tileX,
+          tileY: tile.tileY
+        });
+      } catch (err1) {
+        res = await api.post('/grid/land/purchase', {
+          x: tile.tileX,
+          y: tile.tileY,
+          zoneId: activeZoneId
+        });
+      }
+      if (res.data.success || res.data.ok) {
+        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga 100 Perak!`);
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error}`);
+        showMessage(`❌ ${res.data.error || 'Gagal membeli tanah'}`);
       }
     } catch (err: any) {
-      showMessage(err.response?.data?.error || 'Gagal membeli tanah');
+      showMessage(err.response?.data?.error || err.message || 'Gagal membeli tanah');
     }
   };
 
@@ -623,6 +627,33 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
             setActivePath([]);
           }}
         />
+
+        {/* Card Spasial Inspektur Petak Grid (Wuxia Tile Card - Muncul Setiap Petak Diklik) */}
+        {selectedTile && (
+          <GridTileInspectorCard
+            tile={selectedTile}
+            playerPos={{ x: px, y: py }}
+            currentUserId={user?.id || (user as any)?.userId || (user as any)?.discordId}
+            pathSteps={pathSteps}
+            isWalking={isWalking}
+            onWalkToTile={handleStartWalking}
+            onPurchaseLand={handlePurchaseLand}
+            onOpenBuildModal={(t) => setBuildModalTile(t)}
+            onEnterBuilding={handleEnterBuilding}
+            onEnterSettlement={handleEnterSettlement}
+            onEnterSect={(t) => setSectModalTile(t)}
+            onEnterExpedition={(t) => setExpeditionModalTile(t)}
+            onFish={handleFish}
+            onForage={handleForage}
+            onPlantCrop={handlePlantCrop}
+            onHarvestCrop={handleHarvestCrop}
+            onSearchArea={handleSearch}
+            onClose={() => {
+              setSelectedTile(null);
+              setActivePath([]);
+            }}
+          />
+        )}
       </div>
 
       {showMacroMap && (

@@ -10,6 +10,11 @@ const craftingService = require('../../services/craftingService');
 const forageTrainingService = require('../../services/forageTrainingService');
 const expeditionService = require('../../services/expeditionService');
 
+const { authenticateToken } = require('../middlewares/auth');
+
+// Gunakan authenticateToken agar req.user tersedia secara konsisten dari token JWT dashboard
+router.use(authenticateToken);
+
 // Helper untuk mengekstrak userId dan guildId dari token JWT atau body request
 function getContext(req) {
   const discordId = req.user?.userId || req.body?.discordId || req.query?.discordId;

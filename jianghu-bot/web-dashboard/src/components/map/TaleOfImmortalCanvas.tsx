@@ -18,9 +18,11 @@ export interface TileData {
   settlementData?: any;
   isOccupied?: boolean;
   buildingName?: string | null;
+  buildingType?: string | null;
   isDoor?: boolean;
   propertyStructureId?: string | null;
   isClaimable?: boolean;
+  plotPriceSilver?: number;
   ownerId?: string | null;
   ownerName?: string | null;
   cropType?: string | null;
@@ -312,9 +314,55 @@ export default function TaleOfImmortalCanvas({
             ctx.fillStyle = 'rgba(128, 0, 128, 0.1)'; // Purple tint for sect
             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           } else if (tile.territoryType === 'monster_zone') {
-             // Let's add a small icon or just a very faint orange tint
              ctx.fillStyle = 'rgba(255, 165, 0, 0.05)'; 
              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+          }
+
+          // 2.5B Kavling Tanah Siap Bangun (Claimable Plots) & Tanah Milik Pemain
+          if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction) {
+            if (!tile.ownerId) {
+              // Kavling belum bertuan (Border emas tipis putus-putus)
+              ctx.strokeStyle = 'rgba(217, 119, 6, 0.6)';
+              ctx.lineWidth = Math.max(1, 1.5 * camera.zoom);
+              ctx.setLineDash([4 * camera.zoom, 4 * camera.zoom]);
+              ctx.strokeRect(sx + 2, sy + 2, currentTileSize - 4, currentTileSize - 4);
+              ctx.setLineDash([]);
+
+              // Patok tanah kayu kecil
+              ctx.fillStyle = '#b45309';
+              ctx.fillRect(sx + currentTileSize * 0.45, sy + currentTileSize * 0.6, currentTileSize * 0.1, currentTileSize * 0.25);
+              ctx.fillStyle = '#f59e0b';
+              ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.fillText('🏷️', sx + currentTileSize / 2, sy + currentTileSize * 0.5);
+            } else {
+              // Tanah milik pemain (Border hijau/cyan solid)
+              ctx.strokeStyle = 'rgba(16, 185, 129, 0.7)';
+              ctx.lineWidth = Math.max(1.5, 2 * camera.zoom);
+              ctx.strokeRect(sx + 2, sy + 2, currentTileSize - 4, currentTileSize - 4);
+
+              // Bendera kepemilikan
+              ctx.fillStyle = '#10b981';
+              ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
+            }
+          }
+
+          // 2.5C Spot Memancing (Ikan di Air)
+          if ((tile.resourceType === 'fish' || tile.terrainType === 'river') && !tile.isSolid) {
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
+            ctx.font = `${Math.max(8, 11 * camera.zoom)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText('🐟', sx + currentTileSize * 0.75, sy + currentTileSize * 0.35);
+          }
+
+          // 2.5D Tanaman Pertanian (Crop)
+          if (tile.cropType) {
+            ctx.fillStyle = '#84cc16';
+            ctx.font = `${Math.max(8, 12 * camera.zoom)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText('🌾', sx + currentTileSize * 0.5, sy + currentTileSize * 0.55);
           }
 
           // 2.6 Player Asset / Construction / Scaffolding Overlay

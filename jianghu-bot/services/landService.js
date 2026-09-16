@@ -48,18 +48,38 @@ class LandService {
     }
 
     // 2. Cari petak tanah target
-    const tile = await ZoneTile.findOne({
+    let tile = await ZoneTile.findOne({
       guildId,
       zoneId,
       tileX: targetX,
       tileY: targetY
     });
 
+    // Jika tile belum tersimpan di DB, cek dari procedural engine untuk zona master 5000x5000
+    if (!tile) {
+      const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
+      const pTile = proceduralWorldEngine.getTileAt(targetX, targetY);
+      if (pTile && pTile.isClaimable && !pTile.isSolid) {
+        tile = new ZoneTile({
+          guildId,
+          zoneId,
+          tileX: targetX,
+          tileY: targetY,
+          tileType: 'buildable_plot',
+          terrainType: pTile.terrainType || 'plains',
+          isClaimable: true,
+          isSolid: false,
+          plotPriceSilver: 100
+        });
+        await tile.save();
+      }
+    }
+
     if (!tile) {
       return { ok: false, error: `Petak tanah pada koordinat (${targetX}, ${targetY}) tidak ditemukan di ${zoneId}.` };
     }
 
-    if (!tile.isClaimable) {
+    if (!tile.isClaimable && tile.tileType !== 'buildable_plot') {
       return { ok: false, error: 'Petak tanah ini adalah fasilitas umum atau wilayah alam yang tidak dapat diperjualbelikan.' };
     }
 
