@@ -69,14 +69,12 @@ export default function Navbar() {
       { href: "/skills", label: "Kitab & Jurus" },
     ],
     dunia: [
-      { href: "/world", label: "Peta Dunia & Grid" },
-      { href: "/explore", label: "Ekspedisi Luar" },
+      { href: "/world", label: "Peta Dunia Spasial" },
       { href: "/arena", label: "Arena Pertarungan" },
     ],
     aset: [
       { href: "/inventory", label: "Tas / Inventory" },
       { href: "/assets", label: "Lahan & Properti" },
-      { href: "/professions", label: "Profesi & Crafting" },
       { href: "/pet", label: "Pet Spiritual" },
       { href: "/marriage", label: "Pasangan Taois" },
     ],

@@ -17,7 +17,9 @@ import {
   Fish,
   Wheat,
   Home,
-  Coins
+  Coins,
+  Hammer,
+  Compass
 } from 'lucide-react';
 import ThermalStatusBadge from '../ui/ThermalStatusBadge';
 import PropertyInteriorView from './PropertyInteriorView';
@@ -26,15 +28,24 @@ import SettlementPanoramaView from './SettlementPanoramaView';
 import ScenicCourtyardView from './ScenicCourtyardView';
 import WorldScrollMapView from './WorldScrollMapView';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
+import { useAuthStore } from '@/lib/store';
+import GridAssetDetailCard from './modals/GridAssetDetailCard';
+import GridAssetBuildModal from './modals/GridAssetBuildModal';
+import GridProfessionWorkbench from './modals/GridProfessionWorkbench';
+import GridExpeditionModal from './modals/GridExpeditionModal';
+import GridSectHallModal from './modals/GridSectHallModal';
+import GridAmbushCombatModal from './modals/GridAmbushCombatModal';
 
 interface ZoneGridViewProps {
   zoneId: string;
   onBackToWorld: () => void;
+  targetFocusTile?: { x: number; y: number } | null;
 }
 
-export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProps) {
-  const activeZoneId = zoneId && zoneId !== 'central_plains_bamboo_forest' ? zoneId : 'tianyuan_world_map';
+export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }: ZoneGridViewProps) {
+  const activeZoneId = zoneId || 'tianyuan_world_map';
 
+  const { user } = useAuthStore();
   const [zoneConfig, setZoneConfig] = useState<any>(null);
   const [tiles, setTiles] = useState<TileData[]>([]);
   const [playerGrid, setPlayerGrid] = useState<any>(null);
@@ -45,6 +56,20 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
   const [activePath, setActivePath] = useState<Point[]>([]);
   const [pathSteps, setPathSteps] = useState<number>(0);
   const [isWalking, setIsWalking] = useState(false);
+
+  // Modals state
+  const [assetDetailTile, setAssetDetailTile] = useState<TileData | null>(null);
+  const [buildModalTile, setBuildModalTile] = useState<TileData | null>(null);
+  const [professionWorkbench, setProfessionWorkbench] = useState<{
+    type: 'smithing' | 'cooking' | 'alchemy' | 'fishing' | 'farming';
+    name: string;
+  } | null>(null);
+  const [expeditionModalTile, setExpeditionModalTile] = useState<TileData | null>(null);
+  const [sectModalTile, setSectModalTile] = useState<TileData | null>(null);
+  const [ambushModalData, setAmbushModalData] = useState<{
+    enemyName?: string;
+    encounterMessage?: string;
+  } | null>(null);
 
   // View Mode: 'map' | 'settlement' | 'courtyard'
   const [viewMode, setViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
@@ -105,6 +130,19 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     };
   }, [activeZoneId]);
 
+  // Auto-fokus dan pilih tile jika targetFocusTile diberikan
+  useEffect(() => {
+    if (targetFocusTile && tiles.length > 0) {
+      const found = tiles.find(t => t.tileX === targetFocusTile.x && t.tileY === targetFocusTile.y);
+      if (found) {
+        setSelectedTile(found);
+        if (found.buildingName || found.isUnderConstruction || found.propertyStructureId) {
+          setAssetDetailTile(found);
+        }
+      }
+    }
+  }, [targetFocusTile, tiles]);
+
   const handleToggleBgm = () => {
     if (isBgmOn) {
       sound.stopBgm();
@@ -130,6 +168,11 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     setSelectedTile(tile);
     const px = playerGrid?.position?.tileX ?? 2455;
     const py = playerGrid?.position?.tileY ?? 2485;
+
+    // Jika tile yang diklik memiliki aset/bangunan (atau sedang dibangun), buka Asset Inspector Card
+    if (tile.buildingName || tile.isUnderConstruction || tile.propertyStructureId) {
+      setAssetDetailTile(tile);
+    }
 
     // Hitung pathfinding A* ke target
     const result = findAStarPath(px, py, tile.tileX, tile.tileY, solidTilesSet, 60);
@@ -185,6 +228,12 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
 
           if (res.data.stoppedEarly) {
             showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
+            if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
+              setAmbushModalData({
+                enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
+                encounterMessage: res.data.stopReason || 'Disergap oleh musuh di zona bahaya!'
+              });
+            }
             if (res.data.arrivedPosition) {
               fetchZoneData(res.data.arrivedPosition.tileX, res.data.arrivedPosition.tileY);
             } else {
@@ -192,6 +241,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             }
           } else if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
             showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
+            setAmbushModalData({
+              enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
+              encounterMessage: 'Disergap oleh musuh di zona bahaya!'
+            });
             fetchZoneData(res.data.arrivedPosition?.tileX, res.data.arrivedPosition?.tileY);
           } else {
             const finalPoint = allWaypoints[allWaypoints.length - 1];
@@ -282,8 +335,52 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     }
   };
 
-  // Masuk Interior Bangunan (Toko / Rumah)
+  // Bangun Aset / Profesi di Tanah Milik
+  const handleStartBuildAsset = async (assetName: string) => {
+    if (!buildModalTile) return;
+    try {
+      const res = await api.post('/world/zone/build', {
+        tileX: buildModalTile.tileX,
+        tileY: buildModalTile.tileY,
+        assetName: assetName,
+        isOpenToPublic: true
+      });
+      if (res.data?.success) {
+        showMessage(`🎉 Pembangunan ${assetName} dimulai! Pekerja mulai beraksi.`);
+        setBuildModalTile(null);
+        fetchZoneData();
+      } else {
+        showMessage(`❌ ${res.data?.error || 'Gagal memulai pembangunan'}`);
+      }
+    } catch (err: any) {
+      showMessage(`❌ ${err.response?.data?.error || 'Gagal memulai pembangunan'}`);
+    }
+  };
+
+  // Masuk Interior Bangunan (Toko / Rumah / Workbench Profesi)
   const handleEnterBuilding = async (tile: TileData) => {
+    const bName = (tile.buildingName || tile.label || '').toLowerCase();
+    if (bName.includes('tempa') || bName.includes('smith')) {
+      setProfessionWorkbench({ type: 'smithing', name: tile.buildingName || 'Bengkel Tempa' });
+      return;
+    }
+    if (bName.includes('dapur') || bName.includes('masak') || bName.includes('cook')) {
+      setProfessionWorkbench({ type: 'cooking', name: tile.buildingName || 'Dapur Kedai' });
+      return;
+    }
+    if (bName.includes('alkimia') || bName.includes('alchemy')) {
+      setProfessionWorkbench({ type: 'alchemy', name: tile.buildingName || 'Paviliun Alkimia' });
+      return;
+    }
+    if (bName.includes('kolam') || bName.includes('tambak') || bName.includes('koi')) {
+      setProfessionWorkbench({ type: 'fishing', name: tile.buildingName || 'Kolam Ikan Rohani' });
+      return;
+    }
+    if (bName.includes('lahan') || bName.includes('tani') || bName.includes('padi') || bName.includes('herbal')) {
+      setProfessionWorkbench({ type: 'farming', name: tile.buildingName || 'Lahan Pertanian' });
+      return;
+    }
+
     try {
       const res = await api.post('/grid/building/enter', {
         zoneId: activeZoneId,
@@ -458,8 +555,11 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     return <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />;
   }
 
-  const px = playerGrid?.position?.tileX ?? 2455;
-  const py = playerGrid?.position?.tileY ?? 2485;
+  const isMacro = activeZoneId === 'tianyuan_world_map';
+  const defaultX = targetFocusTile?.x ?? (isMacro ? 2455 : 10);
+  const defaultY = targetFocusTile?.y ?? (isMacro ? 2485 : 10);
+  const px = playerGrid?.position?.tileX ?? defaultX;
+  const py = playerGrid?.position?.tileY ?? defaultY;
   const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
 
   return (
@@ -510,6 +610,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
         <TaleOfImmortalCanvas
           tiles={tiles}
           playerPos={{ x: px, y: py }}
+          focusTile={targetFocusTile ? { x: targetFocusTile.x, y: targetFocusTile.y } : null}
           targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
           activePath={activePath}
           exploredChunks={exploredChunks}
@@ -631,6 +732,50 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             </button>
           )}
 
+          {/* Tombol Inspeksi Aset / Detail Card */}
+          {selectedTile && (selectedTile.buildingName || selectedTile.isUnderConstruction || selectedTile.propertyStructureId) && (
+            <button
+              onClick={() => setAssetDetailTile(selectedTile)}
+              className="bg-stone-800 hover:bg-stone-700 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-600/50 flex items-center gap-1.5 text-xs font-serif font-bold shadow-md transition-all"
+            >
+              <Building2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>Inspeksi Aset</span>
+            </button>
+          )}
+
+          {/* Tombol Bangun Aset / Profesi jika tanah milik sendiri */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && (!selectedTile.buildingName && !selectedTile.isUnderConstruction) && (
+            <button
+              onClick={() => setBuildModalTile(selectedTile)}
+              className="bg-amber-800 hover:bg-amber-700 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-400/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all animate-pulse"
+            >
+              <Hammer className="w-3.5 h-3.5 text-amber-300" />
+              <span>Bangun Aset / Profesi</span>
+            </button>
+          )}
+
+          {/* Tombol Masuk Ekspedisi Dungeon */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.isExpeditionNode || selectedTile.label?.toLowerCase().includes('gua') || selectedTile.label?.toLowerCase().includes('makam') || selectedTile.label?.toLowerCase().includes('ekspedisi')) && (
+            <button
+              onClick={() => setExpeditionModalTile(selectedTile)}
+              className="bg-indigo-950 hover:bg-indigo-900 text-indigo-100 px-3.5 py-1.5 rounded-lg border border-indigo-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <Compass className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Masuk Ekspedisi</span>
+            </button>
+          )}
+
+          {/* Tombol Masuk Balai Sekte */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.territoryType === 'sect_territory' || selectedTile.label?.includes('Sekte') || selectedTile.label?.includes('Dojo')) && (
+            <button
+              onClick={() => setSectModalTile(selectedTile)}
+              className="bg-purple-950 hover:bg-purple-900 text-purple-100 px-3.5 py-1.5 rounded-lg border border-purple-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-purple-300" />
+              <span>Masuk Balai Sekte</span>
+            </button>
+          )}
+
           {/* Tombol Beli Kavling Tanah */}
           {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && !selectedTile.ownerId && (
             <button
@@ -695,6 +840,69 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
           </button>
         </div>
       </div>
+
+      {/* Modal Detail Aset (Inspector Card) */}
+      {assetDetailTile && (
+        <GridAssetDetailCard
+          tile={assetDetailTile}
+          playerPos={{ x: px, y: py }}
+          onEnter={(t) => {
+            setAssetDetailTile(null);
+            handleEnterBuilding(t);
+          }}
+          onClose={() => setAssetDetailTile(null)}
+        />
+      )}
+
+      {/* Modal Pembangunan Aset / Profesi */}
+      {buildModalTile && (
+        <GridAssetBuildModal
+          tile={buildModalTile}
+          onBuild={handleStartBuildAsset}
+          onClose={() => setBuildModalTile(null)}
+        />
+      )}
+
+      {/* Modal Workbench Profesi */}
+      {professionWorkbench && (
+        <GridProfessionWorkbench
+          professionType={professionWorkbench.type}
+          buildingName={professionWorkbench.name}
+          tileCoordinates={{ x: px, y: py }}
+          zoneId={activeZoneId}
+          onClose={() => setProfessionWorkbench(null)}
+          onActionSuccess={(msg) => showMessage(msg)}
+        />
+      )}
+
+      {/* Modal Ekspedisi Dungeon */}
+      {expeditionModalTile && (
+        <GridExpeditionModal
+          dungeonName={expeditionModalTile.label || 'Gua Kuno Terlarang'}
+          tileCoordinates={{ x: expeditionModalTile.tileX, y: expeditionModalTile.tileY }}
+          onClose={() => setExpeditionModalTile(null)}
+          onSuccess={(msg) => showMessage(msg)}
+        />
+      )}
+
+      {/* Modal Balai Sekte */}
+      {sectModalTile && (
+        <GridSectHallModal
+          sectName={sectModalTile.label || sectModalTile.factionName || 'Balai Sekte'}
+          sectId={sectModalTile.regionId}
+          onClose={() => setSectModalTile(null)}
+        />
+      )}
+
+      {/* Modal Encounter Ambush */}
+      {ambushModalData && (
+        <GridAmbushCombatModal
+          enemyName={ambushModalData.enemyName}
+          encounterMessage={ambushModalData.encounterMessage}
+          onResolved={(resMsg) => showMessage(resMsg)}
+          onClose={() => setAmbushModalData(null)}
+        />
+      )}
     </div>
   );
 }

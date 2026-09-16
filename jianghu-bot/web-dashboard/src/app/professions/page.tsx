@@ -108,8 +108,33 @@ export default function ProfessionsPage() {
     const hasTool = (player?.inventory || []).some((item: any) => item.itemId?.toolType && (item.durability == null || item.durability > 0));
 
     return (
-        <div className="container mx-auto p-4 max-w-6xl text-gray-100">
-            <h1 className="text-3xl font-bold mb-6 text-amber-500 tracking-wider">Sistem Profesi & Kemahiran</h1>
+        <div className="container mx-auto p-4 max-w-6xl text-gray-100 space-y-6">
+            <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/30 p-5 shadow-xl backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400 text-2xl shadow-inner">
+                        🗺️
+                    </div>
+                    <div>
+                        <h3 className="text-base font-bold text-amber-200 flex items-center gap-2">
+                            Profesi Kini Terintegrasi ke Peta Dunia Spasial!
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                Tale of Immortal
+                            </span>
+                        </h3>
+                        <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                            Aktivitas menempa (*Blacksmith*), memasak (*Dapur*), meracik pil (*Alkimia*), memancing (*Tambak Ikan*), serta bercocok tanam (*Ladang Herbal*) kini dilakukan langsung di atas plot tanah yang kamu beli di dalam Grid Peta Dunia.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => router.push('/world')}
+                    className="w-full md:w-auto shrink-0 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs"
+                >
+                    Buka Peta Dunia (Grid Spasial) →
+                </button>
+            </div>
+
+            <h1 className="text-3xl font-bold text-amber-500 tracking-wider">Sistem Profesi & Kemahiran</h1>
 
             {playerProfs.farming?.isUnlocked && farmStats.readyCount > 0 && (
                 <div className="mb-6 p-4 bg-green-900/40 border border-green-500 rounded-lg flex items-center justify-between shadow-lg shadow-green-900/20">

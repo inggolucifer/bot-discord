@@ -1,7 +1,8 @@
 'use client';
 import FallbackImage from "@/components/FallbackImage";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +13,15 @@ import SectExamModal from './SectExamModal';
 import WorldMapView from "@/components/map/WorldMapView";
 import ZoneGridView from "@/components/map/ZoneGridView";
 
-export default function WorldPage() {
+function WorldPageContent() {
+  const searchParams = useSearchParams();
+  const queryZoneId = searchParams.get('zoneId');
+  const queryTileX = searchParams.get('tileX');
+  const queryTileY = searchParams.get('tileY');
+  const targetFocusTile = queryTileX !== null && queryTileY !== null
+    ? { x: Number(queryTileX), y: Number(queryTileY) }
+    : null;
+
   const [locationData, setLocationData] = useState<any>(null);
   const [travelStatus, setTravelStatus] = useState<any>(null);
   const [restData, setRestData] = useState<any>(null);
@@ -398,12 +407,15 @@ export default function WorldPage() {
                 setSelectedRegionSlug(regionSlug);
                 setMapView('grid');
               }}
+              playerPos={locationData?.gridPosition ? { x: locationData.gridPosition.tileX, y: locationData.gridPosition.tileY } : undefined}
+              currentLocation={locationData?.currentLocation}
             />
           </div>
         ) : (
           <div className="animate-in fade-in zoom-in-95 duration-300 ease-out">
             <ZoneGridView
-              zoneId={locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
+              zoneId={queryZoneId || locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
+              targetFocusTile={targetFocusTile}
               onBackToWorld={() => setMapView('world')}
             />
           </div>
@@ -412,7 +424,7 @@ export default function WorldPage() {
 
       {/* Tab Content */}
       {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'location' && (
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="w-full">
           <div className="bg-[#1a1f2e]/80 border border-[#2a3142] rounded-xl p-6 shadow-xl backdrop-blur-sm">
             <div className="flex justify-between items-start mb-4">
                 <h2 className="text-xl font-serif font-bold text-[#c5a880]">Lokasi Saat Ini</h2>
@@ -480,66 +492,6 @@ export default function WorldPage() {
               </div>
             )}
           </div>
-
-          {/* Travel Panel */}
-          {(!locationData?.currentLocation?.buildingName) && (
-            <div className="bg-[#1a1f2e]/80 border border-[#2a3142] rounded-xl p-6 shadow-xl backdrop-blur-sm">
-              <h2 className="text-xl font-serif font-bold mb-4 text-[#80a8c5]">Perjalanan</h2>
-
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm mb-2 text-gray-400">Tujuan:</label>
-                  <select
-                    className="w-full bg-[#0f131c] text-gray-200 border border-[#2a3142] rounded-lg p-3 focus:outline-none focus:border-[#4a5568] transition-colors"
-                    value={travelDestination}
-                    onChange={(e) => setTravelDestination(e.target.value)}
-                  >
-                    <option value="">Pilih Settlement Tujuan...</option>
-                    {settlements
-                      .filter(s =>
-                        s.name !== locationData?.currentLocation?.settlementName &&
-                        edges[locationData?.currentLocation?.settlementName] &&
-                        edges[locationData?.currentLocation?.settlementName][s.name]
-                      )
-                      .map(s => {
-                         const distance = edges[locationData?.currentLocation?.settlementName][s.name];
-                         const isLocked = s.minRealmIndex !== undefined && playerRealmIndex < s.minRealmIndex;
-                         return (
-                           <option key={s.name} value={s.name} disabled={isLocked}>
-                             {s.name} ({distance} Li) {isLocked ? '(Ranah Belum Cukup)' : ''}
-                           </option>
-                         );
-                      })
-                    }
-                  </select>
-                  <p className="text-xs text-gray-500 mt-2">Hanya menampilkan pemukiman yang terhubung langsung dan terbuka untuk tingkat Ranah (Realm) kultivasimu.</p>
-                </div>
-
-                <div className="bg-[#0f131c] p-4 rounded-lg border border-[#2a3142]">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={useEscort}
-                      onChange={(e) => setUseEscort(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900"
-                    />
-                    <div>
-                      <span className="text-sm font-medium text-gray-300">Gunakan Surat Jaminan Biro Pengawalan</span>
-                      <p className="text-xs text-gray-500 mt-1">Mengurangi risiko disergap bandit selama perjalanan dengan mengkonsumsi 1 item.</p>
-                    </div>
-                  </label>
-                </div>
-
-                <button
-                  onClick={handleStartTravel}
-                  disabled={!travelDestination}
-                  className="w-full bg-blue-600/80 hover:bg-blue-500 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-blue-500/50"
-                >
-                  Mulai Perjalanan
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
@@ -605,5 +557,13 @@ export default function WorldPage() {
           />
       )}
     </div>
+  );
+}
+
+export default function WorldPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-amber-200">Menghubungkan ke Benua Jianghu...</div>}>
+      <WorldPageContent />
+    </Suspense>
   );
 }

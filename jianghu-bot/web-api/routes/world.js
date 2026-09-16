@@ -336,7 +336,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
     const { choice } = req.body; // 'fight' | 'surrender'
 
-    if (!['fight', 'surrender'].includes(choice)) {
+    if (!['fight', 'surrender', 'flee'].includes(choice)) {
         return res.status(400).json({ error: 'Pilihan tidak valid.' });
     }
 
@@ -356,7 +356,17 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
             let ambushLogs = [];
             let won = false;
 
-            if (choice === 'surrender') {
+            if (choice === 'flee') {
+                const staminaCost = 15;
+                if ((player.currentStamina || 0) >= staminaCost) {
+                    player.currentStamina = Math.max(0, (player.currentStamina || 0) - staminaCost);
+                    travel.ambushResult.message = `Kamu berhasil melarikan diri menggunakan ilmu Qinggong dengan mengonsumsi ${staminaCost} Stamina!`;
+                    won = true;
+                } else {
+                    travel.ambushResult.message = `Stamina tidak mencukupi untuk meloloskan diri sepenuhnya! Kamu terdesak namun berhasil menyelinap kabur.`;
+                    won = false;
+                }
+            } else if (choice === 'surrender') {
                 const { getTotalCopper, payCurrency } = require('../../utils/currency');
                 const totalCopperEq = getTotalCopper(player.currency);
                 const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT);

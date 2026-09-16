@@ -17,6 +17,8 @@ interface Region {
 
 interface WorldMapViewProps {
   onSelectRegion: (regionSlug: string) => void;
+  playerPos?: { x: number; y: number };
+  currentLocation?: any;
 }
 
 const DEFAULT_REGIONS: Region[] = [
@@ -67,12 +69,17 @@ const DEFAULT_REGIONS: Region[] = [
   }
 ];
 
-export default function WorldMapView({ onSelectRegion }: WorldMapViewProps) {
+export default function WorldMapView({ onSelectRegion, playerPos, currentLocation }: WorldMapViewProps) {
   const [regions, setRegions] = useState<Region[]>(DEFAULT_REGIONS);
   const [loading, setLoading] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState<Region | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
+
+  const px = playerPos?.x ?? 2455;
+  const py = playerPos?.y ?? 2485;
+  const playerPercentX = Math.max(10, Math.min(90, (px / 5000) * 100));
+  const playerPercentY = Math.max(10, Math.min(90, (py / 5000) * 100));
 
   useEffect(() => {
     const fetchWorldMap = async () => {
@@ -261,6 +268,39 @@ export default function WorldMapView({ onSelectRegion }: WorldMapViewProps) {
               </div>
             </div>
           )}
+
+          {/* Titik Kuning Posisiku (Pulsing Golden Radar Marker - Requirement 7) */}
+          <div
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none"
+            style={{
+              left: `${playerPercentX}%`,
+              top: `${playerPercentY}%`
+            }}
+          >
+            {/* Radar Wave Ping */}
+            <div className="w-10 h-10 rounded-full border-2 border-yellow-400 animate-ping absolute -top-3 -left-3 opacity-75" />
+            <div className="w-4 h-4 rounded-full bg-yellow-400 border-2 border-white shadow-[0_0_20px_#f59e0b] animate-pulse relative flex items-center justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-950" />
+            </div>
+
+            {/* Badge Posisimu */}
+            <div className="mt-1 px-2.5 py-0.5 bg-black/90 border border-yellow-500/80 rounded-full text-[10px] font-serif font-bold text-yellow-300 whitespace-nowrap text-center shadow-xl">
+              📍 Posisimu ({px}, {py})
+            </div>
+          </div>
+        </div>
+
+        {/* Info Lokasi Relatif Terhadap Benua */}
+        <div className="absolute bottom-6 left-6 z-30 bg-[#0e1422]/95 border border-yellow-600/70 p-3.5 rounded-xl shadow-2xl backdrop-blur-md max-w-xs pointer-events-none">
+          <div className="flex items-center gap-2 text-yellow-400 font-serif font-bold text-xs mb-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_8px_#f59e0b]" />
+            <span>Lokasimu Saat Ini (Titik Kuning)</span>
+          </div>
+          <div className="text-[11px] text-gray-300 space-y-0.5 font-sans">
+            <div>Koordinat: <strong className="text-yellow-300 font-mono">({px}, {py})</strong></div>
+            <div>Wilayah: <span className="text-amber-200">{currentLocation?.regionSlug || 'Central Plains'}</span></div>
+            <div>Dekat: <span className="text-gray-400">{currentLocation?.settlementName || 'XiTong City & Hutan Bambu'}</span></div>
+          </div>
         </div>
       </div>
     </div>

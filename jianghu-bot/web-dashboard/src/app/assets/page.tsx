@@ -1,42 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Map,
   Clock,
   ArrowRight,
   Loader2,
-  Pickaxe,
-  CheckCircle2,
   AlertTriangle,
   Hammer,
-  X,
-  Users,
+  Shield,
   Search,
-  PackageOpen,
   Filter,
+  ExternalLink,
+  PlusCircle,
+  Wrench,
+  CheckCircle2,
+  Building,
+  Sparkles,
+  Info,
 } from "lucide-react";
-
-const FILTER_CATEGORIES = ["Semua", "Pertanian", "Pertukangan", "Alkimia", "Dapur", "Blueprint/Riset", "Lainnya"];
-
-const getAssetCategory = (assetName: string, assetType: string, recipes?: any[]) => {
-  const name = (assetName || "").toLowerCase();
-  const type = (assetType || "").toLowerCase();
-  let recipeOutputs = "";
-  if (recipes && recipes.length > 0) {
-    recipeOutputs = recipes.map((r: any) => (r.resultItemName || "").toLowerCase()).join(" ");
-  }
-  const matches = (keywords: string[]) => keywords.some(kw => name.includes(kw) || type.includes(kw) || recipeOutputs.includes(kw));
-  if (matches(["lahan", "tani", "pupuk", "kebun", "bibit", "farm", "pertanian", "ladang"])) return "Pertanian";
-  if (matches(["tungku", "peleburan", "anvil", "baja", "batangan", "besi", "smith", "forge", "pertukangan", "pandai besi"])) return "Pertukangan";
-  if (matches(["kuali", "alkimia", "pil", "elixir", "alchemy", "paviliun"])) return "Alkimia";
-  if (matches(["dapur", "masak", "kitchen", "panci", "resep", "makanan"])) return "Dapur";
-  if (matches(["blueprint", "riset", "penelitian", "meja kerja", "buku"])) return "Blueprint/Riset";
-  return "Lainnya";
-};
-import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
 import FallbackImage from "@/components/FallbackImage";
 import { getRarityColor, getRarityTextClass } from "@/lib/rarity";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -62,164 +47,117 @@ interface Asset {
   underConstruction: boolean;
   constructionCompleteAt: string | null;
   status: string;
-  progressPercent: number;
-  remainingMs: number;
+  progressHours?: number;
+  rank?: string;
   isCraftingStation?: boolean;
-  recipes?: {
-    recipeName: string;
-    resultItemId: string;
-    resultItemName: string;
-    resultQuantity: number;
-    materials: {
-      itemId: string;
-      itemName: string;
-      quantity: number;
-    }[];
-  }[];
-  workerInputMaterials?: {
-    itemId: any;
-    itemName: string;
-    quantity: number;
-    durabilityHours: number;
-  }[];
-  toolDurabilityUsage?: Record<string, number>;
+  recipes?: any[];
+  workerInputMaterials?: any[];
   isDamaged?: boolean;
   damageType?: string | null;
   guardEndTime?: string | null;
+  hp?: number;
+  maxHp?: number;
+  placement?: {
+    zoneId: string;
+    tileX: number;
+    tileY: number;
+  } | null;
 }
 
-interface BuildableAsset {
-  _id: string;
-  name: string;
-  description: string;
-  type: string;
-  buildable: boolean;
-  constructionTimeHours: number;
-  buildRequirements: {
-    itemId: { _id: string; name: string };
-    quantity: number;
-  }[];
-  imageUrl?: string;
-  rank?: string;
-  basePrice?: number;
-  priceCurrency?: string;
-  dailyProfit?: number;
-  profitCurrency?: string;
-  workerOutputQuantity?: number;
-  workerOutputItemName?: string;
-}
+const FILTER_CATEGORIES = [
+  "Semua",
+  "Pertukangan",
+  "Dapur",
+  "Alkimia",
+  "Pertanian",
+  "Kediaman/Lainnya",
+];
+
+const getAssetCategory = (assetName: string, assetType: string) => {
+  const name = (assetName || "").toLowerCase();
+  const type = (assetType || "").toLowerCase();
+  const matches = (keywords: string[]) =>
+    keywords.some((kw) => name.includes(kw) || type.includes(kw));
+
+  if (matches(["tungku", "anvil", "baja", "besi", "smith", "forge", "pandai besi", "pertukangan"]))
+    return "Pertukangan";
+  if (matches(["dapur", "masak", "kitchen", "panci", "kuliner", "resep"]))
+    return "Dapur";
+  if (matches(["kuali", "alkimia", "pil", "elixir", "alchemy", "paviliun"]))
+    return "Alkimia";
+  if (matches(["lahan", "tani", "pupuk", "kebun", "bibit", "farm", "ladang", "tambak", "kolam"]))
+    return "Pertanian";
+  return "Kediaman/Lainnya";
+};
 
 const Countdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState<string>("");
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const difference = new Date(targetDate).getTime() - new Date().getTime();
-
-      if (difference > 0) {
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((difference / 1000 / 60) % 60);
-        const seconds = Math.floor((difference / 1000) % 60);
+      const diff = new Date(targetDate).getTime() - new Date().getTime();
+      if (diff > 0) {
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
         setTimeLeft(`${hours}j ${minutes}m ${seconds}s`);
       } else {
-        setTimeLeft("Selesai (Refresh/Klaim)");
+        setTimeLeft("Konstruksi Selesai");
       }
     };
-
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  return <span>{timeLeft}</span>;
+  return <span className="font-mono text-amber-300 font-bold">{timeLeft}</span>;
 };
 
 export default function AssetsPage() {
   const { user } = useAuthStore();
   const router = useRouter();
+
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [assetSlots, setAssetSlots] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-
-  const [activeTab, setActiveTab] = useState<"info" | "move" | "guard">("info");
-  const [guardDurationDays, setGuardDurationDays] = useState<number>(1);
-  const [guardCostText, setGuardCostText] = useState<string | null>(null);
-  const [guardCostLoading, setGuardCostLoading] = useState(false);
-  const [repairCostText, setRepairCostText] = useState<string | null>(null);
-  const [repairCanAfford, setRepairCanAfford] = useState<boolean | null>(null);
-  const [repairCostLoading, setRepairCostLoading] = useState(false);
-  const [activePageTab, setActivePageTab] = useState<
-    "my-assets" | "build-asset"
-  >("my-assets");
   const [activeFilter, setActiveFilter] = useState("Semua");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedWorkerIdToMove, setSelectedWorkerIdToMove] =
-    useState<string>("");
-  const [assetSlots, setAssetSlots] = useState<number>(1);
+
+  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [buySlotModalOpen, setBuySlotModalOpen] = useState(false);
   const [buySlotLoading, setBuySlotLoading] = useState(false);
-  const [targetAssetId, setTargetAssetId] = useState<string>("");
-  const [moveLoading, setMoveLoading] = useState(false);
+  const [repairModalOpen, setRepairModalOpen] = useState(false);
+  const [repairCostText, setRepairCostText] = useState<string | null>(null);
+  const [repairLoading, setRepairLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{
     type: "success" | "error";
     text: string;
-    cta?: { text: string; link: string; link2?: string; text2?: string }
   } | null>(null);
-
-  const [buildableAssets, setBuildableAssets] = useState<BuildableAsset[]>([]);
-  const [inventory, setInventory] = useState<
-    { id: string; quantity: number }[]
-  >([]);
-  const [loadingBuildable, setLoadingBuildable] = useState(false);
-  const [buildActionLoading, setBuildActionLoading] = useState(false);
-
-  const [npcDuration, setNpcDuration] = useState<number>(1);
-  const [expandedAssets, setExpandedAssets] = useState<Record<string, boolean>>(
-    {},
-  );
-
-  const toggleAssetExpand = (id: string) => {
-    setExpandedAssets((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   const fetchAssets = async () => {
     try {
+      setLoading(true);
       const res = await api.get("/player/assets");
-      setAssets(res.data.data);
+      setAssets(res.data.data || []);
       if (res.data.assetSlots) {
         setAssetSlots(res.data.assetSlots);
       }
-
-      // Sync selectedAsset if it's currently open
-      if (selectedAsset) {
-        const updatedSelectedAsset = res.data.data.find((a: Asset) => a.id === selectedAsset.id);
-        if (updatedSelectedAsset) {
-          setSelectedAsset(updatedSelectedAsset);
-        } else {
-          // If the asset was deleted, clear the selection
-          setSelectedAsset(null);
-        }
-      }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError(
-        (err as { response?: { data?: { error?: string } } }).response?.data
-          ?.error || "Gagal memuat data aset.",
-      );
+      setError(err.response?.data?.error || "Gagal memuat daftar aset properti.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!user) {
-      const timeout = setTimeout(() => setLoading(false), 0);
-      return () => clearTimeout(timeout);
+    if (user) {
+      fetchAssets();
+    } else {
+      setLoading(false);
     }
-    const timeout = setTimeout(() => fetchAssets(), 0);
-    return () => clearTimeout(timeout);
   }, [user]);
 
   const handleBuySlot = async () => {
@@ -228,1463 +166,469 @@ export default function AssetsPage() {
       const res = await api.post("/player/assets/tambah-slot");
       setActionMessage({
         type: "success",
-        text: res.data.message || "Berhasil menambah slot aset!",
+        text: res.data.message || "Berhasil menambah slot aset properti!",
       });
       setBuySlotModalOpen(false);
       fetchAssets();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
       setActionMessage({
         type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal menambah slot.",
+        text: err.response?.data?.error || "Gagal membeli slot tambahan.",
       });
-      setBuySlotModalOpen(false);
     } finally {
       setBuySlotLoading(false);
     }
   };
 
-  const [actionLoading, setActionLoading] = useState(false);
-  const [destroyModalOpen, setDestroyModalOpen] = useState(false);
-  const [destroyConfirmText, setDestroyConfirmText] = useState("");
-  const [selectedAssetForDestroy, setSelectedAssetForDestroy] =
-    useState<Asset | null>(null);
-
-  const [moveWorkerModalOpen, setMoveWorkerModalOpen] = useState(false);
-  const [selectedWorkerForMove, setSelectedWorkerForMove] =
-    useState<Worker | null>(null);
-  const [selectedTargetAssetId, setSelectedTargetAssetId] = useState("");
-  const [sourceAssetIdForMove, setSourceAssetIdForMove] = useState("");
-
-  const handleDestroyAsset = async () => {
-    if (!selectedAssetForDestroy || destroyConfirmText !== "HANCURKAN") return;
-    setActionLoading(true);
+  const handleOpenRepairModal = async (asset: Asset) => {
+    setSelectedAsset(asset);
+    setRepairModalOpen(true);
     try {
-      await api.post("/player/assets/destroy", {
-        assetId: selectedAssetForDestroy.id,
-      });
-      setDestroyModalOpen(false);
-      setDestroyConfirmText("");
-      setSelectedAssetForDestroy(null);
-      await fetchAssets();
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Gagal menghancurkan aset.");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleExpandSlot = async () => {
-    if (!confirm("Perluas slot aset? Biaya akan dipotong sesuai harga."))
-      return;
-    setActionLoading(true);
-    try {
-      await api.post("/player/assets/tambah-slot");
-      await fetchAssets();
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Gagal menambah slot.");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleStopMandiri = async () => {
-    if (!confirm("Berhenti kerja mandiri?")) return;
-    setActionLoading(true);
-    try {
-      await api.post("/worker/stop-mandiri");
-      await fetchAssets();
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Gagal berhenti kerja mandiri.");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleWorkSelf = async () => {
-    if (!selectedAsset) return;
-    if (selectedAsset.isDamaged) {
-      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum bekerja." });
-      return;
-    }
-    setActionLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/player/assets/work-self", {
-        assetId: selectedAsset.id,
-      });
-      setActionMessage({ type: "success", text: res.data.message });
-      await setTimeout(() => fetchAssets(), 0);
-      setSelectedAsset(null);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal mulai kerja mandiri.",
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleStopWorkSelf = async () => {
-    if (!selectedAsset) return;
-    setActionLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/worker/stop-mandiri");
-      setActionMessage({ type: "success", text: res.data.message });
-      await setTimeout(() => fetchAssets(), 0);
-      setSelectedAsset(null);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal berhenti kerja.",
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleHireNpc = async () => {
-    if (!selectedAsset) return;
-    if (selectedAsset.isDamaged) {
-      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum bekerja." });
-      return;
-    }
-    setActionLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/player/assets/hire-npc", {
-        assetId: selectedAsset.id,
-        hours: npcDuration,
-      });
-      setActionMessage({ type: "success", text: res.data.message });
-      await setTimeout(() => fetchAssets(), 0);
-      setSelectedAsset(null);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal menyewa NPC.",
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const fetchGuardCost = async (assetId: string, days: number) => {
-    setGuardCostLoading(true);
-    try {
-      const res = await api.post("/player/assets/guard-cost", {
-        assetId,
-        hari: days,
-      });
+      const res = await api.post("/player/assets/repair-cost", { assetId: asset.id });
       if (res.data.success) {
-        setGuardCostText(res.data.costText);
+        setRepairCostText(res.data.costText);
       }
     } catch (err: any) {
-      console.error("Error fetching guard cost", err);
-      setGuardCostText(err.response?.data?.error || "Gagal memuat biaya");
-    } finally {
-      setGuardCostLoading(false);
+      setRepairCostText(err.response?.data?.error || "Biaya perbaikan: 500 Silver / 2 Kayu Gelondong");
     }
   };
 
-  useEffect(() => {
-    if (selectedAsset && activeTab === "guard") {
-      fetchGuardCost(selectedAsset.id, guardDurationDays);
-    }
-  }, [selectedAsset, activeTab, guardDurationDays]);
-
-  useEffect(() => {
-    if (selectedAsset && selectedAsset.isDamaged) {
-      setRepairCostText(null);
-      setRepairCanAfford(null);
-      setRepairCostLoading(true);
-      api
-        .post("/player/assets/repair-cost", { assetId: selectedAsset.id })
-        .then((res) => {
-          if (res.data.success) {
-             setRepairCostText(res.data.costText);
-             setRepairCanAfford(res.data.playerCanAfford);
-          }
-        })
-        .catch((err) => {
-            setRepairCostText(
-              err.response?.data?.error || "Gagal memuat biaya"
-            );
-            setRepairCanAfford(false);
-        })
-        .finally(() => {
-            setRepairCostLoading(false);
-        });
-    } else {
-      setRepairCostText(null);
-      setRepairCanAfford(null);
-    }
-  }, [selectedAsset?.id, selectedAsset?.isDamaged]);
-
-  const filteredMyAssets = assets.filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, asset.recipes) === activeFilter);
-
-  const handleHireGuard = async () => {
+  const handleConfirmRepair = async () => {
     if (!selectedAsset) return;
-    setActionLoading(true);
-    try {
-      await api.post("/player/assets/guard", {
-        assetId: selectedAsset.id,
-        hari: guardDurationDays,
-      });
-      fetchAssets();
-    } catch (err: any) {
-      alert(
-        err.response?.data?.error || "Terjadi kesalahan saat menyewa guard.",
-      );
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleRepairAsset = async () => {
-    if (!selectedAsset) return;
-    setActionLoading(true);
-    setActionMessage(null);
+    setRepairLoading(true);
     try {
       const res = await api.post("/player/assets/repair", { assetId: selectedAsset.id });
-      setActionMessage({ type: "success", text: res.data.message || "Aset berhasil diperbaiki." });
-      await fetchAssets();
-      setRepairCostText(null);
-      setRepairCanAfford(null);
+      setActionMessage({
+        type: "success",
+        text: res.data.message || "Bangunan aset berhasil diperbaiki!",
+      });
+      setRepairModalOpen(false);
+      fetchAssets();
     } catch (err: any) {
       setActionMessage({
         type: "error",
-        text: err.response?.data?.error || "Terjadi kesalahan saat memperbaiki aset.",
+        text: err.response?.data?.error || "Gagal memperbaiki bangunan aset.",
       });
     } finally {
-      setActionLoading(false);
+      setRepairLoading(false);
     }
   };
 
-  const handleMoveWorker = async () => {
-    if (!selectedAsset || !selectedWorkerIdToMove || !targetAssetId) return;
-    if (selectedAsset.isDamaged) {
-      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum memindahkan pekerja." });
-      return;
-    }
-    setMoveLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/player/assets/move-worker", {
-        workerId: selectedWorkerIdToMove,
-        targetAssetId: targetAssetId,
-      });
-      setActionMessage({ type: "success", text: res.data.message });
-      await setTimeout(() => fetchAssets(), 0);
-      setSelectedAsset(null);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal memindah pekerja.",
-      });
-    } finally {
-      setMoveLoading(false);
-    }
+  const handleNavigateToGrid = (asset: Asset) => {
+    const zoneId = asset.placement?.zoneId || "central_plains_bamboo_forest";
+    const x = asset.placement?.tileX ?? 10;
+    const y = asset.placement?.tileY ?? 10;
+    router.push(`/world?zoneId=${zoneId}&tileX=${x}&tileY=${y}`);
   };
 
-  const fetchBuildableAssets = async () => {
-    setLoadingBuildable(true);
-    try {
-      const [assetsRes, invRes] = await Promise.all([
-        api.get("/almanack/assets"),
-        api.get("/inventory"),
-      ]);
-      const buildable = assetsRes.data.data.filter(
-        (a: { buildable: boolean }) => a.buildable,
-      );
-      setBuildableAssets(buildable);
-      if (invRes.data && invRes.data.data) {
-        setInventory(invRes.data.data || []);
-      }
-    } catch (err) {
-      console.error(err);
-      setActionMessage({
-        type: "error",
-        text: "Gagal memuat daftar aset yang bisa dibangun.",
-      });
-    } finally {
-      setLoadingBuildable(false);
-    }
-  };
+  // Filtered Assets
+  const filteredAssets = assets.filter((asset) => {
+    const matchesCategory =
+      activeFilter === "Semua" ||
+      getAssetCategory(asset.name, asset.type) === activeFilter;
+    const matchesSearch =
+      asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (asset.placement?.zoneId || "").toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
-  useEffect(() => {
-    if (activePageTab === "build-asset" && buildableAssets.length === 0) {
-      const timeout = setTimeout(() => fetchBuildableAssets(), 0);
-      return () => clearTimeout(timeout);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePageTab]);
-
-  const filteredBuildableAssets = buildableAssets
-    .filter(
-      (asset) =>
-        asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (asset.description &&
-          asset.description.toLowerCase().includes(searchQuery.toLowerCase())),
-    )
-    .filter((asset) => activeFilter === "Semua" || getAssetCategory(asset.name, asset.type, []) === activeFilter)
-    .map((asset) => {
-      let canBuild = true;
-      if (asset.buildRequirements && asset.buildRequirements.length > 0) {
-        for (const req of asset.buildRequirements) {
-          const invItem = inventory.find(
-            (i) => i.id === (req.itemId as { _id: string })._id,
-          );
-          if (!invItem || invItem.quantity < req.quantity) {
-            canBuild = false;
-            break;
-          }
-        }
-      }
-      return { ...asset, canBuild };
-    })
-    .sort((a, b) => {
-      if (a.canBuild && !b.canBuild) return -1;
-      if (!a.canBuild && b.canBuild) return 1;
-      return a.name.localeCompare(b.name);
-    });
-
-  const handleBuildAsset = async (assetId: string) => {
-    setBuildActionLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/almanack/build-asset", { assetId });
-      setActionMessage({ type: "success", text: res.data.message });
-      await setTimeout(() => {
-        fetchAssets();
-        fetchBuildableAssets();
-      }, 0);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal membangun aset.",
-      });
-    } finally {
-      setBuildActionLoading(false);
-    }
-  };
-
-  const handleCompleteConstruction = async (asset: Asset) => {
-    if (asset.isDamaged) {
-      setActionMessage({ type: "error", text: "Aset rusak. Perbaiki dulu sebelum mengambil hasil." });
-      return;
-    }
-    setActionLoading(true);
-    setActionMessage(null);
-    try {
-      const res = await api.post("/player/assets/claim-progress", { assetId: asset.id });
-
-      let cta = undefined;
-      const category = getAssetCategory(asset.name, asset.type, asset.recipes);
-      if (category === "Pertanian") cta = { text: "Buka Farming", link: "/professions/farming", text2: "Buka Inventory", link2: "/inventory" };
-      else if (category === "Pertukangan") cta = { text: "Buka Smithing", link: "/professions/smithing", text2: "Buka Inventory", link2: "/inventory" };
-      else if (category === "Alkimia") cta = { text: "Buka Alkimia", link: "/professions/alchemy", text2: "Buka Inventory", link2: "/inventory" };
-      else if (category === "Dapur") cta = { text: "Buka Dapur", link: "/professions/cooking", text2: "Buka Inventory", link2: "/inventory" };
-      else if (category === "Blueprint/Riset") cta = { text: "Buka Inventory", link: "/inventory" };
-      else cta = { text: "Buka Profesi", link: "/professions", text2: "Buka Inventory", link2: "/inventory" };
-
-      setActionMessage({ type: "success", text: res.data.message, cta });
-      await setTimeout(() => fetchAssets(), 0);
-    } catch (err) {
-      setActionMessage({
-        type: "error",
-        text:
-          (err as { response?: { data?: { error?: string } } }).response?.data
-            ?.error || "Gagal menyelesaikan pembangunan aset.",
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
+  const underConstructionCount = assets.filter((a) => a.underConstruction).length;
+  const damagedCount = assets.filter((a) => a.isDamaged).length;
+  const activeCount = assets.filter((a) => !a.underConstruction && !a.isDamaged).length;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 space-y-6">
+      {/* Header */}
       <PageHeader
-        title="Manajemen Aset"
-        description="Pantau pembangunan aset, produksi tambang, dan kelola pekerja Anda."
-        action={
-          <div className="flex flex-col sm:flex-row gap-3">
-            {activePageTab === "build-asset" && (
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Cari blueprint..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#111] border border-[#444] rounded-md pl-9 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#c5a880] transition-colors"
-                />
-              </div>
-            )}
-
-            <Button
-              variant="outline"
-              onClick={() =>
-                activePageTab === "my-assets"
-                  ? fetchAssets()
-                  : fetchBuildableAssets()
-              }
-            >
-              Refresh Data
-            </Button>
-          </div>
-        }
+        title="Daftar Kepemilikan Lahan & Properti"
+        description="Pantau seluruh properti tanah, bengkel profesi, dan aset bangunan yang kamu miliki di berbagai penjuru benua Jianghu."
       />
 
-      {!user && !loading ? (
-        <EmptyState
-          icon={<Map />}
-          title="Akses Ditolak"
-          description="Silakan login menggunakan Discord untuk melihat Aset Anda."
-        />
-      ) : (
-        <>
-          <div className="flex flex-col gap-4 border-b border-[#333]">
-            <div className="flex gap-4 sm:gap-6 overflow-x-auto custom-scrollbar justify-between items-center w-full">
-              <div className="flex gap-4 sm:gap-6">
-                <button
-                  className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "my-assets" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                  onClick={() => {
-                    setActivePageTab("my-assets");
-                    setActionMessage(null);
-                  }}
-                >
-                  <Map size={16} /> Aset Saya ({assets.length})
-                </button>
-                <button
-                  className={`pb-3 text-sm font-semibold transition-colors flex items-center gap-2 whitespace-nowrap ${activePageTab === "build-asset" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                  onClick={() => {
-                    setActivePageTab("build-asset");
-                    setActionMessage(null);
-                  }}
-                >
-                  <Hammer size={16} /> Bangun Aset
-                </button>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setBuySlotModalOpen(true)}
-                disabled={assetSlots >= 5}
-                className={`mb-3 ${assetSlots >= 5 ? "opacity-50 cursor-not-allowed" : "hover:border-[#c5a880] hover:text-[#c5a880]"}`}
-              >
-                Slot Lahan: {assetSlots}/5 {assetSlots < 5 ? "+" : "(Max)"}
-              </Button>
+      {/* Spatial Grid Redirection Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/20 p-5 shadow-xl backdrop-blur-md">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400 shadow-inner">
+              <Map className="w-6 h-6 animate-pulse" />
             </div>
-            <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-3 mb-1">
-              {FILTER_CATEGORIES.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setActiveFilter(category)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-full border whitespace-nowrap transition-colors ${
-                    activeFilter === category
-                      ? "bg-[#c5a880] text-black border-[#c5a880]"
-                      : "bg-[#111] text-gray-400 border-[#333] hover:border-[#666] hover:text-white"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+            <div>
+              <h3 className="text-base font-bold text-amber-200 flex items-center gap-2">
+                Sistem Spasial Peta Dunia Aktif
+                <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Tale of Immortal Mode
+                </span>
+              </h3>
+              <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-3xl">
+                Pembelian plot tanah kosong, pembangunan bengkel profesi (*Pandai Besi, Dapur, Alkimia, Tambak Ikan, Ladang*), serta pengoperasian fasilitas kini dilakukan secara langsung di atas **Peta Grid Spasial**. Klik tombol inspeksi pada daftar aset di bawah untuk langsung menuju koordinat bangunan!
+              </p>
             </div>
           </div>
-
-          <Modal
-            isOpen={buySlotModalOpen}
-            onClose={() => setBuySlotModalOpen(false)}
-            title="Tambah Slot Aset"
+          <Button
+            onClick={() => router.push("/world")}
+            className="w-full md:w-auto shrink-0 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 border border-amber-400/30"
           >
-            <div className="p-4">
-              <p className="text-sm text-gray-300 mb-4">
-                Apakah Anda yakin ingin menambah slot aset maksimal menjadi{" "}
-                <strong>{assetSlots + 1}</strong>?
-              </p>
-              <div className="bg-[#111] p-3 rounded-lg border border-[#333] mb-4">
-                <p className="text-xs text-gray-400">Biaya yang dibutuhkan:</p>
-                <p className="text-lg font-bold text-gray-200 mt-1 flex items-center gap-2">
-                  {assetSlots === 1
-                    ? "1 Gold"
-                    : assetSlots === 2
-                      ? "20 Gold"
-                      : assetSlots === 3
-                        ? "80 Gold"
-                        : assetSlots === 4
-                          ? "1 Jade"
-                          : "Max"}
-                </p>
-              </div>
-              {assetSlots >= 5 && (
-                <p className="text-sm text-red-400 mb-4">
-                  Anda sudah mencapai batas maksimal 5 slot aset.
-                </p>
-              )}
-              <div className="flex justify-end gap-2 mt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setBuySlotModalOpen(false)}
-                >
-                  Batal
-                </Button>
-                <Button
-                  variant="default"
-                  onClick={handleBuySlot}
-                  disabled={buySlotLoading || assetSlots >= 5}
-                >
-                  {buySlotLoading ? (
-                    <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                  ) : null}
-                  Beli Slot
-                </Button>
-              </div>
-            </div>
-          </Modal>
+            Buka Peta Dunia
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
 
-          {actionMessage && (
-            <div
-              className={`p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-3 border ${actionMessage.type === "success" ? "bg-green-900/20 border-green-900/50 text-green-400" : "bg-red-900/20 border-red-900/50 text-red-400"}`}
-            >
-              <span className="text-sm flex-1">{actionMessage.text}</span>
-              <div className="flex gap-2 items-center">
-                {actionMessage.cta && (
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-green-600/50 text-green-400 hover:bg-green-900/30"
-                      onClick={() => router.push(actionMessage.cta!.link)}
-                    >
-                      {actionMessage.cta.text} <ArrowRight className="w-3 h-3 ml-1" />
-                    </Button>
-                    {actionMessage.cta.link2 && actionMessage.cta.text2 && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-green-600/50 text-green-400 hover:bg-green-900/30"
-                        onClick={() => router.push(actionMessage.cta!.link2!)}
-                      >
-                        {actionMessage.cta.text2} <ArrowRight className="w-3 h-3 ml-1" />
-                      </Button>
-                    )}
-                  </div>
-                )}
-                <button onClick={() => setActionMessage(null)} className="p-1 hover:bg-black/20 rounded">
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Tab: Aset Saya */}
-          {activePageTab === "my-assets" && (
-            <>
-              {loading && <LoadingState text="Memuat peta aset..." />}
-
-              {error && (
-                <div className="py-10 text-center text-red-500 bg-red-900/10 border border-red-900/50 rounded-lg">
-                  {error}
-                </div>
-              )}
-
-              {user && !loading && assets.length === 0 && !error && (
-                <div className="flex flex-col items-center text-center p-8 bg-[#111] border border-[#333] rounded-lg w-full">
-                  <Hammer size={48} className="text-gray-600 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">Belum Ada Aset (Industri Pasif)</h3>
-                  <p className="text-gray-400 mb-6 max-w-xl">
-                    Aset adalah industri pasif yang menghasilkan bahan-bahan penting secara otomatis.
-                    Bangun aset pertama Anda untuk mendukung kemajuan Profesi:
-                  </p>
-                  <ul className="text-sm text-gray-300 text-left space-y-3 mb-8 w-full max-w-sm mx-auto">
-                    <li className="flex items-start gap-2">
-                      <span className="text-green-500 font-bold">1.</span>
-                      <div><b>Lahan Tani</b> → Menghasilkan <i>Pupuk Dasar</i></div>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 font-bold">2.</span>
-                      <div><b>Peleburan/Anvil</b> → Menghasilkan <i>Batangan & Baja</i></div>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-orange-500 font-bold">3.</span>
-                      <div><b>Dapur/Bengkel</b> → Menghasilkan <i>Bahan Masak & Blueprint</i></div>
-                    </li>
-                  </ul>
-                  <Button
-                    variant="default"
-                    onClick={() => {
-                      setActivePageTab("build-asset");
-                      setActionMessage(null);
-                    }}
-                    className="bg-[#c5a880] hover:bg-[#b09570] text-black font-bold"
-                  >
-                    Buka Katalog Bangun Aset <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              )}
-
-              {user && !loading && assets.length > 0 && filteredMyAssets.length === 0 && !error && (
-                <EmptyState
-                  icon={<Filter />}
-                  title="Aset Tidak Ditemukan"
-                  description={`Tidak ada aset yang cocok dengan kategori '${activeFilter}'.`}
-                />
-              )}
-
-              {user && !loading && filteredMyAssets.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredMyAssets.map((asset) => (
-                    <div
-                      key={asset.id}
-                      className={`relative flex flex-col rounded-lg border p-4 sm:p-5 transition-all duration-300 hover:shadow-lg ${asset.underConstruction ? "bg-[#1a110a] border-orange-900/40 hover:border-orange-700/60" : "bg-[#111] border-[#333] hover:border-[#8b0000]/50"}`}
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex-1 pr-2">
-                          <h3 className="font-serif font-bold text-lg text-[#c5a880] truncate">
-                            {asset.name}
-                          </h3>
-                          <p className="text-xs text-gray-500 mt-1 capitalize flex items-center gap-1">
-                            <PackageOpen size={12} /> {asset.type}
-                          </p>
-                        </div>
-                        <Badge
-                          variant={
-                            asset.underConstruction ? "warning" : "outline"
-                          }
-                          className={
-                            asset.underConstruction
-                              ? "bg-orange-900/80 text-orange-200"
-                              : "border-[#444] text-gray-300"
-                          }
-                        >
-                          {asset.underConstruction ? "Membangun" : "Aktif"}
-                        </Badge>
-                      </div>
-
-                      <p className="text-sm text-gray-400 mb-4 line-clamp-2 h-10">
-                        {asset.description}
-                      </p>
-
-                      <div className="grid grid-cols-2 gap-2 mb-4 bg-black/40 p-2 rounded-md border border-[#333]/50">
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">
-                            Jumlah
-                          </p>
-                          <p className="text-sm font-bold text-white">
-                            {asset.quantity}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-0.5">
-                            Pekerja
-                          </p>
-                          <p className="text-sm font-bold text-white flex items-center gap-1">
-                            <Users size={12} className="text-gray-400" />
-                            {asset.assignedWorkers.length}{" "}
-                            {asset.underConstruction ? "" : "/ 1"}
-                          </p>
-                        </div>
-                      </div>
-
-                      {(asset.isDamaged || asset.status === 'Rusak') && (
-                        <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded border border-red-800 shadow animate-pulse flex items-center gap-1 z-10">
-                          <AlertTriangle size={12} />
-                          RUSAK
-                        </div>
-                      )}
-
-                      {asset.guardEndTime &&
-                        new Date(asset.guardEndTime).getTime() > Date.now() && (
-                          <div className="absolute top-8 right-2 bg-blue-600/80 text-white text-[10px] font-bold px-2 py-1 rounded border border-blue-400 shadow z-10">
-                            Guard: <Countdown targetDate={asset.guardEndTime} />
-                          </div>
-                        )}
-                      {!asset.guardEndTime ||
-                      new Date(asset.guardEndTime).getTime() < Date.now() ? (
-                        <div className="absolute top-8 right-2 text-red-400 text-[10px] font-bold bg-black/80 px-1 py-1 rounded flex items-center gap-1 z-10">
-                          <AlertTriangle size={10} /> Rentan
-                        </div>
-                      ) : null}
-
-                      {asset.underConstruction &&
-                        asset.constructionCompleteAt && (
-                          <div className="mb-4 bg-orange-900/20 p-2 rounded-md border border-orange-900/30">
-                            <div className="flex justify-between text-xs mb-1">
-                              <span className="text-orange-400">Progres</span>
-                              <span className="text-orange-400 font-mono">
-                                <Countdown
-                                  targetDate={asset.constructionCompleteAt}
-                                />
-                              </span>
-                            </div>
-                            <div className="w-full bg-black/50 rounded-full h-1.5 border border-orange-900/50 overflow-hidden">
-                              <div
-                                className="bg-orange-500 h-1.5 rounded-full"
-                                style={{ width: `${asset.progressPercent}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        )}
-
-                      <div className="mt-auto pt-4 border-t border-[#333]/50 flex justify-end">
-                        {asset.underConstruction &&
-                        asset.progressPercent >= 100 ? (
-                          <div className="flex flex-col gap-2 w-full">
-                            <span className="text-xs text-green-400 text-center font-bold animate-pulse">Hasil siap diambil!</span>
-                            <Button
-                              size="sm"
-                              variant="default"
-                              onClick={() => handleCompleteConstruction(asset)}
-                              disabled={actionLoading || asset.isDamaged}
-                              className="w-full bg-green-600 hover:bg-green-500 text-white shadow-[0_0_10px_rgba(34,197,94,0.4)]"
-                            >
-                              <CheckCircle2 className="w-4 h-4 mr-1" /> Klaim Sekarang
-                            </Button>
-                          </div>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setSelectedAsset(asset)}
-                            className="ml-auto text-xs w-full sm:w-auto"
-                          >
-                            Kelola <ArrowRight className="w-3 h-3 ml-1" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Tab: Bangun Aset */}
-          {user && activePageTab === "build-asset" && (
-            <div className="space-y-4">
-              {loadingBuildable ? (
-                <LoadingState text="Memuat daftar blueprint..." />
-              ) : filteredBuildableAssets.length === 0 ? (
-                <EmptyState
-                  icon={<Hammer />}
-                  title="Tidak Ada Aset"
-                  description="Tidak ada aset yang bisa dibangun atau cocok dengan pencarian."
-                />
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {filteredBuildableAssets.map((asset: BuildableAsset) => (
-                    <div
-                      key={asset._id}
-                      className={`bg-[#111] border p-4 sm:p-5 rounded-lg flex flex-col gap-3 relative overflow-hidden group hover:border-[#c5a880]/50 hover:shadow-lg transition-all ${getRarityColor(asset.rank || "")}`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black/60 rounded-md border border-[#333] flex-shrink-0 flex items-center justify-center p-1 shadow-inner">
-                          <FallbackImage
-                            src={asset.imageUrl || ""}
-                            alt={asset.name}
-                            className="max-w-full max-h-full object-contain"
-                            fallbackNode={
-                              <div className="text-2xl sm:text-4xl">🏛️</div>
-                            }
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3
-                            className={`font-bold text-sm sm:text-base leading-tight mb-1.5 ${getRarityTextClass(asset.rank || "")} truncate`}
-                            title={asset.name}
-                          >
-                            {asset.name}
-                          </h3>
-                          <div className="flex flex-wrap gap-1.5">
-                            <Badge
-                              variant="success"
-                              className="text-[9px] sm:text-[10px] py-0 h-4 bg-[#1f402e]/80"
-                            >
-                              Blueprint
-                            </Badge>
-                            <Badge
-                              variant="outline"
-                              className="text-[9px] sm:text-[10px] py-0 h-4 border-[#333] bg-black/40 capitalize"
-                            >
-                              {asset.type}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mb-2 bg-black/30 p-2 rounded border border-[#333]/50">
-                        <p
-                          className={`text-[10px] sm:text-xs text-gray-400 italic leading-relaxed ${expandedAssets[asset._id] ? "" : "line-clamp-3"}`}
-                        >
-                          {asset.description}
-                        </p>
-                        {asset.description &&
-                          asset.description.length > 100 && (
-                            <button
-                              onClick={() => toggleAssetExpand(asset._id)}
-                              className="text-[10px] text-[#c5a880] hover:text-white mt-1 flex items-center gap-1 w-full justify-center"
-                            >
-                              {expandedAssets[asset._id]
-                                ? "Tutup"
-                                : "Selengkapnya"}
-                              <span
-                                className={`transform transition-transform ${expandedAssets[asset._id] ? "rotate-180" : ""}`}
-                              >
-                                ▼
-                              </span>
-                            </button>
-                          )}
-                      </div>
-
-                      <div className="mt-auto pt-3 border-t border-[#333] text-[10px] sm:text-xs text-gray-400 space-y-2">
-                        {asset.dailyProfit !== undefined &&
-                          asset.dailyProfit > 0 && (
-                            <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2">
-                              <span>Profit Harian:</span>{" "}
-                              <span className="text-yellow-500 font-mono">
-                                {asset.dailyProfit} {asset.profitCurrency}
-                              </span>
-                            </p>
-                          )}
-                        {asset.workerOutputQuantity !== undefined &&
-                          asset.workerOutputQuantity > 0 && (
-                            <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2">
-                              <span>Output Produksi:</span>{" "}
-                              <span className="text-purple-400 font-mono">
-                                {asset.workerOutputQuantity}x{" "}
-                                {asset.workerOutputItemName}
-                              </span>
-                            </p>
-                          )}
-                        {asset.basePrice !== undefined &&
-                          asset.basePrice > 0 &&
-                          !asset.buildable && (
-                            <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2">
-                              <span>Harga (Shop):</span>{" "}
-                              <span className="text-gray-300 font-mono">
-                                {asset.basePrice} {asset.priceCurrency}
-                              </span>
-                            </p>
-                          )}
-                        <p className="flex flex-wrap sm:flex-nowrap justify-between gap-x-2">
-                          <span>Waktu Bangun:</span>{" "}
-                          <span className="text-orange-400 font-mono">
-                            {asset.constructionTimeHours} Jam
-                          </span>
-                        </p>
-
-                        <div className="mt-2 bg-black/40 p-2 rounded border border-[#333]/50">
-                          <span className="text-gray-400 block mb-1.5 font-semibold">
-                            Material Dibutuhkan:
-                          </span>
-                          {asset.buildRequirements &&
-                          asset.buildRequirements.length > 0 ? (
-                            <div className="flex flex-wrap gap-1.5">
-                              {asset.buildRequirements.map(
-                                (
-                                  req: {
-                                    itemId?: { name: string };
-                                    quantity: number;
-                                  },
-                                  i: number,
-                                ) => (
-                                  <div
-                                    key={i}
-                                    className="flex items-center gap-1 bg-[#111] border border-[#444] px-1.5 py-0.5 rounded-sm"
-                                  >
-                                    <span
-                                      className="text-[#c5a880] truncate max-w-[80px]"
-                                      title={req.itemId?.name || "Unknown Item"}
-                                    >
-                                      {req.itemId?.name || "Unknown Item"}
-                                    </span>
-                                    <span className="text-gray-500 font-mono">
-                                      x{req.quantity}
-                                    </span>
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-gray-600 italic">
-                              Tidak ada material khusus.
-                            </span>
-                          )}
-                        </div>
-
-                        <Button
-                          variant={
-                            (asset as BuildableAsset & { canBuild: boolean })
-                              .canBuild
-                              ? "default"
-                              : "secondary"
-                          }
-                          size="sm"
-                          onClick={() => handleBuildAsset(asset._id)}
-                          disabled={
-                            buildActionLoading ||
-                            !(asset as BuildableAsset & { canBuild: boolean })
-                              .canBuild
-                          }
-                          className="w-full mt-3"
-                        >
-                          {buildActionLoading ? (
-                            <Loader2 size={14} className="animate-spin" />
-                          ) : (
-                            <>
-                              <Hammer size={14} className="mr-2" /> Bangun Aset
-                              Ini
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Asset Management Modal */}
-          <Modal
-            isOpen={!!selectedAsset}
-            onClose={() => {
-              setSelectedAsset(null);
-              setActionMessage(null);
-            }}
-            title={selectedAsset?.name || "Kelola Aset"}
-          >
-            {selectedAsset && (
-              <div>
-                <div className="flex border-b border-[#333] mb-4 overflow-x-auto">
-                  <button
-                    onClick={() => setActiveTab("info")}
-                    className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === "info" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                  >
-                    Informasi
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("move")}
-                    className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === "move" ? "text-[#c5a880] border-b-2 border-[#c5a880]" : "text-gray-500 hover:text-gray-300"}`}
-                  >
-                    Pindah Pekerja
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("guard")}
-                    className={`px-4 py-3 text-sm font-bold whitespace-nowrap ${activeTab === "guard" ? "text-blue-400 border-b-2 border-blue-400" : "text-gray-500 hover:text-gray-300"}`}
-                  >
-                    Guard / Repair
-                  </button>
-                </div>
-
-
-                {/* Banner Rusak */}
-                {selectedAsset.isDamaged && (
-                  <div className="bg-red-950/40 border border-red-500/50 p-4 mb-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div>
-                      <h4 className="text-red-400 font-bold flex items-center gap-2 mb-1">
-                        <AlertTriangle size={16} /> Aset Rusak — perbaiki sebelum produksi
-                      </h4>
-                      <p className="text-xs text-gray-300">
-                        Aset ini mengalami kerusakan (Jenis: {selectedAsset.damageType || 'Tidak diketahui'}).
-                        <br />
-                        Biaya Perbaikan: <span className="font-semibold text-[#c5a880]">{repairCostText || "Memuat..."}</span>
-                      </p>
-                    </div>
-                    <Button
-                      variant="destructive"
-                      onClick={handleRepairAsset}
-                      disabled={actionLoading || repairCostLoading || !repairCostText || repairCanAfford === false}
-                    >
-                      Perbaiki Sekarang
-                    </Button>
-                  </div>
-                )}
-
-
-
-
-                {activeTab === "info" && (
-                  <div className="space-y-6">
-                    <p className="text-sm text-gray-300 bg-black/30 p-3 rounded-lg border border-[#333]/50 leading-relaxed">
-                      {selectedAsset.description}
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                      <div className="bg-black/50 p-4 rounded-lg border border-[#333] flex flex-col items-center justify-center text-center">
-                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider mb-1">
-                          Status
-                        </p>
-                        <p
-                          className={`font-bold text-sm sm:text-base ${selectedAsset.underConstruction ? "text-orange-400" : selectedAsset.status === "Halted (Terhenti)" ? "text-red-400" : "text-green-400"}`}
-                        >
-                          {selectedAsset.underConstruction
-                            ? "Sedang Dibangun"
-                            : selectedAsset.status}
-                        </p>
-                      </div>
-                      <div className="bg-black/50 p-4 rounded-lg border border-[#333] flex flex-col items-center justify-center text-center">
-                        <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider mb-1">
-                          Jumlah
-                        </p>
-                        <p className="font-bold text-white text-lg sm:text-xl">
-                          {selectedAsset.quantity}
-                        </p>
-                      </div>
-                    </div>
-
-                    {selectedAsset.underConstruction &&
-                      selectedAsset.constructionCompleteAt && (
-                        <div className="p-4 bg-orange-900/10 border border-orange-900/30 rounded-lg flex flex-col items-center justify-center text-center">
-                          <p className="text-xs text-orange-400/80 mb-2 flex items-center gap-2">
-                            <Clock size={14} /> Selesai Dalam
-                          </p>
-                          <p className="text-xl sm:text-2xl font-mono font-bold text-orange-400">
-                            <Countdown
-                              targetDate={selectedAsset.constructionCompleteAt}
-                            />
-                          </p>
-                        </div>
-                      )}
-
-                    {selectedAsset.isCraftingStation && (
-                      selectedAsset.recipes &&
-                      selectedAsset.recipes.length > 0 ? (
-                        <div>
-                          <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
-                            Resep Crafting
-                          </h3>
-                          <div className="space-y-3">
-                            {selectedAsset.recipes.map((recipe, i) => (
-                              <div
-                                key={i}
-                                className="bg-[#111] border border-[#333] p-3 rounded-md"
-                              >
-                                <div className="text-xs sm:text-sm text-white font-medium mb-2 flex items-center flex-wrap gap-2">
-                                  <span className="text-blue-400 border border-blue-400/30 px-2 py-0.5 rounded bg-blue-900/10">
-                                    {recipe.recipeName}
-                                  </span>
-                                  <span className="text-gray-400">→</span>
-                                  {recipe.resultItemName ? (
-                                    <span className="text-purple-400 font-bold">
-                                      {recipe.resultQuantity}x {recipe.resultItemName}
-                                    </span>
-                                  ) : (
-                                    <span className="text-red-400 text-[10px] uppercase font-bold flex items-center gap-1 border border-red-500/30 px-1 py-0.5 rounded bg-red-900/20">
-                                      <AlertTriangle size={12} /> Output tidak terkonfigurasi
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                  {recipe.materials &&
-                                    recipe.materials.map((mat, j) => (
-                                      <div
-                                        key={j}
-                                        className="flex items-center gap-1 bg-black/40 border border-[#444] px-2 py-1 rounded text-[10px] sm:text-xs"
-                                      >
-                                        <span className="text-[#c5a880]">
-                                          {mat.itemName}
-                                        </span>
-                                        <span className="text-gray-500 font-mono">
-                                          x{mat.quantity}
-                                        </span>
-                                      </div>
-                                    ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
-                            Resep Crafting
-                          </h3>
-                          <div className="bg-[#111] border border-[#333] p-4 rounded-md text-center">
-                            <p className="text-sm text-gray-500 italic">Station ini belum punya recipe industri</p>
-                          </div>
-                        </div>
-                      )
-                    )}
-
-                    <div>
-                      <h3 className="text-sm font-bold text-gray-400 border-b border-[#333] pb-2 mb-3">
-                        Daftar Pekerja ({selectedAsset.assignedWorkers.length})
-                      </h3>
-                      {selectedAsset.assignedWorkers.length === 0 ? (
-                        <p className="text-sm text-gray-500 italic">
-                          Tidak ada pekerja yang ditugaskan.
-                        </p>
-                      ) : (
-                        <ul className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                          {selectedAsset.assignedWorkers.map(
-                            (worker, index) => (
-                              <li
-                                key={index}
-                                className="flex flex-wrap justify-between items-center gap-1 text-xs sm:text-sm bg-[#111] p-3 rounded-md border border-[#333]"
-                              >
-                                <span className="font-semibold text-gray-300">
-                                  {worker.workerId.startsWith("NPC")
-                                    ? worker.workerId.substring(0, 15) + "..."
-                                    : worker.workerId}
-                                  {worker.workerId === user?.id && " (Anda)"}
-                                </span>
-                                {worker.endTime && (
-                                  <span className="text-orange-400 bg-orange-900/20 px-2 py-1 rounded text-[10px] sm:text-xs flex items-center gap-1 border border-orange-900/30">
-                                    <Clock size={12} />{" "}
-                                    <Countdown targetDate={worker.endTime} />
-                                  </span>
-                                )}
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                      )}
-                    </div>
-
-                    <div className="space-y-3">
-                      {selectedAsset.assignedWorkers.some(
-                        (w) => w.workerId === user?.id,
-                      ) ? (
-                        <Button
-                          variant="outline"
-                          className="w-full border-orange-900 text-orange-400 hover:bg-orange-900/20"
-                          onClick={handleStopWorkSelf}
-                          disabled={actionLoading}
-                        >
-                          <Pickaxe className="mr-2 h-4 w-4" /> Berhenti Kerja
-                          Mandiri
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="destructive"
-                          className="w-full bg-[#8b0000]"
-                          onClick={handleWorkSelf}
-                          disabled={
-                            actionLoading ||
-                            selectedAsset.isDamaged ||
-                            (!selectedAsset.underConstruction &&
-                              selectedAsset.status === "active" &&
-                              selectedAsset.assignedWorkers.length >=
-                                (selectedAsset.quantity || 1)) ||
-                            ((selectedAsset.underConstruction ||
-                              selectedAsset.status !== "active") &&
-                              selectedAsset.assignedWorkers.length >= 4)
-                          }
-                          title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum bekerja." : undefined}
-                        >
-                          <Pickaxe className="mr-2 h-4 w-4" /> Kerja Mandiri di
-                          Aset Ini
-                        </Button>
-                      )}
-
-                      <Button
-                        variant="secondary"
-                        className="w-full"
-                        onClick={() => router.push("/worker")}
-                        disabled={selectedAsset.isDamaged}
-                        title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum menyewa pekerja." : undefined}
-                      >
-                        <Users className="mr-2 h-4 w-4" /> Sewa Pekerja dari
-                        Papan
-                      </Button>
-
-                      {!selectedAsset.underConstruction &&
-                        selectedAsset.assignedWorkers.length >= 1 && (
-                          <p className="text-[10px] text-gray-500 text-center flex items-center justify-center gap-1 mt-3">
-                            <AlertTriangle size={12} /> Aset yang sudah jadi
-                            hanya bisa ditangani maksimal 1 pekerja.
-                          </p>
-                        )}
-
-                      <div className="pt-4 mt-4 border-t border-[#333]">
-                        <h4 className="text-xs font-bold text-gray-400 mb-2">
-                          Sewa NPC (5 Silver / Jam)
-                        </h4>
-                        <div className="flex gap-2">
-                          <input
-                            type="number"
-                            min="1"
-                            value={npcDuration}
-                            onChange={(e) =>
-                              setNpcDuration(parseInt(e.target.value) || 1)
-                            }
-                            className="w-20 bg-[#111] border border-[#333] rounded px-2 text-sm text-white focus:outline-none focus:border-[#c5a880]"
-                          />
-                          <Button
-                            variant="outline"
-                            className="flex-1"
-                            onClick={handleHireNpc}
-                            disabled={
-                              actionLoading ||
-                              selectedAsset.isDamaged ||
-                              (!selectedAsset.underConstruction &&
-                                selectedAsset.status === "active" &&
-                                selectedAsset.assignedWorkers.length >=
-                                  (selectedAsset.quantity || 1)) ||
-                              ((selectedAsset.underConstruction ||
-                                selectedAsset.status !== "active") &&
-                                selectedAsset.assignedWorkers.length >= 4)
-                            }
-                            title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum bekerja." : undefined}
-                          >
-                            Sewa NPC ({npcDuration * 5} Silver)
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "move" && (
-                  <div className="space-y-6">
-                    <p className="text-sm text-gray-400 bg-black/30 p-3 rounded-lg border border-[#333]/50">
-                      Pindahkan pekerja dari aset ini ke aset lain milikmu untuk
-                      mengoptimalkan produksi.
-                    </p>
-
-                    {selectedAsset.assignedWorkers.length === 0 ? (
-                      <div className="text-center py-8">
-                        <Pickaxe className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                        <p className="text-sm text-gray-500">
-                          Tidak ada pekerja di aset ini untuk dipindahkan.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Pilih Pekerja
-                          </label>
-                          <select
-                            value={selectedWorkerIdToMove}
-                            onChange={(e) =>
-                              setSelectedWorkerIdToMove(e.target.value)
-                            }
-                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={selectedAsset.isDamaged}
-                          >
-                            <option value="" disabled>
-                              -- Pilih Pekerja --
-                            </option>
-                            {selectedAsset.assignedWorkers.map((w, i) => (
-                              <option key={i} value={w.workerId}>
-                                {w.workerId.startsWith("NPC")
-                                  ? w.workerId.substring(0, 15) + "..."
-                                  : w.workerId}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                            Pilih Aset Tujuan
-                          </label>
-                          <select
-                            value={targetAssetId}
-                            onChange={(e) => setTargetAssetId(e.target.value)}
-                            className="w-full bg-[#111] border border-[#444] rounded-md px-3 py-2.5 text-white focus:outline-none focus:border-[#c5a880] text-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={selectedAsset.isDamaged}
-                          >
-                            <option value="" disabled>
-                              -- Pilih Aset --
-                            </option>
-                            {assets
-                              .filter((a) => a.id !== selectedAsset.id)
-                              .map((a) => (
-                                <option
-                                  key={a.id}
-                                  value={a.id}
-                                  disabled={
-                                    (!a.underConstruction &&
-                                      a.status === "active" &&
-                                      a.assignedWorkers.length >=
-                                        (a.quantity || 1)) ||
-                                    ((a.underConstruction ||
-                                      a.status !== "active") &&
-                                      a.assignedWorkers.length >= 4)
-                                  }
-                                  className="disabled:text-gray-600"
-                                >
-                                  {a.name}{" "}
-                                  {(!a.underConstruction &&
-                                    a.status === "active" &&
-                                    a.assignedWorkers.length >=
-                                      (a.quantity || 1)) ||
-                                  ((a.underConstruction ||
-                                    a.status !== "active") &&
-                                    a.assignedWorkers.length >= 4)
-                                    ? "(Penuh)"
-                                    : ""}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-
-                        <Button
-                          onClick={handleMoveWorker}
-                          disabled={
-                            moveLoading ||
-                            selectedAsset.isDamaged ||
-                            !selectedWorkerIdToMove ||
-                            !targetAssetId
-                          }
-                          title={selectedAsset.isDamaged ? "Aset rusak. Perbaiki dulu sebelum memindahkan pekerja." : undefined}
-                          className="w-full mt-4"
-                          variant="default"
-                        >
-                          {moveLoading ? (
-                            <Loader2 size={16} className="animate-spin mr-2" />
-                          ) : (
-                            <ArrowRight size={16} className="mr-2" />
-                          )}
-                          Pindahkan Pekerja
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === "guard" && (
-                  <div className="space-y-6">
-                    <div className="bg-black/30 p-4 rounded-lg border border-[#333]/50">
-                      <h4 className="text-sm font-bold text-gray-300 mb-2">
-                        Sewa Penjaga (Guard)
-                      </h4>
-                      <p className="text-xs text-gray-400 mb-4">
-                        Sewa guard untuk melindungi aset dari serangan bandit
-                        dan bencana alam.
-                      </p>
-                      <div className="flex gap-2 mb-3 items-center">
-                        <input
-                          type="number"
-                          min="1"
-                          value={guardDurationDays}
-                          onChange={(e) =>
-                            setGuardDurationDays(parseInt(e.target.value) || 1)
-                          }
-                          className="w-20 bg-[#111] border border-[#333] rounded px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#c5a880]"
-                        />
-                        <span className="text-sm text-gray-400">Hari</span>
-                      </div>
-                      <div className="text-sm text-[#c5a880] mb-4 font-bold">
-                        Biaya:{" "}
-                        {guardCostLoading
-                          ? "Menghitung..."
-                          : guardCostText || "-"}
-                      </div>
-                      <p className="text-[10px] text-red-500 font-bold mb-2 uppercase tracking-wide">
-                        Peringatan: Keuntungan aset mungkin tidak menutupi biaya
-                        harian guard. Pertimbangkan kembali!
-                      </p>
-                      <Button
-                        onClick={handleHireGuard}
-                        disabled={actionLoading || guardCostLoading}
-                        className="w-full bg-blue-700 hover:bg-blue-600 text-white border-none shadow-md"
-                      >
-                        Sewa Penjaga
-                      </Button>
-                    </div>
-
-
-                  </div>
-                )}
-              </div>
+      {/* Action Notification Message */}
+      {actionMessage && (
+        <div
+          className={`p-4 rounded-xl border flex items-center justify-between ${
+            actionMessage.type === "success"
+              ? "bg-emerald-950/50 border-emerald-500/30 text-emerald-200"
+              : "bg-rose-950/50 border-rose-500/30 text-rose-200"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            {actionMessage.type === "success" ? (
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
             )}
-          </Modal>
-        </>
+            <span className="text-sm">{actionMessage.text}</span>
+          </div>
+          <button
+            onClick={() => setActionMessage(null)}
+            className="text-slate-400 hover:text-slate-200 text-xs px-2 py-1"
+          >
+            Tutup
+          </button>
+        </div>
       )}
 
-      {/* Destroy Modal */}
-      <Modal
-        isOpen={destroyModalOpen}
-        onClose={() => setDestroyModalOpen(false)}
-        title="Hancurkan Aset"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-300">
-            Apakah kamu yakin ingin menghancurkan aset{" "}
-            <strong>{selectedAssetForDestroy?.name}</strong>?
-          </p>
-          <p className="text-red-400 text-sm">
-            Tindakan ini permanen. Biaya: 1 Gold (100 Silver). Ketik{" "}
-            <strong>HANCURKAN</strong> untuk konfirmasi.
-          </p>
+      {/* Overview Stat Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-medium">Total Properti Dimiliki</span>
+            <Building className="w-4 h-4 text-amber-400" />
+          </div>
+          <div className="mt-2 text-2xl font-bold text-slate-100">{assets.length}</div>
+          <div className="text-[11px] text-slate-500 mt-1">Tersebar di berbagai zona</div>
+        </div>
+
+        <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-medium">Slot Properti</span>
+            <button
+              onClick={() => setBuySlotModalOpen(true)}
+              className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              Beli Slot
+            </button>
+          </div>
+          <div className="mt-2 text-2xl font-bold text-amber-300">
+            {assets.length} <span className="text-sm font-normal text-slate-400">/ {assetSlots}</span>
+          </div>
+          <div className="text-[11px] text-slate-500 mt-1">Maksimal 5 slot kepemilikan</div>
+        </div>
+
+        <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-medium">Dalam Konstruksi</span>
+            <Hammer className="w-4 h-4 text-sky-400" />
+          </div>
+          <div className="mt-2 text-2xl font-bold text-sky-300">{underConstructionCount}</div>
+          <div className="text-[11px] text-slate-500 mt-1">
+            {underConstructionCount > 0 ? "Menunggu selesai" : "Tidak ada antrean"}
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/60 backdrop-blur-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400 font-medium">Status Rusak</span>
+            <AlertTriangle className="w-4 h-4 text-rose-400" />
+          </div>
+          <div className="mt-2 text-2xl font-bold text-rose-400">{damagedCount}</div>
+          <div className="text-[11px] text-slate-500 mt-1">
+            {damagedCount > 0 ? "Perlu segera diperbaiki" : "Semua kondisi prima"}
+          </div>
+        </div>
+      </div>
+
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+          <Filter className="w-4 h-4 text-slate-400 shrink-0 ml-1" />
+          {FILTER_CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                activeFilter === cat
+                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                  : "bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-transparent"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full md:w-64">
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            className="w-full bg-[#111] border border-[#444] rounded p-2 text-white"
-            value={destroyConfirmText}
-            onChange={(e) => setDestroyConfirmText(e.target.value)}
-            placeholder="HANCURKAN"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari nama aset / zona..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-amber-500/50"
           />
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={() => setDestroyModalOpen(false)}>
+        </div>
+      </div>
+
+      {/* Content Section */}
+      {loading ? (
+        <LoadingState text="Memuat inventaris lahan & properti kultivator..." />
+      ) : error ? (
+        <div className="p-8 text-center text-rose-400 bg-rose-950/20 border border-rose-900/40 rounded-xl">
+          <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-80" />
+          <p>{error}</p>
+          <Button onClick={fetchAssets} className="mt-4 bg-slate-800 text-slate-200 text-xs">
+            Coba Lagi
+          </Button>
+        </div>
+      ) : filteredAssets.length === 0 ? (
+        <div className="py-12 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40 text-center">
+          <Building className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+          <h3 className="text-base font-semibold text-slate-300">
+            {assets.length === 0
+              ? "Belum Memiliki Properti Tanah atau Bangunan"
+              : "Tidak Ada Properti yang Cocok"}
+          </h3>
+          <p className="text-xs text-slate-500 max-w-md mx-auto mt-1 mb-5">
+            {assets.length === 0
+              ? "Kunjungi Peta Dunia untuk menemukan plot tanah kosong (buildable plot), membelinya dengan Silver, dan mendirikan bengkel atau kediaman kultivator."
+              : "Coba ganti filter kategori atau kata kunci pencarian."}
+          </p>
+          {assets.length === 0 && (
+            <Button
+              onClick={() => router.push("/world")}
+              className="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-5 py-2 text-xs rounded-xl"
+            >
+              Jelajahi Peta Dunia
+            </Button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredAssets.map((asset) => {
+            const currentHp = asset.hp ?? (asset.isDamaged ? 30 : 100);
+            const maxHp = asset.maxHp ?? 100;
+            const hpPercent = Math.min(100, Math.max(0, Math.round((currentHp / maxHp) * 100)));
+            const zoneName = asset.placement?.zoneId
+              ? asset.placement.zoneId.replace(/_/g, " ").toUpperCase()
+              : "ZONA BENUA UTAMA";
+            const posX = asset.placement?.tileX ?? "-";
+            const posY = asset.placement?.tileY ?? "-";
+
+            return (
+              <div
+                key={asset.id || Math.random().toString()}
+                className="group relative rounded-2xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-5 shadow-lg hover:border-amber-500/40 transition-all flex flex-col justify-between"
+              >
+                {/* Top Badge & Status */}
+                <div>
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold tracking-wider bg-slate-800 text-slate-300 border border-slate-700/60">
+                        {getAssetCategory(asset.name, asset.type)}
+                      </span>
+                      {asset.underConstruction ? (
+                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 flex items-center gap-1">
+                          <Hammer className="w-3 h-3 animate-spin" />
+                          Membangun
+                        </span>
+                      ) : asset.isDamaged ? (
+                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          Rusak
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          Aktif
+                        </span>
+                      )}
+                    </div>
+
+                    <span className="text-[11px] font-mono text-amber-400 bg-amber-950/30 px-2 py-0.5 rounded border border-amber-500/20">
+                      X: {posX} | Y: {posY}
+                    </span>
+                  </div>
+
+                  {/* Asset Name & Zone */}
+                  <h4 className="text-base font-bold text-slate-100 group-hover:text-amber-300 transition-colors">
+                    {asset.name}
+                  </h4>
+                  <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                    <Map className="w-3 h-3 text-slate-500" />
+                    {zoneName}
+                  </p>
+
+                  {/* Construction Countdown (if building) */}
+                  {asset.underConstruction && asset.constructionCompleteAt && (
+                    <div className="mt-3 p-2.5 rounded-lg bg-sky-950/30 border border-sky-500/30 text-xs flex items-center justify-between">
+                      <span className="text-sky-300 text-[11px] flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-sky-400" />
+                        Selesai Dalam:
+                      </span>
+                      <Countdown targetDate={asset.constructionCompleteAt} />
+                    </div>
+                  )}
+
+                  {/* HP Bar */}
+                  <div className="mt-4 space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400">Integritas Fisik (HP)</span>
+                      <span
+                        className={`font-mono font-semibold ${
+                          hpPercent > 60
+                            ? "text-emerald-400"
+                            : hpPercent > 25
+                            ? "text-amber-400"
+                            : "text-rose-400"
+                        }`}
+                      >
+                        {currentHp} / {maxHp} ({hpPercent}%)
+                      </span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500 ${
+                          hpPercent > 60
+                            ? "bg-emerald-500"
+                            : hpPercent > 25
+                            ? "bg-amber-500"
+                            : "bg-rose-500"
+                        }`}
+                        style={{ width: `${hpPercent}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Description / Output */}
+                  <p className="text-xs text-slate-400 mt-3 line-clamp-2 leading-relaxed">
+                    {asset.description ||
+                      "Fasilitas mandiri yang dapat digunakan untuk crafting, istirahat, atau mempekerjakan pekerja."}
+                  </p>
+                </div>
+
+                {/* Bottom Actions */}
+                <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center gap-2">
+                  <Button
+                    onClick={() => handleNavigateToGrid(asset)}
+                    className="flex-1 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/30 text-xs font-semibold py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                  >
+                    <Map className="w-3.5 h-3.5" />
+                    Lihat di Peta Grid
+                  </Button>
+
+                  {asset.isDamaged && (
+                    <Button
+                      onClick={() => handleOpenRepairModal(asset)}
+                      className="bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-semibold px-3 py-2 rounded-xl flex items-center justify-center gap-1 transition-all"
+                    >
+                      <Wrench className="w-3.5 h-3.5" />
+                      Perbaiki
+                    </Button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Buy Slot Modal */}
+      <Modal
+        isOpen={buySlotModalOpen}
+        onClose={() => setBuySlotModalOpen(false)}
+        title="Beli Tambahan Slot Properti"
+      >
+        <div className="space-y-4 p-2 text-slate-200">
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Membuka slot properti tambahan memungkinkan kultivator untuk memiliki lebih banyak tanah dan bangunan secara bersamaan di seluruh benua Jianghu.
+          </p>
+          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+            <div className="flex justify-between">
+              <span className="text-slate-400">Slot Saat Ini:</span>
+              <span className="font-bold text-slate-200">{assetSlots} / 5</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Biaya Pembukaan Slot:</span>
+              <span className="font-bold text-amber-400">10,000 Silver / 50 Gold</span>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 pt-3">
+            <Button
+              variant="outline"
+              onClick={() => setBuySlotModalOpen(false)}
+              className="text-xs"
+            >
               Batal
             </Button>
             <Button
-              variant="outline"
-              className="border-red-500 text-red-500 hover:bg-red-500/10"
-              onClick={handleDestroyAsset}
-              disabled={actionLoading || destroyConfirmText !== "HANCURKAN"}
+              onClick={handleBuySlot}
+              disabled={buySlotLoading || assetSlots >= 5}
+              className="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs"
             >
-              Hancurkan
+              {buySlotLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : assetSlots >= 5 ? (
+                "Slot Maksimal Terpenuhi"
+              ) : (
+                "Konfirmasi Beli Slot"
+              )}
             </Button>
           </div>
         </div>
       </Modal>
 
-      {/* Move Worker Modal */}
+      {/* Repair Modal */}
       <Modal
-        isOpen={moveWorkerModalOpen}
-        onClose={() => setMoveWorkerModalOpen(false)}
-        title="Pindahkan Pekerja"
+        isOpen={repairModalOpen}
+        onClose={() => setRepairModalOpen(false)}
+        title={`Perbaiki Bangunan: ${selectedAsset?.name || ""}`}
       >
-        <div className="space-y-4">
-          <p className="text-gray-300">Pilih aset tujuan untuk pekerja ini.</p>
-          <select
-            className="w-full bg-black/50 border border-gray-600 rounded p-2 text-white"
-            value={selectedTargetAssetId}
-            onChange={(e) => setSelectedTargetAssetId(e.target.value)}
-          >
-            <option value="">-- Pilih Aset Tujuan --</option>
-            {assets
-              .filter(
-                (a) => a.id !== sourceAssetIdForMove && !a.underConstruction,
-              )
-              .map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
-          </select>
-          <div className="flex justify-end gap-2">
+        <div className="space-y-4 p-2 text-slate-200">
+          <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-500/30 text-xs text-rose-300 flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+            <div>
+              <p className="font-semibold">Bangunan Sedang Rusak!</p>
+              <p className="text-[11px] text-slate-400 mt-1">
+                Fasilitas tidak dapat beroperasi dan produktivitas terhenti hingga diperbaiki oleh tukang kayu dan material perbaikan.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+            <div className="flex justify-between">
+              <span className="text-slate-400">Estimasi Biaya:</span>
+              <span className="font-semibold text-amber-300">
+                {repairCostText || "Memuat estimasi material..."}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-3">
             <Button
-              variant="ghost"
-              onClick={() => setMoveWorkerModalOpen(false)}
+              variant="outline"
+              onClick={() => setRepairModalOpen(false)}
+              className="text-xs"
             >
               Batal
             </Button>
             <Button
-              variant="default"
-              onClick={handleMoveWorker}
-              disabled={actionLoading || !selectedTargetAssetId}
+              onClick={handleConfirmRepair}
+              disabled={repairLoading}
+              className="bg-rose-600 hover:bg-rose-500 text-slate-100 font-bold text-xs"
             >
-              Pindahkan
+              {repairLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Perbaiki Sekarang"}
             </Button>
           </div>
         </div>

@@ -85,10 +85,11 @@ export const GLOBAL_ASSETS = {
     "Perkumpulan Pisau Sunyi": "",
     "Serambi Seribu Bisik": "",
     "Rumah Gadai Giok Sejuk": "",
+    "default_sect_gate_4x4": "", // Template Gerbang Sekte Megah 4x4
   },
 
   // =========================================================================
-  // 4. LANDMARKS: KOTA & FASILITAS KHUSUS
+  // 4. LANDMARKS: KOTA & PEMUKIMAN
   // Deskripsi: Gerbang kota atau arsitektur pemukiman besar di peta.
   // Ukuran: 256x256 px s/d 512x512 px (Format: PNG Transparan)
   // =========================================================================
@@ -97,6 +98,22 @@ export const GLOBAL_ASSETS = {
     "XiTong City": "",       // Kota faksi utama (384x384 px)
     "default_city": "",      // Fallback untuk kota standar (256x256 px)
     "default_village": "",   // Fallback untuk desa kecil (192x192 px)
+  },
+
+  // =========================================================================
+  // 4B. FASILITAS PEMUKIMAN & KOTA (PANORAMA INTERIOR)
+  // Ukuran: 128x128 px s/d 256x256 px (Format: PNG Transparan)
+  // =========================================================================
+  settlement_facilities: {
+    inn: "",             // Penginapan (Inn)
+    tavern: "",          // Kedai Minuman (Tavern)
+    market: "",          // Pasar Spiritual (NPC Shop)
+    workshop: "",        // Bengkel Tempa & Alkimia Kota
+    manual_pavilion: "", // Paviliun Kitab Kota
+    bounty_board: "",    // Papan Sayembara
+    courier_stables: "", // Pos Kereta & Tunggangan
+    vault: "",           // Gudang Harta Kota
+    auction_house: "",   // Balai Lelang Langit
   },
 
   // =========================================================================
@@ -126,7 +143,36 @@ export const GLOBAL_ASSETS = {
     "Bengkel Tempa Senjata": "",
     "Dapur Masak Kedai": "",
     "Kolam Ikan Koi Spiritual": "",
+    "Tambak Ikan Air Tawar": "",
+    "Petak Herbal Rohani": "",
+    "Kediaman Kultivator": "",
     "Istana Lelang Langit (Heavenly Auction House)": "",
+    // Status visual
+    "scaffolding_under_construction": "", // Visual aset dalam tahap pengerjaan konstruksi
+    "damaged_building_overlay": "",       // Visual aset dalam kondisi rusak
+  },
+
+  // =========================================================================
+  // 6B. LANDMARK EKSPEDISI / DUNGEON LUAR (256x256 px)
+  // =========================================================================
+  expeditions: {
+    "Gua Rahasia Kuno": "",         // Pintu masuk dungeon gua
+    "Makam Kaisar Pedang": "",       // Pintu masuk makam purba
+    "Sarang Naga Rawa": "",          // Pintu masuk sarang siluman
+    "Lembah Miasma Abadi": "",       // Titik ekspedisi racun
+    "default_dungeon_portal": "",    // Fallback portal ekspedisi
+  },
+
+  // =========================================================================
+  // 6C. TUNGGANGAN & MOUNTS (128x128 px)
+  // =========================================================================
+  mounts: {
+    "Gerobak Kayu": "",
+    "Kuda Jinak": "",
+    "Kuda Perang Baja": "",
+    "Kapal Kayu Ek": "",
+    "Pedang Terbang Bambu": "",
+    "Pedang Terbang Giok": "",
   },
 
   // =========================================================================
@@ -240,6 +286,7 @@ export const GLOBAL_ASSETS = {
     parchment_bg: "",        // Kanvas gulungan kertas tua (Latar belakang peta)
     macro_map_bg: "",        // Gambar peta benua utuh (World Scroll 5000x5000)
     login_screen_bg: "",     // Latar belakang menu utama
+    player_radar_marker: "", // Ikon pin radar kuning lokasi pemain
   },
 
   // =========================================================================

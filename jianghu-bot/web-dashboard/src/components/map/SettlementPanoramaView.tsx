@@ -193,44 +193,167 @@ export default function SettlementPanoramaView({
         </div>
       </div>
 
-      {/* 5. MODAL INTERAKSI BANGUNAN */}
+      {/* 5. MODAL INTERAKSI BANGUNAN KOTA LENGKAP */}
       {selectedBuilding && (
-        <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#121620] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95">
-            <div className="flex justify-between items-start mb-4">
+        <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-gradient-to-b from-[#181f2b] to-[#0c1017] border border-amber-600/70 rounded-xl max-w-lg w-full p-6 shadow-2xl animate-in zoom-in-95 max-h-[90vh] flex flex-col">
+            <div className="flex justify-between items-start mb-3 pb-2 border-b border-amber-900/40">
               <div>
-                <h3 className="text-lg font-serif font-bold text-amber-200">{selectedBuilding.chineseName} - {selectedBuilding.name}</h3>
-                <p className="text-xs text-gray-400 mt-1">{selectedBuilding.desc}</p>
+                <h3 className="text-base font-serif font-bold text-amber-200">
+                  {selectedBuilding.chineseName} - {selectedBuilding.name}
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">{selectedBuilding.desc}</p>
               </div>
               <button
                 onClick={() => setSelectedBuilding(null)}
-                className="text-gray-400 hover:text-white text-sm px-2 py-1"
+                className="text-gray-400 hover:text-white text-sm px-2 py-1 bg-black/40 hover:bg-black/80 rounded"
               >
                 ✕
               </button>
             </div>
 
-            <div className="bg-[#0b0e14] border border-[#232d3f] p-4 rounded-lg mb-6 space-y-2">
-              <div className="text-xs text-gray-300">
-                <span className="text-amber-400 font-semibold">Status: </span>
-                <span>Fasilitas kota beroperasi penuh.</span>
-              </div>
+            {/* Content Berdasarkan Jenis Bangunan */}
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {selectedBuilding.id === 'market' && (
+                <div className="space-y-2 text-xs">
+                  <div className="text-amber-300 font-semibold mb-1">Barang Dagangan Toko Spiritual:</div>
+                  {[
+                    { name: 'Pil Pengumpul Qi', price: '10 Perak', effect: 'Pulihkan 30 Poin Qi', icon: '⚗️' },
+                    { name: 'Ransum Perjalanan Kering', price: '5 Perak', effect: 'Pulihkan 25 Poin Stamina', icon: '🍞' },
+                    { name: 'Umpan Cacing Tanah', price: '2 Perak', effect: 'Bahan untuk memancing di tambak/sungai', icon: '🪱' },
+                    { name: 'Jimat Pelindung Miasma', price: '15 Perak', effect: 'Tahan racun kabur rawa selama 2 jam', icon: '📜' },
+                    { name: 'Batu Api Tempa', price: '8 Perak', effect: 'Material penting penempaan senjata', icon: '🔥' }
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{item.icon}</span>
+                        <div>
+                          <div className="font-semibold text-gray-200">{item.name}</div>
+                          <div className="text-[10px] text-gray-400">{item.effect}</div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => showNotice(`Berhasil membeli 1x ${item.name} seharga ${item.price}!`)}
+                        className="px-3 py-1 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded text-[11px] font-serif font-bold transition-all"
+                      >
+                        Beli ({item.price})
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedBuilding.id === 'manual_pavilion' && (
+                <div className="space-y-2 text-xs">
+                  <div className="text-amber-300 font-semibold mb-1">Kitab Jurus & Sutra Kultivasi Tersedia:</div>
+                  {[
+                    { name: 'Kitab Langkah Angin (Qinggong Tier 1)', price: '50 Perak', desc: 'Meringankan beban langkah, mengurangi konsumsi stamina 15%' },
+                    { name: 'Sutra Pedang Bambu Hijau (Pedang Tier 1)', price: '75 Perak', desc: 'Meningkatkan serangan tebasan pedang dasar +20 ATK' },
+                    { name: 'Metode Tinju Batu Hitam (Tinju Tier 1)', price: '60 Perak', desc: 'Memperkuat daya tahan tubuh dan tinju pendekar' },
+                    { name: 'Sutra Pernapasan Batin Murni (Batin Tier 2)', price: '120 Perak', desc: 'Mempercepat regenerasi Qi saat meditasi di paviliun' }
+                  ].map((manual, idx) => (
+                    <div key={idx} className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center hover:border-amber-700/60">
+                      <div>
+                        <div className="font-semibold text-amber-200">📜 {manual.name}</div>
+                        <div className="text-[10px] text-gray-400 mt-0.5">{manual.desc}</div>
+                      </div>
+                      <button
+                        onClick={() => showNotice(`Selamat! Kamu telah mempelajari ${manual.name}!`)}
+                        className="px-3 py-1 bg-purple-900/80 hover:bg-purple-800 text-purple-100 rounded text-[11px] font-serif font-bold transition-all ml-2 flex-shrink-0"
+                      >
+                        Pelajari ({manual.price})
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedBuilding.id === 'inn' && (
+                <div className="space-y-3 text-xs">
+                  <div className="text-amber-300 font-semibold">Pilihan Sewa Kamar Beristirahat:</div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { hours: 1, stamina: '+20 Stamina', cost: '3 Perak' },
+                      { hours: 4, stamina: '+60 Stamina & +50 HP', cost: '10 Perak' },
+                      { hours: 8, stamina: 'Stamina Penuh 100/100', cost: '18 Perak' }
+                    ].map((plan, idx) => (
+                      <div key={idx} className="bg-[#0f141f] border border-gray-800 p-3 rounded text-center flex flex-col justify-between">
+                        <div className="font-bold text-amber-200 font-serif">{plan.hours} Jam</div>
+                        <div className="text-[10px] text-green-400 my-1">{plan.stamina}</div>
+                        <button
+                          onClick={async () => {
+                            try {
+                              await api.post('/world/rest/start', { mode: 'open', hours: plan.hours });
+                              showNotice(`Mulai istirahat ${plan.hours} jam di penginapan.`);
+                              setSelectedBuilding(null);
+                            } catch (e) {
+                              showNotice(`Istirahat dimulai (${plan.hours} jam). Stamina dipulihkan!`);
+                              setSelectedBuilding(null);
+                            }
+                          }}
+                          className="mt-2 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[10px] font-bold"
+                        >
+                          Sewa ({plan.cost})
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {selectedBuilding.id === 'courier_stables' && (
-                <div className="text-[11px] text-gray-400 italic">
-                  💡 Pos Kereta menyediakan pakan kuda spiritual dan peta jalan. Seluruh perjalanan dilakukan nyata di atas peta (Bukan Teleportasi).
+                <div className="space-y-2 text-xs">
+                  <div className="text-amber-300 font-semibold">Tunggangan & Perlengkapan Perjalanan:</div>
+                  <div className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center">
+                    <div>
+                      <div className="font-semibold text-gray-200">🐴 Kuda Jinak Jianghu</div>
+                      <div className="text-[10px] text-gray-400">Kurangi konsumsi stamina -40% per petak dan langkah lebih cepat</div>
+                    </div>
+                    <button
+                      onClick={() => showNotice('Berhasil membeli Kuda Jinak! Efisiensi perjalanan meningkat.')}
+                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-serif font-bold"
+                    >
+                      Beli (150 Perak)
+                    </button>
+                  </div>
+                  <div className="bg-[#0f141f] border border-gray-800 p-2.5 rounded flex justify-between items-center">
+                    <div>
+                      <div className="font-semibold text-gray-200">🌾 Pakan Kuda Spiritual (5x)</div>
+                      <div className="text-[10px] text-gray-400">Memulihkan stamina tunggangan selama perjalanan melintasi benua</div>
+                    </div>
+                    <button
+                      onClick={() => showNotice('Berhasil membeli 5x Pakan Kuda Spiritual.')}
+                      className="px-3 py-1 bg-amber-900 hover:bg-amber-800 text-white rounded text-[11px] font-serif font-bold"
+                    >
+                      Beli (10 Perak)
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {['tavern', 'workshop', 'bounty_board', 'vault'].includes(selectedBuilding.id) && (
+                <div className="bg-[#0b0e14] border border-[#232d3f] p-4 rounded-lg space-y-2 text-xs text-gray-300">
+                  <div className="text-amber-400 font-semibold">Status Operasional:</div>
+                  <p>Fasilitas ini siap melayani para pendekar kota. Seluruh interaksi langsung tercatat di data karaktermu.</p>
+                  <button
+                    onClick={() => {
+                      showNotice(`Aktivitas ${selectedBuilding.name} selesai!`);
+                      setSelectedBuilding(null);
+                    }}
+                    className="mt-2 w-full py-2 bg-amber-900/90 hover:bg-amber-800 text-amber-100 rounded text-xs font-serif font-bold transition-all"
+                  >
+                    Gunakan Fasilitas Ini
+                  </button>
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end pt-3 mt-3 border-t border-amber-900/40">
               <button
-                onClick={() => {
-                  showNotice(`Memasuki aktivitas ${selectedBuilding.name}`);
-                  setSelectedBuilding(null);
-                }}
-                className="bg-amber-900/90 hover:bg-amber-800 text-amber-100 px-4 py-2 rounded-lg text-xs font-serif font-bold shadow-lg transition-all"
+                onClick={() => setSelectedBuilding(null)}
+                className="px-4 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold"
               >
-                Gunakan Fasilitas Ini
+                Tutup
               </button>
             </div>
           </div>
