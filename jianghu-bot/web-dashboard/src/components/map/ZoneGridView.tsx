@@ -154,6 +154,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
     // Potong titik awal karena pemain sudah berada di sana
     const waypoints = activePath.slice(1);
     let stepIndex = 0;
+    
+    // Track the latest sync promise so we don't race against it at the end
+    let lastSyncPromise: Promise<any> | null = null;
 
     if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
 
@@ -162,17 +165,23 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
       if (stepIndex >= waypoints.length) {
         // Tiba di tujuan
         clearInterval(walkIntervalRef.current);
+        
+        // Tunggu hingga sinkronisasi terakhir ke database server selesai
+        if (lastSyncPromise) {
+          try {
+            await lastSyncPromise;
+          } catch (e) {
+            console.error('Final sync error:', e);
+          }
+        }
+        
         setIsWalking(false);
         setActivePath([]);
 
         const finalPoint = waypoints[waypoints.length - 1];
+        showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
+        fetchZoneData(finalPoint.x, finalPoint.y);
         
-        // Sinkronisasi langkah terakhir sudah dieksekusi di tick sebelumnya (saat stepIndex === waypoints.length).
-        // Kita hanya perlu menunggu sejenak agar request tersebut selesai di database, lalu refresh data.
-        setTimeout(() => {
-          showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
-          fetchZoneData(finalPoint.x, finalPoint.y);
-        }, 500);
         return;
       }
 
@@ -187,13 +196,12 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
 
       // Kirim sinkronisasi langkah ke server tiap 5 langkah atau langkah terakhir
       if (stepIndex % 5 === 0 || stepIndex === waypoints.length) {
-        try {
-          const batchWaypoints = waypoints.slice(Math.max(0, stepIndex - 5), stepIndex);
-          const res = await api.post('/world/zone/step-move', {
-            waypoints: batchWaypoints,
-            zoneId: activeZoneId
-          });
-
+        const batchWaypoints = waypoints.slice(Math.max(0, stepIndex - 5), stepIndex);
+        
+        lastSyncPromise = api.post('/world/zone/step-move', {
+          waypoints: batchWaypoints,
+          zoneId: activeZoneId
+        }).then((res) => {
           if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
 
           // Jika terhenti lebih awal (stamina habis atau disergap musuh)
@@ -204,15 +212,16 @@ export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProp
             showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
             fetchZoneData(currentStep.x, currentStep.y);
           }
-        } catch (err: any) {
+          return res;
+        }).catch((err) => {
           console.error('[StepMove] Sync error:', err);
-        }
+        });
       }
     }, 240);
   };
 
   // Batalkan perjalanan
-  const handleStopWalking = () => {
+  const handleStopWalking = async () => {
     if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
     setIsWalking(false);
     setActivePath([]);
