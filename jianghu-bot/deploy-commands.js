@@ -44,29 +44,21 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     );
     console.log(`[DEPLOY] Sukses! ${globalCommands.length} Command didaftarkan secara GLOBAL (bisa butuh ~1 jam untuk muncul).`);
 
-    // 2. Daftarkan Guild Commands (Admin commands)
-    if (process.env.GUILD_ID) {
-      await rest.put(
-        Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
-        { body: guildCommands },
-      );
-      console.log(`[DEPLOY] Sukses! ${guildCommands.length} Command Admin terdaftar di server GUILD_ID=${process.env.GUILD_ID}.`);
-    } else {
-      console.log('[DEPLOY] Mengambil daftar server bot...');
-      const guilds = await rest.get(Routes.userGuilds());
-      for (const guild of guilds) {
-        try {
-          await rest.put(
-            Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id),
-            { body: guildCommands },
-          );
-          console.log(`[DEPLOY] Command Admin terdaftar di server: ${guild.name} (${guild.id})`);
-        } catch (err) {
-          console.error(`[DEPLOY] Gagal mendaftarkan command di server ${guild.name} (${guild.id}):`, err.message);
-        }
+    const allCommands = [...globalCommands, ...guildCommands];
+    console.log(`[DEPLOY] Mengambil daftar server bot untuk pendaftaran instan (${allCommands.length} command)...`);
+    const guilds = await rest.get(Routes.userGuilds());
+    for (const guild of guilds) {
+      try {
+        await rest.put(
+          Routes.applicationGuildCommands(process.env.CLIENT_ID, guild.id),
+          { body: allCommands },
+        );
+        console.log(`[DEPLOY] Sukses! ${allCommands.length} Command (Player + Admin) aktif INSTAN di server: ${guild.name} (${guild.id})`);
+      } catch (err) {
+        console.error(`[DEPLOY] Gagal mendaftarkan command di server ${guild.name} (${guild.id}):`, err.message);
       }
-      console.log('[DEPLOY] Pendaftaran Command Admin ke semua server selesai.');
     }
+    console.log('[DEPLOY] Pendaftaran Command Admin ke semua server selesai.');
   } catch (error) {
     console.error('[DEPLOY] Gagal mendaftarkan command:', error);
   }
