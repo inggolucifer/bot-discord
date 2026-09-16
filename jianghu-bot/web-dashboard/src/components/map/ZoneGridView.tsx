@@ -1,525 +1,464 @@
 'use client';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import api from '@/lib/api';
 import { sound } from '@/lib/soundSynthesizer';
 import {
-    Map as MapIcon,
-    Pickaxe,
-    Search,
-    Footprints,
-    DoorOpen,
-    Sparkles,
-    Volume2,
-    VolumeX,
-    Music,
-    ShieldAlert
+  Map as MapIcon,
+  Pickaxe,
+  Search,
+  Footprints,
+  DoorOpen,
+  Sparkles,
+  Music,
+  ShieldAlert,
+  Building2,
+  Trees,
+  SquareX
 } from 'lucide-react';
 import ThermalStatusBadge from '../ui/ThermalStatusBadge';
 import PropertyInteriorView from './PropertyInteriorView';
-
-interface Tile {
-    _id: string;
-    tileX: number;
-    tileY: number;
-    tileType: string;
-    terrainType?: string;
-    isSolid?: boolean;
-    isClaimable?: boolean;
-    baseTemperature?: number;
-    label?: string;
-    hidden?: boolean;
-    resourceType?: string;
-    nodeRespawnAt?: string;
-    ownerName?: string;
-    ownerId?: string;
-    ownerType?: string;
-    plotPriceSilver?: number;
-    isOccupied?: boolean;
-    isUnderConstruction?: boolean;
-    buildingName?: string;
-    propertyStructureId?: string;
-}
+import TaleOfImmortalCanvas, { TileData } from './TaleOfImmortalCanvas';
+import SettlementPanoramaView from './SettlementPanoramaView';
+import ScenicCourtyardView from './ScenicCourtyardView';
+import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
 
 interface ZoneGridViewProps {
-    zoneId: string;
-    onBackToWorld: () => void;
+  zoneId: string;
+  onBackToWorld: () => void;
 }
 
 export default function ZoneGridView({ zoneId, onBackToWorld }: ZoneGridViewProps) {
-    const [zoneConfig, setZoneConfig] = useState<any>(null);
-    const [tiles, setTiles] = useState<Tile[]>([]);
-    const [playerGrid, setPlayerGrid] = useState<any>(null);
-    const [selectedTile, setSelectedTile] = useState<{ x: number; y: number; specialTile?: Tile } | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [actionMessage, setActionMessage] = useState<string | null>(null);
-    const [isWalking, setIsWalking] = useState(false);
-    const [isBgmOn, setIsBgmOn] = useState(false);
-    const [interiorData, setInteriorData] = useState<any | null>(null);
-    const [thermalStatus, setThermalStatus] = useState<any | null>(null);
+  const activeZoneId = zoneId && zoneId !== 'central_plains_bamboo_forest' ? zoneId : 'tianyuan_world_map';
 
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const walkTimeoutRef = useRef<any>(null);
+  const [zoneConfig, setZoneConfig] = useState<any>(null);
+  const [tiles, setTiles] = useState<TileData[]>([]);
+  const [playerGrid, setPlayerGrid] = useState<any>(null);
+  const [exploredChunks, setExploredChunks] = useState<string[]>([]);
 
-    // Canvas Virtualization Constants
-    const VIEWPORT_WIDTH_TILES = 11;
-    const VIEWPORT_HEIGHT_TILES = 9;
-    const TILE_SIZE = 56; // pixels per tile on canvas
+  // Selection & Navigasi
+  const [selectedTile, setSelectedTile] = useState<TileData | null>(null);
+  const [activePath, setActivePath] = useState<Point[]>([]);
+  const [pathSteps, setPathSteps] = useState<number>(0);
+  const [isWalking, setIsWalking] = useState(false);
 
-    const fetchZoneData = async () => {
-        try {
-            const activeZone = zoneId || 'central_plains_bamboo_forest';
-            const res = await api.get(`/world/zone/${activeZone}`);
-            if (res.data.config) setZoneConfig(res.data.config);
-            if (res.data.tiles) setTiles(res.data.tiles);
-            if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
-            setError(null);
-            setLoading(false);
-        } catch (err: any) {
-            console.error('[ZoneGridView] Error fetching zone:', err);
-            console.error('[ZoneGridView] Error response data:', err.response?.data);
-            const serverMsg = err.response?.data?.error || err.response?.data?.message || err.message;
-            setError(serverMsg || 'Gagal memuat zona');
-            setLoading(false);
-        }
+  // View Mode: 'map' | 'settlement' | 'courtyard'
+  const [viewMode, setViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
+  const [activeSettlementName, setActiveSettlementName] = useState<string>('XiTong City');
+  const [activeCourtyardName, setActiveCourtyardName] = useState<string>('Paviliun Gazebo Puncak Pinus');
+
+  // State lainnya
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [isBgmOn, setIsBgmOn] = useState(false);
+  const [interiorData, setInteriorData] = useState<any | null>(null);
+  const [thermalStatus, setThermalStatus] = useState<any | null>(null);
+
+  const walkIntervalRef = useRef<any>(null);
+
+  // Set tile solid untuk pathfinding
+  const solidTilesSet = useMemo(() => {
+    const set = new Set<string>();
+    for (const t of tiles) {
+      if (t.isSolid) {
+        set.add(`${t.tileX},${t.tileY}`);
+      }
+    }
+    return set;
+  }, [tiles]);
+
+  // Fetch Zone Data
+  const fetchZoneData = useCallback(async (cx?: number, cy?: number) => {
+    try {
+      const px = cx !== undefined ? cx : playerGrid?.position?.tileX;
+      const py = cy !== undefined ? cy : playerGrid?.position?.tileY;
+
+      const queryParams = px !== undefined && py !== undefined ? `?centerX=${px}&centerY=${py}&radius=22` : '';
+      const res = await api.get(`/world/zone/${activeZoneId}${queryParams}`);
+
+      if (res.data.config) setZoneConfig(res.data.config);
+      if (res.data.tiles) setTiles(res.data.tiles);
+      if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
+      if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+
+      setError(null);
+      setLoading(false);
+    } catch (err: any) {
+      console.error('[ZoneGridView] Error fetching zone:', err);
+      const serverMsg = err.response?.data?.error || err.message;
+      setError(serverMsg || 'Gagal memuat peta');
+      setLoading(false);
+    }
+  }, [activeZoneId, playerGrid?.position?.tileX, playerGrid?.position?.tileY]);
+
+  useEffect(() => {
+    fetchZoneData();
+    return () => {
+      if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
+      sound.stopBgm();
     };
+  }, [activeZoneId]);
 
-    useEffect(() => {
-        fetchZoneData();
-        return () => {
-            if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
-            sound.stopBgm();
-        };
-    }, [zoneId]);
+  const handleToggleBgm = () => {
+    if (isBgmOn) {
+      sound.stopBgm();
+      setIsBgmOn(false);
+    } else {
+      sound.startAmbientBgm();
+      setIsBgmOn(true);
+    }
+  };
 
-    const handleToggleBgm = () => {
-        if (isBgmOn) {
-            sound.stopBgm();
-            setIsBgmOn(false);
-        } else {
-            sound.startAmbientBgm();
-            setIsBgmOn(true);
-        }
-    };
+  const showMessage = (msg: string) => {
+    setActionMessage(msg);
+    setTimeout(() => setActionMessage(null), 3500);
+  };
 
-    // ==========================================
-    // CANVAS HIGH PERFORMANCE RENDERING ENGINE
-    // ==========================================
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas || !zoneConfig || !playerGrid?.position) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const px = playerGrid.position.tileX ?? 0;
-        const py = playerGrid.position.tileY ?? 0;
-
-        const startX = Math.max(0, px - Math.floor(VIEWPORT_WIDTH_TILES / 2));
-        const endX = Math.min(zoneConfig.gridWidth - 1, startX + VIEWPORT_WIDTH_TILES - 1);
-        const startY = Math.max(0, py - Math.floor(VIEWPORT_HEIGHT_TILES / 2));
-        const endY = Math.min(zoneConfig.gridHeight - 1, startY + VIEWPORT_HEIGHT_TILES - 1);
-
-        const exploredSet = new Set(playerGrid.exploredTileIndexes || []);
-
-        // Clear canvas
-        ctx.fillStyle = '#06080d';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw visible grid tiles
-        for (let y = startY; y <= endY; y++) {
-            for (let x = startX; x <= endX; x++) {
-                const screenX = (x - startX) * TILE_SIZE;
-                const screenY = (y - startY) * TILE_SIZE;
-                const tileIndex = y * zoneConfig.gridWidth + x;
-                const isExplored = exploredSet.has(tileIndex);
-                const tileObj = tiles.find(t => t.tileX === x && t.tileY === y);
-
-                if (!isExplored) {
-                    // Fog of War
-                    ctx.fillStyle = '#0a0d14';
-                    ctx.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-                    ctx.strokeStyle = '#121620';
-                    ctx.strokeRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-
-                    ctx.fillStyle = '#2d3748';
-                    ctx.font = '10px monospace';
-                    ctx.fillText('?', screenX + TILE_SIZE / 2 - 3, screenY + TILE_SIZE / 2 + 3);
-                    continue;
-                }
-
-                // Terrain & Tile Background
-                let terrainColor = '#151c27';
-                const terrain = tileObj?.terrainType || 'plains';
-
-                if (terrain === 'forest') terrainColor = '#0f241d';
-                else if (terrain === 'mountain' || tileObj?.isSolid) terrainColor = '#1e2430';
-                else if (terrain === 'swamp') terrainColor = '#1c1326';
-                else if (terrain === 'glacial') terrainColor = '#0d222e';
-                else if (terrain === 'volcanic') terrainColor = '#2b1414';
-                else if (terrain === 'settlement') terrainColor = '#241e15';
-
-                ctx.fillStyle = terrainColor;
-                ctx.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-                ctx.strokeStyle = '#232f42';
-                ctx.strokeRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-
-                // Coordinate label in subtle text
-                ctx.fillStyle = '#4a5568';
-                ctx.font = '8px monospace';
-                ctx.fillText(`${x},${y}`, screenX + 3, screenY + 10);
-
-                // Tile Elements
-                if (tileObj) {
-                    if (tileObj.tileType === 'resource_node') {
-                        ctx.fillStyle = '#10b981';
-                        ctx.beginPath();
-                        ctx.arc(screenX + TILE_SIZE / 2, screenY + TILE_SIZE / 2 - 2, 7, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#a7f3d0';
-                        ctx.font = 'bold 8px sans-serif';
-                        ctx.fillText('⛏', screenX + TILE_SIZE / 2 - 4, screenY + TILE_SIZE / 2 + 1);
-                    } else if (tileObj.tileType === 'hazard') {
-                        ctx.fillStyle = '#ef4444';
-                        ctx.font = '14px sans-serif';
-                        ctx.fillText('☠', screenX + TILE_SIZE / 2 - 6, screenY + TILE_SIZE / 2 + 4);
-                    } else if (tileObj.tileType === 'npc_spawn') {
-                        ctx.fillStyle = '#a855f7';
-                        ctx.beginPath();
-                        ctx.arc(screenX + TILE_SIZE / 2, screenY + TILE_SIZE / 2 - 2, 7, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = '#f3e8ff';
-                        ctx.font = 'bold 8px sans-serif';
-                        ctx.fillText('NPC', screenX + TILE_SIZE / 2 - 8, screenY + TILE_SIZE / 2 + 1);
-                    } else if (tileObj.tileType === 'buildable_plot') {
-                        if (tileObj.isOccupied) {
-                            ctx.fillStyle = '#3b82f6';
-                            ctx.fillRect(screenX + 8, screenY + 12, TILE_SIZE - 16, TILE_SIZE - 24);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.font = 'bold 7px sans-serif';
-                            ctx.fillText('RUMAH', screenX + 11, screenY + TILE_SIZE / 2 + 2);
-                        } else {
-                            ctx.strokeStyle = '#9ca3af';
-                            ctx.setLineDash([2, 2]);
-                            ctx.strokeRect(screenX + 8, screenY + 12, TILE_SIZE - 16, TILE_SIZE - 24);
-                            ctx.setLineDash([]);
-                        }
-                    }
-                }
-
-                // Selected Tile Ring
-                if (selectedTile && selectedTile.x === x && selectedTile.y === y) {
-                    ctx.strokeStyle = '#fbbf24';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(screenX + 1, screenY + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-                    ctx.lineWidth = 1;
-                }
-
-                // Player Avatar
-                if (px === x && py === y) {
-                    ctx.fillStyle = '#2563eb';
-                    ctx.beginPath();
-                    ctx.arc(screenX + TILE_SIZE / 2, screenY + TILE_SIZE / 2, 10, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    ctx.lineWidth = 1;
-
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = 'bold 8px sans-serif';
-                    ctx.fillText('P1', screenX + TILE_SIZE / 2 - 5, screenY + TILE_SIZE / 2 + 3);
-                }
-            }
-        }
-    }, [zoneConfig, playerGrid, tiles, selectedTile]);
-
-    // Canvas Click Handler
-    const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const canvas = canvasRef.current;
-        if (!canvas || !zoneConfig || !playerGrid?.position) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const clickY = e.clientY - rect.top;
-
-        const px = playerGrid.position.tileX ?? 0;
-        const py = playerGrid.position.tileY ?? 0;
-        const startX = Math.max(0, px - Math.floor(VIEWPORT_WIDTH_TILES / 2));
-        const startY = Math.max(0, py - Math.floor(VIEWPORT_HEIGHT_TILES / 2));
-
-        const gridX = startX + Math.floor(clickX / TILE_SIZE);
-        const gridY = startY + Math.floor(clickY / TILE_SIZE);
-
-        if (gridX < 0 || gridX >= zoneConfig.gridWidth || gridY < 0 || gridY >= zoneConfig.gridHeight) return;
-
-        const specialTile = tiles.find(t => t.tileX === gridX && t.tileY === gridY);
-        setSelectedTile({ x: gridX, y: gridY, specialTile });
-
-        const dist = Math.max(Math.abs(px - gridX), Math.abs(py - gridY));
-        if (dist === 0) {
-            if (specialTile?.tileType === 'buildable_plot' && specialTile.isOccupied) {
-                handleEnterProperty(gridX, gridY);
-            }
-        }
-    };
-
-    // Movement Handler
-    const handleMove = async (targetX: number, targetY: number) => {
-        if (isWalking) {
-            setActionMessage('Karakter masih sedang melangkah menuju tujuan!');
-            setTimeout(() => setActionMessage(null), 2500);
-            return;
-        }
-
-        try {
-            sound.playGuzheng(440, 0.4);
-            const res = await api.post('/world/zone/move', { targetX, targetY, zoneId });
-            if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
-
-            const durationSec = res.data.durationSeconds || 1;
-            setIsWalking(true);
-            setActionMessage(`Melangkah ke (${targetX}, ${targetY})... (~${durationSec}s)`);
-
-            if (walkTimeoutRef.current) clearTimeout(walkTimeoutRef.current);
-            walkTimeoutRef.current = setTimeout(async () => {
-                try {
-                    const resolveRes = await api.post('/world/zone/resolve-move');
-                    setIsWalking(false);
-                    if (resolveRes.data.playerGrid) setPlayerGrid(resolveRes.data.playerGrid);
-                    if (resolveRes.data.thermalStatus) setThermalStatus(resolveRes.data.thermalStatus);
-
-                    if (resolveRes.data.encounter?.encountered) {
-                        const enc = resolveRes.data.encounter;
-                        const won = enc.battleResult?.winner === 'player';
-                        setActionMessage(`⚔️ Disergap oleh ${enc.enemyName}! Hasil pertarungan: ${won ? 'MENANG' : 'KALAH'}`);
-                    } else {
-                        setActionMessage(`Tiba di (${targetX}, ${targetY})`);
-                    }
-                    fetchZoneData();
-                    setTimeout(() => setActionMessage(null), 3500);
-                } catch {
-                    setIsWalking(false);
-                    fetchZoneData();
-                }
-            }, durationSec * 1000);
-        } catch (err: any) {
-            setActionMessage(err.response?.data?.error || 'Gagal bergerak');
-            setTimeout(() => setActionMessage(null), 3000);
-        }
-    };
-
-    const handleEnterProperty = async (tileX?: number, tileY?: number) => {
-        try {
-            const tx = tileX !== undefined ? tileX : playerGrid?.position?.tileX;
-            const ty = tileY !== undefined ? tileY : playerGrid?.position?.tileY;
-            const res = await api.post('/world/zone/enter-property', { tileX: tx, tileY: ty });
-            if (res.data.property) {
-                setInteriorData(res.data.property);
-            }
-        } catch (err: any) {
-            setActionMessage(err.response?.data?.error || 'Gagal memasuki kediaman');
-            setTimeout(() => setActionMessage(null), 3000);
-        }
-    };
-
-    const handleExitProperty = async () => {
-        try {
-            await api.post('/world/zone/exit-property');
-            setInteriorData(null);
-            fetchZoneData();
-        } catch (err: any) {
-            setInteriorData(null);
-        }
-    };
-
-    const handleSearch = async () => {
-        try {
-            const res = await api.post('/world/zone/search', { zoneId });
-            if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
-            if (res.data.tiles) setTiles(res.data.tiles);
-            setActionMessage('Pencarian selesai: ' + res.data.message);
-            fetchZoneData();
-            setTimeout(() => setActionMessage(null), 4000);
-        } catch (err: any) {
-            setActionMessage(err.response?.data?.error || 'Gagal mencari');
-            setTimeout(() => setActionMessage(null), 3000);
-        }
-    };
-
-    const handleGather = async (tileX: number, tileY: number) => {
-        try {
-            const res = await api.post('/world/zone/gather', { tileX, tileY, zoneId });
-            if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
-            setActionMessage(res.data.message);
-            fetchZoneData();
-            setTimeout(() => setActionMessage(null), 4000);
-        } catch (err: any) {
-            setActionMessage(err.response?.data?.error || 'Gagal panen');
-            setTimeout(() => setActionMessage(null), 3000);
-        }
-    };
-
-    const handleBuyPlot = async (tileX: number, tileY: number) => {
-        try {
-            const res = await api.post('/world/zone/buy-plot', { tileX, tileY });
-            setActionMessage(res.data.message || 'Berhasil membeli plot tanah!');
-            fetchZoneData();
-            setTimeout(() => setActionMessage(null), 4000);
-        } catch (err: any) {
-            setActionMessage(err.response?.data?.error || 'Gagal membeli plot tanah');
-            setTimeout(() => setActionMessage(null), 3000);
-        }
-    };
-
-    if (error) {
-        return (
-            <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
-                <span className="text-red-400 font-medium text-sm max-w-md">{error}</span>
-                <button
-                    onClick={() => { setError(null); setLoading(true); fetchZoneData(); }}
-                    className="px-4 py-1.5 bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-600/50 rounded-lg text-xs font-semibold shadow-md transition-colors"
-                >
-                    Coba Muat Ulang
-                </button>
-            </div>
-        );
+  // Klik pada sebuah tile di kanvas
+  const handleTileClick = (tile: TileData) => {
+    if (isWalking) {
+      showMessage('Karakter sedang melangkah! Klik "Hentikan Langkah" jika ingin berhenti.');
+      return;
     }
 
-    // Jika sedang berada di dalam interior properti
-    if (interiorData) {
-        return <PropertyInteriorView propertyData={interiorData} onExit={handleExitProperty} />;
+    setSelectedTile(tile);
+    const px = playerGrid?.position?.tileX ?? 2455;
+    const py = playerGrid?.position?.tileY ?? 2485;
+
+    // Hitung pathfinding A* ke target
+    const result = findAStarPath(px, py, tile.tileX, tile.tileY, solidTilesSet, 60);
+
+    if (result.reachable) {
+      setActivePath(result.path);
+      setPathSteps(result.totalSteps);
+    } else {
+      setActivePath([]);
+      setPathSteps(0);
+      if (tile.isSolid) {
+        showMessage('Jalur terhalang oleh tebing batu yang mustahil ditembus!');
+      }
     }
+  };
 
-    const currentPx = playerGrid?.position?.tileX ?? 0;
-    const currentPy = playerGrid?.position?.tileY ?? 0;
-    const selectedDist = selectedTile != null
-        ? Math.max(Math.abs(currentPx - selectedTile.x), Math.abs(currentPy - selectedTile.y))
-        : null;
+  // Memulai perjalanan kontinu langkah demi langkah (Tale of Immortal Style)
+  const handleStartWalking = () => {
+    if (activePath.length <= 1) return;
+    if (isWalking) return;
 
+    setIsWalking(true);
+    sound.playGuzheng(520, 0.3);
+    showMessage(`Mulai meluncur ke (${selectedTile?.tileX}, ${selectedTile?.tileY})...`);
+
+    // Potong titik awal karena pemain sudah berada di sana
+    const waypoints = activePath.slice(1);
+    let stepIndex = 0;
+
+    if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
+
+    // Langkah kontinu per 240ms (halus dan tidak terasa kaku)
+    walkIntervalRef.current = setInterval(async () => {
+      if (stepIndex >= waypoints.length) {
+        // Tiba di tujuan
+        clearInterval(walkIntervalRef.current);
+        setIsWalking(false);
+        setActivePath([]);
+
+        const finalPoint = waypoints[waypoints.length - 1];
+        try {
+          const res = await api.post('/world/zone/step-move', {
+            waypoints: [finalPoint],
+            zoneId: activeZoneId
+          });
+
+          if (res.data.arrivedPosition) {
+            setPlayerGrid((prev: any) => ({
+              ...prev,
+              position: { ...prev?.position, tileX: res.data.arrivedPosition.tileX, tileY: res.data.arrivedPosition.tileY }
+            }));
+          }
+          if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+
+          if (res.data.encounter?.encountered) {
+            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName}!`);
+          } else {
+            showMessage(`Tiba di tujuan (${finalPoint.x}, ${finalPoint.y})`);
+          }
+          fetchZoneData(finalPoint.x, finalPoint.y);
+        } catch {
+          fetchZoneData();
+        }
+        return;
+      }
+
+      const currentStep = waypoints[stepIndex];
+      stepIndex++;
+
+      // Update posisi pemain di UI secara lokal instan
+      setPlayerGrid((prev: any) => ({
+        ...prev,
+        position: { ...prev?.position, tileX: currentStep.x, tileY: currentStep.y }
+      }));
+
+      // Kirim sinkronisasi langkah ke server tiap 5 langkah atau langkah terakhir
+      if (stepIndex % 5 === 0 || stepIndex === waypoints.length) {
+        try {
+          const batchWaypoints = waypoints.slice(Math.max(0, stepIndex - 5), stepIndex);
+          const res = await api.post('/world/zone/step-move', {
+            waypoints: batchWaypoints,
+            zoneId: activeZoneId
+          });
+
+          if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
+
+          // Jika terhenti lebih awal (stamina habis atau disergap musuh)
+          if (res.data.stoppedEarly) {
+            clearInterval(walkIntervalRef.current);
+            setIsWalking(false);
+            setActivePath([]);
+            showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
+            fetchZoneData(currentStep.x, currentStep.y);
+          }
+        } catch (err: any) {
+          console.error('[StepMove] Sync error:', err);
+        }
+      }
+    }, 240);
+  };
+
+  // Batalkan perjalanan
+  const handleStopWalking = () => {
+    if (walkIntervalRef.current) clearInterval(walkIntervalRef.current);
+    setIsWalking(false);
+    setActivePath([]);
+    showMessage('Perjalanan dihentikan.');
+    fetchZoneData();
+  };
+
+  // Masuk ke Pemukiman / Kota (Gambar 4)
+  const handleEnterSettlement = (cityName: string) => {
+    setActiveSettlementName(cityName);
+    setViewMode('settlement');
+  };
+
+  // Masuk ke Halaman Meditasi Khusus (Gambar 5)
+  const handleEnterCourtyard = (pavilionName: string) => {
+    setActiveCourtyardName(pavilionName);
+    setViewMode('courtyard');
+  };
+
+  // Panen Sumber Daya (Anti-OP)
+  const handleGather = async (tileX: number, tileY: number) => {
+    try {
+      const res = await api.post('/world/zone/gather', { tileX, tileY, zoneId: activeZoneId });
+      showMessage(res.data.message || 'Berhasil mengumpulkan bahan mentah!');
+      fetchZoneData();
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal memanen');
+    }
+  };
+
+  // Cari Sekitar
+  const handleSearch = async () => {
+    try {
+      const res = await api.post('/world/zone/search', { zoneId: activeZoneId });
+      showMessage(res.data.message || 'Pencarian selesai!');
+      fetchZoneData();
+    } catch (err: any) {
+      showMessage(err.response?.data?.error || 'Gagal mencari sekitar');
+    }
+  };
+
+  if (error) {
     return (
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-[#2a3142] shadow-2xl bg-[#0b0e14] flex flex-col select-none">
-            {/* HUD Top Bar */}
-            <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
-                <div className="flex items-center gap-2 pointer-events-auto">
-                    <button
-                        onClick={onBackToWorld}
-                        className="bg-black/75 hover:bg-black/90 text-white px-3 py-1.5 rounded-lg border border-gray-600 flex items-center gap-2 backdrop-blur-sm transition-colors text-xs font-semibold shadow-md"
-                    >
-                        <MapIcon className="w-4 h-4" /> Peta Dunia
-                    </button>
-                    <button
-                        onClick={handleToggleBgm}
-                        className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-sm transition-colors text-xs font-semibold shadow-md
-                            ${isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/75 border-gray-700 text-gray-400'}`}
-                    >
-                        <Music className="w-3.5 h-3.5" />
-                        <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
-                    </button>
-                </div>
-
-                <div className="flex items-center gap-2 pointer-events-auto">
-                    {/* Thermal Status HUD Badge */}
-                    <ThermalStatusBadge initialThermalData={thermalStatus} />
-
-                    <div className="bg-black/75 border border-amber-900/60 px-4 py-1.5 rounded-lg backdrop-blur-sm shadow-md flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wide">{zoneConfig?.displayName || 'Zone'}</h3>
-                        <span className="text-[11px] text-gray-400 font-mono">({currentPx}, {currentPy})</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Action Notice Alert */}
-            {actionMessage && (
-                <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/70 text-amber-200 px-5 py-2.5 rounded-lg shadow-2xl font-medium text-xs backdrop-blur-md animate-in fade-in">
-                    {actionMessage}
-                </div>
-            )}
-
-            {/* Virtualized Grid Canvas Viewport */}
-            <div className="flex-1 flex items-center justify-center relative overflow-hidden bg-[#06080d]">
-                <canvas
-                    ref={canvasRef}
-                    width={VIEWPORT_WIDTH_TILES * TILE_SIZE}
-                    height={VIEWPORT_HEIGHT_TILES * TILE_SIZE}
-                    onClick={handleCanvasClick}
-                    className="cursor-pointer border border-[#1a2333] rounded-lg shadow-2xl max-w-full max-h-full object-contain"
-                />
-            </div>
-
-            {/* Bottom HUD: Action Bar & Inspector */}
-            <div className="bg-[#10151f]/95 border-t border-[#2a3142] px-4 py-2 z-20 flex justify-between items-center backdrop-blur-md">
-                <div className="flex items-center gap-3 text-xs text-gray-300">
-                    {selectedTile ? (
-                        <>
-                            <span className="font-semibold text-amber-300">Tile ({selectedTile.x}, {selectedTile.y})</span>
-                            <span className="text-gray-500">|</span>
-                            <span className="text-gray-400">Jarak: <strong className="text-gray-200">{selectedDist}</strong> tile</span>
-                            {selectedTile.specialTile && (
-                                <>
-                                    <span className="text-gray-500">|</span>
-                                    <span className="text-emerald-400 font-medium capitalize">
-                                        {selectedTile.specialTile.tileType.replace('_', ' ')}: {selectedTile.specialTile.label || selectedTile.specialTile.buildingName || ''}
-                                    </span>
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        <span className="text-gray-500 italic">Klik sebuah tile pada Canvas untuk memeriksa atau melangkah.</span>
-                    )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                    {selectedTile && selectedDist != null && (
-                        <>
-                            {selectedTile.specialTile?.tileType === 'resource_node' && selectedDist <= 1 && (
-                                <button
-                                    onClick={() => handleGather(selectedTile.x, selectedTile.y)}
-                                    className="bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-700/50 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
-                                >
-                                    <Pickaxe className="w-3.5 h-3.5" /> Panen
-                                </button>
-                            )}
-
-                            {selectedTile.specialTile?.tileType === 'buildable_plot' && selectedTile.specialTile.isOccupied && selectedDist <= 1 && (
-                                <button
-                                    onClick={() => handleEnterProperty(selectedTile.x, selectedTile.y)}
-                                    className="bg-blue-900/80 hover:bg-blue-800 text-blue-200 px-3 py-1.5 rounded-lg border border-blue-700/50 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
-                                >
-                                    <DoorOpen className="w-3.5 h-3.5" /> Masuk Kediaman
-                                </button>
-                            )}
-
-                            {selectedTile.specialTile?.tileType === 'buildable_plot' && !selectedTile.specialTile.isOccupied && selectedDist <= 1 && (
-                                <button
-                                    onClick={() => handleBuyPlot(selectedTile.x, selectedTile.y)}
-                                    className="bg-amber-900/90 hover:bg-amber-800 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
-                                >
-                                    <Sparkles className="w-3.5 h-3.5" /> Beli Plot ({selectedTile.specialTile.plotPriceSilver || 500} Silv)
-                                </button>
-                            )}
-
-                            {selectedDist > 0 && selectedDist <= (zoneConfig?.maxMovePerAction || 5) && (
-                                <button
-                                    onClick={() => handleMove(selectedTile.x, selectedTile.y)}
-                                    disabled={isWalking}
-                                    className="bg-amber-900/80 hover:bg-amber-800 disabled:opacity-50 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-700/50 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
-                                >
-                                    <Footprints className="w-3.5 h-3.5" /> {isWalking ? 'Melangkah...' : 'Melangkah ke Sini'}
-                                </button>
-                            )}
-                        </>
-                    )}
-
-                    <button
-                        onClick={handleSearch}
-                        className="bg-blue-950/80 hover:bg-blue-900 text-blue-200 px-3 py-1.5 rounded-lg border border-blue-800/60 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-colors"
-                    >
-                        <Search className="w-3.5 h-3.5" /> Cari Sekitar
-                    </button>
-                </div>
-            </div>
-        </div>
+      <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
+        <span className="text-red-400 font-medium text-sm max-w-md">{error}</span>
+        <button
+          onClick={() => { setError(null); setLoading(true); fetchZoneData(); }}
+          className="px-4 py-1.5 bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-600/50 rounded-lg text-xs font-semibold shadow-md transition-colors"
+        >
+          Coba Muat Ulang
+        </button>
+      </div>
     );
+  }
+
+  // Render Tampilan Panorama Kota (Gambar 4)
+  if (viewMode === 'settlement') {
+    return (
+      <SettlementPanoramaView
+        settlementName={activeSettlementName}
+        onExitCity={() => setViewMode('map')}
+      />
+    );
+  }
+
+  // Render Halaman Meditasi Khusus (Gambar 5)
+  if (viewMode === 'courtyard') {
+    return (
+      <ScenicCourtyardView
+        locationName={activeCourtyardName}
+        onExit={() => setViewMode('map')}
+      />
+    );
+  }
+
+  // Render Interior Properti Rumah Pemain
+  if (interiorData) {
+    return <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />;
+  }
+
+  const px = playerGrid?.position?.tileX ?? 2455;
+  const py = playerGrid?.position?.tileY ?? 2485;
+  const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
+
+  return (
+    <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#080b11] select-none flex flex-col">
+      {/* HUD Top Bar */}
+      <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <button
+            onClick={onBackToWorld}
+            className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
+          >
+            <MapIcon className="w-4 h-4 text-amber-400" />
+            <span>Peta Benua</span>
+          </button>
+
+          <button
+            onClick={handleToggleBgm}
+            className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-xs font-semibold shadow-lg transition-all ${
+              isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
+            }`}
+          >
+            <Music className="w-3.5 h-3.5" />
+            <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <ThermalStatusBadge initialThermalData={thermalStatus} />
+          <div className="bg-black/85 border border-amber-900/70 px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-xl flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wider">
+              {zoneConfig?.chineseName || '天元'} {zoneConfig?.displayName || 'Benua Jianghu'}
+            </h3>
+            <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Action Notice Alert */}
+      {actionMessage && (
+        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/80 text-amber-200 px-5 py-2.5 rounded-lg shadow-2xl font-medium text-xs backdrop-blur-md animate-in fade-in">
+          {actionMessage}
+        </div>
+      )}
+
+      {/* TALE OF IMMORTAL SHAN SHUI CANVAS ENGINE */}
+      <div className="flex-1 w-full h-full relative">
+        <TaleOfImmortalCanvas
+          tiles={tiles}
+          playerPos={{ x: px, y: py }}
+          targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
+          activePath={activePath}
+          exploredChunks={exploredChunks}
+          isWalking={isWalking}
+          onTileClick={handleTileClick}
+        />
+      </div>
+
+      {/* Bottom HUD: Action Bar, Navigasi & Inspektur */}
+      <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
+        <div className="flex items-center gap-3 text-xs text-gray-300">
+          {selectedTile ? (
+            <>
+              <span className="font-semibold text-amber-300 font-serif">
+                Tile ({selectedTile.tileX}, {selectedTile.tileY})
+              </span>
+              <span className="text-gray-600">|</span>
+              <span className="text-gray-400">
+                Jarak: <strong className="text-gray-200">{distToSelected}</strong> tile
+                {pathSteps > 0 && ` (~${pathSteps} langkah)`}
+              </span>
+              {selectedTile.label && (
+                <>
+                  <span className="text-gray-600">|</span>
+                  <span className="text-emerald-400 font-medium">
+                    {selectedTile.label}
+                  </span>
+                </>
+              )}
+            </>
+          ) : (
+            <span className="text-gray-400 italic">
+              Klik tile mana saja pada lukisan peta untuk menentukan arah langkah.
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* Tombol Hentikan Perjalanan saat sedang jalan */}
+          {isWalking && (
+            <button
+              onClick={handleStopWalking}
+              className="bg-red-950 hover:bg-red-900 text-red-200 px-3.5 py-1.5 rounded-lg border border-red-700 flex items-center gap-1.5 text-xs font-semibold shadow-lg transition-all animate-pulse"
+            >
+              <SquareX className="w-3.5 h-3.5" /> Hentikan Langkah
+            </button>
+          )}
+
+          {/* Tombol Mulai Melangkah Jalur A* */}
+          {selectedTile && !isWalking && distToSelected !== null && distToSelected > 0 && pathSteps > 0 && (
+            <button
+              onClick={handleStartWalking}
+              className="bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white px-4 py-1.5 rounded-lg border border-amber-400/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)] transition-all active:scale-95"
+            >
+              <Footprints className="w-3.5 h-3.5 text-amber-200" />
+              <span>Mulai Melangkah ({pathSteps} Langkah)</span>
+            </button>
+          )}
+
+          {/* Tombol Masuk Kota (Gambar 4) jika berada di settlement */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
+            <button
+              onClick={() => handleEnterSettlement(selectedTile.settlementName || 'XiTong City')}
+              className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-3.5 py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <Building2 className="w-3.5 h-3.5 text-blue-300" />
+              <span>Masuk {selectedTile.settlementName}</span>
+            </button>
+          )}
+
+          {/* Tombol Masuk Paviliun Meditasi (Gambar 5) jika berada di scenic courtyard */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
+            <button
+              onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
+              className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-3.5 py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>Masuk Taman Paviliun</span>
+            </button>
+          )}
+
+          {/* Tombol Panen Sumber Daya */}
+          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.tileType === 'resource_node' && (
+            <button
+              onClick={() => handleGather(selectedTile.tileX, selectedTile.tileY)}
+              className="bg-emerald-900/90 hover:bg-emerald-800 text-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-all"
+            >
+              <Pickaxe className="w-3.5 h-3.5" /> Panen Bahan
+            </button>
+          )}
+
+          {/* Tombol Cari Sekitar */}
+          <button
+            onClick={handleSearch}
+            className="bg-[#182130] hover:bg-[#222e42] text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-all"
+          >
+            <Search className="w-3.5 h-3.5 text-blue-400" /> Cari Sekitar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
