@@ -79,6 +79,8 @@ router.post('/simulate', authenticateToken, async (req, res) => {
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
     }
+});
+
 // Endpoint: POST /api/battle/spar
 // Latihan tanding (sparring) di Sasana/Arena Web untuk mengasah Kungfu Mastery secara organik
 router.post('/spar', authenticateToken, async (req, res) => {
