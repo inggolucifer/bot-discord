@@ -30,7 +30,20 @@ const zoneTileSchema = new mongoose.Schema({
   constructionCompleteAt: { type: Date, default: null },
   isUnderConstruction: { type: Boolean, default: false },
   isOpenToPublic: { type: Boolean, default: true },
-  isPubliclyVisible: { type: Boolean, default: true }
+  isPubliclyVisible: { type: Boolean, default: true },
+
+  // Blueprint Spasial & Termodinamika Jianghu
+  terrainType: {
+    type: String,
+    enum: ['plains', 'forest', 'mountain', 'swamp', 'glacial', 'volcanic', 'settlement', 'sect', 'claimable'],
+    default: 'plains'
+  },
+  isSolid: { type: Boolean, default: false },
+  isClaimable: { type: Boolean, default: false },
+  baseTemperature: { type: Number, default: 20 },
+  spiritualQiDensity: { type: Number, default: 10 },
+  ambushRiskRate: { type: Number, default: 0.05 },
+  propertyStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null }
 }, { timestamps: true });
 
 zoneTileSchema.index({ guildId: 1, zoneId: 1, tileX: 1, tileY: 1 }, { unique: true });

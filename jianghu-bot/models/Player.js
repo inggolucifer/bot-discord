@@ -155,7 +155,16 @@ const playerSchema = new mongoose.Schema({
   gridPosition: {
     zoneId: { type: String, default: 'central_plains_bamboo_forest' },
     tileX: { type: Number, default: 0 },
-    tileY: { type: Number, default: 0 }
+    tileY: { type: Number, default: 0 },
+    interiorInstanceId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null }
+  },
+
+  equippedMount: { type: String, default: null }, // ferghana_horse, spirit_horned_horse, shadow_tiger, flying_sword
+  bodyTemperingLevel: { type: Number, default: 0 }, // Mengurangi stamina cost melangkah
+  thermalState: {
+    consecutiveBreachTicks: { type: Number, default: 0 },
+    hasMeridianDamage: { type: Boolean, default: false },
+    lastEvaluatedAt: { type: Date, default: null }
   },
 
   exploredTiles: [{
