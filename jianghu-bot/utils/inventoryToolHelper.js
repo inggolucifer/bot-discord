@@ -46,11 +46,20 @@ function ensureToolDurability(inventoryEntry, itemDoc) {
 /**
  * Validates if a tool can be used for a profession.
  */
-function canUseTool(inventoryEntry, itemDoc, { requiredToolType, minToolTier }) {
+function canUseTool(inventoryEntry, itemDoc, { requiredToolType, minToolTier, player }) {
     if (!isToolItem(itemDoc)) return { valid: false, error: 'Bukan alat yang valid.' };
 
     if (itemDoc.toolType !== requiredToolType) {
         return { valid: false, error: `Alat tidak cocok untuk resep ini.` };
+    }
+
+    // Validasi syarat Kungfu pada Alat jika ada player
+    if (player && itemDoc.requiredKungfuSkill && itemDoc.requiredKungfuLevel > 0) {
+        const { checkItemKungfuRequirement } = require('./kungfuMastery');
+        const check = checkItemKungfuRequirement(player, itemDoc);
+        if (!check.allowed) {
+            return { valid: false, error: check.reason };
+        }
     }
 
     // Ensure durability is initialized before checking

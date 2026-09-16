@@ -1862,6 +1862,21 @@ router.get('/stats', authenticateToken, async (req, res) => {
         const { getComputedStats } = require('../../utils/statCalculator');
         const computedStats = getComputedStats(player, player.laws, player.manuals);
 
+        const { KUNGFU_SKILLS, getKungfuLevel, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
+        const kungfuMastery = {};
+        for (const skillKey of Object.keys(KUNGFU_SKILLS)) {
+            const rawExp = player.kungfuSkills ? (player.kungfuSkills[skillKey] || 0) : 0;
+            const levelInfo = getKungfuLevel(rawExp);
+            kungfuMastery[skillKey] = {
+                ...KUNGFU_SKILLS[skillKey],
+                ...levelInfo,
+                weaponMasteryMultiplier: getWeaponMasteryMultiplier(levelInfo.level),
+                unarmedBonus: skillKey === 'fist' ? getUnarmedBonus(levelInfo.level) : null,
+                preserveChance: skillKey === 'forging' ? getToolDurabilityPreserveChance(levelInfo.level) : null,
+                stealingBonus: skillKey === 'stealing' ? getStealingSuccessBonus(levelInfo.level) : null
+            };
+        }
+
         res.json({
             success: true,
             data: {
@@ -1870,6 +1885,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
                 talents: player.talents,
                 unallocatedTalentPoints: player.unallocatedTalentPoints,
                 kungfuSkills: player.kungfuSkills,
+                kungfuMastery,
                 computedStats
             }
         });
@@ -1931,39 +1947,33 @@ router.post('/talents/allocate', authenticateToken, async (req, res) => {
     }
 });
 
-// Endpoint: POST /api/player/kungfu/practice
-router.post('/kungfu/practice', authenticateToken, async (req, res) => {
-    const { skillType } = req.body;
-    const userId = req.user.userId;
-
-    const validSkills = ['sword', 'saber', 'staff', 'fist', 'finger', 'special', 'forging', 'qimen', 'melody', 'healing', 'wineArt', 'hiddenWeapon', 'stealing', 'core'];
-    if (!validSkills.includes(skillType)) return res.status(400).json({ error: 'Tipe skill tidak valid.' });
-
-    const lockKey = `player_kungfu_${userId}`;
-    const releaseLock = await LockManager.acquire(lockKey);
-    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
-
+// Endpoint: GET /api/player/kungfu/mastery
+// Menampilkan ringkasan tingkat kemahiran beladiri dan efek aktif
+router.get('/kungfu/mastery', authenticateToken, async (req, res) => {
     try {
-        const player = await Player.findOne({ discordId: userId });
+        const player = await Player.findOne({ discordId: req.user.userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        if (!player.kungfuSkills) player.kungfuSkills = {};
+        const { KUNGFU_SKILLS, getKungfuLevel, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
 
-        // If practicing another skill, auto claim first? For Phase 10, simple switch is okay.
+        const masteryData = {};
+        for (const skillKey of Object.keys(KUNGFU_SKILLS)) {
+            const rawExp = player.kungfuSkills ? (player.kungfuSkills[skillKey] || 0) : 0;
+            const levelInfo = getKungfuLevel(rawExp);
+            masteryData[skillKey] = {
+                ...KUNGFU_SKILLS[skillKey],
+                ...levelInfo,
+                weaponMasteryMultiplier: getWeaponMasteryMultiplier(levelInfo.level),
+                unarmedBonus: skillKey === 'fist' ? getUnarmedBonus(levelInfo.level) : null,
+                preserveChance: skillKey === 'forging' ? getToolDurabilityPreserveChance(levelInfo.level) : null,
+                stealingBonus: skillKey === 'stealing' ? getStealingSuccessBonus(levelInfo.level) : null
+            };
+        }
 
-        player.kungfuSkills.activePracticeSkill = skillType;
-        player.kungfuSkills.practiceStartedAt = new Date();
-        player.kungfuSkills.lastPracticeAt = new Date();
-
-        player.markModified('kungfuSkills');
-        await player.save();
-
-        res.json({ success: true, message: `Mulai berlatih skill ${skillType}.` });
+        res.json({ success: true, data: masteryData });
     } catch (error) {
-        console.error('[API-PLAYER] POST kungfu practice error:', error);
+        console.error('[API-PLAYER] GET kungfu mastery error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan server.' });
-    } finally {
-        if (typeof releaseLock === 'function') releaseLock();
     }
 });
 
@@ -2029,56 +2039,6 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 });
 
 
-// Endpoint: POST /api/player/kungfu/practice-claim
-router.post('/kungfu/practice-claim', authenticateToken, async (req, res) => {
-    const userId = req.user.userId;
 
-    const lockKey = `player_kungfu_claim_${userId}`;
-    const releaseLock = await LockManager.acquire(lockKey);
-    if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
-
-    try {
-        const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
-
-        if (!player.kungfuSkills || !player.kungfuSkills.activePracticeSkill) {
-            return res.status(400).json({ error: 'Kamu tidak sedang berlatih skill apapun.' });
-        }
-
-        const activeSkill = player.kungfuSkills.activePracticeSkill;
-        const lastPracticeTime = player.kungfuSkills.lastPracticeAt || player.kungfuSkills.practiceStartedAt;
-        if (!lastPracticeTime) {
-            return res.status(400).json({ error: 'Waktu mulai latihan tidak valid.' });
-        }
-
-        const now = new Date();
-        const hoursPassed = (now.getTime() - new Date(lastPracticeTime).getTime()) / (1000 * 60 * 60);
-
-        if (hoursPassed < 0.1) {
-             return res.status(400).json({ error: 'Terlalu cepat untuk claim (minimal 6 menit).' });
-        }
-
-        const { TALENT_EFFECTS } = require('../../config/talentEffects');
-        const baseSkillGainPerHour = 5; // e.g., 5 skill points per hour
-        const intMultiplier = 1 + ((player.talents && player.talents.int ? player.talents.int : 0) * TALENT_EFFECTS.int.expMultiplier);
-
-        let gainedSkillPoints = Math.floor(hoursPassed * baseSkillGainPerHour * intMultiplier);
-
-        if (gainedSkillPoints < 1) gainedSkillPoints = 1;
-
-        player.kungfuSkills[activeSkill] = (player.kungfuSkills[activeSkill] || 0) + gainedSkillPoints;
-        player.kungfuSkills.lastPracticeAt = now;
-
-        player.markModified('kungfuSkills');
-        await player.save();
-
-        res.json({ success: true, message: `Berhasil mendapatkan ${gainedSkillPoints} poin skill ${activeSkill}.` });
-    } catch (error) {
-        console.error('[API-PLAYER] POST kungfu practice claim error:', error);
-        res.status(500).json({ error: 'Terjadi kesalahan server.' });
-    } finally {
-        if (typeof releaseLock === 'function') releaseLock();
-    }
-});
 
 module.exports = router;

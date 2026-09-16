@@ -32,6 +32,9 @@ interface InventoryItem {
   effectTierGate?: number;
   toolType?: string;
   durability?: number;
+  weaponType?: string;
+  requiredKungfuSkill?: string;
+  requiredKungfuLevel?: number;
 }
 
 const getHumanReadableEffect = (item: InventoryItem) => {
@@ -613,6 +616,17 @@ export default function InventoryPage() {
                       Durability: {selectedItemDetail.durability}
                     </p>
                   )}
+                </div>
+              )}
+
+              {/* Kungfu Requirement Block */}
+              {selectedItemDetail.requiredKungfuSkill && (selectedItemDetail.requiredKungfuLevel ?? 0) > 0 && (
+                <div className="mt-3 pt-3 border-t border-[#333]">
+                  <p className="text-xs text-red-400 font-semibold mb-1">Syarat Kemahiran Kungfu:</p>
+                  <p className="text-sm text-amber-300 font-medium flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                    Membutuhkan: <span className="capitalize font-bold">{selectedItemDetail.requiredKungfuSkill}</span> Tingkat {selectedItemDetail.requiredKungfuLevel}
+                  </p>
                 </div>
               )}
             </div>

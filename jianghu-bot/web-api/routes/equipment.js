@@ -8,6 +8,7 @@ const Item = require('../../models/Item');
 const LockManager = require('../utils/lockManager');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
+const { checkItemKungfuRequirement } = require('../../utils/kungfuMastery');
 
 // POST /api/equipment/equip
 router.post('/equip', authenticateToken, async (req, res) => {
@@ -36,6 +37,12 @@ router.post('/equip', authenticateToken, async (req, res) => {
         const minRealmIdx = item.minRealmIndex || 0;
         if (playerRealmIdx < minRealmIdx) {
             return res.status(400).json({ error: `Item ini membutuhkan minimal Realm Index ${minRealmIdx}, realm-mu saat ini ${playerRealmIdx}.` });
+        }
+
+        // Validasi Persyaratan Level Kungfu (Kungfu Mastery Gate)
+        const kungfuCheck = checkItemKungfuRequirement(player, item);
+        if (!kungfuCheck.allowed) {
+            return res.status(400).json({ error: kungfuCheck.reason });
         }
 
         // Map item category to equipment slot

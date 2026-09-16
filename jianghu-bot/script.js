@@ -604,10 +604,21 @@ async function main() {
 
   await upsertItem('6a91b15ea9e03dc91c54c067', {
     name: 'Pedang Petir Ilahi',
-    rank: 'Legendary', tier: 5, category: 'weapon',
+    rank: 'Legendary', tier: 5, category: 'weapon', weaponType: 'sword',
+    requiredKungfuSkill: 'sword', requiredKungfuLevel: 50,
     basePrice: 25, priceCurrency: 'jade',
     description: 'Senjata tingkat Immortal. Setiap ayunan memicu kilatan petir. Bilahnya abadi dan tak pernah tumpul. (Durabilitas: Abadi)',
     effect: null, origin: 'Bengkel Artefak Ilahi', imageUrl: null, createdBy: 'System Oracle',
+  });
+
+  await upsertItem('6a91b15ea9e03dc91c54c06f', {
+    name: 'Pedang Demon',
+    rank: 'Epic', tier: 4, category: 'weapon', weaponType: 'sword',
+    requiredKungfuSkill: 'sword', requiredKungfuLevel: 30,
+    baseAtk: 120, baseSpd: 15,
+    basePrice: 50, priceCurrency: 'gold',
+    description: 'Pedang terkutuk bermata hitam pekat yang haus darah. Membutuhkan kemahiran Pedang (Sword) Tingkat 30 untuk mengendalikannya tanpa kehilangan akal sehat.',
+    effect: null, origin: 'Makam Iblis Kuno', imageUrl: null, createdBy: 'System Oracle',
   });
 
   await upsertItem('6a91b15ea9e03dc91c54c06e', {

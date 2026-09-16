@@ -50,6 +50,11 @@ export default function ToolPicker({ inventory, toolType, minToolTier = 1, selec
                             <div>
                                 <div className="font-bold text-gray-200">{tool.itemId.name}</div>
                                 <div className="text-xs text-gray-400 mt-1 capitalize">{tool.itemId.toolType.replace('_', ' ')} (Tier {toolTier})</div>
+                                {tool.itemId.requiredKungfuSkill && tool.itemId.requiredKungfuLevel > 0 && (
+                                    <div className="text-[10px] text-amber-400 font-medium mt-0.5">
+                                        Syarat: {tool.itemId.requiredKungfuSkill.toUpperCase()} Lv.{tool.itemId.requiredKungfuLevel}
+                                    </div>
+                                )}
                                 {!isSufficient && (
                                     <div className="text-[10px] text-red-400 font-bold mt-1">Tier tidak mencukupi (Butuh T{minToolTier})</div>
                                 )}

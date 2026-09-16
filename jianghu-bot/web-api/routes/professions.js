@@ -347,7 +347,8 @@ router.post('/start', verifyToken, async (req, res) => {
 
         const toolValidation = canUseTool(toolInInventory, toolInInventory.itemId, {
             requiredToolType: recipe.toolType,
-            minToolTier: recipe.minToolTier || 1
+            minToolTier: recipe.minToolTier || 1,
+            player
         });
         if (!toolValidation.valid) {
             return res.status(400).json({ error: toolValidation.error });
@@ -448,18 +449,32 @@ router.post('/complete', verifyToken, async (req, res) => {
         const profLevel = player.professions[session.profession].level || 1;
         const recipe = RECIPES[session.recipeId];
 
-        // Kurangi durability alat
+        // Kurangi durability alat (dengan peluang preservasi dari Kungfu Forging)
         let toolBroken = false;
+        let toolPreserved = false;
         const toolIndex = player.inventory.findIndex(i => i.itemId._id.toString() === session.toolItemId);
         if (toolIndex !== -1) {
              const toolEntry = player.inventory[toolIndex];
              if (toolEntry.durability == null) {
                   toolEntry.durability = (toolEntry.maxDurability || 20);
              }
-             toolEntry.durability -= 1;
-             if (toolEntry.durability <= 0) {
-                 player.inventory.splice(toolIndex, 1);
-                 toolBroken = true;
+
+             if (session.profession === 'smithing' || session.profession === 'alchemy') {
+                 const { getKungfuLevel, getToolDurabilityPreserveChance } = require('../../utils/kungfuMastery');
+                 const forgingExp = player.kungfuSkills?.forging || 0;
+                 const forgingLevel = getKungfuLevel(forgingExp).level;
+                 const preserveChance = getToolDurabilityPreserveChance(forgingLevel);
+                 if (Math.random() < preserveChance) {
+                     toolPreserved = true;
+                 }
+             }
+
+             if (!toolPreserved) {
+                 toolEntry.durability -= 1;
+                 if (toolEntry.durability <= 0) {
+                     player.inventory.splice(toolIndex, 1);
+                     toolBroken = true;
+                 }
              }
         }
         player.markModified('inventory');
@@ -569,10 +584,11 @@ router.post('/complete', verifyToken, async (req, res) => {
 
             player.professions[session.profession].exp += gainedExp;
 
-            // Phase 10: Increase forging kungfu skill on success if smithing
+            // Tambahkan Kungfu Forging XP secara organik jika smithing
             if (session.profession === 'smithing') {
-                if (!player.kungfuSkills) player.kungfuSkills = {};
-                player.kungfuSkills.forging = (player.kungfuSkills.forging || 0) + 1;
+                const { awardKungfuExp } = require('../../utils/kungfuMastery');
+                const baseForgingExp = Math.max(15, (recipe.minToolTier || 1) * 12);
+                awardKungfuExp(player, 'forging', baseForgingExp);
             }
 
             let currentLvl = player.professions[session.profession].level;
