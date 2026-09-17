@@ -49,12 +49,15 @@ class ForageTrainingService {
       return { ok: false, error: 'Stamina tidak mencukupi untuk meramu/menebang (Butuh 3 Stamina).' };
     }
 
-    // Tentukan item hasil sesuai tipe node
-    let itemName = 'Kayu Glondongan';
-    if (node.resourceType === 'herb') itemName = 'Herba Liar Pegunungan';
-    if (node.resourceType === 'ore') itemName = 'Bijih Besi Mentah';
+    // Tentukan item hasil sesuai tipe node (Kanonikal Jianghu Era 1)
+    let itemName = 'Kayu Mentah';
+    if (node.resourceType === 'herb') itemName = 'Serat Tumbuhan';
+    if (node.resourceType === 'ore') itemName = 'Bijih Besi';
 
-    let itemDoc = await Item.findOne({ guildId, name: itemName });
+    let itemDoc = await Item.findOne({ name: itemName });
+    if (!itemDoc) {
+      itemDoc = await Item.findOne({ guildId, name: itemName });
+    }
     if (!itemDoc) {
       itemDoc = await Item.create({
         guildId,

@@ -7,7 +7,7 @@
 module.exports = {
   zoneId: 'tianyuan_world_map',
   regionSlug: 'central_plains',
-  displayName: 'Benua Jianghu Raya (5000x5000)',
+  displayName: 'Benua Jianghu',
   chineseName: '天元大陆',
   gridWidth: 5000,
   gridHeight: 5000,

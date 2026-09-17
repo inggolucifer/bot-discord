@@ -12,51 +12,59 @@ const BLUEPRINTS = [
     blueprintId: 'rumah_kayu_sederhana',
     name: 'Rumah Kayu Sederhana',
     category: 'residence',
-    description: 'Tempat tinggal asri yang mempercepat regenerasi stamina.',
-    requiredSilver: 50,
+    description: 'Pondok hunian asri dari kayu mentah yang mempercepat pemulihan stamina (Aset Tier 1).',
+    requiredSilver: 30,
     requiredMaterials: [
-      { itemName: 'Kayu Glondongan', quantity: 10 }
+      { itemId: new mongoose.Types.ObjectId('6a91b15aa9e03dc91c54bfc3'), itemName: 'Kayu Mentah', quantity: 15 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 8 }
     ],
     buildDurationSeconds: 180,
-    minRealmIndex: 0
-  },
-  {
-    blueprintId: 'bengkel_tempa_baja',
-    name: 'Bengkel Tempa Pandai Besi',
-    category: 'blacksmith',
-    description: 'Fasilitas tempa yang dilengkapi landasan baja dan tungku peleburan.',
-    requiredSilver: 120,
-    requiredMaterials: [
-      { itemName: 'Kayu Glondongan', quantity: 15 },
-      { itemName: 'Batu Kali', quantity: 10 }
-    ],
-    buildDurationSeconds: 300,
-    minRealmIndex: 1
+    minRealmIndex: 0,
+    defaultInteriorTier: 1
   },
   {
     blueprintId: 'kios_obat_herbal',
     name: 'Kios Apotek Herbal',
     category: 'shop',
-    description: 'Toko herbal dengan kuali alkimia kuno untuk meracik ramuan obat.',
-    requiredSilver: 100,
+    description: 'Toko herbal bertingkat dengan etalase dan rak obat dari papan kayu pernis (Aset Tier 2).',
+    requiredSilver: 80,
     requiredMaterials: [
-      { itemName: 'Kayu Glondongan', quantity: 12 }
+      { itemId: new mongoose.Types.ObjectId('6a91b15ba9e03dc91c54bff2'), itemName: 'Papan Kayu', quantity: 12 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 10 }
     ],
     buildDurationSeconds: 240,
-    minRealmIndex: 0
+    minRealmIndex: 1,
+    defaultInteriorTier: 2
+  },
+  {
+    blueprintId: 'bengkel_tempa_baja',
+    name: 'Bengkel Tempa Pandai Besi',
+    category: 'blacksmith',
+    description: 'Fasilitas tempa kokoh dengan dinding papan kayu, landasan baja, dan tungku peleburan (Aset Tier 2).',
+    requiredSilver: 120,
+    requiredMaterials: [
+      { itemId: new mongoose.Types.ObjectId('6a91b15ba9e03dc91c54bff2'), itemName: 'Papan Kayu', quantity: 15 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 15 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15ba9e03dc91c54bff3'), itemName: 'Bijih Besi', quantity: 5 }
+    ],
+    buildDurationSeconds: 300,
+    minRealmIndex: 1,
+    defaultInteriorTier: 2
   },
   {
     blueprintId: 'dojo_bela_diri',
     name: 'Dojo Perguruan Bela Diri',
     category: 'dojo',
-    description: 'Sasana latihan jurus silat dan penempaan meridian kungfu.',
+    description: 'Sasana megah dengan lantai papan kayu pernis untuk latihan jurus silat dan penempaan meridian kungfu (Aset Tier 3).',
     requiredSilver: 200,
     requiredMaterials: [
-      { itemName: 'Kayu Glondongan', quantity: 20 },
-      { itemName: 'Batu Kali', quantity: 20 }
+      { itemId: new mongoose.Types.ObjectId('6a91b15ba9e03dc91c54bff2'), itemName: 'Papan Kayu', quantity: 25 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15aa9e03dc91c54bfc2'), itemName: 'Batu Kasar', quantity: 20 },
+      { itemId: new mongoose.Types.ObjectId('6a91b15ba9e03dc91c54bff5'), itemName: 'Batangan Besi', quantity: 5 }
     ],
     buildDurationSeconds: 600,
-    minRealmIndex: 2
+    minRealmIndex: 2,
+    defaultInteriorTier: 3
   }
 ];
 
