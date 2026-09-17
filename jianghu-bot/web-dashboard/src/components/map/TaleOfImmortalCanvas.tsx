@@ -416,8 +416,8 @@ export default function TaleOfImmortalCanvas({
             ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
           }
 
-          // 2.5C Spot Memancing (Ikan di Air)
-          if ((tile.resourceType === 'fish' || tile.terrainType === 'river') && !tile.isSolid) {
+          // 2.5C Spot Memancing (Hanya jika secara eksplisit terdapat sumber daya ikan)
+          if (tile.resourceType === 'fish' && !tile.isSolid) {
             ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
             ctx.font = `${Math.max(8, 11 * camera.zoom)}px sans-serif`;
             ctx.textAlign = 'center';
@@ -547,8 +547,8 @@ export default function TaleOfImmortalCanvas({
             }
           }
 
-          // 2.7 Landmark Ekspedisi / Dungeon Gate
-          if (tile.isExpeditionNode || tile.label?.toLowerCase().includes('gua') || tile.label?.toLowerCase().includes('makam') || tile.label?.toLowerCase().includes('ekspedisi')) {
+          // 2.7 Landmark Ekspedisi / Dungeon Gate (Hanya jika node ekspedisi eksplisit)
+          if (tile.isExpeditionNode) {
             const ex = sx + currentTileSize * 0.2;
             const ey = sy + currentTileSize * 0.2;
             const ew = currentTileSize * 0.6;
@@ -659,11 +659,12 @@ export default function TaleOfImmortalCanvas({
         }
       }
 
-      // 4.5 Badge Angka NPC di Sudut Petak (Persis Sesuai Gambar Referensi Pengguna)
+      // 4.5 Badge Angka NPC di Sudut Petak (Hanya jika benar-benar ada NPC aktif yang valid di petak ini)
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
           const tile = tileMap.get(`${tx},${ty}`);
-          if (!tile || !tile.npcCount || tile.npcCount <= 0) continue;
+          // Jika tidak ada NPC aktif pada petak ini, biarkan kosong tanpa lingkaran hitam atau angka
+          if (!tile || !Array.isArray(tile.npcs) || tile.npcs.length === 0 || !tile.npcCount || tile.npcCount <= 0) continue;
 
           const chunkX = Math.floor(tx / 16);
           const chunkY = Math.floor(ty / 16);
@@ -681,7 +682,7 @@ export default function TaleOfImmortalCanvas({
           ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
           ctx.shadowBlur = 4 * camera.zoom;
 
-          // Lingkaran bulat hitam / charcoal bergradien (seperti di referensi)
+          // Lingkaran bulat hitam / charcoal bergradien
           const badgeGrad = ctx.createLinearGradient(badgeX - badgeR, badgeY - badgeR, badgeX + badgeR, badgeY + badgeR);
           badgeGrad.addColorStop(0, '#374151');
           badgeGrad.addColorStop(0.5, '#1f2937');
@@ -702,71 +703,7 @@ export default function TaleOfImmortalCanvas({
           ctx.font = `bold ${Math.max(8, 10 * camera.zoom)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(String(tile.npcCount), badgeX, badgeY);
-          ctx.restore();
-        }
-      }
-
-      // 4.6 Badge Ancaman Monster / Bahaya di Sudut Kanan Atas Petak
-      for (let ty = minTileY; ty <= maxTileY; ty++) {
-        for (let tx = minTileX; tx <= maxTileX; tx++) {
-          const tile = tileMap.get(`${tx},${ty}`);
-          if (!tile) continue;
-
-          const isThreat = Boolean(
-            (tile.dangerTier && tile.dangerTier > 0) ||
-            (tile.ambushRiskRate && tile.ambushRiskRate > 0) ||
-            tile.territoryType === 'monster_zone' ||
-            tile.territoryType === 'danger_zone' ||
-            tile.territoryType === 'wilderness_high_risk'
-          );
-          if (!isThreat) continue;
-
-          const chunkX = Math.floor(tx / 16);
-          const chunkY = Math.floor(ty / 16);
-          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
-
-          const sx = toScreenX(tx);
-          const sy = toScreenY(ty);
-
-          ctx.save();
-          const badgeR = Math.max(6.5, 8.5 * camera.zoom);
-          const badgeX = sx + currentTileSize - Math.max(9, 11 * camera.zoom);
-          const badgeY = sy + Math.max(9, 11 * camera.zoom);
-
-          const threatImg = loadedImages.conditions?.monster_threat_icon;
-          if (threatImg) {
-            ctx.shadowColor = 'rgba(239, 68, 68, 0.6)';
-            ctx.shadowBlur = 4 * camera.zoom;
-            ctx.drawImage(threatImg, badgeX - badgeR, badgeY - badgeR, badgeR * 2, badgeR * 2);
-          } else {
-            // Bayangan lingkaran ancaman
-            ctx.shadowColor = 'rgba(185, 28, 28, 0.6)';
-            ctx.shadowBlur = 5 * camera.zoom;
-
-            // Lingkaran gradien merah tua crimson
-            const mBadgeGrad = ctx.createLinearGradient(badgeX - badgeR, badgeY - badgeR, badgeX + badgeR, badgeY + badgeR);
-            mBadgeGrad.addColorStop(0, '#ef4444');
-            mBadgeGrad.addColorStop(0.5, '#b91c1c');
-            mBadgeGrad.addColorStop(1, '#450a0a');
-            ctx.fillStyle = mBadgeGrad;
-            ctx.beginPath();
-            ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Ring merah muda / putih tipis
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = 'rgba(254, 202, 202, 0.75)';
-            ctx.lineWidth = Math.max(0.8, 1.2 * camera.zoom);
-            ctx.stroke();
-
-            // Simbol ancaman monster (👹 atau T{tier})
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `${Math.max(7, 9 * camera.zoom)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(tile.dangerTier && tile.dangerTier > 1 ? `T${tile.dangerTier}` : '👹', badgeX, badgeY);
-          }
+          ctx.fillText(String(tile.npcs.length), badgeX, badgeY);
           ctx.restore();
         }
       }
