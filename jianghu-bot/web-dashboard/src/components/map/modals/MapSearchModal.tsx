@@ -161,6 +161,21 @@ export default function MapSearchModal({
             </button>
           )}
 
+          {/* Quick Return to Current Character Position Button */}
+          <button
+            onClick={() => {
+              onSelectLocation(currentPos.x, currentPos.y, 'Posisi Karakter');
+              onClose();
+            }}
+            className="w-full py-1.5 px-3 bg-[#161c28] hover:bg-[#1f2838] border border-emerald-600/50 hover:border-emerald-500 rounded-lg text-emerald-300 font-semibold flex items-center justify-between transition-colors text-xs"
+          >
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Posisi Karakter Saat Ini: <strong>({currentPos.x}, {currentPos.y})</strong></span>
+            </span>
+            <span className="text-[10px] text-emerald-400 font-mono">Pusatkan 🎯</span>
+          </button>
+
           {/* Tab Switcher */}
           <div className="flex gap-1 pt-1">
             <button

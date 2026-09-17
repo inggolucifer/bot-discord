@@ -150,7 +150,15 @@ router.post('/start', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId }).populate('manuals.manualId');
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
-        if (player.currentHp <= 0) {
+        const { getComputedStats } = require('../../utils/statCalculator');
+        const computed = getComputedStats(player, player.laws || [], player.manuals || []);
+        const maxHp = computed.maxHp || player.stats?.baseHp || 100;
+
+        // Inisialisasi otomatis jika belum ada currentHp (default MongoDB null)
+        if (player.currentHp === null || player.currentHp === undefined || isNaN(player.currentHp)) {
+            player.currentHp = maxHp;
+            await player.save();
+        } else if (typeof player.currentHp === 'number' && player.currentHp <= 0) {
             return res.status(400).json({ error: 'Karaktermu sedang pingsan dan butuh pemulihan sebelum bertarung.' });
         }
 

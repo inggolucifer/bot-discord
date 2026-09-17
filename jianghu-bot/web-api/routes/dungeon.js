@@ -106,7 +106,14 @@ router.post('/enter', authenticateToken, async (req, res) => {
     const player = await Player.findOne({ discordId: userId });
     if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-    if (player.currentHp <= 0) {
+    const { getComputedStats } = require('../../utils/statCalculator');
+    const computed = getComputedStats(player, player.laws || [], player.manuals || []);
+    const maxHp = computed.maxHp || player.stats?.baseHp || 100;
+
+    if (player.currentHp === null || player.currentHp === undefined || isNaN(player.currentHp)) {
+      player.currentHp = maxHp;
+      await player.save();
+    } else if (typeof player.currentHp === 'number' && player.currentHp <= 0) {
       return res.status(400).json({ error: 'Karaktermu terluka parah. Pulihkan HP terlebih dahulu.' });
     }
 
