@@ -131,28 +131,28 @@ export default function KataQteMinigame({ discipline = 'sword', onClose, onCompl
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-            <div className="bg-[#0e141f] border border-red-900/60 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 select-none">
+            <div className="bg-[#0e141f] border border-amber-900/60 rounded-2xl w-full max-w-md landscape:max-w-xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
                 {/* Header */}
-                <div className="bg-[#181a24] px-5 py-3 border-b border-[#282d3f] flex justify-between items-center">
+                <div className="bg-[#181a24] px-4 py-2.5 landscape:py-1.5 border-b border-[#282d3f] flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-2">
-                        <Swords className="w-5 h-5 text-red-400 animate-pulse" />
-                        <h3 className="font-serif font-bold text-amber-200 text-base">Rangkaian Kuda-Kuda Silat (QTE)</h3>
+                        <Swords className="w-4 h-4 text-amber-500 animate-pulse" />
+                        <h3 className="font-serif font-bold text-amber-200 text-sm sm:text-base">Rangkaian Kuda-Kuda Silat (QTE)</h3>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white text-sm font-semibold px-2 py-1"
+                        className="text-gray-400 hover:text-white text-xs sm:text-sm font-semibold px-2 py-1"
                     >
                         ✕
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex flex-col items-center">
+                <div className="p-3 sm:p-5 landscape:p-3 flex flex-col items-center">
                     {!isFinished ? (
                         <>
                             {/* Round & Streak Counter */}
-                            <div className="flex justify-between w-full text-xs font-mono text-gray-400 mb-2">
+                            <div className="flex justify-between w-full text-xs font-mono text-gray-400 mb-1.5">
                                 <span>Jurus: <strong className="text-white">{currentRound} / {totalRounds}</strong></span>
                                 <span className="flex items-center gap-1 text-amber-400 font-bold">
                                     <Flame className="w-3.5 h-3.5 fill-amber-400" /> Combo: {streakCount}x
@@ -160,76 +160,79 @@ export default function KataQteMinigame({ discipline = 'sword', onClose, onCompl
                             </div>
 
                             {/* Timer Progress Bar */}
-                            <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6 border border-gray-700">
+                            <div className="w-full h-1.5 sm:h-2 bg-gray-800 rounded-full overflow-hidden mb-3 landscape:mb-2 border border-gray-700">
                                 <div
                                     className={`h-full transition-all duration-75 ${timeLeftPercent > 40 ? 'bg-amber-400' : 'bg-red-500'}`}
                                     style={{ width: `${timeLeftPercent}%` }}
                                 />
                             </div>
 
-                            {/* Stance Vector Circle */}
-                            <div className="relative w-48 h-48 rounded-full border-4 border-amber-900/50 bg-[#121622] flex flex-col items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.2)] select-none">
-                                {currentTarget && (
-                                    <>
-                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-600 to-red-600 flex items-center justify-center text-white shadow-xl animate-pulse">
-                                            <span className="text-4xl font-extrabold">{currentTarget.symbol}</span>
+                            {/* Play Area: Side-by-side in landscape */}
+                            <div className="flex flex-col landscape:flex-row items-center justify-around w-full gap-3 landscape:gap-4 my-1">
+                                {/* Stance Vector Circle */}
+                                <div className="relative w-36 h-36 sm:w-44 sm:h-44 landscape:w-32 landscape:h-32 rounded-full border-4 border-amber-900/50 bg-[#121622] flex flex-col items-center justify-center shadow-[0_0_25px_rgba(239,68,68,0.2)] select-none shrink-0">
+                                    {currentTarget && (
+                                        <>
+                                            <div className="w-14 h-14 sm:w-18 sm:h-18 landscape:w-12 landscape:h-12 rounded-full bg-gradient-to-br from-amber-600 to-red-600 flex items-center justify-center text-white shadow-xl animate-pulse">
+                                                <span className="text-2xl sm:text-3xl landscape:text-2xl font-extrabold">{currentTarget.symbol}</span>
+                                            </div>
+                                            <span className="text-[10px] sm:text-xs font-serif font-bold text-amber-200 mt-1 sm:mt-1.5">
+                                                {currentTarget.label}
+                                            </span>
+                                        </>
+                                    )}
+
+                                    {feedback && (
+                                        <div className={`absolute inset-0 flex items-center justify-center bg-black/70 rounded-full text-sm sm:text-base font-bold ${feedback.color} backdrop-blur-xs`}>
+                                            {feedback.text}
                                         </div>
-                                        <span className="text-xs font-serif font-bold text-amber-200 mt-2">
-                                            {currentTarget.label}
-                                        </span>
-                                    </>
-                                )}
-
-                                {feedback && (
-                                    <div className={`absolute inset-0 flex items-center justify-center bg-black/60 rounded-full text-lg font-bold ${feedback.color} backdrop-blur-xs`}>
-                                        {feedback.text}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Directional Touch Buttons for Mobile / Mouse */}
-                            <div className="grid grid-cols-3 gap-2 mt-6 w-full max-w-[240px]">
-                                <div />
-                                <button
-                                    onClick={() => currentTarget?.key === 'ArrowUp' ? handleSuccess() : handleFail()}
-                                    className="p-3.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-lg font-bold"
-                                >
-                                    ↑
-                                </button>
-                                <div />
-                                <button
-                                    onClick={() => currentTarget?.key === 'ArrowLeft' ? handleSuccess() : handleFail()}
-                                    className="p-3.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-lg font-bold"
-                                >
-                                    ←
-                                </button>
-                                <div className="flex items-center justify-center text-[10px] text-gray-500 font-mono">
-                                    WASD
+                                    )}
                                 </div>
-                                <button
-                                    onClick={() => currentTarget?.key === 'ArrowRight' ? handleSuccess() : handleFail()}
-                                    className="p-3.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-lg font-bold"
-                                >
-                                    →
-                                </button>
-                                <div />
-                                <button
-                                    onClick={() => currentTarget?.key === 'ArrowDown' ? handleSuccess() : handleFail()}
-                                    className="p-3.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-lg font-bold"
-                                >
-                                    ↓
-                                </button>
-                                <div />
+
+                                {/* Directional Touch Buttons for Mobile / Mouse */}
+                                <div className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full max-w-[200px] landscape:max-w-[180px]">
+                                    <div />
+                                    <button
+                                        onClick={() => currentTarget?.key === 'ArrowUp' ? handleSuccess() : handleFail()}
+                                        className="p-2 sm:p-3 landscape:p-1.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-base sm:text-lg font-bold"
+                                    >
+                                        ↑
+                                    </button>
+                                    <div />
+                                    <button
+                                        onClick={() => currentTarget?.key === 'ArrowLeft' ? handleSuccess() : handleFail()}
+                                        className="p-2 sm:p-3 landscape:p-1.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-base sm:text-lg font-bold"
+                                    >
+                                        ←
+                                    </button>
+                                    <div className="flex items-center justify-center text-[9px] text-gray-500 font-mono">
+                                        WASD
+                                    </div>
+                                    <button
+                                        onClick={() => currentTarget?.key === 'ArrowRight' ? handleSuccess() : handleFail()}
+                                        className="p-2 sm:p-3 landscape:p-1.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-base sm:text-lg font-bold"
+                                    >
+                                        →
+                                    </button>
+                                    <div />
+                                    <button
+                                        onClick={() => currentTarget?.key === 'ArrowDown' ? handleSuccess() : handleFail()}
+                                        className="p-2 sm:p-3 landscape:p-1.5 bg-[#1b2333] hover:bg-amber-900 active:scale-90 text-amber-300 rounded-xl border border-gray-700 flex items-center justify-center shadow-md text-base sm:text-lg font-bold"
+                                    >
+                                        ↓
+                                    </button>
+                                    <div />
+                                </div>
                             </div>
                         </>
                     ) : (
                         /* Result Dialog */
                         <div className="w-full flex flex-col items-center text-center py-2">
-                            <div className="w-14 h-14 rounded-full bg-red-900/50 border-2 border-red-500 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(239,68,68,0.4)]">
-                                <Swords className="w-7 h-7 text-red-300" />
+                            <div className="w-12 h-12 rounded-full bg-red-900/50 border-2 border-red-500 flex items-center justify-center mb-2 shadow-[0_0_20px_rgba(239,68,68,0.4)]">
+                                <Swords className="w-6 h-6 text-red-300" />
                             </div>
-                            <h4 className="font-serif font-bold text-lg text-amber-200 mb-1">Hasil Latihan Silat</h4>
-                            <p className="text-xs text-gray-300 mb-4">
+                            <h4 className="font-serif font-bold text-base sm:text-lg text-amber-200 mb-1">Hasil Latihan Silat</h4>
+                            <p className="text-xs text-gray-300 mb-3">
                                 {report?.message || 'Rangkaian jurus selesai dilatih.'}
                             </p>
 

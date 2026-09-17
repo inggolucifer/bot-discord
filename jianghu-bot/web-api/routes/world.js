@@ -1564,6 +1564,73 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             });
         }
 
+        // Petakan NPC aktif ke dalam petak (tile) yang sesuai untuk badge spasial & interaksi
+        try {
+            const Npc = require('../../models/Npc');
+            const npcQuery = player.guildId ? { guildId: player.guildId, isActive: true } : { isActive: true };
+            const allActiveNpcs = await Npc.find(npcQuery).select('_id name title description greeting portraitUrl imageUrl zoneId tileX tileY settlementName buildingName').lean();
+
+            const settlementCoords = new Map();
+            for (const s of proceduralWorldEngine.ANCHOR_SETTLEMENTS || []) {
+                settlementCoords.set(s.name.toLowerCase(), { x: s.tileX, y: s.tileY });
+            }
+
+            const npcsByCoord = new Map();
+            for (const npc of allActiveNpcs) {
+                let targetX = npc.tileX;
+                let targetY = npc.tileY;
+
+                // Jika koordinat eksplisit belum ada, gunakan koordinat pusat pemukiman (origin tile)
+                if ((targetX === null || targetX === undefined) && npc.settlementName) {
+                    const sNameKey = npc.settlementName.toLowerCase();
+                    let sCoord = settlementCoords.get(sNameKey);
+                    if (!sCoord) {
+                        for (const [sName, coord] of settlementCoords.entries()) {
+                            if (sNameKey.includes(sName) || sName.includes(sNameKey)) {
+                                sCoord = coord;
+                                break;
+                            }
+                        }
+                    }
+                    if (sCoord) {
+                        targetX = sCoord.x;
+                        targetY = sCoord.y;
+                    }
+                }
+
+                if (targetX !== null && targetX !== undefined && targetY !== null && targetY !== undefined) {
+                    const coordKey = `${targetX},${targetY}`;
+                    if (!npcsByCoord.has(coordKey)) npcsByCoord.set(coordKey, []);
+                    npcsByCoord.get(coordKey).push({
+                        _id: String(npc._id),
+                        name: npc.name,
+                        title: npc.title,
+                        description: npc.description,
+                        greeting: npc.greeting,
+                        portraitUrl: npc.portraitUrl,
+                        imageUrl: npc.imageUrl,
+                        buildingName: npc.buildingName,
+                        settlementName: npc.settlementName
+                    });
+                }
+            }
+
+            for (let i = 0; i < visibleTiles.length; i++) {
+                const t = visibleTiles[i];
+                const key = `${t.tileX},${t.tileY}`;
+                const npcsHere = npcsByCoord.get(key);
+                if (npcsHere && npcsHere.length > 0) {
+                    visibleTiles[i] = {
+                        ...t,
+                        npcCount: npcsHere.length,
+                        npcs: npcsHere
+                    };
+                }
+            }
+        } catch (npcErr) {
+            console.warn('[API-ZONE] Non-fatal NPC tile mapping error:', npcErr.message);
+        }
+
         const ZoneTileModel = require('../../models/ZoneTile');
         const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
         const ownedPlotsCount = await ZoneTileModel.countDocuments({ ownerId: player.discordId });
@@ -2197,7 +2264,7 @@ router.post('/zone/search', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
         const fs = require('fs');
         const path = require('path');
         const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);

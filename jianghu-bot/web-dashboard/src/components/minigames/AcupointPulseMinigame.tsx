@@ -126,32 +126,28 @@ export default function AcupointPulseMinigame({ onClose, onCompleted }: Acupoint
     const activeNode = ACUPOINT_NODES[currentNodeIndex] || ACUPOINT_NODES[0];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-            <div className="bg-[#0e141f] border border-amber-900/60 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 select-none">
+            <div className="bg-[#0b1019] border border-cyan-900/60 rounded-2xl w-full max-w-md landscape:max-w-2xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
                 {/* Header */}
-                <div className="bg-[#141c2c] px-5 py-3 border-b border-[#243147] flex justify-between items-center">
+                <div className="bg-[#121926] px-4 py-2.5 landscape:py-1.5 border-b border-cyan-900/40 flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-2">
-                        <Activity className="w-5 h-5 text-amber-400 animate-pulse" />
-                        <h3 className="font-serif font-bold text-amber-200 text-base">Resonansi Titik Akupunktur</h3>
+                        <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
+                        <h3 className="font-serif font-bold text-amber-200 text-sm sm:text-base">Resonansi Titik Akupunktur</h3>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors text-sm font-semibold px-2 py-1 rounded-md"
+                        className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm font-semibold px-2 py-1 rounded-md"
                     >
                         ✕
                     </button>
                 </div>
 
                 {/* Body Area */}
-                <div className="p-5 flex flex-col items-center">
+                <div className="p-3 sm:p-5 landscape:p-3 flex flex-col items-center">
                     {!isFinished ? (
-                        <>
-                            <p className="text-xs text-gray-300 text-center mb-3">
-                                Sentuh simpul meridian saat cincin pulsa Qi berimpit sempurna dengan titik akupunktur.
-                            </p>
-
+                        <div className="flex flex-col landscape:flex-row items-center justify-around w-full gap-3 landscape:gap-4">
                             {/* Diagram Siluet Tubuh */}
-                            <div className="relative w-72 h-80 bg-[#070a10] border border-cyan-900/40 rounded-xl overflow-hidden shadow-inner flex items-center justify-center select-none">
+                            <div className="relative w-64 h-72 sm:w-72 sm:h-80 landscape:w-48 landscape:h-56 bg-[#070a10] border border-cyan-900/40 rounded-xl overflow-hidden shadow-inner flex items-center justify-center select-none shrink-0">
                                 {/* Garis-garis Meridian Latar */}
                                 <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25" viewBox="0 0 100 100">
                                     <line x1="50" y1="12" x2="50" y2="92" stroke="#38bdf8" strokeWidth="1" strokeDasharray="2,2" />
@@ -172,52 +168,55 @@ export default function AcupointPulseMinigame({ onClose, onCompleted }: Acupoint
                                             style={{ left: `${node.x}%`, top: `${node.y}%` }}
                                             className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full cursor-pointer transition-all flex items-center justify-center
                                                 ${isActive
-                                                    ? 'w-10 h-10 bg-amber-500/30 border-2 border-amber-400 z-20 shadow-[0_0_16px_rgba(251,191,36,0.8)]'
+                                                    ? 'w-8 h-8 sm:w-10 sm:h-10 bg-amber-500/30 border-2 border-amber-400 z-20 shadow-[0_0_16px_rgba(251,191,36,0.8)]'
                                                     : isPast
-                                                        ? 'w-5 h-5 bg-emerald-900/60 border border-emerald-500/80 z-10'
-                                                        : 'w-4 h-4 bg-gray-800/80 border border-gray-600/60 opacity-60 z-10'}`}
+                                                        ? 'w-4 h-4 sm:w-5 sm:h-5 bg-emerald-900/60 border border-emerald-500/80 z-10'
+                                                        : 'w-3.5 h-3.5 sm:w-4 sm:h-4 bg-gray-800/80 border border-gray-600/60 opacity-60 z-10'}`}
                                         >
                                             {/* Cincin Pulsa Animasi saat Aktif */}
                                             {isActive && (
                                                 <div
                                                     className="absolute rounded-full border-2 border-cyan-400 pointer-events-none animate-ping"
                                                     style={{
-                                                        width: `${Math.max(16, 50 - pulseProgress * 0.3)}px`,
-                                                        height: `${Math.max(16, 50 - pulseProgress * 0.3)}px`,
+                                                        width: `${Math.max(14, 44 - pulseProgress * 0.3)}px`,
+                                                        height: `${Math.max(14, 44 - pulseProgress * 0.3)}px`,
                                                         opacity: 1 - Math.abs(pulseProgress - 50) / 50
                                                     }}
                                                 />
                                             )}
-                                            <span className="text-[8px] font-bold text-white pointer-events-none">{node.id}</span>
+                                            <span className="text-[7px] sm:text-[8px] font-bold text-white pointer-events-none">{node.id}</span>
                                         </div>
                                     );
                                 })}
 
                                 {/* Feedback Banner */}
                                 {feedback && (
-                                    <div className={`absolute top-4 font-bold text-sm bg-black/80 px-3 py-1 rounded-full shadow-lg ${feedback.color} animate-bounce`}>
+                                    <div className={`absolute top-2 sm:top-4 font-bold text-xs sm:text-sm bg-black/80 px-2.5 py-0.5 rounded-full shadow-lg ${feedback.color} animate-bounce`}>
                                         {feedback.text}
                                     </div>
                                 )}
                             </div>
 
-                            {/* Node Target Info & Button */}
-                            <div className="w-full mt-4 flex flex-col items-center">
-                                <div className="text-xs text-amber-200 font-medium mb-2">
-                                    Simpul Saat Ini: <span className="font-bold text-white">{activeNode.name}</span>
+                            {/* Node Target Info & Action Button */}
+                            <div className="w-full flex flex-col items-center landscape:items-start text-center landscape:text-left space-y-2">
+                                <p className="text-[11px] sm:text-xs text-gray-300">
+                                    Sentuh simpul meridian saat cincin pulsa Qi berimpit sempurna dengan titik akupunktur.
+                                </p>
+                                <div className="text-xs text-amber-200 font-medium">
+                                    Simpul Aktif: <span className="font-bold text-white">{activeNode.name}</span>
                                 </div>
                                 <button
                                     onClick={() => handleTapNode(currentNodeIndex)}
-                                    className="w-full bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 active:scale-95 text-white font-serif font-bold py-3 rounded-xl shadow-lg border border-amber-500/50 transition-all flex items-center justify-center gap-2"
+                                    className="w-full bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 active:scale-95 text-white font-serif font-bold py-2.5 sm:py-3 rounded-xl shadow-lg border border-amber-500/50 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
                                 >
                                     <Sparkles className="w-4 h-4 text-amber-200" />
                                     Selaraskan Napas Qi (Sentuh)
                                 </button>
                             </div>
-                        </>
+                        </div>
                     ) : (
                         /* Report Dialog */
-                        <div className="w-full flex flex-col items-center text-center py-3">
+                        <div className="w-full flex flex-col items-center text-center py-2">
                             <div className="w-14 h-14 rounded-full bg-amber-900/60 border-2 border-amber-500 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(251,191,36,0.4)]">
                                 <Sparkles className="w-7 h-7 text-amber-300" />
                             </div>

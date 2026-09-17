@@ -39,15 +39,18 @@ import GridSectHallModal from './modals/GridSectHallModal';
 import GridAmbushCombatModal from './modals/GridAmbushCombatModal';
 import GridTileInspectorCard from './GridTileInspectorCard';
 import LandscapeOrientationPrompt from '../ui/LandscapeOrientationPrompt';
+import NpcPanel from '@/app/world/NpcPanel';
+import MapSearchModal from './modals/MapSearchModal';
 
 interface ZoneGridViewProps {
   zoneId: string;
   onBackToWorld: () => void;
   targetFocusTile?: { x: number; y: number } | null;
   onSubViewChange?: (mode: 'map' | 'settlement' | 'courtyard') => void;
+  climateData?: any;
 }
 
-export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, onSubViewChange }: ZoneGridViewProps) {
+export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, onSubViewChange, climateData }: ZoneGridViewProps) {
   const activeZoneId = zoneId || 'tianyuan_world_map';
 
   const { user } = useAuthStore();
@@ -62,6 +65,32 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
   const [activePath, setActivePath] = useState<Point[]>([]);
   const [pathSteps, setPathSteps] = useState<number>(0);
   const [isWalking, setIsWalking] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [searchFocusTile, setSearchFocusTile] = useState<{ x: number; y: number } | null>(null);
+  const [floatingNotices, setFloatingNotices] = useState<{ id: number; text: string; color: 'emerald' | 'amber' | 'cyan' | 'red' }[]>([]);
+
+  const addFloatingNotice = (text: string, color: 'emerald' | 'amber' | 'cyan' | 'red' = 'emerald') => {
+    const id = Date.now() + Math.random();
+    setFloatingNotices(prev => [...prev, { id, text, color }]);
+    setTimeout(() => {
+      setFloatingNotices(prev => prev.filter(n => n.id !== id));
+    }, 2500);
+  };
+
+  // Lingkungan & Cuaca Dinamis (Tale of Immortal Atmosphere)
+  const weatherMode: 'rain' | 'snow' | 'miasma' | 'none' = useMemo(() => {
+    const rawWeather = (climateData?.weather || '').toLowerCase();
+    if (rawWeather.includes('hujan') || rawWeather.includes('rain')) return 'rain';
+    if (rawWeather.includes('salju') || rawWeather.includes('snow')) return 'snow';
+    if (rawWeather.includes('beracun') || rawWeather.includes('racun') || rawWeather.includes('miasma')) return 'miasma';
+    return 'none';
+  }, [climateData?.weather]);
+
+  const isNightMode: boolean = useMemo(() => {
+    if (climateData?.isNight !== undefined) return Boolean(climateData.isNight);
+    const hour = new Date().getHours();
+    return hour < 6 || hour >= 18;
+  }, [climateData?.isNight]);
 
   // Modals state
   const [assetDetailTile, setAssetDetailTile] = useState<TileData | null>(null);
@@ -76,6 +105,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
     enemyName?: string;
     encounterMessage?: string;
   } | null>(null);
+  const [talkingNpc, setTalkingNpc] = useState<any | null>(null);
 
   // View Mode: 'map' | 'settlement' | 'courtyard'
   const [viewMode, setViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
@@ -218,6 +248,35 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
     }
   };
 
+  // Handler seleksi dari modal pencarian landmark & bookmark koordinat
+  const handleSelectSearchResult = (targetX: number, targetY: number, label?: string) => {
+    setIsSearchModalOpen(false);
+    setSearchFocusTile({ x: targetX, y: targetY });
+
+    const existingTile = tiles.find(t => t.tileX === targetX && t.tileY === targetY);
+    if (existingTile) {
+      setSelectedTile(existingTile);
+      const px = playerGrid?.position?.tileX ?? 2455;
+      const py = playerGrid?.position?.tileY ?? 2485;
+      const result = findAStarPath(px, py, targetX, targetY, solidTilesSet, 60);
+      if (result.reachable) {
+        setActivePath(result.path);
+        setPathSteps(result.totalSteps);
+      }
+    } else {
+      setSelectedTile({
+        tileX: targetX,
+        tileY: targetY,
+        terrainType: 'plains',
+        tileType: 'ground',
+        label: label || `Koordinat (${targetX}, ${targetY})`
+      });
+      fetchZoneData(targetX, targetY);
+    }
+    showMessage(`📍 Membidik ${label ? label + ' ' : ''}(${targetX}, ${targetY})`);
+    sound.playDiscovery();
+  };
+
   // Memulai perjalanan kontinu langkah demi langkah (Tale of Immortal Style)
   const handleStartWalking = () => {
     if (activePath.length <= 1) return;
@@ -256,6 +315,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
           }
 
           if (res.data.stoppedEarly) {
+            sound.playSwordSlash();
             showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
             if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
               setAmbushModalData({
@@ -269,6 +329,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
               fetchZoneData();
             }
           } else if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
+            sound.playSwordSlash();
             showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
             setAmbushModalData({
               enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
@@ -296,6 +357,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
       const currentStep = allWaypoints[stepIndex];
       stepIndex++;
 
+      // Bunyi derap langkah wuxia
+      sound.playFootstep();
+
       // Update posisi pemain di UI secara lokal instan (hanya visual)
       setPlayerGrid((prev: any) => ({
         ...prev,
@@ -316,6 +380,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         showMessage('Jalur terhalang!');
         return;
     }
+
+    sound.playFootstep();
 
     // Prediksi lokal
     setPlayerGrid((prev: any) => ({
@@ -343,6 +409,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
       }
 
       if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
+        sound.playSwordSlash();
         showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
         setAmbushModalData({
           enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
@@ -411,7 +478,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
   const handleSearch = async () => {
     try {
       const res = await api.post('/world/zone/search', { zoneId: activeZoneId });
+      sound.playDiscovery();
       showMessage(res.data.message || 'Pencarian selesai!');
+      addFloatingNotice(res.data.message || 'Selesai menjelajah sekitar', 'amber');
       fetchZoneData();
     } catch (err: any) {
       showMessage(err.response?.data?.error || 'Gagal mencari sekitar');
@@ -505,8 +574,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
             3: { name: 'Bantal Semadi', isSolid: false, interactable: true, action: 'minigame_acupoint' },
             4: { name: 'Kuali Alkimia', isSolid: true, interactable: true, action: 'minigame_crucible' },
             5: { name: 'Landasan Tempa', isSolid: true, interactable: true, action: 'minigame_kata' },
-            6: { name: 'Petak Herbal', isSolid: false, interactable: true, action: 'harvest_herbs' },
-            7: { name: 'Pintu Keluar', isSolid: false, interactable: true, action: 'exit_property' }
+            6: { name: 'Petak Herbal', isSolid: false, interactable: true, action: 'minigame_harvest' },
+            7: { name: 'Pintu Keluar', isSolid: false, interactable: true, action: 'exit_property' },
+            8: { name: 'Kolam Ikan Rohani', isSolid: true, interactable: true, action: 'minigame_fishing' },
+            9: { name: 'Dapur Masak', isSolid: true, interactable: true, action: 'minigame_cooking' }
           }
         });
       }
@@ -554,7 +625,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
     try {
       const res = await api.post('/grid/profession/fish', { zoneId: activeZoneId });
       if (res.data.ok) {
+        sound.playDiscovery();
         showMessage(`🎣 Strike! Mendapatkan 1x ${res.data.fishName} (Level Pancing: ${res.data.fishingLevel})`);
+        addFloatingNotice(`🎣 +1 ${res.data.fishName}`, 'cyan');
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error}`);
@@ -564,12 +637,15 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
     }
   };
 
-  // Meramu / Panen Alam
+  // Meramu / Panen Alam (Biaya 5 Stamina)
   const handleForage = async () => {
     try {
       const res = await api.post('/grid/profession/forage', { zoneId: activeZoneId });
       if (res.data.ok) {
-        showMessage(`🌿 Berhasil memanen ${res.data.quantity}x ${res.data.itemName}!`);
+        sound.playDiscovery();
+        const cost = res.data.staminaCost ?? 5;
+        showMessage(`🌿 Berhasil memanen ${res.data.quantity}x ${res.data.itemName}! (-${cost} Stamina)`);
+        addFloatingNotice(`🌿 +${res.data.quantity} ${res.data.itemName} (-${cost} Stamina)`, 'emerald');
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error}`);
@@ -588,7 +664,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         cropName: 'Gandum Emas'
       });
       if (res.data.ok) {
+        sound.playGuzheng(440, 0.4);
         showMessage(`🌱 Berhasil menanam Gandum Emas di petak (${tile.tileX}, ${tile.tileY})!`);
+        addFloatingNotice(`🌱 Gandum Emas Ditanam`, 'amber');
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error}`);
@@ -605,7 +683,9 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         y: tile.tileY
       });
       if (res.data.ok) {
+        sound.playDiscovery();
         showMessage(`🌾 Berhasil memanen ${res.data.quantity}x ${res.data.cropName}!`);
+        addFloatingNotice(`🌾 +${res.data.quantity} ${res.data.cropName}`, 'amber');
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error}`);
@@ -680,6 +760,15 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
             </button>
 
             <button
+              onClick={() => setIsSearchModalOpen(true)}
+              className="bg-black/80 hover:bg-black text-amber-300 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1 backdrop-blur-md text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all flex-shrink-0"
+              title="Cari Landmark, Sekte & Markah Koordinat"
+            >
+              <Search className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Cari</span>
+            </button>
+
+            <button
               onClick={handleToggleBgm}
               className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border flex items-center gap-1 backdrop-blur-md text-[11px] sm:text-xs font-semibold shadow-lg transition-all flex-shrink-0 ${
                 isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
@@ -717,7 +806,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         <TaleOfImmortalCanvas
           tiles={tiles}
           playerPos={{ x: px, y: py }}
-          focusTile={targetFocusTile ? { x: targetFocusTile.x, y: targetFocusTile.y } : null}
+          focusTile={searchFocusTile || (targetFocusTile ? { x: targetFocusTile.x, y: targetFocusTile.y } : null)}
           targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
           activePath={activePath}
           exploredChunks={exploredChunks}
@@ -729,7 +818,30 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
             setSelectedTile(null);
             setActivePath([]);
           }}
+          weather={weatherMode}
+          isNight={isNightMode}
+          onOpenSearch={() => setIsSearchModalOpen(true)}
         />
+
+        {/* Floating Numbers & Notices (Gathering / Panen Feedback) */}
+        <div className="absolute inset-0 pointer-events-none z-30 flex flex-col items-center justify-center gap-2">
+          {floatingNotices.map((notice) => (
+            <div
+              key={notice.id}
+              className={`px-4 py-1.5 rounded-full font-serif font-bold text-sm tracking-wide shadow-2xl backdrop-blur-md border animate-in fade-in zoom-in slide-out-to-top-8 duration-700 transition-all ${
+                notice.color === 'emerald'
+                  ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500/70 shadow-emerald-950/50'
+                  : notice.color === 'amber'
+                  ? 'bg-amber-950/90 text-amber-300 border-amber-500/70 shadow-amber-950/50'
+                  : notice.color === 'cyan'
+                  ? 'bg-cyan-950/90 text-cyan-300 border-cyan-500/70 shadow-cyan-950/50'
+                  : 'bg-red-950/90 text-red-300 border-red-500/70 shadow-red-950/50'
+              }`}
+            >
+              {notice.text}
+            </div>
+          ))}
+        </div>
 
         {/* Card Spasial Inspektur Petak Grid (Wuxia Tile Card - Muncul Setiap Petak Diklik) */}
         {selectedTile && (
@@ -740,6 +852,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
             pathSteps={pathSteps}
             isWalking={isWalking}
             onWalkToTile={handleStartWalking}
+            onTalkToNpc={(npc) => setTalkingNpc(npc)}
             onPurchaseLand={handlePurchaseLand}
             onOpenBuildModal={(t) => setBuildModalTile(t)}
             onEnterBuilding={handleEnterBuilding}
@@ -1030,6 +1143,30 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
              }
           }}
           onClose={() => setAmbushModalData(null)}
+        />
+      )}
+
+      {/* Modal Interaksi Dialog NPC dari Peta */}
+      {talkingNpc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-[#0e131d] border border-amber-600/70 rounded-2xl p-4 sm:p-5 max-w-lg w-full shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <NpcPanel
+              npcId={talkingNpc._id}
+              onBack={() => setTalkingNpc(null)}
+              onQuestAccepted={() => {
+                showMessage(`📜 Menerima quest dari ${talkingNpc.name}`);
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {/* Modal Cari Landmark & Markah Koordinat */}
+      {isSearchModalOpen && (
+        <MapSearchModal
+          currentPos={{ x: px, y: py }}
+          selectedPos={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
+          onSelectLocation={handleSelectSearchResult}
+          onClose={() => setIsSearchModalOpen(false)}
         />
       )}
       </div>

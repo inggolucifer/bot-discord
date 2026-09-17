@@ -1,7 +1,6 @@
 'use client';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Point } from '@/hooks/useAStarGridPath';
-import MapActionOverlay from './MapActionOverlay';
 import { useGlobalAssetLoader } from '@/hooks/useGlobalAssetLoader';
 
 export interface TileData {
@@ -40,6 +39,8 @@ export interface TileData {
   assetHp?: number;
   assetMaxHp?: number;
   isExpeditionNode?: boolean;
+  npcCount?: number;
+  npcs?: any[];
 }
 
 interface TaleOfImmortalCanvasProps {
@@ -57,6 +58,7 @@ interface TaleOfImmortalCanvasProps {
   focusTile?: Point | null;
   weather?: 'rain' | 'snow' | 'miasma' | 'none';
   isNight?: boolean;
+  onOpenSearch?: () => void;
 }
 
 export default function TaleOfImmortalCanvas({
@@ -73,7 +75,8 @@ export default function TaleOfImmortalCanvas({
   onClearTarget,
   focusTile = null,
   weather = 'none',
-  isNight = false
+  isNight = false,
+  onOpenSearch
 }: TaleOfImmortalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -142,9 +145,6 @@ export default function TaleOfImmortalCanvas({
   
   const { loadedImages } = useGlobalAssetLoader();
   
-  // Track overlay position
-  const [overlayPos, setOverlayPos] = useState<{x: number, y: number} | null>(null);
-
   // Client-Side Prediction / Tweening state
   const animatedPlayerPos = useRef({ x: playerPos.x, y: playerPos.y });
 
@@ -193,31 +193,6 @@ export default function TaleOfImmortalCanvas({
     }
   }, [playerPos.x, playerPos.y, isWalking]);
 
-  // Update Overlay Position when camera or target changes
-  useEffect(() => {
-    if (!targetTile || !canvasRef.current) {
-      setOverlayPos(null);
-      return;
-    }
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const currentTileSize = BASE_TILE_SIZE * camera.zoom;
-    const viewTilesX = canvas.width / currentTileSize;
-    const viewTilesY = canvas.height / currentTileSize;
-    
-    // Position at the top-center of the target tile
-    const screenX = (targetTile.x - camera.x + viewTilesX / 2) * currentTileSize + (currentTileSize / 2);
-    const screenY = (targetTile.y - camera.y + viewTilesY / 2) * currentTileSize;
-    
-    const scaleX = rect.width / canvas.width;
-    const scaleY = rect.height / canvas.height;
-    
-    setOverlayPos({
-      x: screenX * scaleX,
-      y: screenY * scaleY
-    });
-  }, [targetTile, camera, BASE_TILE_SIZE]);
-
   // Rendering Engine
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -234,21 +209,22 @@ export default function TaleOfImmortalCanvas({
       const height = canvas.height;
       const currentTileSize = BASE_TILE_SIZE * camera.zoom;
 
-      // Kertas Perkamen Latar Belakang (Parchment Silk)
+      // Kertas Perkamen / Sutra Xuan Putih Lembut (Guohua Shan Shui Paper)
       if (loadedImages.ui?.parchment_bg) {
         ctx.drawImage(loadedImages.ui.parchment_bg, 0, 0, width, height);
       } else {
-        const bgGradient = ctx.createRadialGradient(width/2, height/2, height/4, width/2, height/2, width);
-        bgGradient.addColorStop(0, '#f2eadd');
-        bgGradient.addColorStop(1, '#e3d5bd');
+        const bgGradient = ctx.createRadialGradient(width / 2, height / 2, height / 5, width / 2, height / 2, width);
+        bgGradient.addColorStop(0, '#faf8f4');
+        bgGradient.addColorStop(0.7, '#f4eee1');
+        bgGradient.addColorStop(1, '#ebe3d3');
         ctx.fillStyle = bgGradient;
         ctx.fillRect(0, 0, width, height);
       }
       
-      // Tambahkan noise lembut untuk efek tekstur kertas
-      ctx.fillStyle = 'rgba(100, 80, 50, 0.03)';
-      for(let i=0; i<100; i++) {
-        ctx.fillRect(Math.random()*width, Math.random()*height, 2, 2);
+      // Tekstur serat kertas seni tradisional
+      ctx.fillStyle = 'rgba(90, 75, 55, 0.02)';
+      for (let i = 0; i < 40; i++) {
+        ctx.fillRect((i * 137.5) % width, (i * 269.3) % height, 1.5, 1.5);
       }
 
       const viewTilesX = width / currentTileSize;
@@ -296,53 +272,126 @@ export default function TaleOfImmortalCanvas({
               ctx.stroke();
             }
           } else {
-            // FALLBACK PROCEDURAL
+            // FALLBACK PROCEDURAL SHAN SHUI (LUKISAN TINTA ORIENTAL)
             if (terrain === 'river' || terrain === 'swamp' || terrain === 'demonic_swamp' || terrain === 'eastern_sea') {
-              ctx.fillStyle = (terrain === 'river' || terrain === 'eastern_sea') ? 'rgba(135, 180, 200, 0.4)' : 'rgba(160, 175, 160, 0.4)';
+              // Air Mineral Tinta Mengalir Lembut
+              const isDemonic = terrain === 'demonic_swamp' || terrain === 'swamp';
+              ctx.fillStyle = isDemonic ? 'rgba(120, 95, 130, 0.28)' : 'rgba(168, 205, 218, 0.35)';
               ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
-              ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+
+              // Riak gelombang tinta putih lembut
+              ctx.strokeStyle = isDemonic ? 'rgba(180, 140, 200, 0.35)' : 'rgba(255, 255, 255, 0.5)';
+              ctx.lineWidth = Math.max(1, 1.2 * camera.zoom);
               ctx.beginPath();
-              const waveOffset = Math.sin(time + tx * 0.5 + ty * 0.5) * 5 * camera.zoom;
-              ctx.moveTo(sx + 5, sy + currentTileSize/2 + waveOffset);
-              ctx.quadraticCurveTo(sx + currentTileSize/2, sy + currentTileSize/2 - waveOffset, sx + currentTileSize - 5, sy + currentTileSize/2 + waveOffset);
+              const waveOffset1 = Math.sin(time * 1.8 + tx * 0.7 + ty * 0.5) * 4 * camera.zoom;
+              ctx.moveTo(sx + currentTileSize * 0.1, sy + currentTileSize * 0.4 + waveOffset1);
+              ctx.quadraticCurveTo(sx + currentTileSize * 0.5, sy + currentTileSize * 0.35 - waveOffset1, sx + currentTileSize * 0.9, sy + currentTileSize * 0.45 + waveOffset1);
+              ctx.moveTo(sx + currentTileSize * 0.2, sy + currentTileSize * 0.75 - waveOffset1);
+              ctx.quadraticCurveTo(sx + currentTileSize * 0.6, sy + currentTileSize * 0.8 + waveOffset1, sx + currentTileSize * 0.85, sy + currentTileSize * 0.7 - waveOffset1);
               ctx.stroke();
             } 
             else if (terrain === 'bamboo_forest' || terrain === 'forest') {
-              ctx.fillStyle = terrain === 'bamboo_forest' ? 'rgba(160, 190, 140, 0.4)' : 'rgba(120, 150, 120, 0.4)';
-              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
-              ctx.fillStyle = terrain === 'bamboo_forest' ? '#5c8a52' : '#3a5043';
-              const sway = Math.sin(time * 2 + tx) * 2 * camera.zoom;
+              // RUMPUN BAMBU / RIMBA TINTA WUXIA (Persis seperti referensi lukisan Dinasti Song)
+              const isBamboo = terrain === 'bamboo_forest';
+              const sway = Math.sin(time * 1.5 + tx * 0.6 + ty * 0.4) * 2 * camera.zoom;
+
+              // Batang Bambu / Pohon Slender Tinta
+              const stalkCount = isBamboo ? 4 : 3;
+              for (let s = 0; s < stalkCount; s++) {
+                const baseX = sx + currentTileSize * (0.2 + s * 0.22);
+                const baseY = sy + currentTileSize * 0.88;
+                const topX = baseX + sway * (0.6 + s * 0.2);
+                const topY = sy + currentTileSize * (0.15 + (s % 2) * 0.1);
+
+                // Batang
+                ctx.strokeStyle = isBamboo ? (s % 2 === 0 ? '#263b2c' : '#1c2d22') : '#362d26';
+                ctx.lineWidth = Math.max(1.2, (isBamboo ? 2.2 : 3) * camera.zoom);
+                ctx.beginPath();
+                ctx.moveTo(baseX, baseY);
+                ctx.quadraticCurveTo((baseX + topX) / 2 + sway * 0.5, (baseY + topY) / 2, topX, topY);
+                ctx.stroke();
+
+                // Ruas bambu
+                if (isBamboo) {
+                  ctx.fillStyle = '#142018';
+                  for (let n = 1; n <= 3; n++) {
+                    const nodeY = baseY - (baseY - topY) * (n * 0.26);
+                    const nodeX = baseX + (topX - baseX) * (n * 0.26);
+                    ctx.fillRect(nodeX - 2 * camera.zoom, nodeY - 1, 4 * camera.zoom, 2);
+                  }
+                }
+
+                // Daun Bambu Feathery Lanceolate (Sapuan kuas khas Guohua)
+                const leafColor = isBamboo 
+                  ? (s % 2 === 0 ? '#38573d' : '#28422d') 
+                  : (s % 2 === 0 ? '#2f4538' : '#1f3328');
+                ctx.fillStyle = leafColor;
+
+                const leafY = topY + currentTileSize * 0.08;
+                for (let l = -2; l <= 2; l++) {
+                  ctx.beginPath();
+                  const lx = topX + l * 4 * camera.zoom;
+                  const ly = leafY + Math.abs(l) * 3 * camera.zoom;
+                  ctx.ellipse(lx, ly, Math.max(3, 7 * camera.zoom), Math.max(1.5, 2.5 * camera.zoom), (l * 0.4) + (sway * 0.05), 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+
+              // Bebatuan Tinta di Kaki Rumpun
+              ctx.fillStyle = '#3c4740';
               ctx.beginPath();
-              ctx.moveTo(sx + currentTileSize/2 + sway, sy + currentTileSize*0.2);
-              ctx.lineTo(sx + currentTileSize*0.2, sy + currentTileSize*0.8);
-              ctx.lineTo(sx + currentTileSize*0.8, sy + currentTileSize*0.8);
+              ctx.ellipse(sx + currentTileSize * 0.35, sy + currentTileSize * 0.86, 6 * camera.zoom, 3.5 * camera.zoom, 0, 0, Math.PI * 2);
+              ctx.ellipse(sx + currentTileSize * 0.65, sy + currentTileSize * 0.88, 5 * camera.zoom, 3 * camera.zoom, 0, 0, Math.PI * 2);
               ctx.fill();
+
+              // Kabut Lembut di Kaki Rumpun Pohon (Mist Wash khas lukisan Shan Shui)
+              const mistGrad = ctx.createLinearGradient(0, sy + currentTileSize * 0.72, 0, sy + currentTileSize);
+              mistGrad.addColorStop(0, 'rgba(250, 248, 244, 0)');
+              mistGrad.addColorStop(1, 'rgba(250, 248, 244, 0.75)');
+              ctx.fillStyle = mistGrad;
+              ctx.fillRect(sx, sy + currentTileSize * 0.7, currentTileSize, currentTileSize * 0.3);
             }
             else if (terrain === 'mountain' || terrain === 'glacial' || terrain === 'azure_mountain' || terrain === 'northern_glacial') {
               const isGlacial = terrain === 'glacial' || terrain === 'northern_glacial';
-              ctx.fillStyle = isGlacial ? 'rgba(180, 210, 230, 0.5)' : 'rgba(180, 175, 170, 0.5)';
+              
+              // Tebing Batu Berlapis Kuas Tinta
+              ctx.fillStyle = isGlacial ? 'rgba(195, 220, 235, 0.45)' : 'rgba(190, 185, 178, 0.4)';
               ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
-              ctx.fillStyle = isGlacial ? '#6a8a9a' : '#5a5550';
+
+              ctx.fillStyle = isGlacial ? '#5b798c' : '#4d4842';
               ctx.beginPath();
-              ctx.moveTo(sx + currentTileSize*0.1, sy + currentTileSize*0.9);
-              ctx.lineTo(sx + currentTileSize*0.5, sy + currentTileSize*0.2);
-              ctx.lineTo(sx + currentTileSize*0.9, sy + currentTileSize*0.9);
+              ctx.moveTo(sx + currentTileSize * 0.1, sy + currentTileSize * 0.9);
+              ctx.lineTo(sx + currentTileSize * 0.5, sy + currentTileSize * 0.18);
+              ctx.lineTo(sx + currentTileSize * 0.9, sy + currentTileSize * 0.9);
+              ctx.closePath();
               ctx.fill();
+
+              // Bayangan tebing samping
+              ctx.fillStyle = isGlacial ? '#3f5666' : '#332f2b';
+              ctx.beginPath();
+              ctx.moveTo(sx + currentTileSize * 0.5, sy + currentTileSize * 0.18);
+              ctx.lineTo(sx + currentTileSize * 0.9, sy + currentTileSize * 0.9);
+              ctx.lineTo(sx + currentTileSize * 0.5, sy + currentTileSize * 0.9);
+              ctx.closePath();
+              ctx.fill();
+
+              // Puncak Salju / Kabut Puncak
               if (isGlacial) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
-                ctx.moveTo(sx + currentTileSize*0.35, sy + currentTileSize*0.45);
-                ctx.lineTo(sx + currentTileSize*0.5, sy + currentTileSize*0.2);
-                ctx.lineTo(sx + currentTileSize*0.65, sy + currentTileSize*0.45);
+                ctx.moveTo(sx + currentTileSize * 0.35, sy + currentTileSize * 0.45);
+                ctx.lineTo(sx + currentTileSize * 0.5, sy + currentTileSize * 0.18);
+                ctx.lineTo(sx + currentTileSize * 0.65, sy + currentTileSize * 0.45);
+                ctx.closePath();
                 ctx.fill();
               }
             }
             else if (terrain === 'settlement') {
-              ctx.fillStyle = 'rgba(220, 205, 185, 0.6)';
+              ctx.fillStyle = 'rgba(228, 220, 206, 0.65)';
               ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
             }
             else if (terrain === 'western_desert') {
-              ctx.fillStyle = '#e2cca0';
+              ctx.fillStyle = '#e8d4a8';
               ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
             }
           }
@@ -518,9 +567,9 @@ export default function TaleOfImmortalCanvas({
         }
       }
 
-      // 2.8 Garis Grid Presisi: Hitam Tipis Satu Garis (Single-Pass, Tidak Menimpa Yang Lain)
+      // 2.8 Garis Grid Presisi: Garis Tipis Satu Sapuan (Shan Shui Grid)
       ctx.save();
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)'; // Hitam tipis tegas & elegan
+      ctx.strokeStyle = 'rgba(165, 155, 142, 0.35)'; // Abu-abu perkamen tipis & elegan
       ctx.lineWidth = 1;
 
       // Garis grid vertikal (tx dari minTileX sampai maxTileX + 1)
@@ -610,22 +659,141 @@ export default function TaleOfImmortalCanvas({
         }
       }
 
-      // 5. Jalur A* Kuning Bercahaya (Glow Path)
+      // 4.5 Badge Angka NPC di Sudut Petak (Persis Sesuai Gambar Referensi Pengguna)
+      for (let ty = minTileY; ty <= maxTileY; ty++) {
+        for (let tx = minTileX; tx <= maxTileX; tx++) {
+          const tile = tileMap.get(`${tx},${ty}`);
+          if (!tile || !tile.npcCount || tile.npcCount <= 0) continue;
+
+          const chunkX = Math.floor(tx / 16);
+          const chunkY = Math.floor(ty / 16);
+          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+
+          const sx = toScreenX(tx);
+          const sy = toScreenY(ty);
+
+          ctx.save();
+          const badgeR = Math.max(6.5, 8.5 * camera.zoom);
+          const badgeX = sx + Math.max(9, 11 * camera.zoom);
+          const badgeY = sy + Math.max(9, 11 * camera.zoom);
+
+          // Bayangan lembut lingkaran
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+          ctx.shadowBlur = 4 * camera.zoom;
+
+          // Lingkaran bulat hitam / charcoal bergradien (seperti di referensi)
+          const badgeGrad = ctx.createLinearGradient(badgeX - badgeR, badgeY - badgeR, badgeX + badgeR, badgeY + badgeR);
+          badgeGrad.addColorStop(0, '#374151');
+          badgeGrad.addColorStop(0.5, '#1f2937');
+          badgeGrad.addColorStop(1, '#111827');
+          ctx.fillStyle = badgeGrad;
+          ctx.beginPath();
+          ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Ring pembatas perak / putih halus
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.lineWidth = Math.max(0.8, 1.2 * camera.zoom);
+          ctx.stroke();
+
+          // Angka putih tebal di tengah lingkaran
+          ctx.fillStyle = '#ffffff';
+          ctx.font = `bold ${Math.max(8, 10 * camera.zoom)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(tile.npcCount), badgeX, badgeY);
+          ctx.restore();
+        }
+      }
+
+      // 4.6 Badge Ancaman Monster / Bahaya di Sudut Kanan Atas Petak
+      for (let ty = minTileY; ty <= maxTileY; ty++) {
+        for (let tx = minTileX; tx <= maxTileX; tx++) {
+          const tile = tileMap.get(`${tx},${ty}`);
+          if (!tile) continue;
+
+          const isThreat = Boolean(
+            (tile.dangerTier && tile.dangerTier > 0) ||
+            (tile.ambushRiskRate && tile.ambushRiskRate > 0) ||
+            tile.territoryType === 'monster_zone' ||
+            tile.territoryType === 'danger_zone' ||
+            tile.territoryType === 'wilderness_high_risk'
+          );
+          if (!isThreat) continue;
+
+          const chunkX = Math.floor(tx / 16);
+          const chunkY = Math.floor(ty / 16);
+          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+
+          const sx = toScreenX(tx);
+          const sy = toScreenY(ty);
+
+          ctx.save();
+          const badgeR = Math.max(6.5, 8.5 * camera.zoom);
+          const badgeX = sx + currentTileSize - Math.max(9, 11 * camera.zoom);
+          const badgeY = sy + Math.max(9, 11 * camera.zoom);
+
+          const threatImg = loadedImages.conditions?.monster_threat_icon;
+          if (threatImg) {
+            ctx.shadowColor = 'rgba(239, 68, 68, 0.6)';
+            ctx.shadowBlur = 4 * camera.zoom;
+            ctx.drawImage(threatImg, badgeX - badgeR, badgeY - badgeR, badgeR * 2, badgeR * 2);
+          } else {
+            // Bayangan lingkaran ancaman
+            ctx.shadowColor = 'rgba(185, 28, 28, 0.6)';
+            ctx.shadowBlur = 5 * camera.zoom;
+
+            // Lingkaran gradien merah tua crimson
+            const mBadgeGrad = ctx.createLinearGradient(badgeX - badgeR, badgeY - badgeR, badgeX + badgeR, badgeY + badgeR);
+            mBadgeGrad.addColorStop(0, '#ef4444');
+            mBadgeGrad.addColorStop(0.5, '#b91c1c');
+            mBadgeGrad.addColorStop(1, '#450a0a');
+            ctx.fillStyle = mBadgeGrad;
+            ctx.beginPath();
+            ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ring merah muda / putih tipis
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(254, 202, 202, 0.75)';
+            ctx.lineWidth = Math.max(0.8, 1.2 * camera.zoom);
+            ctx.stroke();
+
+            // Simbol ancaman monster (👹 atau T{tier})
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `${Math.max(7, 9 * camera.zoom)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(tile.dangerTier && tile.dangerTier > 1 ? `T${tile.dangerTier}` : '👹', badgeX, badgeY);
+          }
+          ctx.restore();
+        }
+      }
+
+      // 5. Jalur A* Kuning Bercahaya (Glow Path - Pita Emas Bersih & Bersudut Siku)
       if (activePath && activePath.length > 1) {
         ctx.save();
-        ctx.shadowColor = '#fbbf24';
-        ctx.shadowBlur = 15 * camera.zoom;
+        ctx.shadowColor = 'rgba(245, 158, 11, 0.8)';
+        ctx.shadowBlur = 12 * camera.zoom;
         ctx.strokeStyle = '#f59e0b';
-        ctx.lineWidth = 3.5 * camera.zoom;
-        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.lineWidth = Math.max(3.5, 4.8 * camera.zoom);
+        ctx.lineCap = 'square';
+        ctx.lineJoin = 'miter';
 
         ctx.beginPath();
         activePath.forEach((pt, idx) => {
-          const px = toScreenX(pt.x) + currentTileSize/2;
-          const py = toScreenY(pt.y) + currentTileSize/2;
+          const px = toScreenX(pt.x) + currentTileSize / 2;
+          const py = toScreenY(pt.y) + currentTileSize / 2;
           if (idx === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         });
+        ctx.stroke();
+
+        // Garis inti kilau emas muda
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = Math.max(1, 1.6 * camera.zoom);
+        ctx.shadowBlur = 0;
         ctx.stroke();
         ctx.restore();
       }
@@ -652,13 +820,38 @@ export default function TaleOfImmortalCanvas({
         ctx.restore();
       }
 
+      // 6.5 Sorotan Emas Petak Karakter Aktif (Persis Seperti di Gambar Referensi Pengguna)
+      const curTileX = Math.round(animatedPlayerPos.current.x);
+      const curTileY = Math.round(animatedPlayerPos.current.y);
+      const pTileSx = toScreenX(curTileX);
+      const pTileSy = toScreenY(curTileY);
+
+      ctx.save();
+      // Warna kuning emas transparan hangat mengisi petak aktif
+      ctx.fillStyle = 'rgba(254, 243, 199, 0.35)';
+      ctx.fillRect(pTileSx, pTileSy, currentTileSize, currentTileSize);
+
+      // Bingkai luar emas bercahaya tegas
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = Math.max(1.5, 2.4 * camera.zoom);
+      ctx.shadowColor = 'rgba(245, 158, 11, 0.65)';
+      ctx.shadowBlur = 8 * camera.zoom;
+      ctx.strokeRect(pTileSx + 0.5, pTileSy + 0.5, currentTileSize - 1, currentTileSize - 1);
+
+      // Garis bingkai dalam emas halus
+      ctx.strokeStyle = 'rgba(254, 240, 138, 0.85)';
+      ctx.lineWidth = 1;
+      ctx.shadowBlur = 0;
+      ctx.strokeRect(pTileSx + 3 * camera.zoom, pTileSy + 3 * camera.zoom, currentTileSize - 6 * camera.zoom, currentTileSize - 6 * camera.zoom);
+      ctx.restore();
+
       // 7. Avatar Karakter Utama (Spiritual Aura)
       // Client-Side Prediction (Tweening) untuk pergerakan map yang smooth
       animatedPlayerPos.current.x += (playerPos.x - animatedPlayerPos.current.x) * 0.15;
       animatedPlayerPos.current.y += (playerPos.y - animatedPlayerPos.current.y) * 0.15;
 
-      const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize/2;
-      const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize/2;
+      const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize / 2;
+      const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize / 2;
       
       ctx.save();
       if (loadedImages.sprites?.player_default) {
@@ -670,25 +863,41 @@ export default function TaleOfImmortalCanvas({
           ctx.drawImage(loadedImages.sprites.flying_sword_aura, px - pw/2, py + 5*camera.zoom, pw, pw/2);
         }
       } else {
-        // Bayangan
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        ctx.beginPath(); ctx.ellipse(px, py + 12*camera.zoom, 14*camera.zoom, 5*camera.zoom, 0, 0, Math.PI*2); ctx.fill();
-        
-        // Aura berdenyut
-        const auraPulse = 14 + Math.sin(time*5) * 3;
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
-        ctx.beginPath(); ctx.arc(px, py - 6*camera.zoom, auraPulse * camera.zoom, 0, Math.PI*2); ctx.fill();
-        
-        // Sprite Sederhana Pendekar
-        ctx.fillStyle = '#e2e8f0'; // Jubah putih/perak
+        // Bayangan lembut karakter
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
         ctx.beginPath();
-        ctx.moveTo(px, py - 18*camera.zoom);
-        ctx.lineTo(px + 8*camera.zoom, py + 8*camera.zoom);
-        ctx.lineTo(px - 8*camera.zoom, py + 8*camera.zoom);
+        ctx.ellipse(px, py + 11 * camera.zoom, 12 * camera.zoom, 4.5 * camera.zoom, 0, 0, Math.PI * 2);
         ctx.fill();
         
-        ctx.fillStyle = '#0f172a'; // Rambut
-        ctx.beginPath(); ctx.arc(px, py - 18*camera.zoom, 5*camera.zoom, 0, Math.PI*2); ctx.fill();
+        // Aura Qi berdenyut lembut
+        const auraPulse = 13 + Math.sin(time * 4) * 2.5;
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+        ctx.beginPath();
+        ctx.arc(px, py - 5 * camera.zoom, auraPulse * camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Sprite Pendekar Wuxia (Jubah & Rambut Khas)
+        ctx.fillStyle = '#1e293b'; // Jubah hitam/abu gelap pendekar
+        ctx.beginPath();
+        ctx.moveTo(px, py - 16 * camera.zoom);
+        ctx.lineTo(px + 7 * camera.zoom, py + 9 * camera.zoom);
+        ctx.lineTo(px - 7 * camera.zoom, py + 9 * camera.zoom);
+        ctx.closePath();
+        ctx.fill();
+
+        // Selendang putih/perak
+        ctx.fillStyle = '#f1f5f9';
+        ctx.fillRect(px - 2 * camera.zoom, py - 12 * camera.zoom, 4 * camera.zoom, 18 * camera.zoom);
+        
+        // Kepala & Sanggul Rambut
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(px, py - 17 * camera.zoom, 4.5 * camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
+        // Topknot / Sanggul
+        ctx.beginPath();
+        ctx.arc(px, py - 22 * camera.zoom, 2.2 * camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
       }
       ctx.restore();
 
@@ -942,8 +1151,6 @@ export default function TaleOfImmortalCanvas({
     }));
   };
 
-  const selectedTileData = targetTile ? tileMap.get(`${targetTile.x},${targetTile.y}`) : null;
-
   return (
     <div ref={containerRef} className="relative w-full h-full select-none overflow-hidden bg-[#e3d5bd] flex flex-col items-center justify-center font-sans">
       <canvas
@@ -958,20 +1165,6 @@ export default function TaleOfImmortalCanvas({
         onWheel={handleWheel}
         className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
       />
-
-      {/* Map Action Overlay Pop-up (Khusus layar Desktop, di Mobile digantikan oleh GridTileInspectorCard) */}
-      {overlayPos && selectedTileData && onActionWalk && !isWalking && (
-        <div className="hidden sm:block">
-          <MapActionOverlay 
-            x={overlayPos.x} 
-            y={overlayPos.y} 
-            tile={selectedTileData}
-            onWalk={onActionWalk}
-            onInspect={onActionInspect || (() => {})}
-            onClose={() => onClearTarget && onClearTarget()}
-          />
-        </div>
-      )}
 
       {/* HUD Controls (+ dan - Zoom Spasial) - Berada di sisi kiri atas di bawah bar navigasi agar bebas tabrakan */}
       <div className="absolute top-14 left-3 sm:top-16 sm:left-4 z-20 flex items-center gap-1.5 pointer-events-auto">
@@ -1003,6 +1196,15 @@ export default function TaleOfImmortalCanvas({
         >
           +
         </button>
+        {onOpenSearch && (
+          <button
+            onClick={onOpenSearch}
+            className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1 transition-all active:scale-95 ml-1"
+            title="Cari Landmark, Sekte & Markah Koordinat"
+          >
+            <span>🔍 Cari</span>
+          </button>
+        )}
       </div>
     </div>
   );

@@ -45,8 +45,8 @@ class ForageTrainingService {
     }
 
     const currentStamina = getCurrentStamina(player);
-    if (currentStamina < 3) {
-      return { ok: false, error: 'Stamina tidak mencukupi untuk meramu/menebang (Butuh 3 Stamina).' };
+    if (currentStamina < 5) {
+      return { ok: false, error: 'Stamina tidak mencukupi untuk meramu/menebang (Butuh 5 Stamina).' };
     }
 
     // Tentukan item hasil sesuai tipe node (Kanonikal Jianghu Era 1)
@@ -76,7 +76,8 @@ class ForageTrainingService {
       player.inventory.push({ itemId: itemDoc._id, quantity: yieldQty });
     }
 
-    player.currentStamina = Math.max(0, currentStamina - 3);
+    // Biaya stamina 5
+    player.currentStamina = Math.max(0, currentStamina - 5);
 
     // Pasang cooldown respawn (30 detik)
     const cooldownSec = options.overrideCooldownSeconds != null ? options.overrideCooldownSeconds : 30;
@@ -106,6 +107,7 @@ class ForageTrainingService {
       resourceType: node.resourceType,
       itemName,
       quantity: yieldQty,
+      staminaCost: 5,
       remainingStamina: player.currentStamina,
       cooldownSeconds: cooldownSec
     };

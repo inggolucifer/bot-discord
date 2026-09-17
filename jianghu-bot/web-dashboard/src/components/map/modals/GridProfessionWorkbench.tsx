@@ -2,6 +2,11 @@
 import React, { useState } from 'react';
 import { Hammer, Utensils, Sparkles, Fish, Wheat, X, ArrowRight, CheckCircle2 } from 'lucide-react';
 import api from '@/lib/api';
+import CrucibleEquilibriumMinigame from '@/components/minigames/CrucibleEquilibriumMinigame';
+import KataQteMinigame from '@/components/minigames/KataQteMinigame';
+import FishingReelMinigame from '@/components/minigames/FishingReelMinigame';
+import CookingFlameMinigame from '@/components/minigames/CookingFlameMinigame';
+import HerbHarvestMinigame from '@/components/minigames/HerbHarvestMinigame';
 
 interface GridProfessionWorkbenchProps {
   professionType: 'smithing' | 'cooking' | 'alchemy' | 'fishing' | 'farming';
@@ -23,6 +28,7 @@ export default function GridProfessionWorkbench({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
+  const [activeMinigame, setActiveMinigame] = useState<'crucible' | 'kata' | 'fishing' | 'cooking' | 'harvest' | null>(null);
 
   // Formulir / Resep State
   const [selectedRecipe, setSelectedRecipe] = useState<string>('Pedang Besi Tempa');
@@ -75,36 +81,36 @@ export default function GridProfessionWorkbench({
   };
 
   return (
-    <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-[#181f2b] to-[#0c1017] border border-amber-600/70 rounded-xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto flex flex-col">
+    <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
+      <div className="bg-gradient-to-b from-[#181f2b] to-[#0c1017] border border-amber-600/70 rounded-xl max-w-lg landscape:max-w-xl w-full p-4 sm:p-6 landscape:p-3 shadow-2xl relative max-h-[95vh] overflow-y-auto flex flex-col">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 hover:bg-black/80 rounded-full p-1.5 transition-colors"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white bg-black/40 hover:bg-black/80 rounded-full p-1.5 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-2 mb-1">
           {getIcon()}
-          <h2 className="text-base font-serif font-bold text-amber-200">{getTitle()}</h2>
+          <h2 className="text-sm sm:text-base font-serif font-bold text-amber-200">{getTitle()}</h2>
         </div>
-        <p className="text-xs text-gray-400 mb-4">{buildingName} • Fasilitas kerja mandiri di grid.</p>
+        <p className="text-[11px] sm:text-xs text-gray-400 mb-2.5 sm:mb-4">{buildingName} • Fasilitas kerja mandiri di grid.</p>
 
         {error && (
-          <div className="mb-3 bg-red-950/60 border border-red-700/60 text-red-200 p-2.5 rounded-lg text-xs">
+          <div className="mb-2.5 bg-red-950/60 border border-red-700/60 text-red-200 p-2 sm:p-2.5 rounded-lg text-xs">
             {error}
           </div>
         )}
 
         {successNotice && (
-          <div className="mb-3 bg-green-950/60 border border-green-700/60 text-green-200 p-2.5 rounded-lg text-xs flex items-center gap-1.5">
+          <div className="mb-2.5 bg-green-950/60 border border-green-700/60 text-green-200 p-2 sm:p-2.5 rounded-lg text-xs flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-green-400" />
             <span>{successNotice}</span>
           </div>
         )}
 
         {/* Resep & Menu Pilihan */}
-        <div className="bg-[#0f141f] border border-gray-800 rounded-lg p-3.5 mb-4 space-y-3">
+        <div className="bg-[#0f141f] border border-gray-800 rounded-lg p-2.5 sm:p-3.5 mb-2.5 sm:mb-4 space-y-2 sm:space-y-3">
           <label className="block text-xs font-semibold text-gray-300">Pilih Resep / Aktivitas:</label>
           <select
             value={selectedRecipe}
@@ -150,6 +156,27 @@ export default function GridProfessionWorkbench({
           </div>
         </div>
 
+        {/* Tombol Peluncuran Minigame Interaktif untuk Semua Profesi */}
+        <button
+          onClick={() => {
+            if (professionType === 'alchemy') setActiveMinigame('crucible');
+            else if (professionType === 'smithing') setActiveMinigame('kata');
+            else if (professionType === 'fishing') setActiveMinigame('fishing');
+            else if (professionType === 'cooking') setActiveMinigame('cooking');
+            else if (professionType === 'farming') setActiveMinigame('harvest');
+          }}
+          className="w-full mb-3 py-2.5 rounded-lg bg-gradient-to-r from-purple-950 via-amber-950 to-cyan-950 hover:from-purple-900 hover:to-cyan-900 border border-amber-500/70 text-amber-200 text-xs font-serif font-bold shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 animate-pulse"
+        >
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          <span>
+            {professionType === 'alchemy' && '🔥 Mainkan Minigame Kendali Suhu Kuali (Bonus Qi & Kemurnian)'}
+            {professionType === 'smithing' && '⚒️ Mainkan Minigame Ritme Pukulan Palu Tempa'}
+            {professionType === 'fishing' && '🎣 Mainkan Minigame Tarik Joran Ikan Spiritual'}
+            {professionType === 'cooking' && '🍳 Mainkan Minigame Panas Wajan & Racik Bumbu'}
+            {professionType === 'farming' && '🌿 Mainkan Minigame Cabut Akar Herba & Panen Presisi'}
+          </span>
+        </button>
+
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
@@ -162,11 +189,70 @@ export default function GridProfessionWorkbench({
             disabled={loading}
             className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white text-xs font-serif font-bold shadow-lg border border-amber-400/50 flex items-center gap-1.5 transition-all disabled:opacity-50 active:scale-95"
           >
-            <span>{loading ? 'Sedang Memproses...' : 'Mulai Pengerjaan'}</span>
+            <span>{loading ? 'Sedang Memproses...' : 'Mulai Pengerjaan Langsung'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
+
+      {/* Minigame Overlays */}
+      {activeMinigame === 'crucible' && (
+        <CrucibleEquilibriumMinigame
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            setSuccessNotice(res.message);
+            if (onActionSuccess) onActionSuccess(res.message);
+          }}
+        />
+      )}
+      {activeMinigame === 'kata' && (
+        <KataQteMinigame
+          discipline="sword"
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            setSuccessNotice(res.message);
+            if (onActionSuccess) onActionSuccess(res.message);
+          }}
+        />
+      )}
+      {activeMinigame === 'fishing' && (
+        <FishingReelMinigame
+          zoneId={zoneId}
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            const msg = `🎣 Berhasil menangkap 1x ${res.fishName || 'Ikan Spiritual'}!`;
+            setSuccessNotice(msg);
+            if (onActionSuccess) onActionSuccess(msg);
+          }}
+        />
+      )}
+      {activeMinigame === 'cooking' && (
+        <CookingFlameMinigame
+          dishName={selectedRecipe}
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            const msg = res.message || `🍲 Masakan ${selectedRecipe} berhasil disajikan!`;
+            setSuccessNotice(msg);
+            if (onActionSuccess) onActionSuccess(msg);
+          }}
+        />
+      )}
+      {activeMinigame === 'harvest' && (
+        <HerbHarvestMinigame
+          cropName={selectedRecipe}
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            const msg = res.message || `🌿 Berhasil memanen tanaman ${selectedRecipe}!`;
+            setSuccessNotice(msg);
+            if (onActionSuccess) onActionSuccess(msg);
+          }}
+        />
+      )}
     </div>
   );
 }
