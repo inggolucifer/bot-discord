@@ -197,4 +197,116 @@ router.post('/crucible/submit', authenticateToken, async (req, res) => {
     }
 });
 
+/**
+ * 4. SUBMIT HASIL MINIGAME MEMASAK (WOK HEI & SEASONING)
+ */
+router.post('/cooking/submit', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { scorePercent = 0, perfectSeasonings = 0, dishName = 'Sup Ikan Mas' } = req.body;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const score = Math.min(100, Math.max(0, parseFloat(scorePercent)));
+        const isMasterDish = score >= 85;
+
+        // Berikan EXP Memasak
+        if (!player.professions) player.professions = {};
+        if (!player.professions.cooking) player.professions.cooking = { level: 1, exp: 0, isUnlocked: true };
+        
+        const expGain = isMasterDish ? 45 : 25;
+        player.professions.cooking.exp += expGain;
+
+        // Pulihkan Stamina instan dari aroma masakan
+        const staminaGain = isMasterDish ? 30 : 15;
+        if (player.currentStamina !== undefined && player.maxStamina !== undefined) {
+            player.currentStamina = Math.min(player.maxStamina, (player.currentStamina || 0) + staminaGain);
+        }
+
+        // Berikan item makanan ke inventory
+        const finalDish = isMasterDish ? `Kelezatan Sempurna: ${dishName}` : dishName;
+        let foodItem = await Item.findOne({ name: dishName }) || await Item.findOne({ type: 'consumable' });
+        if (foodItem) {
+            if (!player.inventory) player.inventory = [];
+            const existingSlot = player.inventory.find(i => i.itemId && i.itemId.toString() === foodItem._id.toString());
+            if (existingSlot) {
+                existingSlot.quantity = (existingSlot.quantity || 1) + 1;
+            } else {
+                player.inventory.push({ itemId: foodItem._id, quantity: 1 });
+            }
+        }
+
+        await player.save();
+
+        res.json({
+            success: true,
+            scorePercent: score,
+            isMasterDish,
+            dishName: finalDish,
+            staminaGain,
+            expGain,
+            cookingLevel: player.professions.cooking.level,
+            message: `Masakan ${finalDish} selesai dengan cita rasa ${score}%! Menikmati aroma masakan memulihkan +${staminaGain} Stamina!`
+        });
+    } catch (error) {
+        console.error('[MINIGAME-COOKING] Error:', error);
+        res.status(500).json({ error: 'Gagal memproses hasil masakan' });
+    }
+});
+
+/**
+ * 5. SUBMIT HASIL MINIGAME PANEN HERBA (DELICATE ROOT HARVEST)
+ */
+router.post('/harvest/submit', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { accuracyPercent = 0, rootsIntact = true, cropName = 'Herba Rohani' } = req.body;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const accuracy = Math.min(100, Math.max(0, parseFloat(accuracyPercent)));
+        const isPristine = accuracy >= 85 && rootsIntact;
+
+        // Berikan EXP Farming
+        if (!player.professions) player.professions = {};
+        if (!player.professions.farming) player.professions.farming = { level: 1, exp: 0, isUnlocked: true };
+        
+        const expGain = isPristine ? 40 : 20;
+        player.professions.farming.exp += expGain;
+
+        // Berikan hasil panen ke inventory
+        const harvestQty = isPristine ? 2 : 1;
+        let cropItem = await Item.findOne({ name: cropName }) || await Item.findOne({ type: 'material' });
+        if (cropItem) {
+            if (!player.inventory) player.inventory = [];
+            const existingSlot = player.inventory.find(i => i.itemId && i.itemId.toString() === cropItem._id.toString());
+            if (existingSlot) {
+                existingSlot.quantity = (existingSlot.quantity || 1) + harvestQty;
+            } else {
+                player.inventory.push({ itemId: cropItem._id, quantity: harvestQty });
+            }
+        }
+
+        await player.save();
+
+        res.json({
+            success: true,
+            accuracyPercent: accuracy,
+            isPristine,
+            cropName,
+            harvestQty,
+            expGain,
+            farmingLevel: player.professions.farming.level,
+            message: isPristine
+                ? `Panen Sempurna! Akar ${cropName} dicabut utuh tanpa cacat. Memperoleh ${harvestQty}x ${cropName} berkualitas tinggi (+${expGain} EXP Tani)!`
+                : `Panen selesai. Berhasil mengumpulkan ${harvestQty}x ${cropName} (+${expGain} EXP Tani).`
+        });
+    } catch (error) {
+        console.error('[MINIGAME-HARVEST] Error:', error);
+        res.status(500).json({ error: 'Gagal memproses hasil panen herba' });
+    }
+});
+
 module.exports = router;

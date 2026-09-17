@@ -12,7 +12,9 @@ const INTERIOR_TILES = {
     ALCHEMY_CRUCIBLE: 4,
     BLACKSMITH_ANVIL: 5,
     HERB_PLOT: 6,
-    DOOR_EXIT: 7
+    DOOR_EXIT: 7,
+    FISH_POND: 8,
+    KITCHEN_STOVE: 9
 };
 
 const TILE_METADATA = {
@@ -22,8 +24,10 @@ const TILE_METADATA = {
     [INTERIOR_TILES.CULTIVATION_MAT]: { name: 'Bantal Semadi Formasi Qi', isSolid: false, interactable: true, action: 'minigame_acupoint' },
     [INTERIOR_TILES.ALCHEMY_CRUCIBLE]: { name: 'Kuali Tembaga Kuno Alkimia', isSolid: true, interactable: true, action: 'minigame_crucible' },
     [INTERIOR_TILES.BLACKSMITH_ANVIL]: { name: 'Landasan Tempa Baja Meteor', isSolid: true, interactable: true, action: 'minigame_kata' },
-    [INTERIOR_TILES.HERB_PLOT]: { name: 'Petak Herbal Rohani', isSolid: false, interactable: true, action: 'harvest_herbs' },
-    [INTERIOR_TILES.DOOR_EXIT]: { name: 'Pintu Gerbang Keluar', isSolid: false, interactable: true, action: 'exit_property' }
+    [INTERIOR_TILES.HERB_PLOT]: { name: 'Petak Herbal Rohani', isSolid: false, interactable: true, action: 'minigame_harvest' },
+    [INTERIOR_TILES.DOOR_EXIT]: { name: 'Pintu Gerbang Keluar', isSolid: false, interactable: true, action: 'exit_property' },
+    [INTERIOR_TILES.FISH_POND]: { name: 'Kolam Ikan Rohani', isSolid: true, interactable: true, action: 'minigame_fishing' },
+    [INTERIOR_TILES.KITCHEN_STOVE]: { name: 'Tungku Dapur Jianghu', isSolid: true, interactable: true, action: 'minigame_cooking' }
 };
 
 /**
@@ -105,6 +109,12 @@ function generateDefaultEstateLayout(width = 12, height = 12) {
     // 7. Kebun Tanaman Rohani (Kanan Bawah: x=8, y=9 dan x=9, y=9)
     grid[9 * width + 8] = INTERIOR_TILES.HERB_PLOT;
     grid[9 * width + 9] = INTERIOR_TILES.HERB_PLOT;
+
+    // 8. Kolam Ikan Rohani (Kiri Tengah: x=2, y=5)
+    grid[5 * width + 2] = INTERIOR_TILES.FISH_POND;
+
+    // 9. Dapur Masak (Kanan Tengah: x=9, y=5)
+    grid[5 * width + 9] = INTERIOR_TILES.KITCHEN_STOVE;
 
     return compressLayoutRLE(grid);
 }

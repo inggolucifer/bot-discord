@@ -243,8 +243,9 @@ export function WorldPageContent() {
         ) : (
           <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out relative z-10">
             <ZoneGridView
-              zoneId={queryZoneId || locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
+              zoneId={queryZoneId || locationData?.gridPosition?.zoneId || 'tianyuan_world_map'}
               targetFocusTile={targetFocusTile}
+              climateData={climateData}
               onBackToWorld={() => setMapView('world')}
               onSubViewChange={setSubViewMode}
             />

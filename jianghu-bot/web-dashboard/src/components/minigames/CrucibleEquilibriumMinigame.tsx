@@ -70,6 +70,23 @@ export default function CrucibleEquilibriumMinigame({ onClose, onCompleted }: Cr
         };
     }, []);
 
+    // Keyboard controls: A / Panah Kiri = Yin, D / Panah Kanan = Yang
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (isFinished) return;
+            if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+                e.preventDefault();
+                handleApplyYin();
+            } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+                e.preventDefault();
+                handleApplyYang();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isFinished]);
+
     const handleApplyYang = () => {
         if (isFinished) return;
         sound.playCauldronSizzle();
@@ -112,44 +129,44 @@ export default function CrucibleEquilibriumMinigame({ onClose, onCompleted }: Cr
     const warningActive = consecutiveOutOfZone >= 1.5;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-            <div className="bg-[#0e141f] border border-amber-900/60 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 select-none">
+            <div className="bg-[#0e141f] border border-amber-900/60 rounded-2xl w-full max-w-md landscape:max-w-xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
                 {/* Header */}
-                <div className="bg-[#181a24] px-5 py-3 border-b border-[#282d3f] flex justify-between items-center">
+                <div className="bg-[#181a24] px-4 py-2.5 landscape:py-1.5 border-b border-[#282d3f] flex justify-between items-center shrink-0">
                     <div className="flex items-center gap-2">
-                        <Flame className="w-5 h-5 text-amber-500 animate-pulse" />
-                        <h3 className="font-serif font-bold text-amber-200 text-base">Pengendalian Tungku Yin-Yang</h3>
+                        <Flame className="w-4 h-4 text-amber-500 animate-pulse" />
+                        <h3 className="font-serif font-bold text-amber-200 text-sm sm:text-base">Pengendalian Tungku Yin-Yang</h3>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white text-sm font-semibold px-2 py-1"
+                        className="text-gray-400 hover:text-white text-xs sm:text-sm font-semibold px-2 py-1"
                     >
                         ✕
                     </button>
                 </div>
 
                 {/* Main Content */}
-                <div className="p-5 flex flex-col items-center">
+                <div className="p-3.5 sm:p-5 landscape:p-3 flex flex-col items-center">
                     {!isFinished ? (
                         <>
-                            <div className="flex justify-between w-full text-xs font-mono text-gray-300 mb-2">
-                                <span>Waktu Peleburan: <strong className="text-amber-300 font-bold">{secondsLeft}s</strong></span>
+                            <div className="flex justify-between w-full text-xs font-mono text-gray-300 mb-1.5">
+                                <span>Waktu: <strong className="text-amber-300 font-bold">{secondsLeft}s</strong></span>
                                 <span>Stabilitas Hijau: <strong className="text-emerald-400 font-bold">{Math.round(timeInEquilibrium)}s / 30s</strong></span>
                             </div>
 
                             {/* Warning if out of balance */}
                             {warningActive && (
-                                <div className="w-full bg-red-950/80 border border-red-600/80 text-red-200 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 mb-3 animate-pulse">
-                                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-                                    <span>Bahaya! Suhu tungku tidak stabil! Kuali bisa meledak dalam {(3.5 - consecutiveOutOfZone).toFixed(1)}s!</span>
+                                <div className="w-full bg-red-950/80 border border-red-600/80 text-red-200 px-2.5 py-1 rounded-lg text-[11px] flex items-center gap-1.5 mb-2 animate-pulse">
+                                    <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                                    <span>Bahaya! Suhu kuali tidak stabil! Ledakan dalam {(3.5 - consecutiveOutOfZone).toFixed(1)}s!</span>
                                 </div>
                             )}
 
                             {/* Thermometer Gauge */}
-                            <div className="relative w-full h-10 bg-[#0a0d14] rounded-xl border border-gray-700 overflow-hidden shadow-inner my-4">
+                            <div className="relative w-full h-8 sm:h-10 landscape:h-8 bg-[#0a0d14] rounded-xl border border-gray-700 overflow-hidden shadow-inner my-2 sm:my-3 landscape:my-1.5">
                                 {/* Yin Zone (Left, Blue) */}
                                 <div className="absolute left-0 top-0 bottom-0 w-[40%] bg-blue-950/60 border-r border-blue-600/30 flex items-center pl-2">
-                                    <Snowflake className="w-4 h-4 text-blue-400 opacity-60" />
+                                    <Snowflake className="w-3.5 h-3.5 text-blue-400 opacity-60" />
                                     <span className="text-[9px] text-blue-300 ml-1 font-mono">Dingin (Yin)</span>
                                 </div>
 
@@ -161,7 +178,7 @@ export default function CrucibleEquilibriumMinigame({ onClose, onCompleted }: Cr
                                 {/* Yang Zone (Right, Red) */}
                                 <div className="absolute left-[60%] top-0 bottom-0 w-[40%] bg-red-950/60 border-l border-red-600/30 flex items-center justify-end pr-2">
                                     <span className="text-[9px] text-amber-300 mr-1 font-mono">Panas (Yang)</span>
-                                    <Flame className="w-4 h-4 text-amber-400 opacity-60" />
+                                    <Flame className="w-3.5 h-3.5 text-amber-400 opacity-60" />
                                 </div>
 
                                 {/* Thermal Needle Indicator */}
@@ -169,60 +186,60 @@ export default function CrucibleEquilibriumMinigame({ onClose, onCompleted }: Cr
                                     className="absolute top-0 bottom-0 w-1.5 bg-white shadow-[0_0_12px_#ffffff] transition-all duration-75 -translate-x-1/2 z-20"
                                     style={{ left: `${temperature}%` }}
                                 >
-                                    <div className="w-3 h-3 bg-amber-400 rounded-full -translate-x-[3px] -translate-y-1 shadow-md" />
+                                    <div className="w-2.5 h-2.5 bg-amber-400 rounded-full -translate-x-[2px] -translate-y-0.5 shadow-md" />
                                 </div>
                             </div>
 
                             {/* Control Levers */}
-                            <div className="grid grid-cols-2 gap-4 w-full mt-4">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-4 w-full mt-2 landscape:mt-1">
                                 <button
                                     onClick={handleApplyYin}
-                                    className="p-4 bg-gradient-to-b from-blue-900 to-blue-950 hover:from-blue-800 hover:to-blue-900 active:scale-95 text-blue-200 rounded-2xl border border-blue-600/50 shadow-lg flex flex-col items-center gap-2 transition-all"
+                                    className="p-2.5 sm:p-3.5 landscape:py-2 bg-gradient-to-b from-blue-900 to-blue-950 hover:from-blue-800 hover:to-blue-900 active:scale-95 text-blue-200 rounded-xl border border-blue-600/50 shadow-lg flex flex-col items-center gap-1 transition-all"
                                 >
-                                    <Snowflake className="w-6 h-6 text-blue-400" />
-                                    <span className="font-serif font-bold text-xs">Tuas Pengabut Es (Yin)</span>
-                                    <span className="text-[9px] text-blue-300/80">Turunkan Suhu Api</span>
+                                    <Snowflake className="w-5 h-5 landscape:w-4 landscape:h-4 text-blue-400" />
+                                    <span className="font-serif font-bold text-xs">Tuas Es (Yin)</span>
+                                    <span className="text-[9px] text-blue-300/80 hidden sm:inline">Turunkan Suhu (A / ←)</span>
                                 </button>
 
                                 <button
                                     onClick={handleApplyYang}
-                                    className="p-4 bg-gradient-to-b from-amber-800 to-red-950 hover:from-amber-700 hover:to-red-900 active:scale-95 text-amber-200 rounded-2xl border border-amber-600/50 shadow-lg flex flex-col items-center gap-2 transition-all"
+                                    className="p-2.5 sm:p-3.5 landscape:py-2 bg-gradient-to-b from-amber-800 to-red-950 hover:from-amber-700 hover:to-red-900 active:scale-95 text-amber-200 rounded-xl border border-amber-600/50 shadow-lg flex flex-col items-center gap-1 transition-all"
                                 >
-                                    <Flame className="w-6 h-6 text-amber-400" />
-                                    <span className="font-serif font-bold text-xs">Tuas Kipas Bawah (Yang)</span>
-                                    <span className="text-[9px] text-amber-300/80">Tingkatkan Hawa Api</span>
+                                    <Flame className="w-5 h-5 landscape:w-4 landscape:h-4 text-amber-400" />
+                                    <span className="font-serif font-bold text-xs">Tuas Api (Yang)</span>
+                                    <span className="text-[9px] text-amber-300/80 hidden sm:inline">Naikkan Hawa (D / →)</span>
                                 </button>
                             </div>
                         </>
                     ) : (
                         /* Report Dialog */
                         <div className="w-full flex flex-col items-center text-center py-2">
-                            <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-3 shadow-xl ${isExploded ? 'bg-red-950 border-2 border-red-500' : 'bg-emerald-950 border-2 border-emerald-500'}`}>
-                                {isExploded ? <AlertTriangle className="w-7 h-7 text-red-400" /> : <Sparkles className="w-7 h-7 text-emerald-300" />}
+                            <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 shadow-xl ${isExploded ? 'bg-red-950 border-2 border-red-500' : 'bg-emerald-950 border-2 border-emerald-500'}`}>
+                                {isExploded ? <AlertTriangle className="w-6 h-6 text-red-400" /> : <Sparkles className="w-6 h-6 text-emerald-300" />}
                             </div>
-                            <h4 className="font-serif font-bold text-lg text-amber-200 mb-1">
+                            <h4 className="font-serif font-bold text-base sm:text-lg text-amber-200 mb-1">
                                 {isExploded ? 'Ledakan Kuali Peleburan!' : 'Peleburan Alkimia Selesai'}
                             </h4>
-                            <p className="text-xs text-gray-300 mb-4">
+                            <p className="text-xs text-gray-300 mb-3">
                                 {report?.message || 'Proses alkimia selesai.'}
                             </p>
 
                             {!isExploded && (
-                                <div className="grid grid-cols-2 gap-2 w-full mb-5">
-                                    <div className="bg-[#141b28] border border-[#27354c] p-3 rounded-lg">
+                                <div className="grid grid-cols-2 gap-2 w-full mb-3">
+                                    <div className="bg-[#141b28] border border-[#27354c] p-2 sm:p-3 rounded-lg">
                                         <span className="text-[10px] text-gray-400 block">Kemurnian Pil</span>
-                                        <strong className="text-emerald-400 text-lg">{report?.purityPercent || 0}%</strong>
+                                        <strong className="text-emerald-400 text-base sm:text-lg">{report?.purityPercent || 0}%</strong>
                                     </div>
-                                    <div className="bg-[#141b28] border border-[#27354c] p-3 rounded-lg">
+                                    <div className="bg-[#141b28] border border-[#27354c] p-2 sm:p-3 rounded-lg">
                                         <span className="text-[10px] text-gray-400 block">Bonus Qi Diperoleh</span>
-                                        <strong className="text-amber-400 text-lg">+{report?.qiBonus || 50}</strong>
+                                        <strong className="text-amber-400 text-base sm:text-lg">+{report?.qiBonus || 50}</strong>
                                     </div>
                                 </div>
                             )}
 
                             <button
                                 onClick={onClose}
-                                className="w-full bg-[#1b2537] hover:bg-[#25334d] text-amber-200 font-bold py-2.5 rounded-xl border border-amber-900/60 transition-colors text-sm"
+                                className="w-full bg-[#1b2537] hover:bg-[#25334d] text-amber-200 font-bold py-2 sm:py-2.5 rounded-xl border border-amber-900/60 transition-colors text-xs sm:text-sm"
                             >
                                 Selesai & Tutup
                             </button>

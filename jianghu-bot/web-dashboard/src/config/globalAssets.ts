@@ -21,6 +21,7 @@ export const GLOBAL_ASSETS = {
     weather_miasma: "",       // Kabut racun ungu (Southern Demon Domain)
     time_night: "",           // Filter gelap malam hari
     danger_zone_overlay: "",  // Partikel merah peringatan zona bahaya
+    monster_threat_icon: "",  // Ikon penanda ancaman monster / zona bahaya di sudut tile (misal: lambang tengkorak / iblis)
   },
 
   // =========================================================================
@@ -214,6 +215,14 @@ export const GLOBAL_ASSETS = {
     "Pedang Terbang Bambu": "",  // Dibutuhkan untuk melintasi Azure Mountain Range
     "Cincin Penyimpanan": "",
     "Tenda Sederhana": "",
+
+    // Tiket & Kualifikasi Ujian Sekte
+    "Plakat Ujian Sekte": "",
+    "Surat Rekomendasi Tetua": "",
+
+    // Mata Uang Spiritual & Harta Gua
+    "Batu Roh Rendah": "",
+    "Batu Roh Menengah": "",
   },
 
   // =========================================================================
@@ -252,6 +261,33 @@ export const GLOBAL_ASSETS = {
   // Key = NPC.name
   // =========================================================================
   npcs: {
+    // Tokoh & Tetua Desa Xingcun (Central Plains)
+    "Penatua Zhou": "",
+    "Ahli Tani Lian": "",
+    "Pelatih Dojo Han": "",
+    "Kurir Biro Shen": "",
+
+    // Azure Mountain Range
+    "Pendekar Pedang Li": "",
+    "Tabib Misterius": "",
+
+    // Eastern Sea Region
+    "Penjaga Laut Wu": "",
+    "Pedagang Eksotis": "",
+
+    // Southern Demon Domain
+    "Tetua Iblis Merah": "",
+    "Pemburu Iblis": "",
+
+    // Western Sacred Deserts
+    "Penjelajah Gurun": "",
+    "Pertapa Pasir": "",
+
+    // Northern Desolate Territory
+    "Pejuang Utara": "",
+    "Pandai Besi Salju": "",
+
+    // Tokoh Umum & Sekte
     "Penjaga Gerbang": "",
     "Ketua Sekte Pedang Langit": "",
     "Tetua Alkimia Bai": "",
@@ -290,6 +326,45 @@ export const GLOBAL_ASSETS = {
   },
 
   // =========================================================================
+  // 13B. DUNGEON & LABIRIN GOA KUNO (MINI-GRID 8x8, 20x20, 40x40)
+  // Ukuran: 128x128 px (Format: PNG Transparan)
+  // =========================================================================
+  dungeon: {
+    floor_stone: "",          // Ubin lorong batu gua remang
+    wall_stone: "",           // Dinding tebing batu gua (rintangan solid)
+    fog_darkness: "",         // Kabut kegelapan penutup labirin (Fog of War)
+    trap_spike: "",           // Jebakan duri lantai tersembunyi
+    trap_poison: "",          // Jebakan semburan gas racun
+    treasure_chest: "",       // Peti harta karun kuno tertutup
+    treasure_chest_open: "",  // Peti harta karun terbuka setelah dijarah
+    exit_portal: "",          // Formasi susunan batu jalan keluar gua
+    boss_lair: "",            // Penanda sarang bos di ruang terdalam
+  },
+
+  // =========================================================================
+  // 13C. DERMAGA & PENYEBERANGAN AIR (FERRY & WATER CROSSING)
+  // Ukuran: 128x128 px s/d 256x256 px (Format: PNG Transparan)
+  // =========================================================================
+  ferry: {
+    dock_pier: "",            // Dermaga kayu tepian air
+    raft_wood: "",            // Rakit dayung kayu bambu (ekonomis, berwaktu)
+    ship_luxury: "",          // Kapal layar cepat mewah / perahu spiritual (instan)
+  },
+
+  // =========================================================================
+  // 13D. INTERIOR BANGUNAN & OBJEK MINIGAME INTERAKTIF
+  // Ukuran: 128x128 px (Format: PNG Transparan)
+  // =========================================================================
+  interior_interactives: {
+    alchemy_furnace: "",      // Kuali tungku alkimia (Minigame aduk suhu api)
+    forge_anvil: "",          // Landasan tempa palu (Minigame ritme pukulan)
+    fish_pond: "",            // Kolam ikan tambak (Minigame tarikan joran)
+    farm_plot: "",            // Petak tanah ladang (Minigame siram & pupuk)
+    meditation_mat: "",       // Bantal semadi sutra (Minigame titik akupuntur Qi)
+    kitchen_stove: "",        // Kompor kuali masak (Minigame kombinasi bumbu)
+  },
+
+  // =========================================================================
   // 14. EMOJI FALLBACK
   // Tampilan cadangan otomatis jika URL di atas belum diisi
   // =========================================================================
@@ -303,6 +378,12 @@ export const GLOBAL_ASSETS = {
     face: "🙂",
     hair: "💇",
     cloth: "👘",
+    trap: "⚠️",
+    chest: "📦",
+    portal: "🌀",
+    ferry: "⛵",
+    anvil: "⚒️",
+    crucible: "⚗️",
     default: "🖼️"
   }
 };
