@@ -145,14 +145,36 @@ const Monster = require('../../models/Monster');
 router.post('/start', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { targetId, targetType, zoneId } = req.body;
+        const { targetId, targetType, zoneId, tileKey, maxActiveEnemies, allyInstanceIds } = req.body;
 
-        const player = await Player.findOne({ discordId: userId }).populate('manuals.manualId');
+        const player = await Player.findOne({ discordId: userId }).populate('manuals.manualId').populate('inventory.itemId');
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
         const { getComputedStats } = require('../../utils/statCalculator');
         const computed = getComputedStats(player, player.laws || [], player.manuals || []);
         const maxHp = computed.maxHp || player.stats?.baseHp || 100;
+
+        // Cek Masa Pemulihan Kematian (Death Recovery 4 Jam)
+        if (player.deathRecoveryUntil) {
+            const recoveryTime = new Date(player.deathRecoveryUntil).getTime();
+            if (recoveryTime > Date.now()) {
+                const remainingMs = recoveryTime - Date.now();
+                return res.status(403).json({
+                    code: 'DEATH_RECOVERY',
+                    error: 'Karaktermu sedang dalam masa pemulihan setelah gugur dalam pertarungan. Dantian butuh istirahat.',
+                    remainingMs,
+                    recoveryUntil: player.deathRecoveryUntil,
+                    killedBy: player.lastKilledByMonster || 'Siluman Liar'
+                });
+            } else {
+                // Pemulihan selesai
+                player.deathRecoveryUntil = null;
+                if (!player.currentHp || player.currentHp <= 0) {
+                    player.currentHp = Math.floor(maxHp * 0.5);
+                }
+                await player.save();
+            }
+        }
 
         // Inisialisasi otomatis jika belum ada currentHp (default MongoDB null)
         if (player.currentHp === null || player.currentHp === undefined || isNaN(player.currentHp)) {
@@ -181,6 +203,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                     key: 'wolf_azure',
                     name: 'Serigala Roh Darah',
                     tier: 1,
+                    tierSize: 'small',
+                    element: 'neutral',
                     statBlock: { hp: 150, atk: 20, def: 8, spd: 10 },
                     skills: [{ skillId: 'claw_strike', name: 'Cakaran Roh Darah', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }]
                 },
@@ -188,6 +212,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                     key: 'wolf_azure',
                     name: 'Serigala Roh Darah',
                     tier: 1,
+                    tierSize: 'small',
+                    element: 'neutral',
                     statBlock: { hp: 150, atk: 20, def: 8, spd: 10 },
                     skills: [{ skillId: 'claw_strike', name: 'Cakaran Roh Darah', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }]
                 },
@@ -195,18 +221,24 @@ router.post('/start', authenticateToken, async (req, res) => {
                     key: 'golden_eagle',
                     name: 'Elang Emas',
                     tier: 1,
+                    tierSize: 'small',
+                    element: 'metal',
                     statBlock: { hp: 100, atk: 22, def: 6, spd: 16 }
                 },
                 'cave_bat': {
                     key: 'cave_bat',
                     name: 'Kelelawar Gua Beracun',
                     tier: 1,
+                    tierSize: 'small',
+                    element: 'wood',
                     statBlock: { hp: 80, atk: 14, def: 6, spd: 8 }
                 },
                 'bandit_leader': {
                     key: 'bandit_leader',
                     name: 'Pemimpin Bandit',
                     tier: 2,
+                    tierSize: 'medium',
+                    element: 'neutral',
                     statBlock: { hp: 250, atk: 32, def: 18, spd: 12 }
                 }
             };
@@ -225,6 +257,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                                 name: candidate.name || 'Monster Liar',
                                 regionSlug: candidate.regionSlug || 'central_plains',
                                 tier: candidate.tier || 1,
+                                tierSize: candidate.tierSize || 'small',
+                                element: candidate.element || 'neutral',
                                 statBlock: {
                                     hp: candidate.hp || candidate.statBlock?.hp || 150,
                                     atk: candidate.atk || candidate.statBlock?.atk || 20,
@@ -257,6 +291,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                 name: mData.name || 'Monster Liar',
                 level: mData.tier || mData.level || 1,
                 imageUrl: mData.imageUrl || null,
+                element: mData.element || 'neutral',
+                tierSize: mData.tierSize || 'small',
                 hp: mHp,
                 maxHp: mHp,
                 attack: mAtk,
@@ -270,11 +306,13 @@ router.post('/start', authenticateToken, async (req, res) => {
                 name: req.body.enemyName || 'Musuh Ambush',
                 level: player.level || 1,
                 imageUrl: null,
-                hp: player.maxHp * 0.8,
-                maxHp: player.maxHp * 0.8,
-                attack: player.stats?.attack * 0.8 || 10,
-                defense: player.stats?.defense * 0.8 || 5,
-                speed: player.stats?.speed * 0.8 || 5,
+                element: 'neutral',
+                tierSize: 'small',
+                hp: Math.floor(player.maxHp * 0.8) || 80,
+                maxHp: Math.floor(player.maxHp * 0.8) || 80,
+                attack: Math.floor(player.stats?.attack * 0.8) || 10,
+                defense: Math.floor(player.stats?.defense * 0.8) || 5,
+                speed: Math.floor(player.stats?.speed * 0.8) || 5,
                 skills: [
                     { skillId: 'basic_attack', name: 'Serangan Brutal', type: 'attack', power: 15, qiCost: 0, cooldown: 0, currentCooldown: 0 }
                 ]
@@ -289,6 +327,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                 name: targetPlayer.characterName || 'Pendekar',
                 level: targetPlayer.level,
                 imageUrl: targetPlayer.characterImage || null,
+                element: 'neutral',
+                tierSize: 'small',
                 hp: targetPlayer.currentHp || targetPlayer.maxHp,
                 maxHp: targetPlayer.maxHp,
                 attack: targetPlayer.stats?.attack || 10,
@@ -303,12 +343,65 @@ router.post('/start', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Tipe target tidak valid.' });
         }
 
-        const session = await InteractiveBattleService.startBattle(player, enemies, battleType, zoneId);
+        // Bawa sekutu jika ada
+        let allies = [];
+        if (Array.isArray(allyInstanceIds) && allyInstanceIds.length > 0 && Array.isArray(player.pets)) {
+            const chosenPets = player.pets.filter(p => allyInstanceIds.includes(p.instanceId));
+            allies = chosenPets.map(p => ({
+                entityId: p.instanceId,
+                entityType: 'npc',
+                name: p.nickname || 'Pet Pendamping',
+                level: p.level || 1,
+                hp: p.hp || 80,
+                maxHp: p.maxHp || 80,
+                attack: p.atk || 15,
+                defense: p.def || 8,
+                speed: p.spd || 10,
+                allyType: 'pet'
+            }));
+        }
+
+        const session = await InteractiveBattleService.startBattle(
+            player, 
+            enemies, 
+            battleType, 
+            zoneId, 
+            allies, 
+            { 
+                maxActiveEnemies: maxActiveEnemies || 4,
+                tileKey,
+                zoneId
+            }
+        );
         
         res.json({ success: true, battleId: session.battleId, session });
     } catch (err) {
         console.error('[API-BATTLE] Start Error:', err);
         res.status(400).json({ error: err.message });
+    }
+});
+
+// GET /api/battle/recovery-status
+router.get('/recovery-status', authenticateToken, async (req, res) => {
+    try {
+        const player = await Player.findOne({ discordId: req.user.userId }).select('deathRecoveryUntil lastKilledAt lastKilledByMonster currentHp');
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        const now = Date.now();
+        const recoveryTime = player.deathRecoveryUntil ? new Date(player.deathRecoveryUntil).getTime() : 0;
+        const isRecovering = recoveryTime > now;
+        const remainingMs = isRecovering ? (recoveryTime - now) : 0;
+
+        res.json({
+            success: true,
+            isRecovering,
+            remainingMs,
+            recoveryUntil: player.deathRecoveryUntil,
+            lastKilledAt: player.lastKilledAt,
+            lastKilledByMonster: player.lastKilledByMonster || 'Musuh Jianghu'
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -343,8 +436,69 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
         if (session.status === 'won') {
              const player = await Player.findOne({ discordId: userId });
              if (player && session.rewards) {
-                 player.exp = (player.exp || 0) + session.rewards.exp;
-                 player.silver = (player.silver || 0) + session.rewards.silver;
+                 player.exp = (player.exp || 0) + (session.rewards.exp || 0);
+                 
+                 const { normalizeCurrency } = require('../../utils/currencyNormalize');
+                 player.currency = normalizeCurrency(player.currency);
+                 player.currency.silver = (player.currency.silver || 0) + (session.rewards.silver || 0);
+
+                 // Distribusi KungFu XP Senjata & Jurus
+                 const { awardKungfuExp } = require('../../utils/kungfuMastery');
+                 if (Array.isArray(session.rewards.kungfuExp)) {
+                     for (const k of session.rewards.kungfuExp) {
+                         const resExp = awardKungfuExp(player, k.discipline, k.amount, { allowLevelUp: true });
+                         k.newLevel = resExp.newLevel;
+                         k.levelUp = resExp.levelUp;
+                     }
+                 }
+
+                 // Distribusi Item Loot
+                 if (Array.isArray(session.rewards.items) && session.rewards.items.length > 0) {
+                     const Item = require('../../models/Item');
+                     for (const loot of session.rewards.items) {
+                         let itemDoc = await Item.findOne({ key: loot.itemId });
+                         if (!itemDoc) {
+                             itemDoc = await Item.findOne({ name: loot.name });
+                         }
+                         if (itemDoc) {
+                             const existingInv = player.inventory.find(i => i.itemId && i.itemId.toString() === itemDoc._id.toString());
+                             if (existingInv) {
+                                 existingInv.quantity += (loot.quantity || 1);
+                             } else {
+                                 player.inventory.push({
+                                     itemId: itemDoc._id,
+                                     quantity: loot.quantity || 1,
+                                     qualityMultiplier: loot.qualityMultiplier || 1.0
+                                 });
+                             }
+                         }
+                     }
+                 }
+
+                 // Catat petak monster yang dikalahkan agar menghilang dari peta (DefeatedMonsterTile)
+                 const tileKey = session.battleConfig?.tileKey;
+                 if (tileKey) {
+                     try {
+                         const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+                         const guildId = player.guildId || req.user.guildId || 'global';
+                         const zId = session.battleConfig.zoneId || session.zoneId || 'unknown';
+                         await DefeatedMonsterTile.findOneAndUpdate(
+                             { guildId, zoneId: zId, tileKey },
+                             {
+                                 guildId,
+                                 zoneId: zId,
+                                 tileKey,
+                                 monsterKey: session.enemies[0]?.entityId || 'monster',
+                                 defeatedAt: new Date(),
+                                 respawnAt: new Date(Date.now() + 60 * 60 * 1000) // 1 Jam respawn
+                             },
+                             { upsert: true, new: true }
+                         );
+                     } catch (eTileErr) {
+                         console.warn('[API-BATTLE] Gagal mencatat DefeatedMonsterTile:', eTileErr.message);
+                     }
+                 }
+
                  player.currentHp = session.player.hp;
                  player.currentQi = session.player.qi;
                  await player.save();
@@ -353,6 +507,10 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
              const player = await Player.findOne({ discordId: userId });
              if (player) {
                  player.currentHp = 0;
+                 // Waktu pemulihan 4 jam diam di tempat
+                 player.deathRecoveryUntil = new Date(Date.now() + 4 * 60 * 60 * 1000);
+                 player.lastKilledAt = new Date();
+                 player.lastKilledByMonster = session.enemies[0]?.name || 'Siluman Liar';
                  await player.save();
              }
         }

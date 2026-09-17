@@ -259,40 +259,107 @@ export const GLOBAL_ASSETS = {
 
   // =========================================================================
   // 9. BESTIARY & MONSTERS (AMBUSH & COMBAT)
-  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px atau 256x256 px (Format: PNG Transparan)
+  // Format: PNG Transparan
+  // Kategori Ukuran & Dimensi Rekomendasi:
+  // - SMALL  : 64x64 px s/d 128x128 px  (Monster kecil, kawanan hewan, kelelawar, serangga)
+  // - MEDIUM : 128x128 px s/d 192x192 px (Predator buas, bandit, pendekar sesat)
+  // - LARGE  : 256x256 px               (Siluman raksasa, golem batu, naga rawa)
+  // - BOSS   : 384x384 px s/d 512x512 px (Raja siluman purba, penguasa gua, iblis legendaris)
   // Key = Monster.key atau Monster.name
   // =========================================================================
   monsters: {
-    // Central Plains
-    "wolf_azure": "",             // Serigala Azure
-    "golden_eagle": "",           // Elang Emas
-    "bandit_leader": "",          // Pemimpin Bandit
+    // --- TIER 1: SMALL MONSTERS (64x64 s/d 128x128 px) ---
+    "cave_bat": "",               // Kelelawar Gua Beracun (Wood) - Small (96x96 px)
+    "ghost_sparrow": "",          // Burung Pipit Hantu (Wind/Neutral) - Small (96x96 px)
+    "toxic_frog": "",             // Katak Beracun Rawa (Water/Wood) - Small (96x96 px)
+    "sand_beetle": "",            // Kumbang Pasir Berduri (Earth) - Small (96x96 px)
+    "spirit_rabbit": "",          // Kelinci Roh Liar (Neutral) - Small (64x64 px)
+    "bamboo_viper": "",           // Ular Bambu Hijau (Wood) - Small (96x96 px)
+    "fire_wasp": "",              // Tawon Api Menyengat (Fire) - Small (80x80 px)
+    "frost_rat": "",              // Tikus Salju Es (Water) - Small (64x64 px)
+    "cave_spider": "",            // Laba-Laba Gua (Dark) - Small (112x112 px)
+    "wild_monkey": "",            // Kera Gunung Nakal (Earth) - Small (96x96 px)
 
-    // Azure Mountain Range
-    "white_tiger": "",            // Harimau Putih Pegunungan
-    "ghost_sparrow": "",          // Burung Pipit Hantu
-    "rock_golem": "",             // Golem Batu Kuno
+    // --- TIER 2: MEDIUM MONSTERS (128x128 s/d 192x192 px) ---
+    "wolf_azure": "",             // Serigala Roh Darah (Neutral) - Medium (160x160 px)
+    "Serigala Roh Darah": "",     // Alias Serigala Roh Darah
+    "golden_eagle": "",           // Elang Emas Pemburu (Metal) - Medium (160x160 px)
+    "bandit_scout": "",           // Pengintai Bandit (Neutral) - Medium (144x144 px)
+    "bandit_leader": "",          // Pemimpin Bandit (Neutral) - Medium (176x176 px)
+    "shadow_wolf": "",            // Serigala Bayangan Gua (Dark) - Medium (160x160 px)
+    "miasma_viper": "",           // Ular Beludru Miasma (Dark/Wood) - Medium (160x160 px)
+    "swamp_croc": "",             // Buaya Rawa Raksasa (Water) - Medium (192x192 px)
+    "desert_hyena": "",           // Dubuk Gurun Tulang (Earth) - Medium (160x160 px)
+    "mountain_boar": "",          // Celeng Bertaring Baja (Earth) - Medium (160x160 px)
+    "corrupted_cultivator": "",   // Kultivator Sesat (Dark) - Medium (160x160 px)
+    "lightning_leopard": "",      // Macan Tutul Petir (Lightning) - Medium (176x176 px)
 
-    // Southern Demon Domain
-    "swamp_python": "",           // Ular Piton Rawa Iblis
-    "miasma_fiend": "",           // Iblis Kabut Beracun
+    // --- TIER 3: LARGE MONSTERS (256x256 px) ---
+    "white_tiger": "",            // Harimau Putih Pegunungan (Metal) - Large (256x256 px)
+    "rock_golem": "",             // Golem Batu Kuno (Earth) - Large (256x256 px)
+    "swamp_python": "",           // Ular Piton Rawa Iblis (Wood/Water) - Large (256x256 px)
+    "miasma_fiend": "",           // Iblis Kabut Beracun (Dark) - Large (256x256 px)
+    "abyssal_serpent": "",        // Ular Naga Laut Dalam (Water) - Large (256x256 px)
+    "frost_demon": "",            // Iblis Es Abadi (Water/Dark) - Large (256x256 px)
+    "sand_scorpion": "",          // Kalajengking Raksasa Pasir (Earth) - Large (256x256 px)
+    "ancient_sword_wraith": "",   // Hantu Pendekar Pedang Kuno (Metal/Dark) - Large (256x256 px)
+    "flame_ape": "",              // Kera Raksasa Lahar (Fire) - Large (256x256 px)
+    "storm_roc": "",              // Burung Garuda Badai (Lightning) - Large (256x256 px)
+    "iron_rhino": "",             // Badak Lapis Besi Kuno (Metal/Earth) - Large (256x256 px)
 
-    // Eastern Sea Region
-    "abyssal_serpent": "",        // Ular Naga Laut Dalam
+    // --- TIER 4: BOSS MONSTERS (384x384 s/d 512x512 px) ---
+    "ancient_demon_lord": "",     // Raja Iblis Gua Purba - Boss (400x400 px)
+    "azure_dragon": "",           // Naga Biru Langit Esoteris - Boss (512x512 px)
+    "crimson_phoenix": "",        // Burung Feniks Api Surgawi - Boss (480x480 px)
+    "black_tortoise": "",         // Kura-Kura Hitam Abadi Xuanwu - Boss (450x450 px)
+    "sword_saint_wraith": "",     // Makam Roh Santo Pedang - Boss (400x400 px)
+    "nine_tailed_fox": "",        // Siluman Rubah Ekor Sembilan - Boss (420x420 px)
+    "underworld_behemoth": "",    // Raksasa Bawah Tanah Neraka - Boss (512x512 px)
+    "heavenly_thunder_kirin": "", // Qilin Petir Kemuliaan - Boss (480x480 px)
+  },
 
-    // Northern Desolate Territory
-    "frost_demon": "",            // Iblis Es Abadi
+  // =========================================================================
+  // 9B. BATTLE ARENA UI & STATUS ASSETS (32x32 px s/d 64x64 px)
+  // Format: PNG Transparan
+  // =========================================================================
+  battle_ui: {
+    // Ikon Elemen Spiritual (32x32 px)
+    elem_fire: "",
+    elem_water: "",
+    elem_wood: "",
+    elem_metal: "",
+    elem_earth: "",
+    elem_lightning: "",
+    elem_dark: "",
+    elem_light: "",
+    elem_neutral: "",
 
-    // Western Sacred Deserts
-    "sand_scorpion": "",          // Kalajengking Raksasa Pasir
+    // Ikon Efek Status & Debuff (32x32 px)
+    fx_poison: "",
+    fx_burn: "",
+    fx_stun: "",
+    fx_stance_break: "",
+    fx_regen: "",
+    fx_attack_up: "",
+    fx_defense_up: "",
+    fx_silence: "",
 
-    // Monster Gua Bawah Tanah & Bos Kuno
-    "cave_bat": "",               // Kelelawar Gua Beracun
-    "cave_spider": "",            // Laba-Laba Gua Raksasa
-    "shadow_wolf": "",            // Serigala Bayangan Gua
-    "miasma_viper": "",           // Ular Beludru Miasma
-    "ancient_sword_wraith": "",   // Hantu Pendekar Pedang Kuno
-    "ancient_demon_lord": "",     // Raja Iblis Gua Purba (Boss)
+    // Frame Loot Rarity (64x64 px)
+    rarity_common: "",
+    rarity_uncommon: "",
+    rarity_rare: "",
+    rarity_epic: "",
+    rarity_legendary: "",
+
+    // Ikon Disiplin Senjata BattleCard (32x32 px)
+    disc_sword: "",
+    disc_saber: "",
+    disc_staff: "",
+    disc_fist: "",
+    disc_finger: "",
+    disc_hiddenWeapon: "",
+    disc_healing: "",
+    disc_melody: "",
   },
 
   // =========================================================================
