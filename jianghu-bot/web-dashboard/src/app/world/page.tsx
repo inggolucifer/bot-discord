@@ -222,9 +222,9 @@ export function WorldPageContent() {
     <div className={`w-full h-full relative overflow-hidden ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
       
       {/* Main Map Background */}
-      <div className="absolute inset-0 z-0 flex flex-col">
+      <div className="absolute inset-0 flex flex-col">
         {mapView === 'world' ? (
-          <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out">
+          <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out relative z-30">
             <WorldMapView
               onSelectRegion={(regionSlug: string) => {
                 setSelectedRegionSlug(regionSlug);
@@ -235,7 +235,7 @@ export function WorldPageContent() {
             />
           </div>
         ) : (
-          <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out">
+          <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out relative z-10">
             <ZoneGridView
               zoneId={queryZoneId || locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
               targetFocusTile={targetFocusTile}
@@ -246,7 +246,7 @@ export function WorldPageContent() {
       </div>
 
       {/* Floating View Switcher */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-[#0e131d]/80 p-1.5 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 bg-[#0e131d]/80 p-1.5 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
         <button
           onClick={() => setMapView('grid')}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
@@ -261,8 +261,10 @@ export function WorldPageContent() {
         </button>
       </div>
 
-      {/* Floating Status Bar (Stamina / Climate) */}
-      <div className="absolute top-20 right-6 z-10 w-80 space-y-4">
+      {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP */}
+      {mapView !== 'world' && (
+      <div className="absolute top-20 right-6 z-0 w-80 space-y-4 pointer-events-none">
+        <div className="pointer-events-auto">
         {error && <div className="bg-red-900/80 backdrop-blur-md border border-red-500/50 text-red-200 p-3 rounded-lg text-sm">{error}</div>}
         {message && <div className="bg-green-900/80 backdrop-blur-md border border-green-500/50 text-green-200 p-3 rounded-lg text-sm">{message}</div>}
 
@@ -387,9 +389,12 @@ export function WorldPageContent() {
         </div>
       )}
 
+        </div>
       </div>
+      )}
 
       {/* Floating Panel (Tabs & Content) */}
+      {mapView !== 'world' && (
       <div className="absolute bottom-6 left-6 z-10 w-[400px] max-h-[80vh] flex flex-col pointer-events-none">
         
         {/* Tabs */}

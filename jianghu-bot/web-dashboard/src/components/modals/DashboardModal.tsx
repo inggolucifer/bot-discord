@@ -513,14 +513,7 @@ export default function DashboardModal() {
           <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Rawat, beri makan, dan ikuti battle dengan pet spiritualmu.</p>
         </button>
 
-        <button onClick={(e) => { e.preventDefault(); closeModal(); }} className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-amber-700 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(245,158,11,0.15)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-amber-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="p-3 sm:p-4 bg-black rounded-full text-amber-500 group-hover:text-amber-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all duration-300 relative z-10 border border-[#333] group-hover:border-amber-800">
-            <Compass size={28} className="sm:w-8 sm:h-8" />
-          </div>
-          <h3 className="font-bold font-serif text-base sm:text-lg text-white relative z-10 group-hover:text-amber-400 transition-colors">Peta Dunia & Lahan Grid</h3>
-          <p className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Jelajahi peta spasial 5000x5000, klaim tanah, bangun fasilitas profesi, dan masuki ekspedisi.</p>
-        </button>
+
 
         <button onClick={(e) => { e.preventDefault(); setActiveModal('cultivation'); }} className="group relative bg-[#111] border border-[#333] p-5 sm:p-6 rounded-lg hover:border-purple-800 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(147,51,234,0.15)] transition-all duration-300 flex flex-col items-center text-center gap-3 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-purple-700/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
