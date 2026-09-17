@@ -17,21 +17,28 @@ class InteractiveBattleService {
     }
 
     // Parse Player to Entity
+    const { getComputedStats } = require('../utils/statCalculator');
+    const computedStats = getComputedStats(player, player.laws || [], player.manuals || []);
+    const maxHp = computedStats.maxHp || player.stats?.maxHp || player.stats?.baseHp || 100;
+    const currentHp = (player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp))
+      ? player.currentHp
+      : maxHp;
+
     const playerEntity = {
       entityId: player.discordId,
       entityType: 'player',
       name: player.characterName || 'Pendekar',
       level: player.level || 1,
       imageUrl: player.characterImage || player.imageUrl,
-      hp: player.currentHp || player.maxHp,
-      maxHp: player.maxHp,
+      hp: currentHp,
+      maxHp: maxHp,
       qi: player.currentQi || 0,
       maxQi: player.maxQi || 100,
       stamina: player.currentStamina || 100,
       maxStamina: player.maxStamina || 100,
-      attack: player.stats?.attack || 10,
-      defense: player.stats?.defense || 10,
-      speed: player.stats?.speed || 10,
+      attack: computedStats.atk || player.stats?.atk || 15,
+      defense: computedStats.def || player.stats?.def || 10,
+      speed: computedStats.spd || player.stats?.spd || 10,
       atb: 0,
       maxAtb: 1000,
       stance: player.stats?.stance || 100,

@@ -70,6 +70,7 @@ interface TaleOfImmortalCanvasProps {
   weather?: 'rain' | 'snow' | 'miasma' | 'none';
   isNight?: boolean;
   onOpenSearch?: () => void;
+  onRecenterPlayer?: () => void;
 }
 
 export default function TaleOfImmortalCanvas({
@@ -87,7 +88,8 @@ export default function TaleOfImmortalCanvas({
   focusTile = null,
   weather = 'none',
   isNight = false,
-  onOpenSearch
+  onOpenSearch,
+  onRecenterPlayer
 }: TaleOfImmortalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -169,14 +171,22 @@ export default function TaleOfImmortalCanvas({
 
   const centerOnPlayer = useCallback(() => {
     setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
-  }, [playerPos.x, playerPos.y]);
+    animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
+    onRecenterPlayer?.();
+  }, [playerPos.x, playerPos.y, onRecenterPlayer]);
 
-  // Recenter if focusTile is supplied or changes
+  // Recenter if focusTile is supplied or changes, OR snap back if focusTile is cleared
+  const prevFocusTile = useRef<Point | null>(focusTile);
   useEffect(() => {
     if (focusTile) {
       setCamera(prev => ({ ...prev, x: focusTile.x, y: focusTile.y }));
+    } else if (prevFocusTile.current && !focusTile) {
+      // Search focus was cleared or recentered, snap camera back to player
+      setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
+      animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
     }
-  }, [focusTile?.x, focusTile?.y]);
+    prevFocusTile.current = focusTile;
+  }, [focusTile?.x, focusTile?.y, playerPos.x, playerPos.y]);
 
   // Auto-sync camera if player position jumps (e.g. on initial data load)
   const prevPlayerPos = useRef(playerPos);
@@ -252,7 +262,16 @@ export default function TaleOfImmortalCanvas({
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
           const tile = tileMap.get(`${tx},${ty}`);
-          if (!tile) continue;
+          if (!tile) {
+            if (tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
+              const sx = toScreenX(tx);
+              const sy = toScreenY(ty);
+              ctx.strokeStyle = 'rgba(180, 160, 130, 0.12)';
+              ctx.lineWidth = 0.5;
+              ctx.strokeRect(sx, sy, currentTileSize, currentTileSize);
+            }
+            continue;
+          }
           
           const sx = toScreenX(tx);
           const sy = toScreenY(ty);

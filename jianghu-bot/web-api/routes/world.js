@@ -1528,7 +1528,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
         if (isMacro) {
             // Tentukan viewport window (radius query)
-            const viewRadius = Math.min(30, Math.max(10, parseInt(req.query.radius) || 18));
+            const viewRadius = Math.min(25, Math.max(8, parseInt(req.query.radius) || 16));
             const centerX = parseInt(req.query.centerX) || px;
             const centerY = parseInt(req.query.centerY) || py;
 
@@ -1601,6 +1601,10 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         try {
             const Npc = require('../../models/Npc');
             const npcQuery = player.guildId ? { guildId: player.guildId, isActive: true } : { isActive: true };
+            if (isMacro && viewport && viewport.bounds) {
+                npcQuery.tileX = { $gte: viewport.bounds.minX, $lte: viewport.bounds.maxX };
+                npcQuery.tileY = { $gte: viewport.bounds.minY, $lte: viewport.bounds.maxY };
+            }
             const allActiveNpcs = await Npc.find(npcQuery).select('_id name title description greeting portraitUrl imageUrl zoneId tileX tileY settlementName buildingName').lean();
 
             const npcsByCoord = new Map();

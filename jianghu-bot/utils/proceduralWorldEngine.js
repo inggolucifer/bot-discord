@@ -252,7 +252,7 @@ function fbmNoise(x, y, baseScale = 0.02, octaves = 3, seed = WORLD_SEED) {
 /**
  * Ambil data deterministik tile pada koordinat (tileX, tileY)
  */
-function getTileAt(tileX, tileY) {
+function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   // Batas Dunia 5000x5000
   if (tileX < 0 || tileX >= WORLD_WIDTH || tileY < 0 || tileY >= WORLD_HEIGHT) {
     return {
@@ -278,16 +278,18 @@ function getTileAt(tileX, tileY) {
   let settlementInfo = null;
 
   // 1. Cek apakah masuk dalam zona Landmark / Pemukiman Permanen
-  for (const settlement of ANCHOR_SETTLEMENTS) {
-    if (
-      tileX >= settlement.tileX &&
-      tileX < settlement.tileX + settlement.spanWidth &&
-      tileY >= settlement.tileY &&
-      tileY < settlement.tileY + settlement.spanHeight
-    ) {
-      isSettlementTile = true;
-      settlementInfo = settlement;
-      break;
+  if (candidateSettlements && candidateSettlements.length > 0) {
+    for (const settlement of candidateSettlements) {
+      if (
+        tileX >= settlement.tileX &&
+        tileX < settlement.tileX + settlement.spanWidth &&
+        tileY >= settlement.tileY &&
+        tileY < settlement.tileY + settlement.spanHeight
+      ) {
+        isSettlementTile = true;
+        settlementInfo = settlement;
+        break;
+      }
     }
   }
 
@@ -454,10 +456,16 @@ function getViewportTiles(centerX, centerY, radius = 16) {
   const minY = Math.max(0, centerY - radius);
   const maxY = Math.min(WORLD_HEIGHT - 1, centerY + radius);
 
+  // Pre-filter pemukiman yang beririsan dengan bounding box viewport saja (O(1) filter vs ribuan loop per tile)
+  const candidateSettlements = ANCHOR_SETTLEMENTS.filter(s =>
+    s.tileX + s.spanWidth > minX && s.tileX <= maxX &&
+    s.tileY + s.spanHeight > minY && s.tileY <= maxY
+  );
+
   const tiles = [];
   for (let y = minY; y <= maxY; y++) {
     for (let x = minX; x <= maxX; x++) {
-      tiles.push(getTileAt(x, y));
+      tiles.push(getTileAt(x, y, candidateSettlements));
     }
   }
 

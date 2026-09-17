@@ -135,17 +135,39 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
     return set;
   }, [tiles]);
 
-  // Fetch Zone Data
+  // Fetch Zone Data (Radius 16: Ringan, Cepat, dan Menghemat Bandwidth)
   const fetchZoneData = useCallback(async (cx?: number, cy?: number) => {
     try {
       const px = cx !== undefined ? cx : playerGrid?.position?.tileX;
       const py = cy !== undefined ? cy : playerGrid?.position?.tileY;
 
-      const queryParams = px !== undefined && py !== undefined ? `?centerX=${px}&centerY=${py}&radius=22` : '';
+      const queryParams = px !== undefined && py !== undefined ? `?centerX=${px}&centerY=${py}&radius=16` : '';
       const res = await api.get(`/world/zone/${activeZoneId}${queryParams}`);
 
       if (res.data.config) setZoneConfig(res.data.config);
-      if (res.data.tiles) setTiles(res.data.tiles);
+      if (res.data.tiles) {
+        // Tile Merging Cache: Pertahankan petak yang sudah dimuat agar saat kembali dari pencarian jauh tidak terjadi layar blank
+        setTiles(prev => {
+          const map = new Map<string, TileData>();
+          for (const t of prev) {
+            map.set(`${t.tileX},${t.tileY}`, t);
+          }
+          for (const t of res.data.tiles) {
+            map.set(`${t.tileX},${t.tileY}`, t);
+          }
+          if (map.size > 5000) {
+            const centerTileX = px ?? 2455;
+            const centerTileY = py ?? 2485;
+            const sorted = Array.from(map.values()).sort((a, b) => {
+              const distA = Math.hypot(a.tileX - centerTileX, a.tileY - centerTileY);
+              const distB = Math.hypot(b.tileX - centerTileX, b.tileY - centerTileY);
+              return distA - distB;
+            });
+            return sorted.slice(0, 3500);
+          }
+          return Array.from(map.values());
+        });
+      }
       if (res.data.playerGrid) setPlayerGrid(res.data.playerGrid);
       if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
       if (res.data.playerLandStats) setPlayerLandStats(res.data.playerLandStats);
@@ -159,6 +181,17 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
       setLoading(false);
     }
   }, [activeZoneId, playerGrid?.position?.tileX, playerGrid?.position?.tileY]);
+
+  // Pusatkan kembali kamera ke posisi karakter (menghilangkan layar blank setelah cari tempat jauh)
+  const handleRecenterToPlayer = useCallback(() => {
+    setSearchFocusTile(null);
+    setSelectedTile(null);
+    setActivePath([]);
+    const px = playerGrid?.position?.tileX ?? 2455;
+    const py = playerGrid?.position?.tileY ?? 2485;
+    fetchZoneData(px, py);
+    showMessage(`🎯 Kamera dipusatkan kembali ke posisi karakter (${px}, ${py})`);
+  }, [playerGrid?.position?.tileX, playerGrid?.position?.tileY, fetchZoneData]);
 
   useEffect(() => {
     fetchZoneData();
@@ -251,13 +284,20 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
   // Handler seleksi dari modal pencarian landmark & bookmark koordinat
   const handleSelectSearchResult = (targetX: number, targetY: number, label?: string) => {
     setIsSearchModalOpen(false);
+    const px = playerGrid?.position?.tileX ?? 2455;
+    const py = playerGrid?.position?.tileY ?? 2485;
+
+    // Jika pengguna memilih posisi karakternya sendiri, bersihkan bidikan dan kembali ke karakter
+    if (targetX === px && targetY === py) {
+      handleRecenterToPlayer();
+      return;
+    }
+
     setSearchFocusTile({ x: targetX, y: targetY });
 
     const existingTile = tiles.find(t => t.tileX === targetX && t.tileY === targetY);
     if (existingTile) {
       setSelectedTile(existingTile);
-      const px = playerGrid?.position?.tileX ?? 2455;
-      const py = playerGrid?.position?.tileY ?? 2485;
       const result = findAStarPath(px, py, targetX, targetY, solidTilesSet, 60);
       if (result.reachable) {
         setActivePath(result.path);
@@ -778,14 +818,18 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
               <span className="hidden sm:inline">{isBgmOn ? 'Musik' : 'Bisu'}</span>
             </button>
 
-            {/* Badge Lokasi Ringkas: Hanya Koordinat (Anti Menabrak Bar Tengah) */}
-            <div 
-              title={`Lokasi: ${zoneConfig?.chineseName ? zoneConfig.chineseName + ' ' : ''}${zoneConfig?.displayName || 'Jianghu'} (${px}, ${py})`}
-              className="flex items-center gap-1.5 bg-black/85 border border-amber-900/70 px-2 sm:px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md text-xs flex-shrink-0 cursor-default"
+            {/* Badge Lokasi Ringkas: Klik untuk Pusatkan ke Karakter */}
+            <button 
+              onClick={handleRecenterToPlayer}
+              title={`Lokasi Karakter: (${px}, ${py}). Klik untuk pusatkan kamera.`}
+              className="flex items-center gap-1.5 bg-black/85 hover:bg-amber-950/80 border border-amber-900/70 hover:border-amber-500/70 px-2 sm:px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md text-xs flex-shrink-0 cursor-pointer transition-all active:scale-95 group pointer-events-auto"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-              <span className="text-[11px] text-amber-400/95 font-mono font-bold tracking-tight">({px}, {py})</span>
-            </div>
+              <span className="text-[11px] text-amber-400/95 group-hover:text-amber-300 font-mono font-bold tracking-tight">({px}, {py})</span>
+              {searchFocusTile && (
+                <span className="text-[10px] text-amber-300/90 font-serif ml-0.5">🎯</span>
+              )}
+            </button>
 
             <ThermalStatusBadge initialThermalData={thermalStatus} />
           </div>
@@ -798,6 +842,19 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         {actionMessage && (
           <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/80 text-amber-200 px-5 py-2.5 rounded-lg shadow-2xl font-medium text-xs backdrop-blur-md animate-in fade-in">
             {actionMessage}
+          </div>
+        )}
+
+        {/* Banner Indikator saat Membidik Tempat Jauh via Fitur Cari */}
+        {searchFocusTile && (
+          <div className="absolute top-14 sm:top-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/90 border border-amber-500/80 text-amber-200 px-3 py-1.5 rounded-full shadow-2xl font-serif text-xs backdrop-blur-md animate-in fade-in">
+            <span className="text-amber-400">📍 Membidik: ({searchFocusTile.x}, {searchFocusTile.y})</span>
+            <button
+              onClick={handleRecenterToPlayer}
+              className="px-2.5 py-0.5 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-full border border-amber-500 text-[11px] font-sans font-semibold transition-all active:scale-95 flex items-center gap-1"
+            >
+              🎯 Kembali ke Karakter
+            </button>
           </div>
         )}
 
@@ -821,6 +878,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
           weather={weatherMode}
           isNight={isNightMode}
           onOpenSearch={() => setIsSearchModalOpen(true)}
+          onRecenterPlayer={handleRecenterToPlayer}
         />
 
         {/* Floating Numbers & Notices (Gathering / Panen Feedback) */}
