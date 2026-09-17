@@ -146,6 +146,7 @@ function calculateEnergyCost({
     currentWeight = 10,
     maxWeight = 50,
     mountType = null,
+    staminaReduction = 0,
     bodyTemperingLevel = 0
 }) {
     const terrain = TERRAIN_PROPERTIES[terrainType] || TERRAIN_PROPERTIES.plains;
@@ -156,9 +157,9 @@ function calculateEnergyCost({
     const safeMaxWeight = Math.max(1, maxWeight);
     const weightRatio = Math.max(0, currentWeight / safeMaxWeight);
 
-    // Mount reduction
+    // Mount reduction: mendukung staminaReduction langsung dari Item mount atau konfigurasi preset
     const mount = mountType && MOUNT_CONFIGS[mountType] ? MOUNT_CONFIGS[mountType] : null;
-    const R_mount = mount ? mount.staminaReduction : 0;
+    const R_mount = Number(staminaReduction) > 0 ? Number(staminaReduction) : (mount ? mount.staminaReduction : 0);
 
     // Body Tempering (Ranah Pemurnian Jasmani: tiap level mengurangi 2% stamina cost, max 30%)
     const B_physique = Math.min(0.30, Math.max(0, bodyTemperingLevel * 0.02));

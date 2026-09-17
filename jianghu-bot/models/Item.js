@@ -8,7 +8,7 @@ const itemSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },
   name: { type: String, required: true },
   rank: { type: String, enum: RANKS, default: 'Common' },
-  category: { type: String, enum: ['weapon', 'armor', 'helmet', 'pants', 'boots', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'tool', 'none'], default: 'none' },
+  category: { type: String, enum: ['weapon', 'armor', 'helmet', 'pants', 'boots', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'tool', 'mount', 'none'], default: 'none' },
   tier: { type: Number, min: 1, max: 9, default: 1 },
   toolType: { type: String, enum: ['fishing_rod', 'furnace', 'forge', 'kitchen_tool', 'farming_tool', null], default: null },
   weaponType: { type: String, enum: ['sword', 'saber', 'staff', 'fist', 'finger', 'hiddenWeapon', 'special', null], default: null },
@@ -34,6 +34,11 @@ const itemSchema = new mongoose.Schema({
   capacityMode: { type: String, enum: ['always', 'travel_only', null], default: null },
   travelSpeedBonus: { type: Number, default: 0 },
   capacityType: { type: String, enum: ['cart', 'horse', 'storage_ring', null], default: null },
+
+  // Mount Attributes
+  mountType: { type: String, default: null }, // e.g. 'ferghana_horse', 'spirit_horned_horse', 'shadow_tiger', 'flying_sword', 'ship'
+  staminaReduction: { type: Number, default: 0 }, // Pengurangan stamina tetap per petak (misal 0.5 s/d 2.0)
+  staminaReductionPercent: { type: Number, default: 0 }, // Pengurangan stamina persentase (misal 20 = diskon 20%)
 
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
   minRealmIndex: { type: Number, default: 0 },

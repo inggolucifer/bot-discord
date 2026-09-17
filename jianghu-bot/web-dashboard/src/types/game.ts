@@ -30,6 +30,7 @@ export type ItemCategory =
   | 'law'
   | 'manual'
   | 'tool'
+  | 'mount'
   | 'none';
 
 export interface ItemData {
@@ -54,6 +55,10 @@ export interface ItemData {
   effectValue?: number | null;
   weight: number;
   capacityBonus?: number;
+  mountType?: string | null;
+  staminaReduction?: number;
+  staminaReductionPercent?: number;
+  travelSpeedBonus?: number;
   minRealmIndex?: number;
   basePrice?: number;
   priceCurrency?: CurrencyType;
@@ -77,6 +82,7 @@ export interface EquipmentSlots {
   pants: string | ItemData | null;
   boots: string | ItemData | null;
   accessory: string | ItemData | null;
+  mount?: string | ItemData | null;
 }
 
 export interface CultivationInfo {

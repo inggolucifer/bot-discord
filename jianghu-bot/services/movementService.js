@@ -60,10 +60,23 @@ class MovementService {
     const targetX = currentX + dirInfo.dx;
     const targetY = currentY + dirInfo.dy;
 
+    // Resolusi Mount dari equipment
+    let mountDoc = null;
+    if (player.equipment && player.equipment.mount && Array.isArray(player.inventory)) {
+      const mountInv = player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString());
+      if (mountInv && mountInv.itemId) {
+        const Item = require('../models/Item');
+        mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
+      }
+    }
+    const effectiveMountType = mountDoc?.mountType || player.equippedMount;
+    const isFlyingMount = effectiveMountType === 'flying_sword' || (mountDoc && mountDoc.name && mountDoc.name.toLowerCase().includes('pedang terbang'));
+    const isWaterMount = effectiveMountType === 'ship' || (mountDoc && mountDoc.name && (mountDoc.name.toLowerCase().includes('kapal') || mountDoc.name.toLowerCase().includes('perahu')));
+
     // 2. Trait karakter (terbang, berenang, dll)
     const playerTraits = {
-      canFly: player.equippedMount === 'flying_sword',
-      canSwim: !!options.canSwim
+      canFly: isFlyingMount,
+      canSwim: isWaterMount || !!options.canSwim
     };
 
     // 3. Validasi Passability & Collision
@@ -94,7 +107,8 @@ class MovementService {
         terrainType: terrain,
         currentWeight,
         maxWeight,
-        mountType: player.equippedMount
+        mountType: effectiveMountType,
+        staminaReduction: mountDoc?.staminaReduction || 0
       });
     }
 

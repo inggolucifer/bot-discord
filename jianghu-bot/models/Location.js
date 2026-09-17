@@ -7,7 +7,7 @@ const locationSchema = new mongoose.Schema({
   buildingName: { type: String, required: true },
   buildingType: {
     type: String,
-    enum: ['shop', 'dojo', 'sect_hall', 'blacksmith', 'residence', 'farm', 'tavern', 'npc_house', 'plaza'],
+    enum: ['shop', 'dojo', 'sect_hall', 'blacksmith', 'residence', 'farm', 'tavern', 'npc_house', 'plaza', 'dock', 'dungeon_entrance'],
     required: true
   },
   npcIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Npc' }],
@@ -23,7 +23,7 @@ const locationSchema = new mongoose.Schema({
   zoneId: { type: String, default: null, index: true },
   mapIconType: {
     type: String,
-    enum: ['city', 'village', 'sect_hall', 'dojo', 'danger_zone', 'landmark', null],
+    enum: ['city', 'village', 'sect_hall', 'dojo', 'danger_zone', 'landmark', 'dock', 'dungeon', null],
     default: null
   }
 }, { timestamps: true });

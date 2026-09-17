@@ -190,6 +190,15 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
                 }
             }
         }
+        if (player.equipment && player.equipment.mount) {
+            const mountInvItem = player.inventory.id ? player.inventory.id(player.equipment.mount) : player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString());
+            if (mountInvItem && mountInvItem.itemId) {
+                const mountItem = typeof mountInvItem.itemId === 'object' && mountInvItem.itemId.name ? mountInvItem.itemId : await Item.findById(mountInvItem.itemId);
+                if (mountItem) {
+                    horseSpeedBonus = Math.max(horseSpeedBonus, mountItem.travelSpeedBonus || 0.2);
+                }
+            }
+        }
 
         const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
 
@@ -1709,6 +1718,19 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         let stopReason = null;
         let encounterResult = null;
 
+        // Resolusi Mount & Efek Efisiensi Stamina
+        let mountDoc = null;
+        if (player.equipment && player.equipment.mount) {
+            const mountInv = player.inventory?.id ? player.inventory.id(player.equipment.mount) : (Array.isArray(player.inventory) ? player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString()) : null);
+            if (mountInv && mountInv.itemId) {
+                const Item = require('../../models/Item');
+                mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
+            }
+        }
+        const effectiveMountType = mountDoc?.mountType || player.equippedMount;
+        const isFlyingMount = effectiveMountType === 'flying_sword' || (mountDoc && mountDoc.name && mountDoc.name.toLowerCase().includes('pedang terbang'));
+        const isWaterMount = effectiveMountType === 'ship' || (mountDoc && mountDoc.name && (mountDoc.name.toLowerCase().includes('kapal') || mountDoc.name.toLowerCase().includes('perahu')));
+
         for (const wp of waypoints) {
             const targetX = parseInt(wp.x);
             const targetY = parseInt(wp.y);
@@ -1739,11 +1761,11 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
 
             // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal
             if (tileInfo.isSolid) {
-                if (tileInfo.terrainType === 'ocean' && player.equippedMount !== 'ship') {
+                if (tileInfo.terrainType === 'ocean' && !isWaterMount && !isFlyingMount) {
                     stoppedEarly = true;
                     stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Lautan Dalam'}! Membutuhkan perahu atau kapal layar.`;
                     break;
-                } else if (tileInfo.terrainType !== 'ocean' && player.equippedMount !== 'flying_sword') {
+                } else if (tileInfo.terrainType !== 'ocean' && !isFlyingMount) {
                     stoppedEarly = true;
                     stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
                     break;
@@ -1753,9 +1775,24 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Konsumsi Stamina berdasarkan Terrain dan region
             let stepCost = tileInfo.staminaCost || 1;
             
-            // Efek meringankan jika punya mount darat
-            if (player.equippedMount && player.equippedMount !== 'none' && player.equippedMount !== 'ship' && player.equippedMount !== 'flying_sword') {
-                stepCost = Math.max(0.5, stepCost - 0.5);
+            // Efek meringankan jika memakai mount
+            let mountDiscount = 0;
+            if (mountDoc) {
+                if (typeof mountDoc.staminaReduction === 'number' && mountDoc.staminaReduction > 0) {
+                    mountDiscount = mountDoc.staminaReduction;
+                } else if (typeof mountDoc.staminaReductionPercent === 'number' && mountDoc.staminaReductionPercent > 0) {
+                    mountDiscount = stepCost * (mountDoc.staminaReductionPercent / 100);
+                } else if (typeof mountDoc.travelSpeedBonus === 'number' && mountDoc.travelSpeedBonus > 0) {
+                    mountDiscount = mountDoc.travelSpeedBonus * 2;
+                } else {
+                    mountDiscount = 0.5;
+                }
+            } else if (effectiveMountType && effectiveMountType !== 'none' && effectiveMountType !== 'ship') {
+                mountDiscount = 0.5;
+            }
+
+            if (mountDiscount > 0) {
+                stepCost = Math.max(0.2, Number((stepCost - mountDiscount).toFixed(2)));
             }
 
             if (player.currentStamina !== null && player.currentStamina !== undefined && player.currentStamina < stepCost) {
@@ -2082,8 +2119,19 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             tileY: targetY
         });
 
+        // Dapatkan mountDoc dari equipment jika ada
+        let mountDoc = null;
+        if (player.equipment && player.equipment.mount) {
+            const mountInv = player.inventory?.id ? player.inventory.id(player.equipment.mount) : (Array.isArray(player.inventory) ? player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString()) : null);
+            if (mountInv && mountInv.itemId) {
+                const Item = require('../../models/Item');
+                mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
+            }
+        }
+        const effectiveMountType = mountDoc?.mountType || player.equippedMount;
+
         const targetTerrain = destTile?.terrainType || 'plains';
-        if (isTileObstructed({ terrainType: targetTerrain, mountType: player.equippedMount })) {
+        if (isTileObstructed({ terrainType: targetTerrain, mountType: effectiveMountType })) {
             return res.status(400).json({
                 error: `Jalur terhalang rintangan tebing batu yang mustahil ditembus! Dibutuhkan artefak terbang spiritual.`
             });
@@ -2093,7 +2141,8 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             terrainType: targetTerrain,
             currentWeight: player.inventory?.length || 10,
             maxWeight: player.baseCarryCapacity || 50,
-            mountType: player.equippedMount,
+            mountType: effectiveMountType,
+            staminaReduction: mountDoc?.staminaReduction || 0,
             bodyTemperingLevel: player.bodyTemperingLevel || 0
         });
 
@@ -2107,7 +2156,7 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
         }
 
         // Hitung durasi pergerakan dinamis berdasarkan tunggangan & medan
-        const tileSpeedMs = calculateTravelSpeed({ terrainType: targetTerrain, mountType: player.equippedMount });
+        const tileSpeedMs = calculateTravelSpeed({ terrainType: targetTerrain, mountType: effectiveMountType });
         const totalDurationMs = Math.max(1000, distance * tileSpeedMs);
         const durationSeconds = Math.ceil(totalDurationMs / 1000);
 

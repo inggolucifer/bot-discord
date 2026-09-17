@@ -310,7 +310,8 @@ const playerSchema = new mongoose.Schema({
     helmet: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     pants: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     boots: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
-    accessory: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
+    accessory: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    mount: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },
