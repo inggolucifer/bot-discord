@@ -660,8 +660,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
       <div className={`absolute inset-0 flex flex-col transition-all duration-500 ${interiorData ? 'blur-md pointer-events-none scale-105 opacity-60' : ''}`}>
         
         {/* HUD Top Bar */}
-        <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center pointer-events-none">
-          <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
+          <div className="flex items-center gap-2 pointer-events-auto flex-wrap">
             <button
               onClick={() => setShowMacroMap(true)}
               className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
@@ -679,17 +679,18 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
               <Music className="w-3.5 h-3.5" />
               <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
             </button>
-          </div>
 
-          <div className="flex items-center gap-2 pointer-events-auto">
-            <ThermalStatusBadge initialThermalData={thermalStatus} />
-            <div className="bg-black/85 border border-amber-900/70 px-3.5 py-1.5 rounded-lg backdrop-blur-md shadow-xl flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <div className="hidden sm:flex items-center gap-2 bg-black/85 border border-amber-900/70 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-xl">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wider">
                 {zoneConfig?.chineseName || '天元'} {zoneConfig?.displayName || 'Benua Jianghu'}
               </h3>
               <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
             </div>
+          </div>
+
+          <div className="flex items-center gap-2 pointer-events-auto">
+            <ThermalStatusBadge initialThermalData={thermalStatus} />
           </div>
         </div>
 
@@ -757,7 +758,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
       )}
 
       {/* Bottom HUD: Action Bar, Navigasi & Inspektur */}
-      <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
+      <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-4 pr-20 md:pr-24 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
         <div className="flex items-center gap-3 text-xs text-gray-300">
           {selectedTile ? (
             <>

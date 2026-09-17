@@ -93,9 +93,9 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end">
+    <div className={`fixed bottom-4 right-4 ${isOpen ? 'z-50' : 'z-40'} flex flex-col items-end`}>
       {isOpen && (
-        <div className="bg-[#1a1a1a]/95 backdrop-blur-md border border-[#c5a880]/50 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.8)] w-[calc(100vw-2rem)] sm:w-[380px] h-[450px] max-h-[calc(100vh-6rem)] flex flex-col mb-4 overflow-hidden">
+        <div className="bg-[#111622]/95 backdrop-blur-md border border-amber-600/50 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] w-[calc(100vw-2rem)] sm:w-[380px] h-[450px] max-h-[calc(100vh-6rem)] flex flex-col mb-2 overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200">
           {/* Header */}
           <div className="bg-black border-b border-[#333] p-3 flex flex-wrap justify-between items-center gap-2">
             <h3 className="text-[#c5a880] font-bold flex items-center gap-2">
@@ -182,9 +182,10 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-[#8b0000] hover:bg-red-800 text-white rounded-full p-3 shadow-lg border border-[#c5a880]/30 transition-all hover:scale-105 animate-bounce-slow"
+          className="bg-gradient-to-br from-[#8b0000] to-red-900 hover:from-red-800 hover:to-red-700 text-white rounded-full p-3 shadow-[0_4px_20px_rgba(139,0,0,0.5)] border border-amber-600/40 transition-all hover:scale-105 flex items-center justify-center"
+          title="Buka Chat Global"
         >
-          <MessageSquare size={24} />
+          <MessageSquare size={22} />
         </button>
       )}
     </div>

@@ -136,7 +136,7 @@ export default function GridTileInspectorCard({
   }
 
   return (
-    <div className="absolute top-16 right-4 z-40 w-80 sm:w-88 max-w-[calc(100vw-2rem)] bg-[#0d121c]/95 border border-amber-600/70 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden text-xs text-gray-200 select-none animate-in fade-in slide-in-from-right-3 duration-200 flex flex-col max-h-[85vh]">
+    <div className="absolute top-16 right-4 z-40 w-80 sm:w-88 max-w-[calc(100vw-2rem)] bg-[#0d121c]/95 border border-amber-600/70 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden text-xs text-gray-200 select-none animate-in fade-in slide-in-from-right-3 duration-200 flex flex-col max-h-[calc(100vh-8.5rem)]">
       {/* Header Card Wuxia */}
       <div className="bg-gradient-to-r from-[#1c160e] via-[#2a2015] to-[#17120a] border-b border-amber-800/60 px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-2">

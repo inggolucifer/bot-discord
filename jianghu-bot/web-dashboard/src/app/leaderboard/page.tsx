@@ -50,27 +50,27 @@ export default function LeaderboardPage() {
   };
 
   useEffect(() => {
-    if (!hasCharacter) {
-      setTimeout(() => setLoading(false), 0);
-      return;
-    }
-    setTimeout(() => fetchLeaderboard(), 0);
-  }, [hasCharacter]);
-
-  if (!user || !hasCharacter) return null;
+    fetchLeaderboard();
+  }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-5xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title="Papan Peringkat"
         description="Daftar Pendekar Terkaya di Jianghu."
         action={
-          <Button variant="outline" onClick={fetchLeaderboard} disabled={loading}>
+          <Button variant="outline" onClick={fetchLeaderboard} disabled={loading} className="border-[#444]">
             {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             Refresh
           </Button>
         }
       />
+
+      {!user && (
+        <div className="bg-[#141a24]/90 border border-amber-700/40 rounded-xl p-3.5 text-xs text-amber-200/90 backdrop-blur-md flex items-center justify-between shadow-lg">
+          <span>Masuk menggunakan Discord untuk melihat posisi peringkat karakter Anda di gulungan kehormatan.</span>
+        </div>
+      )}
 
       {error ? (
         <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-center text-red-400">

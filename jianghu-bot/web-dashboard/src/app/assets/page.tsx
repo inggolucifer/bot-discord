@@ -237,7 +237,7 @@ export default function AssetsPage() {
   const activeCount = assets.filter((a) => !a.underConstruction && !a.isDamaged).length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8 text-slate-100">
       {/* Header */}
       <PageHeader
         title="Daftar Kepemilikan Lahan & Properti"

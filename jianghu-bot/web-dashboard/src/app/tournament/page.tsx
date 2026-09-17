@@ -63,14 +63,18 @@ export default function TournamentPage() {
     fetchTournament();
   }, [hasCharacter]);
 
-  if (!hasCharacter) return null;
-
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title="Arena Turnamen"
         description={tournament ? `${tournament.name} — Status: ${tournament.status.toUpperCase()}` : "Sistem pertarungan bela diri."}
       />
+
+      {!hasCharacter && (
+        <div className="bg-[#141a24]/90 border border-amber-700/40 rounded-xl p-3.5 text-xs text-amber-200/90 backdrop-blur-md flex items-center justify-between shadow-lg">
+          <span>Masuk menggunakan akun Discord untuk berpartisipasi dalam pendaftaran turnamen beladiri.</span>
+        </div>
+      )}
 
       {error ? (
         <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-center text-red-400">
