@@ -1579,36 +1579,12 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             const npcQuery = player.guildId ? { guildId: player.guildId, isActive: true } : { isActive: true };
             const allActiveNpcs = await Npc.find(npcQuery).select('_id name title description greeting portraitUrl imageUrl zoneId tileX tileY settlementName buildingName').lean();
 
-            const settlementCoords = new Map();
-            for (const s of proceduralWorldEngine.ANCHOR_SETTLEMENTS || []) {
-                settlementCoords.set(s.name.toLowerCase(), { x: s.tileX, y: s.tileY });
-            }
-
             const npcsByCoord = new Map();
             for (const npc of allActiveNpcs) {
-                let targetX = npc.tileX;
-                let targetY = npc.tileY;
-
-                // Jika koordinat eksplisit belum ada, gunakan koordinat pusat pemukiman (origin tile)
-                if ((targetX === null || targetX === undefined) && npc.settlementName) {
-                    const sNameKey = npc.settlementName.toLowerCase();
-                    let sCoord = settlementCoords.get(sNameKey);
-                    if (!sCoord) {
-                        for (const [sName, coord] of settlementCoords.entries()) {
-                            if (sNameKey.includes(sName) || sName.includes(sNameKey)) {
-                                sCoord = coord;
-                                break;
-                            }
-                        }
-                    }
-                    if (sCoord) {
-                        targetX = sCoord.x;
-                        targetY = sCoord.y;
-                    }
-                }
-
-                if (targetX !== null && targetX !== undefined && targetY !== null && targetY !== undefined) {
-                    const coordKey = `${targetX},${targetY}`;
+                // HANYA petakan jika NPC secara eksplisit memiliki koordinat tileX & tileY numerik di zona peta dunia aktif
+                // NPC di dalam pemukiman/bangunan diakses melalui SettlementPanoramaView, BUKAN di petak dunia terbuka
+                if (typeof npc.tileX === 'number' && typeof npc.tileY === 'number' && (!npc.zoneId || npc.zoneId === zoneId)) {
+                    const coordKey = `${npc.tileX},${npc.tileY}`;
                     if (!npcsByCoord.has(coordKey)) npcsByCoord.set(coordKey, []);
                     npcsByCoord.get(coordKey).push({
                         _id: String(npc._id),
