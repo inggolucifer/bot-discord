@@ -10,7 +10,7 @@ export default function RootApp() {
   const { setActiveModal, activeModal } = useUIStore();
 
   return (
-    <div className="relative w-full h-full min-h-screen overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-4rem)] overflow-hidden">
       {/* Background Map Layer */}
       <div className="absolute inset-0 z-0">
          <Suspense fallback={<div className="p-8 text-center text-amber-200">Menghubungkan ke Benua Jianghu...</div>}>

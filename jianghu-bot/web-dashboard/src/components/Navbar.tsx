@@ -69,7 +69,6 @@ export default function Navbar() {
       { href: "/skills", label: "Kitab & Jurus" },
     ],
     dunia: [
-      { href: "/world", label: "Peta Dunia Spasial" },
       { href: "/arena", label: "Arena Pertarungan" },
     ],
     aset: [

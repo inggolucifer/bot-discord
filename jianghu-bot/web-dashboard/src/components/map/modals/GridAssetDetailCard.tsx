@@ -54,7 +54,7 @@ export default function GridAssetDetailCard({
 
   return (
     <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-[#181f2b] to-[#0c1017] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+      <div className="bg-gradient-to-b from-[#181f2b] to-[#0c1017] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto flex flex-col">
         {/* Tombol Tutup */}
         <button
           onClick={onClose}

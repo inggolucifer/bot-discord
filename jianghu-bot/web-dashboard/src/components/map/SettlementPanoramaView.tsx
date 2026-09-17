@@ -110,7 +110,7 @@ export default function SettlementPanoramaView({
 
   if (loading) {
     return (
-      <div className="w-full aspect-video rounded-xl bg-[#0a0d14] flex items-center justify-center border border-amber-900/40">
+      <div className="w-full h-full min-h-[350px] rounded-xl bg-[#0a0d14] flex items-center justify-center border border-amber-900/40">
         <span className="text-amber-300 font-serif animate-pulse">Memasuki gerbang {settlementName}...</span>
       </div>
     );
@@ -120,9 +120,9 @@ export default function SettlementPanoramaView({
   const buildings = data?.buildings || [];
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#080b11] select-none flex flex-col">
+    <div className="relative w-full h-full overflow-hidden bg-[#080b11] select-none flex flex-col">
       {/* 1. PITA ATAS NPC (LIVE CITY NPC RIBBON - GAMBAR 4) */}
-      <div className="absolute top-0 left-0 right-0 z-30 bg-black/85 border-b border-amber-900/50 px-4 py-2 flex items-center gap-3 overflow-x-auto backdrop-blur-md">
+      <div className="flex-shrink-0 bg-black/85 border-b border-amber-900/50 px-4 py-2 flex items-center gap-3 overflow-x-auto backdrop-blur-md z-20">
         <div className="text-[10px] uppercase font-serif font-bold text-amber-400 tracking-wider flex-shrink-0 flex items-center gap-1.5 pr-2 border-r border-gray-700">
           <User className="w-3.5 h-3.5 text-amber-300" />
           <span>Kultivator di Kota</span>
@@ -156,7 +156,7 @@ export default function SettlementPanoramaView({
       </div>
 
       {/* 2. LATAR BELAKANG PANORAMA KOTA TRADISIONAL (GAMBAR 4) */}
-      <div className="flex-1 relative overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#182635] via-[#101923] to-[#0a0f16]">
+      <div className="flex-1 min-h-0 relative overflow-hidden flex items-end justify-center bg-gradient-to-b from-[#182635] via-[#101923] to-[#0a0f16]">
         {/* Siluet Pegunungan Kabut di Latar Belakang */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <svg viewBox="0 0 1000 400" className="w-full h-full object-cover">
@@ -167,13 +167,13 @@ export default function SettlementPanoramaView({
 
         {/* Notifikasi Aksi */}
         {actionNotice && (
-          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-40 bg-black/90 border border-amber-500 text-amber-200 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md animate-in fade-in">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 bg-black/90 border border-amber-500 text-amber-200 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md animate-in fade-in">
             {actionNotice}
           </div>
         )}
 
         {/* 3. DERETAN BANGUNAN INTERAKTIF YANG DAPAT DIMASUKI (GAMBAR 4) */}
-        <div className="relative z-20 w-full px-6 pb-8 flex items-end justify-around gap-2 flex-wrap sm:flex-nowrap">
+        <div className="relative z-20 w-full px-4 sm:px-6 pb-3 sm:pb-6 flex items-end justify-around gap-2 overflow-x-auto scrollbar-none">
           {buildings.map((b: any) => {
             let IconComp = BedDouble;
             if (b.id === 'tavern') IconComp = Wine;
@@ -219,7 +219,7 @@ export default function SettlementPanoramaView({
       </div>
 
       {/* 4. BOTTOM HUD CONTROLS */}
-      <div className="bg-[#0b0e14] border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
+      <div className="flex-shrink-0 bg-[#0b0e14] border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
         <button
           onClick={onExitCity}
           className="bg-black/80 hover:bg-black text-gray-200 px-3.5 py-1.5 rounded-lg border border-gray-700 flex items-center gap-2 text-xs font-serif font-bold transition-all active:scale-95 shadow-md"
@@ -421,7 +421,7 @@ export default function SettlementPanoramaView({
       {/* 6. MODAL INTERAKSI NPC */}
       {selectedNpc && (
         <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#121620] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95">
+          <div className="bg-[#121620] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 max-h-[85vh] overflow-y-auto flex flex-col">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-b from-amber-900 to-stone-900 border border-amber-500 flex items-center justify-center text-lg text-amber-200 font-serif font-bold shadow-md">
                 {selectedNpc.name.charAt(0)}

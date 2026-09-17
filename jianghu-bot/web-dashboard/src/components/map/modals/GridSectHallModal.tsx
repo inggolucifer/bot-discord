@@ -53,7 +53,7 @@ export default function GridSectHallModal({
 
   return (
     <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-[#1f1b2b] to-[#0d0a17] border border-purple-600/70 rounded-xl max-w-lg w-full p-6 shadow-2xl relative">
+      <div className="bg-gradient-to-b from-[#1f1b2b] to-[#0d0a17] border border-purple-600/70 rounded-xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto flex flex-col">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/40 hover:bg-black/80 rounded-full p-1.5 transition-colors"

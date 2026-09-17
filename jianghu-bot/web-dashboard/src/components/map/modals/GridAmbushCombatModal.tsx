@@ -46,7 +46,7 @@ export default function GridAmbushCombatModal({
 
   return (
     <div className="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 select-none animate-in zoom-in-95 duration-200">
-      <div className="bg-gradient-to-b from-[#2b1515] to-[#120808] border border-red-600/80 rounded-xl max-w-md w-full p-6 shadow-2xl relative text-center">
+      <div className="bg-gradient-to-b from-[#2b1515] to-[#120808] border border-red-600/80 rounded-xl max-w-md w-full p-6 shadow-2xl relative text-center max-h-[90vh] overflow-y-auto flex flex-col">
         <div className="w-16 h-16 rounded-full bg-red-950/80 border-2 border-red-500/80 mx-auto flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse">
           <Skull className="w-8 h-8 text-red-400" />
         </div>
