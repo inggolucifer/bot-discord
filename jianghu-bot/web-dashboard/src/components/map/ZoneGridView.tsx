@@ -916,7 +916,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
                 const res = await api.post('/battle/start', {
                   targetId: monsterKey,
                   targetType: 'monster',
-                  zoneId: activeZoneId
+                  zoneId: activeZoneId,
+                  monsterData: selectedTile?.spawnedMonster
                 });
                 if (res.data?.success && res.data.battleId) {
                   setActiveBattleId(res.data.battleId);
