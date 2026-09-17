@@ -167,28 +167,102 @@ router.post('/start', authenticateToken, async (req, res) => {
 
         if (targetType === 'monster') {
             const mongoose = require('mongoose');
-            const monster = await Monster.findOne({
+            let monster = await Monster.findOne({
                 $or: [
                     { key: targetId },
                     { name: targetId },
                     ...(mongoose.Types.ObjectId.isValid(targetId) ? [{ _id: targetId }] : [])
                 ]
             });
-            if (!monster) return res.status(404).json({ error: 'Monster tidak ditemukan' });
-            
+
+            // Master monster catalog fallback (menjamin monster uji coba & bestiary selalu valid)
+            const fallbackCatalog = {
+                'wolf_azure': {
+                    key: 'wolf_azure',
+                    name: 'Serigala Roh Darah',
+                    tier: 1,
+                    statBlock: { hp: 150, atk: 20, def: 8, spd: 10 },
+                    skills: [{ skillId: 'claw_strike', name: 'Cakaran Roh Darah', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }]
+                },
+                'Serigala Roh Darah': {
+                    key: 'wolf_azure',
+                    name: 'Serigala Roh Darah',
+                    tier: 1,
+                    statBlock: { hp: 150, atk: 20, def: 8, spd: 10 },
+                    skills: [{ skillId: 'claw_strike', name: 'Cakaran Roh Darah', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }]
+                },
+                'golden_eagle': {
+                    key: 'golden_eagle',
+                    name: 'Elang Emas',
+                    tier: 1,
+                    statBlock: { hp: 100, atk: 22, def: 6, spd: 16 }
+                },
+                'cave_bat': {
+                    key: 'cave_bat',
+                    name: 'Kelelawar Gua Beracun',
+                    tier: 1,
+                    statBlock: { hp: 80, atk: 14, def: 6, spd: 8 }
+                },
+                'bandit_leader': {
+                    key: 'bandit_leader',
+                    name: 'Pemimpin Bandit',
+                    tier: 2,
+                    statBlock: { hp: 250, atk: 32, def: 18, spd: 12 }
+                }
+            };
+
+            const candidate = req.body.monsterData || fallbackCatalog[targetId];
+
+            if (!monster && candidate) {
+                try {
+                    const guildId = player.guildId || req.user.guildId || 'global';
+                    monster = await Monster.findOneAndUpdate(
+                        { guildId, key: candidate.key || targetId },
+                        {
+                            $setOnInsert: {
+                                guildId,
+                                key: candidate.key || targetId,
+                                name: candidate.name || 'Monster Liar',
+                                regionSlug: candidate.regionSlug || 'central_plains',
+                                tier: candidate.tier || 1,
+                                statBlock: {
+                                    hp: candidate.hp || candidate.statBlock?.hp || 150,
+                                    atk: candidate.atk || candidate.statBlock?.atk || 20,
+                                    def: candidate.def || candidate.statBlock?.def || 8,
+                                    spd: candidate.spd || candidate.statBlock?.spd || 10
+                                },
+                                isActive: true
+                            }
+                        },
+                        { upsert: true, new: true }
+                    );
+                } catch (dbErr) {
+                    console.warn('[API-BATTLE] Auto-seed monster fallback notice:', dbErr.message);
+                }
+            }
+
+            const mData = monster || candidate;
+            if (!mData) return res.status(404).json({ error: 'Monster tidak ditemukan' });
+
+            const mHp = mData.statBlock?.hp || mData.hp || mData.stats?.hp || 150;
+            const mAtk = mData.statBlock?.atk || mData.atk || mData.stats?.attack || 20;
+            const mDef = mData.statBlock?.def || mData.def || mData.stats?.defense || 8;
+            const mSpd = mData.statBlock?.spd || mData.spd || mData.stats?.speed || 10;
+            const mSkills = (mData.skills && mData.skills.length > 0)
+                ? mData.skills
+                : [{ skillId: 'claw_strike', name: 'Cakaran Mematikan', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }];
+
             enemies = [{
-                id: monster.key || String(monster._id),
-                name: monster.name,
-                level: monster.tier || monster.level || 1,
-                imageUrl: monster.imageUrl || null,
-                hp: monster.statBlock?.hp || monster.stats?.hp || 120,
-                maxHp: monster.statBlock?.hp || monster.stats?.hp || 120,
-                attack: monster.statBlock?.atk || monster.stats?.attack || 18,
-                defense: monster.statBlock?.def || monster.stats?.defense || 8,
-                speed: monster.statBlock?.spd || monster.stats?.speed || 10,
-                skills: [
-                    { skillId: 'claw_strike', name: 'Cakaran Mematikan', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }
-                ]
+                id: mData.key || String(mData._id || targetId),
+                name: mData.name || 'Monster Liar',
+                level: mData.tier || mData.level || 1,
+                imageUrl: mData.imageUrl || null,
+                hp: mHp,
+                maxHp: mHp,
+                attack: mAtk,
+                defense: mDef,
+                speed: mSpd,
+                skills: mSkills
             }];
         } else if (targetType === 'ambush') {
             enemies = [{
