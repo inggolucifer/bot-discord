@@ -76,6 +76,36 @@ export default function TaleOfImmortalCanvas({
   isNight = false
 }: TaleOfImmortalCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // Responsive Canvas Size (Never Stretches - 1:1 Aspect Ratio)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!container || !canvas) return;
+      const { clientWidth, clientHeight } = container;
+      if (clientWidth > 0 && clientHeight > 0) {
+        if (canvas.width !== clientWidth || canvas.height !== clientHeight) {
+          canvas.width = clientWidth;
+          canvas.height = clientHeight;
+        }
+      }
+    };
+
+    handleResize();
+
+    const ro = new ResizeObserver(() => handleResize());
+    ro.observe(container);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Camera State
   const [camera, setCamera] = useState<{ x: number; y: number; zoom: number }>({
@@ -88,6 +118,27 @@ export default function TaleOfImmortalCanvas({
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [cameraStart, setCameraStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveredTile, setHoveredTile] = useState<TileData | null>(null);
+
+  // Mobile Touch Pan & Tap State
+  const touchState = useRef<{
+    startX: number;
+    startY: number;
+    cameraStartX: number;
+    cameraStartY: number;
+    movedDist: number;
+    initialPinchDist: number | null;
+    initialZoom: number;
+    isPinching: boolean;
+  }>({
+    startX: 0,
+    startY: 0,
+    cameraStartX: 0,
+    cameraStartY: 0,
+    movedDist: 0,
+    initialPinchDist: null,
+    initialZoom: 1.0,
+    isPinching: false
+  });
   
   const { loadedImages } = useGlobalAssetLoader();
   
@@ -783,6 +834,95 @@ export default function TaleOfImmortalCanvas({
     }
   };
 
+  // Touch Handlers for Mobile (Geser Peta & Tap untuk Info Petak)
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      touchState.current = {
+        startX: touch.clientX,
+        startY: touch.clientY,
+        cameraStartX: camera.x,
+        cameraStartY: camera.y,
+        movedDist: 0,
+        initialPinchDist: null,
+        initialZoom: camera.zoom,
+        isPinching: false
+      };
+      setIsDragging(true);
+    } else if (e.touches.length === 2) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      touchState.current.initialPinchDist = dist;
+      touchState.current.initialZoom = camera.zoom;
+      touchState.current.isPinching = true;
+      setIsDragging(false);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1 && !touchState.current.isPinching) {
+      const touch = e.touches[0];
+      const dxPixels = touch.clientX - touchState.current.startX;
+      const dyPixels = touch.clientY - touchState.current.startY;
+      touchState.current.movedDist += Math.hypot(dxPixels, dyPixels);
+
+      const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+      const dxTiles = dxPixels / currentTileSize;
+      const dyTiles = dyPixels / currentTileSize;
+
+      setCamera(prev => ({
+        ...prev,
+        x: Math.max(0, Math.min(4999, touchState.current.cameraStartX - dxTiles)),
+        y: Math.max(0, Math.min(4999, touchState.current.cameraStartY - dyTiles))
+      }));
+    } else if (e.touches.length === 2 && touchState.current.initialPinchDist) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const currentDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const scale = currentDist / touchState.current.initialPinchDist;
+      const newZoom = Math.min(2.5, Math.max(0.45, +(touchState.current.initialZoom * scale).toFixed(2)));
+      setCamera(prev => ({ ...prev, zoom: newZoom }));
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    setIsDragging(false);
+
+    // Jika ketukan bersih (moved distance < 12px), buka info petak yang diklik
+    if (!touchState.current.isPinching && touchState.current.movedDist < 12 && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const screenX = (touch.clientX - rect.left) * scaleX;
+      const screenY = (touch.clientY - rect.top) * scaleY;
+
+      const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+      const viewTilesX = canvas.width / currentTileSize;
+      const viewTilesY = canvas.height / currentTileSize;
+
+      const clickX = Math.floor(camera.x - viewTilesX / 2 + screenX / currentTileSize);
+      const clickY = Math.floor(camera.y - viewTilesY / 2 + screenY / currentTileSize);
+
+      if (clickX >= 0 && clickX < 5000 && clickY >= 0 && clickY < 5000) {
+        const selectedTile = tileMap.get(`${clickX},${clickY}`) || {
+          tileX: clickX,
+          tileY: clickY,
+          terrainType: 'plains',
+          tileType: 'walkable'
+        };
+        onTileClick(selectedTile);
+      }
+    }
+
+    touchState.current.isPinching = false;
+    touchState.current.initialPinchDist = null;
+  };
+
   // Nonaktifkan zoom mouse wheel per instruksi user (hanya pakai tombol + dan -)
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
     e.preventDefault();
@@ -805,75 +945,65 @@ export default function TaleOfImmortalCanvas({
   const selectedTileData = targetTile ? tileMap.get(`${targetTile.x},${targetTile.y}`) : null;
 
   return (
-    <div className="relative w-full h-full select-none overflow-hidden bg-[#e3d5bd] flex flex-col items-center justify-center font-sans">
+    <div ref={containerRef} className="relative w-full h-full select-none overflow-hidden bg-[#e3d5bd] flex flex-col items-center justify-center font-sans">
       <canvas
         ref={canvasRef}
-        width={1280}
-        height={720}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
         onWheel={handleWheel}
-        className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl"
+        className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
       />
 
-      {/* Map Action Overlay Pop-up */}
+      {/* Map Action Overlay Pop-up (Khusus layar Desktop, di Mobile digantikan oleh GridTileInspectorCard) */}
       {overlayPos && selectedTileData && onActionWalk && !isWalking && (
-        <MapActionOverlay 
-          x={overlayPos.x} 
-          y={overlayPos.y} 
-          tile={selectedTileData}
-          onWalk={onActionWalk}
-          onInspect={onActionInspect || (() => {})}
-          onClose={() => onClearTarget && onClearTarget()}
-        />
+        <div className="hidden sm:block">
+          <MapActionOverlay 
+            x={overlayPos.x} 
+            y={overlayPos.y} 
+            tile={selectedTileData}
+            onWalk={onActionWalk}
+            onInspect={onActionInspect || (() => {})}
+            onClose={() => onClearTarget && onClearTarget()}
+          />
+        </div>
       )}
 
-      {/* HUD Controls (+ dan - Zoom Spasial) */}
-      <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 pointer-events-auto">
+      {/* HUD Controls (+ dan - Zoom Spasial) - Berada di sisi kiri atas di bawah bar navigasi agar bebas tabrakan */}
+      <div className="absolute top-14 left-3 sm:top-16 sm:left-4 z-20 flex items-center gap-1.5 pointer-events-auto">
         <button
           onClick={centerOnPlayer}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-3 py-1.5 rounded-sm text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95"
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95"
           title="Pusatkan Karakter"
         >
           <span>🎯 Pusatkan</span>
         </button>
         <button
           onClick={handleZoomOut}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-sm text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-md text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
           title="Perkecil Peta (-)"
         >
           -
         </button>
         <button
           onClick={() => setCamera(prev => ({ ...prev, zoom: 1.0 }))}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#8c7a5f] border border-[#524530] px-2 py-1 rounded-sm text-xs font-mono shadow-lg backdrop-blur-md"
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#8c7a5f] border border-[#524530] px-2 py-1 rounded-md text-xs font-mono shadow-lg backdrop-blur-md"
           title="Reset Zoom 100%"
         >
           {Math.round(camera.zoom * 100)}%
         </button>
         <button
           onClick={handleZoomIn}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-sm text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-md text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
           title="Perbesar Peta (+)"
         >
           +
         </button>
       </div>
-
-      <div className="absolute bottom-4 right-4 z-20 bg-[#292218]/90 border border-[#524530] px-3 py-1.5 rounded-sm shadow-xl backdrop-blur-md text-right pointer-events-none">
-        <div className="text-[10px] text-[#8c7a5f] font-mono tracking-wider uppercase">Koordinat Benua</div>
-        <div className="text-xs font-mono font-bold text-[#d8c3a5]">
-          X: {playerPos.x} | Y: {playerPos.y}
-        </div>
-      </div>
-      
-      {/* Target Tile Debug */}
-      {hoveredTile && !isDragging && (
-        <div className="absolute top-4 left-4 z-20 bg-[#292218]/90 border border-[#524530] px-3 py-1.5 rounded-sm text-xs text-[#d8c3a5] backdrop-blur-sm pointer-events-none shadow-lg">
-          <span className="font-bold text-[#fde047]">{hoveredTile.label || hoveredTile.terrainType}</span> ({hoveredTile.tileX}, {hoveredTile.tileY})
-        </div>
-      )}
     </div>
   );
 }

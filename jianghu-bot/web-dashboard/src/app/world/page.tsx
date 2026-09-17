@@ -12,6 +12,7 @@ import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 import WorldMapView from "@/components/map/WorldMapView";
 import ZoneGridView from "@/components/map/ZoneGridView";
+import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
 
 export function WorldPageContent() {
   const searchParams = useSearchParams();
@@ -48,7 +49,7 @@ export function WorldPageContent() {
 
   // UI Drawer & Rest Modal State
   const [isRestModalOpen, setIsRestModalOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Map View State
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
@@ -224,7 +225,7 @@ export function WorldPageContent() {
   if (loading) return <div className="p-4 sm:p-6 lg:p-8 pt-20">Memuat dunia...</div>;
 
   return (
-    <div className={`w-full h-[calc(100vh-4rem)] relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
+    <div className={`w-full h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] lg:h-[calc(100vh-4rem)] relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
       
       {/* Main Map Background */}
       <div className="absolute inset-0 flex flex-col">
@@ -253,16 +254,16 @@ export function WorldPageContent() {
 
       {/* Floating View Switcher - Only visible on map, hidden when inside building / settlement */}
       {subViewMode === 'map' && (
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 bg-[#0e131d]/80 p-1.5 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
+        <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 bg-[#0e131d]/85 p-1 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
           <button
             onClick={() => setMapView('grid')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
           >
             <Compass className="w-3.5 h-3.5 text-amber-300" /> Eksplorasi Grid
           </button>
           <button
             onClick={() => setMapView('world')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'world' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-serif font-bold transition-all ${mapView === 'world' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
           >
             <Map className="w-3.5 h-3.5 text-amber-300" /> Peta Makro
           </button>
@@ -271,11 +272,11 @@ export function WorldPageContent() {
 
       {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP */}
       {mapView !== 'world' && (
-        <div className="absolute top-4 right-4 z-40 flex flex-col items-end gap-2 pointer-events-none">
+        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-40 flex flex-col items-end gap-2 pointer-events-none">
           {/* Top-Right HUD Row */}
           <div className="flex items-center gap-2 pointer-events-auto">
             {/* Stamina Capsule */}
-            <div className="bg-[#0e131d]/90 backdrop-blur-md border border-amber-700/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] rounded-xl px-3.5 py-1.5 flex items-center gap-3">
+            <div className="bg-[#0e131d]/90 backdrop-blur-md border border-amber-700/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] rounded-xl px-2.5 sm:px-3.5 py-1 sm:py-1.5 flex items-center gap-2.5 sm:gap-3">
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
                 <div className="flex flex-col">
@@ -487,7 +488,7 @@ export function WorldPageContent() {
 
       {/* Floating Panel (Tabs & Content) - Collapsible Drawer */}
       {mapView !== 'world' && subViewMode === 'map' && (
-      <div className="absolute bottom-14 left-4 z-30 w-80 sm:w-96 max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
+      <div className="absolute bottom-12 sm:bottom-14 left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[50vh] sm:max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
         
         {/* Collapsible Drawer Header */}
         <div className="pointer-events-auto mb-1.5 flex items-center justify-between bg-[#0e131d]/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-amber-900/60 shadow-xl">
@@ -670,6 +671,9 @@ export function WorldPageContent() {
               }}
           />
       )}
+
+      {/* Peringatan Orientasi Landscape Mobile */}
+      <LandscapeOrientationPrompt />
     </div>
   );
 }

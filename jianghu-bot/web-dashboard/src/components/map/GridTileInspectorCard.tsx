@@ -136,16 +136,16 @@ export default function GridTileInspectorCard({
   }
 
   return (
-    <div className="absolute top-16 right-4 z-40 w-80 sm:w-88 max-w-[calc(100vw-2rem)] bg-[#0d121c]/95 border border-amber-600/70 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden text-xs text-gray-200 select-none animate-in fade-in slide-in-from-right-3 duration-200 flex flex-col max-h-[calc(100vh-8.5rem)]">
+    <div className="absolute top-12 sm:top-16 right-2 sm:right-4 z-40 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] bg-[#0d121c]/95 border border-amber-600/70 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] backdrop-blur-md overflow-hidden text-xs text-gray-200 select-none animate-in fade-in slide-in-from-right-3 duration-200 flex flex-col max-h-[calc(100vh-3.5rem)] sm:max-h-[calc(100vh-4.5rem)]">
       {/* Header Card Wuxia */}
-      <div className="bg-gradient-to-r from-[#1c160e] via-[#2a2015] to-[#17120a] border-b border-amber-800/60 px-4 py-2.5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <div>
-            <h3 className="text-amber-200 font-serif font-bold text-sm leading-tight flex items-center gap-1.5">
+      <div className="bg-gradient-to-r from-[#1c160e] via-[#2a2015] to-[#17120a] border-b border-amber-800/60 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0" />
+          <div className="min-w-0">
+            <h3 className="text-amber-200 font-serif font-bold text-xs sm:text-sm leading-tight flex items-center gap-1.5 truncate">
               {displayTitle}
             </h3>
-            <div className="text-[10px] text-amber-400/80 font-mono">
+            <div className="text-[10px] text-amber-400/80 font-mono truncate">
               Koordinat ({tile.tileX}, {tile.tileY}) • {tile.regionName || 'Central Plains'}
             </div>
           </div>
@@ -153,14 +153,14 @@ export default function GridTileInspectorCard({
 
         <button
           onClick={onClose}
-          className="text-amber-400/70 hover:text-white bg-black/40 hover:bg-black/80 rounded-full p-1 transition-colors"
+          className="text-amber-400/70 hover:text-white bg-black/40 hover:bg-black/80 rounded-full p-1 transition-colors flex-shrink-0 ml-1"
           title="Tutup Card"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="p-3.5 space-y-3 overflow-y-auto scrollbar-thin">
+      <div className="p-2.5 sm:p-3.5 space-y-2 sm:space-y-3 overflow-y-auto scrollbar-thin">
         {/* Status Badge & Jarak */}
         <div className="flex items-center justify-between text-[11px] bg-black/50 px-2.5 py-1.5 rounded-lg border border-gray-800/80">
           <span className="flex items-center gap-1 font-mono text-gray-400">
