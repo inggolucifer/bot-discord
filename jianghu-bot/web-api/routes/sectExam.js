@@ -115,13 +115,58 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
       }
     }
 
+    // 2. Cek Biaya Pendaftaran / Tiket Ujian Masuk
+    const REGISTRATION_FEE_SILVER = 150;
+    const Item = require('../../models/Item');
+    const ticketItem = await Item.findOne({ name: { $in: ['Plakat Ujian Sekte', 'Surat Rekomendasi Tetua'] } });
+    let usedTicket = false;
+
+    if (ticketItem && Array.isArray(player.inventory)) {
+      const invTicket = player.inventory.find(i => i.itemId && i.itemId.toString() === ticketItem._id.toString() && (i.quantity || 1) > 0);
+      if (invTicket) {
+        invTicket.quantity -= 1;
+        if (invTicket.quantity <= 0) {
+          player.inventory = player.inventory.filter(i => i._id.toString() !== invTicket._id.toString());
+        }
+        usedTicket = true;
+      }
+    }
+
+    if (!usedTicket) {
+      const playerSilver = player.currencies?.silver || 0;
+      if (playerSilver < REGISTRATION_FEE_SILVER) {
+        return res.status(400).json({
+          message: `Biaya pendaftaran ujian sekte adalah ${REGISTRATION_FEE_SILVER} Perak atau memiliki 'Plakat Ujian Sekte'. Koin perakmu: ${playerSilver}.`
+        });
+      }
+      player.currencies.silver -= REGISTRATION_FEE_SILVER;
+    }
+
     const exam = sect.entranceTest;
 
     if (exam.type === 'combat') {
-      // Resolve combat
+      // TAHAP 1 & 2: Validasi Jasmani & Sirkulasi Qi
+      const stage1_physique = (player.bodyTemperingLevel || 0) >= 0; // Kuda-kuda terpenuhi
+      const stage2_qi = realmIdx >= (exam.minRealmIndex || 0);
+
+      if (!stage1_physique || !stage2_qi) {
+        return res.status(400).json({ message: 'Fondasi jasmani atau kemurnian Qi Anda belum memenuhi standar minimal ujian.' });
+      }
+
+      // TAHAP 3: Duel Turnamen Melawan Calon Murid Penantang / Penguji
       await player.populate([{ path: 'laws' }, { path: 'manuals.manualId' }]);
       const playerStats = calculatePlayerStats(player, player.laws, player.manuals);
-      const combatResult = simulateExamCombat(playerStats, exam.guardianStatBlock);
+
+      // Stat penantang disesuaikan dengan ujian sekte
+      const opponentStatBlock = {
+        name: exam.guardianStatBlock?.name || 'Calon Murid Pendaftar Penantang',
+        hp: exam.guardianStatBlock?.hp || 120,
+        atk: exam.guardianStatBlock?.atk || 18,
+        def: exam.guardianStatBlock?.def || 12,
+        spd: exam.guardianStatBlock?.spd || 10
+      };
+
+      const combatResult = simulateExamCombat(playerStats, opponentStatBlock);
 
       if (!player.sectExamState) player.sectExamState = { lastAttempts: [] };
       const attempts = player.sectExamState.lastAttempts.filter(a => a.sectId && a.sectId.toString() !== sect._id.toString());
@@ -129,43 +174,51 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
       player.sectExamState.lastAttempts = attempts;
 
       if (combatResult.won) {
-        sect.memberIds.push(player.discordId);
+        if (!sect.memberIds.includes(player.discordId)) {
+          sect.memberIds.push(player.discordId);
+        }
         player.sect = sect.name;
+        player.sectRole = 'outer_disciple'; // Resmi diangkat sebagai Murid Luar
+
         await sect.save();
         await player.save();
         await AdminLog.create({
             guildId: player.guildId,
             adminId: player.discordId,
             action: 'SECT_EXAM_COMBAT_SUCCESS',
-            details: `Lulus ujian combat dan bergabung ke ${sect.name}.`
+            details: `Lulus 3 babak seleksi dan resmi bergabung ke ${sect.name} sebagai Murid Luar.`
         });
-        return res.json({ success: true, message: 'Anda lulus ujian!', log: combatResult.log });
+
+        return res.json({
+          success: true,
+          message: `Selamat! Kamu berhasil mengalahkan ${opponentStatBlock.name} dan resmi diterima sebagai Murid Luar ${sect.name}!`,
+          stages: [
+            { stage: 1, name: 'Uji Kuda-Kuda Jasmani', passed: true },
+            { stage: 2, name: 'Uji Kemurnian Qi', passed: true },
+            { stage: 3, name: 'Duel Arena Turnamen', passed: true }
+          ],
+          log: combatResult.log
+        });
       } else {
         await player.save();
         await AdminLog.create({
             guildId: player.guildId,
             adminId: player.discordId,
             action: 'SECT_EXAM_COMBAT_FAIL',
-            details: `Gagal ujian combat ke ${sect.name}.`
+            details: `Gagal dalam duel ujian masuk ${sect.name}.`
         });
-        return res.json({ success: false, message: 'Anda gagal dalam ujian combat.', log: combatResult.log });
+
+        return res.json({
+          success: false,
+          message: `Kamu dikalahkan oleh ${opponentStatBlock.name}. Berlatihlah lebih tekun sebelum mencoba kembali!`,
+          stages: [
+            { stage: 1, name: 'Uji Kuda-Kuda Jasmani', passed: true },
+            { stage: 2, name: 'Uji Kemurnian Qi', passed: true },
+            { stage: 3, name: 'Duel Arena Turnamen', passed: false }
+          ],
+          log: combatResult.log
+        });
       }
-
-    } else if (exam.type === 'trial_task') {
-      // Assign trial
-      if (!player.sectExamState) player.sectExamState = {};
-      player.sectExamState.activeSectId = sect._id;
-      player.sectExamState.activeType = 'trial_task';
-      player.sectExamState.trialAssignedAt = new Date();
-      player.sectExamState.trialDeadlineAt = new Date(Date.now() + (exam.trialTask.durationHours * 60 * 60 * 1000));
-      await player.save();
-
-      return res.json({
-        success: true,
-        message: 'Ujian dimulai. Harap selesaikan tugas sebelum batas waktu.',
-        deadlineAt: player.sectExamState.trialDeadlineAt
-      });
-    }
 
   } catch (error) {
     console.error(error);

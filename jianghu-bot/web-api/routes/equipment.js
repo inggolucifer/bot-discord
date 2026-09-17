@@ -52,7 +52,10 @@ router.post('/equip', authenticateToken, async (req, res) => {
         else if (item.category === 'helmet') slot = 'helmet';
         else if (item.category === 'pants') slot = 'pants';
         else if (item.category === 'boots') slot = 'boots';
-        else if (item.category === 'accessories') slot = 'accessory';
+        else if (item.category === 'accessories') {
+            slot = (item.capacityType === 'horse') ? 'mount' : 'accessory';
+        }
+        else if (item.category === 'mount') slot = 'mount';
 
         if (!slot) {
             return res.status(400).json({ error: 'Item cannot be equipped' });
@@ -70,6 +73,12 @@ router.post('/equip', authenticateToken, async (req, res) => {
         if (!player.equipment) player.equipment = {};
         player.equipment[slot] = invItem._id;
         invItem.isEquipped = true;
+
+        // Sinkronisasi status tunggangan aktif pemain
+        if (slot === 'mount') {
+            player.equippedMount = item.mountType || item.name.toLowerCase().replace(/\s+/g, '_');
+        }
+
         player.markModified('inventory');
         player.markModified('equipment');
 
@@ -97,7 +106,7 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'slot is required' });
     }
 
-    const validSlots = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory'];
+    const validSlots = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount'];
     if (!validSlots.includes(slot)) {
         return res.status(400).json({ error: 'Invalid slot' });
     }
@@ -130,7 +139,7 @@ router.post('/unequip', authenticateToken, async (req, res) => {
 
             // Calculate hypothetical capacity without this item
             const equippedItems = [];
-            for (const key of ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory']) {
+            for (const key of ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount']) {
                 if (key !== slot && player.equipment[key]) {
                     const eInvItem = player.inventory.id(player.equipment[key]);
                     if (eInvItem && eInvItem.itemId) {
@@ -159,6 +168,9 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         }
 
         player.equipment[slot] = null;
+        if (slot === 'mount') {
+            player.equippedMount = null;
+        }
         player.markModified('inventory');
         player.markModified('equipment');
 

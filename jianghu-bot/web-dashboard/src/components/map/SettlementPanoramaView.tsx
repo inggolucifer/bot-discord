@@ -19,8 +19,13 @@ import {
   Sparkles,
   ShieldAlert,
   Coins,
-  Loader2
+  Loader2,
+  Ship,
+  Compass as CompassIcon
 } from 'lucide-react';
+import DungeonMazeExplorer from '@/components/dungeon/DungeonMazeExplorer';
+import FerryCrossingModal from '@/components/ferry/FerryCrossingModal';
+import SectEntranceExamModal from '@/components/sect/SectEntranceExamModal';
 
 interface SettlementPanoramaViewProps {
   settlementName: string;
@@ -40,6 +45,12 @@ export default function SettlementPanoramaView({
   const [selectedBuilding, setSelectedBuilding] = useState<any | null>(null);
   const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
+
+  // Modal State Hooks untuk Fitur Baru
+  const [showDungeonExplorer, setShowDungeonExplorer] = useState(false);
+  const [showFerryModal, setShowFerryModal] = useState(false);
+  const [showSectExamModal, setShowSectExamModal] = useState(false);
+  const [sectExamSectId, setSectExamSectId] = useState<string>('');
 
   useEffect(() => {
     const fetchSettlement = async () => {
@@ -101,10 +112,21 @@ export default function SettlementPanoramaView({
 
   const handleBuildingClick = (building: any) => {
     setSelectedBuilding(building);
+    const bName = (building.name || '').toLowerCase();
+    const bId = (building.id || '').toLowerCase();
+    const bType = (building.buildingType || '').toLowerCase();
+
     if (building.id === 'inn' && onOpenInn) {
       onOpenInn();
     } else if (building.id === 'market' && onOpenMarket) {
       onOpenMarket();
+    } else if (bId === 'dock' || bType === 'dock' || bName.includes('dermaga') || bName.includes('pelabuhan')) {
+      setShowFerryModal(true);
+    } else if (bId === 'sect_hall' || bType === 'sect_hall' || bName.includes('balai sekte') || bName.includes('ujian')) {
+      setSectExamSectId(building.linkedSectId || '654321654321654321654321');
+      setShowSectExamModal(true);
+    } else if (bId === 'dungeon' || bType === 'dungeon_entrance' || bName.includes('gua') || bName.includes('makam')) {
+      setShowDungeonExplorer(true);
     }
   };
 
@@ -183,6 +205,9 @@ export default function SettlementPanoramaView({
             if (b.id === 'bounty_board') IconComp = FileText;
             if (b.id === 'courier_stables') IconComp = Compass;
             if (b.id === 'vault') IconComp = Archive;
+            if (b.id === 'dock' || b.buildingType === 'dock' || (b.name || '').toLowerCase().includes('dermaga')) IconComp = Ship;
+            if (b.id === 'sect_hall' || b.buildingType === 'sect_hall' || (b.name || '').toLowerCase().includes('sekte')) IconComp = Swords;
+            if (b.id === 'dungeon' || b.buildingType === 'dungeon_entrance' || (b.name || '').toLowerCase().includes('gua')) IconComp = Sparkles;
 
             return (
               <div
@@ -479,6 +504,29 @@ export default function SettlementPanoramaView({
             </div>
           </div>
         </div>
+      )}
+
+      {/* 7. MODALS INTERAKTIF: DUNGEON, FERRY, DAN UJIAN SEKTE */}
+      {showDungeonExplorer && (
+        <DungeonMazeExplorer
+          onClose={() => setShowDungeonExplorer(false)}
+          onExitSuccess={(loot) => showNotice(`🎉 Berhasil keluar dari gua membawa ${loot.silver} Perak & ${loot.spiritStones} Batu Roh!`)}
+        />
+      )}
+
+      {showFerryModal && (
+        <FerryCrossingModal
+          onClose={() => setShowFerryModal(false)}
+          onArrivalSuccess={(newLoc) => showNotice(`⛵ Berhasil menyeberang ke ${newLoc.buildingName || newLoc.settlementName}!`)}
+        />
+      )}
+
+      {showSectExamModal && (
+        <SectEntranceExamModal
+          sectId={sectExamSectId}
+          onClose={() => setShowSectExamModal(false)}
+          onSuccess={() => showNotice('🎉 Selamat! Kamu telah resmi diterima sebagai Murid Luar Sekte!')}
+        />
       )}
     </div>
   );

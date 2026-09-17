@@ -166,14 +166,30 @@ export const GLOBAL_ASSETS = {
 
   // =========================================================================
   // 6C. TUNGGANGAN & MOUNTS (128x128 px)
+  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG Transparan)
+  // Memberikan efisiensi stamina langkah (-0.5 s/d -2.5) dan kecepatan jelajah
   // =========================================================================
   mounts: {
     "Gerobak Kayu": "",
     "Kuda Jinak": "",
     "Kuda Perang Baja": "",
+    "Kuda Ferghana": "",
+    "Kuda Roh Bertanduk": "",
+    "Harimau Bayangan": "",
+    "Kura-kura Lapis Baja": "",
     "Kapal Kayu Ek": "",
+    "Perahu Kayu Nelayan": "",
     "Pedang Terbang Bambu": "",
     "Pedang Terbang Giok": "",
+    "Pedang Terbang Spiritual": "",
+    "Bangau Putih Spiritual": "",
+    horse_jinak: "",
+    horse_ferghana: "",
+    spirit_horned_horse: "",
+    shadow_tiger: "",
+    flying_sword: "",
+    wooden_boat: "",
+    feather_crane: "",
   },
 
   // =========================================================================
@@ -208,6 +224,18 @@ export const GLOBAL_ASSETS = {
   // Key = Nama Item persis di Database (Item.name) atau Item.key
   // =========================================================================
   items: {
+    // Senjata & Perlengkapan Tempur
+    "Pedang Bambu": "",
+    "Pedang Besi Tempa": "",
+    "Golok Baja Naga": "",
+    "Pedang Giok Langit": "",
+    "Jubah Kain Kasar": "",
+    "Baju Zirah Besi": "",
+    "Jubah Sutra Surgawi": "",
+    "Ikat Kepala Pendekar": "",
+    "Celana Kain Praktis": "",
+    "Sepatu Langkah Bayangan": "",
+
     // Kendaraan & Alat Transportasi
     "Gerobak Kayu": "",
     "Kuda Jinak": "",
@@ -219,10 +247,14 @@ export const GLOBAL_ASSETS = {
     // Tiket & Kualifikasi Ujian Sekte
     "Plakat Ujian Sekte": "",
     "Surat Rekomendasi Tetua": "",
+    "Tiket Rakit Penyeberangan": "",
+    "Pakan Kuda Spiritual": "",
 
     // Mata Uang Spiritual & Harta Gua
     "Batu Roh Rendah": "",
     "Batu Roh Menengah": "",
+    "Bijih Besi Kuno": "",
+    "Herba Ginseng Seribu Tahun": "",
   },
 
   // =========================================================================
@@ -253,6 +285,14 @@ export const GLOBAL_ASSETS = {
 
     // Western Sacred Deserts
     "sand_scorpion": "",          // Kalajengking Raksasa Pasir
+
+    // Monster Gua Bawah Tanah & Bos Kuno
+    "cave_bat": "",               // Kelelawar Gua Beracun
+    "cave_spider": "",            // Laba-Laba Gua Raksasa
+    "shadow_wolf": "",            // Serigala Bayangan Gua
+    "miasma_viper": "",           // Ular Beludru Miasma
+    "ancient_sword_wraith": "",   // Hantu Pendekar Pedang Kuno
+    "ancient_demon_lord": "",     // Raja Iblis Gua Purba (Boss)
   },
 
   // =========================================================================
@@ -382,6 +422,7 @@ export const GLOBAL_ASSETS = {
     chest: "📦",
     portal: "🌀",
     ferry: "⛵",
+    mount: "🐎",
     anvil: "⚒️",
     crucible: "⚗️",
     default: "🖼️"

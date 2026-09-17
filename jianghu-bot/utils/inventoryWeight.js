@@ -66,12 +66,20 @@ async function getCarryCapacity(player, options = {}, equippedItemDocs = []) {
   let docs = equippedItemDocs;
   if (!docs || docs.length === 0) {
     // Attempt to automatically fetch from player.equipment if not provided
-    if (player.equipment && player.equipment.accessory) {
+    docs = [];
+    const Item = require('../models/Item');
+    if (player.equipment && player.equipment.accessory && Array.isArray(player.inventory)) {
         const accInvItem = player.inventory.find(i => i._id && i._id.toString() === player.equipment.accessory.toString());
         if (accInvItem && accInvItem.itemId) {
-             const Item = require('../models/Item');
-             const doc = await Item.findById(accInvItem.itemId).lean();
-             if (doc) docs = [doc];
+             const doc = typeof accInvItem.itemId === 'object' && accInvItem.itemId.name ? accInvItem.itemId : await Item.findById(accInvItem.itemId).lean();
+             if (doc) docs.push(doc);
+        }
+    }
+    if (player.equipment && player.equipment.mount && Array.isArray(player.inventory)) {
+        const mountInvItem = player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString());
+        if (mountInvItem && mountInvItem.itemId) {
+             const doc = typeof mountInvItem.itemId === 'object' && mountInvItem.itemId.name ? mountInvItem.itemId : await Item.findById(mountInvItem.itemId).lean();
+             if (doc) docs.push(doc);
         }
     }
   }

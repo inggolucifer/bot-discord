@@ -121,6 +121,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
                     equippedItems.push(accInvItem.itemId);
                 }
             }
+            if (mutablePlayer.equipment && mutablePlayer.equipment.mount) {
+                const mountInvItem = mutablePlayer.inventory.find(i => i._id.toString() === mutablePlayer.equipment.mount.toString());
+                if (mountInvItem && mountInvItem.itemId && mountInvItem.itemId.capacityBonus) {
+                    equippedItems.push(mountInvItem.itemId);
+                }
+            }
             const Travel = require('../../models/Travel');
             const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
             const isTraveling = !!activeTravel;

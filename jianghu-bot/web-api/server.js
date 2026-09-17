@@ -188,6 +188,8 @@ const setupServer = (client) => {
     const equipmentRoutes = require('./routes/equipment');
     const marriageRoutes = require('./routes/marriage');
     const minigameRoutes = require('./routes/minigame');
+    const dungeonRoutes = require('./routes/dungeon');
+    const ferryRoutes = require('./routes/ferry');
 
     app.use('/api/auth', authRoutes);
     app.use('/api/barter', barterRoutes);
@@ -213,6 +215,8 @@ const setupServer = (client) => {
     app.use('/api/equipment', equipmentRoutes);
     app.use('/api/marriage', marriageRoutes);
     app.use('/api/minigame', minigameRoutes);
+    app.use('/api/dungeon', dungeonRoutes);
+    app.use('/api/ferry', ferryRoutes);
 
     const gridSimulationRoutes = require('./routes/gridSimulation');
     app.use('/api/grid', gridSimulationRoutes);

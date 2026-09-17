@@ -83,7 +83,8 @@ export default function ProfilePage() {
     { id: 'armor', label: 'Armor', icon: '👕' },
     { id: 'accessory', label: 'Accessory', icon: '💍' },
     { id: 'pants', label: 'Pants', icon: '👖' },
-    { id: 'boots', label: 'Boots', icon: '👢' }
+    { id: 'boots', label: 'Boots', icon: '👢' },
+    { id: 'mount', label: 'Mount', icon: '🐎' }
   ];
 
   const handleEquip = (inventoryId: string) => {
@@ -98,7 +99,7 @@ export default function ProfilePage() {
 
   const equipableItems = profile.inventory?.filter((inv: any) =>
     !inv.isEquipped &&
-    ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessories'].includes(inv.itemId?.category)
+    ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessories', 'mount'].includes(inv.itemId?.category)
   ) || [];
 
   // Farming Summary Logic
@@ -237,35 +238,45 @@ export default function ProfilePage() {
                  {/* Decorative center line */}
                  <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
                  {equipmentSlots.map(slot => {
-                   const equippedId = equipment[slot.id];
-                   const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
-                   const itemData = equippedInvItem?.itemId;
+                    const equippedId = equipment[slot.id];
+                    const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                    const itemData = equippedInvItem?.itemId;
+                    const isMount = slot.id === 'mount';
 
-                   return (
-                     <motion.div
-                        key={slot.id}
-                        whileHover={{ scale: 1.02 }}
-                        className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
-                        onClick={() => equippedId && handleUnequip(slot.id)}
-                     >
-                       {equippedInvItem ? (
-                          <>
-                             <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
-                             <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name || 'Unknown'}</div>
-                             <div className="text-[10px] text-gray-500 mt-1 capitalize">{slot.id}</div>
-                             <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                <span className="text-xs font-bold text-red-100">Click to Unequip</span>
-                             </div>
-                          </>
-                       ) : (
-                          <>
-                             <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
-                             <div className="text-xs text-gray-600 font-bold uppercase tracking-wide">{slot.label}</div>
-                          </>
-                       )}
-                     </motion.div>
-                   );
-                 })}
+                    return (
+                      <motion.div
+                         key={slot.id}
+                         whileHover={{ scale: 1.02 }}
+                         className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${isMount ? 'col-span-2 bg-gradient-to-r from-amber-950/20 via-black/70 to-amber-950/20 border-amber-800/40' : ''} ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
+                         onClick={() => equippedId && handleUnequip(slot.id)}
+                      >
+                        {equippedInvItem ? (
+                           <>
+                              <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
+                              <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name || 'Unknown'}</div>
+                              <div className="text-[10px] text-gray-500 mt-0.5 capitalize flex items-center gap-1">
+                                {isMount ? (
+                                  <span className="text-emerald-400 font-semibold">
+                                    {itemData?.staminaReduction ? `-${itemData.staminaReduction} STA / Langkah` : itemData?.travelSpeedBonus ? `+${Math.round(itemData.travelSpeedBonus * 100)}% Speed` : 'Efisiensi Stamina'}
+                                  </span>
+                                ) : (
+                                  slot.id
+                                )}
+                              </div>
+                              <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                 <span className="text-xs font-bold text-red-100">Lepas {slot.label}</span>
+                              </div>
+                           </>
+                        ) : (
+                           <>
+                              <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
+                              <div className="text-xs text-gray-500 font-bold uppercase tracking-wide">{isMount ? '🐎 Slot Tunggangan' : slot.label}</div>
+                              {isMount && <div className="text-[9px] text-gray-600">Mengurangi stamina langkah</div>}
+                           </>
+                        )}
+                      </motion.div>
+                    );
+                  })}
               </div>
 
               <div className="w-full bg-black/40 p-4 rounded border border-[#333]">
@@ -444,39 +455,48 @@ export default function ProfilePage() {
                       </div>
                    ) : (
                       equipableItems.map((inv: any) => {
-                         const slotKey = inv.itemId?.category === 'cloth' ? 'armor' : inv.itemId?.category;
-                         const equippedId = equipment[slotKey];
-                         const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
-                         const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
+                          const slotKey = inv.itemId?.category === 'cloth' ? 'armor' 
+                            : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
+                            : inv.itemId?.category;
+                          const equippedId = equipment[slotKey];
+                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                          const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
 
-                         return (
-                            <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
-                               <motion.div
-                                  whileHover={{ x: 4 }}
-                                  className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
-                                  onClick={() => {
-                                     if (!kungfuCheck.allowed) {
-                                        toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
-                                        return;
-                                     }
-                                     handleEquip(inv._id);
-                                  }}
-                               >
-                                  <div className="flex items-center gap-3 overflow-hidden">
-                                     <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
-                                        {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : '📦'}
-                                     </div>
-                                     <div className="min-w-0">
-                                        <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
-                                        <p className="text-xs text-gray-500 capitalize">{slotKey}</p>
-                                        {!kungfuCheck.allowed && (
-                                           <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
-                                              <Lock size={10} className="shrink-0" />
-                                              <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
-                                           </div>
-                                        )}
-                                     </div>
-                                  </div>
+                          return (
+                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
+                                <motion.div
+                                   whileHover={{ x: 4 }}
+                                   className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
+                                   onClick={() => {
+                                      if (!kungfuCheck.allowed) {
+                                         toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
+                                         return;
+                                      }
+                                      handleEquip(inv._id);
+                                   }}
+                                >
+                                   <div className="flex items-center gap-3 overflow-hidden">
+                                      <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
+                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : (slotKey === 'mount' ? '🐎' : '📦')}
+                                      </div>
+                                      <div className="min-w-0">
+                                         <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
+                                         <p className="text-xs text-gray-500 capitalize flex items-center gap-1.5">
+                                            <span>{slotKey}</span>
+                                            {inv.itemId?.category === 'mount' && (
+                                               <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-1 rounded border border-emerald-800/40">
+                                                  {inv.itemId?.staminaReduction ? `-${inv.itemId.staminaReduction} Stamina` : 'Hemat Stamina'}
+                                               </span>
+                                            )}
+                                         </p>
+                                         {!kungfuCheck.allowed && (
+                                            <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
+                                               <Lock size={10} className="shrink-0" />
+                                               <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
+                                            </div>
+                                         )}
+                                      </div>
+                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
                                      <button 
                                         disabled={!kungfuCheck.allowed}
