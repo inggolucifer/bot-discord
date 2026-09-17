@@ -44,9 +44,10 @@ interface ZoneGridViewProps {
   zoneId: string;
   onBackToWorld: () => void;
   targetFocusTile?: { x: number; y: number } | null;
+  onSubViewChange?: (mode: 'map' | 'settlement' | 'courtyard') => void;
 }
 
-export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }: ZoneGridViewProps) {
+export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, onSubViewChange }: ZoneGridViewProps) {
   const activeZoneId = zoneId || 'tianyuan_world_map';
 
   const { user } = useAuthStore();
@@ -395,12 +396,14 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
   const handleEnterSettlement = (cityName: string) => {
     setActiveSettlementName(cityName);
     setViewMode('settlement');
+    onSubViewChange?.('settlement');
   };
 
   // Masuk ke Halaman Meditasi Khusus (Gambar 5)
   const handleEnterCourtyard = (pavilionName: string) => {
     setActiveCourtyardName(pavilionName);
     setViewMode('courtyard');
+    onSubViewChange?.('courtyard');
   };
 
 
@@ -631,7 +634,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
     return (
       <SettlementPanoramaView
         settlementName={activeSettlementName}
-        onExitCity={() => setViewMode('map')}
+        onExitCity={() => {
+          setViewMode('map');
+          onSubViewChange?.('map');
+        }}
       />
     );
   }
@@ -641,7 +647,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
     return (
       <ScenicCourtyardView
         locationName={activeCourtyardName}
-        onExit={() => setViewMode('map')}
+        onExit={() => {
+          setViewMode('map');
+          onSubViewChange?.('map');
+        }}
       />
     );
   }
@@ -702,7 +711,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
         )}
 
         {/* TALE OF IMMORTAL SHAN SHUI CANVAS ENGINE */}
-        <div className="flex-1 w-full h-full relative">
+        <div className="flex-1 min-h-0 w-full h-full relative">
         <TaleOfImmortalCanvas
           tiles={tiles}
           playerPos={{ x: px, y: py }}
@@ -1057,8 +1066,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile }:
 
       {/* Render Interior Properti Rumah Pemain as a Modal Overlay */}
       {interiorData && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/40 backdrop-blur-sm animate-in zoom-in-95 fade-in duration-300">
-           <div className="w-full max-w-4xl max-h-full flex shadow-2xl ring-1 ring-amber-500/50 rounded-xl">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md animate-in zoom-in-95 fade-in duration-200">
+           <div className="w-full max-w-3xl h-[88vh] max-h-[88vh] flex flex-col shadow-2xl ring-1 ring-amber-500/50 rounded-xl overflow-hidden bg-[#090c13]">
              <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />
            </div>
         </div>

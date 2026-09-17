@@ -254,18 +254,18 @@ export default function ScenicCourtyardView({ locationName, onExit }: ScenicCour
   };
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#161413] select-none flex flex-col">
+    <div className="relative w-full h-full overflow-hidden bg-[#161413] select-none flex flex-col">
       {/* Top HUD */}
-      <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
+      <div className="flex-shrink-0 bg-[#0e0c0b]/95 border-b border-amber-900/40 px-4 py-2 z-20 flex justify-between items-center backdrop-blur-md">
         <button
           onClick={onExit}
-          className="pointer-events-auto bg-black/80 hover:bg-black text-gray-200 border border-gray-700 px-3 py-1.5 rounded-lg text-xs font-serif font-bold shadow-md flex items-center gap-1.5 transition-all"
+          className="bg-black/80 hover:bg-black text-gray-200 border border-gray-700 px-3 py-1.5 rounded-lg text-xs font-serif font-bold shadow-md flex items-center gap-1.5 transition-all"
         >
           <ArrowLeft className="w-4 h-4 text-amber-400" />
           <span>Kembali ke Peta</span>
         </button>
 
-        <div className="pointer-events-auto bg-black/80 border border-amber-800/60 px-4 py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2">
+        <div className="bg-black/80 border border-amber-800/60 px-4 py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
           <h3 className="text-amber-200 font-serif font-bold text-xs">{locationName}</h3>
           <span className="text-[10px] text-gray-400 font-mono">| Tempat Meditasi Suci</span>
@@ -273,7 +273,7 @@ export default function ScenicCourtyardView({ locationName, onExit }: ScenicCour
       </div>
 
       {/* Canvas Halaman Pemandangan Meditasi */}
-      <div className="flex-1 w-full h-full relative cursor-pointer">
+      <div className="flex-1 min-h-0 w-full h-full relative cursor-pointer">
         <canvas
           ref={canvasRef}
           width={960}
@@ -281,17 +281,17 @@ export default function ScenicCourtyardView({ locationName, onExit }: ScenicCour
           onClick={handleCanvasClick}
           className="w-full h-full object-cover"
         />
+
+        {/* Action Notification */}
+        {message && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/70 text-amber-200 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md animate-in fade-in">
+            {message}
+          </div>
+        )}
       </div>
 
-      {/* Action Notification */}
-      {message && (
-        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-amber-500/70 text-amber-200 px-4 py-2 rounded-lg text-xs font-semibold shadow-2xl backdrop-blur-md animate-in fade-in">
-          {message}
-        </div>
-      )}
-
       {/* Bottom Bar: Kontrol Meditasi & Serap Qi */}
-      <div className="bg-[#0e0c0b] border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
+      <div className="flex-shrink-0 bg-[#0e0c0b] border-t border-amber-900/40 px-4 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
         <div className="flex items-center gap-3 text-xs text-gray-300">
           <span className="text-gray-400">Klik di mana saja pada lantai batu untuk berjalan.</span>
           {qiGained > 0 && (

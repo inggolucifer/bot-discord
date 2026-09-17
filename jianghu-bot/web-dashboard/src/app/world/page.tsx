@@ -53,6 +53,7 @@ export function WorldPageContent() {
   // Map View State
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
   const [selectedRegionSlug, setSelectedRegionSlug] = useState<string | null>(null);
+  const [subViewMode, setSubViewMode] = useState<'map' | 'settlement' | 'courtyard'>('map');
 
   useEffect(() => {
     fetchData();
@@ -223,7 +224,7 @@ export function WorldPageContent() {
   if (loading) return <div className="p-4 sm:p-6 lg:p-8 pt-20">Memuat dunia...</div>;
 
   return (
-    <div className={`w-full h-full relative overflow-hidden ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
+    <div className={`w-full h-[calc(100vh-4rem)] relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
       
       {/* Main Map Background */}
       <div className="absolute inset-0 flex flex-col">
@@ -244,26 +245,29 @@ export function WorldPageContent() {
               zoneId={queryZoneId || locationData?.gridPosition?.zoneId || 'central_plains_bamboo_forest'}
               targetFocusTile={targetFocusTile}
               onBackToWorld={() => setMapView('world')}
+              onSubViewChange={setSubViewMode}
             />
           </div>
         )}
       </div>
 
-      {/* Floating View Switcher */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 bg-[#0e131d]/80 p-1.5 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
-        <button
-          onClick={() => setMapView('grid')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
-        >
-          <Compass className="w-3.5 h-3.5 text-amber-300" /> Eksplorasi Grid
-        </button>
-        <button
-          onClick={() => setMapView('world')}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'world' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
-        >
-          <Map className="w-3.5 h-3.5 text-amber-300" /> Peta Makro
-        </button>
-      </div>
+      {/* Floating View Switcher - Only visible on map, hidden when inside building / settlement */}
+      {subViewMode === 'map' && (
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 bg-[#0e131d]/80 p-1.5 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
+          <button
+            onClick={() => setMapView('grid')}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+          >
+            <Compass className="w-3.5 h-3.5 text-amber-300" /> Eksplorasi Grid
+          </button>
+          <button
+            onClick={() => setMapView('world')}
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-serif font-bold transition-all ${mapView === 'world' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
+          >
+            <Map className="w-3.5 h-3.5 text-amber-300" /> Peta Makro
+          </button>
+        </div>
+      )}
 
       {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP */}
       {mapView !== 'world' && (
@@ -482,7 +486,7 @@ export function WorldPageContent() {
       )}
 
       {/* Floating Panel (Tabs & Content) - Collapsible Drawer */}
-      {mapView !== 'world' && (
+      {mapView !== 'world' && subViewMode === 'map' && (
       <div className="absolute bottom-14 left-4 z-30 w-80 sm:w-96 max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
         
         {/* Collapsible Drawer Header */}

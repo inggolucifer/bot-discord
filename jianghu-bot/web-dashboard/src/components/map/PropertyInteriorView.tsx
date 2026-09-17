@@ -99,12 +99,12 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
     };
 
     return (
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#090c13] flex flex-col select-none">
+        <div className="relative w-full h-full max-h-[88vh] rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#090c13] flex flex-col select-none">
             {/* HUD Top Bar */}
-            <div className="absolute top-3 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
+            <div className="flex-shrink-0 bg-[#0e131d]/95 border-b border-amber-900/50 px-4 py-2.5 z-20 flex justify-between items-center">
                 <button
                     onClick={onExit}
-                    className="pointer-events-auto bg-black/75 hover:bg-black/90 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-2 backdrop-blur-sm transition-colors text-xs font-semibold shadow-lg"
+                    className="bg-black/75 hover:bg-black/90 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-2 backdrop-blur-sm transition-colors text-xs font-semibold shadow-lg"
                 >
                     <DoorOpen className="w-4 h-4" /> Keluar ke Dunia Luar
                 </button>
@@ -124,13 +124,13 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
             )}
 
             {/* Interior Sub-Grid 12x12 Rendering */}
-            <div className="flex-1 flex items-center justify-center relative overflow-hidden p-2">
+            <div className="flex-1 min-h-0 flex items-center justify-center relative overflow-auto p-3">
                 <div
                     className="grid gap-1 bg-[#101522] p-2.5 rounded-2xl border border-[#2b354d] shadow-2xl"
                     style={{
                         gridTemplateColumns: `repeat(${width}, minmax(0, 1fr))`,
-                        width: 'min(75vh, 92%)',
-                        height: 'min(75vh, 92%)'
+                        width: 'min(48vh, 92%)',
+                        height: 'min(48vh, 92%)'
                     }}
                 >
                     {Array.from({ length: height }).map((_, y) =>
@@ -201,7 +201,7 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
             </div>
 
             {/* Bottom HUD: Facility Tiers & Owner Upgrades */}
-            <div className="bg-[#101520]/95 border-t border-amber-950/80 px-4 py-2 z-20 flex justify-between items-center backdrop-blur-md">
+            <div className="flex-shrink-0 bg-[#101520]/95 border-t border-amber-950/80 px-4 py-2 z-20 flex justify-between items-center backdrop-blur-md">
                 <div className="flex items-center gap-3 text-xs">
                     <span className="text-gray-400 flex items-center gap-1">
                         <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> Formasi Qi: <strong className="text-cyan-300 font-mono">T{facilities.qiGatheringArrayTier}</strong>
