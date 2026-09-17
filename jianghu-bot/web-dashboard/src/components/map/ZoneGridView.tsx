@@ -49,9 +49,17 @@ interface ZoneGridViewProps {
   targetFocusTile?: { x: number; y: number } | null;
   onSubViewChange?: (mode: 'map' | 'settlement' | 'courtyard') => void;
   climateData?: any;
+  onBattleActiveChange?: (active: boolean) => void;
 }
 
-export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, onSubViewChange, climateData }: ZoneGridViewProps) {
+export default function ZoneGridView({ 
+  zoneId, 
+  onBackToWorld, 
+  targetFocusTile, 
+  onSubViewChange, 
+  climateData,
+  onBattleActiveChange 
+}: ZoneGridViewProps) {
   const activeZoneId = zoneId || 'tianyuan_world_map';
 
   const { user } = useAuthStore();
@@ -123,6 +131,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
   const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
+
+  useEffect(() => {
+    onBattleActiveChange?.(Boolean(activeBattleId));
+  }, [activeBattleId, onBattleActiveChange]);
 
   const walkIntervalRef = useRef<any>(null);
 
@@ -956,7 +968,8 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         />
       )}
 
-      {/* Bottom HUD: Action Bar, Navigasi & Inspektur */}
+      {/* Bottom HUD: Action Bar, Navigasi & Inspektur (Disembunyikan jika sedang bertarung) */}
+      {!activeBattleId && (
       <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-2.5 sm:px-4 pr-16 sm:pr-24 py-1.5 sm:py-2.5 z-20 flex justify-between items-center backdrop-blur-md gap-2">
         <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-300 min-w-0 overflow-hidden">
           {selectedTile ? (
@@ -1151,6 +1164,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
           </button>
         </div>
       </div>
+      )}
 
       {/* Modal Detail Aset (Inspector Card) */}
       {assetDetailTile && (

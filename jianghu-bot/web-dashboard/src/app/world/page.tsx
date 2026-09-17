@@ -51,6 +51,7 @@ export function WorldPageContent() {
   // UI Drawer & Rest Modal State
   const [isRestModalOpen, setIsRestModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isBattleActive, setIsBattleActive] = useState(false);
 
   // Map View State
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
@@ -249,13 +250,14 @@ export function WorldPageContent() {
               climateData={climateData}
               onBackToWorld={() => setMapView('world')}
               onSubViewChange={setSubViewMode}
+              onBattleActiveChange={setIsBattleActive}
             />
           </div>
         )}
       </div>
 
-      {/* Floating View Switcher - Only visible on map, hidden when inside building / settlement */}
-      {subViewMode === 'map' && (
+      {/* Floating View Switcher - Only visible on map, hidden when inside building / settlement or in battle */}
+      {subViewMode === 'map' && !isBattleActive && (
         <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 bg-[#0e131d]/85 p-1 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
           <button
             onClick={() => setMapView('grid')}
@@ -272,8 +274,8 @@ export function WorldPageContent() {
         </div>
       )}
 
-      {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP */}
-      {mapView !== 'world' && (
+      {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP OR IN BATTLE */}
+      {mapView !== 'world' && !isBattleActive && (
         <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-40 flex flex-col items-end gap-2 pointer-events-none">
           {/* Top-Right HUD Row */}
           <div className="flex items-center gap-2 pointer-events-auto">
@@ -488,8 +490,8 @@ export function WorldPageContent() {
         </div>
       )}
 
-      {/* Floating Panel (Tabs & Content) - Collapsible Drawer */}
-      {mapView !== 'world' && subViewMode === 'map' && (
+      {/* Floating Panel (Tabs & Content) - Collapsible Drawer (Hidden during battle) */}
+      {mapView !== 'world' && subViewMode === 'map' && !isBattleActive && (
       <div className="absolute bottom-12 sm:bottom-14 left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[50vh] sm:max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
         
         {/* Collapsible Drawer Header */}

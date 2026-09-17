@@ -1556,28 +1556,26 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 }
             }
 
-            // Injeksi Monster Uji Coba: Serigala Roh Darah di petak (2452, 2481)
+            // Injeksi & Reset Monster Uji Coba: Serigala Roh Darah di petak (2452, 2481)
             const monsterTileKey = '2452,2481';
             if (proceduralTileMap.has(monsterTileKey)) {
                 const currentTile = proceduralTileMap.get(monsterTileKey);
-                if (!currentTile.spawnedMonster) {
-                    proceduralTileMap.set(monsterTileKey, {
-                        ...currentTile,
-                        tileType: 'poi',
-                        label: 'Sarang Serigala Roh Darah',
-                        spawnedMonster: {
-                            key: 'wolf_azure',
-                            name: 'Serigala Roh Darah',
-                            tier: 1,
-                            hp: 150,
-                            maxHp: 150,
-                            atk: 20,
-                            def: 8,
-                            spd: 10,
-                            imageUrl: null
-                        }
-                    });
-                }
+                proceduralTileMap.set(monsterTileKey, {
+                    ...currentTile,
+                    tileType: 'poi',
+                    label: 'Sarang Serigala Roh Darah',
+                    spawnedMonster: {
+                        key: 'wolf_azure',
+                        name: 'Serigala Roh Darah',
+                        tier: 1,
+                        hp: 150,
+                        maxHp: 150,
+                        atk: 20,
+                        def: 8,
+                        spd: 10,
+                        imageUrl: null
+                    }
+                });
             }
 
             visibleTiles = Array.from(proceduralTileMap.values());

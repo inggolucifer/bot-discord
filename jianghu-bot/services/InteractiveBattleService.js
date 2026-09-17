@@ -7,15 +7,11 @@ class InteractiveBattleService {
    * Mulai pertempuran baru
    */
   static async startBattle(player, enemiesInput, type = 'pve', zoneId = 'unknown') {
-    // Validasi apakah player sedang dalam battle
-    const existing = await BattleSession.findOne({
+    // Hapus sesi pertempuran gantung/lama agar pertempuran baru selalu segar, bersih, dan menggunakan engine terbaru
+    await BattleSession.deleteMany({
       'player.entityId': player.discordId,
       status: 'ongoing'
     });
-    if (existing) {
-      // Jika ada pertempuran gantung, kembalikan sesi yang sedang berlangsung
-      return existing;
-    }
 
     // Parse Player to Entity
     const { getComputedStats } = require('../utils/statCalculator');

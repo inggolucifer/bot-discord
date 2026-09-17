@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import api from '@/lib/api';
 import { 
     Sword, Shield, Zap, Skull, Sparkles, MoveRight, 
@@ -12,6 +13,7 @@ interface BattleArenaProps {
 }
 
 export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps) {
+    const [mounted, setMounted] = useState(false);
     const [session, setSession] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -20,6 +22,10 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
     const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
 
     const logsEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Initial state fetch
     const fetchState = async () => {
@@ -85,19 +91,22 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
         }
     };
 
+    if (!mounted || typeof document === 'undefined') return null;
+
     if (loading) {
-        return (
-            <div className="w-full h-full min-h-[500px] flex flex-col items-center justify-center bg-[#070a14] text-amber-300 gap-4 font-serif">
+        return createPortal(
+            <div className="fixed inset-0 z-[99999] w-screen h-screen flex flex-col items-center justify-center bg-[#070a14] text-amber-300 gap-4 font-serif">
                 <RefreshCw className="w-8 h-8 animate-spin text-amber-500" />
                 <div className="text-lg tracking-wider font-bold">Memasuki Medan Tempur Jianghu...</div>
                 <div className="text-xs text-gray-500">Mempersiapkan dantian dan konsentrasi Qi</div>
-            </div>
+            </div>,
+            document.body
         );
     }
 
     if (error) {
-        return (
-            <div className="w-full h-full min-h-[500px] flex flex-col items-center justify-center bg-[#070a14] text-red-400 gap-4 p-6 text-center">
+        return createPortal(
+            <div className="fixed inset-0 z-[99999] w-screen h-screen flex flex-col items-center justify-center bg-[#070a14] text-red-400 gap-4 p-6 text-center">
                 <AlertCircle className="w-12 h-12 text-red-500" />
                 <div className="text-lg font-bold font-serif">{error}</div>
                 <button
@@ -106,7 +115,8 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                 >
                     Kembali ke Peta
                 </button>
-            </div>
+            </div>,
+            document.body
         );
     }
 
@@ -127,8 +137,8 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
         return <Flame className="w-4 h-4 text-orange-400" />;
     };
 
-    return (
-        <div className="relative w-full h-full flex flex-col justify-between bg-[#070a14] font-sans select-none overflow-hidden text-gray-200">
+    return createPortal(
+        <div className="fixed inset-0 z-[99999] w-screen h-screen flex flex-col justify-between bg-[#070a14] font-sans select-none overflow-hidden text-gray-200">
             {/* Ambient Background Glow Effect */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#070a14] to-[#04060b] pointer-events-none" />
 
@@ -479,6 +489,7 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                     )}
                 </div>
             )}
-        </div>
+        </div>,
+        document.body
     );
 }
