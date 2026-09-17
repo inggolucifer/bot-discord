@@ -543,6 +543,7 @@ export function WorldPageContent() {
           )}
         </div>
       </div>
+      )}
 
       {/* Sect Exam Modal */}
       {isExamModalOpen && selectedExamSectId && (
