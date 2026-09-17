@@ -112,10 +112,22 @@ d:\gitub\bot-discord\
   3. **Syarat Afiliasi Sekte (`requiredSectId`)**: Manual esoteris sekte hanya dapat dipelajari oleh murid sah sekte tersebut dengan pangkat yang mencukupi.
   4. **Progres Pemahaman**: Dimulai dari Level 0 dan ditingkatkan bertahap melalui meditasi pemahaman waktu nyata (*timeToComprehendHours*).
 
-### 3.7. Monster Spasial Grid & Pemicu Pertarungan Turn-Based (Interactive Battle Arena)
+### 3.7. Monster Spasial Grid & Sistem Pertarungan Turn-Based Interaktif (Battle Arena)
 - **Penempatan Spasial**: Monster ditempatkan secara eksplisit pada petak koordinat tertentu (`ZoneTile.spawnedMonster`), contoh petak uji coba **(2452, 2481)** untuk *Serigala Roh Darah* (`wolf_azure`).
 - **Zero Clutter Policy**: Petak kosong tanpa monster **DILARANG** menampilkan icon monster `👹`. Hanya petak dengan monster aktif yang merender aura crimson merah dan icon siluman.
-- **Mekanisme Turn-Based**: Klik tombol `[⚔️ Tantang]` pada kartu inspektur petak (`GridTileInspectorCard`) memicu endpoint `/api/battle/start` (targetType `'monster'`), membuka modal `BattleArena` fullscreen dengan sistem ATB dinamis, penggunaan Qi, cooldown jurus, dan drop hadiah (EXP & Perak).
+- **Pemicu & Isolasi Modal Penuh**: Klik tombol `[⚔️ Tantang]` memicu `/api/battle/start` (targetType `'monster'`), membuka modal `BattleArena` berisolasi penuh (`fixed inset-0 z-[99999] w-screen h-screen bg-[#070a14]`) yang menutupi seluruh widget HUD/drawer di latar belakang tanpa tumpang tindih.
+- **Immediate Round-Trip Turn Architecture (Anti-Lag & Anti-Cheat)**:
+  - Eksekusi aksi `/api/battle/action/:battleId` menyelesaikan ronde penuh dalam 1 request HTTP (<100ms): Serangan Pemain $\to$ Jika musuh hidup $\to$ Balasan AI Musuh Seketika $\to$ Tik Cooldown & Regenerasi Qi (+10) $\to$ Giliran Pemain Langsung Dipulihkan (`turnQueue = [playerEntity.entityId]`).
+  - Mengeliminasi jeda polling 1000ms dan error palsu `"Belum giliranmu untuk menyerang!"`.
+- **Pool Jurus Bela Diri & Pertahanan**:
+  1. `basic_attack`: Pukulan Dasar (Power 12, 0 Qi, 0 CD, regenerasi +5 Qi).
+  2. `qi_strike`: Pukulan Hawa Murni (Power 25, 15 Qi, 1 CD).
+  3. `iron_wall`: Kuda-Kuda Besi / Tangkis (0 Qi, 2 CD, memulihkan +35 Stance & +20 Qi, menahan 50% damage serangan lawan ronde ini).
+  4. `qi_overload`: Ledakan Intisari Qi / Ultimate (Power 50, 35 Qi, 3 CD, mengabaikan 50% defense lawan).
+  5. Seluruh Kitab Esoteris yang telah dipelajari pemain dari `player.manuals` otomatis terdaftar ke bar jurus pertempuran.
+- **Stance Break & Kalkulasi Server Authoritative**:
+  - Musuh dengan Stance 0 menerima status `BREAK` (+50% bonus damage).
+  - Seluruh rumus damage, RNG kritikal, dan perolehan hadiah (EXP & Perak) dihitung dan disimpan secara deterministik di server backend.
 
 ---
 

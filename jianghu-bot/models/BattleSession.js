@@ -46,7 +46,7 @@ const battleEntitySchema = new mongoose.Schema({
     skillId: String,
     name: String,
     description: String,
-    type: { type: String, enum: ['attack', 'heal', 'buff', 'debuff', 'ultimate'] },
+    type: { type: String, enum: ['attack', 'heal', 'buff', 'debuff', 'ultimate', 'defend'] },
     power: Number,
     qiCost: Number,
     cooldown: Number,
@@ -102,7 +102,6 @@ const battleSessionSchema = new mongoose.Schema({
   expiresAt: { type: Date, default: () => Date.now() + 30 * 60 * 1000 } // Battle expires after 30 mins
 });
 
-battleSessionSchema.index({ battleId: 1 });
 battleSessionSchema.index({ 'player.entityId': 1, status: 1 });
 
 module.exports = mongoose.model('BattleSession', battleSessionSchema);

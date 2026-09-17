@@ -349,6 +349,12 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                  player.currentQi = session.player.qi;
                  await player.save();
              }
+        } else if (session.status === 'lost') {
+             const player = await Player.findOne({ discordId: userId });
+             if (player) {
+                 player.currentHp = 0;
+                 await player.save();
+             }
         }
 
         res.json({ success: true, session });
