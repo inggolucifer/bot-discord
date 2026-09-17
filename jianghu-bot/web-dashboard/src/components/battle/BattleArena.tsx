@@ -1,7 +1,10 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
-import { Sword, Shield, Zap, Wind, Skull, Sparkles, MoveRight } from 'lucide-react';
+import { 
+    Sword, Shield, Zap, Skull, Sparkles, MoveRight, 
+    Flame, Heart, Trophy, AlertCircle, RefreshCw, X 
+} from 'lucide-react';
 
 interface BattleArenaProps {
     battleId: string;
@@ -13,283 +16,465 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
-    const [selectedAction, setSelectedAction] = useState<string | null>(null);
-    const [selectedTarget, setSelectedTarget] = useState<string | null>(null);
     const [isActionLoading, setIsActionLoading] = useState(false);
+    const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
 
-    // Tick polling
-    const tickIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const logsEndRef = useRef<HTMLDivElement>(null);
 
+    // Initial state fetch
     const fetchState = async () => {
         try {
             const res = await api.get(`/battle/state/${battleId}`);
-            setSession(res.data.session);
+            if (res.data.session) {
+                setSession(res.data.session);
+            }
             setLoading(false);
         } catch (err: any) {
-            setError(err.response?.data?.error || 'Gagal memuat status pertarungan');
+            setError(err.response?.data?.error || 'Gagal memuat status arena pertempuran');
             setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchState();
-        return () => stopTick();
     }, [battleId]);
 
+    // Update isPlayerTurn and auto-scroll logs
     useEffect(() => {
         if (!session) return;
 
-        if (session.status !== 'ongoing') {
-            stopTick();
-            // Wait a bit to show the final state, then end
-            setTimeout(() => {
-                onBattleEnd(session.status, session.rewards);
-            }, 3000);
-            return;
-        }
-
-        const isTurn = session.turnQueue.length > 0 && session.turnQueue[0] === session.player.entityId;
+        const isTurn = session.status === 'ongoing' && 
+                       Array.isArray(session.turnQueue) && 
+                       session.turnQueue.length > 0 && 
+                       session.turnQueue[0] === session.player?.entityId;
         setIsPlayerTurn(isTurn);
 
-        if (!isTurn && session.status === 'ongoing') {
-            startTick();
-        } else {
-            stopTick();
+        // Smooth scroll combat logs to latest
+        if (logsEndRef.current) {
+            logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [session]);
 
-    const startTick = () => {
-        if (tickIntervalRef.current) return;
-        tickIntervalRef.current = setInterval(async () => {
-            try {
-                const res = await api.post(`/battle/tick/${battleId}`);
-                if (res.data.session) {
-                    setSession(res.data.session);
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }, 1000); // Polling every 1 second
-    };
-
-    const stopTick = () => {
-        if (tickIntervalRef.current) {
-            clearInterval(tickIntervalRef.current);
-            tickIntervalRef.current = null;
-        }
-    };
-
+    // Eksekusi aksi pemain secara server-authoritative
     const handleAction = async (actionType: string, skillId?: string, targetId?: string) => {
-        if (isActionLoading) return;
+        if (isActionLoading || !session) return;
+
         setIsActionLoading(true);
+        setActiveSkillId(skillId || actionType);
+        setError(null);
+
         try {
-            const tgt = targetId || (session.enemies.find((e:any) => !e.isDead)?.entityId);
-            const res = await api.post(`/battle/action/${battleId}`, { actionType, skillId, targetId: tgt });
-            setSession(res.data.session);
-            setSelectedAction(null);
-            setSelectedTarget(null);
+            const aliveEnemy = session.enemies.find((e: any) => !e.isDead);
+            const tgt = targetId || (aliveEnemy ? aliveEnemy.entityId : null);
+
+            const res = await api.post(`/battle/action/${battleId}`, {
+                actionType,
+                skillId,
+                targetId: tgt
+            });
+
+            if (res.data.session) {
+                setSession(res.data.session);
+            }
         } catch (err: any) {
-            alert(err.response?.data?.error || 'Aksi gagal');
+            const msg = err.response?.data?.error || err.message || 'Aksi gagal dieksekusi';
+            alert(msg);
         } finally {
             setIsActionLoading(false);
+            setActiveSkillId(null);
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-amber-200">Memasuki Arena Pertempuran...</div>;
-    if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+    if (loading) {
+        return (
+            <div className="w-full h-full min-h-[500px] flex flex-col items-center justify-center bg-[#070a14] text-amber-300 gap-4 font-serif">
+                <RefreshCw className="w-8 h-8 animate-spin text-amber-500" />
+                <div className="text-lg tracking-wider font-bold">Memasuki Medan Tempur Jianghu...</div>
+                <div className="text-xs text-gray-500">Mempersiapkan dantian dan konsentrasi Qi</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="w-full h-full min-h-[500px] flex flex-col items-center justify-center bg-[#070a14] text-red-400 gap-4 p-6 text-center">
+                <AlertCircle className="w-12 h-12 text-red-500" />
+                <div className="text-lg font-bold font-serif">{error}</div>
+                <button
+                    onClick={() => onBattleEnd('error')}
+                    className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-sm transition-colors border border-gray-700"
+                >
+                    Kembali ke Peta
+                </button>
+            </div>
+        );
+    }
+
     if (!session) return null;
 
     const player = session.player;
-    const enemies = session.enemies;
+    const enemies = session.enemies || [];
+    const aliveEnemies = enemies.filter((e: any) => !e.isDead);
+    const targetEnemy = aliveEnemies[0] || enemies[0];
+
+    // Helper icon rendering
+    const renderSkillIcon = (skill: any) => {
+        if (skill.skillId === 'basic_attack') return <Sword className="w-4 h-4 text-amber-400" />;
+        if (skill.skillId === 'qi_strike') return <Zap className="w-4 h-4 text-cyan-400" />;
+        if (skill.skillId === 'iron_wall' || skill.type === 'defend') return <Shield className="w-4 h-4 text-blue-400" />;
+        if (skill.type === 'ultimate') return <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />;
+        if (skill.type === 'heal') return <Heart className="w-4 h-4 text-emerald-400" />;
+        return <Flame className="w-4 h-4 text-orange-400" />;
+    };
 
     return (
-        <div className="relative w-full h-[85vh] bg-[#0a0f18] rounded-xl overflow-hidden flex flex-col font-sans select-none border border-amber-900/40 shadow-2xl">
-            {/* Background Image / Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-black/80 pointer-events-none" />
-            
-            {/* Header */}
-            <div className="relative z-10 flex justify-between items-center p-4 bg-black/50 border-b border-amber-800/30 backdrop-blur-sm">
-                <div className="text-amber-300 font-serif font-bold text-lg">⚔️ Pertempuran Terjadi!</div>
-                <div className="text-gray-400 text-sm">Status: {session.status.toUpperCase()}</div>
+        <div className="relative w-full h-full flex flex-col justify-between bg-[#070a14] font-sans select-none overflow-hidden text-gray-200">
+            {/* Ambient Background Glow Effect */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#070a14] to-[#04060b] pointer-events-none" />
+
+            {/* TOP HEADER BAR */}
+            <div className="relative z-10 flex items-center justify-between px-4 py-2.5 bg-black/70 border-b border-amber-900/40 backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                    <span className="text-lg">⚔️</span>
+                    <h1 className="font-serif font-bold text-amber-300 text-sm sm:text-base tracking-wide">
+                        ARENA PERTEMPURAN JIANGHU
+                    </h1>
+                    <span className="text-[10px] text-gray-500 font-mono hidden sm:inline">[{session.battleId}]</span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="text-xs font-mono text-gray-400">
+                        Ronde: <span className="text-amber-400 font-bold">{session.currentTick || 1}</span>
+                    </div>
+
+                    {session.status === 'ongoing' ? (
+                        <div className={`px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+                            isPlayerTurn 
+                                ? 'bg-emerald-950/90 text-emerald-300 border border-emerald-600/70 shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse' 
+                                : 'bg-gray-900/90 text-gray-400 border border-gray-800'
+                        }`}>
+                            <span className={`w-2 h-2 rounded-full ${isPlayerTurn ? 'bg-emerald-400' : 'bg-gray-600'}`} />
+                            {isPlayerTurn ? 'GILIRANMU' : 'MEMPROSES...'}
+                        </div>
+                    ) : (
+                        <span className="px-3 py-1 bg-amber-900/60 text-amber-300 border border-amber-600 text-xs rounded-full font-bold">
+                            SELESAI
+                        </span>
+                    )}
+                </div>
             </div>
 
-            {/* Arena Space */}
-            <div className="flex-1 relative z-10 p-6 flex flex-col justify-between">
+            {/* BATTLEFIELD STAGE */}
+            <div className="flex-1 relative z-10 p-3 sm:p-5 flex flex-col justify-between overflow-hidden gap-3">
                 
-                {/* Enemies Row */}
-                <div className="flex justify-center gap-8 mb-12 mt-4">
+                {/* 1. ENEMY BATTLER SECTION */}
+                <div className="w-full flex justify-center items-center">
                     {enemies.map((enemy: any) => (
-                        <div key={enemy.entityId} className={`relative flex flex-col items-center transition-all ${enemy.isDead ? 'opacity-30 grayscale' : 'animate-in zoom-in'}`}>
-                            {enemy.isDead && <div className="absolute inset-0 flex items-center justify-center z-20"><Skull className="w-16 h-16 text-red-600/80" /></div>}
-                            
-                            <div className="w-32 h-32 bg-gray-800 rounded-lg border-2 border-red-900/50 mb-2 overflow-hidden shadow-[0_0_15px_rgba(220,38,38,0.2)]">
+                        <div 
+                            key={enemy.entityId} 
+                            className={`relative flex flex-col items-center max-w-sm w-full transition-all duration-300 ${
+                                enemy.isDead ? 'opacity-40 grayscale scale-95' : 'animate-in zoom-in-95'
+                            }`}
+                        >
+                            {enemy.isDead && (
+                                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 rounded-xl">
+                                    <div className="flex flex-col items-center">
+                                        <Skull className="w-12 h-12 text-red-600 animate-pulse" />
+                                        <span className="text-xs font-bold text-red-400 uppercase tracking-widest mt-1">Tumbang</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Monster Avatar Card */}
+                            <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-b from-gray-900 to-black border-2 border-red-800/80 mb-2 overflow-hidden shadow-[0_0_25px_rgba(220,38,38,0.25)] flex items-center justify-center">
                                 {enemy.imageUrl ? (
                                     <img src={enemy.imageUrl} alt={enemy.name} className="w-full h-full object-cover" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-4xl">👹</div>
+                                    <div className="text-5xl filter drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]">👹</div>
                                 )}
-                            </div>
-                            
-                            <div className="bg-black/80 px-3 py-1.5 rounded border border-red-900/60 text-center w-40 backdrop-blur-md">
-                                <h3 className="text-red-200 font-bold text-sm truncate">{enemy.name}</h3>
-                                <div className="text-gray-400 text-[10px]">Lv. {enemy.level}</div>
-                                
-                                {/* HP Bar */}
-                                <div className="w-full h-2 bg-gray-900 rounded-full mt-1.5 overflow-hidden">
-                                    <div className="h-full bg-red-600 transition-all duration-500" style={{ width: `${(enemy.hp / enemy.maxHp) * 100}%` }} />
-                                </div>
-                                <div className="text-[9px] text-gray-300 text-right mt-0.5">{enemy.hp}/{enemy.maxHp} HP</div>
 
-                                {/* ATB Bar */}
-                                <div className="w-full h-1 bg-gray-900 rounded-full mt-1 overflow-hidden">
-                                    <div className="h-full bg-yellow-400 transition-all duration-200" style={{ width: `${(enemy.atb / enemy.maxAtb) * 100}%` }} />
+                                {/* Level Badge */}
+                                <div className="absolute top-1.5 right-1.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-bold text-red-400 border border-red-900/60 font-mono">
+                                    Lv.{enemy.level || 1}
+                                </div>
+                            </div>
+
+                            {/* Enemy Stats Plate */}
+                            <div className="w-full bg-[#0e131d]/90 border border-red-900/60 rounded-xl p-2.5 backdrop-blur-md shadow-xl flex flex-col gap-1.5">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="font-serif font-bold text-red-200 text-sm truncate">{enemy.name}</h3>
+                                    <span className="text-[10px] text-gray-400 font-mono">{enemy.hp}/{enemy.maxHp} HP</span>
+                                </div>
+
+                                {/* HP Bar */}
+                                <div className="w-full h-2.5 bg-gray-900 rounded-full overflow-hidden border border-red-950">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-red-700 to-red-500 transition-all duration-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+                                        style={{ width: `${Math.max(0, Math.min(100, (enemy.hp / enemy.maxHp) * 100))}%` }}
+                                    />
                                 </div>
 
                                 {/* Stance Bar */}
-                                <div className="w-full h-1 bg-gray-900 rounded-full mt-1 overflow-hidden">
-                                    <div className="h-full bg-purple-500 transition-all duration-500" style={{ width: `${(enemy.stance / enemy.maxStance) * 100}%` }} />
+                                <div className="flex justify-between items-center text-[9px] text-purple-300/80 font-mono">
+                                    <span>Stance (Keseimbangan)</span>
+                                    <span>{enemy.stance <= 0 ? '⚡ BREAK (+50% DMG)' : `${enemy.stance}/${enemy.maxStance}`}</span>
+                                </div>
+                                <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-purple-950">
+                                    <div 
+                                        className={`h-full transition-all duration-500 ${
+                                            enemy.stance <= 0 ? 'bg-yellow-400 animate-pulse' : 'bg-purple-600'
+                                        }`}
+                                        style={{ width: `${Math.max(0, Math.min(100, (enemy.stance / enemy.maxStance) * 100))}%` }}
+                                    />
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Combat Logs Overlay (Right Side) */}
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 w-72 h-64 overflow-y-auto bg-black/60 border border-gray-800/60 rounded-lg p-3 backdrop-blur-sm pointer-events-none flex flex-col-reverse shadow-xl scrollbar-hide">
-                    <div className="flex flex-col gap-2">
-                        {session.logs.slice(-10).map((log: any, i: number) => (
-                            <div key={i} className="text-xs text-gray-300 leading-relaxed border-b border-gray-800/50 pb-1">
-                                <span className={log.actor === player.name ? 'text-blue-300 font-semibold' : 'text-red-300 font-semibold'}>
-                                    [{log.actor}]
-                                </span> {log.message}
+                {/* 2. COMBAT LOGS (CENTER OVERLAY) */}
+                <div className="w-full max-w-2xl mx-auto h-28 sm:h-36 bg-black/60 border border-amber-900/30 rounded-xl p-2.5 overflow-y-auto backdrop-blur-sm shadow-inner flex flex-col gap-1 text-xs">
+                    {session.logs && session.logs.map((log: any, idx: number) => {
+                        const isPlayer = log.actor === player?.name;
+                        const isSystem = log.actor === 'System';
+                        return (
+                            <div 
+                                key={idx} 
+                                className={`text-[11px] sm:text-xs leading-relaxed py-0.5 border-b border-gray-800/40 last:border-b-0 ${
+                                    isSystem ? 'text-amber-400 font-serif font-bold italic' :
+                                    isPlayer ? 'text-cyan-200' : 'text-red-300'
+                                }`}
+                            >
+                                <span className="font-bold opacity-80">[{log.actor}]:</span> {log.message}
                             </div>
-                        ))}
-                    </div>
+                        );
+                    })}
+                    <div ref={logsEndRef} />
                 </div>
 
-                {/* Player Row */}
-                <div className="flex justify-center mt-auto pb-4">
-                    <div className="relative flex items-end gap-6 w-full max-w-2xl bg-black/40 p-4 rounded-xl border border-blue-900/30 backdrop-blur-md shadow-2xl">
-                        
-                        {/* Player Avatar */}
-                        <div className="w-24 h-24 bg-gray-800 rounded-lg border-2 border-blue-600/50 overflow-hidden shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.2)]">
-                            {player.imageUrl ? (
-                                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center text-4xl bg-blue-950">🧙‍♂️</div>
-                            )}
+                {/* 3. PLAYER BATTLER SECTION */}
+                <div className="w-full max-w-2xl mx-auto bg-[#0a0e1a]/90 border border-blue-900/50 rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-2xl flex items-center gap-3 sm:gap-4">
+                    {/* Cultivator Avatar */}
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-b from-blue-950 to-black border-2 border-blue-600/70 shrink-0 overflow-hidden shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center justify-center">
+                        {player?.imageUrl ? (
+                            <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="text-3xl sm:text-4xl">🧙‍♂️</div>
+                        )}
+                        <div className="absolute top-1 left-1 bg-blue-950/80 px-1.5 py-0.2 rounded text-[9px] font-mono text-blue-300 font-bold">
+                            Lv.{player?.level || 1}
+                        </div>
+                    </div>
+
+                    {/* Cultivator Vitals */}
+                    <div className="flex-1 flex flex-col gap-1.5">
+                        <div className="flex justify-between items-center">
+                            <h2 className="font-serif font-bold text-blue-200 text-sm sm:text-base flex items-center gap-1.5">
+                                {player?.name}
+                                {player?.buffs && player.buffs.some((b: any) => b.name === 'Kuda-Kuda Besi') && (
+                                    <span className="text-[10px] bg-blue-950 text-blue-300 border border-blue-600 px-1.5 py-0.2 rounded font-sans font-normal">
+                                        🛡️ Kuda-Kuda Besi (-50% DMG)
+                                    </span>
+                                )}
+                            </h2>
+                            <div className="text-[10px] text-amber-300/80 font-mono font-bold">
+                                {isPlayerTurn ? '⚡ SIAP BERAKSI' : '⏳ MENUNGGU...'}
+                            </div>
                         </div>
 
-                        {/* Player Stats */}
-                        <div className="flex-1">
-                            <h2 className="text-blue-200 font-bold text-lg mb-1">{player.name}</h2>
-                            
-                            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                                {/* HP */}
-                                <div>
-                                    <div className="flex justify-between text-[10px] text-gray-400 mb-0.5">
-                                        <span>HP (Darah)</span>
-                                        <span>{player.hp}/{player.maxHp}</span>
-                                    </div>
-                                    <div className="w-full h-2.5 bg-gray-900 rounded-full overflow-hidden">
-                                        <div className="h-full bg-green-500 transition-all duration-500" style={{ width: `${(player.hp / player.maxHp) * 100}%` }} />
-                                    </div>
+                        {/* HP & Qi Bars Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {/* HP Bar */}
+                            <div>
+                                <div className="flex justify-between text-[10px] text-gray-400 mb-0.5 font-mono">
+                                    <span className="text-emerald-400 font-bold">HP (Darah)</span>
+                                    <span>{player?.hp}/{player?.maxHp}</span>
                                 </div>
-                                
-                                {/* Qi */}
-                                <div>
-                                    <div className="flex justify-between text-[10px] text-gray-400 mb-0.5">
-                                        <span>Qi (Energi)</span>
-                                        <span>{player.qi}/{player.maxQi}</span>
-                                    </div>
-                                    <div className="w-full h-2.5 bg-gray-900 rounded-full overflow-hidden">
-                                        <div className="h-full bg-cyan-400 transition-all duration-500" style={{ width: `${(player.qi / player.maxQi) * 100}%` }} />
-                                    </div>
+                                <div className="w-full h-2 bg-gray-900 rounded-full overflow-hidden border border-emerald-950">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-emerald-600 to-green-400 transition-all duration-300 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                                        style={{ width: `${Math.max(0, Math.min(100, (player?.hp / player?.maxHp) * 100))}%` }}
+                                    />
                                 </div>
+                            </div>
 
-                                {/* ATB */}
-                                <div className="col-span-2 mt-1">
-                                    <div className="flex justify-between text-[10px] text-amber-200/70 mb-0.5 font-bold">
-                                        <span>ATB (Kecepatan)</span>
-                                        <span>{isPlayerTurn ? 'READY' : 'WAITING'}</span>
-                                    </div>
-                                    <div className="w-full h-2 bg-gray-900 rounded-full overflow-hidden ring-1 ring-amber-900/30">
-                                        <div className={`h-full transition-all duration-200 ${isPlayerTurn ? 'bg-amber-400 shadow-[0_0_10px_#fbbf24]' : 'bg-yellow-600/50'}`} style={{ width: `${(player.atb / player.maxAtb) * 100}%` }} />
-                                    </div>
+                            {/* Qi Bar */}
+                            <div>
+                                <div className="flex justify-between text-[10px] text-gray-400 mb-0.5 font-mono">
+                                    <span className="text-cyan-400 font-bold">Qi (Energi)</span>
+                                    <span>{player?.qi}/{player?.maxQi}</span>
+                                </div>
+                                <div className="w-full h-2 bg-gray-900 rounded-full overflow-hidden border border-cyan-950">
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-cyan-600 to-blue-400 transition-all duration-300 shadow-[0_0_8px_rgba(6,182,212,0.5)]"
+                                        style={{ width: `${Math.max(0, Math.min(100, (player?.qi / player?.maxQi) * 100))}%` }}
+                                    />
                                 </div>
                             </div>
                         </div>
 
+                        {/* Stance Bar */}
+                        <div>
+                            <div className="flex justify-between text-[9px] text-gray-400 font-mono">
+                                <span className="text-amber-400">Stance (Kuda-kuda)</span>
+                                <span>{player?.stance}/{player?.maxStance}</span>
+                            </div>
+                            <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-amber-950 mt-0.5">
+                                <div 
+                                    className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-300"
+                                    style={{ width: `${Math.max(0, Math.min(100, (player?.stance / player?.maxStance) * 100))}%` }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             </div>
 
-            {/* Action Menu (Bottom Bar) */}
-            <div className={`relative z-20 bg-[#0d131f] border-t border-blue-900/50 p-4 transition-all duration-300 ${isPlayerTurn ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-50 absolute bottom-0 w-full'}`}>
-                {isPlayerTurn ? (
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                        <button 
-                            onClick={() => handleAction('attack', 'basic_attack')}
-                            disabled={isActionLoading}
-                            className="shrink-0 flex items-center justify-center gap-2 bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-800/60 px-6 py-3 rounded-lg font-bold shadow-lg transition-colors min-w-[140px]"
-                        >
-                            <Sword className="w-5 h-5" /> Serang
-                        </button>
-                        
-                        {/* Skills */}
-                        {player.skills.filter((s:any) => s.skillId !== 'basic_attack').map((skill: any) => (
+            {/* 4. BOTTOM ACTION DOCK / FULL SKILL BAR */}
+            <div className="relative z-20 bg-[#080d19] border-t border-amber-900/50 p-2.5 sm:p-4 backdrop-blur-md shadow-2xl">
+                <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 scrollbar-thin">
+                    
+                    {/* Dynamic Skill Buttons */}
+                    {player?.skills && player.skills.map((skill: any) => {
+                        const canAffordQi = (player.qi || 0) >= (skill.qiCost || 0);
+                        const isCoolingDown = (skill.currentCooldown || 0) > 0;
+                        const isDisabled = !isPlayerTurn || isActionLoading || !canAffordQi || isCoolingDown;
+                        const isCurrentlyCasting = isActionLoading && activeSkillId === skill.skillId;
+
+                        return (
                             <button
                                 key={skill.skillId}
                                 onClick={() => handleAction('skill', skill.skillId)}
-                                disabled={isActionLoading || skill.currentCooldown > 0 || player.qi < skill.qiCost}
-                                className={`shrink-0 flex flex-col items-start justify-center bg-blue-950/60 hover:bg-blue-900/80 border ${skill.type === 'ultimate' ? 'border-purple-500/60' : 'border-blue-700/50'} px-5 py-2 rounded-lg transition-colors min-w-[160px] disabled:opacity-50 disabled:cursor-not-allowed`}
+                                disabled={isDisabled}
+                                title={skill.description}
+                                className={`shrink-0 flex flex-col justify-between p-2.5 sm:p-3 rounded-xl border transition-all text-left min-w-[130px] sm:min-w-[160px] ${
+                                    skill.type === 'ultimate'
+                                        ? 'bg-gradient-to-b from-purple-950/70 to-black/80 border-purple-600/70 hover:border-purple-400 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]'
+                                        : skill.type === 'defend'
+                                        ? 'bg-gradient-to-b from-blue-950/70 to-black/80 border-blue-600/70 hover:border-blue-400'
+                                        : 'bg-gradient-to-b from-gray-900/90 to-black/80 border-amber-900/60 hover:border-amber-500'
+                                } ${
+                                    isDisabled ? 'opacity-40 cursor-not-allowed grayscale' : 'hover:scale-[1.02] active:scale-[0.98]'
+                                }`}
                             >
-                                <div className={`font-bold text-sm flex items-center gap-1 ${skill.type === 'ultimate' ? 'text-purple-300' : 'text-blue-200'}`}>
-                                    {skill.type === 'ultimate' && <Sparkles className="w-3.5 h-3.5" />}
-                                    {skill.name}
+                                <div className="flex items-center justify-between w-full mb-1">
+                                    <div className="flex items-center gap-1.5 font-serif font-bold text-xs sm:text-sm text-gray-100 truncate">
+                                        {renderSkillIcon(skill)}
+                                        <span className="truncate">{skill.name}</span>
+                                    </div>
+                                    {isCurrentlyCasting && <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />}
                                 </div>
-                                <div className="flex items-center gap-3 mt-1 text-[10px]">
-                                    <span className={player.qi < skill.qiCost ? 'text-red-400' : 'text-cyan-300'}>{skill.qiCost} Qi</span>
-                                    {skill.currentCooldown > 0 ? (
-                                        <span className="text-amber-500 font-bold">CD: {skill.currentCooldown}T</span>
+
+                                <div className="text-[10px] text-gray-400 line-clamp-1 mb-1.5 font-sans">
+                                    {skill.description}
+                                </div>
+
+                                <div className="flex items-center justify-between text-[10px] font-mono border-t border-gray-800/60 pt-1">
+                                    <span className={canAffordQi ? 'text-cyan-400 font-bold' : 'text-red-400 font-bold'}>
+                                        {skill.qiCost > 0 ? `⚡ ${skill.qiCost} Qi` : '🆓 0 Qi'}
+                                    </span>
+
+                                    {isCoolingDown ? (
+                                        <span className="text-amber-400 font-bold bg-amber-950/80 px-1.5 py-0.2 rounded border border-amber-800">
+                                            ⏳ {skill.currentCooldown}R
+                                        </span>
                                     ) : (
-                                        <span className="text-gray-400">Siap</span>
+                                        <span className="text-emerald-400">Siap</span>
                                     )}
                                 </div>
                             </button>
-                        ))}
+                        );
+                    })}
 
-                        <div className="flex-1" />
+                    <div className="flex-1 min-w-[8px]" />
 
-                        <button 
-                            onClick={() => handleAction('flee')}
-                            disabled={isActionLoading}
-                            className="shrink-0 flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-gray-300 border border-gray-700 px-6 py-3 rounded-lg font-semibold shadow-lg transition-colors"
-                        >
-                            <MoveRight className="w-4 h-4" /> Kabur
-                        </button>
-                    </div>
-                ) : (
-                    <div className="text-center text-amber-500/50 font-bold py-2 animate-pulse tracking-widest text-sm">
-                        MENUNGGU GILIRAN...
-                    </div>
-                )}
+                    {/* Tombol Kabur (Flee) */}
+                    <button
+                        onClick={() => handleAction('flee')}
+                        disabled={!isPlayerTurn || isActionLoading}
+                        className={`shrink-0 flex items-center justify-center gap-1.5 px-4 sm:px-5 py-3 rounded-xl border border-gray-700 bg-gray-900/80 hover:bg-gray-800 text-gray-300 font-bold text-xs sm:text-sm transition-all shadow-lg ${
+                            (!isPlayerTurn || isActionLoading) ? 'opacity-40 cursor-not-allowed' : 'hover:border-gray-500'
+                        }`}
+                    >
+                        <MoveRight className="w-4 h-4" />
+                        <span>Kabur</span>
+                    </button>
+                </div>
             </div>
 
-            {/* Victory/Loss Overlay */}
+            {/* 5. VICTORY / DEFEAT / FLED MODAL OVERLAY */}
             {session.status !== 'ongoing' && (
-                <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-500">
-                    <h1 className={`text-5xl font-serif font-black mb-4 ${session.status === 'won' ? 'text-amber-400' : session.status === 'lost' ? 'text-red-600' : 'text-gray-400'}`}>
-                        {session.status === 'won' ? 'KEMENANGAN!' : session.status === 'lost' ? 'GUGUR!' : 'MELARIKAN DIRI!'}
-                    </h1>
-                    {session.rewards && session.status === 'won' && (
-                        <div className="bg-gray-900/80 border border-amber-500/50 p-6 rounded-xl flex flex-col items-center shadow-[0_0_30px_rgba(245,158,11,0.2)]">
-                            <h3 className="text-amber-200 font-bold mb-3">Rampasan Pertempuran</h3>
-                            <div className="flex gap-6 text-sm">
-                                <span className="text-blue-300">+{session.rewards.exp} EXP</span>
-                                <span className="text-gray-300">+{session.rewards.silver} Keping Perak</span>
-                            </div>
+                <div className="absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 animate-in fade-in zoom-in-95 duration-300 text-center">
+                    {session.status === 'won' ? (
+                        <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#141b2d] to-[#0a0f1d] border-2 border-amber-500/70 p-6 rounded-2xl shadow-[0_0_50px_rgba(245,158,11,0.25)]">
+                            <Trophy className="w-16 h-16 text-amber-400 mb-2 animate-bounce" />
+                            <h2 className="font-serif font-black text-2xl sm:text-3xl text-amber-300 tracking-wider mb-1">
+                                KEMENANGAN TELAH DIRAIH!
+                            </h2>
+                            <p className="text-xs text-gray-300 mb-5">
+                                Lawan telah ditumbangkan dengan jurus bela diri yang tangguh.
+                            </p>
+
+                            {/* Rewards Plate */}
+                            {session.rewards && (
+                                <div className="w-full bg-black/60 border border-amber-600/40 rounded-xl p-4 mb-5 flex justify-around text-center">
+                                    <div>
+                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider">Perolehan EXP</div>
+                                        <div className="text-base sm:text-lg font-bold font-mono text-cyan-400">
+                                            +{session.rewards.exp} EXP
+                                        </div>
+                                    </div>
+                                    <div className="border-r border-gray-800" />
+                                    <div>
+                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider">Perolehan Perak</div>
+                                        <div className="text-base sm:text-lg font-bold font-mono text-amber-300">
+                                            +{session.rewards.silver} Perak
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={() => onBattleEnd(session.status, session.rewards)}
+                                className="w-full py-3 bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-serif font-bold text-sm rounded-xl border border-amber-400 shadow-xl transition-all"
+                            >
+                                ⚔️ Selesai & Kembali ke Dunia
+                            </button>
+                        </div>
+                    ) : session.status === 'lost' ? (
+                        <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#220d0d] to-[#0e0606] border-2 border-red-600/70 p-6 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.25)]">
+                            <Skull className="w-16 h-16 text-red-500 mb-2 animate-pulse" />
+                            <h2 className="font-serif font-black text-2xl sm:text-3xl text-red-400 tracking-wider mb-1">
+                                KAMU TELAH TUMBANG!
+                            </h2>
+                            <p className="text-xs text-gray-300 mb-5">
+                                Tenagamu habis dan dantianmu terluka. Beristirahatlah untuk memulihkan diri.
+                            </p>
+
+                            <button
+                                onClick={() => onBattleEnd(session.status)}
+                                className="w-full py-3 bg-gradient-to-r from-red-900 to-red-800 hover:from-red-800 hover:to-red-700 text-white font-serif font-bold text-sm rounded-xl border border-red-500 shadow-xl transition-all"
+                            >
+                                🩸 Pulihkan Diri & Kembali
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#161a24] to-[#0c0f17] border-2 border-gray-600/70 p-6 rounded-2xl shadow-xl">
+                            <MoveRight className="w-16 h-16 text-gray-400 mb-2" />
+                            <h2 className="font-serif font-black text-2xl text-gray-200 tracking-wider mb-1">
+                                BERHASIL MELOLOSKAN DIRI!
+                            </h2>
+                            <p className="text-xs text-gray-400 mb-5">
+                                Kamu mundur dengan selamat ke jarak yang aman dari ancaman.
+                            </p>
+
+                            <button
+                                onClick={() => onBattleEnd(session.status)}
+                                className="w-full py-3 bg-gray-800 hover:bg-gray-700 text-gray-200 font-serif font-bold text-sm rounded-xl border border-gray-600 shadow-xl transition-all"
+                            >
+                                Kembali ke Peta
+                            </button>
                         </div>
                     )}
                 </div>

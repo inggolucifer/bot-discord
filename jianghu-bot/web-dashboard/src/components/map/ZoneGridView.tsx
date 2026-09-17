@@ -1246,17 +1246,20 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
 
       {/* Render Battle Arena Fullscreen Modal */}
       {activeBattleId && (
-        <div className="absolute inset-0 z-[60] flex items-center justify-center p-2 sm:p-8 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
-           <div className="w-full max-w-6xl max-h-full flex shadow-2xl">
+        <div className="fixed inset-0 z-[99999] w-screen h-screen bg-[#070a14] flex flex-col items-center justify-center p-0 m-0 overflow-hidden">
+           <div className="w-full h-full flex flex-col">
              <BattleArena 
                  battleId={activeBattleId} 
                  onBattleEnd={(result, rewards) => {
                      setActiveBattleId(null);
                      if (result === 'won') {
-                         showMessage(`Menang! Mendapatkan ${rewards?.exp || 0} EXP`);
+                         showMessage(`🏆 Menang! Mendapatkan +${rewards?.exp || 0} EXP dan +${rewards?.silver || 0} Perak`);
+                     } else if (result === 'fled') {
+                         showMessage(`🏃 Berhasil meloloskan diri dari pertempuran.`);
                      } else {
-                         showMessage(`Pertarungan selesai dengan status: ${result}`);
+                         showMessage(`💀 Pertarungan selesai dengan status: ${result}`);
                      }
+                     fetchZoneData();
                  }} 
              />
            </div>

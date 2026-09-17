@@ -1,6 +1,6 @@
 const BattleSession = require('../models/BattleSession');
-const Player = require('../models/Player');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+const uuidv4 = () => crypto.randomUUID();
 
 class InteractiveBattleService {
   /**
@@ -13,7 +13,8 @@ class InteractiveBattleService {
       status: 'ongoing'
     });
     if (existing) {
-      throw new Error('Kamu masih berada dalam pertempuran lain!');
+      // Jika ada pertempuran gantung, kembalikan sesi yang sedang berlangsung
+      return existing;
     }
 
     // Parse Player to Entity
@@ -23,6 +24,10 @@ class InteractiveBattleService {
     const currentHp = (player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp))
       ? player.currentHp
       : maxHp;
+    const maxQi = player.maxQi || 100;
+    const currentQi = (player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0)
+      ? player.currentQi
+      : 40; // Default Qi awal pertarungan agar kultivator bisa langsung memakai jurus
 
     const playerEntity = {
       entityId: player.discordId,
@@ -32,24 +37,26 @@ class InteractiveBattleService {
       imageUrl: player.characterImage || player.imageUrl,
       hp: currentHp,
       maxHp: maxHp,
-      qi: player.currentQi || 0,
-      maxQi: player.maxQi || 100,
+      qi: currentQi,
+      maxQi: maxQi,
       stamina: player.currentStamina || 100,
       maxStamina: player.maxStamina || 100,
       attack: computedStats.atk || player.stats?.atk || 15,
       defense: computedStats.def || player.stats?.def || 10,
       speed: computedStats.spd || player.stats?.spd || 10,
-      atb: 0,
+      atb: 1000,
       maxAtb: 1000,
       stance: player.stats?.stance || 100,
       maxStance: player.stats?.stance || 100,
+      buffs: [],
+      debuffs: [],
       skills: this.formatPlayerSkills(player)
     };
 
     // Parse Enemies
     const enemies = enemiesInput.map((e, index) => ({
-      entityId: e.id || `enemy_${index}_${uuidv4().slice(0,6)}`,
-      entityType: type === 'pvp' ? 'player' : 'monster', // Ghost AI for PvP
+      entityId: e.id || `enemy_${index}_${uuidv4().slice(0, 6)}`,
+      entityType: type === 'pvp' ? 'player' : 'monster',
       name: e.name || 'Musuh Misterius',
       level: e.level || 1,
       imageUrl: e.imageUrl || null,
@@ -59,32 +66,36 @@ class InteractiveBattleService {
       maxQi: e.maxQi || 100,
       stamina: 100,
       maxStamina: 100,
-      attack: e.attack || 5,
-      defense: e.defense || 5,
-      speed: e.speed || 5,
-      atb: Math.floor(Math.random() * 200), // Random starting ATB
+      attack: e.attack || 12,
+      defense: e.defense || 6,
+      speed: e.speed || 8,
+      atb: 0,
       maxAtb: 1000,
       stance: e.stance || 100,
       maxStance: e.stance || 100,
+      buffs: [],
+      debuffs: [],
       skills: e.skills || [{
         skillId: 'basic_attack',
-        name: 'Serangan Biasa',
+        name: 'Serangan Liar',
         description: 'Serangan fisik standar',
         type: 'attack',
-        power: 10,
+        power: 12,
         qiCost: 0,
         cooldown: 0,
         currentCooldown: 0
       }]
     }));
 
-    const battleId = `BTL-${uuidv4().slice(0,8).toUpperCase()}`;
+    const battleId = `BTL-${uuidv4().slice(0, 8).toUpperCase()}`;
     const session = new BattleSession({
       battleId,
       type,
       zoneId,
       player: playerEntity,
       enemies,
+      turnQueue: [playerEntity.entityId], // Inisiatif giliran pertama langsung ke pemain!
+      currentTick: 1,
       logs: [{
         tick: 0,
         actor: 'System',
@@ -97,49 +108,81 @@ class InteractiveBattleService {
     return session;
   }
 
+  /**
+   * Format & generate skills pool for player
+   */
   static formatPlayerSkills(player) {
     const skills = [
       {
         skillId: 'basic_attack',
-        name: 'Pukulan Biasa',
-        description: 'Serangan fisik dasar tanpa Qi.',
+        name: 'Pukulan Dasar',
+        description: 'Serangan fisik dasar tanpa Qi. Memulihkan +5 Qi saat berhasil mendarat.',
         type: 'attack',
-        power: 10,
+        power: 12,
         qiCost: 0,
         cooldown: 0,
+        currentCooldown: 0
+      },
+      {
+        skillId: 'qi_strike',
+        name: 'Pukulan Hawa Murni',
+        description: 'Memadatkan Qi murni ke kepalan tangan untuk merusak pertahanan lawan.',
+        type: 'attack',
+        power: 25,
+        qiCost: 15,
+        cooldown: 1,
+        currentCooldown: 0
+      },
+      {
+        skillId: 'iron_wall',
+        name: 'Kuda-Kuda Besi (Tangkis)',
+        description: 'Menstabilkan pernapasan: memulihkan +35 Stance & +20 Qi serta menahan 50% damage serangan lawan ronde ini.',
+        type: 'defend',
+        power: 0,
+        qiCost: 0,
+        cooldown: 2,
+        currentCooldown: 0
+      },
+      {
+        skillId: 'qi_overload',
+        name: 'Ledakan Intisari Qi (Ultimate)',
+        description: 'Mengorbankan intisari Qi dantian untuk ledakan fatal yang mengabaikan 50% pertahanan musuh!',
+        type: 'ultimate',
+        power: 50,
+        qiCost: 35,
+        cooldown: 3,
         currentCooldown: 0
       }
     ];
 
-    // Map learned manuals to active skills if equipped
-    if (player.manuals) {
+    // Tambahkan manual kitab teknik yang telah dipahami pemain
+    if (Array.isArray(player.manuals)) {
       player.manuals.forEach(m => {
-        if (m.equipped && m.manualId) {
-          skills.push({
-            skillId: m.manualId._id.toString(),
-            name: m.manualId.name,
-            description: m.manualId.description || 'Jurus bela diri',
-            type: m.manualId.type === 'healing' ? 'heal' : 'attack',
-            power: m.manualId.basePower || 25,
-            qiCost: m.manualId.qiCost || 20,
-            cooldown: m.manualId.cooldown || 2,
-            currentCooldown: 0
-          });
-        }
-      });
-    }
+        if (m && m.manualId) {
+          const manualObj = m.manualId;
+          const isPopulated = typeof manualObj === 'object' && manualObj.name;
+          const sId = isPopulated ? (manualObj._id ? manualObj._id.toString() : String(manualObj.key || manualObj.name)) : String(m.manualId);
+          const sName = isPopulated ? manualObj.name : 'Jurus Esoteris';
+          const sDesc = isPopulated ? (manualObj.description || 'Jurus teknik bela diri tingkat tinggi.') : 'Jurus teknik bela diri tingkat tinggi.';
+          const sType = isPopulated && manualObj.type === 'healing' ? 'heal' : 'attack';
+          const sPower = (isPopulated && manualObj.basePower) ? manualObj.basePower : (30 + (m.level || 0) * 5);
+          const sCost = (isPopulated && manualObj.qiCost) ? manualObj.qiCost : 20;
+          const sCd = (isPopulated && manualObj.cooldown) ? manualObj.cooldown : 2;
 
-    // Add Qi Overload Ultimate (if level is high enough or has condition)
-    if (player.level >= 10) {
-      skills.push({
-        skillId: 'qi_overload',
-        name: 'Ledakan Qi (Ultimate)',
-        description: 'Mengorbankan semua Qi untuk serangan fatal mengabaikan 50% defense musuh.',
-        type: 'ultimate',
-        power: 50,
-        qiCost: 100,
-        cooldown: 5,
-        currentCooldown: 0
+          // Hindari duplikasi skillId
+          if (!skills.some(s => s.skillId === sId)) {
+            skills.push({
+              skillId: sId,
+              name: sName,
+              description: sDesc,
+              type: sType,
+              power: sPower,
+              qiCost: sCost,
+              cooldown: sCd,
+              currentCooldown: 0
+            });
+          }
+        }
       });
     }
 
@@ -147,139 +190,43 @@ class InteractiveBattleService {
   }
 
   /**
-   * ATB Tick System
-   * Advances the ATB bars based on speed until someone reaches maxAtb
-   */
-  static async processTick(battleId) {
-    const session = await BattleSession.findOne({ battleId, status: 'ongoing' });
-    if (!session) return null;
-
-    if (session.turnQueue.length > 0) {
-      // Someone is already ready to act, process AI if it's their turn
-      await this.processAIQueue(session);
-      return session;
-    }
-
-    // Find the next entity to reach 1000 ATB
-    let ticksToNextTurn = 9999;
-    let nextActorId = null;
-
-    const entities = [session.player, ...session.enemies.filter(e => !e.isDead)];
-    
-    entities.forEach(entity => {
-      if (entity.isDead) return;
-      const speed = Math.max(1, entity.speed);
-      const remainingAtb = entity.maxAtb - entity.atb;
-      const ticksNeeded = Math.ceil(remainingAtb / speed);
-      
-      if (ticksNeeded < ticksToNextTurn) {
-        ticksToNextTurn = ticksNeeded;
-        nextActorId = entity.entityId;
-      }
-    });
-
-    if (!nextActorId) return session; // All dead?
-
-    // Advance everyone's ATB by ticksToNextTurn
-    entities.forEach(entity => {
-      if (entity.isDead) return;
-      entity.atb += entity.speed * ticksToNextTurn;
-      if (entity.atb >= entity.maxAtb) {
-        entity.atb = entity.maxAtb;
-        if (!session.turnQueue.includes(entity.entityId)) {
-          session.turnQueue.push(entity.entityId);
-        }
-      }
-    });
-
-    session.currentTick += ticksToNextTurn;
-    
-    // Reduce cooldowns for the entity whose turn it is
-    session.turnQueue.forEach(id => {
-        const actor = entities.find(e => e.entityId === id);
-        if (actor) {
-            actor.skills.forEach(s => {
-                if (s.currentCooldown > 0) s.currentCooldown--;
-            });
-        }
-    });
-
-    await this.processAIQueue(session);
-
-    await session.save();
-    return session;
-  }
-
-  /**
-   * Process AI actions if AI is in the queue
-   */
-  static async processAIQueue(session) {
-    while (session.turnQueue.length > 0) {
-      const actorId = session.turnQueue[0];
-      if (actorId === session.player.entityId) {
-        // It's player's turn, wait for user input
-        break;
-      }
-
-      // It's enemy (AI) or Ghost Player
-      const enemy = session.enemies.find(e => e.entityId === actorId);
-      if (!enemy || enemy.isDead) {
-        session.turnQueue.shift();
-        continue;
-      }
-
-      // AI Logic: Pick target (only player for now since it's 1vN)
-      const targetId = session.player.entityId;
-      
-      // AI Logic: Pick skill (random available)
-      const availableSkills = enemy.skills.filter(s => s.currentCooldown <= 0 && enemy.qi >= (s.qiCost || 0));
-      let skillToUse = availableSkills.find(s => s.skillId === 'basic_attack');
-      if (availableSkills.length > 1 && Math.random() > 0.4) {
-        const specials = availableSkills.filter(s => s.skillId !== 'basic_attack');
-        if (specials.length > 0) {
-           skillToUse = specials[Math.floor(Math.random() * specials.length)];
-        }
-      }
-
-      if (!skillToUse) {
-         // Fallback struggle
-         skillToUse = { skillId: 'struggle', name: 'Merapal acak', type: 'attack', power: 5, qiCost: 0 };
-      }
-
-      await this.resolveAction(session, actorId, 'skill', skillToUse.skillId, targetId);
-    }
-  }
-
-  /**
-   * Player executes an action
+   * Eksekusi aksi turn-based round-trip (Instant Turn Resolution)
+   * Aksi pemain diselesaikan, serangan balik AI musuh diselesaikan dalam 1 panggilan HTTP,
+   * cooldown di-tick, dan giliran dikembalikan ke pemain secara instan.
    */
   static async executeAction(battleId, actorId, actionType, skillId, targetId) {
     const session = await BattleSession.findOne({ battleId, status: 'ongoing' });
     if (!session) throw new Error('Pertempuran tidak ditemukan atau sudah selesai.');
 
-    if (session.turnQueue[0] !== actorId) {
-      throw new Error('Belum giliranmu untuk menyerang!');
+    if (session.player.entityId !== actorId) {
+      throw new Error('Kamu bukan pemilik sesi pertempuran ini!');
     }
 
-    if (actionType === 'item') {
-      throw new Error('Tidak boleh menggunakan item (potion) ketika dalam pertempuran!');
+    if (session.player.isDead) {
+      throw new Error('Karaktermu sudah tumbang dan tidak bisa beraksi.');
     }
 
+    // Pastikan giliran aktif untuk pemain (auto-sync jika terjadi desinkronisasi kecil)
+    if (!session.turnQueue || session.turnQueue.length === 0 || session.turnQueue[0] !== actorId) {
+      session.turnQueue = [actorId];
+    }
+
+    // 1. Tangani Aksi Kabur (Flee)
     if (actionType === 'flee') {
-      // Calculate flee chance based on speed
-      const playerSpeed = session.player.speed;
-      const maxEnemySpeed = Math.max(...session.enemies.filter(e => !e.isDead).map(e => e.speed));
-      
-      const fleeChance = Math.min(0.9, Math.max(0.1, (playerSpeed / maxEnemySpeed) * 0.5));
+      const playerSpeed = session.player.speed || 10;
+      const aliveEnemies = session.enemies.filter(e => !e.isDead);
+      const maxEnemySpeed = aliveEnemies.length > 0 ? Math.max(...aliveEnemies.map(e => e.speed || 5)) : 5;
+      const fleeChance = Math.min(0.85, Math.max(0.25, (playerSpeed / (maxEnemySpeed + 1)) * 0.6));
+
       if (Math.random() < fleeChance) {
         session.status = 'fled';
         session.logs.push({
           tick: session.currentTick,
           actor: session.player.name,
           action: 'flee',
-          message: `${session.player.name} berhasil melarikan diri dari pertempuran!`
+          message: `${session.player.name} menggunakan teknik pergerakan lincah dan berhasil melarikan diri dari medan tempur!`
         });
-        session.turnQueue.shift();
+        session.turnQueue = [];
         await session.save();
         return session;
       } else {
@@ -287,112 +234,231 @@ class InteractiveBattleService {
           tick: session.currentTick,
           actor: session.player.name,
           action: 'flee',
-          message: `${session.player.name} mencoba kabur, tapi musuh terlalu cepat!`
+          message: `${session.player.name} mencoba melarikan diri, tetapi musuh sigap menghadang jalur keluar!`
         });
-        
-        const actor = session.player;
-        actor.atb = 0;
-        session.turnQueue.shift();
-        await session.save();
-        return this.processTick(battleId);
+        // Kabur gagal: musuh mendapat kesempatan serangan balik gratis di bawah
+      }
+    } else {
+      // 2. Tangani Aksi Serangan / Skill Pemain
+      const skill = session.player.skills.find(s => s.skillId === (skillId || 'basic_attack'))
+        || session.player.skills[0];
+
+      if (!skill) throw new Error('Jurus tidak ditemukan.');
+      if ((skill.currentCooldown || 0) > 0) {
+        throw new Error(`Jurus "${skill.name}" masih dalam masa jeda (${skill.currentCooldown} ronde lagi)!`);
+      }
+      if (session.player.qi < (skill.qiCost || 0)) {
+        throw new Error(`Qi tidak mencukupi untuk jurus "${skill.name}" (Butuh ${skill.qiCost} Qi, kamu punya ${session.player.qi} Qi)!`);
+      }
+
+      // Konsumsi Qi & Pasang Cooldown
+      session.player.qi -= (skill.qiCost || 0);
+      skill.currentCooldown = skill.cooldown || 0;
+
+      if (skill.type === 'defend') {
+        // Tangkis / Kuda-kuda
+        session.player.stance = Math.min(session.player.maxStance, session.player.stance + 35);
+        session.player.qi = Math.min(session.player.maxQi, session.player.qi + 20);
+        session.player.buffs = (session.player.buffs || []).filter(b => b.name !== 'Kuda-Kuda Besi');
+        session.player.buffs.push({
+          name: 'Kuda-Kuda Besi',
+          type: 'defense_up',
+          value: 0.5,
+          duration: 1
+        });
+
+        session.logs.push({
+          tick: session.currentTick,
+          actor: session.player.name,
+          action: 'skill',
+          skillName: skill.name,
+          message: `🛡️ ${session.player.name} memasang ${skill.name}! Memulihkan 35 Stance, +20 Qi, dan menahan 50% damage serangan lawan ronde ini.`
+        });
+      } else if (skill.type === 'heal') {
+        // Pemulihan HP
+        const healAmt = Math.min(
+          session.player.maxHp - session.player.hp,
+          Math.floor(session.player.maxHp * 0.3) + 25
+        );
+        session.player.hp = Math.min(session.player.maxHp, session.player.hp + healAmt);
+
+        session.logs.push({
+          tick: session.currentTick,
+          actor: session.player.name,
+          action: 'skill',
+          skillName: skill.name,
+          message: `✨ ${session.player.name} merapal ${skill.name} dan memulihkan ${healAmt} HP!`
+        });
+      } else {
+        // Serangan fisik / spiritual ke target
+        const aliveEnemies = session.enemies.filter(e => !e.isDead);
+        if (aliveEnemies.length === 0) {
+          this.checkWinCondition(session);
+          session.turnQueue = [];
+          await session.save();
+          return session;
+        }
+
+        let target = aliveEnemies.find(e => e.entityId === targetId) || aliveEnemies[0];
+
+        // Rumus Kalkulasi Damage Authoritative
+        const isStanceBroken = target.stance <= 0;
+        const defenseToUse = skill.type === 'ultimate' ? target.defense * 0.5 : target.defense;
+        let damage = Math.max(1, Math.floor((session.player.attack * (skill.power / 10)) / (defenseToUse / 10 + 1)));
+
+        if (isStanceBroken) damage = Math.floor(damage * 1.5);
+        const isCrit = Math.random() < 0.15;
+        if (isCrit) damage = Math.floor(damage * 1.5);
+        damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));
+
+        // Kurangi Stance dan HP musuh
+        const stanceDamage = Math.max(5, Math.floor(damage * 0.25));
+        target.stance = Math.max(0, target.stance - stanceDamage);
+        target.hp = Math.max(0, target.hp - damage);
+
+        if (target.hp <= 0) {
+          target.hp = 0;
+          target.isDead = true;
+        }
+
+        // Pukulan biasa meregenerasi +5 Qi
+        if (skill.skillId === 'basic_attack') {
+          session.player.qi = Math.min(session.player.maxQi, session.player.qi + 5);
+        }
+
+        let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} memberikan ${damage} DMG!`;
+        if (isCrit) logMsg += ' 💥 (Kritikal!)';
+        if (target.stance <= 0 && target.stance + stanceDamage > 0) logMsg += ' ⚡ (Stance Hancur!)';
+        if (target.isDead) logMsg += ` ☠️ (${target.name} tumbang!)`;
+
+        session.logs.push({
+          tick: session.currentTick,
+          actor: session.player.name,
+          target: target.name,
+          action: 'skill',
+          skillName: skill.name,
+          damage,
+          critical: isCrit,
+          message: logMsg
+        });
       }
     }
 
-    await this.resolveAction(session, actorId, actionType, skillId, targetId);
-    return await this.processTick(battleId); // advance to next turn automatically
-  }
-
-  static async resolveAction(session, actorId, actionType, skillId, targetId) {
-    const isPlayer = actorId === session.player.entityId;
-    const actor = isPlayer ? session.player : session.enemies.find(e => e.entityId === actorId);
-    const target = isPlayer ? session.enemies.find(e => e.entityId === targetId) : session.player;
-
-    if (!actor || actor.isDead) {
-      session.turnQueue.shift();
-      return;
-    }
-    
-    if (!target && actionType !== 'flee' && actionType !== 'heal') {
-       // Auto target random alive enemy if target is missing/dead
-       const aliveEnemies = session.enemies.filter(e => !e.isDead);
-       if (aliveEnemies.length === 0) {
-           session.turnQueue.shift();
-           return;
-       }
-       target = aliveEnemies[0];
+    // 3. Cek Kemenangan Langsung setelah Serangan Pemain
+    const allEnemiesDead = session.enemies.every(e => e.isDead);
+    if (allEnemiesDead) {
+      this.checkWinCondition(session);
+      session.turnQueue = [];
+      await session.save();
+      return session;
     }
 
-    let skill = null;
-    if (actionType === 'skill' || actionType === 'attack') {
-       skill = actor.skills.find(s => s.skillId === skillId);
-       if (!skill && actionType === 'attack') skill = actor.skills.find(s => s.skillId === 'basic_attack');
-       
-       if (!skill) throw new Error('Skill tidak ditemukan.');
-       if (skill.currentCooldown > 0) throw new Error('Skill masih cooldown!');
-       if (actor.qi < (skill.qiCost || 0)) throw new Error('Qi tidak cukup!');
+    // 4. Balasan Serangan Lawan (Immediate AI Counter-Attack)
+    const aliveEnemies = session.enemies.filter(e => !e.isDead);
+    const hasIronWall = Array.isArray(session.player.buffs) && session.player.buffs.some(b => b.name === 'Kuda-Kuda Besi');
 
-       actor.qi -= (skill.qiCost || 0);
-       skill.currentCooldown = skill.cooldown || 0;
+    for (const enemy of aliveEnemies) {
+      if (session.player.isDead) break;
+
+      // Pilih jurus musuh yang siap
+      const availableSkills = (enemy.skills || []).filter(s => (s.currentCooldown || 0) <= 0);
+      let eSkill = availableSkills.find(s => s.skillId !== 'basic_attack');
+      if (!eSkill || Math.random() < 0.6) {
+        eSkill = availableSkills.find(s => s.skillId === 'basic_attack') || availableSkills[0] || {
+          skillId: 'basic_attack',
+          name: 'Serangan Cakar',
+          power: 12,
+          type: 'attack'
+        };
+      }
+
+      // Hitung damage musuh ke pemain
+      let eDamage = Math.max(1, Math.floor((enemy.attack * (eSkill.power / 10)) / (session.player.defense / 10 + 1)));
+      if (hasIronWall) {
+        eDamage = Math.max(1, Math.floor(eDamage * 0.5));
+      }
+      eDamage = Math.max(1, Math.floor(eDamage * (0.85 + Math.random() * 0.3)));
+
+      const eStanceDmg = Math.max(3, Math.floor(eDamage * 0.2));
+      session.player.stance = Math.max(0, session.player.stance - eStanceDmg);
+      session.player.hp = Math.max(0, session.player.hp - eDamage);
+
+      if (session.player.hp <= 0) {
+        session.player.hp = 0;
+        session.player.isDead = true;
+      }
+
+      let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke ${session.player.name} menghasilkan ${eDamage} DMG!`;
+      if (hasIronWall) eLogMsg += ' 🛡️ (Tertangkis Kuda-Kuda Besi -50%!)';
+      if (session.player.isDead) eLogMsg += ` 💀 (${session.player.name} gugur!)`;
+
+      session.logs.push({
+        tick: session.currentTick,
+        actor: enemy.name,
+        target: session.player.name,
+        action: 'skill',
+        skillName: eSkill.name,
+        damage: eDamage,
+        critical: false,
+        message: eLogMsg
+      });
+
+      if (eSkill.cooldown) eSkill.currentCooldown = eSkill.cooldown;
     }
 
-    // Damage Calculation
-    if (skill && (skill.type === 'attack' || skill.type === 'ultimate')) {
-       // Stance Break mechanic: if target's stance is 0, they take 50% more damage
-       const isStanceBroken = target.stance <= 0;
-       
-       // Qi Overload: Ultimate ignores 50% defense
-       const defenseToUse = skill.type === 'ultimate' ? target.defense * 0.5 : target.defense;
-       
-       // Base formula: (Attack * Power / Defense) * Random(0.85, 1.15)
-       let damage = Math.max(1, Math.floor((actor.attack * (skill.power / 10)) / (defenseToUse / 10 + 1)));
-       
-       // Modifiers
-       if (isStanceBroken) damage = Math.floor(damage * 1.5);
-       
-       // Critical Hit (10% chance)
-       const isCrit = Math.random() < 0.10;
-       if (isCrit) damage = Math.floor(damage * 1.5);
-       
-       // Apply Variance
-       damage = Math.floor(damage * (0.85 + Math.random() * 0.3));
-
-       // Stance Damage
-       const stanceDamage = Math.floor(damage * 0.2); // 20% of damage damages stance
-       target.stance = Math.max(0, target.stance - stanceDamage);
-
-       // HP Damage
-       target.hp -= damage;
-       if (target.hp <= 0) {
-         target.hp = 0;
-         target.isDead = true;
-       }
-
-       let logMsg = `${actor.name} menggunakan ${skill.name} ke ${target.name} memberikan ${damage} DMG!`;
-       if (isCrit) logMsg += ' (Kritikal!)';
-       if (target.stance <= 0 && target.stance + stanceDamage > 0) logMsg += ` Stance ${target.name} Hancur (Break)!`;
-       if (target.isDead) logMsg += ` ${target.name} terbunuh!`;
-
-       session.logs.push({
-         tick: session.currentTick,
-         actor: actor.name,
-         target: target.name,
-         action: 'skill',
-         skillName: skill.name,
-         damage: damage,
-         critical: isCrit,
-         message: logMsg
-       });
+    // 5. Cek Kekalahan Pemain
+    if (session.player.isDead) {
+      this.checkWinCondition(session);
+      session.turnQueue = [];
+      await session.save();
+      return session;
     }
 
-    // Reset ATB and shift queue
-    actor.atb = 0;
-    session.turnQueue.shift();
-    
-    // Check Win/Loss Condition
-    this.checkWinCondition(session);
+    // 6. Akhir Ronde: Kurangi Cooldown, Bersihkan Buff Sementara & Beri Giliran Kembali ke Pemain
+    if (session.player.buffs) {
+      session.player.buffs = session.player.buffs.filter(b => b.name !== 'Kuda-Kuda Besi');
+    }
+
+    // Turunkan cooldown skill pemain & musuh
+    session.player.skills.forEach(s => {
+      if ((s.currentCooldown || 0) > 0) s.currentCooldown--;
+    });
+    session.enemies.forEach(e => {
+      (e.skills || []).forEach(s => {
+        if ((s.currentCooldown || 0) > 0) s.currentCooldown--;
+      });
+    });
+
+    // Regenerasi alami Qi (+10) dan Stance (+10) per ronde
+    session.player.qi = Math.min(session.player.maxQi, session.player.qi + 10);
+    session.player.stance = Math.min(session.player.maxStance, session.player.stance + 10);
+
+    session.currentTick += 1;
+    session.player.atb = 1000;
+    session.turnQueue = [session.player.entityId]; // Pemain siap untuk ronde selanjutnya secara instan!
+
     await session.save();
+    return session;
   }
 
+  /**
+   * Fallback Process Tick (kompatibilitas route lama)
+   */
+  static async processTick(battleId) {
+    const session = await BattleSession.findOne({ battleId, status: 'ongoing' });
+    if (!session) return null;
+
+    if (!session.player.isDead && session.turnQueue.length === 0) {
+      session.player.atb = 1000;
+      session.turnQueue = [session.player.entityId];
+      await session.save();
+    }
+    return session;
+  }
+
+  /**
+   * Evaluasi Kondisi Menang / Kalah & Kalkulasi Hadiah
+   */
   static checkWinCondition(session) {
     if (session.player.isDead) {
       session.status = 'lost';
@@ -400,7 +466,7 @@ class InteractiveBattleService {
         tick: session.currentTick,
         actor: 'System',
         action: 'end',
-        message: 'Kamu kalah dalam pertempuran...'
+        message: `${session.player.name} telah kehabisan darah dan pingsan... Pertempuran berakhir.`
       });
       return;
     }
@@ -408,15 +474,15 @@ class InteractiveBattleService {
     const allEnemiesDead = session.enemies.every(e => e.isDead);
     if (allEnemiesDead) {
       session.status = 'won';
-      
-      // Calculate Rewards
+
       let totalExp = 0;
       let totalSilver = 0;
       session.enemies.forEach(e => {
-         totalExp += e.level * 10;
-         totalSilver += e.level * 5;
+        const lvl = e.level || 1;
+        totalExp += lvl * 20;
+        totalSilver += lvl * 10;
       });
-      
+
       session.rewards = {
         exp: totalExp,
         silver: totalSilver,
@@ -427,7 +493,7 @@ class InteractiveBattleService {
         tick: session.currentTick,
         actor: 'System',
         action: 'end',
-        message: `Kemenangan! Mendapat ${totalExp} EXP dan ${totalSilver} Keping Perak.`
+        message: `🏆 Kemenangan gemilang! Berhasil mengalahkan lawan dan memperoleh +${totalExp} EXP serta +${totalSilver} Keping Perak.`
       });
     }
   }
