@@ -219,6 +219,22 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
           log: combatResult.log
         });
       }
+    } else if (exam.type === 'trial_task') {
+      if (!player.sectExamState) player.sectExamState = {};
+      player.sectExamState.activeSectId = sect._id;
+      player.sectExamState.activeType = 'trial_task';
+      player.sectExamState.trialAssignedAt = new Date();
+      player.sectExamState.trialDeadlineAt = new Date(Date.now() + ((exam.trialTask?.durationHours || 24) * 60 * 60 * 1000));
+      await player.save();
+
+      return res.json({
+        success: true,
+        message: 'Ujian dimulai. Harap selesaikan tugas sebelum batas waktu.',
+        deadlineAt: player.sectExamState.trialDeadlineAt
+      });
+    } else {
+      return res.status(400).json({ message: 'Tipe ujian sekte tidak dikenali.' });
+    }
 
   } catch (error) {
     console.error(error);
