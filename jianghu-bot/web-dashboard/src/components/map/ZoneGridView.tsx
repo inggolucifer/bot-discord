@@ -41,6 +41,7 @@ import GridTileInspectorCard from './GridTileInspectorCard';
 import LandscapeOrientationPrompt from '../ui/LandscapeOrientationPrompt';
 import NpcPanel from '@/app/world/NpcPanel';
 import MapSearchModal from './modals/MapSearchModal';
+import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 
 interface ZoneGridViewProps {
   zoneId: string;
@@ -114,6 +115,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
 
   // State lainnya
   const [loading, setLoading] = useState(true);
+  const [isInitialLoadDone, setIsInitialLoadDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isBgmOn, setIsBgmOn] = useState(false);
@@ -1279,6 +1281,14 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
 
       {/* Peringatan & Rekomendasi Orientasi Lanskap Mobile */}
       <LandscapeOrientationPrompt />
+
+      {/* Sistem Layar Loading Peta Jianghu (Anti-Blank & Mulus) */}
+      {!isInitialLoadDone && (
+        <WorldMapLoadingScreen
+          isReady={!loading && tiles.length > 0 && Boolean(playerGrid)}
+          onFadeComplete={() => setIsInitialLoadDone(true)}
+        />
+      )}
 
     </div>
   );

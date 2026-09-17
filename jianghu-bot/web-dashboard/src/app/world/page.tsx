@@ -12,6 +12,7 @@ import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 import WorldMapView from "@/components/map/WorldMapView";
 import ZoneGridView from "@/components/map/ZoneGridView";
+import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
 
 export function WorldPageContent() {
@@ -222,7 +223,7 @@ export function WorldPageContent() {
       }
   };
 
-  if (loading) return <div className="p-4 sm:p-6 lg:p-8 pt-20">Memuat dunia...</div>;
+  if (loading) return <WorldMapLoadingScreen isReady={false} />;
 
   return (
     <div className={`w-full h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] lg:h-[calc(100vh-4rem)] relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
@@ -681,7 +682,7 @@ export function WorldPageContent() {
 
 export default function WorldPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-amber-200">Menghubungkan ke Benua Jianghu...</div>}>
+    <Suspense fallback={<WorldMapLoadingScreen isReady={false} />}>
       <WorldPageContent />
     </Suspense>
   );
