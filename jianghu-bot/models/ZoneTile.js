@@ -67,11 +67,23 @@ const zoneTileSchema = new mongoose.Schema({
   staminaCostMultiplier: { type: Number, default: 1.0 },
   baseTemperature: { type: Number, default: 20 },
   spiritualQiDensity: { type: Number, default: 10 },
-  ambushRiskRate: { type: Number, default: 0.05 },
   propertyStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null },
   targetInteriorStructureId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null },
   locationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', default: null },
-  isBuildingEntrance: { type: Boolean, default: false }
+  isBuildingEntrance: { type: Boolean, default: false },
+
+  // Field Monster Spasial (Aktif di petak tertentu untuk pemicu battle turn-based)
+  spawnedMonster: {
+    key: { type: String, default: null },
+    name: { type: String, default: null },
+    tier: { type: Number, default: 1 },
+    hp: { type: Number, default: 100 },
+    maxHp: { type: Number, default: 100 },
+    atk: { type: Number, default: 15 },
+    def: { type: Number, default: 5 },
+    spd: { type: Number, default: 5 },
+    imageUrl: { type: String, default: null }
+  }
 }, { timestamps: true });
 
 zoneTileSchema.index({ guildId: 1, zoneId: 1, tileX: 1, tileY: 1 }, { unique: true });

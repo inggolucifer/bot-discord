@@ -536,7 +536,10 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-            //    throw new CustomError('Terlambat! Tubuh fanamu sudah beradaptasi dengan Qi biasa. Kamu tidak bisa lagi mempelajari Hukum Alam (Hanya bisa di tahap Mortal).', 400);
+            // HANYA BISA DISERAP OLEH MORTAL (FONDASI FANA)
+            if (realmIdx > 0) {
+                throw new CustomError('Terlambat! Tubuhmu telah dialiri Qi tingkat lanjut. Gulungan Hukum Alam pembentuk fondasi ini hanya dapat diserap saat masih berada di ranah Mortal (Fondasi Fana).', 400);
+            }
 
             const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
@@ -544,24 +547,36 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             }
 
             const item = player.inventory[inventoryIndex].itemId;
-            if (item.category !== 'law' || !item.effect || !item.effect.startsWith('learn_law_')) {
-                throw new CustomError(`Item **${item.name}** tidak bisa digunakan untuk mempelajari Hukum Alam.`, 400);
+            if (item.category !== 'law') {
+                throw new CustomError(`Item **${item.name}** bukan merupakan Gulungan Hukum Alam.`, 400);
             }
 
-            const extractLawName = item.effect.replace('learn_law_', '');
-            const { escapeRegex } = require('../../utils/escapeRegex');
-            const lawToLearn = await Law.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractLawName)}\\s*$`, 'i') }).session(session);
+            let targetLawName = '';
+            if (item.effect && item.effect.startsWith('learn_law_')) {
+                targetLawName = item.effect.replace('learn_law_', '').trim();
+            } else {
+                targetLawName = item.name.replace(/^(Gulungan|Kitab|Hukum)\s+/i, '').trim();
+            }
 
-            if (!lawToLearn) throw new CustomError(`Hukum Alam **${extractLawName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+            const { escapeRegex } = require('../../utils/escapeRegex');
+            const lawToLearn = await Law.findOne({
+                guildId,
+                $or: [
+                    { name: new RegExp(`^\\s*${escapeRegex(targetLawName)}\\s*$`, 'i') },
+                    { name: new RegExp(`^\\s*${escapeRegex(item.name)}\\s*$`, 'i') }
+                ]
+            }).session(session);
+
+            if (!lawToLearn) throw new CustomError(`Hukum Alam **${targetLawName || item.name}** tidak ditemukan di dunia (hubungi admin).`, 404);
 
             const minRealmIdx = lawToLearn.minRealmIndex || 0;
             if (realmIdx < minRealmIdx) {
                 throw new CustomError(`Hukum Alam **${lawToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
             }
 
-            if (player.laws.length >= 1) {
+            if (player.laws && player.laws.length >= 1) {
                 const currentLaw = player.laws[0];
-                throw new CustomError(`Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan **${currentLaw.name}**.`, 400);
+                throw new CustomError(`Jiwa fanamu hanya mampu menampung satu Hukum Alam semesta. Kamu sudah mengikat takdirmu dengan **${currentLaw.name || 'Hukum Alam'}**.`, 400);
             }
 
             player.inventory[inventoryIndex].quantity -= 1;
@@ -574,7 +589,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             await player.save({ session });
 
             lawName = lawToLearn.name;
-            messageResponse = `Luar biasa! Kamu menyerap intisari dari **${item.name}** dan berhasil memahami **${lawName}**.`;
+            messageResponse = `Luar biasa! Jiwa fanamu menyerap intisari dari **${item.name}** dan berhasil mematri fondasi abadi **${lawName}**!`;
 
             await TransactionLog.create([{
                 guildId,
@@ -627,27 +642,42 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             }
 
             const item = player.inventory[inventoryIndex].itemId;
-            if (item.category !== 'manual' || !item.effect || !item.effect.startsWith('learn_manual_')) {
-                throw new CustomError(`Item **${item.name}** tidak bisa digunakan untuk mempelajari Manual.`, 400);
+            if (item.category !== 'manual') {
+                throw new CustomError(`Item **${item.name}** bukan merupakan Kitab Manual Teknik.`, 400);
             }
 
-            const extractManualName = item.effect.replace('learn_manual_', '');
+            let extractManualName = '';
+            if (item.effect && item.effect.startsWith('learn_manual_')) {
+                extractManualName = item.effect.replace('learn_manual_', '').trim();
+            } else {
+                extractManualName = item.name.replace(/^(Kitab|Manual|Jurus|Buku)\s+/i, '').trim();
+            }
+
             const { escapeRegex } = require('../../utils/escapeRegex');
-            const manualToLearn = await Manual.findOne({ guildId, name: new RegExp(`^\\s*${escapeRegex(extractManualName)}\\s*$`, 'i') }).session(session);
+            const manualToLearn = await Manual.findOne({
+                guildId,
+                $or: [
+                    { name: new RegExp(`^\\s*${escapeRegex(extractManualName)}\\s*$`, 'i') },
+                    { name: new RegExp(`^\\s*${escapeRegex(item.name)}\\s*$`, 'i') }
+                ]
+            }).session(session);
 
-            if (!manualToLearn) throw new CustomError(`Manual **${extractManualName}** yang ada di kitab ini tidak ditemukan di dunia (hubungi admin).`, 404);
+            if (!manualToLearn) throw new CustomError(`Manual **${extractManualName || item.name}** tidak ditemukan di dunia (hubungi admin).`, 404);
 
+            const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
             const minRealmIdx = manualToLearn.minRealmIndex || 0;
             if (realmIdx < minRealmIdx) {
-                throw new CustomError(`Manual **${manualToLearn.name}** ini membutuhkan pemahaman setidaknya pada Realm Index ${minRealmIdx}, realm-mu saat ini ${realmIdx}.`, 400);
+                const reqRealmName = getRealmName(minRealmIdx);
+                throw new CustomError(`Kapasitas dantianmu belum cukup untuk menampung teknik **${manualToLearn.name}**. Butuh ranah minimal **${reqRealmName}** (Realm Index: ${minRealmIdx}), ranahmu saat ini masih Index ${realmIdx}.`, 400);
             }
 
-            // Phase 10: Check kungfu skill requirements
+            // Validasi Kemahiran Senjata / Kungfu Skill (e.g. sword 30, saber 20, fist 15, dll)
             if (manualToLearn.requiredSkillType && manualToLearn.requiredSkillPoints > 0) {
-                const playerSkillPoints = player.kungfuSkills ? (player.kungfuSkills[manualToLearn.requiredSkillType] || 0) : 0;
+                const skillKey = manualToLearn.requiredSkillType.toLowerCase();
+                const playerSkillPoints = player.kungfuSkills ? (player.kungfuSkills[skillKey] || 0) : 0;
                 if (playerSkillPoints < manualToLearn.requiredSkillPoints) {
-                    throw new CustomError(`Manual ini membutuhkan setidaknya ${manualToLearn.requiredSkillPoints} poin pada skill ${manualToLearn.requiredSkillType}. Poin skillmu saat ini: ${playerSkillPoints}.`, 400);
+                    throw new CustomError(`Teknik **${manualToLearn.name}** membutuhkan kemahiran ${manualToLearn.requiredSkillType.toUpperCase()} minimal level ${manualToLearn.requiredSkillPoints}. Kemahiranmu saat ini baru level ${playerSkillPoints}.`, 400);
                 }
             }
 
