@@ -11,8 +11,8 @@ const CRAFT_RECIPES = {
       requiredLevel: 1,
       staminaCost: 10,
       materials: [
-        { name: 'Bijih Besi Mentah', quantity: 2 },
-        { name: 'Kayu Glondongan', quantity: 1 }
+        { name: 'Bijih Besi', quantity: 2 },
+        { name: 'Kayu Mentah', quantity: 1 }
       ],
       output: {
         name: 'Pedang Besi Tempa',
@@ -26,7 +26,7 @@ const CRAFT_RECIPES = {
       requiredLevel: 1,
       staminaCost: 8,
       materials: [
-        { name: 'Bijih Besi Mentah', quantity: 2 }
+        { name: 'Bijih Besi', quantity: 2 }
       ],
       output: {
         name: 'Cangkul Baja Kokoh',

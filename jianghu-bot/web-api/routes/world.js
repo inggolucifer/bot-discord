@@ -1302,22 +1302,38 @@ router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
 
         const Asset = require('../../models/Asset');
         const Blueprint = require('../../models/Blueprint');
+        const Item = require('../../models/Item');
 
-        const [assets, blueprints] = await Promise.all([
+        const [assets, blueprints, allItems] = await Promise.all([
             Asset.find({ buildable: true }).lean(),
-            Blueprint.find({ isActive: true }).lean()
+            Blueprint.find({ isActive: true }).lean(),
+            Item.find({}).select('name').lean()
         ]);
 
         const inventory = player.inventory || [];
 
+        const itemNameById = new Map();
+        const itemIdByName = new Map();
+        for (const it of allItems) {
+            itemNameById.set(String(it._id), it.name.toLowerCase().trim());
+            itemIdByName.set(it.name.toLowerCase().trim(), String(it._id));
+        }
+
         // Helper untuk mencocokkan stok material pemain dari inventory MongoDB
         const getPlayerMaterialStock = (itemName, itemId) => {
-            const found = inventory.find(inv => {
-                if (itemId && inv.itemId && String(inv.itemId) === String(itemId)) return true;
-                if (itemName && inv.name && inv.name.toLowerCase().trim() === itemName.toLowerCase().trim()) return true;
-                return false;
-            });
-            return found ? (found.quantity || 0) : 0;
+            const targetId = itemId ? String(itemId) : (itemName ? itemIdByName.get(itemName.toLowerCase().trim()) : null);
+            const targetName = itemName ? itemName.toLowerCase().trim() : (targetId ? itemNameById.get(targetId) : null);
+
+            let total = 0;
+            for (const inv of inventory) {
+                const invIdStr = inv.itemId ? String(inv.itemId) : null;
+                const invNameStr = inv.name ? inv.name.toLowerCase().trim() : (invIdStr ? itemNameById.get(invIdStr) : null);
+
+                if ((targetId && invIdStr === targetId) || (targetName && invNameStr === targetName)) {
+                    total += (inv.quantity || 0);
+                }
+            }
+            return total;
         };
 
         const { convertToCopper } = require('../../utils/currencyNormalize');
@@ -2485,13 +2501,33 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
 
         // Validasi dan potong material asli dari player.inventory
         const requiredMaterials = bpDoc ? (bpDoc.requiredMaterials || []) : (assetDoc.buildRequirements || []);
+        const allItems = await Item.find({}).select('name').lean();
+        const itemNameById = new Map();
+        const itemIdByName = new Map();
+        for (const it of allItems) {
+            itemNameById.set(String(it._id), it.name.toLowerCase().trim());
+            itemIdByName.set(it.name.toLowerCase().trim(), String(it._id));
+        }
+
+        const getPlayerMaterialStock = (itemName, itemId) => {
+            const targetId = itemId ? String(itemId) : (itemName ? itemIdByName.get(itemName.toLowerCase().trim()) : null);
+            const targetName = itemName ? itemName.toLowerCase().trim() : (targetId ? itemNameById.get(targetId) : null);
+
+            let total = 0;
+            for (const inv of (player.inventory || [])) {
+                const invIdStr = inv.itemId ? String(inv.itemId) : null;
+                const invNameStr = inv.name ? inv.name.toLowerCase().trim() : (invIdStr ? itemNameById.get(invIdStr) : null);
+
+                if ((targetId && invIdStr === targetId) || (targetName && invNameStr === targetName)) {
+                    total += (inv.quantity || 0);
+                }
+            }
+            return total;
+        };
+
         const missingMaterials = [];
         for (const reqMat of requiredMaterials) {
-            const invItem = (player.inventory || []).find(inv =>
-                (inv.name && inv.name.toLowerCase().trim() === reqMat.itemName.toLowerCase().trim()) ||
-                (inv.itemId && reqMat.itemId && String(inv.itemId) === String(reqMat.itemId))
-            );
-            const have = invItem ? invItem.quantity : 0;
+            const have = getPlayerMaterialStock(reqMat.itemName, reqMat.itemId);
             if (have < reqMat.quantity) {
                 missingMaterials.push(`${reqMat.itemName} (kurang ${reqMat.quantity - have})`);
             }
@@ -2522,14 +2558,22 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             });
         }
 
-        // Potong material dari inventory
+        // Potong material dari inventory secara presisi
         for (const reqMat of requiredMaterials) {
-            const invIndex = player.inventory.findIndex(inv =>
-                (inv.name && inv.name.toLowerCase().trim() === reqMat.itemName.toLowerCase().trim()) ||
-                (inv.itemId && reqMat.itemId && String(inv.itemId) === String(reqMat.itemId))
-            );
-            if (invIndex !== -1) {
-                player.inventory[invIndex].quantity -= reqMat.quantity;
+            const targetId = reqMat.itemId ? String(reqMat.itemId) : (reqMat.itemName ? itemIdByName.get(reqMat.itemName.toLowerCase().trim()) : null);
+            const targetName = reqMat.itemName ? reqMat.itemName.toLowerCase().trim() : null;
+            let needed = reqMat.quantity;
+
+            for (const inv of player.inventory) {
+                if (needed <= 0) break;
+                const invIdStr = inv.itemId ? String(inv.itemId) : null;
+                const invNameStr = inv.name ? inv.name.toLowerCase().trim() : (invIdStr ? itemNameById.get(invIdStr) : null);
+
+                if ((targetId && invIdStr === targetId) || (targetName && invNameStr === targetName)) {
+                    const deduct = Math.min(inv.quantity, needed);
+                    inv.quantity -= deduct;
+                    needed -= deduct;
+                }
             }
         }
         player.inventory = player.inventory.filter(inv => inv.quantity > 0);

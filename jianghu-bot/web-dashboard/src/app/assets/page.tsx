@@ -189,7 +189,7 @@ export default function AssetsPage() {
         setRepairCostText(res.data.costText);
       }
     } catch (err: any) {
-      setRepairCostText(err.response?.data?.error || "Biaya perbaikan: 500 Silver / 2 Kayu Gelondong");
+      setRepairCostText(err.response?.data?.error || "Biaya perbaikan: 500 Silver / 2 Kayu Mentah");
     }
   };
 

@@ -670,18 +670,18 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         
         {/* HUD Top Bar */}
         <div className="absolute top-2 sm:top-4 left-2 sm:left-4 right-2 sm:right-4 z-20 flex justify-between items-center pointer-events-none">
-          <div className="flex items-center gap-2 pointer-events-auto flex-wrap">
+          <div className="flex items-center gap-1.5 pointer-events-auto flex-wrap">
             <button
               onClick={() => setShowMacroMap(true)}
-              className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
+              className="bg-black/80 hover:bg-black text-amber-300 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
             >
-              <MapIcon className="w-4 h-4 text-amber-400" />
+              <MapIcon className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Peta Benua</span>
             </button>
 
             <button
               onClick={handleToggleBgm}
-              className={`px-3 py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-xs font-semibold shadow-lg transition-all ${
+              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-[11px] sm:text-xs font-semibold shadow-lg transition-all ${
                 isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
               }`}
             >
@@ -689,11 +689,12 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
               <span className="hidden sm:inline">{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
             </button>
 
-            <div className="hidden sm:flex items-center gap-2 bg-black/85 border border-amber-900/70 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-xl">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <h3 className="text-amber-200 font-serif font-bold text-xs tracking-wider">
-                {zoneConfig?.chineseName || '天元'} {zoneConfig?.displayName || 'Benua Jianghu'}
-              </h3>
+            {/* Badge Lokasi Ringkas (Tanpa teks panjang 5000x5000) */}
+            <div className="flex items-center gap-1.5 bg-black/85 border border-amber-900/70 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md text-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="hidden md:inline text-amber-200 font-serif font-bold text-[11px] truncate max-w-[110px]">
+                {zoneConfig?.displayName?.replace(/\s*\([^)]*5000[^)]*\)/gi, '') || 'Benua Jianghu'}
+              </span>
               <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
             </div>
 
