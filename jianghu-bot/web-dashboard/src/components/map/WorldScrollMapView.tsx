@@ -18,6 +18,7 @@ interface WorldScrollMapViewProps {
 
 export default function WorldScrollMapView({ playerPos, onClose }: WorldScrollMapViewProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [landmarks, setLandmarks] = useState<Landmark[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +27,33 @@ export default function WorldScrollMapView({ playerPos, onClose }: WorldScrollMa
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [cameraStart, setCameraStart] = useState({ x: 0, y: 0 });
+
+  // Responsive Canvas Size (Never Stretches)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!container || !canvas) return;
+      const { clientWidth, clientHeight } = container;
+      if (clientWidth > 0 && clientHeight > 0) {
+        if (canvas.width !== clientWidth || canvas.height !== clientHeight) {
+          canvas.width = clientWidth;
+          canvas.height = clientHeight;
+        }
+      }
+    };
+
+    handleResize();
+    const ro = new ResizeObserver(() => handleResize());
+    ro.observe(container);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchMacroData = async () => {
@@ -245,9 +273,36 @@ export default function WorldScrollMapView({ playerPos, onClose }: WorldScrollMa
     }));
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      setIsDragging(true);
+      setDragStart({ x: t.clientX, y: t.clientY });
+      setCameraStart({ x: camera.x, y: camera.y });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (isDragging && e.touches.length === 1) {
+      const t = e.touches[0];
+      const SCALED_TILE = 54 * camera.zoom;
+      const dx = (t.clientX - dragStart.x) / SCALED_TILE;
+      const dy = (t.clientY - dragStart.y) / SCALED_TILE;
+      setCamera(prev => ({
+        ...prev,
+        x: Math.max(0, Math.min(5000, cameraStart.x - dx)),
+        y: Math.max(0, Math.min(5000, cameraStart.y - dy))
+      }));
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
   return (
     <div className="absolute inset-0 z-40 bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-300">
-      <div className="w-full h-full relative overflow-hidden bg-[#e3d5bd] shadow-[0_0_50px_rgba(0,0,0,0.8)] border-[6px] border-[#383329]">
+      <div ref={containerRef} className="w-full h-full relative overflow-hidden bg-[#e3d5bd] shadow-[0_0_50px_rgba(0,0,0,0.8)] border-[6px] border-[#383329]">
         
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center text-[#524530] font-serif font-bold text-xl">
@@ -260,14 +315,16 @@ export default function WorldScrollMapView({ playerPos, onClose }: WorldScrollMa
         ) : (
           <canvas
             ref={canvasRef}
-            width={1280}
-            height={720}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
             onWheel={handleWheel}
-            className="w-full h-full cursor-grab active:cursor-grabbing"
+            className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
           />
         )}
 

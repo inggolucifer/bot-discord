@@ -28,7 +28,6 @@ import SettlementPanoramaView from './SettlementPanoramaView';
 import ScenicCourtyardView from './ScenicCourtyardView';
 import WorldScrollMapView from './WorldScrollMapView';
 import BattleArena from '../battle/BattleArena';
-import VirtualDPad from '../ui/VirtualDPad';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
 import { useAuthStore } from '@/lib/store';
 import GridAssetDetailCard from './modals/GridAssetDetailCard';
@@ -39,6 +38,7 @@ import { LandPriceInfo } from '@/lib/landPrice';
 import GridSectHallModal from './modals/GridSectHallModal';
 import GridAmbushCombatModal from './modals/GridAmbushCombatModal';
 import GridTileInspectorCard from './GridTileInspectorCard';
+import LandscapeOrientationPrompt from '../ui/LandscapeOrientationPrompt';
 
 interface ZoneGridViewProps {
   zoneId: string;
@@ -669,14 +669,14 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
       <div className={`absolute inset-0 flex flex-col transition-all duration-500 ${interiorData ? 'blur-md pointer-events-none scale-105 opacity-60' : ''}`}>
         
         {/* HUD Top Bar */}
-        <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-center pointer-events-none">
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 right-2 sm:right-4 z-20 flex justify-between items-center pointer-events-none">
           <div className="flex items-center gap-2 pointer-events-auto flex-wrap">
             <button
               onClick={() => setShowMacroMap(true)}
               className="bg-black/80 hover:bg-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-xs font-serif font-bold shadow-lg transition-all"
             >
               <MapIcon className="w-4 h-4 text-amber-400" />
-              <span>Peta Benua</span>
+              <span className="hidden sm:inline">Peta Benua</span>
             </button>
 
             <button
@@ -686,7 +686,7 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
               }`}
             >
               <Music className="w-3.5 h-3.5" />
-              <span>{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
+              <span className="hidden sm:inline">{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
             </button>
 
             <div className="hidden sm:flex items-center gap-2 bg-black/85 border border-amber-900/70 px-3 py-1.5 rounded-lg backdrop-blur-md shadow-xl">
@@ -696,11 +696,12 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
               </h3>
               <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2 pointer-events-auto">
             <ThermalStatusBadge initialThermalData={thermalStatus} />
           </div>
+
+          {/* Sisi kanan dikosongkan agar Bar Stamina dari world/page.tsx tidak pernah tertimpa */}
+          <div />
         </div>
 
         {/* Floating Action Notice Alert */}
@@ -767,77 +768,64 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
       )}
 
       {/* Bottom HUD: Action Bar, Navigasi & Inspektur */}
-      <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-4 pr-20 md:pr-24 py-2.5 z-20 flex justify-between items-center backdrop-blur-md">
-        <div className="flex items-center gap-3 text-xs text-gray-300">
+      <div className="bg-[#0e121a]/95 border-t border-amber-900/40 px-2.5 sm:px-4 pr-16 sm:pr-24 py-1.5 sm:py-2.5 z-20 flex justify-between items-center backdrop-blur-md gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-300 min-w-0 overflow-hidden">
           {selectedTile ? (
-            <>
-              <span className="font-semibold text-amber-300 font-serif">
-                Tile ({selectedTile.tileX}, {selectedTile.tileY})
+            <div className="flex items-center gap-1.5 sm:gap-2 truncate">
+              <span className="font-semibold text-amber-300 font-serif whitespace-nowrap">
+                ({selectedTile.tileX}, {selectedTile.tileY})
               </span>
               <span className="text-gray-600">|</span>
-              <span className="text-gray-400">
-                Jarak: <strong className="text-gray-200">{distToSelected}</strong> tile
-                {pathSteps > 0 && ` (~${pathSteps} langkah)`}
+              <span className="text-gray-400 whitespace-nowrap">
+                {distToSelected} petak{pathSteps > 0 && ` (~${pathSteps} langkah)`}
               </span>
-              <span className="text-gray-600">|</span>
-              <span className="text-blue-300 font-medium">
+              <span className="text-gray-600 hidden sm:inline">|</span>
+              <span className="text-blue-300 font-medium hidden sm:inline truncate">
                 {selectedTile.regionName || 'Central Plains'}
               </span>
-              <span className="text-gray-600">|</span>
-              <span className={
+              <span className="text-gray-600 hidden md:inline">|</span>
+              <span className={`hidden md:inline font-medium ${
                 selectedTile.territoryType === 'danger_zone' ? 'text-red-400 font-bold' :
-                selectedTile.territoryType === 'monster_zone' ? 'text-orange-400 font-medium' :
-                selectedTile.territoryType === 'sect_territory' ? 'text-purple-400 font-medium' :
-                selectedTile.territoryType === 'locked_zone' ? 'text-gray-500 font-medium' :
-                'text-emerald-400 font-medium'
-              }>
-                {selectedTile.territoryType === 'danger_zone' ? 'Zona Bahaya' :
-                 selectedTile.territoryType === 'monster_zone' ? 'Zona Monster' :
-                 selectedTile.territoryType === 'sect_territory' ? 'Wilayah Sekte' :
-                 selectedTile.territoryType === 'locked_zone' ? 'Area Terlarang' :
+                selectedTile.territoryType === 'monster_zone' ? 'text-orange-400' :
+                selectedTile.territoryType === 'sect_territory' ? 'text-purple-400' :
+                selectedTile.territoryType === 'settlement' ? 'text-blue-400' :
+                'text-emerald-400'
+              }`}>
+                {selectedTile.territoryType === 'danger_zone' ? 'Bahaya' :
+                 selectedTile.territoryType === 'monster_zone' ? 'Monster' :
+                 selectedTile.territoryType === 'sect_territory' ? 'Sekte' :
                  selectedTile.territoryType === 'settlement' ? 'Pemukiman' :
                  'Alam Liar'}
               </span>
-              {selectedTile.dangerTier && (
-                <>
-                  <span className="text-gray-600">|</span>
-                  <span className="text-amber-500 font-medium text-[11px] px-1 bg-amber-900/30 rounded border border-amber-900/50">
-                    Tier {selectedTile.dangerTier}
-                  </span>
-                </>
-              )}
               {selectedTile.label && (
-                <>
-                  <span className="text-gray-600">|</span>
-                  <span className="text-gray-300 font-medium">
-                    {selectedTile.label}
-                  </span>
-                </>
+                <span className="text-amber-200/90 font-medium truncate hidden lg:inline">
+                  • {selectedTile.label}
+                </span>
               )}
-            </>
+            </div>
           ) : (
-            <span className="text-gray-400 italic">
-              Klik tile mana saja pada lukisan peta untuk menentukan arah langkah.
+            <span className="text-gray-400 italic text-[11px] sm:text-xs truncate">
+              Geser dan klik petak untuk inspeksi dan berjalan.
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Tombol Hentikan Perjalanan saat sedang jalan */}
           {isWalking && (
             <button
               onClick={handleStopWalking}
-              className="bg-red-950 hover:bg-red-900 text-red-200 px-3.5 py-1.5 rounded-lg border border-red-700 flex items-center gap-1.5 text-xs font-semibold shadow-lg transition-all animate-pulse"
+              className="bg-red-950 hover:bg-red-900 text-red-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-red-700 flex items-center gap-1 text-[11px] sm:text-xs font-semibold shadow-lg transition-all animate-pulse"
             >
-              <SquareX className="w-3.5 h-3.5" /> Hentikan Langkah
+              <SquareX className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Hentikan</span>
             </button>
           )}
 
-          {/* Tombol Masuk Kota (Gambar 4) jika berada di settlement */}
+          {/* Tombol Masuk Kota jika berada di settlement */}
           {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
             <button
               onClick={() => handleEnterSettlement(selectedTile.settlementName || 'XiTong City')}
-              className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-3.5 py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+              className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
             >
               <Building2 className="w-3.5 h-3.5 text-blue-300" />
               <span>Masuk {selectedTile.settlementName}</span>
@@ -848,10 +836,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
           {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
             <button
               onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
-              className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-3.5 py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+              className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Masuk Taman Paviliun</span>
+              <span>Masuk Paviliun</span>
             </button>
           )}
 
@@ -859,10 +847,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
           {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
             <button
               onClick={() => handleEnterBuilding(selectedTile)}
-              className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-3.5 py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+              className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
             >
               <DoorOpen className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Masuk {selectedTile.buildingName || 'Bangunan'}</span>
+              <span>Masuk Bangunan</span>
             </button>
           )}
 
@@ -1073,11 +1061,10 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         </div>
       )}
 
-      {/* Virtual D-Pad untuk Mobile */}
-      <VirtualDPad 
-        onDirection={handleDirectionalMove} 
-        disabled={isWalking || !!activeBattleId || !!interiorData || !!ambushModalData || !!assetDetailTile || !!sectModalTile || !!buildModalTile || !!expeditionModalTile} 
-      />
+      {/* Virtual D-Pad dihapus sesuai permintaan user agar layar mobile bersih & luas */}
+
+      {/* Peringatan & Rekomendasi Orientasi Lanskap Mobile */}
+      <LandscapeOrientationPrompt />
 
     </div>
   );

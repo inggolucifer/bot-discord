@@ -93,10 +93,10 @@ export default function Navbar() {
   return (
     <>
       <header className="bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex justify-between items-center">
+        <div className="container mx-auto px-3 sm:px-4 h-12 sm:h-14 lg:h-16 flex justify-between items-center">
 
           {/* Logo */}
-        <Link href="/" className="text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
+        <Link href="/" className="text-base sm:text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
           JIANGHU RP
         </Link>
 

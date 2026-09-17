@@ -126,7 +126,7 @@ export default function WorldMapView({ onSelectRegion, playerPos, currentLocatio
   };
 
   return (
-    <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-amber-900/60 shadow-2xl bg-[#0a0d14] select-none flex flex-col">
+    <div className="relative w-full h-full overflow-hidden border border-amber-900/60 shadow-2xl bg-[#0a0d14] select-none flex flex-col">
       {/* Top HUD Controls */}
       <div className="absolute top-4 left-4 right-4 z-30 flex justify-between items-center pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto">
