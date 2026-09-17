@@ -154,7 +154,7 @@ export default function SectPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title="Balai Sekte"
         description="Pusat informasi dan manajemen sekte Anda."

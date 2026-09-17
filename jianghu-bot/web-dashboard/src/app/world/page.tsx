@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
-import { Map, MapPin, Building, Activity, Navigation, Compass, ExternalLink, RefreshCw, Sun, Shield, User, MessageCircle, FileText, CheckCircle } from "lucide-react";
+import { Map, MapPin, Building, Activity, Navigation, Compass, ExternalLink, RefreshCw, Sun, Shield, User, MessageCircle, FileText, CheckCircle, Zap, BedDouble, Tent, ChevronDown, ChevronUp, X } from "lucide-react";
 import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
@@ -45,6 +45,10 @@ export function WorldPageContent() {
   const [activeTab, setActiveTab] = useState<'location' | 'npcs' | 'quests'>('location');
   const [questLog, setQuestLog] = useState<any[]>([]);
   const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
+
+  // UI Drawer & Rest Modal State
+  const [isRestModalOpen, setIsRestModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   // Map View State
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
@@ -263,165 +267,269 @@ export function WorldPageContent() {
 
       {/* Floating Status Bar (Stamina / Climate) - HIDDEN IN MACRO MAP */}
       {mapView !== 'world' && (
-      <div className="absolute top-20 right-6 z-0 w-80 space-y-4 pointer-events-none">
-        <div className="pointer-events-auto">
-        {error && <div className="bg-red-900/80 backdrop-blur-md border border-red-500/50 text-red-200 p-3 rounded-lg text-sm">{error}</div>}
-        {message && <div className="bg-green-900/80 backdrop-blur-md border border-green-500/50 text-green-200 p-3 rounded-lg text-sm">{message}</div>}
-
-
-      {/* Stamina & Rest Status */}
-      <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 mb-6">
-          <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-300">Stamina</span>
-              <span className="text-sm font-medium text-yellow-400">{Math.floor(currentStamina)} / {maxStamina}</span>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
-              <div className="bg-yellow-400 h-2.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100))}%` }}></div>
-          </div>
-
-          {restData && restData.status === "resting" ? (
-              <div className="bg-blue-900/30 border border-blue-800/50 rounded p-3 text-sm text-blue-200">
-                  <p className="mb-2">Sedang beristirahat ({restData.mode === "tent" ? "Tenda" : "Terbuka"}). Selesai: {new Date(restData.endsAt).toLocaleTimeString()}</p>
-                  <Button size="sm" variant="destructive" onClick={handleCancelRest}>Berhenti Istirahat</Button>
+        <div className="absolute top-4 right-4 z-40 flex flex-col items-end gap-2 pointer-events-none">
+          {/* Top-Right HUD Row */}
+          <div className="flex items-center gap-2 pointer-events-auto">
+            {/* Stamina Capsule */}
+            <div className="bg-[#0e131d]/90 backdrop-blur-md border border-amber-700/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] rounded-xl px-3.5 py-1.5 flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Stamina</span>
+                    <span className="text-xs font-bold text-amber-300 font-mono">
+                      {Math.floor(currentStamina)} / {maxStamina}
+                    </span>
+                  </div>
+                  <div className="w-20 sm:w-28 bg-gray-800/90 rounded-full h-1.5 overflow-hidden mt-0.5 border border-amber-900/30">
+                    <div
+                      className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.5)]"
+                      style={{ width: `${Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100))}%` }}
+                    />
+                  </div>
+                </div>
               </div>
-          ) : (
-              (!travelStatus || travelStatus.status !== "traveling") && (
-                 <div className="flex items-center gap-4">
-                     <input type="number" min="1" max="8" value={restHours} onChange={(e) => setRestHours(parseInt(e.target.value) || 1)} className="w-16 bg-gray-900 border border-gray-700 text-white rounded p-1 text-center" />
-                     <span className="text-sm text-gray-400">Jam</span>
-                     <Button size="sm" variant="outline" onClick={() => handleStartRest("open")}>Istirahat Terbuka</Button>
-                     <Button size="sm" variant="outline" onClick={() => handleStartRest("tent")} className="text-yellow-500 border-yellow-700/50 hover:bg-yellow-900/20">Gunakan Tenda</Button>
-                 </div>
-              )
-          )}
-      </div>
 
-      {/* Travel Status Banner */}
-      {travelStatus && travelStatus.status === 'traveling' && (
-        <div className="bg-[#1a202c]/80 border border-blue-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
-          <h2 className="text-xl font-serif font-bold text-blue-400 mb-2">Sedang Dalam Perjalanan</h2>
-          <div className="text-gray-300 space-y-1">
-            <p><span className="text-gray-500">Tujuan:</span> {travelStatus.toLocation.settlementName}</p>
-            {travelStatus.exhausted && <p className="text-yellow-400 mb-2 mt-2">Pemain kelelahan! Waktu tempuh dan peluang diserang bertambah.</p>}
-            <p><span className="text-gray-500">Tiba:</span> {new Date(travelStatus.arrivalTime).toLocaleString()}</p>
-          </div>
-        </div>
-      )}
-
-      {travelStatus && travelStatus.status === 'ambushed' && (
-        <div className="bg-red-950/80 border border-red-500/50 rounded-xl p-6 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-          <h2 className="text-xl font-serif font-bold text-red-400 mb-2">Penyergapan Bandit!</h2>
-          <p className="text-red-200 mb-4">{travelStatus.ambushResult?.message}</p>
-
-          <div className="flex gap-4">
-            <button
-              onClick={async () => {
-                try {
-                  const res = await api.post('/world/travel/resolve-ambush', { choice: 'fight' });
-                  setTravelStatus(res.data.travel);
-        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
-                  if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
-                  fetchData(); // Refresh to update currency / quest log
-                } catch (e: any) {
-                  setError(e.response?.data?.error || 'Gagal meresolve ambush.');
-                }
-              }}
-              className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-6 rounded transition-colors"
-            >
-              Melawan (Risiko Tinggi)
-            </button>
-            <button
-              onClick={async () => {
-                try {
-                  const res = await api.post('/world/travel/resolve-ambush', { choice: 'surrender' });
-                  setTravelStatus(res.data.travel);
-        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
-                  if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
-                  fetchData(); // Refresh to update currency
-                } catch (e: any) {
-                  setError(e.response?.data?.error || 'Gagal meresolve ambush.');
-                }
-              }}
-              className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold py-2 px-6 rounded transition-colors"
-            >
-              Menyerah (Bayar Upeti)
-            </button>
-          </div>
-        </div>
-      )}
-
-      {travelStatus && travelStatus.status === 'arrived' && (
-        <div className="bg-[#1a202c]/80 border border-green-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
-          <h2 className="text-xl font-serif font-bold text-green-400 mb-2">Tiba di Tujuan!</h2>
-          <p className="text-gray-300 mb-4">Kamu telah tiba di {travelStatus.toLocation.settlementName}.</p>
-
-          {travelStatus.ambushResult?.happened && (
-            <div className="mb-4 p-4 bg-gray-800/80 rounded-lg border border-gray-600/50">
-               <p className="text-gray-300 font-bold mb-1">Hasil Penyergapan:</p>
-               <p className="text-gray-400">{travelStatus.ambushResult.message}</p>
+              {restData && restData.status === 'resting' ? (
+                <div className="flex items-center gap-2 pl-2 border-l border-gray-700/60">
+                  <span className="text-[11px] text-blue-300 font-medium animate-pulse">
+                    Istirahat ({restData.mode === 'tent' ? 'Tenda' : 'Terbuka'})
+                  </span>
+                  <button
+                    onClick={handleCancelRest}
+                    className="bg-red-950/90 hover:bg-red-900 text-red-200 text-[10px] px-2 py-0.5 rounded border border-red-700/60 font-semibold transition-colors"
+                  >
+                    Bangun
+                  </button>
+                </div>
+              ) : (
+                (!travelStatus || travelStatus.status !== 'traveling') && (
+                  <button
+                    onClick={() => setIsRestModalOpen(true)}
+                    className="bg-gradient-to-r from-amber-950 to-amber-900 hover:from-amber-900 hover:to-amber-800 text-amber-200 text-xs px-2.5 py-1 rounded-lg border border-amber-700/60 font-serif font-bold transition-all shadow-md flex items-center gap-1.5"
+                  >
+                    <BedDouble className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Istirahat</span>
+                  </button>
+                )
+              )}
             </div>
-          )}
+
+            {/* Climate Pill */}
+            {climateData && (
+              <div className="hidden sm:flex items-center gap-1.5 bg-[#0e131d]/90 backdrop-blur-md border border-gray-800 rounded-xl px-3 py-1.5 shadow-xl text-xs">
+                <span className="text-sm">{climateData.inComfort ? '🌤️' : '⚠️'}</span>
+                <span className={`font-bold font-mono ${climateData.inComfort ? 'text-green-400' : 'text-orange-400'}`}>
+                  {climateData.effectiveTemperature}°C
+                </span>
+                <span className="text-gray-400 text-[10px]">({climateData.weather})</span>
+              </div>
+            )}
+          </div>
+
+          {/* Notifications / Alerts beneath HUD */}
+          <div className="w-80 space-y-2 pointer-events-auto">
+            {error && (
+              <div className="bg-red-950/90 backdrop-blur-md border border-red-500/50 text-red-200 p-2.5 rounded-lg text-xs shadow-xl animate-in fade-in flex items-center justify-between">
+                <span>{error}</span>
+                <button onClick={() => setError(null)} className="text-red-400 hover:text-white ml-2"><X className="w-3.5 h-3.5"/></button>
+              </div>
+            )}
+            {message && (
+              <div className="bg-emerald-950/90 backdrop-blur-md border border-emerald-500/50 text-emerald-200 p-2.5 rounded-lg text-xs shadow-xl animate-in fade-in flex items-center justify-between">
+                <span>{message}</span>
+                <button onClick={() => setMessage(null)} className="text-emerald-400 hover:text-white ml-2"><X className="w-3.5 h-3.5"/></button>
+              </div>
+            )}
+
+            {/* Travel Status Banner */}
+            {travelStatus && travelStatus.status === 'traveling' && (
+              <div className="bg-[#1a202c]/90 border border-blue-500/40 rounded-xl p-4 shadow-xl backdrop-blur-md text-xs">
+                <h2 className="text-sm font-serif font-bold text-blue-400 mb-1.5">Sedang Dalam Perjalanan</h2>
+                <div className="text-gray-300 space-y-1">
+                  <p><span className="text-gray-500">Tujuan:</span> {travelStatus.toLocation.settlementName}</p>
+                  {travelStatus.exhausted && <p className="text-yellow-400 font-semibold">Pemain kelelahan! Waktu tempuh bertambah.</p>}
+                  <p><span className="text-gray-500">Tiba:</span> {new Date(travelStatus.arrivalTime).toLocaleTimeString()}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Ambush Banner */}
+            {travelStatus && travelStatus.status === 'ambushed' && (
+              <div className="bg-red-950/90 border border-red-500/60 rounded-xl p-4 shadow-xl backdrop-blur-md text-xs">
+                <h2 className="text-sm font-serif font-bold text-red-400 mb-1.5">Penyergapan Bandit!</h2>
+                <p className="text-red-200 mb-3">{travelStatus.ambushResult?.message}</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await api.post('/world/travel/resolve-ambush', { choice: 'fight' });
+                        setTravelStatus(res.data.travel);
+                        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+                        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+                        if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
+                        fetchData();
+                      } catch (e: any) {
+                        setError(e.response?.data?.error || 'Gagal meresolve ambush.');
+                      }
+                    }}
+                    className="flex-1 bg-red-800 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded text-xs transition-colors"
+                  >
+                    Melawan
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await api.post('/world/travel/resolve-ambush', { choice: 'surrender' });
+                        setTravelStatus(res.data.travel);
+                        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
+                        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+                        if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
+                        fetchData();
+                      } catch (e: any) {
+                        setError(e.response?.data?.error || 'Gagal meresolve ambush.');
+                      }
+                    }}
+                    className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-1.5 px-3 rounded text-xs transition-colors border border-gray-700"
+                  >
+                    Menyerah
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {travelStatus && travelStatus.status === 'arrived' && (
+              <div className="bg-[#1a202c]/90 border border-green-500/40 rounded-xl p-4 shadow-xl backdrop-blur-md text-xs">
+                <h2 className="text-sm font-serif font-bold text-green-400 mb-1">Tiba di Tujuan!</h2>
+                <p className="text-gray-300 mb-2">Tiba di {travelStatus.toLocation.settlementName}.</p>
+                <button
+                  onClick={() => setTravelStatus(null)}
+                  className="bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1 rounded text-xs transition-colors border border-gray-700"
+                >
+                  Tutup Laporan
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Rest Modal */}
+      {isRestModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-[#0e131d] border border-amber-600/70 rounded-2xl p-5 max-w-sm w-full shadow-2xl space-y-4">
+            <div className="flex justify-between items-center border-b border-amber-900/50 pb-3">
+              <h3 className="text-base font-serif font-bold text-amber-200 flex items-center gap-2">
+                <BedDouble className="w-4 h-4 text-amber-400" />
+                Meditasi & Pemulihan Stamina
+              </h3>
+              <button
+                onClick={() => setIsRestModalOpen(false)}
+                className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-800 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-300 leading-relaxed">
+              Pilih durasi istirahat untuk memulihkan stamina Anda. Menggunakan tenda memberikan regenerasi stamina ekstra.
+            </p>
+
+            <div className="space-y-2">
+              <label className="text-xs text-gray-400 font-medium flex justify-between">
+                <span>Durasi Istirahat:</span>
+                <span className="text-amber-300 font-bold font-mono">{restHours} Jam</span>
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="8"
+                value={restHours}
+                onChange={(e) => setRestHours(parseInt(e.target.value) || 1)}
+                className="w-full accent-amber-500 cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-gray-500 font-mono">
+                <span>1 Jam</span>
+                <span>4 Jam</span>
+                <span>8 Jam</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  handleStartRest("open");
+                  setIsRestModalOpen(false);
+                }}
+                className="border-gray-700 hover:bg-gray-800 text-gray-200 text-xs py-2"
+              >
+                Istirahat Terbuka
+              </Button>
+              <Button
+                onClick={() => {
+                  handleStartRest("tent");
+                  setIsRestModalOpen(false);
+                }}
+                className="bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white text-xs py-2 border border-amber-500 shadow-lg flex items-center justify-center gap-1.5"
+              >
+                <Tent className="w-3.5 h-3.5" />
+                Gunakan Tenda
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Panel (Tabs & Content) - Collapsible Drawer */}
+      {mapView !== 'world' && (
+      <div className="absolute bottom-14 left-4 z-30 w-80 sm:w-96 max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
+        
+        {/* Collapsible Drawer Header */}
+        <div className="pointer-events-auto mb-1.5 flex items-center justify-between bg-[#0e131d]/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-amber-900/60 shadow-xl">
           <button
-            onClick={() => setTravelStatus(null)}
-            className="bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-lg transition-colors border border-gray-700"
+            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+            className="flex items-center gap-2 text-xs font-serif font-bold text-amber-300 hover:text-amber-100 transition-colors w-full justify-between"
           >
-            Tutup Laporan
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <span>Warta & Orang Sekitar</span>
+            </span>
+            {isDrawerOpen ? (
+              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            ) : (
+              <ChevronUp className="w-3.5 h-3.5 text-amber-400" />
+            )}
           </button>
         </div>
-      )}
 
-      {/* Climate Banner */}
-      {climateData && !climateData.inComfort && (!travelStatus || travelStatus.status !== 'traveling') && (
-        <div className="bg-orange-900/50 border border-orange-500/50 text-orange-200 p-4 rounded-lg shadow-md flex items-center gap-4">
-           <div className="text-2xl">⚠️</div>
-           <div>
-              <p className="font-bold">Peringatan Suhu Ekstrem: {climateData.effectiveTemperature}°C</p>
-              <p className="text-sm opacity-90">{climateData.message}</p>
-              {climateData.penalties && (
-                  <p className="text-sm font-semibold mt-1">
-                      Efek: Qi Regenerasi -{Math.round((1 - climateData.penalties.qiRegenMultiplier) * 100)}%
-                      {climateData.penalties.combatStatMultiplier < 1 && `, Stat Combat -${Math.round((1 - climateData.penalties.combatStatMultiplier) * 100)}%`}
-                  </p>
-              )}
-           </div>
-        </div>
-      )}
+        {isDrawerOpen && (
+        <div className="flex flex-col flex-1 min-h-0 pointer-events-auto animate-in fade-in slide-in-from-bottom-2 duration-200">
+          {/* Tabs */}
+          {!travelStatus || travelStatus.status !== 'traveling' ? (
+            <div className="flex gap-1.5 mb-2 bg-[#0e131d]/95 backdrop-blur-md p-1.5 rounded-xl border border-gray-800 shadow-xl">
+                <button
+                    onClick={() => setActiveTab('location')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'location' ? 'bg-amber-900/40 text-amber-200 border border-amber-600/50 shadow-inner' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60'}`}
+                >
+                    <MapPin className="w-3.5 h-3.5" /> Lokasi
+                </button>
+                <button
+                    onClick={() => setActiveTab('npcs')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'npcs' ? 'bg-amber-900/40 text-amber-200 border border-amber-600/50 shadow-inner' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60'}`}
+                >
+                    <User className="w-3.5 h-3.5" /> NPC
+                </button>
+                <button
+                    onClick={() => setActiveTab('quests')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'quests' ? 'bg-amber-900/40 text-amber-200 border border-amber-600/50 shadow-inner' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60'}`}
+                >
+                    <FileText className="w-3.5 h-3.5" /> Quest
+                </button>
+            </div>
+          ) : null}
 
-        </div>
-      </div>
-      )}
-
-      {/* Floating Panel (Tabs & Content) */}
-      {mapView !== 'world' && (
-      <div className="absolute bottom-6 left-6 z-10 w-[400px] max-h-[80vh] flex flex-col pointer-events-none">
-        
-        {/* Tabs */}
-        {!travelStatus || travelStatus.status !== 'traveling' ? (
-          <div className="flex gap-2 mb-2 pointer-events-auto bg-[#0e131d]/90 backdrop-blur-md p-2 rounded-xl border border-gray-800 shadow-xl">
-              <button
-                  onClick={() => setActiveTab('location')}
-                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'location' ? 'bg-blue-900/50 text-blue-300 border border-blue-700/50' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}`}
-              >
-                  <MapPin className="w-4 h-4" /> Lokasi
-              </button>
-              <button
-                  onClick={() => setActiveTab('npcs')}
-                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'npcs' ? 'bg-blue-900/50 text-blue-300 border border-blue-700/50' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}`}
-              >
-                  <User className="w-4 h-4" /> NPC
-              </button>
-              <button
-                  onClick={() => setActiveTab('quests')}
-                  className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${activeTab === 'quests' ? 'bg-blue-900/50 text-blue-300 border border-blue-700/50' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'}`}
-              >
-                  <FileText className="w-4 h-4" /> Quest
-              </button>
-          </div>
-        ) : null}
-
-        <div className="flex-1 overflow-y-auto custom-scrollbar pointer-events-auto">
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
           {(!travelStatus || travelStatus.status !== 'traveling') && activeTab === 'location' && (
             <div className="w-full">
               <div className="bg-[#1a1f2e]/90 border border-[#2a3142] rounded-xl p-5 shadow-xl backdrop-blur-md">
@@ -542,6 +650,8 @@ export function WorldPageContent() {
               </div>
           )}
         </div>
+        </div>
+        )}
       </div>
       )}
 

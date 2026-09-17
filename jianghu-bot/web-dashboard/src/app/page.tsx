@@ -18,14 +18,15 @@ export default function RootApp() {
          </Suspense>
       </div>
 
-      {/* Persistent UI Overlays (Floating Buttons) */}
-      <div className="absolute bottom-6 right-6 z-40 flex flex-col gap-3">
+      {/* Persistent UI Overlays (Floating Buttons) - Vertically stacked above GlobalChat */}
+      <div className="fixed bottom-20 right-4 z-30 flex flex-col gap-3">
          {activeModal !== 'dashboard' && (
            <button 
              onClick={() => setActiveModal('dashboard')}
-             className="bg-amber-700/90 hover:bg-amber-600 text-white p-4 rounded-full shadow-[0_0_20px_rgba(217,119,6,0.5)] transition-all border border-amber-500/50"
+             className="bg-[#121722]/90 hover:bg-amber-900/90 text-amber-300 p-3 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.6)] hover:scale-105 transition-all border border-amber-600/60 backdrop-blur-md flex items-center justify-center"
+             title="Profil Pendekar & Manajemen"
            >
-             <Compass size={24} />
+             <Compass size={22} className="animate-spin-slow" />
            </button>
          )}
       </div>

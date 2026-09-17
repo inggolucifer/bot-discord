@@ -90,20 +90,26 @@ export default function WorkerPage() {
       }
   };
 
-  if (!user) return null;
-
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title="Papan Pekerja"
         description="Bursa kontrak pekerja bayaran Jianghu."
         action={
-          <Button variant="outline" onClick={fetchWorkersAndAssets} disabled={loading}>
+          <Button variant="outline" onClick={fetchWorkersAndAssets} disabled={loading} className="border-[#444]">
             {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
             Refresh Papan
           </Button>
         }
       />
+
+      {!user && (
+        <EmptyState
+          icon={<Pickaxe />}
+          title="Akses Terbatas"
+          description="Silakan login dengan akun Discord untuk menyewa atau mengontrak pekerja tambang dan perajin."
+        />
+      )}
 
       {error ? (
         <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-center text-red-400">

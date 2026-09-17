@@ -141,7 +141,7 @@ export default function PetPage() {
   const filteredPets = pets.filter(pet => activeRank === 'all' || (pet.petId.rank || 'common').toLowerCase() === activeRank.toLowerCase());
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 px-4 sm:px-0">
+    <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 py-8">
 
       <PageHeader
         title="Pet Spiritual"
