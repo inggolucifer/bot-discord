@@ -112,22 +112,62 @@ d:\gitub\bot-discord\
   3. **Syarat Afiliasi Sekte (`requiredSectId`)**: Manual esoteris sekte hanya dapat dipelajari oleh murid sah sekte tersebut dengan pangkat yang mencukupi.
   4. **Progres Pemahaman**: Dimulai dari Level 0 dan ditingkatkan bertahap melalui meditasi pemahaman waktu nyata (*timeToComprehendHours*).
 
-### 3.7. Monster Spasial Grid & Sistem Pertarungan Turn-Based Interaktif (Battle Arena)
+### 3.7. Monster Spasial Grid & Sistem Pertarungan Turn-Based Interaktif (Battle Arena V2)
 - **Penempatan Spasial**: Monster ditempatkan secara eksplisit pada petak koordinat tertentu (`ZoneTile.spawnedMonster`), contoh petak uji coba **(2452, 2481)** untuk *Serigala Roh Darah* (`wolf_azure`).
 - **Zero Clutter Policy**: Petak kosong tanpa monster **DILARANG** menampilkan icon monster `👹`. Hanya petak dengan monster aktif yang merender aura crimson merah dan icon siluman.
 - **Pemicu & Isolasi Modal Penuh**: Klik tombol `[⚔️ Tantang]` memicu `/api/battle/start` (targetType `'monster'`), membuka modal `BattleArena` berisolasi penuh (`fixed inset-0 z-[99999] w-screen h-screen bg-[#070a14]`) yang menutupi seluruh widget HUD/drawer di latar belakang tanpa tumpang tindih.
+- **Antarmuka Gaya Pokemon / RPG Maker (Fight & Run)**:
+  - **Mode COMMAND (Pilihan Utama)**: Menampilkan 2 tombol besar bergaya wuxia: `[⚔️ BERTARUNG (FIGHT)]` dan `[🏃 KABUR (RUN)]`.
+  - **Mode SKILLS (Pilihan Jurus)**: Terbuka saat `BERTARUNG` diklik, merender bar jurus dalam grid responsif yang terisolasi rapi di dalam container tanpa tembus ke samping layar, dilengkapi tombol `[← Kembali ke Menu Aksi]`.
+- **Dukungan Pertarungan 1-8 Musuh & Tim Sekutu (Allies)**:
+  - Menampung hingga 8 musuh: maksimal 4 musuh aktif di medan tempur (`session.enemies`), sisanya mengintai di antrian cadangan (`session.enemyQueue`).
+  - Ketika salah satu musuh aktif gugur, musuh terdepan di antrian langsung dipromosikan melangkah maju ke medan tempur.
+  - Pemain dapat membawa hingga 3 sekutu pendamping (Pet / NPC) yang secara otomatis melancarkan serangan bantuan setiap putaran.
 - **Immediate Round-Trip Turn Architecture (Anti-Lag & Anti-Cheat)**:
-  - Eksekusi aksi `/api/battle/action/:battleId` menyelesaikan ronde penuh dalam 1 request HTTP (<100ms): Serangan Pemain $\to$ Jika musuh hidup $\to$ Balasan AI Musuh Seketika $\to$ Tik Cooldown & Regenerasi Qi (+10) $\to$ Giliran Pemain Langsung Dipulihkan (`turnQueue = [playerEntity.entityId]`).
+  - Eksekusi aksi `/api/battle/action/:battleId` menyelesaikan ronde penuh dalam 1 request HTTP (<100ms): Serangan Pemain $\to$ Bantuan Sekutu $\to$ Promosi Antrian Musuh $\to$ Balasan AI Musuh $\to$ DoT Status Tick $\to$ Regenerasi Qi/Stance $\to$ Giliran Pemain Langsung Dipulihkan (`turnQueue = [playerEntity.entityId]`).
   - Mengeliminasi jeda polling 1000ms dan error palsu `"Belum giliranmu untuk menyerang!"`.
-- **Pool Jurus Bela Diri & Pertahanan**:
-  1. `basic_attack`: Pukulan Dasar (Power 12, 0 Qi, 0 CD, regenerasi +5 Qi).
-  2. `qi_strike`: Pukulan Hawa Murni (Power 25, 15 Qi, 1 CD).
-  3. `iron_wall`: Kuda-Kuda Besi / Tangkis (0 Qi, 2 CD, memulihkan +35 Stance & +20 Qi, menahan 50% damage serangan lawan ronde ini).
-  4. `qi_overload`: Ledakan Intisari Qi / Ultimate (Power 50, 35 Qi, 3 CD, mengabaikan 50% defense lawan).
-  5. Seluruh Kitab Esoteris yang telah dipelajari pemain dari `player.manuals` otomatis terdaftar ke bar jurus pertempuran.
-- **Stance Break & Kalkulasi Server Authoritative**:
-  - Musuh dengan Stance 0 menerima status `BREAK` (+50% bonus damage).
-  - Seluruh rumus damage, RNG kritikal, dan perolehan hadiah (EXP & Perak) dihitung dan disimpan secara deterministik di server backend.
+- **Sistem Status Efek (Buff & Debuff)**:
+  - `poison`: Mengurangi HP korban setiap akhir ronde (badge `☠️`).
+  - `stun`: Melumpuhkan target sehingga melewatkan gilirannya pada ronde terkait (badge `⚡`).
+  - `defense_up`: Menahan 50% damage serangan lawan ronde ini (badge `🛡️`).
+- **Sistem Kematian & Masa Pemulihan Dantian 4 Jam (Death Recovery)**:
+  - Jika HP pemain mencapai 0, karakter mengalami luka fatal (`status: 'lost'`).
+  - Terkena sanksi pemulihan dantian selama **4 jam diam di tempat** (`player.deathRecoveryUntil = Date.now() + 4 * 3600 * 1000`).
+  - Selama masa ini, pemain dilarang memulai pertempuran baru dan disajikan timer hitung mundur pemulihan secara real-time.
+- **Penghapusan Monster yang Dikalahkan (Defeated Monster Removal)**:
+  - Monster yang dikalahkan disimpan ke dalam koleksi database `DefeatedMonsterTile` dengan jadwal respawn (default 1 jam).
+  - Endpoint peta `/api/world/tiles` menyaring dan menghapus monster dari petak tersebut sehingga tidak muncul lagi sampai masa respawn selesai.
+
+### 3.8. Kategori Senjata & Disiplin KungFu (Weapon Categories & Discipline Map)
+Setiap senjata di database `Item` (kategori `'weapon'`) dipetakan ke disiplin beladiri (`player.kungfuSkills`) menggunakan fungsi `resolveWeaponDiscipline(item)` di `utils/kungfuMastery.js`. Pemetaan ini menentukan nama aksi, ikon, elemen, dan efek pasif basic attack di medan tempur.
+
+#### Tabel Pemetaan Senjata & Basic Attack Adaptif
+
+| Disiplin KungFu | Senjata yang Di-equip | Nama Aksi Battle | Ikon | Elemen | Bonus Unik |
+|---|---|---|---|---|---|
+| `sword` | Pedang, Jiandao | **Tebasan Pedang** | 🗡️ | Logam (*Metal*) | +5% Crit Rate |
+| `saber` | Golok, Katana, Dao | **Tebas Golok** | ⚔️ | Logam (*Metal*) | +25% Stance Damage |
+| `staff` | Tongkat, Tombak, Gada | **Sapuan Senjata** | 🥢 | Tanah (*Earth*) | **AoE ke SEMUA musuh aktif** |
+| `fist` | Sarung Tangan, Cakar | **Pukulan Telak** | 👊 | Netral (*Physical*) | Pemulihan +5 Qi saat mendarat |
+| `hiddenWeapon` | Jarum Racun, Shuriken | **Lemparan Rahasia** | 🎯 | Netral (*Physical*) | 15% Peluang Racun (*Poison*) |
+| `finger` | Totokan Jari (Unarmed) | **Totokan Meridian** | 👆 | Netral (*Physical*) | 20% Peluang Lumpuh (*Stun*) 1 Ronde |
+| `fist` (unarmed) | Tangan Kosong | **Tinju Tangan Kosong** | 👊 | Netral (*Physical*) | Pemulihan +5 Qi saat mendarat |
+
+#### Aturan Disiplin Non-Tempur
+Disiplin beladiri non-senjata langsung (`melody`, `healing`, `wineArt`, `qimen`, `special`, `core`, `stealing`, `forging`) menggunakan basic attack fallback **Tinju Tangan Kosong** (`fist`).
+
+#### Formula Kekuatan Basic Attack Adaptif
+$$\text{Power} = 10 + \lfloor\text{baseAtk}_{\text{weapon}} \times 0.3\rfloor + \lfloor\text{Level}_{\text{kungfu}} \times 0.1\rfloor$$
+- Memastikan efektivitas serangan dasar bertumbuh seiring ketajaman senjata dan kemahiran kultivator.
+
+#### Kebijakan Slot Skill di Battle Arena
+```
+Slot 1 : [WAJIB] Basic Attack Adaptif (Tergantung senjata yang di-equip)
+Slot 2+: HANYA jurus manual teknik yang telah dipelajari pemain (player.manuals)
+```
+- Seluruh jurus bawaan hardcoded (`qi_strike`, `iron_wall`, `qi_overload`) telah **DIHAPUS SECARA TOTAL**.
+- Pemain yang belum mempelajari kitab manual teknik hanya memiliki **1 slot jurus** (Basic Attack Senjata / Tinju). Hal ini memberikan insentif gameplay yang kuat bagi pemain untuk berburu dan mempelajari kitab manual esoteris.
+- Perolehan kemenangan memberikan hadiah berlipat: EXP Kultivasi, Keping Perak, Peningkatan XP KungFu untuk senjata terkait, dan item loot material monster.
 
 ---
 

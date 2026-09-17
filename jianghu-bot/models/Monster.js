@@ -14,13 +14,32 @@ const monsterSchema = new mongoose.Schema({
   name: { type: String, required: true },
   regionSlug: { type: String, required: true },
   tier: { type: Number, default: 1, min: 1, max: 9 },
+  tierSize: { type: String, enum: ['small', 'medium', 'large', 'boss'], default: 'small' },
+  element: { type: String, enum: ['fire', 'water', 'wood', 'metal', 'earth', 'lightning', 'dark', 'light', 'neutral'], default: 'neutral' },
   minRealmIndex: { type: Number, default: 0 },
+  baseExp: { type: Number, default: 20 },
+  baseKungfuExp: {
+    discipline: { type: String, default: 'fist' },
+    amount: { type: Number, default: 10 }
+  },
   statBlock: {
     hp: { type: Number, default: 100 },
     atk: { type: Number, default: 10 },
     def: { type: Number, default: 5 },
     spd: { type: Number, default: 5 }
   },
+  skills: [{
+    skillId: { type: String, default: 'basic_attack' },
+    name: { type: String, default: 'Serangan Liar' },
+    description: { type: String, default: '' },
+    type: { type: String, enum: ['attack', 'heal', 'buff', 'debuff', 'defend'], default: 'attack' },
+    power: { type: Number, default: 12 },
+    qiCost: { type: Number, default: 0 },
+    cooldown: { type: Number, default: 0 },
+    element: { type: String, default: 'neutral' },
+    debuffChance: { type: Number, default: 0 },
+    debuffType: { type: String, default: null }
+  }],
   dropTable: [dropTableSchema],
   currencyDrop: {
     copperMin: { type: Number, default: 0 },

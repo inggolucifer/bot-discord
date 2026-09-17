@@ -927,17 +927,26 @@ export default function ZoneGridView({
             onTalkToNpc={(npc) => setTalkingNpc(npc)}
             onChallengeMonster={async (monsterKey) => {
               try {
+                const tileKey = selectedTile ? `${selectedTile.tileX},${selectedTile.tileY}` : undefined;
                 const res = await api.post('/battle/start', {
                   targetId: monsterKey,
                   targetType: 'monster',
                   zoneId: activeZoneId,
+                  tileKey,
                   monsterData: selectedTile?.spawnedMonster
                 });
                 if (res.data?.success && res.data.battleId) {
                   setActiveBattleId(res.data.battleId);
                 }
               } catch (err: any) {
-                alert(err.response?.data?.error || 'Gagal memulai pertempuran');
+                if (err.response?.data?.code === 'DEATH_RECOVERY') {
+                  const remMs = err.response.data.remainingMs || 0;
+                  const hours = Math.floor(remMs / 3600000);
+                  const mins = Math.floor((remMs % 3600000) / 60000);
+                  alert(`💀 Dantian Terluka Parah!\nKamu sedang dalam masa pemulihan (Sisa: ${hours} jam ${mins} menit) setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.\nIstirahatkan dantianmu sebelum bertarung kembali!`);
+                } else {
+                  alert(err.response?.data?.error || 'Gagal memulai pertempuran');
+                }
               }
             }}
             onPurchaseLand={handlePurchaseLand}
@@ -1270,6 +1279,14 @@ export default function ZoneGridView({
                      setActiveBattleId(null);
                      if (result === 'won') {
                          showMessage(`🏆 Menang! Mendapatkan +${rewards?.exp || 0} EXP dan +${rewards?.silver || 0} Perak`);
+                         if (selectedTile) {
+                             setSelectedTile((prev: any) => prev ? { ...prev, spawnedMonster: undefined, label: 'Bekas Sarang (Kosong)' } : null);
+                             setTiles((prev: any[]) => prev.map((t: any) => 
+                                 (t.tileX === selectedTile.tileX && t.tileY === selectedTile.tileY) 
+                                     ? { ...t, spawnedMonster: undefined, label: 'Bekas Sarang (Kosong)' } 
+                                     : t
+                             ));
+                         }
                      } else if (result === 'fled') {
                          showMessage(`🏃 Berhasil meloloskan diri dari pertempuran.`);
                      } else {

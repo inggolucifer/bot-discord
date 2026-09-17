@@ -6,6 +6,10 @@ const battleEntitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   level: { type: Number, default: 1 },
   imageUrl: { type: String, default: null },
+  element: { type: String, default: 'neutral' },
+  tierSize: { type: String, enum: ['small', 'medium', 'large', 'boss'], default: 'small' },
+  isAlly: { type: Boolean, default: false },
+  allyType: { type: String, enum: ['npc', 'pet', null], default: null },
   
   // Stats
   hp: { type: Number, required: true },
@@ -30,15 +34,19 @@ const battleEntitySchema = new mongoose.Schema({
   // Status Effects
   buffs: [{
     name: String,
-    type: { type: String, enum: ['attack_up', 'defense_up', 'speed_up', 'regen', 'shield'] },
+    type: { type: String, default: 'defense_up' },
     value: Number,
-    duration: Number // in ticks/turns
+    duration: Number, // in turns
+    icon: { type: String, default: '🛡️' },
+    description: { type: String, default: '' }
   }],
   debuffs: [{
     name: String,
-    type: { type: String, enum: ['poison', 'burn', 'stun', 'defense_down', 'speed_down', 'stance_break'] },
+    type: { type: String, default: 'poison' },
     value: Number,
-    duration: Number
+    duration: Number, // in turns
+    icon: { type: String, default: '☠️' },
+    description: { type: String, default: '' }
   }],
   
   // Skills
@@ -46,11 +54,21 @@ const battleEntitySchema = new mongoose.Schema({
     skillId: String,
     name: String,
     description: String,
-    type: { type: String, enum: ['attack', 'heal', 'buff', 'debuff', 'ultimate', 'defend'] },
-    power: Number,
-    qiCost: Number,
-    cooldown: Number,
-    currentCooldown: { type: Number, default: 0 }
+    type: { type: String, enum: ['attack', 'heal', 'buff', 'debuff', 'ultimate', 'defend'], default: 'attack' },
+    icon: { type: String, default: '⚔️' },
+    power: { type: Number, default: 10 },
+    qiCost: { type: Number, default: 0 },
+    cooldown: { type: Number, default: 0 },
+    currentCooldown: { type: Number, default: 0 },
+    element: { type: String, default: 'neutral' },
+    critBonus: { type: Number, default: 0 },
+    stanceDmgMult: { type: Number, default: 1.0 },
+    aoeAll: { type: Boolean, default: false },
+    qiRegen: { type: Number, default: 0 },
+    debuffChance: { type: Number, default: 0 },
+    debuffType: { type: String, default: null },
+    isBasicAttack: { type: Boolean, default: false },
+    kungfuDiscipline: { type: String, default: 'fist' }
   }],
   
   isDead: { type: Boolean, default: false }
@@ -67,8 +85,18 @@ const battleSessionSchema = new mongoose.Schema({
   
   // Combatants
   player: { type: battleEntitySchema, required: true },
-  enemies: [battleEntitySchema],
+  allies: [battleEntitySchema],
+  enemies: [battleEntitySchema], // active enemies in field (up to maxActiveEnemies)
+  enemyQueue: [battleEntitySchema], // reserve enemies ready to fill in when an active enemy dies
   
+  battleConfig: {
+    maxActiveEnemies: { type: Number, default: 4 },
+    isBossMode: { type: Boolean, default: false },
+    eventContext: { type: String, default: null },
+    tileKey: { type: String, default: null },
+    zoneId: { type: String, default: null }
+  },
+
   // Turn/Tick Management
   currentTick: { type: Number, default: 0 },
   turnQueue: [String], // Array of entityIds ready to act
@@ -78,7 +106,7 @@ const battleSessionSchema = new mongoose.Schema({
     tick: Number,
     actor: String,
     target: String,
-    action: String, // 'attack', 'skill', 'flee', 'item_failed'
+    action: String, // 'attack', 'skill', 'flee', 'item_failed', 'effect', 'summon'
     skillName: String,
     damage: Number,
     critical: Boolean,
@@ -90,10 +118,19 @@ const battleSessionSchema = new mongoose.Schema({
   rewards: {
     exp: { type: Number, default: 0 },
     silver: { type: Number, default: 0 },
+    kungfuExp: [{
+      discipline: String,
+      amount: Number,
+      weaponName: String,
+      newLevel: Number,
+      levelUp: Boolean
+    }],
     items: [{
       itemId: String,
       name: String,
-      quantity: Number
+      quantity: Number,
+      rarity: { type: String, default: 'common' },
+      qualityMultiplier: { type: Number, default: 1.0 }
     }]
   },
   

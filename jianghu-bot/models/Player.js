@@ -220,6 +220,9 @@ const playerSchema = new mongoose.Schema({
   nickname: { type: String, default: null },
 
   currentHp: { type: Number, default: null },
+  deathRecoveryUntil: { type: Date, default: null },
+  lastKilledAt: { type: Date, default: null },
+  lastKilledByMonster: { type: String, default: null },
   currentStamina: { type: Number, default: null },
   rest: {
     status: { type: String, enum: ["idle", "resting"], default: "idle" },

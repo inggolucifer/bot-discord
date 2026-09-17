@@ -21,7 +21,37 @@ TypeScript compilation (`npx tsc --noEmit`) and blueprint integrity tests (`node
   3. **Syarat Afiliasi Sekte (`requiredSectId`)**: Manual esoteris sekte hanya dapat dipelajari oleh murid sah sekte tersebut dengan pangkat yang mencukupi.
   4. **Progres Pemahaman**: Dimulai dari Level 0 dan ditingkatkan bertahap melalui meditasi pemahaman waktu nyata (*timeToComprehendHours*).
 
-### 3.7. Monster Spasial Grid & Pemicu Pertarungan Turn-Based (Interactive Battle Arena)
+### 3.7. Monster Spasial Grid & Sistem Pertarungan Turn-Based Interaktif (Battle Arena V2)
 - **Penempatan Spasial**: Monster ditempatkan secara eksplisit pada petak koordinat tertentu (`ZoneTile.spawnedMonster`), contoh petak uji coba **(2452, 2481)** untuk *Serigala Roh Darah* (`wolf_azure`).
 - **Zero Clutter Policy**: Petak kosong tanpa monster **DILARANG** menampilkan icon monster `👹`. Hanya petak dengan monster aktif yang merender aura crimson merah dan icon siluman.
-- **Mekanisme Turn-Based**: Klik tombol `[⚔️ Tantang]` pada kartu inspektur petak (`GridTileInspectorCard`) memicu endpoint `/api/battle/start` (targetType `'monster'`), membuka modal `BattleArena` fullscreen dengan sistem ATB dinamis, penggunaan Qi, cooldown jurus, dan drop hadiah (EXP & Perak).
+- **Antarmuka Gaya Pokemon / RPG Maker (Fight & Run)**:
+  - **Mode COMMAND**: Pilihan utama `[⚔️ BERTARUNG]` dan `[🏃 KABUR]`.
+  - **Mode SKILLS**: Bar jurus rapi dalam grid terisolasi, tidak tembus ke samping layar.
+- **Dukungan 1-8 Musuh & Tim Sekutu (Allies)**:
+  - Max 4 musuh aktif di medan tempur (`session.enemies`), sisa di antrian cadangan (`session.enemyQueue`).
+  - Ketika musuh aktif gugur, musuh di antrian otomatis melangkah maju.
+  - Pemain dapat membawa hingga 3 sekutu (Pet / NPC) untuk melancarkan serangan bantuan.
+- **Status Efek (Buff & Debuff)**:
+  - `poison`: Damage DoT tiap ronde (badge `☠️`).
+  - `stun`: Melumpuhkan target selama 1 ronde (badge `⚡`).
+  - `defense_up`: Menahan 50% damage serangan lawan (badge `🛡️`).
+- **Kematian & Pemulihan Dantian 4 Jam (Death Recovery)**:
+  - Karakter gugur terkena masa pemulihan dantian selama **4 jam diam di tempat**.
+- **Penghapusan Monster yang Dikalahkan (Defeated Monster Removal)**:
+  - Monster yang dikalahkan disimpan di `DefeatedMonsterTile` dan dihilangkan dari peta hingga waktu respawn selesai.
+
+### 3.8. Kategori Senjata & Disiplin KungFu (Weapon Categories & Discipline Map)
+Setiap senjata dipetakan ke disiplin beladiri (`player.kungfuSkills`) menggunakan `resolveWeaponDiscipline(item)`:
+- `sword`: **Tebasan Pedang** (🗡️, Logam, +5% Crit Rate)
+- `saber`: **Tebas Golok** (⚔️, Logam, +25% Stance Damage)
+- `staff`: **Sapuan Senjata** (🥢, Tanah, AoE ke semua musuh aktif)
+- `fist`: **Pukulan Telak** (👊, Netral, Regenerasi +5 Qi)
+- `hiddenWeapon`: **Lemparan Rahasia** (🎯, Netral, 15% Racun)
+- `finger`: **Totokan Meridian** (👆, Netral, 20% Lumpuh/Stun 1R)
+- `fist` (unarmed): **Tinju Tangan Kosong** (👊, Netral, Regenerasi +5 Qi)
+
+**Slot Jurus Battle Arena**:
+- Slot 1: [WAJIB] Basic Attack Adaptif (sesuai senjata / tangan kosong).
+- Slot 2+: HANYA manual teknik yang dipelajari pemain (`player.manuals`).
+- Jurus hardcoded lama (`qi_strike`, `iron_wall`, `qi_overload`) telah **DIHAPUS SECARA TOTAL**.
+

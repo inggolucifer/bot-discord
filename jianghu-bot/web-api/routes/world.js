@@ -1556,26 +1556,59 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 }
             }
 
+            // Cek Petak Monster yang Dikalahkan (DefeatedMonsterTile)
+            let defeatedKeys = new Set();
+            try {
+                const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+                const defeatedTiles = await DefeatedMonsterTile.find({
+                    guildId: player.guildId || 'global',
+                    zoneId,
+                    respawnAt: { $gt: new Date() }
+                }).lean();
+                defeatedKeys = new Set(defeatedTiles.map(d => d.tileKey));
+            } catch (dErr) {
+                console.warn('[WORLD-TILES] Error reading DefeatedMonsterTile:', dErr.message);
+            }
+
             // Injeksi & Reset Monster Uji Coba: Serigala Roh Darah di petak (2452, 2481)
             const monsterTileKey = '2452,2481';
             if (proceduralTileMap.has(monsterTileKey)) {
                 const currentTile = proceduralTileMap.get(monsterTileKey);
-                proceduralTileMap.set(monsterTileKey, {
-                    ...currentTile,
-                    tileType: 'poi',
-                    label: 'Sarang Serigala Roh Darah',
-                    spawnedMonster: {
-                        key: 'wolf_azure',
-                        name: 'Serigala Roh Darah',
-                        tier: 1,
-                        hp: 150,
-                        maxHp: 150,
-                        atk: 20,
-                        def: 8,
-                        spd: 10,
-                        imageUrl: null
+                if (!defeatedKeys.has(monsterTileKey)) {
+                    proceduralTileMap.set(monsterTileKey, {
+                        ...currentTile,
+                        tileType: 'poi',
+                        label: 'Sarang Serigala Roh Darah',
+                        spawnedMonster: {
+                            key: 'wolf_azure',
+                            name: 'Serigala Roh Darah',
+                            tier: 1,
+                            hp: 150,
+                            maxHp: 150,
+                            atk: 20,
+                            def: 8,
+                            spd: 10,
+                            imageUrl: null
+                        }
+                    });
+                } else {
+                    const cleanedTile = { ...currentTile };
+                    delete cleanedTile.spawnedMonster;
+                    cleanedTile.label = 'Bekas Sarang Serigala (Kosong)';
+                    proceduralTileMap.set(monsterTileKey, cleanedTile);
+                }
+            }
+
+            // Bersihkan monster dari petak lain yang sedang dalam masa respawn
+            for (const dKey of defeatedKeys) {
+                if (proceduralTileMap.has(dKey)) {
+                    const tile = proceduralTileMap.get(dKey);
+                    if (tile.spawnedMonster) {
+                        const cleaned = { ...tile };
+                        delete cleaned.spawnedMonster;
+                        proceduralTileMap.set(dKey, cleaned);
                     }
-                });
+                }
             }
 
             visibleTiles = Array.from(proceduralTileMap.values());
