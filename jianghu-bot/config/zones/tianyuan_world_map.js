@@ -7,8 +7,8 @@
 module.exports = {
   zoneId: 'tianyuan_world_map',
   regionSlug: 'central_plains',
-  displayName: 'Benua Jianghu',
-  chineseName: '天元大陆',
+  displayName: 'Jianghu',
+  chineseName: '天元',
   gridWidth: 5000,
   gridHeight: 5000,
   defaultTerrain: 'plains',

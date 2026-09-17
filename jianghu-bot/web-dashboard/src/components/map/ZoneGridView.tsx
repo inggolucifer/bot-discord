@@ -670,32 +670,32 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
         
         {/* HUD Top Bar */}
         <div className="absolute top-2 sm:top-4 left-2 sm:left-4 right-2 sm:right-4 z-20 flex justify-between items-center pointer-events-none">
-          <div className="flex items-center gap-1.5 pointer-events-auto flex-wrap">
+          <div className="flex items-center gap-1 sm:gap-1.5 pointer-events-auto flex-nowrap">
             <button
               onClick={() => setShowMacroMap(true)}
-              className="bg-black/80 hover:bg-black text-amber-300 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1.5 backdrop-blur-md text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
+              className="bg-black/80 hover:bg-black text-amber-300 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-amber-800/60 flex items-center gap-1 backdrop-blur-md text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all flex-shrink-0"
             >
               <MapIcon className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">Peta Benua</span>
+              <span className="hidden sm:inline">Peta</span>
             </button>
 
             <button
               onClick={handleToggleBgm}
-              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg border flex items-center gap-1.5 backdrop-blur-md text-[11px] sm:text-xs font-semibold shadow-lg transition-all ${
+              className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border flex items-center gap-1 backdrop-blur-md text-[11px] sm:text-xs font-semibold shadow-lg transition-all flex-shrink-0 ${
                 isBgmOn ? 'bg-amber-950/80 border-amber-500 text-amber-200' : 'bg-black/80 border-gray-700 text-gray-400'
               }`}
             >
               <Music className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{isBgmOn ? 'Musik: On' : 'Musik: Off'}</span>
+              <span className="hidden sm:inline">{isBgmOn ? 'Musik' : 'Bisu'}</span>
             </button>
 
-            {/* Badge Lokasi Ringkas (Tanpa teks panjang 5000x5000) */}
-            <div className="flex items-center gap-1.5 bg-black/85 border border-amber-900/70 px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md text-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="hidden md:inline text-amber-200 font-serif font-bold text-[11px] truncate max-w-[110px]">
-                {zoneConfig?.displayName?.replace(/\s*\([^)]*5000[^)]*\)/gi, '') || 'Benua Jianghu'}
-              </span>
-              <span className="text-[11px] text-amber-400/90 font-mono font-bold">({px}, {py})</span>
+            {/* Badge Lokasi Ringkas: Hanya Koordinat (Anti Menabrak Bar Tengah) */}
+            <div 
+              title={`Lokasi: ${zoneConfig?.chineseName ? zoneConfig.chineseName + ' ' : ''}${zoneConfig?.displayName || 'Jianghu'} (${px}, ${py})`}
+              className="flex items-center gap-1.5 bg-black/85 border border-amber-900/70 px-2 sm:px-2.5 py-1 rounded-lg backdrop-blur-md shadow-md text-xs flex-shrink-0 cursor-default"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+              <span className="text-[11px] text-amber-400/95 font-mono font-bold tracking-tight">({px}, {py})</span>
             </div>
 
             <ThermalStatusBadge initialThermalData={thermalStatus} />
