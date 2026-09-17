@@ -41,6 +41,17 @@ export interface TileData {
   isExpeditionNode?: boolean;
   npcCount?: number;
   npcs?: any[];
+  spawnedMonster?: {
+    key: string;
+    name: string;
+    tier?: number;
+    hp?: number;
+    maxHp?: number;
+    atk?: number;
+    def?: number;
+    spd?: number;
+    imageUrl?: string | null;
+  } | null;
 }
 
 interface TaleOfImmortalCanvasProps {
@@ -704,6 +715,56 @@ export default function TaleOfImmortalCanvas({
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(String(tile.npcs.length), badgeX, badgeY);
+          ctx.restore();
+        }
+      }
+
+      // 4.6 Monster Aktif di Petak Spesifik (Hanya jika benar-benar ada entitas monster yang ditempatkan)
+      for (let ty = minTileY; ty <= maxTileY; ty++) {
+        for (let tx = minTileX; tx <= maxTileX; tx++) {
+          const tile = tileMap.get(`${tx},${ty}`);
+          if (!tile || !tile.spawnedMonster || !tile.spawnedMonster.name) continue;
+
+          const chunkX = Math.floor(tx / 16);
+          const chunkY = Math.floor(ty / 16);
+          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+
+          const sx = toScreenX(tx);
+          const sy = toScreenY(ty);
+
+          ctx.save();
+          // Aura Merah Crimson Menyala di Lantai Petak
+          ctx.fillStyle = 'rgba(220, 38, 38, 0.22)';
+          ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = Math.max(1, 1.5 * camera.zoom);
+          ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+
+          // Icon Siluman / Monster di Tengah Petak
+          const mSize = currentTileSize * 0.55;
+          const my = sy + currentTileSize * 0.15;
+          ctx.font = `${Math.max(12, 16 * camera.zoom)}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🐺', sx + currentTileSize / 2, my + mSize * 0.5);
+
+          // Tag Nama Monster di Bawah Petak
+          const mLabel = tile.spawnedMonster.name;
+          ctx.font = `bold ${Math.max(6.5, 8 * camera.zoom)}px sans-serif`;
+          const textW = ctx.measureText(mLabel).width;
+          const pillW = textW + 6 * camera.zoom;
+          const pillH = 10 * camera.zoom;
+          const pillX = sx + (currentTileSize - pillW) / 2;
+          const pillY = sy + currentTileSize * 0.88 - pillH;
+
+          ctx.fillStyle = 'rgba(15, 5, 5, 0.85)';
+          ctx.fillRect(pillX, pillY, pillW, pillH);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 0.8;
+          ctx.strokeRect(pillX, pillY, pillW, pillH);
+
+          ctx.fillStyle = '#fca5a5';
+          ctx.fillText(mLabel, sx + currentTileSize / 2, pillY + pillH - 2 * camera.zoom);
           ctx.restore();
         }
       }

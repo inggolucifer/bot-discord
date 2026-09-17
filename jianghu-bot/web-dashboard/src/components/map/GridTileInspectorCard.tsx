@@ -35,6 +35,7 @@ interface GridTileInspectorCardProps {
   isWalking?: boolean;
   onWalkToTile: (tile: TileData) => void;
   onTalkToNpc?: (npc: any) => void;
+  onChallengeMonster?: (monsterKey: string) => void;
   onPurchaseLand?: (tile: TileData) => void;
   onOpenBuildModal?: (tile: TileData) => void;
   onEnterBuilding?: (tile: TileData) => void;
@@ -62,6 +63,7 @@ export default function GridTileInspectorCard({
   isWalking = false,
   onWalkToTile,
   onTalkToNpc,
+  onChallengeMonster,
   onPurchaseLand,
   onOpenBuildModal,
   onEnterBuilding,
@@ -370,6 +372,38 @@ export default function GridTileInspectorCard({
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* 4.6 SEKSI MONSTER DI PETAK INI (TURN-BASED COMBAT TRIGGER) */}
+        {tile.spawnedMonster && tile.spawnedMonster.name && (
+          <div className="bg-[#1a0c0c] border border-red-700/60 rounded-lg p-2.5 space-y-2 shadow-lg shadow-red-950/40">
+            <div className="flex items-center justify-between border-b border-red-900/50 pb-1.5">
+              <span className="font-serif font-bold text-red-200 text-xs flex items-center gap-1.5">
+                <span className="text-base">🐺</span>
+                <span>Ancaman Siluman ({tile.spawnedMonster.name})</span>
+              </span>
+              <span className="text-[10px] text-red-300 font-mono bg-red-950/80 px-1.5 py-0.5 rounded border border-red-700/50 font-semibold">
+                Tier {tile.spawnedMonster.tier || 1}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between gap-3 bg-black/50 p-2 rounded border border-red-900/30">
+              <div className="text-[11px] text-gray-300 space-y-0.5">
+                <div>HP: <span className="text-red-400 font-bold">{tile.spawnedMonster.hp || 150}</span> / {tile.spawnedMonster.maxHp || 150}</div>
+                <div className="text-[10px] text-gray-400">ATK: {tile.spawnedMonster.atk || 20} • DEF: {tile.spawnedMonster.def || 8} • SPD: {tile.spawnedMonster.spd || 10}</div>
+              </div>
+
+              {onChallengeMonster && (
+                <button
+                  onClick={() => onChallengeMonster(tile.spawnedMonster?.key || 'wolf_azure')}
+                  className="px-3 py-1.5 bg-gradient-to-r from-red-700 to-red-900 hover:from-red-600 hover:to-red-800 text-white rounded text-xs font-bold border border-red-500/70 shadow-md transition-all active:scale-95 flex items-center gap-1.5"
+                >
+                  <span>⚔️</span>
+                  <span>Tantang</span>
+                </button>
+              )}
             </div>
           </div>
         )}

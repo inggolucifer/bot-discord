@@ -158,21 +158,28 @@ router.post('/start', authenticateToken, async (req, res) => {
         let battleType = 'pve';
 
         if (targetType === 'monster') {
-            const monster = await Monster.findOne({ id: targetId });
+            const mongoose = require('mongoose');
+            const monster = await Monster.findOne({
+                $or: [
+                    { key: targetId },
+                    { name: targetId },
+                    ...(mongoose.Types.ObjectId.isValid(targetId) ? [{ _id: targetId }] : [])
+                ]
+            });
             if (!monster) return res.status(404).json({ error: 'Monster tidak ditemukan' });
             
             enemies = [{
-                id: monster.id,
+                id: monster.key || String(monster._id),
                 name: monster.name,
-                level: monster.level,
-                imageUrl: monster.imageUrl,
-                hp: monster.stats?.hp || 50,
-                maxHp: monster.stats?.hp || 50,
-                attack: monster.stats?.attack || 10,
-                defense: monster.stats?.defense || 5,
-                speed: monster.stats?.speed || 5,
+                level: monster.tier || monster.level || 1,
+                imageUrl: monster.imageUrl || null,
+                hp: monster.statBlock?.hp || monster.stats?.hp || 120,
+                maxHp: monster.statBlock?.hp || monster.stats?.hp || 120,
+                attack: monster.statBlock?.atk || monster.stats?.attack || 18,
+                defense: monster.statBlock?.def || monster.stats?.defense || 8,
+                speed: monster.statBlock?.spd || monster.stats?.speed || 10,
                 skills: [
-                    { skillId: 'basic_attack', name: 'Serangan Buas', type: 'attack', power: 15, qiCost: 0, cooldown: 0, currentCooldown: 0 }
+                    { skillId: 'claw_strike', name: 'Cakaran Mematikan', type: 'attack', power: 18, qiCost: 0, cooldown: 0, currentCooldown: 0 }
                 ]
             }];
         } else if (targetType === 'ambush') {

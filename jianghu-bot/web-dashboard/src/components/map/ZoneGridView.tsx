@@ -853,6 +853,20 @@ export default function ZoneGridView({ zoneId, onBackToWorld, targetFocusTile, o
             isWalking={isWalking}
             onWalkToTile={handleStartWalking}
             onTalkToNpc={(npc) => setTalkingNpc(npc)}
+            onChallengeMonster={async (monsterKey) => {
+              try {
+                const res = await api.post('/battle/start', {
+                  targetId: monsterKey,
+                  targetType: 'monster',
+                  zoneId: activeZoneId
+                });
+                if (res.data?.success && res.data.battleId) {
+                  setActiveBattleId(res.data.battleId);
+                }
+              } catch (err: any) {
+                alert(err.response?.data?.error || 'Gagal memulai pertempuran');
+              }
+            }}
             onPurchaseLand={handlePurchaseLand}
             onOpenBuildModal={(t) => setBuildModalTile(t)}
             onEnterBuilding={handleEnterBuilding}
