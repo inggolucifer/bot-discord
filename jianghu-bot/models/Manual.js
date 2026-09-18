@@ -38,10 +38,6 @@ const manualSchema = new mongoose.Schema({
   requiredSkillType: { type: String, enum: ['sword', 'saber', 'staff', 'fist', 'finger', 'special', 'forging', 'qimen', 'melody', 'healing', 'wineArt', 'hiddenWeapon', 'stealing', 'core', null], default: null },
   requiredSkillPoints: { type: Number, default: 0 },
 
-  rootType: { type: String, enum: ['fire', 'water', 'lightning', 'wind', 'earth', 'wood', null], default: null },
-  requiredRootType: { type: String, enum: ['fire', 'water', 'lightning', 'wind', 'earth', 'wood', null], default: null },
-  requiredRootLevel: { type: Number, default: 0 },
-
   requiredSectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Sect', default: null },
 
   createdBy: { type: String, default: null },

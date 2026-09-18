@@ -52,11 +52,12 @@ const extendedStatsSchema = new mongoose.Schema({
 
   // === ARTISANSHIP (Sistem Terpadu dengan Kemahiran Profesi) ===
   artisanship: {
-    alchemy:   { type: Number, default: 1 },
-    forge:     { type: Number, default: 1 },
-    talismans: { type: Number, default: 1 },
-    herbology: { type: Number, default: 1 },
-    mining:    { type: Number, default: 1 }
+    alchemy:   { type: Number, default: 0 },
+    forge:     { type: Number, default: 0 },
+    fengShui:  { type: Number, default: 0 },
+    talismans: { type: Number, default: 0 },
+    herbology: { type: Number, default: 0 },
+    mining:    { type: Number, default: 0 }
   }
 }, { _id: false });
 

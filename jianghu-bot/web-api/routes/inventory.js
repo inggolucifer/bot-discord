@@ -681,17 +681,6 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 }
             }
 
-            if (manualToLearn.requiredRootType && manualToLearn.requiredRootLevel > 0) {
-                const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
-                const rawExp = extRoots[manualToLearn.requiredRootType] === 10 ? 0 : (extRoots[manualToLearn.requiredRootType] || 0);
-                const { getKungfuLevel } = require('../../utils/kungfuMastery');
-                const rootLevel = getKungfuLevel(rawExp).level;
-
-                if (rootLevel < manualToLearn.requiredRootLevel) {
-                    throw new CustomError(`Teknik **${manualToLearn.name}** membutuhkan Spiritual Root ${manualToLearn.requiredRootType.toUpperCase()} level ${manualToLearn.requiredRootLevel}. Levelmu saat ini baru level ${rootLevel}.`, 400);
-                }
-            }
-
             if (manualToLearn.requiredSectId) {
                 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
                 const playerSect = await getPlayerSect(guildId, player.discordId);

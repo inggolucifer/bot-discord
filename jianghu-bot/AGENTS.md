@@ -189,11 +189,10 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
    - `Blade` (Golok/Saber), `Spear` (Tombak/Staff), `Sword` (Pedang), `Fist` (Tinju), `Palm` (Telapak), `Finger` (Totokan Meridian). Terhubung langsung dengan `player.kungfuSkills`.
 
 4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
-   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu). Menentukan afinitas dan multiplikator jurus elemen bersangkutan. Pengalaman elemen spiritual (XP) didapat dari menggunakan manual dengan elemen (`rootType`) terkait saat bertarung. Level spiritual root juga mengikuti formula Kurva Kungfu (maksimal level 250).
+   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu). Menentukan afinitas dan multiplikator jurus elemen bersangkutan.
 
-5. **Artisanship & Kemahiran Profesi (Sistem Terpadu / 技艺)**:
-   - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh). Mulai dari level 1.
-   - **Maksimal Level 250**: Mengikuti desain game online yang adiktif, level maksimal didesain sangat tinggi (Level 250). Jika pemain sangat aktif/rajin, butuh waktu sekitar 2 tahun nyata untuk mencapai level maksimal, dan bisa memakan waktu hingga 4 tahun untuk pemain kasual.
+5. **Artisanship (6 Keahlian Pengrajin / 技艺)**:
+   - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Feng Shui` (Geomansi & Formasi), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh).
 
 6. **Takdir & Moralitas (Destiny & Alignment)**:
    - **Destiny (Nature)**: Karunia bawaan lahir (misal: *Dual Talents*, *Tortured Genius*, *Spirit Sight*).
