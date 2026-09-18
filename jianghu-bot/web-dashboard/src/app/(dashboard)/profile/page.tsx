@@ -439,54 +439,81 @@ export default function ProfilePage() {
                 </div>
             )}
 
-            {/* Profession Skills Section */}
-            <div className="bg-[#1a1a1a] border border-[#c5a880]/30 p-5 rounded-lg shadow-lg">
-               <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Kemahiran Profesi</h3>
-               <div className="grid grid-cols-1 gap-y-3">
+            {/* Unified Artisanship & Kemahiran Profesi Section (Sistem Terpadu 1-to-1) */}
+            <div className="bg-[#12151e]/90 border border-[#c5a880]/40 p-5 rounded-xl shadow-lg font-serif space-y-3">
+               <div className="flex justify-between items-center border-b border-[#3b3322] pb-2.5">
+                  <div className="flex items-center gap-2">
+                     <Hammer size={16} className="text-amber-400" />
+                     <h3 className="text-sm font-bold text-[#c5a880] uppercase tracking-wider">
+                        Kemahiran Profesi & Artisanship (技艺)
+                     </h3>
+                  </div>
+                  <span className="text-[11px] text-stone-400 font-sans">
+                     Sistem Terpadu 1-to-1
+                  </span>
+               </div>
+               
+               <p className="text-[11px] text-stone-400 leading-relaxed">
+                  Keahlian produksi dan pengrajin Jianghu terhubung langsung dengan Pilar Ke-5 Fondasi Kultivasi.
+               </p>
+
+               <div className="grid grid-cols-1 gap-y-2.5">
                   {[
-                      { id: 'farming', name: 'Bertani', icon: '🌾' },
-                      { id: 'fishing', name: 'Memancing', icon: '🎣' },
-                      { id: 'cooking', name: 'Memasak', icon: '🍳' },
-                      { id: 'alchemy', name: 'Alkimia', icon: '⚗️' },
-                      { id: 'smithing', name: 'Menempa', icon: '🔨' }
+                      { id: 'alchemy', name: 'Alkimia (Alchemy)', icon: '⚗️', artKey: 'alchemy', desc: 'Meracik pil obat dan intisari Qi' },
+                      { id: 'smithing', name: 'Tempa (Forge / Smithing)', icon: '⚒️', artKey: 'forge', desc: 'Menempa pedang, baju zirah, dan perkakas' },
+                      { id: 'farming', name: 'Herba & Tani (Herbology)', icon: '🌿', artKey: 'herbology', desc: 'Menanam dan memanen tanaman obat spiritual' },
+                      { id: 'mining', name: 'Pertambangan (Mining)', icon: '⛏️', artKey: 'mining', desc: 'Mengekstraksi bijih besi dingin dan batu giok' },
+                      { id: 'fishing', name: 'Memancing (Fishing)', icon: '🎣', artKey: 'fishing', desc: 'Menangkap ikan roh di perairan Jianghu' },
+                      { id: 'cooking', name: 'Kuliner & Memasak (Cooking)', icon: '🍳', artKey: 'cooking', desc: 'Mengolah ransum dan masakan penambah stamina' },
+                      { id: 'fengShui', name: 'Feng Shui (Geomansi)', icon: '🧭', artKey: 'fengShui', desc: 'Geomansi formasi pelindung dan deteksi urat energi' },
+                      { id: 'talismans', name: 'Penulisan Jimat (Talismans)', icon: '📜', artKey: 'talismans', desc: 'Menuliskan segel mantra pertahanan dan kertas jimat' }
                   ].map(prof => {
                       const profData = profile.professions?.[prof.id];
-                      const isUnlocked = profData?.isUnlocked;
-                      const level = profData?.level || 1;
+                      const artVal = mergedProfile.extendedStats?.artisanship?.[prof.artKey];
+                      const isUnlocked = profData ? profData.isUnlocked : (artVal > 0);
+                      const level = profData?.level || artVal || 1;
                       const exp = profData?.exp || 0;
-                      // Correct EXP formula: Math.floor(50 * level + 15 * level * level)
                       const maxExp = Math.floor(50 * level + 15 * level * level);
-                      const progress = Math.min(100, (exp / maxExp) * 100);
+                      const progress = profData ? Math.min(100, (exp / maxExp) * 100) : (artVal > 0 ? 100 : 0);
 
                       return (
-                          <div key={prof.id} className="bg-gray-800/30 p-2.5 rounded border border-gray-700/50 flex flex-col justify-center">
+                          <div key={prof.id} className="bg-[#181d2a] p-3 rounded-lg border border-[#2e374a] flex flex-col justify-center">
                               <div className="flex justify-between items-center mb-1.5">
-                                  <div className="flex items-center gap-2">
-                                      <span className="text-lg">{prof.icon}</span>
-                                      <span className="text-sm font-bold text-gray-300">{prof.name}</span>
+                                  <div className="flex items-center gap-2.5">
+                                      <span className="text-xl">{prof.icon}</span>
+                                      <div>
+                                          <span className="text-sm font-bold text-amber-200">{prof.name}</span>
+                                          <div className="text-[10px] text-stone-400">{prof.desc}</div>
+                                      </div>
                                   </div>
                                   {isUnlocked ? (
-                                      <span className="text-xs font-bold text-amber-500">Lv. {level}</span>
+                                      <span className="text-xs font-bold text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded border border-amber-600/50 shadow-sm">
+                                          Lv. {level}
+                                      </span>
                                   ) : (
-                                      <span className="text-[10px] font-bold text-gray-500 bg-gray-900 px-2 py-0.5 rounded border border-gray-700">Terkunci</span>
+                                      <span className="text-[10px] font-bold text-stone-500 bg-[#0d1017] px-2 py-0.5 rounded border border-stone-800">
+                                          Belum Terbuka
+                                      </span>
                                   )}
                               </div>
 
-                              {isUnlocked ? (
-                                  <div className="w-full">
-                                      <div className="flex justify-between text-[10px] text-gray-400 mb-0.5 px-1">
-                                          <span>EXP</span>
-                                          <span>{exp} / {maxExp}</span>
+                              {isUnlocked && profData ? (
+                                  <div className="w-full mt-1">
+                                      <div className="flex justify-between text-[10px] text-stone-400 mb-1 font-mono">
+                                          <span>Progres Kemahiran</span>
+                                          <span>{exp} / {maxExp} XP</span>
                                       </div>
-                                      <div className="w-full bg-gray-900 rounded-full h-1.5 overflow-hidden border border-gray-700/50">
+                                      <div className="w-full bg-black/60 rounded-full h-1.5 overflow-hidden border border-[#2b3345]">
                                           <div
-                                              className="bg-amber-500 h-1.5 transition-all duration-500"
+                                              className="bg-gradient-to-r from-amber-500 to-yellow-400 h-1.5 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]"
                                               style={{ width: `${progress}%` }}
                                           ></div>
                                       </div>
                                   </div>
+                              ) : isUnlocked ? (
+                                  <div className="text-[10px] text-amber-400/80 italic mt-1">Kemahiran aktif dari pemahaman fondasi Dao</div>
                               ) : (
-                                  <div className="text-[10px] text-gray-500 italic mt-1 px-1">Tingkatkan di Peta Spasial Dunia</div>
+                                  <div className="text-[10px] text-stone-500 italic mt-1">Latih atau pelajari di peta spasial dunia Jianghu</div>
                               )}
                           </div>
                       );

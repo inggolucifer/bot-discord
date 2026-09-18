@@ -189,10 +189,20 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
    - `Blade` (Golok/Saber), `Spear` (Tombak/Staff), `Sword` (Pedang), `Fist` (Tinju), `Palm` (Telapak), `Finger` (Totokan Meridian). Terhubung langsung dengan `player.kungfuSkills`.
 
 4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
-   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu). Menentukan afinitas dan multiplikator jurus elemen bersangkutan.
+   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu).
+   - **KEBIJAKAN ZERO BASELINE MUTLAK**: **Seluruh pemain memulai (start) dari nilai 0** (`default: 0`). Dilarang memberikan nilai awal 10. Nilai bertumbuh secara organik melalui penyerapan energi semesta, pil pemurni spiritual, pencerahan kitab, dan formasi meridian.
 
-5. **Artisanship (6 Keahlian Pengrajin / 技艺)**:
-   - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Feng Shui` (Geomansi & Formasi), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh).
+5. **Artisanship & Kemahiran Profesi Terpadu (Unified Crafting Framework / 技艺)**:
+   - Kemahiran Profesi dan Artisanship adalah **satu kesatuan sistem 1-to-1** yang tersinkronisasi penuh:
+     - `Alchemy` (Alkimia Pil & Intisari Qi) $\leftrightarrow$ `professions.alchemy`
+     - `Forge` (Tempa Senjata, Zirah & Perkakas) $\leftrightarrow$ `professions.smithing`
+     - `Herbology` (Herba & Pertanian Spiritual) $\leftrightarrow$ `professions.farming`
+     - `Mining` (Ekstraksi Bijih Besi & Giok Roh) $\leftrightarrow$ `professions.mining`
+     - `Fishing` (Memancing Ikan Roh Jianghu) $\leftrightarrow$ `professions.fishing`
+     - `Cooking` (Kuliner & Ransum Pemulih) $\leftrightarrow$ `professions.cooking`
+     - `Feng Shui` (Geomansi & Formasi Energi)
+     - `Talismans` (Penulisan Kertas Jimat & Segel Mantra)
+   - Angka tingkat kemahiran di Pilar Ke-5 `<StatGrid />` merefleksikan secara deterministik level riil profesi pemain, terintegrasi mulus dengan rincian progres EXP di kartu pengrajin profil pemain.
 
 ### 3.9. Sistem Statistik Karakter Terpadu & Sanitasi Integer (Integer Sanitization & Mastery Formula)
 Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js`, `statCalculator.js`, dan komponen UI frontend `<StatGrid />` dengan aturan deterministik:
@@ -251,9 +261,10 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
      - Kolom Gelar Kehormatan pada NPC bernilai default `Tidak Memiliki Gelar (Hanya Admin)` kecuali ditentukan secara manual dan otoritatif oleh Admin (`npcData.adminTitle`).
    - **Tab yang Dipertahankan**: Hanya 3 tab yang aktif: `stats` (identitas, gelar admin, tutur kata, relasi), `family` (silsilah keluarga/sekte), dan `social` (ikatan sosial). Tab `skills`, `artifact`, `backstory`, dan `taoist mind` telah **DIHAPUS**.
 
-4. **Navigasi Atas yang Dapat Menciut (Collapsible Top Navigation Bar - `Navbar.tsx`)**:
+4. **Navigasi Atas yang Dapat Menciut & Viewport Layar Penuh Dinamis (Collapsible Top Navigation Bar & Dynamic Fullscreen Viewport)**:
    - Bar navigasi atas (Beranda, Karakter, Dunia, Aset & Tas, Pasar & Sekte, Almanack & Lore) dapat **menciut hilang ke atas** (`-translate-y-full max-h-0 opacity-0`) melalui tombol `[▲ Ciutkan]` di pojok kanan atas atau tab pegangan di tengah bawah bar.
    - Saat menciut, layar menjadi lega dan bebas distraksi; menyisakan **tombol panah ke bawah mengambang (`ChevronDown`)** di bagian tengah paling atas layar (`fixed top-0 left-1/2 -translate-x-1/2 z-[60]`) untuk memanggil kembali bar navigasi secara instan dan halus.
+   - **Arsitektur Viewport Layar Penuh (Zero-Gap Fullscreen Policy)**: Seluruh container halaman utama (`page.tsx`, `world/page.tsx`, `PageTransition.tsx`) menggunakan flexbox dinamis (`w-full flex-1 min-h-0 h-full flex flex-col`) dan **DILARANG** menggunakan height hardcoded seperti `h-[calc(100vh-4rem)]`. Saat navbar menciut (tinggi 0px), kanvas dan Bottom HUD secara otomatis dan mulus mengisi 100% tinggi layar (*edge-to-edge fullscreen*) tanpa celah wallpaper di bagian bawah.
 
 5. **Halaman Profil Karakter 5 Pilar (`profile/page.tsx`)**:
    - Menyelaraskan seluruh data profil kultivator dengan **Panca Pilar Fondasi Kultivasi (Five Pillars RPG Framework)** via komponen `<StatGrid />`:

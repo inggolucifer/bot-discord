@@ -478,12 +478,12 @@ export default function PlayerStatsModal() {
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {[
-                          { name: 'Alkimia (Alchemy)', level: Math.floor(player?.extendedStats?.artisanship?.alchemy || 5), icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
-                          { name: 'Penempa (Smithing)', level: Math.floor(player?.extendedStats?.artisanship?.forge || 5), icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan artefak' },
-                          { name: 'Feng Shui', level: Math.floor(player?.extendedStats?.artisanship?.fengShui || 5), icon: '🧭', desc: 'Geomansi dan formasi energi spiritual' },
-                          { name: 'Kertas Jimat (Talismans)', level: Math.floor(player?.extendedStats?.artisanship?.talismans || 5), icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
-                          { name: 'Herbalis (Herbology)', level: Math.floor(player?.extendedStats?.artisanship?.herbology || 5), icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
-                          { name: 'Penambang (Mining)', level: Math.floor(player?.extendedStats?.artisanship?.mining || 5), icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
+                          { name: 'Alkimia (Alchemy)', level: Math.floor(player?.professions?.alchemy?.level || player?.extendedStats?.artisanship?.alchemy || 0), icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
+                          { name: 'Penempa (Forge / Smithing)', level: Math.floor(player?.professions?.smithing?.level || player?.extendedStats?.artisanship?.forge || 0), icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan perkakas' },
+                          { name: 'Feng Shui (Geomansi)', level: Math.floor(player?.extendedStats?.artisanship?.fengShui || 0), icon: '🧭', desc: 'Geomansi dan formasi energi spiritual' },
+                          { name: 'Kertas Jimat (Talismans)', level: Math.floor(player?.extendedStats?.artisanship?.talismans || 0), icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
+                          { name: 'Herbalis & Tani (Herbology)', level: Math.floor(player?.professions?.farming?.level || player?.extendedStats?.artisanship?.herbology || 0), icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
+                          { name: 'Penambang (Mining)', level: Math.floor(player?.professions?.mining?.level || player?.extendedStats?.artisanship?.mining || 0), icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
                         ].map((art, idx) => (
                           <div key={idx} className="bg-[#181d2a] border border-[#2d3547] p-3 rounded-lg flex items-center gap-3">
                             <div className="text-2xl p-2 bg-[#10131d] rounded-md border border-[#384157]">

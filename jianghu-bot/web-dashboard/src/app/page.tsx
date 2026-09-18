@@ -17,7 +17,7 @@ export default function RootApp() {
 
   if (showLanding) {
     return (
-      <div className="relative w-screen h-screen overflow-hidden">
+      <div className="fixed inset-0 z-[60] w-screen h-screen overflow-hidden">
         <LandingMenu onEnterWorld={() => setShowLanding(false)} />
         {/* Modals accessible from landing menu (Achievements, Settings) */}
         <AchievementsModal />
@@ -27,9 +27,9 @@ export default function RootApp() {
   }
 
   return (
-    <div className="relative w-full h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="relative w-full flex-1 min-h-0 h-full overflow-hidden flex flex-col">
       {/* Background Map Layer */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 flex flex-col">
          <Suspense fallback={<div className="p-8 text-center text-amber-200">Menghubungkan ke Benua Jianghu...</div>}>
            <WorldPageContent />
          </Suspense>
