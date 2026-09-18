@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore, useUIStore } from '@/lib/store';
 import api from '@/lib/api';
-import { Shield, Sword, Scroll, Users, Coins, Flame, BookOpen, Gift, RefreshCcw, Send, Sparkles, Loader2, Footprints, History, Zap, Compass, X } from 'lucide-react';
+import { Shield, Sword, Scroll, Users, Coins, Flame, BookOpen, Gift, RefreshCcw, Send, Sparkles, Loader2, Footprints, History, Zap, Compass, X, Award } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -236,6 +236,9 @@ export default function DashboardModal() {
                   <div>
                     <h2 className="text-xl sm:text-2xl font-bold text-white font-serif mb-1">{profile.characterName}</h2>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+                        <Badge variant="outline" className="text-xs bg-amber-950/70 border-amber-500/80 gap-1 text-amber-200 font-serif font-semibold shadow-sm">
+                            <Award size={12} className="text-amber-400" /> [{profile.activeTitle || profile.reputationTitle || 'Pendekar Pedang Surgawi'}]
+                        </Badge>
                         <Badge variant="outline" className="text-xs bg-amber-900/30 border-amber-600/40 gap-1 text-amber-200">
                             <Zap size={12} className="text-amber-400" /> {profile.systemCultivation?.realm || profile.realm || 'Fondasi Fana'} {profile.systemCultivation?.stage ? `(Tahap ${profile.systemCultivation.stage})` : ''}
                         </Badge>

@@ -5,11 +5,9 @@ import { useUIStore } from '@/lib/store';
 import api from '@/lib/api';
 import { 
   X, User, BookOpen, Hammer, Package, Scroll, Users, Sparkles,
-  Shield, Sword, Flame, Heart, Zap, RefreshCw, Award
+  Shield, Sword, Flame, Heart, Zap, RefreshCw, Award, Check, ChevronDown
 } from 'lucide-react';
 import StatGrid from '@/components/character/StatGrid';
-import DestinyTraits from '@/components/character/DestinyTraits';
-import PersonalityBadges from '@/components/character/PersonalityBadges';
 import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
@@ -17,12 +15,24 @@ import { PlayerProfile } from '@/types/game';
 
 type ActiveTab = 'stats' | 'skills' | 'artisan' | 'item' | 'experience' | 'relations';
 
+const ACHIEVEMENT_TITLES = [
+  { id: 'title_sword_saint', name: 'Pendekar Pedang Surgawi', color: 'from-amber-500 to-yellow-300', border: 'border-amber-400', desc: 'Menguasai esensi sembilan tebasan langit.' },
+  { id: 'title_nine_continents', name: 'Penakluk Sembilan Benua', color: 'from-purple-500 to-indigo-300', border: 'border-purple-400', desc: 'Menjelajahi setiap pelosok dunia persilatan.' },
+  { id: 'title_golden_core', name: 'Pewaris Inti Emas', color: 'from-yellow-500 to-amber-200', border: 'border-yellow-400', desc: 'Memiliki dantian murni tanpa cela.' },
+  { id: 'title_divine_alchemist', name: 'Pakar Alkimia Ilahi', color: 'from-emerald-500 to-teal-300', border: 'border-emerald-400', desc: 'Peracik pil legendaris penembus ranah.' },
+  { id: 'title_thunder_wanderer', name: 'Pengembara Angin & Petir', color: 'from-cyan-500 to-sky-300', border: 'border-cyan-400', desc: 'Melangkah seringan embun secepat kilat.' },
+  { id: 'title_grandmaster', name: 'Pendekar Besar Jianghu', color: 'from-rose-500 to-red-400', border: 'border-rose-400', desc: 'Dihormati seluruh pendekar dunia persilatan.' }
+];
+
 export default function PlayerStatsModal() {
-  const { activeModal, closeModal, isTileInspectorActive } = useUIStore();
+  const { activeModal, closeModal } = useUIStore();
   const [activeTab, setActiveTab] = useState<ActiveTab>('stats');
-  const [player, setPlayer] = useState<PlayerProfile | null>(null);
+  const [player, setPlayer] = useState<PlayerProfile | any | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showTitleModal, setShowTitleModal] = useState(false);
+  const [equippedTitle, setEquippedTitle] = useState<string>('Pendekar Pedang Surgawi');
+  const [titleNotice, setTitleNotice] = useState<string | null>(null);
 
   const isOpen = activeModal === 'stats';
 
@@ -38,7 +48,13 @@ export default function PlayerStatsModal() {
     try {
       const res = await api.get('/player/profile');
       if (res.data?.success && res.data?.data) {
-        setPlayer(res.data.data);
+        const p = res.data.data;
+        setPlayer(p);
+        if (p.activeTitle) {
+          setEquippedTitle(p.activeTitle);
+        } else if (p.reputationTitle) {
+          setEquippedTitle(p.reputationTitle);
+        }
       } else {
         setError('Gagal memuat profil pendekar.');
       }
@@ -49,24 +65,74 @@ export default function PlayerStatsModal() {
     }
   };
 
+  const handleSelectTitle = (titleName: string) => {
+    setEquippedTitle(titleName);
+    setShowTitleModal(false);
+    setTitleNotice(`Gelar aktif diubah: [${titleName}]`);
+    setTimeout(() => setTitleNotice(null), 3500);
+  };
+
   if (!isOpen) return null;
 
   const characterName = player?.characterName || 'Pendekar Fana';
   const sectName = player?.sect || 'Tanpa Sekte (Rogue Cultivator)';
   const realmName = player?.systemCultivation?.realm || 'Fondasi Fana (Mortal)';
-  const stage = player?.systemCultivation?.stage || 0;
-  const gender = player?.gender || 'Pria';
-  const age = player?.age || 16;
-  const race = player?.race || 'Human';
+  const stage = Math.floor(Number(player?.systemCultivation?.stage) || 0);
+  const gender = player?.gender || 'Laki-laki';
+  const age = Math.floor(Number(player?.age) || 16);
+  const race = player?.race || 'Manusia';
   const charisma = player?.charisma || 'Menawan (Attractive)';
-  const reputation = player?.reputation || 100;
+  const reputation = Math.floor(Number(player?.reputation) || 100);
   const reputationTitle = player?.reputationTitle || 'Terkenal (Renowned)';
-  const interests = player?.interests || ['Bambu', 'Seruling', 'Kitab Kuning'];
-  const personalityTags = player?.personalityTags || ['Protective', 'Carefree'];
-  const destinyNature = player?.destinyNature || ['Dual Talents'];
-  const destinyNurture = player?.destinyNurture || ['Taoist Mind Essence'];
+  const interests = player?.interests || ['Bambu Kuno', 'Seruling Bambu', 'Kitab Kuning'];
+
+  const qi = Math.floor(Number(player?.systemCultivation?.qi) || 0);
+  const maxQi = Math.max(100, (stage + 1) * 100);
+  const qiPercent = Math.min(100, Math.max(0, Math.floor((qi / maxQi) * 100)));
+
+  const gold = Math.floor(Number(player?.currency?.gold) || 0);
+  const silver = Math.floor(Number(player?.currency?.silver) || 0);
+  const copper = Math.floor(Number(player?.currency?.copper) || 0);
+  const spirit = Math.floor(Number(player?.currency?.spirit || player?.currency?.jade) || 0);
 
   const avatar = player?.characterImage || player?.avatarUrl || player?.discordAvatar || '';
+  
+  // Resolve Standing Full-Body Art
+  const standingArtUrl = 
+    (gender === 'Perempuan' 
+      ? GLOBAL_ASSETS.character_standing?.default_female 
+      : GLOBAL_ASSETS.character_standing?.default_male) ||
+    player?.fullBodyImage ||
+    player?.characterImage ||
+    avatar;
+
+  // Elegant Standing Character Silhouette & Daoist Halo Fallback
+  const standingCharacterFallback = (
+    <div className="w-full h-full min-h-[280px] sm:min-h-[340px] flex flex-col items-center justify-center bg-gradient-to-b from-[#151a27] via-[#0d1017] to-[#07090f] p-4 relative overflow-hidden select-none">
+      {/* Background Spiritual Aura Halo */}
+      <div className="absolute w-44 h-44 rounded-full bg-amber-500/15 blur-3xl animate-pulse" />
+      <div className="absolute w-28 h-28 rounded-full bg-sky-500/15 blur-xl" />
+      
+      {/* Standing Character Visual Frame */}
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="w-24 h-24 rounded-full bg-gradient-to-b from-amber-700/60 to-[#101420] border-2 border-amber-500/80 flex items-center justify-center text-5xl shadow-[0_0_25px_rgba(245,158,11,0.35)] mb-3">
+          {gender === 'Perempuan' ? '🧝‍♀️' : '🧙‍♂️'}
+        </div>
+        <div className="px-3 py-0.5 rounded-full bg-amber-950/90 border border-amber-500/60 text-amber-200 text-xs font-serif font-bold tracking-wider shadow-sm">
+          {characterName}
+        </div>
+        <div className="text-[11px] text-stone-400 mt-1">
+          {sectName}
+        </div>
+        <div className="text-[10px] text-amber-400/90 font-mono mt-0.5">
+          {realmName} {stage > 0 ? `Tk. ${stage}` : ''}
+        </div>
+      </div>
+
+      {/* Decorative Bottom Mist */}
+      <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-black/90 to-transparent pointer-events-none" />
+    </div>
+  );
 
   const navItems: { key: ActiveTab; label: string; icon: any }[] = [
     { key: 'stats', label: 'Stats', icon: User },
@@ -93,7 +159,7 @@ export default function PlayerStatsModal() {
         {/* Ornate Top Bar with Close Button */}
         <div className="flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-[#171a24] via-[#221e17] to-[#171a24] border-b border-[#4d3e28]">
           <div className="flex items-center gap-2">
-            <span className="text-amber-400 font-serif font-bold text-base sm:text-lg tracking-widest flex items-center gap-2">
+            <span className="text-amber-400 font-serif font-bold text-sm sm:text-lg tracking-widest flex items-center gap-2">
               📜 LEMBAR STATISTIK PENDEKAR (IMMORTAL STATUS)
             </span>
           </div>
@@ -116,6 +182,14 @@ export default function PlayerStatsModal() {
             </button>
           </div>
         </div>
+
+        {/* Title Change Notification Toast */}
+        {titleNotice && (
+          <div className="mx-4 mt-2 p-2 rounded bg-amber-950/90 border border-amber-500/70 text-amber-200 text-xs flex items-center gap-2 animate-in fade-in shadow-lg">
+            <Award size={15} className="text-amber-400 shrink-0" />
+            <span>{titleNotice}</span>
+          </div>
+        )}
 
         {/* Modal Body: Left Vertical Navigation + Main Scrollable Content */}
         <div className="flex-1 flex overflow-hidden">
@@ -168,59 +242,113 @@ export default function PlayerStatsModal() {
               </div>
             ) : (
               <>
-                {/* TAB 1: STATS (MAIN SHEET - MATCHES IMAGE 3) */}
+                {/* TAB 1: STATS (MAIN SHEET WITH FULL-BODY CHARACTER & TITLE FLEXING) */}
                 {activeTab === 'stats' && (
                   <div className="space-y-4">
                     
-                    {/* Top Section: Portrait + Identity + Destiny */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start bg-[#121622]/80 border border-[#3b3323] p-3 sm:p-4 rounded-xl shadow-lg">
+                    {/* Top Hero Section: Full Body Standing Character (Left) + Identity & Title (Right) */}
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start bg-[#121622]/85 border border-[#3b3323] p-3 sm:p-4 rounded-xl shadow-lg">
                       
-                      {/* Character Avatar & Aura Column (4 cols) */}
-                      <div className="lg:col-span-4 flex flex-col items-center text-center">
-                        <div className="relative mb-2 group">
-                          {/* Daoist Glowing Ring / Aura */}
-                          <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/30 via-purple-500/20 to-amber-500/30 rounded-full blur-md animate-pulse" />
-                          
-                          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full border-2 border-amber-500/80 p-1 bg-[#151924] shadow-[0_0_20px_rgba(245,158,11,0.3)] overflow-hidden">
-                            <FallbackImage
-                              src={avatar}
-                              alt={characterName}
-                              fallbackCategory="avatar"
-                              className="w-full h-full object-cover rounded-full"
-                            />
+                      {/* Left: Full-Body Standing Character Column (5 cols) */}
+                      <div className="md:col-span-5 lg:col-span-4 flex flex-col items-center">
+                        <div className="relative w-full aspect-[9/14] max-h-80 sm:max-h-96 rounded-lg overflow-hidden border-2 border-[#6b5433] bg-[#0c0f17] shadow-inner group">
+                          <FallbackImage
+                            src={standingArtUrl}
+                            alt={characterName}
+                            fallbackNode={standingCharacterFallback}
+                            className="w-full h-full object-contain object-bottom"
+                          />
+
+                          {/* Daoist Realm Seal Bottom-Left */}
+                          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md">
+                            {realmName} {stage > 0 ? `Tk. ${stage}` : ''}
                           </div>
 
-                          {/* Daoist Realm Seal */}
-                          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-800 to-amber-600 border border-amber-400 text-amber-100 text-[11px] font-serif font-bold whitespace-nowrap shadow-md">
-                            {realmName} {stage > 0 ? `Tk. ${stage}` : ''}
+                          {/* Wardrobe Indicator Tag (Foundation for outfits) */}
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-stone-700 text-stone-300 text-[9px] font-serif flex items-center gap-1">
+                            <span>👘</span>
+                            <span>Jubah Sutra Daoist</span>
                           </div>
                         </div>
 
-                        {/* Alignment bar under portrait */}
-                        <div className="w-full max-w-xs mt-3 px-2">
+                        {/* Wardrobe Future Change Action Hint */}
+                        <div className="w-full mt-2 flex items-center justify-between px-2 py-1 bg-[#171c29] border border-[#2e374a] rounded-lg text-[10px] text-stone-400">
+                          <span className="flex items-center gap-1">
+                            <Sparkles size={11} className="text-amber-400" /> Lemari Pakaian (Wardrobe)
+                          </span>
+                          <span className="text-amber-300/80 font-medium">Baju & Kostum</span>
+                        </div>
+
+                        {/* Alignment bar under standing portrait */}
+                        <div className="w-full mt-2.5 px-1">
                           <AlignmentBar 
-                            righteous={player?.alignment?.righteous || 50} 
-                            demonic={player?.alignment?.demonic || 0} 
+                            righteous={Math.floor(Number(player?.alignment?.righteous) || 50)} 
+                            demonic={Math.floor(Number(player?.alignment?.demonic) || 0)} 
                             compact 
                           />
                         </div>
                       </div>
 
-                      {/* Identity Details (5 cols) */}
-                      <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-2 font-serif text-xs sm:text-sm">
+                      {/* Right: Identity Details, Title Flexing, Currencies & Qi (7 cols) */}
+                      <div className="md:col-span-7 lg:col-span-8 flex flex-col justify-between space-y-3 font-serif">
                         
-                        {/* Personality Badges Row */}
-                        <div className="pb-2 border-b border-[#2a2419]">
-                          <PersonalityBadges 
-                            tags={personalityTags} 
-                            internalTrait={player?.internalTraits} 
-                            externalTrait={player?.externalTraits} 
-                          />
+                        {/* 1. TITLE PENCAPAIAN (ACHIEVEMENT TITLE FLEXING BAR) */}
+                        <div className="p-2.5 bg-gradient-to-r from-[#1f1a12] via-[#2a2215] to-[#171a24] border border-[#695333] rounded-lg flex flex-wrap items-center justify-between gap-2 shadow-md">
+                          <div className="flex items-center gap-2">
+                            <Award size={18} className="text-amber-400 animate-pulse shrink-0" />
+                            <div>
+                              <span className="text-[10px] text-stone-400 uppercase tracking-wider block">Gelar Pencapaian (Title):</span>
+                              <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-400 tracking-wide">
+                                🎖️ [{equippedTitle}]
+                              </span>
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => setShowTitleModal(!showTitleModal)}
+                            className="px-2.5 py-1 rounded bg-[#382b18] hover:bg-[#523d20] border border-amber-600/70 text-amber-200 text-xs font-semibold flex items-center gap-1 transition-all shadow-sm active:scale-95"
+                          >
+                            <span>Ganti Gelar</span>
+                            <ChevronDown size={13} className={`transition-transform ${showTitleModal ? 'rotate-180' : ''}`} />
+                          </button>
                         </div>
 
-                        {/* Name & Sect */}
+                        {/* Dropdown / Modal Pemilihan Gelar Pencapaian */}
+                        {showTitleModal && (
+                          <div className="p-3 bg-[#111622] border border-[#524128] rounded-lg space-y-2 animate-in fade-in shadow-xl">
+                            <span className="text-xs font-bold text-amber-300 block mb-1">
+                              Pilih Gelar Kehormatan untuk Dipamerkan (Flexing):
+                            </span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                              {ACHIEVEMENT_TITLES.map((t) => {
+                                const isSelected = equippedTitle === t.name;
+                                return (
+                                  <button
+                                    key={t.id}
+                                    onClick={() => handleSelectTitle(t.name)}
+                                    className={`p-2 rounded-lg border text-left flex items-start justify-between gap-2 transition-all ${
+                                      isSelected
+                                        ? 'bg-amber-950/80 border-amber-400 text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
+                                        : 'bg-[#181e2b] border-[#2f384c] text-stone-300 hover:border-amber-700'
+                                    }`}
+                                  >
+                                    <div>
+                                      <div className="font-bold flex items-center gap-1">
+                                        <span>[{t.name}]</span>
+                                      </div>
+                                      <p className="text-[10px] text-stone-400 mt-0.5">{t.desc}</p>
+                                    </div>
+                                    {isSelected && <Check size={14} className="text-amber-400 shrink-0 mt-0.5" />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 2. Character Name & Sect */}
                         <div>
-                          <h2 className="text-xl sm:text-2xl font-bold text-amber-200 tracking-wide font-serif">
+                          <h2 className="text-2xl sm:text-3xl font-bold text-amber-200 tracking-wide font-serif">
                             {characterName}
                           </h2>
                           <p className="text-stone-400 text-xs mt-0.5">
@@ -228,41 +356,76 @@ export default function PlayerStatsModal() {
                           </p>
                         </div>
 
-                        {/* Core Details Grid */}
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-stone-300 pt-1">
+                        {/* 3. Core Attributes (Integer values) */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-stone-300 bg-[#0e121a] p-2.5 rounded-lg border border-[#262e3d]">
                           <div>
-                            <span className="text-stone-500">Ras:</span> {race}
+                            <span className="text-stone-500 block text-[10px]">Ras</span>
+                            <span className="font-semibold">{race}</span>
                           </div>
                           <div>
-                            <span className="text-stone-500">Kelamin:</span> {gender}
+                            <span className="text-stone-500 block text-[10px]">Kelamin</span>
+                            <span className="font-semibold">{gender}</span>
                           </div>
                           <div>
-                            <span className="text-stone-500">Karisma:</span> <span className="text-amber-300">{charisma}</span>
+                            <span className="text-stone-500 block text-[10px]">Karisma</span>
+                            <span className="text-amber-300 font-semibold">{charisma}</span>
                           </div>
                           <div>
-                            <span className="text-stone-500">Reputasi:</span> <span className="text-emerald-300">{reputationTitle} ({reputation})</span>
+                            <span className="text-stone-500 block text-[10px]">Reputasi</span>
+                            <span className="text-emerald-300 font-semibold">{reputationTitle} ({reputation})</span>
                           </div>
                         </div>
 
-                        {/* Interests */}
+                        {/* 4. Currencies Bar (Integer numbers) */}
+                        <div className="flex flex-wrap items-center gap-2 bg-[#0e121a] p-2 rounded-lg border border-[#262e3d]">
+                          <span className="text-[11px] text-stone-400 mr-1">Kas Saldo:</span>
+                          <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-600/40 text-xs font-mono text-amber-200 flex items-center gap-1">
+                            <span>🥇</span> {gold} Emas
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-black/60 border border-stone-600/40 text-xs font-mono text-stone-300 flex items-center gap-1">
+                            <span>🥈</span> {silver} Perak
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-900/40 text-xs font-mono text-amber-600 flex items-center gap-1">
+                            <span>🟤</span> {copper} Tembaga
+                          </span>
+                          {spirit > 0 && (
+                            <span className="px-2 py-0.5 rounded bg-black/60 border border-purple-600/40 text-xs font-mono text-purple-300 flex items-center gap-1">
+                              <span>🔮</span> {spirit} Batu Roh
+                            </span>
+                          )}
+                        </div>
+
+                        {/* 5. Qi Cultivation Progress Bar */}
+                        <div className="bg-[#0e121a] p-2.5 rounded-lg border border-[#262e3d] space-y-1">
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-stone-400 flex items-center gap-1">
+                              <Zap size={13} className="text-amber-400" />
+                              Intisari Qi Kultivasi
+                            </span>
+                            <span className="text-amber-300 font-mono font-bold">
+                              {qi} / {maxQi} Qi ({qiPercent}%)
+                            </span>
+                          </div>
+                          <div className="w-full bg-[#1b2230] rounded-full h-2.5 overflow-hidden border border-[#313e56]">
+                            <div 
+                              className="bg-gradient-to-r from-amber-600 to-yellow-400 h-full rounded-full transition-all duration-500"
+                              style={{ width: `${qiPercent}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* 6. Interests / Hobbies */}
                         <div className="text-xs pt-1 border-t border-[#2a2419]">
                           <span className="text-stone-500">Minat & Hobi: </span>
-                          <span className="text-stone-300">{interests.join(' • ')}</span>
+                          <span className="text-stone-300 font-medium">{interests.join(' • ')}</span>
                         </div>
-                      </div>
 
-                      {/* Destiny Traits (3 cols) */}
-                      <div className="lg:col-span-3 flex flex-col justify-center h-full border-t lg:border-t-0 lg:border-l border-[#332b1d] lg:pl-4 pt-3 lg:pt-0">
-                        <DestinyTraits 
-                          nature={destinyNature} 
-                          nurture={destinyNurture} 
-                          compact 
-                        />
                       </div>
 
                     </div>
 
                     {/* Bottom Section: 5 Detailed Stat Categories (General, Combat, Martial Arts, Spiritual Root, Artisanship) */}
+                    {/* All values are strictly integers, and sword skill displays pure integer Level (Lv. 1) */}
                     <div className="pt-2">
                       <StatGrid player={player} />
                     </div>
@@ -289,8 +452,8 @@ export default function PlayerStatsModal() {
                                 <h4 className="font-bold text-amber-200 text-sm">{m.name}</h4>
                                 <p className="text-stone-400 line-clamp-2 mt-0.5">{m.description || 'Kitab jurus rahasia.'}</p>
                                 <div className="mt-1 flex items-center justify-between text-[11px] text-amber-400">
-                                  <span>Tingkat: {m.level} / {m.maxLevel || 10}</span>
-                                  <span>{m.effectType ? `${m.effectType} +${m.effectValue}` : ''}</span>
+                                  <span>Tingkat: {Math.floor(m.level || 1)} / {Math.floor(m.maxLevel || 10)}</span>
+                                  <span>{m.effectType ? `${m.effectType} +${Math.floor(m.effectValue || 0)}` : ''}</span>
                                 </div>
                               </div>
                             </div>
@@ -315,12 +478,12 @@ export default function PlayerStatsModal() {
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {[
-                          { name: 'Alkimia (Alchemy)', level: player?.extendedStats?.artisanship?.alchemy || 5, icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
-                          { name: 'Penempa (Smithing)', level: player?.extendedStats?.artisanship?.forge || 5, icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan artefak' },
-                          { name: 'Feng Shui', level: player?.extendedStats?.artisanship?.fengShui || 5, icon: '🧭', desc: 'Geomansi dan formasi energi spiritual' },
-                          { name: 'Kertas Jimat (Talismans)', level: player?.extendedStats?.artisanship?.talismans || 5, icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
-                          { name: 'Herbalis (Herbology)', level: player?.extendedStats?.artisanship?.herbology || 5, icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
-                          { name: 'Penambang (Mining)', level: player?.extendedStats?.artisanship?.mining || 5, icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
+                          { name: 'Alkimia (Alchemy)', level: Math.floor(player?.extendedStats?.artisanship?.alchemy || 5), icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
+                          { name: 'Penempa (Smithing)', level: Math.floor(player?.extendedStats?.artisanship?.forge || 5), icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan artefak' },
+                          { name: 'Feng Shui', level: Math.floor(player?.extendedStats?.artisanship?.fengShui || 5), icon: '🧭', desc: 'Geomansi dan formasi energi spiritual' },
+                          { name: 'Kertas Jimat (Talismans)', level: Math.floor(player?.extendedStats?.artisanship?.talismans || 5), icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
+                          { name: 'Herbalis (Herbology)', level: Math.floor(player?.extendedStats?.artisanship?.herbology || 5), icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
+                          { name: 'Penambang (Mining)', level: Math.floor(player?.extendedStats?.artisanship?.mining || 5), icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
                         ].map((art, idx) => (
                           <div key={idx} className="bg-[#181d2a] border border-[#2d3547] p-3 rounded-lg flex items-center gap-3">
                             <div className="text-2xl p-2 bg-[#10131d] rounded-md border border-[#384157]">
@@ -384,7 +547,7 @@ export default function PlayerStatsModal() {
                         </div>
                         <div className="flex justify-between items-center p-3 bg-[#181d2a] rounded-lg border border-[#2d3547]">
                           <span className="text-stone-400">Total Akumulasi Qi:</span>
-                          <span className="font-bold text-sky-300">{player?.systemCultivation?.qi || 0} Intisari Qi</span>
+                          <span className="font-bold text-sky-300">{qi} Intisari Qi</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-[#181d2a] rounded-lg border border-[#2d3547]">
                           <span className="text-stone-400">Kondisi Fondasi Dantian:</span>

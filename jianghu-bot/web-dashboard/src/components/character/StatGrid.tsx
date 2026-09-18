@@ -8,61 +8,106 @@ import {
 } from 'lucide-react';
 import { PlayerProfile } from '@/types/game';
 
+/**
+ * Formula Kurva XP Kemahiran Kungfu (Synchronized dengan utils/kungfuMastery.js)
+ * 14 * (L^2.25) + 35 * L
+ * Level 1: 49 XP, Level 2: 136 XP
+ * XP = 94 -> Level 1
+ */
+export function getKungfuLevelFromExp(rawExp: number = 0): number {
+  const exp = Math.max(0, Math.floor(Number(rawExp) || 0));
+  let level = 0;
+  while (level < 250) {
+    const nextLevel = level + 1;
+    const req = Math.floor(14 * Math.pow(nextLevel, 2.25) + (35 * nextLevel));
+    if (exp >= req) {
+      level = nextLevel;
+    } else {
+      break;
+    }
+  }
+  return level;
+}
+
 interface StatGridProps {
   player: Partial<PlayerProfile> | any;
   compact?: boolean;
+  hideCombat?: boolean; // Jika true (misal pada NPC), sembunyikan stats tempur & kemahiran beladiri
 }
 
-export default function StatGrid({ player, compact = false }: StatGridProps) {
+export default function StatGrid({ player, compact = false, hideCombat = false }: StatGridProps) {
   // Extract or fallback
   const ext = player?.extendedStats || {};
   const combat = player?.combatStats || {};
   const kungfu = player?.kungfuSkills || {};
-  const roots = ext.spiritualRoot || { fire: 10, water: 10, lightning: 10, wind: 10, earth: 10, wood: 10 };
-  const artisan = ext.artisanship || { alchemy: 5, forge: 5, fengShui: 5, talismans: 5, herbology: 5, mining: 5 };
+  const rawRoots = ext.spiritualRoot || { fire: 10, water: 10, lightning: 10, wind: 10, earth: 10, wood: 10 };
+  const rawArtisan = ext.artisanship || { alchemy: 5, forge: 5, fengShui: 5, talismans: 5, herbology: 5, mining: 5 };
 
-  // General values
-  const age = player?.age || 16;
-  const maxLifespan = ext.maxLifespan || 100;
-  const mood = ext.mood !== undefined ? ext.mood : 100;
-  const health = combat.currentHp !== undefined ? combat.currentHp : (combat.hp || 100);
-  const maxHealth = combat.maxHp || combat.hp || 100;
-  const stamina = player?.currentStamina !== undefined && player.currentStamina !== null ? player.currentStamina : 100;
+  // 1. General Values (Strictly Integers)
+  const age = Math.floor(Number(player?.age) || 16);
+  const maxLifespan = Math.floor(Number(ext.maxLifespan) || 100);
+  const mood = Math.floor(ext.mood !== undefined ? Number(ext.mood) : 100);
+  const rawHp = combat.currentHp !== undefined ? combat.currentHp : (combat.hp !== undefined ? combat.hp : 100);
+  const health = Math.floor(Number(rawHp) || 0);
+  const rawMaxHp = combat.maxHp !== undefined ? combat.maxHp : (combat.hp !== undefined ? combat.hp : 100);
+  const maxHealth = Math.floor(Number(rawMaxHp) || 100);
+  const rawStamina = player?.currentStamina !== undefined && player.currentStamina !== null ? player.currentStamina : 100;
+  const stamina = Math.floor(Number(rawStamina) || 0);
   const maxStamina = 100;
-  const vitality = ext.vitality || 100;
-  const maxVitality = ext.maxVitality || 100;
-  const energy = ext.innerEnergy || 100;
-  const maxEnergy = ext.maxInnerEnergy || 100;
-  const focus = ext.focus || 100;
-  const maxFocus = ext.maxFocus || 100;
-  const luck = ext.luck || 10;
-  const insight = ext.insight || 10;
+  const vitality = Math.floor(Number(ext.vitality) || 100);
+  const maxVitality = Math.floor(Number(ext.maxVitality) || 100);
+  const energy = Math.floor(Number(ext.innerEnergy) || 100);
+  const maxEnergy = Math.floor(Number(ext.maxInnerEnergy) || 100);
+  const focus = Math.floor(Number(ext.focus) || 100);
+  const maxFocus = Math.floor(Number(ext.maxFocus) || 100);
+  const luck = Math.floor(Number(ext.luck) || 10);
+  const insight = Math.floor(Number(ext.insight) || 10);
 
-  // Combat values
-  const atk = combat.atk || 15;
-  const def = combat.def || 10;
-  const crit = combat.critRate !== undefined ? combat.critRate : (ext.critRate || 5);
-  const critRes = combat.critRes !== undefined ? combat.critRes : (ext.critResist || 0);
-  const agility = combat.agility !== undefined ? combat.agility : (ext.agility || combat.spd || 10);
-  const critDmg = combat.critDmg !== undefined ? combat.critDmg : (ext.critDmg || 150);
-  const critDr = combat.critDr !== undefined ? combat.critDr : (ext.critDmgReduce || 0);
-  const travelSpeed = combat.travelSpeed !== undefined ? combat.travelSpeed : (ext.travelSpeed || 100);
-  const martialRes = combat.martialRes !== undefined ? combat.martialRes : (ext.martialRes || 0);
-  const spiritualRes = combat.spiritualRes !== undefined ? combat.spiritualRes : (ext.spiritualRes || 0);
+  // 2. Combat Values (Strictly Integers)
+  const atk = Math.floor(Number(combat.atk) || 15);
+  const def = Math.floor(Number(combat.def) || 10);
+  const crit = Math.floor(Number(combat.critRate !== undefined ? combat.critRate : (ext.critRate || 5)));
+  const critRes = Math.floor(Number(combat.critRes !== undefined ? combat.critRes : (ext.critResist || 0)));
+  const agility = Math.floor(Number(combat.agility !== undefined ? combat.agility : (ext.agility || combat.spd || 10)));
+  const critDmg = Math.floor(Number(combat.critDmg !== undefined ? combat.critDmg : (ext.critDmg || 150)));
+  const critDr = Math.floor(Number(combat.critDr !== undefined ? combat.critDr : (ext.critDmgReduce || 0)));
+  const travelSpeed = Math.floor(Number(combat.travelSpeed !== undefined ? combat.travelSpeed : (ext.travelSpeed || 100)));
+  const martialRes = Math.floor(Number(combat.martialRes !== undefined ? combat.martialRes : (ext.martialRes || 0)));
+  const spiritualRes = Math.floor(Number(combat.spiritualRes !== undefined ? combat.spiritualRes : (ext.spiritualRes || 0)));
 
-  // Martial Arts values (from kungfuSkills)
-  const bladeSkill = kungfu.saber || 0;
-  const spearSkill = kungfu.staff || 0;
-  const swordSkill = kungfu.sword || 0;
-  const fistSkill = kungfu.fist || 0;
-  const palmSkill = kungfu.special || 0;
-  const fingerSkill = kungfu.finger || 0;
+  // 3. Martial Arts Values (Computed Level from XP via getKungfuLevelFromExp)
+  const bladeSkill = getKungfuLevelFromExp(kungfu.saber || 0);
+  const spearSkill = getKungfuLevelFromExp(kungfu.staff || 0);
+  const swordSkill = getKungfuLevelFromExp(kungfu.sword || 0);
+  const fistSkill = getKungfuLevelFromExp(kungfu.fist || 0);
+  const palmSkill = getKungfuLevelFromExp(kungfu.special || 0);
+  const fingerSkill = getKungfuLevelFromExp(kungfu.finger || 0);
+
+  // 4. Spiritual Roots (Strictly Integers)
+  const roots = {
+    fire: Math.floor(Number(rawRoots.fire) || 10),
+    water: Math.floor(Number(rawRoots.water) || 10),
+    lightning: Math.floor(Number(rawRoots.lightning) || 10),
+    wind: Math.floor(Number(rawRoots.wind) || 10),
+    earth: Math.floor(Number(rawRoots.earth) || 10),
+    wood: Math.floor(Number(rawRoots.wood) || 10)
+  };
+
+  // 5. Artisanship (Strictly Integers)
+  const artisan = {
+    alchemy: Math.floor(Number(rawArtisan.alchemy) || 5),
+    forge: Math.floor(Number(rawArtisan.forge) || 5),
+    fengShui: Math.floor(Number(rawArtisan.fengShui) || 5),
+    talismans: Math.floor(Number(rawArtisan.talismans) || 5),
+    herbology: Math.floor(Number(rawArtisan.herbology) || 5),
+    mining: Math.floor(Number(rawArtisan.mining) || 5)
+  };
 
   const headerClass = "px-3 py-1 rounded-full bg-[#1b1c24] border border-[#3e3b30] text-[#e0cfb3] text-xs font-serif font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-md mb-2.5";
 
   return (
     <div className={`w-full font-serif ${compact ? 'text-xs' : 'text-sm'} text-[#d1c2a5]`}>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${hideCombat ? 'lg:grid-cols-3' : 'lg:grid-cols-5'} gap-3 sm:gap-4`}>
         
         {/* 1. GENERAL STATS */}
         <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
@@ -110,85 +155,89 @@ export default function StatGrid({ player, compact = false }: StatGridProps) {
           </div>
         </div>
 
-        {/* 2. COMBAT STATS */}
-        <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
-          <div className={headerClass}>
-            <Sword size={13} className="text-rose-400" />
-            Combat
+        {/* 2. COMBAT STATS (HANYA DITAMPILKAN JIKA BUKAN NPC / hideCombat === false) */}
+        {!hideCombat && (
+          <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
+            <div className={headerClass}>
+              <Sword size={13} className="text-rose-400" />
+              Combat
+            </div>
+            <div className="space-y-1.5 text-xs">
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">⚔️ ATK</span>
+                <span className="font-semibold text-red-300">{atk}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">🛡️ DEF</span>
+                <span className="font-semibold text-blue-300">{def}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">💥 CRIT</span>
+                <span className="font-semibold text-orange-300">{crit}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">🔰 CRIT RES</span>
+                <span className="font-semibold text-indigo-300">{critRes}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">🏃 Agility</span>
+                <span className="font-semibold text-sky-300">{agility}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">⚡ CRIT DMG</span>
+                <span className="font-semibold text-amber-300">{critDmg}%</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">🛡️ CRIT DR</span>
+                <span className="font-semibold text-slate-300">{critDr}%</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">👟 Travel Speed</span>
+                <span className="font-semibold text-amber-200">{travelSpeed}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5">
+                <span className="text-stone-400">🔮 Martial/Spir RES</span>
+                <span className="font-semibold text-amber-200">{martialRes} / {spiritualRes}</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-1.5 text-xs">
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">⚔️ ATK</span>
-              <span className="font-semibold text-red-300">{atk}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">🛡️ DEF</span>
-              <span className="font-semibold text-blue-300">{def}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">💥 CRIT</span>
-              <span className="font-semibold text-orange-300">{crit}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">🔰 CRIT RES</span>
-              <span className="font-semibold text-indigo-300">{critRes}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">🏃 Agility</span>
-              <span className="font-semibold text-sky-300">{agility}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">⚡ CRIT DMG</span>
-              <span className="font-semibold text-amber-300">{critDmg}%</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">🛡️ CRIT DR</span>
-              <span className="font-semibold text-slate-300">{critDr}%</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400">👟 Travel Speed</span>
-              <span className="font-semibold text-amber-200">{travelSpeed}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5">
-              <span className="text-stone-400">🔮 Martial/Spir RES</span>
-              <span className="font-semibold text-amber-200">{martialRes} / {spiritualRes}</span>
-            </div>
-          </div>
-        </div>
+        )}
 
-        {/* 3. MARTIAL ARTS */}
-        <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
-          <div className={headerClass}>
-            <span className="text-amber-400 text-sm">🥋</span>
-            Martial Arts
+        {/* 3. MARTIAL ARTS (HANYA DITAMPILKAN JIKA BUKAN NPC / hideCombat === false) */}
+        {!hideCombat && (
+          <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
+            <div className={headerClass}>
+              <span className="text-amber-400 text-sm">🥋</span>
+              Martial Arts
+            </div>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🗡️ Blade (Golok)</span>
+                <span className="font-semibold text-amber-200">{bladeSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🥢 Spear (Tongkat)</span>
+                <span className="font-semibold text-amber-200">{spearSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">⚔️ Sword (Pedang)</span>
+                <span className="font-semibold text-amber-200">{swordSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">👊 Fist (Tinju)</span>
+                <span className="font-semibold text-amber-200">{fistSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🖐️ Palm (Telapak)</span>
+                <span className="font-semibold text-amber-200">{palmSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5">
+                <span className="text-stone-400 flex items-center gap-1">👆 Finger (Totokan)</span>
+                <span className="font-semibold text-amber-200">{fingerSkill}</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">🗡️ Blade (Golok)</span>
-              <span className="font-semibold text-amber-200">{bladeSkill}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">🥢 Spear (Tongkat)</span>
-              <span className="font-semibold text-amber-200">{spearSkill}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">⚔️ Sword (Pedang)</span>
-              <span className="font-semibold text-amber-200">{swordSkill}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">👊 Fist (Tinju)</span>
-              <span className="font-semibold text-amber-200">{fistSkill}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">🖐️ Palm (Telapak)</span>
-              <span className="font-semibold text-amber-200">{palmSkill}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5">
-              <span className="text-stone-400 flex items-center gap-1">👆 Finger (Totokan)</span>
-              <span className="font-semibold text-amber-200">{fingerSkill}</span>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* 4. SPIRITUAL ROOT */}
         <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
