@@ -156,7 +156,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             martialRes: 0,
             spiritualRes: 0,
             spiritualRoot: { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 },
-            artisanship: { alchemy: 0, forge: 0, fengShui: 0, talismans: 0, herbology: 0, mining: 0 }
+            artisanship: { alchemy: 1, forge: 1, talismans: 1, herbology: 1, mining: 1 }
         };
 
         // Sinkronisasi Terpadu: Kemahiran Profesi & Artisanship Menjadi Satu Kesatuan Sistem
@@ -164,12 +164,11 @@ router.get('/profile', authenticateToken, async (req, res) => {
         const extArt = (player.extendedStats && player.extendedStats.artisanship) || {};
         
         const unifiedArtisanship = {
-            alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(extArt.alchemy) || 0)),
-            forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(extArt.forge) || 0)),
-            herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(extArt.herbology) || 0)),
-            mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(extArt.mining) || 0)),
-            fengShui: Math.floor(Number(extArt.fengShui) || 0),
-            talismans: Math.floor(Number(extArt.talismans) || 0),
+            alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(extArt.alchemy) || 1)),
+            forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(extArt.forge) || 1)),
+            herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(extArt.herbology) || 1)),
+            mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(extArt.mining) || 1)),
+            talismans: Math.floor(Number(extArt.talismans) || 1),
             fishing: Math.floor(prof.fishing?.isUnlocked ? (prof.fishing.level || 1) : 0),
             cooking: Math.floor(prof.cooking?.isUnlocked ? (prof.cooking.level || 1) : 0)
         };
@@ -1446,6 +1445,17 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
                 const rank = getPlayerSectRank(playerSect, player.discordId);
                 if (!can(rank, 'learn_sect_manual')) {
                     throw new CustomError(`Jabatan sektemu (${rank || 'Tidak ada'}) tidak punya akses untuk upgrade manual sekte.`, 403);
+                }
+            }
+
+            if (m.requiredRootType && m.requiredRootLevel > 0) {
+                const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
+                const rawExp = extRoots[m.requiredRootType] === 10 ? 0 : (extRoots[m.requiredRootType] || 0);
+                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+                const rootLevel = getKungfuLevel(rawExp).level;
+
+                if (rootLevel < m.requiredRootLevel) {
+                    throw new CustomError(`Manual ini membutuhkan Spiritual Root ${m.requiredRootType.toUpperCase()} level ${m.requiredRootLevel}. Levelmu saat ini: ${rootLevel}.`, 400);
                 }
             }
 
