@@ -240,13 +240,32 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
    - **Pemicu Ribbon Kota**: Klik pada kartu tokoh di pita atas pemukiman ("KULTIVATOR DI KOTA") langsung membuka modal interaksi megah Tale of Immortal (menggantikan dialog kecil lama).
    - **Full-Body Standing Art NPC**: Menampilkan ilustrasi berdiri penuh tokoh terintegrasi dengan `GLOBAL_ASSETS.npcs` (`Shuang Ke`, `Wu Binglin`, `Yin Ci`, `Li Keke`, `Xi Hua`, dll.).
    - **Status Hubungan & Karma**: Menampilkan relasi (*Stranger*, *Sahabat*, *Kenalan*, *Pasangan*, *Musuh*), bar kemajuan poin keakraban (*Affinity Progress*), dan bar moralitas *Righteous* vs *Demonic*.
-   - **Penyamaran Kekuatan Tempur (Shrouded Combat Power)**:
-     - Seluruh atribut tempur (ATK, DEF, CRIT, CRIT RES, Agility, Travel Speed) dan jurus/kemahiran beladiri **DISEMBUNYIKAN SECARA TOTAL** (`hideCombat={true}`). Pemain tidak diizinkan mengetahui kekuatan tempur asli NPC agar misteri dan kedalaman dunia persilatan terjaga.
-   - **Gelar Menggantikan Destiny**: Destiny dihapus dan digantikan oleh Gelar Kehormatan NPC (Title).
-   - **Tab yang Dipertahankan**: Hanya 3 tab yang aktif: `stats` (identitas, gelar, relasi & atribut non-tempur), `family` (silsilah keluarga/sekte), dan `social` (ikatan sosial). Tab `skills`, `artifact`, `backstory`, dan `taoist mind` telah **DIHAPUS**.
-   - **Aksi Sosial Lengkap**: Sapa (Talk), Beri Hadiah (Gift), Akrab (Bond), Sparring (Bertarung Latih), Semadi Berdua (Dual Cultivation), Debat Dao, Minta Bantuan, Ajak Jelajah, Curi (Theft), Serang (Attack).
+   - **Aksi Sosial & Bermusuhan Terbatas (Hanya 4 Aksi Sah)**:
+     - **DIHAPUS**: `ajak jelajah`, `debat dao`, `sparing`, `akrab`, `semedi berdua`, dan `bantuan` telah **DIHAPUS SECARA TOTAL**.
+     - **HANYA 4 AKSI AKTIF**: `Sapa (Talk)`, `Hadiah (Gift)`, `Curi (Theft)`, dan `Serang! (Attack)`.
+   - **Pemberantasan Stat & Penyamaran Kekuatan (Zero Stat Clutter Policy)**:
+     - Seluruh stat `General`, `Spiritual Root`, `Artisanship`, dan `Combat` **DIHAPUS DARI MODAL NPC**.
+     - NPC hanya menampilkan data identitas ringkas (Nama, Sekte, Jabatan, Ras, Kelamin, Ranah, Karisma, Reputasi, Minat/Hobi), kesan tutur kata/dialog, serta status hubungan dan moralitas.
+   - **Gelar Kehormatan NPC (Admin Only Title Policy)**:
+     - NPC biasa **TIDAK MEMILIKI GELAR OTOMATIS/ACAK**.
+     - Kolom Gelar Kehormatan pada NPC bernilai default `Tidak Memiliki Gelar (Hanya Admin)` kecuali ditentukan secara manual dan otoritatif oleh Admin (`npcData.adminTitle`).
+   - **Tab yang Dipertahankan**: Hanya 3 tab yang aktif: `stats` (identitas, gelar admin, tutur kata, relasi), `family` (silsilah keluarga/sekte), dan `social` (ikatan sosial). Tab `skills`, `artifact`, `backstory`, dan `taoist mind` telah **DIHAPUS**.
 
-4. **Zero-Overlap & Mutual Exclusion Rules**:
+4. **Navigasi Atas yang Dapat Menciut (Collapsible Top Navigation Bar - `Navbar.tsx`)**:
+   - Bar navigasi atas (Beranda, Karakter, Dunia, Aset & Tas, Pasar & Sekte, Almanack & Lore) dapat **menciut hilang ke atas** (`-translate-y-full max-h-0 opacity-0`) melalui tombol `[▲ Ciutkan]` di pojok kanan atas atau tab pegangan di tengah bawah bar.
+   - Saat menciut, layar menjadi lega dan bebas distraksi; menyisakan **tombol panah ke bawah mengambang (`ChevronDown`)** di bagian tengah paling atas layar (`fixed top-0 left-1/2 -translate-x-1/2 z-[60]`) untuk memanggil kembali bar navigasi secara instan dan halus.
+
+5. **Halaman Profil Karakter 5 Pilar (`profile/page.tsx`)**:
+   - Menyelaraskan seluruh data profil kultivator dengan **Panca Pilar Fondasi Kultivasi (Five Pillars RPG Framework)** via komponen `<StatGrid />`:
+     1. General (Lifespan, Mood, Health, Stamina, Vitality, Energy, Focus, Luck, Insight).
+     2. Combat (ATK, DEF, CRIT, CRIT RES, Agility, CRIT DMG, CRIT DR, Travel Speed, Martial/Spiritual RES).
+     3. Martial Arts (Blade, Spear, Sword, Fist, Palm, Finger - level riil dihitung dari kurva XP).
+     4. Spiritual Root (6 Elemen: Api, Air, Petir, Angin, Tanah, Kayu).
+     5. Artisanship (6 Profesi: Alkimia, Tempa, Feng Shui, Jimat, Herba, Tambang).
+   - Menampilkan Lencana Gelar Pencapaian (`🎖️ [${activeTitle}]`), Bar Sirkulasi Inti Qi, Saldo Tael (Emas, Perak, Tembaga, Batu Roh, Giok), serta tombol pembuka lembar status lengkap (`PlayerStatsModal`).
+   - Seluruh nilai numerik disanitasi mutlak menjadi integer bulat murni (`Math.floor`).
+
+6. **Zero-Overlap & Mutual Exclusion Rules**:
    - Modal penuh (`PlayerStatsModal`, `NpcInteractionModal`, `BattleArena`, `DashboardModal`) saling menutup satu sama lain saat dibuka.
    - Di viewport mobile landscape (tinggi 360–420px) maupun portrait, setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri tanpa ada elemen yang saling menimpa atau terpotong.
 

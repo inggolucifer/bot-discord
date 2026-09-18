@@ -8,7 +8,6 @@ import {
   HelpCircle, Compass, RefreshCw, AlertTriangle, Skull, Sparkles, BookOpen,
   Award, Heart, Users, ShieldCheck, UserCheck, Flame
 } from 'lucide-react';
-import StatGrid from '@/components/character/StatGrid';
 import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
@@ -147,33 +146,10 @@ export default function NpcInteractionModal() {
   const npcReputation = npcData?.reputation || 'Termasyhur (Renowned)';
   const npcInterests = npcData?.interests || ['Bambu Kuno', 'Seruling Xiao', 'Kaligrafi Kitab'];
   
-  // Title Pengganti Destiny
-  const npcTitle = npcData?.honorificTitle || `[${npcPosition} ${npcSect}]`;
-
   // Status Hubungan
   const relationship = npcData?.relationship || 'Stranger';
   const relationshipPoints = Math.floor(Number(npcData?.relationshipPoints) || 15);
   const npcAlignment = npcData?.alignment || { righteous: 200, demonic: 100 };
-
-  // Data Non-Combat untuk StatGrid (hideCombat={true} agar kekuatan tempur & jurus disembunyikan!)
-  const npcNonCombatStats = {
-    age: Math.floor(Number(npcData?.age) || 28),
-    currentStamina: Math.floor(Number(npcData?.stamina) || 80),
-    extendedStats: {
-      maxLifespan: Math.floor(Number(npcData?.maxLifespan) || 810),
-      mood: Math.floor(Number(npcData?.mood) || 75),
-      vitality: Math.floor(Number(npcData?.vitality) || 9863),
-      maxVitality: Math.floor(Number(npcData?.maxVitality) || 11435),
-      innerEnergy: Math.floor(Number(npcData?.innerEnergy) || 1782),
-      maxInnerEnergy: Math.floor(Number(npcData?.maxInnerEnergy) || 1985),
-      focus: Math.floor(Number(npcData?.focus) || 1866),
-      maxFocus: Math.floor(Number(npcData?.maxFocus) || 2137),
-      luck: Math.floor(Number(npcData?.luck) || 100),
-      insight: Math.floor(Number(npcData?.insight) || 150),
-      spiritualRoot: npcData?.spiritualRoot || { fire: 311, water: 108, lightning: 76, wind: 247, earth: 117, wood: 91 },
-      artisanship: npcData?.artisanship || { alchemy: 173, forge: 37, fengShui: 38, talismans: 26, herbology: 60, mining: 20 }
-    }
-  };
 
   // Resolve standing full-body art from GLOBAL_ASSETS.npcs
   const standingArtUrl = 
@@ -311,71 +287,35 @@ export default function NpcInteractionModal() {
                 </div>
               </div>
 
-              {/* Action Buttons (Social Actions) */}
-              <div className="grid grid-cols-2 gap-1.5 text-xs font-serif">
+              {/* Action Buttons (Social Actions: Sapa & Beri Hadiah) */}
+              <div className="grid grid-cols-2 gap-2 text-xs font-serif">
                 <button 
                   onClick={() => handleAction('talk')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
+                  className="py-2 px-3 rounded-lg bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
                 >
-                  <MessageSquare size={13} className="text-sky-400" /> Sapa (Talk)
+                  <MessageSquare size={14} className="text-sky-400" /> Sapa (Talk)
                 </button>
                 <button 
                   onClick={() => handleAction('gift')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
+                  className="py-2 px-3 rounded-lg bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
                 >
-                  <Gift size={13} className="text-amber-400" /> Hadiah (Gift)
-                </button>
-                <button 
-                  onClick={() => handleAction('bond')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <HeartHandshake size={13} className="text-rose-400" /> Akrab (Bond)
-                </button>
-                <button 
-                  onClick={() => handleAction('spar')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <Swords size={13} className="text-yellow-400" /> Sparring
-                </button>
-                <button 
-                  onClick={() => handleAction('dualCultivation')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <Sparkles size={13} className="text-purple-400" /> Semadi Berdua
-                </button>
-                <button 
-                  onClick={() => handleAction('debate')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <BookOpen size={13} className="text-teal-400" /> Debat Dao
-                </button>
-                <button 
-                  onClick={() => handleAction('request')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <HelpCircle size={13} className="text-cyan-400" /> Bantuan
-                </button>
-                <button 
-                  onClick={() => handleAction('invite')}
-                  className="py-1.5 px-2 rounded bg-[#181e2b] hover:bg-[#252f44] border border-[#38435d] text-stone-200 flex items-center justify-center gap-1 transition-all active:scale-95"
-                >
-                  <Compass size={13} className="text-emerald-400" /> Ajak Jelajah
+                  <Gift size={14} className="text-amber-400" /> Hadiah (Gift)
                 </button>
               </div>
 
               {/* Hostile Actions */}
-              <div className="mt-2.5 pt-2 border-t border-[#262117] grid grid-cols-2 gap-1.5 text-xs">
+              <div className="mt-2.5 pt-2 border-t border-[#262117] grid grid-cols-2 gap-2 text-xs">
                 <button 
                   onClick={() => handleHostileAction('theft')}
-                  className="py-1 px-2 rounded bg-[#2a1315] hover:bg-rose-900/60 border border-rose-800/60 text-rose-200 flex items-center justify-center gap-1 transition-all"
+                  className="py-1.5 px-2 rounded-lg bg-[#2a1315] hover:bg-rose-900/60 border border-rose-800/60 text-rose-200 flex items-center justify-center gap-1 transition-all"
                 >
                   🧤 Curi (Theft)
                 </button>
                 <button 
                   onClick={() => handleHostileAction('attack')}
-                  className="py-1 px-2 rounded bg-gradient-to-r from-red-950 to-rose-900 hover:from-red-900 hover:to-rose-800 border border-red-600 text-red-100 flex items-center justify-center gap-1 font-semibold transition-all shadow-md"
+                  className="py-1.5 px-2 rounded-lg bg-gradient-to-r from-red-950 to-rose-900 hover:from-red-900 hover:to-rose-800 border border-red-600 text-red-100 flex items-center justify-center gap-1 font-semibold transition-all shadow-md"
                 >
-                  <Skull size={13} className="text-red-400" /> Serang!
+                  <Skull size={14} className="text-red-400" /> Serang!
                 </button>
               </div>
             </div>
@@ -459,14 +399,14 @@ export default function NpcInteractionModal() {
             {/* Tab Contents */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-5">
               
-              {/* TAB 1: STATS (IDENTITAS, GELAR & ATRIBUT NON-TEMPUR) */}
+              {/* TAB 1: STATS (IDENTITAS & STATUS HUBUNGAN SAJA - TANPA STAT GENERAL, SPIRIT ROOT, ARTISAN, DAN TANPA COMBAT) */}
               {activeTab === 'stats' && (
                 <div className="space-y-4">
                   {/* Identity Summary Header */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 bg-[#111520] border border-[#30291d] rounded-lg">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 p-3.5 bg-[#111520] border border-[#30291d] rounded-lg shadow-md">
                     
                     {/* Identity Details (8 cols) */}
-                    <div className="lg:col-span-8 space-y-1.5 text-xs">
+                    <div className="lg:col-span-8 space-y-2 text-xs">
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                         <div><span className="text-stone-500">Nama:</span> <span className="font-bold text-amber-200 text-sm">{npcName}</span></div>
                         <div><span className="text-stone-500">Sekte:</span> <span className="text-amber-300 font-semibold">{npcSect}</span></div>
@@ -479,28 +419,66 @@ export default function NpcInteractionModal() {
                         <div><span className="text-stone-500">Karisma:</span> <span className="text-amber-400">{npcCharisma}</span></div>
                         <div><span className="text-stone-500">Reputasi:</span> <span className="text-emerald-300">{npcReputation}</span></div>
                       </div>
-                      <div className="pt-1 text-[11px] text-stone-400 border-t border-[#1f2635]">
+                      <div className="pt-1.5 text-[11px] text-stone-400 border-t border-[#1f2635]">
                         <span className="text-stone-500">Minat & Hobi:</span> <span className="text-stone-300 font-medium">{npcInterests.join(' • ')}</span>
                       </div>
                     </div>
 
-                    {/* Gelar / Title NPC (Pengganti Destiny Sesuai Permintaan) (4 cols) */}
+                    {/* Gelar Kehormatan (Title): KOSONG KECUALI DITENTUKAN OLEH ADMIN */}
                     <div className="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-[#2e271a] lg:pl-3 flex flex-col justify-center">
                       <span className="text-[10px] text-stone-400 uppercase tracking-wider block mb-1">
                         Gelar Kehormatan (Title):
                       </span>
-                      <div className="p-2 rounded bg-gradient-to-r from-[#201b12] to-[#121620] border border-amber-500/60 text-amber-200 text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-                        <Award size={16} className="text-amber-400 shrink-0" />
-                        <span className="truncate">{npcTitle}</span>
-                      </div>
+                      {npcData?.adminTitle ? (
+                        <div className="p-2 rounded bg-gradient-to-r from-[#201b12] to-[#121620] border border-amber-500/60 text-amber-200 text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                          <Award size={16} className="text-amber-400 shrink-0" />
+                          <span className="truncate">{npcData.adminTitle}</span>
+                        </div>
+                      ) : (
+                        <div className="p-2 rounded bg-[#0b0e14] border border-[#232d3f] text-stone-500 text-xs italic flex items-center gap-1.5">
+                          <Award size={14} className="text-stone-600 shrink-0" />
+                          <span>Tidak Memiliki Gelar (Hanya Admin)</span>
+                        </div>
+                      )}
                       <span className="text-[9px] text-stone-500 italic mt-1">
                         Kekuatan tempur & jurus dirahasiakan oleh dunia persilatan.
                       </span>
                     </div>
                   </div>
 
-                  {/* Detailed Non-Combat Stats (Kekuatan Tempur & Martial Arts disembunyikan via hideCombat={true}) */}
-                  <StatGrid player={npcNonCombatStats} compact hideCombat={true} />
+                  {/* Percakapan Terakhir & Sapaan Tokoh */}
+                  <div className="p-4 bg-[#111520] border border-[#30291d] rounded-lg">
+                    <h4 className="text-xs font-bold text-amber-300 mb-2 flex items-center gap-1.5">
+                      <MessageSquare size={13} className="text-sky-400" />
+                      Tutur Kata & Kesan Tokoh
+                    </h4>
+                    <div className="bg-[#0c1017] p-3 rounded border border-[#232d3f] text-xs text-stone-300 italic leading-relaxed">
+                      "{dialogHistory[0] || npcData?.greeting || 'Membaca sutra suci menuntut kejernihan akal budi.'}"
+                    </div>
+                  </div>
+
+                  {/* Status Hubungan & Ikatan */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div className="p-3 bg-[#111520] rounded-lg border border-[#30291d]">
+                      <div className="text-stone-400 text-[11px] mb-0.5">Status Hubungan</div>
+                      <div className="font-bold text-amber-200">
+                        {relationship === 'Friend' || relationship === 'Sahabat' ? 'Sahabat Karib' : 'Orang Asing (Stranger)'}
+                      </div>
+                      <div className="text-stone-500 text-[10px] mt-1">
+                        Poin Keakraban: <span className="text-amber-300 font-semibold">{relationshipPoints}</span> / 100
+                      </div>
+                    </div>
+                    <div className="p-3 bg-[#111520] rounded-lg border border-[#30291d]">
+                      <div className="text-stone-400 text-[11px] mb-0.5">Orientasi Moral</div>
+                      <div className="font-bold text-emerald-300">
+                        {npcAlignment.righteous >= npcAlignment.demonic ? 'Jalan Lurus (Righteous)' : 'Jalan Iblis (Demonic)'}
+                      </div>
+                      <div className="text-stone-500 text-[10px] mt-1">
+                        Kebajikan: {npcAlignment.righteous} • Kejahatan: {npcAlignment.demonic}
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               )}
 

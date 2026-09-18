@@ -3,7 +3,7 @@
 import { useAuthStore } from '@/lib/store';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
  // Need to check if FallbackImage exists, if not we will fix it later.
@@ -13,6 +13,7 @@ export default function Navbar() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -92,13 +93,34 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md">
+      {/* Floating Down-Arrow Summon Button When Navbar is Collapsed */}
+      {isNavbarCollapsed && (
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
+          <button
+            onClick={() => setIsNavbarCollapsed(false)}
+            title="Tampilkan Kembali Menu Navigasi"
+            className="bg-[#0f121a]/95 hover:bg-[#1a202c] border-b-2 border-x border-[#c5a880]/80 text-[#c5a880] px-4 py-1.5 rounded-b-xl shadow-[0_4px_20px_rgba(0,0,0,0.9)] backdrop-blur-md flex items-center gap-1.5 text-xs font-serif font-bold tracking-wider hover:text-amber-200 transition-all hover:pt-2 group cursor-pointer"
+          >
+            <ChevronDown className="w-4 h-4 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
+            <span>Menu Navigasi</span>
+          </button>
+        </div>
+      )}
+
+      <header 
+        className={cn(
+          "bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ease-in-out relative",
+          isNavbarCollapsed 
+            ? "-translate-y-full opacity-0 pointer-events-none max-h-0 border-b-0 overflow-hidden" 
+            : "translate-y-0 opacity-100 max-h-24 shadow-lg"
+        )}
+      >
         <div className="container mx-auto px-3 sm:px-4 h-12 sm:h-14 lg:h-16 flex justify-between items-center">
 
           {/* Logo */}
-        <Link href="/" className="text-base sm:text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
-          JIANGHU RP
-        </Link>
+          <Link href="/" className="text-base sm:text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
+            JIANGHU RP
+          </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
@@ -224,6 +246,19 @@ export default function Navbar() {
             </Button>
           )}
 
+            {/* Collapse Navbar Button */}
+            <button
+              onClick={() => {
+                setIsNavbarCollapsed(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-md bg-[#161a24] hover:bg-[#23293a] border border-[#3b3322] hover:border-[#c5a880]/70 text-stone-300 hover:text-amber-200 transition-all flex items-center gap-1 text-xs cursor-pointer shadow-sm"
+              title="Ciutkan Menu Navigasi ke Atas"
+            >
+              <ChevronUp className="w-4 h-4 text-amber-400" />
+              <span className="hidden md:inline text-[11px] font-serif">Ciutkan</span>
+            </button>
+
             {/* Mobile Menu Toggle */}
             <button
               className="lg:hidden p-2 text-gray-300 hover:text-[#c5a880]"
@@ -233,6 +268,21 @@ export default function Navbar() {
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
+        </div>
+
+        {/* Center Bottom Pull Tab Handle */}
+        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto hidden sm:block">
+          <button
+            onClick={() => {
+              setIsNavbarCollapsed(true);
+              setIsMobileMenuOpen(false);
+            }}
+            title="Ciutkan Menu Navigasi ke Atas"
+            className="px-3 py-0.5 rounded-b-md bg-[#0d1017]/95 hover:bg-[#181d2a] border-b border-x border-[#52442d] hover:border-[#c5a880] text-[#c5a880] hover:text-amber-200 text-[10px] font-serif flex items-center gap-1 transition-all shadow-md cursor-pointer"
+          >
+            <ChevronUp size={11} className="text-amber-400" />
+            <span>Ciutkan</span>
+          </button>
         </div>
       </header>
 

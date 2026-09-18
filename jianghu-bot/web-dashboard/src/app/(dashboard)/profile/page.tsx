@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
-import { Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, Backpack, Compass, Hammer, Sprout, Lock, Home } from 'lucide-react';
+import { 
+  Loader2, Coins, Shield, Swords, Activity, MapPin, Zap, Info, Clock, 
+  Backpack, Compass, Hammer, Sprout, Lock, Home, Award, Sparkles, User
+} from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { motion } from 'framer-motion';
 import { getRarityBorderClass } from './components/RarityHelpers';
@@ -12,9 +15,13 @@ import { StatDeltaHover } from './components/StatDeltaHover';
 import Link from 'next/link';
 import { Phase10Stats } from './components/Phase10Stats';
 import { checkClientKungfuRequirement } from '@/lib/kungfu';
+import StatGrid from '@/components/character/StatGrid';
+import PlayerStatsModal from '@/components/modals/PlayerStatsModal';
+import { useUIStore } from '@/lib/store';
 
 export default function ProfilePage() {
   const queryClient = useQueryClient();
+  const { activeModal, setActiveModal } = useUIStore();
 
   const { data: profileData, isLoading, error } = useQuery({
     queryKey: ['player-profile-private'],
@@ -69,13 +76,27 @@ export default function ProfilePage() {
   }
 
   const profile = profileData.player || profileData;
-  const combatStats = profileData.combatStats || { hp: 0, atk: 0, def: 0, spd: 0 };
+  const combatStats = profileData.combatStats || profile.combatStats || { hp: 0, atk: 0, def: 0, spd: 0 };
   const equipment = profile.equipment || {};
   const currentEnergy = profileData.energy?.current || 0;
   const maxEnergy = profileData.maxEnergy || 100;
   const energyPercent = Math.min(100, (currentEnergy / maxEnergy) * 100);
 
   const currency = profile.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+
+  const qi = Math.floor(Number(profile.systemCultivation?.qi) || 0);
+  const stage = Math.floor(Number(profile.systemCultivation?.stage || profile.stage) || 0);
+  const maxQi = Math.max(100, (stage + 1) * 100);
+  const qiPercent = Math.min(100, Math.max(0, Math.floor((qi / maxQi) * 100)));
+  const activeTitle = profile.activeTitle || 'Pendekar Pedang Surgawi';
+
+  const mergedProfile = {
+    ...profile,
+    characterName: profile.characterName || 'Pendekar Jianghu',
+    activeTitle,
+    combatStats: profileData.combatStats || profile.combatStats || {},
+    extendedStats: profile.extendedStats || profileData.extendedStats || {}
+  };
 
   const equipmentSlots = [
     { id: 'helmet', label: 'Helmet', icon: '🪖' },
@@ -132,69 +153,137 @@ export default function ProfilePage() {
   const activeBuffs = (profile.activeBuffs || []).filter((b: any) => new Date(b.expiresAt) > now);
 
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6">
+    <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
 
-      {/* Header Identitas */}
-      <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col md:flex-row items-center md:items-start gap-4">
-         <div className="w-20 h-20 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0">
-            {profile.avatarUrl || profile.characterImage ? (
-              <FallbackImage src={profile.avatarUrl || profile.characterImage || ''} alt={profile.characterName} fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>} />
-            ) : profile.resolvedBody ? (
-              <div className="relative w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 overflow-hidden">
-                {profile.resolvedBody.cloth && <img src={profile.resolvedBody.cloth} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 1}} />}
-                {profile.resolvedBody.face && <img src={profile.resolvedBody.face} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 2}} />}
-                {profile.resolvedBody.hair && <img src={profile.resolvedBody.hair} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 3}} />}
-                {profile.resolvedBody.mask && <img src={profile.resolvedBody.mask} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 4}} />}
-                {!profile.resolvedBody.face && !profile.resolvedBody.hair && !profile.resolvedBody.cloth && <div className="text-5xl">{profile.imageEmoji || '👤'}</div>}
-              </div>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>
-            )}
-         </div>
-         <div className="text-center md:text-left flex-1">
-            <h2 className="text-2xl font-bold text-gray-200">{profile.characterName}</h2>
-            <p className="text-sm text-gray-400 mb-2">{profile.sect || 'Tanpa Sekte'}</p>
-            <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-               <span className="inline-flex items-center gap-1 bg-blue-900/40 border border-blue-900/50 rounded px-2 py-1 text-xs text-blue-300 font-bold">
-                  <Zap size={12} /> {profile.realm} (Tahap {profile.stage})
-               </span>
-               {profile.systemCultivation?.isFlawedFoundation && (
-                   <span
-                      className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
-                      title="Penalti -5% All Stats karena menghancurkan fondasi fana secara paksa."
-                   >
-                      Fondasi Cacat
-                   </span>
-               )}
+      {/* Header Identitas & Qi Kultivasi */}
+      <div className="bg-gradient-to-r from-[#141824] via-[#10131d] to-[#181c28] border-2 border-[#574730] rounded-xl p-4 sm:p-6 shadow-[0_4px_30px_rgba(0,0,0,0.8)] flex flex-col md:flex-row items-center md:items-start gap-5 relative overflow-hidden">
+        {/* Decorative spiritual glow halo */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0 shadow-[0_0_25px_rgba(197,168,128,0.35)]">
+          {profile.avatarUrl || profile.characterImage ? (
+            <FallbackImage 
+              src={profile.avatarUrl || profile.characterImage || ''} 
+              alt={profile.characterName} 
+              fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>} 
+            />
+          ) : profile.resolvedBody ? (
+            <div className="relative w-full h-full flex items-center justify-center bg-[#151922] overflow-hidden">
+              {profile.resolvedBody.cloth && <img src={profile.resolvedBody.cloth} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 1}} />}
+              {profile.resolvedBody.face && <img src={profile.resolvedBody.face} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 2}} />}
+              {profile.resolvedBody.hair && <img src={profile.resolvedBody.hair} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 3}} />}
+              {profile.resolvedBody.mask && <img src={profile.resolvedBody.mask} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 4}} />}
+              {!profile.resolvedBody.face && !profile.resolvedBody.hair && !profile.resolvedBody.cloth && <div className="text-5xl">{profile.imageEmoji || '👤'}</div>}
             </div>
-         </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>
+          )}
+        </div>
+
+        <div className="text-center md:text-left flex-1 space-y-2.5 z-10 w-full">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                <h2 className="text-2xl sm:text-3xl font-bold font-serif text-amber-100">{profile.characterName}</h2>
+                {/* Lencana Gelar Pencapaian (Title Flexing Badge) */}
+                <div className="px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-950/90 to-amber-900/60 border border-amber-500/70 text-amber-200 text-xs font-serif font-bold tracking-wider shadow-sm flex items-center gap-1.5">
+                  <Award size={13} className="text-amber-400" />
+                  <span>[{activeTitle}]</span>
+                </div>
+              </div>
+              <p className="text-xs sm:text-sm text-stone-400 mt-0.5 font-serif">
+                {profile.sect || 'Tanpa Sekte (Rogue Cultivator)'}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setActiveModal('stats')}
+              className="self-center sm:self-start px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-[#2f2416] to-[#1e1911] hover:from-[#47361f] hover:to-[#2e261a] border border-[#c5a880]/70 text-amber-200 text-xs font-serif font-semibold shadow-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+            >
+              <User size={14} className="text-amber-400" />
+              <span>Lembar Status Lengkap</span>
+            </button>
+          </div>
+
+          <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1 bg-sky-950/80 border border-sky-600/60 rounded px-2.5 py-1 text-xs text-sky-200 font-bold font-serif">
+              <Zap size={12} className="text-sky-400" /> {profile.realm} (Tahap {profile.stage || 'Awal'})
+            </span>
+            {profile.systemCultivation?.isFlawedFoundation && (
+              <span
+                className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
+                title="Penalti -5% All Stats karena menghancurkan fondasi fana secara paksa."
+              >
+                Fondasi Cacat
+              </span>
+            )}
+          </div>
+
+          {/* Qi Cultivation Progress Bar */}
+          <div className="bg-[#0b0e14]/80 p-2.5 rounded-lg border border-[#2e3748] max-w-xl">
+            <div className="flex justify-between items-center text-xs font-serif mb-1">
+              <span className="text-amber-300 font-semibold flex items-center gap-1">
+                <Sparkles size={12} className="text-amber-400" /> Sirkulasi Inti Qi
+              </span>
+              <span className="text-stone-300 font-mono text-[11px] font-semibold">
+                {qi} / {maxQi} ({qiPercent}%)
+              </span>
+            </div>
+            <div className="w-full bg-black/60 rounded-full h-2 overflow-hidden border border-[#1f2636]">
+              <div 
+                className="bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-300 h-full rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" 
+                style={{ width: `${qiPercent}%` }}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* CTA Navigation Row */}
-      <div className="flex flex-wrap gap-4 mb-6">
-          <Link href="/inventory" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+      <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 font-serif">
+          <Link href="/inventory" className="flex-1 min-w-[120px] bg-[#12151e] hover:bg-[#1c2230] border border-[#c5a880]/40 rounded-xl p-3 text-center transition-all shadow-md group">
               <Backpack className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
-              <span className="text-sm font-bold text-gray-300">Inventory</span>
+              <span className="text-xs sm:text-sm font-bold text-stone-200">Inventory</span>
           </Link>
-          <Link href="/world" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+          <Link href="/world" className="flex-1 min-w-[120px] bg-[#12151e] hover:bg-[#1c2230] border border-[#c5a880]/40 rounded-xl p-3 text-center transition-all shadow-md group">
               <MapPin className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
-              <span className="text-sm font-bold text-gray-300">Peta Dunia</span>
+              <span className="text-xs sm:text-sm font-bold text-stone-200">Peta Dunia</span>
           </Link>
-          <Link href="/cultivation" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+          <Link href="/cultivation" className="flex-1 min-w-[120px] bg-[#12151e] hover:bg-[#1c2230] border border-[#c5a880]/40 rounded-xl p-3 text-center transition-all shadow-md group">
               <Compass className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
-              <span className="text-sm font-bold text-gray-300">Kultivasi</span>
+              <span className="text-xs sm:text-sm font-bold text-stone-200">Kultivasi</span>
           </Link>
-          <Link href="/assets" className="flex-1 min-w-[120px] bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#c5a880]/30 rounded-lg p-3 text-center transition-colors group">
+          <Link href="/assets" className="flex-1 min-w-[120px] bg-[#12151e] hover:bg-[#1c2230] border border-[#c5a880]/40 rounded-xl p-3 text-center transition-all shadow-md group">
               <div className="relative inline-block">
                 <Home className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
                 {farmSummary.ready > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-green-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    <span className="absolute -top-2 -right-2 bg-emerald-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
                         Panen x{farmSummary.ready}
                     </span>
                 )}
               </div>
-              <span className="text-sm font-bold text-gray-300 block">Lahan & Aset</span>
+              <span className="text-xs sm:text-sm font-bold text-stone-200 block">Lahan & Aset</span>
           </Link>
+      </div>
+
+      {/* 5 Atribut Fondasi Kultivasi (Five Pillars RPG Framework - Sesuai Foto 2) */}
+      <div className="bg-gradient-to-b from-[#11141d] to-[#0d0f16] border-2 border-[#54432c] rounded-xl p-4 sm:p-6 shadow-[0_4px_30px_rgba(0,0,0,0.85)] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#3d311f] pb-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-400 animate-pulse" />
+            <h3 className="text-base sm:text-lg font-serif font-bold text-amber-200 tracking-wide">
+              5 Pilar Fondasi Kultivasi (Five Pillars Framework)
+            </h3>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-stone-400">
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-950/70 border border-amber-500/50 text-amber-300 font-serif font-semibold">
+              ✨ Spiritual Root & Artisanship Aktif
+            </span>
+          </div>
+        </div>
+
+        {/* 5-Pillar Attributes Grid: General, Combat, Martial Arts, Spiritual Root (6 Elemen), Artisanship (6 Profesi) */}
+        <StatGrid player={mergedProfile} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -222,11 +311,11 @@ export default function ProfilePage() {
             <div className="bg-black/40 p-3 rounded border border-[#333]">
                <h3 className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-2 flex items-center gap-1"><Coins size={14}/> Kekayaan</h3>
                <div className="flex flex-wrap gap-3 text-sm font-bold text-gray-200">
-                  <span className="flex items-center gap-1"><span className="text-cyan-400">💎</span> {currency.spirit?.toLocaleString() || 0}</span>
-                  <span className="flex items-center gap-1"><span className="text-emerald-400">🟢</span> {currency.jade?.toLocaleString() || 0}</span>
-                  <span className="flex items-center gap-1"><span className="text-yellow-400">🟡</span> {currency.gold?.toLocaleString() || 0}</span>
-                  <span className="flex items-center gap-1"><span className="text-gray-300">⚪</span> {currency.silver?.toLocaleString() || 0}</span>
-                  <span className="flex items-center gap-1"><span className="text-amber-600">🟤</span> {currency.copper?.toLocaleString() || 0}</span>
+                  <span className="flex items-center gap-1"><span className="text-cyan-400">💎</span> {Math.floor(Number(currency.spirit) || 0).toLocaleString()}</span>
+                  <span className="flex items-center gap-1"><span className="text-emerald-400">🟢</span> {Math.floor(Number(currency.jade) || 0).toLocaleString()}</span>
+                  <span className="flex items-center gap-1"><span className="text-yellow-400">🟡</span> {Math.floor(Number(currency.gold) || 0).toLocaleString()}</span>
+                  <span className="flex items-center gap-1"><span className="text-gray-300">⚪</span> {Math.floor(Number(currency.silver) || 0).toLocaleString()}</span>
+                  <span className="flex items-center gap-1"><span className="text-amber-600">🟤</span> {Math.floor(Number(currency.copper) || 0).toLocaleString()}</span>
                </div>
             </div>
           </div>
@@ -285,36 +374,36 @@ export default function ProfilePage() {
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">HP</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-green-400 text-lg">{combatStats.hp?.toLocaleString()}</span>
+                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp) || 0).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {combatStats._base?.hp || 0} {combatStats._equip?.hp ? `+ Equip ${combatStats._equip.hp}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.hp) || 0)} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">ATK</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-red-400 text-lg">{combatStats.atk?.toLocaleString()}</span>
+                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk) || 0).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {combatStats._base?.atk || 0} {combatStats._equip?.atk ? `+ Equip ${combatStats._equip.atk}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.atk) || 0)} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">DEF</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-blue-400 text-lg">{combatStats.def?.toLocaleString()}</span>
+                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def) || 0).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {combatStats._base?.def || 0} {combatStats._equip?.def ? `+ Equip ${combatStats._equip.def}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.def) || 0)} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">SPD</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-yellow-400 text-lg">{combatStats.spd?.toLocaleString()}</span>
+                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd) || 0).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {combatStats._base?.spd || 0} {combatStats._equip?.spd ? `+ Equip ${combatStats._equip.spd}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.spd) || 0)} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
                           </span>
                        </div>
                     </div>
@@ -517,6 +606,9 @@ export default function ProfilePage() {
         </div>
 
       </div>
+
+      {/* Modal Lembar Status Pendekar */}
+      {activeModal === 'stats' && <PlayerStatsModal />}
     </div>
   );
 }
