@@ -56,10 +56,21 @@ export default function NpcPanel({ npcId, onBack, onQuestAccepted }: { npcId: st
                 <button onClick={onBack} className="p-2 hover:bg-[#2a3142] rounded-lg transition-colors text-gray-400">
                     <ArrowLeft className="w-5 h-5" />
                 </button>
-                <div>
+                <div className="flex-1">
                     <h3 className="text-2xl font-bold text-gray-100">{npcData.name}</h3>
                     <p className="text-sm text-gray-400">{npcData.title} • {npcData.description}</p>
                 </div>
+                <button
+                    onClick={() => {
+                        const { useUIStore } = require('@/lib/store');
+                        useUIStore.getState().setActiveNpcId(npcId);
+                        onBack();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-800 to-amber-600 hover:from-amber-700 hover:to-amber-500 border border-amber-400 text-amber-100 text-xs font-serif font-bold shadow-md whitespace-nowrap"
+                    title="Buka panel penuh Tale of Immortal"
+                >
+                    📜 Panel Tokoh Lengkap
+                </button>
             </div>
 
             {error && <div className="bg-red-900/50 border border-red-500/50 text-red-200 p-3 rounded-lg text-sm">{error}</div>}

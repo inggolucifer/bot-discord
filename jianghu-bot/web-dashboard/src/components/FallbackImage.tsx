@@ -2,15 +2,18 @@
 
 import React, { useState } from 'react';
 
+import { GLOBAL_ASSETS } from '@/config/globalAssets';
+
 interface FallbackImageProps {
   src: string;
   alt: string;
   className?: string;
+  fallbackCategory?: string;
   fallbackHtml?: string;
   fallbackNode?: React.ReactNode;
 }
 
-export default function FallbackImage({ src, alt, className, fallbackHtml, fallbackNode }: FallbackImageProps) {
+export default function FallbackImage({ src, alt, className, fallbackCategory, fallbackHtml, fallbackNode }: FallbackImageProps) {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -21,6 +24,15 @@ export default function FallbackImage({ src, alt, className, fallbackHtml, fallb
           {fallbackNode}
         </div>
        );
+    }
+
+    if (fallbackCategory) {
+      const emoji = (GLOBAL_ASSETS.emoji as any)?.[fallbackCategory] || '👤';
+      return (
+        <div className={`${className || ''} flex items-center justify-center bg-[#181d29] text-2xl select-none animate-in fade-in duration-300`}>
+          <span>{emoji}</span>
+        </div>
+      );
     }
 
     return (
