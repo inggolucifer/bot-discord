@@ -23,6 +23,7 @@ import {
   Ship,
   Compass as CompassIcon
 } from 'lucide-react';
+import { useUIStore } from '@/lib/store';
 import DungeonMazeExplorer from '@/components/dungeon/DungeonMazeExplorer';
 import FerryCrossingModal from '@/components/ferry/FerryCrossingModal';
 import SectEntranceExamModal from '@/components/sect/SectEntranceExamModal';
@@ -40,10 +41,10 @@ export default function SettlementPanoramaView({
   onOpenInn,
   onOpenMarket
 }: SettlementPanoramaViewProps) {
+  const { setActiveNpcId, setActiveModal } = useUIStore();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedBuilding, setSelectedBuilding] = useState<any | null>(null);
-  const [selectedNpc, setSelectedNpc] = useState<any | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
 
   // Modal State Hooks untuk Fitur Baru
@@ -154,7 +155,10 @@ export default function SettlementPanoramaView({
           {npcs.map((npc: any) => (
             <div
               key={npc._id}
-              onClick={() => setSelectedNpc(npc)}
+              onClick={() => {
+                setActiveNpcId(npc._id);
+                setActiveModal('npcInteraction');
+              }}
               className="flex-shrink-0 flex flex-col items-center bg-[#131924]/90 hover:bg-[#1f293d] border border-amber-900/40 hover:border-amber-400/80 rounded-lg px-2.5 py-1.5 cursor-pointer transition-all shadow-md active:scale-95 min-w-[76px]"
             >
               <div className="flex items-center gap-1 mb-1">
@@ -443,68 +447,7 @@ export default function SettlementPanoramaView({
         </div>
       )}
 
-      {/* 6. MODAL INTERAKSI NPC */}
-      {selectedNpc && (
-        <div className="absolute inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#121620] border border-amber-600/70 rounded-xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 max-h-[85vh] overflow-y-auto flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-b from-amber-900 to-stone-900 border border-amber-500 flex items-center justify-center text-lg text-amber-200 font-serif font-bold shadow-md">
-                {selectedNpc.name.charAt(0)}
-              </div>
-              <div>
-                <h3 className="text-base font-serif font-bold text-amber-200">{selectedNpc.name}</h3>
-                <span className="text-xs text-gray-400">{selectedNpc.title}</span>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] px-2 py-0.5 bg-amber-950/80 border border-amber-800/50 rounded text-amber-300">{selectedNpc.realm || 'Ranah Fondasi'}</span>
-                  <span className="text-[10px] text-gray-400">{selectedNpc.sect || 'Pengelana'}</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Dialog Sambutan */}
-            <div className="bg-[#0b0e14] border border-[#232d3f] p-3.5 rounded-lg mb-4 text-xs text-gray-300 italic">
-              "{selectedNpc.greeting || 'Salam, rekan kultivator.'}"
-            </div>
-
-            {/* Tombol Aksi Sosial Sesuai Tale of Immortal */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              <button
-                onClick={() => showNotice(`Bercakap-cakap dengan ${selectedNpc.name}. Relasi meningkat!`)}
-                className="bg-[#1a2333] hover:bg-[#253249] border border-gray-700 text-gray-200 p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
-              >
-                <MessageCircle className="w-3.5 h-3.5 text-blue-400" /> Ngobrol Santai
-              </button>
-              <button
-                onClick={() => showNotice(`Memberikan hadiah herba kepada ${selectedNpc.name}.`)}
-                className="bg-[#1a2333] hover:bg-[#253249] border border-gray-700 text-gray-200 p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
-              >
-                <Gift className="w-3.5 h-3.5 text-pink-400" /> Beri Hadiah
-              </button>
-              <button
-                onClick={() => showNotice(`Bertukar wawasan pemahaman Dao bersama ${selectedNpc.name}.`)}
-                className="bg-[#1a2333] hover:bg-[#253249] border border-gray-700 text-gray-200 p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Diskusi Dao
-              </button>
-              <button
-                onClick={() => showNotice(`Mengajak bertarung latih (spar) pedang dengan ${selectedNpc.name}.`)}
-                className="bg-[#1a2333] hover:bg-[#253249] border border-gray-700 text-gray-200 p-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
-              >
-                <Swords className="w-3.5 h-3.5 text-red-400" /> Bertarung Latih
-              </button>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                onClick={() => setSelectedNpc(null)}
-                className="bg-black/60 hover:bg-black text-gray-400 px-4 py-1.5 rounded-lg text-xs font-semibold border border-gray-700"
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 7. MODALS INTERAKTIF: DUNGEON, FERRY, DAN UJIAN SEKTE */}
       {showDungeonExplorer && (

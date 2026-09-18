@@ -394,6 +394,16 @@ export const GLOBAL_ASSETS = {
     "Pejuang Utara": "",
     "Pandai Besi Salju": "",
 
+    // Tokoh Kota Pemukiman (Settlement NPCs)
+    "Shuang Ke": "",               // Pendekar Pedang Bayangan (Pria)
+    "Wu Binglin": "",              // Saudagar Herba Gunung (Pria)
+    "Yin Ci": "",                  // Penjaga Paviliun Kitab (Pria)
+    "Li Keke": "",                 // Murid Alkimia Bunga Persik (Wanita)
+    "npc_shuang_ke": "",
+    "npc_wu_binglin": "",
+    "npc_yin_ci": "",
+    "npc_li_keke": "",
+
     // Tokoh Umum & Sekte
     "Xi Hua": "",              // Tetua Sekte Roh Suci (Wanita, gaun hijau berdiri)
     "Tetua Sekte": "",         // Tetua Sekte umum
@@ -404,6 +414,32 @@ export const GLOBAL_ASSETS = {
     "default_standing_female": "", // Full-body art default wanita
     "default_standing_male": "",   // Full-body art default pria
     "default_standing_elder": "",  // Full-body art default tetua
+  },
+
+  // =========================================================================
+  // 10B. KARAKTER PEMAIN BERDIRI (FULL BODY STANDING ART & WARDROBE)
+  // Rasio Wajib: 9:16 atau 2:3. Format: PNG Transparan
+  // =========================================================================
+  character_standing: {
+    default_male: "",          // Karakter pria berdiri penuh
+    default_female: "",        // Karakter wanita berdiri penuh
+    outfit_mortal: "",         // Pakaian kain fana biasa
+    outfit_daoist_blue: "",    // Jubah Daoist biru pemula
+    outfit_daoist_green: "",   // Jubah sutra hijau bertingkat
+    outfit_golden_core: "",    // Jubah Inti Emas kaisar dao
+  },
+
+  // =========================================================================
+  // 10C. LENCANA GELAR PENCAPAIAN (ACHIEVEMENT TITLE BADGES)
+  // Format: PNG Transparan (128x32 atau 256x64 px)
+  // =========================================================================
+  titles: {
+    title_sword_saint: "",     // Gelar [Pendekar Pedang Surgawi]
+    title_nine_continents: "", // Gelar [Penakluk Sembilan Benua]
+    title_golden_core: "",     // Gelar [Pewaris Inti Emas]
+    title_divine_alchemist: "",// Gelar [Pakar Alkimia Ilahi]
+    title_thunder_wanderer: "",// Gelar [Pengembara Angin & Petir]
+    title_grandmaster: "",     // Gelar [Pendekar Besar Jianghu]
   },
 
   // =========================================================================

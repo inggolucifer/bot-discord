@@ -1103,6 +1103,93 @@ router.get('/npcs', authenticateToken, async (req, res) => {
     }
 });
 
+const SETTLEMENT_FALLBACK_NPCS = {
+    npc_shuang_ke: {
+        _id: 'npc_shuang_ke',
+        name: 'Shuang Ke',
+        title: 'Pendekar Pedang Bayangan',
+        realm: 'Ranah Fondasi (Foundation)',
+        sect: 'Sekte Awan Pedang',
+        gender: 'Laki-laki',
+        race: 'Manusia',
+        position: 'Murid Inti',
+        relationship: 'Stranger',
+        relationshipPoints: 10,
+        greeting: 'Salam, rekan kultivator. Apakah jalan pedangmu seimbang dengan hatimu?',
+        interests: ['Ilmu Pedang', 'Meditasi Bambu', 'Teh Awan'],
+        alignment: { righteous: 120, demonic: 40 },
+        charisma: 'Tenang (Calm)',
+        reputation: 'Dihormati (Respected)',
+        reputationScore: 250,
+        isActive: true,
+        minRealmIndexToTalk: 0,
+        questIds: []
+    },
+    npc_wu_binglin: {
+        _id: 'npc_wu_binglin',
+        name: 'Wu Binglin',
+        title: 'Saudagar Herba Gunung',
+        realm: 'Ranah Kondensasi Qi',
+        sect: 'Rogue Cultivator',
+        gender: 'Laki-laki',
+        race: 'Manusia',
+        position: 'Ketua Serikat Dagang',
+        relationship: 'Stranger',
+        relationshipPoints: 25,
+        greeting: 'Herba liar dari pegunungan utara sangat berkhasiat untuk memurnikan Qi!',
+        interests: ['Herba Langka', 'Alkimia', 'Timbangan Emas'],
+        alignment: { righteous: 80, demonic: 20 },
+        charisma: 'Ramah (Approachable)',
+        reputation: 'Kaya Raya (Wealthy)',
+        reputationScore: 320,
+        isActive: true,
+        minRealmIndexToTalk: 0,
+        questIds: []
+    },
+    npc_yin_ci: {
+        _id: 'npc_yin_ci',
+        name: 'Yin Ci',
+        title: 'Penjaga Paviliun Kitab',
+        realm: 'Ranah Inti Emas (Core)',
+        sect: 'XiTong City Guard',
+        gender: 'Laki-laki',
+        race: 'Manusia',
+        position: 'Penjaga Paviliun Kitab',
+        relationship: 'Stranger',
+        relationshipPoints: 15,
+        greeting: 'Membaca sutra suci menuntut kejernihan akal budi.',
+        interests: ['Kaligrafi Kuno', 'Sutra Dao', 'Catur Bintang'],
+        alignment: { righteous: 180, demonic: 10 },
+        charisma: 'Agung (Scholarly)',
+        reputation: 'Termasyhur (Renowned)',
+        reputationScore: 540,
+        isActive: true,
+        minRealmIndexToTalk: 0,
+        questIds: []
+    },
+    npc_li_keke: {
+        _id: 'npc_li_keke',
+        name: 'Li Keke',
+        title: 'Murid Alkimia Bunga Persik',
+        realm: 'Ranah Kondensasi Qi',
+        sect: 'Lembah Seribu Bunga',
+        gender: 'Perempuan',
+        race: 'Manusia',
+        position: 'Murid Alkimia',
+        relationship: 'Sahabat',
+        relationshipPoints: 65,
+        greeting: 'Kelopak persik musim semi adalah rahasia pil penenang jiwa yang sempurna.',
+        interests: ['Kelopak Bunga Persik', 'Suling Bambu', 'Racikan Teh'],
+        alignment: { righteous: 150, demonic: 0 },
+        charisma: 'Menawan (Charming)',
+        reputation: 'Dicintai (Beloved)',
+        reputationScore: 410,
+        isActive: true,
+        minRealmIndexToTalk: 0,
+        questIds: []
+    }
+};
+
 router.get('/npc/:npcId', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1111,25 +1198,39 @@ router.get('/npc/:npcId', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
+        const mongoose = require('mongoose');
         const Npc = require('../../models/Npc');
         const Quest = require('../../models/Quest');
         const { getRealmIndex } = require('../../utils/cultivation');
 
-        const npc = await Npc.findById(npcId).populate('questIds');
+        let npc = null;
+        if (mongoose.isValidObjectId(npcId)) {
+            npc = await Npc.findById(npcId).populate('questIds');
+        } else if (SETTLEMENT_FALLBACK_NPCS[npcId]) {
+            npc = SETTLEMENT_FALLBACK_NPCS[npcId];
+        } else {
+            npc = await Npc.findOne({
+                $or: [{ slug: npcId }, { name: new RegExp(npcId.replace('npc_', '').replace(/_/g, ' '), 'i') }]
+            }).populate('questIds');
+        }
+
         if (!npc || !npc.isActive) return res.status(404).json({ error: 'NPC tidak ditemukan.' });
 
-        const proximity = await checkNpcProximity(player, npc);
-        if (!proximity.ok) {
-            return res.status(400).json({ error: proximity.error });
+        if (mongoose.isValidObjectId(npc._id)) {
+            const proximity = await checkNpcProximity(player, npc);
+            if (!proximity.ok) {
+                return res.status(400).json({ error: proximity.error });
+            }
         }
 
         const realmIndex = getRealmIndex(player.systemCultivation.realm);
-        if (realmIndex < npc.minRealmIndexToTalk) {
+        if (realmIndex < (npc.minRealmIndexToTalk || 0)) {
             return res.status(403).json({ error: 'Ranah Kultivasi belum mencukupi untuk berbicara dengan NPC ini.' });
         }
 
         // Filter valid quests
-        const validQuests = npc.questIds.filter(quest => {
+        const questList = npc.questIds || [];
+        const validQuests = questList.filter(quest => {
             if (!quest.isActive) return false;
             if (realmIndex < quest.minRealmIndex) return false;
 
@@ -1144,12 +1245,12 @@ router.get('/npc/:npcId', authenticateToken, async (req, res) => {
             // Check repeat logic
             const existingQuest = player.questLog.find(q => q.questId.toString() === quest._id.toString());
             if (existingQuest) {
-                if (existingQuest.status === 'active') return false; // Already active, shown in quest log
-                if (!quest.repeatable && (existingQuest.status === 'completed' || existingQuest.status === 'claimed')) return false; // Already done
+                if (existingQuest.status === 'active') return false;
+                if (!quest.repeatable && (existingQuest.status === 'completed' || existingQuest.status === 'claimed')) return false;
                 if (quest.repeatable && existingQuest.status === 'claimed') {
                      const cooldownDate = new Date(existingQuest.claimedAt);
                      cooldownDate.setHours(cooldownDate.getHours() + quest.cooldownHours);
-                     if (new Date() < cooldownDate) return false; // Still on cooldown
+                     if (new Date() < cooldownDate) return false;
                 }
             }
 
@@ -1168,7 +1269,6 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
         const userId = req.user.userId;
         const { npcId } = req.params;
         const { dialogId } = req.body;
-        // Endpoint '/zone/gather' DIHAPUS. Gathering sekarang dilakukan melalui asset khusus (Life Simulator).
 
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
@@ -1178,26 +1278,39 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Tidak bisa berbicara saat dalam perjalanan.' });
         }
 
+        const mongoose = require('mongoose');
         const Npc = require('../../models/Npc');
         const Quest = require('../../models/Quest');
         const { getRealmIndex } = require('../../utils/cultivation');
         const { evaluateQuestProgress } = require('../../utils/questProgress');
 
-        const npc = await Npc.findById(npcId);
+        let npc = null;
+        if (mongoose.isValidObjectId(npcId)) {
+            npc = await Npc.findById(npcId);
+        } else if (SETTLEMENT_FALLBACK_NPCS[npcId]) {
+            npc = SETTLEMENT_FALLBACK_NPCS[npcId];
+        } else {
+            npc = await Npc.findOne({
+                $or: [{ slug: npcId }, { name: new RegExp(npcId.replace('npc_', '').replace(/_/g, ' '), 'i') }]
+            });
+        }
+
         if (!npc || !npc.isActive) return res.status(404).json({ error: 'NPC tidak ditemukan.' });
 
-        const proximity = await checkNpcProximity(player, npc);
-        if (!proximity.ok) {
-            return res.status(400).json({ error: proximity.error });
+        if (mongoose.isValidObjectId(npc._id)) {
+            const proximity = await checkNpcProximity(player, npc);
+            if (!proximity.ok) {
+                return res.status(400).json({ error: proximity.error });
+            }
         }
 
         const realmIndex = getRealmIndex(player.systemCultivation.realm);
-        if (realmIndex < npc.minRealmIndexToTalk) {
+        if (realmIndex < (npc.minRealmIndexToTalk || 0)) {
             return res.status(403).json({ error: 'Ranah Kultivasi belum mencukupi.' });
         }
 
         let dialogResponse = npc.greeting;
-        if (dialogId) {
+        if (dialogId && npc.dialogLines) {
             const line = npc.dialogLines.find(dl => dl.id === dialogId);
             if (line) dialogResponse = line.text;
         }

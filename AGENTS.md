@@ -194,45 +194,61 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
 5. **Artisanship (6 Keahlian Pengrajin / 技艺)**:
    - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Feng Shui` (Geomansi & Formasi), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh).
 
-6. **Takdir & Moralitas (Destiny & Alignment)**:
-   - **Destiny (Nature)**: Karunia bawaan lahir (misal: *Dual Talents*, *Tortured Genius*, *Spirit Sight*).
-   - **Destiny (Nurture)**: Karunia hasil latihan atau berkah pencerahan temporer/permanen (misal: *Taoist Mind Essence*, *Soul Reaver*).
-   - **Alignment Bar**: Keseimbangan karma `Righteous` (Jalan Lurus/Kebajikan) vs `Demonic` (Jalan Iblis/Kekejaman).
-   - **Temperament & Traits**: Kepribadian unik (`Evil`, `Protective`, `Self-centered`, `Traditional Carefree`, `Middle Way`), nilai Karisma (`Charisma`), serta Minat Pribadi (`Interests`).
+### 3.9. Sistem Statistik Karakter Terpadu & Sanitasi Integer (Integer Sanitization & Mastery Formula)
+Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js`, `statCalculator.js`, dan komponen UI frontend `<StatGrid />` dengan aturan deterministik:
+
+1. **Kebijakan Integer Mutlak (Zero Decimal Policy)**:
+   - **SEMUA parameter numerik** (Stamina, HP, Max HP, Vitality, Energy, Focus, Luck, Insight, ATK, DEF, Agility, CRIT, CRIT RES, Martial/Spiritual RES, dll.) **WAJIB dibulatkan menjadi integer bulat murni (`Math.floor()`)**.
+   - Dilarang keras menampilkan nilai pecahan/desimal seperti `97.46597333333318/100`; nilai wajib berformat `97/100`.
+
+2. **Koreksi Kemahiran Kungfu (XP vs Level Mastery)**:
+   - Koleksi database `player.kungfuSkills` menyimpan akumulasi pengalaman (**XP**), bukan level instan.
+   - Level dihitung menggunakan formula kurva eksponensial jangka panjang:
+     $$\text{XP}_{\text{req}}(L) = \lfloor 14 \times L^{2.25} + 35 \times L \rfloor$$
+     - Level 1 membutuhkan minimal 49 XP.
+     - Level 2 membutuhkan minimal 136 XP.
+   - Nilai XP sebesar `94` XP secara sah menghasilkan **Level 1**. Seluruh modul UI dan ringkasan profil **WAJIB** menghitung level riil via `getKungfuLevelFromExp()` sehingga menampilkan integer level (misal `1` atau `Lv. 1`), bukan angka XP mentah (`94`).
+
+3. **Penghapusan Fitur Badges & Destiny**:
+   - Seluruh badge kepribadian (`Protective`, `Carefree`, `Middle Way`, `Traditional Carefree`) serta takdir bawaan (`Destiny (Nature) Dual Talents` dan `Destiny (Nurture) Taoist Mind Essence`) telah **DIHAPUS SECARA TOTAL** baik dari lembar status pemain maupun panel NPC.
+
+4. **Sistem Gelar Pencapaian (Title Pencapaian untuk Fleksing)**:
+   - Menggantikan fitur kepribadian dan takdir dengan **Gelar Kehormatan (Title)** terpadu:
+     - Contoh: `[Pendekar Pedang Surgawi]`, `[Penakluk Sembilan Benua]`, `[Pewaris Inti Emas]`, `[Pakar Alkimia Ilahi]`, `[Pengembara Angin & Petir]`, `[Pendekar Besar Jianghu]`.
+   - Menampilkan lencana emas berkilau dan dialog pemilihan gelar aktif untuk pamer/fleksing ke pemain lain.
+
+5. **Karakter Full Body Standing Art & Kerangka Lemari Pakaian (Wardrobe)**:
+   - Lembar status pemain menampilkan visual ilustrasi berdiri penuh (Full Body Standing Art) di sisi kiri identitas karakter.
+   - Terintegrasi dengan `GLOBAL_ASSETS.character_standing` (`default_male`, `default_female`, dsb.) dengan fallback siluet Wuxia bercahaya halo spiritual.
+   - Dilengkapi slot indikator pakaian/wardrobe (`outfit_mortal`, `outfit_daoist_blue`, dll.) sebagai fondasi sistem pergantian kostum/baju.
 
 ---
 
-### 3.10. Arsitektur Antarmuka UI (Landing Menu, Character Sheet & NPC Panel)
+### 3.10. Arsitektur Antarmuka UI (Landing Menu, Character Sheet & Shrouded NPC Panel)
 Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-Overlap & Mutual Exclusion**:
 
 1. **Landing Menu (`LandingMenu.tsx`)**:
-   - Layar pembuka sebelum masuk dunia (Enter World).
-   - Menampilkan latar lukisan tinta pemandangan perahu naga air, partikel kabut air mengambang via canvas 60fps.
-   - 4 Tombol Menu Gaya Plakat Kuno:
-     1. `[🐉 Masuk Dunia (Enter World)]` → Membuka World Map eksplorasi.
-     2. `[📜 Pencapaian (Achievements)]` → Membuka modal daftar prestasi kultivator.
-     3. `[⚙️ Pengaturan (Settings)]` → Audio BGM, SFX, dan kualitas grafis.
-     4. `[🚪 Keluar Game (Quit)]` → Logout aman.
-   - **KEBIJAKAN MUTLAK**: Tombol `Mod` telah **DIHAPUS SECARA TOTAL** tanpa pengganti.
+   - Layar pembuka bertajuk **IMMORTAL X** dengan lukisan pemandangan tinta perahu naga air 60fps.
+   - 4 Tombol Menu: `[🐉 Masuk Dunia]`, `[📜 Pencapaian]`, `[⚙️ Pengaturan]`, `[🚪 Keluar Game]`.
+   - **KEBIJAKAN MUTLAK**: Tombol `Mod` telah **DIHAPUS SECARA TOTAL**.
 
 2. **Lembar Status Pendekar (`PlayerStatsModal.tsx`)**:
-   - Modal berdesain gulungan perkamen kaisar kuno dengan 6 tombol navigasi sidebar:
-     - `Stats`: Menampilkan potret karakter, aura daoist, badge kepribadian, takdir (Nature/Nurture), bar alignment, serta komponen terpadu `<StatGrid />` (5 pilar stat).
-     - `Skills`: Menampilkan daftar kitab manual dan tingkat penguasaan.
-     - `Artisan`: Menampilkan tingkat kemahiran 6 profesi pengrajin.
-     - `Item`: Rangkuman peralatan dan isi kantong qiankun.
-     - `Experience`: Jejak kultivasi, kapasitas Qi, dan status fondasi dantian.
-     - `Relations`: Ikatan sekte, pernikahan pasangan dao, dan pet sekutu.
+   - Modal gulungan perkamen kaisar kuno dengan 6 tab: `Stats`, `Skills`, `Artisan`, `Item`, `Experience`, `Relations`.
+   - Tab `Stats`: Menampilkan visual Karakter Full-Body (dengan indikator wardrobe), Lencana Gelar Pencapaian (Title) interaktif, identitas karakter, saldo tael (emas/perak/tembaga/batu roh), progres Qi kultivasi, serta grid atribut 5 pilar dalam format integer murni.
 
-3. **Panel Interaksi Tokoh / NPC (`NpcInteractionModal.tsx`)**:
-   - Row horizontal tokoh sekitar di bagian atas untuk berpindah target secara instan tanpa menutup modal.
-   - Sisi Kiri: Potret karakter NPC, status hubungan (*Stranger*, *Friendly*), bar moralitas Righteous/Demonic, tombol aksi sosial (*Talk*, *Gift*, *Bond*, *Spar*, *Dual Cultivation*, *Debate*), serta aksi bermusuhan bertanda merah dengan dialog konfirmasi (*Theft*, *Attack*).
-   - Sisi Kanan: Tab informasi lengkap (*Stats*, *Skills*, *Artifact*, *Backstory*, *Family*, *Social*, *Taoist Mind*) yang memanfaatkan komponen bersama `<StatGrid />`.
+3. **Panel Interaksi Tokoh / NPC (`NpcInteractionModal.tsx` & `SettlementPanoramaView.tsx`)**:
+   - **Pemicu Ribbon Kota**: Klik pada kartu tokoh di pita atas pemukiman ("KULTIVATOR DI KOTA") langsung membuka modal interaksi megah Tale of Immortal (menggantikan dialog kecil lama).
+   - **Full-Body Standing Art NPC**: Menampilkan ilustrasi berdiri penuh tokoh terintegrasi dengan `GLOBAL_ASSETS.npcs` (`Shuang Ke`, `Wu Binglin`, `Yin Ci`, `Li Keke`, `Xi Hua`, dll.).
+   - **Status Hubungan & Karma**: Menampilkan relasi (*Stranger*, *Sahabat*, *Kenalan*, *Pasangan*, *Musuh*), bar kemajuan poin keakraban (*Affinity Progress*), dan bar moralitas *Righteous* vs *Demonic*.
+   - **Penyamaran Kekuatan Tempur (Shrouded Combat Power)**:
+     - Seluruh atribut tempur (ATK, DEF, CRIT, CRIT RES, Agility, Travel Speed) dan jurus/kemahiran beladiri **DISEMBUNYIKAN SECARA TOTAL** (`hideCombat={true}`). Pemain tidak diizinkan mengetahui kekuatan tempur asli NPC agar misteri dan kedalaman dunia persilatan terjaga.
+   - **Gelar Menggantikan Destiny**: Destiny dihapus dan digantikan oleh Gelar Kehormatan NPC (Title).
+   - **Tab yang Dipertahankan**: Hanya 3 tab yang aktif: `stats` (identitas, gelar, relasi & atribut non-tempur), `family` (silsilah keluarga/sekte), dan `social` (ikatan sosial). Tab `skills`, `artifact`, `backstory`, dan `taoist mind` telah **DIHAPUS**.
+   - **Aksi Sosial Lengkap**: Sapa (Talk), Beri Hadiah (Gift), Akrab (Bond), Sparring (Bertarung Latih), Semadi Berdua (Dual Cultivation), Debat Dao, Minta Bantuan, Ajak Jelajah, Curi (Theft), Serang (Attack).
 
 4. **Zero-Overlap & Mutual Exclusion Rules**:
    - Modal penuh (`PlayerStatsModal`, `NpcInteractionModal`, `BattleArena`, `DashboardModal`) saling menutup satu sama lain saat dibuka.
-   - Tombol mengambang (floating buttons) seperti kompas dan chat otomatis disembunyikan saat modal atau inspektor petak aktif.
-   - Di viewport mobile landscape (tinggi 360–420px), setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri sehingga tidak pernah terpotong atau saling menimpa.
+   - Di viewport mobile landscape (tinggi 360–420px) maupun portrait, setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri tanpa ada elemen yang saling menimpa atau terpotong.
 
 ---
 
