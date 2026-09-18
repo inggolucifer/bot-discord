@@ -395,10 +395,15 @@ export const GLOBAL_ASSETS = {
     "Pandai Besi Salju": "",
 
     // Tokoh Umum & Sekte
+    "Xi Hua": "",              // Tetua Sekte Roh Suci (Wanita, gaun hijau berdiri)
+    "Tetua Sekte": "",         // Tetua Sekte umum
     "Penjaga Gerbang": "",
     "Ketua Sekte Pedang Langit": "",
     "Tetua Alkimia Bai": "",
     "Pedagang Keliling": "",
+    "default_standing_female": "", // Full-body art default wanita
+    "default_standing_male": "",   // Full-body art default pria
+    "default_standing_elder": "",  // Full-body art default tetua
   },
 
   // =========================================================================
