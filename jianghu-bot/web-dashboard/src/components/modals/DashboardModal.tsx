@@ -289,6 +289,20 @@ export default function DashboardModal() {
                       {Math.min(100, Math.round(((profile.systemCultivation?.qi || 0) / Math.max(1, ((profile.systemCultivation?.stage || 0) + 1) * 100)) * 100))}%
                     </p>
                 </div>
+
+                {/* Direct Link to Grand Player Stats Sheet */}
+                <div className="mt-3">
+                  <button
+                    onClick={() => {
+                      closeModal();
+                      setActiveModal('stats');
+                    }}
+                    className="w-full py-2 px-4 rounded-lg bg-gradient-to-r from-[#3a2d1a] via-[#523e20] to-[#3a2d1a] hover:from-[#5e4726] hover:to-[#42331c] border border-[#a8864f] text-amber-200 hover:text-white text-xs font-serif font-bold shadow-md flex items-center justify-center gap-2 transition-all group"
+                  >
+                    <span className="text-base group-hover:scale-110 transition-transform">📜</span>
+                    <span>Buka Lembar Status Lengkap (Tale of Immortal)</span>
+                  </button>
+                </div>
               </div>
             </>
           ) : user ? (

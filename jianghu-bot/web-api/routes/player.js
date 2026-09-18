@@ -136,10 +136,58 @@ router.get('/profile', authenticateToken, async (req, res) => {
             carryCapacity = await getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
         }
 
+        const defaultExtendedStats = {
+            maxLifespan: 100,
+            mood: 100,
+            luck: 10,
+            insight: 10,
+            vitality: 100,
+            maxVitality: 100,
+            innerEnergy: 100,
+            maxInnerEnergy: 100,
+            focus: 100,
+            maxFocus: 100,
+            critRate: 5,
+            critResist: 0,
+            agility: 10,
+            critDmg: 150,
+            critDmgReduce: 0,
+            travelSpeed: 100,
+            martialRes: 0,
+            spiritualRes: 0,
+            spiritualRoot: { fire: 10, water: 10, lightning: 10, wind: 10, earth: 10, wood: 10 },
+            artisanship: { alchemy: 5, forge: 5, fengShui: 5, talismans: 5, herbology: 5, mining: 5 }
+        };
+
+        const mergedExtendedStats = {
+            ...defaultExtendedStats,
+            ...(player.extendedStats || {}),
+            spiritualRoot: {
+                ...defaultExtendedStats.spiritualRoot,
+                ...((player.extendedStats && player.extendedStats.spiritualRoot) || {})
+            },
+            artisanship: {
+                ...defaultExtendedStats.artisanship,
+                ...((player.extendedStats && player.extendedStats.artisanship) || {})
+            }
+        };
+
         res.json({
             success: true,
             data: {
                 ...player,
+                extendedStats: mergedExtendedStats,
+                alignment: player.alignment || { righteous: 50, demonic: 0 },
+                destinyNature: (player.destinyNature && player.destinyNature.length > 0) ? player.destinyNature : ['Dual Talents'],
+                destinyNurture: (player.destinyNurture && player.destinyNurture.length > 0) ? player.destinyNurture : ['Taoist Mind Essence'],
+                personalityTags: (player.personalityTags && player.personalityTags.length > 0) ? player.personalityTags : ['Protective', 'Carefree'],
+                internalTraits: player.internalTraits || 'Middle Way',
+                externalTraits: player.externalTraits || 'Traditional Carefree',
+                charisma: player.charisma || 'Average',
+                interests: (player.interests && player.interests.length > 0) ? player.interests : ['Bambooware', 'Flute', 'Wine'],
+                race: player.race || 'Human',
+                reputation: player.reputation !== undefined ? player.reputation : 100,
+                reputationTitle: player.reputationTitle || 'Novice Cultivator',
                 energy: { current: currentEnergy, lastUpdated: player.energy ? player.energy.lastUpdated : new Date() },
                 maxEnergy: MAX_ENERGY,
                 currentLocation: player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },

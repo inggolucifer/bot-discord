@@ -167,7 +167,72 @@ Slot 2+: HANYA jurus manual teknik yang telah dipelajari pemain (player.manuals)
 ```
 - Seluruh jurus bawaan hardcoded (`qi_strike`, `iron_wall`, `qi_overload`) telah **DIHAPUS SECARA TOTAL**.
 - Pemain yang belum mempelajari kitab manual teknik hanya memiliki **1 slot jurus** (Basic Attack Senjata / Tinju). Hal ini memberikan insentif gameplay yang kuat bagi pemain untuk berburu dan mempelajari kitab manual esoteris.
-- Perolehan kemenangan memberikan hadiah berlipat: EXP Kultivasi, Keping Perak, Peningkatan XP KungFu untuk senjata terkait, dan item loot material monster.
+### 3.9. Sistem Statistik Karakter yang Diperluas (Extended RPG Stats & Five-Pillars Framework)
+Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model komputasi `statCalculator.js`, dibagi menjadi **5 Pilar Utama** bergaya *Tale of Immortal*:
+
+1. **General Attributes (Dasar Kehidupan & Takdir)**:
+   - `Lifespan`: Usia saat ini dan batas umur maksimal sesuai ranah kultivasi.
+   - `Mood`: Suasana hati (0–100), mempengaruhi interaksi NPC dan efisiensi meditasi.
+   - `Health` & `Stamina`: Daya tahan hidup dan stamina pergerakan mikro-grid.
+   - `Vitality`: Energi fisik harian untuk bertarung dan menahan luka dalam.
+   - `Energy`: Intisari Qi internal tubuh untuk merapalkan mantra esoteris.
+   - `Focus`: Konsentrasi mental untuk membedah kitab dan formasi segel.
+   - `Luck` & `Insight`: Faktor penentu perolehan item langka, peluang terobosan ranah, dan kecepatan memahami manual.
+
+2. **Combat Attributes (Parameter Tempur Lengkap)**:
+   - `ATK`, `DEF`, `Agility` (kecepatan aksi/evasion).
+   - `CRIT`, `CRIT RES`, `CRIT DMG` (default 150%), `CRIT DR` (pengurangan damage critical).
+   - `Travel Speed`: Kecepatan jelajah di peta dunia.
+   - `Martial RES` & `Spiritual RES`: Resistensi terhadap serangan fisik vs sihir elemen.
+
+3. **Martial Arts (6 Disiplin Beladiri Jianghu)**:
+   - `Blade` (Golok/Saber), `Spear` (Tombak/Staff), `Sword` (Pedang), `Fist` (Tinju), `Palm` (Telapak), `Finger` (Totokan Meridian). Terhubung langsung dengan `player.kungfuSkills`.
+
+4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
+   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu). Menentukan afinitas dan multiplikator jurus elemen bersangkutan.
+
+5. **Artisanship (6 Keahlian Pengrajin / 技艺)**:
+   - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Feng Shui` (Geomansi & Formasi), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh).
+
+6. **Takdir & Moralitas (Destiny & Alignment)**:
+   - **Destiny (Nature)**: Karunia bawaan lahir (misal: *Dual Talents*, *Tortured Genius*, *Spirit Sight*).
+   - **Destiny (Nurture)**: Karunia hasil latihan atau berkah pencerahan temporer/permanen (misal: *Taoist Mind Essence*, *Soul Reaver*).
+   - **Alignment Bar**: Keseimbangan karma `Righteous` (Jalan Lurus/Kebajikan) vs `Demonic` (Jalan Iblis/Kekejaman).
+   - **Temperament & Traits**: Kepribadian unik (`Evil`, `Protective`, `Self-centered`, `Traditional Carefree`, `Middle Way`), nilai Karisma (`Charisma`), serta Minat Pribadi (`Interests`).
+
+---
+
+### 3.10. Arsitektur Antarmuka UI (Landing Menu, Character Sheet & NPC Panel)
+Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-Overlap & Mutual Exclusion**:
+
+1. **Landing Menu (`LandingMenu.tsx`)**:
+   - Layar pembuka sebelum masuk dunia (Enter World).
+   - Menampilkan latar lukisan tinta pemandangan perahu naga air, partikel kabut air mengambang via canvas 60fps.
+   - 4 Tombol Menu Gaya Plakat Kuno:
+     1. `[🐉 Masuk Dunia (Enter World)]` → Membuka World Map eksplorasi.
+     2. `[📜 Pencapaian (Achievements)]` → Membuka modal daftar prestasi kultivator.
+     3. `[⚙️ Pengaturan (Settings)]` → Audio BGM, SFX, dan kualitas grafis.
+     4. `[🚪 Keluar Game (Quit)]` → Logout aman.
+   - **KEBIJAKAN MUTLAK**: Tombol `Mod` telah **DIHAPUS SECARA TOTAL** tanpa pengganti.
+
+2. **Lembar Status Pendekar (`PlayerStatsModal.tsx`)**:
+   - Modal berdesain gulungan perkamen kaisar kuno dengan 6 tombol navigasi sidebar:
+     - `Stats`: Menampilkan potret karakter, aura daoist, badge kepribadian, takdir (Nature/Nurture), bar alignment, serta komponen terpadu `<StatGrid />` (5 pilar stat).
+     - `Skills`: Menampilkan daftar kitab manual dan tingkat penguasaan.
+     - `Artisan`: Menampilkan tingkat kemahiran 6 profesi pengrajin.
+     - `Item`: Rangkuman peralatan dan isi kantong qiankun.
+     - `Experience`: Jejak kultivasi, kapasitas Qi, dan status fondasi dantian.
+     - `Relations`: Ikatan sekte, pernikahan pasangan dao, dan pet sekutu.
+
+3. **Panel Interaksi Tokoh / NPC (`NpcInteractionModal.tsx`)**:
+   - Row horizontal tokoh sekitar di bagian atas untuk berpindah target secara instan tanpa menutup modal.
+   - Sisi Kiri: Potret karakter NPC, status hubungan (*Stranger*, *Friendly*), bar moralitas Righteous/Demonic, tombol aksi sosial (*Talk*, *Gift*, *Bond*, *Spar*, *Dual Cultivation*, *Debate*), serta aksi bermusuhan bertanda merah dengan dialog konfirmasi (*Theft*, *Attack*).
+   - Sisi Kanan: Tab informasi lengkap (*Stats*, *Skills*, *Artifact*, *Backstory*, *Family*, *Social*, *Taoist Mind*) yang memanfaatkan komponen bersama `<StatGrid />`.
+
+4. **Zero-Overlap & Mutual Exclusion Rules**:
+   - Modal penuh (`PlayerStatsModal`, `NpcInteractionModal`, `BattleArena`, `DashboardModal`) saling menutup satu sama lain saat dibuka.
+   - Tombol mengambang (floating buttons) seperti kompas dan chat otomatis disembunyikan saat modal atau inspektor petak aktif.
+   - Di viewport mobile landscape (tinggi 360–420px), setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri sehingga tidak pernah terpotong atau saling menimpa.
 
 ---
 

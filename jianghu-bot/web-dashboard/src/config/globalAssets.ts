@@ -472,6 +472,21 @@ export const GLOBAL_ASSETS = {
   },
 
   // =========================================================================
+  // 13E. UI PANELS & BACKGROUND ASSETS (LANDING, CHARACTER SHEET, NPC)
+  // Ukuran: Variatif (Format: PNG / JPG Transparan)
+  // =========================================================================
+  ui_panels: {
+    landing_bg: "",           // Watercolor wuxia landscape painting (1920x1080)
+    landing_boat: "",         // Perahu kultivator Tale of Immortal
+    scroll_parchment_bg: "",  // Tekstur gulungan perkamen karakter
+    character_frame_gold: "", // Ornate golden frame untuk potret pendekar
+    npc_default_male: "",     // Siluet tinta kultivator pria
+    npc_default_female: "",   // Siluet tinta kultivator wanita
+    npc_default_elder: "",    // Siluet tinta tetua sekte
+    taoist_mind_ring: "",     // Cincin aura Taoist Mind
+  },
+
+  // =========================================================================
   // 14. EMOJI FALLBACK
   // Tampilan cadangan otomatis jika URL di atas belum diisi
   // =========================================================================

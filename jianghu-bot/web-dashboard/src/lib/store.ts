@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   }
 }));
 
-type UIModal = 'dashboard' | 'inventory' | 'sect' | 'cultivation' | 'pet' | 'assets' | null;
+export type UIModal = 'dashboard' | 'inventory' | 'sect' | 'cultivation' | 'pet' | 'assets' | 'stats' | 'achievements' | 'settings' | 'npcInteraction' | null;
 
 interface UIState {
   activeModal: UIModal;
@@ -90,14 +90,18 @@ interface UIState {
   setMapFullscreen: (val: boolean) => void;
   isTileInspectorActive: boolean;
   setIsTileInspectorActive: (val: boolean) => void;
+  activeNpcId: string | null;
+  setActiveNpcId: (id: string | null) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
   activeModal: null, // Default shows no modal (hidden)
   setActiveModal: (modal) => set({ activeModal: modal }),
-  closeModal: () => set({ activeModal: null }),
+  closeModal: () => set({ activeModal: null, activeNpcId: null }),
   isMapFullscreen: true,
   setMapFullscreen: (val) => set({ isMapFullscreen: val }),
   isTileInspectorActive: false,
-  setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val })
+  setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val }),
+  activeNpcId: null,
+  setActiveNpcId: (id) => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null })
 }));

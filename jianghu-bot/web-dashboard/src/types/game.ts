@@ -138,6 +138,63 @@ export interface ZoneTile {
   isPubliclyVisible?: boolean;
 }
 
+export interface SpiritualRootStats {
+  fire: number;
+  water: number;
+  lightning: number;
+  wind: number;
+  earth: number;
+  wood: number;
+}
+
+export interface ArtisanshipStats {
+  alchemy: number;
+  forge: number;
+  fengShui: number;
+  talismans: number;
+  herbology: number;
+  mining: number;
+}
+
+export interface ExtendedCombatStats {
+  critRate: number;
+  critRes: number;
+  agility: number;
+  critDmg: number;
+  critDr: number;
+  travelSpeed: number;
+  martialRes: number;
+  spiritualRes: number;
+}
+
+export interface ExtendedPlayerStats {
+  maxLifespan: number;
+  mood: number;
+  luck: number;
+  insight: number;
+  vitality: number;
+  maxVitality: number;
+  innerEnergy: number;
+  maxInnerEnergy: number;
+  focus: number;
+  maxFocus: number;
+  critRate: number;
+  critResist: number;
+  agility: number;
+  critDmg: number;
+  critDmgReduce: number;
+  travelSpeed: number;
+  martialRes: number;
+  spiritualRes: number;
+  spiritualRoot: SpiritualRootStats;
+  artisanship: ArtisanshipStats;
+}
+
+export interface AlignmentData {
+  righteous: number;
+  demonic: number;
+}
+
 export interface CombatStats {
   hp: number;
   maxHp: number;
@@ -145,6 +202,13 @@ export interface CombatStats {
   def: number;
   spd: number;
   critRate?: number;
+  critRes?: number;
+  agility?: number;
+  critDmg?: number;
+  critDr?: number;
+  travelSpeed?: number;
+  martialRes?: number;
+  spiritualRes?: number;
   dodgeRate?: number;
   damageReduction?: number;
 }
@@ -159,7 +223,7 @@ export interface PlayerProfile {
   discordId: string;
   guildId: string;
   characterName: string;
-  gender: 'Pria' | 'Wanita' | null;
+  gender: 'Pria' | 'Wanita' | 'Laki-laki' | 'Perempuan' | null;
   age: number;
   schemaVersion: number;
   level: number;
@@ -167,6 +231,7 @@ export interface PlayerProfile {
   biography?: string;
   nickname?: string | null;
   avatarUrl?: string | null;
+  characterImage?: string | null;
   discordAvatar?: string | null;
   sect?: string;
   currency: Currency;
@@ -177,6 +242,22 @@ export interface PlayerProfile {
   equipment: EquipmentSlots;
   inventory?: InventoryItem[];
   combatStats?: CombatStats;
+  extendedStats?: ExtendedPlayerStats;
+  alignment?: AlignmentData;
+  destinyNature?: string[];
+  destinyNurture?: string[];
+  personalityTags?: string[];
+  internalTraits?: string;
+  externalTraits?: string;
+  charisma?: string;
+  interests?: string[];
+  race?: string;
+  reputation?: number;
+  reputationTitle?: string;
+  kungfuSkills?: Record<string, number>;
+  manuals?: any[];
+  equippedMount?: string | null;
+  marriage?: any;
   energy: PlayerEnergy;
   maxEnergy: number;
   inventoryWeight: number;

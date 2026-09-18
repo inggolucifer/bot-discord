@@ -17,6 +17,50 @@ const playerStatsSchema = new mongoose.Schema({
   baseSpd: { type: Number, default: 10 }
 }, { _id: false });
 
+const extendedStatsSchema = new mongoose.Schema({
+  // === GENERAL ===
+  maxLifespan:   { type: Number, default: 100 },
+  mood:          { type: Number, default: 100, min: 0, max: 100 },
+  luck:          { type: Number, default: 10 },
+  insight:       { type: Number, default: 10 },
+  vitality:      { type: Number, default: 100 },
+  maxVitality:   { type: Number, default: 100 },
+  innerEnergy:   { type: Number, default: 100 },
+  maxInnerEnergy: { type: Number, default: 100 },
+  focus:         { type: Number, default: 100 },
+  maxFocus:      { type: Number, default: 100 },
+
+  // === COMBAT ===
+  critRate:      { type: Number, default: 5 },
+  critResist:    { type: Number, default: 0 },
+  agility:       { type: Number, default: 10 },
+  critDmg:       { type: Number, default: 150 },
+  critDmgReduce: { type: Number, default: 0 },
+  travelSpeed:   { type: Number, default: 100 },
+  martialRes:    { type: Number, default: 0 },
+  spiritualRes:  { type: Number, default: 0 },
+
+  // === SPIRITUAL ROOT ===
+  spiritualRoot: {
+    fire:      { type: Number, default: 10 },
+    water:     { type: Number, default: 10 },
+    lightning: { type: Number, default: 10 },
+    wind:      { type: Number, default: 10 },
+    earth:     { type: Number, default: 10 },
+    wood:      { type: Number, default: 10 }
+  },
+
+  // === ARTISANSHIP ===
+  artisanship: {
+    alchemy:   { type: Number, default: 5 },
+    forge:     { type: Number, default: 5 },
+    fengShui:  { type: Number, default: 5 },
+    talismans: { type: Number, default: 5 },
+    herbology: { type: Number, default: 5 },
+    mining:    { type: Number, default: 5 }
+  }
+}, { _id: false });
+
 const inventoryItemSchema = new mongoose.Schema({
   itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', required: true },
   quantity: { type: Number, default: 1 },
@@ -278,6 +322,21 @@ const playerSchema = new mongoose.Schema({
 
 
   stats: { type: playerStatsSchema, default: () => ({}) },
+  extendedStats: { type: extendedStatsSchema, default: () => ({}) },
+  alignment: {
+    righteous: { type: Number, default: 50 },
+    demonic:   { type: Number, default: 0 }
+  },
+  destinyNature:  { type: [String], default: () => ['Dual Talents'] },
+  destinyNurture: { type: [String], default: () => ['Taoist Mind Essence'] },
+  personalityTags: { type: [String], default: () => ['Protective', 'Carefree'] },
+  internalTraits: { type: String, default: 'Middle Way' },
+  externalTraits: { type: String, default: 'Traditional Carefree' },
+  charisma:       { type: String, default: 'Average' },
+  interests:      { type: [String], default: () => ['Bambooware', 'Flute', 'Wine'] },
+  race:           { type: String, default: 'Human' },
+  reputation:     { type: Number, default: 100 },
+  reputationTitle: { type: String, default: 'Novice Cultivator' },
   laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
   manuals: { type: [playerManualSchema], default: [] },
   isNormalCultivator: { type: Boolean, default: false },
