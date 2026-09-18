@@ -73,12 +73,12 @@ export function Phase10Stats() {
 
                         <h3 className="font-semibold text-slate-300 text-xs uppercase tracking-wider mb-2">Computed Combat Stats</h3>
                         <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 bg-slate-800/80 p-3 rounded-lg border border-slate-700/60">
-                            <div>HP: <span className="text-emerald-400 font-bold">{computedStats.currentHp} / {computedStats.maxHp}</span></div>
-                            <div>MP: <span className="text-cyan-400 font-bold">{computedStats.currentMp} / {computedStats.maxMp}</span></div>
-                            <div>ATK: <span className="text-red-400 font-bold">{computedStats.atk}</span></div>
-                            <div>DEF: <span className="text-blue-400 font-bold">{computedStats.def}</span></div>
-                            <div>SPD: <span className="text-yellow-400 font-bold">{computedStats.spd}</span></div>
-                            <div>CRIT: <span className="text-amber-400 font-bold">{((computedStats.critHitRate || 0.05) * 100).toFixed(1)}%</span></div>
+                            <div>HP: <span className="text-emerald-400 font-bold">{Math.floor(Number(computedStats.currentHp) || 0)} / {Math.floor(Number(computedStats.maxHp) || 100)}</span></div>
+                            <div>MP: <span className="text-cyan-400 font-bold">{Math.floor(Number(computedStats.currentMp) || 0)} / {Math.floor(Number(computedStats.maxMp) || 100)}</span></div>
+                            <div>ATK: <span className="text-red-400 font-bold">{Math.floor(Number(computedStats.atk) || 0)}</span></div>
+                            <div>DEF: <span className="text-blue-400 font-bold">{Math.floor(Number(computedStats.def) || 0)}</span></div>
+                            <div>SPD: <span className="text-yellow-400 font-bold">{Math.floor(Number(computedStats.spd) || 0)}</span></div>
+                            <div>CRIT: <span className="text-amber-400 font-bold">{Math.floor((Number(computedStats.critHitRate) || 0.05) * 100)}%</span></div>
                         </div>
                     </div>
 
