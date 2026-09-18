@@ -175,7 +175,14 @@ export default function DashboardModal() {
   }
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-[600px] lg:w-[800px] bg-black/80 backdrop-blur-md border-l border-[#c5a880]/30 shadow-[-10px_0_30px_rgba(0,0,0,0.8)] z-50 overflow-y-auto custom-scrollbar flex flex-col slide-in-right">
+    <div 
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex justify-end animate-in fade-in"
+      onClick={closeModal}
+    >
+      <div 
+        className="relative w-full md:w-[600px] lg:w-[800px] h-full bg-[#0c0f17]/95 border-l border-[#c5a880]/40 shadow-[-10px_0_30px_rgba(0,0,0,0.8)] overflow-y-auto custom-scrollbar flex flex-col slide-in-from-right duration-300"
+        onClick={(e) => e.stopPropagation()}
+      >
       
       {/* Modal Header */}
       <div className="sticky top-0 bg-black/90 border-b border-[#333] px-6 py-4 flex justify-between items-center z-20">
@@ -622,5 +629,6 @@ export default function DashboardModal() {
 
       </div>
     </div>
+  </div>
   );
 }

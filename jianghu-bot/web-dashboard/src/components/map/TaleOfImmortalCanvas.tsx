@@ -1183,45 +1183,37 @@ export default function TaleOfImmortalCanvas({
         className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
       />
 
-      {/* HUD Controls (+ dan - Zoom Spasial) - Berada di sisi kiri atas di bawah bar navigasi agar bebas tabrakan */}
-      <div className="absolute top-14 left-3 sm:top-16 sm:left-4 z-20 flex items-center gap-1.5 pointer-events-auto">
+      {/* HUD Controls (+ dan - Zoom Spasial) - Ultra-kompak di kiri atas agar bebas tabrakan */}
+      <div className="absolute top-12 left-2 sm:top-14 sm:left-4 z-20 flex items-center gap-1 pointer-events-auto bg-[#18140e]/90 p-0.5 sm:p-1 rounded-lg border border-[#453826]/70 shadow-lg backdrop-blur-md">
         <button
           onClick={centerOnPlayer}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95"
-          title="Pusatkan Karakter"
+          className="bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] px-2 py-1 rounded text-[11px] sm:text-xs font-serif font-bold transition-all active:scale-95 flex items-center gap-1"
+          title="Pusatkan Kamera ke Karakter"
         >
-          <span>🎯 Pusatkan</span>
+          <span>🎯</span>
+          <span className="hidden sm:inline">Pusat</span>
         </button>
         <button
           onClick={handleZoomOut}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-md text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          className="w-6 h-6 sm:w-7 sm:h-7 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded text-xs sm:text-sm font-bold flex items-center justify-center transition-all active:scale-90"
           title="Perkecil Peta (-)"
         >
           -
         </button>
         <button
           onClick={() => setCamera(prev => ({ ...prev, zoom: 1.0 }))}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#8c7a5f] border border-[#524530] px-2 py-1 rounded-md text-xs font-mono shadow-lg backdrop-blur-md"
+          className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono text-[#a89578] hover:text-[#e0d3bc] transition-colors"
           title="Reset Zoom 100%"
         >
           {Math.round(camera.zoom * 100)}%
         </button>
         <button
           onClick={handleZoomIn}
-          className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] w-7 h-7 rounded-md text-sm font-bold shadow-lg backdrop-blur-md flex items-center justify-center transition-all active:scale-90"
+          className="w-6 h-6 sm:w-7 sm:h-7 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded text-xs sm:text-sm font-bold flex items-center justify-center transition-all active:scale-90"
           title="Perbesar Peta (+)"
         >
           +
         </button>
-        {onOpenSearch && (
-          <button
-            onClick={onOpenSearch}
-            className="bg-[#292218]/90 hover:bg-[#3d3324] text-[#d8c3a5] border border-[#524530] px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-serif font-bold shadow-lg backdrop-blur-md flex items-center gap-1 transition-all active:scale-95 ml-1"
-            title="Cari Landmark, Sekte & Markah Koordinat"
-          >
-            <span>🔍 Cari</span>
-          </button>
-        )}
       </div>
     </div>
   );
