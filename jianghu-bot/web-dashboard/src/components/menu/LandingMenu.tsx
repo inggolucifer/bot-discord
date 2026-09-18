@@ -136,7 +136,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-[#141a27]/80 border border-[#3e3425] text-xs text-amber-200 backdrop-blur-md shadow-lg flex items-center gap-1.5">
               <Sparkles size={13} className="text-amber-400 animate-spin-slow" />
-              <span>Immortal-X • Tale of Jianghu</span>
+              <span>Immortal X • Dunia Persilatan Jianghu</span>
             </span>
           </div>
 
@@ -167,19 +167,19 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
         <div className="my-auto max-w-xl flex flex-col items-start space-y-8">
           
           {/* Main Title / Logo in Ink Calligraphy Style */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-3">
-              <div className="text-5xl sm:text-7xl font-bold tracking-widest text-[#f5ebd7] drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] select-none">
+              <div className="text-5xl sm:text-7xl font-bold tracking-widest text-[#f5ebd7] drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] select-none font-serif">
                 江湖八荒
               </div>
               <div className="w-9 h-9 rounded-md bg-red-900/80 border border-red-500 text-red-100 flex items-center justify-center font-bold text-lg shadow-[0_0_15px_rgba(239,68,68,0.5)]">
-                印
+                仙
               </div>
             </div>
-            <div className="text-lg sm:text-2xl font-serif tracking-[0.3em] text-amber-300 uppercase pl-1 drop-shadow-md">
-              Tale of Immortal
+            <div className="text-2xl sm:text-4xl font-serif font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-yellow-500 uppercase pl-1 drop-shadow-[0_2px_15px_rgba(245,158,11,0.5)]">
+              IMMORTAL X
             </div>
-            <p className="text-xs sm:text-sm text-stone-400 pl-1 max-w-md leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-stone-300 pl-1 max-w-md leading-relaxed font-sans">
               Menembus kabut fana, meniti tangga keabadian, dan memahat takdir sejati di semesta sembilan benua.
             </p>
           </div>
@@ -251,7 +251,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
 
         {/* Bottom Footer: Version & Legal Note */}
         <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 font-sans border-t border-[#2a241b] pt-3">
-          <div>Jianghu Bot & Immortal-X • v1.2.0 Tale of Immortal Edition</div>
+          <div>Jianghu Bot • Immortal X (v1.2.0)</div>
           <div className="mt-1 sm:mt-0 text-stone-400">
             Dunia Terbuka 5000x5000 • Tanpa Modul Eksternal
           </div>

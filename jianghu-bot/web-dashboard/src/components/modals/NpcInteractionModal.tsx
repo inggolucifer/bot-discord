@@ -12,6 +12,7 @@ import DestinyTraits from '@/components/character/DestinyTraits';
 import PersonalityBadges from '@/components/character/PersonalityBadges';
 import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
+import { GLOBAL_ASSETS } from '@/config/globalAssets';
 
 type NpcTab = 'stats' | 'skills' | 'artifact' | 'backstory' | 'family' | 'social' | 'taoistMind';
 
@@ -197,6 +198,45 @@ export default function NpcInteractionModal() {
   const npcNurture = ['Unobstructed (Bebas Halangan)'];
   const npcAlignment = { righteous: 200, demonic: 100 };
 
+  // Resolve standing full-body art from GLOBAL_ASSETS.npcs or ui_panels
+  const standingArtUrl = 
+    (GLOBAL_ASSETS.npcs as any)?.[npcName] ||
+    (npcData?.slug && (GLOBAL_ASSETS.npcs as any)?.[npcData.slug]) ||
+    npcData?.standingImageUrl ||
+    (npcSex === 'Wanita' 
+      ? ((GLOBAL_ASSETS.npcs as any)?.['default_standing_female'] || GLOBAL_ASSETS.ui_panels?.npc_default_female)
+      : ((GLOBAL_ASSETS.npcs as any)?.['default_standing_male'] || GLOBAL_ASSETS.ui_panels?.npc_default_male)) ||
+    npcData?.avatarUrl ||
+    '';
+
+  // Custom Wuxia Standing Silhouette & Halo Fallback Node
+  const standingFallbackNode = (
+    <div className="w-full h-full min-h-[260px] flex flex-col items-center justify-center bg-gradient-to-b from-[#131826] via-[#0c101a] to-[#07090f] p-4 relative overflow-hidden select-none">
+      {/* Background Spiritual Aura Halo */}
+      <div className="absolute w-44 h-44 rounded-full bg-emerald-500/10 blur-3xl animate-pulse" />
+      <div className="absolute w-28 h-28 rounded-full bg-amber-500/15 blur-xl" />
+      
+      {/* Standing Silhouette Graphic */}
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="w-20 h-20 rounded-full bg-gradient-to-b from-amber-900/50 to-[#101420] border-2 border-amber-500/70 flex items-center justify-center text-4xl shadow-[0_0_25px_rgba(245,158,11,0.35)] mb-3 group-hover:scale-105 transition-transform">
+          {npcSex === 'Wanita' ? '🧝‍♀️' : '🧙‍♂️'}
+        </div>
+        <div className="px-3 py-0.5 rounded-full bg-amber-950/90 border border-amber-500/60 text-amber-200 text-xs font-serif font-bold tracking-wider shadow-sm">
+          {npcName}
+        </div>
+        <div className="text-[11px] text-stone-400 mt-1">
+          {npcPosition}
+        </div>
+        <div className="text-[10px] text-amber-400/80 font-mono mt-0.5">
+          {npcRealm}
+        </div>
+      </div>
+
+      {/* Decorative Traditional Mist */}
+      <div className="absolute bottom-0 inset-x-0 h-14 bg-gradient-to-t from-black/90 to-transparent pointer-events-none" />
+    </div>
+  );
+
   return (
     <div 
       className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-hidden animate-in fade-in duration-200"
@@ -255,19 +295,26 @@ export default function NpcInteractionModal() {
         {/* Main Body */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           
-          {/* Left Panel: Portrait & Action Command Column */}
+          {/* Left Panel: Full-Body Standing Portrait & Action Command Column */}
           <div className="w-full md:w-64 lg:w-72 bg-[#090b11] border-b md:border-b-0 md:border-r border-[#382f20] p-3 flex flex-col justify-between overflow-y-auto custom-scrollbar shrink-0">
             <div>
-              {/* NPC Portrait */}
-              <div className="relative w-full aspect-[3/4] max-h-56 sm:max-h-64 rounded-lg overflow-hidden border border-[#52442d] bg-[#121622] mb-3 shadow-inner">
+              {/* NPC Full-Body Standing Art Container */}
+              <div className="relative w-full aspect-[9/14] max-h-72 sm:max-h-80 rounded-lg overflow-hidden border-2 border-[#52442d] bg-[#0d111a] mb-3 shadow-inner group">
                 <FallbackImage
-                  src={npcData?.avatarUrl || ''}
+                  src={standingArtUrl}
                   alt={npcName}
-                  fallbackCategory="npc"
-                  className="w-full h-full object-cover object-top"
+                  fallbackNode={standingFallbackNode}
+                  className="w-full h-full object-contain object-bottom"
                 />
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/70 border border-stone-600 text-stone-300 text-[10px]">
+                
+                {/* Title badge overlay top-right */}
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-black/80 border border-amber-600/50 text-amber-300 text-[10px] shadow">
                   {npcData?.title || 'Pengelana (Stranger)'}
+                </div>
+
+                {/* Standing Art Indicator Label */}
+                <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 border border-stone-700 text-stone-400 text-[9px] font-sans">
+                  Tokoh Berdiri (Standing Art)
                 </div>
               </div>
 
