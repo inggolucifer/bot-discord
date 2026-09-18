@@ -236,7 +236,7 @@ export function WorldPageContent() {
   if (loading) return <WorldMapLoadingScreen isReady={false} />;
 
   return (
-    <div className={`w-full h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)] lg:h-[calc(100vh-4rem)] relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
+    <div className={`w-full flex-1 min-h-0 h-full relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>
       
       {/* Main Map Background */}
       <div className="absolute inset-0 flex flex-col">

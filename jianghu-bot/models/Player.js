@@ -40,24 +40,24 @@ const extendedStatsSchema = new mongoose.Schema({
   martialRes:    { type: Number, default: 0 },
   spiritualRes:  { type: Number, default: 0 },
 
-  // === SPIRITUAL ROOT ===
+  // === SPIRITUAL ROOT (Semua Player Start dari 0) ===
   spiritualRoot: {
-    fire:      { type: Number, default: 10 },
-    water:     { type: Number, default: 10 },
-    lightning: { type: Number, default: 10 },
-    wind:      { type: Number, default: 10 },
-    earth:     { type: Number, default: 10 },
-    wood:      { type: Number, default: 10 }
+    fire:      { type: Number, default: 0 },
+    water:     { type: Number, default: 0 },
+    lightning: { type: Number, default: 0 },
+    wind:      { type: Number, default: 0 },
+    earth:     { type: Number, default: 0 },
+    wood:      { type: Number, default: 0 }
   },
 
-  // === ARTISANSHIP ===
+  // === ARTISANSHIP (Sistem Terpadu dengan Kemahiran Profesi) ===
   artisanship: {
-    alchemy:   { type: Number, default: 5 },
-    forge:     { type: Number, default: 5 },
-    fengShui:  { type: Number, default: 5 },
-    talismans: { type: Number, default: 5 },
-    herbology: { type: Number, default: 5 },
-    mining:    { type: Number, default: 5 }
+    alchemy:   { type: Number, default: 0 },
+    forge:     { type: Number, default: 0 },
+    fengShui:  { type: Number, default: 0 },
+    talismans: { type: Number, default: 0 },
+    herbology: { type: Number, default: 0 },
+    mining:    { type: Number, default: 0 }
   }
 }, { _id: false });
 

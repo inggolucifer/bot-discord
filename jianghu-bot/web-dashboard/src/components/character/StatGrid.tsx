@@ -40,8 +40,9 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const ext = player?.extendedStats || {};
   const combat = player?.combatStats || {};
   const kungfu = player?.kungfuSkills || {};
-  const rawRoots = ext.spiritualRoot || { fire: 10, water: 10, lightning: 10, wind: 10, earth: 10, wood: 10 };
-  const rawArtisan = ext.artisanship || { alchemy: 5, forge: 5, fengShui: 5, talismans: 5, herbology: 5, mining: 5 };
+  const prof = player?.professions || {};
+  const rawRoots = ext.spiritualRoot || { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
+  const rawArtisan = ext.artisanship || {};
 
   // 1. General Values (Strictly Integers)
   const age = Math.floor(Number(player?.age) || 16);
@@ -83,24 +84,24 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const palmSkill = getKungfuLevelFromExp(kungfu.special || 0);
   const fingerSkill = getKungfuLevelFromExp(kungfu.finger || 0);
 
-  // 4. Spiritual Roots (Strictly Integers)
+  // 4. Spiritual Roots (Strictly Integers - Semua Player Start dari 0)
   const roots = {
-    fire: Math.floor(Number(rawRoots.fire) || 10),
-    water: Math.floor(Number(rawRoots.water) || 10),
-    lightning: Math.floor(Number(rawRoots.lightning) || 10),
-    wind: Math.floor(Number(rawRoots.wind) || 10),
-    earth: Math.floor(Number(rawRoots.earth) || 10),
-    wood: Math.floor(Number(rawRoots.wood) || 10)
+    fire: Math.floor(Number(rawRoots.fire) === 10 ? 0 : (Number(rawRoots.fire) || 0)),
+    water: Math.floor(Number(rawRoots.water) === 10 ? 0 : (Number(rawRoots.water) || 0)),
+    lightning: Math.floor(Number(rawRoots.lightning) === 10 ? 0 : (Number(rawRoots.lightning) || 0)),
+    wind: Math.floor(Number(rawRoots.wind) === 10 ? 0 : (Number(rawRoots.wind) || 0)),
+    earth: Math.floor(Number(rawRoots.earth) === 10 ? 0 : (Number(rawRoots.earth) || 0)),
+    wood: Math.floor(Number(rawRoots.wood) === 10 ? 0 : (Number(rawRoots.wood) || 0))
   };
 
-  // 5. Artisanship (Strictly Integers)
+  // 5. Artisanship & Kemahiran Profesi (Strictly Integers - Sistem Terpadu 1-to-1)
   const artisan = {
-    alchemy: Math.floor(Number(rawArtisan.alchemy) || 5),
-    forge: Math.floor(Number(rawArtisan.forge) || 5),
-    fengShui: Math.floor(Number(rawArtisan.fengShui) || 5),
-    talismans: Math.floor(Number(rawArtisan.talismans) || 5),
-    herbology: Math.floor(Number(rawArtisan.herbology) || 5),
-    mining: Math.floor(Number(rawArtisan.mining) || 5)
+    alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(rawArtisan.alchemy) || 0)),
+    forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 0)),
+    fengShui: Math.floor(Number(rawArtisan.fengShui) || 0),
+    talismans: Math.floor(Number(rawArtisan.talismans) || 0),
+    herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 0)),
+    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 0))
   };
 
   const headerClass = "px-3 py-1 rounded-full bg-[#1b1c24] border border-[#3e3b30] text-[#e0cfb3] text-xs font-serif font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-md mb-2.5";
@@ -273,15 +274,15 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
           </div>
         </div>
 
-        {/* 5. ARTISANSHIP */}
+        {/* 5. ARTISANSHIP & KEMAHIRAN PROFESI */}
         <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
           <div className={headerClass}>
             <Hammer size={13} className="text-amber-400" />
-            Artisanship
+            Artisanship & Profesi
           </div>
           <div className="space-y-2 text-xs">
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">⚗️ Alchemy</span>
+              <span className="text-stone-400 flex items-center gap-1">⚗️ Alchemy (Alkimia)</span>
               <span className="font-semibold text-purple-300">{artisan.alchemy}</span>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
@@ -293,15 +294,15 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
               <span className="font-semibold text-sky-300">{artisan.fengShui}</span>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">📜 Talismans</span>
+              <span className="text-stone-400 flex items-center gap-1">📜 Talismans (Jimat)</span>
               <span className="font-semibold text-yellow-300">{artisan.talismans}</span>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">🌿 Herbology</span>
+              <span className="text-stone-400 flex items-center gap-1">🌿 Herbology (Tani)</span>
               <span className="font-semibold text-emerald-300">{artisan.herbology}</span>
             </div>
             <div className="flex justify-between items-center py-0.5">
-              <span className="text-stone-400 flex items-center gap-1">⛏️ Mining</span>
+              <span className="text-stone-400 flex items-center gap-1">⛏️ Mining (Tambang)</span>
               <span className="font-semibold text-stone-300">{artisan.mining}</span>
             </div>
           </div>
