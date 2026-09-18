@@ -14,6 +14,7 @@ import WorldMapView from "@/components/map/WorldMapView";
 import ZoneGridView from "@/components/map/ZoneGridView";
 import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
+import { useUIStore } from "@/lib/store";
 
 export function WorldPageContent() {
   const searchParams = useSearchParams();
@@ -52,6 +53,14 @@ export function WorldPageContent() {
   const [isRestModalOpen, setIsRestModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBattleActive, setIsBattleActive] = useState(false);
+  const isTileInspectorActive = useUIStore(s => s.isTileInspectorActive);
+
+  // Auto-close Warta drawer if Tile Inspector becomes active
+  useEffect(() => {
+    if (isTileInspectorActive) {
+      setIsDrawerOpen(false);
+    }
+  }, [isTileInspectorActive]);
 
   // Map View State
   const [mapView, setMapView] = useState<'grid' | 'world' | 'region'>('grid');
@@ -258,7 +267,7 @@ export function WorldPageContent() {
 
       {/* Floating View Switcher - Only visible on map, hidden when inside building / settlement or in battle */}
       {subViewMode === 'map' && !isBattleActive && (
-        <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 bg-[#0e131d]/85 p-1 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl">
+        <div className={`absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-40 items-center gap-1 bg-[#0e131d]/85 p-1 rounded-xl border border-gray-800 backdrop-blur-md shadow-xl ${mapView === 'world' ? 'flex' : 'hidden lg:flex'}`}>
           <button
             onClick={() => setMapView('grid')}
             className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-serif font-bold transition-all ${mapView === 'grid' ? 'bg-gradient-to-r from-amber-700 to-amber-600 text-white border border-amber-500 shadow-lg' : 'text-gray-400 hover:text-gray-200'}`}
@@ -326,7 +335,7 @@ export function WorldPageContent() {
 
             {/* Climate Pill */}
             {climateData && (
-              <div className="hidden sm:flex items-center gap-1.5 bg-[#0e131d]/90 backdrop-blur-md border border-gray-800 rounded-xl px-3 py-1.5 shadow-xl text-xs">
+              <div className="hidden md:flex items-center gap-1.5 bg-[#0e131d]/90 backdrop-blur-md border border-gray-800 rounded-xl px-3 py-1.5 shadow-xl text-xs">
                 <span className="text-sm">{climateData.inComfort ? '🌤️' : '⚠️'}</span>
                 <span className={`font-bold font-mono ${climateData.inComfort ? 'text-green-400' : 'text-orange-400'}`}>
                   {climateData.effectiveTemperature}°C
@@ -492,12 +501,17 @@ export function WorldPageContent() {
 
       {/* Floating Panel (Tabs & Content) - Collapsible Drawer (Hidden during battle) */}
       {mapView !== 'world' && subViewMode === 'map' && !isBattleActive && (
-      <div className="absolute bottom-12 sm:bottom-14 left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[50vh] sm:max-h-[60vh] flex flex-col pointer-events-none animate-in fade-in">
+      <div className="absolute bottom-12 sm:bottom-14 left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[42vh] sm:max-h-[55vh] flex flex-col pointer-events-none animate-in fade-in">
         
         {/* Collapsible Drawer Header */}
         <div className="pointer-events-auto mb-1.5 flex items-center justify-between bg-[#0e131d]/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-amber-900/60 shadow-xl">
           <button
-            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+            onClick={() => {
+              if (!isDrawerOpen) {
+                useUIStore.getState().setIsTileInspectorActive(false);
+              }
+              setIsDrawerOpen(!isDrawerOpen);
+            }}
             className="flex items-center gap-2 text-xs font-serif font-bold text-amber-300 hover:text-amber-100 transition-colors w-full justify-between"
           >
             <span className="flex items-center gap-1.5">

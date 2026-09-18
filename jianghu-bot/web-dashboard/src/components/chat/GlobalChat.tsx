@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { socket } from '@/lib/socket';
-import { useAuthStore } from '@/lib/store';
+import { useAuthStore, useUIStore } from '@/lib/store';
 import { MessageSquare, X, Send, User } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
 import { Button } from '@/components/ui/Button';
@@ -20,6 +20,7 @@ interface ChatMessage {
 
 export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordId: string) => void }) {
   const { user, token: storeToken } = useAuthStore();
+  const isTileInspectorActive = useUIStore(s => s.isTileInspectorActive);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -179,7 +180,7 @@ export default function GlobalChat({ onPlayerClick }: { onPlayerClick: (discordI
       )}
 
       {/* Floating Toggle Button */}
-      {!isOpen && (
+      {!isOpen && !isTileInspectorActive && (
         <button
           onClick={() => setIsOpen(true)}
           className="bg-gradient-to-br from-[#8b0000] to-red-900 hover:from-red-800 hover:to-red-700 text-white rounded-full p-3 shadow-[0_4px_20px_rgba(139,0,0,0.5)] border border-amber-600/40 transition-all hover:scale-105 flex items-center justify-center"

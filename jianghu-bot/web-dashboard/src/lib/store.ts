@@ -88,6 +88,8 @@ interface UIState {
   closeModal: () => void;
   isMapFullscreen: boolean;
   setMapFullscreen: (val: boolean) => void;
+  isTileInspectorActive: boolean;
+  setIsTileInspectorActive: (val: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -95,5 +97,7 @@ export const useUIStore = create<UIState>((set) => ({
   setActiveModal: (modal) => set({ activeModal: modal }),
   closeModal: () => set({ activeModal: null }),
   isMapFullscreen: true,
-  setMapFullscreen: (val) => set({ isMapFullscreen: val })
+  setMapFullscreen: (val) => set({ isMapFullscreen: val }),
+  isTileInspectorActive: false,
+  setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val })
 }));

@@ -29,7 +29,7 @@ import ScenicCourtyardView from './ScenicCourtyardView';
 import WorldScrollMapView from './WorldScrollMapView';
 import BattleArena from '../battle/BattleArena';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
-import { useAuthStore } from '@/lib/store';
+import { useAuthStore, useUIStore } from '@/lib/store';
 import GridAssetDetailCard from './modals/GridAssetDetailCard';
 import GridAssetBuildModal from './modals/GridAssetBuildModal';
 import GridProfessionWorkbench from './modals/GridProfessionWorkbench';
@@ -72,6 +72,14 @@ export default function ZoneGridView({
   // Selection & Navigasi
   const [selectedTile, setSelectedTile] = useState<TileData | null>(null);
   const [activePath, setActivePath] = useState<Point[]>([]);
+
+  // Sinkronisasi status inspektur petak ke store global
+  useEffect(() => {
+    useUIStore.getState().setIsTileInspectorActive(Boolean(selectedTile));
+    return () => {
+      useUIStore.getState().setIsTileInspectorActive(false);
+    };
+  }, [selectedTile]);
   const [pathSteps, setPathSteps] = useState<number>(0);
   const [isWalking, setIsWalking] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -965,6 +973,7 @@ export default function ZoneGridView({
             onClose={() => {
               setSelectedTile(null);
               setActivePath([]);
+              useUIStore.getState().setIsTileInspectorActive(false);
             }}
           />
         )}
@@ -1032,145 +1041,148 @@ export default function ZoneGridView({
             </button>
           )}
 
-          {/* Tombol Masuk Kota jika berada di settlement */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
-            <button
-              onClick={() => handleEnterSettlement(selectedTile.settlementName || 'XiTong City')}
-              className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
-            >
-              <Building2 className="w-3.5 h-3.5 text-blue-300" />
-              <span>Masuk {selectedTile.settlementName}</span>
-            </button>
-          )}
+          {/* Tombol Aksi Cepat Desktop (Di mobile dihandle penuh oleh GridTileInspectorCard agar tidak tumpang tindih) */}
+          <div className="hidden lg:flex items-center gap-1.5 sm:gap-2">
+            {/* Tombol Masuk Kota jika berada di settlement */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
+              <button
+                onClick={() => handleEnterSettlement(selectedTile.settlementName || 'XiTong City')}
+                className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
+              >
+                <Building2 className="w-3.5 h-3.5 text-blue-300" />
+                <span>Masuk {selectedTile.settlementName}</span>
+              </button>
+            )}
 
-          {/* Tombol Masuk Paviliun Meditasi jika berada di scenic courtyard */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
-            <button
-              onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
-              className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Masuk Paviliun</span>
-            </button>
-          )}
+            {/* Tombol Masuk Paviliun Meditasi jika berada di scenic courtyard */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
+              <button
+                onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
+                className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Masuk Paviliun</span>
+              </button>
+            )}
 
-          {/* Tombol Masuk Bangunan Interior (Rumah / Toko) */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
-            <button
-              onClick={() => handleEnterBuilding(selectedTile)}
-              className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
-            >
-              <DoorOpen className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Masuk Bangunan</span>
-            </button>
-          )}
+            {/* Tombol Masuk Bangunan Interior (Rumah / Toko) */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
+              <button
+                onClick={() => handleEnterBuilding(selectedTile)}
+                className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
+              >
+                <DoorOpen className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Masuk Bangunan</span>
+              </button>
+            )}
 
-          {/* Tombol Inspeksi Aset / Detail Card */}
-          {selectedTile && (selectedTile.buildingName || selectedTile.isUnderConstruction || selectedTile.propertyStructureId) && (
-            <button
-              onClick={() => setAssetDetailTile(selectedTile)}
-              className="bg-stone-800 hover:bg-stone-700 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-600/50 flex items-center gap-1.5 text-xs font-serif font-bold shadow-md transition-all"
-            >
-              <Building2 className="w-3.5 h-3.5 text-amber-400" />
-              <span>Inspeksi Aset</span>
-            </button>
-          )}
+            {/* Tombol Inspeksi Aset / Detail Card */}
+            {selectedTile && (selectedTile.buildingName || selectedTile.isUnderConstruction || selectedTile.propertyStructureId) && (
+              <button
+                onClick={() => setAssetDetailTile(selectedTile)}
+                className="bg-stone-800 hover:bg-stone-700 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-600/50 flex items-center gap-1.5 text-xs font-serif font-bold shadow-md transition-all"
+              >
+                <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>Inspeksi Aset</span>
+              </button>
+            )}
 
-          {/* Tombol Bangun Aset / Profesi jika tanah milik sendiri */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && (!selectedTile.buildingName && !selectedTile.isUnderConstruction) && (
-            <button
-              onClick={() => setBuildModalTile(selectedTile)}
-              className="bg-amber-800 hover:bg-amber-700 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-400/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all animate-pulse"
-            >
-              <Hammer className="w-3.5 h-3.5 text-amber-300" />
-              <span>Bangun Aset / Profesi</span>
-            </button>
-          )}
+            {/* Tombol Bangun Aset / Profesi jika tanah milik sendiri */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && (!selectedTile.buildingName && !selectedTile.isUnderConstruction) && (
+              <button
+                onClick={() => setBuildModalTile(selectedTile)}
+                className="bg-amber-800 hover:bg-amber-700 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-400/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all animate-pulse"
+              >
+                <Hammer className="w-3.5 h-3.5 text-amber-300" />
+                <span>Bangun Aset / Profesi</span>
+              </button>
+            )}
 
-          {/* Tombol Masuk Ekspedisi Dungeon */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.isExpeditionNode || selectedTile.label?.toLowerCase().includes('gua') || selectedTile.label?.toLowerCase().includes('makam') || selectedTile.label?.toLowerCase().includes('ekspedisi')) && (
-            <button
-              onClick={() => setExpeditionModalTile(selectedTile)}
-              className="bg-indigo-950 hover:bg-indigo-900 text-indigo-100 px-3.5 py-1.5 rounded-lg border border-indigo-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
-            >
-              <Compass className="w-3.5 h-3.5 text-indigo-300" />
-              <span>Masuk Ekspedisi</span>
-            </button>
-          )}
+            {/* Tombol Masuk Ekspedisi Dungeon */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.isExpeditionNode || selectedTile.label?.toLowerCase().includes('gua') || selectedTile.label?.toLowerCase().includes('makam') || selectedTile.label?.toLowerCase().includes('ekspedisi')) && (
+              <button
+                onClick={() => setExpeditionModalTile(selectedTile)}
+                className="bg-indigo-950 hover:bg-indigo-900 text-indigo-100 px-3.5 py-1.5 rounded-lg border border-indigo-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+              >
+                <Compass className="w-3.5 h-3.5 text-indigo-300" />
+                <span>Masuk Ekspedisi</span>
+              </button>
+            )}
 
-          {/* Tombol Masuk Balai Sekte */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.territoryType === 'sect_territory' || selectedTile.label?.includes('Sekte') || selectedTile.label?.includes('Dojo')) && (
-            <button
-              onClick={() => setSectModalTile(selectedTile)}
-              className="bg-purple-950 hover:bg-purple-900 text-purple-100 px-3.5 py-1.5 rounded-lg border border-purple-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
-            >
-              <ShieldAlert className="w-3.5 h-3.5 text-purple-300" />
-              <span>Masuk Balai Sekte</span>
-            </button>
-          )}
+            {/* Tombol Masuk Balai Sekte */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.territoryType === 'sect_territory' || selectedTile.label?.includes('Sekte') || selectedTile.label?.includes('Dojo')) && (
+              <button
+                onClick={() => setSectModalTile(selectedTile)}
+                className="bg-purple-950 hover:bg-purple-900 text-purple-100 px-3.5 py-1.5 rounded-lg border border-purple-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-purple-300" />
+                <span>Masuk Balai Sekte</span>
+              </button>
+            )}
 
-          {/* Tombol Beli Kavling Tanah */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && !selectedTile.ownerId && (
-            <button
-              onClick={() => handlePurchaseLand(selectedTile)}
-              className="bg-amber-900/90 hover:bg-amber-800 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-500/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-            >
-              <Coins className="w-3.5 h-3.5 text-amber-300" />
-              <span>Klaim Tanah (100 Perak)</span>
-            </button>
-          )}
+            {/* Tombol Beli Kavling Tanah */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && !selectedTile.ownerId && (
+              <button
+                onClick={() => handlePurchaseLand(selectedTile)}
+                className="bg-amber-900/90 hover:bg-amber-800 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-500/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+              >
+                <Coins className="w-3.5 h-3.5 text-amber-300" />
+                <span>Klaim Tanah (100 Perak)</span>
+              </button>
+            )}
 
-          {/* Tombol Tanam Tanaman */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && !selectedTile.cropType && (
-            <button
-              onClick={() => handlePlantCrop(selectedTile)}
-              className="bg-lime-950 hover:bg-lime-900 text-lime-200 px-3.5 py-1.5 rounded-lg border border-lime-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-            >
-              <Wheat className="w-3.5 h-3.5 text-lime-400" />
-              <span>Tanam Gandum</span>
-            </button>
-          )}
+            {/* Tombol Tanam Tanaman */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && !selectedTile.cropType && (
+              <button
+                onClick={() => handlePlantCrop(selectedTile)}
+                className="bg-lime-950 hover:bg-lime-900 text-lime-200 px-3.5 py-1.5 rounded-lg border border-lime-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+              >
+                <Wheat className="w-3.5 h-3.5 text-lime-400" />
+                <span>Tanam Gandum</span>
+              </button>
+            )}
 
-          {/* Tombol Panen Tanaman */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.cropType && (
-            <button
-              onClick={() => handleHarvestCrop(selectedTile)}
-              className="bg-yellow-950 hover:bg-yellow-900 text-yellow-200 px-3.5 py-1.5 rounded-lg border border-yellow-500/70 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-            >
-              <Wheat className="w-3.5 h-3.5 text-yellow-400" />
-              <span>Panen {selectedTile.cropType}</span>
-            </button>
-          )}
+            {/* Tombol Panen Tanaman */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.cropType && (
+              <button
+                onClick={() => handleHarvestCrop(selectedTile)}
+                className="bg-yellow-950 hover:bg-yellow-900 text-yellow-200 px-3.5 py-1.5 rounded-lg border border-yellow-500/70 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+              >
+                <Wheat className="w-3.5 h-3.5 text-yellow-400" />
+                <span>Panen {selectedTile.cropType}</span>
+              </button>
+            )}
 
-          {/* Tombol Mancing */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.resourceType === 'fish' || selectedTile.terrainType === 'water' || selectedTile.terrainType === 'river') && (
-            <button
-              onClick={handleFish}
-              className="bg-cyan-950 hover:bg-cyan-900 text-cyan-200 px-3.5 py-1.5 rounded-lg border border-cyan-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-            >
-              <Fish className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Mancing</span>
-            </button>
-          )}
+            {/* Tombol Mancing */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.resourceType === 'fish' || selectedTile.terrainType === 'water' || selectedTile.terrainType === 'river') && (
+              <button
+                onClick={handleFish}
+                className="bg-cyan-950 hover:bg-cyan-900 text-cyan-200 px-3.5 py-1.5 rounded-lg border border-cyan-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+              >
+                <Fish className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Mancing</span>
+              </button>
+            )}
 
-          {/* Tombol Panen Sumber Daya Alam (Forage) */}
-          {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.resourceType && selectedTile.resourceType !== 'fish' && (
-            <button
-              onClick={handleForage}
-              className="bg-teal-950 hover:bg-teal-900 text-teal-200 px-3.5 py-1.5 rounded-lg border border-teal-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-            >
-              <Trees className="w-3.5 h-3.5 text-teal-400" />
-              <span>Ambil Sumber Daya</span>
-            </button>
-          )}
+            {/* Tombol Panen Sumber Daya Alam (Forage) */}
+            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.resourceType && selectedTile.resourceType !== 'fish' && (
+              <button
+                onClick={handleForage}
+                className="bg-teal-950 hover:bg-teal-900 text-teal-200 px-3.5 py-1.5 rounded-lg border border-teal-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
+              >
+                <Trees className="w-3.5 h-3.5 text-teal-400" />
+                <span>Ambil Sumber Daya</span>
+              </button>
+            )}
 
-          {/* Tombol Cari Sekitar */}
-          <button
-            onClick={handleSearch}
-            className="bg-[#182130] hover:bg-[#222e42] text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-all"
-          >
-            <Search className="w-3.5 h-3.5 text-blue-400" /> Cari Sekitar
-          </button>
+            {/* Tombol Cari Sekitar */}
+            <button
+              onClick={handleSearch}
+              className="bg-[#182130] hover:bg-[#222e42] text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 flex items-center gap-1.5 text-xs font-semibold shadow-md transition-all"
+            >
+              <Search className="w-3.5 h-3.5 text-blue-400" /> Cari Sekitar
+            </button>
+          </div>
         </div>
       </div>
       )}
