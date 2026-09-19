@@ -681,6 +681,21 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 }
             }
 
+            // Validasi Spiritual Root (e.g., fire 10, water 5, dll)
+            if (manualToLearn.requiredRootType && manualToLearn.requiredRootLevel > 0) {
+                const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
+                const rawExp = Number(extRoots[manualToLearn.requiredRootType]) || 0;
+                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+                const rootLevel = getKungfuLevel(rawExp).level;
+
+                if (rootLevel < manualToLearn.requiredRootLevel) {
+                    throw new CustomError(
+                        `Teknik **${manualToLearn.name}** membutuhkan Spiritual Root ${manualToLearn.requiredRootType.toUpperCase()} level ${manualToLearn.requiredRootLevel}. Levelmu saat ini: ${rootLevel}.`,
+                        400
+                    );
+                }
+            }
+
             if (manualToLearn.requiredSectId) {
                 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
                 const playerSect = await getPlayerSect(guildId, player.discordId);
@@ -711,10 +726,26 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 isComprehending: false,
                 comprehendStartTime: null
             });
+
+            let xpMessage = '';
+            if (manualToLearn.rootType) {
+                const rootType = manualToLearn.rootType;
+                if (!player.extendedStats) player.extendedStats = {};
+                if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
+
+                const baseXp = 30;
+                const tierBonus = (manualToLearn.tier || manualToLearn.rank || 1) * 10;
+                const xpGain = baseXp + tierBonus;
+
+                player.extendedStats.spiritualRoot[rootType] = (player.extendedStats.spiritualRoot[rootType] || 0) + xpGain;
+                player.markModified('extendedStats.spiritualRoot');
+                xpMessage = `\nSpiritual Root **${rootType.toUpperCase()}** mendapatkan +${xpGain} XP!`;
+            }
+
             await player.save({ session });
 
             manualName = manualToLearn.name;
-            messageResponse = `Kamu membuka **${item.name}** dan mulai membaca **${manualName}**.`;
+            messageResponse = `Kamu membuka **${item.name}** dan mulai membaca **${manualName}**.${xpMessage}`;
 
             await TransactionLog.create([{
                 guildId,

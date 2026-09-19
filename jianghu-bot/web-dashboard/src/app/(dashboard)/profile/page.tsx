@@ -123,31 +123,6 @@ export default function ProfilePage() {
     ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessories', 'mount'].includes(inv.itemId?.category)
   ) || [];
 
-  // Farming Summary Logic
-  let farmSummary = { total: 0, ready: 0, growing: 0, depleted: 0, empty: 0 };
-  if (profile.professions?.farming?.farmPlots) {
-      const now = new Date();
-      farmSummary.total = profile.professions.farming.farmPlots.length;
-      profile.professions.farming.farmPlots.forEach((plot: any) => {
-          if (!plot.isUnlocked) return;
-          if (plot.isDepleted) {
-              if (new Date(plot.depletedUntil) > now) {
-                  farmSummary.depleted++;
-              } else {
-                  farmSummary.empty++;
-              }
-          } else if (plot.cropId) {
-              if (new Date(plot.harvestAt) <= now) {
-                  farmSummary.ready++;
-              } else {
-                  farmSummary.growing++;
-              }
-          } else {
-              farmSummary.empty++;
-          }
-      });
-  }
-
   // Active Buffs Logic
   const now = new Date();
   const activeBuffs = (profile.activeBuffs || []).filter((b: any) => new Date(b.expiresAt) > now);
@@ -256,11 +231,6 @@ export default function ProfilePage() {
           <Link href="/assets" className="flex-1 min-w-[120px] bg-[#12151e] hover:bg-[#1c2230] border border-[#c5a880]/40 rounded-xl p-3 text-center transition-all shadow-md group">
               <div className="relative inline-block">
                 <Home className="mx-auto mb-2 text-[#c5a880] group-hover:scale-110 transition-transform" size={24} />
-                {farmSummary.ready > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-emerald-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
-                        Panen x{farmSummary.ready}
-                    </span>
-                )}
               </div>
               <span className="text-xs sm:text-sm font-bold text-stone-200 block">Lahan & Aset</span>
           </Link>
@@ -321,9 +291,11 @@ export default function ProfilePage() {
           </div>
 
           {/* Combat Stats & Equipment */}
-          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col items-center flex-1">
+          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col xl:flex-row gap-6 w-full items-start justify-center h-full">
+             <div className="flex-1 w-full xl:w-1/2 flex flex-col items-center sticky top-0">
               <h3 className="text-lg font-bold text-[#c5a880] mb-6 w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
-              <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-8">
+              <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-6">
                  {/* Decorative center line */}
                  <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
                  {equipmentSlots.map(slot => {
@@ -412,6 +384,81 @@ export default function ProfilePage() {
                     <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
                  </p>
               </div>
+             </div>
+
+             {/* Inventory to Equip */}
+             <div className="flex-1 w-full xl:w-1/2 flex flex-col min-h-[300px] xl:h-full max-h-[800px]">
+                <h3 className="text-lg font-bold text-[#c5a880] text-center w-full mb-6 border-b border-[#333] pb-2 flex justify-between items-center px-2">
+                   <span>Available Equipment</span>
+                   <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
+                </h3>
+
+                <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 pb-4">
+                   {equipableItems.length === 0 ? (
+                      <div className="h-full flex items-center justify-center text-gray-500 text-sm text-center">
+                         Tidak ada equipment yang bisa dipakai di inventory.
+                      </div>
+                   ) : (
+                      equipableItems.map((inv: any) => {
+                          const slotKey = inv.itemId?.category === 'cloth' ? 'armor'
+                            : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
+                            : inv.itemId?.category;
+                          const equippedId = equipment[slotKey];
+                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                          const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
+
+                          return (
+                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
+                                <motion.div
+                                   whileHover={{ x: 4 }}
+                                   className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
+                                   onClick={() => {
+                                      if (!kungfuCheck.allowed) {
+                                         toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
+                                         return;
+                                      }
+                                      handleEquip(inv._id);
+                                   }}
+                                >
+                                   <div className="flex items-center gap-3 overflow-hidden">
+                                      <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
+                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : (slotKey === 'mount' ? '🐎' : '📦')}
+                                      </div>
+                                      <div className="min-w-0">
+                                         <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
+                                         <p className="text-xs text-gray-500 capitalize flex items-center gap-1.5">
+                                            <span>{slotKey}</span>
+                                            {inv.itemId?.category === 'mount' && (
+                                               <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-1 rounded border border-emerald-800/40">
+                                                  {inv.itemId?.staminaReduction ? `-${inv.itemId.staminaReduction} Stamina` : 'Hemat Stamina'}
+                                               </span>
+                                            )}
+                                         </p>
+                                         {!kungfuCheck.allowed && (
+                                            <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
+                                               <Lock size={10} className="shrink-0" />
+                                               <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
+                                            </div>
+                                         )}
+                                      </div>
+                                   </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+                                     <button
+                                        disabled={!kungfuCheck.allowed}
+                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1`}
+                                     >
+                                        {!kungfuCheck.allowed && <Lock size={12} />}
+                                        {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
+                                     </button>
+                                  </div>
+                               </motion.div>
+                            </StatDeltaHover>
+                         );
+                      })
+                   )}
+                </div>
+             </div>
+            </div>
           </div>
         </div>
 
@@ -465,7 +512,6 @@ export default function ProfilePage() {
                       { id: 'mining', name: 'Pertambangan (Mining)', icon: '⛏️', artKey: 'mining', desc: 'Mengekstraksi bijih besi dingin dan batu giok' },
                       { id: 'fishing', name: 'Memancing (Fishing)', icon: '🎣', artKey: 'fishing', desc: 'Menangkap ikan roh di perairan Jianghu' },
                       { id: 'cooking', name: 'Kuliner & Memasak (Cooking)', icon: '🍳', artKey: 'cooking', desc: 'Mengolah ransum dan masakan penambah stamina' },
-                      { id: 'fengShui', name: 'Feng Shui (Geomansi)', icon: '🧭', artKey: 'fengShui', desc: 'Geomansi formasi pelindung dan deteksi urat energi' },
                       { id: 'talismans', name: 'Penulisan Jimat (Talismans)', icon: '📜', artKey: 'talismans', desc: 'Menuliskan segel mantra pertahanan dan kertas jimat' }
                   ].map(prof => {
                       const profData = profile.professions?.[prof.id];
@@ -519,115 +565,6 @@ export default function ProfilePage() {
                       );
                   })}
                </div>
-            </div>
-
-            {/* Farming Summary */}
-            {profile.professions?.farming?.isUnlocked && (
-                <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg">
-                   <div className="flex justify-between items-center mb-3 border-b border-[#333] pb-2">
-                       <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider">Status Ladang</h3>
-                       <Link href="/world" className="text-xs text-[#c5a880] hover:underline">Kelola di Peta &rarr;</Link>
-                   </div>
-
-                   {farmSummary.ready > 0 && (
-                      <div className="mb-3 bg-green-900/40 border border-green-500/50 rounded p-2 text-center">
-                          <span className="text-green-400 font-bold text-sm">Ada tanaman siap panen!</span>
-                          <Link href="/world" className="ml-2 text-xs bg-green-700 hover:bg-green-600 text-white px-2 py-1 rounded transition">Panen di Peta</Link>
-                      </div>
-                   )}
-
-                   <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
-                       <div className="bg-green-900/30 border border-green-700/50 rounded py-2 text-green-400">
-                           <div className="text-xl mb-1">{farmSummary.ready}</div>
-                           <div className="text-[10px] uppercase">Ready</div>
-                       </div>
-                       <div className="bg-blue-900/30 border border-blue-700/50 rounded py-2 text-blue-400">
-                           <div className="text-xl mb-1">{farmSummary.growing}</div>
-                           <div className="text-[10px] uppercase">Tumbuh</div>
-                       </div>
-                       <div className="bg-gray-800/50 border border-gray-600/50 rounded py-2 text-gray-300">
-                           <div className="text-xl mb-1">{farmSummary.empty}</div>
-                           <div className="text-[10px] uppercase">Kosong</div>
-                       </div>
-                       <div className="bg-red-900/30 border border-red-700/50 rounded py-2 text-red-400">
-                           <div className="text-xl mb-1">{farmSummary.depleted}</div>
-                           <div className="text-[10px] uppercase">Gersang</div>
-                       </div>
-                   </div>
-                </div>
-            )}
-
-            {/* Inventory to Equip */}
-            <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg flex flex-col flex-1 min-h-[300px]">
-                <h3 className="text-sm font-bold text-[#c5a880] uppercase tracking-wider mb-4 border-b border-[#333] pb-2 flex justify-between items-center">
-                   <span>Available Equipment</span>
-                   <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
-                </h3>
-
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
-                   {equipableItems.length === 0 ? (
-                      <div className="h-full flex items-center justify-center text-gray-500 text-sm text-center">
-                         Tidak ada equipment yang bisa dipakai di inventory.
-                      </div>
-                   ) : (
-                      equipableItems.map((inv: any) => {
-                          const slotKey = inv.itemId?.category === 'cloth' ? 'armor' 
-                            : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
-                            : inv.itemId?.category;
-                          const equippedId = equipment[slotKey];
-                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
-                          const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
-
-                          return (
-                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
-                                <motion.div
-                                   whileHover={{ x: 4 }}
-                                   className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
-                                   onClick={() => {
-                                      if (!kungfuCheck.allowed) {
-                                         toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
-                                         return;
-                                      }
-                                      handleEquip(inv._id);
-                                   }}
-                                >
-                                   <div className="flex items-center gap-3 overflow-hidden">
-                                      <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
-                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : (slotKey === 'mount' ? '🐎' : '📦')}
-                                      </div>
-                                      <div className="min-w-0">
-                                         <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
-                                         <p className="text-xs text-gray-500 capitalize flex items-center gap-1.5">
-                                            <span>{slotKey}</span>
-                                            {inv.itemId?.category === 'mount' && (
-                                               <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-1 rounded border border-emerald-800/40">
-                                                  {inv.itemId?.staminaReduction ? `-${inv.itemId.staminaReduction} Stamina` : 'Hemat Stamina'}
-                                               </span>
-                                            )}
-                                         </p>
-                                         {!kungfuCheck.allowed && (
-                                            <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
-                                               <Lock size={10} className="shrink-0" />
-                                               <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
-                                            </div>
-                                         )}
-                                      </div>
-                                   </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
-                                     <button 
-                                        disabled={!kungfuCheck.allowed}
-                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1`}
-                                     >
-                                        {!kungfuCheck.allowed && <Lock size={12} />}
-                                        {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
-                                     </button>
-                                  </div>
-                               </motion.div>
-                            </StatDeltaHover>
-                         );
-                      })
-                   )}
-                </div>
             </div>
 
         </div>
