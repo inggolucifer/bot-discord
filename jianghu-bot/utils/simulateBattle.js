@@ -83,7 +83,7 @@ function simulateBattle(challenger, opponent, options = {}) {
 
     const p1UsedSkillTypes = new Set();
     p1UsedSkillTypes.add(p1WeaponDiscipline);
-    const p1UsedElements = new Set();
+    const p1UsedElementsCount = {};
 
     const getElement = (playerObj) => (playerObj?.laws && playerObj.laws.length > 0 && playerObj.laws[0]?.element && typeof playerObj.laws[0].element === 'string') ? playerObj.laws[0].element.toLowerCase() : 'netral';
     const p1Element = getElement(challenger);
@@ -311,7 +311,9 @@ function simulateBattle(challenger, opponent, options = {}) {
 
         if (activeSkill && currentAttacker === 1) {
             if (activeSkill.requiredSkillType) p1UsedSkillTypes.add(activeSkill.requiredSkillType);
-            if (activeSkill.rootType) p1UsedElements.add(activeSkill.rootType);
+            if (activeSkill.rootType) {
+                p1UsedElementsCount[activeSkill.rootType] = (p1UsedElementsCount[activeSkill.rootType] || 0) + 1;
+            }
         }
 
         let effectiveDefSpd = Math.max(0, defStats.spd - (atkStats.atk * 0.1));
@@ -485,7 +487,7 @@ function simulateBattle(challenger, opponent, options = {}) {
         weaponExp: baseCombatExp,
         weaponItemName: hasP1Weapon ? (p1EquippedWeapon.name || 'Senjata') : null,
         usedSkills: Array.from(p1UsedSkillTypes),
-        usedElements: Array.from(p1UsedElements),
+        usedElementsCount: p1UsedElementsCount,
         stealingExp
     };
 

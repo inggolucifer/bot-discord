@@ -191,10 +191,15 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
 4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
    - `Fire`, `Water`, `Lightning`, `Wind`, `Earth`, `Wood`
    - Menyimpan raw XP; level dihitung via `getKungfuLevel()` (max 250)
-   - Cara mendapat XP:
-     1. Menggunakan skill/teknik elemen tersebut di combat
-     2. Melatih / comprehend manual yang memiliki `rootType` sesuai elemen
    - Manual dapat memiliki syarat `requiredRootType` + `requiredRootLevel`
+   ### XP Spiritual Root dari Combat
+   - Setiap cast skill elemen: +8 XP ke root elemen tersebut
+   - Maksimal per elemen per battle: 40 XP (anti-abuse)
+   - Engine battle mengembalikan `usedElementsCount` (counter per elemen)
+   - Endpoint combat yang menyimpan ke database (server authoritative)
+   ### XP Spiritual Root dari Training Manual
+   - Formula: `min(30 + tier * 10, 100)` di mana tier = manual.tier || manual.rank || 1 (clamp 1–10)
+   - Diberikan saat berhasil use-manual / skills upgrade yang punya rootType
 
 5. **Artisanship & Kemahiran Profesi (Sistem Terpadu / 技艺)**:
    - Daftar: `Alchemy` (Alkimia), `Forge` (Tempa), `Talismans` (Jimat), `Herbology` (Herba), `Mining` (Tambang)
