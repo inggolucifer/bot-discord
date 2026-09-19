@@ -681,6 +681,21 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 }
             }
 
+            // Validasi Spiritual Root (e.g., fire 10, water 5, dll)
+            if (manualToLearn.requiredRootType && manualToLearn.requiredRootLevel > 0) {
+                const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
+                const rawExp = Number(extRoots[manualToLearn.requiredRootType]) || 0;
+                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+                const rootLevel = getKungfuLevel(rawExp).level;
+
+                if (rootLevel < manualToLearn.requiredRootLevel) {
+                    throw new CustomError(
+                        `Teknik **${manualToLearn.name}** membutuhkan Spiritual Root ${manualToLearn.requiredRootType.toUpperCase()} level ${manualToLearn.requiredRootLevel}. Levelmu saat ini: ${rootLevel}.`,
+                        400
+                    );
+                }
+            }
+
             if (manualToLearn.requiredSectId) {
                 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
                 const playerSect = await getPlayerSect(guildId, player.discordId);
@@ -711,10 +726,20 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 isComprehending: false,
                 comprehendStartTime: null
             });
+
+            let xpMessage = '';
+            if (manualToLearn.rootType) {
+                const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                const xpGain = applyTrainingSpiritualRootXp(player, manualToLearn.rootType, manualToLearn);
+                if (xpGain > 0) {
+                    xpMessage = `\nSpiritual Root **${manualToLearn.rootType.toUpperCase()}** mendapatkan +${xpGain} XP!`;
+                }
+            }
+
             await player.save({ session });
 
             manualName = manualToLearn.name;
-            messageResponse = `Kamu membuka **${item.name}** dan mulai membaca **${manualName}**.`;
+            messageResponse = `Kamu membuka **${item.name}** dan mulai membaca **${manualName}**.${xpMessage}`;
 
             await TransactionLog.create([{
                 guildId,
