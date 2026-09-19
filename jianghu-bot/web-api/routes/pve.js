@@ -24,7 +24,6 @@ const { simulateBattle } = require('../../utils/simulateBattle');
 const { syncPlayerCultivation } = require('../../utils/cultivation');
 const WeatherConfig = require('../../models/WeatherConfig');
 const { awardKungfuExp } = require('../../utils/kungfuMastery');
-const { getRealmIndex } = require('../../utils/cultivation');
 const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
 const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
 const { TALENT_EFFECTS } = require('../../config/talentEffects');
