@@ -1,13 +1,33 @@
+
+
+
+const router = express.Router();
 const { resolveItemImage } = require('../../utils/imageResolve');
 const Item = require('../../models/Item');
 const express = require('express');
-const router = express.Router();
 const Player = require('../../models/Player');
 const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
 const Asset = require('../../models/Asset');
 const { isUnderConstruction, checkMaterials, consumeMaterials } = require('../../utils/crafting');
 const { getPlayerSect } = require('../../utils/sectUtils');
+const TransactionLog = require('../../models/TransactionLog');
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/CustomError');
+const Law = require('../../models/Law');
+const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
+const { escapeRegex } = require('../../utils/escapeRegex');
+const Manual = require('../../models/Manual');
+const { getKungfuLevel } = require('../../utils/kungfuMastery');
+const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
+
+
+
+
+
+
 
 // Endpoint to fetch player's inventory
 router.get('/', authenticateToken, async (req, res) => {
@@ -223,7 +243,7 @@ router.post('/craft', authenticateToken, async (req, res) => {
 
         await player.save();
 
-        const TransactionLog = require('../../models/TransactionLog');
+
         await TransactionLog.create({
             guildId,
             type: 'craft',
@@ -255,9 +275,9 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
     }
 
     try {
-        const { withTransaction } = require('../utils/dbTransaction');
-        const CustomError = require('../utils/CustomError');
-        const TransactionLog = require('../../models/TransactionLog');
+
+
+
 
         await withTransaction(async (session) => {
             const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
@@ -344,9 +364,9 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
     try {
-        const { withTransaction } = require('../utils/dbTransaction');
-        const CustomError = require('../utils/CustomError');
-        const TransactionLog = require('../../models/TransactionLog');
+
+
+
         let itemName = '';
         let messageResponse = '';
         let finalEffectsApplied = [];
@@ -519,11 +539,11 @@ router.post('/use-law', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
     try {
-        const { withTransaction } = require('../utils/dbTransaction');
-        const CustomError = require('../utils/CustomError');
-        const TransactionLog = require('../../models/TransactionLog');
-        const Law = require('../../models/Law');
-        const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
+
+
+
+
+
         let lawName = '';
         let messageResponse = '';
 
@@ -558,7 +578,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
                 targetLawName = item.name.replace(/^(Gulungan|Kitab|Hukum)\s+/i, '').trim();
             }
 
-            const { escapeRegex } = require('../../utils/escapeRegex');
+
             const lawToLearn = await Law.findOne({
                 guildId,
                 $or: [
@@ -621,10 +641,10 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
     try {
-        const { withTransaction } = require('../utils/dbTransaction');
-        const CustomError = require('../utils/CustomError');
-        const TransactionLog = require('../../models/TransactionLog');
-        const Manual = require('../../models/Manual');
+
+
+
+
         let manualName = '';
         let messageResponse = '';
 
@@ -653,7 +673,7 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 extractManualName = item.name.replace(/^(Kitab|Manual|Jurus|Buku)\s+/i, '').trim();
             }
 
-            const { escapeRegex } = require('../../utils/escapeRegex');
+
             const manualToLearn = await Manual.findOne({
                 guildId,
                 $or: [
@@ -664,7 +684,7 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
 
             if (!manualToLearn) throw new CustomError(`Manual **${extractManualName || item.name}** tidak ditemukan di dunia (hubungi admin).`, 404);
 
-            const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
+
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
             const minRealmIdx = manualToLearn.minRealmIndex || 0;
             if (realmIdx < minRealmIdx) {
@@ -685,7 +705,7 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             if (manualToLearn.requiredRootType && manualToLearn.requiredRootLevel > 0) {
                 const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
                 const rawExp = Number(extRoots[manualToLearn.requiredRootType]) || 0;
-                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+
                 const rootLevel = getKungfuLevel(rawExp).level;
 
                 if (rootLevel < manualToLearn.requiredRootLevel) {
@@ -697,7 +717,7 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             }
 
             if (manualToLearn.requiredSectId) {
-                const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+
                 const playerSect = await getPlayerSect(guildId, player.discordId);
                 if (!playerSect || !playerSect._id.equals(manualToLearn.requiredSectId)) {
                     await manualToLearn.populate('requiredSectId');
@@ -729,7 +749,7 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
 
             let xpMessage = '';
             if (manualToLearn.rootType) {
-                const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
                 const xpGain = applyTrainingSpiritualRootXp(player, manualToLearn.rootType, manualToLearn);
                 if (xpGain > 0) {
                     xpMessage = `\nSpiritual Root **${manualToLearn.rootType.toUpperCase()}** mendapatkan +${xpGain} XP!`;

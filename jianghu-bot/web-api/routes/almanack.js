@@ -157,7 +157,7 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
 
         await player.save();
 
-        await logTransaction(req.discordClient, {
+        await logTransaction(req.discordClient || req.app.get('client'), {
             guildId: guildId,
             type: 'player_build_asset_web',
             fromUserId: userId,
