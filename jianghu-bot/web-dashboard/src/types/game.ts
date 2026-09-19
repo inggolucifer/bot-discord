@@ -150,7 +150,6 @@ export interface SpiritualRootStats {
 export interface ArtisanshipStats {
   alchemy: number;
   forge: number;
-  fengShui: number;
   talismans: number;
   herbology: number;
   mining: number;

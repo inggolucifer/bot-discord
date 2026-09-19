@@ -156,7 +156,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             martialRes: 0,
             spiritualRes: 0,
             spiritualRoot: { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 },
-            artisanship: { alchemy: 0, forge: 0, fengShui: 0, talismans: 0, herbology: 0, mining: 0 }
+            artisanship: { alchemy: 1, forge: 1, talismans: 1, herbology: 1, mining: 1 }
         };
 
         // Sinkronisasi Terpadu: Kemahiran Profesi & Artisanship Menjadi Satu Kesatuan Sistem
@@ -164,12 +164,11 @@ router.get('/profile', authenticateToken, async (req, res) => {
         const extArt = (player.extendedStats && player.extendedStats.artisanship) || {};
         
         const unifiedArtisanship = {
-            alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(extArt.alchemy) || 0)),
-            forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(extArt.forge) || 0)),
-            herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(extArt.herbology) || 0)),
-            mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(extArt.mining) || 0)),
-            fengShui: Math.floor(Number(extArt.fengShui) || 0),
-            talismans: Math.floor(Number(extArt.talismans) || 0),
+            alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(extArt.alchemy) || 1)),
+            forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(extArt.forge) || 1)),
+            herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(extArt.herbology) || 1)),
+            mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(extArt.mining) || 1)),
+            talismans: Math.floor(Number(extArt.talismans) || 1),
             fishing: Math.floor(prof.fishing?.isUnlocked ? (prof.fishing.level || 1) : 0),
             cooking: Math.floor(prof.cooking?.isUnlocked ? (prof.cooking.level || 1) : 0)
         };
@@ -177,12 +176,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
         const rawSpiritualRoot = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
         // Memastikan seluruh pemain start dari 0 untuk spiritual root
         const normalizedSpiritualRoot = {
-            fire: Math.floor(Number(rawSpiritualRoot.fire) === 10 ? 0 : (Number(rawSpiritualRoot.fire) || 0)),
-            water: Math.floor(Number(rawSpiritualRoot.water) === 10 ? 0 : (Number(rawSpiritualRoot.water) || 0)),
-            lightning: Math.floor(Number(rawSpiritualRoot.lightning) === 10 ? 0 : (Number(rawSpiritualRoot.lightning) || 0)),
-            wind: Math.floor(Number(rawSpiritualRoot.wind) === 10 ? 0 : (Number(rawSpiritualRoot.wind) || 0)),
-            earth: Math.floor(Number(rawSpiritualRoot.earth) === 10 ? 0 : (Number(rawSpiritualRoot.earth) || 0)),
-            wood: Math.floor(Number(rawSpiritualRoot.wood) === 10 ? 0 : (Number(rawSpiritualRoot.wood) || 0))
+            fire: Math.floor(Number(rawSpiritualRoot.fire) || 0),
+            water: Math.floor(Number(rawSpiritualRoot.water) || 0),
+            lightning: Math.floor(Number(rawSpiritualRoot.lightning) || 0),
+            wind: Math.floor(Number(rawSpiritualRoot.wind) || 0),
+            earth: Math.floor(Number(rawSpiritualRoot.earth) || 0),
+            wood: Math.floor(Number(rawSpiritualRoot.wood) || 0)
         };
 
         const mergedExtendedStats = {
@@ -1433,6 +1432,21 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
 
                         const m = pm.manualId;
 
+            // Validasi Spiritual Root (e.g., fire 10, water 5, dll)
+            if (m.requiredRootType && m.requiredRootLevel > 0) {
+                const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
+                const rawExp = Number(extRoots[m.requiredRootType]) || 0;
+                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+                const rootLevel = getKungfuLevel(rawExp).level;
+
+                if (rootLevel < m.requiredRootLevel) {
+                    throw new CustomError(
+                        `Teknik **${m.name}** membutuhkan Spiritual Root ${m.requiredRootType.toUpperCase()} level ${m.requiredRootLevel}. Levelmu saat ini: ${rootLevel}.`,
+                        400
+                    );
+                }
+            }
+
             if (m.requiredSectId) {
                 const { getPlayerSect } = require('../../utils/sectUtils');
                 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
@@ -1480,6 +1494,11 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             // Phase 10: Increase Core skill upon manual upgrade success
             if (!player.kungfuSkills) player.kungfuSkills = {};
             player.kungfuSkills.core = (player.kungfuSkills.core || 0) + 1;
+
+            if (m.rootType) {
+                const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                applyTrainingSpiritualRootXp(player, m.rootType, m);
+            }
 
             player.markModified('manuals');
             player.markModified('kungfuSkills');

@@ -331,6 +331,10 @@ router.post('/claim', authenticateToken, async (req, res) => {
                             }
                         }
                     }
+                    if (battleResult.kungfuGains.usedElementsCount) {
+                        const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                        applyCombatSpiritualRootXp(player, battleResult.kungfuGains.usedElementsCount);
+                    }
                 }
 
                 if (battleResult.stealSuccess) {

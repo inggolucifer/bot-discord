@@ -82,6 +82,20 @@ router.post('/simulate', authenticateToken, async (req, res) => {
                     }
                 }
             }
+
+            if (simResult.kungfuGains.usedElementsCount) {
+                const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                const rootGains = applyCombatSpiritualRootXp(challenger, simResult.kungfuGains.usedElementsCount);
+                for (const gain of rootGains) {
+                    kungfuRewards.push({
+                        skill: `Spiritual Root (${gain.element.toUpperCase()})`,
+                        expGained: gain.gain,
+                        weaponName: `Resonansi Elemen (${gain.casts} cast)`,
+                        newLevel: '-',
+                        levelUp: false
+                    });
+                }
+            }
         }
 
         await challenger.save();

@@ -189,10 +189,36 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
    - `Blade` (Golok/Saber), `Spear` (Tombak/Staff), `Sword` (Pedang), `Fist` (Tinju), `Palm` (Telapak), `Finger` (Totokan Meridian). Terhubung langsung dengan `player.kungfuSkills`.
 
 4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
-   - `Fire` (Api), `Water` (Air), `Lightning` (Petir), `Wind` (Angin), `Earth` (Tanah), `Wood` (Kayu). Menentukan afinitas dan multiplikator jurus elemen bersangkutan.
+   - `Fire`, `Water`, `Lightning`, `Wind`, `Earth`, `Wood`
+   - Menyimpan raw XP; level dihitung via `getKungfuLevel()` (max 250)
+   - Manual dapat memiliki syarat `requiredRootType` + `requiredRootLevel`
+   ### XP Spiritual Root dari Combat
+   - Setiap cast skill elemen: +8 XP ke root elemen tersebut
+   - Maksimal per elemen per battle: 40 XP (anti-abuse)
+   - Engine battle mengembalikan `usedElementsCount` (counter per elemen)
+   - Endpoint combat yang menyimpan ke database (server authoritative)
+   ### XP Spiritual Root dari Training Manual
+   - Formula: `min(30 + tier * 10, 100)` di mana tier = manual.tier || manual.rank || 1 (clamp 1–10)
+   - Diberikan saat berhasil use-manual / skills upgrade yang punya rootType
 
-5. **Artisanship (6 Keahlian Pengrajin / 技艺)**:
-   - `Alchemy` (Alkimia Pil), `Forge` (Tempa Senjata/Zirah), `Feng Shui` (Geomansi & Formasi), `Talismans` (Penulisan Kertas Jimat), `Herbology` (Identifikasi & Panen Herba), `Mining` (Ekstraksi Bijih Roh).
+5. **Artisanship & Kemahiran Profesi (Sistem Terpadu / 技艺)**:
+   - Daftar: `Alchemy` (Alkimia), `Forge` (Tempa), `Talismans` (Jimat), `Herbology` (Herba), `Mining` (Tambang)
+   - **Mulai dari level 1** (bukan 0)
+   - **Maksimal level 250**
+   - **Target waktu nyata**:
+     - Pemain rajin (aktif hampir setiap hari): ± **2 tahun** untuk max level
+     - Pemain kasual (3–4 hari/minggu): ± **4 tahun** untuk max level
+   - **Formula XP** (dari level L ke L+1):
+     ```js
+     function xpRequiredForArtisanshipLevel(L) {
+       // L = level saat ini (1 s/d 249)
+       return Math.floor(18 * Math.pow(L, 2.15) + 40 * L + 60);
+     }
+     ```
+     - Level 1–50: progress cepat dan memuaskan
+     - Level 50–150: progressive menantang
+     - Level 150–250: endgame grind yang adiktif
+     - Feng Shui sudah dihapus sepenuhnya dari sistem
 
 6. **Takdir & Moralitas (Destiny & Alignment)**:
    - **Destiny (Nature)**: Karunia bawaan lahir (misal: *Dual Talents*, *Tortured Genius*, *Spirit Sight*).
