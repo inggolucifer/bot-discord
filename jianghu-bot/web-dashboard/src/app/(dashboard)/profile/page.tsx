@@ -465,7 +465,7 @@ export default function ProfilePage() {
                       { id: 'mining', name: 'Pertambangan (Mining)', icon: '⛏️', artKey: 'mining', desc: 'Mengekstraksi bijih besi dingin dan batu giok' },
                       { id: 'fishing', name: 'Memancing (Fishing)', icon: '🎣', artKey: 'fishing', desc: 'Menangkap ikan roh di perairan Jianghu' },
                       { id: 'cooking', name: 'Kuliner & Memasak (Cooking)', icon: '🍳', artKey: 'cooking', desc: 'Mengolah ransum dan masakan penambah stamina' },
-                      { id: 'fengShui', name: 'Feng Shui (Geomansi)', icon: '🧭', artKey: 'fengShui', desc: 'Geomansi formasi pelindung dan deteksi urat energi' },
+
                       { id: 'talismans', name: 'Penulisan Jimat (Talismans)', icon: '📜', artKey: 'talismans', desc: 'Menuliskan segel mantra pertahanan dan kertas jimat' }
                   ].map(prof => {
                       const profData = profile.professions?.[prof.id];
@@ -521,41 +521,7 @@ export default function ProfilePage() {
                </div>
             </div>
 
-            {/* Farming Summary */}
-            {profile.professions?.farming?.isUnlocked && (
-                <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg">
-                   <div className="flex justify-between items-center mb-3 border-b border-[#333] pb-2">
-                       <h3 className="text-sm text-[#c5a880] uppercase font-bold tracking-wider">Status Ladang</h3>
-                       <Link href="/world" className="text-xs text-[#c5a880] hover:underline">Kelola di Peta &rarr;</Link>
-                   </div>
 
-                   {farmSummary.ready > 0 && (
-                      <div className="mb-3 bg-green-900/40 border border-green-500/50 rounded p-2 text-center">
-                          <span className="text-green-400 font-bold text-sm">Ada tanaman siap panen!</span>
-                          <Link href="/world" className="ml-2 text-xs bg-green-700 hover:bg-green-600 text-white px-2 py-1 rounded transition">Panen di Peta</Link>
-                      </div>
-                   )}
-
-                   <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold">
-                       <div className="bg-green-900/30 border border-green-700/50 rounded py-2 text-green-400">
-                           <div className="text-xl mb-1">{farmSummary.ready}</div>
-                           <div className="text-[10px] uppercase">Ready</div>
-                       </div>
-                       <div className="bg-blue-900/30 border border-blue-700/50 rounded py-2 text-blue-400">
-                           <div className="text-xl mb-1">{farmSummary.growing}</div>
-                           <div className="text-[10px] uppercase">Tumbuh</div>
-                       </div>
-                       <div className="bg-gray-800/50 border border-gray-600/50 rounded py-2 text-gray-300">
-                           <div className="text-xl mb-1">{farmSummary.empty}</div>
-                           <div className="text-[10px] uppercase">Kosong</div>
-                       </div>
-                       <div className="bg-red-900/30 border border-red-700/50 rounded py-2 text-red-400">
-                           <div className="text-xl mb-1">{farmSummary.depleted}</div>
-                           <div className="text-[10px] uppercase">Gersang</div>
-                       </div>
-                   </div>
-                </div>
-            )}
 
             {/* Inventory to Equip */}
             <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-5 shadow-lg flex flex-col flex-1 min-h-[300px]">
