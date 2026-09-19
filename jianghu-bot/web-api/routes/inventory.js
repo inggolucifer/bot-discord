@@ -734,8 +734,9 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
 
                 const baseXp = 30;
-                const tierBonus = (manualToLearn.tier || manualToLearn.rank || 1) * 10;
-                const xpGain = baseXp + tierBonus;
+                const tier = Number(manualToLearn.tier || manualToLearn.rank || 1);
+                const tierBonus = Math.min(Math.max(tier, 1), 10) * 10;
+                const xpGain = Math.min(baseXp + tierBonus, 100);
 
                 player.extendedStats.spiritualRoot[rootType] = (player.extendedStats.spiritualRoot[rootType] || 0) + xpGain;
                 player.markModified('extendedStats.spiritualRoot');
