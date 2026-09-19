@@ -216,8 +216,8 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
 
         // Update Discord Role outside transaction if it's a new realm
         if (roleUpdated && isSuccess) {
-             const reqClient = req.app.get('client');
-             if (reqClient) {
+             const reqClient = req.discordClient || req.app.get('client');
+             if (reqClient && reqClient.user) {
                  const guild = reqClient.guilds.cache.get(guildId);
                  if (guild) {
                      const member = await guild.members.fetch(userId).catch(() => null);

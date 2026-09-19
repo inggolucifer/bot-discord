@@ -313,7 +313,8 @@ router.post('/login', async (req, res) => {
         const tokenPayload = {
             userId: userId,
             username: discordUser.username,
-            avatar: avatarUrl
+            avatar: avatarUrl,
+            guildId: player?.guildId || process.env.GUILD_ID || 'DEFAULT_GUILD'
         };
 
         const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
@@ -378,7 +379,8 @@ router.post('/refresh', (req, res) => {
         const tokenPayload = {
             userId: user.userId,
             username: user.username,
-            avatar: user.avatar
+            avatar: user.avatar,
+            guildId: user.guildId || process.env.GUILD_ID || 'DEFAULT_GUILD'
         };
 
         const newAccessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
@@ -410,7 +412,8 @@ router.post('/migrate', (req, res) => {
         const tokenPayload = {
             userId: user.userId,
             username: user.username,
-            avatar: user.avatar
+            avatar: user.avatar,
+            guildId: user.guildId || process.env.GUILD_ID || 'DEFAULT_GUILD'
         };
 
         const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });

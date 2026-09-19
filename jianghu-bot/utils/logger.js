@@ -15,10 +15,14 @@ const WEALTH_AFFECTING_TYPES = new Set([
 async function logTransaction(client, { guildId, type, fromUserId = null, toUserId = null, currency = null, amount = 0, itemDescription = null, balanceAfter = null, note = null }) {
   const entry = await TransactionLog.create({ guildId, type, fromUserId, toUserId, currency, amount, itemDescription, balanceAfter, note });
 
+  if (!client || !client.user) {
+      return entry; // Skip Discord notifications quietly if bot is offline
+  }
+
   try {
     const config = await GuildConfig.findOne({ guildId });
     if (config?.logChannelId) {
-      const channel = await client.channels.fetch(config.logChannelId).catch(() => null);
+      const channel = await client.channels?.fetch(config.logChannelId).catch(() => null);
       if (channel) {
         const embed = new EmbedBuilder()
           .setColor(0x8e5b3c)
@@ -52,11 +56,15 @@ async function logTransaction(client, { guildId, type, fromUserId = null, toUser
 async function logAdminAction(client, { guildId, adminId, action, targetUserId = null, details = null }) {
   const entry = await AdminLog.create({ guildId, adminId, action, targetUserId, details });
 
+  if (!client || !client.user) {
+      return entry; // Skip Discord notifications quietly if bot is offline
+  }
+
   try {
     const config = await GuildConfig.findOne({ guildId });
     const channelId = config?.adminLogChannelId || config?.logChannelId;
     if (channelId) {
-      const channel = await client.channels.fetch(channelId).catch(() => null);
+      const channel = await client.channels?.fetch(channelId).catch(() => null);
       if (channel) {
         const embed = new EmbedBuilder()
           .setColor(0xc0392b)
