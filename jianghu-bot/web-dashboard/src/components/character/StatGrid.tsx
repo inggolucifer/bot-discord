@@ -96,12 +96,11 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
 
   // 5. Artisanship & Kemahiran Profesi (Strictly Integers - Sistem Terpadu 1-to-1)
   const artisan = {
-    alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(rawArtisan.alchemy) || 0)),
-    forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 0)),
-    fengShui: Math.floor(Number(rawArtisan.fengShui) || 0),
-    talismans: Math.floor(Number(rawArtisan.talismans) || 0),
-    herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 0)),
-    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 0))
+    alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(rawArtisan.alchemy) || 1)),
+    forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 1)),
+    talismans: Math.floor(Number(rawArtisan.talismans) || 1),
+    herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 1)),
+    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 1))
   };
 
   const headerClass = "px-3 py-1 rounded-full bg-[#1b1c24] border border-[#3e3b30] text-[#e0cfb3] text-xs font-serif font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-md mb-2.5";
@@ -288,10 +287,6 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">⚒️ Forge (Tempa)</span>
               <span className="font-semibold text-orange-300">{artisan.forge}</span>
-            </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-              <span className="text-stone-400 flex items-center gap-1">🧭 Feng Shui</span>
-              <span className="font-semibold text-sky-300">{artisan.fengShui}</span>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">📜 Talismans (Jimat)</span>

@@ -82,6 +82,26 @@ router.post('/simulate', authenticateToken, async (req, res) => {
                     }
                 }
             }
+
+            if (Array.isArray(simResult.kungfuGains.usedElements)) {
+                if (!challenger.extendedStats) challenger.extendedStats = {};
+                if (!challenger.extendedStats.spiritualRoot) challenger.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
+
+                for (const usedElem of simResult.kungfuGains.usedElements) {
+                    if (challenger.extendedStats.spiritualRoot[usedElem] !== undefined) {
+                        challenger.extendedStats.spiritualRoot[usedElem] = (challenger.extendedStats.spiritualRoot[usedElem] || 0) + 10;
+                        challenger.markModified('extendedStats.spiritualRoot');
+                        // Add to rewards purely for display if frontend supports it, otherwise it's just saved silently
+                        kungfuRewards.push({
+                            skill: `Spiritual Root (${usedElem.toUpperCase()})`,
+                            expGained: 10,
+                            weaponName: 'Resonansi Elemen',
+                            newLevel: '-',
+                            levelUp: false
+                        });
+                    }
+                }
+            }
         }
 
         await challenger.save();

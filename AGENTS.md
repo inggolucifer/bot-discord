@@ -200,7 +200,6 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
      - `Mining` (Ekstraksi Bijih Besi & Giok Roh) $\leftrightarrow$ `professions.mining`
      - `Fishing` (Memancing Ikan Roh Jianghu) $\leftrightarrow$ `professions.fishing`
      - `Cooking` (Kuliner & Ransum Pemulih) $\leftrightarrow$ `professions.cooking`
-     - `Feng Shui` (Geomansi & Formasi Energi)
      - `Talismans` (Penulisan Kertas Jimat & Segel Mantra)
    - Angka tingkat kemahiran di Pilar Ke-5 `<StatGrid />` merefleksikan secara deterministik level riil profesi pemain, terintegrasi mulus dengan rincian progres EXP di kartu pengrajin profil pemain.
 
@@ -272,7 +271,7 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
      2. Combat (ATK, DEF, CRIT, CRIT RES, Agility, CRIT DMG, CRIT DR, Travel Speed, Martial/Spiritual RES).
      3. Martial Arts (Blade, Spear, Sword, Fist, Palm, Finger - level riil dihitung dari kurva XP).
      4. Spiritual Root (6 Elemen: Api, Air, Petir, Angin, Tanah, Kayu).
-     5. Artisanship (6 Profesi: Alkimia, Tempa, Feng Shui, Jimat, Herba, Tambang).
+     5. Artisanship (5 Profesi: Alkimia, Tempa, Jimat, Herba, Tambang).
    - Menampilkan Lencana Gelar Pencapaian (`🎖️ [${activeTitle}]`), Bar Sirkulasi Inti Qi, Saldo Tael (Emas, Perak, Tembaga, Batu Roh, Giok), serta tombol pembuka lembar status lengkap (`PlayerStatsModal`).
    - Seluruh nilai numerik disanitasi mutlak menjadi integer bulat murni (`Math.floor`).
 

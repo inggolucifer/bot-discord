@@ -331,6 +331,17 @@ router.post('/claim', authenticateToken, async (req, res) => {
                             }
                         }
                     }
+                    if (Array.isArray(battleResult.kungfuGains.usedElements)) {
+                        if (!player.extendedStats) player.extendedStats = {};
+                        if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
+
+                        for (const usedElem of battleResult.kungfuGains.usedElements) {
+                            if (player.extendedStats.spiritualRoot[usedElem] !== undefined) {
+                                player.extendedStats.spiritualRoot[usedElem] = (player.extendedStats.spiritualRoot[usedElem] || 0) + 10;
+                                player.markModified('extendedStats.spiritualRoot');
+                            }
+                        }
+                    }
                 }
 
                 if (battleResult.stealSuccess) {
