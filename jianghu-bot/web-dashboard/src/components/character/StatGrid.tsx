@@ -98,7 +98,6 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const artisan = {
     alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(rawArtisan.alchemy) || 0)),
     forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 0)),
-    fengShui: Math.floor(Number(rawArtisan.fengShui) || 0),
     talismans: Math.floor(Number(rawArtisan.talismans) || 0),
     herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 0)),
     mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 0))
@@ -291,7 +290,6 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">🧭 Feng Shui</span>
-              <span className="font-semibold text-sky-300">{artisan.fengShui}</span>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">📜 Talismans (Jimat)</span>
