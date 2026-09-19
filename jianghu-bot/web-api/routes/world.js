@@ -1,17 +1,17 @@
+
+
+const router = express.Router();
 const { resolveNpcImage, resolveLocationImage, getEmoji } = require('../../utils/imageResolve');
 const express = require('express');
-const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
-
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const TransactionLog = require('../../models/TransactionLog');
-
 const Location = require('../../models/Location');
 const Travel = require('../../models/Travel');
 const Shop = require('../../models/Shop');
 const AdminLog = require('../../models/AdminLog');
-const { authenticateToken } = require('../middlewares/auth'); // assuming it's in auth based on other files
+const { authenticateToken } = require('../middlewares/auth');
 const travelConfig = require('../../config/travelDistances');
 const { applyTravelDrain, getCurrentStamina, getMaxStamina } = require('../../utils/stamina');
 const staminaConfig = require('../../config/stamina');
@@ -20,6 +20,74 @@ const { calculateEnergy } = require('../../utils/energyManager');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
 const { markArrived } = require('../../utils/mapDiscovery');
+const Item = require('../../models/Item');
+const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
+const Sect = require('../../models/Sect');
+const LockManager = require('../utils/lockManager');
+const { getTotalCopper, payCurrency } = require('../../utils/currency');
+const Monster = require('../../models/Monster');
+const { simulateBattle } = require('../../utils/simulateBattle');
+const { syncPlayerCultivation } = require('../../utils/cultivation');
+const { awardKungfuExp } = require('../../utils/kungfuMastery');
+const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+const { TALENT_EFFECTS } = require('../../config/talentEffects');
+const { evaluateQuestProgress } = require('../../utils/questProgress');
+const Quest = require('../../models/Quest');
+const WeatherConfig = require('../../models/WeatherConfig');
+const { getClimatePenalties, getPlayerClimateResistance } = require('../../utils/climate');
+const { getComputedStats } = require('../../utils/statCalculator');
+const ZoneTile = require('../../models/ZoneTile');
+const Npc = require('../../models/Npc');
+const mongoose = require('mongoose');
+const gridConfig = require('../../config/gridConfig');
+const proceduralWorldEngine = require('../../utils/proceduralWorldEngine');
+const sparseFogManager = require('../../utils/sparseFogManager');
+const {
+    getTileIndex,
+    getCoordinatesFromIndex,
+    getTilesInRevealRadius,
+    revealTilesForPlayer,
+    resolvePlayerGridMove
+} = require('../../utils/gridManager');
+const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
+const Asset = require('../../models/Asset');
+const Blueprint = require('../../models/Blueprint');
+const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
+const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
+const fs = require('fs');
+const path = require('path');
+const zoneConfig = require(configPath);
+const landService = require('../../services/landService');
+const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+const ZoneTileModel = require('../../models/ZoneTile');
+const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+const { calculateEnergyCost, calculateTravelSpeed, isTileObstructed } = require('../../utils/explorationMath');
+const { evaluateAmbush } = require('../../utils/explorationMath');
+const pEngine = require('../../utils/proceduralWorldEngine');
+const PropertyStructure = require('../../models/PropertyStructure');
+const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
+
+
+
+
+
+
+
+
+
+
+
+ // assuming it's in auth based on other files
+
+
+
+
+
+
+
+
 
 router.get('/location', authenticateToken, async (req, res) => {
     try {
@@ -179,7 +247,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         let realmDiscount = Math.min(0.5, realmIndex * 0.03);
         let horseSpeedBonus = 0;
-        const Item = require('../../models/Item');
+
 
         if (player.equipment && player.equipment.accessory) {
             const accInvItem = player.inventory.id(player.equipment.accessory);
@@ -200,11 +268,11 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
             }
         }
 
-        const { MAX_TRAVEL_SPEED_DISCOUNT } = require('../../config/inventoryWeight');
+
 
         let sectHomeDiscount = 0;
         if (player.sect && player.sect !== 'Tanpa Sekte (Rogue Cultivator)') {
-             const Sect = require('../../models/Sect');
+
              const playerSect = await Sect.findOne({ name: player.sect, guildId: player.guildId }).lean();
              if (playerSect && playerSect.hallSettlementName === toSettlementName) {
                  sectHomeDiscount = 0.1; // 10% discount for traveling home
@@ -218,7 +286,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
 
         let escortUsed = false;
         if (useEscortLetter) {
-            const Item = require('../../models/Item');
+
             const escortItemDef = await Item.findOne({ name: 'Surat Jaminan Biro Pengawalan' });
             if (escortItemDef) {
                 const itemIndex = player.inventory.findIndex(i => i.itemId && i.itemId.toString() === escortItemDef._id.toString());
@@ -349,7 +417,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Pilihan tidak valid.' });
     }
 
-    const LockManager = require('../utils/lockManager');
+
     const lockKey = `ambush_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: 'Permintaan sedang diproses.' });
@@ -376,7 +444,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     won = false;
                 }
             } else if (choice === 'surrender') {
-                const { getTotalCopper, payCurrency } = require('../../utils/currency');
+
                 const totalCopperEq = getTotalCopper(player.currency);
                 const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT);
                 const capCopper = travelConfig.AMBUSH_LOSS_CAP_SILVER_EQ * 100;
@@ -401,9 +469,9 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
                 won = false;
             } else if (choice === 'fight') {
-                const Monster = require('../../models/Monster');
-                const { simulateBattle } = require('../../utils/simulateBattle');
-                const { syncPlayerCultivation } = require('../../utils/cultivation');
+
+
+
 
                 await syncPlayerCultivation(player);
                 await player.populate('laws manuals.manualId inventory.itemId');
@@ -447,8 +515,8 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                 player.combatConditions = battleResult.p1Conditions;
 
                 // Terapkan perolehan Kungfu XP organik dari pertarungan di world
-                const { awardKungfuExp } = require('../../utils/kungfuMastery');
-                const { getRealmIndex } = require('../../utils/cultivation');
+
+
                 const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
                 const oppRealmIdx = opponent.statBlock?.realmIndex !== undefined ? opponent.statBlock.realmIndex : playerRealmIdx;
 
@@ -479,7 +547,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                         }
                     }
                     if (battleResult.kungfuGains.usedElementsCount) {
-                        const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
                         applyCombatSpiritualRootXp(player, battleResult.kungfuGains.usedElementsCount);
                     }
                 }
@@ -555,8 +623,8 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     won = true;
 
                     // Award EXP and check level up
-                    const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
-                    const { TALENT_EFFECTS } = require('../../config/talentEffects');
+
+
 
                     let expGain = 60; // Mock base exp from bandit
                     if (player.talents && player.talents.int) {
@@ -597,8 +665,8 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     }
 
                     // Quest Hook
-                    const { evaluateQuestProgress } = require('../../utils/questProgress');
-                    const Quest = require('../../models/Quest');
+
+
                     for (const questEntry of player.questLog.filter(q => q.status === 'active')) {
                          const quest = await Quest.findById(questEntry.questId).session(session);
                          if (!quest) continue;
@@ -617,7 +685,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     }
                 } else {
                     won = false;
-                    const { getTotalCopper, payCurrency } = require('../../utils/currency');
+
                     const totalCopperEq = getTotalCopper(player.currency);
 
                     const lossCopper = Math.floor(totalCopperEq * travelConfig.AMBUSH_LOSS_PERCENT * 1.5);
@@ -678,10 +746,10 @@ router.get('/climate', authenticateToken, async (req, res) => {
         const location = player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null };
         const regionSlug = location.regionSlug;
 
-        const WeatherConfig = require('../../models/WeatherConfig');
+
         const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
 
-        const { getClimatePenalties, getPlayerClimateResistance } = require('../../utils/climate');
+
 
         const resistance = await getPlayerClimateResistance(player);
 
@@ -867,7 +935,7 @@ router.get('/rest/status', authenticateToken, async (req, res) => {
             player.currentStamina = Math.min(maxStam, getCurrentStamina(player) + (staminaRate * hoursElapsed));
 
             if (player.currentHp !== null && player.currentHp !== undefined) {
-                const { getComputedStats } = require('../../utils/statCalculator');
+
                 const maxHp = getComputedStats(player).maxHp;
                 const hpGain = maxHp * hpRate * hoursElapsed;
                 player.currentHp = Math.min(maxHp, Math.floor(player.currentHp + hpGain));
@@ -888,7 +956,7 @@ router.get('/rest/status', authenticateToken, async (req, res) => {
                  player.rest.status = 'idle';
                  player.rest.mode = null;
 
-                 const { payCurrency } = require('../../utils/currency');
+
                  const penaltyCopper = 250;
                  if (player.currency.copper >= penaltyCopper) {
                       payCurrency(player.currency, penaltyCopper, 'copper');
@@ -947,7 +1015,7 @@ router.post('/rest/cancel', authenticateToken, async (req, res) => {
             player.currentStamina = Math.min(maxStam, getCurrentStamina(player) + (staminaRate * hoursElapsed));
 
             if (player.currentHp !== null && player.currentHp !== undefined) {
-                const { getComputedStats } = require('../../utils/statCalculator');
+
                 const maxHp = getComputedStats(player).maxHp;
                 const hpGain = maxHp * hpRate * hoursElapsed;
                 player.currentHp = Math.min(maxHp, Math.floor(player.currentHp + hpGain));
@@ -965,7 +1033,7 @@ router.post('/rest/cancel', authenticateToken, async (req, res) => {
             }
 
             if (ambushed) {
-                 const { payCurrency } = require('../../utils/currency');
+
                  const penaltyCopper = 250;
                  if (player.currency.copper >= penaltyCopper) {
                       payCurrency(player.currency, penaltyCopper, 'copper');
@@ -1010,7 +1078,7 @@ async function checkNpcProximity(player, npc) {
         let npcY = npc.tileY;
 
         if (npcZone == null || npcX == null || npcY == null) {
-            const ZoneTile = require('../../models/ZoneTile');
+
             const tile = await ZoneTile.findOne({
                 guildId: player.guildId,
                 zoneId: zoneId,
@@ -1055,8 +1123,8 @@ router.get('/npcs', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const Npc = require('../../models/Npc');
-        const ZoneTile = require('../../models/ZoneTile');
+
+
 
         let npcs = [];
         if (player.gridPosition?.zoneId) {
@@ -1202,10 +1270,10 @@ router.get('/npc/:npcId', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const mongoose = require('mongoose');
-        const Npc = require('../../models/Npc');
-        const Quest = require('../../models/Quest');
-        const { getRealmIndex } = require('../../utils/cultivation');
+
+
+
+
 
         let npc = null;
         if (mongoose.isValidObjectId(npcId)) {
@@ -1282,11 +1350,11 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Tidak bisa berbicara saat dalam perjalanan.' });
         }
 
-        const mongoose = require('mongoose');
-        const Npc = require('../../models/Npc');
-        const Quest = require('../../models/Quest');
-        const { getRealmIndex } = require('../../utils/cultivation');
-        const { evaluateQuestProgress } = require('../../utils/questProgress');
+
+
+
+
+
 
         let npc = null;
         if (mongoose.isValidObjectId(npcId)) {
@@ -1349,16 +1417,10 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
     }
 });
 
-const gridConfig = require('../../config/gridConfig');
-const proceduralWorldEngine = require('../../utils/proceduralWorldEngine');
-const sparseFogManager = require('../../utils/sparseFogManager');
-const {
-    getTileIndex,
-    getCoordinatesFromIndex,
-    getTilesInRevealRadius,
-    revealTilesForPlayer,
-    resolvePlayerGridMove
-} = require('../../utils/gridManager');
+
+
+
+
 
 // ==========================================
 // STATUS TERMAL ZONA AKTIF (Wajib sebelum /zone/:zoneId wildcard)
@@ -1370,13 +1432,13 @@ router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
-        const ZoneTile = require('../../models/ZoneTile');
+
         const tileQuery = player.guildId
             ? { guildId: player.guildId, zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 }
             : { zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 };
         const tile = await ZoneTile.findOne(tileQuery).lean();
 
-        const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
+
         const currentHour = new Date().getHours();
         const gridTemp = calculateGridTemperature({
             baseTemperature: tile?.baseTemperature || 20,
@@ -1426,9 +1488,9 @@ router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId }).lean();
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const Asset = require('../../models/Asset');
-        const Blueprint = require('../../models/Blueprint');
-        const Item = require('../../models/Item');
+
+
+
 
         const [assets, blueprints, allItems] = await Promise.all([
             Asset.find({ buildable: true }).lean(),
@@ -1462,7 +1524,7 @@ router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
             return total;
         };
 
-        const { convertToCopper } = require('../../utils/currencyNormalize');
+
         const playerCopper = convertToCopper(player.currency);
 
         const options = [];
@@ -1514,7 +1576,7 @@ router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
                 };
             });
 
-            const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
+
             const rate = RATE_TO_COPPER[ast.priceCurrency] || 100;
             const costInCopper = (ast.basePrice || 0) * rate;
             const costSilver = Math.floor(costInCopper / 100);
@@ -1568,14 +1630,14 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${zoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Zona tidak ditemukan' });
         }
 
-        const zoneConfig = require(configPath);
+
         const isMacro = Boolean(zoneConfig.isMacroGrid || zoneConfig.gridWidth >= 1000);
 
         // Inisialisasi gridPosition jika belum ada atau jika baru masuk macro grid
@@ -1635,7 +1697,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
         // Auto-resolusi konstruksi bangunan yang sudah selesai saat peta dimuat
         try {
-            const landService = require('../../services/landService');
+
             await landService.resolveZoneConstruction(zoneId, player.guildId);
         } catch (resolveErr) {
             console.warn('[API-ZONE] Auto-resolve construction warning:', resolveErr.message);
@@ -1657,7 +1719,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             }
 
             // Overlay dengan POI / plot custom yang ada di MongoDB
-            const ZoneTile = require('../../models/ZoneTile');
+
             const customDbTiles = await ZoneTile.find({
                 zoneId: zoneId,
                 tileX: { $gte: viewport.bounds.minX, $lte: viewport.bounds.maxX },
@@ -1676,7 +1738,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             // Cek Petak Monster yang Dikalahkan (DefeatedMonsterTile)
             let defeatedKeys = new Set();
             try {
-                const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+
                 const defeatedTiles = await DefeatedMonsterTile.find({
                     guildId: player.guildId || 'global',
                     zoneId,
@@ -1731,7 +1793,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             visibleTiles = Array.from(proceduralTileMap.values());
         } else {
             // Legacy zone small grid
-            const ZoneTile = require('../../models/ZoneTile');
+
             const tileQuery = player.guildId
                 ? { $or: [{ guildId: player.guildId, zoneId }, { zoneId }] }
                 : { zoneId };
@@ -1747,7 +1809,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
         // Petakan NPC aktif ke dalam petak (tile) yang sesuai untuk badge spasial & interaksi
         try {
-            const Npc = require('../../models/Npc');
+
             const npcQuery = player.guildId ? { guildId: player.guildId, isActive: true } : { isActive: true };
             if (isMacro && viewport && viewport.bounds) {
                 npcQuery.tileX = { $gte: viewport.bounds.minX, $lte: viewport.bounds.maxX };
@@ -1792,8 +1854,8 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             console.warn('[API-ZONE] Non-fatal NPC tile mapping error:', npcErr.message);
         }
 
-        const ZoneTileModel = require('../../models/ZoneTile');
-        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+
+
         const ownedPlotsCount = await ZoneTileModel.countDocuments({ ownerId: player.discordId });
         const nextLandPrice = getLandPriceForPlayer(ownedPlotsCount);
 
@@ -1846,16 +1908,16 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${activeZoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Zona tidak ditemukan' });
         }
-        const zoneConfig = require(configPath);
 
-        const { calculateEnergyCost } = require('../../utils/explorationMath');
-        const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+
+
+
 
         let currentX = player.gridPosition?.tileX ?? 2455;
         let currentY = player.gridPosition?.tileY ?? 2485;
@@ -1875,7 +1937,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         if (player.equipment && player.equipment.mount) {
             const mountInv = player.inventory?.id ? player.inventory.id(player.equipment.mount) : (Array.isArray(player.inventory) ? player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString()) : null);
             if (mountInv && mountInv.itemId) {
-                const Item = require('../../models/Item');
+
                 mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
             }
         }
@@ -2122,7 +2184,7 @@ router.get('/settlement/:settlementName', authenticateToken, async (req, res) =>
         ];
 
         // Ambil daftar NPC yang berada di pemukiman ini dari database
-        const Npc = require('../../models/Npc');
+
         let npcs = await Npc.find({
             settlementName: { $regex: new RegExp(`^${settlementName}$`, 'i') },
             isActive: true
@@ -2205,13 +2267,13 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
 
         const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
 
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Konfigurasi zona aktif tidak ditemukan' });
         }
-        const zoneConfig = require(configPath);
+
 
         // Resolusi lazy pergerakan sebelumnya bila sudah selesai
         resolvePlayerGridMove(player, zoneConfig);
@@ -2262,8 +2324,8 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
         }
 
         // Blueprint: Validasi Obstruksi Medan & Konsumsi Stamina
-        const { calculateEnergyCost, calculateTravelSpeed, isTileObstructed } = require('../../utils/explorationMath');
-        const ZoneTile = require('../../models/ZoneTile');
+
+
         const destTile = await ZoneTile.findOne({
             guildId: player.guildId,
             zoneId: currentZoneId,
@@ -2276,7 +2338,7 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
         if (player.equipment && player.equipment.mount) {
             const mountInv = player.inventory?.id ? player.inventory.id(player.equipment.mount) : (Array.isArray(player.inventory) ? player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString()) : null);
             if (mountInv && mountInv.itemId) {
-                const Item = require('../../models/Item');
+
                 mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
             }
         }
@@ -2354,20 +2416,20 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Zona tidak ditemukan' });
         }
-        const zoneConfig = require(configPath);
+
 
         const status = resolvePlayerGridMove(player, zoneConfig);
         let encounterResult = null;
 
         let thermalReport = null;
         if (status && status.justArrived) {
-            const ZoneTile = require('../../models/ZoneTile');
+
             const destTile = await ZoneTile.findOne({
                 guildId: player.guildId,
                 zoneId: currentZoneId,
@@ -2377,7 +2439,7 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
             const isHazard = Boolean(destTile && destTile.tileType === 'hazard');
 
             // 1. Ambush Evaluation
-            const { evaluateAmbush } = require('../../utils/explorationMath');
+
             const ambushEval = evaluateAmbush({
                 terrainType: destTile?.terrainType || 'plains',
                 stealthRating: (player.kungfuSkills?.qinggong || 0) * 0.01,
@@ -2386,12 +2448,12 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
             });
 
             if (ambushEval.triggered || isHazard) {
-                const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
+
                 encounterResult = checkAndRunGridEncounter(player, zoneConfig, isHazard);
             }
 
             // 2. Blueprint: Termodinamika Lingkungan & Fisiologi Karakter
-            const { calculateGridTemperature, evaluateThermalBreach } = require('../../utils/thermodynamicsEngine');
+
             const currentHour = new Date().getHours();
             const gridTemp = calculateGridTemperature({
                 baseTemperature: destTile?.baseTemperature || 20,
@@ -2466,13 +2528,13 @@ router.post('/zone/search', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Zona tidak ditemukan' });
         }
-        const zoneConfig = require(configPath);
+
 
         // Resolusi pergerakan lazy terlebih dahulu
         resolvePlayerGridMove(player, zoneConfig);
@@ -2503,7 +2565,7 @@ router.post('/zone/search', authenticateToken, async (req, res) => {
         const playerX = player.gridPosition?.tileX ?? 0;
         const playerY = player.gridPosition?.tileY ?? 0;
 
-        const ZoneTile = require('../../models/ZoneTile');
+
         // Cari tile tersembunyi di zona ini
         const hiddenTiles = await ZoneTile.find({
             guildId: player.guildId,
@@ -2582,13 +2644,13 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
-        const fs = require('fs');
-        const path = require('path');
+
+
         const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
         if (!fs.existsSync(configPath)) {
             return res.status(404).json({ error: 'Zona tidak ditemukan' });
         }
-        const zoneConfig = require(configPath);
+
 
         // Validasi batasan zona yang diizinkan untuk pembangunan (G5.3)
         if (!zoneConfig.buildableAllowed) {
@@ -2609,7 +2671,7 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Kamu harus berdiri di dekat plot tanah tersebut untuk membelinya!' });
         }
 
-        const ZoneTile = require('../../models/ZoneTile');
+
         let tile = await ZoneTile.findOne({
             guildId: player.guildId,
             zoneId: currentZoneId,
@@ -2619,7 +2681,7 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
 
         // Jika tile belum ada di MongoDB (pada Procedural World Map 5000x5000), periksa dari Procedural World Engine
         if (!tile) {
-            const pEngine = require('../../utils/proceduralWorldEngine');
+
             const pTile = pEngine.getTileAt(targetX, targetY);
             if (pTile && pTile.isClaimable && !pTile.isSolid) {
                 tile = new ZoneTile({
@@ -2644,8 +2706,8 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: `Plot tanah ini sudah menjadi milik ${tile.ownerName || 'pemain lain'}!` });
         }
 
-        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
-        const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
+
+
 
         const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
         const priceInfo = getLandPriceForPlayer(ownedPlotsCount);
@@ -2694,8 +2756,8 @@ router.get('/zone/land-price', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const ZoneTile = require('../../models/ZoneTile');
-        const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
+
+
         const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
         const nextPrice = getLandPriceForPlayer(ownedPlotsCount);
 
@@ -2721,7 +2783,7 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         const targetX = parseInt(tileX);
         const targetY = parseInt(tileY);
 
-        const ZoneTile = require('../../models/ZoneTile');
+
         const tile = await ZoneTile.findOne({
             guildId: player.guildId,
             zoneId: currentZoneId,
@@ -2741,8 +2803,8 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: `Sudah berdiri bangunan ${tile.buildingName} di plot ini!` });
         }
 
-        const Asset = require('../../models/Asset');
-        const Blueprint = require('../../models/Blueprint');
+
+
         let assetDoc = null;
         let bpDoc = null;
 
@@ -2808,7 +2870,7 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         }
 
         // Validasi dan potong biaya perak/uang
-        const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
+
         let costSilver = 0;
         if (bpDoc) {
             costSilver = bpDoc.requiredSilver || 0;
@@ -2908,7 +2970,7 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Kamu harus berdiri di dekat bangunan untuk memasukinya!' });
         }
 
-        const ZoneTile = require('../../models/ZoneTile');
+
         const tile = await ZoneTile.findOne({
             guildId: player.guildId,
             zoneId: currentZoneId,
@@ -2989,7 +3051,7 @@ router.post('/zone/enter-property', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Kamu harus berada di dekat pintu masuk kediaman!' });
         }
 
-        const ZoneTile = require('../../models/ZoneTile');
+
         const tile = await ZoneTile.findOne({
             guildId: player.guildId,
             zoneId: currentZoneId,
@@ -3001,8 +3063,8 @@ router.post('/zone/enter-property', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Tidak ada kediaman atau properti di koordinat ini.' });
         }
 
-        const PropertyStructure = require('../../models/PropertyStructure');
-        const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
+
+
 
         let property = null;
         if (tile.propertyStructureId) {
@@ -3110,7 +3172,7 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const PropertyStructure = require('../../models/PropertyStructure');
+
         const property = await PropertyStructure.findById(propertyId);
         if (!property) return res.status(404).json({ error: 'Properti tidak ditemukan' });
 
@@ -3153,7 +3215,7 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
             property.herbPlotsUnlocked = currentTier + 1;
         }
 
-        const { payCurrency } = require('../../utils/currency');
+
         if (!payCurrency(player.currency, upgradeCostSilver, 'silver')) {
             return res.status(400).json({ error: `Dana tidak mencukupi. Diperlukan ${upgradeCostSilver} Silver untuk memperbarui ${facilityName}.` });
         }

@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -5,6 +6,22 @@ const { authenticateToken } = require('../middlewares/auth');
 const { simulateBattle } = require('../../utils/simulateBattle');
 const CustomError = require('../utils/CustomError');
 const LockManager = require('../utils/lockManager');
+const { awardKungfuExp } = require('../../utils/kungfuMastery');
+const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+const InteractiveBattleService = require('../../services/InteractiveBattleService');
+const BattleSession = require('../../models/BattleSession');
+const Monster = require('../../models/Monster');
+const { getComputedStats } = require('../../utils/statCalculator');
+const mongoose = require('mongoose');
+const { normalizeCurrency } = require('../../utils/currencyNormalize');
+const Item = require('../../models/Item');
+const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+
+
+
+
+
+
 
 // Endpoint: POST /api/battle/simulate
 // Menerima input "opponentId", mengembalikan hasil battle lengkap (array of logs)
@@ -46,7 +63,7 @@ router.post('/simulate', authenticateToken, async (req, res) => {
         challenger.combatConditions = simResult.p1Conditions;
 
         // Terapkan perolehan Kungfu XP murni dari pertarungan turn-based berdasarkan senjata yang dibawa & jurus yang dipicu
-        const { awardKungfuExp } = require('../../utils/kungfuMastery');
+
         const kungfuRewards = [];
 
         if (simResult.kungfuGains) {
@@ -84,7 +101,7 @@ router.post('/simulate', authenticateToken, async (req, res) => {
             }
 
             if (simResult.kungfuGains.usedElementsCount) {
-                const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
                 const rootGains = applyCombatSpiritualRootXp(challenger, simResult.kungfuGains.usedElementsCount);
                 for (const gain of rootGains) {
                     kungfuRewards.push({
@@ -151,9 +168,9 @@ router.post('/spar', authenticateToken, (req, res) => {
 });
 
 // --- NEW INTERACTIVE ATB BATTLE ENDPOINTS ---
-const InteractiveBattleService = require('../../services/InteractiveBattleService');
-const BattleSession = require('../../models/BattleSession');
-const Monster = require('../../models/Monster');
+
+
+
 
 // POST /api/battle/start
 router.post('/start', authenticateToken, async (req, res) => {
@@ -164,7 +181,7 @@ router.post('/start', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId }).populate('manuals.manualId').populate('inventory.itemId');
         if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
 
-        const { getComputedStats } = require('../../utils/statCalculator');
+
         const computed = getComputedStats(player, player.laws || [], player.manuals || []);
         const maxHp = computed.maxHp || player.stats?.baseHp || 100;
 
@@ -202,7 +219,7 @@ router.post('/start', authenticateToken, async (req, res) => {
         let battleType = 'pve';
 
         if (targetType === 'monster') {
-            const mongoose = require('mongoose');
+
             let monster = await Monster.findOne({
                 $or: [
                     { key: targetId },
@@ -452,12 +469,12 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
              if (player && session.rewards) {
                  player.exp = (player.exp || 0) + (session.rewards.exp || 0);
                  
-                 const { normalizeCurrency } = require('../../utils/currencyNormalize');
+
                  player.currency = normalizeCurrency(player.currency);
                  player.currency.silver = (player.currency.silver || 0) + (session.rewards.silver || 0);
 
                  // Distribusi KungFu XP Senjata & Jurus
-                 const { awardKungfuExp } = require('../../utils/kungfuMastery');
+
                  if (Array.isArray(session.rewards.kungfuExp)) {
                      for (const k of session.rewards.kungfuExp) {
                          const resExp = awardKungfuExp(player, k.discipline, k.amount, { allowLevelUp: true });
@@ -468,7 +485,7 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
 
                  // Distribusi Item Loot
                  if (Array.isArray(session.rewards.items) && session.rewards.items.length > 0) {
-                     const Item = require('../../models/Item');
+
                      for (const loot of session.rewards.items) {
                          let itemDoc = await Item.findOne({ key: loot.itemId });
                          if (!itemDoc) {
@@ -493,7 +510,7 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                  const tileKey = session.battleConfig?.tileKey;
                  if (tileKey) {
                      try {
-                         const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+
                          const guildId = player.guildId || req.user.guildId || 'global';
                          const zId = session.battleConfig.zoneId || session.zoneId || 'unknown';
                          await DefeatedMonsterTile.findOneAndUpdate(

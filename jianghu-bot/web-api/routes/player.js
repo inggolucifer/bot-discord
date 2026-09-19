@@ -1,24 +1,59 @@
-const { resolveBodyPart, getEmoji } = require('../../utils/imageResolve');
-const { escapeRegex } = require('../../utils/escapeRegex');
-const express = require('express');
-const router = express.Router();
-const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
 
-const Player = require('../../models/Player');
-const Asset = require('../../models/Asset');
-const { authenticateToken } = require('../middlewares/auth');
-const { calculateProgress } = require('../../utils/assetProgress');
-const { isUnderConstruction } = require('../../utils/crafting');
-const { calculateEnergy, MAX_ENERGY } = require('../../utils/energyManager');
-const { syncWorkerContracts } = require('../../utils/workerManager');
-const { isClaimedToday, isClaimedYesterday } = require('../../utils/timezone');
-const LockManager = require('../utils/lockManager');
-const { withTransaction } = require('../utils/dbTransaction');
-const CustomError = require('../utils/CustomError');
-const { RATE_TO_COPPER } = require('../../utils/currency');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const router = express.Router();
+const TransactionLog = require("../../models/TransactionLog");
+const { getComputedStats } = require("../../utils/statCalculator");
+const Travel = require("../../models/Travel");
+const { hasEnoughCurrency, payCurrency } = require("../../utils/currency");
+const { logTransaction } = require("../../utils/logger");
+const WorkerContract = require("../../models/WorkerContract");
+const LootPool = require("../../models/LootPool");
+const crypto = require("crypto");
+const { calculateRepairCost, calculateDailyGuardCost } = require("../../utils/assetCostCalculator");
+const { convertFromCopper } = require("../../utils/currencyNormalize");
+const { getPlayerSect } = require("../../utils/sectUtils");
+const { getPlayerSectRank, can } = require("../../utils/sectAccess");
+const { getKungfuLevel, KUNGFU_SKILLS, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require("../../utils/kungfuMastery");
+const { applyTrainingSpiritualRootXp } = require("../../utils/spiritualRootXp");
+const TransferRequest = require("../../models/TransferRequest");
+const Item = require("../../models/Item");
+const { getGlobalAssets } = require("../../utils/imageResolve");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function formatCurrencyString(currencyObj) {
-    if (!currencyObj) return '0 Copper';
     const parts = [];
     if (currencyObj.spirit) parts.push(currencyObj.spirit + ' Spirit');
     if (currencyObj.jade) parts.push(currencyObj.jade + ' Jade');
@@ -36,7 +71,7 @@ router.get('/transactions', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
-        const TransactionLog = require('../../models/TransactionLog');
+
         // Retrieve transactions involving this user (either explicitly or via descriptions that match their actions - simplified for now)
         // A more robust implementation would structure TransactionLog to have fromUserId and toUserId, but for now we search description
         const player = await Player.findOne({ discordId: userId, guildId }).select('characterName').lean();
@@ -91,7 +126,6 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 maxLevel: pm.manualId.maxLevel,
                 level: pm.level,
                 effectType: pm.manualId.effectType,
-                effectValue: pm.manualId.effectValue,
                 triggerChance: pm.manualId.triggerChance,
                 sectLocked: pm.manualId.requiredSectId ? true : false,
                 requiredSectId: pm.manualId.requiredSectId,
@@ -101,18 +135,17 @@ router.get('/profile', authenticateToken, async (req, res) => {
         }).filter(m => m !== null);
 
 
-        const { getComputedStats } = require('../../utils/statCalculator');
+
         const combatStats = getComputedStats(player, player.laws, player.manuals);
 
         // Calculate real-time energy
         const currentEnergy = calculateEnergy(player);
 
-        const { getInventoryWeight, getCarryCapacity } = require('../../utils/inventoryWeight');
+
 
         let inventoryWeight = 0;
         let carryCapacity = 50;
 
-        const mutablePlayer = await Player.findOne({ discordId: userId }).populate('inventory.itemId').lean();
         if (mutablePlayer) {
             const equippedItems = [];
             if (mutablePlayer.equipment && mutablePlayer.equipment.accessory) {
@@ -127,7 +160,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                     equippedItems.push(mountInvItem.itemId);
                 }
             }
-            const Travel = require('../../models/Travel');
+
             const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
             const isTraveling = !!activeTravel;
 
@@ -312,7 +345,6 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
         if (player.status !== 'active') return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
 
         const currentSlots = player.assetSlots || 1;
-
         if (currentSlots >= 5) {
             return res.status(400).json({ error: 'Maksimal slot aset adalah 5.' });
         }
@@ -326,7 +358,7 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
 
         const costSilver = slotCosts[currentSlots + 1];
 
-        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+
         if (!hasEnoughCurrency(player.currency, costSilver, 'silver')) {
            let tempCost = costSilver;
            const spirit = Math.floor(tempCost / 1000000); tempCost %= 1000000;
@@ -338,7 +370,6 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
            if (spirit > 0) costStr.push(`${spirit} Spirit`);
            if (jade > 0) costStr.push(`${jade} Jade`);
            if (gold > 0) costStr.push(`${gold} Gold`);
-           if (silver > 0) costStr.push(`${silver} Silver`);
 
            return res.status(400).json({ error: `Saldo Wealth kamu tidak cukup. Butuh ${costStr.join(' ')} untuk unlock slot aset ke-${currentSlots + 1}.` });
         }
@@ -351,9 +382,9 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
         player.assetSlots = currentSlots + 1;
         await player.save();
 
-        const { logTransaction } = require('../../utils/logger');
+
         // Using shop_purchase as per user instruction
-        await logTransaction(req.app.get('client'), {
+        await logTransaction(req.discordClient || req.app.get('client'), {
           guildId: guildId,
           type: 'shop_purchase',
           fromUserId: userId,
@@ -387,7 +418,6 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
         if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
 
         const ownedAsset = player.assets.find(a => a.assetId.equals(assetDoc._id));
-        if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
         if (!isUnderConstruction(ownedAsset)) {
             if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
@@ -399,7 +429,7 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
         }
 
         const totalCost = durasi * 5;
-        const { payCurrency } = require('../../utils/currency');
+
         if (!payCurrency(player.currency, totalCost, 'silver')) {
             return res.status(400).json({ error: `Uang kamu tidak cukup. Butuh setara dengan ${totalCost} Silver.` });
         }
@@ -428,7 +458,6 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
 router.post('/assets/work-self', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
         const { assetId } = req.body;
 
@@ -439,7 +468,7 @@ router.post('/assets/work-self', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId, guildId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        const Asset = require('../../models/Asset');
+
         const assetDoc = await Asset.findById(assetId);
         if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
 
@@ -463,7 +492,7 @@ router.post('/assets/work-self', authenticateToken, async (req, res) => {
         }
 
         // Batalkan kontrak dari WorkerContract jika ada
-        const WorkerContract = require('../../models/WorkerContract');
+
         const existingContract = await WorkerContract.findOne({ guildId, workerId: userId });
         if (existingContract) {
             if (existingContract.status === 'working') {
@@ -501,13 +530,14 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { assetId, workerId, durasi } = req.body;
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
+        const { assetId, workerId, durasi } = req.body;
 
         if (!assetId || !workerId || !durasi || durasi < 1) {
             return res.status(400).json({ error: 'Data tidak lengkap.' });
         }
 
-        const WorkerContract = require('../../models/WorkerContract');
+
         const contract = await WorkerContract.findOne({ _id: workerId, guildId, status: 'available' });
         if (!contract) return res.status(400).json({ error: 'Pekerja tidak tersedia.' });
 
@@ -529,7 +559,6 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
 
         if (!isUnderConstruction(ownedAsset)) {
             if (!ownedAsset.assignedWorkers) ownedAsset.assignedWorkers = [];
-            const activeWorkers = ownedAsset.assignedWorkers.filter(w => !w.endTime || w.endTime.getTime() > Date.now()).length;
             const maxWorkers = ownedAsset.quantity || 1;
             if (activeWorkers >= maxWorkers) {
                 return res.status(400).json({ error: `Aset yang sudah jadi hanya boleh maksimal memiliki ${maxWorkers} pekerja.` });
@@ -537,7 +566,7 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
         }
 
         const totalCost = durasi * contract.pricePerHour;
-        const { payCurrency } = require('../../utils/currency');
+
         if (!payCurrency(player.currency, totalCost, 'silver')) {
             return res.status(400).json({ error: `Uang kamu tidak cukup. Butuh setara dengan ${totalCost} Silver.` });
         }
@@ -582,14 +611,13 @@ router.post('/assets/move-worker', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
-        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);const { targetAssetId, workerId } = req.body;
 
         if (!targetAssetId || !workerId) return res.status(400).json({ error: 'Data tidak lengkap.' });
 
         const player = await Player.findOne({ discordId: userId, guildId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        const WorkerContract = require('../../models/WorkerContract');
+
         let contract = null;
         let isNpc = workerId.startsWith('NPC_');
 
@@ -779,13 +807,12 @@ router.post('/transfer', authenticateToken, async (req, res) => {
 
             // Notice we use receiver.save() to trigger 'save' middleware on update?
             // `updateOne` and `$inc` don't trigger `pre('save')` normalisation in mongoose natively.
-            // Since we need normalisation for the tax subtraction, we MUST fetch receiver and save it.
 
             receiver.currency[currencyType] = (receiver.currency[currencyType] || 0) + amount;
             receiver.currency.copper = (receiver.currency.copper || 0) - taxCopper;
             await receiver.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'transfer',
@@ -812,7 +839,7 @@ router.get('/loot', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
-        const LootPool = require('../../models/LootPool');
+
         const availableLoots = await LootPool.find({
             guildId,
             targetUserId: userId,
@@ -842,11 +869,10 @@ router.post('/loot', authenticateToken, async (req, res) => {
     try {
         const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
-
         let successMessage = '';
 
         await withTransaction(async (session) => {
-            const LootPool = require('../../models/LootPool');
+
             // Atomically lock and claim the pool
             const pool = await LootPool.findOneAndUpdate(
                 { _id: poolId, guildId, targetUserId: userId, claimed: false },
@@ -876,7 +902,7 @@ router.post('/loot', authenticateToken, async (req, res) => {
             }
 
             let petLootedCount = 0;
-            const crypto = require('crypto');
+
             for (const p of pool.pets) {
                 if (player.pets.length < 6) {
                     const transferredPet = p;
@@ -886,9 +912,8 @@ router.post('/loot', authenticateToken, async (req, res) => {
                 }
             }
 
-            await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'loot_claim',
@@ -959,7 +984,6 @@ router.post('/daily', authenticateToken, async (req, res) => {
             player.lastDailyClaim = new Date();
             await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
             await TransactionLog.create([{
                 guildId,
                 type: 'daily_claim',
@@ -1008,11 +1032,9 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
         if (!ownedAsset.isDamaged) return res.status(400).json({ error: 'Aset tersebut tidak sedang rusak.' });
 
-        const { calculateRepairCost } = require('../../utils/assetCostCalculator');
         const { neededMaterials, repairCostInCopper } = calculateRepairCost(assetConfig);
 
         let repairCostLog = "";
-        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
 
         if (neededMaterials.length > 0) {
             // Check inventory
@@ -1037,17 +1059,15 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
             }
         } else {
             if (!hasEnoughCurrency(player.currency, repairCostInCopper, 'copper')) {
-                const { convertFromCopper } = require('../../utils/currencyNormalize');
+
                 const costStr = formatCurrencyString(convertFromCopper(repairCostInCopper));
-                return res.status(400).json({ error: `Tidak memiliki cukup uang untuk biaya perbaikan. Butuh ${costStr}.` });
             }
             if (!payCurrency(player.currency, repairCostInCopper, 'copper')) {
                 return res.status(400).json({ error: 'Gagal memotong uang untuk biaya perbaikan.' });
             }
-            const { convertFromCopper } = require('../../utils/currencyNormalize');
+
             repairCostLog = formatCurrencyString(convertFromCopper(repairCostInCopper));
         }
-
         ownedAsset.isDamaged = false;
         ownedAsset.isHalted = false;
         ownedAsset.damageType = null;
@@ -1055,10 +1075,10 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
 
         await player.save();
 
-        const { logTransaction } = require('../../utils/logger');
+
         try {
-            const client = req.app.get('client');
-            if (client) {
+            const client = req.discordClient || req.app.get('client');
+            if (client && client.user) {
                 await logTransaction(client, {
                     guildId,
                     type: 'player_repair_asset',
@@ -1111,16 +1131,13 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
         if (ownedAsset.status !== 'active') return res.status(400).json({ error: 'Aset belum selesai dibangun, tidak bisa dijaga.' });
         // Guard allowed while damaged for protection
 
-        const { calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
-        const { convertFromCopper } = require('../../utils/currencyNormalize');
-        const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+
+
+
 
         const dailyCostCopper = calculateDailyGuardCost(assetConfig);
-        const totalCostCopper = dailyCostCopper * hari;
         const formattedCost = formatCurrencyString(convertFromCopper(totalCostCopper));
-
         if (!hasEnoughCurrency(player.currency, totalCostCopper, 'copper')) {
-            return res.status(400).json({ error: `Tidak memiliki cukup uang untuk biaya guard. Butuh ${formattedCost}.` });
         }
 
         if (!payCurrency(player.currency, totalCostCopper, 'copper')) {
@@ -1135,15 +1152,14 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
 
         await player.save();
 
-        const { logTransaction } = require('../../utils/logger');
+
         try {
-            const client = req.app.get('client');
-            if (client) {
+            const client = req.discordClient || req.app.get('client');
+            if (client && client.user) {
                 await logTransaction(client, {
                     guildId,
                     type: 'player_guard_asset',
                     fromUserId: userId,
-                    amount: totalCostCopper,
                     currency: 'copper',
                     itemDescription: `Guard asset: ${assetConfig.name} for ${hari} days. Cost: ${formattedCost}`
                 });
@@ -1178,8 +1194,8 @@ router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
-        const { calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
-        const { convertFromCopper } = require('../../utils/currencyNormalize');
+
+
 
         const dailyCostCopper = calculateDailyGuardCost(ownedAsset.assetId);
         const totalCostCopper = dailyCostCopper * hariParsed;
@@ -1187,9 +1203,7 @@ router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
 
         res.json({
             success: true,
-            costText: formattedCost,
             costCopper: totalCostCopper,
-            dailyCostCopper: dailyCostCopper
         });
     } catch (error) {
         console.error('[API-PLAYER] Error fetching guard cost:', error);
@@ -1212,10 +1226,10 @@ router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
-        const { calculateRepairCost } = require('../../utils/assetCostCalculator');
+
         const { neededMaterials, repairCostInCopper } = calculateRepairCost(ownedAsset.assetId);
-        const { convertFromCopper } = require('../../utils/currencyNormalize');
-        const { hasEnoughCurrency } = require('../../utils/currency');
+
+
 
         let repairCostLog = "";
         let mode = 'currency';
@@ -1223,12 +1237,9 @@ router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
         let detailedMaterials = [];
 
         if (neededMaterials.length > 0) {
-            mode = 'materials';
             neededMaterials.forEach(mat => {
                 repairCostLog += `${mat.quantity}x ${mat.itemName}, `;
-                const owned = player.inventory.find(i => String(i.itemId._id || i.itemId) === String(mat.itemId));
                 const ownedQuantity = owned ? owned.quantity : 0;
-                if (ownedQuantity < mat.quantity) playerCanAfford = false;
                 detailedMaterials.push({
                     itemId: mat.itemId,
                     itemName: mat.itemName,
@@ -1280,7 +1291,7 @@ router.post('/assets/destroy', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
 
             const HANCURKAN_COST_SILVER = 100;
-            const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
+
 
             if (!hasEnoughCurrency(player.currency, HANCURKAN_COST_SILVER, 'silver')) {
                 throw new CustomError('Saldo Wealth kamu tidak cukup. Butuh setara dengan 1 Gold (100 Silver) untuk menghancurkan aset.', 400);
@@ -1296,7 +1307,7 @@ router.post('/assets/destroy', authenticateToken, async (req, res) => {
                 throw new CustomError('Aset masih dalam tahap pembangunan dan tidak bisa dihancurkan.', 400);
             }
 
-            const WorkerContract = require('../../models/WorkerContract');
+
             if (ownedAsset.assignedWorkers && ownedAsset.assignedWorkers.length > 0) {
                 const workerIds = ownedAsset.assignedWorkers.map(w => w.workerId);
                 await WorkerContract.updateMany(
@@ -1319,7 +1330,7 @@ router.post('/assets/destroy', authenticateToken, async (req, res) => {
 
             await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'player_destroy_asset',
@@ -1362,8 +1373,8 @@ router.post('/skills/comprehend', authenticateToken, async (req, res) => {
         if (!pm) return res.status(400).json({ error: 'Kamu tidak memiliki manual ini.' });
 
                 if (pm.manualId.requiredSectId) {
-            const { getPlayerSect } = require('../../utils/sectUtils');
-            const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+
+
             const playerSect = await getPlayerSect(guildId, player.discordId);
 
             if (!playerSect || !playerSect._id.equals(pm.manualId.requiredSectId)) {
@@ -1379,9 +1390,7 @@ router.post('/skills/comprehend', authenticateToken, async (req, res) => {
 
         // Phase 10: Check kungfu skill requirements
         if (pm.manualId.requiredSkillType && pm.manualId.requiredSkillPoints > 0) {
-            const playerSkillPoints = player.kungfuSkills ? (player.kungfuSkills[pm.manualId.requiredSkillType] || 0) : 0;
             if (playerSkillPoints < pm.manualId.requiredSkillPoints) {
-                return res.status(400).json({ error: `Manual ini membutuhkan setidaknya ${pm.manualId.requiredSkillPoints} poin pada skill ${pm.manualId.requiredSkillType}. Poin skillmu saat ini: ${playerSkillPoints}.` });
             }
         }
 
@@ -1436,7 +1445,7 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             if (m.requiredRootType && m.requiredRootLevel > 0) {
                 const extRoots = (player.extendedStats && player.extendedStats.spiritualRoot) || {};
                 const rawExp = Number(extRoots[m.requiredRootType]) || 0;
-                const { getKungfuLevel } = require('../../utils/kungfuMastery');
+
                 const rootLevel = getKungfuLevel(rawExp).level;
 
                 if (rootLevel < m.requiredRootLevel) {
@@ -1448,14 +1457,13 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             }
 
             if (m.requiredSectId) {
-                const { getPlayerSect } = require('../../utils/sectUtils');
-                const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+
+
                 const playerSect = await getPlayerSect(guildId, player.discordId);
 
                 if (!playerSect || !playerSect._id.equals(m.requiredSectId)) {
                     await m.populate('requiredSectId');
                     const sectName = m.requiredSectId ? m.requiredSectId.name : 'Sekte Tersembunyi';
-                    throw new CustomError(`Manual ini eksklusif anggota sekte ${sectName}.`, 403);
                 }
                 const rank = getPlayerSectRank(playerSect, player.discordId);
                 if (!can(rank, 'learn_sect_manual')) {
@@ -1468,10 +1476,8 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
 
             if (hoursPassed < m.timeToComprehendHours) {
                 const left = m.timeToComprehendHours - hoursPassed;
-                throw new CustomError(`Meditasi belum selesai. Tersisa sekitar ${left.toFixed(1)} jam.`, 400);
             }
 
-            const { hasEnoughCurrency, payCurrency } = require('../../utils/currency');
             const costCurrency = m.costCurrency;
             const nextLevel = pm.level + 1;
             const totalCost = m.baseCost * nextLevel;
@@ -1493,10 +1499,9 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
 
             // Phase 10: Increase Core skill upon manual upgrade success
             if (!player.kungfuSkills) player.kungfuSkills = {};
-            player.kungfuSkills.core = (player.kungfuSkills.core || 0) + 1;
 
             if (m.rootType) {
-                const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
                 applyTrainingSpiritualRootXp(player, m.rootType, m);
             }
 
@@ -1505,7 +1510,7 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             player.markModified('currency');
             await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'comprehend_manual',
@@ -1519,7 +1524,6 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
         if (error instanceof CustomError) {
              return res.status(error.statusCode).json({ error: error.message });
         }
-        console.error('[API-PLAYER] Upgrade skill error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
@@ -1527,8 +1531,7 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
 });
 
 
-const Law = require('../../models/Law');
-const { getRealmIndex } = require('../../utils/cultivation');
+
 
 // Endpoint: GET /api/player/laws
 router.get('/laws', authenticateToken, async (req, res) => {
@@ -1640,7 +1643,7 @@ router.post('/laws/reset', authenticateToken, async (req, res) => {
 
             await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'law_reset',
@@ -1665,7 +1668,6 @@ router.post('/laws/reset', authenticateToken, async (req, res) => {
 router.post('/transfer-item-request', authenticateToken, async (req, res) => {
     const { targetName, itemId, quantity } = req.body;
     const userId = req.user.userId;
-
     if (!targetName || !itemId || !quantity || quantity <= 0) {
         return res.status(400).json({ error: 'Data tidak valid.' });
     }
@@ -1675,8 +1677,8 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
     try {
-        const TransferRequest = require('../../models/TransferRequest');
-        const Item = require('../../models/Item');
+
+
 
         await withTransaction(async (session) => {
             const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
@@ -1701,9 +1703,7 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
             if (!owned || owned.quantity < quantity) throw new CustomError('Item tidak cukup di inventory.', 400);
 
             const pajak = quantity; // 1 silver per item
-            if (sender.currency.silver < pajak) {
                 throw new CustomError(`Saldo Silver tidak cukup untuk bayar pajak (Butuh: ${pajak} Silver).`, 400);
-            }
 
             const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
@@ -1734,7 +1734,7 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
 router.get('/transfer-requests', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const TransferRequest = require('../../models/TransferRequest');
+
 
         // cleanup expired
         await TransferRequest.updateMany(
@@ -1780,8 +1780,8 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
 
     try {
-        const TransferRequest = require('../../models/TransferRequest');
-        const TransactionLog = require('../../models/TransactionLog');
+
+
 
         let msg = '';
         await withTransaction(async (session) => {
@@ -1809,9 +1809,7 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
             if (!sender || sender.status !== 'active') throw new CustomError('Pengirim tidak valid/tidak aktif.', 400);
             if (!receiver || receiver.status !== 'active') throw new CustomError('Penerima tidak aktif.', 400);
             if (sender.currency.silver < tr.taxAmount) throw new CustomError('Pengirim tidak memiliki cukup Silver untuk pajak.', 400);
-
             const senderOwned = sender.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
-            if (!senderOwned || senderOwned.quantity < tr.quantity) throw new CustomError('Pengirim tidak memiliki item yang cukup.', 400);
 
             // Deduct from sender
             sender.currency.silver -= tr.taxAmount;
@@ -1821,7 +1819,7 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
             }
 
             // Add to receiver
-            const Item = require('../../models/Item');
+
             const itemDoc = await Item.findById(tr.itemId._id).session(session);
             const invCheck = await canAddToInventory(receiver, [{ itemDoc, quantity: tr.quantity }]);
             if (!invCheck.ok) {
@@ -1852,7 +1850,6 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
                 itemDescription: `[WEB] Transfer ${tr.quantity}x ${tr.itemId.name} (Pajak ${tr.taxAmount} Silver)`
             }], { session });
 
-            msg = `Berhasil menerima ${tr.quantity}x ${tr.itemId.name}.`;
         });
 
         res.json({ success: true, message: msg });
@@ -1877,7 +1874,7 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
     try {
-        const { withTransaction } = require('../utils/dbTransaction');
+
 
         await withTransaction(async (session) => {
             const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
@@ -1909,7 +1906,6 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
             player.isNormalCultivator = false;
 
             // Keep discordId, guildId, characterName, gender, sect, characterImage, etc.
-
             player.markModified('inventory');
             player.markModified('pets');
             player.markModified('assets');
@@ -1921,7 +1917,7 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
 
             await player.save({ session });
 
-            const TransactionLog = require('../../models/TransactionLog');
+
             await TransactionLog.create([{
                 guildId,
                 type: 'law_reset', // Close enough type for reset
@@ -1954,12 +1950,11 @@ router.get('/stats', authenticateToken, async (req, res) => {
             .populate('inventory.itemId')
             .lean();
 
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        const { getComputedStats } = require('../../utils/statCalculator');
+
         const computedStats = getComputedStats(player, player.laws, player.manuals);
 
-        const { KUNGFU_SKILLS, getKungfuLevel, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
+
         const kungfuMastery = {};
         for (const skillKey of Object.keys(KUNGFU_SKILLS)) {
             const rawExp = player.kungfuSkills ? (player.kungfuSkills[skillKey] || 0) : 0;
@@ -1994,7 +1989,6 @@ router.get('/stats', authenticateToken, async (req, res) => {
 
 // Endpoint: POST /api/player/talents/allocate
 router.post('/talents/allocate', authenticateToken, async (req, res) => {
-    const { str, agi, sta, pow, int, mor } = req.body;
     const userId = req.user.userId;
 
     const lockKey = `player_talents_${userId}`;
@@ -2051,7 +2045,7 @@ router.get('/kungfu/mastery', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: req.user.userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        const { KUNGFU_SKILLS, getKungfuLevel, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
+
 
         const masteryData = {};
         for (const skillKey of Object.keys(KUNGFU_SKILLS)) {
@@ -2087,7 +2081,16 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        if (biography !== undefined) player.biography = biography.substring(0, 500);
+        if (biography !== undefined) {
+             const cleanBio = escapeRegex(biography).substring(0, 500);
+             player.biography = cleanBio;
+        }
+
+        if (nickname !== undefined) {
+             const cleanNickname = nickname ? escapeRegex(nickname).substring(0, 32) : null;
+             player.nickname = cleanNickname;
+        }
+
         if (age !== undefined) player.age = parseInt(age);
 
         let mappedGender = gender;
@@ -2096,7 +2099,7 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         if (mappedGender !== undefined && ['Pria', 'Wanita'].includes(mappedGender)) player.gender = mappedGender;
 
         if (body !== undefined && typeof body === 'object') {
-             const { getGlobalAssets } = require('../../utils/imageResolve');
+
              const catalog = getGlobalAssets();
              const validKeys = (part, key) => key === null || key === '' || (catalog.body && catalog.body[part] && catalog.body[part][key] !== undefined);
              if (!player.body) player.body = {};
@@ -2134,9 +2137,6 @@ router.patch('/profile', authenticateToken, async (req, res) => {
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
-
-
-
 
 // Endpoint: POST /api/player/finish-prologue
 router.post('/finish-prologue', authenticateToken, async (req, res) => {
