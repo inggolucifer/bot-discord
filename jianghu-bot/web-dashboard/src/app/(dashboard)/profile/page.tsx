@@ -291,9 +291,9 @@ export default function ProfilePage() {
           </div>
 
           {/* Combat Stats & Equipment */}
-          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-y-auto custom-scrollbar">
-            <div className="flex flex-col xl:flex-row gap-6 w-full items-start justify-center h-full">
-             <div className="flex-1 w-full xl:w-1/2 flex flex-col items-center sticky top-0">
+          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-hidden">
+            <div className="flex flex-col lg:flex-row gap-6 w-full items-start justify-center h-full">
+             <div className="flex-1 w-full lg:w-1/2 flex flex-col items-center">
               <h3 className="text-lg font-bold text-[#c5a880] mb-6 w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
               <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-6">
                  {/* Decorative center line */}
@@ -387,13 +387,13 @@ export default function ProfilePage() {
              </div>
 
              {/* Inventory to Equip */}
-             <div className="flex-1 w-full xl:w-1/2 flex flex-col min-h-[300px] xl:h-full max-h-[800px]">
+             <div className="flex-1 w-full lg:w-1/2 flex flex-col min-h-[300px] lg:h-full">
                 <h3 className="text-lg font-bold text-[#c5a880] text-center w-full mb-6 border-b border-[#333] pb-2 flex justify-between items-center px-2">
                    <span>Available Equipment</span>
                    <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
                 </h3>
 
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 pb-4">
+                <div className="flex-1 overflow-y-auto max-h-[420px] custom-scrollbar pr-2 space-y-3 pb-4">
                    {equipableItems.length === 0 ? (
                       <div className="h-full flex items-center justify-center text-gray-500 text-sm text-center">
                          Tidak ada equipment yang bisa dipakai di inventory.
