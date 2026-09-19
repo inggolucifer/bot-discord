@@ -1496,17 +1496,8 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             player.kungfuSkills.core = (player.kungfuSkills.core || 0) + 1;
 
             if (m.rootType) {
-                const rootType = m.rootType;
-                if (!player.extendedStats) player.extendedStats = {};
-                if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
-
-                const baseXp = 30;
-                const tier = Number(m.tier || m.rank || 1);
-                const tierBonus = Math.min(Math.max(tier, 1), 10) * 10;
-                const xpGain = Math.min(baseXp + tierBonus, 100);
-
-                player.extendedStats.spiritualRoot[rootType] = (player.extendedStats.spiritualRoot[rootType] || 0) + xpGain;
-                player.markModified('extendedStats.spiritualRoot');
+                const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                applyTrainingSpiritualRootXp(player, m.rootType, m);
             }
 
             player.markModified('manuals');

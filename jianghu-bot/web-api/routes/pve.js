@@ -331,20 +331,9 @@ router.post('/claim', authenticateToken, async (req, res) => {
                             }
                         }
                     }
-                    if (battleResult.kungfuGains.usedElementsCount && typeof battleResult.kungfuGains.usedElementsCount === 'object') {
-                        if (!player.extendedStats) player.extendedStats = {};
-                        if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
-
-                        const XP_PER_ELEMENTAL_CAST = 8;
-                        const MAX_XP_PER_ELEMENT_PER_BATTLE = 40;
-
-                        for (const [usedElem, count] of Object.entries(battleResult.kungfuGains.usedElementsCount)) {
-                            if (player.extendedStats.spiritualRoot[usedElem] !== undefined) {
-                                const gain = Math.min(count * XP_PER_ELEMENTAL_CAST, MAX_XP_PER_ELEMENT_PER_BATTLE);
-                                player.extendedStats.spiritualRoot[usedElem] = (player.extendedStats.spiritualRoot[usedElem] || 0) + gain;
-                                player.markModified('extendedStats.spiritualRoot');
-                            }
-                        }
+                    if (battleResult.kungfuGains.usedElementsCount) {
+                        const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                        applyCombatSpiritualRootXp(player, battleResult.kungfuGains.usedElementsCount);
                     }
                 }
 

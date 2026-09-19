@@ -83,27 +83,17 @@ router.post('/simulate', authenticateToken, async (req, res) => {
                 }
             }
 
-            if (simResult.kungfuGains.usedElementsCount && typeof simResult.kungfuGains.usedElementsCount === 'object') {
-                if (!challenger.extendedStats) challenger.extendedStats = {};
-                if (!challenger.extendedStats.spiritualRoot) challenger.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
-
-                const XP_PER_ELEMENTAL_CAST = 8;
-                const MAX_XP_PER_ELEMENT_PER_BATTLE = 40;
-
-                for (const [usedElem, count] of Object.entries(simResult.kungfuGains.usedElementsCount)) {
-                    if (challenger.extendedStats.spiritualRoot[usedElem] !== undefined) {
-                        const gain = Math.min(count * XP_PER_ELEMENTAL_CAST, MAX_XP_PER_ELEMENT_PER_BATTLE);
-                        challenger.extendedStats.spiritualRoot[usedElem] = (challenger.extendedStats.spiritualRoot[usedElem] || 0) + gain;
-                        challenger.markModified('extendedStats.spiritualRoot');
-                        // Add to rewards purely for display if frontend supports it, otherwise it's just saved silently
-                        kungfuRewards.push({
-                            skill: `Spiritual Root (${usedElem.toUpperCase()})`,
-                            expGained: gain,
-                            weaponName: `Resonansi Elemen (${count} cast)`,
-                            newLevel: '-',
-                            levelUp: false
-                        });
-                    }
+            if (simResult.kungfuGains.usedElementsCount) {
+                const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+                const rootGains = applyCombatSpiritualRootXp(challenger, simResult.kungfuGains.usedElementsCount);
+                for (const gain of rootGains) {
+                    kungfuRewards.push({
+                        skill: `Spiritual Root (${gain.element.toUpperCase()})`,
+                        expGained: gain.gain,
+                        weaponName: `Resonansi Elemen (${gain.casts} cast)`,
+                        newLevel: '-',
+                        levelUp: false
+                    });
                 }
             }
         }
