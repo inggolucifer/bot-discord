@@ -1,16 +1,15 @@
+
+
+const router = express.Router();
 const { resolveMonsterImage, resolveItemImage, getEmoji } = require('../../utils/imageResolve');
 const express = require('express');
-const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
-
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const TransactionLog = require('../../models/TransactionLog');
-
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const Item = require('../../models/Item');
 const Exploration = require('../../models/Exploration');
-
 const LockManager = require('../utils/lockManager');
 const CustomError = require('../utils/CustomError');
 const { authenticateToken } = require('../middlewares/auth');
@@ -23,6 +22,34 @@ const Quest = require('../../models/Quest');
 const Monster = require('../../models/Monster');
 const { simulateBattle } = require('../../utils/simulateBattle');
 const { syncPlayerCultivation } = require('../../utils/cultivation');
+const WeatherConfig = require('../../models/WeatherConfig');
+const { awardKungfuExp } = require('../../utils/kungfuMastery');
+const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+const { TALENT_EFFECTS } = require('../../config/talentEffects');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Helper untuk Mongoose Transaction
 const withTransaction = async (callback) => {
@@ -42,7 +69,7 @@ const withTransaction = async (callback) => {
 
 // Helper to generate drops
 async function generateDrops(location, durationHours, guildId, player) {
-    const WeatherConfig = require('../../models/WeatherConfig');
+
     const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
     let isBadWeather = weatherConfig && weatherConfig.currentWeather === 'Badai Beracun';
 
@@ -300,8 +327,8 @@ router.post('/claim', authenticateToken, async (req, res) => {
                 player.combatConditions = battleResult.p1Conditions;
 
                 // Terapkan perolehan Kungfu XP organik dari pertarungan
-                const { awardKungfuExp } = require('../../utils/kungfuMastery');
-                const { getRealmIndex } = require('../../utils/cultivation');
+
+
                 const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
                 const oppRealmIdx = opponent.statBlock?.realmIndex !== undefined ? opponent.statBlock.realmIndex : playerRealmIdx;
 
@@ -332,7 +359,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
                         }
                     }
                     if (battleResult.kungfuGains.usedElementsCount) {
-                        const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+
                         applyCombatSpiritualRootXp(player, battleResult.kungfuGains.usedElementsCount);
                     }
                 }
@@ -409,8 +436,8 @@ router.post('/claim', authenticateToken, async (req, res) => {
                     encounterResult.won = true;
 
                     // Award EXP and check level up
-                    const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
-                    const { TALENT_EFFECTS } = require('../../config/talentEffects');
+
+
 
                     let expGain = 50; // Mock base exp from monster
                     if (player.talents && player.talents.int) {
