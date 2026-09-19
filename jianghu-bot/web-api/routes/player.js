@@ -2136,9 +2136,7 @@ router.patch('/profile', authenticateToken, async (req, res) => {
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
     }
-
-
-
+});
 
 // Endpoint: POST /api/player/finish-prologue
 router.post('/finish-prologue', authenticateToken, async (req, res) => {
