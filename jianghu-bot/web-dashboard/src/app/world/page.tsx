@@ -139,25 +139,35 @@ export function WorldPageContent() {
     }
   };
 
+  const [actionLoading, setActionLoading] = useState(false);
+
   const handleEnter = async (buildingName: string) => {
+    if (actionLoading) return;
     setError(null); setMessage(null);
+    setActionLoading(true);
     try {
       const res = await api.post('/world/enter', { buildingName });
       setMessage(res.data.message);
       setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal masuk bangunan');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleExit = async () => {
+    if (actionLoading) return;
     setError(null); setMessage(null);
+    setActionLoading(true);
     try {
       const res = await api.post('/world/exit');
       setMessage(res.data.message);
       setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal keluar bangunan');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -584,14 +594,16 @@ export function WorldPageContent() {
                                   setSelectedExamSectId(locationData.currentLocation.linkedSectId);
                                   setIsExamModalOpen(true);
                               }}
-                              className="w-full bg-blue-900/50 hover:bg-blue-800/80 text-blue-200 border-blue-700/50 text-xs py-2"
+                              disabled={actionLoading}
+                              className="w-full bg-blue-900/50 hover:bg-blue-800/80 text-blue-200 border-blue-700/50 text-xs py-2 disabled:opacity-50"
                           >
                               <Shield className="w-3.5 h-3.5 mr-2" /> Ujian Masuk Sekte
                           </Button>
                       )}
                       <button
+                        disabled={actionLoading}
                         onClick={handleExit}
-                        className="w-full bg-red-900/50 hover:bg-red-800/80 text-red-200 px-3 py-2 rounded-lg transition-colors border border-red-700/50 font-medium text-xs"
+                        className="w-full bg-red-900/50 hover:bg-red-800/80 text-red-200 px-3 py-2 rounded-lg transition-colors border border-red-700/50 font-medium text-xs disabled:opacity-50"
                       >
                         Keluar ke Jalanan
                       </button>
@@ -610,8 +622,9 @@ export function WorldPageContent() {
                           </div>
                           <div className="flex gap-2">
                               <button
+                                disabled={actionLoading}
                                 onClick={() => handleEnter(b.buildingName)}
-                                className="bg-[#2d3748] hover:bg-[#4a5568] text-gray-200 px-3 py-1.5 rounded-md text-xs font-medium transition-colors border border-[#4a5568]"
+                                className="bg-[#2d3748] hover:bg-[#4a5568] text-gray-200 px-3 py-1.5 rounded-md text-xs font-medium transition-colors border border-[#4a5568] disabled:opacity-50"
                               >
                                 Masuk
                               </button>

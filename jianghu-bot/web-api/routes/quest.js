@@ -204,6 +204,7 @@ router.post('/:questId/accept', authenticateToken, async (req, res) => {
              });
         }
 
+        player.markModified('questLog');
         await player.save();
         res.json({ message: 'Quest diterima.', questLog: player.questLog });
     } catch (err) {
@@ -286,6 +287,8 @@ router.post('/:questId/submit-item', authenticateToken, async (req, res) => {
             questEntry.completedAt = new Date();
         }
 
+        player.markModified('inventory');
+        player.markModified('questLog');
         await player.save();
         res.json({ message: 'Item berhasil diserahkan.', questLog: player.questLog, completed: allDone });
 
@@ -322,6 +325,7 @@ router.post('/:questId/evaluate', authenticateToken, async (req, res) => {
             questEntry.completedAt = new Date();
         }
 
+        player.markModified('questLog');
         await player.save();
         res.json({ message: 'Progress diperbarui.', questLog: player.questLog, completed: allDone });
     } catch (err) {

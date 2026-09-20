@@ -135,6 +135,7 @@ router.post('/discard', authenticateToken, async (req, res) => {
         if (player.inventory[inventoryIndex].quantity <= 0) {
             player.inventory.splice(inventoryIndex, 1);
         }
+        player.markModified('inventory');
 
         await player.save();
 
@@ -240,7 +241,8 @@ router.post('/craft', authenticateToken, async (req, res) => {
                 progressHours: 0
             });
         }
-
+        player.markModified('craftingQueue');
+        player.markModified('inventory');
         await player.save();
 
 
