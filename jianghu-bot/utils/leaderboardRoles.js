@@ -28,6 +28,7 @@ async function updateTop3LeaderboardRoles(client, guildId) {
   const unchanged = newHolders.every((v, i) => v === oldHolders[i]);
   if (unchanged) return; // tidak ada perubahan ranking -> tidak perlu sentuh Discord API sama sekali
 
+  if (!client || !client.user || !client.guilds) return;
   const guild = await client.guilds.fetch(guildId).catch(() => null);
   if (!guild) return;
 

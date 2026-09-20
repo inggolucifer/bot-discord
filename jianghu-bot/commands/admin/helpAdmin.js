@@ -7,6 +7,8 @@ module.exports = {
     .setDescription('[ADMIN] Lihat semua command admin'),
 
   async execute(interaction) {
+    const url = process.env.FRONTEND_URL || "https://immortal-x.online";
+    return interaction.reply({ content: `Fitur ini sudah dipindahkan ke website. Main di: ${url}`, ephemeral: true });
     try {
     return await helpAdminService.execute(interaction);
       } catch (error) {

@@ -296,6 +296,7 @@ router.post('/travel/start', authenticateToken, async (req, res) => {
                     if (player.inventory[itemIndex].quantity <= 0) {
                         player.inventory.splice(itemIndex, 1);
                     }
+                    player.markModified('inventory');
                     await player.save();
                 }
             }
@@ -588,6 +589,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                                  } else {
                                      player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
                                  }
+                                 player.markModified('inventory');
                              }
 
                              if (stolenItem) {
@@ -870,6 +872,7 @@ router.post('/rest/start', authenticateToken, async (req, res) => {
                 if (player.inventory[tentIndex].quantity <= 0) {
                      player.inventory.splice(tentIndex, 1);
                 }
+                player.markModified('inventory');
                 usedTent = true;
 
                 await TransactionLog.create([{
@@ -2907,6 +2910,7 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             }
         }
         player.inventory = player.inventory.filter(inv => inv.quantity > 0);
+        player.markModified('inventory');
 
         // Potong biaya currency jika ada
         if (costInCopper > 0) {
