@@ -1410,6 +1410,7 @@ router.post('/npc/:npcId/talk', authenticateToken, async (req, res) => {
         }
 
         if (updatedQuests) {
+            player.markModified('questLog');
             await player.save();
         }
 
