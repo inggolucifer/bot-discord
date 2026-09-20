@@ -70,6 +70,23 @@ const PropertyStructure = require('../../models/PropertyStructure');
 const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
 
 
+function loadZoneConfig(zoneId) {
+    if (!zoneId || typeof zoneId !== 'string' || !/^[a-z0-9_-]+$/i.test(zoneId)) {
+        const err = new Error('ID Zona tidak valid.');
+        err.statusCode = 400;
+        throw err;
+    }
+    const configPath = path.join(__dirname, '../../config/zones', `${zoneId}.js`);
+    if (!fs.existsSync(configPath)) {
+        const err = new Error('Zona tidak ditemukan');
+        err.statusCode = 404;
+        throw err;
+    }
+    return require(configPath);
+}
+
+
+
 
 
 
@@ -1439,7 +1456,7 @@ router.get('/zone/thermal-status', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
 
         const tileQuery = player.guildId
             ? { guildId: player.guildId, zoneId: currentZoneId, tileX: player.gridPosition?.tileX ?? 0, tileY: player.gridPosition?.tileY ?? 0 }
@@ -1640,9 +1657,11 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${zoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(zoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -1918,9 +1937,11 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${activeZoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(activeZoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -2273,13 +2294,15 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Kamu sedang dalam perjalanan jauh (Travel) dan tidak dapat bergerak di grid!' });
         }
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
 
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Konfigurasi zona aktif tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(currentZoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -2423,12 +2446,14 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(currentZoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -2538,9 +2563,11 @@ router.post('/zone/search', authenticateToken, async (req, res) => {
         const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(currentZoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -2651,12 +2678,14 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
 
 
-        const configPath = path.join(__dirname, '../../config/zones', `${currentZoneId}.js`);
-        if (!fs.existsSync(configPath)) {
-            return res.status(404).json({ error: 'Zona tidak ditemukan' });
+        let zoneConfig;
+        try {
+            zoneConfig = loadZoneConfig(currentZoneId);
+        } catch (e) {
+            return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
 
 
@@ -2788,7 +2817,7 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
         const targetX = parseInt(tileX);
         const targetY = parseInt(tileY);
 
@@ -2971,7 +3000,7 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
         const targetX = parseInt(tileX);
         const targetY = parseInt(tileY);
 
@@ -3052,7 +3081,7 @@ router.post('/zone/enter-property', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        const currentZoneId = player.gridPosition?.zoneId || 'central_plains_bamboo_forest';
+        const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
         const targetX = parseInt(tileX !== undefined ? tileX : player.gridPosition?.tileX ?? 0);
         const targetY = parseInt(tileY !== undefined ? tileY : player.gridPosition?.tileY ?? 0);
 
