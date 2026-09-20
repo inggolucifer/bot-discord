@@ -1,13 +1,22 @@
-# Jianghu World Discord Bot
+# Jianghu World RPG System
 
-Jianghu World adalah bot Discord game RPG Xianxia/Wuxia mandiri dengan sistem kultivasi, ekonomi, profesi, item, pet, asset, eksplorasi, dan turnamen.
+Jianghu World adalah game RPG Web Xianxia/Wuxia mandiri dengan sistem kultivasi, ekonomi, profesi, item, pet, asset, eksplorasi, dan turnamen.
+
+## Web-First Runtime (Required)
+1. MongoDB up
+2. `node web-api/server.js`
+3. `web-dashboard` (dev or production build)
+4. Login via Discord OAuth (identity only)
+
+Discord bot process is NOT required for gameplay.
+Slash commands are removed/deprecated.
 
 ## Instalasi
-1. Pastikan memiliki Node.js v16+
+1. Pastikan memiliki Node.js v18+ dan MongoDB
 2. Jalankan `npm install`
-3. Konfigurasi `DISCORD_TOKEN` dan `CLIENT_ID` di file `.env`
-4. Jalankan `node deploy-commands.js`
-5. Jalankan `node index.js` atau gunakan `pm2 start index.js --name jianghu-bot`
+3. Konfigurasi file `.env` dengan `DISCORD_CLIENT_ID` dan `DISCORD_CLIENT_SECRET` untuk OAuth.
+4. Jalankan `npm run web` (Untuk API standalone)
+5. Jalankan `npm run web:dev` (Untuk Web Dashboard)
 
 ## Struktur Direktori Utama
 - `commands/` - Mendaftarkan top-level slash commands

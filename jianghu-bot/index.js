@@ -51,7 +51,18 @@ for (const file of eventFiles) {
   // Initialize Web API
   setupServer(client);
 
-  await client.login(process.env.DISCORD_TOKEN);
+  console.log('[DEPRECATED] Discord bot process is not required for gameplay.');
+  console.log('Using Web-First runtime. Features are moved to the web dashboard.');
+
+  if (process.env.DISCORD_TOKEN) {
+    try {
+      await client.login(process.env.DISCORD_TOKEN);
+    } catch (e) {
+      console.error('[BOT] Gagal login ke Discord (token salah/offline). Bot di-skip.');
+    }
+  } else {
+    console.warn('[BOT] DISCORD_TOKEN tidak ditemukan. Bot tidak akan dijalankan, hanya API.');
+  }
 
   // ====== Jadwal auto-cleanup log (SATU interval ringan, bukan proses/cron terpisah) ======
   // Jalan pertama kali 2 menit setelah bot nyala (kasih waktu koneksi stabil dulu),

@@ -4,6 +4,7 @@
 const GuildConfig = require('../models/GuildConfig');
 
 async function syncRealmRole(client, guildId, discordId, newRealmName) {
+  if (!client || !client.user || !client.guilds) return;
   const config = await GuildConfig.findOne({ guildId });
   if (!config || !config.realmRoles?.length) return; // belum ada mapping role ranah -> skip total
 

@@ -192,6 +192,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
             if (!payCurrency(player.currency, bidAmount, 'silver')) {
                  throw new CustomError(`Saldo tidak cukup meskipun total kekayaan setara ${player.totalWealth} Silver.`, 400);
             }
+            player.markModified('currency');
             await player.save({ session });
 
             auction.highestBid = bidAmount;
@@ -263,6 +264,8 @@ router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
 
             // Add Currency
             player.currency[currencyType] += totalHarga;
+            player.markModified('currency');
+            player.markModified('inventory');
             await player.save({ session });
 
             await new TransactionLog({
@@ -367,7 +370,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             if (!payCurrency(player.currency, totalPrice, currencyType)) {
                  throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
             }
-
+            player.markModified('currency');
             await player.save({ session });
 
             // Deduct stock if not unlimited
@@ -398,8 +401,10 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
                 const existingAsset = player.assets.find(a => a.assetId.equals(shopItem.refId));
                 if (existingAsset) existingAsset.quantity += quantity;
                 else player.assets.push({ assetId: shopItem.refId, quantity: quantity });
+                player.markModified('assets');
             } // Pets simplified out for now
 
+            player.markModified('inventory');
             await player.save({ session });
         });
 
@@ -508,6 +513,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
             if (!payCurrency(player.currency, totalPrice, currencyType)) {
                  throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
             }
+            player.markModified('currency');
             await player.save({ session });
 
             // Add money to seller atomically
@@ -554,7 +560,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
                 listing.status = 'sold';
                 listing.buyerId = userId;
             }
-
+            player.markModified('inventory');
             await listing.save({ session });
             await player.save({ session });
             // seller sudah disave lewat findOneAndUpdate
@@ -670,7 +676,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
                     }
                 }
             }
-
+            player.markModified('inventory');
             await player.save({ session });
 
             target.status = 'cancelled';
@@ -740,7 +746,7 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
             if (owned.quantity <= 0) {
                 player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId);
             }
-
+            player.markModified('inventory');
             await player.save({ session });
 
             const listing = await PlayerListing.create([{

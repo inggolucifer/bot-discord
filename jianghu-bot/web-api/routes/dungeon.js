@@ -341,6 +341,8 @@ router.post('/interact', authenticateToken, async (req, res) => {
           }
         }
       }
+      player.markModified('inventory');
+      player.markModified('currencies');
 
       dungeon.status = isAtExit ? 'completed' : 'escaped';
       await dungeon.save();

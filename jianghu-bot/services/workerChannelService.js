@@ -4,6 +4,7 @@ const WorkerContract = require('../models/WorkerContract');
 
 async function refreshWorkerChannel(client, guildId) {
   try {
+    if (!client || !client.user || !client.channels) return;
     const config = await GuildConfig.findOne({ guildId });
     if (!config || !config.workerChannelId) return;
 
