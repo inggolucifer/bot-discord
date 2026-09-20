@@ -6,9 +6,12 @@ Selamat datang di repositori **Jianghu Bot (Immortal-X)**. Dokumen ini adalah in
 
 ## 1. Identitas & Visi Proyek
 
-**Jianghu Bot (Immortal-X)** adalah game Wuxia/Xianxia MMORPG hibrida terdistribusi yang menggabungkan:
-1. **Bot Discord Terkelola** (Interaksi teks, slash command, notifikasi event real-time).
-2. **Web Dashboard Modern** (Peta dunia Tale of Immortal 5000x5000, mikro-grid eksplorasi spasial, minigame profesi interaktif, sistem pertarungan turn-based, visualisasi inventori dan kultivasi).
+**Jianghu Bot (Immortal-X)** adalah game Wuxia/Xianxia MMORPG berbasis Web-First yang menggunakan:
+1. **Web Dashboard Modern** (Peta dunia Tale of Immortal 5000x5000, mikro-grid eksplorasi spasial, minigame profesi interaktif, sistem pertarungan turn-based, visualisasi inventori dan kultivasi).
+2. **Discord OAuth** (Hanya untuk keperluan otentikasi/identitas awal).
+
+**PERHATIAN: Web-First Runtime**
+Gameplay bot Discord sudah DEPRECATED. Proses bot tidak diperlukan untuk bermain. Slash command lama dinonaktifkan/meredirect user ke Web.
 
 Filosofi Desain:
 - **Server Authoritative**: Semua kalkulasi spasial, konsumsi stamina, peluang ambush, transaksi ekonomi, dan perolehan barang dihitung secara deterministik dan terlindungi di server backend.

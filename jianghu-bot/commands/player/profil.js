@@ -14,6 +14,8 @@ module.exports = {
     .addUserOption((opt) => opt.setName('user').setDescription('Player yang ingin dilihat profilnya').setRequired(false)),
 
   async execute(interaction) {
+    const url = process.env.FRONTEND_URL || "https://immortal-x.online";
+    return interaction.reply({ content: `Fitur ini sudah dipindahkan ke website. Main di: ${url}`, ephemeral: true });
     try {
     await interaction.deferReply();
 

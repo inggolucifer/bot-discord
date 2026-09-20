@@ -502,6 +502,7 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                                      qualityMultiplier: loot.qualityMultiplier || 1.0
                                  });
                              }
+                             player.markModified('inventory');
                          }
                      }
                  }
