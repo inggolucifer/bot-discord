@@ -58,9 +58,9 @@ router.post('/email-register', async (req, res) => {
                 buildingName: null
             },
             gridPosition: {
-                zoneId: 'xingcun_village',
-                tileX: 16,
-                tileY: 16
+                zoneId: 'tianyuan_world_map',
+                tileX: 2455,
+                tileY: 2485
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',
@@ -195,9 +195,9 @@ router.post('/web-login', async (req, res) => {
                     buildingName: null
                 },
                 gridPosition: {
-                    zoneId: 'xingcun_village',
-                    tileX: 16,
-                    tileY: 16
+                    zoneId: 'tianyuan_world_map',
+                    tileX: 2455,
+                    tileY: 2485
                 },
                 systemCultivation: {
                     realm: 'Fondasi Fana (Mortal Foundation)',
@@ -529,9 +529,9 @@ router.post('/register-character', authenticateToken, async (req, res) => {
                 buildingName: null
             },
             gridPosition: {
-                zoneId: 'central_plains_bamboo_forest',
-                tileX: 0,
-                tileY: 0
+                zoneId: 'tianyuan_world_map',
+                tileX: 2455,
+                tileY: 2485
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',

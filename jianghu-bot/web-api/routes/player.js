@@ -55,7 +55,7 @@ router.get('/transactions', authenticateToken, async (req, res) => {
         // Retrieve transactions involving this user (either explicitly or via descriptions that match their actions - simplified for now)
         // A more robust implementation would structure TransactionLog to have fromUserId and toUserId, but for now we search description
         const player = await Player.findOne({ discordId: userId, guildId }).select('characterName').lean();
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const regex = new RegExp(`\\[${player.characterName}\\]`, 'i');
         const transactions = await TransactionLog.find({
@@ -253,7 +253,7 @@ router.get('/assets', authenticateToken, async (req, res) => {
             .lean();
 
         if (!player) {
-            return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+            return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
         }
 
         const assets = player.assets.map(asset => {
@@ -321,7 +321,7 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
         const player = await Player.findOne({ discordId: userId, guildId: guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
         if (player.status !== 'active') return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
 
         const currentSlots = player.assetSlots || 1;
@@ -393,7 +393,7 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
         }
 
         const player = await Player.findOne({ discordId: userId, guildId: guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const assetDoc = await Asset.findById(assetId);
         if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
@@ -448,7 +448,7 @@ router.post('/assets/work-self', authenticateToken, async (req, res) => {
         }
 
         const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
 
         const assetDoc = await Asset.findById(assetId);
@@ -531,7 +531,7 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
         }
 
         const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const assetDoc = await Asset.findById(assetId);
         if (!assetDoc) return res.status(404).json({ error: 'Aset tidak ditemukan.' });
@@ -598,7 +598,7 @@ router.post('/assets/move-worker', authenticateToken, async (req, res) => {
         if (!targetAssetId || !workerId) return res.status(400).json({ error: 'Data tidak lengkap.' });
 
         const player = await Player.findOne({ discordId: userId, guildId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
 
         let contract = null;
@@ -684,7 +684,7 @@ router.get('/public-profile/:discordId', async (req, res) => {
             .lean();
 
         if (!player) {
-            return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+            return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
         }
 
         const totalAssets = player.assets ? player.assets.reduce((sum, a) => sum + (a.quantity || 1), 0) : 0;
@@ -779,7 +779,7 @@ router.post('/transfer', authenticateToken, async (req, res) => {
             if (!sender) {
                 // Determine the cause of failure to provide a better error message
                 const senderCheck = await Player.findOne({ discordId: userId, guildId }).session(session);
-                if (!senderCheck) throw new CustomError('Karakter tidak ditemukan.', 404);
+                if (!senderCheck) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
                 if (senderCheck.status !== 'active') throw new CustomError(`Karaktermu berstatus ${senderCheck.status}.`, 403);
                 throw new CustomError(`Saldo ${currencyType} kamu tidak mencukupi.`, 400);
             }
@@ -866,7 +866,7 @@ router.post('/loot', authenticateToken, async (req, res) => {
             if (!pool) throw new CustomError('Loot tidak ditemukan atau sudah diklaim.', 404);
 
             const player = await Player.findOne({ discordId: userId, guildId }).session(session);
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
             for (const c of ['copper', 'silver', 'gold', 'jade', 'spirit']) {
@@ -944,7 +944,7 @@ router.post('/daily', authenticateToken, async (req, res) => {
 
         const rewardData = await withTransaction(async (session) => {
             const player = await Player.findOne({ discordId: userId, guildId }).session(session);
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
             if (isClaimedToday(player.lastDailyClaim)) {
@@ -1007,7 +1007,7 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
         const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId');
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const assetConfig = await Asset.findById(assetId);
         if (!assetConfig) return res.status(404).json({ error: 'Data master aset tidak ditemukan.' });
@@ -1107,7 +1107,7 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
         const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId');
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const assetConfig = await Asset.findById(assetId);
         if (!assetConfig) return res.status(404).json({ error: 'Data master aset tidak ditemukan.' });
@@ -1177,7 +1177,7 @@ router.post('/assets/guard-cost', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
         const player = await Player.findOne({ discordId: req.user.userId, guildId }).populate('assets.assetId');
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
@@ -1209,7 +1209,7 @@ router.post('/assets/repair-cost', authenticateToken, async (req, res) => {
         const playerRef = await Player.findOne({ discordId: req.user.userId }).select('guildId').lean();
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : req.user.userId);
         const player = await Player.findOne({ discordId: req.user.userId, guildId }).populate('assets.assetId').populate('inventory.itemId');
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
         const ownedAsset = player.assets.find(a => (a.assetId && a.assetId._id && a.assetId._id.equals(assetId)) || (a.assetId && a.assetId.equals && a.assetId.equals(assetId)));
         if (!ownedAsset) return res.status(400).json({ error: 'Kamu tidak memiliki aset tersebut.' });
 
@@ -1275,7 +1275,7 @@ router.post('/assets/destroy', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
             const player = await Player.findOne({ discordId: userId, guildId }).populate('assets.assetId').session(session);
 
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
 
             const HANCURKAN_COST_SILVER = 100;
 
@@ -1356,7 +1356,7 @@ router.post('/skills/comprehend', authenticateToken, async (req, res) => {
         const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
         const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId');
 
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const pm = player.manuals.find(m => m.manualId && m.manualId.equals(manualId));
         if (!pm) return res.status(400).json({ error: 'Kamu tidak memiliki manual ini.' });
@@ -1422,7 +1422,7 @@ router.post('/skills/upgrade', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
             const player = await Player.findOne({ discordId: userId, guildId }).populate('manuals.manualId').session(session);
 
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
 
             const pm = player.manuals.find(m => m.manualId && m.manualId.equals(manualId));
             if (!pm) throw new CustomError('Kamu tidak memiliki manual ini.', 400);
@@ -1554,7 +1554,7 @@ router.post('/laws/learn', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
             const player = await Player.findOne({ discordId: userId, guildId }).populate('laws').session(session);
 
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
 
             const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
             if (player.isNormalCultivator || realmIdx > 0) {
@@ -1607,7 +1607,7 @@ router.post('/laws/reset', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
             const player = await Player.findOne({ discordId: userId, guildId }).populate('inventory.itemId').populate('laws').session(session);
 
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
 
             if (!player.laws || player.laws.length === 0) {
                 throw new CustomError('Kamu belum memahami Hukum Alam apapun untuk direset.', 400);
@@ -1675,7 +1675,7 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
             const sender = await Player.findOne({ discordId: userId, guildId }).session(session);
-            if (!sender) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!sender) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
             if (sender.status !== 'active') throw new CustomError(`Karaktermu berstatus ${sender.status}.`, 403);
 
             const receiver = await Player.findOne({
@@ -1871,7 +1871,7 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
             const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
 
             const player = await Player.findOne({ discordId: userId, guildId }).session(session);
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
+            if (!player) throw new CustomError('Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.', 404);
 
             if (player.status !== 'dead') {
                 throw new CustomError('Karaktermu masih hidup! Command ini hanya untuk karakter yang sudah meninggal.', 400);
@@ -1988,7 +1988,7 @@ router.post('/talents/allocate', authenticateToken, async (req, res) => {
 
     try {
         const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         const valStr = Number(str) || 0;
         const valAgi = Number(agi) || 0;
@@ -2034,7 +2034,7 @@ router.post('/talents/allocate', authenticateToken, async (req, res) => {
 router.get('/kungfu/mastery', authenticateToken, async (req, res) => {
     try {
         const player = await Player.findOne({ discordId: req.user.userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
 
 
@@ -2070,7 +2070,7 @@ router.patch('/profile', authenticateToken, async (req, res) => {
 
     try {
         const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         if (biography !== undefined) {
              const cleanBio = escapeRegex(biography).substring(0, 500);
@@ -2134,7 +2134,7 @@ router.post('/finish-prologue', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
         const player = await Player.findOne({ discordId: userId });
-        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan. Silakan registrasi karakter baru di menu pendaftaran.' });
 
         player.prologueCompleted = true;
         await player.save();
