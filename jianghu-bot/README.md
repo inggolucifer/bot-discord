@@ -61,3 +61,12 @@ Slash commands are removed/deprecated.
   - `realm-role-set`, `realm-role-remove`, `realm-role-list`
   - `leaderboard-role`
   - `set-log`, `set-log-retention`, `clear-logs`, `set-role`, `set-worker-channel`
+## Web-First Runtime (Required)
+1. MongoDB up
+2. `node web-api/server.js`
+3. `web-dashboard` (dev or production build)
+4. Login via web (OAuth / email / web-login — identity only)
+
+Discord bot process is NOT required for gameplay.
+Slash commands are deprecated (redirect to website).
+Player database may be wiped for fresh season — no Discord data migration.

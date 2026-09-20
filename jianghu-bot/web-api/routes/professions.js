@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
@@ -107,6 +108,7 @@ router.post('/farming/unlock-slot', verifyToken, async (req, res) => {
         player.markModified('currency');
         player.professions.farming.farmPlots.push({ isUnlocked: true });
 
+        player.markModified('currency');
         await player.save();
 
         res.json({ message: `Berhasil membuka petak ke-${nextSlot}!`, farmPlots: player.professions.farming.farmPlots });
@@ -162,6 +164,7 @@ router.post('/farming/bypass-depletion', verifyToken, async (req, res) => {
         plot.isDepleted = false;
         plot.depletedUntil = null;
 
+        player.markModified('inventory');
         await player.save();
 
         res.json({ message: 'Tanah kembali subur!', farmPlots: player.professions.farming.farmPlots });
@@ -209,6 +212,7 @@ router.post('/fishing/unlock-zone', verifyToken, async (req, res) => {
         player.markModified('currency');
         player.professions.fishing.unlockedFishingZones.push(zoneId);
 
+        player.markModified('currency');
         await player.save();
 
         res.json({ message: `Berhasil membuka Zona Memancing ${zoneId}!`, unlockedZones: player.professions.fishing.unlockedFishingZones });
@@ -259,6 +263,7 @@ router.post('/unlock', verifyToken, async (req, res) => {
 
         player.set(`professions.${profession}.isUnlocked`, true);
         player.markModified('professions');
+        player.markModified('currency');
         await player.save();
 
         res.json({ success: true, message: `Profesi ${profession} berhasil dibuka!`, professions: player.professions });
@@ -504,6 +509,7 @@ router.post('/complete', verifyToken, async (req, res) => {
                   player.professions.farming.level += 1;
              }
              player.markModified('professions');
+             player.markModified('inventory');
              await player.save();
 
              return res.json({ message: 'Tanaman berhasil ditanam!', result: { toolBroken }, farmPlots: player.professions.farming.farmPlots });

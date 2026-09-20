@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
@@ -405,6 +406,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
             } // Pets simplified out for now
 
             player.markModified('inventory');
+            player.markModified('assets');
             await player.save({ session });
         });
 
@@ -562,6 +564,8 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
             }
             player.markModified('inventory');
             await listing.save({ session });
+            player.markModified('assets');
+            player.markModified('inventory');
             await player.save({ session });
             // seller sudah disave lewat findOneAndUpdate
 
@@ -677,6 +681,7 @@ router.post('/player-shop/my-listings/cancel', authenticateToken, async (req, re
                 }
             }
             player.markModified('inventory');
+            player.markModified('assets');
             await player.save({ session });
 
             target.status = 'cancelled';

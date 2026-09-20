@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -430,6 +431,7 @@ router.post('/divorce', authenticateToken, async (req, res) => {
       player.marriage = { status: 'single', spouseId: null, marriageId: null };
       if (!player.cooldowns) player.cooldowns = {};
       player.cooldowns.remarry = new Date(Date.now() + config.REMARRY_COOLDOWN_HOURS * 3600000);
+      player.markModified('currency');
       await player.save({ session });
 
       const spouse = await Player.findOne({ discordId: spouseId, guildId });

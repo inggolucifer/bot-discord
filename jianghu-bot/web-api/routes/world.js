@@ -1,8 +1,9 @@
 
 
+const express = require('express');
 const router = express.Router();
 const { resolveNpcImage, resolveLocationImage, getEmoji } = require('../../utils/imageResolve');
-const express = require('express');
+
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
@@ -57,7 +58,6 @@ const { convertToCopper, convertFromCopper } = require('../../utils/currencyNorm
 const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
 const fs = require('fs');
 const path = require('path');
-const zoneConfig = require(configPath);
 const landService = require('../../services/landService');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
 const ZoneTileModel = require('../../models/ZoneTile');
@@ -723,6 +723,7 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
             markArrived(player, travel.toLocation.regionSlug, travel.toLocation.settlementName);
 
+            player.markModified('currency');
             await player.save({ session });
             await travel.save({ session });
 
@@ -900,6 +901,7 @@ router.post('/rest/start', authenticateToken, async (req, res) => {
                  player.currentStamina = getMaxStamina(player);
             }
 
+            player.markModified('inventory');
             await player.save({ session });
         });
 
@@ -983,6 +985,7 @@ router.get('/rest/status', authenticateToken, async (req, res) => {
                 }
             }
 
+            player.markModified('currency');
             await player.save();
         }
 
@@ -1056,6 +1059,7 @@ router.post('/rest/cancel', authenticateToken, async (req, res) => {
 
         player.rest.status = 'idle';
         player.rest.mode = null;
+        player.markModified('currency');
         await player.save();
 
         res.json({ rest: null, currentStamina: getCurrentStamina(player), maxStamina: getMaxStamina(player) });
@@ -2735,6 +2739,7 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         tile.isOccupied = true;
         tile.label = `Lahan Milik ${player.characterName}`;
         await tile.save();
+        player.markModified('currency');
         await player.save();
 
         const nextPrice = getLandPriceForPlayer(ownedPlotsCount + 1);
@@ -2943,6 +2948,8 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             isOpenToPublic: tile.isOpenToPublic,
             isPubliclyVisible: true
         });
+        player.markModified('assets');
+        player.markModified('currency');
         await player.save();
 
         res.json({
@@ -3227,6 +3234,7 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
 
         property.lastUpgradedAt = new Date();
         await property.save();
+        player.markModified('currency');
         await player.save();
 
         res.json({
