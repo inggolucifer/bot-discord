@@ -37,11 +37,11 @@ export default function ProfilePage() {
       return res.data;
     },
     onSuccess: (data) => {
-      toast.show({ message: data.message || 'Item equipped', type: 'success' });
+      toast.show({ message: data.message ?? 'Item equipped', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
     },
     onError: (err: any) => {
-      toast.show({ message: err.response?.data?.error || 'Failed to equip item', type: 'error' });
+      toast.show({ message: err.response?.data?.error ?? 'Failed to equip item', type: 'error' });
     }
   });
 
@@ -51,11 +51,11 @@ export default function ProfilePage() {
       return res.data;
     },
     onSuccess: (data) => {
-      toast.show({ message: data.message || 'Item unequipped', type: 'success' });
+      toast.show({ message: data.message ?? 'Item unequipped', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
     },
     onError: (err: any) => {
-      toast.show({ message: err.response?.data?.error || 'Failed to unequip item', type: 'error' });
+      toast.show({ message: err.response?.data?.error ?? 'Failed to unequip item', type: 'error' });
     }
   });
 
@@ -75,27 +75,27 @@ export default function ProfilePage() {
     );
   }
 
-  const profile = profileData.player || profileData;
-  const combatStats = profileData.combatStats || profile.combatStats || { hp: 0, atk: 0, def: 0, spd: 0 };
-  const equipment = profile.equipment || {};
-  const currentEnergy = profileData.energy?.current || 0;
-  const maxEnergy = profileData.maxEnergy || 100;
+  const profile = profileData.player ?? profileData;
+  const combatStats = profileData.combatStats ?? profile.combatStats ?? { hp: 0, atk: 0, def: 0, spd: 0 };
+  const equipment = profile.equipment ?? {};
+  const currentEnergy = profileData.energy?.current ?? 0;
+  const maxEnergy = profileData.maxEnergy ?? 100;
   const energyPercent = Math.min(100, (currentEnergy / maxEnergy) * 100);
 
-  const currency = profile.currency || { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+  const currency = profile.currency ?? { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
 
   const qi = Math.floor(Number(profile.systemCultivation?.qi) || 0);
-  const stage = Math.floor(Number(profile.systemCultivation?.stage || profile.stage) || 0);
+  const stage = Math.floor(Number(profile.systemCultivation?.stage ?? profile.stage) || 0);
   const maxQi = Math.max(100, (stage + 1) * 100);
   const qiPercent = Math.min(100, Math.max(0, Math.floor((qi / maxQi) * 100)));
-  const activeTitle = profile.activeTitle || 'Pendekar Pedang Surgawi';
+  const activeTitle = profile.activeTitle ?? 'Pendekar Pedang Surgawi';
 
   const mergedProfile = {
     ...profile,
-    characterName: profile.characterName || 'Pendekar Jianghu',
+    characterName: profile.characterName ?? 'Pendekar Jianghu',
     activeTitle,
-    combatStats: profileData.combatStats || profile.combatStats || {},
-    extendedStats: profile.extendedStats || profileData.extendedStats || {}
+    combatStats: profileData.combatStats ?? profile.combatStats ?? {},
+    extendedStats: profile.extendedStats ?? profileData.extendedStats ?? {}
   };
 
   const equipmentSlots = [
@@ -118,14 +118,25 @@ export default function ProfilePage() {
     unequipMutation.mutate(slot);
   };
 
-  const equipableItems = profile.inventory?.filter((inv: any) =>
-    !inv.isEquipped &&
-    ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessories', 'mount'].includes(inv.itemId?.category)
-  ) || [];
+  const equippedInventoryIds = Object.values(equipment ?? {}).map(id => String(id));
+  const equipableItems = profile.inventory?.filter((inv: any) => {
+    if (inv.isEquipped) return false;
+    if (!inv.itemId || !inv.itemId.category) return false;
+
+    // Convert alias categories to slot key for validation
+    const slotKey = inv.itemId.category === 'cloth' ? 'armor'
+      : inv.itemId.category === 'accessories' ? (inv.itemId.capacityType === 'horse' ? 'mount' : 'accessory')
+      : inv.itemId.category;
+
+    const isValidCategory = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount'].includes(slotKey);
+    const isAlreadyEquipped = equippedInventoryIds.includes(String(inv._id));
+
+    return isValidCategory && !isAlreadyEquipped;
+  }) ?? [];
 
   // Active Buffs Logic
   const now = new Date();
-  const activeBuffs = (profile.activeBuffs || []).filter((b: any) => new Date(b.expiresAt) > now);
+  const activeBuffs = (profile.activeBuffs ?? []).filter((b: any) => new Date(b.expiresAt) > now);
 
   return (
     <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
@@ -136,11 +147,11 @@ export default function ProfilePage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0 shadow-[0_0_25px_rgba(197,168,128,0.35)]">
-          {profile.avatarUrl || profile.characterImage ? (
+          {profile.avatarUrl ?? profile.characterImage ? (
             <FallbackImage 
-              src={profile.avatarUrl || profile.characterImage || ''} 
+              src={profile.avatarUrl ?? profile.characterImage ?? ''}
               alt={profile.characterName} 
-              fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>} 
+              fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji ?? '👤'}</div>}
             />
           ) : profile.resolvedBody ? (
             <div className="relative w-full h-full flex items-center justify-center bg-[#151922] overflow-hidden">
@@ -148,10 +159,10 @@ export default function ProfilePage() {
               {profile.resolvedBody.face && <img src={profile.resolvedBody.face} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 2}} />}
               {profile.resolvedBody.hair && <img src={profile.resolvedBody.hair} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 3}} />}
               {profile.resolvedBody.mask && <img src={profile.resolvedBody.mask} className="absolute inset-0 w-full h-full object-contain" style={{zIndex: 4}} />}
-              {!profile.resolvedBody.face && !profile.resolvedBody.hair && !profile.resolvedBody.cloth && <div className="text-5xl">{profile.imageEmoji || '👤'}</div>}
+              {!profile.resolvedBody.face && !profile.resolvedBody.hair && !profile.resolvedBody.cloth && <div className="text-5xl">{profile.imageEmoji ?? '👤'}</div>}
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji || '👤'}</div>
+            <div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji ?? '👤'}</div>
           )}
         </div>
 
@@ -167,7 +178,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-stone-400 mt-0.5 font-serif">
-                {profile.sect || 'Tanpa Sekte (Rogue Cultivator)'}
+                {profile.sect ?? 'Tanpa Sekte (Rogue Cultivator)'}
               </p>
             </div>
 
@@ -182,7 +193,7 @@ export default function ProfilePage() {
 
           <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-sky-950/80 border border-sky-600/60 rounded px-2.5 py-1 text-xs text-sky-200 font-bold font-serif">
-              <Zap size={12} className="text-sky-400" /> {profile.realm} (Tahap {profile.stage || 'Awal'})
+              <Zap size={12} className="text-sky-400" /> {profile.realm} (Tahap {profile.stage ?? 'Awal'})
             </span>
             {profile.systemCultivation?.isFlawedFoundation && (
               <span
@@ -292,15 +303,17 @@ export default function ProfilePage() {
 
           {/* Combat Stats & Equipment */}
           <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-hidden">
-            <div className="flex flex-col lg:flex-row gap-6 w-full items-start justify-center h-full">
-             <div className="flex-1 w-full lg:w-1/2 flex flex-col items-center">
-              <h3 className="text-lg font-bold text-[#c5a880] mb-6 w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
-              <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative mb-6">
+           {/* Mobile Ordering Fix: Extract the Combat Stats so it's placed after Available Equipment on mobile */}
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full items-stretch">
+             {/* Left Column: Equipped Items */}
+             <div className="flex flex-col items-center space-y-6 order-1 lg:order-1 h-full">
+               <h3 className="text-lg font-bold text-[#c5a880] w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
+               <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative flex-shrink-0">
                  {/* Decorative center line */}
                  <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
                  {equipmentSlots.map(slot => {
                     const equippedId = equipment[slot.id];
-                    const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                    const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
                     const itemData = equippedInvItem?.itemId;
                     const isMount = slot.id === 'mount';
 
@@ -314,7 +327,7 @@ export default function ProfilePage() {
                         {equippedInvItem ? (
                            <>
                               <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
-                              <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name || 'Unknown'}</div>
+                              <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name ?? 'Unknown'}</div>
                               <div className="text-[10px] text-gray-500 mt-0.5 capitalize flex items-center gap-1">
                                 {isMount ? (
                                   <span className="text-emerald-400 font-semibold">
@@ -338,44 +351,46 @@ export default function ProfilePage() {
                       </motion.div>
                     );
                   })}
-              </div>
+               </div>
 
-              <div className="w-full bg-black/40 p-4 rounded border border-[#333]">
+               {/* Desktop Only Stats Component to place it under Equipped */}
+
+               <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto hidden lg:block">
                  <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
                  <div className="grid grid-cols-1 gap-y-3">
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">HP</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp) || 0).toLocaleString()}</span>
+                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.hp) || 0)} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">ATK</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk) || 0).toLocaleString()}</span>
+                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.atk) || 0)} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">DEF</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def) || 0).toLocaleString()}</span>
+                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.def) || 0)} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
                           </span>
                        </div>
                     </div>
                     <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
                        <span className="text-gray-400 font-bold w-12">SPD</span>
                        <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd) || 0).toLocaleString()}</span>
+                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
                           <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.spd) || 0)} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
+                             (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
                           </span>
                        </div>
                     </div>
@@ -383,20 +398,23 @@ export default function ProfilePage() {
                  <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
                     <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
                  </p>
-              </div>
+               </div>
+
              </div>
 
-             {/* Inventory to Equip */}
-             <div className="flex-1 w-full lg:w-1/2 flex flex-col min-h-[300px] lg:h-full">
+             {/* Right Column: Inventory to Equip */}
+             <div className="w-full flex flex-col order-2 lg:order-2 h-full border-b border-[#333] lg:border-none pb-6 lg:pb-0">
                 <h3 className="text-lg font-bold text-[#c5a880] text-center w-full mb-6 border-b border-[#333] pb-2 flex justify-between items-center px-2">
                    <span>Available Equipment</span>
                    <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
                 </h3>
 
-                <div className="flex-1 overflow-y-auto max-h-[420px] custom-scrollbar pr-2 space-y-3 pb-4">
+                <div className="flex-1 overflow-y-auto max-h-[600px] lg:max-h-full custom-scrollbar pr-2 space-y-3 pb-4 h-full min-h-[280px]">
                    {equipableItems.length === 0 ? (
-                      <div className="h-full flex items-center justify-center text-gray-500 text-sm text-center">
-                         Tidak ada equipment yang bisa dipakai di inventory.
+                      <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm text-center py-12 px-4 border-2 border-dashed border-[#333] rounded-lg bg-black/20">
+                         <Backpack size={32} className="mb-3 text-[#555]" />
+                         <p className="mb-2">Tidak ada equipment yang bisa dipakai.</p>
+                         <Link href="/inventory" className="text-[#c5a880] hover:text-amber-200 underline underline-offset-2 decoration-[#c5a880]/40 transition-colors">Buka Inventory</Link>
                       </div>
                    ) : (
                       equipableItems.map((inv: any) => {
@@ -404,7 +422,7 @@ export default function ProfilePage() {
                             : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
                             : inv.itemId?.category;
                           const equippedId = equipment[slotKey];
-                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => i._id === equippedId) : null;
+                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
                           const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
 
                           return (
@@ -414,7 +432,7 @@ export default function ProfilePage() {
                                    className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
                                    onClick={() => {
                                       if (!kungfuCheck.allowed) {
-                                         toast.show({ message: kungfuCheck.reason || 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
+                                         toast.show({ message: kungfuCheck.reason ?? 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
                                          return;
                                       }
                                       handleEquip(inv._id);
@@ -437,15 +455,15 @@ export default function ProfilePage() {
                                          {!kungfuCheck.allowed && (
                                             <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
                                                <Lock size={10} className="shrink-0" />
-                                               <span className="truncate">Butuh {kungfuCheck.skillName || kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
+                                               <span className="truncate">Butuh {kungfuCheck.skillName ?? kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
                                             </div>
                                          )}
                                       </div>
                                    </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
                                      <button
-                                        disabled={!kungfuCheck.allowed}
-                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1`}
+                                        disabled={!kungfuCheck.allowed || equipMutation.isPending || unequipMutation.isPending}
+                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1 disabled:opacity-50`}
                                      >
                                         {!kungfuCheck.allowed && <Lock size={12} />}
                                         {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
@@ -458,7 +476,55 @@ export default function ProfilePage() {
                    )}
                 </div>
              </div>
-            </div>
+
+             {/* Mobile Stats Component (Order 3) */}
+
+               <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto block lg:hidden order-3 mt-4">
+                 <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
+                 <div className="grid grid-cols-1 gap-y-3">
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">HP</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">ATK</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">DEF</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                       <span className="text-gray-400 font-bold w-12">SPD</span>
+                       <div className="flex flex-col items-end text-sm">
+                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
+                          <span className="text-[10px] text-gray-500">
+                             (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
+                          </span>
+                       </div>
+                    </div>
+                 </div>
+                 <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
+                    <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
+                 </p>
+               </div>
+
+</div>
           </div>
         </div>
 
@@ -517,8 +583,8 @@ export default function ProfilePage() {
                       const profData = profile.professions?.[prof.id];
                       const artVal = mergedProfile.extendedStats?.artisanship?.[prof.artKey];
                       const isUnlocked = profData ? profData.isUnlocked : (artVal > 0);
-                      const level = profData?.level || artVal || 1;
-                      const exp = profData?.exp || 0;
+                      const level = profData?.level ?? artVal ?? 1;
+                      const exp = profData?.exp ?? 0;
                       const maxExp = Math.floor(50 * level + 15 * level * level);
                       const progress = profData ? Math.min(100, (exp / maxExp) * 100) : (artVal > 0 ? 100 : 0);
 
