@@ -2,6 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 const { resolveNpcImage, resolveLocationImage, getEmoji } = require('../../utils/imageResolve');
 
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
@@ -56,8 +58,6 @@ const Asset = require('../../models/Asset');
 const Blueprint = require('../../models/Blueprint');
 const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
 const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
-const fs = require('fs');
-const path = require('path');
 const landService = require('../../services/landService');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
 const ZoneTileModel = require('../../models/ZoneTile');
@@ -1731,6 +1731,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
         }
 
         let visibleTiles = [];
+        let viewport = null;
 
         if (isMacro) {
             // Tentukan viewport window (radius query)
@@ -1739,7 +1740,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             const centerY = parseInt(req.query.centerY) || py;
 
             // Gunakan Procedural World Engine untuk streaming medan 5000x5000 dalam O(1)
-            const viewport = proceduralWorldEngine.getViewportTiles(centerX, centerY, viewRadius);
+            viewport = proceduralWorldEngine.getViewportTiles(centerX, centerY, viewRadius);
             const proceduralTileMap = new Map();
             for (const t of viewport.tiles) {
                 proceduralTileMap.set(`${t.tileX},${t.tileY}`, t);

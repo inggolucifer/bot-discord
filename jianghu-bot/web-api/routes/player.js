@@ -25,9 +25,8 @@ const { getGlobalAssets } = require('../../utils/imageResolve');
 const LockManager = require('../utils/lockManager');
 const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
-const { calculateEnergy } = require('../../utils/energyManager');
+const { calculateEnergy, MAX_ENERGY } = require('../../utils/energyManager');
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
-const { MAX_ENERGY } = require('../../config/stamina'); // Might need adjustment based on config
 const Law = require('../../models/Law');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const { getRealmIndex } = require('../../utils/cultivation');
@@ -118,35 +117,52 @@ router.get('/profile', authenticateToken, async (req, res) => {
 
         const combatStats = getComputedStats(player, player.laws, player.manuals);
 
-        // Calculate real-time energy
-        const currentEnergy = calculateEnergy(player);
-
-
+        // Calculate real-time energy safely
+        let currentEnergy = 100;
+        try {
+          if (typeof calculateEnergy === 'function') {
+            currentEnergy = calculateEnergy(player);
+          } else if (player.energy && typeof player.energy.current === 'number') {
+            currentEnergy = player.energy.current;
+          }
+        } catch (e) {
+          console.warn('[API-PLAYER] calculateEnergy failed:', e.message);
+        }
 
         let inventoryWeight = 0;
         let carryCapacity = 50;
-
-        if (mutablePlayer) {
-            const equippedItems = [];
-            if (mutablePlayer.equipment && mutablePlayer.equipment.accessory) {
-                const accInvItem = mutablePlayer.inventory.find(i => i._id.toString() === mutablePlayer.equipment.accessory.toString());
-                if (accInvItem && accInvItem.itemId && accInvItem.itemId.capacityBonus) {
-                    equippedItems.push(accInvItem.itemId);
-                }
+        try {
+          const equippedItems = [];
+          if (player.equipment && player.equipment.accessory && Array.isArray(player.inventory)) {
+            const accInvItem = player.inventory.find(
+              (i) => i && i._id && i._id.toString() === String(player.equipment.accessory)
+            );
+            if (accInvItem && accInvItem.itemId && accInvItem.itemId.capacityBonus) {
+              equippedItems.push(accInvItem.itemId);
             }
-            if (mutablePlayer.equipment && mutablePlayer.equipment.mount) {
-                const mountInvItem = mutablePlayer.inventory.find(i => i._id.toString() === mutablePlayer.equipment.mount.toString());
-                if (mountInvItem && mountInvItem.itemId && mountInvItem.itemId.capacityBonus) {
-                    equippedItems.push(mountInvItem.itemId);
-                }
+          }
+          if (player.equipment && player.equipment.mount && Array.isArray(player.inventory)) {
+            const mountInvItem = player.inventory.find(
+              (i) => i && i._id && i._id.toString() === String(player.equipment.mount)
+            );
+            if (mountInvItem && mountInvItem.itemId && mountInvItem.itemId.capacityBonus) {
+              equippedItems.push(mountInvItem.itemId);
             }
+          }
 
-            const activeTravel = await Travel.findOne({ discordId: userId, status: { $in: ['traveling', 'ambushed'] } });
-            const isTraveling = !!activeTravel;
+          const activeTravel = await Travel.findOne({
+            discordId: userId,
+            status: { $in: ['traveling', 'ambushed'] }
+          });
+          const isTraveling = !!activeTravel;
 
-            const itemMapWeight = await buildInventoryItemMap(mutablePlayer);
-            inventoryWeight = getInventoryWeight(mutablePlayer, itemMapWeight);
-            carryCapacity = await getCarryCapacity(mutablePlayer, { isTraveling }, equippedItems);
+          if (typeof buildInventoryItemMap === 'function') {
+            const itemMapWeight = await buildInventoryItemMap(player);
+            inventoryWeight = getInventoryWeight(player, itemMapWeight);
+            carryCapacity = await getCarryCapacity(player, { isTraveling }, equippedItems);
+          }
+        } catch (weightErr) {
+          console.warn('[API-PLAYER] weight calc skipped:', weightErr.message);
         }
 
         const defaultExtendedStats = {
@@ -221,7 +237,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 reputation: player.reputation !== undefined ? player.reputation : 100,
                 reputationTitle: player.reputationTitle || 'Novice Cultivator',
                 energy: { current: currentEnergy, lastUpdated: player.energy ? player.energy.lastUpdated : new Date() },
-                maxEnergy: MAX_ENERGY,
+                maxEnergy: (typeof MAX_ENERGY === 'number' ? MAX_ENERGY : 100),
                 currentLocation: player.currentLocation || { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },
                 combatStats,
                 manuals: formattedManuals,
