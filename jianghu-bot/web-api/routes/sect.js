@@ -1,4 +1,5 @@
 const { resolveLocationImage } = require('../../utils/imageResolve');
+
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');

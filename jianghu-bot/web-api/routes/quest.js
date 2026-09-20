@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
@@ -409,6 +410,8 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
             questEntry.claimedAt = new Date();
             questEntry.lastTouchedAt = new Date();
 
+            player.markModified('inventory');
+            player.markModified('currency');
             await player.save({ session });
 
             await AdminLog.create([{

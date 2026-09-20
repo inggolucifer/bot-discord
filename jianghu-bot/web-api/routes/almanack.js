@@ -1,4 +1,5 @@
 const { resolveItemImage, resolveMonsterImage, resolveNpcImage, resolveManualImage, getEmoji } = require('../../utils/imageResolve');
+
 const express = require('express');
 const router = express.Router();
 const Item = require('../../models/Item');
@@ -155,6 +156,7 @@ router.post('/build-asset', authenticateToken, async (req, res) => {
             });
         }
 
+        player.markModified('assets');
         await player.save();
 
         await logTransaction(req.discordClient || req.app.get('client'), {

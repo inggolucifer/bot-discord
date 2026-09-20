@@ -1,8 +1,9 @@
 
 
+const express = require('express');
 const router = express.Router();
 const { resolveMonsterImage, resolveItemImage, getEmoji } = require('../../utils/imageResolve');
-const express = require('express');
+
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
 const Player = require('../../models/Player');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
@@ -237,6 +238,8 @@ router.post('/start', authenticateToken, async (req, res) => {
             await exploration.save({ session });
 
             player.customStatus = `Sedang mengeksplorasi ${location.name}`;
+            player.markModified('inventory');
+            player.markModified('currency');
             await player.save({ session });
         });
 
@@ -565,6 +568,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
             }
 
             player.customStatus = null; // Clear status
+            player.markModified('quests');
             await player.save({ session });
 
             exploration.status = 'claimed';

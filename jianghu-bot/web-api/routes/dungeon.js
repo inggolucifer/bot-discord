@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middlewares/auth');
@@ -346,6 +347,7 @@ router.post('/interact', authenticateToken, async (req, res) => {
 
       dungeon.status = isAtExit ? 'completed' : 'escaped';
       await dungeon.save();
+      player.markModified('inventory');
       await player.save();
 
       return res.json({
