@@ -6,6 +6,7 @@
  * 3. Pengendalian Tungku Alkimia (Crucible Yin-Yang Equilibrium)
  */
 
+
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middlewares/auth');
@@ -57,6 +58,7 @@ router.post('/acupoint/submit', authenticateToken, async (req, res) => {
         player.kungfuSkills = player.kungfuSkills || {};
         player.kungfuSkills.special = (player.kungfuSkills.special || 0) + Math.round(neigongPoints / 20);
 
+        player.markModified('kungfuSkills');
         await player.save();
 
         res.json({
@@ -101,6 +103,7 @@ router.post('/kata/submit', authenticateToken, async (req, res) => {
         player.kungfuSkills = player.kungfuSkills || {};
         player.kungfuSkills[skillKey] = (player.kungfuSkills[skillKey] || 0) + aptitudeGain;
 
+        player.markModified('kungfuSkills');
         await player.save();
 
         res.json({
@@ -180,6 +183,7 @@ router.post('/crucible/submit', authenticateToken, async (req, res) => {
             player.systemCultivation.qi = (player.systemCultivation.qi || 0) + qiBonus;
         }
 
+        player.markModified('inventory');
         await player.save();
 
         res.json({
@@ -237,6 +241,7 @@ router.post('/cooking/submit', authenticateToken, async (req, res) => {
             }
         }
 
+        player.markModified('inventory');
         await player.save();
 
         res.json({
@@ -289,6 +294,7 @@ router.post('/harvest/submit', authenticateToken, async (req, res) => {
             }
         }
 
+        player.markModified('inventory');
         await player.save();
 
         res.json({

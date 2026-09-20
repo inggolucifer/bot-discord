@@ -1,57 +1,37 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const express = require('express');
 const router = express.Router();
-const TransactionLog = require("../../models/TransactionLog");
-const { getComputedStats } = require("../../utils/statCalculator");
-const Travel = require("../../models/Travel");
-const { hasEnoughCurrency, payCurrency } = require("../../utils/currency");
-const { logTransaction } = require("../../utils/logger");
-const WorkerContract = require("../../models/WorkerContract");
-const LootPool = require("../../models/LootPool");
-const crypto = require("crypto");
-const { calculateRepairCost, calculateDailyGuardCost } = require("../../utils/assetCostCalculator");
-const { convertFromCopper } = require("../../utils/currencyNormalize");
-const { getPlayerSect } = require("../../utils/sectUtils");
-const { getPlayerSectRank, can } = require("../../utils/sectAccess");
-const { getKungfuLevel, KUNGFU_SKILLS, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require("../../utils/kungfuMastery");
-const { applyTrainingSpiritualRootXp } = require("../../utils/spiritualRootXp");
-const TransferRequest = require("../../models/TransferRequest");
-const Item = require("../../models/Item");
-const { getGlobalAssets } = require("../../utils/imageResolve");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const mongoose = require('mongoose');
+const Player = require('../../models/Player');
+const { authenticateToken } = require('../middlewares/auth');
+const TransactionLog = require('../../models/TransactionLog');
+const { getComputedStats } = require('../../utils/statCalculator');
+const Travel = require('../../models/Travel');
+const { hasEnoughCurrency, payCurrency, getTotalCopper } = require('../../utils/currency');
+const { logTransaction } = require('../../utils/logger');
+const WorkerContract = require('../../models/WorkerContract');
+const LootPool = require('../../models/LootPool');
+const crypto = require('crypto');
+const { calculateRepairCost, calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
+const { convertFromCopper, convertToCopper } = require('../../utils/currencyNormalize');
+const { getPlayerSect } = require('../../utils/sectUtils');
+const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+const { getKungfuLevel, KUNGFU_SKILLS, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
+const { applyTrainingSpiritualRootXp, applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
+const TransferRequest = require('../../models/TransferRequest');
+const Item = require('../../models/Item');
+const Asset = require('../../models/Asset');
+const { getGlobalAssets } = require('../../utils/imageResolve');
+const LockManager = require('../utils/lockManager');
+const { withTransaction } = require('../utils/dbTransaction');
+const CustomError = require('../utils/CustomError');
+const { calculateEnergy } = require('../../utils/energyManager');
+const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
+const { MAX_ENERGY } = require('../../config/stamina'); // Might need adjustment based on config
+const Law = require('../../models/Law');
+const { escapeRegex } = require('../../utils/escapeRegex');
+const { getRealmIndex } = require('../../utils/cultivation');
+const { isUnderConstruction, calculateProgress } = require('../../utils/crafting');
 
 function formatCurrencyString(currencyObj) {
     const parts = [];
@@ -110,7 +90,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             .lean();
 
         if (!player) {
-            return res.status(404).json({ error: 'Karakter tidak ditemukan. Pastikan Anda sudah register di Discord.' });
+            return res.status(404).json({ error: 'Karakter tidak ditemukan. Pastikan Anda sudah membuat karakter melalui Web Dashboard.' });
         }
 
         // Inject Discord Avatar URL from the JWT payload as fallback
@@ -380,6 +360,7 @@ router.post('/assets/tambah-slot', authenticateToken, async (req, res) => {
         }
 
         player.assetSlots = currentSlots + 1;
+        player.markModified('currency');
         await player.save();
 
 
@@ -445,6 +426,7 @@ router.post('/assets/hire-npc', authenticateToken, async (req, res) => {
 
         if (ownedAsset.status === 'pending') ownedAsset.status = 'building';
 
+        player.markModified('currency');
         await player.save();
 
         res.json({ success: true, message: `Berhasil menyewa NPC Worker untuk ${durasi} jam.` });
@@ -591,6 +573,7 @@ router.post('/assets/hire-player', authenticateToken, async (req, res) => {
         contract.workingUntil = endTime;
 
         await contract.save();
+        player.markModified('currency');
         await player.save();
 
         const workerPlayer = await Player.findOne({ discordId: contract.workerId, guildId });
@@ -982,6 +965,7 @@ router.post('/daily', authenticateToken, async (req, res) => {
 
             player.currency[reward.type] += reward.amount;
             player.lastDailyClaim = new Date();
+            player.markModified('currency');
             await player.save({ session });
 
             await TransactionLog.create([{
@@ -1073,6 +1057,8 @@ router.post('/assets/repair', authenticateToken, async (req, res) => {
         ownedAsset.damageType = null;
         ownedAsset.lastProgressUpdate = new Date();
 
+        player.markModified('currency');
+        player.markModified('inventory');
         await player.save();
 
 
@@ -1150,6 +1136,7 @@ router.post('/assets/guard', authenticateToken, async (req, res) => {
 
         ownedAsset.guardEndTime = new Date(currentEndTime + (hari * 24 * 3600 * 1000));
 
+        player.markModified('currency');
         await player.save();
 
 
@@ -1328,6 +1315,8 @@ router.post('/assets/destroy', authenticateToken, async (req, res) => {
                 throw new CustomError('Saldo tidak cukup untuk biaya penghancuran.', 400);
             }
 
+            player.markModified('currency');
+            player.markModified('assets');
             await player.save({ session });
 
 
@@ -1641,6 +1630,7 @@ router.post('/laws/reset', authenticateToken, async (req, res) => {
             player.laws = [];
             player.markModified('laws');
 
+            player.markModified('inventory');
             await player.save({ session });
 
 
@@ -1915,6 +1905,7 @@ router.post('/restart-karakter', authenticateToken, async (req, res) => {
             player.markModified('stats');
             player.markModified('systemCultivation');
 
+            player.markModified('currency');
             await player.save({ session });
 
 
