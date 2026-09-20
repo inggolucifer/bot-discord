@@ -1,6 +1,7 @@
 const LockManager = require('../utils/lockManager');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
+
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -127,6 +128,7 @@ router.post('/feed', authenticateToken, async (req, res) => {
         player.inventory[invIndex].quantity -= 1;
         if (player.inventory[invIndex].quantity <= 0) player.inventory.splice(invIndex, 1);
 
+        player.markModified('inventory');
         await player.save();
 
         let msg = `Kamu memberi makan ${pet.nickname || pet.petId.name} dengan ${itemDoc.name}. Hunger +${hungerAdd}, EXP +${expAdd}.`;
@@ -182,6 +184,7 @@ router.post('/heal', authenticateToken, async (req, res) => {
         player.inventory[invIndex].quantity -= 1;
         if (player.inventory[invIndex].quantity <= 0) player.inventory.splice(invIndex, 1);
 
+        player.markModified('inventory');
         await player.save();
 
         const msg = isFull ? `HP pulih sepenuhnya!` : `HP bertambah ${healAmt}.`;

@@ -1,10 +1,11 @@
 
 
 
+const express = require('express');
 const router = express.Router();
 const { resolveItemImage } = require('../../utils/imageResolve');
 const Item = require('../../models/Item');
-const express = require('express');
+
 const Player = require('../../models/Player');
 const LockManager = require('../utils/lockManager');
 const { authenticateToken } = require('../middlewares/auth');
@@ -137,6 +138,7 @@ router.post('/discard', authenticateToken, async (req, res) => {
         }
         player.markModified('inventory');
 
+        player.markModified('inventory');
         await player.save();
 
         res.json({ success: true, message: 'Item berhasil dibuang.' });
@@ -331,6 +333,7 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
             pm.comprehendStartTime = new Date(currentStartTime.getTime() - (hoursToSkip * 60 * 60 * 1000));
             player.markModified('manuals');
 
+            player.markModified('inventory');
             await player.save({ session });
 
             await TransactionLog.create([{
@@ -397,6 +400,7 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             }
             player.markModified('inventory');
 
+            player.markModified('inventory');
             await player.save({ session });
 
             itemName = item.name;
@@ -608,6 +612,7 @@ router.post('/use-law', authenticateToken, async (req, res) => {
             player.markModified('inventory');
 
             player.laws.push(lawToLearn._id);
+            player.markModified('inventory');
             await player.save({ session });
 
             lawName = lawToLearn.name;
@@ -758,6 +763,8 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 }
             }
 
+            player.markModified('manuals');
+            player.markModified('inventory');
             await player.save({ session });
 
             manualName = manualToLearn.name;

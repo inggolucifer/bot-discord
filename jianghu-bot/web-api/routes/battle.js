@@ -1,4 +1,5 @@
 
+
 const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
@@ -203,7 +204,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                 if (!player.currentHp || player.currentHp <= 0) {
                     player.currentHp = Math.floor(maxHp * 0.5);
                 }
-                await player.save();
+                player.markModified('kungfuSkills');
+            await player.save();
             }
         }
 
@@ -533,6 +535,7 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
 
                  player.currentHp = session.player.hp;
                  player.currentQi = session.player.qi;
+                 player.markModified('inventory');
                  await player.save();
              }
         } else if (session.status === 'lost') {
