@@ -182,7 +182,7 @@ export default function BarterPage() {
                             </div>
                         </div>
                     </div>
-                    <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                    <button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50">
                         Kirim Tawaran
                     </button>
                 </form>
@@ -222,9 +222,9 @@ export default function BarterPage() {
                                     </div>
                                     {offer.status === 'pending' && (
                                         <div className="space-x-2">
-                                            {isIncoming && <button onClick={() => handleAction(offer._id, 'accept')} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Terima</button>}
-                                            {isIncoming && <button onClick={() => handleAction(offer._id, 'reject')} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Tolak</button>}
-                                            {isOutgoing && <button onClick={() => handleAction(offer._id, 'cancel')} className="bg-gray-500 hover:bg-gray-600 px-3 py-1 rounded text-sm">Batal</button>}
+                                            {isIncoming && <button onClick={() => handleAction(offer._id, 'accept')} disabled={loading} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm disabled:opacity-50">Terima</button>}
+                                            {isIncoming && <button onClick={() => handleAction(offer._id, 'reject')} disabled={loading} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm disabled:opacity-50">Tolak</button>}
+                                            {isOutgoing && <button onClick={() => handleAction(offer._id, 'cancel')} disabled={loading} className="bg-gray-500 hover:bg-gray-600 px-3 py-1 rounded text-sm disabled:opacity-50">Batal</button>}
                                         </div>
                                     )}
                                 </div>

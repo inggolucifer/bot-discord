@@ -6,26 +6,6 @@ const { REST, Routes } = require('discord.js');
 const globalCommands = [];
 const guildCommands = [];
 
-// Load player commands as global
-const playerCommandsPath = path.join(__dirname, 'commands', 'player');
-if (fs.existsSync(playerCommandsPath)) {
-  const playerCommandFiles = fs.readdirSync(playerCommandsPath).filter((f) => f.endsWith('.js'));
-  for (const file of playerCommandFiles) {
-    const command = require(path.join(playerCommandsPath, file));
-    if (command?.data) globalCommands.push(command.data.toJSON());
-  }
-}
-
-// Load admin commands as guild-specific
-const adminCommandsPath = path.join(__dirname, 'commands', 'admin');
-if (fs.existsSync(adminCommandsPath)) {
-  const adminCommandFiles = fs.readdirSync(adminCommandsPath).filter((f) => f.endsWith('.js'));
-  for (const file of adminCommandFiles) {
-    const command = require(path.join(adminCommandsPath, file));
-    if (command?.data) guildCommands.push(command.data.toJSON());
-  }
-}
-
 if (!process.env.DISCORD_TOKEN) {
     console.warn("[DEPLOY] Skipping deployment: DISCORD_TOKEN is not set.");
     process.exit(0);

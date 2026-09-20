@@ -213,6 +213,7 @@ router.post('/start', authenticateToken, async (req, res) => {
             if (player.inventory[foundInvIndex].quantity <= 0) {
                 player.inventory.splice(foundInvIndex, 1);
             }
+            player.markModified('inventory');
 
             const activeExp = await Exploration.findOne({ discordId: userId, status: 'exploring' }).session(session);
             if (activeExp) throw new CustomError('Kamu sudah memiliki eksplorasi aktif.', 400);
@@ -401,6 +402,7 @@ router.post('/claim', authenticateToken, async (req, res) => {
                                  } else {
                                      player.inventory.push({ itemId: stolenItem.id, quantity: stolenItem.qty });
                                  }
+                                 player.markModified('inventory');
                              }
 
                              if (stolenItem) {
@@ -516,6 +518,9 @@ router.post('/claim', authenticateToken, async (req, res) => {
                     } else {
                         player.inventory.push({ itemId: dropItem.itemId._id || dropItem.itemId, quantity: dropItem.quantity });
                     }
+                }
+                if (drops.items && drops.items.length > 0) {
+                     player.markModified('inventory');
                 }
 
                 // Quest Hook: kill_beast
