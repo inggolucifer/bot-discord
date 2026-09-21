@@ -9,3 +9,15 @@ export const getRarityBorderClass = (rank: string) => {
         default: return 'border-gray-500 hover:border-gray-400';
     }
 };
+
+export const getRarityColor = (rank: string) => {
+    switch (rank) {
+        case 'Uncommon': return '#22c55e';
+        case 'Rare': return '#3b82f6';
+        case 'Epic': return '#a855f7';
+        case 'Legendary': return '#eab308';
+        case 'Mythical': return '#ef4444';
+        case 'Common':
+        default: return '#9ca3af';
+    }
+};
