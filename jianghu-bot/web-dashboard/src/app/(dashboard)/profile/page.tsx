@@ -301,231 +301,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Combat Stats & Equipment */}
-          <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-hidden">
-           {/* Mobile Ordering Fix: Extract the Combat Stats so it's placed after Available Equipment on mobile */}
-           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full items-stretch">
-             {/* Left Column: Equipped Items */}
-             <div className="flex flex-col items-center space-y-6 order-1 lg:order-1 h-full">
-               <h3 className="text-lg font-bold text-[#c5a880] w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
-               <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative flex-shrink-0">
-                 {/* Decorative center line */}
-                 <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
-                 {equipmentSlots.map(slot => {
-                    const equippedId = equipment[slot.id];
-                    const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
-                    const itemData = equippedInvItem?.itemId;
-                    const isMount = slot.id === 'mount';
-
-                    return (
-                      <motion.div
-                         key={slot.id}
-                         whileHover={{ scale: 1.02 }}
-                         className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${isMount ? 'col-span-2 bg-gradient-to-r from-amber-950/20 via-black/70 to-amber-950/20 border-amber-800/40' : ''} ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
-                         onClick={() => equippedId && handleUnequip(slot.id)}
-                      >
-                        {equippedInvItem ? (
-                           <>
-                              <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
-                              <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name ?? 'Unknown'}</div>
-                              <div className="text-[10px] text-gray-500 mt-0.5 capitalize flex items-center gap-1">
-                                {isMount ? (
-                                  <span className="text-emerald-400 font-semibold">
-                                    {itemData?.staminaReduction ? `-${itemData.staminaReduction} STA / Langkah` : itemData?.travelSpeedBonus ? `+${Math.round(itemData.travelSpeedBonus * 100)}% Speed` : 'Efisiensi Stamina'}
-                                  </span>
-                                ) : (
-                                  slot.id
-                                )}
-                              </div>
-                              <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                 <span className="text-xs font-bold text-red-100">Lepas {slot.label}</span>
-                              </div>
-                           </>
-                        ) : (
-                           <>
-                              <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
-                              <div className="text-xs text-gray-500 font-bold uppercase tracking-wide">{isMount ? '🐎 Slot Tunggangan' : slot.label}</div>
-                              {isMount && <div className="text-[9px] text-gray-600">Mengurangi stamina langkah</div>}
-                           </>
-                        )}
-                      </motion.div>
-                    );
-                  })}
-               </div>
-
-               {/* Desktop Only Stats Component to place it under Equipped */}
-
-               <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto hidden lg:block">
-                 <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
-                 <div className="grid grid-cols-1 gap-y-3">
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">HP</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">ATK</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">DEF</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">SPD</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                 </div>
-                 <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
-                    <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
-                 </p>
-               </div>
-
-             </div>
-
-             {/* Right Column: Inventory to Equip */}
-             <div className="w-full flex flex-col order-2 lg:order-2 h-full border-b border-[#333] lg:border-none pb-6 lg:pb-0">
-                <h3 className="text-lg font-bold text-[#c5a880] text-center w-full mb-6 border-b border-[#333] pb-2 flex justify-between items-center px-2">
-                   <span>Available Equipment</span>
-                   <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
-                </h3>
-
-                <div className="flex-1 overflow-y-auto max-h-[600px] lg:max-h-full custom-scrollbar pr-2 space-y-3 pb-4 h-full min-h-[280px]">
-                   {equipableItems.length === 0 ? (
-                      <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm text-center py-12 px-4 border-2 border-dashed border-[#333] rounded-lg bg-black/20">
-                         <Backpack size={32} className="mb-3 text-[#555]" />
-                         <p className="mb-2">Tidak ada equipment yang bisa dipakai.</p>
-                         <Link href="/inventory" className="text-[#c5a880] hover:text-amber-200 underline underline-offset-2 decoration-[#c5a880]/40 transition-colors">Buka Inventory</Link>
-                      </div>
-                   ) : (
-                      equipableItems.map((inv: any) => {
-                          const slotKey = inv.itemId?.category === 'cloth' ? 'armor'
-                            : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
-                            : inv.itemId?.category;
-                          const equippedId = equipment[slotKey];
-                          const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
-                          const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
-
-                          return (
-                             <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
-                                <motion.div
-                                   whileHover={{ x: 4 }}
-                                   className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
-                                   onClick={() => {
-                                      if (!kungfuCheck.allowed) {
-                                         toast.show({ message: kungfuCheck.reason ?? 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
-                                         return;
-                                      }
-                                      handleEquip(inv._id);
-                                   }}
-                                >
-                                   <div className="flex items-center gap-3 overflow-hidden">
-                                      <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
-                                         {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : (slotKey === 'mount' ? '🐎' : '📦')}
-                                      </div>
-                                      <div className="min-w-0">
-                                         <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
-                                         <p className="text-xs text-gray-500 capitalize flex items-center gap-1.5">
-                                            <span>{slotKey}</span>
-                                            {inv.itemId?.category === 'mount' && (
-                                               <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-1 rounded border border-emerald-800/40">
-                                                  {inv.itemId?.staminaReduction ? `-${inv.itemId.staminaReduction} Stamina` : 'Hemat Stamina'}
-                                               </span>
-                                            )}
-                                         </p>
-                                         {!kungfuCheck.allowed && (
-                                            <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
-                                               <Lock size={10} className="shrink-0" />
-                                               <span className="truncate">Butuh {kungfuCheck.skillName ?? kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
-                                            </div>
-                                         )}
-                                      </div>
-                                   </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
-                                     <button
-                                        disabled={!kungfuCheck.allowed || equipMutation.isPending || unequipMutation.isPending}
-                                        className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1 disabled:opacity-50`}
-                                     >
-                                        {!kungfuCheck.allowed && <Lock size={12} />}
-                                        {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
-                                     </button>
-                                  </div>
-                               </motion.div>
-                            </StatDeltaHover>
-                         );
-                      })
-                   )}
-                </div>
-             </div>
-
-             {/* Mobile Stats Component (Order 3) */}
-
-               <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto block lg:hidden order-3 mt-4">
-                 <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
-                 <div className="grid grid-cols-1 gap-y-3">
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">HP</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">ATK</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">DEF</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
-                       <span className="text-gray-400 font-bold w-12">SPD</span>
-                       <div className="flex flex-col items-end text-sm">
-                          <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
-                          <span className="text-[10px] text-gray-500">
-                             (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
-                          </span>
-                       </div>
-                    </div>
-                 </div>
-                 <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
-                    <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
-                 </p>
-               </div>
-
-</div>
-          </div>
         </div>
 
         {/* Right Column: Active Buffs, Professions, Farming Summary, Available Equip (Span 6) */}
@@ -635,6 +410,235 @@ export default function ProfilePage() {
 
         </div>
 
+      </div>
+
+      {/* Full-width Equipment Section */}
+      <div className="w-full mt-6">
+        {/* Combat Stats & Equipment */}
+        <div className="bg-[#1a1a1a] border border-[#c5a880]/30 rounded-lg p-6 shadow-lg flex flex-col flex-1 h-full max-h-[850px] overflow-hidden">
+         {/* Mobile Ordering Fix: Extract the Combat Stats so it's placed after Available Equipment on mobile */}
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full items-stretch">
+           {/* Left Column: Equipped Items */}
+           <div className="flex flex-col items-center space-y-6 order-1 lg:order-1 h-full">
+             <h3 className="text-lg font-bold text-[#c5a880] w-full text-center border-b border-[#333] pb-2">Equipped Items</h3>
+             <div className="grid grid-cols-2 gap-6 w-full max-w-xs relative flex-shrink-0">
+               {/* Decorative center line */}
+               <div className="absolute inset-y-0 left-1/2 w-px bg-[#333] -translate-x-1/2"></div>
+               {equipmentSlots.map(slot => {
+                  const equippedId = equipment[slot.id];
+                  const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
+                  const itemData = equippedInvItem?.itemId;
+                  const isMount = slot.id === 'mount';
+
+                  return (
+                    <motion.div
+                       key={slot.id}
+                       whileHover={{ scale: 1.02 }}
+                       className={`relative bg-black/60 border-2 rounded-lg p-3 h-24 flex flex-col items-center justify-center cursor-pointer group transition-colors ${isMount ? 'col-span-2 bg-gradient-to-r from-amber-950/20 via-black/70 to-amber-950/20 border-amber-800/40' : ''} ${equippedInvItem ? getRarityBorderClass(itemData?.rank) : 'border-[#444] hover:border-[#c5a880]/70'}`}
+                       onClick={() => equippedId && handleUnequip(slot.id)}
+                    >
+                      {equippedInvItem ? (
+                         <>
+                            <div className="text-2xl mb-1">{itemData?.imageUrl ? <img src={itemData.imageUrl} alt={itemData.name} className="w-8 h-8 object-contain"/> : slot.icon}</div>
+                            <div className="text-xs text-center text-gray-300 font-medium truncate w-full px-1">{itemData?.name ?? 'Unknown'}</div>
+                            <div className="text-[10px] text-gray-500 mt-0.5 capitalize flex items-center gap-1">
+                              {isMount ? (
+                                <span className="text-emerald-400 font-semibold">
+                                  {itemData?.staminaReduction ? `-${itemData.staminaReduction} STA / Langkah` : itemData?.travelSpeedBonus ? `+${Math.round(itemData.travelSpeedBonus * 100)}% Speed` : 'Efisiensi Stamina'}
+                                </span>
+                              ) : (
+                                slot.id
+                              )}
+                            </div>
+                            <div className="absolute inset-0 bg-red-900/80 rounded-lg opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                               <span className="text-xs font-bold text-red-100">Lepas {slot.label}</span>
+                            </div>
+                         </>
+                      ) : (
+                         <>
+                            <div className="text-3xl opacity-20 mb-1">{slot.icon}</div>
+                            <div className="text-xs text-gray-500 font-bold uppercase tracking-wide">{isMount ? '🐎 Slot Tunggangan' : slot.label}</div>
+                            {isMount && <div className="text-[9px] text-gray-600">Mengurangi stamina langkah</div>}
+                         </>
+                      )}
+                    </motion.div>
+                  );
+                })}
+             </div>
+
+             {/* Desktop Only Stats Component to place it under Equipped */}
+
+             <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto hidden lg:block">
+               <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
+               <div className="grid grid-cols-1 gap-y-3">
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">HP</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">ATK</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">DEF</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">SPD</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
+                  <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
+               </p>
+             </div>
+
+           </div>
+
+           {/* Right Column: Inventory to Equip */}
+           <div className="w-full flex flex-col order-2 lg:order-2 h-full border-b border-[#333] lg:border-none pb-6 lg:pb-0">
+              <h3 className="text-lg font-bold text-[#c5a880] text-center w-full mb-6 border-b border-[#333] pb-2 flex justify-between items-center px-2">
+                 <span>Available Equipment</span>
+                 <span className="text-xs bg-black/50 px-2 py-1 rounded text-gray-400 border border-[#333]">{equipableItems.length} items</span>
+              </h3>
+
+              <div className="flex-1 overflow-y-auto max-h-[600px] lg:max-h-full custom-scrollbar pr-2 space-y-3 pb-4 h-full min-h-[280px]">
+                 {equipableItems.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-gray-500 text-sm text-center py-12 px-4 border-2 border-dashed border-[#333] rounded-lg bg-black/20">
+                       <Backpack size={32} className="mb-3 text-[#555]" />
+                       <p className="mb-2">Tidak ada equipment yang bisa dipakai.</p>
+                       <Link href="/inventory" className="text-[#c5a880] hover:text-amber-200 underline underline-offset-2 decoration-[#c5a880]/40 transition-colors">Buka Inventory</Link>
+                    </div>
+                 ) : (
+                    equipableItems.map((inv: any) => {
+                        const slotKey = inv.itemId?.category === 'cloth' ? 'armor'
+                          : inv.itemId?.category === 'accessories' ? (inv.itemId?.capacityType === 'horse' ? 'mount' : 'accessory')
+                          : inv.itemId?.category;
+                        const equippedId = equipment[slotKey];
+                        const equippedInvItem = equippedId ? profile.inventory?.find((i:any) => String(i._id) === String(equippedId)) : null;
+                        const kungfuCheck = checkClientKungfuRequirement(profile.kungfuSkills, inv.itemId);
+
+                        return (
+                           <StatDeltaHover key={inv._id} itemHovered={inv} equippedItem={equippedInvItem}>
+                              <motion.div
+                                 whileHover={{ x: 4 }}
+                                 className={`bg-black/40 border-l-4 rounded p-3 transition-colors flex justify-between items-center group cursor-pointer ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500/70 opacity-80'}`}
+                                 onClick={() => {
+                                    if (!kungfuCheck.allowed) {
+                                       toast.show({ message: kungfuCheck.reason ?? 'Syarat kemahiran kungfu belum terpenuhi.', type: 'error' });
+                                       return;
+                                    }
+                                    handleEquip(inv._id);
+                                 }}
+                              >
+                                 <div className="flex items-center gap-3 overflow-hidden">
+                                    <div className={`w-10 h-10 bg-black rounded border-2 flex items-center justify-center text-xl shrink-0 ${kungfuCheck.allowed ? getRarityBorderClass(inv.itemId?.rank) : 'border-red-500'}`}>
+                                       {inv.itemId?.imageUrl ? <img src={inv.itemId.imageUrl} alt="" className="w-8 h-8 object-contain"/> : (slotKey === 'mount' ? '🐎' : '📦')}
+                                    </div>
+                                    <div className="min-w-0">
+                                       <p className="text-sm font-bold text-gray-200 truncate">{inv.itemId?.name}</p>
+                                       <p className="text-xs text-gray-500 capitalize flex items-center gap-1.5">
+                                          <span>{slotKey}</span>
+                                          {inv.itemId?.category === 'mount' && (
+                                             <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-1 rounded border border-emerald-800/40">
+                                                {inv.itemId?.staminaReduction ? `-${inv.itemId.staminaReduction} Stamina` : 'Hemat Stamina'}
+                                             </span>
+                                          )}
+                                       </p>
+                                       {!kungfuCheck.allowed && (
+                                          <div className="text-[10px] text-red-400 font-semibold flex items-center gap-1 mt-0.5">
+                                             <Lock size={10} className="shrink-0" />
+                                             <span className="truncate">Butuh {kungfuCheck.skillName ?? kungfuCheck.requiredSkill} Lv.{kungfuCheck.requiredLevel}</span>
+                                          </div>
+                                       )}
+                                    </div>
+                                 </div>
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+                                   <button
+                                      disabled={!kungfuCheck.allowed || equipMutation.isPending || unequipMutation.isPending}
+                                      className={`${kungfuCheck.allowed ? 'bg-[#c5a880] text-black hover:bg-[#d8c09d]' : 'bg-red-900/60 text-red-200 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded flex items-center gap-1 disabled:opacity-50`}
+                                   >
+                                      {!kungfuCheck.allowed && <Lock size={12} />}
+                                      {kungfuCheck.allowed ? 'Equip' : 'Terkunci'}
+                                   </button>
+                                </div>
+                             </motion.div>
+                          </StatDeltaHover>
+                       );
+                    })
+                 )}
+              </div>
+           </div>
+
+           {/* Mobile Stats Component (Order 3) */}
+
+             <div className="w-full bg-black/40 p-4 rounded border border-[#333] flex-shrink-0 mt-auto block lg:hidden order-3 mt-4">
+               <h3 className="text-sm text-gray-400 uppercase font-bold tracking-wider mb-3 border-b border-[#333] pb-2">Combat Stats</h3>
+               <div className="grid grid-cols-1 gap-y-3">
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">HP</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-green-400 text-lg">{Math.floor(Number(combatStats.hp ?? combatStats.maxHp ?? combatStats.currentHp ?? profile.currentHp ?? combatStats._base?.hp ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.hp ?? combatStats.hp ?? 0))} {combatStats._equip?.hp ? `+ Equip ${Math.floor(Number(combatStats._equip.hp))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">ATK</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-red-400 text-lg">{Math.floor(Number(combatStats.atk ?? combatStats._base?.atk ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.atk ?? combatStats.atk ?? 0))} {combatStats._equip?.atk ? `+ Equip ${Math.floor(Number(combatStats._equip.atk))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">DEF</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-blue-400 text-lg">{Math.floor(Number(combatStats.def ?? combatStats._base?.def ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.def ?? combatStats.def ?? 0))} {combatStats._equip?.def ? `+ Equip ${Math.floor(Number(combatStats._equip.def))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center bg-gray-800/30 p-2 rounded">
+                     <span className="text-gray-400 font-bold w-12">SPD</span>
+                     <div className="flex flex-col items-end text-sm">
+                        <span className="font-bold text-yellow-400 text-lg">{Math.floor(Number(combatStats.spd ?? combatStats._base?.spd ?? 0)).toLocaleString()}</span>
+                        <span className="text-[10px] text-gray-500">
+                           (Base {Math.floor(Number(combatStats._base?.spd ?? combatStats.spd ?? 0))} {combatStats._equip?.spd ? `+ Equip ${Math.floor(Number(combatStats._equip.spd))}` : ''})
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <p className="text-[10px] text-gray-500 mt-3 pt-2 border-t border-[#333] flex items-center gap-1">
+                  <Info size={12}/> Sudah termasuk buff, equip, dan kultivasi.
+               </p>
+             </div>
+
+</div>
+        </div>
       </div>
 
       {/* Modal Lembar Status Pendekar */}
