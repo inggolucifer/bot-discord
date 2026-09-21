@@ -1,7 +1,8 @@
 
 const express = require('express');
-const { getRealmIndex } = require('../../utils/cultivation');
 const router = express.Router();
+const { getLevelCap } = require('../../config/leveling');
+const { getRealmIndex } = require('../../utils/cultivation');
 const mongoose = require('mongoose');
 const Player = require('../../models/Player');
 const { authenticateToken } = require('../middlewares/auth');
