@@ -108,7 +108,7 @@ export default function CharacterPage() {
     return isValidCategory && !isAlreadyEquipped;
   }) ?? [];
 
-  const maxManualSlots = 5 + Math.floor((profile.kungfuSkills?.core || 1) / 5);
+  const maxManualSlots = 5 + Math.floor((profile.kungfuSkills?.core || 0) / 5);
 
   const unlearnMutation = useMutation({
     mutationFn: async (manualId: string) => {
