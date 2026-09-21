@@ -8,7 +8,16 @@ function getRequiredExpForLevel(level) {
     return Math.floor(level * 100 + Math.pow(level, 2) * 50);
 }
 
+/**
+ * Calculates the maximum character level based on the realm index.
+ * Formula: 20 + (20 * realmIndex)
+ */
+function getLevelCap(realmIndex) {
+    return 20 + (20 * (Number(realmIndex) || 0));
+}
+
 module.exports = {
     POINTS_PER_LEVEL,
-    getRequiredExpForLevel
+    getRequiredExpForLevel,
+    getLevelCap
 };

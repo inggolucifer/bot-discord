@@ -301,3 +301,39 @@ Sebelum menyelesaikan pekerjaan apa pun, Anda **WAJIB** memverifikasi:
 Discord bot process is NOT required for gameplay.
 Slash commands are deprecated (redirect to website).
 Player database may be wiped for fresh season — no Discord data migration.
+
+### 3.11. Player Progression Contract (Unified Pipeline)
+Sebagai standarisasi pertumbuhan karakter (kultivasi & beladiri), backend memberlakukan batasan dan perhitungan stat server-authoritative terpusat (menghindari duplikasi kalkulasi di frontend):
+
+1. **Aturan Batas Level Karakter (Level Cap)**:
+   - Rumus: \`levelCap(realmIndex) = 20 + (20 * realmIndex)\`
+   - Pada saat \`player.level\` mencapai batas, pertumbuhan level **dihentikan** (freeze), namun \`player.exp\` terus terakumulasi (banked EXP). Level cap baru hanya terbuka apabila pemain sukses melakukan breakthrough ke ranah (\`realm\`) berikutnya.
+
+2. **Pemetaan Talenta (Talent) ke Atribut Combat**:
+   - \`STR\`: +5 ATK dan +5 DEF
+   - \`AGI\`: +5 SPD
+   - \`STA\`: +25 maxHp
+   - \`POW\`: +25 maxMp
+   - Perhitungan stats wajib dipusatkan di \`statCalculator.js (getComputedStats)\`.
+
+3. **Standarisasi Canonical Combat Sheet DTO**:
+   - DTO (\`combatStats\`) yang diekspos API **tidak memuat** atribut non-tempur (seperti \`travelSpeed\`) serta label redundan seperti \`Agility\`. Seluruh komputasi kelincahan sudah masuk dan direpresentasikan secara seragam sebagai \`SPD\`.
+   - Field standar yang harus ada: \`hp\`, \`maxHp\`, \`mp\`, \`maxMp\`, \`atk\`, \`def\`, \`spd\`, \`critHitRate\`, \`critDmgRate\`, \`comboRate\`.
+
+4. **Sistem Hooks (Triggers) Kungfu Otomatis**:
+   - `core` XP: Bertambah secara otomatis (+1 poin XP) **setiap kali** skill kungfu lain mendapatkan poin XP/level, diregulasi terpusat pada utilitas `awardKungfuExp()`.
+   - `forging` XP: Bertambah secara otomatis (misal: +10 poin XP) **setiap kali** pembuatan item / senjata berhasil dilakukan di fasiltas crafting (`inventory.js` atau grid-simulation).
+   - `stealing` XP: Terdapat di alur combat (`simulateBattle.js`), dieksekusi bila `stealSuccess` memicu `awardKungfuExp('stealing', ...)` pada akhir battle.
+
+5. **Syarat Praktik Kitab Manual (Manual Ranking Gates)**:
+   - Kitab beladiri esoterik (rank tinggi) divalidasi dengan threshold *Setiap kelipatan 20 Skill Point* pada skill kungfu senjatanya. Contoh: Mempelajari kitab pedang ranking 3 memerlukan setidaknya 60 XP Sword (3 * 20) sebelum bisa dikuasai.
+
+6. **Combat Conditions (Status Effects) Dictionary**:
+   - `poison`: Target loses HP equal to \`5% * severity\` of their max HP upon performing an offensive action. Cleansed at end of combat or via specific cleanse abilities.
+   - `injury`: Target's \`ATK\` and \`DEF\` are reduced by \`3% * severity\`, and \`maxMP\` is reduced by \`2% * severity\`. Severity naturally decays by 0.25 per turn. Applied when taking massive single hits (\`>= 15% Max HP\`).
+   - `bleed`: Target loses HP equal to \`3% * severity\` of their max HP per turn. Severity naturally decays by 0.5 per turn.
+   - `burn`: Target loses HP equal to \`4% + (1% * severity)\` of their max HP per turn. Severity INCREASES by 1 each turn. At severity >= 5, target is "incinerated" (healing reduced by 50%).
+   - `intox`: Increases miss rate by \`10% * severity\`. Naturally decays by 1 per turn. Players with high Wine Art (\`wineArt\`) gain damage bonuses while intoxicated.
+   - `frozen`: Target skips their turn. Persists for \`remainingTurns\` duration.
+   - `knockback`: Target's action is interrupted, skips current turn, and immediately clears the condition.
+   - `psychosis`: Target has a 20% chance to miss entirely or hit themselves.

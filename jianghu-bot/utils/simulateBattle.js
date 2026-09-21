@@ -352,7 +352,7 @@ function simulateBattle(challenger, opponent, options = {}) {
 
         // Calculate hits (Combo)
         let hits = 1;
-        let comboChance = atkStats.comboRate || BASE_COMBO_RATE;
+        let comboChance = atkStats.comboRate !== undefined ? (atkStats.comboRate <= 1 ? atkStats.comboRate : atkStats.comboRate / 100) : BASE_COMBO_RATE;
         if (Math.random() < comboChance) {
             hits = 2;
         }

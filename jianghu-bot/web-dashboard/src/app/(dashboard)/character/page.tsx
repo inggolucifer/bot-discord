@@ -286,6 +286,7 @@ export default function CharacterPage() {
                 <StatRow label="ATK" color="text-red-400" current={combatStats.atk ?? combatStats._base?.atk ?? 0} base={combatStats._base?.atk ?? combatStats.atk ?? 0} equip={combatStats._equip?.atk} />
                 <StatRow label="DEF" color="text-blue-400" current={combatStats.def ?? combatStats._base?.def ?? 0} base={combatStats._base?.def ?? combatStats.def ?? 0} equip={combatStats._equip?.def} />
                 <StatRow label="SPD" color="text-yellow-400" current={combatStats.spd ?? combatStats._base?.spd ?? 0} base={combatStats._base?.spd ?? combatStats.spd ?? 0} equip={combatStats._equip?.spd} />
+                <StatRow label="COMBO" color="text-amber-400" current={(combatStats.comboRate || 5) + '%'} base={(combatStats._base?.comboRate || 5) + '%'} />
              </div>
              <p className="text-[10px] text-stone-500 mt-4 pt-3 border-t border-[#3b3322] flex items-center gap-1.5">
                 <Info size={14} className="text-stone-400"/> Status akhir: Base + Equip + Buff.

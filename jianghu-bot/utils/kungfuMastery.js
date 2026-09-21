@@ -347,6 +347,12 @@ function awardKungfuExp(player, skill, baseExp, options = {}) {
 
     const newExp = oldExp + expToAward;
     player.kungfuSkills[skill] = newExp;
+
+    // Core hook: award 1 XP to 'core' when any other skill gains XP
+    if (skill !== 'core' && expToAward > 0) {
+        player.kungfuSkills['core'] = (player.kungfuSkills['core'] || 0) + 1;
+    }
+
     if (typeof player.markModified === 'function') {
         player.markModified('kungfuSkills');
     }
