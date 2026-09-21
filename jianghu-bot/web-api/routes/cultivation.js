@@ -133,6 +133,12 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 throw new CustomError('Qi kamu belum mencukupi untuk menerobos batas!', 400);
             }
 
+            const { getLevelCap } = require('../../config/leveling');
+            const currentLevelCap = getLevelCap(calcResult.realmIdx);
+            if ((player.level || 1) < currentLevelCap) {
+                throw new CustomError(`Level karaktermu belum maksimal. Capai Level ${currentLevelCap} sebelum menerobos batas!`, 400);
+            }
+
             const realmData = SYSTEM_REALMS[calcResult.realmIdx];
 
             if (player.systemCultivation.realm === 'Fondasi Fana (Mortal Foundation)' && player.systemCultivation.stage === 9) {

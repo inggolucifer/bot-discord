@@ -69,10 +69,10 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const def = Math.floor(Number(combat.def) || 10);
   const crit = Math.floor(Number(combat.critRate !== undefined ? combat.critRate : (ext.critRate || 5)));
   const critRes = Math.floor(Number(combat.critRes !== undefined ? combat.critRes : (ext.critResist || 0)));
-  const agility = Math.floor(Number(combat.agility !== undefined ? combat.agility : (ext.agility || combat.spd || 10)));
+
   const critDmg = Math.floor(Number(combat.critDmg !== undefined ? combat.critDmg : (ext.critDmg || 150)));
   const critDr = Math.floor(Number(combat.critDr !== undefined ? combat.critDr : (ext.critDmgReduce || 0)));
-  const travelSpeed = Math.floor(Number(combat.travelSpeed !== undefined ? combat.travelSpeed : (ext.travelSpeed || 100)));
+
   const martialRes = Math.floor(Number(combat.martialRes !== undefined ? combat.martialRes : (ext.martialRes || 0)));
   const spiritualRes = Math.floor(Number(combat.spiritualRes !== undefined ? combat.spiritualRes : (ext.spiritualRes || 0)));
 
@@ -83,15 +83,23 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const fistSkill = getKungfuLevelFromExp(kungfu.fist || 0);
   const palmSkill = getKungfuLevelFromExp(kungfu.special || 0);
   const fingerSkill = getKungfuLevelFromExp(kungfu.finger || 0);
+  const qimenSkill = getKungfuLevelFromExp(kungfu.qimen || 0);
+  const melodySkill = getKungfuLevelFromExp(kungfu.melody || 0);
+  const healingSkill = getKungfuLevelFromExp(kungfu.healing || 0);
+  const wineArtSkill = getKungfuLevelFromExp(kungfu.wineArt || 0);
+  const hiddenWeaponSkill = getKungfuLevelFromExp(kungfu.hiddenWeapon || 0);
+  const stealingSkill = getKungfuLevelFromExp(kungfu.stealing || 0);
+  const coreSkill = getKungfuLevelFromExp(kungfu.core || 0);
+  const forgingSkill = getKungfuLevelFromExp(kungfu.forging || 0);
 
   // 4. Spiritual Roots (Strictly Integers - Semua Player Start dari 0)
   const roots = {
-    fire: Math.floor(Number(rawRoots.fire) === 10 ? 0 : (Number(rawRoots.fire) || 0)),
-    water: Math.floor(Number(rawRoots.water) === 10 ? 0 : (Number(rawRoots.water) || 0)),
-    lightning: Math.floor(Number(rawRoots.lightning) === 10 ? 0 : (Number(rawRoots.lightning) || 0)),
-    wind: Math.floor(Number(rawRoots.wind) === 10 ? 0 : (Number(rawRoots.wind) || 0)),
-    earth: Math.floor(Number(rawRoots.earth) === 10 ? 0 : (Number(rawRoots.earth) || 0)),
-    wood: Math.floor(Number(rawRoots.wood) === 10 ? 0 : (Number(rawRoots.wood) || 0))
+    fire: Math.floor(Number(rawRoots.fire) || 0),
+    water: Math.floor(Number(rawRoots.water) || 0),
+    lightning: Math.floor(Number(rawRoots.lightning) || 0),
+    wind: Math.floor(Number(rawRoots.wind) || 0),
+    earth: Math.floor(Number(rawRoots.earth) || 0),
+    wood: Math.floor(Number(rawRoots.wood) || 0)
   };
 
   // 5. Artisanship & Kemahiran Profesi (Strictly Integers - Sistem Terpadu 1-to-1)
@@ -176,12 +184,16 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
                 <span className="font-semibold text-orange-300">{crit}</span>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400">🎯 COMBO</span>
+                <span className="font-semibold text-amber-300">{combat.comboRate || 5}%</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
                 <span className="text-stone-400">🔰 CRIT RES</span>
                 <span className="font-semibold text-indigo-300">{critRes}</span>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-                <span className="text-stone-400">🏃 Agility</span>
-                <span className="font-semibold text-sky-300">{agility}</span>
+                <span className="text-stone-400">🏃 SPD</span>
+                <span className="font-semibold text-sky-300">{combat.spd ?? ext.spd ?? 0}</span>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
                 <span className="text-stone-400">⚡ CRIT DMG</span>
@@ -191,10 +203,7 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
                 <span className="text-stone-400">🛡️ CRIT DR</span>
                 <span className="font-semibold text-slate-300">{critDr}%</span>
               </div>
-              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-                <span className="text-stone-400">👟 Travel Speed</span>
-                <span className="font-semibold text-amber-200">{travelSpeed}</span>
-              </div>
+
               <div className="flex justify-between items-center py-0.5">
                 <span className="text-stone-400">🔮 Martial/Spir RES</span>
                 <span className="font-semibold text-amber-200">{martialRes} / {spiritualRes}</span>
@@ -228,12 +237,44 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
                 <span className="font-semibold text-amber-200">{fistSkill}</span>
               </div>
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
-                <span className="text-stone-400 flex items-center gap-1">🖐️ Palm (Telapak)</span>
-                <span className="font-semibold text-amber-200">{palmSkill}</span>
-              </div>
-              <div className="flex justify-between items-center py-0.5">
                 <span className="text-stone-400 flex items-center gap-1">👆 Finger (Totokan)</span>
                 <span className="font-semibold text-amber-200">{fingerSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🌀 Special (Palm/Lainnya)</span>
+                <span className="font-semibold text-amber-200">{palmSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">⚒️ Forging</span>
+                <span className="font-semibold text-amber-200">{forgingSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">☯️ Qimen</span>
+                <span className="font-semibold text-amber-200">{qimenSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🎵 Melody</span>
+                <span className="font-semibold text-amber-200">{melodySkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">💊 Healing</span>
+                <span className="font-semibold text-amber-200">{healingSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🍷 Wine Art</span>
+                <span className="font-semibold text-amber-200">{wineArtSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🎯 Hidden Weapon</span>
+                <span className="font-semibold text-amber-200">{hiddenWeaponSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+                <span className="text-stone-400 flex items-center gap-1">🕵️ Stealing</span>
+                <span className="font-semibold text-amber-200">{stealingSkill}</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5">
+                <span className="text-stone-400 flex items-center gap-1">🧠 Core</span>
+                <span className="font-semibold text-amber-200">{coreSkill}</span>
               </div>
             </div>
           </div>

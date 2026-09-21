@@ -26,7 +26,7 @@ const { syncPlayerCultivation } = require('../../utils/cultivation');
 const WeatherConfig = require('../../models/WeatherConfig');
 const { awardKungfuExp } = require('../../utils/kungfuMastery');
 const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
-const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+const { POINTS_PER_LEVEL, getRequiredExpForLevel, getLevelCap } = require('../../config/leveling');
 const { TALENT_EFFECTS } = require('../../config/talentEffects');
 
 
@@ -450,8 +450,9 @@ router.post('/claim', authenticateToken, async (req, res) => {
                     }
                     player.exp = (player.exp || 0) + expGain;
 
+                    const currentLevelCap = getLevelCap(playerRealmIdx);
                     let requiredExp = getRequiredExpForLevel(player.level || 1);
-                    while (player.exp >= requiredExp && (player.level || 1) < 100) {
+                    while (player.exp >= requiredExp && (player.level || 1) < currentLevelCap) {
                          player.exp -= requiredExp;
                          player.level = (player.level || 1) + 1;
                          player.unallocatedTalentPoints = (player.unallocatedTalentPoints || 0) + POINTS_PER_LEVEL;
