@@ -1,5 +1,6 @@
 
 const express = require('express');
+const { getRealmIndex } = require('../../utils/cultivation');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Player = require('../../models/Player');
@@ -29,7 +30,6 @@ const { calculateEnergy, MAX_ENERGY } = require('../../utils/energyManager');
 const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventoryWeight } = require('../../utils/inventoryWeight');
 const Law = require('../../models/Law');
 const { escapeRegex } = require('../../utils/escapeRegex');
-const { getRealmIndex } = require('../../utils/cultivation');
 const { isUnderConstruction, calculateProgress } = require('../../utils/crafting');
 
 function formatCurrencyString(currencyObj) {
@@ -235,6 +235,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
                 interests: (player.interests && player.interests.length > 0) ? player.interests : ['Bambooware', 'Flute', 'Wine'],
                 race: player.race || 'Human',
                 reputation: player.reputation !== undefined ? player.reputation : 100,
+                levelCap: getLevelCap(getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)')),
                 reputationTitle: player.reputationTitle || 'Novice Cultivator',
                 energy: { current: currentEnergy, lastUpdated: player.energy ? player.energy.lastUpdated : new Date() },
                 maxEnergy: (typeof MAX_ENERGY === 'number' ? MAX_ENERGY : 100),
@@ -1981,6 +1982,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
             data: {
                 level: player.level,
                 exp: player.exp,
+                levelCap: getLevelCap(getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)')),
                 talents: player.talents,
                 unallocatedTalentPoints: player.unallocatedTalentPoints,
                 kungfuSkills: player.kungfuSkills,

@@ -33,7 +33,7 @@ const { simulateBattle } = require('../../utils/simulateBattle');
 const { syncPlayerCultivation } = require('../../utils/cultivation');
 const { awardKungfuExp } = require('../../utils/kungfuMastery');
 const { applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
-const { POINTS_PER_LEVEL, getRequiredExpForLevel } = require('../../config/leveling');
+const { POINTS_PER_LEVEL, getRequiredExpForLevel, getLevelCap } = require('../../config/leveling');
 const { TALENT_EFFECTS } = require('../../config/talentEffects');
 const { evaluateQuestProgress } = require('../../utils/questProgress');
 const Quest = require('../../models/Quest');
@@ -651,8 +651,10 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
                     }
                     player.exp = (player.exp || 0) + expGain;
 
+                    const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+                    const currentLevelCap = getLevelCap(realmIdx);
                     let requiredExp = getRequiredExpForLevel(player.level || 1);
-                    while (player.exp >= requiredExp && (player.level || 1) < 100) {
+                    while (player.exp >= requiredExp && (player.level || 1) < currentLevelCap) {
                          player.exp -= requiredExp;
                          player.level = (player.level || 1) + 1;
                          player.unallocatedTalentPoints = (player.unallocatedTalentPoints || 0) + POINTS_PER_LEVEL;

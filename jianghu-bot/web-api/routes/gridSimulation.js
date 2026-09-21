@@ -205,6 +205,15 @@ router.post('/profession/craft/smith', async (req, res) => {
     const result = await craftingService.craftSmithing(discordId, guildId, recipe);
     if (!result.ok) return res.status(400).json(result);
 
+    // Add forging XP hook
+    const Player = require('../../models/Player');
+    const { awardKungfuExp } = require('../../utils/kungfuMastery');
+    const player = await Player.findOne({ discordId, guildId });
+    if (player) {
+        awardKungfuExp(player, 'forging', 10);
+        await player.save();
+    }
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });

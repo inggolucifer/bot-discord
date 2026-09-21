@@ -67,7 +67,14 @@ export function Phase10Stats() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-white">Level {level || 1}</h3>
+                            <h3 className="font-semibold text-white flex gap-2 items-center">
+                                Level {level || 1}
+                                {level >= (statsData?.levelCap || 999) && (
+                                    <span className="text-[10px] bg-red-900/50 text-red-300 px-2 py-0.5 rounded border border-red-900">
+                                        Max Ranah — siapkan terobosan
+                                    </span>
+                                )}
+                            </h3>
                             <span className="text-slate-400 text-xs">EXP: {exp?.toLocaleString() || 0}</span>
                         </div>
 
@@ -79,6 +86,7 @@ export function Phase10Stats() {
                             <div>DEF: <span className="text-blue-400 font-bold">{Math.floor(Number(computedStats.def) || 0)}</span></div>
                             <div>SPD: <span className="text-yellow-400 font-bold">{Math.floor(Number(computedStats.spd) || 0)}</span></div>
                             <div>CRIT: <span className="text-amber-400 font-bold">{Math.floor((Number(computedStats.critHitRate) || 0.05) * 100)}%</span></div>
+                            <div>COMBO: <span className="text-amber-400 font-bold">{Math.floor(Number(computedStats.comboRate) || 5)}%</span></div>
                         </div>
                     </div>
 
@@ -88,8 +96,17 @@ export function Phase10Stats() {
                         </div>
 
                         <div className="space-y-1.5">
-                            {['str', 'agi', 'sta', 'pow', 'int', 'mor'].map((stat) => (
-                                <div key={stat} className="flex items-center justify-between bg-slate-800/70 p-2 rounded border border-slate-700/50">
+                            {['str', 'agi', 'sta', 'pow', 'int', 'mor'].map((stat) => {
+                                const tooltips: Record<string, string> = {
+                                    str: '+5 ATK & +5 DEF per point',
+                                    agi: '+5 SPD per point',
+                                    sta: '+25 Max HP per point',
+                                    pow: '+25 Max MP per point',
+                                    int: 'Mempercepat XP latihan',
+                                    mor: 'Mempengaruhi event dan faksi'
+                                };
+                                return (
+                                <div key={stat} title={tooltips[stat]} className="flex items-center justify-between bg-slate-800/70 p-2 rounded border border-slate-700/50 cursor-help">
                                     <span className="uppercase text-slate-300 text-xs font-bold w-12">{stat}</span>
                                     <span className="text-white text-xs font-bold w-8 text-center">{talents?.[stat] || 5}</span>
 
@@ -113,7 +130,8 @@ export function Phase10Stats() {
                                         </div>
                                     )}
                                 </div>
-                            ))}
+                                );
+                            })}
                         </div>
                         {Object.values(allocatePoints).reduce((a, b) => a + b, 0) > 0 && (
                             <button

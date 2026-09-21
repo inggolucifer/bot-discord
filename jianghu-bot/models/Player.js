@@ -33,6 +33,7 @@ const extendedStatsSchema = new mongoose.Schema({
   // === COMBAT ===
   critRate:      { type: Number, default: 5 },
   critResist:    { type: Number, default: 0 },
+  comboRate:     { type: Number, default: 5 },
   agility:       { type: Number, default: 10 },
   critDmg:       { type: Number, default: 150 },
   critDmgReduce: { type: Number, default: 0 },
