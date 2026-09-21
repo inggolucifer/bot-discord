@@ -7,6 +7,7 @@ import KataQteMinigame from '@/components/minigames/KataQteMinigame';
 import FishingReelMinigame from '@/components/minigames/FishingReelMinigame';
 import CookingFlameMinigame from '@/components/minigames/CookingFlameMinigame';
 import HerbHarvestMinigame from '@/components/minigames/HerbHarvestMinigame';
+import ForgeMinigame from '@/components/minigames/ForgeMinigame';
 
 interface GridProfessionWorkbenchProps {
   professionType: 'smithing' | 'cooking' | 'alchemy' | 'fishing' | 'farming';
@@ -158,12 +159,29 @@ export default function GridProfessionWorkbench({
 
         {/* Tombol Peluncuran Minigame Interaktif untuk Semua Profesi */}
         <button
-          onClick={() => {
-            if (professionType === 'alchemy') setActiveMinigame('crucible');
-            else if (professionType === 'smithing') setActiveMinigame('kata');
-            else if (professionType === 'fishing') setActiveMinigame('fishing');
-            else if (professionType === 'cooking') setActiveMinigame('cooking');
-            else if (professionType === 'farming') setActiveMinigame('harvest');
+          onClick={async () => {
+             try {
+                // start session minigame based on profession type
+                let recipeKey = selectedRecipe;
+                let toolItemId = 'dummy_tool_id'; // backend doesn't strictly enforce validity of tool if absent but requires string occasionally or handles gracefully if not matching
+                // Wait for the api.post /professions/start to initialize
+                const action = professionType === 'farming' ? 'harvest' : 'craft';
+                const res = await api.post('/professions/start', { profession: professionType, recipeId: recipeKey, toolItemId, action });
+
+                if (res.data?.sessionId) {
+                     if (professionType === 'smithing') {
+                         setActiveMinigame('forge' as any); // forge mode
+                         // Temporarily store sessionId somewhere accessible, using window for quick hack to pass it
+                         (window as any)._forgeSessionId = res.data.sessionId;
+                     }
+                     else if (professionType === 'alchemy') setActiveMinigame('crucible');
+                     else if (professionType === 'fishing') setActiveMinigame('fishing');
+                     else if (professionType === 'cooking') setActiveMinigame('cooking');
+                     else if (professionType === 'farming') setActiveMinigame('harvest');
+                }
+             } catch (err: any) {
+                 setError(err.response?.data?.error || err.message || 'Gagal memulai minigame profesi.');
+             }
           }}
           className="w-full mb-3 py-2.5 rounded-lg bg-gradient-to-r from-purple-950 via-amber-950 to-cyan-950 hover:from-purple-900 hover:to-cyan-900 border border-amber-500/70 text-amber-200 text-xs font-serif font-bold shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 animate-pulse"
         >
@@ -203,6 +221,17 @@ export default function GridProfessionWorkbench({
             setActiveMinigame(null);
             setSuccessNotice(res.message);
             if (onActionSuccess) onActionSuccess(res.message);
+          }}
+        />
+      )}
+      {activeMinigame === 'forge' as any && (
+        <ForgeMinigame
+          sessionId={(window as any)._forgeSessionId}
+          onClose={() => setActiveMinigame(null)}
+          onCompleted={(res) => {
+            setActiveMinigame(null);
+            setSuccessNotice(res.message || 'Peralatan berhasil ditempa!');
+            if (onActionSuccess) onActionSuccess(res.message || 'Peralatan berhasil ditempa!');
           }}
         />
       )}

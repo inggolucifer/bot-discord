@@ -61,6 +61,8 @@ router.get('/', authenticateToken, async (req, res) => {
         let baseSuccessRate = realmData.baseSuccessRate;
         if (stage > 0) baseSuccessRate -= (stage * 2);
 
+        const { MOOD_COSTS } = require('../../config/fivePillars');
+
         res.json({
             success: true,
             data: {
@@ -78,7 +80,8 @@ router.get('/', authenticateToken, async (req, res) => {
                     percent: 25,
                     qiAmount: Math.floor(calcResult.maxQi * 0.25)
                 },
-                usablePills: usablePills
+                usablePills: usablePills,
+                moodCost: MOOD_COSTS.CULTIVATION_BREAKTHROUGH
             }
         });
 
@@ -126,6 +129,10 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
             let player = await Player.findOne({ discordId: userId, guildId }).session(session);
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
+
+            const { assertMood, applyMoodDelta } = require('../../utils/moodManager');
+            const { MOOD_COSTS } = require('../../config/fivePillars');
+            assertMood(player, MOOD_COSTS.CULTIVATION_BREAKTHROUGH);
 
             const calcResult = await syncPlayerCultivation(player);
 
@@ -186,7 +193,14 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
             const attempt = attemptBreakthrough(calcResult.realmIdx, player.systemCultivation.stage, successBonus);
             isSuccess = attempt.success;
 
+            // Deduct mood
+            applyMoodDelta(player, -MOOD_COSTS.CULTIVATION_BREAKTHROUGH);
+
             if (isSuccess) {
+                // Grant small insight
+                if (!player.extendedStats) player.extendedStats = {};
+                player.extendedStats.insight = (player.extendedStats.insight || 0) + 1;
+                player.markModified('extendedStats');
                  let newRealmIdx = calcResult.realmIdx;
                  let newStage = player.systemCultivation.stage + 1;
                  let isNewRealm = false;
