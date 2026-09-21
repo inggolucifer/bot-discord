@@ -66,6 +66,7 @@ export default function Navbar() {
   const navLinks = {
     kultivasi: [
       { href: "/profile", label: "Profil Karakter" },
+      { href: "/character", label: "Karakter — Peralatan" },
       { href: "/cultivation", label: "Kultivasi & Ranah" },
       { href: "/skills", label: "Kitab & Jurus" },
     ],
