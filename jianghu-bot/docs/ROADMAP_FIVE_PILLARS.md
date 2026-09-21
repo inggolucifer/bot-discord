@@ -16,16 +16,23 @@ This update establishes the foundation for the Five-Pillars Stats system (Mood, 
 * **Battle Inventory:** Added `usableInBattle` boolean to items.
 * **Roots Cleanup:** Applied one-time migration hook for fixing bugged 10-all spiritual roots to 0.
 
+### Website Survival Loop Sprint Updates (Completed):
+* **Truthful Stats:** Fixed `StatGrid` and Profile header so Stamina and Energy accurately read from the new API structure without hardcoding. Separated Martial and Spiritual Resistance displays. Added UX tooltips explaining the Five Pillars (Mood, Vitality, Focus).
+* **Inventory Survival Use:** Restorative Item properties (`restoresHp`, `restoresStamina`, `restoresVitality`, `restoresMood`) have been added to the MongoDB schema and wired to the `POST /use-consumable` endpoint. Added a critical alert box in the Profile screen to warn users to eat/rest when HP or Stamina drop below 30%.
+* **Battle Inventory Panel:** Replaced the simple battle command bar with a Quick Bag tray allowing the use of items mid-battle using the `usableInBattle` validation, seamlessly integrated with the tick system.
+* **Cultivation Website UX:** Exposed Realm Level Caps and added warnings when at maximum level. Exposed the Breakthrough UI on the website showing base success rates and Mood costs (`CULTIVATION_BREAKTHROUGH`).
+* **Manuals Unlearn UI:** Created a Tab on the Character page dedicated to Kitab & Jurus displaying the dynamic slot limit derived from Core, complete with an endpoint `POST /manuals/unlearn`.
+* **Profession Minigame:** Built a Timing-Bar Minigame for Forging (`ForgeMinigame.tsx`). Hooked into `POST /professions/start` and `POST /professions/complete` which now appropriately deduct Mood costs (`CRAFT_FORGE`) based on `fivePillars.js` configurations.
+
 ## 2. Next Development Priorities
 
 In sequential priority order:
-1. **Minigames Phase 1:** Implement full UX and result hooks for manual learning, laws, forge, alchemy, mining, herbology, cooking, fishing, and talismans. Hook the minigame results to consume the mood costs.
+1. **Minigames Phase 2:** Implement remaining full UX and result hooks for manual learning, laws, alchemy, mining, herbology, cooking, fishing, and talismans.
 2. **Map Focus Marks UI:** Expose the focus mark UI on the front-end grid overview and display NPC conditions icons (based on tracked focus marks).
-3. **Battle Inventory Panel:** Expose usable items in the combat instanced screen to consume restorative items (HP, Mood, Vitality) in battle.
-4. **Full Talisman Effects:** Wire actual talisman effects (e.g. stealth, map efficiency, combat resist) into the main computation loop.
-5. **Out-of-Battle Steal NPC Flow:** Implement out-of-battle stealing logic against NPCs. Failure hooks should trigger NPC hostility and force combat.
-6. **Multi Cultivation Types:** Allow distinct branches of cultivation styles to level separately (instead of just generic Qi refining).
-7. **Economy Sourcing:** Introduce new ways for players to source Vitality items, Mood items, and Core upgrade mechanics via world drop tables.
+3. **Full Talisman Effects:** Wire actual talisman effects (e.g. stealth, map efficiency, combat resist) into the main computation loop.
+4. **Out-of-Battle Steal NPC Flow:** Implement out-of-battle stealing logic against NPCs. Failure hooks should trigger NPC hostility and force combat.
+5. **Multi Cultivation Types:** Allow distinct branches of cultivation styles to level separately (instead of just generic Qi refining).
+6. **Economy Sourcing:** Introduce new ways for players to source Vitality items, Mood items, and Core upgrade mechanics via world drop tables.
 
 ## 3. Open Risks
 * **Double Craft XP:** Because we've added mood costs, we need to ensure players aren't finding ways to circumvent the attempt cost on failed minigames resulting in unearned XP or bypassing the cost altogether by canceling the UI.
