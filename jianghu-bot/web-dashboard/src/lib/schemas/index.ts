@@ -29,7 +29,8 @@ export const CultivationDataSchema = z.object({
     percent: z.number(),
     qiAmount: z.number()
   }).optional(),
-  usablePills: z.array(UsablePillSchema).optional()
+  usablePills: z.array(UsablePillSchema).optional(),
+  moodCost: z.number().optional()
 });
 
 export const BreakthroughResponseSchema = z.object({

@@ -33,6 +33,37 @@ const Law = require('../../models/Law');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const { isUnderConstruction, calculateProgress } = require('../../utils/crafting');
 
+// Endpoint: POST /api/player/manuals/unlearn
+router.post('/manuals/unlearn', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { manualId } = req.body;
+
+        if (!manualId) return res.status(400).json({ error: 'manualId is required' });
+
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        const player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Player tidak ditemukan' });
+
+        const manualIndex = player.manuals.findIndex(m => m.manualId && m.manualId.toString() === manualId);
+        if (manualIndex === -1) {
+            return res.status(400).json({ error: 'Kamu tidak sedang mempelajari kitab ini.' });
+        }
+
+        // Hapus manual dari array (tidak ada refund XP, core, atau item)
+        player.manuals.splice(manualIndex, 1);
+        player.markModified('manuals');
+        await player.save();
+
+        res.json({ success: true, message: `Berhasil melupakan kitab.` });
+    } catch (error) {
+        console.error('[API-PLAYER] Unlearn manual error:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
 function formatCurrencyString(currencyObj) {
     const parts = [];
     if (currencyObj.spirit) parts.push(currencyObj.spirit + ' Spirit');
