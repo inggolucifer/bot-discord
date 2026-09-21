@@ -128,9 +128,12 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
               <span className="text-stone-400 flex items-center gap-1">⏳ Lifespan</span>
               <span className="font-semibold text-amber-200">{age}/{maxLifespan}</span>
             </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d] group relative cursor-help">
               <span className="text-stone-400 flex items-center gap-1">💛 Mood</span>
               <span className="font-semibold text-amber-200">{mood}/100</span>
+              <div className="absolute z-10 hidden group-hover:block bottom-full mb-1 left-0 w-48 bg-black/90 text-white text-[10px] p-2 rounded shadow-lg border border-gray-700">
+                Turun saat belajar/craft/gather; naik dari item makanan/hiburan.
+              </div>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">❤️ Health</span>
@@ -140,17 +143,23 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
               <span className="text-stone-400 flex items-center gap-1">💚 Stamina</span>
               <span className="font-semibold text-emerald-400">{stamina}/{maxStamina}</span>
             </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d] group relative cursor-help">
               <span className="text-stone-400 flex items-center gap-1">💜 Vitality</span>
               <span className="font-semibold text-purple-300">{vitality}/{maxVitality}</span>
+              <div className="absolute z-10 hidden group-hover:block bottom-full mb-1 left-0 w-48 bg-black/90 text-white text-[10px] p-2 rounded shadow-lg border border-gray-700">
+                Jika di bawah 50%, stats tempur berkurang. Jika kritis, debuff parah.
+              </div>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">⚡ Energy</span>
               <span className="font-semibold text-sky-300">{energy}/{maxEnergy}</span>
             </div>
-            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d] group relative cursor-help">
               <span className="text-stone-400 flex items-center gap-1">🎯 Focus</span>
               <span className="font-semibold text-cyan-300">{focus}/{maxFocus}</span>
+              <div className="absolute z-10 hidden group-hover:block bottom-full mb-1 right-0 w-48 bg-black/90 text-white text-[10px] p-2 rounded shadow-lg border border-gray-700">
+                Gunakan untuk melacak NPC dan event pada map. Segera hadir.
+              </div>
             </div>
             <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">🍀 Luck</span>

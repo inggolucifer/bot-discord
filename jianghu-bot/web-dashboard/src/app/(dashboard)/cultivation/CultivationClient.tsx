@@ -85,7 +85,7 @@ export default function CultivationClient() {
 
     if (!cultivationData) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data kultivasi." icon={<Flame size={48} />} />;
 
-    const { realm, stage, currentQi, maxQi, ratePerMinute, isReadyForBreakthrough, baseSuccessRate, isMaxLevel, usablePills } = cultivationData;
+    const { realm, stage, currentQi, maxQi, ratePerMinute, isReadyForBreakthrough, baseSuccessRate, isMaxLevel, usablePills, moodCost } = cultivationData;
     const progressPercent = Math.min(100, Math.max(0, (currentQi / maxQi) * 100));
 
     return (
@@ -197,6 +197,10 @@ export default function CultivationClient() {
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Realm Saat Ini:</span>
                                     <span className="font-bold text-white">{realm} (Tahap {stage})</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">Biaya Mood:</span>
+                                    <span className="font-bold text-rose-400">{moodCost || 25} Mood</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Peluang Sukses Dasar:</span>

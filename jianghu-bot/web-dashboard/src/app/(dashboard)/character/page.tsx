@@ -58,6 +58,8 @@ export default function CharacterPage() {
     );
   }
 
+  const [activeTab, setActiveTab] = useState<'peralatan' | 'kitab'>('peralatan');
+
   if (error || !profileData) {
     return (
       <div className="p-8 text-center text-red-400">
@@ -106,16 +108,51 @@ export default function CharacterPage() {
     return isValidCategory && !isAlreadyEquipped;
   }) ?? [];
 
+  const maxManualSlots = 5 + Math.floor((profile.kungfuSkills?.core || 1) / 5);
+
+  const unlearnMutation = useMutation({
+    mutationFn: async (manualId: string) => {
+      const res = await api.post('/player/manuals/unlearn', { manualId });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.show({ message: data.message ?? 'Kitab berhasil dilupakan', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error ?? 'Gagal melupakan kitab', type: 'error' });
+    }
+  });
+
   return (
     <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
-      <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#c5a880] mb-6 flex items-center gap-3">
-        <span className="bg-[#c5a880]/10 p-2 rounded-lg border border-[#c5a880]/30">
-          <Backpack className="w-6 h-6 text-amber-400" />
-        </span>
-        Peralatan & Status
-      </h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#c5a880] flex items-center gap-3">
+          <span className="bg-[#c5a880]/10 p-2 rounded-lg border border-[#c5a880]/30">
+            <Backpack className="w-6 h-6 text-amber-400" />
+          </span>
+          Peralatan & Status
+        </h1>
+
+        {/* Tabs Desktop & Mobile */}
+        <div className="mt-4 sm:mt-0 flex border-b border-[#3b3322] w-full max-w-[300px]">
+          <button
+            className={`w-1/2 py-2 font-serif font-bold text-sm transition-colors ${activeTab === 'peralatan' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
+            onClick={() => setActiveTab('peralatan')}
+          >
+            Peralatan
+          </button>
+          <button
+            className={`w-1/2 py-2 font-serif font-bold text-sm transition-colors ${activeTab === 'kitab' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
+            onClick={() => setActiveTab('kitab')}
+          >
+            Kitab & Jurus
+          </button>
+        </div>
+      </div>
 
       <div className="bg-gradient-to-b from-[#11141d] to-[#0d0f16] border border-[#c5a880]/30 rounded-xl p-4 sm:p-6 shadow-xl flex flex-col w-full h-full lg:min-h-[700px]">
+        {activeTab === 'peralatan' ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full items-stretch flex-1">
           {/* Left Column: Equipped Items & Desktop Stats */}
           <div className="flex flex-col items-center space-y-6 order-1 h-full">
@@ -293,6 +330,58 @@ export default function CharacterPage() {
              </p>
           </div>
         </div>
+        ) : (
+          /* Tab Kitab & Jurus */
+          <div className="flex flex-col space-y-6 animate-in fade-in zoom-in-95 duration-200">
+             <div className="flex justify-between items-center bg-[#181d2a]/80 p-4 rounded-xl border border-[#2e3748] shadow-inner">
+                <div>
+                   <h3 className="text-lg font-bold text-[#c5a880] font-serif">Kitab Dipelajari</h3>
+                   <p className="text-sm text-stone-400">Total slot aktif bergantung pada poin Core (Inti).</p>
+                </div>
+                <div className="text-right">
+                   <div className="text-2xl font-bold font-mono text-amber-200">
+                      {profile.manuals?.length || 0} <span className="text-stone-500 text-lg">/ {maxManualSlots}</span>
+                   </div>
+                   <div className="text-xs text-stone-400">Slot Terpakai</div>
+                </div>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {(!profile.manuals || profile.manuals.length === 0) ? (
+                   <div className="col-span-full h-40 flex flex-col items-center justify-center text-stone-500 text-sm border-2 border-dashed border-[#2e3748] rounded-xl bg-[#0d1017]/50">
+                      <span className="text-3xl mb-2">📜</span>
+                      <p className="font-serif">Belum ada kitab yang dipelajari.</p>
+                   </div>
+                ) : (
+                   profile.manuals.map((manual: any, idx: number) => (
+                      <div key={idx} className="bg-[#0d1017] border border-[#2e3748] rounded-xl p-4 flex flex-col shadow-sm relative overflow-hidden group">
+                         <div className="flex justify-between items-start mb-2">
+                            <h4 className="text-amber-200 font-bold font-serif text-lg">{manual.name || 'Kitab Misterius'}</h4>
+                            <span className="bg-[#181d2a] text-amber-400/80 px-2 py-0.5 rounded text-xs font-mono border border-[#3b3322]">
+                               Lv.{manual.level}/{manual.maxLevel}
+                            </span>
+                         </div>
+                         <p className="text-xs text-stone-400 mb-4 flex-1 line-clamp-3">{manual.description}</p>
+
+                         <div className="pt-3 border-t border-[#2e3748] flex justify-end">
+                            <button
+                               disabled={unlearnMutation.isPending}
+                               onClick={() => {
+                                  if(confirm(`Yakin ingin melupakan kitab ${manual.name}? Tindakan ini tidak mengembalikan item kitab, XP, atau core points.`)) {
+                                     unlearnMutation.mutate(manual.id);
+                                  }
+                               }}
+                               className="text-xs text-red-400 hover:text-red-300 hover:bg-red-950/30 px-3 py-1.5 rounded transition-colors"
+                            >
+                               Lupakan Kitab
+                            </button>
+                         </div>
+                      </div>
+                   ))
+                )}
+             </div>
+          </div>
+        )}
       </div>
     </div>
   );

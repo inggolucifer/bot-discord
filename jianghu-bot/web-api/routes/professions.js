@@ -299,6 +299,24 @@ router.post('/start', verifyToken, async (req, res) => {
             return res.status(400).json({ error: `Energy tidak cukup. Butuh ${energyCost} Energy.` });
         }
 
+        // --- Verifikasi Mood ---
+        const { assertMood, applyMoodDelta } = require('../../utils/moodManager');
+        const { MOOD_COSTS } = require('../../config/fivePillars');
+        let moodCost = 0;
+        if (profession === 'smithing') moodCost = MOOD_COSTS.CRAFT_FORGE;
+        else if (profession === 'alchemy') moodCost = MOOD_COSTS.CRAFT_ALCHEMY;
+        else if (profession === 'farming') moodCost = MOOD_COSTS.GATHER_HERBOLOGY;
+        else if (profession === 'fishing') moodCost = MOOD_COSTS.GATHER_FISHING;
+        else if (profession === 'cooking') moodCost = MOOD_COSTS.GATHER_COOKING;
+        else if (profession === 'mining') moodCost = MOOD_COSTS.GATHER_MINING;
+
+        if (moodCost > 0) {
+             assertMood(player, moodCost);
+             applyMoodDelta(player, -moodCost);
+             player.markModified('extendedStats');
+             await player.save();
+        }
+
         let recipe;
         let harvestRecipeKey = null;
         if (profession === 'farming' && action === 'harvest') {
@@ -521,16 +539,25 @@ router.post('/complete', verifyToken, async (req, res) => {
              telemetryBonus = telemetryData.accuracy * 0.1;
         }
 
-        let weatherBonus = 0;
-        if (session.profession === 'farming') {
-             const WeatherConfig = require('../../models/WeatherConfig');
-             const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
-             if (weatherConfig && weatherConfig.currentWeather === 'Hujan') {
-                  weatherBonus = 0.2;
-             }
-        }
+        let isSuccess = false;
 
-        const isSuccess = Math.random() < (baseChance + telemetryBonus + weatherBonus);
+        // If it's the forge minigame and the telemetry explicitly reports failed, use it
+        if (session.profession === 'smithing' && telemetryData && telemetryData.failed === true) {
+             isSuccess = false;
+        } else if (session.profession === 'smithing' && telemetryData && telemetryData.hits !== undefined) {
+             isSuccess = telemetryData.hits >= 5;
+        } else {
+             let weatherBonus = 0;
+             if (session.profession === 'farming') {
+                  const WeatherConfig = require('../../models/WeatherConfig');
+                  const weatherConfig = await WeatherConfig.findOne({ configId: 'global' });
+                  if (weatherConfig && weatherConfig.currentWeather === 'Hujan') {
+                       weatherBonus = 0.2;
+                  }
+             }
+
+             isSuccess = Math.random() < (baseChance + telemetryBonus + weatherBonus);
+        }
 
         let finalQuality = 1.0;
         let isMasterpiece = false;
@@ -625,6 +652,13 @@ router.post('/complete', verifyToken, async (req, res) => {
                      }
                  }
              }
+
+             // Vitality penalty on failure
+             if (!player.extendedStats) player.extendedStats = {};
+             // random penalty between 1 to 3
+             const penalty = Math.floor(Math.random() * 3) + 1;
+             player.extendedStats.vitality = Math.max(0, (player.extendedStats.vitality || 100) - penalty);
+             player.markModified('extendedStats');
         }
 
         // Always clear plot and set to depleted on harvest (whether success or fail)
