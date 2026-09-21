@@ -260,6 +260,10 @@ async function runWorkerAutoProcess(client) {
                                  activeCraft.targetQuantity -= 1;
                                  activeCraft.progressHours = 0;
 
+                                 // Add forging XP hook on craft completion
+                                 const { awardKungfuExp } = require('./kungfuMastery');
+                                 awardKungfuExp(player, 'forging', 10);
+
                                  if (activeCraft.targetQuantity <= 0) {
                                      const finishedRecipeName = activeCraft.recipeName;
                                      owned.activeCrafts.shift();

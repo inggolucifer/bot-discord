@@ -128,7 +128,7 @@ export default function ProfilePage() {
 
           <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-sky-950/80 border border-sky-600/60 rounded px-2.5 py-1 text-xs text-sky-200 font-bold font-serif">
-              <Zap size={12} className="text-sky-400" /> {profile.realm} (Tahap {profile.stage ?? 'Awal'})
+              <Zap size={12} className="text-sky-400" /> {profile.systemCultivation?.realm || profile.realm} (Tahap {profile.systemCultivation?.stage ?? profile.stage ?? 'Awal'})
             </span>
             {profile.systemCultivation?.isFlawedFoundation && (
               <span

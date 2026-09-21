@@ -20,12 +20,16 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
     let spd = baseStats.spd;
 
     // Apply Talent Bonuses
+    // STR: +5 ATK, +5 DEF
+    // AGI: +5 SPD
+    // STA: +25 maxHP
+    // POW: +25 maxMP
     if (player.talents) {
-        maxHp += (player.talents.sta || 0) * TALENT_EFFECTS.sta.maxHp;
-        maxMp += (player.talents.pow || 0) * TALENT_EFFECTS.pow.maxMp;
-        atk += (player.talents.str || 0) * TALENT_EFFECTS.str.atk;
-        def += (player.talents.str || 0) * TALENT_EFFECTS.str.def;
-        spd += (player.talents.agi || 0) * TALENT_EFFECTS.agi.spd;
+        maxHp += (player.talents.sta || 0) * 25;
+        maxMp += (player.talents.pow || 0) * 25;
+        atk += (player.talents.str || 0) * 5;
+        def += (player.talents.str || 0) * 5;
+        spd += (player.talents.agi || 0) * 5;
     }
 
     // Determine current HP and MP (clamp to max)
@@ -56,14 +60,12 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         spd,
         critHitRate,
         critDmgRate: BASE_CRIT_DMG,
-        comboRate,
+        comboRate: player.extendedStats?.comboRate !== undefined ? player.extendedStats.comboRate : Math.round(comboRate * 100),
         // Extended Combat Stats
         critRate: player.extendedStats?.critRate !== undefined ? player.extendedStats.critRate : Math.round(critHitRate * 100),
         critRes: player.extendedStats?.critResist || 0,
-        agility: player.extendedStats?.agility || spd,
         critDmg: player.extendedStats?.critDmg || Math.round(BASE_CRIT_DMG * 100),
         critDr: player.extendedStats?.critDmgReduce || 0,
-        travelSpeed: player.extendedStats?.travelSpeed || 100,
         martialRes: player.extendedStats?.martialRes || 0,
         spiritualRes: player.extendedStats?.spiritualRes || 0,
         _base: baseStats._base,
