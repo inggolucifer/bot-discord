@@ -60,8 +60,13 @@ router.post('/simulate', authenticateToken, async (req, res) => {
         // Simulasi Battle Turn-Based RPG
         const simResult = simulateBattle(challenger, opponent, { isPvE: false });
 
+        const { applyVitalityLossOnDeath } = require('../../utils/vitality');
         challenger.currentHp = simResult.p1Hp;
         challenger.combatConditions = simResult.p1Conditions;
+
+        if (challenger.currentHp <= 0) {
+             applyVitalityLossOnDeath(challenger);
+        }
 
         // Terapkan perolehan Kungfu XP murni dari pertarungan turn-based berdasarkan senjata yang dibawa & jurus yang dipicu
 
@@ -541,7 +546,9 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
         } else if (session.status === 'lost') {
              const player = await Player.findOne({ discordId: userId });
              if (player) {
+                 const { applyVitalityLossOnDeath } = require('../../utils/vitality');
                  player.currentHp = 0;
+                 applyVitalityLossOnDeath(player);
                  // Waktu pemulihan 4 jam diam di tempat
                  player.deathRecoveryUntil = new Date(Date.now() + 4 * 60 * 60 * 1000);
                  player.lastKilledAt = new Date();

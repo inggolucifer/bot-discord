@@ -327,8 +327,13 @@ router.post('/claim', authenticateToken, async (req, res) => {
 
                 // Simulate Battle
                 const battleResult = simulateBattle(player, opponent, { isPvE: true, allowSteal: true });
+                const { applyVitalityLossOnDeath } = require('../../utils/vitality');
                 player.currentHp = battleResult.p1Hp;
                 player.combatConditions = battleResult.p1Conditions;
+
+                if (player.currentHp <= 0) {
+                     applyVitalityLossOnDeath(player);
+                }
 
                 // Terapkan perolehan Kungfu XP organik dari pertarungan
 
