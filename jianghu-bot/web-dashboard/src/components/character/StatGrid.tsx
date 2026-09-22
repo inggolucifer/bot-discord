@@ -108,14 +108,16 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
     forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 1)),
     talismans: Math.floor(Number(rawArtisan.talismans) || 1),
     herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 1)),
-    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 1))
+    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 1)),
+    fishing: Math.floor(prof.fishing?.isUnlocked ? (prof.fishing.level || 1) : (Number(rawArtisan.fishing) || 0)),
+    cooking: Math.floor(prof.cooking?.isUnlocked ? (prof.cooking.level || 1) : (Number(rawArtisan.cooking) || 0))
   };
 
   const headerClass = "px-3 py-1 rounded-full bg-[#1b1c24] border border-[#3e3b30] text-[#e0cfb3] text-xs font-serif font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-md mb-2.5";
 
   return (
     <div className={`w-full font-serif ${compact ? 'text-xs' : 'text-sm'} text-[#d1c2a5]`}>
-      <div className={`grid grid-cols-1 md:grid-cols-2 ${hideCombat ? 'lg:grid-cols-3' : 'lg:grid-cols-5'} gap-3 sm:gap-4`}>
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${hideCombat ? 'lg:grid-cols-3' : 'lg:grid-cols-5'} gap-3 sm:gap-4 items-start`}>
         
         {/* 1. GENERAL STATS */}
         <div className="bg-[#0e111a]/70 border border-[#2d2920] rounded-lg p-2.5 flex flex-col shadow-inner backdrop-blur-sm">
@@ -228,7 +230,7 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
               <span className="text-amber-400 text-sm">🥋</span>
               Martial Arts
             </div>
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 text-xs max-h-[min(420px,50vh)] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-[#3e3b30] scrollbar-track-transparent">
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
                 <span className="text-stone-400 flex items-center gap-1">🗡️ Blade (Golok)</span>
                 <span className="font-semibold text-amber-200">{bladeSkill}</span>
@@ -253,6 +255,7 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
                 <span className="text-stone-400 flex items-center gap-1">🌀 Special (Palm/Lainnya)</span>
                 <span className="font-semibold text-amber-200">{palmSkill}</span>
               </div>
+              <div className="my-1 border-t border-[#3e3b30] opacity-50"></div>
               <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
                 <span className="text-stone-400 flex items-center gap-1">⚒️ Forging</span>
                 <span className="font-semibold text-amber-200">{forgingSkill}</span>
@@ -346,9 +349,17 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
               <span className="text-stone-400 flex items-center gap-1">🌿 Herbology (Tani)</span>
               <span className="font-semibold text-emerald-300">{artisan.herbology}</span>
             </div>
-            <div className="flex justify-between items-center py-0.5">
+            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
               <span className="text-stone-400 flex items-center gap-1">⛏️ Mining (Tambang)</span>
               <span className="font-semibold text-stone-300">{artisan.mining}</span>
+            </div>
+            <div className="flex justify-between items-center py-0.5 border-b border-[#1f222d]">
+              <span className="text-stone-400 flex items-center gap-1">🎣 Fishing (Memancing)</span>
+              <span className="font-semibold text-cyan-300">{artisan.fishing}</span>
+            </div>
+            <div className="flex justify-between items-center py-0.5">
+              <span className="text-stone-400 flex items-center gap-1">🍳 Cooking (Kuliner)</span>
+              <span className="font-semibold text-orange-200">{artisan.cooking}</span>
             </div>
           </div>
         </div>
