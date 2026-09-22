@@ -48,7 +48,6 @@ router.post('/email-register', async (req, res) => {
             characterName: trimmedName,
             gender: validGender,
             currency: { copper: 500, silver: 10, gold: 0, jade: 0, spirit: 0 },
-            currentLocation: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },
             age: 18,
             schemaVersion: 2,
             avatarUrl: null,
@@ -186,7 +185,6 @@ router.post('/web-login', async (req, res) => {
                 gender: validGender,
                 age: 18,
                 currency: { copper: 500, silver: 10, gold: 0, jade: 0, spirit: 0 },
-                currentLocation: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },
                 schemaVersion: 2,
                 avatarUrl: null,
                 currentLocation: {
@@ -520,7 +518,6 @@ router.post('/register-character', authenticateToken, async (req, res) => {
             gender: validGender,
             age: parsedAge,
             currency: { copper: 500, silver: 10, gold: 0, jade: 0, spirit: 0 },
-            currentLocation: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', buildingName: null },
             schemaVersion: 2,
             avatarUrl: req.user.avatar || null,
             currentLocation: {

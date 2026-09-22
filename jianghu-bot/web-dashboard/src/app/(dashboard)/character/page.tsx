@@ -50,6 +50,22 @@ export default function CharacterPage() {
     }
   });
 
+  const [activeTab, setActiveTab] = useState<'peralatan' | 'kitab'>('peralatan');
+
+  const unlearnMutation = useMutation({
+    mutationFn: async (manualId: string) => {
+      const res = await api.post('/player/manuals/unlearn', { manualId });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.show({ message: data.message ?? 'Manual berhasil dilupakan', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error ?? 'Gagal unlearn manual', type: 'error' });
+    }
+  });
+
   if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-80px)] items-center justify-center">
@@ -57,8 +73,6 @@ export default function CharacterPage() {
       </div>
     );
   }
-
-  const [activeTab, setActiveTab] = useState<'peralatan' | 'kitab'>('peralatan');
 
   if (error || !profileData) {
     return (
@@ -109,20 +123,6 @@ export default function CharacterPage() {
   }) ?? [];
 
   const maxManualSlots = 5 + Math.floor((profile.kungfuSkills?.core || 0) / 5);
-
-  const unlearnMutation = useMutation({
-    mutationFn: async (manualId: string) => {
-      const res = await api.post('/player/manuals/unlearn', { manualId });
-      return res.data;
-    },
-    onSuccess: (data) => {
-      toast.show({ message: data.message ?? 'Kitab berhasil dilupakan', type: 'success' });
-      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
-    },
-    onError: (err: any) => {
-      toast.show({ message: err.response?.data?.error ?? 'Gagal melupakan kitab', type: 'error' });
-    }
-  });
 
   return (
     <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
