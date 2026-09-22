@@ -317,6 +317,7 @@ const playerSchema = new mongoose.Schema({
     avatarBorder: { type: String, default: null },
     chatBorder: { type: String, default: null }
   },
+  unlockedTitles: { type: [String], default: [] },
 
   age: { type: Number, default: 16 },
   gender: { type: String, enum: ['Pria', 'Wanita', 'Laki-laki', 'Perempuan', null], default: null },
@@ -374,7 +375,9 @@ const playerSchema = new mongoose.Schema({
     pants: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     boots: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     accessory: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
-    mount: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
+    mount: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    talisman: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    artifact: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
   },
 
   inventory: { type: [inventoryItemSchema], default: [] },

@@ -22,8 +22,8 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
     const [isActionLoading, setIsActionLoading] = useState(false);
     const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
 
-    // Pokemon-style command mode: 'COMMAND' (Fight / Run) vs 'SKILLS' (Skill grid)
-    const [actionMode, setActionMode] = useState<'COMMAND' | 'SKILLS'>('COMMAND');
+    // Pokemon-style command mode: 'COMMAND' (Fight / Run) vs 'SKILLS' (Skill grid) vs 'ITEMS' (Item grid)
+    const [actionMode, setActionMode] = useState<'COMMAND' | 'SKILLS' | 'ITEMS'>('COMMAND');
     const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
 
     // Death countdown state (4-hour timer)
@@ -494,7 +494,7 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
 
                     {/* MODE A: COMMAND SELECTION (FIGHT vs RUN) */}
                     {actionMode === 'COMMAND' ? (
-                        <div className="grid grid-cols-2 gap-3 w-full animate-in fade-in zoom-in-95 duration-200">
+                        <div className="grid grid-cols-3 gap-3 w-full animate-in fade-in zoom-in-95 duration-200">
                             {/* Tombol FIGHT */}
                             <button
                                 onClick={() => setActionMode('SKILLS')}
@@ -506,7 +506,21 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                 }`}
                             >
                                 <Sword className="w-5 h-5 text-amber-300" />
-                                <span>BERTARUNG (FIGHT)</span>
+                                <span>FIGHT</span>
+                            </button>
+
+                            {/* Tombol ITEM */}
+                            <button
+                                onClick={() => setActionMode('ITEMS')}
+                                disabled={!isPlayerTurn || isActionLoading}
+                                className={`flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl border font-serif font-bold text-sm sm:text-base tracking-wider transition-all shadow-xl ${
+                                    (!isPlayerTurn || isActionLoading)
+                                        ? 'bg-gray-900/50 border-gray-800 text-gray-600 cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-800 hover:from-emerald-700 hover:to-emerald-600 text-emerald-100 border-emerald-500/80 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:scale-[1.02] active:scale-[0.98]'
+                                }`}
+                            >
+                                <Package className="w-5 h-5 text-emerald-300" />
+                                <span>TAS/ITEM</span>
                             </button>
 
                             {/* Tombol RUN */}
@@ -520,10 +534,10 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                 }`}
                             >
                                 <MoveRight className="w-5 h-5 text-gray-400" />
-                                <span>KABUR (RUN)</span>
+                                <span>RUN</span>
                             </button>
                         </div>
-                    ) : (
+                    ) : actionMode === 'SKILLS' ? (
                         /* MODE B: SKILL SELECTION (CONTAINED GRID, TIDAK TEMBUS KE SAMPING) */
                         <div className="flex flex-col gap-2 w-full animate-in fade-in zoom-in-95 duration-200">
                             {/* Bar Navigasi Kembali */}
@@ -606,7 +620,71 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                 })}
                             </div>
                         </div>
-                    )}
+                    ) : actionMode === 'ITEMS' ? (
+                        /* MODE C: ITEM SELECTION */
+                        <div className="flex flex-col gap-2 w-full animate-in fade-in zoom-in-95 duration-200">
+                            {/* Bar Navigasi Kembali */}
+                            <div className="flex justify-between items-center pb-1 border-b border-gray-800">
+                                <button
+                                    onClick={() => setActionMode('COMMAND')}
+                                    className="flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 font-serif font-bold transition-colors"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    <span>Kembali ke Menu Aksi</span>
+                                </button>
+                                <span className="text-[10px] text-gray-400 font-mono">
+                                    Target: <strong className="text-red-300">{enemies.find((e: any) => e.entityId === selectedTargetId)?.name || 'Musuh'}</strong>
+                                </span>
+                            </div>
+
+                            {/* Grid Items */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
+                                {(() => {
+                                    const usableItems = player?.inventory?.filter((inv: any) => inv.usableInBattle && inv.quantity > 0) || [];
+                                    if (usableItems.length === 0) {
+                                        return (
+                                            <div className="col-span-full p-4 text-center text-gray-500 text-sm italic border border-dashed border-gray-800 rounded-lg">
+                                                Tidak ada item yang bisa dipakai di pertarungan.
+                                            </div>
+                                        );
+                                    }
+                                    return usableItems.map((inv: any, idx: number) => {
+                                        const isDisabled = !isPlayerTurn || isActionLoading;
+                                        const isCurrentlyUsing = isActionLoading && activeSkillId === inv.itemId._id;
+
+                                        return (
+                                            <button
+                                                key={inv.itemId._id || idx}
+                                                onClick={() => handleAction('item', inv.itemId._id)}
+                                                disabled={isDisabled}
+                                                className={`flex flex-col justify-between p-2.5 rounded-xl border text-left transition-all relative overflow-hidden bg-gradient-to-br from-[#121827] to-[#090d17] border-emerald-900/60 hover:border-emerald-500 ${
+                                                    isDisabled ? 'opacity-40 cursor-not-allowed grayscale' : 'hover:scale-[1.01] active:scale-[0.99]'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between w-full mb-1">
+                                                    <div className="flex items-center gap-1.5 font-serif font-bold text-xs sm:text-sm text-gray-100 truncate">
+                                                        <Package className="w-4 h-4 text-emerald-400" />
+                                                        <span className="truncate">{inv.itemId.name}</span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-1 shrink-0">
+                                                        <span className="text-[8px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-1 rounded font-mono">
+                                                            x{inv.quantity}
+                                                        </span>
+                                                        {isCurrentlyUsing && <RefreshCw className="w-3 h-3 animate-spin text-amber-400" />}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-[10px] text-gray-400 line-clamp-1 mb-1 font-sans">
+                                                    {inv.itemId.effect || 'Memulihkan status.'}
+                                                </div>
+                                            </button>
+                                        );
+                                    });
+                                })()}
+                            </div>
+                        </div>
+                    ) : null}
                 </div>
             </div>
 

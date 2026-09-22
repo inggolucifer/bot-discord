@@ -1044,7 +1044,7 @@ export default function ZoneGridView({
           {/* Tombol Aksi Cepat Desktop (Di mobile dihandle penuh oleh GridTileInspectorCard agar tidak tumpang tindih) */}
           <div className="hidden lg:flex items-center gap-1.5 sm:gap-2">
             {/* Tombol Masuk Kota jika berada di settlement */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.settlementName && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.settlementName && (
               <button
                 onClick={() => handleEnterSettlement(selectedTile.settlementName || 'XiTong City')}
                 className="bg-blue-900/90 hover:bg-blue-800 text-blue-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-blue-500/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
@@ -1055,7 +1055,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Masuk Paviliun Meditasi jika berada di scenic courtyard */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.label?.includes('Paviliun') && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.label?.includes('Paviliun') && (
               <button
                 onClick={() => handleEnterCourtyard(selectedTile.label || 'Paviliun Gazebo')}
                 className="bg-amber-950 hover:bg-amber-900 text-amber-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-amber-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
@@ -1066,7 +1066,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Masuk Bangunan Interior (Rumah / Toko) */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && (selectedTile.buildingName || selectedTile.isDoor || selectedTile.propertyStructureId) && (
               <button
                 onClick={() => handleEnterBuilding(selectedTile)}
                 className="bg-emerald-950 hover:bg-emerald-900 text-emerald-200 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg border border-emerald-600/60 flex items-center gap-1 text-[11px] sm:text-xs font-serif font-bold shadow-lg transition-all"
@@ -1088,7 +1088,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Bangun Aset / Profesi jika tanah milik sendiri */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && (!selectedTile.buildingName && !selectedTile.isUnderConstruction) && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.isClaimable && selectedTile.ownerId && (!selectedTile.buildingName && !selectedTile.isUnderConstruction) && (
               <button
                 onClick={() => setBuildModalTile(selectedTile)}
                 className="bg-amber-800 hover:bg-amber-700 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-400/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all animate-pulse"
@@ -1099,7 +1099,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Masuk Ekspedisi Dungeon */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.isExpeditionNode || selectedTile.label?.toLowerCase().includes('gua') || selectedTile.label?.toLowerCase().includes('makam') || selectedTile.label?.toLowerCase().includes('ekspedisi')) && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && (selectedTile.isExpeditionNode || selectedTile.label?.toLowerCase().includes('gua') || selectedTile.label?.toLowerCase().includes('makam') || selectedTile.label?.toLowerCase().includes('ekspedisi')) && (
               <button
                 onClick={() => setExpeditionModalTile(selectedTile)}
                 className="bg-indigo-950 hover:bg-indigo-900 text-indigo-100 px-3.5 py-1.5 rounded-lg border border-indigo-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
@@ -1110,7 +1110,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Masuk Balai Sekte */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.territoryType === 'sect_territory' || selectedTile.label?.includes('Sekte') || selectedTile.label?.includes('Dojo')) && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && (selectedTile.territoryType === 'sect_territory' || selectedTile.label?.includes('Sekte') || selectedTile.label?.includes('Dojo')) && (
               <button
                 onClick={() => setSectModalTile(selectedTile)}
                 className="bg-purple-950 hover:bg-purple-900 text-purple-100 px-3.5 py-1.5 rounded-lg border border-purple-500/70 flex items-center gap-1.5 text-xs font-serif font-bold shadow-lg transition-all"
@@ -1120,19 +1120,9 @@ export default function ZoneGridView({
               </button>
             )}
 
-            {/* Tombol Beli Kavling Tanah */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && !selectedTile.ownerId && (
-              <button
-                onClick={() => handlePurchaseLand(selectedTile)}
-                className="bg-amber-900/90 hover:bg-amber-800 text-amber-100 px-3.5 py-1.5 rounded-lg border border-amber-500/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
-              >
-                <Coins className="w-3.5 h-3.5 text-amber-300" />
-                <span>Klaim Tanah (100 Perak)</span>
-              </button>
-            )}
 
             {/* Tombol Tanam Tanaman */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.ownerId && !selectedTile.cropType && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.isClaimable && selectedTile.ownerId && !selectedTile.cropType && (
               <button
                 onClick={() => handlePlantCrop(selectedTile)}
                 className="bg-lime-950 hover:bg-lime-900 text-lime-200 px-3.5 py-1.5 rounded-lg border border-lime-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
@@ -1143,7 +1133,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Panen Tanaman */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.isClaimable && selectedTile.cropType && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.isClaimable && selectedTile.cropType && (
               <button
                 onClick={() => handleHarvestCrop(selectedTile)}
                 className="bg-yellow-950 hover:bg-yellow-900 text-yellow-200 px-3.5 py-1.5 rounded-lg border border-yellow-500/70 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
@@ -1154,7 +1144,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Mancing */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && (selectedTile.resourceType === 'fish' || selectedTile.terrainType === 'water' || selectedTile.terrainType === 'river') && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && (selectedTile.resourceType === 'fish' || selectedTile.terrainType === 'water' || selectedTile.terrainType === 'river') && (
               <button
                 onClick={handleFish}
                 className="bg-cyan-950 hover:bg-cyan-900 text-cyan-200 px-3.5 py-1.5 rounded-lg border border-cyan-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"
@@ -1165,7 +1155,7 @@ export default function ZoneGridView({
             )}
 
             {/* Tombol Panen Sumber Daya Alam (Forage) */}
-            {selectedTile && distToSelected !== null && distToSelected <= 1 && selectedTile.resourceType && selectedTile.resourceType !== 'fish' && (
+            {selectedTile && distToSelected !== null && distToSelected === 0 && selectedTile.resourceType && selectedTile.resourceType !== 'fish' && (
               <button
                 onClick={handleForage}
                 className="bg-teal-950 hover:bg-teal-900 text-teal-200 px-3.5 py-1.5 rounded-lg border border-teal-600/60 flex items-center gap-1.5 text-xs font-bold shadow-lg transition-all"

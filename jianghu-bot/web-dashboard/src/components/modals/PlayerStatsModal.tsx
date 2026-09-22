@@ -31,7 +31,7 @@ export default function PlayerStatsModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showTitleModal, setShowTitleModal] = useState(false);
-  const [equippedTitle, setEquippedTitle] = useState<string>('Pendekar Pedang Surgawi');
+  const [equippedTitle, setEquippedTitle] = useState<string | null>(null);
   const [titleNotice, setTitleNotice] = useState<string | null>(null);
 
   const isOpen = activeModal === 'stats';
@@ -50,11 +50,7 @@ export default function PlayerStatsModal() {
       if (res.data?.success && res.data?.data) {
         const p = res.data.data;
         setPlayer(p);
-        if (p.activeTitle) {
-          setEquippedTitle(p.activeTitle);
-        } else if (p.reputationTitle) {
-          setEquippedTitle(p.reputationTitle);
-        }
+        setEquippedTitle(p.body?.title || null);
       } else {
         setError('Gagal memuat profil pendekar.');
       }
@@ -65,11 +61,24 @@ export default function PlayerStatsModal() {
     }
   };
 
-  const handleSelectTitle = (titleName: string) => {
-    setEquippedTitle(titleName);
-    setShowTitleModal(false);
-    setTitleNotice(`Gelar aktif diubah: [${titleName}]`);
-    setTimeout(() => setTitleNotice(null), 3500);
+  const handleSelectTitle = async (titleName: string) => {
+    try {
+        const res = await api.patch('/player/profile', {
+            body: { title: titleName }
+        });
+        if (res.data?.success) {
+            setEquippedTitle(titleName);
+            setShowTitleModal(false);
+            setTitleNotice(`Gelar aktif diubah: [${titleName}]`);
+            setTimeout(() => setTitleNotice(null), 3500);
+        } else {
+            setTitleNotice(`Gagal merubah gelar: ${res.data?.error || 'Unknown error'}`);
+            setTimeout(() => setTitleNotice(null), 3500);
+        }
+    } catch (error: any) {
+        setTitleNotice(`Gagal merubah gelar: ${error.response?.data?.error || 'Koneksi ke server terputus.'}`);
+        setTimeout(() => setTitleNotice(null), 3500);
+    }
   };
 
   if (!isOpen) return null;
@@ -320,28 +329,33 @@ export default function PlayerStatsModal() {
                               Pilih Gelar Kehormatan untuk Dipamerkan (Flexing):
                             </span>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                              {ACHIEVEMENT_TITLES.map((t) => {
-                                const isSelected = equippedTitle === t.name;
-                                return (
-                                  <button
-                                    key={t.id}
-                                    onClick={() => handleSelectTitle(t.name)}
-                                    className={`p-2 rounded-lg border text-left flex items-start justify-between gap-2 transition-all ${
-                                      isSelected
-                                        ? 'bg-amber-950/80 border-amber-400 text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
-                                        : 'bg-[#181e2b] border-[#2f384c] text-stone-300 hover:border-amber-700'
-                                    }`}
-                                  >
-                                    <div>
-                                      <div className="font-bold flex items-center gap-1">
-                                        <span>[{t.name}]</span>
+                              {player?.unlockedTitles?.length > 0 ? (
+                                player.unlockedTitles.map((t: string, index: number) => {
+                                  const isSelected = equippedTitle === t;
+                                  return (
+                                    <button
+                                      key={index}
+                                      onClick={() => handleSelectTitle(t)}
+                                      className={`p-2 rounded-lg border text-left flex items-start justify-between gap-2 transition-all ${
+                                        isSelected
+                                          ? 'bg-amber-950/80 border-amber-400 text-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
+                                          : 'bg-[#181e2b] border-[#2f384c] text-stone-300 hover:border-amber-700'
+                                      }`}
+                                    >
+                                      <div>
+                                        <div className="font-bold flex items-center gap-1">
+                                          <span>[{t}]</span>
+                                        </div>
                                       </div>
-                                      <p className="text-[10px] text-stone-400 mt-0.5">{t.desc}</p>
-                                    </div>
-                                    {isSelected && <Check size={14} className="text-amber-400 shrink-0 mt-0.5" />}
-                                  </button>
-                                );
-                              })}
+                                      {isSelected && <Check size={14} className="text-amber-400 shrink-0 mt-0.5" />}
+                                    </button>
+                                  );
+                                })
+                              ) : (
+                                <div className="col-span-full text-center text-stone-500 py-4 italic">
+                                  Belum ada gelar. Raih dari pencapaian, quest, atau sekte.
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}

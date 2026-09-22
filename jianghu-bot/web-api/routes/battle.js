@@ -226,6 +226,21 @@ router.post('/start', authenticateToken, async (req, res) => {
         let battleType = 'pve';
 
         if (targetType === 'monster') {
+            const playerZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
+            if (playerZoneId !== zoneId) {
+                return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });
+            }
+
+            if (tileKey) {
+                const [targetX, targetY] = tileKey.split('_').map(Number);
+                const currentX = player.gridPosition?.tileX ?? 0;
+                const currentY = player.gridPosition?.tileY ?? 0;
+
+                if (targetX !== currentX || targetY !== currentY) {
+                    return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });
+                }
+            }
+
 
             let monster = await Monster.findOne({
                 $or: [

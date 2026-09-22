@@ -80,7 +80,7 @@ export default function GridTileInspectorCard({
   onClose
 }: GridTileInspectorCardProps) {
   const dist = Math.max(Math.abs(playerPos.x - tile.tileX), Math.abs(playerPos.y - tile.tileY));
-  const isAdjacentOrOn = dist <= 1;
+  const isAdjacentOrOn = dist === 0;
   const isDirectlyOn = dist === 0;
 
   const currentLandPrice = playerLandStats?.nextPrice || getLandPriceForPlayer(playerLandStats?.ownedPlotsCount || 0);

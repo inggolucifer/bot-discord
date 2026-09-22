@@ -2172,7 +2172,13 @@ router.patch('/profile', authenticateToken, async (req, res) => {
              if (body.cloth !== undefined && validKeys('cloth', body.cloth)) player.body.cloth = body.cloth;
              if (body.mask !== undefined && validKeys('mask', body.mask)) player.body.mask = body.mask;
              if (body.spellAvatar !== undefined && validKeys('spellAvatar', body.spellAvatar)) player.body.spellAvatar = body.spellAvatar;
-             if (body.title !== undefined && validKeys('title', body.title)) player.body.title = body.title;
+             if (body.title !== undefined) {
+                 if (body.title === null || (player.unlockedTitles && player.unlockedTitles.includes(body.title))) {
+                     player.body.title = body.title;
+                 } else {
+                     throw new CustomError('Kamu tidak memiliki gelar tersebut.', 403);
+                 }
+             }
              if (body.avatarBorder !== undefined && validKeys('avatarBorder', body.avatarBorder)) player.body.avatarBorder = body.avatarBorder;
              if (body.chatBorder !== undefined && validKeys('chatBorder', body.chatBorder)) player.body.chatBorder = body.chatBorder;
              player.markModified('body');

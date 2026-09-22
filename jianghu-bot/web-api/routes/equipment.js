@@ -57,6 +57,8 @@ router.post('/equip', authenticateToken, async (req, res) => {
             slot = (item.capacityType === 'horse') ? 'mount' : 'accessory';
         }
         else if (item.category === 'mount') slot = 'mount';
+        else if (item.category === 'talisman') slot = 'talisman';
+        else if (item.category === 'artifact') slot = 'artifact';
 
         if (!slot) {
             return res.status(400).json({ error: 'Item cannot be equipped' });

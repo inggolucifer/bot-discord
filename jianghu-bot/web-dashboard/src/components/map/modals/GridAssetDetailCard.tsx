@@ -18,7 +18,7 @@ export default function GridAssetDetailCard({
   onClose
 }: GridAssetDetailCardProps) {
   const dist = Math.max(Math.abs(playerPos.x - tile.tileX), Math.abs(playerPos.y - tile.tileY));
-  const isAdjacentOrOnTile = dist <= 1;
+  const isAdjacentOrOnTile = dist === 0;
 
   // Countdown timer jika sedang dalam pembangunan
   const [timeLeft, setTimeLeft] = useState<string>('');

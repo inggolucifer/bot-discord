@@ -93,6 +93,8 @@ export default function CharacterPage() {
     { id: 'accessory', label: 'Accessory', icon: '💍' },
     { id: 'pants', label: 'Pants', icon: '👖' },
     { id: 'boots', label: 'Boots', icon: '👢' },
+    { id: 'talisman', label: 'Talisman', icon: '📜' },
+    { id: 'artifact', label: 'Artifact', icon: '🔮' },
     { id: 'mount', label: 'Mount', icon: '🐎' }
   ];
 
@@ -116,7 +118,7 @@ export default function CharacterPage() {
       : inv.itemId.category === 'accessories' ? (inv.itemId.capacityType === 'horse' ? 'mount' : 'accessory')
       : inv.itemId.category;
 
-    const isValidCategory = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount'].includes(slotKey);
+    const isValidCategory = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'talisman', 'artifact', 'mount'].includes(slotKey);
     const isAlreadyEquipped = equippedInventoryIds.includes(String(inv._id));
 
     return isValidCategory && !isAlreadyEquipped;
