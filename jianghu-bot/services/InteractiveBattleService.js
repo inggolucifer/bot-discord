@@ -391,6 +391,41 @@ class InteractiveBattleService {
         message: `⚡ ${session.player.name} terkena efek lumpuh/totokan saraf (Stun) dan tidak dapat bergerak ronde ini!`
       });
       // Lewati aksi pemain, langsung ke serangan balik musuh & tick status
+    } else if (actionType === 'item') {
+      const Player = require('../models/Player');
+      const playerDoc = await Player.findOne({ discordId: actorId }).populate('inventory.itemId');
+      if (!playerDoc) throw new Error('Karakter tidak ditemukan.');
+
+      const inventoryIndex = playerDoc.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === skillId);
+      if (inventoryIndex === -1 || playerDoc.inventory[inventoryIndex].quantity <= 0) {
+        throw new Error('Kamu tidak memiliki item tersebut di inventory.');
+      }
+
+      const item = playerDoc.inventory[inventoryIndex].itemId;
+      if (!item.usableInBattle) {
+        throw new Error(`Item ${item.name} tidak dapat digunakan di dalam pertarungan.`);
+      }
+
+      const { applyConsumableEffects } = require('../utils/itemEffects');
+      const buffMessage = applyConsumableEffects(playerDoc, item);
+      if (item.restoresHp) {
+        session.player.hp = playerDoc.currentHp;
+      }
+
+      playerDoc.inventory[inventoryIndex].quantity -= 1;
+      if (playerDoc.inventory[inventoryIndex].quantity <= 0) {
+        playerDoc.inventory.splice(inventoryIndex, 1);
+      }
+      playerDoc.markModified('inventory');
+      await playerDoc.save();
+
+      session.logs.push({
+        tick: session.currentTick,
+        actor: session.player.name,
+        action: 'item',
+        message: `🎒 ${session.player.name} menggunakan item [${item.name}].${buffMessage}`
+      });
+
     } else if (actionType === 'flee') {
       // 2. Aksi Kabur (Run)
       const playerSpeed = session.player.speed || 10;
