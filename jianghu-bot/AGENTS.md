@@ -191,6 +191,8 @@ Sistem statistik kultivator diintegrasikan ke dalam schema `Player.js` dan model
 3. **Martial Arts (6 Disiplin Beladiri Jianghu)**:
    - `Blade` (Golok/Saber), `Spear` (Tombak/Staff), `Sword` (Pedang), `Fist` (Tinju), `Palm` (Telapak), `Finger` (Totokan Meridian). Terhubung langsung dengan `player.kungfuSkills`.
 
+   > UI Martial Arts menampilkan 14 skill kungfu (6 senjata/tangan + forging, qimen, melody, healing, wineArt, hiddenWeapon, stealing, core). Ini disengaja; layout kartu boleh scroll internal.
+
 4. **Spiritual Root (6 Akar Elemen Dao / 灵根)**:
    - `Fire`, `Water`, `Lightning`, `Wind`, `Earth`, `Wood`
    - Menyimpan raw XP; level dihitung via `getKungfuLevel()` (max 250)
