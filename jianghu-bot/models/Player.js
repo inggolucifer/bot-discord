@@ -267,7 +267,8 @@ const playerSchema = new mongoose.Schema({
   deathRecoveryUntil: { type: Date, default: null },
   lastKilledAt: { type: Date, default: null },
   lastKilledByMonster: { type: String, default: null },
-  currentStamina: { type: Number, default: null },
+  currentStamina: { type: Number, default: 100 },
+  maxStamina: { type: Number, default: 100 },
   rest: {
     status: { type: String, enum: ["idle", "resting"], default: "idle" },
     mode: { type: String, enum: ["tent", "open", null], default: null },
