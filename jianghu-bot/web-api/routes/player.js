@@ -18,6 +18,7 @@ const { calculateRepairCost, calculateDailyGuardCost } = require('../../utils/as
 const { convertFromCopper, convertToCopper } = require('../../utils/currencyNormalize');
 const { getPlayerSect } = require('../../utils/sectUtils');
 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
+const { clampStamina } = require('../../utils/stamina');
 const { getKungfuLevel, KUNGFU_SKILLS, getWeaponMasteryMultiplier, getUnarmedBonus, getToolDurabilityPreserveChance, getStealingSuccessBonus } = require('../../utils/kungfuMastery');
 const { applyTrainingSpiritualRootXp, applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
 const TransferRequest = require('../../models/TransferRequest');
@@ -113,16 +114,37 @@ router.get('/profile', authenticateToken, async (req, res) => {
         // Note: For multi-guild support, we ideally need guildId from frontend.
         // For now, we fetch the first profile found for the user (assuming 1 main server)
         // In a full production scenario, the frontend should pass guildId.
-        const player = await Player.findOne({ discordId: userId })
+        let playerObj = await Player.findOne({ discordId: userId })
             .populate('laws')
             .populate('manuals.manualId')
             .populate('inventory.itemId')
-            .select('-pets -assets') // Exclude heavy arrays for the simple profile view
-            .lean();
+            .select('-pets -assets'); // Exclude heavy arrays for the simple profile view
 
-        if (!player) {
+        if (!playerObj) {
             return res.status(404).json({ error: 'Karakter tidak ditemukan. Pastikan Anda sudah membuat karakter melalui Web Dashboard.' });
         }
+
+        let shouldSave = false;
+
+        // Apply Stamina Clamping (BUG 1)
+        const staminaResult = clampStamina(playerObj);
+        if (playerObj.isModified('currentStamina') || playerObj.isModified('maxStamina')) {
+            shouldSave = true;
+        }
+
+        // Apply Spiritual Root all-10 Reset (BUG 3)
+        const sr = playerObj.extendedStats?.spiritualRoot;
+        if (sr && [sr.fire, sr.water, sr.lightning, sr.wind, sr.earth, sr.wood].every(v => Number(v) === 10)) {
+            playerObj.extendedStats.spiritualRoot = { fire: 0, water: 0, lightning: 0, wind: 0, earth: 0, wood: 0 };
+            playerObj.markModified('extendedStats');
+            shouldSave = true;
+        }
+
+        if (shouldSave) {
+            await playerObj.save();
+        }
+
+        const player = playerObj.toObject();
 
         // Inject Discord Avatar URL from the JWT payload as fallback
         const discordAvatarUrl = req.user.avatar; // Assuming we passed it during auth

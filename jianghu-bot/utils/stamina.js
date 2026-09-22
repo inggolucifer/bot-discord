@@ -5,11 +5,21 @@ function getMaxStamina(player) {
     return staminaConfig.BASE_MAX_STAMINA + (sta * staminaConfig.STA_STAMINA_PER_POINT);
 }
 
+function clampStamina(player) {
+    const calculatedMax = getMaxStamina(player);
+    const maxS = Math.max(1, Number(player.maxStamina) || calculatedMax);
+    player.maxStamina = maxS;
+
+    let cur = player.currentStamina;
+    if (cur == null || Number.isNaN(Number(cur))) cur = maxS;
+
+    cur = Math.min(Math.max(0, Number(cur)), maxS);
+    player.currentStamina = cur;
+    return { current: cur, max: maxS };
+}
+
 function getCurrentStamina(player) {
-    if (player.currentStamina === null || player.currentStamina === undefined) {
-        return getMaxStamina(player);
-    }
-    return Math.max(0, Math.min(player.currentStamina, getMaxStamina(player)));
+    return clampStamina(player).current;
 }
 
 function applyTravelDrain(player, travelDoc, now) {
@@ -56,5 +66,6 @@ function applyTravelDrain(player, travelDoc, now) {
 module.exports = {
     getMaxStamina,
     getCurrentStamina,
-    applyTravelDrain
+    applyTravelDrain,
+    clampStamina
 };

@@ -59,9 +59,15 @@ function createGridOpponent(ambientDangerTier = 1, isHazardTile = false) {
 function runGridBattle(player, opponent, ambientDangerTier = 1) {
   const battleResult = simulateBattle(player, opponent, { isPvE: true, allowSteal: true });
 
+  const { applyVitalityLossOnDeath } = require('./vitality');
+
   const won = battleResult.winnerIdx === 1;
   player.currentHp = Math.max(1, battleResult.p1Hp);
   player.combatConditions = battleResult.p1Conditions || [];
+
+  if (player.currentHp <= 1) {
+    applyVitalityLossOnDeath(player);
+  }
 
   let rewardMessage = '';
   if (won) {
