@@ -10,6 +10,8 @@
  * 4. Seluruh Lokasi, Bangunan, Dermaga, dan Gua Kuno
  */
 
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const Item = require('../models/Item');
 const Monster = require('../models/Monster');
@@ -325,6 +327,90 @@ async function seedMasterEcosystem(options = { reset: false, guildId: DEFAULT_GU
       weight: 0.2,
       basePrice: 120,
       description: 'Akar herba bertuah untuk memulihkan meridian tubuh dan bahan ramuan pil.'
+    },
+
+    // --- OBAT-OBATAN & PENAWAR KONDISI JIANGHU ---
+    {
+      name: 'Pil Penawar Racun',
+      rank: 'Uncommon',
+      category: 'pill',
+      weight: 0.1,
+      basePrice: 40,
+      usableInBattle: true,
+      description: 'Pil herbal penawar racun untuk menetralkan racun mematikan di aliran darah.'
+    },
+    {
+      name: 'Salep Jin Chuang',
+      rank: 'Uncommon',
+      category: 'consume',
+      weight: 0.2,
+      basePrice: 45,
+      usableInBattle: true,
+      description: 'Salep emas tabib kuno untuk merawat luka dalam dan menutup luka pendarahan.'
+    },
+    {
+      name: 'Perban Sutra',
+      rank: 'Common',
+      category: 'consume',
+      weight: 0.1,
+      basePrice: 15,
+      usableInBattle: true,
+      description: 'Perban sutra bersih untuk membalut luka sobek dan menghentikan pendarahan.'
+    },
+    {
+      name: 'Teh Pengusir Mabuk',
+      rank: 'Common',
+      category: 'consume',
+      weight: 0.2,
+      basePrice: 20,
+      usableInBattle: true,
+      description: 'Seduhan teh hijau pahit yang menguraikan pengaruh alkohol dan menyadarkan pikiran.'
+    },
+    {
+      name: 'Pil Api Yang',
+      rank: 'Rare',
+      category: 'pill',
+      weight: 0.1,
+      basePrice: 85,
+      usableInBattle: true,
+      description: 'Pil berintikan hawa Yang berkobar untuk mencairkan es dan menghangatkan tubuh yang membeku.'
+    },
+    {
+      name: 'Pil Hati Jernih',
+      rank: 'Rare',
+      category: 'pill',
+      weight: 0.1,
+      basePrice: 90,
+      usableInBattle: true,
+      description: 'Pil Qingxin penenang jiwa untuk menyembuhkan penyimpangan Qi dan delusi kegilaan.'
+    },
+    {
+      name: 'Air Embun Sejuk',
+      rank: 'Common',
+      category: 'consume',
+      weight: 0.3,
+      basePrice: 25,
+      usableInBattle: true,
+      description: 'Air embun pegunungan sejuk untuk memadamkan kobaran luka bakar pada tubuh.'
+    },
+    {
+      name: 'Salep Salju Dingin',
+      rank: 'Rare',
+      category: 'consume',
+      weight: 0.2,
+      basePrice: 95,
+      usableInBattle: true,
+      description: 'Salep es giok dingin untuk menyembuhkan luka bakar parah dan memadamkan status incinerated.'
+    },
+    {
+      name: 'Arak Shaoxing',
+      rank: 'Common',
+      category: 'consume',
+      weight: 0.5,
+      basePrice: 30,
+      usableInBattle: true,
+      restoresMood: 15,
+      description: 'Arak beras tradisional wangi yang meningkatkan kadar alkohol untuk jurus beladiri Tinju Arak.'
     }
   ];
 

@@ -32,6 +32,18 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         spd += (player.talents.agi || 0) * 5;
     }
 
+    // Apply Injury Condition penalty:
+    // Semakin tinggi injury, semakin rendah Max MP / Qi, serta mereduksi ATK dan DEF secara drastis
+    const injury = Math.max(0, Math.floor(Number(player.conditions?.injury) || 0));
+    if (injury > 0) {
+        const penaltyRatio = Math.min(0.80, injury * 0.0045);
+        atk = Math.max(1, Math.floor(atk * (1 - penaltyRatio)));
+        def = Math.max(1, Math.floor(def * (1 - penaltyRatio)));
+
+        const mpPenaltyRatio = Math.min(0.80, injury * 0.005);
+        maxMp = Math.max(5, Math.floor(maxMp * (1 - mpPenaltyRatio)));
+    }
+
     // Determine current HP and MP (clamp to max)
     let currentHp = player.currentHp !== null && player.currentHp !== undefined ? player.currentHp : maxHp;
     let currentMp = player.currentMp !== null && player.currentMp !== undefined ? player.currentMp : maxMp;

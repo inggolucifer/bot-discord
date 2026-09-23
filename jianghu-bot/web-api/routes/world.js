@@ -1982,6 +1982,12 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         const isFlyingMount = effectiveMountType === 'flying_sword' || (mountDoc && mountDoc.name && mountDoc.name.toLowerCase().includes('pedang terbang'));
         const isWaterMount = effectiveMountType === 'ship' || (mountDoc && mountDoc.name && (mountDoc.name.toLowerCase().includes('kapal') || mountDoc.name.toLowerCase().includes('perahu')));
 
+        const { processGridStepConditions } = require('../../utils/conditionEngine');
+        const condCheck = processGridStepConditions(player, 1);
+        if (!condCheck.canMove) {
+            return res.status(400).json({ error: condCheck.reason });
+        }
+
         for (const wp of waypoints) {
             const targetX = parseInt(wp.x);
             const targetY = parseInt(wp.y);
@@ -2055,6 +2061,11 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             if (player.currentStamina !== null && player.currentStamina !== undefined) {
                 player.currentStamina = Math.max(0, player.currentStamina - stepCost);
                 totalStaminaCost += stepCost;
+            }
+
+            // Kerusakan racun saat melangkah
+            if (condCheck.stepDamage > 0) {
+                player.currentHp = Math.max(1, (player.currentHp || 100) - condCheck.stepDamage);
             }
 
             // Maju ke tile ini

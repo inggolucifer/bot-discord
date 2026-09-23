@@ -1,19 +1,49 @@
+/**
+ * combatConditions.js
+ * Master Configuration for Character Conditions & Status Effects
+ * Jianghu Bot & Immortal-X
+ */
+
 module.exports = {
-    POISON_DOT_BASE: 0.05, // e.g., 5% of max HP per severity
-    INJURY_THRESHOLD_PERCENT: 0.15, // Hit big enough to cause injury
-    INJURY_MAX_MP_REDUCTION_PERCENT: 0.02,
-    INJURY_ATK_DEF_REDUCTION_PERCENT: 0.03,
-    BLEED_DOT_BASE: 0.03, // Base bleed damage percentage
-    BLEED_REDUCTION_PER_TURN: 0.5, // Severity drops by 0.5 each turn
-    INTOX_MISS_RATE_PER_SEVERITY: 0.1, // 10% more miss per severity
-    INTOX_REDUCTION_PER_TURN: 1, // Reduces severity each turn
-    STEAL_BASE_CHANCE: 0.3,
-    STEAL_PER_SKILL: 0.05,
-    INJURY_REDUCTION_PER_TURN: 0.25,
-    INTOX_WINE_ART_MULTIPLIER: 1.2, // +20% damage for wineArt if toxed
-    PSYCHOSIS_MISS_OR_SELF_HIT_CHANCE: 0.2, // 20% chance to miss or hit self in 1v1
-    BURN_DOT_BASE: 0.04,
-    BURN_RAMP_PER_TURN: 0.01,
-    BURN_INCINERATED_THRESHOLD: 5,
-    HEALING_REDUCTION_INCINERATED: 0.5 // Healing is 50% less effective
+  // POISON
+  POISON_DAMAGE_FACTOR: 0.005, // e.g., value * 0.5% maxHp or proportional damage
+  POISON_STEP_DAMAGE_FACTOR: 0.002, // Damage per step when walking on grid while poisoned
+
+  // INJURY
+  INJURY_ATK_DEF_REDUCTION_PER_POINT: 0.0045, // 100 injury = ~45% reduction to ATK and DEF
+  INJURY_MAX_MP_REDUCTION_PER_POINT: 0.005,  // 100 injury = ~50% reduction to Max MP/Qi
+  INJURY_REDUCTION_PER_REST: 20,
+
+  // BLEED
+  BLEED_DAMAGE_FACTOR: 0.004, // Bleed DoT per point
+  BLEED_DECAY_PER_TURN: 10,   // Bleed decays naturally each turn
+
+  // INTOX
+  INTOX_MISS_RATE_PER_POINT: 0.0035, // 100 intox = +35% miss rate in combat
+  INTOX_WINE_ART_BONUS_PER_POINT: 0.006, // 100 intox = +60% Drunken Kungfu / wineArt DMG
+  INTOX_DECAY_PER_TURN: 5,
+
+  // FROZEN
+  FROZEN_THRESHOLD: 30, // >= 30 means completely frozen (cannot move / skip turn)
+  FROZEN_DECAY_PER_TURN: 10,
+  FIRE_CLEANSE_FROZEN_AMOUNT: 50, // Fire skill reduces frozen by 50 points
+
+  // PSYCHOSIS
+  PSYCHOSIS_CONFUSION_CHANCE_PER_POINT: 0.0065, // Max ~65% confusion at 100 psychosis
+  PSYCHOSIS_DECAY_PER_TURN: 5,
+
+  // BURN
+  BURN_DAMAGE_FACTOR: 0.0035,
+  BURN_RAMP_PER_TURN: 5, // Burn worsens by 5 points each turn
+  BURN_INCINERATED_THRESHOLD: 75, // >= 75 triggers INCINERATED
+  HEALING_REDUCTION_INCINERATED: 0.5, // 50% healing reduction when incinerated
+  WATER_CLEANSE_BURN_AMOUNT: 45, // Water skill reduces burn by 45 points
+
+  // KNOCK BACK
+  KNOCKBACK_BASE_ATB_REDUCTION: 35, // -35 ATB flat
+  KNOCKBACK_ATB_SCALE: 0.3,
+  KNOCKBACK_STANCE_DAMAGE: 30,
+  KNOCKBACK_WALL_SLAM_THRESHOLD: 50, // If knockback >= 50, triggers wall slam collision
+  KNOCKBACK_WALL_SLAM_PERCENT: 0.08, // 8% Max HP collision damage
+  KNOCKBACK_QUEUE_SWAP_THRESHOLD: 60, // If knockback >= 60, swap front enemy to queue
 };

@@ -48,6 +48,16 @@ const battleEntitySchema = new mongoose.Schema({
     icon: { type: String, default: '☠️' },
     description: { type: String, default: '' }
   }],
+  conditions: {
+    poison: { type: Number, default: 0 },
+    injury: { type: Number, default: 0 },
+    bleed: { type: Number, default: 0 },
+    intox: { type: Number, default: 0 },
+    frozen: { type: Number, default: 0 },
+    psychosis: { type: Number, default: 0 },
+    burn: { type: Number, default: 0 },
+    knockback: { type: Number, default: 0 }
+  },
   
   // Skills
   skills: [{

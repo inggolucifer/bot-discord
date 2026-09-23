@@ -5,15 +5,16 @@ import { useUIStore } from '@/lib/store';
 import api from '@/lib/api';
 import { 
   X, User, BookOpen, Hammer, Package, Scroll, Users, Sparkles,
-  Shield, Sword, Flame, Heart, Zap, RefreshCw, Award, Check, ChevronDown
+  Shield, Sword, Flame, Heart, Zap, RefreshCw, Award, Check, ChevronDown, ShieldAlert
 } from 'lucide-react';
 import StatGrid from '@/components/character/StatGrid';
 import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
+import ConditionTab from '@/components/character/ConditionTab';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { PlayerProfile } from '@/types/game';
 
-type ActiveTab = 'stats' | 'skills' | 'artisan' | 'item' | 'experience' | 'relations';
+type ActiveTab = 'stats' | 'condition' | 'skills' | 'artisan' | 'item' | 'experience' | 'relations';
 
 const ACHIEVEMENT_TITLES = [
   { id: 'title_sword_saint', name: 'Pendekar Pedang Surgawi', color: 'from-amber-500 to-yellow-300', border: 'border-amber-400', desc: 'Menguasai esensi sembilan tebasan langit.' },
@@ -146,6 +147,7 @@ export default function PlayerStatsModal() {
 
   const navItems: { key: ActiveTab; label: string; icon: any }[] = [
     { key: 'stats', label: 'Stats', icon: User },
+    { key: 'condition', label: 'Kondisi', icon: ShieldAlert },
     { key: 'skills', label: 'Skills', icon: Zap },
     { key: 'artisan', label: 'Artisan', icon: Hammer },
     { key: 'item', label: 'Item', icon: Package },
@@ -449,7 +451,12 @@ export default function PlayerStatsModal() {
                   </div>
                 )}
 
-                {/* TAB 2: SKILLS (MANUALS & JURUS) */}
+                {/* TAB 2: CONDITION (KONDISI & EFEK STATUS STATUS KARAKTER) */}
+                {activeTab === 'condition' && (
+                  <ConditionTab player={player} onRefresh={fetchPlayerProfile} />
+                )}
+
+                {/* TAB 3: SKILLS (MANUALS & JURUS) */}
                 {activeTab === 'skills' && (
                   <div className="space-y-4">
                     <div className="bg-[#121622] border border-[#3b3323] p-4 rounded-xl">

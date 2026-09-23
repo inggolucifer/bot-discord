@@ -198,6 +198,55 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
         );
     };
 
+    const renderConditionBadges = (conditions?: Record<string, number>, isPlayer: boolean = false) => {
+        if (!conditions) return null;
+        const badges: { icon: string; name: string; val: number; color: string }[] = [];
+        
+        if ((conditions.poison || 0) > 0) {
+            badges.push({ icon: '☠️', name: 'Racun', val: Math.floor(conditions.poison), color: 'bg-emerald-950/90 text-emerald-300 border-emerald-700' });
+        }
+        if ((conditions.burn || 0) > 0) {
+            const isIncinerated = conditions.burn >= 75;
+            badges.push({ icon: '🔥', name: isIncinerated ? 'Hangus' : 'Bakar', val: Math.floor(conditions.burn), color: 'bg-orange-950/90 text-orange-300 border-orange-700 animate-pulse' });
+        }
+        if ((conditions.frozen || 0) > 0) {
+            const isFrozen = conditions.frozen >= 30;
+            badges.push({ icon: '❄️', name: isFrozen ? 'Membeku' : 'Dingin', val: Math.floor(conditions.frozen), color: 'bg-cyan-950/90 text-cyan-300 border-cyan-600' });
+        }
+        if ((conditions.injury || 0) > 0) {
+            badges.push({ icon: '🩹', name: 'Cedera', val: Math.floor(conditions.injury), color: 'bg-amber-950/90 text-amber-300 border-amber-700' });
+        }
+        if ((conditions.bleed || 0) > 0) {
+            badges.push({ icon: '🩸', name: 'Pendarahan', val: Math.floor(conditions.bleed), color: 'bg-rose-950/90 text-rose-300 border-rose-700' });
+        }
+        if ((conditions.intox || 0) > 0) {
+            badges.push({ icon: '🍶', name: 'Mabuk', val: Math.floor(conditions.intox), color: 'bg-indigo-950/90 text-indigo-300 border-indigo-700' });
+        }
+        if ((conditions.psychosis || 0) > 0) {
+            badges.push({ icon: '🌀', name: 'Kalap', val: Math.floor(conditions.psychosis), color: 'bg-purple-950/90 text-purple-300 border-purple-700 animate-pulse' });
+        }
+        if ((conditions.knockback || 0) > 0) {
+            badges.push({ icon: '💥', name: 'Pental', val: Math.floor(conditions.knockback), color: 'bg-yellow-950/90 text-yellow-300 border-yellow-700' });
+        }
+
+        if (badges.length === 0) return null;
+
+        return (
+            <div className={`flex flex-wrap gap-1 ${isPlayer ? 'justify-start mt-0.5' : 'justify-center mt-1'} w-full`}>
+                {badges.map((b, idx) => (
+                    <span 
+                        key={idx} 
+                        title={`${b.name}: ${b.val} poin`}
+                        className={`text-[9px] px-1 py-0.2 rounded border font-mono flex items-center gap-0.5 shadow-sm ${b.color}`}
+                    >
+                        <span>{b.icon}</span>
+                        <span>{b.name} [{b.val}]</span>
+                    </span>
+                ))}
+            </div>
+        );
+    };
+
     return createPortal(
         <div className="fixed inset-0 z-[99999] w-screen h-screen flex flex-col justify-between bg-[#070a14] font-sans select-none overflow-hidden text-gray-200">
             {/* Ambient Background Glow Effect */}
@@ -358,6 +407,9 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                             ))}
                                         </div>
                                     )}
+
+                                    {/* Authoritative Conditions (Poison, Burn, Frozen, Knockback, etc.) */}
+                                    {renderConditionBadges(enemy.conditions)}
                                 </div>
                             );
                         })}
@@ -438,6 +490,9 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                 {isPlayerTurn ? '⚡ SIAP BERAKSI' : '⏳ MENUNGGU...'}
                             </div>
                         </div>
+
+                        {/* Authoritative Conditions (Poison, Burn, Frozen, Knockback, etc.) */}
+                        {renderConditionBadges(player?.conditions, true)}
 
                         {/* HP & Qi Bars Grid */}
                         <div className="grid grid-cols-2 gap-2">

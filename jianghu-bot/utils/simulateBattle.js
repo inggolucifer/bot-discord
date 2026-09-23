@@ -149,7 +149,12 @@ function simulateBattle(challenger, opponent, options = {}) {
         for (let i = pConditions.length - 1; i >= 0; i--) {
             let cond = pConditions[i];
 
-            if (cond.type === 'bleed') {
+            if (cond.type === 'poison') {
+                let dmg = Math.floor(pMaxHp * 0.05 * (cond.severity || 1));
+                hpLoss += dmg;
+                pushLog(`☠️ **${pName}** terkena sengatan racun sebesar **${dmg}** damage saat menyerang!`, 'condition_tick', { damage: dmg, type: 'poison', target: actorIdx });
+
+            } else if (cond.type === 'bleed') {
                 let dmg = Math.floor(pMaxHp * (COMBAT_COND.BLEED_DOT_BASE * cond.severity));
                 hpLoss += dmg;
                 cond.severity = Math.max(0, cond.severity - COMBAT_COND.BLEED_REDUCTION_PER_TURN);
@@ -313,6 +318,24 @@ function simulateBattle(challenger, opponent, options = {}) {
             if (activeSkill.requiredSkillType) p1UsedSkillTypes.add(activeSkill.requiredSkillType);
             if (activeSkill.rootType) {
                 p1UsedElementsCount[activeSkill.rootType] = (p1UsedElementsCount[activeSkill.rootType] || 0) + 1;
+            }
+        }
+
+        // Resonansi Elemen: Skill Air memadamkan Burn, Skill Api mencairkan Frozen
+        if (activeSkill && activeSkill.rootType) {
+            const root = activeSkill.rootType.toLowerCase();
+            if (root === 'air' || root === 'water') {
+                const bIdx = atkConds.findIndex(c => c.type === 'burn');
+                if (bIdx !== -1) {
+                    atkConds.splice(bIdx, 1);
+                    pushLog(`💧 [Resonansi Air] Jurus **${activeSkill.name}** memadamkan kobaran api luka bakar pada tubuh ${attacker.characterName}!`, 'elemental_cleanse');
+                }
+            } else if (root === 'api' || root === 'fire') {
+                const fIdx = atkConds.findIndex(c => c.type === 'frozen');
+                if (fIdx !== -1) {
+                    atkConds.splice(fIdx, 1);
+                    pushLog(`🔥 [Resonansi Api] Hawa Yang jurus **${activeSkill.name}** mencairkan pembekuan es pada tubuh ${attacker.characterName}!`, 'elemental_cleanse');
+                }
             }
         }
 

@@ -23,6 +23,7 @@ const { getKungfuLevel, KUNGFU_SKILLS, getWeaponMasteryMultiplier, getUnarmedBon
 const { applyTrainingSpiritualRootXp, applyCombatSpiritualRootXp } = require('../../utils/spiritualRootXp');
 const TransferRequest = require('../../models/TransferRequest');
 const Item = require('../../models/Item');
+const { normalizeConditions, applyItemConditionCure } = require('../../utils/conditionEngine');
 const Asset = require('../../models/Asset');
 const { getGlobalAssets } = require('../../utils/imageResolve');
 const LockManager = require('../utils/lockManager');
@@ -278,6 +279,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
             success: true,
             data: {
                 ...player,
+                conditions: normalizeConditions(player.conditions),
                 extendedStats: mergedExtendedStats,
                 alignment: player.alignment || { righteous: 50, demonic: 0 },
                 destinyNature: (player.destinyNature && player.destinyNature.length > 0) ? player.destinyNature : ['Dual Talents'],
@@ -2221,6 +2223,60 @@ router.post('/finish-prologue', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[API-PLAYER] POST /finish-prologue error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan server.' });
+    }
+});
+
+// Endpoint: POST /api/player/quick-cure
+// Menggunakan obat dari tas untuk mengobati kondisi tertentu dari UI Tab Kondisi
+router.post('/quick-cure', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { itemId } = req.body;
+
+        if (!itemId) {
+            return res.status(400).json({ error: 'Item ID obat dibutuhkan.' });
+        }
+
+        const player = await Player.findOne({ discordId: userId }).populate('inventory.itemId');
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const invIdx = player.inventory.findIndex(i => i.itemId && (
+            i.itemId._id.toString() === itemId || 
+            i.itemId.key === itemId || 
+            i.itemId.name === itemId ||
+            (i._id && i._id.toString() === itemId)
+        ));
+
+        if (invIdx === -1 || player.inventory[invIdx].quantity <= 0) {
+            return res.status(400).json({ error: 'Item obat tidak ditemukan di tasmu.' });
+        }
+
+        const item = player.inventory[invIdx].itemId;
+        const { applyItemConditionCure } = require('../../utils/conditionEngine');
+        const { applyConsumableEffects } = require('../../utils/itemEffects');
+
+        const cureMessage = applyItemConditionCure(player, item);
+        const buffMessage = applyConsumableEffects(player, item);
+
+        player.inventory[invIdx].quantity -= 1;
+        if (player.inventory[invIdx].quantity <= 0) {
+            player.inventory.splice(invIdx, 1);
+        }
+
+        player.markModified('inventory');
+        player.markModified('conditions');
+        await player.save();
+
+        res.json({
+            success: true,
+            message: `Menggunakan [${item.name}]: ${cureMessage || 'Kondisi dirawat.'} ${buffMessage}`,
+            conditions: normalizeConditions(player.conditions),
+            currentHp: player.currentHp,
+            currentStamina: player.currentStamina
+        });
+    } catch (err) {
+        console.error('[API-PLAYER] POST /quick-cure error:', err);
+        res.status(500).json({ error: err.message });
     }
 });
 

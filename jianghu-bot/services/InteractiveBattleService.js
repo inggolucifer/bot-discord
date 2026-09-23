@@ -1,6 +1,13 @@
 const BattleSession = require('../models/BattleSession');
 const crypto = require('crypto');
 const uuidv4 = () => crypto.randomUUID();
+const {
+  normalizeConditions,
+  processElementalInteractions,
+  applyKnockbackEffect,
+  processCombatTurnConditions
+} = require('../utils/conditionEngine');
+const COMBAT_COND = require('../config/combatConditions');
 
 class InteractiveBattleService {
   /**
@@ -250,6 +257,7 @@ class InteractiveBattleService {
       maxStance: player.stats?.stance || 100,
       buffs: [],
       debuffs: [],
+      conditions: normalizeConditions(player.conditions),
       skills: this.formatPlayerSkills(player)
     };
 
@@ -316,6 +324,7 @@ class InteractiveBattleService {
       maxStance: e.stance || 100,
       buffs: [],
       debuffs: [],
+      conditions: normalizeConditions(e.conditions),
       skills: (e.skills && e.skills.length > 0) ? e.skills : [{
         skillId: 'basic_attack',
         name: 'Serangan Cakar Liar',
@@ -381,9 +390,25 @@ class InteractiveBattleService {
       session.turnQueue = [actorId];
     }
 
-    // 1. Cek Apakah Pemain Terkena Stun
+    session.player.conditions = normalizeConditions(session.player.conditions);
+    const isPlayerFrozen = session.player.conditions.frozen >= COMBAT_COND.FROZEN_THRESHOLD;
     const isPlayerStunned = Array.isArray(session.player.debuffs) && session.player.debuffs.some(d => d.type === 'stun' && d.duration > 0);
-    if (isPlayerStunned) {
+
+    const chosenSkill = (actionType === 'skill' || !actionType)
+      ? (session.player.skills.find(s => s.skillId === (skillId || 'basic_attack')) || session.player.skills[0])
+      : null;
+    const isFireSkill = chosenSkill && (chosenSkill.element === 'fire' || chosenSkill.rootType === 'fire');
+
+    // 1. Cek Apakah Pemain Membeku (Frozen) atau Terkena Stun
+    if (isPlayerFrozen && !isFireSkill) {
+      session.logs.push({
+        tick: session.currentTick,
+        actor: session.player.name,
+        action: 'effect',
+        message: `❄️ ${session.player.name} membeku kaku oleh hawa es (Frozen: ${session.player.conditions.frozen}) dan tidak dapat bergerak! (Gunakan jurus/item berelemen Api untuk mencairkannya!)`
+      });
+      // Lewati aksi pemain, langsung ke serangan balik musuh & tick status
+    } else if (isPlayerStunned) {
       session.logs.push({
         tick: session.currentTick,
         actor: session.player.name,
@@ -407,9 +432,20 @@ class InteractiveBattleService {
       }
 
       const { applyConsumableEffects } = require('../utils/itemEffects');
-      const buffMessage = applyConsumableEffects(playerDoc, item);
+      const { applyItemConditionCure } = require('../utils/conditionEngine');
+
+      const cureMessage = applyItemConditionCure(playerDoc, item);
+      session.player.conditions = normalizeConditions(playerDoc.conditions);
+      let buffMessage = applyConsumableEffects(playerDoc, item) + cureMessage;
+
       if (item.restoresHp) {
-        session.player.hp = playerDoc.currentHp;
+        if (session.player.conditions.burn >= COMBAT_COND.BURN_INCINERATED_THRESHOLD) {
+          const cutHp = Math.floor(item.restoresHp * (1 - COMBAT_COND.HEALING_REDUCTION_INCINERATED));
+          session.player.hp = Math.min(session.player.maxHp, session.player.hp + cutHp);
+          buffMessage += ' ⚠️ [Incinerated: Efek heal berkurang 50%]';
+        } else {
+          session.player.hp = playerDoc.currentHp;
+        }
       }
 
       playerDoc.inventory[inventoryIndex].quantity -= 1;
@@ -417,6 +453,7 @@ class InteractiveBattleService {
         playerDoc.inventory.splice(inventoryIndex, 1);
       }
       playerDoc.markModified('inventory');
+      playerDoc.markModified('conditions');
       await playerDoc.save();
 
       session.logs.push({
@@ -494,11 +531,16 @@ class InteractiveBattleService {
           message: `🛡️ ${session.player.name} memasang ${skill.name}! Memulihkan 35 Stance, +15 Qi, dan menahan 50% damage lawan ronde ini.`
         });
       } else if (skill.type === 'heal') {
-        // Pemulihan HP
-        const healAmt = Math.min(
+        // Pemulihan HP (Terpotong 50% jika terkena Incinerated)
+        let healAmt = Math.min(
           session.player.maxHp - session.player.hp,
           Math.floor(session.player.maxHp * 0.3) + (skill.power || 25)
         );
+        let healNote = '';
+        if (session.player.conditions.burn >= COMBAT_COND.BURN_INCINERATED_THRESHOLD) {
+          healAmt = Math.floor(healAmt * COMBAT_COND.HEALING_REDUCTION_INCINERATED);
+          healNote = ' ⚠️ (Status Incinerated memotong pemulihan 50%!)';
+        }
         session.player.hp = Math.min(session.player.maxHp, session.player.hp + healAmt);
 
         session.logs.push({
@@ -506,76 +548,152 @@ class InteractiveBattleService {
           actor: session.player.name,
           action: 'skill',
           skillName: skill.name,
-          message: `✨ ${session.player.name} merapal ${skill.name} dan memulihkan ${healAmt} HP!`
+          message: `✨ ${session.player.name} merapal ${skill.name} dan memulihkan ${healAmt} HP!${healNote}`
         });
       } else {
-        // Serangan fisik / spiritual (Single Target atau AoE)
-        const aliveEnemies = session.enemies.filter(e => !e.isDead);
-        if (aliveEnemies.length === 0) {
-          this.promoteEnemiesFromQueue(session);
+        // Cek Psychosis (Penyimpangan Qi): Hilang kontrol dan tidak dapat membedakan teman/lawan
+        const psychosisVal = session.player.conditions.psychosis || 0;
+        let isConfused = false;
+        if (psychosisVal > 0 && Math.random() < (psychosisVal * COMBAT_COND.PSYCHOSIS_CONFUSION_CHANCE_PER_POINT)) {
+          isConfused = true;
         }
 
-        const targets = skill.aoeAll
-          ? session.enemies.filter(e => !e.isDead)
-          : [session.enemies.find(e => e.entityId === targetId && !e.isDead) || session.enemies.find(e => !e.isDead)].filter(Boolean);
-
-        for (const target of targets) {
-          const isStanceBroken = (target.stance || 0) <= 0;
-          const targetDef = Math.max(1, target.defense || 5);
-          let damage = Math.max(1, Math.floor((session.player.attack * (skill.power / 10)) / (targetDef / 10 + 1)));
-
-          if (isStanceBroken) damage = Math.floor(damage * 1.5);
-
-          const critRate = 0.10 + (skill.critBonus || 0);
-          const isCrit = Math.random() < critRate;
-          if (isCrit) damage = Math.floor(damage * 1.5);
-
-          damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));
-
-          // Kurangi Stance dan HP
-          const stanceMultiplier = skill.stanceDmgMult || 1.0;
-          const stanceDmg = Math.max(5, Math.floor(damage * 0.25 * stanceMultiplier));
-          target.stance = Math.max(0, (target.stance || 0) - stanceDmg);
-          target.hp = Math.max(0, target.hp - damage);
-
-          if (target.hp <= 0) {
-            target.hp = 0;
-            target.isDead = true;
+        if (isConfused) {
+          const aliveAllies = Array.isArray(session.allies) ? session.allies.filter(a => !a.isDead) : [];
+          if (aliveAllies.length > 0) {
+            const allyTarget = aliveAllies[Math.floor(Math.random() * aliveAllies.length)];
+            const allyDmg = Math.max(1, Math.floor((session.player.attack * 0.8) / ((allyTarget.defense || 5) / 10 + 1)));
+            allyTarget.hp = Math.max(0, allyTarget.hp - allyDmg);
+            if (allyTarget.hp <= 0) allyTarget.isDead = true;
+            session.logs.push({
+              tick: session.currentTick,
+              actor: session.player.name,
+              target: allyTarget.name,
+              action: 'skill',
+              message: `🌀 [Penyimpangan Qi] Pikiran ${session.player.name} kacau dan tidak mengenali kawan! Menyerang sekutu ${allyTarget.name} sebesar ${allyDmg} DMG!${allyTarget.isDead ? ` 💀 (${allyTarget.name} tumbang!)` : ''}`
+            });
+          } else {
+            const selfDmg = Math.max(2, Math.floor(session.player.maxHp * 0.05));
+            session.player.hp = Math.max(0, session.player.hp - selfDmg);
+            if (session.player.hp <= 0) session.player.isDead = true;
+            session.logs.push({
+              tick: session.currentTick,
+              actor: session.player.name,
+              action: 'skill',
+              message: `🌀 [Penyimpangan Qi] Pikiran ${session.player.name} tersesat dalam delusi dan melukai diri sendiri sebesar ${selfDmg} DMG!${session.player.isDead ? ` 💀 (${session.player.name} gugur!)` : ''}`
+            });
+          }
+        } else {
+          // Serangan fisik / spiritual (Single Target atau AoE)
+          const aliveEnemies = session.enemies.filter(e => !e.isDead);
+          if (aliveEnemies.length === 0) {
+            this.promoteEnemiesFromQueue(session);
           }
 
-          // Efek Debuff (Racun / Stun)
-          let debuffTriggeredMsg = '';
-          if (!target.isDead && skill.debuffChance > 0 && Math.random() < skill.debuffChance) {
-            if (skill.debuffType === 'poison') {
-              target.debuffs = target.debuffs || [];
-              target.debuffs.push({
-                name: 'Racun Senjata',
-                type: 'poison',
-                value: Math.max(5, Math.floor(damage * 0.2)),
-                duration: 2,
-                icon: '☠️',
-                description: 'Kehilangan HP akibat racun'
+          const targets = skill.aoeAll
+            ? session.enemies.filter(e => !e.isDead)
+            : [session.enemies.find(e => e.entityId === targetId && !e.isDead) || session.enemies.find(e => !e.isDead)].filter(Boolean);
+
+          const intoxVal = session.player.conditions.intox || 0;
+          const missChance = intoxVal > 0 ? Math.min(0.35, intoxVal * COMBAT_COND.INTOX_MISS_RATE_PER_POINT) : 0;
+          const isWineSkill = skill.kungfuDiscipline === 'wineArt' || skill.name?.toLowerCase().includes('arak') || skill.name?.toLowerCase().includes('mabuk');
+
+          for (const target of targets) {
+            // Cek Miss Chance karena Mabuk (Intox)
+            if (Math.random() < missChance) {
+              session.logs.push({
+                tick: session.currentTick,
+                actor: session.player.name,
+                target: target.name,
+                action: 'skill',
+                message: `🍶 ${session.player.name} mengayunkan ${skill.name} ke ${target.name} dalam pengaruh arak, pandangan membayang sehingga serangan meleset!`
               });
-              debuffTriggeredMsg = ' ☠️ (Terkena Racun 2 Ronde!)';
-            } else if (skill.debuffType === 'stun') {
-              target.debuffs = target.debuffs || [];
-              target.debuffs.push({
-                name: 'Totokan Meridian',
-                type: 'stun',
-                value: 1,
-                duration: 1,
-                icon: '⚡',
-                description: 'Lumpuh tidak dapat bergerak'
-              });
-              debuffTriggeredMsg = ' ⚡ (Lumpuh / Stun 1 Ronde!)';
+              continue;
             }
-          }
 
-          let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} menghasilkan ${damage} DMG!`;
-          if (isCrit) logMsg += ' 💥 (Kritikal!)';
-          if (target.stance <= 0 && target.stance + stanceDmg > 0) logMsg += ' ⚡ (Stance Hancur!)';
-          if (debuffTriggeredMsg) logMsg += debuffTriggeredMsg;
-          if (target.isDead) logMsg += ` ☠️ (${target.name} tumbang!)`;
+            const isStanceBroken = (target.stance || 0) <= 0;
+            const targetDef = Math.max(1, target.defense || 5);
+            let damage = Math.max(1, Math.floor((session.player.attack * (skill.power / 10)) / (targetDef / 10 + 1)));
+
+            // Bonus Drunken Kungfu / Wine Art jika mabuk
+            let drunkenNote = '';
+            if (isWineSkill && intoxVal > 0) {
+              const wineMult = 1 + (intoxVal * COMBAT_COND.INTOX_WINE_ART_BONUS_PER_POINT);
+              damage = Math.floor(damage * wineMult);
+              drunkenNote = ` 🍶 [Drunken DMG +${Math.floor(intoxVal * 0.6)}%]`;
+            }
+
+            if (isStanceBroken) damage = Math.floor(damage * 1.5);
+
+            const critRate = 0.10 + (skill.critBonus || 0);
+            const isCrit = Math.random() < critRate;
+            if (isCrit) damage = Math.floor(damage * 1.5);
+
+            damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));
+
+            // Kurangi Stance dan HP
+            const stanceMultiplier = skill.stanceDmgMult || 1.0;
+            const stanceDmg = Math.max(5, Math.floor(damage * 0.25 * stanceMultiplier));
+            target.stance = Math.max(0, (target.stance || 0) - stanceDmg);
+            target.hp = Math.max(0, target.hp - damage);
+
+            if (target.hp <= 0) {
+              target.hp = 0;
+              target.isDead = true;
+            }
+
+            // Resonansi Elemen (Skill Air padamkan Burn, Skill Api cairkan Frozen)
+            const elemEvents = processElementalInteractions(session.player, skill, target);
+            elemEvents.forEach(ev => {
+              session.logs.push({
+                tick: session.currentTick,
+                actor: ev.actor,
+                action: 'effect',
+                message: ev.message
+              });
+            });
+
+            // Efek Knock Back Turn-Based (ATB delay, stance crush, guard break, wall slam)
+            const kbPoints = skill.knockback || (skill.power >= 25 ? 35 : (skill.stanceDmgMult > 1 ? 25 : 0));
+            if (kbPoints > 0) {
+              const kbEvents = applyKnockbackEffect(session, session.player, target, kbPoints);
+              kbEvents.forEach(ev => {
+                session.logs.push({
+                  tick: session.currentTick,
+                  actor: session.player.name,
+                  action: 'effect',
+                  message: ev.message
+                });
+              });
+            }
+
+            // Efek Debuff Racun / Stun
+            let debuffTriggeredMsg = '';
+            if (!target.isDead && skill.debuffChance > 0 && Math.random() < skill.debuffChance) {
+              if (skill.debuffType === 'poison') {
+                target.conditions = normalizeConditions(target.conditions);
+                target.conditions.poison = Math.min(100, target.conditions.poison + 20);
+                debuffTriggeredMsg = ' ☠️ (Meracuni target +20 Poison!)';
+              } else if (skill.debuffType === 'stun') {
+                target.debuffs = target.debuffs || [];
+                target.debuffs.push({
+                  name: 'Totokan Meridian',
+                  type: 'stun',
+                  value: 1,
+                  duration: 1,
+                  icon: '⚡',
+                  description: 'Lumpuh tidak dapat bergerak'
+                });
+                debuffTriggeredMsg = ' ⚡ (Lumpuh / Stun 1 Ronde!)';
+              }
+            }
+
+            let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} menghasilkan ${damage} DMG!`;
+            if (drunkenNote) logMsg += drunkenNote;
+            if (isCrit) logMsg += ' 💥 (Kritikal!)';
+            if (target.stance <= 0 && target.stance + stanceDmg > 0) logMsg += ' ⚡ (Stance Hancur!)';
+            if (debuffTriggeredMsg) logMsg += debuffTriggeredMsg;
+            if (target.isDead) logMsg += ` ☠️ (${target.name} tumbang!)`;
 
           session.logs.push({
             tick: session.currentTick,
@@ -595,6 +713,7 @@ class InteractiveBattleService {
         }
       }
     }
+  }
 
     // 4. Aksi Sekutu (Allies: NPC / Pet)
     if (Array.isArray(session.allies) && session.allies.length > 0) {
@@ -704,8 +823,8 @@ class InteractiveBattleService {
       return session;
     }
 
-    // 9. Tick Efek Status (Poison DoT & Pengurangan Durasi Buff/Debuff)
-    this.processStatusEffects(session);
+    // 9. Tick Efek Status (Poison DoT, Bleed, Burn, Frozen, Psychosis, dll.)
+    this.processStatusEffects(session, { actionType, isStandby: actionType === 'defend' });
 
     // 10. Re-check Musuh Mati dari Efek Racun DoT & Promosi Queue
     this.promoteEnemiesFromQueue(session);
@@ -780,28 +899,18 @@ class InteractiveBattleService {
   }
 
   /**
-   * Proses Status Effects (Poison DoT & Durasi)
+   * Proses Status Effects & Conditions (Poison, Bleed, Burn, Frozen, dll.)
    */
-  static processStatusEffects(session) {
-    // Tick debuff player
+  static processStatusEffects(session, actionContext = {}) {
+    // 1. Tick debuff lama (durasi stun / legacy)
     if (Array.isArray(session.player.debuffs)) {
       session.player.debuffs = session.player.debuffs.filter(d => {
-        if (d.type === 'poison' && d.duration > 0) {
-          const dmg = d.value || 5;
-          session.player.hp = Math.max(0, session.player.hp - dmg);
-          session.logs.push({
-            tick: session.currentTick,
-            actor: 'System',
-            action: 'effect',
-            message: `☠️ Racun menggerogoti tubuh ${session.player.name}, kehilangan ${dmg} HP!`
-          });
-        }
         d.duration -= 1;
         return d.duration > 0;
       });
     }
 
-    // Tick buff player (misal Kuda-kuda bertahan)
+    // 2. Tick buff player (Kuda-kuda bertahan)
     if (Array.isArray(session.player.buffs)) {
       session.player.buffs = session.player.buffs.filter(b => {
         b.duration -= 1;
@@ -809,25 +918,46 @@ class InteractiveBattleService {
       });
     }
 
-    // Tick debuff musuh aktif
+    // 3. Tick Condition Engine untuk Pemain (Poison, Bleed, Burn, Frozen, dll.)
+    const playerConditionEvents = processCombatTurnConditions(session.player, actionContext);
+    playerConditionEvents.forEach(ev => {
+      session.logs.push({
+        tick: session.currentTick,
+        actor: 'System',
+        action: 'condition_tick',
+        message: ev.message
+      });
+    });
+
+    if (session.player.hp <= 0) {
+      session.player.hp = 0;
+      session.player.isDead = true;
+    }
+
+    // 4. Tick debuff lama musuh aktif
     session.enemies.forEach(e => {
       if (e.isDead) return;
       if (Array.isArray(e.debuffs)) {
         e.debuffs = e.debuffs.filter(d => {
-          if (d.type === 'poison' && d.duration > 0) {
-            const dmg = d.value || 5;
-            e.hp = Math.max(0, e.hp - dmg);
-            if (e.hp <= 0) e.isDead = true;
-            session.logs.push({
-              tick: session.currentTick,
-              actor: 'System',
-              action: 'effect',
-              message: `☠️ Racun merenggut ${dmg} HP dari ${e.name}!${e.isDead ? ` (${e.name} tewas oleh racun!)` : ''}`
-            });
-          }
           d.duration -= 1;
           return d.duration > 0;
         });
+      }
+
+      // 5. Tick Condition Engine untuk Musuh Aktif
+      const enemyConditionEvents = processCombatTurnConditions(e, { actionType: 'attack' });
+      enemyConditionEvents.forEach(ev => {
+        session.logs.push({
+          tick: session.currentTick,
+          actor: 'System',
+          action: 'condition_tick',
+          message: ev.message
+        });
+      });
+
+      if (e.hp <= 0) {
+        e.hp = 0;
+        e.isDead = true;
       }
     });
   }

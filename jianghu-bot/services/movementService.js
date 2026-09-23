@@ -2,6 +2,7 @@ const Player = require('../models/Player');
 const gridZoneService = require('./gridZoneService');
 const { getCurrentStamina, getMaxStamina } = require('../utils/stamina');
 const { calculateEnergyCost } = require('../utils/explorationMath');
+const { processGridStepConditions } = require('../utils/conditionEngine');
 
 const DIRECTION_MAP = {
   // Indonesian aliases
@@ -51,6 +52,11 @@ class MovementService {
 
     if (player.rest && player.rest.status === 'resting') {
       return { ok: false, error: 'Kamu sedang beristirahat. Selesaikan atau batalkan istirahat sebelum melangkah.' };
+    }
+
+    const condCheck = processGridStepConditions(player, 1);
+    if (!condCheck.canMove) {
+      return { ok: false, error: condCheck.reason };
     }
 
     const zoneId = player.gridPosition?.zoneId || 'xingcun_village';
@@ -135,6 +141,11 @@ class MovementService {
     // 5. Update Database Posisi & Stamina secara konsisten
     const newStamina = Math.max(0, currentStamina - finalStaminaCost);
     player.currentStamina = newStamina;
+
+    // Terapkan damage racun jika melangkah dalam kondisi terpoison
+    if (condCheck.stepDamage > 0) {
+      player.currentHp = Math.max(1, (player.currentHp || 100) - condCheck.stepDamage);
+    }
 
     if (!player.gridPosition) player.gridPosition = {};
     player.gridPosition.zoneId = zoneId;

@@ -400,9 +400,6 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             }
             player.markModified('inventory');
 
-            player.markModified('inventory');
-            await player.save({ session });
-
             itemName = item.name;
             let effect = item.effect || 'Tidak ada efek khusus.';
             let buffMessage = '';
@@ -416,6 +413,13 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             // Handle Survival Restorations
             const { applyConsumableEffects } = require('../../utils/itemEffects');
             buffMessage += applyConsumableEffects(player, item);
+
+            // Handle Condition Cures (Antidotes, Salves, Teas, Water) & Alcohol (Intox)
+            const { applyItemConditionCure } = require('../../utils/conditionEngine');
+            buffMessage += applyItemConditionCure(player, item);
+            player.markModified('conditions');
+
+            await player.save({ session });
 
             // Handle Blueprints
             if (item.name.startsWith('Blueprint:')) {
