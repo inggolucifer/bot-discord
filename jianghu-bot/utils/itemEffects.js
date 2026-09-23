@@ -21,11 +21,13 @@ function applyConsumableEffects(player, item) {
         buffMessage += ` Memulihkan ${item.restoresStamina} Stamina.`;
     }
     if (item.restoresVitality) {
-        player.extendedStats.vitality = Math.min(100, (player.extendedStats.vitality || 0) + item.restoresVitality);
+        if (!player.extendedStats) player.extendedStats = {};
+        player.extendedStats.vitality = Math.min(player.extendedStats.maxVitality || 100, (player.extendedStats.vitality || 0) + item.restoresVitality);
         player.markModified('extendedStats');
         buffMessage += ` Memulihkan ${item.restoresVitality} Vitalitas.`;
     }
     if (item.restoresMood) {
+        if (!player.extendedStats) player.extendedStats = {};
         applyMoodDelta(player, item.restoresMood, { itemKey: item.key });
         buffMessage += ` Meningkatkan ${item.restoresMood} Mood.`;
     }
