@@ -67,6 +67,7 @@ export default function Navbar() {
     kultivasi: [
       { href: "/profile", label: "Profil Karakter" },
       { href: "/character", label: "Karakter — Peralatan" },
+      { href: "/condition", label: "Kondisi Karakter" },
       { href: "/cultivation", label: "Kultivasi & Ranah" },
       { href: "/skills", label: "Kitab & Jurus" },
     ],

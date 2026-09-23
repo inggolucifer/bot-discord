@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
-import { Loader2, Backpack, Lock, Info } from 'lucide-react';
+import { Loader2, Backpack, Lock, Info, ShieldAlert } from 'lucide-react';
 import { toast } from '@/components/ui/Toast';
 import { motion } from 'framer-motion';
 import { getRarityBorderClass } from '../profile/components/RarityHelpers';
 import { StatDeltaHover } from '../profile/components/StatDeltaHover';
 import Link from 'next/link';
 import { checkClientKungfuRequirement } from '@/lib/kungfu';
+import ConditionTab from '@/components/character/ConditionTab';
 
 export default function CharacterPage() {
   const queryClient = useQueryClient();
@@ -50,7 +52,17 @@ export default function CharacterPage() {
     }
   });
 
-  const [activeTab, setActiveTab] = useState<'peralatan' | 'kitab'>('peralatan');
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'peralatan' | 'kitab' | 'kondisi'>('peralatan');
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'kondisi' || tabParam === 'condition') {
+      setActiveTab('kondisi');
+    } else if (tabParam === 'kitab') {
+      setActiveTab('kitab');
+    }
+  }, [searchParams]);
 
   const unlearnMutation = useMutation({
     mutationFn: async (manualId: string) => {
@@ -137,18 +149,25 @@ export default function CharacterPage() {
         </h1>
 
         {/* Tabs Desktop & Mobile */}
-        <div className="mt-4 sm:mt-0 flex border-b border-[#3b3322] w-full max-w-[300px]">
+        <div className="mt-4 sm:mt-0 flex border-b border-[#3b3322] w-full max-w-[440px]">
           <button
-            className={`w-1/2 py-2 font-serif font-bold text-sm transition-colors ${activeTab === 'peralatan' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
+            className={`flex-1 py-2 font-serif font-bold text-xs sm:text-sm transition-colors text-center ${activeTab === 'peralatan' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
             onClick={() => setActiveTab('peralatan')}
           >
             Peralatan
           </button>
           <button
-            className={`w-1/2 py-2 font-serif font-bold text-sm transition-colors ${activeTab === 'kitab' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
+            className={`flex-1 py-2 font-serif font-bold text-xs sm:text-sm transition-colors text-center ${activeTab === 'kitab' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
             onClick={() => setActiveTab('kitab')}
           >
             Kitab & Jurus
+          </button>
+          <button
+            className={`flex-1 py-2 font-serif font-bold text-xs sm:text-sm transition-colors text-center flex items-center justify-center gap-1.5 ${activeTab === 'kondisi' ? 'text-amber-200 border-b-2 border-amber-400' : 'text-stone-500 hover:text-stone-300'}`}
+            onClick={() => setActiveTab('kondisi')}
+          >
+            <ShieldAlert size={14} className={activeTab === 'kondisi' ? 'text-amber-400' : 'text-stone-500'} />
+            <span>Kondisi Tubuh</span>
           </button>
         </div>
       </div>
@@ -382,6 +401,16 @@ export default function CharacterPage() {
                    ))
                 )}
              </div>
+          </div>
+        )}
+
+        {/* TAB 3: KONDISI TUBUH & STATUS MERIDIAN */}
+        {activeTab === 'kondisi' && (
+          <div className="w-full">
+            <ConditionTab
+              player={profile}
+              onRefresh={() => queryClient.invalidateQueries({ queryKey: ['player-profile-private'] })}
+            />
           </div>
         )}
       </div>
