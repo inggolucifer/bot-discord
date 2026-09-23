@@ -2345,8 +2345,8 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             });
         }
 
-        const currentX = player.gridPosition?.tileX ?? 0;
-        const currentY = player.gridPosition?.tileY ?? 0;
+        const currentX = Number(player.gridPosition?.tileX ?? 0);
+        const currentY = Number(player.gridPosition?.tileY ?? 0);
 
         const dx = Math.abs(targetX - currentX);
         const dy = Math.abs(targetY - currentY);
@@ -2709,8 +2709,8 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         }
 
         // Cek kedekatan fisik (pemain harus berdiri berdekatan dengan plot, radius 1 tile)
-        const currentX = player.gridPosition?.tileX ?? 0;
-        const currentY = player.gridPosition?.tileY ?? 0;
+        const currentX = Number(player.gridPosition?.tileX ?? 0);
+        const currentY = Number(player.gridPosition?.tileY ?? 0);
         const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
         if (dist > 1) {
             return res.status(400).json({ error: 'Kamu harus berdiri di dekat plot tanah tersebut untuk membelinya!' });
@@ -3012,8 +3012,8 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
         const targetX = parseInt(tileX);
         const targetY = parseInt(tileY);
 
-        const currentX = player.gridPosition?.tileX ?? 0;
-        const currentY = player.gridPosition?.tileY ?? 0;
+        const currentX = Number(player.gridPosition?.tileX ?? 0);
+        const currentY = Number(player.gridPosition?.tileY ?? 0);
         const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
         if (dist > 0) {
             return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });
@@ -3093,8 +3093,8 @@ router.post('/zone/enter-property', authenticateToken, async (req, res) => {
         const targetX = parseInt(tileX !== undefined ? tileX : player.gridPosition?.tileX ?? 0);
         const targetY = parseInt(tileY !== undefined ? tileY : player.gridPosition?.tileY ?? 0);
 
-        const currentX = player.gridPosition?.tileX ?? 0;
-        const currentY = player.gridPosition?.tileY ?? 0;
+        const currentX = Number(player.gridPosition?.tileX ?? 0);
+        const currentY = Number(player.gridPosition?.tileY ?? 0);
         const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
         if (dist > 0) {
             return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });

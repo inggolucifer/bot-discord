@@ -232,9 +232,10 @@ router.post('/start', authenticateToken, async (req, res) => {
             }
 
             if (tileKey) {
-                const [targetX, targetY] = tileKey.split('_').map(Number);
-                const currentX = player.gridPosition?.tileX ?? 0;
-                const currentY = player.gridPosition?.tileY ?? 0;
+                const parts = tileKey.includes('_') ? tileKey.split('_') : tileKey.split(',');
+                const [targetX, targetY] = parts.map(Number);
+                const currentX = Number(player.gridPosition?.tileX ?? 0);
+                const currentY = Number(player.gridPosition?.tileY ?? 0);
 
                 if (targetX !== currentX || targetY !== currentY) {
                     return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });

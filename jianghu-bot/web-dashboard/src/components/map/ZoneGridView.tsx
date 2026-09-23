@@ -935,7 +935,7 @@ export default function ZoneGridView({
             onTalkToNpc={(npc) => setTalkingNpc(npc)}
             onChallengeMonster={async (monsterKey) => {
               try {
-                const tileKey = selectedTile ? `${selectedTile.tileX},${selectedTile.tileY}` : undefined;
+                const tileKey = selectedTile ? `${selectedTile.tileX}_${selectedTile.tileY}` : undefined;
                 const res = await api.post('/battle/start', {
                   targetId: monsterKey,
                   targetType: 'monster',
