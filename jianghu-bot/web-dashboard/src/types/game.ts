@@ -217,6 +217,17 @@ export interface PlayerEnergy {
   lastUpdated: string | Date;
 }
 
+export interface PlayerConditions {
+  poison: number;
+  injury: number;
+  bleed: number;
+  intox: number;
+  frozen: number;
+  psychosis: number;
+  burn: number;
+  knockback: number;
+}
+
 export interface PlayerProfile {
   _id: string;
   discordId: string;
@@ -240,6 +251,7 @@ export interface PlayerProfile {
   gridPosition: GridPosition;
   equipment: EquipmentSlots;
   inventory?: InventoryItem[];
+  conditions?: PlayerConditions;
   combatStats?: CombatStats;
   extendedStats?: ExtendedPlayerStats;
   alignment?: AlignmentData;

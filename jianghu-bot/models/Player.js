@@ -17,6 +17,17 @@ const playerStatsSchema = new mongoose.Schema({
   baseSpd: { type: Number, default: 10 }
 }, { _id: false });
 
+const playerConditionsSchema = new mongoose.Schema({
+  poison: { type: Number, default: 0, min: 0 },
+  injury: { type: Number, default: 0, min: 0 },
+  bleed: { type: Number, default: 0, min: 0 },
+  intox: { type: Number, default: 0, min: 0 },
+  frozen: { type: Number, default: 0, min: 0 },
+  psychosis: { type: Number, default: 0, min: 0 },
+  burn: { type: Number, default: 0, min: 0 },
+  knockback: { type: Number, default: 0, min: 0 }
+}, { _id: false });
+
 const extendedStatsSchema = new mongoose.Schema({
   // === GENERAL ===
   maxLifespan:   { type: Number, default: 100 },
@@ -277,6 +288,7 @@ const playerSchema = new mongoose.Schema({
     lastAppliedAt: { type: Date, default: null },
     usedTentItem: { type: Boolean, default: false }
   },
+  conditions: { type: playerConditionsSchema, default: () => ({}) },
   combatConditions: [{
     type: {
       type: String,

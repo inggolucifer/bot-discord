@@ -556,6 +556,10 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
 
                  player.currentHp = session.player.hp;
                  player.currentQi = session.player.qi;
+                 if (session.player.conditions) {
+                     player.conditions = session.player.conditions;
+                     player.markModified('conditions');
+                 }
                  player.markModified('inventory');
                  await player.save();
              }
@@ -564,6 +568,10 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
              if (player) {
                  const { applyVitalityLossOnDeath } = require('../../utils/vitality');
                  player.currentHp = 0;
+                 if (session.player.conditions) {
+                     player.conditions = session.player.conditions;
+                     player.markModified('conditions');
+                 }
                  applyVitalityLossOnDeath(player);
                  // Waktu pemulihan 4 jam diam di tempat
                  player.deathRecoveryUntil = new Date(Date.now() + 4 * 60 * 60 * 1000);
