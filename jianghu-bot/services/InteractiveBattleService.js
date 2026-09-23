@@ -426,6 +426,9 @@ class InteractiveBattleService {
         message: `🎒 ${session.player.name} menggunakan item [${item.name}].${buffMessage}`
       });
 
+      // Tandai pemain sudah bertindak ronde ini
+      session.turnQueue.shift(); // Hapus giliran pemain
+
     } else if (actionType === 'flee') {
       // 2. Aksi Kabur (Run)
       const playerSpeed = session.player.speed || 10;
