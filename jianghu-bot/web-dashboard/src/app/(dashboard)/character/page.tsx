@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import api from '@/lib/api';
@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { checkClientKungfuRequirement } from '@/lib/kungfu';
 import ConditionTab from '@/components/character/ConditionTab';
 
-export default function CharacterPage() {
+function CharacterPageContent() {
   const queryClient = useQueryClient();
 
   const { data: profileData, isLoading, error } = useQuery({
@@ -448,5 +448,19 @@ function SwordsIcon() {
       <line x1="7" x2="4" y1="17" y2="20"/>
       <line x1="3" x2="5" y1="19" y2="21"/>
     </svg>
+  );
+}
+
+export default function CharacterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-[calc(100vh-80px)] items-center justify-center">
+          <Loader2 size={32} className="animate-spin text-[#c5a880]" />
+        </div>
+      }
+    >
+      <CharacterPageContent />
+    </Suspense>
   );
 }
