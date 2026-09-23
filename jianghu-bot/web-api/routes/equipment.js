@@ -109,7 +109,7 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'slot is required' });
     }
 
-    const validSlots = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount'];
+    const validSlots = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount', 'talisman', 'artifact'];
     if (!validSlots.includes(slot)) {
         return res.status(400).json({ error: 'Invalid slot' });
     }
@@ -142,7 +142,7 @@ router.post('/unequip', authenticateToken, async (req, res) => {
 
             // Calculate hypothetical capacity without this item
             const equippedItems = [];
-            for (const key of ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount']) {
+            for (const key of ['weapon', 'armor', 'helmet', 'pants', 'boots', 'accessory', 'mount', 'talisman', 'artifact']) {
                 if (key !== slot && player.equipment[key]) {
                     const eInvItem = player.inventory.id(player.equipment[key]);
                     if (eInvItem && eInvItem.itemId) {
