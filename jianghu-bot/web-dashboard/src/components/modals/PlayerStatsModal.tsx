@@ -102,7 +102,8 @@ export default function PlayerStatsModal() {
   const gold = Math.floor(Number(player?.currency?.gold) || 0);
   const silver = Math.floor(Number(player?.currency?.silver) || 0);
   const copper = Math.floor(Number(player?.currency?.copper) || 0);
-  const spirit = Math.floor(Number(player?.currency?.spirit || player?.currency?.jade) || 0);
+  const jade = Math.floor(Number(player?.currency?.jade) || 0);
+  const spirit = Math.floor(Number(player?.currency?.spirit) || 0);
 
   const avatar = player?.characterImage || player?.avatarUrl || player?.discordAvatar || '';
   
@@ -402,11 +403,12 @@ export default function PlayerStatsModal() {
                           <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-900/40 text-xs font-mono text-amber-600 flex items-center gap-1">
                             <span>🟤</span> {copper} Tembaga
                           </span>
-                          {spirit > 0 && (
-                            <span className="px-2 py-0.5 rounded bg-black/60 border border-purple-600/40 text-xs font-mono text-purple-300 flex items-center gap-1">
-                              <span>🔮</span> {spirit} Batu Roh
-                            </span>
-                          )}
+                          <span className="px-2 py-0.5 rounded bg-black/60 border border-emerald-600/40 text-xs font-mono text-emerald-300 flex items-center gap-1">
+                            <span>💠</span> {jade} Giok
+                          </span>
+                          <span className="px-2 py-0.5 rounded bg-black/60 border border-purple-600/40 text-xs font-mono text-purple-300 flex items-center gap-1">
+                            <span>🔮</span> {spirit} Batu Roh
+                          </span>
                         </div>
 
                         {/* 5. Qi Cultivation Progress Bar */}
