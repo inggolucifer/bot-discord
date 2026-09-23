@@ -3015,8 +3015,8 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
         const currentX = player.gridPosition?.tileX ?? 0;
         const currentY = player.gridPosition?.tileY ?? 0;
         const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
-        if (dist > 1) {
-            return res.status(400).json({ error: 'Kamu harus berdiri di dekat bangunan untuk memasukinya!' });
+        if (dist > 0) {
+            return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });
         }
 
 
@@ -3096,8 +3096,8 @@ router.post('/zone/enter-property', authenticateToken, async (req, res) => {
         const currentX = player.gridPosition?.tileX ?? 0;
         const currentY = player.gridPosition?.tileY ?? 0;
         const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
-        if (dist > 1) {
-            return res.status(400).json({ error: 'Kamu harus berada di dekat pintu masuk kediaman!' });
+        if (dist > 0) {
+            return res.status(400).json({ error: 'Kamu harus berada di petak yang sama untuk melakukan aksi ini.' });
         }
 
 

@@ -413,6 +413,10 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
                 throw new CustomError('Pakai pupuk dari halaman Farming pada plot yang sedang tumbuh.', 400);
             }
 
+            // Handle Survival Restorations
+            const { applyConsumableEffects } = require('../../utils/itemEffects');
+            buffMessage += applyConsumableEffects(player, item);
+
             // Handle Blueprints
             if (item.name.startsWith('Blueprint:')) {
                 if (!player.professions) player.professions = {};
