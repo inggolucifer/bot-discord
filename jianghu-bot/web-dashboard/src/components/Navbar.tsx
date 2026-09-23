@@ -76,8 +76,6 @@ export default function Navbar() {
     aset: [
       { href: "/inventory", label: "Tas / Inventory" },
       { href: "/assets", label: "Lahan & Properti" },
-      { href: "/pet", label: "Pet Spiritual" },
-      { href: "/marriage", label: "Pasangan Taois" },
     ],
     sosial: [
       { href: "/market", label: "Pasar Lelang" },
@@ -85,7 +83,6 @@ export default function Navbar() {
       { href: "/sect", label: "Balai Sekte" },
       { href: "/worker", label: "Pekerja Tambang" },
       { href: "/leaderboard", label: "Peringkat Dunia" },
-      { href: "/tournament", label: "Turnamen Jianghu" },
     ],
     referensi: [
       { href: "/almanack", label: "Almanack & Lore" }

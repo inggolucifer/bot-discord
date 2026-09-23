@@ -8,7 +8,7 @@ const itemSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },
   name: { type: String, required: true },
   rank: { type: String, enum: RANKS, default: 'Common' },
-  category: { type: String, enum: ['weapon', 'armor', 'helmet', 'pants', 'boots', 'herb', 'pill', 'consume', 'material', 'artifact', 'accessories', 'law', 'manual', 'tool', 'mount', 'none'], default: 'none' },
+  category: { type: String, enum: ['weapon', 'armor', 'helmet', 'pants', 'boots', 'herb', 'pill', 'consume', 'material', 'artifact', 'talisman', 'accessories', 'law', 'manual', 'tool', 'mount', 'none'], default: 'none' },
   tier: { type: Number, min: 1, max: 9, default: 1 },
   toolType: { type: String, enum: ['fishing_rod', 'furnace', 'forge', 'kitchen_tool', 'farming_tool', null], default: null },
   weaponType: { type: String, enum: ['sword', 'saber', 'staff', 'fist', 'finger', 'hiddenWeapon', 'special', null], default: null },
@@ -28,6 +28,12 @@ const itemSchema = new mongoose.Schema({
   origin: { type: String, default: null },
   coldResistance: { type: Number, default: 0, min: 0 },
   heatResistance: { type: Number, default: 0, min: 0 },
+
+  usableInBattle: { type: Boolean, default: false },
+  restoresHp: { type: Number, default: 0 },
+  restoresStamina: { type: Number, default: 0 },
+  restoresVitality: { type: Number, default: 0 },
+  restoresMood: { type: Number, default: 0 },
 
   weight: { type: Number, default: 1, min: 0 },
   capacityBonus: { type: Number, default: 0 },
