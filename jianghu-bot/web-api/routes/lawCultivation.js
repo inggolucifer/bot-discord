@@ -83,7 +83,111 @@ router.get('/status', authenticateToken, async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// POST /law/bind — Pengikatan Fondasi Law Mortal (PERMANEN)
+const LAW_BINDING_REQUIREMENTS = {
+  element_phoenix_fire:     { slot2Required: true,  tag: 'fire_catalyst',      name: 'Intisari Api Merah / Pil Api' },
+  element_azure_water:      { slot2Required: true,  tag: 'water_catalyst',     name: 'Embun Es Abadi / Giok Air' },
+  element_xuanwu_earth:     { slot2Required: true,  tag: 'earth_catalyst',     name: 'Batu Inti Purba / Tanah Kuning' },
+  element_qingdi_wood:      { slot2Required: true,  tag: 'wood_catalyst',      name: 'Getah Pohon Roh / Benih Hayat' },
+  element_roc_wind:         { slot2Required: true,  tag: 'wind_catalyst',      name: 'Bulu Burung Roc / Kristal Badai' },
+  element_godthunder_light: { slot2Required: true,  tag: 'thunder_catalyst',   name: 'Pasir Petir Langit / Obsidian Kilat' },
+  body_tempering:           { slot2Required: false, tag: null,                 name: null }, // Slot 2 Hidden!
+  gu_master:                { slot2Required: true,  tag: 'gu_larva',           name: 'Bibit Ulat Gu Fana' },
+  natal_artifact:           { slot2Required: true,  tag: 'common_artifact',    name: 'Benda Common (Pedang Patah/Mangkuk Retak/dll)' },
+  natal_beast:              { slot2Required: true,  tag: 'common_beast',       name: 'Satwa Common (Anak Anjing/Ular Rumput/dll)' },
+  demonic_turbid_core:      { slot2Required: true,  tag: 'beast_core',         name: 'Inti Siluman Kotor Tingkat 1' },
+  demonic_blood_soul:       { slot2Required: true,  tag: 'blood_vial',         name: 'Botol Darah Monster Segar' },
+  demonic_myriad_venom:     { slot2Required: true,  tag: 'venom_sac',          name: 'Kantung Racun Ular Rawa' },
+  demonic_abyssal_pact:     { slot2Required: true,  tag: 'abyssal_scroll',     name: 'Perkamen Darah Gelap' },
+  demonic_nether_darkness:  { slot2Required: true,  tag: 'yin_stone',          name: 'Batu Yin Kuburan Tua' }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// GET /law/binding/inventory — Real Inventory Picker for Slot 1 & 2
+// ═══════════════════════════════════════════════════════════════
+router.get('/binding/inventory', authenticateToken, async (req, res) => {
+  try {
+    const player = await resolvePlayer(req);
+    const { getRealmIndex } = require('../../utils/cultivation');
+    const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const stage = player.systemCultivation?.stage || 1;
+    const isBound = !!player.cultivationLaw?.activeLawType;
+    const isOrdinary = !!player.isNormalCultivator;
+
+    await player.populate({
+      path: 'inventory.itemId',
+      select: 'name category rank tier lawType tags description imageUrl basePrice priceCurrency'
+    });
+
+    const slot1Manuals = [];
+    const slot2Items = [];
+
+    for (const inv of (player.inventory || [])) {
+      if (!inv.itemId || inv.quantity < 1) continue;
+      const item = inv.itemId;
+
+      if (item.category === 'law' || item.lawType || (item.tags && item.tags.includes('law_manual'))) {
+        slot1Manuals.push({
+          inventoryId: inv._id ? inv._id.toString() : item._id.toString(),
+          itemId: item._id.toString(),
+          name: item.name,
+          lawType: item.lawType || detectLawTypeFromItem(item),
+          quantity: inv.quantity,
+          rank: item.rank || 'Common',
+          tier: item.tier || 1,
+          description: item.description,
+          imageUrl: item.imageUrl || null
+        });
+      }
+
+      const isCandidateSlot2 = 
+        (item.rank === 'Common') ||
+        (item.category === 'material') ||
+        (item.category === 'weapon' && item.rank === 'Common') ||
+        (item.category === 'pet' && item.rank === 'Common') ||
+        (item.tags && item.tags.some(t => [
+          'catalyst', 'fire_catalyst', 'water_catalyst', 'earth_catalyst', 'wood_catalyst', 'wind_catalyst', 'thunder_catalyst',
+          'gu_larva', 'common_artifact', 'common_beast', 'beast_core', 'blood_vial', 'venom_sac', 'abyssal_scroll', 'yin_stone'
+        ].includes(t)));
+
+      if (isCandidateSlot2 && item.category !== 'law') {
+        slot2Items.push({
+          inventoryId: inv._id ? inv._id.toString() : item._id.toString(),
+          itemId: item._id.toString(),
+          name: item.name,
+          category: item.category,
+          rank: item.rank || 'Common',
+          quantity: inv.quantity,
+          tags: item.tags || [],
+          description: item.description,
+          imageUrl: item.imageUrl || null
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      data: {
+        isEligible: realmIdx === 0 && !isBound && !isOrdinary,
+        currentRealm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
+        currentStage: stage,
+        isBound,
+        boundLawType: player.cultivationLaw?.activeLawType || null,
+        isNormalCultivator: isOrdinary,
+        canChooseOrdinary: stage >= 10 && !isBound && !isOrdinary,
+        slot1Manuals,
+        slot2Items,
+        requirementsMap: LAW_BINDING_REQUIREMENTS
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error fetching binding inventory:', error);
+    res.status(500).json({ error: 'Gagal memuat inventori pengikatan Hukum.' });
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// POST /law/bind — Pengikatan Fondasi Law Mortal (PERMANEN, Real Inventory)
 // ═══════════════════════════════════════════════════════════════
 const bindSchema = z.object({
   slot1ManualItemId: z.string().min(1),
@@ -106,9 +210,12 @@ router.post('/bind', authenticateToken, async (req, res) => {
     await withTransaction(async (session) => {
       const player = await resolvePlayer(req, session);
 
-      // Validasi: Sudah punya Law → TIDAK BOLEH GANTI
+      // Validasi: Sudah punya Law atau memilih Jalur Biasa → TIDAK BOLEH GANTI
       if (player.cultivationLaw?.activeLawType) {
         throw new CustomError('Kamu sudah mematri Hukum Semesta ke dalam fondasi fana. Pilihan ini bersifat PERMANEN dan tidak dapat diubah.', 400);
+      }
+      if (player.isNormalCultivator) {
+        throw new CustomError('Kamu telah memilih Jalur Kultivator Biasa. Tubuh fana telah mengunci diri dari ikatan Hukum Semesta.', 400);
       }
 
       // Validasi: Harus masih Mortal (realmIndex === 0)
@@ -137,56 +244,51 @@ router.post('/bind', authenticateToken, async (req, res) => {
         throw new CustomError('Item ini bukan Kitab Hukum Semesta yang sah.', 400);
       }
 
-      // Validasi atau berikan manual di inventori jika fondasi fana
+      // Validasi kepemilikan manual di tas/inventori
       let manualInv = player.inventory.find(i => i.itemId.toString() === manualItem._id.toString());
       if (!manualInv || manualInv.quantity < 1) {
-        if (realmIdx === 0) {
-          manualInv = { itemId: manualItem._id, quantity: 1 };
-          player.inventory.push(manualInv);
-        } else {
-          throw new CustomError('Kitab Hukum Semesta tidak ditemukan di inventori.', 400);
-        }
+        throw new CustomError(`Kitab Hukum "${manualItem.name}" tidak ditemukan di inventori tasmu. Dapatkan terlebih dahulu dari quest, eksplorasi, atau pasar.`, 400);
       }
 
       // Konsumsi manual dari inventori
       manualInv.quantity -= 1;
+      if (manualInv.quantity <= 0) {
+        player.inventory = player.inventory.filter(i => i.itemId.toString() !== manualItem._id.toString());
+      }
       player.markModified('inventory');
 
-      // Inisialisasi cultivationLaw
-      player.cultivationLaw.activeLawType = lawType;
-      player.cultivationLaw.boundAt = new Date();
-      player.cultivationLaw.rank = 0;
-      player.cultivationLaw.stage = 0;
-      player.cultivationLaw.qi = 0;
-      player.cultivationLaw.maxQi = getQiRequired(0, 0);
-      player.cultivationLaw.lawLevelCapBonus = 0;
-      player.cultivationLaw.lawSkillPoints = 0;
+      // Validasi Slot 2: Persyaratan Law
+      const reqConfig = LAW_BINDING_REQUIREMENTS[lawType];
+      if (reqConfig && reqConfig.slot2Required) {
+        if (!slot2CompanionItemId) {
+          throw new CustomError(`Hukum Semesta ${LAW_DEFINITIONS[lawType].name} membutuhkan item persyaratan di Slot 2: ${reqConfig.name}.`, 400);
+        }
 
-      // Validasi & Bind Slot 2: Companion Entity (Natal Artifact / Natal Beast)
-      if (lawType === 'natal_artifact' || lawType === 'natal_beast') {
         let companionItem = null;
-        if (slot2CompanionItemId && mongoose.Types.ObjectId.isValid(slot2CompanionItemId)) {
+        if (mongoose.Types.ObjectId.isValid(slot2CompanionItemId)) {
           companionItem = await Item.findById(slot2CompanionItemId).session(session);
         }
-        if (!companionItem && slot2CompanionItemId) {
+        if (!companionItem) {
           companionItem = await Item.findOne({ name: slot2CompanionItemId }).session(session);
         }
         if (!companionItem) {
-          // Fallback ke item common default
-          const defaultName = lawType === 'natal_artifact' ? 'Pedang Besi Patah' : 'Anak Anjing Kampung';
-          companionItem = await Item.findOne({ name: defaultName }).session(session) ||
-                          await Item.findOne({ rank: 'Common' }).session(session);
+          throw new CustomError('Item persyaratan Slot 2 tidak ditemukan di dunia Jianghu.', 400);
         }
 
-        if (companionItem) {
-          let companionInv = player.inventory.find(i => i.itemId.toString() === companionItem._id.toString());
-          if (!companionInv || companionInv.quantity < 1) {
-            companionInv = { itemId: companionItem._id, quantity: 1 };
-            player.inventory.push(companionInv);
-          }
-          companionInv.quantity -= 1;
-          player.markModified('inventory');
+        let companionInv = player.inventory.find(i => i.itemId.toString() === companionItem._id.toString());
+        if (!companionInv || companionInv.quantity < 1) {
+          throw new CustomError(`Item persyaratan "${companionItem.name}" tidak ada di inventori tasmu (butuh minimal 1).`, 400);
+        }
 
+        // Konsumsi item persyaratan dari tas
+        companionInv.quantity -= 1;
+        if (companionInv.quantity <= 0) {
+          player.inventory = player.inventory.filter(i => i.itemId.toString() !== companionItem._id.toString());
+        }
+        player.markModified('inventory');
+
+        // Jika Law berwujud Companion Entity (Natal Artifact / Natal Beast), inisialisasi boundEntity
+        if (lawType === 'natal_artifact' || lawType === 'natal_beast') {
           const entityType = lawType === 'natal_artifact' ? 'artifact' : 'beast';
           player.cultivationLaw.boundEntity = {
             entityType,
@@ -205,6 +307,16 @@ router.post('/bind', authenticateToken, async (req, res) => {
           };
         }
       }
+
+      // Inisialisasi cultivationLaw
+      player.cultivationLaw.activeLawType = lawType;
+      player.cultivationLaw.boundAt = new Date();
+      player.cultivationLaw.rank = 0;
+      player.cultivationLaw.stage = 0;
+      player.cultivationLaw.qi = 0;
+      player.cultivationLaw.maxQi = getQiRequired(0, 0);
+      player.cultivationLaw.lawLevelCapBonus = 0;
+      player.cultivationLaw.lawSkillPoints = 0;
 
       player.markModified('cultivationLaw');
       await player.save({ session });
@@ -232,6 +344,50 @@ router.post('/bind', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Terjadi kesalahan saat mematri Hukum Semesta.' });
   } finally {
     if (typeof releaseLock === 'function') releaseLock();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// POST /law/ordinary/confirm — Mengunci Jalur Kultivator Biasa
+// ═══════════════════════════════════════════════════════════════
+router.post('/ordinary/confirm', authenticateToken, async (req, res) => {
+  try {
+    const player = await resolvePlayer(req);
+
+    if (player.cultivationLaw?.activeLawType) {
+      return res.status(400).json({ error: 'Kamu telah mematri Hukum Semesta. Tidak dapat berpindah ke Jalur Kultivator Biasa.' });
+    }
+
+    if (player.isNormalCultivator) {
+      return res.status(400).json({ error: 'Kamu sudah berada di Jalur Kultivator Biasa.' });
+    }
+
+    const { getRealmIndex } = require('../../utils/cultivation');
+    const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const stage = player.systemCultivation?.stage || 1;
+
+    // Gerbang pilihan terbuka pada Tahap 10 Mortal atau di luar Mortal
+    if (stage < 10 && realmIdx === 0) {
+      return res.status(400).json({ error: 'Pilihan Jalur Kultivator Biasa baru terbuka pada gerbang Fondasi Fana Tahap 10.' });
+    }
+
+    player.isNormalCultivator = true;
+    player.normalCultivatorConfirmedAt = new Date();
+    player.markModified('isNormalCultivator');
+    await player.save();
+
+    res.json({
+      success: true,
+      message: '📜 Keputusan terpatri! Kamu memilih berjalan tanpa belenggu Hukum Semesta sebagai Kultivator Biasa. Stat tempur disesuaikan (×0.95).',
+      data: {
+        isNormalCultivator: true,
+        normalCultivatorConfirmedAt: player.normalCultivatorConfirmedAt
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error confirming ordinary path:', error);
+    res.status(500).json({ error: 'Gagal mengonfirmasi jalur Kultivator Biasa.' });
   }
 });
 

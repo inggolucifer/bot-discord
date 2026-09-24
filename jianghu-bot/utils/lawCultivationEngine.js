@@ -663,6 +663,7 @@ function getLawStatus(player) {
   const charLevelCap = getLevelCap(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)', law.lawLevelCapBonus || 0);
 
   return {
+    isNormalCultivator: !!player.isNormalCultivator,
     hasLaw: !!law.activeLawType,
     activeLawType: law.activeLawType,
     lawName: lawDef?.name || null,

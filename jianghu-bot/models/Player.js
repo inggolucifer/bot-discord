@@ -473,7 +473,49 @@ const playerSchema = new mongoose.Schema({
   reputationTitle: { type: String, default: 'Novice Cultivator' },
   laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
   manuals: { type: [playerManualSchema], default: [] },
-  isNormalCultivator: { type: Boolean, default: false },
+  isNormalCultivator: { type: Boolean, default: false, index: true },
+  normalCultivatorConfirmedAt: { type: Date, default: null },
+
+  // Live Tianji Hub Tracking
+  dailyHub: {
+    lastDailyResetAt: { type: Date, default: Date.now },
+    loginStreak: { type: Number, default: 1, min: 1, max: 7 },
+    lastStreakClaimAt: { type: Date, default: null },
+    lastEpiphanyClaimAt: { type: Date, default: null },
+    missions: [{
+      missionId: { type: String, required: true },
+      type: { type: String, enum: ['channel', 'combat', 'craft'], required: true },
+      currentProgress: { type: Number, default: 0 },
+      target: { type: Number, required: true },
+      completed: { type: Boolean, default: false },
+      claimed: { type: Boolean, default: false }
+    }],
+    weeklyMissionsCompleted: { type: Number, default: 0 },
+    weeklyChestClaimed: { type: Boolean, default: false },
+    lastWeeklyResetAt: { type: Date, default: Date.now }
+  },
+
+  // Sect Arena Persistent Record
+  sectArena: {
+    division: { 
+      type: String, 
+      enum: ['mortal', 'qi_refining', 'foundation', 'golden_core'], 
+      default: 'mortal',
+      index: true 
+    },
+    rating: { type: Number, default: 1000 },
+    wins: { type: Number, default: 0 },
+    losses: { type: Number, default: 0 },
+    meritTokens: { type: Number, default: 0 },
+    lastSparredAt: { type: Date, default: null },
+    matchHistory: [{
+      opponentName: String,
+      opponentDivision: String,
+      won: Boolean,
+      ratingDelta: Number,
+      timestamp: { type: Date, default: Date.now }
+    }]
+  },
 
   sect: { type: String, default: 'Tanpa Sekte (Rogue Cultivator)' },
 

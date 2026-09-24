@@ -1,15 +1,12 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import SectArenaModal from '@/components/cultivation/SectArenaModal';
 
 export default function SectArenaPage() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen">
-      <SectArenaModal isOpen={true} onClose={() => router.push('/cultivation')} />
+    <div className="container mx-auto px-3 sm:px-6 py-6 max-w-5xl">
+      <SectArenaModal isOpen={true} isStandalone={true} />
     </div>
   );
 }

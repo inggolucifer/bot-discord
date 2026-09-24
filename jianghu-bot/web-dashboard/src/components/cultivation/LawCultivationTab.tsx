@@ -11,6 +11,7 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { LawStatusData, LawSkillItem, LawType } from '@/types/game';
 import { CultivationData } from '@/lib/schemas';
+import { LAW_RANK_NAMES_EN } from '@/lib/realmUtils';
 import Link from 'next/link';
 import {
   Flame,
@@ -223,13 +224,26 @@ interface LawCultivationTabProps {
 
 export default function LawCultivationTab({ realmData }: LawCultivationTabProps) {
   const queryClient = useQueryClient();
-  const [selectedLawForBind, setSelectedLawForBind] = useState<typeof LAW_CATALOG[0] | null>(null);
-  const [manualPickerOpen, setManualPickerOpen] = useState(false);
-  const [selectedCompanionPreset, setSelectedCompanionPreset] = useState<typeof COMMON_PRESETS[0] | null>(null);
+  const [selectedSlot1Item, setSelectedSlot1Item] = useState<any>(null);
+  const [selectedSlot2Item, setSelectedSlot2Item] = useState<any>(null);
+  const [slot1PickerOpen, setSlot1PickerOpen] = useState(false);
+  const [slot2PickerOpen, setSlot2PickerOpen] = useState(false);
+  const [ordinaryConfirmModalOpen, setOrdinaryConfirmModalOpen] = useState(false);
   const [customEntityName, setCustomEntityName] = useState('');
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>('skin');
 
-  // Fetch Player Inventory for Manuals & Prerequisites
+  // Fetch Real Inventory for Law Binding (Slot 1 & Slot 2)
+  const { data: bindInvRes, isLoading: isBindInvLoading } = useQuery<{ success: boolean; data: any }>({
+    queryKey: ['bindingInventory'],
+    queryFn: async () => {
+      const { data } = await api.get('/cultivation/law/binding/inventory');
+      return data;
+    }
+  });
+
+  const bindingData = bindInvRes?.data;
+
+  // Fetch Player Inventory for fallback references
   const { data: invRes } = useQuery<{ success: boolean; data: any[] }>({
     queryKey: ['inventory'],
     queryFn: async () => {
@@ -371,47 +385,29 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   });
 
   // Handler Bind Law (Slot 1 + Slot 2)
-  const handleSelectLawManual = (law: typeof LAW_CATALOG[0]) => {
-    setSelectedLawForBind(law);
-    setSelectedCompanionPreset(null);
-    setCustomEntityName('');
-    setManualPickerOpen(false);
-  };
-
   const handleExecuteBind = async () => {
-    if (!selectedLawForBind) {
+    if (!selectedSlot1Item) {
       toast.show({ message: 'Masukkan Kitab Manual Hukum di Slot 1 terlebih dahulu!', type: 'error' });
       return;
     }
 
+    const reqConfig = bindingData?.requirementsMap?.[selectedSlot1Item.lawType];
+    if (reqConfig?.slot2Required && !selectedSlot2Item) {
+      toast.show({ message: `Pilih item persyaratan (${reqConfig.name}) di Slot 2!`, type: 'error' });
+      return;
+    }
+
     try {
-      // Cari kitab law di inventori atau kirim mock/fallback ID untuk demo seeder
-      let manualItem = inventoryItems.find((i: any) => {
-        const item = i.itemId || i;
-        return item.lawType === selectedLawForBind.type || (item.name || '').toLowerCase().includes(selectedLawForBind.name.toLowerCase().slice(6, 15));
-      });
-
-      const manualItemId = manualItem?.id || manualItem?.itemId?._id || manualItem?._id || selectedLawForBind.type;
-
-      // Cari companion item jika Natal Artifact / Beast
-      let companionItemId: string | null = null;
-      if (selectedLawForBind.type === 'natal_artifact' || selectedLawForBind.type === 'natal_beast') {
-        const compItem = inventoryItems.find((i: any) => {
-          const item = i.itemId || i;
-          return selectedCompanionPreset && (item.name || '').includes(selectedCompanionPreset.name.split(' ')[0]);
-        });
-        companionItemId = compItem?.id || compItem?.itemId?._id || compItem?._id || (selectedCompanionPreset ? selectedCompanionPreset.name : null);
-      }
-
       const payload = {
-        slot1ManualItemId: String(manualItemId),
-        slot2CompanionItemId: companionItemId ? String(companionItemId) : null,
-        customEntityName: customEntityName.trim() || (selectedCompanionPreset ? selectedCompanionPreset.name : null)
+        slot1ManualItemId: String(selectedSlot1Item.itemId),
+        slot2CompanionItemId: selectedSlot2Item ? String(selectedSlot2Item.itemId) : null,
+        customEntityName: customEntityName.trim() || (selectedSlot2Item ? selectedSlot2Item.name : null)
       };
 
       const { data: bindRes } = await api.post('/cultivation/law/bind', payload);
       toast.show({ message: bindRes.message || 'Berhasil mengikat Hukum Semesta!', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['bindingInventory'] });
       queryClient.invalidateQueries({ queryKey: ['cultivation'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
@@ -419,8 +415,81 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     }
   };
 
-  if (isLoading) {
+  const handleConfirmOrdinary = async () => {
+    try {
+      const { data: ordRes } = await api.post('/cultivation/law/ordinary/confirm', { confirmed: true });
+      toast.show({ message: ordRes.message || 'Berhasil memilih Jalur Kultivator Biasa!', type: 'success' });
+      setOrdinaryConfirmModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['bindingInventory'] });
+      queryClient.invalidateQueries({ queryKey: ['cultivation'] });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+      toast.show({ message: err.response?.data?.error || 'Gagal mengonfirmasi jalur Kultivator Biasa.', type: 'error' });
+    }
+  };
+
+  if (isLoading || isBindInvLoading) {
     return <LoadingState text="Menyelaraskan Hukum Semesta ke Dantian..." />;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // KASUS 1: PEMAIN BELUM MEMILIH LAW → 2-SLOT DAO BINDING ALTAR
+  // ═══════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════
+  // KASUS 0: PEMAIN MEMILIH JALUR KULTIVATOR BIASA (TANPA HUKUM)
+  // ═══════════════════════════════════════════════════════════════════
+  if (bindingData?.isNormalCultivator) {
+    return (
+      <div className="space-y-6">
+        {/* Banner Jalur Kultivator Biasa */}
+        <div className="relative overflow-hidden rounded-2xl border-2 border-stone-700 bg-gradient-to-r from-stone-900/90 via-[#0c0f17]/95 to-stone-950/95 p-6 shadow-2xl backdrop-blur-md">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-xl bg-stone-800/80 border border-stone-600 flex items-center justify-center text-3xl shadow-inner shrink-0">
+                🥋
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-xl font-bold font-serif text-amber-200">
+                    Jalur Kultivator Biasa (Tanpa Hukum Semesta)
+                  </h2>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-stone-800 border border-stone-600 text-stone-300 font-mono">
+                    Dao Fana Murni
+                  </span>
+                </div>
+                <p className="text-xs text-stone-400 max-w-xl leading-relaxed">
+                  Kamu telah memilih jalan keteguhan pribadi tanpa belenggu ikatan Hukum Semesta. Tubuh fana mengandalkan disiplin beladiri murni (Martial Arts), senjata, dan pil kultivasi.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-stone-950/80 border border-stone-800 rounded-xl p-3 text-right">
+              <span className="text-[11px] text-amber-400/90 font-mono block">Penyesuaian Stat Tempur</span>
+              <span className="text-sm font-bold text-stone-200 font-serif">× 0.95 (Efektivitas Tempur)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Card & Action Link to Skill Tree */}
+        <div className="rounded-xl border border-stone-800 bg-[#0d1017]/90 p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-stone-300 font-serif font-bold text-sm">
+              <Sword className="w-4 h-4 text-amber-400" />
+              <span>Disiplin Beladiri Jianghu & Kitab Manual</span>
+            </div>
+            <Link href="/skill-tree">
+              <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs">
+                Buka Pohon Kemahiran & Manual ➔
+              </Button>
+            </Link>
+          </div>
+          <p className="text-xs text-stone-400 leading-relaxed">
+            Sebagai Kultivator Biasa, seluruh kemahiran bertarung terpusat pada 6 Disiplin Beladiri (Pedang, Golok, Tombak, Tinju, Telapak, Jari) serta Kitab Manual yang kamu pelajari dari dunia. Latih kemahiranmu melalui pertarungan dan sparring sekte!
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -446,318 +515,499 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
           </div>
         </div>
 
-        {/* 2-SLOT INTERACTIVE ALTAR */}
-        <div className="relative rounded-2xl border-2 border-[#826b48] bg-gradient-to-b from-[#131722]/95 via-[#0c0f17]/95 to-[#080a10]/95 p-6 sm:p-8 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden">
-          {/* Subtle Ambient Halo */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/5 blur-3xl pointer-events-none rounded-full" />
-
-          <div className="text-center max-w-xl mx-auto mb-8 space-y-1">
-            <span className="text-xs uppercase font-serif tracking-widest text-amber-400 font-bold">
-              ✦ Formasi Segel Langit Sembilan Tingkat ✦
-            </span>
-            <h3 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
-              Penyatuan Intisari Dao ke Dantian Fana
-            </h3>
-            <p className="text-xs text-stone-400">
-              Pilih Kitab Manual Hukum dan padukan dengan benda atau intisari pembuka jalurnya.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-11 gap-4 items-center">
-            
-            {/* SLOT 1: KITAB MANUAL HUKUM SEMESTA (5 Cols) */}
-            <div className="lg:col-span-5 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-amber-400" />
-                  SLOT 1: KITAB MANUAL HUKUM
-                </span>
-                {selectedLawForBind && (
-                  <button
-                    onClick={() => setManualPickerOpen(true)}
-                    className="text-[11px] text-amber-400 hover:text-amber-200 underline font-serif"
-                  >
-                    Ganti Kitab
-                  </button>
-                )}
+        {/* Banner Pilihan Jalur Kultivator Biasa (Jika mencapai Tahap 10) */}
+        {bindingData?.canChooseOrdinary && (
+          <div className="relative overflow-hidden rounded-xl border border-stone-600 bg-stone-900/90 p-5 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="rounded-lg bg-stone-800 p-3 text-stone-200 border border-stone-600 shrink-0 text-2xl">
+                🥋
               </div>
-
-              {!selectedLawForBind ? (
-                <div
-                  onClick={() => setManualPickerOpen(true)}
-                  className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-black/40 hover:bg-amber-950/20 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
-                >
-                  <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform mb-3">
-                    📜
-                  </div>
-                  <span className="font-serif font-bold text-sm text-amber-200 group-hover:text-amber-100">
-                    Pilih Kitab Manual Hukum
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold tracking-wide text-stone-200 font-serif">
+                    Gerbang Tahap 10: Jalur Kultivator Biasa
+                  </h3>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-stone-800 border border-stone-600 text-stone-400 font-mono">
+                    Alternatif Non-Hukum
                   </span>
-                  <p className="text-xs text-stone-500 mt-1 max-w-xs">
-                    Klik untuk memilih salah satu dari 15 Kitab Manual Hukum Semesta Jianghu
-                  </p>
-                  <Button
-                    size="sm"
-                    className="mt-4 bg-amber-600/80 hover:bg-amber-500 text-stone-950 font-bold text-xs"
-                  >
-                    Buka Daftar Kitab Manual
-                  </Button>
                 </div>
-              ) : (
-                <div
-                  className={`flex-1 min-h-[220px] rounded-xl border border-amber-500/60 bg-gradient-to-b ${selectedLawForBind.bgGradient} p-5 flex flex-col justify-between shadow-lg relative overflow-hidden`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl p-3 rounded-lg bg-black/60 border border-amber-500/30 shrink-0">
-                      {selectedLawForBind.icon}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="font-serif font-bold text-base text-amber-200">
-                          {selectedLawForBind.name}
-                        </h4>
-                        <span
-                          className="text-[10px] px-2 py-0.5 rounded-full font-mono border"
-                          style={{
-                            borderColor: `${selectedLawForBind.color}50`,
-                            color: selectedLawForBind.color,
-                            backgroundColor: `${selectedLawForBind.color}15`
-                          }}
-                        >
-                          {selectedLawForBind.element}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-stone-400 font-mono block">
-                        Kategori: {selectedLawForBind.category.toUpperCase()} • 90 Stages / ~1000 Hari
-                      </span>
-                      <p className="text-xs text-stone-300 mt-2 leading-relaxed">
-                        {selectedLawForBind.desc}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-stone-800 flex justify-between items-center text-xs mt-4">
-                    <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
-                      <CheckCircle2 size={13} /> Kitab Terpasang di Slot 1
-                    </span>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setManualPickerOpen(true)}
-                      className="border-stone-700 text-stone-300 hover:text-white h-7 text-xs"
-                    >
-                      Ganti
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* CENTER CONNECTOR (1 Col) */}
-            <div className="lg:col-span-1 flex flex-col items-center justify-center py-2 lg:py-0">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-b from-amber-600 to-amber-900 border border-amber-400 flex items-center justify-center text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-                <Zap size={18} className="animate-pulse" />
+                <p className="text-xs text-stone-400 leading-relaxed">
+                  Kamu telah mencapai puncak fondasi fana. Kamu dapat memilih untuk melangkah sebagai Kultivator Biasa tanpa terikat Hukum Semesta.
+                </p>
               </div>
-              <span className="text-[9px] font-serif text-amber-400 font-bold uppercase tracking-wider mt-1 hidden lg:block text-center">
-                Penyatuan
-              </span>
             </div>
-
-            {/* SLOT 2: ITEM PERSYARATAN HUKUM (5 Cols) */}
-            <div className="lg:col-span-5 flex flex-col h-full">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  SLOT 2: ITEM PERSYARATAN HUKUM
-                </span>
-                {selectedLawForBind && (
-                  <span className="text-[10px] text-stone-400 font-mono">
-                    {selectedLawForBind.category === 'companion' ? 'Item Wajib Dipilih' : 'Katalis Otomatis'}
-                  </span>
-                )}
-              </div>
-
-              {!selectedLawForBind ? (
-                <div className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-stone-800 bg-black/20 flex flex-col items-center justify-center p-6 text-center text-stone-600">
-                  <Lock size={32} className="mb-2 opacity-50" />
-                  <span className="font-serif font-semibold text-xs text-stone-500">
-                    Slot 2 Terkunci
-                  </span>
-                  <p className="text-[11px] text-stone-600 mt-1 max-w-xs">
-                    Pilih Kitab Manual di Slot 1 terlebih dahulu untuk memunculkan persyaratan khusus.
-                  </p>
-                </div>
-              ) : selectedLawForBind.type === 'natal_artifact' || selectedLawForBind.type === 'natal_beast' ? (
-                <div className="flex-1 min-h-[220px] rounded-xl border border-amber-500/40 bg-[#121622]/90 p-4 flex flex-col justify-between space-y-3">
-                  <div>
-                    <label className="text-xs font-serif font-semibold text-amber-200 block mb-2">
-                      Pilih {selectedLawForBind.type === 'natal_artifact' ? 'Benda Common Permanen' : 'Satwa Common Permanen'}:
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {COMMON_PRESETS
-                        .filter(p => selectedLawForBind.type === 'natal_artifact' ? p.type === 'artifact' : p.type === 'beast')
-                        .map((preset) => (
-                          <button
-                            key={preset.id}
-                            type="button"
-                            onClick={() => setSelectedCompanionPreset(preset)}
-                            className={`p-2 rounded border text-left text-xs flex items-center gap-2 transition-all ${
-                              selectedCompanionPreset?.id === preset.id
-                                ? 'border-amber-400 bg-amber-500/20 text-amber-200 font-bold shadow-sm'
-                                : 'border-stone-800 bg-stone-900/60 text-stone-400 hover:border-stone-700'
-                            }`}
-                          >
-                            <span className="text-lg">{preset.icon}</span>
-                            <span className="truncate">{preset.name}</span>
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] text-stone-400 block mb-1">
-                      Beri Nama Julukan Khusus (Opsional):
-                    </label>
-                    <input
-                      type="text"
-                      maxLength={30}
-                      value={customEntityName}
-                      onChange={(e) => setCustomEntityName(e.target.value)}
-                      placeholder={selectedCompanionPreset ? selectedCompanionPreset.name : 'Contoh: Bilah Patah Penjaga Jiwa'}
-                      className="w-full rounded bg-stone-950 border border-stone-800 px-3 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-amber-500 font-serif"
-                    />
-                  </div>
-                </div>
-              ) : selectedLawForBind.type === 'body_tempering' ? (
-                <div className="flex-1 min-h-[220px] rounded-xl border border-amber-500/40 bg-[#121622]/90 p-4 flex flex-col justify-between space-y-2">
-                  <div>
-                    <label className="text-xs font-serif font-semibold text-amber-200 block mb-1.5">
-                      Fokus Awal Raga Daging Fana:
-                    </label>
-                    <div className="grid grid-cols-3 gap-1.5 text-xs">
-                      {BODY_PARTS_INFO.slice(0, 6).map((part) => (
-                        <button
-                          key={part.id}
-                          type="button"
-                          onClick={() => setSelectedBodyPart(part.id)}
-                          className={`p-1.5 rounded border text-left flex items-center gap-1.5 text-[11px] transition-all ${
-                            selectedBodyPart === part.id
-                              ? 'border-amber-400 bg-amber-500/20 text-amber-200 font-semibold'
-                              : 'border-stone-800 bg-stone-900/40 text-stone-400 hover:border-stone-700'
-                          }`}
-                        >
-                          <span>{part.icon}</span>
-                          <span className="truncate">{part.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-stone-400 leading-relaxed italic border-t border-stone-800 pt-2">
-                    💡 Menempa meridian & daging fana menggunakan energi True Qi murni.
-                  </p>
-                </div>
-              ) : (
-                <div className="flex-1 min-h-[220px] rounded-xl border border-emerald-500/30 bg-[#121622]/90 p-5 flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-center text-2xl">
-                        {selectedLawForBind.icon}
-                      </div>
-                      <div>
-                        <h5 className="font-serif font-bold text-sm text-stone-200">
-                          Katalis Intisari {selectedLawForBind.element}
-                        </h5>
-                        <span className="text-[11px] text-emerald-400 font-mono">
-                          Status: Tersedia & Siap Diserap
-                        </span>
-                      </div>
-                    </div>
-                    <p className="text-xs text-stone-400 leading-relaxed">
-                      Dantian fana akan menyerap intisari semesta sesuai jalur <strong className="text-amber-300">{selectedLawForBind.name}</strong> untuk membentuk jalur meridian permanen.
-                    </p>
-                  </div>
-
-                  <div className="p-2.5 rounded bg-black/40 border border-stone-800 text-[11px] text-stone-400 flex items-center gap-2">
-                    <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
-                    <span>Seluruh persyaratan dan intisari fondasi terpenuhi secara otomatis.</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* ACTION BUTTON & WARNING */}
-          <div className="mt-8 pt-6 border-t border-[#4a3d28] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-stone-400 flex items-center gap-2 max-w-lg">
-              <Info className="w-5 h-5 text-amber-400 shrink-0" />
-              <span>
-                <strong>Keputusan Abadi:</strong> Setelah dipatri, dantian akan terkunci pada hukum ini seumur hidup dan dilarang berpindah jalur.
-              </span>
-            </div>
-
             <Button
-              size="lg"
-              disabled={!selectedLawForBind}
-              onClick={handleExecuteBind}
-              className={`font-serif font-bold tracking-wider px-8 shadow-xl transition-all ${
-                selectedLawForBind
-                  ? 'bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 border border-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 active:scale-95'
-                  : 'bg-stone-800 text-stone-500 border border-stone-700 cursor-not-allowed'
-              }`}
+              size="sm"
+              variant="outline"
+              onClick={() => setOrdinaryConfirmModalOpen(true)}
+              className="border-stone-500 hover:border-amber-400 hover:bg-stone-800 text-stone-200 font-serif text-xs shrink-0"
             >
-              ⚡ PATRI HUKUM SEMESTA KE DANTIAN FANA
+              Lanjutkan Tanpa Hukum Semesta ➔
             </Button>
           </div>
-        </div>
+        )}
 
-        {/* MODAL PEMILIHAN KITAB MANUAL (SLOT 1) */}
+        {/* 2-SLOT INTERACTIVE ALTAR */}
+        {(() => {
+          const reqConfig = selectedSlot1Item?.lawType ? bindingData?.requirementsMap?.[selectedSlot1Item.lawType] : null;
+          const isSlot2Hidden = reqConfig && reqConfig.slot2Required === false;
+          const slot1Meta = selectedSlot1Item?.lawType ? LAW_CATALOG.find(l => l.type === selectedSlot1Item.lawType) : null;
+          const isBindReady = selectedSlot1Item && (isSlot2Hidden || selectedSlot2Item);
+
+          return (
+            <div className="relative rounded-2xl border-2 border-[#826b48] bg-gradient-to-b from-[#131722]/95 via-[#0c0f17]/95 to-[#080a10]/95 p-6 sm:p-8 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden">
+              {/* Subtle Ambient Halo */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/5 blur-3xl pointer-events-none rounded-full" />
+
+              <div className="text-center max-w-xl mx-auto mb-8 space-y-1">
+                <span className="text-xs uppercase font-serif tracking-widest text-amber-400 font-bold">
+                  ✦ Formasi Segel Langit Sembilan Tingkat ✦
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
+                  Penyatuan Intisari Dao ke Dantian Fana
+                </h3>
+                <p className="text-xs text-stone-400">
+                  {isSlot2Hidden
+                    ? 'Hukum ini berfokus pada penempaan daging raga murni dan tidak membutuhkan item katalis di Slot 2.'
+                    : 'Pilih Kitab Manual Hukum dari tas dan padukan dengan item persyaratan pembuka jalurnya.'}
+                </p>
+              </div>
+
+              <div className={`grid grid-cols-1 ${isSlot2Hidden ? 'lg:grid-cols-1 max-w-2xl mx-auto' : 'lg:grid-cols-11'} gap-4 items-center`}>
+                
+                {/* SLOT 1: KITAB MANUAL HUKUM SEMESTA */}
+                <div className={`${isSlot2Hidden ? 'w-full' : 'lg:col-span-5'} flex flex-col h-full`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                      <BookOpen className="w-4 h-4 text-amber-400" />
+                      SLOT 1: KITAB MANUAL HUKUM (TAS)
+                    </span>
+                    {selectedSlot1Item && (
+                      <button
+                        onClick={() => setSlot1PickerOpen(true)}
+                        className="text-[11px] text-amber-400 hover:text-amber-200 underline font-serif"
+                      >
+                        Ganti Kitab
+                      </button>
+                    )}
+                  </div>
+
+                  {!selectedSlot1Item ? (
+                    <div
+                      onClick={() => setSlot1PickerOpen(true)}
+                      className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-black/40 hover:bg-amber-950/20 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform mb-3">
+                        📜
+                      </div>
+                      <span className="font-serif font-bold text-sm text-amber-200 group-hover:text-amber-100">
+                        Pilih Kitab Manual Hukum
+                      </span>
+                      <p className="text-xs text-stone-500 mt-1 max-w-xs">
+                        Pilih Kitab Manual Hukum Semesta yang kamu miliki di tas inventori
+                      </p>
+                      <Button
+                        size="sm"
+                        className="mt-4 bg-amber-600/80 hover:bg-amber-500 text-stone-950 font-bold text-xs"
+                      >
+                        Buka Tas Inventori
+                      </Button>
+                    </div>
+                  ) : (
+                    <div
+                      className={`flex-1 min-h-[220px] rounded-xl border border-amber-500/60 bg-gradient-to-b ${slot1Meta?.bgGradient || 'from-amber-950/50 to-stone-900/80'} p-5 flex flex-col justify-between shadow-lg relative overflow-hidden`}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="text-4xl p-3 rounded-lg bg-black/60 border border-amber-500/30 shrink-0">
+                          {slot1Meta?.icon || '📜'}
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-serif font-bold text-base text-amber-200">
+                              {selectedSlot1Item.name}
+                            </h4>
+                            <span
+                              className="text-[10px] px-2 py-0.5 rounded-full font-mono border"
+                              style={{
+                                borderColor: `${slot1Meta?.color || '#f59e0b'}50`,
+                                color: slot1Meta?.color || '#f59e0b',
+                                backgroundColor: `${slot1Meta?.color || '#f59e0b'}15`
+                              }}
+                            >
+                              {slot1Meta?.element || selectedSlot1Item.rank}
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800/80 border border-stone-700 text-amber-300 font-mono">
+                              x{selectedSlot1Item.quantity} di Tas
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-stone-400 font-mono block">
+                            Hukum: {slot1Meta?.name || selectedSlot1Item.lawType} • {slot1Meta?.category?.toUpperCase() || 'MANUAL'}
+                          </span>
+                          <p className="text-xs text-stone-300 mt-2 leading-relaxed">
+                            {selectedSlot1Item.description || slot1Meta?.desc}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-stone-800 flex justify-between items-center text-xs mt-4">
+                        <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
+                          <CheckCircle2 size={13} /> Kitab Terpasang di Slot 1
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSlot1PickerOpen(true)}
+                          className="border-stone-700 text-stone-300 hover:text-white h-7 text-xs"
+                        >
+                          Ganti
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* CENTER CONNECTOR & SLOT 2 (Hanya jika Slot 2 Dibutuhkan) */}
+                {!isSlot2Hidden && (
+                  <>
+                    {/* CENTER CONNECTOR (1 Col) */}
+                    <div className="lg:col-span-1 flex flex-col items-center justify-center py-2 lg:py-0">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-b from-amber-600 to-amber-900 border border-amber-400 flex items-center justify-center text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                        <Zap size={18} className="animate-pulse" />
+                      </div>
+                      <span className="text-[9px] font-serif text-amber-400 font-bold uppercase tracking-wider mt-1 hidden lg:block text-center">
+                        Penyatuan
+                      </span>
+                    </div>
+
+                    {/* SLOT 2: ITEM PERSYARATAN DARI TAS (5 Cols) */}
+                    <div className="lg:col-span-5 flex flex-col h-full">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                          <Sparkles className="w-4 h-4 text-amber-400" />
+                          SLOT 2: ITEM PERSYARATAN (TAS)
+                        </span>
+                        {selectedSlot2Item && (
+                          <button
+                            onClick={() => setSlot2PickerOpen(true)}
+                            className="text-[11px] text-amber-400 hover:text-amber-200 underline font-serif"
+                          >
+                            Ganti Item
+                          </button>
+                        )}
+                      </div>
+
+                      {!selectedSlot1Item ? (
+                        <div className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-stone-800 bg-black/20 flex flex-col items-center justify-center p-6 text-center text-stone-600">
+                          <Lock size={32} className="mb-2 opacity-50" />
+                          <span className="font-serif font-semibold text-xs text-stone-500">
+                            Slot 2 Terkunci
+                          </span>
+                          <p className="text-[11px] text-stone-600 mt-1 max-w-xs">
+                            Pilih Kitab Manual di Slot 1 terlebih dahulu untuk memunculkan persyaratan khusus.
+                          </p>
+                        </div>
+                      ) : !selectedSlot2Item ? (
+                        <div
+                          onClick={() => setSlot2PickerOpen(true)}
+                          className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-black/40 hover:bg-amber-950/20 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+                        >
+                          <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform mb-3">
+                            ✨
+                          </div>
+                          <span className="font-serif font-bold text-sm text-amber-200 group-hover:text-amber-100">
+                            Pilih {reqConfig?.name || 'Item Persyaratan'}
+                          </span>
+                          <p className="text-xs text-stone-400 mt-1 max-w-xs">
+                            Wajib memilih item pendukung atau katalis dari tas inventori untuk memicu penyatuan fondasi.
+                          </p>
+                          <Button
+                            size="sm"
+                            className="mt-4 bg-amber-600/80 hover:bg-amber-500 text-stone-950 font-bold text-xs"
+                          >
+                            Buka Tas Persyaratan
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex-1 min-h-[220px] rounded-xl border border-amber-500/60 bg-[#121622]/90 p-5 flex flex-col justify-between shadow-lg">
+                          <div className="space-y-3">
+                            <div className="flex items-start gap-4">
+                              <div className="text-3xl p-3 rounded-lg bg-black/60 border border-amber-500/30 shrink-0">
+                                💎
+                              </div>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <h4 className="font-serif font-bold text-base text-amber-200">
+                                    {selectedSlot2Item.name}
+                                  </h4>
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 border border-stone-700 text-amber-300 font-mono">
+                                    x{selectedSlot2Item.quantity} di Tas
+                                  </span>
+                                </div>
+                                <span className="text-[10px] text-stone-400 font-mono block">
+                                  Kategori: {selectedSlot2Item.category} • {selectedSlot2Item.rank}
+                                </span>
+                                <p className="text-xs text-stone-300 mt-1 leading-relaxed">
+                                  {selectedSlot2Item.description || `Item pendukung untuk mengikat ${selectedSlot1Item.name}.`}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Nama Julukan khusus bila companion / beast / artifact */}
+                            {(selectedSlot1Item.lawType === 'natal_artifact' || selectedSlot1Item.lawType === 'natal_beast') && (
+                              <div className="pt-2 border-t border-stone-800">
+                                <label className="text-[11px] text-stone-400 block mb-1">
+                                  Beri Nama Julukan Khusus (Opsional):
+                                </label>
+                                <input
+                                  type="text"
+                                  maxLength={30}
+                                  value={customEntityName}
+                                  onChange={(e) => setCustomEntityName(e.target.value)}
+                                  placeholder={`Contoh: ${selectedSlot2Item.name} Abadi`}
+                                  className="w-full rounded bg-stone-950 border border-stone-800 px-3 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-amber-500 font-serif"
+                                />
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="pt-3 border-t border-stone-800 flex justify-between items-center text-xs mt-3">
+                            <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
+                              <CheckCircle2 size={13} /> Item Terpasang di Slot 2
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setSlot2PickerOpen(true)}
+                              className="border-stone-700 text-stone-300 hover:text-white h-7 text-xs"
+                            >
+                              Ganti
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+              </div>
+
+              {/* ACTION BUTTON & WARNING */}
+              <div className="mt-8 pt-6 border-t border-[#4a3d28] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-xs text-stone-400 flex items-center gap-2 max-w-lg">
+                  <Info className="w-5 h-5 text-amber-400 shrink-0" />
+                  <span>
+                    <strong>Keputusan Abadi:</strong> Item di Slot 1 dan Slot 2 akan dikonsumsi permanen dari tas. Setelah dipatri, dantian terkunci pada hukum ini seumur hidup.
+                  </span>
+                </div>
+
+                <Button
+                  size="lg"
+                  disabled={!isBindReady}
+                  onClick={handleExecuteBind}
+                  className={`font-serif font-bold tracking-wider px-8 shadow-xl transition-all ${
+                    isBindReady
+                      ? 'bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 border border-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 active:scale-95'
+                      : 'bg-stone-800 text-stone-500 border border-stone-700 cursor-not-allowed'
+                  }`}
+                >
+                  ⚡ PATRI HUKUM SEMESTA KE DANTIAN FANA
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* MODAL PICKER SLOT 1: KITAB MANUAL HUKUM DARI INVENTORI */}
         <Modal
-          isOpen={manualPickerOpen}
-          onClose={() => setManualPickerOpen(false)}
-          title="Pilih Kitab Manual Hukum Semesta (Slot 1)"
+          isOpen={slot1PickerOpen}
+          onClose={() => setSlot1PickerOpen(false)}
+          title="Pilih Kitab Manual Hukum Semesta (Tas Inventori)"
         >
           <div className="space-y-4 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
             <p className="text-xs text-stone-400">
-              Pilih Kitab Manual Hukum Semesta yang ingin kamu patrikan ke dalam dantian fana:
+              Pilih Kitab Manual Hukum Semesta yang kamu miliki di tas untuk dipatrikan ke dantian fana:
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {LAW_CATALOG.map((law) => {
-                const isSelected = selectedLawForBind?.type === law.type;
-                return (
-                  <button
-                    key={law.type}
-                    type="button"
-                    onClick={() => handleSelectLawManual(law)}
-                    className={`p-3 rounded-lg border text-left transition-all flex items-start gap-3 ${
-                      isSelected
-                        ? 'border-amber-400 bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                        : 'border-stone-800 bg-[#121622]/80 hover:border-stone-700 hover:bg-[#181d2a]'
-                    }`}
-                  >
-                    <div className="text-2xl p-2 rounded bg-black/60 border border-stone-700 shrink-0">
-                      {law.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-serif font-bold text-xs text-amber-200">
-                          {law.name}
-                        </span>
-                        <span
-                          className="text-[9px] px-1.5 py-0.2 rounded font-mono border"
-                          style={{ borderColor: `${law.color}40`, color: law.color }}
-                        >
-                          {law.element}
-                        </span>
+            {(!bindingData?.slot1Manuals || bindingData.slot1Manuals.length === 0) ? (
+              <div className="p-8 text-center rounded-xl border border-dashed border-stone-800 bg-stone-950/60 space-y-3">
+                <div className="text-4xl">📭</div>
+                <h5 className="font-serif font-bold text-stone-300 text-sm">
+                  Tidak Ada Kitab Manual di Tas Inventori
+                </h5>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto leading-relaxed">
+                  Kamu belum memiliki Kitab Manual Hukum Semesta di tas. Kitab dapat diperoleh dari hadiah quest, eksplorasi gua kuno, drop monster langka, atau pasar Jianghu.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {bindingData.slot1Manuals.map((manual: any) => {
+                  const meta = LAW_CATALOG.find(l => l.type === manual.lawType);
+                  const isSelected = selectedSlot1Item?.itemId === manual.itemId;
+                  return (
+                    <button
+                      key={manual.inventoryId}
+                      type="button"
+                      onClick={() => {
+                        setSelectedSlot1Item(manual);
+                        setSelectedSlot2Item(null);
+                        setCustomEntityName('');
+                        setSlot1PickerOpen(false);
+                      }}
+                      className={`p-3 rounded-lg border text-left transition-all flex items-start gap-3 ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                          : 'border-stone-800 bg-[#121622]/80 hover:border-stone-700 hover:bg-[#181d2a]'
+                      }`}
+                    >
+                      <div className="text-2xl p-2 rounded bg-black/60 border border-stone-700 shrink-0">
+                        {meta?.icon || '📜'}
                       </div>
-                      <p className="text-[11px] text-stone-400 mt-1 line-clamp-2 leading-relaxed">
-                        {law.desc}
-                      </p>
-                    </div>
-                  </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="font-serif font-bold text-xs text-amber-200">
+                            {manual.name}
+                          </span>
+                          <span className="text-[9px] px-1.5 py-0.2 rounded font-mono bg-amber-950/40 border border-amber-500/40 text-amber-300">
+                            x{manual.quantity}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-stone-400 mt-1 line-clamp-2 leading-relaxed">
+                          {manual.description || meta?.desc}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </Modal>
+
+        {/* MODAL PICKER SLOT 2: ITEM PERSYARATAN DARI INVENTORI */}
+        <Modal
+          isOpen={slot2PickerOpen}
+          onClose={() => setSlot2PickerOpen(false)}
+          title={`Pilih Item Persyaratan (${bindingData?.requirementsMap?.[selectedSlot1Item?.lawType]?.name || 'Katalis'})`}
+        >
+          <div className="space-y-4 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            <p className="text-xs text-stone-400">
+              Pilih item persyaratan yang kamu miliki di tas untuk pengikatan <strong>{selectedSlot1Item?.name}</strong>:
+            </p>
+
+            {(() => {
+              const req = bindingData?.requirementsMap?.[selectedSlot1Item?.lawType];
+              const tag = req?.tag;
+              const filtered = (bindingData?.slot2Items || []).filter((item: any) => {
+                if (!tag) return true;
+                if (tag === 'common_artifact') {
+                  return item.category === 'weapon' || item.rank === 'Common' || (item.tags && item.tags.includes('common_artifact'));
+                }
+                if (tag === 'common_beast') {
+                  return item.category === 'pet' || item.rank === 'Common' || (item.tags && item.tags.includes('common_beast'));
+                }
+                return (item.tags && item.tags.includes(tag)) || (item.tags && item.tags.includes('catalyst')) || item.category === 'material';
+              });
+
+              if (filtered.length === 0) {
+                return (
+                  <div className="p-8 text-center rounded-xl border border-dashed border-stone-800 bg-stone-950/60 space-y-3">
+                    <div className="text-4xl">⚠️</div>
+                    <h5 className="font-serif font-bold text-stone-300 text-sm">
+                      Item Persyaratan Tidak Ditemukan di Tas
+                    </h5>
+                    <p className="text-xs text-stone-500 max-w-sm mx-auto leading-relaxed">
+                      Kamu belum memiliki item yang memenuhi syarat: <strong className="text-amber-300">{req?.name}</strong>. Temukan item ini dari eksplorasi atau beli di pasar sebelum melanjutkan.
+                    </p>
+                  </div>
                 );
-              })}
+              }
+
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {filtered.map((item: any) => {
+                    const isSelected = selectedSlot2Item?.itemId === item.itemId;
+                    return (
+                      <button
+                        key={item.inventoryId}
+                        type="button"
+                        onClick={() => {
+                          setSelectedSlot2Item(item);
+                          setSlot2PickerOpen(false);
+                        }}
+                        className={`p-3 rounded-lg border text-left transition-all flex items-start gap-3 ${
+                          isSelected
+                            ? 'border-amber-400 bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                            : 'border-stone-800 bg-[#121622]/80 hover:border-stone-700 hover:bg-[#181d2a]'
+                        }`}
+                      >
+                        <div className="text-2xl p-2 rounded bg-black/60 border border-stone-700 shrink-0">
+                          {item.category === 'weapon' ? '🗡️' : item.category === 'pet' ? '🐾' : '💎'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-serif font-bold text-xs text-amber-200">
+                              {item.name}
+                            </span>
+                            <span className="text-[9px] px-1.5 py-0.2 rounded font-mono bg-stone-800 border border-stone-700 text-stone-300">
+                              x{item.quantity}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-stone-400 font-mono block mt-0.5">
+                            Rank: {item.rank} • {item.category}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        </Modal>
+
+        {/* MODAL KONFIRMASI JALUR KULTIVATOR BIASA */}
+        <Modal
+          isOpen={ordinaryConfirmModalOpen}
+          onClose={() => setOrdinaryConfirmModalOpen(false)}
+          title="Konfirmasi Jalur Kultivator Biasa"
+        >
+          <div className="space-y-4 p-2 text-stone-200">
+            <div className="p-4 rounded-xl border border-amber-500/40 bg-amber-950/20 flex items-start gap-3">
+              <span className="text-2xl">⚠️</span>
+              <div className="space-y-1">
+                <h5 className="font-serif font-bold text-amber-300 text-sm">
+                  Peringatan Pilihan Permanen
+                </h5>
+                <p className="text-xs text-stone-300 leading-relaxed">
+                  Apakah kamu yakin ingin melangkah maju sebagai <strong>Kultivator Biasa (Tanpa Hukum Semesta)</strong>?
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-xs text-stone-400 bg-black/40 p-4 rounded-xl border border-stone-800">
+              <p className="font-semibold text-stone-200">Konsekuensi Keputusan Ini:</p>
+              <ul className="list-disc pl-5 space-y-1 text-stone-400">
+                <li>Dantian fana tidak akan terikat kontrak dengan 15 Hukum Semesta semesta raya.</li>
+                <li>Stat tempur dasar (HP, MP, ATK, DEF, SPD) disesuaikan sebesar <strong className="text-amber-300">× 0.95</strong> secara permanen.</li>
+                <li>Kamu tidak menggunakan Pohon Jurus Hukum Semesta, melainkan mengandalkan jurus manual beladiri fana (Martial Arts) dan senjata.</li>
+                <li>Pilihan ini bersifat permanen dan tidak dapat diubah setelah disetujui.</li>
+              </ul>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-3 border-t border-stone-800">
+              <Button
+                variant="outline"
+                onClick={() => setOrdinaryConfirmModalOpen(false)}
+                className="border-stone-700 text-stone-300 text-xs"
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={handleConfirmOrdinary}
+                className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs"
+              >
+                ⚡ Ya, Lanjutkan Sebagai Kultivator Biasa
+              </Button>
             </div>
           </div>
         </Modal>
@@ -808,17 +1058,20 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const skillsList = skillsRes?.data?.skills || [];
   const availablePoints = skillsRes?.data?.availablePoints ?? lawData.lawSkillPoints;
 
-  // Realm progress (dari props)
-  const realmProgressPercent = realmData ? Math.min(100, Math.max(0, (realmData.currentQi / realmData.maxQi) * 100)) : 0;
+  // English Wuxia Law Rank Title
+  const activeLawTypeKey = lawData.activeLawType || '';
+  const englishRankName = (LAW_RANK_NAMES_EN[activeLawTypeKey] && LAW_RANK_NAMES_EN[activeLawTypeKey][lawData.rank - 1])
+    || lawData.rankDisplayName
+    || 'Mortal Foundation';
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner Law Aktif + Realm Info Terpadu */}
-      <Card className="relative overflow-hidden border border-amber-500/30 bg-gradient-to-r from-[#14100c] via-black to-[#14100c] p-6 shadow-2xl">
+      {/* 1. UNIFIED HERO CARD: LAW CULTIVATION & REALM MASTER BANNER */}
+      <Card className="relative overflow-hidden border border-amber-500/40 bg-gradient-to-r from-[#17120c] via-black to-[#17120c] p-6 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
             <div className="relative flex-shrink-0">
-              <div className="w-20 h-20 rounded-xl bg-gradient-to-b from-amber-500/20 to-black border-2 border-amber-400/50 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/10">
+              <div className="w-20 h-20 rounded-xl bg-gradient-to-b from-amber-500/20 to-black border-2 border-amber-400/60 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/20">
                 📜
               </div>
               <div className="absolute -bottom-2 -right-2 bg-amber-500 text-stone-950 font-bold text-[10px] px-1.5 py-0.5 rounded shadow">
@@ -826,46 +1079,49 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               </div>
             </div>
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold font-serif text-amber-200 tracking-wide">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-2xl sm:text-3xl font-bold font-serif text-amber-200 tracking-wide">
                   {lawData.lawName}
                 </h2>
                 <span className="text-xs px-2.5 py-0.5 rounded-full font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30">
                   {lawData.category?.toUpperCase()}
                 </span>
               </div>
-              <p className="text-sm text-stone-300 font-serif">
-                Law Rank: <span className="font-bold text-amber-300 text-base">{lawData.rankDisplayName}</span>
-                <span className="text-xs text-stone-500 ml-2 font-mono">(Stage {lawData.stage}/9)</span>
+              <p className="text-base text-stone-200 font-serif flex items-center flex-wrap gap-2">
+                <span>Realm:</span>
+                <span className="font-bold text-amber-300 text-lg sm:text-xl drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
+                  {englishRankName}
+                </span>
+                <span className="text-xs text-amber-400/90 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40">
+                  Stage {lawData.stage}/9
+                </span>
               </p>
-              {realmData && (
-                <p className="text-xs text-stone-400 font-serif">
-                  Character Realm: <span className="font-semibold text-sky-300">{realmData.realm}</span>
-                  <span className="text-stone-500 ml-1 font-mono">(Stage {realmData.stage})</span>
-                </p>
-              )}
               <div className="flex flex-wrap items-center gap-4 text-xs text-stone-400 pt-1">
                 <span className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-amber-400" />
-                  Bonus Cap Level: <strong className="text-amber-300 font-mono">+{lawData.lawLevelCapBonus}</strong> (Cap Karakter: Lv. {lawData.characterLevelCap})
+                  Kapasitas Level: <strong className="text-amber-300 font-mono">Lv. {lawData.characterLevelCap}</strong>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Poin Skill Law: <strong className="text-amber-300 font-mono">{availablePoints}</strong>
+                  Poin Jurus Law: <strong className="text-amber-300 font-mono">{availablePoints}</strong>
+                </span>
+                <span className="flex items-center gap-1.5 font-mono text-stone-400">
+                  <Flame className="w-3.5 h-3.5 text-orange-400" />
+                  Laju Intisari: <strong className="text-stone-200">+{lawData.channelRatePerMinute} {lawData.qiType === 'true_qi' ? 'True Qi' : 'Qi'}/mnt</strong>
                 </span>
               </div>
             </div>
           </div>
 
           {/* Quick Actions (Channeling & Breakthrough) */}
-          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-end">
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end">
             {lawData.canClaimEpiphany && (
               <Button
                 size="sm"
                 onClick={() => dailyClaimMutation.mutate()}
                 disabled={dailyClaimMutation.isPending}
-                className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold border border-emerald-300/40 shadow"
+                className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold border border-emerald-300/40 shadow text-xs"
               >
                 ✨ Klaim Pencerahan Harian
               </Button>
@@ -877,8 +1133,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               onClick={() => channelMutation.mutate(lawData.isChanneling ? 'stop' : 'start')}
               disabled={channelMutation.isPending}
               className={lawData.isChanneling
-                ? "border-red-500/50 text-red-400 hover:bg-red-950/40"
-                : "bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold"}
+                ? "border-red-500/50 text-red-400 hover:bg-red-950/40 text-xs"
+                : "bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs"}
             >
               {lawData.isChanneling ? "⏹️ Hentikan Meditasi" : "🧘 Mulai Meditasi"}
             </Button>
@@ -887,7 +1143,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               size="sm"
               onClick={() => miniBreakthroughMutation.mutate()}
               disabled={!lawData.canMiniBreakthrough || miniBreakthroughMutation.isPending}
-              className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-bold border border-yellow-300/40 shadow"
+              className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-bold border border-yellow-300/40 shadow text-xs"
             >
               ⚡ Terobos Stage (+2 LvCap)
             </Button>
@@ -897,7 +1153,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 size="sm"
                 onClick={() => majorBreakthroughMutation.mutate()}
                 disabled={!lawData.canMajorBreakthrough || majorBreakthroughMutation.isPending}
-                className="bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold border border-purple-400/50 shadow-lg shadow-purple-500/20"
+                className="bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold border border-purple-400/50 shadow-lg shadow-purple-500/20 text-xs"
               >
                 🌩️ Penerobosan Agung Rank
               </Button>
@@ -938,50 +1194,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             </span>
           </div>
           <div className="flex items-center gap-2 text-stone-400 justify-start md:justify-end">
-            <span className="font-mono text-[11px] text-stone-500">
-              Laju Qi: +{lawData.channelRatePerMinute} {lawData.qiType === 'true_qi' ? 'True Qi' : 'Qi'}/mnt
+            <span className="font-serif text-[11px] text-emerald-400/90 flex items-center gap-1">
+              <CheckCircle2 size={13} /> Fondasi Dantian Sempurna
             </span>
           </div>
         </div>
       </Card>
-
-      {/* Realm Qi Progress + Breakthrough (Integrated from realm data) */}
-      {realmData && (
-        <Card className="border border-sky-500/30 bg-gradient-to-r from-[#0b1628] via-black to-[#0b1628] p-5">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-2 flex-1 w-full">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-sky-300 flex items-center gap-1.5 font-serif">
-                  <Flame className="w-4 h-4 text-sky-400" /> Character Realm Qi Progress
-                </span>
-                <span className="font-mono text-stone-400">
-                  <strong className="text-sky-300">{Math.floor(realmData.currentQi).toLocaleString()}</strong> / {realmData.maxQi.toLocaleString()} Qi
-                </span>
-              </div>
-              <div className="w-full h-2.5 bg-stone-950 rounded-full overflow-hidden border border-stone-800">
-                <div
-                  className="h-full bg-gradient-to-r from-sky-600 via-blue-500 to-sky-400 rounded-full transition-all duration-500"
-                  style={{ width: `${realmProgressPercent}%` }}
-                />
-              </div>
-              <div className="flex items-center gap-3 text-xs text-stone-500">
-                <span className="font-mono">+{realmData.ratePerMinute.toFixed(1)} Qi/mnt</span>
-                {realmData.isMaxLevel && <span className="text-yellow-500 font-semibold">🌟 Puncak Alam Semesta Tercapai!</span>}
-              </div>
-            </div>
-            {!realmData.isMaxLevel && (
-              <Button
-                size="sm"
-                disabled={!realmData.isReadyForBreakthrough}
-                className="bg-[#1e3a5f] hover:bg-blue-900 border border-blue-800 text-white font-bold text-xs flex items-center gap-1.5 whitespace-nowrap"
-              >
-                <ArrowUpCircle className="w-4 h-4" />
-                {realmData.isReadyForBreakthrough ? 'Terobos Realm' : 'Qi Belum Cukup'}
-              </Button>
-            )}
-          </div>
-        </Card>
-      )}
 
       {/* CTA Link ke Skill Tree Mandiri */}
       <div className="flex items-center justify-between p-3 rounded-xl border border-stone-800 bg-stone-950/50 backdrop-blur-md">

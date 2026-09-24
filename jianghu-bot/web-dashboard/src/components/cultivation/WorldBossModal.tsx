@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { toast } from '@/components/ui/Toast';
 import { Shield, Flame, Swords, Trophy, Skull, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { PageHeader } from '@/components/ui/PageHeader';
 
 interface WorldBossModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  isStandalone?: boolean;
 }
 
 interface WorldBossData {
@@ -28,7 +30,7 @@ interface WorldBossData {
   }>;
 }
 
-export default function WorldBossModal({ isOpen, onClose }: WorldBossModalProps) {
+export default function WorldBossModal({ isOpen = true, onClose = () => {}, isStandalone = false }: WorldBossModalProps) {
   const queryClient = useQueryClient();
 
   const { data: statusRes, isLoading } = useQuery<{ success: boolean; data: WorldBossData }>({
@@ -86,9 +88,8 @@ export default function WorldBossModal({ isOpen, onClose }: WorldBossModalProps)
     'Fase 3: Amukan Ekstrem Letusan Lahar (<25% HP)'
   ];
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="🐉 Pertempuran Bos Dunia Mingguan (World Boss — Setiap Sabtu 20:00)">
-      <div className="space-y-5 text-stone-200 p-1 text-xs">
+  const innerContent = (
+    <div className="space-y-5 text-stone-200 p-1 text-xs">
         {/* Banner Bos Dunia 512x512 panggung visual wuxia */}
         <div className="relative overflow-hidden rounded-xl border border-red-500/40 bg-gradient-to-b from-red-950/80 via-black to-stone-950 p-6 text-center space-y-3 shadow-2xl backdrop-blur-md">
           {/* Efek visual glow lava */}
@@ -186,6 +187,23 @@ export default function WorldBossModal({ isOpen, onClose }: WorldBossModalProps)
           </Card>
         </div>
       </div>
+  );
+
+  if (isStandalone) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="🐉 Pertempuran Bos Dunia Mingguan (World Boss)"
+          description="Pertarungan akbar setiap Sabtu pukul 20:00 WIB. Satukan kekuatan pendekar sembilan benua Jianghu menumbangkan 400 Juta HP Bos Purba."
+        />
+        {innerContent}
+      </div>
+    );
+  }
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="🐉 Pertempuran Bos Dunia Mingguan (World Boss — Setiap Sabtu 20:00)">
+      {innerContent}
     </Modal>
   );
 }

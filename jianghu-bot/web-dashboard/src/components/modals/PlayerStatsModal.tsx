@@ -138,7 +138,7 @@ export default function PlayerStatsModal() {
           {sectName}
         </div>
         <div className="text-[10px] text-amber-400/90 font-mono mt-0.5">
-          {realmName} {stage > 0 ? `Tk. ${stage}` : ''}
+          {realmDisplay.fullTitle}
         </div>
       </div>
 
@@ -572,7 +572,7 @@ export default function PlayerStatsModal() {
                       <div className="space-y-3 text-xs sm:text-sm">
                         <div className="flex justify-between items-center p-3 bg-[#181d2a] rounded-lg border border-[#2d3547]">
                           <span className="text-stone-400">Ranah Kultivasi Saat Ini:</span>
-                          <span className="font-bold text-amber-300 text-base">{realmName} (Tahap {stage})</span>
+                          <span className="font-bold text-amber-300 text-base">{realmDisplay.fullTitle}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-[#181d2a] rounded-lg border border-[#2d3547]">
                           <span className="text-stone-400">Total Akumulasi Qi:</span>
