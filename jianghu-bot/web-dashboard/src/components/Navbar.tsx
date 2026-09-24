@@ -66,7 +66,7 @@ export default function Navbar() {
   const navLinks = {
     kultivasi: [
       { href: "/profile", label: "Profil Karakter" },
-      { href: "/character", label: "Karakter — Peralatan" },
+      { href: "/character", label: "Peralatan & Busana" },
       { href: "/condition", label: "Kondisi Karakter" },
       { href: "/cultivation", label: "Kultivasi & Ranah" },
       { href: "/skills", label: "Kitab & Jurus" },
@@ -74,13 +74,15 @@ export default function Navbar() {
       { href: "/daily-hub", label: "✨ Misi & Pencerahan" },
     ],
     dunia: [
-      { href: "/arena", label: "Arena Pertarungan" },
-      { href: "/world-boss", label: "🐉 World Boss" },
-      { href: "/sect-arena", label: "⚔️ Arena Sekte" },
+      { href: "/world", label: "🗺️ Peta Dunia Tale of Immortal" },
+      { href: "/explore", label: "🧭 Eksplorasi Grid Spasial" },
+      { href: "/arena", label: "⚔️ Arena Pertarungan" },
+      { href: "/world-boss", label: "🐉 World Boss (Sabtu)" },
+      { href: "/sect-arena", label: "🏆 Arena Sekte (Minggu)" },
     ],
     aset: [
-      { href: "/inventory", label: "Tas / Inventory" },
-      { href: "/assets", label: "Lahan & Properti" },
+      { href: "/inventory", label: "🎒 Tas / Inventory" },
+      { href: "/assets", label: "🏡 Lahan & Properti" },
     ],
     sosial: [
       { href: "/market", label: "Pasar Lelang" },
@@ -140,7 +142,7 @@ export default function Navbar() {
                 Karakter <ChevronDown className="w-3.5 h-3.5 opacity-70" />
               </button>
               {openDropdown === 'kultivasi' && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
                   {navLinks.kultivasi.map(link => (
                     <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
                       {link.label}
@@ -159,7 +161,7 @@ export default function Navbar() {
                 Dunia <ChevronDown className="w-3.5 h-3.5 opacity-70" />
               </button>
               {openDropdown === 'dunia' && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                <div className="absolute top-full left-0 mt-1 w-64 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
                   {navLinks.dunia.map(link => (
                     <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
                       {link.label}
@@ -215,7 +217,17 @@ export default function Navbar() {
           </nav>
 
           {/* Right Section (Auth & Mobile Toggle) */}
-          <div className="flex items-center gap-2 lg:gap-4 z-50">
+          <div className="flex items-center gap-2 lg:gap-3 z-50">
+            {/* Quick Access Tianji Hub Button */}
+            <Link
+              href="/daily-hub"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-950/70 to-yellow-950/70 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-amber-100 text-xs font-serif shadow-[0_0_12px_rgba(217,119,6,0.25)] hover:shadow-[0_0_18px_rgba(245,158,11,0.5)] transition-all cursor-pointer"
+              title="✨ Misi & Pencerahan Harian"
+            >
+              <span className="text-amber-400 animate-pulse text-xs">✨</span>
+              <span className="font-semibold tracking-wide">Tianji Hub</span>
+            </Link>
+
             {errorMsg && (
               <span className="text-[#8b0000] text-xs font-semibold hidden sm:inline">{errorMsg}</span>
             )}
@@ -396,6 +408,57 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation Bar - Fixed at bottom-0 */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0d14]/95 backdrop-blur-md border-t border-[#3b3322] px-2 py-1.5 flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.85)]">
+        <Link
+          href="/"
+          onClick={closeMobileMenu}
+          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
+        >
+          <span className="text-base sm:text-lg">🏠</span>
+          <span className="text-[10px] font-serif font-medium">Beranda</span>
+        </Link>
+        <Link
+          href="/profile"
+          onClick={closeMobileMenu}
+          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
+        >
+          <span className="text-base sm:text-lg">👤</span>
+          <span className="text-[10px] font-serif font-medium">Karakter</span>
+        </Link>
+        <Link
+          href="/world"
+          onClick={closeMobileMenu}
+          className="flex flex-col items-center gap-0.5 text-amber-300 hover:text-amber-200 transition-colors py-1 px-2.5 relative"
+        >
+          <span className="text-base sm:text-lg animate-pulse">🗺️</span>
+          <span className="text-[10px] font-serif font-bold text-amber-300">Dunia</span>
+        </Link>
+        <Link
+          href="/daily-hub"
+          onClick={closeMobileMenu}
+          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
+        >
+          <span className="text-base sm:text-lg">✨</span>
+          <span className="text-[10px] font-serif font-medium">Tianji</span>
+        </Link>
+        <Link
+          href="/inventory"
+          onClick={closeMobileMenu}
+          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
+        >
+          <span className="text-base sm:text-lg">🎒</span>
+          <span className="text-[10px] font-serif font-medium">Tas</span>
+        </Link>
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5 cursor-pointer"
+        >
+          <span className="text-base sm:text-lg">{isMobileMenuOpen ? "✖️" : "📜"}</span>
+          <span className="text-[10px] font-serif font-medium">Menu</span>
+        </button>
+      </nav>
     </>
   );
 }

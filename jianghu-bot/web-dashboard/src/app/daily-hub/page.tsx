@@ -1,16 +1,12 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import DailyHubModal from '@/components/cultivation/DailyHubModal';
-import { PageHeader } from '@/components/ui/PageHeader';
 
 export default function DailyHubPage() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen">
-      <DailyHubModal isOpen={true} onClose={() => router.push('/cultivation')} />
+    <div className="container mx-auto px-3 sm:px-6 py-6 max-w-5xl">
+      <DailyHubModal isOpen={true} isStandalone={true} />
     </div>
   );
 }

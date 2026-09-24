@@ -44,6 +44,16 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         maxMp = Math.max(5, Math.floor(maxMp * (1 - mpPenaltyRatio)));
     }
 
+    // Apply Ordinary Cultivator (Kultivator Biasa) 0.95x modifier
+    // Players who refuse cosmic laws receive a 5% stat penalty on core combat attributes
+    if (player.isNormalCultivator === true) {
+        maxHp = Math.max(10, Math.floor(maxHp * 0.95));
+        maxMp = Math.max(5,  Math.floor(maxMp * 0.95));
+        atk   = Math.max(1,  Math.floor(atk * 0.95));
+        def   = Math.max(1,  Math.floor(def * 0.95));
+        spd   = Math.max(1,  Math.floor(spd * 0.95));
+    }
+
     // Determine current HP and MP (clamp to max)
     let currentHp = player.currentHp !== null && player.currentHp !== undefined ? player.currentHp : maxHp;
     let currentMp = player.currentMp !== null && player.currentMp !== undefined ? player.currentMp : maxMp;

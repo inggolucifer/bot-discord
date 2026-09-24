@@ -561,6 +561,22 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                      player.markModified('conditions');
                  }
                  player.markModified('inventory');
+
+                 // Catat progres misi harian dailyHub
+                 const todayStr = new Date().toISOString().slice(0, 10);
+                 if (!player.dailyHub) player.dailyHub = {};
+                 if (!player.dailyHub.missions) player.dailyHub.missions = {};
+                 if (player.dailyHub.missions.missionsDate !== todayStr) {
+                     player.dailyHub.missions.missionsDate = todayStr;
+                     player.dailyHub.missions.meditateMinutes = 0;
+                     player.dailyHub.missions.meditateClaimed = false;
+                     player.dailyHub.missions.combatDefeats = 0;
+                     player.dailyHub.missions.combatClaimed = false;
+                     player.dailyHub.missions.craftCount = 0;
+                     player.dailyHub.missions.craftClaimed = false;
+                 }
+                 player.dailyHub.missions.combatDefeats = (player.dailyHub.missions.combatDefeats || 0) + 1;
+                 player.markModified('dailyHub');
                  await player.save();
              }
         } else if (session.status === 'lost') {
