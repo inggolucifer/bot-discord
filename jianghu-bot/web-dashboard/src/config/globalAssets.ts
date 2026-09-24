@@ -255,6 +255,33 @@ export const GLOBAL_ASSETS = {
     "Batu Roh Menengah": "",
     "Bijih Besi Kuno": "",
     "Herba Ginseng Seribu Tahun": "",
+
+    // 15 Kitab Manual Hukum Semesta (Category: 'law')
+    "Kitab Api Nirwana Phoenix": "",
+    "Kitab Samudra Naga Azure": "",
+    "Kitab Inti Bumi Xuanwu": "",
+    "Kitab Pohon Hayat Kaisar Hijau": "",
+    "Kitab Badai Sayap Roc Sembilan Langit": "",
+    "Kitab Guntur Halilintar Dewa Petir": "",
+    "Kitab Penempaan Raga Suci": "",
+    "Kitab Rongga Sepuluh Ribu Gu": "",
+    "Kitab Ikatan Pusaka Jiwa Kelahiran": "",
+    "Kitab Ikatan Satwa Roh Kelahiran": "",
+    "Kitab Pelebur Inti Siluman Kotor": "",
+    "Kitab Penghisap Darah & Pemanen Ruh": "",
+    "Kitab Konsumsi Racun Maut": "",
+    "Kitab Perjanjian Iblis Purba": "",
+    "Kitab Bayangan Sembilan Yin": "",
+
+    // Benda & Satwa Common Pengikatan Fondasi Fana
+    "Pedang Besi Patah": "",
+    "Mangkuk Keramik Retak": "",
+    "Cermin Kuningan Usang": "",
+    "Kerikil Hitam Kali": "",
+    "Anak Anjing Kampung": "",
+    "Ular Rumput Hijau": "",
+    "Gagak Hitam Liar": "",
+    "Kucing Hutan Belang": "",
   },
 
   // =========================================================================

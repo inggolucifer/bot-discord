@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
- // Need to check if FallbackImage exists, if not we will fix it later.
+// Need to check if FallbackImage exists, if not we will fix it later.
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
@@ -70,9 +70,13 @@ export default function Navbar() {
       { href: "/condition", label: "Kondisi Karakter" },
       { href: "/cultivation", label: "Kultivasi & Ranah" },
       { href: "/skills", label: "Kitab & Jurus" },
+      { href: "/skill-tree", label: "🌳 Pohon Jurus Law" },
+      { href: "/daily-hub", label: "✨ Misi & Pencerahan" },
     ],
     dunia: [
       { href: "/arena", label: "Arena Pertarungan" },
+      { href: "/world-boss", label: "🐉 World Boss" },
+      { href: "/sect-arena", label: "⚔️ Arena Sekte" },
     ],
     aset: [
       { href: "/inventory", label: "Tas / Inventory" },
@@ -106,11 +110,11 @@ export default function Navbar() {
         </div>
       )}
 
-      <header 
+      <header
         className={cn(
           "bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ease-in-out relative",
-          isNavbarCollapsed 
-            ? "-translate-y-full opacity-0 pointer-events-none max-h-0 border-b-0 overflow-hidden" 
+          isNavbarCollapsed
+            ? "-translate-y-full opacity-0 pointer-events-none max-h-0 border-b-0 overflow-hidden"
             : "translate-y-0 opacity-100 max-h-24 shadow-lg"
         )}
       >
@@ -121,129 +125,129 @@ export default function Navbar() {
             JIANGHU RP
           </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
-          <Link href="/" className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors font-medium">
-            Beranda
-          </Link>
-
-          {/* Dropdown Kultivasi */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown('kultivasi')}
-              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
-            >
-              Karakter <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-            </button>
-            {openDropdown === 'kultivasi' && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                {navLinks.kultivasi.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Dropdown Dunia */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown('dunia')}
-              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
-            >
-              Dunia <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-            </button>
-            {openDropdown === 'dunia' && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                {navLinks.dunia.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Dropdown Aset & Tas */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown('aset')}
-              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
-            >
-              Aset & Tas <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-            </button>
-            {openDropdown === 'aset' && (
-              <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                {navLinks.aset.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Dropdown Pasar & Aliansi */}
-          <div className="relative">
-            <button
-              onClick={() => toggleDropdown('sosial')}
-              className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
-            >
-              Pasar & Sekte <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-            </button>
-            {openDropdown === 'sosial' && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                {navLinks.sosial.map(link => (
-                  <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {navLinks.referensi.map(link => (
-            <Link key={link.href} href={link.href} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
-              {link.label}
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
+            <Link href="/" className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors font-medium">
+              Beranda
             </Link>
-          ))}
-        </nav>
 
-        {/* Right Section (Auth & Mobile Toggle) */}
-        <div className="flex items-center gap-2 lg:gap-4 z-50">
-          {errorMsg && (
-            <span className="text-[#8b0000] text-xs font-semibold hidden sm:inline">{errorMsg}</span>
-          )}
-          {user ? (
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-300 hidden sm:inline">{user.username}</span>
-              {user.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full border border-[#c5a880]" />
-              ) : (
-                <div className="w-8 h-8 rounded-full border border-[#c5a880] bg-[#333] flex items-center justify-center text-xs">?</div>
-              )}
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={logout}
-                className="border-[#333] text-gray-400 hover:text-white hover:bg-black/50 px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
+            {/* Dropdown Kultivasi */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('kultivasi')}
+                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
               >
-                Logout
-              </Button>
+                Karakter <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+              {openDropdown === 'kultivasi' && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                  {navLinks.kultivasi.map(link => (
+                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          ) : (
-            <Button
-              onClick={handleLogin}
-              variant="destructive"
-              size="sm"
-              className="shadow-[0_0_10px_rgba(139,0,0,0.5)] px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
-            >
-              Login Discord
-            </Button>
-          )}
+
+            {/* Dropdown Dunia */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('dunia')}
+                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+              >
+                Dunia <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+              {openDropdown === 'dunia' && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                  {navLinks.dunia.map(link => (
+                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Dropdown Aset & Tas */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('aset')}
+                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+              >
+                Aset & Tas <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+              {openDropdown === 'aset' && (
+                <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                  {navLinks.aset.map(link => (
+                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Dropdown Pasar & Aliansi */}
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('sosial')}
+                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+              >
+                Pasar & Sekte <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+              {openDropdown === 'sosial' && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
+                  {navLinks.sosial.map(link => (
+                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {navLinks.referensi.map(link => (
+              <Link key={link.href} href={link.href} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right Section (Auth & Mobile Toggle) */}
+          <div className="flex items-center gap-2 lg:gap-4 z-50">
+            {errorMsg && (
+              <span className="text-[#8b0000] text-xs font-semibold hidden sm:inline">{errorMsg}</span>
+            )}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-300 hidden sm:inline">{user.username}</span>
+                {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full border border-[#c5a880]" />
+                ) : (
+                  <div className="w-8 h-8 rounded-full border border-[#c5a880] bg-[#333] flex items-center justify-center text-xs">?</div>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={logout}
+                  className="border-[#333] text-gray-400 hover:text-white hover:bg-black/50 px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={handleLogin}
+                variant="destructive"
+                size="sm"
+                className="shadow-[0_0_10px_rgba(139,0,0,0.5)] px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
+              >
+                Login Discord
+              </Button>
+            )}
 
             {/* Collapse Navbar Button */}
             <button
@@ -379,19 +383,19 @@ export default function Navbar() {
             ))}
           </div>
 
-            <div className="mt-auto pt-6 border-t border-[#333]">
-               {user && (
-                 <Button
-                   variant="outline"
-                   onClick={() => { logout(); closeMobileMenu(); }}
-                   className="w-full justify-center border-[#333] text-gray-400"
-                 >
-                   Logout
-                 </Button>
-               )}
-            </div>
+          <div className="mt-auto pt-6 border-t border-[#333]">
+            {user && (
+              <Button
+                variant="outline"
+                onClick={() => { logout(); closeMobileMenu(); }}
+                className="w-full justify-center border-[#333] text-gray-400"
+              >
+                Logout
+              </Button>
+            )}
           </div>
         </div>
+      </div>
     </>
   );
 }

@@ -13,6 +13,7 @@ import FallbackImage from '@/components/FallbackImage';
 import ConditionTab from '@/components/character/ConditionTab';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { PlayerProfile } from '@/types/game';
+import { getEnglishRealmDisplay } from '@/lib/realmUtils';
 
 type ActiveTab = 'stats' | 'condition' | 'skills' | 'artisan' | 'item' | 'experience' | 'relations';
 
@@ -86,7 +87,8 @@ export default function PlayerStatsModal() {
 
   const characterName = player?.characterName || 'Pendekar Fana';
   const sectName = player?.sect || 'Tanpa Sekte (Rogue Cultivator)';
-  const realmName = player?.systemCultivation?.realm || 'Fondasi Fana (Mortal)';
+  const realmDisplay = getEnglishRealmDisplay(player);
+  const realmName = realmDisplay.fullTitle;
   const stage = Math.floor(Number(player?.systemCultivation?.stage) || 0);
   const gender = player?.gender || 'Laki-laki';
   const age = Math.floor(Number(player?.age) || 16);
@@ -273,7 +275,7 @@ export default function PlayerStatsModal() {
 
                           {/* Daoist Realm Seal Bottom-Left */}
                           <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md">
-                            {realmName} {stage > 0 ? `Tk. ${stage}` : ''}
+                            {realmDisplay.fullTitle}
                           </div>
 
                           {/* Wardrobe Indicator Tag (Foundation for outfits) */}
@@ -365,9 +367,14 @@ export default function PlayerStatsModal() {
 
                         {/* 2. Character Name & Sect */}
                         <div>
-                          <h2 className="text-2xl sm:text-3xl font-bold text-amber-200 tracking-wide font-serif">
-                            {characterName}
-                          </h2>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h2 className="text-2xl sm:text-3xl font-bold text-amber-200 tracking-wide font-serif">
+                              {characterName}
+                            </h2>
+                            <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-950/80 to-amber-900/80 border border-amber-500/60 text-amber-200 text-xs font-serif font-bold shadow-md">
+                              {realmDisplay.fullTitle}
+                            </span>
+                          </div>
                           <p className="text-stone-400 text-xs mt-0.5">
                             Sekte: <span className="text-amber-300 font-semibold">{sectName}</span>
                           </p>
