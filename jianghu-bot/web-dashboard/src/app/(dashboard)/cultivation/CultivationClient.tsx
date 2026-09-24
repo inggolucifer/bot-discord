@@ -12,16 +12,30 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { toast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';
-import { Flame, ArrowUpCircle, Loader2 } from 'lucide-react';
+import { Flame, ArrowUpCircle, Loader2, Sparkles, Trophy, Swords, Moon, BookOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CultivationData, BreakthroughResponse } from '@/lib/schemas';
 import { AxiosError } from 'axios';
+import LawCultivationTab from '@/components/cultivation/LawCultivationTab';
+import DailyHubModal from '@/components/cultivation/DailyHubModal';
+import WorldBossModal from '@/components/cultivation/WorldBossModal';
+import SectArenaModal from '@/components/cultivation/SectArenaModal';
+import CelestialCalendarModal from '@/components/cultivation/CelestialCalendarModal';
 
 export default function CultivationClient() {
     const { token } = useAuthStore();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState(false);
+
+    // Navigasi Sub-Tab Utama (Ranah vs Hukum Semesta)
+    const [mainTab, setMainTab] = useState<'realm' | 'law'>('realm');
+
+    // Modals Event & Hub
+    const [dailyHubOpen, setDailyHubOpen] = useState(false);
+    const [worldBossOpen, setWorldBossOpen] = useState(false);
+    const [sectArenaOpen, setSectArenaOpen] = useState(false);
+    const [calendarOpen, setCalendarOpen] = useState(false);
 
     const [breakthroughModalOpen, setBreakthroughModalOpen] = useState(false);
     const [showBreakthroughAnim, setShowBreakthroughAnim] = useState(false);
@@ -92,11 +106,88 @@ export default function CultivationClient() {
         <div className="space-y-6">
             <BreakthroughAnimation isVisible={showBreakthroughAnim} onClose={() => { setShowBreakthroughAnim(false); setBreakthroughResult(null); }} />
             <PageHeader
-                title="Kultivasi Spiritual"
-                description="Pantau perkembangan Qi dan lakukan terobosan untuk mencapai Realm yang lebih tinggi."
+                title="Kultivasi Spiritual & Hukum Semesta"
+                description="Pantau perkembangan Qi spiritual, pelajari 15 Hukum Semesta, dan lakukan terobosan tingkat tinggi."
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Ribbon Tombol Aksi Cepat (Event Mingguan & Misi Harian) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border border-stone-800 bg-stone-950/70 backdrop-blur-md">
+                <div className="flex flex-wrap items-center gap-2">
+                    <Button
+                        size="sm"
+                        onClick={() => setDailyHubOpen(true)}
+                        className="bg-amber-600/90 hover:bg-amber-500 text-stone-950 font-bold text-xs flex items-center gap-1.5 shadow"
+                    >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        ✨ Misi & Pencerahan
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setWorldBossOpen(true)}
+                        className="border-red-500/40 text-red-300 hover:bg-red-950/40 text-xs flex items-center gap-1.5"
+                    >
+                        <Flame className="w-3.5 h-3.5 text-red-400" />
+                        🐉 World Boss (Sabtu)
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSectArenaOpen(true)}
+                        className="border-amber-500/40 text-amber-300 hover:bg-amber-950/40 text-xs flex items-center gap-1.5"
+                    >
+                        <Swords className="w-3.5 h-3.5 text-amber-400" />
+                        ⚔️ Arena Sekte (Minggu)
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setCalendarOpen(true)}
+                        className="border-indigo-500/40 text-indigo-300 hover:bg-indigo-950/40 text-xs flex items-center gap-1.5"
+                    >
+                        <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                        🌕 Kalender Semesta
+                    </Button>
+                </div>
+
+                <div className="text-xs text-stone-500 font-mono">
+                    Reset Server: 00:00 WIB
+                </div>
+            </div>
+
+            {/* Sub-Tab Navigation Bar Utama */}
+            <div className="flex items-center gap-3 border-b border-stone-800 pb-2">
+                <button
+                    onClick={() => setMainTab('realm')}
+                    className={`px-5 py-2.5 rounded-lg font-serif font-bold text-sm transition-all flex items-center gap-2 ${
+                        mainTab === 'realm'
+                            ? 'bg-[#1e3a5f] text-white border border-blue-500/50 shadow-lg shadow-blue-900/30'
+                            : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900/60'
+                    }`}
+                >
+                    <span>🧘</span> TAB 1: Ranah Karakter (Mortal → Dewa)
+                </button>
+                <button
+                    onClick={() => setMainTab('law')}
+                    className={`px-5 py-2.5 rounded-lg font-serif font-bold text-sm transition-all flex items-center gap-2 ${
+                        mainTab === 'law'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-lg shadow-amber-500/10'
+                            : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900/60'
+                    }`}
+                >
+                    <span>📜</span> TAB 2: Hukum Semesta (15 Law Framework)
+                </button>
+            </div>
+
+            {/* KONTEN TAB 2: HUKUM SEMESTA */}
+            {mainTab === 'law' && (
+                <LawCultivationTab />
+            )}
+
+            {/* KONTEN TAB 1: RANAH KARAKTER (REALM EXISTING) */}
+            {mainTab === 'realm' && (
+                <>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="col-span-1 lg:col-span-2 bg-[#111] border-[#c5a880]/30">
                     <CardContent className="p-6 sm:p-8 flex flex-col items-center text-center space-y-6">
                         <div className="relative">
@@ -267,6 +358,14 @@ export default function CultivationClient() {
                     )}
                 </div>
             </Modal>
+            </>
+            )}
+
+            {/* Modal-modal Event & Hub Baru */}
+            <DailyHubModal isOpen={dailyHubOpen} onClose={() => setDailyHubOpen(false)} />
+            <WorldBossModal isOpen={worldBossOpen} onClose={() => setWorldBossOpen(false)} />
+            <SectArenaModal isOpen={sectArenaOpen} onClose={() => setSectArenaOpen(false)} />
+            <CelestialCalendarModal isOpen={calendarOpen} onClose={() => setCalendarOpen(false)} />
         </div>
     );
 }

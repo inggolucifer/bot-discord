@@ -178,6 +178,122 @@ const assetOwnedSchema = new mongoose.Schema({
   isPubliclyVisible: { type: Boolean, default: true },
 }, { _id: false });
 
+// ═══════════════════════════════════════════════════════════════════════
+// CULTIVATION LAW SYSTEM — 15 Jalur Hukum Semesta (90 Stages / 9 Ranks)
+// Referensi: implementation_plan.md §11.3
+// ═══════════════════════════════════════════════════════════════════════
+
+const LAW_TYPE_ENUM = [
+  'element_phoenix_fire', 'element_azure_water', 'element_xuanwu_earth',
+  'element_qingdi_wood', 'element_roc_wind', 'element_godthunder_light',
+  'body_tempering', 'gu_master', 'natal_artifact', 'natal_beast',
+  'demonic_turbid_core', 'demonic_blood_soul', 'demonic_myriad_venom',
+  'demonic_abyssal_pact', 'demonic_nether_darkness',
+  null
+];
+
+const boundEntitySchema = new mongoose.Schema({
+  entityType: { type: String, enum: ['artifact', 'beast', null], default: null },
+  baseItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+  originalName: { type: String, default: null },       // Contoh: "Pedang Besi Karatan" atau "Anak Anjing Kampung"
+  customName: { type: String, default: null },         // Nama pemberian pemain (misal: "Bilah Pelindung Jiwa")
+  rankLevel: { type: Number, default: 0 },             // Mengikuti Law Rank
+  evolutionStage: { type: String, default: 'Mortal' }, // Mortal -> Spirit -> Earth -> Heaven -> Primordial
+  essence: { type: Number, default: 0 },               // Beast Essence Bar / Artifact Infusion Bar
+  maxEssence: { type: Number, default: 100 },
+  beastCurrentHp: { type: Number, default: 100 },
+  beastMaxHp: { type: Number, default: 100 },
+  beastAtk: { type: Number, default: 15 },
+  beastDef: { type: Number, default: 10 },
+  beastSpd: { type: Number, default: 12 },
+  lastFeedAt: { type: Date, default: null }
+}, { _id: false });
+
+const demonicDataSchema = new mongoose.Schema({
+  turbidCoresConsumed: { type: Number, default: 0 },
+  balefulAura: { type: Number, default: 0 },           // Penumpukan hawa kotor (0-100)
+  bloodEssenceVials: { type: Number, default: 0 },
+  soulBannerCaptures: { type: Number, default: 0 },    // Jumlah arwah terserap
+  infamy: { type: Number, default: 0 },                // Poin buronan sekte ortodoks
+  venomToxinLevel: { type: Number, default: 0 },       // Toleransi racun
+  venomTypesConsumed: { type: Number, default: 0 },    // Berapa jenis racun telah diminum
+  abyssalPactTier: { type: Number, default: 0 },
+  abyssalTributeDueAt: { type: Date, default: null },  // Tenggat waktu upeti iblis
+  corruptionIndex: { type: Number, default: 0 }        // +1% ATK per 10 corruption (bonus Demonic)
+}, { _id: false });
+
+const lawDailyDataSchema = new mongoose.Schema({
+  channelMinutesToday: { type: Number, default: 0 },   // Base cap: 90 mnt + streak bonus
+  lastDailyResetAt: { type: Date, default: Date.now },
+  lastEpiphanyClaimAt: { type: Date, default: null },  // Klaim pencerahan harian (+10% Qi cap instan)
+  lastMaintenanceAt: { type: Date, default: null },    // Perawatan harian law (pakan/asah/mandi)
+  dailyMissionsCompleted: { type: Number, default: 0 },
+  dailyMissionIds: { type: [String], default: [] },    // 3 misi acak hari ini
+  lastDailyChestClaimAt: { type: Date, default: null },
+  weeklyMissionsCount: { type: Number, default: 0 },
+  lastWeeklyChestClaimAt: { type: Date, default: null }
+}, { _id: false });
+
+const cultivationLawSchema = new mongoose.Schema({
+  // Jalur Law terpilih (hanya bisa diisi saat realmIndex === 0, PERMANEN setelah dipilih)
+  activeLawType: { type: String, enum: LAW_TYPE_ENUM, default: null },
+  boundAt: { type: Date, default: null },              // Timestamp saat Law pertama kali diikat
+
+  // Progres Kultivasi Law
+  rank: { type: Number, default: 0, min: 0, max: 8 },      // Rank 0 s/d 8
+  stage: { type: Number, default: 0, min: 0, max: 9 },     // Stage 0 s/d 9 per rank (Total 90 stages)
+  qi: { type: Number, default: 0, min: 0 },                // Akumulasi Qi (atau True Qi untuk Body Tempering)
+  maxQi: { type: Number, default: 756 },                   // Target Qi stage saat ini (dihitung dari formula §2.4)
+
+  // Channeling State
+  isChanneling: { type: Boolean, default: false },
+  lastChannelSyncAt: { type: Date, default: null },
+
+  // Gating & Bonus Karakter
+  lawLevelCapBonus: { type: Number, default: 0 },          // +2 per stage selesai (Max +180 dari 90 stage)
+  lawSkillPoints: { type: Number, default: 0 },            // Poin pohon skill yang belum dialokasikan
+
+  // Slot 2: Permanent Common Binding (Khusus Natal Artifact & Natal Beast)
+  boundEntity: { type: boundEntitySchema, default: () => ({}) },
+
+  // Demonic Laws Specific Trackers
+  demonicData: { type: demonicDataSchema, default: () => ({}) },
+
+  // Daily Channeling Cap, Streak, & Misi
+  dailyData: { type: lawDailyDataSchema, default: () => ({}) },
+
+  // Combat Loadout (Sistem 4+1: Basic Attack Senjata otomatis + 4 Jurus dari Skill Tree)
+  unlockedSkillIds: { type: [String], default: [] },       // ID skill dari pohon yang telah diambil
+  combatLoadout: { type: [String], default: [] },          // Maksimal 4 jurus aktif terpilih
+
+  // Cooldowns Terobosan
+  miniBreakthroughCooldownUntil: { type: Date, default: null },
+  majorBreakthroughCooldownUntil: { type: Date, default: null },
+
+  // Gu Master Specific (Aperture Slot)
+  guSlots: [{
+    guItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
+    guName: { type: String, default: null },
+    guType: { type: String, enum: ['attack', 'defense', 'healing', 'support', null], default: null },
+    level: { type: Number, default: 1 },
+    hunger: { type: Number, default: 100 },            // 0-100; 0 = hibernasi (tidak bisa dipanggil bertarung)
+    lastFedAt: { type: Date, default: null }
+  }],
+
+  // Body Tempering Specific (9 Body Parts Tempering Progress)
+  bodyTemperingParts: {
+    head: { type: Number, default: 0 },
+    torso: { type: Number, default: 0 },
+    leftArm: { type: Number, default: 0 },
+    rightArm: { type: Number, default: 0 },
+    leftLeg: { type: Number, default: 0 },
+    rightLeg: { type: Number, default: 0 },
+    spine: { type: Number, default: 0 },
+    dantian: { type: Number, default: 0 },
+    skin: { type: Number, default: 0 }
+  }
+}, { _id: false });
+
 const playerSchema = new mongoose.Schema({
 
   questLog: [{
@@ -257,6 +373,10 @@ const playerSchema = new mongoose.Schema({
     lastSyncAt: { type: Date, default: Date.now },
     isFlawedFoundation: { type: Boolean, default: false }
   },
+
+  // Sistem 15 Hukum Semesta (Law Cultivation) — 90 Stages / 9 Ranks
+  cultivationLaw: { type: cultivationLawSchema, default: () => ({}) },
+
 
   talents: {
     str: { type: Number, default: 5 },
