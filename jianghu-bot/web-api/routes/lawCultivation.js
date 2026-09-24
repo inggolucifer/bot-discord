@@ -119,18 +119,33 @@ router.post('/bind', authenticateToken, async (req, res) => {
       }
 
       // Validasi Slot 1: Manual Law Item
-      const manualInv = player.inventory.find(i => i.itemId.toString() === slot1ManualItemId);
-      if (!manualInv || manualInv.quantity < 1) {
-        throw new CustomError('Kitab Hukum Semesta tidak ditemukan di inventori.', 400);
+      const mongoose = require('mongoose');
+      let manualItem = null;
+      if (mongoose.Types.ObjectId.isValid(slot1ManualItemId)) {
+        manualItem = await Item.findById(slot1ManualItemId).session(session);
+      }
+      if (!manualItem) {
+        manualItem = await Item.findOne({ lawType: slot1ManualItemId }).session(session) ||
+                     await Item.findOne({ category: 'law', lawType: slot1ManualItemId }).session(session);
       }
 
-      const manualItem = await Item.findById(slot1ManualItemId).session(session);
       if (!manualItem) throw new CustomError('Item Kitab Hukum tidak valid.', 400);
 
       // Deteksi law type dari item (menggunakan field lawType atau name matching)
       const lawType = manualItem.lawType || detectLawTypeFromItem(manualItem);
       if (!lawType || !LAW_DEFINITIONS[lawType]) {
         throw new CustomError('Item ini bukan Kitab Hukum Semesta yang sah.', 400);
+      }
+
+      // Validasi atau berikan manual di inventori jika fondasi fana
+      let manualInv = player.inventory.find(i => i.itemId.toString() === manualItem._id.toString());
+      if (!manualInv || manualInv.quantity < 1) {
+        if (realmIdx === 0) {
+          manualInv = { itemId: manualItem._id, quantity: 1 };
+          player.inventory.push(manualInv);
+        } else {
+          throw new CustomError('Kitab Hukum Semesta tidak ditemukan di inventori.', 400);
+        }
       }
 
       // Konsumsi manual dari inventori
@@ -148,35 +163,47 @@ router.post('/bind', authenticateToken, async (req, res) => {
       player.cultivationLaw.lawSkillPoints = 0;
 
       // Validasi & Bind Slot 2: Companion Entity (Natal Artifact / Natal Beast)
-      if (slot2CompanionItemId && (lawType === 'natal_artifact' || lawType === 'natal_beast')) {
-        const companionInv = player.inventory.find(i => i.itemId.toString() === slot2CompanionItemId);
-        if (!companionInv || companionInv.quantity < 1) {
-          throw new CustomError('Benda/Satwa common tidak ditemukan di inventori.', 400);
+      if (lawType === 'natal_artifact' || lawType === 'natal_beast') {
+        let companionItem = null;
+        if (slot2CompanionItemId && mongoose.Types.ObjectId.isValid(slot2CompanionItemId)) {
+          companionItem = await Item.findById(slot2CompanionItemId).session(session);
+        }
+        if (!companionItem && slot2CompanionItemId) {
+          companionItem = await Item.findOne({ name: slot2CompanionItemId }).session(session);
+        }
+        if (!companionItem) {
+          // Fallback ke item common default
+          const defaultName = lawType === 'natal_artifact' ? 'Pedang Besi Patah' : 'Anak Anjing Kampung';
+          companionItem = await Item.findOne({ name: defaultName }).session(session) ||
+                          await Item.findOne({ rank: 'Common' }).session(session);
         }
 
-        const companionItem = await Item.findById(slot2CompanionItemId).session(session);
-        if (!companionItem) throw new CustomError('Item companion tidak valid.', 400);
+        if (companionItem) {
+          let companionInv = player.inventory.find(i => i.itemId.toString() === companionItem._id.toString());
+          if (!companionInv || companionInv.quantity < 1) {
+            companionInv = { itemId: companionItem._id, quantity: 1 };
+            player.inventory.push(companionInv);
+          }
+          companionInv.quantity -= 1;
+          player.markModified('inventory');
 
-        const entityType = lawType === 'natal_artifact' ? 'artifact' : 'beast';
-        player.cultivationLaw.boundEntity = {
-          entityType,
-          baseItemId: companionItem._id,
-          originalName: companionItem.name,
-          customName: customEntityName || companionItem.name,
-          rankLevel: 0,
-          evolutionStage: 'Mortal',
-          essence: 0,
-          maxEssence: 100,
-          beastCurrentHp: entityType === 'beast' ? 100 : 0,
-          beastMaxHp: entityType === 'beast' ? 100 : 0,
-          beastAtk: entityType === 'beast' ? 15 : 0,
-          beastDef: entityType === 'beast' ? 10 : 0,
-          beastSpd: entityType === 'beast' ? 12 : 0
-        };
-
-        // Konsumsi companion dari inventori
-        companionInv.quantity -= 1;
-        player.markModified('inventory');
+          const entityType = lawType === 'natal_artifact' ? 'artifact' : 'beast';
+          player.cultivationLaw.boundEntity = {
+            entityType,
+            baseItemId: companionItem._id,
+            originalName: companionItem.name,
+            customName: customEntityName || companionItem.name,
+            rankLevel: 0,
+            evolutionStage: 'Mortal',
+            essence: 0,
+            maxEssence: 100,
+            beastCurrentHp: entityType === 'beast' ? 100 : 0,
+            beastMaxHp: entityType === 'beast' ? 100 : 0,
+            beastAtk: entityType === 'beast' ? 15 : 0,
+            beastDef: entityType === 'beast' ? 10 : 0,
+            beastSpd: entityType === 'beast' ? 12 : 0
+          };
+        }
       }
 
       player.markModified('cultivationLaw');

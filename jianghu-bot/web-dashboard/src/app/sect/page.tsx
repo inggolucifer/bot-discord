@@ -41,34 +41,34 @@ interface Asset {
 }
 
 interface ClaimResult {
-    claimedCurrency: string[];
-    claimedMaterial: string[];
-    distributionSummary: string[];
+  claimedCurrency: string[];
+  claimedMaterial: string[];
+  distributionSummary: string[];
 }
 
 const Countdown = ({ targetDate }: { targetDate: string }) => {
-    const [timeLeft, setTimeLeft] = useState<string>('');
+  const [timeLeft, setTimeLeft] = useState<string>('');
 
-    useEffect(() => {
-        const calculateTimeLeft = () => {
-            const difference = new Date(targetDate).getTime() - new Date().getTime();
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = new Date(targetDate).getTime() - new Date().getTime();
 
-            if (difference > 0) {
-                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((difference / 1000 / 60) % 60);
-                const seconds = Math.floor((difference / 1000) % 60);
-                setTimeLeft(`${hours}j ${minutes}m ${seconds}s`);
-            } else {
-                setTimeLeft('Selesai');
-            }
-        };
+      if (difference > 0) {
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+        setTimeLeft(`${hours}j ${minutes}m ${seconds}s`);
+      } else {
+        setTimeLeft('Selesai');
+      }
+    };
 
-        calculateTimeLeft();
-        const timer = setInterval(calculateTimeLeft, 1000);
-        return () => clearInterval(timer);
-    }, [targetDate]);
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
+  }, [targetDate]);
 
-    return <span>{timeLeft}</span>;
+  return <span>{timeLeft}</span>;
 };
 
 export default function SectPage() {
@@ -92,52 +92,52 @@ export default function SectPage() {
     e.preventDefault();
     setDonateLoading(true);
     try {
-       await api.post('/sect/donate', { type: donateType, amount: donateAmount });
-       alert(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
-       setIsDonateModalOpen(false);
-       setDonateAmount(1);
-       setDonateType('copper');
-       fetchSectData();
-       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
-    } catch(err: any) {
-       alert(err.response?.data?.error || 'Gagal melakukan donasi.');
+      await api.post('/sect/donate', { type: donateType, amount: donateAmount });
+      alert(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
+      setIsDonateModalOpen(false);
+      setDonateAmount(1);
+      setDonateType('copper');
+      fetchSectData();
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Gagal melakukan donasi.');
     } finally {
-       setDonateLoading(false);
+      setDonateLoading(false);
     }
   };
 
 
   const handleEnterHall = async () => {
     try {
-       await api.post('/sect/hall/enter');
-       alert('Berhasil memasuki Balai Sekte.');
-       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      await api.post('/sect/hall/enter');
+      alert('Berhasil memasuki Balai Sekte.');
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
-       alert(err.response?.data?.error || 'Gagal memasuki balai sekte.');
+      alert(err.response?.data?.error || 'Gagal memasuki balai sekte.');
     }
   };
 
   const handleLeaveHall = async () => {
     try {
-       await api.post('/sect/hall/leave');
-       alert('Berhasil keluar dari Balai Sekte.');
-       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      await api.post('/sect/hall/leave');
+      alert('Berhasil keluar dari Balai Sekte.');
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
-       alert(err.response?.data?.error || 'Gagal keluar dari balai sekte.');
+      alert(err.response?.data?.error || 'Gagal keluar dari balai sekte.');
     }
   };
 
   const fetchSectData = async () => {
-      try {
-        const res = await api.get('/sect');
-        setSect(res.data.data.sect);
-        setAssets(res.data.data.assets);
-      } catch (err: any) {
-        alert(err);
-        setError(err.response?.data?.error || 'Gagal memuat data sekte.');
-      } finally {
-        setLoading(false);
-      }
+    try {
+      const res = await api.get('/sect');
+      setSect(res.data.data.sect);
+      setAssets(res.data.data.assets);
+    } catch (err: any) {
+      alert(err);
+      setError(err.response?.data?.error || 'Gagal memuat data sekte.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export default function SectPage() {
 
 
   if (loading) {
-      return <LoadingState text="Menghubungkan ke Balai Sekte..." />;
+    return <LoadingState text="Menghubungkan ke Balai Sekte..." />;
   }
 
   return (
@@ -161,79 +161,79 @@ export default function SectPage() {
       />
 
       {!user && (
-          <EmptyState
-            icon={<Shield />}
-            title="Akses Ditolak"
-            description="Silakan login menggunakan Discord untuk melihat informasi Sekte."
-          />
+        <EmptyState
+          icon={<Shield />}
+          title="Akses Ditolak"
+          description="Silakan login menggunakan Discord untuk melihat informasi Sekte."
+        />
       )}
 
       {error && !sect && (
-          <EmptyState
-            icon={<Shield />}
-            title="Pengembara Tanpa Tuan"
-            description={error}
-          />
+        <EmptyState
+          icon={<Shield />}
+          title="Pengembara Tanpa Tuan"
+          description={error}
+        />
       )}
 
       {user && sect && (
-          <>
+        <>
           {/* Hero Profil Sekte */}
           <div className="relative rounded-xl bg-[#111] border border-[#1f402e]/50 overflow-hidden shadow-[0_0_30px_rgba(31,64,46,0.1)]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-green-900/10 rounded-bl-full pointer-events-none"></div>
             <div className="absolute -left-16 -top-16 w-64 h-64 bg-[#1f402e] rounded-full mix-blend-overlay filter blur-[100px] opacity-20"></div>
 
             <div className="p-6 sm:p-10 text-center relative z-10">
-                 <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto bg-black rounded-full border-2 border-green-700 flex items-center justify-center mb-4 overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.2)]">
-                    <FallbackImage
-                       src={sect.imageUrl as string || ''}
-                       alt="Sect Banner"
-                       fallbackNode={<span className="text-4xl sm:text-5xl">⛩️</span>}
-                       className="w-full h-full object-cover"
-                    />
-                 </div>
-
-                 <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif mb-2">{sect.name}</h2>
-                 <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto mb-6">{sect.description}</p>
-
-                 <div className="inline-flex items-center gap-2 bg-[#1f402e]/30 text-green-400 px-4 py-2 rounded-full border border-green-800/50 shadow-inner text-sm font-semibold">
-                   <Shield size={16} /> Jabatan: {sect.role}
-                 </div>
-
-                 <div className="mt-4 flex justify-center gap-2">
-                    <Button variant="outline" className="border-green-700 text-green-400 hover:bg-green-700/20" onClick={() => setIsDonateModalOpen(true)}>
-                        <DollarSign size={16} className="mr-1"/> Donasi Kekayaan
-                    </Button>
-                    {sect.hallSettlementName && (
-                        <Button variant="outline" className="border-blue-700 text-blue-400 hover:bg-blue-700/20" onClick={handleEnterHall}>
-                            <Map size={16} className="mr-1"/> Memasuki Balai Sekte
-                        </Button>
-                    )}
-                 </div>
-
-                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                    <Card variant="green" className="bg-black/40">
-                       <CardContent className="p-4 sm:p-5">
-                          <h3 className="font-bold text-green-400 mb-2 flex items-center gap-2"><Users size={16}/> Informasi Keanggotaan</h3>
-                          <p className="text-lg text-gray-200 font-semibold mb-1">{sect.memberCount} Anggota</p>
-                          <p className="text-xs text-gray-500">Manajemen anggota penuh tersedia di bot Discord (menggunakan komando /sekte).</p>
-                       </CardContent>
-                    </Card>
-                    <Card variant="gold" className="bg-black/40">
-                       <CardContent className="p-4 sm:p-5">
-                          <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16}/> Gudang Sekte</h3>
-                          <p className="text-lg text-gray-200 font-semibold mb-2 font-mono">{(sect.totalWealth).toLocaleString()} Silver (Total)</p>
-                          <div className="flex flex-wrap gap-2 text-xs">
-                             <Badge variant="outline" className="border-[#8b4513] text-[#cd7f32]">C: {(sect.currency).copper}</Badge>
-                             <Badge variant="outline" className="border-gray-700 text-gray-400">S: {(sect.currency).silver}</Badge>
-                             <Badge variant="outline" className="border-yellow-900/50 text-yellow-500">G: {(sect.currency).gold}</Badge>
-                             <Badge variant="outline" className="border-green-900/50 text-green-400">J: {(sect.currency).jade}</Badge>
-                             <Badge variant="outline" className="border-blue-900/50 text-blue-400">SP: {(sect.currency).spirit}</Badge>
-                          </div>
-                       </CardContent>
-                    </Card>
-                 </div>
+              <div className="w-20 h-20 sm:w-28 sm:h-28 mx-auto bg-black rounded-full border-2 border-green-700 flex items-center justify-center mb-4 overflow-hidden shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                <FallbackImage
+                  src={sect.imageUrl as string || ''}
+                  alt="Sect Banner"
+                  fallbackNode={<span className="text-4xl sm:text-5xl">⛩️</span>}
+                  className="w-full h-full object-cover"
+                />
               </div>
+
+              <h2 className="text-2xl sm:text-4xl font-bold text-white font-serif mb-2">{sect.name}</h2>
+              <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto mb-6">{sect.description}</p>
+
+              <div className="inline-flex items-center gap-2 bg-[#1f402e]/30 text-green-400 px-4 py-2 rounded-full border border-green-800/50 shadow-inner text-sm font-semibold">
+                <Shield size={16} /> Jabatan: {sect.role}
+              </div>
+
+              <div className="mt-4 flex justify-center gap-2">
+                <Button variant="outline" className="border-green-700 text-green-400 hover:bg-green-700/20" onClick={() => setIsDonateModalOpen(true)}>
+                  <DollarSign size={16} className="mr-1" /> Donasi Kekayaan
+                </Button>
+                {sect.hallSettlementName && (
+                  <Button variant="outline" className="border-blue-700 text-blue-400 hover:bg-blue-700/20" onClick={handleEnterHall}>
+                    <Map size={16} className="mr-1" /> Memasuki Balai Sekte
+                  </Button>
+                )}
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                <Card variant="green" className="bg-black/40">
+                  <CardContent className="p-4 sm:p-5">
+                    <h3 className="font-bold text-green-400 mb-2 flex items-center gap-2"><Users size={16} /> Informasi Keanggotaan</h3>
+                    <p className="text-lg text-gray-200 font-semibold mb-1">{sect.memberCount} Anggota</p>
+                    <p className="text-xs text-gray-500">Manajemen anggota penuh tersedia di bot Discord (menggunakan komando /sekte).</p>
+                  </CardContent>
+                </Card>
+                <Card variant="gold" className="bg-black/40">
+                  <CardContent className="p-4 sm:p-5">
+                    <h3 className="font-bold text-[#c5a880] mb-2 flex items-center gap-2"><Banknote size={16} /> Gudang Sekte</h3>
+                    <p className="text-lg text-gray-200 font-semibold mb-2 font-mono">{(sect.totalWealth).toLocaleString()} Silver (Total)</p>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <Badge variant="outline" className="border-[#8b4513] text-[#cd7f32]">C: {(sect.currency).copper}</Badge>
+                      <Badge variant="outline" className="border-gray-700 text-gray-400">S: {(sect.currency).silver}</Badge>
+                      <Badge variant="outline" className="border-yellow-900/50 text-yellow-500">G: {(sect.currency).gold}</Badge>
+                      <Badge variant="outline" className="border-green-900/50 text-green-400">J: {(sect.currency).jade}</Badge>
+                      <Badge variant="outline" className="border-blue-900/50 text-blue-400">SP: {(sect.currency).spirit}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
 
           {/* Aset Sekte Section */}
@@ -258,13 +258,13 @@ export default function SectPage() {
                   <div key={index} className="bg-black/40 border border-[#333] rounded-lg p-4 hover:border-green-800/60 transition-colors relative group">
 
                     <div className="absolute top-2 right-2 z-10">
-                        {asset.underConstruction ? (
-                            <Badge variant="warning" className="text-[9px] gap-1"><Clock size={10} /> Membangun</Badge>
-                        ) : asset.status === 'Halted (Terhenti)' ? (
-                            <Badge variant="destructive" className="text-[9px] gap-1"><AlertTriangle size={10} /> Terhenti</Badge>
-                        ) : (
-                            <Badge variant="success" className="text-[9px] gap-1 bg-[#1f402e]/80"><CheckCircle2 size={10} /> Aktif</Badge>
-                        )}
+                      {asset.underConstruction ? (
+                        <Badge variant="warning" className="text-[9px] gap-1"><Clock size={10} /> Membangun</Badge>
+                      ) : asset.status === 'Halted (Terhenti)' ? (
+                        <Badge variant="destructive" className="text-[9px] gap-1"><AlertTriangle size={10} /> Terhenti</Badge>
+                      ) : (
+                        <Badge variant="success" className="text-[9px] gap-1 bg-[#1f402e]/80"><CheckCircle2 size={10} /> Aktif</Badge>
+                      )}
                     </div>
 
                     <div className="flex gap-3 sm:gap-4 mb-3 sm:mb-4">
@@ -286,23 +286,23 @@ export default function SectPage() {
                     <div className="border-t border-[#333] pt-3 flex flex-wrap justify-between items-center gap-2 text-[10px] sm:text-xs">
                       <div className="flex items-center gap-1.5">
                         {asset.isCraftingStation ? (
-                            <Badge variant="outline" className="border-blue-900 text-blue-400 py-0 h-5">Fasilitas Crafting</Badge>
+                          <Badge variant="outline" className="border-blue-900 text-blue-400 py-0 h-5">Fasilitas Crafting</Badge>
                         ) : (
-                            <Badge variant="outline" className="border-[#333] text-gray-500 py-0 h-5">Pasif</Badge>
+                          <Badge variant="outline" className="border-[#333] text-gray-500 py-0 h-5">Pasif</Badge>
                         )}
                       </div>
                       {!asset.underConstruction && asset.status === 'Aktif' && asset.profitAvailable && (
-                         <span className="text-green-400 font-bold animate-pulse flex items-center gap-1">
-                             <DollarSign size={12} /> Profit sedia
-                         </span>
+                        <span className="text-green-400 font-bold animate-pulse flex items-center gap-1">
+                          <DollarSign size={12} /> Profit sedia
+                        </span>
                       )}
                     </div>
 
                     {asset.underConstruction && asset.constructionCompleteAt && (
-                        <div className="mt-3 p-2 bg-black/60 rounded border border-[#333] flex flex-wrap justify-between items-center gap-1">
-                           <p className="text-[9px] sm:text-[10px] text-gray-500">Target Selesai:</p>
-                           <p className="text-[10px] sm:text-xs text-orange-400 font-semibold font-mono"><Countdown targetDate={asset.constructionCompleteAt} /></p>
-                        </div>
+                      <div className="mt-3 p-2 bg-black/60 rounded border border-[#333] flex flex-wrap justify-between items-center gap-1">
+                        <p className="text-[9px] sm:text-[10px] text-gray-500">Target Selesai:</p>
+                        <p className="text-[10px] sm:text-xs text-orange-400 font-semibold font-mono"><Countdown targetDate={asset.constructionCompleteAt} /></p>
+                      </div>
                     )}
 
                   </div>
@@ -310,7 +310,7 @@ export default function SectPage() {
               </div>
             )}
           </div>
-          </>
+        </>
       )}
     </div>
   );

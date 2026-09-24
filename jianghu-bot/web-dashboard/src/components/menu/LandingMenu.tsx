@@ -3,8 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuthStore, useUIStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import { 
-  Compass, Award, Settings, LogOut, Volume2, VolumeX, 
+import {
+  Compass, Award, Settings, LogOut, Volume2, VolumeX,
   Sparkles, ExternalLink, ChevronRight
 } from 'lucide-react';
 import FallbackImage from '@/components/FallbackImage';
@@ -106,9 +106,9 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden select-none bg-[#090d15] text-[#e8dfcf] font-serif">
-      
+
       {/* Background Classical Chinese Watercolor Ink Wash Art */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 scale-105"
         style={{
           backgroundImage: `radial-gradient(ellipse at center, rgba(13,19,33,0.3) 0%, rgba(8,11,18,0.85) 100%), url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2069&auto=format&fit=crop')`,
@@ -130,7 +130,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
 
       {/* Foreground UI Layer */}
       <div className="relative z-20 w-full h-full flex flex-col justify-between p-6 sm:p-10 md:p-14">
-        
+
         {/* Top Header: Audio / User Status */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
+            <button
               onClick={() => setIsAudioMuted(!isAudioMuted)}
               className="p-2 rounded-full bg-[#161d2d]/80 hover:bg-[#232f48] border border-[#443827] text-amber-300 transition-all backdrop-blur-md shadow-md"
               title={isAudioMuted ? 'Nyalakan Musik Tradisional' : 'Matikan Musik'}
@@ -165,7 +165,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
 
         {/* Center / Left: Calligraphy Logo & Main Action Menu */}
         <div className="my-auto max-w-xl flex flex-col items-start space-y-8">
-          
+
           {/* Main Title / Logo in Ink Calligraphy Style */}
           <div className="space-y-1.5">
             <div className="flex items-center gap-3">
@@ -186,7 +186,7 @@ export default function LandingMenu({ onEnterWorld }: LandingMenuProps) {
 
           {/* Menu Button List (4 Plaque Buttons - Mod Removed as instructed) */}
           <div className="flex flex-col gap-3 w-64 sm:w-72">
-            
+
             {/* 1. Enter World */}
             <button
               onClick={handleEnterWorld}

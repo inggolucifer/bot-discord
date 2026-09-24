@@ -80,7 +80,8 @@ router.get('/', authenticateToken, async (req, res) => {
             effectDurationMinutes: slot.itemId.effectDurationMinutes,
             effectTierGate: slot.itemId.effectTierGate,
             toolType: slot.itemId.toolType,
-            durability: slot.durability
+            durability: slot.durability,
+            lawType: slot.itemId.lawType
         }));
 
         res.json({

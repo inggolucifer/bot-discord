@@ -10,6 +10,8 @@ import { Modal } from '@/components/ui/Modal';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { LawStatusData, LawSkillItem, LawType } from '@/types/game';
+import { CultivationData } from '@/lib/schemas';
+import Link from 'next/link';
 import {
   Flame,
   Shield,
@@ -27,7 +29,9 @@ import {
   Droplets,
   Wind,
   Mountain,
-  Skull
+  Skull,
+  ArrowUpCircle,
+  TreePine
 } from 'lucide-react';
 
 // 15 Law Catalog untuk Modal Pemilihan Fondasi Fana
@@ -213,14 +217,28 @@ const BODY_PARTS_INFO = [
   { id: 'dantian', name: 'Dantian Daging Fana', icon: '🌀', desc: 'Wadah sejati pembentukan True Qi yang murni dari daging fana.' }
 ];
 
-export default function LawCultivationTab() {
+interface LawCultivationTabProps {
+  realmData?: CultivationData;
+}
+
+export default function LawCultivationTab({ realmData }: LawCultivationTabProps) {
   const queryClient = useQueryClient();
   const [selectedLawForBind, setSelectedLawForBind] = useState<typeof LAW_CATALOG[0] | null>(null);
-  const [bindModalOpen, setBindModalOpen] = useState(false);
+  const [manualPickerOpen, setManualPickerOpen] = useState(false);
   const [selectedCompanionPreset, setSelectedCompanionPreset] = useState<typeof COMMON_PRESETS[0] | null>(null);
   const [customEntityName, setCustomEntityName] = useState('');
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'skills'>('overview');
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>('skin');
+
+  // Fetch Player Inventory for Manuals & Prerequisites
+  const { data: invRes } = useQuery<{ success: boolean; data: any[] }>({
+    queryKey: ['inventory'],
+    queryFn: async () => {
+      const { data } = await api.get('/inventory');
+      return data;
+    }
+  });
+
+  const inventoryItems: any[] = Array.isArray(invRes?.data) ? invRes.data : [];
 
   // Fetch Law Status
   const { data: statusRes, isLoading } = useQuery<{ success: boolean; data: LawStatusData }>({
@@ -353,48 +371,46 @@ export default function LawCultivationTab() {
   });
 
   // Handler Bind Law (Slot 1 + Slot 2)
-  const handleOpenBindModal = (law: typeof LAW_CATALOG[0]) => {
+  const handleSelectLawManual = (law: typeof LAW_CATALOG[0]) => {
     setSelectedLawForBind(law);
     setSelectedCompanionPreset(null);
     setCustomEntityName('');
-    setBindModalOpen(true);
+    setManualPickerOpen(false);
   };
 
   const handleExecuteBind = async () => {
-    if (!selectedLawForBind) return;
+    if (!selectedLawForBind) {
+      toast.show({ message: 'Masukkan Kitab Manual Hukum di Slot 1 terlebih dahulu!', type: 'error' });
+      return;
+    }
 
     try {
       // Cari kitab law di inventori atau kirim mock/fallback ID untuk demo seeder
-      const { data: invRes } = await api.get('/inventory');
-      const items = invRes?.data?.inventory || invRes?.data || [];
-
-      // Cari item manual yang cocok
-      let manualItem = items.find((i: any) => {
+      let manualItem = inventoryItems.find((i: any) => {
         const item = i.itemId || i;
         return item.lawType === selectedLawForBind.type || (item.name || '').toLowerCase().includes(selectedLawForBind.name.toLowerCase().slice(6, 15));
       });
 
-      const manualItemId = manualItem?.itemId?._id || manualItem?._id || 'mock_manual_id';
+      const manualItemId = manualItem?.id || manualItem?.itemId?._id || manualItem?._id || selectedLawForBind.type;
 
       // Cari companion item jika Natal Artifact / Beast
       let companionItemId: string | null = null;
       if (selectedLawForBind.type === 'natal_artifact' || selectedLawForBind.type === 'natal_beast') {
-        const compItem = items.find((i: any) => {
+        const compItem = inventoryItems.find((i: any) => {
           const item = i.itemId || i;
           return selectedCompanionPreset && (item.name || '').includes(selectedCompanionPreset.name.split(' ')[0]);
         });
-        companionItemId = compItem?.itemId?._id || compItem?._id || 'mock_companion_id';
+        companionItemId = compItem?.id || compItem?.itemId?._id || compItem?._id || (selectedCompanionPreset ? selectedCompanionPreset.name : null);
       }
 
       const payload = {
-        slot1ManualItemId: manualItemId,
-        slot2CompanionItemId: companionItemId,
+        slot1ManualItemId: String(manualItemId),
+        slot2CompanionItemId: companionItemId ? String(companionItemId) : null,
         customEntityName: customEntityName.trim() || (selectedCompanionPreset ? selectedCompanionPreset.name : null)
       };
 
       const { data: bindRes } = await api.post('/cultivation/law/bind', payload);
       toast.show({ message: bindRes.message || 'Berhasil mengikat Hukum Semesta!', type: 'success' });
-      setBindModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
       queryClient.invalidateQueries({ queryKey: ['cultivation'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
@@ -408,7 +424,7 @@ export default function LawCultivationTab() {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // KASUS 1: PEMAIN BELUM MEMILIH LAW (GALERI 15 HUKUM SEMESTA)
+  // KASUS 1: PEMAIN BELUM MEMILIH LAW → 2-SLOT DAO BINDING ALTAR
   // ═══════════════════════════════════════════════════════════════════
   if (!lawData?.hasLaw) {
     return (
@@ -416,169 +432,388 @@ export default function LawCultivationTab() {
         {/* Banner Peringatan Fondasi Fana */}
         <div className="relative overflow-hidden rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-black to-amber-950/40 p-5 shadow-2xl backdrop-blur-md">
           <div className="flex items-start gap-4">
-            <div className="rounded-lg bg-amber-500/20 p-3 text-amber-400 border border-amber-500/30">
+            <div className="rounded-lg bg-amber-500/20 p-3 text-amber-400 border border-amber-500/30 shrink-0">
               <Award className="h-8 w-8" />
             </div>
             <div className="space-y-1">
               <h2 className="text-xl font-bold tracking-wide text-amber-300 font-serif">
-                Pemilihan Fondasi Hukum Semesta (Mortal Only Law Binding)
+                Altar Pengikatan Fondasi Fana (2-Slot Binding Altar)
               </h2>
               <p className="text-sm text-stone-300 leading-relaxed">
-                Kultivator hanya dapat mematri <span className="font-semibold text-amber-300">1 Hukum Semesta Utama</span> ke dalam tubuh saat masih berada di <span className="text-amber-400 font-bold">Ranah Fondasi Fana (Mortal)</span>. Sekali diikat, keputusan ini bersifat <span className="text-red-400 font-bold">PERMANEN SEUMUR HIDUP</span> dan tidak dapat diubah kembali!
+                Kultivator hanya dapat mematri <span className="font-semibold text-amber-300">1 Hukum Semesta Utama</span> ke dalam tubuh saat masih berada di <span className="text-amber-400 font-bold">Ranah Fondasi Fana (Mortal)</span>. Tempatkan Kitab Manual di <strong>Slot 1</strong> dan Item Persyaratan di <strong>Slot 2</strong>. Sekali diikat, keputusan ini bersifat <span className="text-red-400 font-bold">PERMANEN SEUMUR HIDUP</span>!
               </p>
             </div>
           </div>
         </div>
 
-        {/* Galeri 15 Hukum Semesta */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {LAW_CATALOG.map((law) => (
-            <Card
-              key={law.type}
-              className={`relative overflow-hidden border border-stone-800 hover:border-amber-500/60 transition-all duration-300 bg-gradient-to-b ${law.bgGradient} p-5 group hover:shadow-xl hover:shadow-amber-500/10`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl p-2.5 rounded-lg bg-black/60 border border-stone-700/50 shadow-inner group-hover:scale-110 transition-transform">
-                    {law.icon}
+        {/* 2-SLOT INTERACTIVE ALTAR */}
+        <div className="relative rounded-2xl border-2 border-[#826b48] bg-gradient-to-b from-[#131722]/95 via-[#0c0f17]/95 to-[#080a10]/95 p-6 sm:p-8 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden">
+          {/* Subtle Ambient Halo */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/5 blur-3xl pointer-events-none rounded-full" />
+
+          <div className="text-center max-w-xl mx-auto mb-8 space-y-1">
+            <span className="text-xs uppercase font-serif tracking-widest text-amber-400 font-bold">
+              ✦ Formasi Segel Langit Sembilan Tingkat ✦
+            </span>
+            <h3 className="text-xl sm:text-2xl font-bold font-serif text-amber-100">
+              Penyatuan Intisari Dao ke Dantian Fana
+            </h3>
+            <p className="text-xs text-stone-400">
+              Pilih Kitab Manual Hukum dan padukan dengan benda atau intisari pembuka jalurnya.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-11 gap-4 items-center">
+            
+            {/* SLOT 1: KITAB MANUAL HUKUM SEMESTA (5 Cols) */}
+            <div className="lg:col-span-5 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-amber-400" />
+                  SLOT 1: KITAB MANUAL HUKUM
+                </span>
+                {selectedLawForBind && (
+                  <button
+                    onClick={() => setManualPickerOpen(true)}
+                    className="text-[11px] text-amber-400 hover:text-amber-200 underline font-serif"
+                  >
+                    Ganti Kitab
+                  </button>
+                )}
+              </div>
+
+              {!selectedLawForBind ? (
+                <div
+                  onClick={() => setManualPickerOpen(true)}
+                  className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-amber-500/40 hover:border-amber-400 bg-black/40 hover:bg-amber-950/20 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+                >
+                  <div className="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform mb-3">
+                    📜
                   </div>
-                  <div>
-                    <h3 className="font-serif font-bold text-base text-stone-100 group-hover:text-amber-300 transition-colors">
-                      {law.name}
-                    </h3>
-                    <span className="text-xs px-2 py-0.5 rounded-full font-mono font-medium border"
-                      style={{ borderColor: `${law.color}40`, color: law.color, backgroundColor: `${law.color}15` }}>
-                      {law.element}
+                  <span className="font-serif font-bold text-sm text-amber-200 group-hover:text-amber-100">
+                    Pilih Kitab Manual Hukum
+                  </span>
+                  <p className="text-xs text-stone-500 mt-1 max-w-xs">
+                    Klik untuk memilih salah satu dari 15 Kitab Manual Hukum Semesta Jianghu
+                  </p>
+                  <Button
+                    size="sm"
+                    className="mt-4 bg-amber-600/80 hover:bg-amber-500 text-stone-950 font-bold text-xs"
+                  >
+                    Buka Daftar Kitab Manual
+                  </Button>
+                </div>
+              ) : (
+                <div
+                  className={`flex-1 min-h-[220px] rounded-xl border border-amber-500/60 bg-gradient-to-b ${selectedLawForBind.bgGradient} p-5 flex flex-col justify-between shadow-lg relative overflow-hidden`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl p-3 rounded-lg bg-black/60 border border-amber-500/30 shrink-0">
+                      {selectedLawForBind.icon}
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-serif font-bold text-base text-amber-200">
+                          {selectedLawForBind.name}
+                        </h4>
+                        <span
+                          className="text-[10px] px-2 py-0.5 rounded-full font-mono border"
+                          style={{
+                            borderColor: `${selectedLawForBind.color}50`,
+                            color: selectedLawForBind.color,
+                            backgroundColor: `${selectedLawForBind.color}15`
+                          }}
+                        >
+                          {selectedLawForBind.element}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-stone-400 font-mono block">
+                        Kategori: {selectedLawForBind.category.toUpperCase()} • 90 Stages / ~1000 Hari
+                      </span>
+                      <p className="text-xs text-stone-300 mt-2 leading-relaxed">
+                        {selectedLawForBind.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-stone-800 flex justify-between items-center text-xs mt-4">
+                    <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
+                      <CheckCircle2 size={13} /> Kitab Terpasang di Slot 1
                     </span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setManualPickerOpen(true)}
+                      className="border-stone-700 text-stone-300 hover:text-white h-7 text-xs"
+                    >
+                      Ganti
+                    </Button>
                   </div>
                 </div>
+              )}
+            </div>
+
+            {/* CENTER CONNECTOR (1 Col) */}
+            <div className="lg:col-span-1 flex flex-col items-center justify-center py-2 lg:py-0">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-b from-amber-600 to-amber-900 border border-amber-400 flex items-center justify-center text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                <Zap size={18} className="animate-pulse" />
               </div>
-
-              <p className="mt-4 text-xs text-stone-400 leading-relaxed min-h-[48px]">
-                {law.desc}
-              </p>
-
-              <div className="mt-5 pt-3 border-t border-stone-800/80 flex items-center justify-between">
-                <span className="text-[11px] text-stone-500 flex items-center gap-1 font-mono">
-                  <Clock className="w-3.5 h-3.5" /> 90 Stages / ~1000 Hari
-                </span>
-                <Button
-                  size="sm"
-                  onClick={() => handleOpenBindModal(law)}
-                  className="bg-amber-600/80 hover:bg-amber-500 text-stone-950 font-semibold text-xs px-3 py-1.5 h-auto rounded border border-amber-400/40 shadow"
-                >
-                  Pilih Jalur Law <ChevronRight className="w-3.5 h-3.5 ml-1" />
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* Modal Konfirmasi Pengikatan Fondasi */}
-        <Modal
-          isOpen={bindModalOpen}
-          onClose={() => setBindModalOpen(false)}
-          title={`Mematri ${selectedLawForBind?.name || 'Hukum Semesta'}`}
-        >
-          <div className="space-y-5 p-1 text-stone-200">
-            <div className="rounded-lg bg-red-950/30 border border-red-500/30 p-3.5 text-xs text-red-300 flex items-start gap-2.5">
-              <Info className="w-5 h-5 flex-shrink-0 text-red-400" />
-              <span>
-                <strong>Peringatan Mutlak:</strong> Setelah kamu mengikat hukum ini ke fondasi fana, dantianmu akan menyatu permanen. Kamu dilarang mengganti atau melepas hukum ini selamanya!
+              <span className="text-[9px] font-serif text-amber-400 font-bold uppercase tracking-wider mt-1 hidden lg:block text-center">
+                Penyatuan
               </span>
             </div>
 
-            {/* Jika Natal Artifact atau Natal Beast: Tampilkan Pilihan Slot 2 */}
-            {(selectedLawForBind?.type === 'natal_artifact' || selectedLawForBind?.type === 'natal_beast') && (
-              <div className="space-y-3 pt-2 border-t border-stone-800">
-                <label className="text-xs font-semibold text-amber-300 block font-serif">
-                  Slot 2: Pilih Benda / Satwa Common untuk Diikat Permanen
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {COMMON_PRESETS
-                    .filter(p => selectedLawForBind.type === 'natal_artifact' ? p.type === 'artifact' : p.type === 'beast')
-                    .map((preset) => (
-                      <button
-                        key={preset.id}
-                        type="button"
-                        onClick={() => setSelectedCompanionPreset(preset)}
-                        className={`p-2.5 rounded border text-left text-xs flex items-center gap-2 transition-all ${
-                          selectedCompanionPreset?.id === preset.id
-                            ? 'border-amber-400 bg-amber-500/20 text-amber-200'
-                            : 'border-stone-800 bg-stone-900/60 text-stone-400 hover:border-stone-700'
-                        }`}
-                      >
-                        <span className="text-lg">{preset.icon}</span>
-                        <span className="truncate">{preset.name}</span>
-                      </button>
-                    ))}
-                </div>
-
-                <div className="pt-2">
-                  <label className="text-xs text-stone-400 block mb-1">
-                    Beri Nama Khusus / Julukan (Opsional):
-                  </label>
-                  <input
-                    type="text"
-                    maxLength={30}
-                    value={customEntityName}
-                    onChange={(e) => setCustomEntityName(e.target.value)}
-                    placeholder={selectedCompanionPreset ? selectedCompanionPreset.name : 'Contoh: Bilah Patah Penjaga Jiwa'}
-                    className="w-full rounded bg-stone-950 border border-stone-800 px-3 py-2 text-xs text-stone-200 focus:outline-none focus:border-amber-500"
-                  />
-                </div>
+            {/* SLOT 2: ITEM PERSYARATAN HUKUM (5 Cols) */}
+            <div className="lg:col-span-5 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  SLOT 2: ITEM PERSYARATAN HUKUM
+                </span>
+                {selectedLawForBind && (
+                  <span className="text-[10px] text-stone-400 font-mono">
+                    {selectedLawForBind.category === 'companion' ? 'Item Wajib Dipilih' : 'Katalis Otomatis'}
+                  </span>
+                )}
               </div>
-            )}
 
-            <div className="pt-3 border-t border-stone-800 flex justify-end gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setBindModalOpen(false)}
-                className="border-stone-800 text-stone-400 hover:bg-stone-900"
-              >
-                Batal
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleExecuteBind}
-                className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4"
-              >
-                Mematri ke Dantian Fana
-              </Button>
+              {!selectedLawForBind ? (
+                <div className="flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-stone-800 bg-black/20 flex flex-col items-center justify-center p-6 text-center text-stone-600">
+                  <Lock size={32} className="mb-2 opacity-50" />
+                  <span className="font-serif font-semibold text-xs text-stone-500">
+                    Slot 2 Terkunci
+                  </span>
+                  <p className="text-[11px] text-stone-600 mt-1 max-w-xs">
+                    Pilih Kitab Manual di Slot 1 terlebih dahulu untuk memunculkan persyaratan khusus.
+                  </p>
+                </div>
+              ) : selectedLawForBind.type === 'natal_artifact' || selectedLawForBind.type === 'natal_beast' ? (
+                <div className="flex-1 min-h-[220px] rounded-xl border border-amber-500/40 bg-[#121622]/90 p-4 flex flex-col justify-between space-y-3">
+                  <div>
+                    <label className="text-xs font-serif font-semibold text-amber-200 block mb-2">
+                      Pilih {selectedLawForBind.type === 'natal_artifact' ? 'Benda Common Permanen' : 'Satwa Common Permanen'}:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {COMMON_PRESETS
+                        .filter(p => selectedLawForBind.type === 'natal_artifact' ? p.type === 'artifact' : p.type === 'beast')
+                        .map((preset) => (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => setSelectedCompanionPreset(preset)}
+                            className={`p-2 rounded border text-left text-xs flex items-center gap-2 transition-all ${
+                              selectedCompanionPreset?.id === preset.id
+                                ? 'border-amber-400 bg-amber-500/20 text-amber-200 font-bold shadow-sm'
+                                : 'border-stone-800 bg-stone-900/60 text-stone-400 hover:border-stone-700'
+                            }`}
+                          >
+                            <span className="text-lg">{preset.icon}</span>
+                            <span className="truncate">{preset.name}</span>
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] text-stone-400 block mb-1">
+                      Beri Nama Julukan Khusus (Opsional):
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={30}
+                      value={customEntityName}
+                      onChange={(e) => setCustomEntityName(e.target.value)}
+                      placeholder={selectedCompanionPreset ? selectedCompanionPreset.name : 'Contoh: Bilah Patah Penjaga Jiwa'}
+                      className="w-full rounded bg-stone-950 border border-stone-800 px-3 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-amber-500 font-serif"
+                    />
+                  </div>
+                </div>
+              ) : selectedLawForBind.type === 'body_tempering' ? (
+                <div className="flex-1 min-h-[220px] rounded-xl border border-amber-500/40 bg-[#121622]/90 p-4 flex flex-col justify-between space-y-2">
+                  <div>
+                    <label className="text-xs font-serif font-semibold text-amber-200 block mb-1.5">
+                      Fokus Awal Raga Daging Fana:
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5 text-xs">
+                      {BODY_PARTS_INFO.slice(0, 6).map((part) => (
+                        <button
+                          key={part.id}
+                          type="button"
+                          onClick={() => setSelectedBodyPart(part.id)}
+                          className={`p-1.5 rounded border text-left flex items-center gap-1.5 text-[11px] transition-all ${
+                            selectedBodyPart === part.id
+                              ? 'border-amber-400 bg-amber-500/20 text-amber-200 font-semibold'
+                              : 'border-stone-800 bg-stone-900/40 text-stone-400 hover:border-stone-700'
+                          }`}
+                        >
+                          <span>{part.icon}</span>
+                          <span className="truncate">{part.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-stone-400 leading-relaxed italic border-t border-stone-800 pt-2">
+                    💡 Menempa meridian & daging fana menggunakan energi True Qi murni.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex-1 min-h-[220px] rounded-xl border border-emerald-500/30 bg-[#121622]/90 p-5 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-center text-2xl">
+                        {selectedLawForBind.icon}
+                      </div>
+                      <div>
+                        <h5 className="font-serif font-bold text-sm text-stone-200">
+                          Katalis Intisari {selectedLawForBind.element}
+                        </h5>
+                        <span className="text-[11px] text-emerald-400 font-mono">
+                          Status: Tersedia & Siap Diserap
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-stone-400 leading-relaxed">
+                      Dantian fana akan menyerap intisari semesta sesuai jalur <strong className="text-amber-300">{selectedLawForBind.name}</strong> untuk membentuk jalur meridian permanen.
+                    </p>
+                  </div>
+
+                  <div className="p-2.5 rounded bg-black/40 border border-stone-800 text-[11px] text-stone-400 flex items-center gap-2">
+                    <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                    <span>Seluruh persyaratan dan intisari fondasi terpenuhi secara otomatis.</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
+
+          {/* ACTION BUTTON & WARNING */}
+          <div className="mt-8 pt-6 border-t border-[#4a3d28] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-stone-400 flex items-center gap-2 max-w-lg">
+              <Info className="w-5 h-5 text-amber-400 shrink-0" />
+              <span>
+                <strong>Keputusan Abadi:</strong> Setelah dipatri, dantian akan terkunci pada hukum ini seumur hidup dan dilarang berpindah jalur.
+              </span>
+            </div>
+
+            <Button
+              size="lg"
+              disabled={!selectedLawForBind}
+              onClick={handleExecuteBind}
+              className={`font-serif font-bold tracking-wider px-8 shadow-xl transition-all ${
+                selectedLawForBind
+                  ? 'bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 border border-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:scale-105 active:scale-95'
+                  : 'bg-stone-800 text-stone-500 border border-stone-700 cursor-not-allowed'
+              }`}
+            >
+              ⚡ PATRI HUKUM SEMESTA KE DANTIAN FANA
+            </Button>
+          </div>
+        </div>
+
+        {/* MODAL PEMILIHAN KITAB MANUAL (SLOT 1) */}
+        <Modal
+          isOpen={manualPickerOpen}
+          onClose={() => setManualPickerOpen(false)}
+          title="Pilih Kitab Manual Hukum Semesta (Slot 1)"
+        >
+          <div className="space-y-4 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            <p className="text-xs text-stone-400">
+              Pilih Kitab Manual Hukum Semesta yang ingin kamu patrikan ke dalam dantian fana:
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {LAW_CATALOG.map((law) => {
+                const isSelected = selectedLawForBind?.type === law.type;
+                return (
+                  <button
+                    key={law.type}
+                    type="button"
+                    onClick={() => handleSelectLawManual(law)}
+                    className={`p-3 rounded-lg border text-left transition-all flex items-start gap-3 ${
+                      isSelected
+                        ? 'border-amber-400 bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                        : 'border-stone-800 bg-[#121622]/80 hover:border-stone-700 hover:bg-[#181d2a]'
+                    }`}
+                  >
+                    <div className="text-2xl p-2 rounded bg-black/60 border border-stone-700 shrink-0">
+                      {law.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-serif font-bold text-xs text-amber-200">
+                          {law.name}
+                        </span>
+                        <span
+                          className="text-[9px] px-1.5 py-0.2 rounded font-mono border"
+                          style={{ borderColor: `${law.color}40`, color: law.color }}
+                        >
+                          {law.element}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-stone-400 mt-1 line-clamp-2 leading-relaxed">
+                        {law.desc}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </Modal>
+
+        {/* ENSIKLOPEDIA 15 HUKUM SEMESTA (COLLAPSIBLE ACCORDION) */}
+        <details className="group border border-stone-800/80 rounded-xl bg-[#0e121a]/60 p-4 transition-all">
+          <summary className="cursor-pointer font-serif font-semibold text-sm text-stone-400 hover:text-amber-300 flex items-center justify-between select-none">
+            <span className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              📖 Ensiklopedia 15 Hukum Semesta (Referensi Lore & Sifat Beladiri)
+            </span>
+            <span className="text-xs text-amber-400 font-mono group-open:rotate-180 transition-transform">
+              ▼
+            </span>
+          </summary>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 pt-4 mt-3 border-t border-stone-800">
+            {LAW_CATALOG.map((law) => (
+              <div
+                key={law.type}
+                className="p-3 rounded-lg border border-stone-800/60 bg-black/40 text-xs space-y-1.5"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{law.icon}</span>
+                  <span className="font-serif font-bold text-stone-200">{law.name}</span>
+                </div>
+                <span
+                  className="inline-block text-[10px] px-1.5 py-0.2 rounded border font-mono"
+                  style={{ borderColor: `${law.color}40`, color: law.color }}
+                >
+                  {law.element}
+                </span>
+                <p className="text-[11px] text-stone-400 leading-relaxed">
+                  {law.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </details>
       </div>
     );
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // KASUS 2: PEMAIN SUDAH MEMILIKI LAW AKTIF
+  // KASUS 2: PEMAIN SUDAH MEMILIKI LAW AKTIF → DASHBOARD TERPADU
   // ═══════════════════════════════════════════════════════════════════
   const energyLabel = lawData.qiType === 'true_qi' ? 'True Qi (真气)' : 'Qi Spiritual (灵气)';
   const skillsList = skillsRes?.data?.skills || [];
   const availablePoints = skillsRes?.data?.availablePoints ?? lawData.lawSkillPoints;
 
-  // Toggle loadout jurus aktif
-  const handleToggleCombatLoadout = (skillId: string) => {
-    const current = [...(lawData.combatLoadout || [])];
-    const idx = current.indexOf(skillId);
-    if (idx >= 0) {
-      current.splice(idx, 1);
-    } else {
-      if (current.length >= 4) {
-        toast.show({ message: 'Slot jurus aktif penuh (Maksimal 4 jurus)!', type: 'error' });
-        return;
-      }
-      current.push(skillId);
-    }
-    updateLoadoutMutation.mutate(current);
-  };
+  // Realm progress (dari props)
+  const realmProgressPercent = realmData ? Math.min(100, Math.max(0, (realmData.currentQi / realmData.maxQi) * 100)) : 0;
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner Law Aktif */}
+      {/* 1. Header Banner Law Aktif + Realm Info Terpadu */}
       <Card className="relative overflow-hidden border border-amber-500/30 bg-gradient-to-r from-[#14100c] via-black to-[#14100c] p-6 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
@@ -601,9 +836,15 @@ export default function LawCultivationTab() {
                 </span>
               </div>
               <p className="text-sm text-stone-300 font-serif">
-                Tingkat Ranah: <span className="font-bold text-amber-300 text-base">{lawData.rankDisplayName}</span>
+                Law Rank: <span className="font-bold text-amber-300 text-base">{lawData.rankDisplayName}</span>
                 <span className="text-xs text-stone-500 ml-2 font-mono">(Stage {lawData.stage}/9)</span>
               </p>
+              {realmData && (
+                <p className="text-xs text-stone-400 font-serif">
+                  Character Realm: <span className="font-semibold text-sky-300">{realmData.realm}</span>
+                  <span className="text-stone-500 ml-1 font-mono">(Stage {realmData.stage})</span>
+                </p>
+              )}
               <div className="flex flex-wrap items-center gap-4 text-xs text-stone-400 pt-1">
                 <span className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-amber-400" />
@@ -704,37 +945,64 @@ export default function LawCultivationTab() {
         </div>
       </Card>
 
-      {/* Sub-Tab Navigasi (Ringkasan Spesialisasi vs Pohon Jurus) */}
-      <div className="flex items-center gap-2 border-b border-stone-800 pb-2">
-        <button
-          onClick={() => setActiveSubTab('overview')}
-          className={`px-4 py-2 rounded-lg font-serif text-sm font-semibold transition-all ${
-            activeSubTab === 'overview'
-              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow'
-              : 'text-stone-400 hover:text-stone-200'
-          }`}
-        >
-          📜 Rincian Spesialisasi Law
-        </button>
-        <button
-          onClick={() => setActiveSubTab('skills')}
-          className={`px-4 py-2 rounded-lg font-serif text-sm font-semibold transition-all flex items-center gap-1.5 ${
-            activeSubTab === 'skills'
-              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow'
-              : 'text-stone-400 hover:text-stone-200'
-          }`}
-        >
-          🌳 Pohon Jurus & Loadout (4+1)
+      {/* Realm Qi Progress + Breakthrough (Integrated from realm data) */}
+      {realmData && (
+        <Card className="border border-sky-500/30 bg-gradient-to-r from-[#0b1628] via-black to-[#0b1628] p-5">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="space-y-2 flex-1 w-full">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-sky-300 flex items-center gap-1.5 font-serif">
+                  <Flame className="w-4 h-4 text-sky-400" /> Character Realm Qi Progress
+                </span>
+                <span className="font-mono text-stone-400">
+                  <strong className="text-sky-300">{Math.floor(realmData.currentQi).toLocaleString()}</strong> / {realmData.maxQi.toLocaleString()} Qi
+                </span>
+              </div>
+              <div className="w-full h-2.5 bg-stone-950 rounded-full overflow-hidden border border-stone-800">
+                <div
+                  className="h-full bg-gradient-to-r from-sky-600 via-blue-500 to-sky-400 rounded-full transition-all duration-500"
+                  style={{ width: `${realmProgressPercent}%` }}
+                />
+              </div>
+              <div className="flex items-center gap-3 text-xs text-stone-500">
+                <span className="font-mono">+{realmData.ratePerMinute.toFixed(1)} Qi/mnt</span>
+                {realmData.isMaxLevel && <span className="text-yellow-500 font-semibold">🌟 Puncak Alam Semesta Tercapai!</span>}
+              </div>
+            </div>
+            {!realmData.isMaxLevel && (
+              <Button
+                size="sm"
+                disabled={!realmData.isReadyForBreakthrough}
+                className="bg-[#1e3a5f] hover:bg-blue-900 border border-blue-800 text-white font-bold text-xs flex items-center gap-1.5 whitespace-nowrap"
+              >
+                <ArrowUpCircle className="w-4 h-4" />
+                {realmData.isReadyForBreakthrough ? 'Terobos Realm' : 'Qi Belum Cukup'}
+              </Button>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* CTA Link ke Skill Tree Mandiri */}
+      <div className="flex items-center justify-between p-3 rounded-xl border border-stone-800 bg-stone-950/50 backdrop-blur-md">
+        <div className="flex items-center gap-2 text-sm text-stone-400">
+          <TreePine className="w-4 h-4 text-emerald-400" />
+          <span className="font-serif">Pohon Jurus Law ({lawData.combatLoadout?.length || 0}/4 Equipped)</span>
           {availablePoints > 0 && (
-            <span className="w-5 h-5 rounded-full bg-amber-500 text-stone-950 font-mono text-[11px] font-bold flex items-center justify-center">
+            <span className="w-5 h-5 rounded-full bg-amber-500 text-stone-950 font-mono text-[10px] font-bold flex items-center justify-center">
               {availablePoints}
             </span>
           )}
-        </button>
+        </div>
+        <Link href="/skill-tree">
+          <Button size="sm" className="bg-emerald-600/80 hover:bg-emerald-500 text-stone-950 font-bold text-xs">
+            🌳 Buka Pohon Jurus <ChevronRight className="w-3.5 h-3.5 ml-1" />
+          </Button>
+        </Link>
       </div>
 
-      {/* SUB-TAB 1: RINCIAN SPESIALISASI LAW */}
-      {activeSubTab === 'overview' && (
+      {/* RINCIAN SPESIALISASI LAW (Selalu tampil, tanpa sub-tab) */}
+      {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* 1. SISI KIRI: SPESIALISASI INTERAKTIF SESUAI HUKUM */}
@@ -1284,175 +1552,7 @@ export default function LawCultivationTab() {
             </div>
           </Card>
         </div>
-      )}
-
-      {/* SUB-TAB 2: POHON JURUS & LOADOUT (4+1) */}
-      {activeSubTab === 'skills' && (
-        <div className="space-y-6">
-          {/* Bar Jurus Aktif Terpasang (Loadout 4+1) */}
-          <Card className="border border-amber-500/30 bg-black/60 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-serif font-bold text-sm text-amber-300 flex items-center gap-2">
-                <Sword className="w-4 h-4 text-amber-400" />
-                Loadout Tempur 4+1 (Basic Attack Otomatis + 4 Jurus Bebas)
-              </h3>
-              <span className="text-xs text-stone-400 font-mono">
-                Terpasang: <strong className="text-amber-400 font-mono">{lawData.combatLoadout?.length || 0}</strong> / 4 Jurus Aktif
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {/* Slot 1: Basic Attack Adaptif (Terkunci Otomatis Sesuai Senjata) */}
-              <div className="p-3 rounded-lg border border-amber-500/50 bg-amber-950/20 text-xs">
-                <div className="flex items-center justify-between text-[11px] text-amber-400 font-mono mb-1">
-                  <span>SLOT 1 [WAJIB]</span>
-                  <Lock className="w-3 h-3" />
-                </div>
-                <div className="font-bold text-stone-100 flex items-center gap-1.5 font-serif">
-                  🗡️ Basic Attack
-                </div>
-                <p className="text-[10px] text-stone-400 mt-1">
-                  Otomatis sesuai senjata yang di-equip / tinju.
-                </p>
-              </div>
-
-              {/* Slot 2 s/d 5: Jurus Pilihan Pemain */}
-              {[0, 1, 2, 3].map((slotIdx) => {
-                const skillId = lawData.combatLoadout?.[slotIdx];
-                const skill = skillsList.find(s => s.skillId === skillId);
-
-                return (
-                  <div
-                    key={slotIdx}
-                    className={`p-3 rounded-lg border text-xs transition-all ${
-                      skill
-                        ? 'border-stone-700 bg-stone-900/80 text-stone-200'
-                        : 'border-dashed border-stone-800 bg-black/30 text-stone-600 flex flex-col items-center justify-center min-h-[72px]'
-                    }`}
-                  >
-                    {skill ? (
-                      <div>
-                        <div className="flex items-center justify-between text-[10px] text-stone-500 font-mono mb-1">
-                          <span>SLOT {slotIdx + 2}</span>
-                          <button
-                            onClick={() => handleToggleCombatLoadout(skill.skillId)}
-                            className="text-red-400 hover:text-red-300 font-bold"
-                          >
-                            Lepas ✕
-                          </button>
-                        </div>
-                        <div className="font-bold text-amber-300 flex items-center gap-1 font-serif truncate">
-                          <span>{skill.icon}</span>
-                          <span className="truncate">{skill.name}</span>
-                        </div>
-                        <div className="text-[10px] text-stone-400 mt-1 font-mono">
-                          Biaya: {skill.baseCost} {skill.costType === 'true_qi' ? 'True Qi' : 'Qi'} | CD: {skill.cooldownTurns}r
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-stone-600 font-serif">
-                        Slot {slotIdx + 2} Kosong
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Daftar Jurus Pohon Skill (Tier 1 s/d Tier 5) */}
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((tierNum) => {
-              const tierSkills = skillsList.filter(s => s.tier === tierNum);
-              if (tierSkills.length === 0) return null;
-
-              return (
-                <div key={tierNum} className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-serif text-xs font-bold">
-                      TIER {tierNum} {tierNum === 5 ? '(PUNCAK PRIMORDIAL)' : ''}
-                    </span>
-                    <div className="h-[1px] flex-1 bg-stone-800" />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-                    {tierSkills.map((skill) => (
-                      <Card
-                        key={skill.skillId}
-                        className={`p-4 border transition-all text-xs space-y-3 ${
-                          skill.isUnlocked
-                            ? 'border-amber-500/40 bg-stone-900/60 shadow-sm'
-                            : 'border-stone-800/80 bg-black/40 opacity-70'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl">{skill.icon}</span>
-                            <div>
-                              <h4 className="font-serif font-bold text-stone-100">
-                                {skill.name}
-                              </h4>
-                              <span className="text-[10px] text-stone-500 font-mono">
-                                {skill.isPassive ? 'Pasif' : 'Jurus Aktif'}
-                              </span>
-                            </div>
-                          </div>
-                          {skill.isUnlocked ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                          ) : (
-                            <Lock className="w-4 h-4 text-stone-600 flex-shrink-0" />
-                          )}
-                        </div>
-
-                        <p className="text-[11px] text-stone-400 leading-relaxed min-h-[36px]">
-                          {skill.description}
-                        </p>
-
-                        {!skill.isPassive && (
-                          <div className="text-[10px] text-stone-500 font-mono pt-1 border-t border-stone-800/60 flex justify-between">
-                            <span>Cost: {skill.baseCost} {skill.costType === 'true_qi' ? 'True Qi' : 'Qi'}</span>
-                            <span>Cooldown: {skill.cooldownTurns} ronde</span>
-                          </div>
-                        )}
-
-                        <div className="pt-2 border-t border-stone-800/80 flex items-center justify-between">
-                          {!skill.isUnlocked ? (
-                            <Button
-                              size="sm"
-                              onClick={() => allocateSkillMutation.mutate(skill.skillId)}
-                              disabled={!skill.canUnlock || allocateSkillMutation.isPending}
-                              className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-1 h-auto rounded"
-                            >
-                              Pelajari ({skill.skillPointCost} Poin)
-                            </Button>
-                          ) : !skill.isPassive ? (
-                            <Button
-                              size="sm"
-                              variant={skill.isEquipped ? "outline" : "default"}
-                              onClick={() => handleToggleCombatLoadout(skill.skillId)}
-                              className={`w-full text-xs py-1 h-auto rounded font-semibold ${
-                                skill.isEquipped
-                                  ? 'border-red-500/40 text-red-400 hover:bg-red-950/30'
-                                  : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
-                              }`}
-                            >
-                              {skill.isEquipped ? 'Lepas dari Loadout' : 'Pasang ke Loadout'}
-                            </Button>
-                          ) : (
-                            <span className="text-[11px] text-emerald-400 font-mono w-full text-center">
-                              ✓ Efek Pasif Aktif
-                            </span>
-                          )}
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      }
     </div>
   );
 }

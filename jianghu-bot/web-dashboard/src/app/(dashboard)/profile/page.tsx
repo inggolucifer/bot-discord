@@ -18,6 +18,7 @@ import { checkClientKungfuRequirement } from '@/lib/kungfu';
 import StatGrid from '@/components/character/StatGrid';
 import PlayerStatsModal from '@/components/modals/PlayerStatsModal';
 import { useUIStore } from '@/lib/store';
+import { getEnglishRealmDisplay } from '@/lib/realmUtils';
 
 export default function ProfilePage() {
   const { activeModal, setActiveModal } = useUIStore();
@@ -127,9 +128,14 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1 bg-sky-950/80 border border-sky-600/60 rounded px-2.5 py-1 text-xs text-sky-200 font-bold font-serif">
-              <Zap size={12} className="text-sky-400" /> {profile.systemCultivation?.realm || profile.realm} (Tahap {profile.systemCultivation?.stage ?? profile.stage ?? 'Awal'})
-            </span>
+            {(() => {
+              const realmDisplay = getEnglishRealmDisplay(profile);
+              return (
+                <span className="inline-flex items-center gap-1 bg-sky-950/80 border border-sky-600/60 rounded px-2.5 py-1 text-xs text-sky-200 font-bold font-serif">
+                  <Zap size={12} className="text-sky-400" /> {realmDisplay.fullTitle}
+                </span>
+              );
+            })()}
             {profile.systemCultivation?.isFlawedFoundation && (
               <span
                 className="inline-flex items-center rounded-full bg-red-900/50 px-2 py-0.5 text-xs font-semibold text-red-300 border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-help"
