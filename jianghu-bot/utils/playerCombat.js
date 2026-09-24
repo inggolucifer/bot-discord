@@ -144,6 +144,73 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     }
   }
 
+  // 2e. Cultivation Law Stat Multipliers & Bonuses (15 Law Framework)
+  if (player.cultivationLaw && player.cultivationLaw.activeLawType) {
+    const law = player.cultivationLaw;
+    const rank = law.rank || 0;
+    const stage = law.stage || 0;
+    const totalStages = (rank * 10) + stage;
+
+    // +0.8% stats per stage completed across all laws (90 stages = max +72%)
+    const lawProgressionMult = totalStages * 0.008;
+    mult.hp += lawProgressionMult;
+    mult.atk += lawProgressionMult;
+    mult.def += lawProgressionMult;
+    mult.spd += lawProgressionMult * 0.5;
+
+    // Law Specialization Bonuses
+    switch (law.activeLawType) {
+      case 'element_phoenix_fire':
+        mult.atk += rank * 0.03; // +3% ATK per rank
+        break;
+      case 'element_azure_water':
+        mult.hp += rank * 0.03;  // +3% HP per rank
+        break;
+      case 'element_xuanwu_earth':
+        mult.def += rank * 0.04; // +4% DEF per rank
+        break;
+      case 'element_qingdi_wood':
+        mult.hp += rank * 0.02;
+        flat.hp += rank * 60;
+        break;
+      case 'element_roc_wind':
+        mult.spd += rank * 0.04; // +4% SPD per rank
+        break;
+      case 'element_godthunder_light':
+        mult.atk += rank * 0.025;
+        mult.spd += rank * 0.02;
+        break;
+      case 'body_tempering':
+        mult.hp += rank * 0.06;  // Raga Suci: massive HP & DEF scaling
+        mult.def += rank * 0.06;
+        flat.hp += rank * 100;
+        break;
+      case 'natal_artifact':
+        if (law.boundEntity?.entityType === 'artifact') {
+          const artRank = law.boundEntity.rankLevel || rank;
+          flat.atk += artRank * 25;
+          flat.def += artRank * 15;
+        }
+        break;
+      case 'natal_beast':
+        if (law.boundEntity?.entityType === 'beast') {
+          const beastRank = law.boundEntity.rankLevel || rank;
+          flat.hp += beastRank * 50;
+          flat.atk += beastRank * 15;
+        }
+        break;
+      case 'demonic_turbid_core':
+      case 'demonic_blood_soul':
+      case 'demonic_myriad_venom':
+      case 'demonic_abyssal_pact':
+      case 'demonic_nether_darkness':
+        const corruption = law.demonicData?.corruptionIndex || 0;
+        mult.atk += Math.floor(corruption / 10) * 0.01; // +1% ATK per 10 corruption
+        mult.atk += rank * 0.035;                      // Demonic high offense
+        break;
+    }
+  }
+
   // 3. Final Calculation: (Base + Flat) * Multiplier
   totals.hp = Math.floor((totals.hp + flat.hp) * mult.hp);
   totals.atk = Math.floor((totals.atk + flat.atk) * mult.atk);

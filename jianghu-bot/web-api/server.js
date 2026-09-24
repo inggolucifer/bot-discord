@@ -1,3 +1,6 @@
+const dns = require('dns');
+try { dns.setServers(['8.8.8.8', '1.1.1.1']); } catch (e) {}
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -147,7 +150,8 @@ const setupServer = (client) => {
         '/api/minigame/kata/submit',
         '/api/minigame/crucible/submit',
         '/api/world/zone/enter-property',
-        '/api/world/zone/upgrade-property-facility'
+        '/api/world/zone/upgrade-property-facility',
+        '/api/cultivation/law'
     ];
     app.use((req, res, next) => {
         if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
@@ -217,6 +221,21 @@ const setupServer = (client) => {
     app.use('/api/minigame', minigameRoutes);
     app.use('/api/dungeon', dungeonRoutes);
     app.use('/api/ferry', ferryRoutes);
+
+    const lawCultivationRoutes = require('./routes/lawCultivation');
+    app.use('/api/cultivation/law', lawCultivationRoutes);
+
+    const dailyHubRoutes = require('./routes/dailyHub');
+    app.use('/api/daily-hub', dailyHubRoutes);
+
+    const worldBossRoutes = require('./routes/worldBoss');
+    app.use('/api/world-boss', worldBossRoutes);
+
+    const sectArenaRoutes = require('./routes/sectArena');
+    app.use('/api/sect-arena', sectArenaRoutes);
+
+    const celestialCalendarRoutes = require('./routes/celestialCalendar');
+    app.use('/api/celestial-calendar', celestialCalendarRoutes);
 
     const gridSimulationRoutes = require('./routes/gridSimulation');
     app.use('/api/grid', gridSimulationRoutes);

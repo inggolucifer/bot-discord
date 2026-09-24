@@ -232,6 +232,42 @@ class InteractiveBattleService {
       ? player.currentQi
       : 30; // Qi awal pertarungan
 
+    // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
+    let lawSkillsFormatted = [];
+    if (player.cultivationLaw?.combatLoadout?.length > 0) {
+      try {
+        const LawSkillDefinition = require('../models/LawSkillDefinition');
+        const loadedSkillDefs = await LawSkillDefinition.find({
+          skillId: { $in: player.cultivationLaw.combatLoadout }
+        }).lean();
+
+        const isBody = player.cultivationLaw.activeLawType === 'body_tempering';
+        lawSkillsFormatted = loadedSkillDefs.map(def => ({
+          skillId: def.skillId,
+          name: def.name,
+          description: def.description,
+          type: def.targetType === 'self' ? 'buff' : (def.isPassive ? 'passive' : 'attack'),
+          icon: def.icon || '✨',
+          power: Math.round((def.damageMultiplier || 1.0) * 20),
+          qiCost: def.baseCost || 15,
+          costType: isBody ? 'true_qi' : (def.costType || 'qi'),
+          cooldown: def.cooldownTurns || 3,
+          currentCooldown: 0,
+          element: def.element || 'neutral',
+          critBonus: def.critBonus || 0,
+          stanceDmgMult: def.stanceDmgMult || 1.0,
+          aoeAll: def.targetType === 'all_enemies',
+          qiRegen: 0,
+          debuffChance: 0,
+          debuffType: null,
+          isBasicAttack: false,
+          isLawSkill: true
+        }));
+      } catch (err) {
+        console.error('[BATTLE] Gagal memuat jurus Law:', err);
+      }
+    }
+
     const playerEntity = {
       entityId: player.discordId,
       entityType: 'player',
@@ -246,6 +282,7 @@ class InteractiveBattleService {
       maxHp: maxHp,
       qi: currentQi,
       maxQi: maxQi,
+      qiType: player.cultivationLaw?.activeLawType === 'body_tempering' ? 'true_qi' : 'qi',
       stamina: player.currentStamina || 100,
       maxStamina: player.maxStamina || 100,
       attack: computedStats.atk || player.stats?.atk || 15,
@@ -258,7 +295,7 @@ class InteractiveBattleService {
       buffs: [],
       debuffs: [],
       conditions: normalizeConditions(player.conditions),
-      skills: this.formatPlayerSkills(player)
+      skills: [...this.formatPlayerSkills(player), ...lawSkillsFormatted]
     };
 
     // Konversi Sekutu (Allies: NPC / Pet)
@@ -296,6 +333,45 @@ class InteractiveBattleService {
         cooldown: 0
       }]
     }));
+
+    // Tambahkan Satwa Roh sebagai Sekutu jika pemain mengikat Law Satwa (Natal Beast)
+    if (player.cultivationLaw?.activeLawType === 'natal_beast' && player.cultivationLaw.boundEntity?.entityType === 'beast') {
+      const b = player.cultivationLaw.boundEntity;
+      allies.unshift({
+        entityId: `beast_${player.discordId}`,
+        entityType: 'beast_companion',
+        name: b.customName || b.originalName || 'Satwa Roh Dewa',
+        level: player.level || 1,
+        imageUrl: null,
+        element: 'neutral',
+        tierSize: 'small',
+        isAlly: true,
+        allyType: 'beast',
+        hp: b.beastCurrentHp || 120,
+        maxHp: b.beastMaxHp || 120,
+        qi: 0,
+        maxQi: 50,
+        stamina: 100,
+        maxStamina: 100,
+        attack: b.beastAtk || 18,
+        defense: b.beastDef || 12,
+        speed: b.beastSpd || 14,
+        atb: 600,
+        maxAtb: 1000,
+        stance: 80,
+        maxStance: 80,
+        buffs: [],
+        debuffs: [],
+        skills: [{
+          skillId: 'beast_claw_strike',
+          name: 'Cakaran Satwa Purba',
+          type: 'attack',
+          power: b.beastAtk || 18,
+          qiCost: 0,
+          cooldown: 0
+        }]
+      });
+    }
 
     // Konversi Semua Musuh (Mendukung hingga 8 musuh: max 4 aktif di medan tempur, sisanya di enemyQueue)
     const maxActive = options.maxActiveEnemies || 4;
@@ -501,11 +577,12 @@ class InteractiveBattleService {
       if ((skill.currentCooldown || 0) > 0) {
         throw new Error(`Jurus "${skill.name}" masih dalam jeda (${skill.currentCooldown} ronde lagi)!`);
       }
+      const energyName = session.player.qiType === 'true_qi' ? 'True Qi' : 'Qi';
       if (session.player.qi < (skill.qiCost || 0)) {
-        throw new Error(`Qi tidak cukup untuk "${skill.name}" (Butuh ${skill.qiCost} Qi, kamu punya ${session.player.qi} Qi)!`);
+        throw new Error(`${energyName} tidak cukup untuk "${skill.name}" (Butuh ${skill.qiCost} ${energyName}, kamu punya ${session.player.qi} ${energyName})!`);
       }
 
-      // Konsumsi Qi & Pasang Cooldown
+      // Konsumsi Qi / True Qi & Pasang Cooldown
       session.player.qi -= (skill.qiCost || 0);
       skill.currentCooldown = skill.cooldown || 0;
 

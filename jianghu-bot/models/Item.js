@@ -46,6 +46,13 @@ const itemSchema = new mongoose.Schema({
   staminaReduction: { type: Number, default: 0 }, // Pengurangan stamina tetap per petak (misal 0.5 s/d 2.0)
   staminaReductionPercent: { type: Number, default: 0 }, // Pengurangan stamina persentase (misal 20 = diskon 20%)
 
+  // Cultivation Law & Companion Attributes
+  lawType: { type: String, default: null },
+  isLawManual: { type: Boolean, default: false },
+  canBecomeArtifact: { type: Boolean, default: false },
+  beastTokenType: { type: String, default: null },
+  demonicAffinity: { type: String, default: null },
+
   // Harga dasar, dipakai untuk jual-beli di shop DAN sebagai basis harga jual-balik (/jual) ke sistem (20% dari basePrice)
   minRealmIndex: { type: Number, default: 0 },
   basePrice: { type: Number, default: 0, min: 0 },

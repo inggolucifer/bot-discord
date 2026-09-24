@@ -282,3 +282,118 @@ export interface ApiResponse<T = unknown> {
   message?: string;
   error?: string;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// CULTIVATION LAW SYSTEM CONTRACTS (15 Laws × 90 Stages)
+// ═══════════════════════════════════════════════════════════════
+
+export type LawType =
+  | 'element_phoenix_fire'
+  | 'element_azure_water'
+  | 'element_xuanwu_earth'
+  | 'element_qingdi_wood'
+  | 'element_roc_wind'
+  | 'element_godthunder_light'
+  | 'body_tempering'
+  | 'gu_master'
+  | 'natal_artifact'
+  | 'natal_beast'
+  | 'demonic_turbid_core'
+  | 'demonic_blood_soul'
+  | 'demonic_myriad_venom'
+  | 'demonic_abyssal_pact'
+  | 'demonic_nether_darkness';
+
+export interface BoundEntityData {
+  entityType: 'artifact' | 'beast' | null;
+  baseItemId?: string | null;
+  originalName?: string | null;
+  customName?: string | null;
+  rankLevel: number;
+  evolutionStage: string;
+  essence: number;
+  maxEssence: number;
+  beastCurrentHp?: number;
+  beastMaxHp?: number;
+  beastAtk?: number;
+  beastDef?: number;
+  beastSpd?: number;
+}
+
+export interface LawStatusData {
+  hasLaw: boolean;
+  activeLawType: LawType | null;
+  lawName: string | null;
+  category: string | null;
+  qiType: 'qi' | 'true_qi';
+  rank: number;
+  stage: number;
+  rankDisplayName: string;
+  qi: number;
+  maxQi: number;
+  qiProgressPercent: number;
+  isChanneling: boolean;
+  channelRatePerMinute: number;
+  channelMinutesUsedToday: number;
+  dailyChannelCapMinutes: number;
+  remainingChannelMinutesToday: number;
+  loginStreak: number;
+  streakBonusMinutes: number;
+  lawLevelCapBonus: number;
+  characterLevelCap: number;
+  lawSkillPoints: number;
+  unlockedSkillsCount: number;
+  combatLoadout: string[];
+  boundEntity?: BoundEntityData | null;
+  bodyTemperingParts?: Record<string, number>;
+  guSlots?: Array<{ guName: string; guType: string; level: number; hunger: number; lastFedAt?: string | Date }>;
+  demonicData?: {
+    turbidCoresConsumed?: number;
+    corruptionIndex?: number;
+    bloodEssenceVials?: number;
+    soulBannerCaptures?: number;
+    venomToxinLevel?: number;
+    abyssalTributeDueAt?: string | Date;
+    infamy?: number;
+  } | null;
+  element?: string | null;
+  canMiniBreakthrough: boolean;
+  canMajorBreakthrough: boolean;
+  requiresTribulation: boolean;
+  miniBreakthroughCost: {
+    moodCost: number;
+    vitalityCost: number;
+    silverCost: number;
+    materialName: string;
+  };
+  miniBreakthroughSuccessRate: number;
+  majorBreakthroughSuccessRate: number;
+  miniBreakthroughCooldownUntil?: string | null;
+  majorBreakthroughCooldownUntil?: string | null;
+  canClaimEpiphany: boolean;
+  canBind: boolean;
+}
+
+export interface LawSkillItem {
+  skillId: string;
+  lawType: LawType;
+  tier: number;
+  name: string;
+  icon: string;
+  description: string;
+  isPassive: boolean;
+  maxLevel: number;
+  requiredRank: number;
+  requiredParentSkillId?: string | null;
+  skillPointCost: number;
+  costType: 'qi' | 'true_qi' | 'hp' | 'stamina' | 'none';
+  baseCost: number;
+  cooldownTurns: number;
+  targetType: string;
+  damageMultiplier: number;
+  element?: string | null;
+  isUnlocked: boolean;
+  isEquipped: boolean;
+  canUnlock: boolean;
+}
+

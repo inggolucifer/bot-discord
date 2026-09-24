@@ -528,6 +528,72 @@ export const GLOBAL_ASSETS = {
   },
 
   // =========================================================================
+  // 13F. CULTIVATION LAWS (15 JALUR HUKUM ALAM SURGAWI & DEMONIC)
+  // Ukuran: 128x128 px (Format: PNG Transparan)
+  // =========================================================================
+  cultivation_laws: {
+    // 6 Divine Elemental Laws
+    law_element_phoenix_fire: "",     // Segel Lambang Api Phoenix
+    law_element_azure_water: "",      // Segel Lambang Samudra Naga Azure
+    law_element_xuanwu_earth: "",     // Segel Lambang Inti Bumi Xuanwu
+    law_element_qingdi_wood: "",      // Segel Lambang Pohon Hayat Qingdi
+    law_element_roc_wind: "",         // Segel Lambang Badai Sayap Roc
+    law_element_godthunder_light: "", // Segel Lambang Guntur Halilintar Dewa Petir
+
+    // Jalur Raga, Gu, Artifact & Beast
+    law_body: "",                     // Lambang Tinju Penempaan Raga Suci
+    law_body_tempering: "",
+    law_gu: "",                       // Lambang Rongga Serangga Gu
+    law_gu_master: "",
+    law_artifact: "",                 // Lambang Pusaka Jiwa Kelahiran
+    law_natal_artifact: "",
+    law_beast: "",                    // Lambang Sumpah Darah Satwa Roh
+    law_natal_beast: "",
+
+    // 5 Demonic Dao Laws
+    law_demonic_turbid_core: "",      // Lambang Peleburan Inti Siluman Kotor
+    law_demonic_blood_soul: "",       // Lambang Panji Darah & Ruh Sembilan Hantu
+    law_demonic_myriad_poison: "",    // Lambang Kuali Kantung Bisa Racun
+    law_demonic_myriad_venom: "",
+    law_demonic_fiend_pact: "",       // Lambang Kontrak Kulit Iblis Abyss
+    law_demonic_abyssal_pact: "",
+    law_demonic_nether_darkness: "",  // Lambang Gerbang Yin Gelap Nether
+  },
+
+  // =========================================================================
+  // 13G. WORLD BOSSES & EVENT MINGGUAN (384x384 s/d 512x512 px)
+  // =========================================================================
+  world_bosses: {
+    boss_flame_kirin: "",             // Raja Qilin Api Purba (Sabtu World Boss)
+    boss_abyssal_leviathan: "",       // Naga Raksasa Palung Samudra Utara
+    boss_nether_dragon: "",           // Naga Iblis Sembilan Jurang Gelap
+    boss_primordial_titan: "",        // Golem Titan Pengguncang Benua
+  },
+
+  // =========================================================================
+  // 13H. ARENA BELADIRI SEKTE (TOURNAMENT & SPARRING)
+  // =========================================================================
+  sect_arena: {
+    arena_banner: "",                 // Panji Turnamen Beladiri Sekte
+    sparring_ring_bg: "",             // Kanvas Gelanggang Sparring Batu Kuno
+    trophy_champion: "",              // Piala Emas Mahkota Juara Sekte
+    trophy_runner_up: "",             // Lencana Perak Peringkat Kedua
+    rank_badge_grandmaster: "",       // Lencana Pangkat Pendekar Besar
+  },
+
+  // =========================================================================
+  // 13I. DAILY LOOP & CELESTIAL CALENDAR (HUB & EVENT WIDGETS)
+  // =========================================================================
+  daily_events: {
+    daily_epiphany_chest: "",         // Peti Emas Pencerahan Harian
+    streak_flame_active: "",          // Kobaran Api Login Streak Membara
+    streak_flame_inactive: "",        // Abu Login Streak Mati
+    weekly_grand_chest: "",           // Peti Harta Karun Mingguan
+    celestial_moon_alignment: "",     // Fenomena Gerhana Bulan Kembar Surgawi
+    midnight_enlightenment_bell: "",  // Lonceng Emas Pencerahan Tengah Malam
+  },
+
+  // =========================================================================
   // 14. EMOJI FALLBACK
   // Tampilan cadangan otomatis jika URL di atas belum diisi
   // =========================================================================
@@ -548,8 +614,18 @@ export const GLOBAL_ASSETS = {
     mount: "🐎",
     anvil: "⚒️",
     crucible: "⚗️",
+    law: "📜",
+    world_boss: "🐲",
+    arena: "⚔️",
+    epiphany: "✨",
+    streak: "🔥",
+    beast_evolve: "🐾",
+    soul_artifact: "🗡️",
+    demonic_altar: "🩸",
+    body_temper: "💪",
     default: "🖼️"
   }
 };
 
 export type GlobalAssetKey = keyof typeof GLOBAL_ASSETS;
+
