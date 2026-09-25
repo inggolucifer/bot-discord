@@ -2,18 +2,40 @@
 
 import { useAuthStore } from '@/lib/store';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Sparkles,
+  LogOut,
+  User,
+  Compass,
+  Map,
+  Shield,
+  Swords,
+  Backpack,
+  Landmark,
+  Store,
+  BookOpen,
+  Layers,
+  Award,
+  Home,
+  Scroll,
+  HeartPulse,
+  Flame,
+  Globe2,
+} from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
-// Need to check if FallbackImage exists, if not we will fix it later.
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
+  const pathname = usePathname();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,13 +45,13 @@ export default function Navbar() {
         setOpenDropdown(null);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  // Prevent scroll when mobile menu is open
+  // Prevent background scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -41,15 +63,23 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  // Close menus on route change
+  useEffect(() => {
+    setOpenDropdown(null);
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
     if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
-      setErrorMsg("Konfigurasi login belum lengkap (NEXT_PUBLIC_DISCORD_CLIENT_ID belum diatur). Hubungi admin.");
+      setErrorMsg('Konfigurasi login Discord belum diatur.');
       return;
     }
 
     const redirectUri = encodeURIComponent(
-      process.env.NEXT_PUBLIC_URL ? `${process.env.NEXT_PUBLIC_URL}/auth/callback` : 'http://localhost:3000/auth/callback'
+      process.env.NEXT_PUBLIC_URL
+        ? `${process.env.NEXT_PUBLIC_URL}/auth/callback`
+        : 'http://localhost:3000/auth/callback'
     );
     window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
   };
@@ -63,190 +93,254 @@ export default function Navbar() {
     setOpenDropdown(null);
   };
 
-  const navLinks = {
-    kultivasi: [
-      { href: "/profile", label: "Profil Karakter" },
-      { href: "/character", label: "Peralatan & Busana" },
-      { href: "/condition", label: "Kondisi Karakter" },
-      { href: "/cultivation", label: "Kultivasi & Ranah" },
-      { href: "/skills", label: "Kitab & Jurus" },
-      { href: "/skill-tree", label: "🌳 Pohon Jurus Law" },
-      { href: "/daily-hub", label: "✨ Misi & Pencerahan" },
-    ],
-    dunia: [
-      { href: "/world", label: "🗺️ Peta Dunia Tale of Immortal" },
-      { href: "/explore", label: "🧭 Eksplorasi Grid Spasial" },
-      { href: "/arena", label: "⚔️ Arena Pertarungan" },
-      { href: "/world-boss", label: "🐉 World Boss (Sabtu)" },
-      { href: "/sect-arena", label: "🏆 Arena Sekte (Minggu)" },
-    ],
-    aset: [
-      { href: "/inventory", label: "🎒 Tas / Inventory" },
-      { href: "/assets", label: "🏡 Lahan & Properti" },
-    ],
-    sosial: [
-      { href: "/market", label: "Pasar Lelang" },
-      { href: "/barter", label: "Barter Langsung" },
-      { href: "/sect", label: "Balai Sekte" },
-      { href: "/worker", label: "Pekerja Tambang" },
-      { href: "/leaderboard", label: "Peringkat Dunia" },
-    ],
-    referensi: [
-      { href: "/almanack", label: "Almanack & Lore" }
-    ]
-  };
+  // Streamlined nav groups for desktop dropdowns
+  const karakterLinks = [
+    { href: '/profile', label: 'Profil Pendekar', icon: User },
+    { href: '/character', label: 'Peralatan & Busana', icon: Shield },
+    { href: '/cultivation', label: 'Kultivasi & Ranah', icon: Flame },
+    { href: '/skills', label: 'Kitab & Jurus', icon: Scroll },
+    { href: '/skill-tree', label: 'Pohon Dao', icon: Layers },
+    { href: '/condition', label: 'Kondisi Tubuh', icon: HeartPulse },
+  ];
+
+  const duniaLinks = [
+    { href: '/world', label: 'Peta Benua', icon: Map },
+    { href: '/explore', label: 'Eksplorasi Spasial', icon: Compass },
+    { href: '/arena', label: 'Arena Duel', icon: Swords },
+    { href: '/world-boss', label: 'World Boss', icon: Globe2 },
+    { href: '/sect-arena', label: 'Turnamen Sekte', icon: Award },
+  ];
+
+  const sosialLinks = [
+    { href: '/sect', label: 'Balai Sekte', icon: Landmark },
+    { href: '/market', label: 'Pasar Lelang', icon: Store },
+    { href: '/assets', label: 'Lahan & Properti', icon: Landmark },
+    { href: '/leaderboard', label: 'Papan Peringkat', icon: Award },
+  ];
 
   return (
     <>
-      {/* Floating Down-Arrow Summon Button When Navbar is Collapsed */}
-      {isNavbarCollapsed && (
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
-          <button
-            onClick={() => setIsNavbarCollapsed(false)}
-            title="Tampilkan Kembali Menu Navigasi"
-            className="bg-[#0f121a]/95 hover:bg-[#1a202c] border-b-2 border-x border-[#c5a880]/80 text-[#c5a880] px-4 py-1.5 rounded-b-xl shadow-[0_4px_20px_rgba(0,0,0,0.9)] backdrop-blur-md flex items-center gap-1.5 text-xs font-serif font-bold tracking-wider hover:text-amber-200 transition-all hover:pt-2 group cursor-pointer"
+      {/* Top Header Navbar - Clean, Minimalist Wuxia */}
+      <header className="bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-15 flex justify-between items-center">
+          
+          {/* Left: Clean Brand Logo */}
+          <Link
+            href="/"
+            className="font-serif font-bold text-base sm:text-lg tracking-wider text-amber-200 hover:text-amber-100 transition-colors select-none shrink-0"
           >
-            <ChevronDown className="w-4 h-4 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
-            <span>Menu Navigasi</span>
-          </button>
-        </div>
-      )}
-
-      <header
-        className={cn(
-          "bg-black/90 border-b border-[#333] sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ease-in-out relative",
-          isNavbarCollapsed
-            ? "-translate-y-full opacity-0 pointer-events-none max-h-0 border-b-0 overflow-hidden"
-            : "translate-y-0 opacity-100 max-h-24 shadow-lg"
-        )}
-      >
-        <div className="container mx-auto px-3 sm:px-4 h-12 sm:h-14 lg:h-16 flex justify-between items-center">
-
-          {/* Logo */}
-          <Link href="/" className="text-base sm:text-xl font-bold font-serif text-[#c5a880] tracking-wider hover:text-yellow-200 transition-colors flex items-center z-50">
-            JIANGHU RP
+            JIANGHU
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
-            <Link href="/" className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors font-medium">
+          {/* Center: Desktop Navigation Links (Simple, Direct & Easy) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2" ref={dropdownRef}>
+            {/* 1. Beranda */}
+            <Link
+              href="/"
+              className={cn(
+                'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors',
+                pathname === '/'
+                  ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                  : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+              )}
+            >
               Beranda
             </Link>
 
-            {/* Dropdown Kultivasi */}
+            {/* 2. Karakter (Dropdown) */}
             <div className="relative">
               <button
-                onClick={() => toggleDropdown('kultivasi')}
-                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+                onClick={() => toggleDropdown('karakter')}
+                className={cn(
+                  'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors flex items-center gap-1 cursor-pointer',
+                  pathname.startsWith('/profile') || pathname.startsWith('/character') || pathname.startsWith('/cultivation') || pathname.startsWith('/skills') || pathname.startsWith('/skill-tree') || pathname.startsWith('/condition') || openDropdown === 'karakter'
+                    ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                    : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                )}
               >
-                Karakter <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+                <span>Karakter</span>
+                <ChevronDown className={cn('w-3.5 h-3.5 opacity-70 transition-transform', openDropdown === 'karakter' ? 'rotate-180 text-amber-300' : '')} />
               </button>
-              {openDropdown === 'kultivasi' && (
-                <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                  {navLinks.kultivasi.map(link => (
-                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                      {link.label}
-                    </Link>
-                  ))}
+
+              {openDropdown === 'karakter' && (
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  {karakterLinks.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpenDropdown(null)}
+                        className={cn(
+                          'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors',
+                          pathname === item.href
+                            ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                            : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                        )}
+                      >
+                        <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            {/* Dropdown Dunia */}
+            {/* 3. Dunia (Dropdown) */}
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('dunia')}
-                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+                className={cn(
+                  'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors flex items-center gap-1 cursor-pointer',
+                  pathname.startsWith('/world') || pathname.startsWith('/explore') || pathname.startsWith('/arena') || pathname.startsWith('/world-boss') || pathname.startsWith('/sect-arena') || openDropdown === 'dunia'
+                    ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                    : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                )}
               >
-                Dunia <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+                <span>Dunia</span>
+                <ChevronDown className={cn('w-3.5 h-3.5 opacity-70 transition-transform', openDropdown === 'dunia' ? 'rotate-180 text-amber-300' : '')} />
               </button>
+
               {openDropdown === 'dunia' && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                  {navLinks.dunia.map(link => (
-                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                      {link.label}
-                    </Link>
-                  ))}
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  {duniaLinks.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpenDropdown(null)}
+                        className={cn(
+                          'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors',
+                          pathname === item.href
+                            ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                            : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                        )}
+                      >
+                        <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            {/* Dropdown Aset & Tas */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('aset')}
-                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
-              >
-                Aset & Tas <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-              </button>
-              {openDropdown === 'aset' && (
-                <div className="absolute top-full left-0 mt-1 w-52 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                  {navLinks.aset.map(link => (
-                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
+            {/* 4. Tas (Direct 1-Click Link - Easy & Fast!) */}
+            <Link
+              href="/inventory"
+              className={cn(
+                'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors flex items-center gap-1.5',
+                pathname === '/inventory'
+                  ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                  : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
               )}
-            </div>
+            >
+              <Backpack className="w-3.5 h-3.5 opacity-80" />
+              <span>Tas</span>
+            </Link>
 
-            {/* Dropdown Pasar & Aliansi */}
+            {/* 5. Sekte & Pasar (Dropdown) */}
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('sosial')}
-                className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors flex items-center gap-1"
+                className={cn(
+                  'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors flex items-center gap-1 cursor-pointer',
+                  pathname.startsWith('/sect') || pathname.startsWith('/market') || pathname.startsWith('/assets') || pathname.startsWith('/leaderboard') || openDropdown === 'sosial'
+                    ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                    : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                )}
               >
-                Pasar & Sekte <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+                <span>Sekte & Pasar</span>
+                <ChevronDown className={cn('w-3.5 h-3.5 opacity-70 transition-transform', openDropdown === 'sosial' ? 'rotate-180 text-amber-300' : '')} />
               </button>
+
               {openDropdown === 'sosial' && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-[#111] border border-[#333] rounded-lg shadow-2xl py-1 z-50">
-                  {navLinks.sosial.map(link => (
-                    <Link key={link.href} href={link.href} onClick={() => setOpenDropdown(null)} className="block px-4 py-2.5 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] transition-colors">
-                      {link.label}
-                    </Link>
-                  ))}
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  {sosialLinks.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpenDropdown(null)}
+                        className={cn(
+                          'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors',
+                          pathname === item.href
+                            ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                            : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+                        )}
+                      >
+                        <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            {navLinks.referensi.map(link => (
-              <Link key={link.href} href={link.href} className="px-3 py-2 text-sm text-gray-300 hover:text-[#c5a880] hover:bg-[#c5a880]/10 rounded-md transition-colors">
-                {link.label}
-              </Link>
-            ))}
+            {/* 6. Pustaka (Direct 1-Click Link) */}
+            <Link
+              href="/almanack"
+              className={cn(
+                'px-3 py-1.5 text-xs xl:text-sm font-serif rounded-lg transition-colors flex items-center gap-1.5',
+                pathname === '/almanack'
+                  ? 'text-amber-200 bg-[#c5a880]/15 font-bold border border-[#c5a880]/40'
+                  : 'text-stone-300 hover:text-amber-200 hover:bg-white/5'
+              )}
+            >
+              <BookOpen className="w-3.5 h-3.5 opacity-80" />
+              <span>Pustaka</span>
+            </Link>
           </nav>
 
-          {/* Right Section (Auth & Mobile Toggle) */}
-          <div className="flex items-center gap-2 lg:gap-3 z-50">
-            {/* Quick Access Tianji Hub Button */}
+          {/* Right Header: Tianji Pill + Profile/Auth + Mobile Menu Toggle */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Simple Tianji Hub Pill */}
             <Link
               href="/daily-hub"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-950/70 to-yellow-950/70 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-amber-100 text-xs font-serif shadow-[0_0_12px_rgba(217,119,6,0.25)] hover:shadow-[0_0_18px_rgba(245,158,11,0.5)] transition-all cursor-pointer"
-              title="✨ Misi & Pencerahan Harian"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-950/40 hover:bg-amber-950/70 border border-amber-600/40 hover:border-amber-400 text-amber-200 text-xs font-serif transition-colors"
+              title="Misi & Pencerahan Harian"
             >
-              <span className="text-amber-400 animate-pulse text-xs">✨</span>
-              <span className="font-semibold tracking-wide">Tianji Hub</span>
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span className="font-semibold text-[11px] sm:text-xs">Tianji</span>
             </Link>
 
-            {errorMsg && (
-              <span className="text-[#8b0000] text-xs font-semibold hidden sm:inline">{errorMsg}</span>
-            )}
+            {/* User Profile or Discord Login */}
             {user ? (
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-300 hidden sm:inline">{user.username}</span>
-                {user.avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full border border-[#c5a880]" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full border border-[#c5a880] bg-[#333] flex items-center justify-center text-xs">?</div>
-                )}
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors"
+                  title="Buka Profil"
+                >
+                  {user.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.avatar}
+                      alt={user.username || 'Avatar'}
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#c5a880]/60"
+                    />
+                  ) : (
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#c5a880]/60 bg-[#141824] flex items-center justify-center text-xs text-amber-200">
+                      ?
+                    </div>
+                  )}
+                  <span className="text-xs font-serif text-stone-300 hidden xl:inline max-w-[90px] truncate">
+                    {user.username}
+                  </span>
+                </Link>
 
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={logout}
-                  className="border-[#333] text-gray-400 hover:text-white hover:bg-black/50 px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
+                  className="hidden md:inline-flex border-[#2b3345] hover:border-red-900/60 text-stone-400 hover:text-red-300 hover:bg-red-950/20 px-2.5 py-1 h-7 sm:h-8 text-xs rounded-lg transition-colors cursor-pointer"
+                  title="Logout"
                 >
+                  <LogOut className="w-3 h-3 mr-1" />
                   Logout
                 </Button>
               </div>
@@ -255,209 +349,283 @@ export default function Navbar() {
                 onClick={handleLogin}
                 variant="destructive"
                 size="sm"
-                className="shadow-[0_0_10px_rgba(139,0,0,0.5)] px-2 py-1 h-8 text-xs sm:px-3 sm:py-2 sm:h-9 sm:text-sm"
+                className="bg-amber-900 hover:bg-amber-800 text-amber-100 text-xs font-serif font-bold px-3 py-1 h-8 rounded-lg"
               >
-                Login Discord
+                Login
               </Button>
             )}
 
-            {/* Collapse Navbar Button */}
+            {/* Mobile Menu Hamburger Toggle */}
             <button
-              onClick={() => {
-                setIsNavbarCollapsed(true);
-                setIsMobileMenuOpen(false);
-              }}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-md bg-[#161a24] hover:bg-[#23293a] border border-[#3b3322] hover:border-[#c5a880]/70 text-stone-300 hover:text-amber-200 transition-all flex items-center gap-1 text-xs cursor-pointer shadow-sm"
-              title="Ciutkan Menu Navigasi ke Atas"
-            >
-              <ChevronUp className="w-4 h-4 text-amber-400" />
-              <span className="hidden md:inline text-[11px] font-serif">Ciutkan</span>
-            </button>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="lg:hidden p-2 text-gray-300 hover:text-[#c5a880]"
+              className="lg:hidden p-2 text-stone-300 hover:text-amber-200 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
+              aria-label="Menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5 text-amber-300" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-        </div>
 
-        {/* Center Bottom Pull Tab Handle */}
-        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto hidden sm:block">
-          <button
-            onClick={() => {
-              setIsNavbarCollapsed(true);
-              setIsMobileMenuOpen(false);
-            }}
-            title="Ciutkan Menu Navigasi ke Atas"
-            className="px-3 py-0.5 rounded-b-md bg-[#0d1017]/95 hover:bg-[#181d2a] border-b border-x border-[#52442d] hover:border-[#c5a880] text-[#c5a880] hover:text-amber-200 text-[10px] font-serif flex items-center gap-1 transition-all shadow-md cursor-pointer"
-          >
-            <ChevronUp size={11} className="text-amber-400" />
-            <span>Ciutkan</span>
-          </button>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay / Drawer */}
+      {/* Mobile Drawer (Clean, Uncluttered, Direct Links - Zero Sideways Scroll) */}
       <div
         className={cn(
-          "fixed inset-0 top-16 bg-black/95 backdrop-blur-xl z-40 transition-transform duration-300 ease-in-out overflow-y-auto lg:hidden flex flex-col",
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          'fixed inset-0 top-14 z-40 bg-[#080b11]/98 backdrop-blur-xl transition-all duration-200 ease-out lg:hidden flex flex-col overflow-y-auto overflow-x-hidden border-t border-[#2b3345] pb-24',
+          isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
         )}
       >
-        <div className="p-4 flex flex-col gap-2 h-full">
-          {errorMsg && (
-            <div className="p-3 bg-red-900/20 border border-red-900/50 rounded-md text-red-500 text-sm mb-4">
-              {errorMsg}
-            </div>
-          )}
-
-          <div className="space-y-1 mb-4">
-            <Link
-              href="/"
-              onClick={closeMobileMenu}
-              className="block px-3 py-2.5 text-base font-medium text-amber-200 hover:bg-[#c5a880]/10 rounded-md"
-            >
-              Beranda
-            </Link>
-          </div>
-
-          <div className="space-y-1 mb-4">
-            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Karakter & Ranah</div>
-            {navLinks.kultivasi.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="space-y-1 mb-4">
-            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Dunia Jianghu</div>
-            {navLinks.dunia.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="space-y-1 mb-4">
-            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Aset & Tas</div>
-            {navLinks.aset.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="space-y-1 mb-4">
-            <div className="text-xs font-semibold text-[#c5a880] uppercase tracking-wider mb-1 px-3">Pasar & Sekte</div>
-            {navLinks.sosial.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="block px-3 py-2 text-sm text-gray-200 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="space-y-1 mb-4">
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 px-3">Referensi</div>
-            {navLinks.referensi.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMobileMenu}
-                className="block px-3 py-2 text-sm text-gray-300 hover:bg-[#c5a880]/10 hover:text-[#c5a880] rounded-md"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-auto pt-6 border-t border-[#333]">
-            {user && (
+        <div className="w-full max-w-full px-4 py-4 space-y-4">
+          
+          {/* User Profile Bar in Mobile Menu */}
+          {user ? (
+            <div className="bg-[#10141f] border border-[#2b3345] rounded-xl p-3 flex items-center justify-between">
+              <div className="flex items-center gap-3 min-w-0">
+                {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={user.avatar}
+                    alt={user.username || 'Avatar'}
+                    className="w-9 h-9 rounded-full border border-[#c5a880]/60 shrink-0"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full border border-[#c5a880]/60 bg-[#161a24] flex items-center justify-center font-bold text-amber-200 shrink-0">
+                    ?
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <h4 className="font-serif font-bold text-amber-200 text-sm truncate">{user.username}</h4>
+                  <span className="text-[10px] text-stone-400 font-serif">Kultivator Jianghu</span>
+                </div>
+              </div>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => { logout(); closeMobileMenu(); }}
-                className="w-full justify-center border-[#333] text-gray-400"
+                className="border-red-900/50 text-red-400 hover:bg-red-950/30 text-xs px-2.5 py-1 h-7 rounded-lg shrink-0"
               >
                 Logout
               </Button>
-            )}
+            </div>
+          ) : (
+            <div className="bg-[#10141f] border border-[#2b3345] rounded-xl p-3 flex items-center justify-between">
+              <span className="text-xs text-stone-300 font-serif">Silakan masuk dengan Discord</span>
+              <Button
+                onClick={handleLogin}
+                size="sm"
+                variant="destructive"
+                className="bg-amber-900 hover:bg-amber-800 text-amber-100 text-xs font-serif font-bold px-3 py-1 h-7"
+              >
+                Login
+              </Button>
+            </div>
+          )}
+
+          {/* Quick Access 4-Tile Grid */}
+          <div className="grid grid-cols-4 gap-2">
+            <Link
+              href="/"
+              onClick={closeMobileMenu}
+              className="bg-[#10141f] hover:bg-[#161c2b] border border-[#252e40] rounded-xl p-2.5 flex flex-col items-center justify-center text-center transition-colors"
+            >
+              <Home className="w-4 h-4 text-amber-400 mb-1" />
+              <span className="text-[11px] font-serif text-stone-200">Beranda</span>
+            </Link>
+            <Link
+              href="/world"
+              onClick={closeMobileMenu}
+              className="bg-[#10141f] hover:bg-[#161c2b] border border-[#252e40] rounded-xl p-2.5 flex flex-col items-center justify-center text-center transition-colors"
+            >
+              <Map className="w-4 h-4 text-amber-300 mb-1" />
+              <span className="text-[11px] font-serif text-amber-300 font-bold">Peta</span>
+            </Link>
+            <Link
+              href="/inventory"
+              onClick={closeMobileMenu}
+              className="bg-[#10141f] hover:bg-[#161c2b] border border-[#252e40] rounded-xl p-2.5 flex flex-col items-center justify-center text-center transition-colors"
+            >
+              <Backpack className="w-4 h-4 text-amber-400 mb-1" />
+              <span className="text-[11px] font-serif text-stone-200">Tas</span>
+            </Link>
+            <Link
+              href="/daily-hub"
+              onClick={closeMobileMenu}
+              className="bg-[#10141f] hover:bg-[#161c2b] border border-[#252e40] rounded-xl p-2.5 flex flex-col items-center justify-center text-center transition-colors"
+            >
+              <Sparkles className="w-4 h-4 text-amber-400 mb-1" />
+              <span className="text-[11px] font-serif text-stone-200">Tianji</span>
+            </Link>
           </div>
+
+          {/* Group 1: Karakter & Kultivasi */}
+          <div className="bg-[#0e121b] border border-[#252e40] rounded-xl p-3 space-y-1">
+            <span className="text-[10px] font-serif uppercase tracking-widest text-[#c5a880] font-bold block mb-1 px-1">
+              Karakter & Kultivasi
+            </span>
+            <div className="grid grid-cols-2 gap-1.5">
+              {karakterLinks.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMobileMenu}
+                    className={cn(
+                      'flex items-center gap-2 p-2 rounded-lg text-xs transition-colors',
+                      pathname === item.href
+                        ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                        : 'text-stone-300 hover:text-amber-200 hover:bg-white/5 bg-[#121622]/60'
+                    )}
+                  >
+                    <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Group 2: Dunia & Pertarungan */}
+          <div className="bg-[#0e121b] border border-[#252e40] rounded-xl p-3 space-y-1">
+            <span className="text-[10px] font-serif uppercase tracking-widest text-[#c5a880] font-bold block mb-1 px-1">
+              Dunia & Pertarungan
+            </span>
+            <div className="grid grid-cols-2 gap-1.5">
+              {duniaLinks.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMobileMenu}
+                    className={cn(
+                      'flex items-center gap-2 p-2 rounded-lg text-xs transition-colors',
+                      pathname === item.href
+                        ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                        : 'text-stone-300 hover:text-amber-200 hover:bg-white/5 bg-[#121622]/60'
+                    )}
+                  >
+                    <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Group 3: Sekte, Pasar & Lainnya */}
+          <div className="bg-[#0e121b] border border-[#252e40] rounded-xl p-3 space-y-1">
+            <span className="text-[10px] font-serif uppercase tracking-widest text-[#c5a880] font-bold block mb-1 px-1">
+              Komunitas & Referensi
+            </span>
+            <div className="grid grid-cols-2 gap-1.5">
+              {sosialLinks.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeMobileMenu}
+                    className={cn(
+                      'flex items-center gap-2 p-2 rounded-lg text-xs transition-colors',
+                      pathname === item.href
+                        ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                        : 'text-stone-300 hover:text-amber-200 hover:bg-white/5 bg-[#121622]/60'
+                    )}
+                  >
+                    <Icon className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                href="/almanack"
+                onClick={closeMobileMenu}
+                className={cn(
+                  'flex items-center gap-2 p-2 rounded-lg text-xs transition-colors col-span-2',
+                  pathname === '/almanack'
+                    ? 'bg-[#c5a880]/20 text-amber-200 font-bold'
+                    : 'text-stone-300 hover:text-amber-200 hover:bg-white/5 bg-[#121622]/60'
+                )}
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-400/80 shrink-0" />
+                <span>Pustaka & Ensiklopedia Jianghu</span>
+              </Link>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation Bar - Fixed at bottom-0 */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0d14]/95 backdrop-blur-md border-t border-[#3b3322] px-2 py-1.5 flex items-center justify-around shadow-[0_-4px_20px_rgba(0,0,0,0.85)]">
-        <Link
-          href="/"
-          onClick={closeMobileMenu}
-          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
-        >
-          <span className="text-base sm:text-lg">🏠</span>
-          <span className="text-[10px] font-serif font-medium">Beranda</span>
-        </Link>
-        <Link
-          href="/profile"
-          onClick={closeMobileMenu}
-          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
-        >
-          <span className="text-base sm:text-lg">👤</span>
-          <span className="text-[10px] font-serif font-medium">Karakter</span>
-        </Link>
-        <Link
-          href="/world"
-          onClick={closeMobileMenu}
-          className="flex flex-col items-center gap-0.5 text-amber-300 hover:text-amber-200 transition-colors py-1 px-2.5 relative"
-        >
-          <span className="text-base sm:text-lg animate-pulse">🗺️</span>
-          <span className="text-[10px] font-serif font-bold text-amber-300">Dunia</span>
-        </Link>
-        <Link
-          href="/daily-hub"
-          onClick={closeMobileMenu}
-          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
-        >
-          <span className="text-base sm:text-lg">✨</span>
-          <span className="text-[10px] font-serif font-medium">Tianji</span>
-        </Link>
-        <Link
-          href="/inventory"
-          onClick={closeMobileMenu}
-          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5"
-        >
-          <span className="text-base sm:text-lg">🎒</span>
-          <span className="text-[10px] font-serif font-medium">Tas</span>
-        </Link>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex flex-col items-center gap-0.5 text-stone-400 hover:text-amber-300 transition-colors py-1 px-2.5 cursor-pointer"
-        >
-          <span className="text-base sm:text-lg">{isMobileMenuOpen ? "✖️" : "📜"}</span>
-          <span className="text-[10px] font-serif font-medium">Menu</span>
-        </button>
+      {/* Mobile Bottom Navigation Bar (5 Touch-Optimized Pillars) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#090c13]/95 backdrop-blur-xl border-t border-[#2b3345] px-2 py-1 shadow-lg max-w-full overflow-hidden">
+        <div className="grid grid-cols-5 items-center w-full max-w-md mx-auto">
+          {/* 1. Beranda */}
+          <Link
+            href="/"
+            onClick={closeMobileMenu}
+            className={cn(
+              'flex flex-col items-center justify-center py-1 rounded-lg transition-colors min-h-[44px]',
+              pathname === '/' ? 'text-amber-300 font-bold' : 'text-stone-400 hover:text-stone-200'
+            )}
+          >
+            <Home className="w-4 h-4 mb-0.5" />
+            <span className="text-[10px] font-serif">Beranda</span>
+          </Link>
+
+          {/* 2. Karakter */}
+          <Link
+            href="/profile"
+            onClick={closeMobileMenu}
+            className={cn(
+              'flex flex-col items-center justify-center py-1 rounded-lg transition-colors min-h-[44px]',
+              pathname.startsWith('/profile') || pathname.startsWith('/character')
+                ? 'text-amber-300 font-bold'
+                : 'text-stone-400 hover:text-stone-200'
+            )}
+          >
+            <User className="w-4 h-4 mb-0.5" />
+            <span className="text-[10px] font-serif">Karakter</span>
+          </Link>
+
+          {/* 3. Dunia */}
+          <Link
+            href="/world"
+            onClick={closeMobileMenu}
+            className={cn(
+              'flex flex-col items-center justify-center py-1 rounded-lg transition-colors min-h-[44px]',
+              pathname === '/world' ? 'text-amber-300 font-bold' : 'text-stone-400 hover:text-stone-200'
+            )}
+          >
+            <Map className="w-4 h-4 mb-0.5" />
+            <span className="text-[10px] font-serif">Dunia</span>
+          </Link>
+
+          {/* 4. Tas */}
+          <Link
+            href="/inventory"
+            onClick={closeMobileMenu}
+            className={cn(
+              'flex flex-col items-center justify-center py-1 rounded-lg transition-colors min-h-[44px]',
+              pathname === '/inventory' ? 'text-amber-300 font-bold' : 'text-stone-400 hover:text-stone-200'
+            )}
+          >
+            <Backpack className="w-4 h-4 mb-0.5" />
+            <span className="text-[10px] font-serif">Tas</span>
+          </Link>
+
+          {/* 5. Menu */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={cn(
+              'flex flex-col items-center justify-center py-1 rounded-lg transition-colors min-h-[44px] cursor-pointer',
+              isMobileMenuOpen ? 'text-amber-300 font-bold' : 'text-stone-400 hover:text-stone-200'
+            )}
+          >
+            {isMobileMenuOpen ? <X className="w-4 h-4 mb-0.5" /> : <Menu className="w-4 h-4 mb-0.5" />}
+            <span className="text-[10px] font-serif">{isMobileMenuOpen ? 'Tutup' : 'Menu'}</span>
+          </button>
+        </div>
       </nav>
     </>
   );

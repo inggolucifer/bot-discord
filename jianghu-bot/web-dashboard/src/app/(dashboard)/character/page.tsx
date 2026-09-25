@@ -139,7 +139,7 @@ function CharacterPageContent() {
   const maxManualSlots = 5 + Math.floor((profile.kungfuSkills?.core || 0) / 5);
 
   return (
-    <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
+    <div className="p-3 sm:p-6 md:p-8 max-w-7xl mx-auto w-full overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#c5a880] flex items-center gap-3">
           <span className="bg-[#c5a880]/10 p-2 rounded-lg border border-[#c5a880]/30">
@@ -316,7 +316,7 @@ function CharacterPageContent() {
                                          )}
                                       </div>
                                    </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+                                   <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0 ml-2">
                                      <button
                                         disabled={!kungfuCheck.allowed || equipMutation.isPending || unequipMutation.isPending}
                                         className={`${kungfuCheck.allowed ? 'bg-gradient-to-r from-[#c5a880] to-[#b0926b] text-black hover:from-[#d8c09d] hover:to-[#c5a880] shadow-[0_0_10px_rgba(197,168,128,0.2)]' : 'bg-red-950 text-red-300/50 cursor-not-allowed border border-red-900/30'} text-xs font-bold px-4 py-2 rounded-md flex items-center gap-1.5 disabled:opacity-50 transition-all`}
