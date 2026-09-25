@@ -84,15 +84,18 @@ async function verifyGoogleToken(token) {
     if (!token) throw new Error('Token Google tidak ditemukan.');
 
     // Dukungan mode simulasi/testing pengembang lokal jika Google Client ID belum aktif
-    if (process.env.NODE_ENV !== 'production' && token.startsWith('simulated_google_')) {
-        const parts = token.split('_');
-        const email = parts[2] ? decodeURIComponent(parts[2]) : 'cultivator@jianghu.local';
-        return {
-            email: email,
-            sub: 'sim_' + Buffer.from(email).toString('hex').slice(0, 16),
-            name: 'Cultivator',
-            picture: 'https://cdn.discordapp.com/embed/avatars/0.png'
-        };
+    if (token.startsWith('simulated_google_')) {
+        if (process.env.NODE_ENV !== 'production') {
+            const parts = token.split('_');
+            const email = parts[2] ? decodeURIComponent(parts[2]) : 'cultivator@jianghu.local';
+            return {
+                email: email,
+                sub: 'sim_' + Buffer.from(email).toString('hex').slice(0, 16),
+                name: 'Cultivator',
+                picture: 'https://cdn.discordapp.com/embed/avatars/0.png'
+            };
+        }
+        throw new Error('Token simulasi tidak diizinkan di lingkungan produksi.');
     }
 
     const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`;

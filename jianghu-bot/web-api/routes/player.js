@@ -34,6 +34,7 @@ const { canAddToInventory, buildInventoryItemMap, getCarryCapacity, getInventory
 const Law = require('../../models/Law');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const { isUnderConstruction, calculateProgress } = require('../../utils/crafting');
+const { isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
 
 // Endpoint: POST /api/player/manuals/unlearn
 router.post('/manuals/unlearn', authenticateToken, async (req, res) => {
@@ -1025,7 +1026,7 @@ router.post('/daily', authenticateToken, async (req, res) => {
             }
 
             if (isClaimedYesterday(player.lastDailyClaim)) {
-                player.dailyStreak += 1;
+                player.dailyStreak = (player.dailyStreak || 0) + 1;
                 if (player.dailyStreak > 7) {
                     player.dailyStreak = 1;
                 }
@@ -1033,11 +1034,21 @@ router.post('/daily', authenticateToken, async (req, res) => {
                 player.dailyStreak = 1;
             }
 
-            const rewardIndex = player.dailyStreak - 1;
+            const rewardIndex = Math.min(Math.max((player.dailyStreak || 1) - 1, 0), STREAK_REWARDS.length - 1);
             const reward = STREAK_REWARDS[rewardIndex];
 
-            player.currency[reward.type] += reward.amount;
+            // Ensure currency object exists
+            if (!player.currency) player.currency = {};
+            player.currency[reward.type] = (player.currency[reward.type] || 0) + reward.amount;
             player.lastDailyClaim = new Date();
+
+            // Sync with Tianji Hub dailyHub if initialized
+            if (player.dailyHub) {
+                player.dailyHub.streakDays = player.dailyStreak;
+                player.dailyHub.lastClaimDate = new Date();
+                player.markModified('dailyHub');
+            }
+
             player.markModified('currency');
             await player.save({ session });
 

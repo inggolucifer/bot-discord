@@ -26,6 +26,7 @@ const LockManager = require('../utils/lockManager');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
 const { z } = require('zod');
+const { isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
 
 const {
   LAW_DEFINITIONS,
@@ -490,17 +491,10 @@ router.post('/daily-claim', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: result.message });
     }
 
-    // Update login streak (disinkronkan dari sistem existing)
-    const today = new Date().toISOString().slice(0, 10);
-    const lastStreak = player.lastDailyClaim
-      ? new Date(player.lastDailyClaim).toISOString().slice(0, 10)
-      : null;
-
-    // Cek apakah kemarin login (untuk streak continuity)
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-    if (lastStreak === yesterday) {
+    // Update login streak (disinkronkan dari sistem existing WIB)
+    if (isClaimedYesterday(player.lastDailyClaim)) {
       player.dailyStreak = Math.min((player.dailyStreak || 0) + 1, 7);
-    } else if (lastStreak !== today) {
+    } else if (!isClaimedToday(player.lastDailyClaim)) {
       player.dailyStreak = 1; // Reset streak jika bolos
     }
 

@@ -12,6 +12,8 @@
  * Referensi: implementation_plan.md §2, §3, §5, §10, §11.3
  */
 
+const { isClaimedToday, isClaimedYesterday } = require('./dailyClaim');
+
 // ═══════════════════════════════════════════════════════════════
 // KONSTANTA & KONFIGURASI
 // ═══════════════════════════════════════════════════════════════
@@ -545,8 +547,8 @@ function checkAndResetDailyCap(player) {
   const lastReset = law.dailyData.lastDailyResetAt ? new Date(law.dailyData.lastDailyResetAt) : new Date(0);
   const now = new Date();
 
-  // Reset jika hari berbeda (berdasarkan UTC date)
-  if (lastReset.toISOString().slice(0, 10) !== now.toISOString().slice(0, 10)) {
+  // Reset jika hari berbeda (berdasarkan WIB date 00:00 reset)
+  if (!isClaimedToday(lastReset)) {
     law.dailyData.channelMinutesToday = 0;
     law.dailyData.lastDailyResetAt = now;
     law.dailyData.dailyMissionsCompleted = 0;
@@ -570,13 +572,8 @@ function claimDailyEpiphany(player) {
 
   checkAndResetDailyCap(player);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const lastClaim = law.dailyData.lastEpiphanyClaimAt
-    ? new Date(law.dailyData.lastEpiphanyClaimAt).toISOString().slice(0, 10)
-    : null;
-
-  if (lastClaim === today) {
-    return { success: false, message: 'Pencerahan harian sudah diklaim hari ini.' };
+  if (isClaimedToday(law.dailyData.lastEpiphanyClaimAt)) {
+    return { success: false, message: 'Pencerahan harian sudah diklaim hari ini. Reset pada jam 00:00 WIB.' };
   }
 
   // +10% Qi instan
@@ -654,11 +651,7 @@ function getLawStatus(player) {
   const qiPercent = law.maxQi > 0 ? Math.min(100, Math.floor((law.qi / law.maxQi) * 100)) : 0;
   const channelRate = getChannelQiRate(law.rank);
 
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const lastEpiphanyStr = law.dailyData?.lastEpiphanyClaimAt
-    ? new Date(law.dailyData.lastEpiphanyClaimAt).toISOString().slice(0, 10)
-    : null;
-  const canClaimEpiphany = lastEpiphanyStr !== todayStr;
+  const canClaimEpiphany = !isClaimedToday(law.dailyData?.lastEpiphanyClaimAt);
 
   const charLevelCap = getLevelCap(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)', law.lawLevelCapBonus || 0);
 
