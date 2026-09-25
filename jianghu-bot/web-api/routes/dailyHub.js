@@ -16,6 +16,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const { authenticateToken } = require('../middlewares/auth');
 const CustomError = require('../utils/CustomError');
+const { getWibParts, isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
 
 async function resolvePlayer(req) {
   const userId = req.user.userId;
@@ -27,11 +28,11 @@ async function resolvePlayer(req) {
 }
 
 function getTodayString() {
-  return new Date().toISOString().slice(0, 10);
+  return getWibParts(new Date()).key;
 }
 
 function getYesterdayString() {
-  return new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  return getWibParts(new Date(Date.now() - 86400000)).key;
 }
 
 function getCurrentWeekString() {
@@ -112,9 +113,9 @@ router.get('/status', authenticateToken, async (req, res) => {
     const hub = player.dailyHub;
     const missionsState = hub.missions;
 
-    const streakDays = hub.streakDays || 0;
-    const canClaimStreak = hub.lastClaimDate !== todayStr;
-    const canClaimEpiphany = hub.epiphanyClaimedDate !== todayStr;
+    const streakDays = hub.streakDays || player.dailyStreak || 0;
+    const canClaimStreak = !isClaimedToday(player.lastDailyClaim || hub.lastClaimDate);
+    const canClaimEpiphany = !isClaimedToday(hub.epiphanyClaimedDate);
 
     const missions = [
       {
@@ -188,19 +189,21 @@ router.post('/claim-streak', authenticateToken, async (req, res) => {
     ensureDailyHubInitialized(player);
 
     const todayStr = getTodayString();
-    const yesterdayStr = getYesterdayString();
+    const lastClaim = player.lastDailyClaim || player.dailyHub.lastClaimDate;
 
-    if (player.dailyHub.lastClaimDate === todayStr) {
-      return res.status(400).json({ error: 'Hadiah login streak hari ini sudah kamu klaim.' });
+    if (isClaimedToday(lastClaim)) {
+      return res.status(400).json({ error: 'Hadiah login streak hari ini sudah kamu klaim. Reset pada jam 00:00 WIB.' });
     }
 
     let nextStreak = 1;
-    if (player.dailyHub.lastClaimDate === yesterdayStr) {
-      nextStreak = ((player.dailyHub.streakDays || 0) % 7) + 1;
+    if (isClaimedYesterday(lastClaim)) {
+      nextStreak = ((player.dailyStreak || player.dailyHub.streakDays || 0) % 7) + 1;
     } else {
       nextStreak = 1;
     }
 
+    player.dailyStreak = nextStreak;
+    player.lastDailyClaim = new Date();
     player.dailyHub.streakDays = nextStreak;
     player.dailyHub.lastClaimDate = todayStr;
 
@@ -242,12 +245,11 @@ router.post('/claim-epiphany', authenticateToken, async (req, res) => {
     const player = await resolvePlayer(req);
     ensureDailyHubInitialized(player);
 
-    const todayStr = getTodayString();
-    if (player.dailyHub.epiphanyClaimedDate === todayStr) {
-      return res.status(400).json({ error: 'Pencerahan harian sudah diklaim hari ini.' });
+    if (isClaimedToday(player.dailyHub.epiphanyClaimedDate)) {
+      return res.status(400).json({ error: 'Pencerahan harian sudah diklaim hari ini. Reset pada jam 00:00 WIB.' });
     }
 
-    player.dailyHub.epiphanyClaimedDate = todayStr;
+    player.dailyHub.epiphanyClaimedDate = new Date();
 
     // +30 Copper
     player.currency.copper = (player.currency.copper || 0) + 30;
