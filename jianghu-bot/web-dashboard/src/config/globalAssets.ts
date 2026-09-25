@@ -592,9 +592,14 @@ export const GLOBAL_ASSETS = {
   // =========================================================================
   world_bosses: {
     boss_flame_kirin: "",             // Raja Qilin Api Purba (Sabtu World Boss)
+    boss_ancient_dragon: "",          // Naga Azure Langit Kuno
     boss_abyssal_leviathan: "",       // Naga Raksasa Palung Samudra Utara
+    boss_abyssal_behemoth: "",        // Raksasa Palung Nether
     boss_nether_dragon: "",           // Naga Iblis Sembilan Jurang Gelap
     boss_primordial_titan: "",        // Golem Titan Pengguncang Benua
+    boss_thunder_roc: "",             // Burung Roc Petir Emas
+    boss_nine_tailed_fox: "",         // Rubah Ekor Sembilan Surgawi
+    default_boss: "",                 // Artwork bos default jika ID belum diisi spesifik
   },
 
   // =========================================================================
@@ -664,8 +669,9 @@ export const GLOBAL_ASSETS = {
     }
   },
 
+
   // =========================================================================
-  // 14. EMOJI FALLBACK
+  // 15. EMOJI FALLBACK
   // Tampilan cadangan otomatis jika URL di atas belum diisi
   // =========================================================================
   emoji: {

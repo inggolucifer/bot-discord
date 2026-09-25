@@ -224,13 +224,17 @@ class InteractiveBattleService {
     const { getComputedStats } = require('../utils/statCalculator');
     const computedStats = getComputedStats(player, player.laws || [], player.manuals || []);
     const maxHp = computedStats.maxHp || player.stats?.maxHp || player.stats?.baseHp || 100;
-    const currentHp = (player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp))
-      ? player.currentHp
-      : maxHp;
+
+    // SPIRITUAL PROJECTION / ARENA SPARRING CHECK:
+    // Jika pertempuran adalah world_boss atau sect_arena, pemain bertarung dengan Proyeksi Sukma 100% Max HP & Qi Optimal
+    const isProjection = !!options.isProjection || options.eventContext === 'world_boss' || options.eventContext === 'sect_arena';
+    const currentHp = isProjection
+      ? maxHp
+      : ((player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp)) ? player.currentHp : maxHp);
     const maxQi = player.maxQi || 100;
-    const currentQi = (player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0)
-      ? player.currentQi
-      : 30; // Qi awal pertarungan
+    const currentQi = isProjection
+      ? Math.max(50, Math.floor(maxQi * 0.5))
+      : ((player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0) ? player.currentQi : 30); // Qi awal pertarungan
 
     // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
     let lawSkillsFormatted = [];
@@ -278,6 +282,7 @@ class InteractiveBattleService {
       tierSize: 'small',
       isAlly: false,
       allyType: null,
+      isProjection: isProjection,
       hp: currentHp,
       maxHp: maxHp,
       qi: currentQi,
@@ -429,8 +434,15 @@ class InteractiveBattleService {
         maxActiveEnemies: maxActive,
         isBossMode: !!options.isBossMode,
         eventContext: options.eventContext || null,
+        isProjection: isProjection,
         tileKey: options.tileKey || null,
-        zoneId
+        zoneId,
+        initialPlayerHp: options.initialPlayerHp !== undefined ? options.initialPlayerHp : player.currentHp,
+        initialPlayerVitality: options.initialPlayerVitality !== undefined ? options.initialPlayerVitality : (player.extendedStats?.vitality ?? player.vitality ?? 100),
+        totalBossDamageDealt: 0,
+        targetDiscordId: options.targetDiscordId || null,
+        targetRank: options.targetRank || null,
+        challengerRank: options.challengerRank || null
       },
       turnQueue: [playerEntity.entityId], // Giliran pertama selalu pemain
       currentTick: 1,
@@ -438,7 +450,11 @@ class InteractiveBattleService {
         tick: 0,
         actor: 'System',
         action: 'start',
-        message: `⚔️ Pertempuran dimulai! Menghadapi ${activeEnemies.map(e => e.name).join(', ')}${enemyQueue.length > 0 ? ` (+${enemyQueue.length} musuh cadangan dalam bayangan)` : ''}!`
+        message: isProjection
+          ? (options.eventContext === 'sect_arena'
+              ? `🛡️ [FORMASI PELINDUNG TETUA AKTIF] Duel Sparring Dimulai! Bertarung melawan ${activeEnemies.map(e => e.name).join(', ')}. HP & Vitalitas dunia nyata terlindungi 100%!`
+              : `🌌 [PROYEKSI SUKMA PURBA] Penyerbuan Dimulai! Menyerang ${activeEnemies.map(e => e.name).join(', ')}. Raga fana dan vitalitas aman tanpa risiko cidera!`)
+          : `⚔️ Pertempuran dimulai! Menghadapi ${activeEnemies.map(e => e.name).join(', ')}${enemyQueue.length > 0 ? ` (+${enemyQueue.length} musuh cadangan dalam bayangan)` : ''}!`
       }]
     });
 
@@ -719,6 +735,10 @@ class InteractiveBattleService {
               target.isDead = true;
             }
 
+            if (session.battleConfig && session.battleConfig.eventContext === 'world_boss') {
+              session.battleConfig.totalBossDamageDealt = (session.battleConfig.totalBossDamageDealt || 0) + damage;
+            }
+
             // Resonansi Elemen (Skill Air padamkan Burn, Skill Api cairkan Frozen)
             const elemEvents = processElementalInteractions(session.player, skill, target);
             elemEvents.forEach(ev => {
@@ -801,6 +821,9 @@ class InteractiveBattleService {
 
         const allyDmg = Math.max(1, Math.floor((ally.attack * 1.2) / ((target.defense || 5) / 10 + 1)));
         target.hp = Math.max(0, target.hp - allyDmg);
+        if (session.battleConfig && session.battleConfig.eventContext === 'world_boss') {
+          session.battleConfig.totalBossDamageDealt = (session.battleConfig.totalBossDamageDealt || 0) + allyDmg;
+        }
         if (target.hp <= 0) {
           target.hp = 0;
           target.isDead = true;
@@ -848,11 +871,40 @@ class InteractiveBattleService {
         continue;
       }
 
-      // Pilih jurus musuh
-      const availableSkills = (enemy.skills || []).filter(s => (s.currentCooldown || 0) <= 0);
-      const eSkill = availableSkills.find(s => s.skillId !== 'basic_attack' && Math.random() < 0.4)
-        || availableSkills[0]
-        || { skillId: 'basic_attack', name: 'Serangan Liar', power: 12 };
+      // Pilih jurus musuh (Smart Cultivator AI untuk Arena dan Player Entities)
+      let eSkill;
+      if (session.battleConfig?.eventContext === 'sect_arena' || enemy.entityType === 'player') {
+        const availableSkills = (enemy.skills || []).filter(s => {
+          const onCd = (s.currentCooldown || 0) > 0;
+          const hasQi = (s.qiCost !== undefined && s.qiCost > 0) ? (enemy.qi || 0) >= s.qiCost : true;
+          return !onCd && hasQi;
+        });
+
+        const healSkill = availableSkills.find(s => s.type === 'heal');
+        if ((enemy.hp / (enemy.maxHp || 100)) < 0.35 && healSkill) {
+          eSkill = healSkill;
+        } else {
+          const atkSkills = availableSkills.filter(s => s.type === 'attack');
+          if (atkSkills.length > 0) {
+            atkSkills.sort((a, b) => (b.power || 0) - (a.power || 0));
+            eSkill = atkSkills[0];
+          } else {
+            eSkill = availableSkills[0] || { skillId: 'basic_attack', name: 'Tinju Tangan Kosong', power: 15 };
+          }
+        }
+
+        if (eSkill.qiCost && eSkill.qiCost > 0) {
+          enemy.qi = Math.max(0, (enemy.qi || 0) - eSkill.qiCost);
+        }
+        if (eSkill.qiRegen && eSkill.qiRegen > 0) {
+          enemy.qi = Math.min(enemy.maxQi || 100, (enemy.qi || 0) + eSkill.qiRegen);
+        }
+      } else {
+        const availableSkills = (enemy.skills || []).filter(s => (s.currentCooldown || 0) <= 0);
+        eSkill = availableSkills.find(s => s.skillId !== 'basic_attack' && Math.random() < 0.4)
+          || availableSkills[0]
+          || { skillId: 'basic_attack', name: 'Serangan Liar', power: 12 };
+      }
 
       let eDamage = Math.max(1, Math.floor((enemy.attack * (eSkill.power / 10)) / (session.player.defense / 10 + 1)));
       if (hasDefendBuff) {
@@ -926,6 +978,18 @@ class InteractiveBattleService {
     session.player.stance = Math.min(session.player.maxStance, session.player.stance + 10);
 
     session.currentTick += 1;
+    if (session.battleConfig?.eventContext === 'world_boss' && session.currentTick >= 15 && !session.player.isDead) {
+      session.status = 'fled';
+      session.logs.push({
+        tick: session.currentTick,
+        actor: 'System',
+        action: 'end',
+        message: `⏰ [Batas 15 Ronde] Hawa panas lahar Raja Siluman Purba menghempaskanmu ke luar kawah! Total Damage yang kamu berikan: ${(session.battleConfig.totalBossDamageDealt || 0).toLocaleString()} DMG!`
+      });
+      session.turnQueue = [];
+      await session.save();
+      return session;
+    }
     session.player.atb = 1000;
     session.turnQueue = [session.player.entityId]; // Siap untuk aksi selanjutnya
 

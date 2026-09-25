@@ -460,6 +460,36 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                     </div>
                 )}
 
+                {/* SPIRITUAL PROJECTION / PROTECTED SPARRING STATUS BANNER */}
+                {(session.battleConfig?.eventContext === 'sect_arena' || session.battleConfig?.eventContext === 'world_boss' || session.battleConfig?.isProjection) && (
+                    <div className={`w-full max-w-2xl mx-auto flex items-center justify-between px-3 py-1.5 rounded-xl border backdrop-blur-md shadow-md transition-all ${
+                        session.battleConfig?.eventContext === 'sect_arena'
+                            ? 'bg-blue-950/70 border-cyan-500/50 text-cyan-200'
+                            : 'bg-gradient-to-r from-purple-950/80 to-amber-950/70 border-amber-500/60 text-amber-200'
+                    }`}>
+                        <div className="flex items-center gap-2">
+                            <span className="text-base animate-pulse">
+                                {session.battleConfig?.eventContext === 'sect_arena' ? '🛡️' : '🌌'}
+                            </span>
+                            <div className="flex flex-col">
+                                <span className="font-serif font-black text-xs sm:text-sm tracking-wide">
+                                    {session.battleConfig?.eventContext === 'sect_arena'
+                                        ? 'FORMASI PELINDUNG TETUA AKTIF (SPARRING SPIRITUAL)'
+                                        : 'PENYERBUAN PROYEKSI SUKMA QI (ASTRAL PHANTOM)'}
+                                </span>
+                                <span className="text-[10px] text-gray-300">
+                                    {session.battleConfig?.eventContext === 'sect_arena'
+                                        ? 'Pertarungan proyeksi bayangan • HP & Vitalitas raga di dunia nyata 100% terlindungi tanpa resiko luka fisik!'
+                                        : 'Kesadaran spiritual menyerbu kawah purba • Dantian dan vitalitas raga fana aman tanpa penalti kematian!'}
+                                </span>
+                            </div>
+                        </div>
+                        <span className="hidden sm:inline-block text-[9px] font-mono px-2 py-0.5 rounded-full border bg-black/40 font-bold shrink-0">
+                            🛡️ 100% Aman Fisik
+                        </span>
+                    </div>
+                )}
+
                 {/* 4. PLAYER BATTLER SECTION */}
                 <div className="w-full max-w-2xl mx-auto bg-[#0a0e1a]/95 border border-blue-900/60 rounded-2xl p-3 backdrop-blur-md shadow-2xl flex items-center gap-3">
                     {/* Cultivator Avatar */}
@@ -499,7 +529,10 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                             {/* HP Bar */}
                             <div>
                                 <div className="flex justify-between text-[9px] text-gray-400 mb-0.2 font-mono">
-                                    <span className="text-emerald-400 font-bold">HP</span>
+                                    <span className="text-emerald-400 font-bold">
+                                        {session.battleConfig?.eventContext === 'sect_arena' ? 'HP Proyeksi' :
+                                         session.battleConfig?.eventContext === 'world_boss' ? 'HP Sukma' : 'HP'}
+                                    </span>
                                     <span>{player?.hp}/{player?.maxHp}</span>
                                 </div>
                                 <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-emerald-950">
@@ -752,10 +785,14 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                         <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#141b2d] to-[#0a0f1d] border-2 border-amber-500/80 p-5 sm:p-6 rounded-2xl shadow-[0_0_60px_rgba(245,158,11,0.3)]">
                             <Trophy className="w-14 h-14 sm:w-16 sm:h-16 text-amber-400 mb-2 animate-bounce" />
                             <h2 className="font-serif font-black text-xl sm:text-2xl text-amber-300 tracking-wider mb-1">
-                                KEMENANGAN TELAH DIRAIH!
+                                {session.battleConfig?.eventContext === 'sect_arena'
+                                    ? `KEMENANGAN ARENA! REBUT PERINGKAT #${session.battleConfig.targetRank}`
+                                    : 'KEMENANGAN TELAH DIRAIH!'}
                             </h2>
                             <p className="text-xs text-gray-300 mb-4">
-                                Seluruh musuh berhasil ditundukkan. Dantianmu menyerap intisari pengalaman bertarung.
+                                {session.battleConfig?.eventContext === 'sect_arena'
+                                    ? `Kamu berhasil menaklukkan lawan dan merebut peringkat #${session.battleConfig.targetRank}! Seluruh pendekar di antaranya tergeser turun 1 tingkat.`
+                                    : 'Seluruh musuh berhasil ditundukkan. Dantianmu menyerap intisari pengalaman bertarung.'}
                             </p>
 
                             {/* Rewards Plate */}
@@ -812,49 +849,108 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                 </div>
                             )}
 
+                            {session.battleConfig?.eventContext && (
+                                <div className="text-[11px] text-emerald-400 font-mono mb-3 bg-emerald-950/60 px-3 py-1.5 rounded-lg border border-emerald-700/60 flex items-center justify-center gap-1.5">
+                                    <span>🛡️</span>
+                                    <span>Raga Fisik & Vitalitas Aman: HP dan vitalitas overworld 100% utuh tanpa cedera!</span>
+                                </div>
+                            )}
+
                             <button
                                 onClick={() => onBattleEnd(session.status, session.rewards)}
                                 className="w-full py-3 bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-serif font-bold text-sm rounded-xl border border-amber-400 shadow-xl transition-all"
                             >
-                                ⚔️ Ambil Hadiah & Kembali ke Peta
+                                {session.battleConfig?.eventContext === 'sect_arena'
+                                    ? '🥋 Kembali ke Gelanggang Arena'
+                                    : '⚔️ Ambil Hadiah & Kembali'}
                             </button>
                         </div>
                     )}
 
-                    {/* MODAL KEKALAHAN / KEMATIAN DENGAN COUNTDOWN 4 JAM (LOST) */}
-                    {session.status === 'lost' && (
-                        <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#250d0d] to-[#100505] border-2 border-red-600/80 p-5 sm:p-6 rounded-2xl shadow-[0_0_60px_rgba(239,68,68,0.3)]">
-                            <Skull className="w-14 h-14 sm:w-16 sm:h-16 text-red-500 mb-2 animate-pulse" />
-                            <h2 className="font-serif font-black text-xl sm:text-2xl text-red-400 tracking-wider mb-1">
-                                KAMU TELAH TUMBANG!
-                            </h2>
-                            <p className="text-xs text-gray-300 mb-3">
-                                Dantianmu mengalami luka parah akibat serangan fatal lawan.
-                            </p>
-
-                            {/* 4-Hour Recovery Countdown Box */}
-                            <div className="w-full bg-black/70 border border-red-800/60 rounded-xl p-4 mb-4 flex flex-col items-center gap-2">
-                                <div className="text-[11px] text-red-300 font-serif flex items-center gap-1.5">
-                                    <Clock className="w-4 h-4 text-red-400 animate-spin" />
-                                    <span>Masa Pemulihan Dantian (4 Jam Istirahat):</span>
-                                </div>
-
-                                <div className="text-2xl sm:text-3xl font-mono font-black text-amber-300 tracking-widest bg-[#1a0808] px-4 py-2 rounded-lg border border-red-900 shadow-inner">
-                                    {formatCountdown(deathRemainingSeconds)}
-                                </div>
-
-                                <p className="text-[10px] text-gray-400 text-center leading-relaxed">
-                                    Karaktermu harus diam di tempat dan bermeditasi untuk memulihkan meridian yang retak sebelum dapat kembali bertarung di dunia Jianghu.
+                    {/* MODAL KEKALAHAN / SELESAI / FLED */}
+                    {(session.status === 'lost' || session.status === 'fled') && (
+                        session.battleConfig?.eventContext === 'world_boss' ? (
+                            <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#250d0d] to-[#100505] border-2 border-amber-600/80 p-5 sm:p-6 rounded-2xl shadow-[0_0_60px_rgba(245,158,11,0.3)]">
+                                <Flame className="w-14 h-14 text-amber-400 mb-2 animate-bounce" />
+                                <h2 className="font-serif font-black text-xl sm:text-2xl text-amber-300 tracking-wider mb-1">
+                                    PERTEMPURAN BOS DUNIA SELESAI!
+                                </h2>
+                                <p className="text-xs text-gray-300 mb-3">
+                                    Serangan sukma Qi berhasil mendarat dan mengikis darah Raja Siluman Purba.
                                 </p>
+                                <div className="w-full bg-black/70 border border-amber-800/60 rounded-xl p-4 mb-4 flex flex-col items-center gap-1.5 font-mono">
+                                    <span className="text-[10px] text-gray-400">Total Damage yang Kamu Hasilkan:</span>
+                                    <div className="text-2xl font-bold text-red-400">
+                                        {(session.battleConfig.totalBossDamageDealt || 0).toLocaleString()} DMG
+                                    </div>
+                                    <div className="text-[10px] text-emerald-400 mt-2 bg-emerald-950/70 px-3 py-1 rounded-full border border-emerald-700/60 flex items-center gap-1">
+                                        <span>🛡️</span>
+                                        <span>Proyeksi Sukma Selesai: HP & Vitalitas Dunia Nyata 100% Utuh & Aman!</span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => onBattleEnd(session.status)}
+                                    className="w-full py-3 bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-white font-serif font-bold text-sm rounded-xl border border-amber-400 shadow-xl transition-all"
+                                >
+                                    🐉 Kembali ke Balai Bos Dunia
+                                </button>
                             </div>
+                        ) : session.battleConfig?.eventContext === 'sect_arena' ? (
+                            <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#1a1c29] to-[#0c0e17] border-2 border-stone-600/80 p-5 sm:p-6 rounded-2xl shadow-xl">
+                                <Shield className="w-14 h-14 text-stone-400 mb-2" />
+                                <h2 className="font-serif font-black text-xl sm:text-2xl text-stone-200 tracking-wider mb-1">
+                                    SPARRING ARENA SELESAI
+                                </h2>
+                                <p className="text-xs text-gray-300 mb-3">
+                                    Kamu diimbangi oleh lawan pada peringkat #{session.battleConfig.targetRank}. Peringkatmu tetap bertahan di posisi aman.
+                                </p>
+                                <div className="w-full bg-black/70 border border-stone-800 rounded-xl p-3 mb-4 text-center font-mono">
+                                    <div className="text-[10px] text-emerald-400 bg-emerald-950/70 py-1.5 px-2 rounded-lg border border-emerald-700/60 flex items-center justify-center gap-1">
+                                        <span>🛡️</span>
+                                        <span>Formasi Pelindung Tetua Aktif: HP & Vitalitas Raga 100% Aman Bebas Luka Batin!</span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => onBattleEnd(session.status)}
+                                    className="w-full py-3 bg-gradient-to-r from-stone-800 to-stone-700 hover:from-stone-700 text-white font-serif font-bold text-sm rounded-xl border border-stone-500 shadow-xl transition-all"
+                                >
+                                    🥋 Kembali ke Gelanggang Arena
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center max-w-md w-full bg-gradient-to-b from-[#250d0d] to-[#100505] border-2 border-red-600/80 p-5 sm:p-6 rounded-2xl shadow-[0_0_60px_rgba(239,68,68,0.3)]">
+                                <Skull className="w-14 h-14 sm:w-16 sm:h-16 text-red-500 mb-2 animate-pulse" />
+                                <h2 className="font-serif font-black text-xl sm:text-2xl text-red-400 tracking-wider mb-1">
+                                    KAMU TELAH TUMBANG!
+                                </h2>
+                                <p className="text-xs text-gray-300 mb-3">
+                                    Dantianmu mengalami luka parah akibat serangan fatal lawan.
+                                </p>
 
-                            <button
-                                onClick={() => onBattleEnd(session.status)}
-                                className="w-full py-3 bg-gradient-to-r from-red-900 to-red-800 hover:from-red-800 hover:to-red-700 text-white font-serif font-bold text-sm rounded-xl border border-red-500 shadow-xl transition-all"
-                            >
-                                🩸 Mengakui Kekalahan & Beristirahat
-                            </button>
-                        </div>
+                                {/* 4-Hour Recovery Countdown Box */}
+                                <div className="w-full bg-black/70 border border-red-800/60 rounded-xl p-4 mb-4 flex flex-col items-center gap-2">
+                                    <div className="text-[11px] text-red-300 font-serif flex items-center gap-1.5">
+                                        <Clock className="w-4 h-4 text-red-400 animate-spin" />
+                                        <span>Masa Pemulihan Dantian (4 Jam Istirahat):</span>
+                                    </div>
+
+                                    <div className="text-2xl sm:text-3xl font-mono font-black text-amber-300 tracking-widest bg-[#1a0808] px-4 py-2 rounded-lg border border-red-900 shadow-inner">
+                                        {formatCountdown(deathRemainingSeconds)}
+                                    </div>
+
+                                    <p className="text-[10px] text-gray-400 text-center leading-relaxed">
+                                        Karaktermu harus diam di tempat dan bermeditasi untuk memulihkan meridian yang retak sebelum dapat kembali bertarung di dunia Jianghu.
+                                    </p>
+                                </div>
+
+                                <button
+                                    onClick={() => onBattleEnd(session.status)}
+                                    className="w-full py-3 bg-gradient-to-r from-red-900 to-red-800 hover:from-red-800 hover:to-red-700 text-white font-serif font-bold text-sm rounded-xl border border-red-500 shadow-xl transition-all"
+                                >
+                                    🩸 Mengakui Kekalahan & Beristirahat
+                                </button>
+                            </div>
+                        )
                     )}
 
                     {/* MODAL KABUR (FLED) */}

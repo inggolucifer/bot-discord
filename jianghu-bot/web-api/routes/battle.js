@@ -17,6 +17,8 @@ const mongoose = require('mongoose');
 const { normalizeCurrency } = require('../../utils/currencyNormalize');
 const Item = require('../../models/Item');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+const WorldBossSeason = require('../../models/WorldBossSeason');
+const ArenaLadderEntry = require('../../models/ArenaLadderEntry');
 
 
 
@@ -191,14 +193,19 @@ router.post('/start', authenticateToken, async (req, res) => {
         const computed = getComputedStats(player, player.laws || [], player.manuals || []);
         const maxHp = computed.maxHp || player.stats?.baseHp || 100;
 
+        const isSpiritualProjection = targetType === 'world_boss' || targetType === 'sect_arena';
+
         // Cek Masa Pemulihan Kematian (Death Recovery 4 Jam)
-        if (player.deathRecoveryUntil) {
+        // HANYA berlaku untuk pertarungan fisik nyata di open-world (monster liar, ambush, perkelahian terbuka).
+        // Pertarungan proyeksi spiritual (World Boss & Sect Arena) menggunakan sukma dan formasi pelindung,
+        // sehingga kultivator tetap dapat berpartisipasi tanpa terhalang kondisi raga fana.
+        if (!isSpiritualProjection && player.deathRecoveryUntil) {
             const recoveryTime = new Date(player.deathRecoveryUntil).getTime();
             if (recoveryTime > Date.now()) {
                 const remainingMs = recoveryTime - Date.now();
                 return res.status(403).json({
                     code: 'DEATH_RECOVERY',
-                    error: 'Karaktermu sedang dalam masa pemulihan setelah gugur dalam pertarungan. Dantian butuh istirahat.',
+                    error: 'Karaktermu sedang dalam masa pemulihan setelah gugur dalam pertarungan fisik di dunia Jianghu. Dantian butuh istirahat.',
                     remainingMs,
                     recoveryUntil: player.deathRecoveryUntil,
                     killedBy: player.lastKilledByMonster || 'Siluman Liar'
@@ -210,7 +217,7 @@ router.post('/start', authenticateToken, async (req, res) => {
                     player.currentHp = Math.floor(maxHp * 0.5);
                 }
                 player.markModified('kungfuSkills');
-            await player.save();
+                await player.save();
             }
         }
 
@@ -218,8 +225,8 @@ router.post('/start', authenticateToken, async (req, res) => {
         if (player.currentHp === null || player.currentHp === undefined || isNaN(player.currentHp)) {
             player.currentHp = maxHp;
             await player.save();
-        } else if (typeof player.currentHp === 'number' && player.currentHp <= 0) {
-            return res.status(400).json({ error: 'Karaktermu sedang pingsan dan butuh pemulihan sebelum bertarung.' });
+        } else if (!isSpiritualProjection && typeof player.currentHp === 'number' && player.currentHp <= 0) {
+            return res.status(400).json({ error: 'Karaktermu sedang pingsan dan butuh pemulihan sebelum bertarung di dunia nyata.' });
         }
 
         let enemies = [];
@@ -393,6 +400,149 @@ router.post('/start', authenticateToken, async (req, res) => {
                 stance: targetPlayer.stats?.stance || 100,
                 skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
             }];
+        } else if (targetType === 'world_boss') {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0 = Minggu, 6 = Sabtu
+            const isSaturday = dayOfWeek === 6;
+            if (!isSaturday && !req.body.adminOverride) {
+                return res.status(403).json({ error: 'Raja Siluman Dunia hanya bangkit pada hari Sabtu (00:00 - 23:59 WIB)!' });
+            }
+
+            const season = await WorldBossSeason.findOne({ status: 'active' }).sort({ seasonNumber: -1 });
+            if (!season) return res.status(404).json({ error: 'Tidak ada Bos Dunia aktif saat ini.' });
+            if (season.status === 'defeated') return res.status(400).json({ error: 'Bos Dunia minggu ini telah berhasil ditumbangkan!' });
+
+            const todayStr = now.toISOString().slice(0, 10);
+            const userAttempt = (season.dailyAttempts || []).find(a => a.discordId === userId && a.dateStr === todayStr);
+            const attemptsUsed = userAttempt ? userAttempt.attemptsUsed : 0;
+            if (attemptsUsed >= (season.dailyAttemptsLimit || 3)) {
+                return res.status(400).json({ error: 'Kamu telah menggunakan seluruh jatah 3 kesempatan menyerang Bos Dunia hari ini.' });
+            }
+
+            battleType = 'boss';
+            const bHp = Math.max(1000000, season.currentHp);
+            const bMaxHp = season.maxHp || 400000000;
+            const bStats = season.bossStats || { atk: 140, def: 70, spd: 25 };
+
+            enemies = [{
+                id: season.bossId || 'boss_flame_kirin',
+                entityId: season.bossId || 'boss_flame_kirin',
+                name: season.bossName || 'Raja Qilin Api Purba',
+                level: 10,
+                imageUrl: season.bossImageUrl || null,
+                element: 'fire',
+                tierSize: 'boss',
+                hp: bHp,
+                maxHp: bMaxHp,
+                attack: bStats.atk || 140,
+                defense: bStats.def || 70,
+                speed: bStats.spd || 25,
+                skills: [
+                    { skillId: 'flame_breath', name: 'Semburan Api Purba', type: 'attack', power: 25, element: 'fire', qiCost: 0, cooldown: 2, currentCooldown: 0 },
+                    { skillId: 'lava_burst', name: 'Letusan Lahar Samadhi', type: 'attack', power: 40, element: 'fire', qiCost: 0, cooldown: 4, currentCooldown: 0 },
+                    { skillId: 'kirin_roar', name: 'Auman Menggetarkan Langit', type: 'attack', power: 20, element: 'neutral', qiCost: 0, cooldown: 3, currentCooldown: 0 }
+                ]
+            }];
+
+            const session = await InteractiveBattleService.startBattle(
+                player,
+                enemies,
+                battleType,
+                'world_boss_domain',
+                allies,
+                {
+                    maxActiveEnemies: 1,
+                    isBossMode: true,
+                    eventContext: 'world_boss',
+                    isProjection: true,
+                    initialPlayerHp: player.currentHp !== undefined && player.currentHp !== null ? player.currentHp : maxHp,
+                    initialPlayerVitality: player.extendedStats?.vitality ?? player.vitality ?? 100
+                }
+            );
+
+            return res.json({ success: true, battleId: session.battleId, session });
+        } else if (targetType === 'sect_arena') {
+            const { targetRank } = req.body;
+            if (!targetRank) return res.status(400).json({ error: 'Target rank diperlukan.' });
+
+            const challengerEntry = await ArenaLadderEntry.findOne({ discordId: userId });
+            if (!challengerEntry) return res.status(404).json({ error: 'Data arena karakter belum terdaftar.' });
+
+            const todayStr = new Date().toISOString().slice(0, 10);
+            if (challengerEntry.lastChallengeDate !== todayStr) {
+                challengerEntry.dailyChallengesUsed = 0;
+                challengerEntry.lastChallengeDate = todayStr;
+                await challengerEntry.save();
+            }
+
+            if (challengerEntry.dailyChallengesUsed >= 3) {
+                return res.status(400).json({ error: 'Jatah 3 tiket tantangan harian arena telah habis hari ini.' });
+            }
+
+            const minAllowedRank = Math.max(1, challengerEntry.rank - 5);
+            const maxAllowedRank = challengerEntry.rank - 1;
+            if (challengerEntry.rank === 1) {
+                return res.status(400).json({ error: 'Kamu adalah Juara 1! Tidak ada lawan di atasmu yang bisa ditantang.' });
+            }
+            if (targetRank < minAllowedRank || targetRank > maxAllowedRank) {
+                return res.status(400).json({ error: `Kamu hanya bisa menantang peringkat antara #${minAllowedRank} hingga #${maxAllowedRank}.` });
+            }
+
+            const targetEntry = await ArenaLadderEntry.findOne({ rank: targetRank });
+            if (!targetEntry) return res.status(404).json({ error: `Pemain pada peringkat #${targetRank} tidak ditemukan.` });
+
+            const targetPlayer = await Player.findOne({ discordId: targetEntry.discordId })
+                .populate('laws')
+                .populate('manuals.manualId')
+                .populate('inventory.itemId');
+
+            if (!targetPlayer) return res.status(404).json({ error: 'Karakter lawan tidak ditemukan di database.' });
+
+            const tComputed = getComputedStats(targetPlayer, targetPlayer.laws || [], targetPlayer.manuals || []);
+            const tMaxHp = tComputed.maxHp || targetPlayer.stats?.baseHp || 100;
+            const tAtk = tComputed.atk || targetPlayer.stats?.baseAtk || 20;
+            const tDef = tComputed.def || targetPlayer.stats?.baseDef || 10;
+            const tSpd = tComputed.spd || targetPlayer.stats?.baseSpd || 10;
+
+            battleType = 'pvp';
+            enemies = [{
+                id: targetPlayer.discordId,
+                entityId: targetPlayer.discordId,
+                name: targetPlayer.name || targetPlayer.characterName || 'Pendekar Sekte',
+                level: targetPlayer.realmIndex || targetPlayer.level || 1,
+                imageUrl: targetPlayer.characterImage || null,
+                element: 'neutral',
+                tierSize: 'small',
+                hp: tMaxHp,
+                maxHp: tMaxHp,
+                attack: tAtk,
+                defense: tDef,
+                speed: tSpd,
+                qi: targetPlayer.currentQi || 50,
+                maxQi: targetPlayer.maxQi || 100,
+                stance: 100,
+                skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
+            }];
+
+            const session = await InteractiveBattleService.startBattle(
+                player,
+                enemies,
+                battleType,
+                'sect_arena_stage',
+                allies,
+                {
+                    maxActiveEnemies: 1,
+                    eventContext: 'sect_arena',
+                    isProjection: true,
+                    initialPlayerHp: player.currentHp !== undefined && player.currentHp !== null ? player.currentHp : maxHp,
+                    initialPlayerVitality: player.extendedStats?.vitality ?? player.vitality ?? 100,
+                    targetDiscordId: targetPlayer.discordId,
+                    targetRank: targetRank,
+                    challengerRank: challengerEntry.rank
+                }
+            );
+
+            return res.json({ success: true, battleId: session.battleId, session });
         } else {
             return res.status(400).json({ error: 'Tipe target tidak valid.' });
         }
@@ -486,6 +636,162 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
 
         let session = await InteractiveBattleService.executeAction(battleId, userId, actionType, skillId, targetId);
         
+        // Cek jika pertarungan khusus (World Boss atau Sect Arena) selesai
+        if (session.status !== 'ongoing' && (session.battleConfig?.eventContext === 'world_boss' || session.battleConfig?.eventContext === 'sect_arena' || session.battleConfig?.isProjection)) {
+            const player = await Player.findOne({ discordId: userId });
+            if (player) {
+                // ZERO IMPACT ON PHYSICAL BODY & VITALITY:
+                // 1. HP Fisik Asli: Pulihkan ke nilai asli sebelum masuk pertarungan proyeksi
+                if (session.battleConfig.initialPlayerHp !== undefined && session.battleConfig.initialPlayerHp !== null) {
+                    player.currentHp = session.battleConfig.initialPlayerHp;
+                }
+                // 2. Vitalitas Asli: Kembalikan utuh ke nilai awal sebelum proyeksi (Zero Vitality Loss)
+                if (session.battleConfig.initialPlayerVitality !== undefined && session.battleConfig.initialPlayerVitality !== null) {
+                    if (player.extendedStats) {
+                        player.extendedStats.vitality = session.battleConfig.initialPlayerVitality;
+                        player.markModified('extendedStats');
+                    }
+                    player.vitality = session.battleConfig.initialPlayerVitality;
+                }
+                // 3. JANGAN PERNAH kenakan sanksi 4-jam death recovery dari pertempuran proyeksi arena/world boss
+                if (player.lastKilledByMonster === session.enemies[0]?.name) {
+                    player.deathRecoveryUntil = null;
+                    player.lastKilledByMonster = null;
+                }
+
+                // Berikan reward EXP atau perak jika menang di arena sparring
+                if (session.status === 'won' && session.rewards) {
+                    if (session.rewards.exp) player.exp = (player.exp || 0) + session.rewards.exp;
+                    if (session.rewards.silver) {
+                        player.currency = normalizeCurrency(player.currency);
+                        player.currency.silver = (player.currency.silver || 0) + session.rewards.silver;
+                    }
+                }
+                await player.save();
+            }
+
+            if (session.battleConfig.eventContext === 'world_boss') {
+                const season = await WorldBossSeason.findOne({ status: 'active' }).sort({ seasonNumber: -1 });
+                if (season) {
+                    const totalDmg = Math.max(1000, session.battleConfig.totalBossDamageDealt || 0);
+                    season.currentHp = Math.max(0, season.currentHp - totalDmg);
+                    if (season.currentHp === 0) season.status = 'defeated';
+
+                    const hpRatio = season.currentHp / (season.maxHp || 400000000);
+                    if (hpRatio <= 0.25) season.phase = 3;
+                    else if (hpRatio <= 0.60) season.phase = 2;
+                    else season.phase = 1;
+
+                    let contrib = season.contributions.find(c => c.discordId === userId);
+                    if (contrib) {
+                        contrib.damage += totalDmg;
+                        contrib.attackCount += 1;
+                        contrib.lastAttackedAt = new Date();
+                    } else {
+                        season.contributions.push({
+                            discordId: userId,
+                            characterName: player?.name || player?.characterName || 'Pendekar Fana',
+                            sect: player?.sect || 'Pengelana Bebas',
+                            damage: totalDmg,
+                            attackCount: 1,
+                            lastAttackedAt: new Date()
+                        });
+                    }
+
+                    const todayStr = new Date().toISOString().slice(0, 10);
+                    if (!season.dailyAttempts) season.dailyAttempts = [];
+                    let att = season.dailyAttempts.find(a => a.discordId === userId && a.dateStr === todayStr);
+                    if (att) {
+                        att.attemptsUsed += 1;
+                    } else {
+                        season.dailyAttempts.push({ discordId: userId, dateStr: todayStr, attemptsUsed: 1 });
+                    }
+
+                    season.markModified('contributions');
+                    season.markModified('dailyAttempts');
+                    await season.save();
+                }
+            } else if (session.battleConfig.eventContext === 'sect_arena') {
+                const challengerEntry = await ArenaLadderEntry.findOne({ discordId: userId });
+                if (challengerEntry) {
+                    const todayStr = new Date().toISOString().slice(0, 10);
+                    if (challengerEntry.lastChallengeDate !== todayStr) {
+                        challengerEntry.dailyChallengesUsed = 0;
+                        challengerEntry.lastChallengeDate = todayStr;
+                    }
+                    challengerEntry.dailyChallengesUsed += 1;
+
+                    const targetRank = session.battleConfig.targetRank;
+                    const challengerRank = challengerEntry.rank;
+                    const targetDiscordId = session.battleConfig.targetDiscordId;
+                    const targetEntry = await ArenaLadderEntry.findOne({ discordId: targetDiscordId });
+
+                    if (session.status === 'won' && targetRank && targetRank < challengerRank) {
+                        // Cascade Shift Ladder Swap:
+                        challengerEntry.rank = 0;
+                        await challengerEntry.save();
+
+                        await ArenaLadderEntry.updateMany(
+                            { rank: { $gte: targetRank, $lt: challengerRank } },
+                            { $inc: { rank: 1 } }
+                        );
+
+                        challengerEntry.rank = targetRank;
+                        if (targetRank < (challengerEntry.peakRank || 9999)) {
+                            challengerEntry.peakRank = targetRank;
+                        }
+                        challengerEntry.wins = (challengerEntry.wins || 0) + 1;
+
+                        challengerEntry.matchHistory.unshift({
+                            opponentDiscordId: targetDiscordId,
+                            opponentName: targetEntry?.characterName || 'Rival Jianghu',
+                            opponentRank: targetRank,
+                            isAttacker: true,
+                            outcome: 'win',
+                            rankBefore: challengerRank,
+                            rankAfter: targetRank,
+                            timestamp: new Date()
+                        });
+
+                        if (targetEntry) {
+                            targetEntry.losses = (targetEntry.losses || 0) + 1;
+                            targetEntry.matchHistory.unshift({
+                                opponentDiscordId: userId,
+                                opponentName: challengerEntry.characterName,
+                                opponentRank: challengerRank,
+                                isAttacker: false,
+                                outcome: 'loss',
+                                rankBefore: targetRank,
+                                rankAfter: targetRank + 1,
+                                timestamp: new Date()
+                            });
+                            if (targetEntry.matchHistory.length > 20) targetEntry.matchHistory = targetEntry.matchHistory.slice(0, 20);
+                            await targetEntry.save();
+                        }
+                    } else {
+                        challengerEntry.losses = (challengerEntry.losses || 0) + 1;
+                        challengerEntry.matchHistory.unshift({
+                            opponentDiscordId: targetDiscordId,
+                            opponentName: targetEntry?.characterName || 'Rival Jianghu',
+                            opponentRank: targetRank,
+                            isAttacker: true,
+                            outcome: 'loss',
+                            rankBefore: challengerRank,
+                            rankAfter: challengerRank,
+                            timestamp: new Date()
+                        });
+                    }
+
+                    if (challengerEntry.matchHistory.length > 20) {
+                        challengerEntry.matchHistory = challengerEntry.matchHistory.slice(0, 20);
+                    }
+                    await challengerEntry.save();
+                }
+            }
+
+            return res.json({ success: true, session });
+        }
+
         // Cek jika status menjadi won atau lost, bagikan reward
         if (session.status === 'won') {
              const player = await Player.findOne({ discordId: userId });

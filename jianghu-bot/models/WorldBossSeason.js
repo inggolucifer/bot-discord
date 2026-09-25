@@ -10,6 +10,34 @@ const worldBossSeasonSchema = new mongoose.Schema({
   status: { type: String, enum: ['scheduled', 'active', 'defeated', 'concluded'], default: 'active' },
   windowStart: { type: Date, required: true },
   windowEnd: { type: Date, required: true },
+  dailyAttemptsLimit: { type: Number, default: 3 },
+  dailyAttempts: [{
+    discordId: { type: String, required: true },
+    dateStr: { type: String, required: true },
+    attemptsUsed: { type: Number, default: 0 }
+  }],
+  bossImageUrl: { type: String, default: null },
+  bossStats: {
+    hp: { type: Number, default: 400000000 },
+    atk: { type: Number, default: 120 },
+    def: { type: Number, default: 60 },
+    spd: { type: Number, default: 25 }
+  },
+  rewardTiers: [{
+    tierId: { type: String, required: true },
+    label: { type: String, required: true },
+    minRank: { type: Number, required: true },
+    maxRank: { type: Number, required: true },
+    silver: { type: Number, default: 0 },
+    gold: { type: Number, default: 0 },
+    spiritStones: { type: Number, default: 0 },
+    exp: { type: Number, default: 0 },
+    items: [{
+      itemId: String,
+      name: String,
+      quantity: Number
+    }]
+  }],
   contributions: [{
     discordId: { type: String, required: true, index: true },
     characterName: { type: String, required: true },
