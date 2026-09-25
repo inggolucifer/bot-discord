@@ -163,7 +163,7 @@ export default function AuthPortalModal({ onSuccess }: AuthPortalModalProps) {
   useEffect(() => {
     const googleClientId =
       process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
-      'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+      '794903681615-tl9r1c44lj9arab1o8rbqo8qtjval55o.apps.googleusercontent.com';
 
     const handleGoogleResponse = async (response: any) => {
       if (!response.credential) return;
