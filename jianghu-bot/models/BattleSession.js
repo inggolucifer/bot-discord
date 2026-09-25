@@ -102,9 +102,16 @@ const battleSessionSchema = new mongoose.Schema({
   battleConfig: {
     maxActiveEnemies: { type: Number, default: 4 },
     isBossMode: { type: Boolean, default: false },
-    eventContext: { type: String, default: null },
+    eventContext: { type: String, default: null }, // 'world_boss', 'sect_arena', etc.
+    isProjection: { type: Boolean, default: false }, // Spiritual projection / Sparring array mode (Zero HP/vitality loss to real body)
     tileKey: { type: String, default: null },
-    zoneId: { type: String, default: null }
+    zoneId: { type: String, default: null },
+    initialPlayerHp: { type: Number, default: null },
+    initialPlayerVitality: { type: Number, default: null },
+    totalBossDamageDealt: { type: Number, default: 0 },
+    targetDiscordId: { type: String, default: null },
+    targetRank: { type: Number, default: null },
+    challengerRank: { type: Number, default: null }
   },
 
   // Turn/Tick Management
