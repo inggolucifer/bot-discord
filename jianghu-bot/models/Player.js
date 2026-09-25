@@ -315,9 +315,11 @@ const playerSchema = new mongoose.Schema({
   discordId: { type: String, required: false, index: true, default: null },
   guildId: { type: String, required: false, index: true, default: null },
   email: { type: String, index: { unique: true, sparse: true }, default: null },
+  googleId: { type: String, index: { unique: true, sparse: true }, default: null },
   passwordHash: { type: String, default: null },
   username: { type: String, index: { unique: true, sparse: true }, default: null },
   prologueCompleted: { type: Boolean, default: false },
+  appearanceCompleted: { type: Boolean, default: false },
 
 
   characterName: { type: String, required: true },
@@ -440,7 +442,10 @@ const playerSchema = new mongoose.Schema({
   },
 
   body: {
-    face: { type: String, default: 'default_face_01' },
+    face: { type: String, default: 'face_01' },
+    frontHair: { type: String, default: 'front_hair_01' },
+    backHair: { type: String, default: 'back_hair_01' },
+    outfit: { type: String, default: 'outfit_vagrant_black' },
     hair: { type: String, default: 'default_hair_01' },
     cloth: { type: String, default: 'default_cloth_01' },
     mask: { type: String, default: null },

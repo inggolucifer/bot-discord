@@ -11,6 +11,7 @@ import StatGrid from '@/components/character/StatGrid';
 import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
 import ConditionTab from '@/components/character/ConditionTab';
+import CharacterLayerRenderer from '@/components/character/CharacterLayerRenderer';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { PlayerProfile } from '@/types/game';
 import { getEnglishRealmDisplay } from '@/lib/realmUtils';
@@ -265,23 +266,24 @@ export default function PlayerStatsModal() {
                       
                       {/* Left: Full-Body Standing Character Column (5 cols) */}
                       <div className="md:col-span-5 lg:col-span-4 flex flex-col items-center">
-                        <div className="relative w-full aspect-[9/14] max-h-80 sm:max-h-96 rounded-lg overflow-hidden border-2 border-[#6b5433] bg-[#0c0f17] shadow-inner group">
-                          <FallbackImage
-                            src={standingArtUrl}
-                            alt={characterName}
-                            fallbackNode={standingCharacterFallback}
-                            className="w-full h-full object-contain object-bottom"
+                        <div className="relative w-full aspect-[2/3] max-h-80 sm:max-h-96 rounded-lg overflow-hidden border-2 border-[#6b5433] bg-[#0c0f17] shadow-inner group">
+                          <CharacterLayerRenderer
+                            face={player?.body?.face || 'face_01'}
+                            frontHair={player?.body?.frontHair || 'front_hair_01'}
+                            backHair={player?.body?.backHair || 'back_hair_01'}
+                            outfit={player?.body?.outfit || 'outfit_vagrant_black'}
+                            className="w-full h-full"
                           />
 
                           {/* Daoist Realm Seal Bottom-Left */}
-                          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md">
+                          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md z-50">
                             {realmDisplay.fullTitle}
                           </div>
 
                           {/* Wardrobe Indicator Tag (Foundation for outfits) */}
-                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-stone-700 text-stone-300 text-[9px] font-serif flex items-center gap-1">
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-stone-700 text-stone-300 text-[9px] font-serif flex items-center gap-1 z-50">
                             <span>👘</span>
-                            <span>Jubah Sutra Daoist</span>
+                            <span className="capitalize">{player?.body?.outfit?.replace('outfit_', '').replace(/_/g, ' ') || 'Jubah Pendekar'}</span>
                           </div>
                         </div>
 

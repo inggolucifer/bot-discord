@@ -621,6 +621,50 @@ export const GLOBAL_ASSETS = {
   },
 
   // =========================================================================
+  // 15. STUDIO PENAMPILAN KARAKTER (TALE OF IMMORTAL MODULAR PAPER-DOLL SYSTEM)
+  // Rasio Wajib: 2:3 (Portrait Half-Body) atau 1:1 (Square Half-Body)
+  // Ukuran Pas Standar: 512x768 px (Rekomendasi Utama) atau 512x512 px
+  // Format Wajib: PNG Transparan (32-bit dengan Alpha Channel Penuh)
+  // Panduan Koordinat Anchor:
+  //   - Y 28%: Garis horizontal pupil mata
+  //   - Y 38%: Titik ujung dagu
+  //   - Y 42%: Titik lekuk leher / awal kerah jubah
+  //   - Y 82%: Titik simpul ikat pinggang / sabuk
+  // Urutan Penumpukan (Z-Index):
+  //   1. back_hair  (Z-10): Rambut belakang, menjuntai di balik bahu
+  //   2. face       (Z-20): Model tubuh & wajah dasar berkepala polos (bald base)
+  //   3. outfit     (Z-30): Pakaian jubah starter (menutup torso & bahu)
+  //   4. front_hair (Z-40): Rambut depan, poni dahi, dan mahkota kepala
+  // =========================================================================
+  character_layers: {
+    face: {
+      face_01: "", // 512x768 px PNG: Pemuda Alis Tegas (Mata Emas - Sesuai Referensi Gambar)
+      face_02: "", // 512x768 px PNG: Kultivator Dingin Angkuh
+      face_03: "", // 512x768 px PNG: Pemuda Heroik Bersemangat
+      face_04: "", // 512x768 px PNG: Pendekar Anggun Menawan
+    },
+    front_hair: {
+      front_hair_01: "", // 512x768 px PNG: Poni Belah Tengah Alami
+      front_hair_02: "", // 512x768 px PNG: Ikat Kepala Pita Kain Hitam
+      front_hair_03: "", // 512x768 px PNG: Mahkota Pita Giok Pemula
+      front_hair_04: "", // 512x768 px PNG: Poni Acak Liar Pengembara
+    },
+    back_hair: {
+      back_hair_01: "", // 512x768 px PNG: Kuncir Ekor Kuda Tinggi (High Ponytail)
+      back_hair_02: "", // 512x768 px PNG: Sanggul Kuno Tradisional (Top Bun)
+      back_hair_03: "", // 512x768 px PNG: Rambut Hitam Terurai Lepas
+      back_hair_04: "", // 512x768 px PNG: Rambut Pendek Praktis Beladiri
+    },
+    starter_outfits: {
+      outfit_vagrant_black: "",   // 512x768 px PNG: Jubah Hitam Koyak Pengelana (Sesuai Referensi Gambar)
+      outfit_mortal_linen: "",    // 512x768 px PNG: Jubah Linen Fana Xingcun (Kain Rami Kelabu)
+      outfit_outer_disciple: "",  // 512x768 px PNG: Jubah Murid Luar Perguruan (Biru Muda)
+      outfit_wanderer_bamboo: "", // 512x768 px PNG: Jubah Pengelana Rimba Bambu (Hijau Lumut)
+      outfit_novice_daoist: "",   // 512x768 px PNG: Jubah Daois Pemula (Putih-Hitam Simpel)
+    }
+  },
+
+  // =========================================================================
   // 14. EMOJI FALLBACK
   // Tampilan cadangan otomatis jika URL di atas belum diisi
   // =========================================================================
