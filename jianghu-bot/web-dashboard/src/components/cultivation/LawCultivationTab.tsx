@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
+import { useUIStore } from '@/lib/store';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
@@ -14,6 +15,8 @@ import { CultivationData } from '@/lib/schemas';
 import { LAW_RANK_NAMES_EN } from '@/lib/realmUtils';
 import Link from 'next/link';
 import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
+import MaxLevelCapBanner from './MaxLevelCapBanner';
+import LawConstellationTree from './LawConstellationTree';
 import {
   Flame,
   Shield,
@@ -223,16 +226,76 @@ const BODY_PARTS_INFO = [
 ];
 
 export const MASTER_REALM_ROADMAP = [
-  { idx: 0, name: 'Fondasi Fana', enName: 'Mortal', levelCap: 20, qiCap: '1.000', successRate: '100%', tribulation: 'Pembersihan Raga (0 Dmg)', penalty: 'Tanpa Penalti', icon: '🧘', tier: 0 },
-  { idx: 1, name: 'Pemurnian Qi', enName: 'Qi Refining', levelCap: 40, qiCap: '10.000', successRate: '85%', tribulation: '3 Kilat Ungu (Tier 1)', penalty: '-50% Qi • 1 Jam CD', icon: '💨', tier: 1 },
-  { idx: 2, name: 'Pembangunan Fondasi', enName: 'Foundation Establishment', levelCap: 60, qiCap: '50.000', successRate: '70%', tribulation: '3 Halilintar Azure (Tier 2)', penalty: '-50% Qi • 2 Jam CD', icon: '🏛️', tier: 2 },
-  { idx: 3, name: 'Inti Emas', enName: 'Golden Core', levelCap: 80, qiCap: '250.000', successRate: '55%', tribulation: '3 Petir Api Merah (Tier 3)', penalty: '-50% Qi • 4 Jam CD', icon: '🟡', tier: 3 },
-  { idx: 4, name: 'Jiwa Baru Lahir', enName: 'Nascent Soul', levelCap: 100, qiCap: '1.000.000', successRate: '45%', tribulation: '3 Badai Petir Hitam (Tier 4)', penalty: '-50% Qi • 8 Jam CD', icon: '👶', tier: 4 },
-  { idx: 5, name: 'Pembentukan Jiwa', enName: 'Soul Formation', levelCap: 120, qiCap: '5.000.000', successRate: '35%', tribulation: '3 Guntur Emas Surgawi (Tier 5)', penalty: '-50% Qi • 12 Jam CD', icon: '🔮', tier: 5 },
-  { idx: 6, name: 'Pemurnian Kekosongan', enName: 'Void Refinement', levelCap: 140, qiCap: '25.000.000', successRate: '25%', tribulation: '3 Halilintar Kehancuran (Tier 6)', penalty: '-50% Qi • 24 Jam CD', icon: '🌌', tier: 6 },
-  { idx: 7, name: 'Penyatuan Tubuh', enName: 'Body Integration', levelCap: 160, qiCap: '100.000.000', successRate: '15%', tribulation: '3 Petir Nirwana Kuno (Tier 7)', penalty: '-50% Qi • 48 Jam CD', icon: '⚡', tier: 7 },
-  { idx: 8, name: 'Kenaikan Agung', enName: 'Great Ascension', levelCap: 180, qiCap: '500.000.000', successRate: '10%', tribulation: '9 Guntur Malapetaka (Tier 8)', penalty: '-50% Qi • 72 Jam CD', icon: '👑', tier: 8 }
+  { idx: 0, name: 'Fondasi Fana', enName: 'Mortal Foundation', levelCap: 20, qiCap: '1.000 s/d 15.000 (Dinamis)', successRate: '100%', tribulation: 'Pembersihan Raga (0 Dmg)', penalty: 'Tanpa Penalti', icon: '🧘', tier: 0 },
+  { idx: 1, name: 'Pemurnian Qi', enName: 'Qi Refining', levelCap: 40, qiCap: '5.000 s/d 30.938', successRate: '85%', tribulation: '3 Kilat Ungu (Tier 1)', penalty: '-50% Qi • 1 Jam CD', icon: '💨', tier: 1 },
+  { idx: 2, name: 'Pembangunan Fondasi', enName: 'Foundation Establishment', levelCap: 60, qiCap: '25.000 s/d 154.690', successRate: '70%', tribulation: '3 Halilintar Azure (Tier 2)', penalty: '-50% Qi • 2 Jam CD', icon: '🏛️', tier: 2 },
+  { idx: 3, name: 'Inti Emas', enName: 'Golden Core', levelCap: 80, qiCap: '125.000 s/d 773.450', successRate: '55%', tribulation: '3 Petir Api Merah (Tier 3)', penalty: '-50% Qi • 4 Jam CD', icon: '🟡', tier: 3 },
+  { idx: 4, name: 'Jiwa Baru Lahir', enName: 'Nascent Soul', levelCap: 100, qiCap: '625.000 s/d 3.867.250', successRate: '45%', tribulation: '3 Badai Petir Hitam (Tier 4)', penalty: '-50% Qi • 8 Jam CD', icon: '👶', tier: 4 },
+  { idx: 5, name: 'Pembentukan Jiwa', enName: 'Soul Formation', levelCap: 120, qiCap: '3.125.000 s/d 19.336.250', successRate: '35%', tribulation: '3 Guntur Emas Surgawi (Tier 5)', penalty: '-50% Qi • 12 Jam CD', icon: '🔮', tier: 5 },
+  { idx: 6, name: 'Pemurnian Kekosongan', enName: 'Void Refinement', levelCap: 140, qiCap: '15.625.000 s/d 96.681.250', successRate: '25%', tribulation: '3 Halilintar Kehancuran (Tier 6)', penalty: '-50% Qi • 24 Jam CD', icon: '🌌', tier: 6 },
+  { idx: 7, name: 'Penyatuan Tubuh', enName: 'Body Integration', levelCap: 160, qiCap: '78.125.000 s/d 483.406.250', successRate: '15%', tribulation: '3 Petir Nirwana Kuno (Tier 7)', penalty: '-50% Qi • 48 Jam CD', icon: '⚡', tier: 7 },
+  { idx: 8, name: 'Kenaikan Agung', enName: 'Great Ascension', levelCap: 180, qiCap: '500.000.000+', successRate: '10%', tribulation: '9 Guntur Malapetaka (Tier 8)', penalty: '-50% Qi • 72 Jam CD', icon: '👑', tier: 8 }
 ];
+
+export function MortalStageRoadmap({ currentStage }: { currentStage: number }) {
+  const MORTAL_STAGES = [
+    { stage: 1,  maxQi: 1000,  rate: 2 },
+    { stage: 2,  maxQi: 1500,  rate: 3 },
+    { stage: 3,  maxQi: 2200,  rate: 4 },
+    { stage: 4,  maxQi: 3100,  rate: 5 },
+    { stage: 5,  maxQi: 4200,  rate: 6 },
+    { stage: 6,  maxQi: 5500,  rate: 7 },
+    { stage: 7,  maxQi: 7000,  rate: 8 },
+    { stage: 8,  maxQi: 9000,  rate: 9 },
+    { stage: 9,  maxQi: 11500, rate: 10 },
+    { stage: 10, maxQi: 15000, rate: 12 }
+  ];
+
+  return (
+    <div className="bg-stone-950/90 border border-amber-500/30 rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl">
+      <div className="flex items-center justify-between border-b border-stone-800 pb-2">
+        <h4 className="font-serif font-bold text-sm text-amber-200 flex items-center gap-2">
+          <span>⚡</span> Progresi Dinamis 10 Tahap Fondasi Fana (Anti-Stagnan)
+        </h4>
+        <span className="text-[11px] font-mono text-amber-400">
+          Tahap Saat Ini: <strong>Stage {currentStage}/10</strong>
+        </span>
+      </div>
+      <p className="text-xs text-stone-400">
+        Setiap tahap membutuhkan akumulasi Qi yang bertumbuh secara adiktif diiringi laju penyerapan intisari yang semakin cepat.
+      </p>
+
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
+        {MORTAL_STAGES.map((s) => {
+          const isDone = currentStage > s.stage;
+          const isCurrent = currentStage === s.stage;
+          return (
+            <div
+              key={s.stage}
+              className={`p-2.5 rounded-xl border text-center transition-all ${
+                isCurrent
+                  ? 'border-amber-400 bg-amber-500/20 shadow-md shadow-amber-500/20 scale-[1.02]'
+                  : isDone
+                  ? 'border-emerald-700/60 bg-emerald-950/20 text-emerald-300'
+                  : 'border-stone-800 bg-black/40 text-stone-600'
+              }`}
+            >
+              <div className="font-mono text-[10px] font-bold">
+                {isDone ? '✓ TUNTAS' : isCurrent ? '🔥 AKTIF' : `TAHAP ${s.stage}`}
+              </div>
+              <div className="font-serif text-xs font-bold truncate mt-1 text-stone-200">
+                {s.maxQi.toLocaleString()} Qi
+              </div>
+              <div className="text-[9px] font-mono text-stone-400 mt-0.5">
+                +{s.rate} Qi/mnt
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export const LAW_PATH_MODS: Record<string, { mod: number; note: string }> = {
   element_phoenix_fire:     { mod: 1.08, note: 'Api Purba (+8% Dmg Tribulasi)' },
@@ -581,6 +644,10 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     }
   });
 
+  const globalStamina = useUIStore(s => s.currentStamina);
+  const globalMaxStamina = useUIStore(s => s.maxStamina);
+  const setGlobalStamina = useUIStore(s => s.setStamina);
+
   // Query Player Profile for live stamina and cultivation stats
   const { data: profileRes } = useQuery<{ success: boolean; data: any }>({
     queryKey: ['player-profile-private'],
@@ -590,8 +657,26 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     }
   });
   const livePlayer = profileRes?.data?.player || profileRes?.data;
-  const currentStamina = Math.floor(livePlayer?.currentStamina ?? livePlayer?.stats?.stamina ?? 100);
-  const maxStamina = Math.floor(livePlayer?.maxStamina ?? livePlayer?.stats?.maxStamina ?? 100);
+
+  // Sinkronkan stamina dari realmData atau livePlayer jika tersedia
+  useEffect(() => {
+    if (realmData?.currentStamina !== undefined) {
+      setGlobalStamina(realmData.currentStamina, realmData.maxStamina);
+    } else if (livePlayer?.currentStamina !== undefined) {
+      setGlobalStamina(livePlayer.currentStamina, livePlayer.maxStamina);
+    }
+  }, [realmData?.currentStamina, realmData?.maxStamina, livePlayer?.currentStamina, livePlayer?.maxStamina, setGlobalStamina]);
+
+  const currentStamina = Math.floor(
+    realmData?.currentStamina !== undefined 
+      ? realmData.currentStamina 
+      : (globalStamina ?? livePlayer?.currentStamina ?? 100)
+  );
+  const maxStamina = Math.floor(
+    realmData?.maxStamina !== undefined 
+      ? realmData.maxStamina 
+      : (globalMaxStamina ?? livePlayer?.maxStamina ?? 100)
+  );
 
   // Mutation: Latihan Semadi dengan Stamina (Mortal 1-9)
   const staminaTrainMutation = useMutation({
@@ -601,8 +686,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     },
     onSuccess: (res) => {
       toast.show({ message: res.message || 'Semadi berhasil meningkatkan Qi!', type: 'success' });
+      if (res.data?.currentStamina !== undefined) {
+        setGlobalStamina(res.data.currentStamina, res.data.maxStamina);
+      }
       queryClient.invalidateQueries({ queryKey: ['cultivation'] });
       queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melakukan semadi Qi.', type: 'error' });
@@ -665,6 +754,21 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       toast.show({ message: err.response?.data?.error || 'Gagal memperbarui loadout.', type: 'error' });
     }
   });
+
+  const handleToggleCombatLoadout = (skillId: string) => {
+    const current = [...(lawData?.combatLoadout || [])];
+    const idx = current.indexOf(skillId);
+    if (idx >= 0) {
+      current.splice(idx, 1);
+    } else {
+      if (current.length >= 4) {
+        toast.show({ message: 'Slot jurus aktif penuh (Maksimal 4 jurus)!', type: 'error' });
+        return;
+      }
+      current.push(skillId);
+    }
+    updateLoadoutMutation.mutate(current);
+  };
 
   const lawActionMutation = useMutation({
     mutationFn: async ({ endpoint, payload = {} }: { endpoint: string; payload?: any }) => {
@@ -1026,6 +1130,13 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
     return (
       <div className="space-y-6 animate-in fade-in duration-300">
+        {/* Max Level Cap Banner if reached Level 20 */}
+        <MaxLevelCapBanner
+          currentLevel={currentLevel}
+          currentLevelCap={currentLevelCap}
+          realmName="Fondasi Fana"
+        />
+
         {/* Banner Ranah Fondasi Fana */}
         <div className="relative overflow-hidden rounded-2xl border-2 border-amber-600/40 bg-gradient-to-r from-[#171310] via-[#100e14] to-[#171310] p-5 sm:p-6 shadow-2xl backdrop-blur-md">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -1148,9 +1259,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
           {/* Kolom Kanan: Aksi Latihan dengan Stamina */}
           <div className="lg:col-span-5 bg-[#11141e]/90 border border-[#4d3e28] rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col justify-between space-y-4">
             <div>
-              <div className="flex items-center gap-2 border-b border-[#2d2417] pb-3 mb-3">
-                <Sparkles className="w-5 h-5 text-amber-400" />
-                <h3 className="font-serif font-bold text-amber-200 text-base">Latihan Semadi (Stamina)</h3>
+              <div className="flex items-center justify-between border-b border-[#2d2417] pb-3 mb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-400" />
+                  <h3 className="font-serif font-bold text-amber-200 text-base">Latihan Semadi (Stamina)</h3>
+                </div>
+                <div className="px-2.5 py-1 rounded-lg bg-stone-900 border border-stone-800 text-xs font-mono text-amber-300">
+                  {currentStamina} / {maxStamina} STA
+                </div>
               </div>
               <p className="text-xs text-stone-400 leading-relaxed mb-4">
                 Pusatkan napas dan salurkan stamina fisikmu untuk menyerap Qi semesta secara langsung ke dantian tanpa perlu menunggu akumulasi pasif.
@@ -1208,6 +1324,9 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
         </div>
 
+        {/* Progresi Dinamis 10 Tahap Fondasi Fana */}
+        <MortalStageRoadmap currentStage={stage || 1} />
+
         {/* Master Realm Roadmap Accordion */}
         <MasterRealmRoadmapAccordion currentRealmIdx={0} />
 
@@ -1242,6 +1361,13 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
     return (
       <div className="space-y-6">
+        {/* Max Level Cap Banner if reached Level 20 */}
+        <MaxLevelCapBanner
+          currentLevel={mortalCurrentLevel}
+          currentLevelCap={mortalLevelCap}
+          realmName="Fondasi Fana (Puncak)"
+        />
+
         {/* Banner Peringatan Fondasi Fana */}
         <div className="relative overflow-hidden rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-black to-amber-950/40 p-5 shadow-2xl backdrop-blur-md">
           <div className="flex items-start gap-4">
@@ -1893,6 +2019,9 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
           </div>
         </details>
 
+        {/* Progresi Dinamis 10 Tahap Fondasi Fana */}
+        <MortalStageRoadmap currentStage={10} />
+
         {/* Master Realm Roadmap Accordion */}
         <MasterRealmRoadmapAccordion currentRealmIdx={0} />
 
@@ -1925,6 +2054,18 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
   return (
     <div className="space-y-6">
+      {/* Max Level Cap Banner if reached Level Cap of this Realm */}
+      <MaxLevelCapBanner
+        currentLevel={livePlayer?.level || 1}
+        currentLevelCap={lawData.characterLevelCap || (20 + lawData.rank * 20)}
+        realmName={lawData.rankDisplayName}
+        canBreakthrough={lawData.canMajorBreakthrough}
+        onNavigateBreakthrough={() => {
+          const el = document.getElementById('major-breakthrough-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+
       {/* 1. UNIFIED HERO CARD: LAW CULTIVATION & REALM MASTER BANNER */}
       <Card className="relative overflow-hidden border border-amber-500/40 bg-gradient-to-r from-[#17120c] via-black to-[#17120c] p-6 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -2557,7 +2698,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3.5 text-xs">
+                <div id="major-breakthrough-section" className="space-y-3.5 text-xs">
                   {/* Peringatan Tribulasi Langit */}
                   <div className="p-3 rounded-lg border border-purple-500/40 bg-purple-950/20 text-purple-200 space-y-1">
                     <div className="font-bold flex items-center gap-1.5 text-purple-300">
@@ -2674,6 +2815,35 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </div>
               )}
             </Card>
+          </div>
+
+          {/* KONSTELASI POHON JURUS HUKUM SEMESTA (CONSTELLATION SKILL TREE) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base sm:text-lg font-serif font-bold text-amber-200 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Konstelasi Jurus & Percabangan Dao ({lawData.lawName})
+              </h3>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                  Poin Dao Tersedia: <strong className="text-amber-200">{availablePoints} SP</strong>
+                </span>
+                <Link href="/skill-tree">
+                  <Button size="sm" variant="outline" className="text-xs border-amber-500/40 text-amber-300 hover:bg-amber-500/10">
+                    Buka Halaman Penuh ➔
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <LawConstellationTree
+              skills={skillsList}
+              availablePoints={availablePoints}
+              onAllocate={(skillId) => allocateSkillMutation.mutate(skillId)}
+              isAllocating={allocateSkillMutation.isPending}
+              combatLoadout={lawData.combatLoadout || []}
+              onToggleLoadout={handleToggleCombatLoadout}
+            />
           </div>
 
           {/* ROADMAP PANJANG: 90 STAGE KULTIVASI (RANK 0 - 8) */}

@@ -492,15 +492,19 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
 
                 {/* 4. PLAYER BATTLER SECTION */}
                 <div className="w-full max-w-2xl mx-auto bg-[#0a0e1a]/95 border border-blue-900/60 rounded-2xl p-3 backdrop-blur-md shadow-2xl flex items-center gap-3">
-                    {/* Cultivator Avatar */}
-                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-b from-blue-950 to-black border-2 border-blue-600/70 shrink-0 overflow-hidden shadow-[0_0_12px_rgba(59,130,246,0.3)] flex items-center justify-center">
-                        {player?.imageUrl ? (
-                            <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="text-2xl sm:text-3xl">🧙‍♂️</div>
-                        )}
-                        <div className="absolute top-0.5 left-0.5 bg-blue-950/90 px-1 rounded text-[8px] font-mono text-blue-300 font-bold">
-                            Lv.{player?.level || 1}
+                    {/* Cultivator Avatar with Celestial Aura Ring */}
+                    <div className="relative group shrink-0">
+                        {/* Celestial Particle / Glowing Halo Ring */}
+                        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500/70 via-purple-500/70 to-cyan-500/70 blur-[3px] opacity-80 animate-pulse pointer-events-none" />
+                        <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-b from-blue-950 to-black border-2 border-amber-400/80 overflow-hidden shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center justify-center">
+                            {player?.imageUrl ? (
+                                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="text-2xl sm:text-3xl">🧙‍♂️</div>
+                            )}
+                            <div className="absolute top-0.5 left-0.5 bg-blue-950/90 px-1 rounded text-[8px] font-mono text-amber-300 font-bold border border-amber-500/40">
+                                Lv.{player?.level || 1}
+                            </div>
                         </div>
                     </div>
 

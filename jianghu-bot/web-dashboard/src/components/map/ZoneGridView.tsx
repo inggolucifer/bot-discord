@@ -367,6 +367,10 @@ export default function ZoneGridView({
             zoneId: activeZoneId
           });
 
+          if (res.data.currentStamina !== undefined) {
+            useUIStore.getState().setStamina(res.data.currentStamina, res.data.maxStamina);
+          }
+
           if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
 
           if (res.data.arrivedPosition) {
@@ -457,6 +461,10 @@ export default function ZoneGridView({
         zoneId: activeZoneId
       });
 
+      if (res.data.currentStamina !== undefined) {
+        useUIStore.getState().setStamina(res.data.currentStamina, res.data.maxStamina);
+      }
+
       if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
 
       if (res.data.arrivedPosition) {
@@ -506,10 +514,13 @@ export default function ZoneGridView({
 
     if (completedWaypoints.length > 0) {
       try {
-        await api.post('/world/zone/step-move', {
+        const res = await api.post('/world/zone/step-move', {
           waypoints: completedWaypoints,
           zoneId: activeZoneId
         });
+        if (res.data?.currentStamina !== undefined) {
+          useUIStore.getState().setStamina(res.data.currentStamina, res.data.maxStamina);
+        }
       } catch (err) {
         console.error('[StepMove] Stop sync error:', err);
       }

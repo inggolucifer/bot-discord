@@ -5,7 +5,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const { authenticateToken } = require('../middlewares/auth');
 const LockManager = require('../utils/lockManager');
-const { calculateCurrentQi, attemptBreakthrough, SYSTEM_REALMS, updateCultivationRole, syncPlayerCultivation } = require('../../utils/cultivation');
+const { calculateCurrentQi, attemptBreakthrough, SYSTEM_REALMS, MORTAL_STAGE_PROGRESSION, updateCultivationRole, syncPlayerCultivation } = require('../../utils/cultivation');
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
 const { z } = require('zod');
@@ -142,6 +142,12 @@ router.get('/', authenticateToken, async (req, res) => {
 
         const canBreakthrough = blockingReasons.length === 0;
 
+        const { clampStamina } = require('../../utils/stamina');
+        const staminaInfo = clampStamina(player);
+        if (player.isModified('currentStamina') || player.isModified('maxStamina')) {
+            await player.save();
+        }
+
         res.json({
             success: true,
             data: {
@@ -178,7 +184,10 @@ router.get('/', authenticateToken, async (req, res) => {
                     qiAmount: Math.floor(calcResult.maxQi * 0.25)
                 },
                 usablePills: usablePills,
-                moodCost: MOOD_COSTS.CULTIVATION_BREAKTHROUGH
+                moodCost: MOOD_COSTS.CULTIVATION_BREAKTHROUGH,
+                currentStamina: Math.floor(staminaInfo.current),
+                maxStamina: Math.floor(staminaInfo.max),
+                mortalStageProgression: calcResult.realmIdx === 0 ? MORTAL_STAGE_PROGRESSION : null
             }
         });
 
@@ -465,6 +474,7 @@ router.post('/train', authenticateToken, async (req, res) => {
         player.systemCultivation.qi = currentQi;
         player.systemCultivation.lastSyncAt = new Date();
 
+        player.markModified('currentStamina');
         player.markModified('systemCultivation');
         await player.save();
 

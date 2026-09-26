@@ -2,20 +2,20 @@ const staminaConfig = require('../config/stamina');
 
 function getMaxStamina(player) {
     const sta = player.talents?.sta || 0;
-    return staminaConfig.BASE_MAX_STAMINA + (sta * staminaConfig.STA_STAMINA_PER_POINT);
+    const bodyBonus = (player.bodyTemperingLevel || 0) * 2;
+    return Math.floor(staminaConfig.BASE_MAX_STAMINA + (sta * staminaConfig.STA_STAMINA_PER_POINT) + bodyBonus);
 }
 
 function clampStamina(player) {
     const calculatedMax = getMaxStamina(player);
-    const maxS = Math.max(1, Number(player.maxStamina) || calculatedMax);
-    player.maxStamina = maxS;
+    player.maxStamina = calculatedMax;
 
     let cur = player.currentStamina;
-    if (cur == null || Number.isNaN(Number(cur))) cur = maxS;
+    if (cur == null || Number.isNaN(Number(cur))) cur = calculatedMax;
 
-    cur = Math.min(Math.max(0, Number(cur)), maxS);
+    cur = Math.min(Math.max(0, Number(cur)), calculatedMax);
     player.currentStamina = cur;
-    return { current: cur, max: maxS };
+    return { current: cur, max: calculatedMax };
 }
 
 function getCurrentStamina(player) {

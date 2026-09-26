@@ -144,6 +144,9 @@ interface UIState {
   setActiveNpcId: (id: string | null) => void;
   isLandingMenu: boolean;
   setIsLandingMenu: (val: boolean) => void;
+  currentStamina: number;
+  maxStamina: number;
+  setStamina: (current: number, max?: number) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -160,5 +163,11 @@ export const useUIStore = create<UIState>((set) => ({
   activeNpcId: null,
   setActiveNpcId: (id) => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null }),
   isLandingMenu: true,
-  setIsLandingMenu: (val) => set({ isLandingMenu: val })
+  setIsLandingMenu: (val) => set({ isLandingMenu: val }),
+  currentStamina: 100,
+  maxStamina: 100,
+  setStamina: (current, max) => set((state) => ({
+    currentStamina: Math.floor(current),
+    maxStamina: max !== undefined ? Math.floor(max) : state.maxStamina
+  }))
 }));

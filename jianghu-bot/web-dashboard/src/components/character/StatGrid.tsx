@@ -54,7 +54,10 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
   const maxHealth = Math.floor(Number(rawMaxHp) || 100);
   const rawStamina = player?.currentStamina !== undefined && player.currentStamina !== null ? player.currentStamina : 100;
   const stamina = Math.floor(Number(rawStamina) || 0);
-  const maxStamina = 100;
+  const staTalent = player?.talents?.sta || 0;
+  const bodyBonus = (player?.bodyTemperingLevel || 0) * 2;
+  const calculatedMaxStamina = 100 + (staTalent * 2) + bodyBonus;
+  const maxStamina = Math.floor(Number(player?.maxStamina) || calculatedMaxStamina);
   const vitality = Math.floor(Number(ext.vitality) || 100);
   const maxVitality = Math.floor(Number(ext.maxVitality) || 100);
   const energy = Math.floor(Number(ext.innerEnergy) || 100);

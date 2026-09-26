@@ -24,21 +24,147 @@ const { isClaimedToday, isClaimedYesterday } = require('./dailyClaim');
  * Semakin tinggi PathMod, semakin sulit tribulasi tetapi Qi lebih cepat.
  */
 const LAW_DEFINITIONS = {
-  element_phoenix_fire:     { name: 'Api Phoenix Sejati',      qiType: 'qi',      pathMod: 1.08, category: 'element',  element: 'Fire' },
-  element_azure_water:      { name: 'Samudra Naga Azure',      qiType: 'qi',      pathMod: 1.02, category: 'element',  element: 'Water' },
-  element_xuanwu_earth:     { name: 'Inti Bumi Xuanwu',        qiType: 'qi',      pathMod: 0.98, category: 'element',  element: 'Earth' },
-  element_qingdi_wood:      { name: 'Pohon Hayat Qingdi',      qiType: 'qi',      pathMod: 1.00, category: 'element',  element: 'Wood' },
-  element_roc_wind:         { name: 'Sayap Badai Roc Kuno',    qiType: 'qi',      pathMod: 1.05, category: 'element',  element: 'Wind' },
-  element_godthunder_light: { name: 'Petir Hukuman Dewa',      qiType: 'qi',      pathMod: 1.15, category: 'element',  element: 'Lightning' },
-  body_tempering:           { name: 'Penempaan Raga Suci',     qiType: 'true_qi', pathMod: 1.00, category: 'physical', element: 'Physical' },
-  gu_master:                { name: 'Rongga Sepuluh Ribu Gu',  qiType: 'qi',      pathMod: 1.20, category: 'special',  element: 'Poison' },
-  natal_artifact:           { name: 'Pusaka Jiwa Kelahiran',   qiType: 'qi',      pathMod: 1.05, category: 'bond',     element: 'Neutral' },
-  natal_beast:              { name: 'Satwa Roh Kelahiran',     qiType: 'qi',      pathMod: 1.10, category: 'bond',     element: 'Neutral' },
-  demonic_turbid_core:      { name: 'Pelebur Inti Siluman',    qiType: 'qi',      pathMod: 1.40, category: 'demonic',  element: 'Dark' },
-  demonic_blood_soul:       { name: 'Penghisap Darah & Jiwa',  qiType: 'qi',      pathMod: 1.55, category: 'demonic',  element: 'Dark' },
-  demonic_myriad_venom:     { name: 'Seribu Racun Pemusnah',   qiType: 'qi',      pathMod: 1.35, category: 'demonic',  element: 'Poison' },
-  demonic_abyssal_pact:     { name: 'Kontrak Iblis Abyss',     qiType: 'qi',      pathMod: 1.50, category: 'demonic',  element: 'Dark' },
-  demonic_nether_darkness:  { name: 'Bayangan Sembilan Yin',   qiType: 'qi',      pathMod: 1.25, category: 'demonic',  element: 'Dark' }
+  element_phoenix_fire:     { 
+    name: 'Api Phoenix Sejati',      
+    qiType: 'qi',      
+    energyLabel: 'Samadhi Phoenix Qi',
+    pathMod: 1.08, 
+    category: 'element',  
+    element: 'Fire', 
+    rootKey: 'fire',
+    stageBonus: { atk: 8, crit: 2, rootExp: 25, lifespan: 4 }
+  },
+  element_azure_water:      { 
+    name: 'Samudra Naga Azure',      
+    qiType: 'qi',      
+    energyLabel: 'Azure Tide Qi',
+    pathMod: 1.02, 
+    category: 'element',  
+    element: 'Water', 
+    rootKey: 'water',
+    stageBonus: { hp: 25, def: 4, rootExp: 25, lifespan: 5 }
+  },
+  element_xuanwu_earth:     { 
+    name: 'Inti Bumi Xuanwu',        
+    qiType: 'qi',      
+    energyLabel: 'Leyline Heavy Qi',
+    pathMod: 0.98, 
+    category: 'element',  
+    element: 'Earth', 
+    rootKey: 'earth',
+    stageBonus: { def: 7, hp: 20, martialRes: 3, rootExp: 25, lifespan: 4 }
+  },
+  element_qingdi_wood:      { 
+    name: 'Pohon Hayat Qingdi',      
+    qiType: 'qi',      
+    energyLabel: 'Vitality Life Qi',
+    pathMod: 1.00, 
+    category: 'element',  
+    element: 'Wood', 
+    rootKey: 'wood',
+    stageBonus: { hp: 35, vitality: 5, rootExp: 25, lifespan: 8 }
+  },
+  element_roc_wind:         { 
+    name: 'Sayap Badai Roc Kuno',    
+    qiType: 'qi',      
+    energyLabel: 'Astral Gale Qi',
+    pathMod: 1.05, 
+    category: 'element',  
+    element: 'Wind', 
+    rootKey: 'wind',
+    stageBonus: { agility: 5, travelSpeed: 3, rootExp: 25, lifespan: 3 }
+  },
+  element_godthunder_light: { 
+    name: 'Petir Hukuman Dewa',      
+    qiType: 'qi',      
+    energyLabel: 'Heavenly Lightning Qi',
+    pathMod: 1.15, 
+    category: 'element',  
+    element: 'Lightning', 
+    rootKey: 'lightning',
+    stageBonus: { atk: 10, crit: 3, rootExp: 25, lifespan: 3 }
+  },
+  body_tempering:           { 
+    name: 'Penempaan Raga Suci',     
+    qiType: 'true_qi', 
+    energyLabel: 'True Qi (真气 - Raga Jasmani)',
+    pathMod: 1.00, 
+    category: 'physical', 
+    element: 'Physical', 
+    stageBonus: { hp: 35, def: 6, maxStamina: 5, vitality: 4, lifespan: 3 }
+  },
+  gu_master:                { 
+    name: 'Rongga Sepuluh Ribu Gu',  
+    qiType: 'qi',      
+    energyLabel: 'Myriad Gu Venom Qi',
+    pathMod: 1.20, 
+    category: 'special',  
+    element: 'Poison', 
+    stageBonus: { atk: 6, spiritualRes: 3, lifespan: 3 }
+  },
+  natal_artifact:           { 
+    name: 'Pusaka Jiwa Kelahiran',   
+    qiType: 'qi',      
+    energyLabel: 'Soul Resonance Qi',
+    pathMod: 1.05, 
+    category: 'bond',     
+    element: 'Neutral', 
+    stageBonus: { atk: 7, def: 3, lifespan: 3 }
+  },
+  natal_beast:              { 
+    name: 'Satwa Roh Kelahiran',     
+    qiType: 'qi',      
+    energyLabel: 'Blood Oath Symbiotic Qi',
+    pathMod: 1.10, 
+    category: 'bond',     
+    element: 'Neutral', 
+    stageBonus: { hp: 20, atk: 5, lifespan: 3 }
+  },
+  demonic_turbid_core:      { 
+    name: 'Pelebur Inti Siluman',    
+    qiType: 'qi',      
+    energyLabel: 'Baleful Beast Qi',
+    pathMod: 1.40, 
+    category: 'demonic',  
+    element: 'Dark', 
+    stageBonus: { atk: 8, def: 3, lifespan: 2 }
+  },
+  demonic_blood_soul:       { 
+    name: 'Penghisap Darah & Jiwa',  
+    qiType: 'qi',      
+    energyLabel: 'Blood Essence Qi',
+    pathMod: 1.55, 
+    category: 'demonic',  
+    element: 'Dark', 
+    stageBonus: { atk: 9, hp: 15, lifespan: 2 }
+  },
+  demonic_myriad_venom:     { 
+    name: 'Seribu Racun Pemusnah',   
+    qiType: 'qi',      
+    energyLabel: 'Corrosive Toxic Qi',
+    pathMod: 1.35, 
+    category: 'demonic',  
+    element: 'Poison', 
+    stageBonus: { def: 4, spiritualRes: 5, lifespan: 2 }
+  },
+  demonic_abyssal_pact:     { 
+    name: 'Kontrak Iblis Abyss',     
+    qiType: 'qi',      
+    energyLabel: 'Abyssal Void Qi',
+    pathMod: 1.50, 
+    category: 'demonic',  
+    element: 'Dark', 
+    stageBonus: { atk: 9, lifespan: 2 }
+  },
+  demonic_nether_darkness:  { 
+    name: 'Bayangan Sembilan Yin',   
+    qiType: 'qi',      
+    energyLabel: 'Nether Yin Qi',
+    pathMod: 1.25, 
+    category: 'demonic',  
+    element: 'Dark', 
+    stageBonus: { agility: 4, atk: 6, lifespan: 3 }
+  }
 };
 
 /**
@@ -306,6 +432,30 @@ function attemptMiniBreakthrough(player) {
     const rankNames = LAW_RANK_NAMES[law.activeLawType];
     const rankName = rankNames?.[law.rank] || `Rank ${law.rank}`;
 
+    // Penerapan bonus 5 Pilar sesuai Hukum Semesta yang dipatri
+    if (!player.stats) player.stats = {};
+    if (!player.extendedStats) player.extendedStats = {};
+
+    const bonus = lawDef?.stageBonus || {};
+    if (bonus.hp) player.stats.baseHp = (player.stats.baseHp || 100) + bonus.hp;
+    if (bonus.atk) player.stats.baseAtk = (player.stats.baseAtk || 15) + bonus.atk;
+    if (bonus.def) player.stats.baseDef = (player.stats.baseDef || 10) + bonus.def;
+    if (bonus.crit) player.extendedStats.crit = (player.extendedStats.crit || 0) + bonus.crit;
+    if (bonus.agility) player.extendedStats.agility = (player.extendedStats.agility || 0) + bonus.agility;
+    if (bonus.vitality) player.extendedStats.vitality = (player.extendedStats.vitality || 100) + bonus.vitality;
+    if (bonus.lifespan) player.extendedStats.lifespan = (player.extendedStats.lifespan || 100) + bonus.lifespan;
+    if (bonus.martialRes) player.extendedStats.martialRes = (player.extendedStats.martialRes || 0) + bonus.martialRes;
+    if (bonus.spiritualRes) player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + bonus.spiritualRes;
+    if (bonus.travelSpeed) player.extendedStats.travelSpeed = (player.extendedStats.travelSpeed || 100) + bonus.travelSpeed;
+    if (bonus.maxStamina) player.currentStamina = (player.currentStamina || 100) + bonus.maxStamina;
+
+    // Injeksi Spiritual Root XP Otomatis (Automatic Dao Resonance)
+    if (lawDef?.rootKey) {
+      if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
+      const currentRootXp = player.extendedStats.spiritualRoot[lawDef.rootKey] || 0;
+      player.extendedStats.spiritualRoot[lawDef.rootKey] = currentRootXp + (bonus.rootExp || 25);
+    }
+
     return {
       success: true,
       isSuccess: true,
@@ -317,7 +467,8 @@ function attemptMiniBreakthrough(player) {
         skillPoints: 1,
         cooldownMs: 30 * 60 * 1000,
         maxQi: law.maxQi,
-        rankDisplayName: rankName
+        rankDisplayName: rankName,
+        stageBonusGranted: bonus
       }
     };
   } else {
@@ -494,6 +645,20 @@ function attemptMajorBreakthrough(player) {
 
     const rankNames = LAW_RANK_NAMES[law.activeLawType];
     const newRankName = rankNames?.[law.rank] || `Rank ${law.rank}`;
+    const lawDef = LAW_DEFINITIONS[law.activeLawType];
+
+    // Penerapan lonjakan 5 Pilar Mayor saat kenaikan Rank
+    if (!player.stats) player.stats = {};
+    if (!player.extendedStats) player.extendedStats = {};
+    player.stats.baseHp = (player.stats.baseHp || 100) + 100;
+    player.stats.baseAtk = (player.stats.baseAtk || 15) + 20;
+    player.stats.baseDef = (player.stats.baseDef || 10) + 15;
+    player.extendedStats.lifespan = (player.extendedStats.lifespan || 100) + 20;
+    player.currentStamina = (player.currentStamina || 100) + (law.activeLawType === 'body_tempering' ? 15 : 10);
+    if (lawDef?.rootKey) {
+      if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
+      player.extendedStats.spiritualRoot[lawDef.rootKey] = (player.extendedStats.spiritualRoot[lawDef.rootKey] || 0) + 100;
+    }
 
     return {
       success: true,
@@ -528,6 +693,156 @@ function attemptMajorBreakthrough(player) {
       }
     };
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ACTIVE CULTIVATION ENGINE (ANTI-STAGNAN & LOOP ADIKTIF)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Memberikan perolehan Qi / True Qi aktif berdasarkan aktivitas gameplay nyata.
+ * Menjamin loop gameplay adiktif dan setiap Law merasakan sensasi berbeda.
+ * 
+ * @param {object} player - Mongoose Player document (mutable)
+ * @param {string} triggerType - Jenis aksi gameplay
+ * @param {object} context - Parameter tambahan
+ * @returns {{ lawQiGained: number, systemQiGained: number, energyLabel: string, message: string }}
+ */
+function awardActiveCultivationQi(player, triggerType, context = {}) {
+  if (!player) return { lawQiGained: 0, systemQiGained: 0, energyLabel: 'Qi', message: '' };
+
+  const law = player.cultivationLaw;
+  const activeLawType = law?.activeLawType;
+  const lawDef = LAW_DEFINITIONS[activeLawType];
+
+  let lawQiGained = 0;
+  let systemQiGained = 0;
+  let message = '';
+
+  switch (triggerType) {
+    case 'battle_hit':
+      if (activeLawType === 'body_tempering') {
+        lawQiGained = 12; // True Qi dari pukulan fisik
+      } else {
+        lawQiGained = 4;
+      }
+      break;
+
+    case 'battle_victory':
+      const monsterTier = context.monsterTier || 1;
+      systemQiGained = Math.floor(35 * monsterTier);
+      if (activeLawType === 'body_tempering') {
+        lawQiGained = 35;
+        message = '💪 Otot dan urat menyerap hawa pertarungan (+35 True Qi)!';
+      } else if (activeLawType === 'demonic_blood_soul') {
+        lawQiGained = 50;
+        message = '🩸 Memanen darah musuh yang gugur (+50 Blood Qi)!';
+      } else if (activeLawType === 'natal_beast') {
+        lawQiGained = 35;
+        if (law.boundEntity) {
+          law.boundEntity.beastCurrentHp = Math.min(law.boundEntity.beastMaxHp || 120, (law.boundEntity.beastCurrentHp || 120) + 15);
+        }
+        message = '🐾 Bertarung berdampingan dengan satwa roh (+35 Symbiotic Qi)!';
+      } else {
+        lawQiGained = 25;
+      }
+      break;
+
+    case 'meat_eaten':
+      if (activeLawType === 'body_tempering') {
+        lawQiGained = 80;
+        message = '🍖 Daging binatang buas dicerna menjadi intisari raga (+80 True Qi)!';
+      } else {
+        lawQiGained = 30;
+      }
+      break;
+
+    case 'step_endurance':
+      const steps = context.steps || 1;
+      if (activeLawType === 'element_roc_wind') {
+        lawQiGained = Math.floor(steps * 1.5);
+      } else if (activeLawType === 'body_tempering') {
+        lawQiGained = Math.floor(steps * 1.2);
+      } else {
+        lawQiGained = Math.floor(steps * 0.4);
+      }
+      systemQiGained = Math.floor(steps * 0.5);
+      break;
+
+    case 'fish_caught':
+      if (activeLawType === 'element_azure_water') {
+        lawQiGained = 40;
+        message = '💧 Menyerap embun air danau bersama ikan roh (+40 Azure Qi)!';
+      } else {
+        lawQiGained = 15;
+      }
+      systemQiGained = 20;
+      break;
+
+    case 'ore_mined':
+      if (activeLawType === 'element_xuanwu_earth') {
+        lawQiGained = 35;
+        message = '🗿 Menyerap hawa bumi leylines dari rekahan batu (+35 Leyline Qi)!';
+      } else {
+        lawQiGained = 15;
+      }
+      systemQiGained = 20;
+      break;
+
+    case 'herb_harvested':
+      if (activeLawType === 'element_qingdi_wood') {
+        lawQiGained = 40;
+        message = '🌿 Intisari getah tanaman obat meresap ke pori-pori (+40 Life Qi)!';
+      } else {
+        lawQiGained = 15;
+      }
+      systemQiGained = 20;
+      break;
+
+    case 'equipment_forged':
+      if (activeLawType === 'natal_artifact') {
+        lawQiGained = 50;
+        message = '🗡️ Hawa dentingan palu beresonansi dengan pusaka jiwa (+50 Soul Qi)!';
+      } else {
+        lawQiGained = 20;
+      }
+      systemQiGained = 25;
+      break;
+
+    case 'crit_landed':
+      if (activeLawType === 'element_godthunder_light') {
+        lawQiGained = 20;
+        message = '⚡ Sengatan kilat surgawi menyambar meridian (+20 Lightning Qi)!';
+      } else {
+        lawQiGained = 5;
+      }
+      break;
+
+    default:
+      lawQiGained = 10;
+      systemQiGained = 10;
+  }
+
+  // Akumulasikan ke cultivationLaw jika pemain mengikat Law
+  if (law && law.activeLawType && lawQiGained > 0) {
+    const maxQ = law.maxQi || 1000;
+    law.qi = Math.min(maxQ, (law.qi || 0) + lawQiGained);
+  }
+
+  // Akumulasikan ke systemCultivation (fondasi ranah)
+  if (player.systemCultivation && systemQiGained > 0) {
+    const { getRealmIndex, getMaxQi } = require('./cultivation');
+    const rIdx = getRealmIndex(player.systemCultivation.realm || 'Fondasi Fana (Mortal Foundation)');
+    const sysMaxQi = getMaxQi(rIdx, player.systemCultivation.stage || 1);
+    player.systemCultivation.qi = Math.min(sysMaxQi, (player.systemCultivation.qi || 0) + systemQiGained);
+  }
+
+  return {
+    lawQiGained,
+    systemQiGained,
+    energyLabel: lawDef?.energyLabel || 'Qi',
+    message
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -689,6 +1004,7 @@ function getLawStatus(player) {
     element: lawDef?.element || null,
     lawElement: lawDef?.element || null,
     qiType: lawDef?.qiType || 'qi',
+    energyLabel: lawDef?.energyLabel || (lawDef?.qiType === 'true_qi' ? 'True Qi (真气)' : 'Qi Spiritual (灵气)'),
     pathMod: pathMod,
 
     rank: law.rank || 0,
@@ -808,6 +1124,9 @@ module.exports = {
   // Gate Mutual
   LAW_RANK_REALM_REQUIREMENTS,
   meetsLawRankRequirements,
+
+  // Active Gathering
+  awardActiveCultivationQi,
 
   // Status
   getLawStatus

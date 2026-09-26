@@ -624,6 +624,18 @@ router.post('/complete', verifyToken, async (req, res) => {
                 awardKungfuExp(player, 'forging', baseForgingExp);
             }
 
+            // Sinergi Kultivasi Aktif Berdasarkan Profesi (Anti-Stagnan)
+            const { awardActiveCultivationQi } = require('../../utils/lawCultivationEngine');
+            let triggerProf = null;
+            if (session.profession === 'fishing') triggerProf = 'fish_caught';
+            else if (session.profession === 'smithing') triggerProf = 'equipment_forged';
+            else if (session.profession === 'farming') triggerProf = 'herb_harvested';
+            if (triggerProf) {
+                awardActiveCultivationQi(player, triggerProf);
+                player.markModified('cultivationLaw');
+                player.markModified('systemCultivation');
+            }
+
             let currentLvl = player.professions[session.profession].level;
             let requiredExp = Math.floor(50 * currentLvl + 15 * currentLvl * currentLvl);
 

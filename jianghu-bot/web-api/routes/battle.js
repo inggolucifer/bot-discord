@@ -812,6 +812,18 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                      }
                  }
 
+                 // Distribusi Aktif Qi Kultivasi & True Qi (Loop Adiktif Anti-Stagnan)
+                 const { awardActiveCultivationQi } = require('../../utils/lawCultivationEngine');
+                 const cultGain = awardActiveCultivationQi(player, 'battle_victory', {
+                     monsterTier: session.enemies[0]?.tier || 1
+                 });
+                 if (cultGain?.message) {
+                     if (!Array.isArray(session.logs)) session.logs = [];
+                     session.logs.push(`✨ [Kultivasi]: ${cultGain.message}`);
+                 }
+                 player.markModified('cultivationLaw');
+                 player.markModified('systemCultivation');
+
                  // Distribusi Item Loot
                  if (Array.isArray(session.rewards.items) && session.rewards.items.length > 0) {
 
