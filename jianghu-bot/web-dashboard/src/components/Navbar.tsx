@@ -33,9 +33,9 @@ import { cn } from '@/lib/utils';
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
-  const { showMobileMapNav, setShowMobileMapNav } = useUIStore();
+  const { showMobileMapNav, setShowMobileMapNav, isLandingMenu } = useUIStore();
   const pathname = usePathname();
-  const isMapRoute = pathname === '/world' || pathname === '/' || pathname === '/explore';
+  const isMapRoute = pathname === '/world' || pathname === '/explore' || (pathname === '/' && !isLandingMenu);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -145,9 +145,9 @@ export default function Navbar() {
       {/* Top Header Navbar - Clean, Minimalist Wuxia */}
       <header
         className={cn(
-          'bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md transition-all duration-300 ease-in-out',
+          'bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md transition-all duration-300 ease-in-out lg:overflow-visible',
           isMobileNavHidden
-            ? 'max-lg:-translate-y-full max-lg:opacity-0 max-lg:pointer-events-none max-lg:max-h-0 max-lg:border-b-0 overflow-hidden'
+            ? 'max-lg:-translate-y-full max-lg:opacity-0 max-lg:pointer-events-none max-lg:max-h-0 max-lg:border-b-0 max-lg:overflow-hidden'
             : 'translate-y-0 opacity-100 max-h-16'
         )}
       >
@@ -192,7 +192,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'karakter' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
                   {karakterLinks.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -232,7 +232,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'dunia' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
                   {duniaLinks.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -286,7 +286,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'sosial' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
                   {sosialLinks.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -349,27 +349,18 @@ export default function Navbar() {
               <span className="font-semibold text-[11px] sm:text-xs">Tianji</span>
             </Link>
 
-            {/* User Profile or Discord Login */}
+            {/* User Profile or Login */}
             {user ? (
               <div className="flex items-center gap-2">
                 <Link
                   href="/profile"
-                  className="flex items-center gap-2 p-1 rounded-full hover:bg-white/5 transition-colors"
-                  title="Buka Profil"
+                  className="flex items-center gap-2 p-1 px-2 rounded-full hover:bg-white/5 border border-transparent hover:border-[#c5a880]/30 transition-all group"
+                  title="Buka Lembar Profil Pendekar"
                 >
-                  {user.avatar ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={user.avatar}
-                      alt={user.username || 'Avatar'}
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#c5a880]/60"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#c5a880]/60 bg-[#141824] flex items-center justify-center text-xs text-amber-200">
-                      ?
-                    </div>
-                  )}
-                  <span className="text-xs font-serif text-stone-300 hidden xl:inline max-w-[90px] truncate">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#c5a880]/70 bg-gradient-to-b from-[#1e2538] to-[#0c0f17] flex items-center justify-center text-amber-300 shadow-[0_2px_8px_rgba(0,0,0,0.6)] group-hover:border-amber-300 group-hover:shadow-[0_0_12px_rgba(197,168,128,0.35)] transition-all shrink-0">
+                    <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <span className="text-xs font-serif text-stone-200 group-hover:text-amber-200 hidden xl:inline max-w-[100px] truncate font-medium">
                     {user.username}
                   </span>
                 </Link>
@@ -435,18 +426,9 @@ export default function Navbar() {
           {user ? (
             <div className="bg-[#10141f] border border-[#2b3345] rounded-xl p-3 flex items-center justify-between">
               <div className="flex items-center gap-3 min-w-0">
-                {user.avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={user.avatar}
-                    alt={user.username || 'Avatar'}
-                    className="w-9 h-9 rounded-full border border-[#c5a880]/60 shrink-0"
-                  />
-                ) : (
-                  <div className="w-9 h-9 rounded-full border border-[#c5a880]/60 bg-[#161a24] flex items-center justify-center font-bold text-amber-200 shrink-0">
-                    ?
-                  </div>
-                )}
+                <div className="w-9 h-9 rounded-full border border-[#c5a880]/70 bg-gradient-to-b from-[#1e2538] to-[#0c0f17] flex items-center justify-center text-amber-300 shadow-[0_2px_8px_rgba(0,0,0,0.6)] shrink-0">
+                  <User className="w-4 h-4 text-amber-300" />
+                </div>
                 <div className="min-w-0">
                   <h4 className="font-serif font-bold text-amber-200 text-sm truncate">{user.username}</h4>
                   <span className="text-[10px] text-stone-400 font-serif">Kultivator Jianghu</span>
@@ -463,7 +445,7 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="bg-[#10141f] border border-[#2b3345] rounded-xl p-3 flex items-center justify-between">
-              <span className="text-xs text-stone-300 font-serif">Silakan masuk dengan Discord</span>
+              <span className="text-xs text-stone-300 font-serif">Silakan masuk ke akun Jianghu</span>
               <Button
                 onClick={handleLogin}
                 size="sm"

@@ -142,6 +142,8 @@ interface UIState {
   setIsTileInspectorActive: (val: boolean) => void;
   activeNpcId: string | null;
   setActiveNpcId: (id: string | null) => void;
+  isLandingMenu: boolean;
+  setIsLandingMenu: (val: boolean) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -156,5 +158,7 @@ export const useUIStore = create<UIState>((set) => ({
   isTileInspectorActive: false,
   setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val }),
   activeNpcId: null,
-  setActiveNpcId: (id) => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null })
+  setActiveNpcId: (id) => set({ activeNpcId: id, activeModal: id ? 'npcInteraction' : null }),
+  isLandingMenu: true,
+  setIsLandingMenu: (val) => set({ isLandingMenu: val })
 }));
