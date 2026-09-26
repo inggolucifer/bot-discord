@@ -370,7 +370,7 @@ const playerSchema = new mongoose.Schema({
 
   systemCultivation: {
     realm: { type: String, default: 'Fondasi Fana (Mortal Foundation)' },
-    stage: { type: Number, default: 0 }, // 1-9 untuk realm selain Mortal
+    stage: { type: Number, default: 1 }, // 1-10 untuk Mortal, 1-9 untuk realm lainnya
     qi: { type: Number, default: 0 },
     lastSyncAt: { type: Date, default: Date.now },
     isFlawedFoundation: { type: Boolean, default: false }
