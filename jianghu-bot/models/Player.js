@@ -84,7 +84,7 @@ const inventoryItemSchema = new mongoose.Schema({
 });
 
 const professionSchema = new mongoose.Schema({
-  isUnlocked: { type: Boolean, default: false },
+  isUnlocked: { type: Boolean, default: true },
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 }
 }, { _id: false });
@@ -102,27 +102,27 @@ const farmPlotSchema = new mongoose.Schema({
 }, { _id: false });
 
 const farmingProfessionSchema = new mongoose.Schema({
-  isUnlocked: { type: Boolean, default: false },
+  isUnlocked: { type: Boolean, default: true },
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 },
   farmPlots: { type: [farmPlotSchema], default: () => [{ isUnlocked: true }] } // Default 1 slot terbuka
 }, { _id: false });
 
 const fishingProfessionSchema = new mongoose.Schema({
-  isUnlocked: { type: Boolean, default: false },
+  isUnlocked: { type: Boolean, default: true },
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 },
   unlockedFishingZones: { type: [Number], default: [1] } // Default zona 1 terbuka
 }, { _id: false });
 
 const professionsSchema = new mongoose.Schema({
-  farming: { type: farmingProfessionSchema, default: () => ({}) },
-  fishing: { type: fishingProfessionSchema, default: () => ({}) },
-  cooking: { type: professionSchema, default: () => ({}) },
-  alchemy: { type: professionSchema, default: () => ({}) },
-  smithing: { type: professionSchema, default: () => ({}) },
-  woodcutting: { type: professionSchema, default: () => ({}) },
-  mining: { type: professionSchema, default: () => ({}) },
+  farming: { type: farmingProfessionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  fishing: { type: fishingProfessionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  cooking: { type: professionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  alchemy: { type: professionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  smithing: { type: professionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  woodcutting: { type: professionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
+  mining: { type: professionSchema, default: () => ({ isUnlocked: true, level: 1, exp: 0 }) },
   unlockedBlueprints: { type: [String], default: [] }
 }, { _id: false });
 

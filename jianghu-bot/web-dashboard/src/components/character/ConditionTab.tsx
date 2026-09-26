@@ -146,6 +146,7 @@ const CONDITIONS_CONFIG: ConditionMeta[] = [
 
 export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
   const [curingKey, setCuringKey] = useState<string | null>(null);
+  const [isMeditating, setIsMeditating] = useState(false);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const rawConditions = player?.conditions || {};
@@ -161,6 +162,25 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
   };
 
   const inventory: InventoryItem[] = Array.isArray(player?.inventory) ? player.inventory : [];
+  const currentStamina = Math.floor(player?.currentStamina ?? player?.stats?.stamina ?? player?.energy?.current ?? 100);
+  const maxStamina = Math.floor(player?.maxStamina ?? player?.stats?.maxStamina ?? player?.maxEnergy ?? 100);
+
+  // Filter daftar obat dan herba dari inventori
+  const medicineItems = inventory.filter(inv => {
+    if (!inv.itemId || inv.quantity <= 0) return false;
+    const it = typeof inv.itemId === 'object' ? inv.itemId : null;
+    if (!it || !it.name) return false;
+    const cat = (it.category || '').toLowerCase();
+    const name = it.name.toLowerCase();
+    const desc = (it.description || '').toLowerCase();
+    return (
+      cat === 'consume' ||
+      name.includes('pil') || name.includes('obat') || name.includes('salep') || 
+      name.includes('herba') || name.includes('perban') || name.includes('penawar') ||
+      name.includes('teh') || name.includes('jin chuang') || name.includes('darah') ||
+      desc.includes('sembuh') || desc.includes('racun') || desc.includes('hp') || desc.includes('luka') || desc.includes('meridian')
+    );
+  });
 
   // Hitung Skor Kondisi Tubuh Total (0 = Bebas Kondisi / Prima)
   const totalNegativePoints = 
@@ -182,15 +202,68 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
     }) || null;
   };
 
-  // Handler Penggunaan Obat Cepat
+  // Handler Meditasi Mandiri Pemulihan Meridian (-10 Stamina)
+  const handleMeditationHeal = async () => {
+    if (isMeditating) return;
+    setIsMeditating(true);
+    try {
+      const res = await api.post('/player/condition/heal-meditation');
+      if (res.data?.success) {
+        setToastMessage({
+          text: res.data.message || 'Meditasi berhasil memulihkan meridian!',
+          type: 'success'
+        });
+        if (onRefresh) onRefresh();
+      } else {
+        setToastMessage({
+          text: res.data?.error || 'Gagal melakukan meditasi.',
+          type: 'error'
+        });
+      }
+    } catch (err: any) {
+      setToastMessage({
+        text: err.response?.data?.error || 'Gagal terhubung ke server meditasi.',
+        type: 'error'
+      });
+    } finally {
+      setIsMeditating(false);
+      setTimeout(() => setToastMessage(null), 4000);
+    }
+  };
+
+  // Handler Penggunaan Obat Langsung dari Kotak Obat
+  const handleDirectUseItem = async (itemId: string, itemName: string) => {
+    setCuringKey(itemId);
+    try {
+      const res = await api.post('/player/quick-cure', { itemId });
+      if (res.data?.success) {
+        setToastMessage({
+          text: res.data.message || `Berhasil mengonsumsi [${itemName}]!`,
+          type: 'success'
+        });
+        if (onRefresh) onRefresh();
+      } else {
+        setToastMessage({
+          text: res.data?.error || 'Gagal menggunakan obat.',
+          type: 'error'
+        });
+      }
+    } catch (err: any) {
+      setToastMessage({
+        text: err.response?.data?.error || 'Gagal menggunakan obat.',
+        type: 'error'
+      });
+    } finally {
+      setCuringKey(null);
+      setTimeout(() => setToastMessage(null), 4000);
+    }
+  };
+
+  // Handler Penggunaan Obat Cepat dari Baris Tabel
   const handleQuickCure = async (condKey: string, keywords: string[]) => {
     const cureInv = findCureItemForCondition(keywords);
     if (!cureInv || !cureInv.itemId) {
-      setToastMessage({
-        text: 'Tidak ada item obat yang cocok di tas inventori.',
-        type: 'error'
-      });
-      setTimeout(() => setToastMessage(null), 3500);
+      handleMeditationHeal();
       return;
     }
 
@@ -299,35 +372,47 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
         </div>
       )}
 
-      {/* Header Status Ringkasan Kondisi Dantian */}
+      {/* Header Status Ringkasan Kondisi Dantian & Aksi Meditasi Mandiri */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* Card 1: Status Tubuh Keseluruhan */}
-        <div className="bg-[#141926]/90 border border-[#826b48]/60 rounded-xl p-3 sm:p-4 flex items-center gap-3 shadow-md relative overflow-hidden">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl border ${
-            isHealthy 
-              ? 'bg-emerald-950/70 border-emerald-500/80 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.3)]' 
-              : isCritical 
-                ? 'bg-red-950/80 border-red-500 text-red-300 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]'
-                : 'bg-amber-950/70 border-amber-500/70 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
-          }`}>
-            {isHealthy ? '✨' : isCritical ? '💀' : '🩹'}
-          </div>
-          <div>
-            <div className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">Status Dantian</div>
-            <div className="text-sm sm:text-base font-serif font-bold text-amber-200">
-              {isHealthy ? 'Sehat Walafiat (Prima)' : isCritical ? 'Kritis / Terluka Parah' : 'Terganggu Kondisi'}
+        {/* Card 1: Status Tubuh & Meditasi Mandiri */}
+        <div className="bg-[#141926]/90 border border-[#826b48]/60 rounded-xl p-3 sm:p-4 flex flex-col justify-between shadow-md relative overflow-hidden">
+          <div className="flex items-center gap-3">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl border shrink-0 ${
+              isHealthy 
+                ? 'bg-emerald-950/70 border-emerald-500/80 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.3)]' 
+                : isCritical 
+                  ? 'bg-red-950/80 border-red-500 text-red-300 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]'
+                  : 'bg-amber-950/70 border-amber-500/70 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+            }`}>
+              {isHealthy ? '✨' : isCritical ? '💀' : '🩹'}
             </div>
-            <div className="text-[10px] text-stone-400 mt-0.5">
-              {isHealthy 
-                ? 'Bebas racun, luka, dan hawa es.' 
-                : `${totalNegativePoints} total akumulasi poin gangguan.`}
+            <div>
+              <div className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">Status Dantian</div>
+              <div className="text-sm sm:text-base font-serif font-bold text-amber-200">
+                {isHealthy ? 'Sehat Walafiat (Prima)' : isCritical ? 'Kritis / Terluka Parah' : 'Terganggu Kondisi'}
+              </div>
+              <div className="text-[10px] text-stone-400 mt-0.5">
+                {isHealthy 
+                  ? 'Bebas racun, luka, dan hawa es.' 
+                  : `${totalNegativePoints} total akumulasi poin gangguan.`}
+              </div>
             </div>
           </div>
+
+          {/* Tombol Meditasi Mandiri Salurkan Qi */}
+          <button
+            onClick={handleMeditationHeal}
+            disabled={isMeditating || currentStamina < 10}
+            className="mt-3 w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-emerald-800 to-teal-700 hover:from-emerald-700 hover:to-teal-600 border border-emerald-500/70 text-emerald-100 font-serif text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw size={13} className={isMeditating ? 'animate-spin' : ''} />
+            <span>🧘 Meditasi Salurkan Qi (-10 STA)</span>
+          </button>
         </div>
 
         {/* Card 2: Pengaruh Alkohol & Seni Beladiri Arak */}
         <div className="bg-[#141926]/90 border border-[#826b48]/60 rounded-xl p-3 sm:p-4 flex items-center gap-3 shadow-md">
-          <div className="w-12 h-12 rounded-xl bg-purple-950/70 border border-purple-500/70 flex items-center justify-center text-2xl text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]">
+          <div className="w-12 h-12 rounded-xl bg-purple-950/70 border border-purple-500/70 flex items-center justify-center text-2xl text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] shrink-0">
             🍶
           </div>
           <div>
@@ -338,26 +423,86 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
             <div className="text-[10px] text-stone-400 mt-0.5">
               {conditions.intox > 0 
                 ? `+${Math.floor(conditions.intox * 0.6)}% Drunken DMG / Miss +${Math.floor(conditions.intox * 0.35)}%` 
-                : 'Siap mengonsumsi arak spiritual.'}
+                : 'Dapat mengonsumsi arak spiritual untuk meningkatkan jurus tinju arak.'}
             </div>
           </div>
         </div>
 
-        {/* Card 3: Resonansi Elemen Aktif */}
+        {/* Card 3: 4 Meridian Anatomi Utama */}
         <div className="bg-[#141926]/90 border border-[#826b48]/60 rounded-xl p-3 sm:p-4 flex items-center gap-3 shadow-md">
-          <div className="w-12 h-12 rounded-xl bg-cyan-950/70 border border-cyan-500/70 flex items-center justify-center text-2xl text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]">
+          <div className="w-12 h-12 rounded-xl bg-cyan-950/70 border border-cyan-500/70 flex items-center justify-center text-2xl text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)] shrink-0">
             ☯️
           </div>
-          <div>
-            <div className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">Resonansi Elemen</div>
-            <div className="text-xs font-serif font-bold text-cyan-200">
-              Air 💧 Padamkan Api | Api 🔥 Cairkan Es
+          <div className="text-xs space-y-0.5">
+            <div className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">4 Meridian Utama</div>
+            <div className="text-[11px] text-cyan-200 font-mono">
+              Ren Mai (Yin/Dingin) • Du Mai (Yang/Panas)
             </div>
-            <div className="text-[10px] text-stone-400 mt-0.5">
-              Gunakan jurus elemen air/api untuk counter kondisi.
+            <div className="text-[10px] text-stone-400">
+              Chong Mai (Aliran Darah) • Dai Mai (Pusat Dantian)
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Kotak Obat & Herbal di Tas Karakter (Medicine Cabinet) */}
+      <div className="bg-[#121622]/90 border border-[#4d3e28] rounded-xl p-3.5 sm:p-4 shadow-xl space-y-3">
+        <div className="flex justify-between items-center border-b border-[#2d2417] pb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">💊</span>
+            <h3 className="font-serif font-bold text-amber-200 text-xs sm:text-sm tracking-wide">
+              KOTAK OBAT & HERBAL DI TAS KARAKTER
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono text-stone-400 bg-[#0d1017] px-2 py-0.5 rounded border border-stone-800">
+            {medicineItems.length} Jenis Obat Terdeteksi
+          </span>
+        </div>
+
+        {medicineItems.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {medicineItems.map((inv, idx) => {
+              const it = typeof inv.itemId === 'object' ? inv.itemId : null;
+              const itId = String(it?._id || inv.itemId || '');
+              const itName = it?.name || 'Obat Misterius';
+              const itDesc = it?.description || 'Ramuan berkhasiat memulihkan kondisi raga.';
+              const isConsuming = curingKey === itId;
+
+              return (
+                <div key={idx} className="bg-[#181d2a] border border-[#2d374a] rounded-lg p-2.5 flex items-center justify-between gap-2.5 shadow-sm hover:border-amber-600/50 transition-colors">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-9 h-9 rounded-md bg-[#10131d] border border-[#384157] flex items-center justify-center text-lg shrink-0">
+                      {it?.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={it.imageUrl} alt={itName} className="w-7 h-7 object-contain" />
+                      ) : '💊'}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-amber-200 truncate">{itName}</div>
+                      <div className="text-[10px] text-stone-400 truncate max-w-[140px]">{itDesc}</div>
+                      <div className="text-[10px] font-mono text-emerald-400 font-semibold">Tersedia: {inv.quantity} buah</div>
+                    </div>
+                  </div>
+
+                  <button
+                    disabled={isConsuming}
+                    onClick={() => handleDirectUseItem(itId, itName)}
+                    className="px-2.5 py-1 rounded bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 border border-amber-400/70 text-white font-serif text-[11px] font-bold shadow-sm shrink-0 flex items-center gap-1 transition-all"
+                  >
+                    {isConsuming ? <RefreshCw size={11} className="animate-spin" /> : <span>Gunakan</span>}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="py-3 text-center text-stone-400 text-xs border border-dashed border-[#2d374a] rounded-lg bg-[#0d1017]/40 space-y-1">
+            <p>Tidak ada ramuan obat atau pil herba di dalam tas.</p>
+            <p className="text-[11px] text-stone-500">
+              Gunakan tombol <strong className="text-emerald-300">[🧘 Meditasi Salurkan Qi (-10 STA)]</strong> di atas untuk merawat kondisi tubuhmu secara mandiri.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* TABEL KONDISI LENGKAP DENGAN DESAIN DARK INK WUXIA */}
@@ -448,10 +593,15 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
                         <span>Obati ({cureItem.quantity})</span>
                       </button>
                     ) : (
-                      <div className="px-2.5 py-1 rounded bg-[#1c130d] border border-amber-900/60 text-stone-400 text-[10px] font-mono shrink-0 flex items-center gap-1">
-                        <AlertTriangle size={11} className="text-amber-500" />
-                        <span>Butuh Obat</span>
-                      </div>
+                      <button
+                        onClick={handleMeditationHeal}
+                        disabled={isMeditating || currentStamina < 10}
+                        className="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-teal-900 to-emerald-900 hover:from-teal-800 hover:to-emerald-800 border border-emerald-600/70 text-emerald-200 font-serif text-xs font-bold shadow-sm transition-all flex items-center gap-1 shrink-0 disabled:opacity-50"
+                        title="Gunakan 10 Stamina untuk meditasi menyembuhkan kondisi ini"
+                      >
+                        <RefreshCw size={11} className={isMeditating ? 'animate-spin' : ''} />
+                        <span>🧘 Meditasi (-10 STA)</span>
+                      </button>
                     )
                   ) : (
                     <span className="text-[11px] font-mono text-emerald-400/80 px-2 py-1 bg-emerald-950/40 rounded border border-emerald-900/40 flex items-center gap-1">
@@ -472,6 +622,9 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
         </div>
         <p>
           • <strong>Nilai $0$</strong> merepresentasikan kondisi sempurna tanpa efek samping. Setiap poin penambahan memperparah dampak negatif di medan laga.
+        </p>
+        <p>
+          • <strong>Meditasi Mandiri</strong>: Menyalurkan Qi murni (-10 Stamina) dapat merawat meridian dantian dan mengurangi dampak kondisi negatif secara alami jika tidak memiliki obat herba di tas.
         </p>
         <p>
           • <strong>Resonansi Elemen Jurus</strong>: Melancarkan jurus ber-elemen <span className="text-cyan-300 font-bold">Air (Water)</span> dapat memadamkan kobaran api <span className="text-orange-300 font-bold">Burn</span>, sedangkan melancarkan jurus ber-elemen <span className="text-red-300 font-bold">Api (Fire)</span> menyalurkan energi Yang untuk mencairkan tubuh yang <span className="text-sky-300 font-bold">Frozen</span>.

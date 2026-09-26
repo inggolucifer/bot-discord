@@ -15,7 +15,7 @@ import { Compass, User, Sparkles } from 'lucide-react';
 
 export default function RootApp() {
   const { token, user, appearanceCompleted, initialize } = useAuthStore();
-  const { setActiveModal, activeModal, isTileInspectorActive } = useUIStore();
+  const { setActiveModal, activeModal, isTileInspectorActive, showMobileMapNav } = useUIStore();
 
   const [mounted, setMounted] = useState(false);
   const [showLanding, setShowLanding] = useState(true);
@@ -93,25 +93,25 @@ export default function RootApp() {
       </div>
 
       {/* Persistent UI Overlays (Floating Buttons) */}
-      <div className="fixed bottom-20 right-4 z-30 flex flex-col gap-2.5">
+      <div className={`fixed right-3 sm:right-4 z-30 flex flex-col gap-2 transition-all duration-300 ${showMobileMapNav ? 'bottom-20' : 'bottom-3'}`}>
         {!isTileInspectorActive && !activeModal && (
           <>
             {/* Player Stats Sheet */}
             <button
               onClick={() => setActiveModal('stats')}
-              className="bg-[#121722]/90 hover:bg-amber-900/90 text-amber-300 p-2.5 sm:p-3 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.6)] hover:scale-105 transition-all border border-amber-500/70 backdrop-blur-md flex items-center justify-center"
+              className="bg-[#121722]/90 hover:bg-amber-900/90 text-amber-300 p-2 sm:p-2.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.6)] hover:scale-105 active:scale-95 transition-all border border-amber-500/70 backdrop-blur-md flex items-center justify-center cursor-pointer"
               title="Lembar Status Pendekar (Stats Sheet)"
             >
-              <User size={20} className="text-amber-300" />
+              <User size={18} className="text-amber-300" />
             </button>
 
             {/* Dashboard / Manajemen */}
             <button
               onClick={() => setActiveModal('dashboard')}
-              className="bg-[#121722]/90 hover:bg-amber-900/90 text-amber-300 p-2.5 sm:p-3 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.6)] hover:scale-105 transition-all border border-amber-600/60 backdrop-blur-md flex items-center justify-center"
+              className="bg-[#121722]/90 hover:bg-amber-900/90 text-amber-300 p-2 sm:p-2.5 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.6)] hover:scale-105 active:scale-95 transition-all border border-amber-600/60 backdrop-blur-md flex items-center justify-center cursor-pointer"
               title="Tas Qiankun & Inventori"
             >
-              <Compass size={20} className="animate-spin-slow" />
+              <Compass size={18} className="animate-spin-slow" />
             </button>
           </>
         )}

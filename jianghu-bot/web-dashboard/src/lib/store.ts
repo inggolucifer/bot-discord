@@ -135,6 +135,9 @@ interface UIState {
   closeModal: () => void;
   isMapFullscreen: boolean;
   setMapFullscreen: (val: boolean) => void;
+  showMobileMapNav: boolean;
+  setShowMobileMapNav: (val: boolean) => void;
+  toggleMobileMapNav: () => void;
   isTileInspectorActive: boolean;
   setIsTileInspectorActive: (val: boolean) => void;
   activeNpcId: string | null;
@@ -147,6 +150,9 @@ export const useUIStore = create<UIState>((set) => ({
   closeModal: () => set({ activeModal: null, activeNpcId: null }),
   isMapFullscreen: true,
   setMapFullscreen: (val) => set({ isMapFullscreen: val }),
+  showMobileMapNav: false,
+  setShowMobileMapNav: (val) => set({ showMobileMapNav: val }),
+  toggleMobileMapNav: () => set((state) => ({ showMobileMapNav: !state.showMobileMapNav })),
   isTileInspectorActive: false,
   setIsTileInspectorActive: (val) => set({ isTileInspectorActive: val }),
   activeNpcId: null,

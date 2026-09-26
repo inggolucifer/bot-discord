@@ -1183,36 +1183,36 @@ export default function TaleOfImmortalCanvas({
         className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
       />
 
-      {/* HUD Controls (+ dan - Zoom Spasial) - Ultra-kompak di kiri atas agar bebas tabrakan */}
-      <div className="absolute top-12 left-2 sm:top-14 sm:left-4 z-20 flex items-center gap-1 pointer-events-auto bg-[#18140e]/90 p-0.5 sm:p-1 rounded-lg border border-[#453826]/70 shadow-lg backdrop-blur-md">
+      {/* HUD Controls (+ dan - Zoom Spasial) - Vertical on left side to eliminate top stacking */}
+      <div className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-3 z-20 flex flex-col items-center gap-1 pointer-events-auto bg-[#18140e]/90 p-1 rounded-xl border border-[#453826]/70 shadow-xl backdrop-blur-md">
         <button
-          onClick={centerOnPlayer}
-          className="bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] px-2 py-1 rounded text-[11px] sm:text-xs font-serif font-bold transition-all active:scale-95 flex items-center gap-1"
-          title="Pusatkan Kamera ke Karakter"
+          onClick={handleZoomIn}
+          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+          title="Perbesar Peta (+)"
         >
-          <span>🎯</span>
-          <span className="hidden sm:inline">Pusat</span>
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="w-6 h-6 sm:w-7 sm:h-7 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded text-xs sm:text-sm font-bold flex items-center justify-center transition-all active:scale-90"
-          title="Perkecil Peta (-)"
-        >
-          -
+          +
         </button>
         <button
           onClick={() => setCamera(prev => ({ ...prev, zoom: 1.0 }))}
-          className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono text-[#a89578] hover:text-[#e0d3bc] transition-colors"
+          className="px-1 py-0.5 text-[10px] sm:text-xs font-mono text-[#a89578] hover:text-[#e0d3bc] transition-colors"
           title="Reset Zoom 100%"
         >
           {Math.round(camera.zoom * 100)}%
         </button>
         <button
-          onClick={handleZoomIn}
-          className="w-6 h-6 sm:w-7 sm:h-7 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded text-xs sm:text-sm font-bold flex items-center justify-center transition-all active:scale-90"
-          title="Perbesar Peta (+)"
+          onClick={handleZoomOut}
+          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+          title="Perkecil Peta (-)"
         >
-          +
+          -
+        </button>
+        <div className="w-5 h-px bg-[#453826]/70 my-0.5" />
+        <button
+          onClick={centerOnPlayer}
+          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3d3324] text-[#d8c3a5] rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+          title="Pusatkan Kamera ke Karakter"
+        >
+          🎯
         </button>
       </div>
     </div>

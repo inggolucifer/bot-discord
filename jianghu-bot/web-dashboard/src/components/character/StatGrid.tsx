@@ -102,15 +102,15 @@ export default function StatGrid({ player, compact = false, hideCombat = false }
     wood: Math.floor(Number(rawRoots.wood) || 0)
   };
 
-  // 5. Artisanship & Kemahiran Profesi (Strictly Integers - Sistem Terpadu 1-to-1)
+  // 5. Artisanship & Kemahiran Profesi (Strictly Integers >= 1 - Sistem Terpadu 1-to-1)
   const artisan = {
-    alchemy: Math.floor(prof.alchemy?.isUnlocked ? (prof.alchemy.level || 1) : (Number(rawArtisan.alchemy) || 1)),
-    forge: Math.floor(prof.smithing?.isUnlocked ? (prof.smithing.level || 1) : (Number(rawArtisan.forge) || 1)),
-    talismans: Math.floor(Number(rawArtisan.talismans) || 1),
-    herbology: Math.floor(prof.farming?.isUnlocked ? (prof.farming.level || 1) : (Number(rawArtisan.herbology) || 1)),
-    mining: Math.floor(prof.mining?.isUnlocked ? (prof.mining.level || 1) : (Number(rawArtisan.mining) || 1)),
-    fishing: Math.floor(prof.fishing?.isUnlocked ? (prof.fishing.level || 1) : (Number(rawArtisan.fishing) || 0)),
-    cooking: Math.floor(prof.cooking?.isUnlocked ? (prof.cooking.level || 1) : (Number(rawArtisan.cooking) || 0))
+    alchemy: Math.max(1, Math.floor(prof.alchemy?.level || Number(rawArtisan.alchemy) || 1)),
+    forge: Math.max(1, Math.floor(prof.smithing?.level || Number(rawArtisan.forge) || 1)),
+    talismans: Math.max(1, Math.floor(Number(rawArtisan.talismans) || 1)),
+    herbology: Math.max(1, Math.floor(prof.farming?.level || Number(rawArtisan.herbology) || 1)),
+    mining: Math.max(1, Math.floor(prof.mining?.level || Number(rawArtisan.mining) || 1)),
+    fishing: Math.max(1, Math.floor(prof.fishing?.level || Number(rawArtisan.fishing) || 1)),
+    cooking: Math.max(1, Math.floor(prof.cooking?.level || Number(rawArtisan.cooking) || 1))
   };
 
   const headerClass = "px-3 py-1 rounded-full bg-[#1b1c24] border border-[#3e3b30] text-[#e0cfb3] text-xs font-serif font-semibold tracking-wider flex items-center justify-center gap-1.5 shadow-md mb-2.5";

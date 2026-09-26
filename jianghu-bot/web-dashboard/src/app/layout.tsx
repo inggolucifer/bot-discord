@@ -15,6 +15,8 @@ import ReactQueryProvider from "@/components/ReactQueryProvider";
 import SocketProvider from "@/components/SocketProvider";
 import ProductTour from "@/components/ui/tour/ProductTour";
 
+import MainContentWrapper from "@/components/MainContentWrapper";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,10 +39,10 @@ export default function RootLayout({
 
         <Navbar />
 
-        {/* Main Content Area */}
-        <main className="flex-1 w-full min-h-0 relative z-10 flex flex-col pb-16 lg:pb-0">
+        {/* Main Content Area with dynamic padding */}
+        <MainContentWrapper>
           {children}
-        </main>
+        </MainContentWrapper>
 
         <GlobalChatWrapper />
         <ToastContainer />

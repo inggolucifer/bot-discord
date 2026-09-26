@@ -506,15 +506,17 @@ export default function PlayerStatsModal() {
                     <div className="bg-[#121622] border border-[#3b3323] p-4 rounded-xl">
                       <h3 className="text-lg font-serif font-bold text-amber-300 mb-3 flex items-center gap-2">
                         <Hammer size={18} className="text-amber-400" />
-                        Profesi & Kemahiran Pengrajin
+                        Profesi & Kemahiran Pengrajin (7 Disiplin)
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {[
-                          { name: 'Alkimia (Alchemy)', level: Math.floor(player?.professions?.alchemy?.level || player?.extendedStats?.artisanship?.alchemy || 1), icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
-                          { name: 'Penempa (Forge / Smithing)', level: Math.floor(player?.professions?.smithing?.level || player?.extendedStats?.artisanship?.forge || 1), icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan perkakas' },
-                          { name: 'Kertas Jimat (Talismans)', level: Math.floor(player?.extendedStats?.artisanship?.talismans || 1), icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
-                          { name: 'Herbalis & Tani (Herbology)', level: Math.floor(player?.professions?.farming?.level || player?.extendedStats?.artisanship?.herbology || 1), icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
-                          { name: 'Penambang (Mining)', level: Math.floor(player?.professions?.mining?.level || player?.extendedStats?.artisanship?.mining || 1), icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
+                          { name: 'Alkimia (Alchemy)', level: Math.max(1, Math.floor(player?.professions?.alchemy?.level || player?.extendedStats?.artisanship?.alchemy || 1)), icon: '⚗️', desc: 'Meracik pil obat dan intisari Qi' },
+                          { name: 'Penempa (Forge / Smithing)', level: Math.max(1, Math.floor(player?.professions?.smithing?.level || player?.extendedStats?.artisanship?.forge || 1)), icon: '⚒️', desc: 'Menempa pedang, baju zirah, dan perkakas' },
+                          { name: 'Kertas Jimat (Talismans)', level: Math.max(1, Math.floor(player?.extendedStats?.artisanship?.talismans || 1)), icon: '📜', desc: 'Menuliskan segel mantra pertahanan' },
+                          { name: 'Herbalis & Tani (Herbology)', level: Math.max(1, Math.floor(player?.professions?.farming?.level || player?.extendedStats?.artisanship?.herbology || 1)), icon: '🌿', desc: 'Mengenali dan memanen tanaman obat langka' },
+                          { name: 'Penambang (Mining)', level: Math.max(1, Math.floor(player?.professions?.mining?.level || player?.extendedStats?.artisanship?.mining || 1)), icon: '⛏️', desc: 'Mengekstraksi bijih besi dingin dan giok roh' },
+                          { name: 'Memancing (Fishing)', level: Math.max(1, Math.floor(player?.professions?.fishing?.level || player?.extendedStats?.artisanship?.fishing || 1)), icon: '🎣', desc: 'Menangkap ikan roh di perairan Jianghu' },
+                          { name: 'Kuliner & Masak (Cooking)', level: Math.max(1, Math.floor(player?.professions?.cooking?.level || player?.extendedStats?.artisanship?.cooking || 1)), icon: '🍳', desc: 'Mengolah ransum dan masakan pemulih energi' }
                         ].map((art, idx) => (
                           <div key={idx} className="bg-[#181d2a] border border-[#2d3547] p-3 rounded-lg flex items-center gap-3">
                             <div className="text-2xl p-2 bg-[#10131d] rounded-md border border-[#384157]">
@@ -522,7 +524,7 @@ export default function PlayerStatsModal() {
                             </div>
                             <div>
                               <div className="font-bold text-amber-200 text-xs sm:text-sm">{art.name}</div>
-                              <div className="text-[11px] text-amber-400 font-semibold">Tingkat Kemahiran: {art.level}</div>
+                              <div className="text-[11px] text-amber-400 font-semibold font-mono">Tingkat Kemahiran: Lv. {art.level}</div>
                               <div className="text-[10px] text-stone-400 mt-0.5">{art.desc}</div>
                             </div>
                           </div>

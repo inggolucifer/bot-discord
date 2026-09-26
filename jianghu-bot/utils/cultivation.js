@@ -4,66 +4,102 @@ const Player = require('../models/Player');
 const SYSTEM_REALMS = [
   {
     name: 'Fondasi Fana (Mortal Foundation)',
-    maxStage: 9,
+    maxStage: 10,
     baseQiCapacity: 1000,
     qiRatePerMinute: 1,
-    baseSuccessRate: 100 // Mortal ke Qi Refining 100% success
+    baseSuccessRate: 100, // Mortal ke Qi Refining 100% success
+    tribulationTier: 0,
+    tribulationTitle: 'Pembersihan Dantian & Penyatuan Fondasi Fana',
+    tribulationBaseDamage: 0,
+    failCooldownHours: 0
   },
   {
     name: 'Pemurnian Qi (Qi Refining)',
     maxStage: 9,
     baseQiCapacity: 5000,
     qiRatePerMinute: 2,
-    baseSuccessRate: 90
+    baseSuccessRate: 90,
+    tribulationTier: 1,
+    tribulationTitle: 'Percikan Kilat Rohani Surgawi',
+    tribulationBaseDamage: 100,
+    failCooldownHours: 4
   },
   {
     name: 'Pembentukan Fondasi (Foundation Establishment)',
     maxStage: 9,
     baseQiCapacity: 25000,
     qiRatePerMinute: 5,
-    baseSuccessRate: 80
+    baseSuccessRate: 80,
+    tribulationTier: 2,
+    tribulationTitle: 'Sambaran Guntur Bumi Sembilan Lapis',
+    tribulationBaseDamage: 250,
+    failCooldownHours: 6
   },
   {
     name: 'Pembentukan Inti (Core Formation)',
     maxStage: 9,
     baseQiCapacity: 125000,
     qiRatePerMinute: 15,
-    baseSuccessRate: 70
+    baseSuccessRate: 70,
+    tribulationTier: 3,
+    tribulationTitle: '⚡ Tribulasi Langit Tingkat 1 (Petir Emas Pelebur Inti)',
+    tribulationBaseDamage: 500,
+    failCooldownHours: 12
   },
   {
     name: 'Roh Bayi (Nascent Soul)',
     maxStage: 9,
     baseQiCapacity: 625000,
     qiRatePerMinute: 40,
-    baseSuccessRate: 60
+    baseSuccessRate: 60,
+    tribulationTier: 4,
+    tribulationTitle: '⚡ Tribulasi Roh Membelah Dantian',
+    tribulationBaseDamage: 1000,
+    failCooldownHours: 16
   },
   {
     name: 'Transformasi Roh (Soul Transformation)',
     maxStage: 9,
     baseQiCapacity: 3125000,
     qiRatePerMinute: 120,
-    baseSuccessRate: 50
+    baseSuccessRate: 50,
+    tribulationTier: 5,
+    tribulationTitle: '⚡ Tribulasi Petir Ungu Sembilan Awan',
+    tribulationBaseDamage: 2000,
+    failCooldownHours: 24
   },
   {
     name: 'Pemutus Kehampaan (Void Severing)',
     maxStage: 9,
     baseQiCapacity: 15625000,
     qiRatePerMinute: 350,
-    baseSuccessRate: 40
+    baseSuccessRate: 40,
+    tribulationTier: 6,
+    tribulationTitle: '⚡ Tribulasi Kehampaan Ruang & Waktu',
+    tribulationBaseDamage: 4000,
+    failCooldownHours: 36
   },
   {
     name: 'Penerobosan Tribulasi (Tribulation Crossing) ⚡',
     maxStage: 9,
     baseQiCapacity: 78125000,
     qiRatePerMinute: 1000,
-    baseSuccessRate: 30
+    baseSuccessRate: 30,
+    tribulationTier: 7,
+    tribulationTitle: '⚡⚡ Tribulasi Petir Emas Surgawi Purba',
+    tribulationBaseDamage: 8000,
+    failCooldownHours: 48
   },
   {
     name: 'Kenaikan Abadi (Immortal Ascension)',
     maxStage: 9,
     baseQiCapacity: 500000000,
     qiRatePerMinute: 3000,
-    baseSuccessRate: 20
+    baseSuccessRate: 20,
+    tribulationTier: 8,
+    tribulationTitle: '⚡⚡⚡ Tribulasi Penciptaan Semesta Raya',
+    tribulationBaseDamage: 16000,
+    failCooldownHours: 72
   }
 ];
 
@@ -242,6 +278,60 @@ async function updateCultivationRole(interaction, realmName) {
 }
 
 
+/**
+ * Menghitung HP survival pemain saat menghadapi tribulasi petir.
+ * Formula: SurvivalHP = maxHP + (DEF × 3) + (Vitality × 2) + (Focus × 1.5)
+ */
+function calculateSurvivalHP(player) {
+  const stats = player.stats || {};
+  const ext = player.extendedStats || {};
+  const maxHP = player.currentHp || stats.baseHp || 100;
+  const def = stats.baseDef || 10;
+  const vitality = ext.vitality || 100;
+  const focus = ext.focus || 100;
+
+  return Math.floor(maxHP + (def * 3) + (vitality * 2) + (focus * 1.5));
+}
+
+/**
+ * Menghitung damage gelombang tribulasi petir berdasarkan ranah dan nomor gelombang.
+ */
+function calculateRealmWaveDamage(wave, realmIndex) {
+  const realm = SYSTEM_REALMS[realmIndex];
+  if (!realm || !realm.tribulationBaseDamage) return 0;
+  return Math.floor(realm.tribulationBaseDamage * (1 + 0.3 * wave));
+}
+
+/**
+ * Menjalankan simulasi tribulasi petir 3 gelombang untuk ranah utama.
+ */
+function runRealmTribulation(player, realmIndex) {
+  const realm = SYSTEM_REALMS[realmIndex];
+  const survivalHP = calculateSurvivalHP(player);
+  const waveDetails = [];
+  let survived = true;
+
+  for (let wave = 0; wave < 3; wave++) {
+    const damage = calculateRealmWaveDamage(wave, realmIndex);
+    const cleared = damage === 0 || survivalHP >= damage;
+    waveDetails.push({ wave: wave + 1, damage, survived: cleared });
+    if (!cleared) {
+      survived = false;
+      break;
+    }
+  }
+
+  const totalDamage = waveDetails.reduce((sum, w) => sum + w.damage, 0);
+  return {
+    survived,
+    wavesCleared: waveDetails.filter(w => w.survived).length,
+    totalDamage,
+    survivalHP,
+    waveDetails,
+    tribulationTitle: realm?.tribulationTitle || 'Tribulasi Petir'
+  };
+}
+
 module.exports = {
     SYSTEM_REALMS,
     getRealmIndex,
@@ -250,7 +340,10 @@ module.exports = {
     calculateCurrentQi,
     syncPlayerCultivation,
     attemptBreakthrough,
-    updateCultivationRole
+    updateCultivationRole,
+    calculateSurvivalHP,
+    calculateRealmWaveDamage,
+    runRealmTribulation
 };
 
 function getRealmName(idx) {

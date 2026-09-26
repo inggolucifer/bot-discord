@@ -2291,4 +2291,69 @@ router.post('/quick-cure', authenticateToken, async (req, res) => {
     }
 });
 
+// Endpoint: POST /api/player/condition/heal-meditation
+// Meditasi mandiri menyalurkan Qi murni untuk menyembuhkan luka dan menetralkan racun menggunakan 10 Stamina
+router.post('/condition/heal-meditation', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        const { clampStamina } = require('../../utils/stamina');
+        const { current: currentStamina } = clampStamina(player);
+
+        const staminaCost = 10;
+        if (currentStamina < staminaCost) {
+            return res.status(400).json({
+                error: `Stamina tidak cukup untuk meditasi pemulihan (Butuh ${staminaCost} STA, tersisa ${Math.floor(currentStamina)} STA). Istirahatlah sejenak.`
+            });
+        }
+
+        const { normalizeConditions } = require('../../utils/conditionEngine');
+        player.conditions = normalizeConditions(player.conditions);
+
+        // Cari kondisi negatif yang bernilai > 0
+        const negativeKeys = ['poison', 'injury', 'bleed', 'burn', 'psychosis', 'frozen', 'knockback'];
+        let curedAny = false;
+        const curedDetails = [];
+
+        negativeKeys.forEach(k => {
+            if (player.conditions[k] > 0) {
+                const cureAmt = Math.min(player.conditions[k], 15);
+                player.conditions[k] = Math.max(0, player.conditions[k] - cureAmt);
+                curedAny = true;
+                curedDetails.push(`${k}: -${cureAmt}`);
+            }
+        });
+
+        // Potong stamina
+        player.currentStamina = Math.max(0, currentStamina - staminaCost);
+
+        // Pemulihan HP alami
+        const maxHp = player.stats?.baseHp || 100;
+        if (player.currentHp < maxHp) {
+            player.currentHp = Math.min(maxHp, (player.currentHp || 0) + 15);
+        }
+
+        player.markModified('conditions');
+        await player.save();
+
+        const detailMsg = curedDetails.length > 0 ? ` (${curedDetails.join(', ')})` : '';
+        const msg = curedAny 
+            ? `🧘 Kamu duduk bersila menyalurkan intisari Qi murni! Menghabiskan ${staminaCost} Stamina dan memulihkan kondisi meridian tubuh${detailMsg}.`
+            : `🧘 Kamu melakukan meditasi pernapasan teratur (-${staminaCost} Stamina). Kondisi dantianmu saat ini dalam keadaan prima dan bugar!`;
+
+        res.json({
+            success: true,
+            message: msg,
+            conditions: normalizeConditions(player.conditions),
+            currentStamina: Math.floor(player.currentStamina),
+            currentHp: Math.floor(player.currentHp)
+        });
+    } catch (err) {
+        console.error('[API-PLAYER] POST /condition/heal-meditation error:', err);
+        res.status(500).json({ error: 'Gagal melakukan meditasi pemulihan.' });
+    }
+});
+
 module.exports = router;
