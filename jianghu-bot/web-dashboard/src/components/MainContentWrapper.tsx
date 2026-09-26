@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils';
 
 export default function MainContentWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isMapRoute = pathname === '/world' || pathname === '/' || pathname === '/explore';
+  const isLandingMenu = useUIStore((s) => s.isLandingMenu);
   const showMobileMapNav = useUIStore((s) => s.showMobileMapNav);
+  const isMapRoute = pathname === '/world' || pathname === '/explore' || (pathname === '/' && !isLandingMenu);
 
   return (
     <main

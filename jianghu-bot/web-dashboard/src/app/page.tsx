@@ -15,10 +15,14 @@ import { Compass, User, Sparkles } from 'lucide-react';
 
 export default function RootApp() {
   const { token, user, appearanceCompleted, initialize } = useAuthStore();
-  const { setActiveModal, activeModal, isTileInspectorActive, showMobileMapNav } = useUIStore();
+  const { setActiveModal, activeModal, isTileInspectorActive, showMobileMapNav, setIsLandingMenu } = useUIStore();
 
   const [mounted, setMounted] = useState(false);
   const [showLanding, setShowLanding] = useState(true);
+
+  useEffect(() => {
+    setIsLandingMenu(showLanding);
+  }, [showLanding, setIsLandingMenu]);
 
   useEffect(() => {
     initialize();
@@ -73,7 +77,7 @@ export default function RootApp() {
   if (showLanding) {
     return (
       <div className="fixed inset-0 z-[60] w-screen h-screen overflow-hidden">
-        <LandingMenu onEnterWorld={() => setShowLanding(false)} />
+        <LandingMenu onEnterWorld={() => { setShowLanding(false); setIsLandingMenu(false); }} />
         <AchievementsModal />
         <SettingsModal />
       </div>
