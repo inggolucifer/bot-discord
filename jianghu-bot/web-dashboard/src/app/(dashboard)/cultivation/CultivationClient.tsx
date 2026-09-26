@@ -28,7 +28,7 @@ export default function CultivationClient() {
         }
     }, [token]);
 
-    const { data: rawData, isLoading: isCultivationLoading } = useQuery<{data: CultivationData}>({
+    const { data: rawData, isLoading: isCultivationLoading, error: cultivationError, refetch } = useQuery<{data: CultivationData}>({
         queryKey: ['cultivation'],
         queryFn: async () => {
             const { data } = await api.get('/cultivation');
@@ -42,7 +42,20 @@ export default function CultivationClient() {
 
     if (isCultivationLoading) return <LoadingState text="Menghubungkan ke Dantian..." />;
 
-    if (!cultivationData) return <EmptyState title="Gagal Memuat" description="Tidak dapat memuat data kultivasi." icon={<Flame size={48} />} />;
+    if (!cultivationData) {
+        const errorMsg = (cultivationError as any)?.response?.data?.error || (cultivationError as any)?.message || "Tidak dapat memuat data kultivasi.";
+        return (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                <EmptyState title="Gagal Memuat" description={errorMsg} icon={<Flame size={48} />} />
+                <button
+                    onClick={() => refetch()}
+                    className="px-4 py-2 rounded-xl bg-amber-900/60 hover:bg-amber-800 text-amber-200 border border-amber-600/50 text-xs font-serif font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+                >
+                    🔄 Coba Muat Ulang Dantian
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

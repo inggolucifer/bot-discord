@@ -227,7 +227,7 @@ router.post('/email-register', async (req, res) => {
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',
-                stage: 0,
+                stage: 1,
                 qi: 0,
                 lastSyncAt: new Date(),
                 isFlawedFoundation: false
@@ -395,7 +395,7 @@ router.post('/verify-otp', async (req, res) => {
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',
-                stage: 0,
+                stage: 1,
                 qi: 0,
                 lastSyncAt: new Date(),
                 isFlawedFoundation: false
@@ -554,7 +554,7 @@ router.post('/google-finalize', async (req, res) => {
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',
-                stage: 0,
+                stage: 1,
                 qi: 0,
                 lastSyncAt: new Date(),
                 isFlawedFoundation: false
@@ -737,7 +737,7 @@ router.post('/web-login', async (req, res) => {
                 },
                 systemCultivation: {
                     realm: 'Fondasi Fana (Mortal Foundation)',
-                    stage: 0,
+                    stage: 1,
                     qi: 0,
                     lastSyncAt: new Date(),
                     isFlawedFoundation: false
@@ -1078,7 +1078,7 @@ router.post('/register-character', authenticateToken, async (req, res) => {
             },
             systemCultivation: {
                 realm: 'Fondasi Fana (Mortal Foundation)',
-                stage: 0,
+                stage: 1,
                 qi: 0,
                 lastSyncAt: new Date(),
                 isFlawedFoundation: false

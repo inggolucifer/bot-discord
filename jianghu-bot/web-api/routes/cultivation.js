@@ -9,6 +9,7 @@ const { calculateCurrentQi, attemptBreakthrough, SYSTEM_REALMS, updateCultivatio
 const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
 const { z } = require('zod');
+const { MOOD_COSTS } = require('../../config/fivePillars');
 
 // Endpoint: GET /api/cultivation
 // Mengambil status real-time Qi (dihitung sejak lastSyncAt)
@@ -20,6 +21,19 @@ router.get('/', authenticateToken, async (req, res) => {
 
         let player = await Player.findOne({ discordId: userId, guildId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+
+        // Normalisasi jika player belum memiliki data kultivasi atau masih stage 0 (default schema lama)
+        if (!player.systemCultivation) {
+            player.systemCultivation = {
+                realm: 'Fondasi Fana (Mortal Foundation)',
+                stage: 1,
+                qi: 0,
+                lastSyncAt: new Date(),
+                isFlawedFoundation: false
+            };
+        } else if (!player.systemCultivation.stage || player.systemCultivation.stage < 1) {
+            player.systemCultivation.stage = 1;
+        }
 
         // Hitung real-time QI
         const calcResult = await syncPlayerCultivation(player);
@@ -66,6 +80,12 @@ router.get('/', authenticateToken, async (req, res) => {
         const isMajorBreakthrough = stage >= realmData.maxStage;
 
         // Persentase Sukses Riil (Base - Penalti Stage + Bonus Pil)
+        let baseSuccessRate = calcResult.realmIdx === 0 ? 100 : (realmData.baseSuccessRate || 100);
+        if (calcResult.realmIdx > 0 && stage > 0) {
+            baseSuccessRate -= (stage * 2);
+        }
+        baseSuccessRate = Math.min(100, Math.max(1, baseSuccessRate));
+
         let effectiveSuccessRate = baseSuccessRate;
         const highestPillBonus = usablePills.length > 0 ? Math.max(...usablePills.map(p => p.bonusPercent)) : 0;
         effectiveSuccessRate = Math.min(100, Math.max(1, effectiveSuccessRate + highestPillBonus));
