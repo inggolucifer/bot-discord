@@ -54,6 +54,7 @@ export function WorldPageContent() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBattleActive, setIsBattleActive] = useState(false);
   const isTileInspectorActive = useUIStore(s => s.isTileInspectorActive);
+  const showMobileMapNav = useUIStore(s => s.showMobileMapNav);
 
   // Auto-close Warta drawer if Tile Inspector becomes active
   useEffect(() => {
@@ -299,17 +300,17 @@ export function WorldPageContent() {
           {/* Top-Right HUD Row */}
           <div className="flex items-center gap-2 pointer-events-auto">
             {/* Stamina Capsule */}
-            <div className="bg-[#0e131d]/90 backdrop-blur-md border border-amber-700/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] rounded-xl px-2.5 sm:px-3.5 py-1 sm:py-1.5 flex items-center gap-2.5 sm:gap-3">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
+            <div className="bg-[#0e131d]/90 backdrop-blur-md border border-amber-700/60 shadow-[0_4px_20px_rgba(0,0,0,0.6)] rounded-xl px-2 sm:px-3.5 py-1 flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 fill-amber-400 animate-pulse" />
                 <div className="flex flex-col">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Stamina</span>
-                    <span className="text-xs font-bold text-amber-300 font-mono">
+                  <div className="flex items-center justify-between gap-1.5">
+                    <span className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Stamina</span>
+                    <span className="text-[11px] sm:text-xs font-bold text-amber-300 font-mono">
                       {Math.floor(currentStamina)} / {maxStamina}
                     </span>
                   </div>
-                  <div className="w-20 sm:w-28 bg-gray-800/90 rounded-full h-1.5 overflow-hidden mt-0.5 border border-amber-900/30">
+                  <div className="w-16 sm:w-28 bg-gray-800/90 rounded-full h-1 sm:h-1.5 overflow-hidden mt-0.5 border border-amber-900/30">
                     <div
                       className="bg-gradient-to-r from-amber-500 to-yellow-400 h-full rounded-full transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.5)]"
                       style={{ width: `${Math.min(100, Math.max(0, (currentStamina / maxStamina) * 100))}%` }}
@@ -511,7 +512,7 @@ export function WorldPageContent() {
 
       {/* Floating Panel (Tabs & Content) - Collapsible Drawer (Hidden during battle) */}
       {mapView !== 'world' && subViewMode === 'map' && !isBattleActive && (
-      <div className="absolute bottom-12 sm:bottom-14 left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[42vh] sm:max-h-[55vh] flex flex-col pointer-events-none animate-in fade-in">
+      <div className={`absolute left-2 sm:left-4 z-30 w-72 sm:w-96 max-w-[calc(100vw-1.5rem)] max-h-[42vh] sm:max-h-[55vh] flex flex-col pointer-events-none animate-in fade-in transition-all duration-300 ${showMobileMapNav ? 'bottom-12 sm:bottom-14' : 'bottom-2 sm:bottom-4'}`}>
         
         {/* Collapsible Drawer Header */}
         <div className="pointer-events-auto mb-1.5 flex items-center justify-between bg-[#0e131d]/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-amber-900/60 shadow-xl">

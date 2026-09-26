@@ -13,6 +13,7 @@ import { LawStatusData, LawSkillItem, LawType } from '@/types/game';
 import { CultivationData } from '@/lib/schemas';
 import { LAW_RANK_NAMES_EN } from '@/lib/realmUtils';
 import Link from 'next/link';
+import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
 import {
   Flame,
   Shield,
@@ -21,6 +22,7 @@ import {
   Sword,
   BookOpen,
   CheckCircle2,
+  XCircle,
   Lock,
   ChevronRight,
   Info,
@@ -32,7 +34,9 @@ import {
   Mountain,
   Skull,
   ArrowUpCircle,
-  TreePine
+  TreePine,
+  Loader2,
+  Activity
 } from 'lucide-react';
 
 // 15 Law Catalog untuk Modal Pemilihan Fondasi Fana
@@ -218,6 +222,227 @@ const BODY_PARTS_INFO = [
   { id: 'dantian', name: 'Dantian Daging Fana', icon: '🌀', desc: 'Wadah sejati pembentukan True Qi yang murni dari daging fana.' }
 ];
 
+export const MASTER_REALM_ROADMAP = [
+  { idx: 0, name: 'Fondasi Fana', enName: 'Mortal', levelCap: 20, qiCap: '1.000', successRate: '100%', tribulation: 'Pembersihan Raga (0 Dmg)', penalty: 'Tanpa Penalti', icon: '🧘', tier: 0 },
+  { idx: 1, name: 'Pemurnian Qi', enName: 'Qi Refining', levelCap: 40, qiCap: '10.000', successRate: '85%', tribulation: '3 Kilat Ungu (Tier 1)', penalty: '-50% Qi • 1 Jam CD', icon: '💨', tier: 1 },
+  { idx: 2, name: 'Pembangunan Fondasi', enName: 'Foundation Establishment', levelCap: 60, qiCap: '50.000', successRate: '70%', tribulation: '3 Halilintar Azure (Tier 2)', penalty: '-50% Qi • 2 Jam CD', icon: '🏛️', tier: 2 },
+  { idx: 3, name: 'Inti Emas', enName: 'Golden Core', levelCap: 80, qiCap: '250.000', successRate: '55%', tribulation: '3 Petir Api Merah (Tier 3)', penalty: '-50% Qi • 4 Jam CD', icon: '🟡', tier: 3 },
+  { idx: 4, name: 'Jiwa Baru Lahir', enName: 'Nascent Soul', levelCap: 100, qiCap: '1.000.000', successRate: '45%', tribulation: '3 Badai Petir Hitam (Tier 4)', penalty: '-50% Qi • 8 Jam CD', icon: '👶', tier: 4 },
+  { idx: 5, name: 'Pembentukan Jiwa', enName: 'Soul Formation', levelCap: 120, qiCap: '5.000.000', successRate: '35%', tribulation: '3 Guntur Emas Surgawi (Tier 5)', penalty: '-50% Qi • 12 Jam CD', icon: '🔮', tier: 5 },
+  { idx: 6, name: 'Pemurnian Kekosongan', enName: 'Void Refinement', levelCap: 140, qiCap: '25.000.000', successRate: '25%', tribulation: '3 Halilintar Kehancuran (Tier 6)', penalty: '-50% Qi • 24 Jam CD', icon: '🌌', tier: 6 },
+  { idx: 7, name: 'Penyatuan Tubuh', enName: 'Body Integration', levelCap: 160, qiCap: '100.000.000', successRate: '15%', tribulation: '3 Petir Nirwana Kuno (Tier 7)', penalty: '-50% Qi • 48 Jam CD', icon: '⚡', tier: 7 },
+  { idx: 8, name: 'Kenaikan Agung', enName: 'Great Ascension', levelCap: 180, qiCap: '500.000.000', successRate: '10%', tribulation: '9 Guntur Malapetaka (Tier 8)', penalty: '-50% Qi • 72 Jam CD', icon: '👑', tier: 8 }
+];
+
+export const LAW_PATH_MODS: Record<string, { mod: number; note: string }> = {
+  element_phoenix_fire:     { mod: 1.08, note: 'Api Purba (+8% Dmg Tribulasi)' },
+  element_azure_water:      { mod: 1.02, note: 'Arus Samudra (+2% Dmg Tribulasi)' },
+  element_xuanwu_earth:     { mod: 0.98, note: 'Pertahanan Xuanwu (-2% Dmg Tribulasi)' },
+  element_qingdi_wood:      { mod: 1.00, note: 'Vitalitas Pohon Hayat (Seimbang)' },
+  element_roc_wind:         { mod: 1.05, note: 'Badai Astral (+5% Dmg Tribulasi)' },
+  element_godthunder_light: { mod: 1.15, note: 'Resonansi Petir Murni (+15% Dmg Tribulasi)' },
+  body_tempering:           { mod: 1.00, note: 'True Qi Raga Vajra' },
+  gu_master:                { mod: 1.20, note: 'Beban Rongga Cacing Gu (+20% Dmg Tribulasi)' },
+  natal_artifact:           { mod: 1.05, note: 'Resonansi Pusaka Batin (+5% Dmg Tribulasi)' },
+  natal_beast:              { mod: 1.10, note: 'Ikatan Jiwa Satwa Kembar (+10% Dmg Tribulasi)' },
+  demonic_turbid_core:      { mod: 1.40, note: 'Beban Siluman Kotor (+40% Dmg Tribulasi)' },
+  demonic_blood_soul:       { mod: 1.55, note: 'Karma Darah & Sukma Maut (+55% Dmg Tribulasi)' },
+  demonic_myriad_venom:     { mod: 1.35, note: 'Reaksi Intisari Racun (+35% Dmg Tribulasi)' },
+  demonic_abyssal_pact:     { mod: 1.50, note: 'Kutukan Entitas Abyss (+50% Dmg Tribulasi)' },
+  demonic_nether_darkness:  { mod: 1.25, note: 'Hawa Dingin Yin Kubur (+25% Dmg Tribulasi)' }
+};
+
+export const LAW_RANK_NAMES_ID: Record<string, string[]> = {
+  element_phoenix_fire:     ['Percikan Api Kecil', 'Pembakaran Awal', 'Sayap Api Muda', 'Nirwana Pertama', 'Nyala Phoenix Bangkit', 'Lahar Inti Batin', 'Mahkota Api Surgawi', 'Burung Api Abadi', 'Phoenix Sempurna'],
+  element_azure_water:      ['Tetesan Embun Pagi', 'Aliran Sungai Perak', 'Gelombang Laut Biru', 'Arus Deras Naga', 'Samudra Batin Jernih', 'Glasier Jiwa Beku', 'Pusaran Abyssal', 'Lautan Langit Tanpa Dasar', 'Naga Azure Sempurna'],
+  element_xuanwu_earth:     ['Kerikil Dasar', 'Tanah Liat Padat', 'Batu Karang Kokoh', 'Tebing Baja Bumi', 'Inti Gunung Berapi', 'Lempeng Benua Agung', 'Fondasi Leylines', 'Cangkang Xuanwu Purba', 'Xuanwu Sempurna'],
+  element_qingdi_wood:      ['Tunas Biji Pertama', 'Akar Rumput Liar', 'Batang Bambu Kokoh', 'Pohon Tua Berurat', 'Hutan Belantara Hidup', 'Akar Dunia Terhubung', 'Pohon Hayat Berbunga', 'Kanopi Langit Surgawi', 'Kaisar Hijau Sempurna'],
+  element_roc_wind:         ['Hembusan Lembut', 'Pusaran Debu Kecil', 'Angin Kencang Padang', 'Topan Bilah Tajam', 'Badai Petir Langit', 'Sayap Roc Terbentang', 'Tornado Sembilan Langit', 'Angin Astral Pembatas', 'Roc Kuno Sempurna'],
+  element_godthunder_light: ['Percikan Statis', 'Kilat Jemari Kecil', 'Sambaran Awan Hitam', 'Petir Langit Pertama', 'Rantai Petir Biru', 'Petir Ungu Murni', 'Hukuman Langit Ketujuh', 'Sembilan Petir Suci', 'Dewa Petir Sempurna'],
+  body_tempering:           ['Kulit Fana Biasa', 'Pengerasan Daging', 'Tulang Besi Tempa', 'Otot Kawat Baja', 'Meridian Terbuka', 'Organ Emas Murni', 'Darah Naga Mengalir', 'Raga Vajra Tak Tertembus', 'Raga Sempurna'],
+  gu_master:                ['Penanam Ulat Kecil', 'Penjaga Sarang Awal', 'Peternak Gu Muda', 'Pengendali Koloni', 'Master Fusi Gu', 'Raja Aperture', 'Penguasa Sepuluh Ribu', 'Rongga Chaos Purba', 'Gu Sempurna'],
+  natal_artifact:           ['Benda Fana Biasa', 'Pusaka Berpendar', 'Senjata Roh Muda', 'Artefak Inti Batin', 'Pusaka Batin Hidup', 'Relik Bernapas', 'Senjata Jiwa Terikat', 'Pusaka Surgawi', 'Pusaka Sempurna'],
+  natal_beast:              ['Hewan Fana Biasa', 'Satwa Roh Kecil', 'Satwa Berbakat Muda', 'Macan Roh Tumbuh', 'Satwa Metamorfosis', 'Roh Purba Bangkit', 'Satwa Langit Terbang', 'Naga Roh Sejati', 'Satwa Sempurna'],
+  demonic_turbid_core:      ['Penghisap Hawa Lemah', 'Penyerap Inti Kotor', 'Pembersih Core Muda', 'Pelebur Aura Siluman', 'Penguasa Miasma', 'Pemakan Hawa Hitam', 'Tiran Core Gelap', 'Raja Siluman Pelebur', 'Iblis Core Sempurna'],
+  demonic_blood_soul:       ['Penghisap Setetes Darah', 'Peminum Darah Fana', 'Pengikat Ruh Lemah', 'Panji Ruh Pertama', 'Pencabut Nyawa Diam', 'Lautan Darah Beriak', 'Penguasa Sembilan Ruh', 'Raja Neraka Darah', 'Iblis Darah Sempurna'],
+  demonic_myriad_venom:     ['Penjilat Bisa Ringan', 'Peminum Racun Encer', 'Tubuh Toleran Racun', 'Kantung Bisa Terbentuk', 'Racun Seribu Jenis', 'Tubuh Kebal Maut', 'Naga Racun Korosi', 'Lautan Racun Pemusnah', 'Iblis Racun Sempurna'],
+  demonic_abyssal_pact:     ['Bisikan Iblis Samar', 'Kontrak Pertama', 'Perjanjian Darah', 'Wadah Iblis Muda', 'Segel Keempat Terbuka', 'Tangan Kanan Iblis', 'Perwujudan Abyss', 'Pewaris Tahta Iblis', 'Iblis Pact Sempurna'],
+  demonic_nether_darkness:  ['Bayangan Pudar', 'Kabut Yin Tipis', 'Kegelapan Merayap', 'Jubah Malam Abadi', 'Domain Bayangan', 'Penguasa Nether Yin', 'Kekosongan Sembilan Lapis', 'Raja Kegelapan Kuno', 'Iblis Nether Sempurna']
+};
+
+interface MasterRealmRoadmapAccordionProps {
+  currentRealmIdx: number;
+  activeLawType?: LawType | null;
+  activeLawName?: string | null;
+}
+
+export function MasterRealmRoadmapAccordion({
+  currentRealmIdx,
+  activeLawType,
+  activeLawName
+}: MasterRealmRoadmapAccordionProps) {
+  const lawRankNames = activeLawType ? LAW_RANK_NAMES_ID[activeLawType] : null;
+  const lawPathMod = activeLawType ? LAW_PATH_MODS[activeLawType] : null;
+
+  return (
+    <details className="group border border-stone-800/80 rounded-2xl bg-[#0c0f17]/90 p-5 transition-all shadow-xl backdrop-blur-md">
+      <summary className="cursor-pointer font-serif font-bold text-sm text-amber-200 hover:text-amber-300 flex items-center justify-between select-none">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm">
+            📜
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span>Tabel Master 9 Ranah Kultivasi & Batas Level Cap</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-600/50 text-amber-300 font-mono">
+                Heavenly Dao Roadmap
+              </span>
+              {activeLawName && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-900 border border-stone-700 text-stone-300 font-mono">
+                  Jalur: {activeLawName}
+                </span>
+              )}
+              {lawPathMod && lawPathMod.mod !== 1.0 && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-600/50 text-purple-300 font-mono">
+                  Tribulasi {lawPathMod.note}
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-stone-400 font-sans font-normal mt-0.5">
+              Syarat Max Level Karakter, Kapasitas Qi Dantian, Peluang Terobosan, dan Tingkat Tribulasi Petir Surgawi
+            </p>
+          </div>
+        </div>
+        <span className="text-xs text-amber-400 font-mono group-open:rotate-180 transition-transform">
+          ▼
+        </span>
+      </summary>
+
+      <div className="mt-5 pt-4 border-t border-stone-800 space-y-4">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-stone-800 text-stone-400 font-serif">
+                <th className="py-2.5 px-3">Ranah Kultivasi</th>
+                <th className="py-2.5 px-3">Gelar Jalur Hukum</th>
+                <th className="py-2.5 px-3">English Realm</th>
+                <th className="py-2.5 px-3">Batas Max Level</th>
+                <th className="py-2.5 px-3">Kapasitas Qi</th>
+                <th className="py-2.5 px-3">Peluang Sukses</th>
+                <th className="py-2.5 px-3">Tribulasi Petir</th>
+                <th className="py-2.5 px-3">Penalti Gagal</th>
+                <th className="py-2.5 px-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone-900">
+              {MASTER_REALM_ROADMAP.map((realm) => {
+                const isCurrent = realm.idx === currentRealmIdx;
+                const isPassed = realm.idx < currentRealmIdx;
+                const specificLawTitle = lawRankNames?.[realm.idx] || null;
+
+                return (
+                  <tr
+                    key={realm.idx}
+                    className={`transition-colors ${
+                      isCurrent
+                        ? 'bg-amber-500/10 font-medium'
+                        : isPassed
+                        ? 'bg-emerald-950/10 text-stone-300'
+                        : 'hover:bg-stone-900/40 text-stone-400'
+                    }`}
+                  >
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{realm.icon}</span>
+                        <span className={`font-serif ${isCurrent ? 'text-amber-200 font-bold' : isPassed ? 'text-emerald-300' : 'text-stone-300'}`}>
+                          {realm.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-3 font-serif">
+                      {specificLawTitle ? (
+                        <span className={`font-semibold ${isCurrent ? 'text-amber-300' : isPassed ? 'text-emerald-300' : 'text-stone-400'}`}>
+                          {specificLawTitle}
+                        </span>
+                      ) : (
+                        <span className="text-stone-500 italic text-[11px]">— Mandiri —</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 font-serif text-stone-300 italic">{realm.enName}</td>
+                    <td className="py-3 px-3 font-mono">
+                      <span className={`px-2 py-0.5 rounded ${isCurrent ? 'bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold' : 'text-stone-300'}`}>
+                        Lv. {realm.levelCap}
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 font-mono text-stone-300">{realm.qiCap} Qi</td>
+                    <td className="py-3 px-3 font-mono">
+                      <span className={realm.successRate === '100%' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-semibold'}>
+                        {realm.successRate}
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-stone-300">
+                      <div>
+                        <span className={`flex items-center gap-1 ${realm.tier > 0 ? 'text-purple-300' : 'text-emerald-400'}`}>
+                          {realm.tier > 0 ? '⚡' : '✨'} {realm.tribulation}
+                        </span>
+                        {realm.tier > 0 && lawPathMod && lawPathMod.mod !== 1.0 && (
+                          <span className="text-[10px] text-purple-400/90 font-mono block">
+                            (PathMod: ×{lawPathMod.mod})
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-3 px-3 text-stone-400 font-mono text-[11px]">{realm.penalty}</td>
+                    <td className="py-3 px-3 text-right">
+                      {isCurrent ? (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 font-mono text-[10px] font-bold">
+                          ● Ranah Aktif
+                        </span>
+                      ) : isPassed ? (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-mono text-[10px] font-bold">
+                          ✓ Tuntas
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-full bg-stone-800 text-stone-500 font-mono text-[10px]">
+                          🔒 Terkunci
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 border-t border-stone-800/80 text-[11px] text-stone-400">
+          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
+            <Lock size={14} className="text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-stone-300 block font-serif">Kunci Max Level Mutlak</strong>
+              Setiap terobosan ke ranah berikutnya mewajibkan karakter mencapai Max Level ranah tersebut. Dilarang menerobos sebelum batas tercapai.
+            </div>
+          </div>
+          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
+            <Zap size={14} className="text-purple-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-stone-300 block font-serif">Formula Ketahanan Raga</strong>
+              Survival HP dihitung dari: Max HP + (DEF × 3) + (Vitality × 2) + (Focus × 1.5). Kuatkan fondasi sebelum menghadapi petir langit!
+            </div>
+          </div>
+          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
+            <Skull size={14} className="text-rose-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-stone-300 block font-serif">Risiko Kegagalan Ranah</strong>
+              Kegagalan terobosan mengakibatkan hilangnya 50% Qi dantian dan cooldown meditasi berjam-jam untuk memulihkan meridian yang retak.
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  );
+}
+
 interface LawCultivationTabProps {
   realmData?: CultivationData;
 }
@@ -231,6 +456,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const [ordinaryConfirmModalOpen, setOrdinaryConfirmModalOpen] = useState(false);
   const [customEntityName, setCustomEntityName] = useState('');
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>('skin');
+
+  // Heavenly Tribulation Modal States
+  const [tribulationModalOpen, setTribulationModalOpen] = useState(false);
+  const [tribulationData, setTribulationData] = useState<TribulationData | null>(null);
+  const [tribulationSuccess, setTribulationSuccess] = useState(true);
+  const [tribulationMessage, setTribulationMessage] = useState('');
+  const [tribulationNewRealm, setTribulationNewRealm] = useState<string | undefined>(undefined);
+  const [tribulationNewLevelCap, setTribulationNewLevelCap] = useState<number | null>(null);
 
   // Fetch Real Inventory for Law Binding (Slot 1 & Slot 2)
   const { data: bindInvRes, isLoading: isBindInvLoading } = useQuery<{ success: boolean; data: any }>({
@@ -328,14 +561,78 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       const { data } = await api.post('/cultivation/law/breakthrough/rank');
       return data;
     },
-    onSuccess: (res) => {
-      toast.show({ message: res.message || 'Penerobosan Agung berhasil!', type: 'success' });
+    onSuccess: (res: any) => {
+      if (res?.tribulation) {
+        setTribulationData(res.tribulation);
+        setTribulationSuccess(res.isSuccess !== false);
+        setTribulationMessage(res.message || 'Penerobosan Rank Berhasil!');
+        setTribulationNewRealm(res.rewards?.rankDisplayName);
+        setTribulationNewLevelCap(res.rewards?.levelCapBonus ? ((livePlayer?.level || 1) + res.rewards.levelCapBonus) : null);
+        setTribulationModalOpen(true);
+      } else {
+        toast.show({ message: res.message || 'Penerobosan Agung berhasil!', type: 'success' });
+      }
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
       queryClient.invalidateQueries({ queryKey: ['lawSkills'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melakukan terobosan rank.', type: 'error' });
+    }
+  });
+
+  // Query Player Profile for live stamina and cultivation stats
+  const { data: profileRes } = useQuery<{ success: boolean; data: any }>({
+    queryKey: ['player-profile-private'],
+    queryFn: async () => {
+      const res = await api.get('/player/profile');
+      return res.data;
+    }
+  });
+  const livePlayer = profileRes?.data?.player || profileRes?.data;
+  const currentStamina = Math.floor(livePlayer?.currentStamina ?? livePlayer?.stats?.stamina ?? 100);
+  const maxStamina = Math.floor(livePlayer?.maxStamina ?? livePlayer?.stats?.maxStamina ?? 100);
+
+  // Mutation: Latihan Semadi dengan Stamina (Mortal 1-9)
+  const staminaTrainMutation = useMutation({
+    mutationFn: async (staminaCost: number) => {
+      const { data } = await api.post('/cultivation/train', { staminaCost });
+      return data;
+    },
+    onSuccess: (res) => {
+      toast.show({ message: res.message || 'Semadi berhasil meningkatkan Qi!', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['cultivation'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error || 'Gagal melakukan semadi Qi.', type: 'error' });
+    }
+  });
+
+  // Mutation: Terobosan Tahap Mandiri (Mortal 1-9 Direct Stage & Mortal 10 Realm Breakthrough)
+  const mortalBreakthroughMutation = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.post('/cultivation/breakthrough', { forceBreakthrough: true });
+      return data;
+    },
+    onSuccess: (res: any) => {
+      const respData = res?.data;
+      if (respData?.tribulation) {
+        setTribulationData(respData.tribulation);
+        setTribulationSuccess(res.isSuccess !== false);
+        setTribulationMessage(res.message || 'Terobosan Berhasil!');
+        setTribulationNewRealm(respData.realm);
+        setTribulationNewLevelCap(respData.newLevelCap);
+        setTribulationModalOpen(true);
+      } else {
+        toast.show({ message: res.message || 'Terobosan Berhasil!', type: 'success' });
+      }
+      queryClient.invalidateQueries({ queryKey: ['cultivation'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+      queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error || 'Gagal menerobos tahap.', type: 'error' });
     }
   });
 
@@ -440,8 +737,29 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   // KASUS 0: PEMAIN MEMILIH JALUR KULTIVATOR BIASA (TANPA HUKUM)
   // ═══════════════════════════════════════════════════════════════════
   if (bindingData?.isNormalCultivator) {
+    const normRealmIdx = Number(realmData?.realmIdx) || 0;
+    const normStage = Number(realmData?.stage) || 1;
+    const normCurrentQi = Math.floor(Number(realmData?.currentQi) || 0);
+    const normMaxQi = Math.floor(Number(realmData?.maxQi) || 1000);
+    const normRatePerMinute = Math.max(1, Number(realmData?.ratePerMinute) || 1);
+    const normQiPercent = Math.min(100, Math.floor((normCurrentQi / normMaxQi) * 100));
+    const isReadyForBreakthrough = normCurrentQi >= normMaxQi || Boolean(realmData?.isReadyForBreakthrough);
+    const qiNeeded = Math.max(0, normMaxQi - normCurrentQi);
+
+    const normCurrentLevel = livePlayer?.level || realmData?.currentLevel || 1;
+    const normLevelCap = realmData?.currentLevelCap || (20 + 20 * normRealmIdx);
+    const isLevelMet = normCurrentLevel >= normLevelCap;
+    const isMajorBreakthrough = normStage >= 10;
+    const successRate = realmData?.effectiveSuccessRate || (isMajorBreakthrough ? (normRealmIdx === 0 ? 100 : Math.max(10, 85 - (normRealmIdx - 1) * 15)) : 100);
+    const currentRealmMeta = MASTER_REALM_ROADMAP[normRealmIdx] || MASTER_REALM_ROADMAP[0];
+    const nextRealmMeta = MASTER_REALM_ROADMAP[normRealmIdx + 1] || null;
+
+    const canDoBreakthrough = isMajorBreakthrough
+      ? (isReadyForBreakthrough && isLevelMet && !mortalBreakthroughMutation.isPending)
+      : (isReadyForBreakthrough && !mortalBreakthroughMutation.isPending);
+
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-in fade-in duration-300">
         {/* Banner Jalur Kultivator Biasa */}
         <div className="relative overflow-hidden rounded-2xl border-2 border-stone-700 bg-gradient-to-r from-stone-900/90 via-[#0c0f17]/95 to-stone-950/95 p-6 shadow-2xl backdrop-blur-md">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -452,50 +770,476 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-xl font-bold font-serif text-amber-200">
-                    Jalur Kultivator Biasa (Tanpa Hukum Semesta)
+                    Jalur Kultivator Biasa ({currentRealmMeta.name})
                   </h2>
                   <span className="text-xs px-2.5 py-0.5 rounded-full bg-stone-800 border border-stone-600 text-stone-300 font-mono">
-                    Dao Fana Murni
+                    {currentRealmMeta.enName} • Tahap {normStage} / 10
                   </span>
                 </div>
                 <p className="text-xs text-stone-400 max-w-xl leading-relaxed">
-                  Kamu telah memilih jalan keteguhan pribadi tanpa belenggu ikatan Hukum Semesta. Tubuh fana mengandalkan disiplin beladiri murni (Martial Arts), senjata, dan pil kultivasi.
+                  Kamu melangkah di jalan Dao fana mandiri tanpa keterikatan Hukum Semesta. Mengandalkan penguasaan senjata, 6 disiplin beladiri, dan pernapasan Qi alami.
                 </p>
               </div>
             </div>
 
-            <div className="bg-stone-950/80 border border-stone-800 rounded-xl p-3 text-right">
-              <span className="text-[11px] text-amber-400/90 font-mono block">Penyesuaian Stat Tempur</span>
-              <span className="text-sm font-bold text-stone-200 font-serif">× 0.95 (Efektivitas Tempur)</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="bg-stone-950/80 border border-stone-800 rounded-xl p-3 text-right">
+                <span className="text-[10px] text-stone-400 font-mono block">Batas Level Ranah</span>
+                <span className="text-sm font-bold text-amber-300 font-mono">
+                  Lv. {normCurrentLevel} <span className="text-stone-500 text-xs">/ {normLevelCap}</span>
+                </span>
+              </div>
+              <div className="bg-stone-950/80 border border-stone-800 rounded-xl p-3 text-right">
+                <span className="text-[10px] text-amber-400/90 font-mono block">Efektivitas Tempur</span>
+                <span className="text-sm font-bold text-stone-200 font-serif">× 0.95</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Info Card & Action Link to Skill Tree */}
-        <div className="rounded-xl border border-stone-800 bg-[#0d1017]/90 p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-stone-300 font-serif font-bold text-sm">
-              <Sword className="w-4 h-4 text-amber-400" />
-              <span>Disiplin Beladiri Jianghu & Kitab Manual</span>
+        {/* Grid Akumulasi Qi & Semadi Stamina */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Kolom Kiri: Akumulasi Qi & Terobosan */}
+          <div className="lg:col-span-7 bg-[#11141e]/90 border border-stone-700 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col justify-between space-y-6">
+            <div>
+              <div className="flex justify-between items-center border-b border-stone-800 pb-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-amber-400 animate-pulse" />
+                  <h3 className="font-serif font-bold text-amber-200 text-base">Akumulasi Qi Dantian</h3>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-900/50">
+                  <Clock size={12} />
+                  <span>+{normRatePerMinute} Qi / Menit</span>
+                </div>
+              </div>
+
+              {/* Progress Gauge */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-baseline text-xs font-mono">
+                  <span className="text-stone-300 font-semibold">Kapasitas Intisari Qi:</span>
+                  <span className="text-amber-300 text-sm font-bold">
+                    {normCurrentQi.toLocaleString()} <span className="text-stone-500 text-xs">/ {normMaxQi.toLocaleString()} Qi ({normQiPercent}%)</span>
+                  </span>
+                </div>
+
+                <div className="w-full bg-[#07090e] rounded-full h-4 overflow-hidden border border-stone-800 p-0.5 shadow-inner">
+                  <div
+                    className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                    style={{ width: `${normQiPercent}%` }}
+                  />
+                </div>
+
+                <div className="flex justify-between items-center text-[11px] text-stone-400 pt-1">
+                  <span>{isReadyForBreakthrough ? '✨ Dantian Siap Menerobos' : `Butuh ${qiNeeded.toLocaleString()} Qi lagi`}</span>
+                  <span className="font-mono text-amber-400/90">
+                    {isMajorBreakthrough
+                      ? (nextRealmMeta ? `Menuju ${nextRealmMeta.name} (${nextRealmMeta.enName})` : 'Ranah Tertinggi')
+                      : `Menuju Tahap ${normStage + 1}`}
+                  </span>
+                </div>
+              </div>
+
+              {/* Checklist Khusus Terobosan Ranah (Major Breakthrough di Tahap 10) */}
+              {isMajorBreakthrough && (
+                <div className="mt-5 p-4 rounded-xl bg-black/60 border border-stone-800 space-y-2.5">
+                  <div className="flex items-center justify-between text-xs pb-1 border-b border-stone-800/80">
+                    <span className="font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                      <Award size={14} className="text-amber-400" /> Prasyarat Terobosan Ranah Agung
+                    </span>
+                    <span className="font-mono text-[11px] text-stone-400">Peluang Sukses: <strong className="text-emerald-400">{successRate}%</strong></span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div className={`p-2.5 rounded-lg border flex items-center justify-between ${isReadyForBreakthrough ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-rose-950/20 border-rose-800/40 text-rose-300'}`}>
+                      <span>Kapasitas Qi (100%)</span>
+                      <span className="font-mono font-bold">{isReadyForBreakthrough ? '✓ Penuh' : `${normQiPercent}%`}</span>
+                    </div>
+
+                    <div className={`p-2.5 rounded-lg border flex items-center justify-between ${isLevelMet ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-rose-950/20 border-rose-800/40 text-rose-300'}`}>
+                      <span>Syarat Max Level</span>
+                      <span className="font-mono font-bold">{isLevelMet ? `✓ Lv. ${normCurrentLevel}` : `Lv. ${normCurrentLevel} / ${normLevelCap}`}</span>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-lg bg-stone-900/60 border border-stone-800 text-[11px] flex items-center justify-between text-stone-300">
+                    <span className="flex items-center gap-1.5">
+                      <Zap size={13} className="text-purple-400" /> Ujian Tribulasi Petir:
+                    </span>
+                    <span className="font-mono text-purple-300 font-semibold">{currentRealmMeta.tribulation}</span>
+                  </div>
+
+                  {!isLevelMet && (
+                    <p className="text-[11px] text-rose-400 font-mono flex items-center gap-1">
+                      <XCircle size={12} /> Wajib mencapai Max Level {normLevelCap} sebelum menerobos ke ranah berikutnya!
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
-            <Link href="/skill-tree">
-              <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs">
-                Buka Pohon Kemahiran & Manual ➔
-              </Button>
-            </Link>
+
+            {/* Tombol Terobosan Tahap / Ranah */}
+            <div className="pt-4 border-t border-stone-800">
+              {canDoBreakthrough ? (
+                <button
+                  onClick={() => mortalBreakthroughMutation.mutate()}
+                  disabled={mortalBreakthroughMutation.isPending}
+                  className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-serif font-bold text-base shadow-[0_0_25px_rgba(245,158,11,0.5)] transition-all flex items-center justify-center gap-2 transform hover:scale-[1.01] active:scale-[0.99] border border-amber-300"
+                >
+                  {mortalBreakthroughMutation.isPending ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span>Menghadapi Tribulasi & Menerobos...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Zap size={18} />
+                      <span>
+                        {isMajorBreakthrough
+                          ? `⚡ HADAPI TRIBULASI & TEROBOS KE ${nextRealmMeta?.name?.toUpperCase() || 'RANAH BERIKUTNYA'}!`
+                          : `⚡ TEROBOS KE TAHAP ${normStage + 1} SEKARANG!`}
+                      </span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="w-full py-3 px-4 rounded-xl bg-[#0d1017] border border-stone-800 text-stone-500 font-serif font-bold text-xs sm:text-sm text-center flex items-center justify-center gap-2 cursor-not-allowed">
+                  <Lock size={15} />
+                  <span>
+                    {!isReadyForBreakthrough
+                      ? 'Dantian Belum Penuh (Kumpulkan Qi hingga 100% untuk Menerobos)'
+                      : !isLevelMet
+                      ? `Terkunci: Wajib Mencapai Max Level ${normLevelCap} (Saat ini Lv. ${normCurrentLevel})`
+                      : 'Syarat Terobosan Belum Lengkap'}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-          <p className="text-xs text-stone-400 leading-relaxed">
-            Sebagai Kultivator Biasa, seluruh kemahiran bertarung terpusat pada 6 Disiplin Beladiri (Pedang, Golok, Tombak, Tinju, Telapak, Jari) serta Kitab Manual yang kamu pelajari dari dunia. Latih kemahiranmu melalui pertarungan dan sparring sekte!
-          </p>
+
+          {/* Kolom Kanan: Aksi Latihan Semadi (Stamina) & Disiplin Beladiri */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
+            <div className="bg-[#11141e]/90 border border-stone-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+              <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-amber-400" />
+                  <h3 className="font-serif font-bold text-amber-200 text-base">Latihan Semadi (Stamina)</h3>
+                </div>
+                <div className="px-2.5 py-1 rounded-lg bg-stone-900 border border-stone-800 text-xs font-mono text-amber-300">
+                  {currentStamina} / {maxStamina} STA
+                </div>
+              </div>
+              <p className="text-xs text-stone-400 leading-relaxed">
+                Pusatkan napas dan salurkan stamina fisikmu untuk menyerap Qi semesta secara langsung ke dantian tanpa perlu menunggu akumulasi pasif.
+              </p>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => staminaTrainMutation.mutate(10)}
+                  disabled={staminaTrainMutation.isPending || currentStamina < 10 || isReadyForBreakthrough}
+                  className="w-full p-3.5 rounded-xl bg-gradient-to-r from-[#1c1611] to-[#261f16] hover:from-[#2a2118] hover:to-[#382b1d] border border-amber-800/60 hover:border-amber-500/80 transition-all flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed shadow-md group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl group-hover:scale-110 transition-transform">🧘</span>
+                    <div className="text-left">
+                      <div className="font-serif font-bold text-amber-200 text-sm">Semadi Qi Terarah</div>
+                      <div className="text-[10px] text-stone-400">Konsumsi 10 Stamina • Qi Instan</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded border border-amber-700/50">
+                    -10 STA
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => staminaTrainMutation.mutate(30)}
+                  disabled={staminaTrainMutation.isPending || currentStamina < 30 || isReadyForBreakthrough}
+                  className="w-full p-3.5 rounded-xl bg-gradient-to-r from-[#1f161a] to-[#2d1b22] hover:from-[#2d1f25] hover:to-[#3e232f] border border-rose-900/60 hover:border-rose-500/80 transition-all flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed shadow-md group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl group-hover:scale-110 transition-transform">⚡</span>
+                    <div className="text-left">
+                      <div className="font-serif font-bold text-rose-200 text-sm">Semadi Intensif Dantian</div>
+                      <div className="text-[10px] text-stone-400">Konsumsi 30 Stamina • Qi Melimpah</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-rose-300 bg-rose-950/80 px-2.5 py-1 rounded border border-rose-700/50">
+                    -30 STA
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Info Card Disiplin Beladiri */}
+            <div className="rounded-2xl border border-stone-800 bg-[#0d1017]/90 p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-stone-300 font-serif font-bold text-sm">
+                  <Sword className="w-4 h-4 text-amber-400" />
+                  <span>6 Disiplin Beladiri & Manual</span>
+                </div>
+                <Link href="/skill-tree">
+                  <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs">
+                    Pohon Manual ➔
+                  </Button>
+                </Link>
+              </div>
+              <p className="text-xs text-stone-400 leading-relaxed">
+                Kembangkan kemahiran bertarung melalui pertarungan dunia nyata dan latihan kitab jurus esoteris.
+              </p>
+            </div>
+          </div>
         </div>
+
+        {/* Master Realm Roadmap Accordion */}
+        <MasterRealmRoadmapAccordion currentRealmIdx={normRealmIdx} />
+
+        {/* Heavenly Tribulation Modal */}
+        <HeavenlyTribulationModal
+          isOpen={tribulationModalOpen}
+          onClose={() => setTribulationModalOpen(false)}
+          tribulation={tribulationData}
+          isSuccess={tribulationSuccess}
+          message={tribulationMessage}
+          newRealmName={tribulationNewRealm}
+          newLevelCap={tribulationNewLevelCap}
+        />
       </div>
     );
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // KASUS 1: PEMAIN BELUM MEMILIH LAW → 2-SLOT DAO BINDING ALTAR
+  // KASUS KHUSUS: MORTAL TAHAP 1 - 9 (LATIHAN STAMINA & PENGUMPULAN QI)
+  // ═══════════════════════════════════════════════════════════════════
+  const realmIdx = Number(realmData?.realmIdx) || 0;
+  const stage = Number(realmData?.stage) || 1;
+  const isMortalStage1To9 = (!lawData?.hasLaw) && (realmIdx === 0) && (stage < 10);
+
+  if (isMortalStage1To9) {
+    const currentQi = Math.floor(Number(realmData?.currentQi) || 0);
+    const maxQi = Math.floor(Number(realmData?.maxQi) || 1000);
+    const ratePerMinute = Math.max(1, Number(realmData?.ratePerMinute) || 1);
+    const qiPercent = Math.min(100, Math.floor((currentQi / maxQi) * 100));
+    const isReadyForBreakthrough = currentQi >= maxQi || Boolean(realmData?.isReadyForBreakthrough);
+    const qiNeeded = Math.max(0, maxQi - currentQi);
+
+    const currentLevel = livePlayer?.level || realmData?.currentLevel || 1;
+    const currentLevelCap = realmData?.currentLevelCap || 20;
+
+    return (
+      <div className="space-y-6 animate-in fade-in duration-300">
+        {/* Banner Ranah Fondasi Fana */}
+        <div className="relative overflow-hidden rounded-2xl border-2 border-amber-600/40 bg-gradient-to-r from-[#171310] via-[#100e14] to-[#171310] p-5 sm:p-6 shadow-2xl backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-b from-amber-600/30 to-amber-950/80 border-2 border-amber-500/60 flex items-center justify-center text-3xl shadow-inner shrink-0">
+                🧘
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-wide text-amber-200 font-serif">
+                    Chamber Meditasi Fondasi Fana
+                  </h2>
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-950/80 border border-amber-600/60 text-xs font-mono font-bold text-amber-300">
+                    Tahap {stage} / 10
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-stone-900 border border-stone-700 text-xs font-mono text-emerald-400">
+                    Peluang Sukses: 100%
+                  </span>
+                </div>
+                <p className="text-xs text-stone-300 mt-1 leading-relaxed max-w-2xl">
+                  Fondasi Fana adalah fase awal pemurnian daging raga. Latih pernapasan dantian dengan <strong className="text-amber-300">Stamina</strong> untuk mengumpulkan Qi semesta hingga mencapai batas terobosan tahap.
+                </p>
+              </div>
+            </div>
+
+            {/* Level & Stamina Badge */}
+            <div className="flex flex-wrap items-center gap-3 shrink-0 self-end sm:self-center">
+              <div className="px-3.5 py-2 rounded-xl bg-[#0c0f17] border border-amber-900/50 flex items-center gap-2 shadow-inner">
+                <Award size={16} className="text-amber-400" />
+                <div className="text-right">
+                  <div className="text-[10px] text-stone-400 font-mono">Batas Level Fana</div>
+                  <div className="text-sm font-bold font-mono text-amber-300">
+                    Lv. {currentLevel} <span className="text-stone-500 text-xs">/ {currentLevelCap}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-xl bg-[#0c0f17] border border-[#2d3748] flex items-center gap-2 shadow-inner">
+                <Zap size={16} className="text-amber-400" />
+                <div className="text-right">
+                  <div className="text-[10px] text-stone-400 font-mono">Stamina Tersedia</div>
+                  <div className="text-sm font-bold font-mono text-amber-300">
+                    {currentStamina} <span className="text-stone-500 text-xs">/ {maxStamina} STA</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Grid 2 Kolom: Status Qi & Aksi Semadi */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Kolom Kiri: Akumulasi Qi & Indikator Dantian */}
+          <div className="lg:col-span-7 bg-[#11141e]/90 border border-[#4d3e28] rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col justify-between space-y-6">
+            <div>
+              <div className="flex justify-between items-center border-b border-[#2d2417] pb-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-amber-400 animate-pulse" />
+                  <h3 className="font-serif font-bold text-amber-200 text-base">Akumulasi Qi Dantian</h3>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-900/50">
+                  <Clock size={12} />
+                  <span>+{ratePerMinute} Qi / Menit</span>
+                </div>
+              </div>
+
+              {/* Progress Gauge */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-baseline text-xs font-mono">
+                  <span className="text-stone-300 font-semibold">Kapasitas Intisari Qi:</span>
+                  <span className="text-amber-300 text-sm font-bold">
+                    {currentQi.toLocaleString()} <span className="text-stone-500 text-xs">/ {maxQi.toLocaleString()} Qi ({qiPercent}%)</span>
+                  </span>
+                </div>
+
+                <div className="w-full bg-[#07090e] rounded-full h-4 overflow-hidden border border-[#3e3422] p-0.5 shadow-inner">
+                  <div 
+                    className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                    style={{ width: `${qiPercent}%` }}
+                  />
+                </div>
+
+                <div className="flex justify-between items-center text-[11px] text-stone-400 pt-1">
+                  <span>{isReadyForBreakthrough ? '✨ Resonansi Penuh' : `Butuh ${qiNeeded.toLocaleString()} Qi lagi`}</span>
+                  <span className="font-mono text-amber-400/90">{stage < 10 ? `Menuju Tahap ${stage + 1}` : 'Tahap Puncak'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tombol Terobosan Tahap */}
+            <div className="pt-4 border-t border-[#2d2417]">
+              {isReadyForBreakthrough ? (
+                <button
+                  onClick={() => mortalBreakthroughMutation.mutate()}
+                  disabled={mortalBreakthroughMutation.isPending}
+                  className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-serif font-bold text-base shadow-[0_0_25px_rgba(245,158,11,0.5)] transition-all flex items-center justify-center gap-2 transform hover:scale-[1.01] active:scale-[0.99] border border-amber-300"
+                >
+                  {mortalBreakthroughMutation.isPending ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span>Menerobos Gerbang Meridian...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Zap size={18} />
+                      <span>⚡ TEROBOS KE TAHAP {stage + 1} SEKARANG! (Peluang 100%)</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="w-full py-3 px-4 rounded-xl bg-[#0d1017] border border-stone-800 text-stone-500 font-serif font-bold text-xs sm:text-sm text-center flex items-center justify-center gap-2 cursor-not-allowed">
+                  <Lock size={15} />
+                  <span>Dantian Belum Penuh (Kumpulkan Qi hingga 100% untuk Menerobos)</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Kolom Kanan: Aksi Latihan dengan Stamina */}
+          <div className="lg:col-span-5 bg-[#11141e]/90 border border-[#4d3e28] rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col justify-between space-y-4">
+            <div>
+              <div className="flex items-center gap-2 border-b border-[#2d2417] pb-3 mb-3">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                <h3 className="font-serif font-bold text-amber-200 text-base">Latihan Semadi (Stamina)</h3>
+              </div>
+              <p className="text-xs text-stone-400 leading-relaxed mb-4">
+                Pusatkan napas dan salurkan stamina fisikmu untuk menyerap Qi semesta secara langsung ke dantian tanpa perlu menunggu akumulasi pasif.
+              </p>
+
+              <div className="space-y-3">
+                {/* Opsi 1: Semadi Ringan (10 STA) */}
+                <button
+                  onClick={() => staminaTrainMutation.mutate(10)}
+                  disabled={staminaTrainMutation.isPending || currentStamina < 10 || isReadyForBreakthrough}
+                  className="w-full p-3.5 rounded-xl bg-gradient-to-r from-[#1c1611] to-[#261f16] hover:from-[#2a2118] hover:to-[#382b1d] border border-amber-800/60 hover:border-amber-500/80 transition-all flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed shadow-md group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl group-hover:scale-110 transition-transform">🧘</span>
+                    <div className="text-left">
+                      <div className="font-serif font-bold text-amber-200 text-sm">Semadi Qi Terarah</div>
+                      <div className="text-[10px] text-stone-400">Konsumsi 10 Stamina • Qi Instan</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded border border-amber-700/50">
+                    -10 STA
+                  </span>
+                </button>
+
+                {/* Opsi 2: Semadi Penuh (30 STA) */}
+                <button
+                  onClick={() => staminaTrainMutation.mutate(30)}
+                  disabled={staminaTrainMutation.isPending || currentStamina < 30 || isReadyForBreakthrough}
+                  className="w-full p-3.5 rounded-xl bg-gradient-to-r from-[#1f161a] to-[#2d1b22] hover:from-[#2d1f25] hover:to-[#3e232f] border border-rose-900/60 hover:border-rose-500/80 transition-all flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed shadow-md group"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl group-hover:scale-110 transition-transform">⚡</span>
+                    <div className="text-left">
+                      <div className="font-serif font-bold text-rose-200 text-sm">Semadi Intensif Dantian</div>
+                      <div className="text-[10px] text-stone-400">Konsumsi 30 Stamina • Qi Melimpah</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-rose-300 bg-rose-950/80 px-2.5 py-1 rounded border border-rose-700/50">
+                    -30 STA
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Catatan Gerbang Tahap 10 */}
+            <div className="bg-[#0b0e14] border border-[#261f14] rounded-xl p-3 text-[11px] text-stone-400 space-y-1">
+              <div className="text-amber-400 font-semibold flex items-center gap-1.5 font-serif">
+                <Info size={13} /> Gerbang Tahap 10 (Puncak Mortal):
+              </div>
+              <p className="leading-snug">
+                Begitu menembus hingga <strong className="text-stone-300">Tahap 10</strong> dan mencapai <strong className="text-amber-300">Max Level 20</strong>, Altar Pengikatan Hukum Semesta akan terbuka untuk menerobos ke Ranah Pemurnian Qi (Qi Refining).
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Master Realm Roadmap Accordion */}
+        <MasterRealmRoadmapAccordion currentRealmIdx={0} />
+
+        {/* Heavenly Tribulation Modal */}
+        <HeavenlyTribulationModal
+          isOpen={tribulationModalOpen}
+          onClose={() => setTribulationModalOpen(false)}
+          tribulation={tribulationData}
+          isSuccess={tribulationSuccess}
+          message={tribulationMessage}
+          newRealmName={tribulationNewRealm}
+          newLevelCap={tribulationNewLevelCap}
+        />
+      </div>
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // KASUS 1: PEMAIN TAHAP 10 / BELUM MEMILIH LAW → 2-SLOT DAO BINDING ALTAR
   // ═══════════════════════════════════════════════════════════════════
   if (!lawData?.hasLaw) {
+    const mortalCurrentQi = Math.floor(Number(realmData?.currentQi) || 0);
+    const mortalMaxQi = Math.floor(Number(realmData?.maxQi) || 1000);
+    const mortalCurrentLevel = livePlayer?.level || realmData?.currentLevel || 1;
+    const mortalLevelCap = 20;
+
+    const isQiMet = mortalCurrentQi >= mortalMaxQi || Boolean(realmData?.isReadyForBreakthrough);
+    const isLevelMet = mortalCurrentLevel >= mortalLevelCap;
+    const isFoundationChosen = Boolean(lawData?.hasLaw || bindingData?.isNormalCultivator);
+
+    const canBreakthroughToQiRefining = isQiMet && isLevelMet && isFoundationChosen;
+
     return (
       <div className="space-y-6">
         {/* Banner Peringatan Fondasi Fana */}
@@ -513,6 +1257,107 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Gerbang Terobosan Agung: Menuju Ranah Pemurnian Qi (Qi Refining) */}
+        <div className="rounded-2xl border-2 border-amber-600/60 bg-gradient-to-r from-[#17130e] via-[#11141e] to-[#17130e] p-5 sm:p-6 shadow-2xl space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-stone-800">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-2xl shrink-0">
+                ⚡
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-lg font-bold font-serif text-amber-200">
+                    Gerbang Terobosan Agung: Ranah Pemurnian Qi (Qi Refining)
+                  </h3>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-600/50 text-amber-300 font-mono">
+                    Tahap 10 ➔ Ranah Index 1
+                  </span>
+                </div>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  Syarat mutlak untuk menembus belenggu manusia fana menuju tatanan kultivator sejati.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="px-3 py-1.5 rounded-lg bg-black/60 border border-stone-800 text-right">
+                <span className="text-[10px] text-stone-400 font-mono block">Level Karakter</span>
+                <span className={`text-xs font-mono font-bold ${isLevelMet ? 'text-emerald-400' : 'text-amber-300'}`}>
+                  Lv. {mortalCurrentLevel} / {mortalLevelCap}
+                </span>
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-black/60 border border-stone-800 text-right">
+                <span className="text-[10px] text-stone-400 font-mono block">Peluang Sukses</span>
+                <span className="text-xs font-mono font-bold text-emerald-400">100%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Checklist Prasyarat */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className={`p-3 rounded-xl border flex items-center justify-between ${isQiMet ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-rose-950/20 border-rose-800/40 text-rose-300'}`}>
+              <div className="flex items-center gap-2">
+                {isQiMet ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+                <span>Akumulasi Qi (1.000)</span>
+              </div>
+              <span className="font-mono font-bold">{mortalCurrentQi.toLocaleString()} / 1.000</span>
+            </div>
+
+            <div className={`p-3 rounded-xl border flex items-center justify-between ${isLevelMet ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-rose-950/20 border-rose-800/40 text-rose-300'}`}>
+              <div className="flex items-center gap-2">
+                {isLevelMet ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+                <span>Syarat Max Level 20</span>
+              </div>
+              <span className="font-mono font-bold">Lv. {mortalCurrentLevel} / 20</span>
+            </div>
+
+            <div className={`p-3 rounded-xl border flex items-center justify-between ${isFoundationChosen ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-amber-950/20 border-amber-700/50 text-amber-300'}`}>
+              <div className="flex items-center gap-2">
+                {isFoundationChosen ? <CheckCircle2 size={16} /> : <Lock size={16} />}
+                <span>Pilihan Fondasi</span>
+              </div>
+              <span className="font-mono text-[11px] font-bold">
+                {bindingData?.isNormalCultivator ? 'Kultivator Biasa' : (lawData?.hasLaw ? 'Hukum Terikat' : 'Pilih di Altar')}
+              </span>
+            </div>
+          </div>
+
+          {/* Tombol Terobosan Ranah jika syarat terpenuhi */}
+          {canBreakthroughToQiRefining ? (
+            <button
+              onClick={() => mortalBreakthroughMutation.mutate()}
+              disabled={mortalBreakthroughMutation.isPending}
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-serif font-bold text-base shadow-[0_0_25px_rgba(245,158,11,0.5)] transition-all flex items-center justify-center gap-2 transform hover:scale-[1.01] active:scale-[0.99] border border-amber-300"
+            >
+              {mortalBreakthroughMutation.isPending ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  <span>Membuka Gerbang Pemurnian Qi...</span>
+                </>
+              ) : (
+                <>
+                  <Zap size={18} />
+                  <span>⚡ TEROBOS KE RANAH PEMURNIAN QI (QI REFINING) SEKARANG!</span>
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="p-3 rounded-xl bg-black/40 border border-stone-800 text-[11px] text-stone-400 flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-stone-300">
+                <Info size={14} className="text-amber-400" />
+                {!isLevelMet
+                  ? `Level karakter belum mencapai Max Level 20 (Saat ini Lv. ${mortalCurrentLevel}/20). Latih level melalui pertarungan atau quest!`
+                  : !isFoundationChosen
+                  ? 'Gunakan Altar di bawah untuk mengikat salah satu dari 15 Hukum Semesta, ATAU pilih Jalur Kultivator Biasa.'
+                  : !isQiMet
+                  ? 'Kumpulkan Qi hingga mencapai 1.000 sebelum menerobos.'
+                  : 'Selesaikan semua prasyarat di atas untuk membuka gerbang terobosan.'}
+              </span>
+              <span className="text-stone-500 font-mono text-[10px]">Tribulasi: Pembersihan Meridian (0 Dmg)</span>
+            </div>
+          )}
         </div>
 
         {/* Banner Pilihan Jalur Kultivator Biasa (Jika mencapai Tahap 10) */}
@@ -1047,6 +1892,20 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             ))}
           </div>
         </details>
+
+        {/* Master Realm Roadmap Accordion */}
+        <MasterRealmRoadmapAccordion currentRealmIdx={0} />
+
+        {/* Heavenly Tribulation Modal */}
+        <HeavenlyTribulationModal
+          isOpen={tribulationModalOpen}
+          onClose={() => setTribulationModalOpen(false)}
+          tribulation={tribulationData}
+          isSuccess={tribulationSuccess}
+          message={tribulationMessage}
+          newRealmName={tribulationNewRealm}
+          newLevelCap={tribulationNewLevelCap}
+        />
       </div>
     );
   }
@@ -1698,27 +2557,120 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3 text-xs">
+                <div className="space-y-3.5 text-xs">
+                  {/* Peringatan Tribulasi Langit */}
                   <div className="p-3 rounded-lg border border-purple-500/40 bg-purple-950/20 text-purple-200 space-y-1">
                     <div className="font-bold flex items-center gap-1.5 text-purple-300">
-                      <Skull className="w-4 h-4 text-purple-400" /> Peringatan Tribulasi Langit!
+                      <Skull className="w-4 h-4 text-purple-400" />
+                      <span>{lawData.tribulationDetails?.tribulationTitle || `Peringatan Tribulasi Petir Surgawi (Tier ${lawData.rank})`}</span>
                     </div>
                     <p className="text-[11px] text-purple-300/80 leading-relaxed">
                       Menerobos ke Rank {lawData.rank + 1} memicu 3 gelombang Petir Surgawi. Kegagalan mengakibatkan deviasi Qi dan cedera dantian berat!
                     </p>
                   </div>
-                  <div className="flex justify-between py-1.5 border-b border-stone-800/80 text-stone-300">
-                    <span>Peluang Keberhasilan:</span>
-                    <strong className="text-purple-400 font-mono">{lawData.majorBreakthroughSuccessRate}%</strong>
+
+                  {/* Validasi Syarat Max Level */}
+                  {(() => {
+                    const charLevel = lawData.characterCurrentLevel ?? (livePlayer?.level || 1);
+                    const reqLevel = lawData.requiredLevelForNextRank ?? (lawData.characterLevelCap || (20 + 20 * lawData.rank));
+                    const isLevelMet = lawData.isLevelMetForNextRank ?? (charLevel >= reqLevel);
+                    return (
+                      <div className={`p-3 rounded-lg border flex items-center justify-between ${isLevelMet ? 'bg-emerald-950/20 border-emerald-700/50 text-emerald-300' : 'bg-rose-950/20 border-rose-800/40 text-rose-300'}`}>
+                        <div className="flex items-center gap-2">
+                          {isLevelMet ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+                          <span className="font-semibold">Syarat Max Level Ranah:</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono font-bold">Lv. {charLevel} / {reqLevel}</span>
+                          <span className="block text-[10px] font-sans">
+                            {isLevelMet ? '✓ Memenuhi Syarat' : '✗ Wajib Max Level!'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Simulasi 3 Gelombang Petir Surgawi vs Survival HP */}
+                  {lawData.tribulationDetails && (
+                    <div className="p-3 rounded-lg bg-black/60 border border-stone-800 space-y-2">
+                      <div className="flex justify-between items-center text-[11px] pb-1 border-b border-stone-800">
+                        <span className="text-stone-300 font-semibold flex items-center gap-1 font-serif">
+                          <Zap size={13} className="text-yellow-400" /> Estimasi Kerusakan Petir:
+                        </span>
+                        <span className="text-stone-400 font-mono">
+                          Survival HP: <strong className="text-amber-300">{Math.floor(lawData.tribulationDetails.survivalHP).toLocaleString()}</strong>
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-1.5 text-center text-[11px] font-mono">
+                        <div className="p-1.5 rounded bg-purple-950/30 border border-purple-800/40">
+                          <span className="text-stone-400 block text-[9px]">Gel. 1</span>
+                          <span className="text-purple-300 font-bold">~{Math.floor(lawData.tribulationDetails.waves?.[0]?.damage || 0)}</span>
+                        </div>
+                        <div className="p-1.5 rounded bg-purple-950/30 border border-purple-800/40">
+                          <span className="text-stone-400 block text-[9px]">Gel. 2</span>
+                          <span className="text-purple-300 font-bold">~{Math.floor(lawData.tribulationDetails.waves?.[1]?.damage || 0)}</span>
+                        </div>
+                        <div className="p-1.5 rounded bg-purple-950/30 border border-purple-800/40">
+                          <span className="text-stone-400 block text-[9px]">Gel. 3</span>
+                          <span className="text-purple-300 font-bold">~{Math.floor(lawData.tribulationDetails.waves?.[2]?.damage || 0)}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] pt-1">
+                        <span className="text-stone-400">Ketahanan Raga:</span>
+                        <span className={`font-semibold flex items-center gap-1 ${lawData.tribulationDetails.canSurvive ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {lawData.tribulationDetails.canSurvive ? (
+                            <>
+                              <Shield size={12} /> Raga Siap Menahan Sambaran
+                            </>
+                          ) : (
+                            <>
+                              <Skull size={12} /> Bahaya! Tingkatkan DEF & HP
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Peluang Keberhasilan & Penalti */}
+                  <div className="space-y-1.5 bg-stone-950/50 p-2.5 rounded-lg border border-stone-800/80">
+                    <div className="flex justify-between text-stone-300">
+                      <span>Peluang Keberhasilan:</span>
+                      <strong className="text-purple-400 font-mono text-sm">{lawData.majorBreakthroughSuccessRate}%</strong>
+                    </div>
+                    <div className="flex justify-between text-stone-400 text-[11px]">
+                      <span>Penalti Kegagalan:</span>
+                      <span className="font-mono text-rose-400">-50% Qi Dantian • Cedera Berat</span>
+                    </div>
                   </div>
+
+                  {/* Tombol Terobosan Rank */}
                   <Button
                     size="sm"
                     onClick={() => majorBreakthroughMutation.mutate()}
                     disabled={!lawData.canMajorBreakthrough || majorBreakthroughMutation.isPending}
-                    className="w-full bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-bold border border-purple-400/50 shadow-lg shadow-purple-500/20 py-2 h-auto"
+                    className="w-full bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-700 hover:from-purple-600 hover:to-indigo-500 text-white font-bold border border-purple-400/50 shadow-lg shadow-purple-500/20 py-2.5 h-auto transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    🌩️ Hadapi Tribulasi & Terobos Rank
+                    {majorBreakthroughMutation.isPending ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin mr-2" />
+                        <span>Menghadapi Tribulasi Petir...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap size={16} className="mr-1 text-yellow-300" />
+                        <span>🌩️ Hadapi Tribulasi Langit & Terobos ke Rank {lawData.rank + 1}!</span>
+                      </>
+                    )}
                   </Button>
+
+                  {!lawData.canMajorBreakthrough && (
+                    <p className="text-[11px] text-rose-400 font-mono text-center flex items-center justify-center gap-1">
+                      <Lock size={12} /> {lawData.majorBreakthroughBlockingReason || 'Syarat terobosan rank belum terpenuhi'}
+                    </p>
+                  )}
                 </div>
               )}
             </Card>
@@ -1769,6 +2721,24 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               })}
             </div>
           </Card>
+
+          {/* Master Realm Roadmap Accordion */}
+          <MasterRealmRoadmapAccordion
+            currentRealmIdx={lawData.rank}
+            activeLawType={lawData.activeLawType}
+            activeLawName={lawData.lawName}
+          />
+
+          {/* Heavenly Tribulation Modal */}
+          <HeavenlyTribulationModal
+            isOpen={tribulationModalOpen}
+            onClose={() => setTribulationModalOpen(false)}
+            tribulation={tribulationData}
+            isSuccess={tribulationSuccess}
+            message={tribulationMessage}
+            newRealmName={tribulationNewRealm}
+            newLevelCap={tribulationNewLevelCap}
+          />
         </div>
       }
     </div>

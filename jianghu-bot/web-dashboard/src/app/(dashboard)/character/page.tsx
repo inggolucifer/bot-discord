@@ -173,7 +173,7 @@ function CharacterPageContent() {
       </div>
 
       <div className="bg-gradient-to-b from-[#11141d] to-[#0d0f16] border border-[#c5a880]/30 rounded-xl p-4 sm:p-6 shadow-xl flex flex-col w-full h-full lg:min-h-[700px]">
-        {activeTab === 'peralatan' ? (
+        {activeTab === 'peralatan' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full h-full items-stretch flex-1">
           {/* Left Column: Equipped Items & Desktop Stats */}
           <div className="flex flex-col items-center space-y-6 order-1 h-full">
@@ -351,8 +351,10 @@ function CharacterPageContent() {
              </p>
           </div>
         </div>
-        ) : (
-          /* Tab Kitab & Jurus */
+        )}
+
+        {/* Tab Kitab & Jurus */}
+        {activeTab === 'kitab' && (
           <div className="flex flex-col space-y-6 animate-in fade-in zoom-in-95 duration-200">
              <div className="flex justify-between items-center bg-[#181d2a]/80 p-4 rounded-xl border border-[#2e3748] shadow-inner">
                 <div>

@@ -372,6 +372,17 @@ export interface LawStatusData {
   majorBreakthroughCooldownUntil?: string | null;
   canClaimEpiphany: boolean;
   canBind: boolean;
+  characterCurrentLevel?: number;
+  requiredLevelForNextRank?: number;
+  isLevelMetForNextRank?: boolean;
+  majorBreakthroughBlockingReason?: string;
+  tribulationDetails?: {
+    survivalHP: number;
+    waves: { wave: number; damage: number }[];
+    maxWaveDmg: number;
+    canSurvive: boolean;
+    tribulationTitle?: string;
+  } | null;
 }
 
 export interface LawSkillItem {

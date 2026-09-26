@@ -58,10 +58,69 @@ router.get('/', authenticateToken, async (req, res) => {
                 };
             });
 
-        let baseSuccessRate = realmData.baseSuccessRate;
-        if (stage > 0) baseSuccessRate -= (stage * 2);
+        const { getLevelCap } = require('../../config/leveling');
+        const { calculateSurvivalHP, calculateRealmWaveDamage, runRealmTribulation } = require('../../utils/cultivation');
+        const currentLevel = player.level || 1;
+        const currentLevelCap = getLevelCap(calcResult.realmIdx);
+        const isMaxLevelReached = currentLevel >= currentLevelCap;
+        const isMajorBreakthrough = stage >= realmData.maxStage;
 
-        const { MOOD_COSTS } = require('../../config/fivePillars');
+        // Persentase Sukses Riil (Base - Penalti Stage + Bonus Pil)
+        let effectiveSuccessRate = baseSuccessRate;
+        const highestPillBonus = usablePills.length > 0 ? Math.max(...usablePills.map(p => p.bonusPercent)) : 0;
+        effectiveSuccessRate = Math.min(100, Math.max(1, effectiveSuccessRate + highestPillBonus));
+
+        // Tribulasi Petir Surgawi
+        const willFaceTribulation = isMajorBreakthrough && (realmData.tribulationTier > 0);
+        const waveDamages = [0, 1, 2].map(w => calculateRealmWaveDamage(w, calcResult.realmIdx));
+        const survivalHP = calculateSurvivalHP(player);
+        const maxWaveDmg = Math.max(...waveDamages);
+        const canSurviveTribulation = !willFaceTribulation || (survivalHP >= maxWaveDmg);
+
+        // Checklist 3 Pilar Prasyarat Terobosan
+        const breakthroughChecklist = [
+            {
+                id: 'qi',
+                label: 'Akumulasi Qi Dantian Penuh',
+                current: calcResult.currentQi,
+                target: calcResult.maxQi,
+                isMet: calcResult.isReadyForBreakthrough,
+                hint: calcResult.isReadyForBreakthrough ? 'Dantian telah beresonansi 100%' : `Kurang ${(calcResult.maxQi - calcResult.currentQi).toLocaleString()} Qi`
+            },
+            {
+                id: 'level',
+                label: 'Kapasitas Fisik (Max Level Ranah)',
+                current: currentLevel,
+                target: currentLevelCap,
+                isMet: isMaxLevelReached,
+                required: isMajorBreakthrough,
+                hint: isMaxLevelReached ? `Wadah fisik mencapai puncak sempurna (Lv. ${currentLevelCap})` : `Wajib mencapai Lv. ${currentLevelCap} (Kurang ${currentLevelCap - currentLevel} Level)`
+            },
+            {
+                id: 'tribulation',
+                label: willFaceTribulation ? `Tribulasi Petir: ${realmData.tribulationTitle}` : 'Penyelarasan Meridian Dantian',
+                current: survivalHP,
+                target: maxWaveDmg,
+                isMet: canSurviveTribulation,
+                required: willFaceTribulation,
+                hint: willFaceTribulation 
+                    ? (canSurviveTribulation ? `Survival HP (${survivalHP}) sanggup menahan Petir (${maxWaveDmg} DMG)` : `BAHAYA: Survival HP (${survivalHP}) di bawah Petir (${maxWaveDmg} DMG)! Perkuat DEF/Vitalitas`)
+                    : 'Fondasi stabil tanpa sambaran petir mematikan'
+            }
+        ];
+
+        const blockingReasons = [];
+        if (!calcResult.isReadyForBreakthrough) {
+            blockingReasons.push(`Qi dantian belum penuh (${calcResult.currentQi}/${calcResult.maxQi}).`);
+        }
+        if (isMajorBreakthrough && !isMaxLevelReached) {
+            blockingReasons.push(`Level fisik belum maksimal (Lv. ${currentLevel}/${currentLevelCap}).`);
+        }
+        if (isMajorBreakthrough && calcResult.realmIdx === 0 && (!player.laws || player.laws.length === 0) && !player.isNormalCultivator) {
+            blockingReasons.push(`Belum mengikat Hukum Alam di Altar 2-Slot atau memilih Jalur Kultivator Biasa.`);
+        }
+
+        const canBreakthrough = blockingReasons.length === 0;
 
         res.json({
             success: true,
@@ -74,6 +133,24 @@ router.get('/', authenticateToken, async (req, res) => {
                 ratePerMinute: calcResult.ratePerMinute,
                 isReadyForBreakthrough: calcResult.isReadyForBreakthrough,
                 baseSuccessRate: baseSuccessRate,
+                effectiveSuccessRate: effectiveSuccessRate,
+                currentLevel: currentLevel,
+                currentLevelCap: currentLevelCap,
+                isMaxLevelReached: isMaxLevelReached,
+                isMajorBreakthrough: isMajorBreakthrough,
+                canBreakthrough: canBreakthrough,
+                blockingReasons: blockingReasons,
+                breakthroughChecklist: breakthroughChecklist,
+                tribulationInfo: {
+                    required: willFaceTribulation,
+                    title: realmData.tribulationTitle,
+                    tier: realmData.tribulationTier,
+                    baseDamage: realmData.tribulationBaseDamage,
+                    waveDamages: waveDamages,
+                    survivalHp: survivalHP,
+                    maxWaveDmg: maxWaveDmg,
+                    canSurvive: canSurviveTribulation
+                },
                 maxStage: realmData.maxStage,
                 isMaxLevel: calcResult.realmIdx === SYSTEM_REALMS.length - 1 && stage === realmData.maxStage,
                 penaltyPreview: {
@@ -124,6 +201,8 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
         let resultRealm = '';
         let resultStage = 0;
         let roleUpdated = false;
+        let tribulationResult = null;
+        let newLevelCapGranted = null;
 
         await withTransaction(async (session) => {
             let player = await Player.findOne({ discordId: userId, guildId }).session(session);
@@ -140,19 +219,27 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 throw new CustomError('Qi kamu belum mencukupi untuk menerobos batas!', 400);
             }
 
-            const { getLevelCap } = require('../../config/leveling');
-            const currentLevelCap = getLevelCap(calcResult.realmIdx);
-            if ((player.level || 1) < currentLevelCap) {
-                throw new CustomError(`Level karaktermu belum maksimal. Capai Level ${currentLevelCap} sebelum menerobos batas!`, 400);
+            const realmData = SYSTEM_REALMS[calcResult.realmIdx];
+            const isMajorBreakthrough = player.systemCultivation.stage >= realmData.maxStage;
+
+            // SYARAT MUTLAK: Level cap wajib dicapai saat terobosan ranah besar (Major Realm Breakthrough)
+            if (isMajorBreakthrough) {
+                const { getLevelCap } = require('../../config/leveling');
+                const currentLevelCap = getLevelCap(calcResult.realmIdx);
+                const currentLevel = player.level || 1;
+                if (currentLevel < currentLevelCap) {
+                    throw new CustomError(
+                        `Syarat Terobosan Ranah Tidak Terpenuhi: Kapasitas fisik tubuhmu belum mencapai batas maksimal ranah ini! Kamu harus mencapai Max Level ${currentLevelCap} (Level saat ini: ${currentLevel}) sebelum dapat menembus ke ranah berikutnya. Silakan berburu EXP di dunia fana/PvE untuk mematangkan wadah fisikmu.`,
+                        400
+                    );
+                }
             }
 
-            const realmData = SYSTEM_REALMS[calcResult.realmIdx];
-
-            if (player.systemCultivation.realm === 'Fondasi Fana (Mortal Foundation)' && player.systemCultivation.stage === 9) {
+            if (player.systemCultivation.realm === 'Fondasi Fana (Mortal Foundation)' && player.systemCultivation.stage >= 10) {
                 if (!player.laws || player.laws.length === 0) {
-                    if (!forceBreakthrough) {
-                        throw new CustomError('PERINGATAN SURGAWI: Begitu tubuhmu dialiri Qi sejati, fondasi fanamu akan hancur dan Hukum Alam (Law) akan menolakmu selamanya. Kamu belum mengikat Hukum Alam apapun! Kirim ulang permintaan breakthrough dengan flag konfirmasi jika kamu bersedia melepas kesempatan langka ini.', 400);
-                    } else {
+                    if (!forceBreakthrough && !player.isNormalCultivator) {
+                        throw new CustomError('PERINGATAN SURGAWI: Begitu tubuhmu dialiri Qi sejati, fondasi fanamu akan hancur dan Hukum Alam (Law) akan menolakmu selamanya. Kamu belum mengikat Hukum Alam apapun! Konfirmasi Jalur Kultivator Biasa atau gunakan flag konfirmasi jika bersedia melepas kesempatan ini.', 400);
+                    } else if (forceBreakthrough && !player.isNormalCultivator) {
                         player.systemCultivation.isFlawedFoundation = true;
                     }
                 }
@@ -190,6 +277,33 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 player.markModified('inventory');
             }
 
+            // Simulasi Tribulasi Petir Surgawi jika ini Major Breakthrough
+            if (isMajorBreakthrough && realmData.tribulationTier > 0) {
+                const { runRealmTribulation } = require('../../utils/cultivation');
+                tribulationResult = runRealmTribulation(player, calcResult.realmIdx);
+
+                if (!tribulationResult.survived) {
+                    // Tribulasi Petir Gagal — Penalti Berat
+                    penaltyAmount = Math.floor(calcResult.maxQi * 0.5);
+                    player.systemCultivation.qi = Math.max(0, player.systemCultivation.qi - penaltyAmount);
+                    player.systemCultivation.lastSyncAt = new Date();
+                    player.markModified('systemCultivation');
+                    await player.save({ session });
+
+                    resultRealm = player.systemCultivation.realm;
+                    resultStage = player.systemCultivation.stage;
+                    resultMessage = `⚡ Tribulasi Petir Surgawi GAGAL! Sambaran ${tribulationResult.tribulationTitle} memecahkan pertahananmu di Gelombang ${tribulationResult.wavesCleared + 1}! Kehilangan ${penaltyAmount.toLocaleString()} Qi.`;
+
+                    return res.json({
+                        success: true,
+                        isSuccess: false,
+                        message: resultMessage,
+                        tribulation: tribulationResult,
+                        penalties: { qiLost: penaltyAmount }
+                    });
+                }
+            }
+
             const attempt = attemptBreakthrough(calcResult.realmIdx, player.systemCultivation.stage, successBonus);
             isSuccess = attempt.success;
 
@@ -217,8 +331,15 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
 
                  resultRealm = player.systemCultivation.realm;
                  resultStage = newStage;
-                 resultMessage = `Terobosan Berhasil! Kamu telah mencapai tingkat ${resultRealm} (Tahap ${resultStage}).`;
                  roleUpdated = isNewRealm;
+
+                 if (isNewRealm) {
+                     const { getLevelCap } = require('../../config/leveling');
+                     newLevelCapGranted = getLevelCap(newRealmIdx);
+                     resultMessage = `🎉 TEROBOSAN AGUNG BERHASIL! Selamat datang di ranah ${resultRealm} (Tahap ${resultStage})! Batas Level Karaktermu kini terbuka hingga Level ${newLevelCapGranted}!`;
+                 } else {
+                     resultMessage = `Terobosan Berhasil! Kamu telah mencapai tingkat ${resultRealm} (Tahap ${resultStage}).`;
+                 }
 
             } else {
                  penaltyAmount = Math.floor(calcResult.maxQi * 0.25);
@@ -261,7 +382,10 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
                 stage: resultStage,
                 penalty: penaltyAmount,
                 usedBonus: successBonus,
-                pillConsumed: !!pillId
+                pillConsumed: !!pillId,
+                tribulation: tribulationResult,
+                newLevelCap: newLevelCapGranted,
+                isNewRealm: roleUpdated
             }
         });
 
@@ -273,6 +397,75 @@ router.post('/breakthrough', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat menerobos.' });
     } finally {
         if (typeof releaseLock === 'function') releaseLock();
+    }
+});
+
+// Endpoint: POST /api/cultivation/train
+// Latihan penyerapan Qi menggunakan stamina (Mortal 1-9 & kultivator aktif)
+router.post('/train', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const staminaCost = Math.max(5, Math.min(100, Math.floor(Number(req.body?.staminaCost) || 10)));
+
+        const playerRef = await Player.findOne({ discordId: userId }).select('guildId').lean();
+        const guildId = req.user.guildId || (playerRef ? playerRef.guildId : userId);
+
+        let player = await Player.findOne({ discordId: userId, guildId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        if (player.status !== 'active') return res.status(403).json({ error: `Karaktermu berstatus ${player.status}.` });
+
+        const { clampStamina } = require('../../utils/stamina');
+        const { current: currentStamina, max: maxStamina } = clampStamina(player);
+
+        if (currentStamina < staminaCost) {
+            return res.status(400).json({
+                error: `Stamina tidak mencukupi untuk semadi (Butuh ${staminaCost} STA, tersisa ${Math.floor(currentStamina)} STA). Istirahatlah sejenak.`
+            });
+        }
+
+        // Sinkronisasi kultivasi terkini
+        const calcResult = await syncPlayerCultivation(player);
+        const maxQi = calcResult.maxQi;
+        let currentQi = calcResult.currentQi;
+
+        if (currentQi >= maxQi) {
+            return res.status(400).json({
+                error: 'Dantian kamu telah terisi penuh oleh Qi! Waktunya untuk melakukan terobosan tahap (Breakthrough).'
+            });
+        }
+
+        // Potong stamina
+        player.currentStamina = Math.max(0, currentStamina - staminaCost);
+
+        // Hitung Qi yang diperoleh dari semadi stamina
+        const baseRate = Math.max(1, calcResult.ratePerMinute || 1);
+        const qiGained = Math.max(15, Math.floor(staminaCost * baseRate * 5));
+        
+        currentQi = Math.min(maxQi, currentQi + qiGained);
+        player.systemCultivation.qi = currentQi;
+        player.systemCultivation.lastSyncAt = new Date();
+
+        player.markModified('systemCultivation');
+        await player.save();
+
+        const isReady = currentQi >= maxQi;
+
+        res.json({
+            success: true,
+            message: `🧘 Kamu memusatkan pikiran dan melancarkan sirkulasi Qi! Menghabiskan ${staminaCost} Stamina dan menyerap +${qiGained.toLocaleString()} Qi ke dalam dantian.${isReady ? ' ✨ Dantian bergemuruh! Kamu telah siap melakukan terobosan tahap!' : ''}`,
+            data: {
+                currentQi,
+                maxQi,
+                qiGained,
+                staminaCost,
+                currentStamina: Math.floor(player.currentStamina),
+                maxStamina: Math.floor(maxStamina),
+                isReadyForBreakthrough: isReady
+            }
+        });
+    } catch (err) {
+        console.error('[API-CULTIVATION] POST /train error:', err);
+        res.status(500).json({ error: 'Gagal melakukan semadi latihan Qi.' });
     }
 });
 

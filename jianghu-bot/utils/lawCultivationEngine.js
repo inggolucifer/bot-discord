@@ -655,6 +655,30 @@ function getLawStatus(player) {
 
   const charLevelCap = getLevelCap(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)', law.lawLevelCapBonus || 0);
 
+  const targetRank = (law.rank || 0) + 1;
+  const isLevelMet = meetsLawRankRequirements(player, targetRank);
+  const reqData = LAW_RANK_REALM_REQUIREMENTS[targetRank];
+  const requiredLevel = reqData?.minLevel || 1;
+  const charLevel = player.level || 1;
+
+  const pathMod = lawDef?.pathMod || 1.0;
+  const tribWaveDamages = [0, 1, 2].map(w => calculateTribulationWaveDamage(w, law.rank || 0, pathMod));
+  const survivalHP = calculateSurvivalHP(player);
+  const maxWaveDmg = Math.max(...tribWaveDamages);
+  const willFaceTribulation = requiresTribulation(targetRank);
+  const canSurviveTribulation = !willFaceTribulation || (survivalHP >= maxWaveDmg);
+
+  let majorBlockingReason = null;
+  if (law.stage === 9) {
+    if (!isLevelMet) {
+      majorBlockingReason = `Kapasitas fisik belum siap. Capai Level ${requiredLevel} (saat ini Lv. ${charLevel}).`;
+    } else if (law.qi < law.maxQi) {
+      majorBlockingReason = `Akumulasi Qi belum mencapai batas maksimal (${Math.floor(law.qi)}/${law.maxQi}).`;
+    } else if (willFaceTribulation && !canSurviveTribulation) {
+      majorBlockingReason = `Peringatan Kematian: Survival HP (${survivalHP}) tidak cukup menahan Petir Tribulasi (${maxWaveDmg} DMG). Tingkatkan DEF/Vitalitas.`;
+    }
+  }
+
   return {
     isNormalCultivator: !!player.isNormalCultivator,
     hasLaw: !!law.activeLawType,
@@ -665,7 +689,7 @@ function getLawStatus(player) {
     element: lawDef?.element || null,
     lawElement: lawDef?.element || null,
     qiType: lawDef?.qiType || 'qi',
-    pathMod: lawDef?.pathMod || 1.0,
+    pathMod: pathMod,
 
     rank: law.rank || 0,
     stage: law.stage || 0,
@@ -691,6 +715,9 @@ function getLawStatus(player) {
     streakBonusMinutes: streakBonus,
     lawLevelCapBonus: law.lawLevelCapBonus || 0,
     characterLevelCap: charLevelCap,
+    characterCurrentLevel: charLevel,
+    requiredLevelForNextRank: requiredLevel,
+    isLevelMetForNextRank: isLevelMet,
     lawSkillPoints: law.lawSkillPoints || 0,
     unlockedSkillIds: law.unlockedSkillIds || [],
     unlockedSkillsCount: (law.unlockedSkillIds || []).length,
@@ -705,9 +732,18 @@ function getLawStatus(player) {
 
     canMiniBreakthrough: (law.qi >= law.maxQi) && (law.stage < 9),
     miniBreakthroughReady: (law.qi >= law.maxQi) && (law.stage < 9),
-    canMajorBreakthrough: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8),
-    majorBreakthroughReady: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8),
-    requiresTribulation: requiresTribulation((law.rank || 0) + 1),
+    canMajorBreakthrough: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8) && isLevelMet,
+    majorBreakthroughReady: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8) && isLevelMet,
+    majorBreakthroughBlockingReason: majorBlockingReason,
+    requiresTribulation: willFaceTribulation,
+
+    tribulationDetails: {
+      willFaceTribulation,
+      waveDamages: tribWaveDamages,
+      survivalHP,
+      maxWaveDmg,
+      canSurvive: canSurviveTribulation
+    },
 
     miniBreakthroughCost: {
       moodCost: 15,

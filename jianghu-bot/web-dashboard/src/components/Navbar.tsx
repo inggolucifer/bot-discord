@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@/lib/store';
+import { useAuthStore, useUIStore } from '@/lib/store';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
@@ -8,6 +8,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  ChevronUp,
   Sparkles,
   LogOut,
   User,
@@ -32,7 +33,10 @@ import { cn } from '@/lib/utils';
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
+  const { showMobileMapNav, setShowMobileMapNav } = useUIStore();
   const pathname = usePathname();
+  const isMapRoute = pathname === '/world' || pathname === '/' || pathname === '/explore';
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -63,11 +67,12 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // Close menus on route change
+  // Reset mobile menu and map nav visibility on route change
   useEffect(() => {
     setOpenDropdown(null);
     setIsMobileMenuOpen(false);
-  }, [pathname]);
+    setShowMobileMapNav(false);
+  }, [pathname, setShowMobileMapNav]);
 
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
@@ -118,11 +123,35 @@ export default function Navbar() {
     { href: '/leaderboard', label: 'Papan Peringkat', icon: Award },
   ];
 
+  // In map route on mobile, auto-hide navbars unless user clicks the summon button
+  const isMobileNavHidden = isMapRoute && !showMobileMapNav;
+
   return (
     <>
+      {/* Floating Small Pill Button to Summon Navbars when on Map in Mobile */}
+      {isMobileNavHidden && (
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] lg:hidden animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
+          <button
+            onClick={() => setShowMobileMapNav(true)}
+            className="bg-[#0b0e15]/95 hover:bg-[#141a26] border-b-2 border-x border-[#c5a880]/80 text-[#c5a880] px-3.5 py-1 rounded-b-xl shadow-[0_4px_20px_rgba(0,0,0,0.9)] backdrop-blur-md flex items-center gap-1.5 text-[11px] font-serif font-bold tracking-wider hover:text-amber-200 transition-all cursor-pointer group active:scale-95 select-none"
+            title="Tampilkan Menu Navigasi"
+          >
+            <ChevronDown className="w-3.5 h-3.5 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
+            <span>Navigasi</span>
+          </button>
+        </div>
+      )}
+
       {/* Top Header Navbar - Clean, Minimalist Wuxia */}
-      <header className="bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-15 flex justify-between items-center">
+      <header
+        className={cn(
+          'bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md transition-all duration-300 ease-in-out',
+          isMobileNavHidden
+            ? 'max-lg:-translate-y-full max-lg:opacity-0 max-lg:pointer-events-none max-lg:max-h-0 max-lg:border-b-0 overflow-hidden'
+            : 'translate-y-0 opacity-100 max-h-16'
+        )}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-15 flex justify-between items-center relative">
           
           {/* Left: Clean Brand Logo */}
           <Link
@@ -296,8 +325,20 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          {/* Right Header: Tianji Pill + Profile/Auth + Mobile Menu Toggle */}
+          {/* Right Header: Tianji Pill + Profile/Auth + Mobile Hide Button + Mobile Menu Toggle */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Quick Hide Button when navbars are active in mobile map */}
+            {isMapRoute && showMobileMapNav && (
+              <button
+                onClick={() => setShowMobileMapNav(false)}
+                className="lg:hidden p-1 px-2.5 rounded-lg bg-[#141a26] hover:bg-[#1e2738] border border-[#c5a880]/60 text-amber-300 text-xs font-serif flex items-center gap-1 cursor-pointer shadow-md active:scale-95"
+                title="Sembunyikan Navigasi (Layar Penuh Peta)"
+              >
+                <ChevronUp className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px]">Tutup</span>
+              </button>
+            )}
+
             {/* Simple Tianji Hub Pill */}
             <Link
               href="/daily-hub"
@@ -364,8 +405,21 @@ export default function Navbar() {
               {isMobileMenuOpen ? <X className="w-5 h-5 text-amber-300" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-
         </div>
+
+        {/* Center Bottom Pull Tab to Hide Nav in Mobile Map */}
+        {isMapRoute && showMobileMapNav && (
+          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto lg:hidden">
+            <button
+              onClick={() => setShowMobileMapNav(false)}
+              className="px-3 py-0.5 rounded-b-md bg-[#090c13]/95 border-b border-x border-[#c5a880]/70 text-[#c5a880] text-[10px] font-serif flex items-center gap-1 transition-all shadow-md cursor-pointer hover:text-amber-200"
+              title="Sembunyikan Navigasi"
+            >
+              <ChevronUp size={11} className="text-amber-400" />
+              <span>Sembunyikan</span>
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Mobile Drawer (Clean, Uncluttered, Direct Links - Zero Sideways Scroll) */}
@@ -557,8 +611,15 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation Bar (5 Touch-Optimized Pillars) */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#090c13]/95 backdrop-blur-xl border-t border-[#2b3345] px-2 py-1 shadow-lg max-w-full overflow-hidden">
+      {/* Mobile Bottom Navigation Bar (5 Touch-Optimized Pillars - Auto-hidden on map) */}
+      <nav
+        className={cn(
+          'lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#090c13]/95 backdrop-blur-xl border-t border-[#2b3345] px-2 py-1 shadow-lg max-w-full overflow-hidden transition-all duration-300 ease-in-out',
+          isMobileNavHidden
+            ? 'translate-y-full opacity-0 pointer-events-none'
+            : 'translate-y-0 opacity-100'
+        )}
+      >
         <div className="grid grid-cols-5 items-center w-full max-w-md mx-auto">
           {/* 1. Beranda */}
           <Link

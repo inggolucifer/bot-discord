@@ -243,24 +243,24 @@ export default function ProfilePage() {
         {/* Artisanship - Full Width */}
         <div className="w-full">
             {/* Unified Artisanship & Kemahiran Profesi Section (Sistem Terpadu 1-to-1) */}
-            <div className="bg-[#12151e]/90 border border-[#c5a880]/40 p-5 rounded-xl shadow-lg font-serif space-y-3">
+            <div className="bg-[#12151e]/90 border border-[#c5a880]/40 p-5 rounded-xl shadow-lg font-serif space-y-4">
                <div className="flex justify-between items-center border-b border-[#3b3322] pb-2.5">
                   <div className="flex items-center gap-2">
-                     <Hammer size={16} className="text-amber-400" />
+                     <Hammer size={18} className="text-amber-400" />
                      <h3 className="text-lg font-bold text-[#c5a880] uppercase tracking-wider">
                         Kemahiran Profesi & Artisanship (技艺)
                      </h3>
                   </div>
-                  <span className="text-[11px] text-stone-400 font-sans">
-                     Sistem Terpadu 1-to-1
+                  <span className="text-[11px] text-amber-300/80 font-mono px-2.5 py-0.5 rounded-full bg-amber-950/50 border border-amber-700/40">
+                     Sistem Terpadu 7 Profesi
                   </span>
                </div>
                
                <p className="text-[11px] text-stone-400 leading-relaxed">
-                  Keahlian produksi dan pengrajin Jianghu terhubung langsung dengan Pilar Ke-5 Fondasi Kultivasi.
+                  Keahlian produksi dan pengrajin Jianghu terhubung langsung dengan Pilar Ke-5 Fondasi Kultivasi. Seluruh pendekar menguasai dasar 7 seni kriya Jianghu (Level 1+).
                </p>
 
-               <div className="grid grid-cols-1 gap-y-2.5">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {[
                       { id: 'alchemy', name: 'Alkimia (Alchemy)', icon: '⚗️', artKey: 'alchemy', desc: 'Meracik pil obat dan intisari Qi' },
                       { id: 'smithing', name: 'Tempa (Forge / Smithing)', icon: '⚒️', artKey: 'forge', desc: 'Menempa pedang, baju zirah, dan perkakas' },
@@ -272,51 +272,38 @@ export default function ProfilePage() {
                   ].map(prof => {
                       const profData = profile.professions?.[prof.id];
                       const artVal = mergedProfile.extendedStats?.artisanship?.[prof.artKey];
-                      const isUnlocked = profData ? profData.isUnlocked : (artVal > 0);
-                      const level = profData?.level ?? artVal ?? 1;
-                      const exp = profData?.exp ?? 0;
+                      const level = Math.max(1, Math.floor(profData?.level ?? artVal ?? 1));
+                      const exp = Math.max(0, Math.floor(profData?.exp ?? 0));
                       const maxExp = Math.floor(50 * level + 15 * level * level);
-                      const progress = profData ? Math.min(100, (exp / maxExp) * 100) : (artVal > 0 ? 100 : 0);
+                      const progress = Math.min(100, Math.floor((exp / maxExp) * 100));
 
                       return (
-                          <div key={prof.id} className="bg-[#181d2a] p-3 rounded-lg border border-[#2e374a] flex flex-col justify-center">
-                              <div className="flex justify-between items-center mb-1.5">
+                          <div key={prof.id} className="bg-[#181d2a] p-3.5 rounded-lg border border-[#2e374a] hover:border-amber-600/40 transition-colors flex flex-col justify-between shadow-sm">
+                              <div className="flex justify-between items-start mb-2">
                                   <div className="flex items-center gap-2.5">
-                                      <span className="text-xl">{prof.icon}</span>
+                                      <span className="text-2xl p-1 bg-[#10131d] rounded-md border border-[#384157] shrink-0">{prof.icon}</span>
                                       <div>
-                                          <span className="text-sm font-bold text-amber-200">{prof.name}</span>
-                                          <div className="text-[10px] text-stone-400">{prof.desc}</div>
+                                          <span className="text-sm font-bold text-amber-200 block">{prof.name}</span>
+                                          <div className="text-[10px] text-stone-400 mt-0.5 leading-snug">{prof.desc}</div>
                                       </div>
                                   </div>
-                                  {isUnlocked ? (
-                                      <span className="text-xs font-bold text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded border border-amber-600/50 shadow-sm">
-                                          Lv. {level}
-                                      </span>
-                                  ) : (
-                                      <span className="text-[10px] font-bold text-stone-500 bg-[#0d1017] px-2 py-0.5 rounded border border-stone-800">
-                                          Belum Terbuka
-                                      </span>
-                                  )}
+                                  <span className="text-xs font-bold font-mono text-amber-300 bg-amber-950/80 px-2.5 py-0.5 rounded border border-amber-600/50 shadow-sm shrink-0">
+                                      Lv. {level}
+                                  </span>
                               </div>
 
-                              {isUnlocked && profData ? (
-                                  <div className="w-full mt-1">
-                                      <div className="flex justify-between text-[10px] text-stone-400 mb-1 font-mono">
-                                          <span>Progres Kemahiran</span>
-                                          <span>{exp} / {maxExp} XP</span>
-                                      </div>
-                                      <div className="w-full bg-black/60 rounded-full h-1.5 overflow-hidden border border-[#2b3345]">
-                                          <div
-                                              className="bg-gradient-to-r from-amber-500 to-yellow-400 h-1.5 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]"
-                                              style={{ width: `${progress}%` }}
-                                          ></div>
-                                      </div>
+                              <div className="w-full mt-1.5 pt-2 border-t border-[#23293a]">
+                                  <div className="flex justify-between text-[10px] text-stone-400 mb-1 font-mono">
+                                      <span>Kemahiran Pengrajin</span>
+                                      <span className="text-amber-300/80">{exp} / {maxExp} XP</span>
                                   </div>
-                              ) : isUnlocked ? (
-                                  <div className="text-[10px] text-amber-400/80 italic mt-1">Kemahiran aktif dari pemahaman fondasi Dao</div>
-                              ) : (
-                                  <div className="text-[10px] text-stone-500 italic mt-1">Latih atau pelajari di peta spasial dunia Jianghu</div>
-                              )}
+                                  <div className="w-full bg-black/60 rounded-full h-1.5 overflow-hidden border border-[#2b3345]">
+                                      <div
+                                          className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-400 h-1.5 transition-all duration-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.3)]"
+                                          style={{ width: `${progress}%` }}
+                                      ></div>
+                                  </div>
+                              </div>
                           </div>
                       );
                   })}
