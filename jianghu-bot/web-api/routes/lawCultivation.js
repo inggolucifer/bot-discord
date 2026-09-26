@@ -27,6 +27,7 @@ const CustomError = require('../utils/CustomError');
 const { withTransaction } = require('../utils/dbTransaction');
 const { z } = require('zod');
 const { isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
+const { getSkillPointCost, getMaxSkillLevel, getRequiredSkillCombatExp } = require('../../utils/kungfuMastery');
 
 const {
   LAW_DEFINITIONS,
@@ -688,15 +689,28 @@ router.get('/skill-tree', authenticateToken, async (req, res) => {
       unlockedMap[id] = true;
     });
 
-    const skillTree = skills.map(skill => ({
-      ...skill,
-      isUnlocked: !!unlockedMap[skill.skillId],
-      isEquipped: (law.combatLoadout || []).includes(skill.skillId),
-      canUnlock: !unlockedMap[skill.skillId]
-        && law.rank >= (skill.requiredRank || 0)
-        && law.lawSkillPoints >= (skill.skillPointCost || 1)
-        && (!skill.requiredParentSkillId || !!unlockedMap[skill.requiredParentSkillId])
-    }));
+    const skillTree = skills.map(skill => {
+      const cost = skill.skillPointCost || getSkillPointCost(skill.tier || 1);
+      const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(skill.skillId) : law.skillLevels[skill.skillId]) : 1) || 1;
+      const exp = (law.skillExp ? (law.skillExp.get ? law.skillExp.get(skill.skillId) : law.skillExp[skill.skillId]) : 0) || 0;
+      const maxLvl = getMaxSkillLevel(skill.tier || 1);
+      const reqExp = getRequiredSkillCombatExp(lvl);
+
+      return {
+        ...skill,
+        skillPointCost: cost,
+        level: lvl,
+        exp,
+        reqExp,
+        maxLevel: maxLvl,
+        isUnlocked: !!unlockedMap[skill.skillId],
+        isEquipped: (law.combatLoadout || []).includes(skill.skillId),
+        canUnlock: !unlockedMap[skill.skillId]
+          && law.rank >= (skill.requiredRank || 0)
+          && (law.lawSkillPoints || 0) >= cost
+          && (!skill.requiredParentSkillId || !!unlockedMap[skill.requiredParentSkillId])
+      };
+    });
 
     res.json({
       success: true,
@@ -756,16 +770,27 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Skill prasyarat belum dipelajari.' });
     }
 
-    // Cek skill points
-    const cost = skillDef.skillPointCost || 1;
+    // Cek skill points (Tier-scaled: Tier 1=1, Tier 2=2, Tier 3=3, Tier 4=5, Tier 5=7)
+    const cost = skillDef.skillPointCost || getSkillPointCost(skillDef.tier || 1);
     if ((law.lawSkillPoints || 0) < cost) {
-      return res.status(400).json({ error: `Poin skill tidak cukup. Butuh ${cost}, punya ${law.lawSkillPoints}.` });
+      return res.status(400).json({ error: `Poin skill tidak cukup. Butuh ${cost} SP (Tier ${skillDef.tier || 1}), punya ${law.lawSkillPoints || 0} SP.` });
     }
 
-    // Alokasikan
+    // Alokasikan SP
     law.lawSkillPoints -= cost;
     if (!law.unlockedSkillIds) law.unlockedSkillIds = [];
     law.unlockedSkillIds.push(skillId);
+
+    // Inisialisasi Level 1 dan Exp 0
+    if (!law.skillLevels) law.skillLevels = new Map();
+    if (!law.skillExp) law.skillExp = new Map();
+    if (law.skillLevels.set) {
+      law.skillLevels.set(skillId, 1);
+      law.skillExp.set(skillId, 0);
+    } else {
+      law.skillLevels[skillId] = 1;
+      law.skillExp[skillId] = 0;
+    }
 
     // Sinergi Law ke Spiritual Root XP (Automatic Dao Resonance)
     const lawDef = LAW_DEFINITIONS[law.activeLawType];

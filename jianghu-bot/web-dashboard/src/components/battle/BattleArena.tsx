@@ -29,6 +29,18 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
     // Death countdown state (4-hour timer)
     const [deathRemainingSeconds, setDeathRemainingSeconds] = useState<number>(4 * 3600);
 
+    // Dynamic Combat Status Alert Banners
+    interface StatusAlert {
+        id: string;
+        targetName: string;
+        icon: string;
+        title: string;
+        subtitle: string;
+        color: string;
+    }
+    const [activeAlerts, setActiveAlerts] = useState<StatusAlert[]>([]);
+    const lastProcessedLogIndex = useRef<number>(0);
+
     const logsEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -91,6 +103,93 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
         }, 1000);
         return () => clearInterval(interval);
     }, [session?.status]);
+
+    // Deteksi Efek Status Baru (Poison, Bleed, Burn, Freeze, Stun, Buff, Level Up)
+    useEffect(() => {
+        if (!session?.logs || session.logs.length === 0) return;
+
+        const newLogs = session.logs.slice(lastProcessedLogIndex.current);
+        lastProcessedLogIndex.current = session.logs.length;
+
+        const detectedAlerts: StatusAlert[] = [];
+        newLogs.forEach((log: any, idx: number) => {
+            const msg = log.message || '';
+            const actor = log.actor || '';
+            const target = log.target || '';
+
+            if (msg.includes('Meracuni') || msg.includes('Poison')) {
+                detectedAlerts.push({
+                    id: `alert_poison_${Date.now()}_${idx}`,
+                    targetName: target || 'Lawan',
+                    icon: '☠️',
+                    title: 'STATUS TERACUNI!',
+                    subtitle: 'Terpapar racun mematikan, HP berkurang tiap ronde',
+                    color: 'from-emerald-950 via-emerald-900 to-black border-emerald-500 text-emerald-300'
+                });
+            } else if (msg.includes('Pendarahan') || msg.includes('Bleed')) {
+                detectedAlerts.push({
+                    id: `alert_bleed_${Date.now()}_${idx}`,
+                    targetName: target || 'Lawan',
+                    icon: '🩸',
+                    title: 'LUKA PENDARAHAN!',
+                    subtitle: 'Meridian robek, luka dalam terus mengucurkan darah',
+                    color: 'from-rose-950 via-rose-900 to-black border-rose-500 text-rose-300'
+                });
+            } else if (msg.includes('Membeku') || msg.includes('Frozen') || msg.includes('hawa es')) {
+                detectedAlerts.push({
+                    id: `alert_frozen_${Date.now()}_${idx}`,
+                    targetName: actor || target || 'Lawan',
+                    icon: '❄️',
+                    title: 'MEMBEKU KAKU!',
+                    subtitle: 'Hawa es membekukan tubuh, tidak dapat bertindak',
+                    color: 'from-cyan-950 via-cyan-900 to-black border-cyan-500 text-cyan-300'
+                });
+            } else if (msg.includes('Hangus') || msg.includes('Incinerated')) {
+                detectedAlerts.push({
+                    id: `alert_burn_${Date.now()}_${idx}`,
+                    targetName: target || actor || 'Lawan',
+                    icon: '🔥',
+                    title: 'HANGUS MEMBARA!',
+                    subtitle: 'Terbakar hebat, pemulihan HP berkurang 50%',
+                    color: 'from-orange-950 via-orange-900 to-black border-orange-500 text-orange-300'
+                });
+            } else if (msg.includes('Lumpuh') || msg.includes('Stun') || msg.includes('totokan')) {
+                detectedAlerts.push({
+                    id: `alert_stun_${Date.now()}_${idx}`,
+                    targetName: target || actor || 'Lawan',
+                    icon: '⚡',
+                    title: 'TOTOKAN MERIDIAN (STUN)!',
+                    subtitle: 'Saraf terkunci, melewatkan giliran bertarung',
+                    color: 'from-yellow-950 via-yellow-900 to-black border-yellow-500 text-yellow-300'
+                });
+            } else if (msg.includes('Kuda-Kuda Bertahan') || msg.includes('menahan 50% damage')) {
+                detectedAlerts.push({
+                    id: `alert_def_${Date.now()}_${idx}`,
+                    targetName: actor || 'Pendekar',
+                    icon: '🛡️',
+                    title: 'KUDA-KUDA PERTAHANAN!',
+                    subtitle: 'Pertahanan kokoh membelokkan 50% damage serangan',
+                    color: 'from-blue-950 via-blue-900 to-black border-blue-500 text-blue-300'
+                });
+            } else if (msg.includes('[Pencerahan Tempur]') || msg.includes('[Pencerahan]')) {
+                detectedAlerts.push({
+                    id: `alert_up_${Date.now()}_${idx}`,
+                    targetName: actor || 'Pendekar',
+                    icon: '✨',
+                    title: 'PENCERAHAN JURUS NAIK LEVEL!',
+                    subtitle: msg.replace(/.*Pencerahan.*?\]\s*/i, ''),
+                    color: 'from-amber-950 via-amber-900 to-black border-amber-400 text-amber-200'
+                });
+            }
+        });
+
+        if (detectedAlerts.length > 0) {
+            setActiveAlerts(prev => [...prev, ...detectedAlerts].slice(-3));
+            setTimeout(() => {
+                setActiveAlerts(prev => prev.filter(a => !detectedAlerts.some(da => da.id === a.id)));
+            }, 2500);
+        }
+    }, [session?.logs]);
 
     const formatCountdown = (totalSeconds: number) => {
         const h = Math.floor(totalSeconds / 3600);
@@ -283,6 +382,29 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                     )}
                 </div>
             </div>
+
+            {/* DYNAMIC COMBAT STATUS ALERT BANNERS (Auto-fades after 2.5s) */}
+            {activeAlerts.length > 0 && (
+                <div className="absolute top-14 inset-x-0 z-50 flex flex-col items-center gap-2 pointer-events-none px-4">
+                    {activeAlerts.map(alert => (
+                        <div 
+                            key={alert.id}
+                            className={`bg-gradient-to-r ${alert.color} border-2 px-4 py-2 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.9)] flex items-center gap-3 animate-in slide-in-from-top-4 duration-300`}
+                        >
+                            <span className="text-2xl animate-bounce">{alert.icon}</span>
+                            <div className="text-left">
+                                <div className="font-serif font-black text-xs sm:text-sm tracking-wider flex items-center gap-1.5">
+                                    <span>[{alert.targetName}]</span>
+                                    <span>{alert.title}</span>
+                                </div>
+                                <div className="text-[10px] font-mono opacity-90">
+                                    {alert.subtitle}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* BATTLEFIELD STAGE */}
             <div className="flex-1 relative z-10 p-3 sm:p-4 flex flex-col justify-between overflow-y-auto gap-3">

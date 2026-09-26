@@ -484,12 +484,18 @@ router.post('/start', authenticateToken, async (req, res) => {
             if (challengerEntry.rank === 1) {
                 return res.status(400).json({ error: 'Kamu adalah Juara 1! Tidak ada lawan di atasmu yang bisa ditantang.' });
             }
+            if (targetRank >= challengerEntry.rank) {
+                return res.status(400).json({ error: 'Kamu tidak dapat menantang pendekar yang memiliki peringkat sama atau di bawah peringkatmu!' });
+            }
             if (targetRank < minAllowedRank || targetRank > maxAllowedRank) {
-                return res.status(400).json({ error: `Kamu hanya bisa menantang peringkat antara #${minAllowedRank} hingga #${maxAllowedRank}.` });
+                return res.status(400).json({ error: `Kamu hanya bisa menantang peringkat di atasmu antara #${minAllowedRank} hingga #${maxAllowedRank}.` });
             }
 
             const targetEntry = await ArenaLadderEntry.findOne({ rank: targetRank });
             if (!targetEntry) return res.status(404).json({ error: `Pemain pada peringkat #${targetRank} tidak ditemukan.` });
+            if (targetEntry.discordId === userId) {
+                return res.status(400).json({ error: 'Kamu tidak dapat menantang karakter dirimu sendiri!' });
+            }
 
             const targetPlayer = await Player.findOne({ discordId: targetEntry.discordId })
                 .populate('laws')
@@ -659,8 +665,8 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                     player.lastKilledByMonster = null;
                 }
 
-                // Berikan reward EXP atau perak jika menang di arena sparring
-                if (session.status === 'won' && session.rewards) {
+                // Berikan reward EXP atau perak jika menang (HANYA pertarungan non-arena sekte; Arena sekte zero-reward)
+                if (session.status === 'won' && session.rewards && session.battleConfig?.eventContext !== 'sect_arena') {
                     if (session.rewards.exp) player.exp = (player.exp || 0) + session.rewards.exp;
                     if (session.rewards.silver) {
                         player.currency = normalizeCurrency(player.currency);

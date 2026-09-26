@@ -19,7 +19,7 @@ const Law = require('../../models/Law');
 const { getRealmIndex, getRealmName } = require('../../utils/cultivation');
 const { escapeRegex } = require('../../utils/escapeRegex');
 const Manual = require('../../models/Manual');
-const { getKungfuLevel } = require('../../utils/kungfuMastery');
+const { getKungfuLevel, canLearnNewManual, getMaxManualCapacity, getMaxSkillLevel } = require('../../utils/kungfuMastery');
 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
 const { applyTrainingSpiritualRootXp } = require('../../utils/spiritualRootXp');
 
@@ -750,18 +750,44 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
                 throw new CustomError('Kamu sudah memiliki Manual ini.', 400);
             }
 
+            if (!canLearnNewManual(player)) {
+                const maxCap = getMaxManualCapacity(player);
+                const coreVal = player.kungfuSkills ? (player.kungfuSkills.core || 0) : 0;
+                throw new CustomError(`Kapasitas pemahaman kitab telah mencapai batas maksimal (${player.manuals.length}/${maxCap} Manual). Naikkan stat Core (saat ini ${coreVal}) atau lupakan salah satu manual untuk mempelajari manual baru.`, 400);
+            }
+
             player.inventory[inventoryIndex].quantity -= 1;
             if (player.inventory[inventoryIndex].quantity <= 0) {
                 player.inventory.splice(inventoryIndex, 1);
             }
             player.markModified('inventory');
 
+            const manualTier = manualToLearn.tier || manualToLearn.rank || 1;
+            const maxLvl = getMaxSkillLevel(manualTier);
+
             player.manuals.push({
                 manualId: manualToLearn._id,
-                level: 0,
+                level: 1,
+                exp: 0,
+                maxLevel: maxLvl,
                 isComprehending: false,
                 comprehendStartTime: null
             });
+
+            // Catat baseline rekor penguasaan (Anti-Abuse Core Stat Farming)
+            if (!player.historicSkillMastery) player.historicSkillMastery = new Map();
+            const mKey = manualToLearn._id.toString();
+            const existingPeak = player.historicSkillMastery.get 
+                ? player.historicSkillMastery.get(mKey) 
+                : player.historicSkillMastery[mKey];
+            if (!existingPeak) {
+                if (player.historicSkillMastery.set) {
+                    player.historicSkillMastery.set(mKey, 1);
+                } else {
+                    player.historicSkillMastery[mKey] = 1;
+                }
+                player.markModified('historicSkillMastery');
+            }
 
             let xpMessage = '';
             if (manualToLearn.rootType) {

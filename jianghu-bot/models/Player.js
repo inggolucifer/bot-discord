@@ -5,7 +5,9 @@ const { normalizeCurrency } = require('../utils/currencyNormalize');
 
 const playerManualSchema = new mongoose.Schema({
   manualId: { type: mongoose.Schema.Types.ObjectId, ref: 'Manual', required: true },
-  level: { type: Number, default: 0 }, // Level 0 means just learned, haven't finished first upgrade
+  level: { type: Number, default: 1 }, // Level 1+
+  exp: { type: Number, default: 0 },   // Combat attack mastery XP
+  maxLevel: { type: Number, default: 5 },
   isComprehending: { type: Boolean, default: false },
   comprehendStartTime: { type: Date, default: null }
 }, { _id: false });
@@ -262,8 +264,10 @@ const cultivationLawSchema = new mongoose.Schema({
   // Daily Channeling Cap, Streak, & Misi
   dailyData: { type: lawDailyDataSchema, default: () => ({}) },
 
-  // Combat Loadout (Sistem 4+1: Basic Attack Senjata otomatis + 4 Jurus dari Skill Tree)
+  // Combat Loadout (Sistem 4+1: Basic Attack Senjata otomatis + 4 Jurus dari Skill Tree / Manual)
   unlockedSkillIds: { type: [String], default: [] },       // ID skill dari pohon yang telah diambil
+  skillLevels: { type: Map, of: Number, default: () => new Map() }, // Level jurus Law (Level 1..Max)
+  skillExp: { type: Map, of: Number, default: () => new Map() },    // Akumulasi serangan combat nyata
   combatLoadout: { type: [String], default: [] },          // Maksimal 4 jurus aktif terpilih
 
   // Cooldowns Terobosan
@@ -478,6 +482,7 @@ const playerSchema = new mongoose.Schema({
   reputationTitle: { type: String, default: 'Novice Cultivator' },
   laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
   manuals: { type: [playerManualSchema], default: [] },
+  historicSkillMastery: { type: Map, of: Number, default: () => new Map() }, // Catatan rekor level tertinggi per manual/skill (Anti-Abuse Core Stat Farming)
   isNormalCultivator: { type: Boolean, default: false, index: true },
   normalCultivatorConfirmedAt: { type: Date, default: null },
 

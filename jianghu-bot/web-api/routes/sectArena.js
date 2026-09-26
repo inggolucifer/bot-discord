@@ -281,16 +281,24 @@ router.post('/challenge', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Kamu adalah Juara 1! Tidak ada lawan di atasmu yang bisa ditantang.' });
     }
 
+    if (targetRank >= myRank) {
+      return res.status(400).json({ error: 'Kamu tidak dapat menantang pendekar yang memiliki peringkat sama atau di bawah peringkatmu!' });
+    }
+
     const minAllowedRank = Math.max(1, myRank - 5);
     const maxAllowedRank = myRank - 1;
 
     if (targetRank < minAllowedRank || targetRank > maxAllowedRank) {
-      return res.status(400).json({ error: `Kamu hanya bisa menantang peringkat antara #${minAllowedRank} hingga #${maxAllowedRank}.` });
+      return res.status(400).json({ error: `Kamu hanya bisa menantang peringkat di atasmu antara #${minAllowedRank} hingga #${maxAllowedRank}.` });
     }
 
     const targetEntry = await ArenaLadderEntry.findOne({ rank: targetRank });
     if (!targetEntry) {
       return res.status(404).json({ error: `Pemain pada peringkat #${targetRank} tidak ditemukan.` });
+    }
+
+    if (targetEntry.discordId === challengerEntry.discordId) {
+      return res.status(400).json({ error: 'Kamu tidak dapat menantang karakter dirimu sendiri!' });
     }
 
     const targetPlayer = await Player.findOne({ discordId: targetEntry.discordId })
