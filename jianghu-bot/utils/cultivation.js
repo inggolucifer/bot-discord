@@ -109,16 +109,38 @@ function getRealmIndex(realmName) {
   return idx !== -1 ? idx : 0; // fallback to Mortal
 }
 
+// Tabel Progresi Dinamis Fondasi Fana (Mortal Foundation Stage 1 - 10)
+// Menjamin setiap stage bertumbuh secara organik dan tidak stagnan di 1000 Qi
+const MORTAL_STAGE_PROGRESSION = [
+  { stage: 1,  maxQi: 1000,  ratePerMinute: 2 },
+  { stage: 2,  maxQi: 1500,  ratePerMinute: 3 },
+  { stage: 3,  maxQi: 2200,  ratePerMinute: 4 },
+  { stage: 4,  maxQi: 3100,  ratePerMinute: 5 },
+  { stage: 5,  maxQi: 4200,  ratePerMinute: 6 },
+  { stage: 6,  maxQi: 5500,  ratePerMinute: 7 },
+  { stage: 7,  maxQi: 7000,  ratePerMinute: 8 },
+  { stage: 8,  maxQi: 9000,  ratePerMinute: 9 },
+  { stage: 9,  maxQi: 11500, ratePerMinute: 10 },
+  { stage: 10, maxQi: 15000, ratePerMinute: 12 }
+];
+
 // Menghitung Kapasitas Qi Maksimal (Max Qi) untuk Realm & Stage saat ini
 function getMaxQi(realmIndex, stage) {
   const realm = SYSTEM_REALMS[realmIndex];
   if (!realm) return 1000;
 
-  if (realmIndex === 0) return realm.baseQiCapacity;
+  // 1. Fondasi Fana (Realm 0): Gunakan progresi dinamis per stage (1 - 10)
+  if (realmIndex === 0) {
+    const s = Math.max(1, Math.min(10, Number(stage) || 1));
+    const entry = MORTAL_STAGE_PROGRESSION[s - 1];
+    return entry ? entry.maxQi : 1000;
+  }
 
-  // Eksponensial sederhana berdasarkan stage
-  // Semakin tinggi stage, kapasitas naik
-  const stageMultiplier = Math.pow(1.5, stage - 1);
+  // 2. Ranah Tinggi (Realm 1+): Kurva halus (Smoothed Progressive Curve)
+  // Menghindari ledakan liar 1.5^(stage-1) = 38x yang mematikan gameplay
+  const s = Math.max(1, Math.min(realm.maxStage || 9, Number(stage) || 1));
+  const stageOffset = s - 1;
+  const stageMultiplier = 1 + (stageOffset * 0.40) + (Math.pow(stageOffset, 1.35) * 0.12);
   return Math.floor(realm.baseQiCapacity * stageMultiplier);
 }
 
@@ -127,10 +149,16 @@ function getQiRatePerMinute(realmIndex, stage) {
     const realm = SYSTEM_REALMS[realmIndex];
     if (!realm) return 1;
 
-    if (realmIndex === 0) return realm.qiRatePerMinute;
+    // 1. Fondasi Fana (Realm 0): Laju Qi bertumbuh seiring pembukaan meridian
+    if (realmIndex === 0) {
+      const s = Math.max(1, Math.min(10, Number(stage) || 1));
+      const entry = MORTAL_STAGE_PROGRESSION[s - 1];
+      return entry ? entry.ratePerMinute : 2;
+    }
 
-    // Rate naik sedikit per stage agar tidak frustrasi
-    const stageMultiplier = 1 + ((stage - 1) * 0.1); // +10% rate per stage
+    // 2. Ranah Tinggi (Realm 1+): Laju bertumbuh +20% per mini-stage
+    const s = Math.max(1, Math.min(realm.maxStage || 9, Number(stage) || 1));
+    const stageMultiplier = 1 + ((s - 1) * 0.20);
     return Math.floor(realm.qiRatePerMinute * stageMultiplier);
 }
 
@@ -334,6 +362,7 @@ function runRealmTribulation(player, realmIndex) {
 
 module.exports = {
     SYSTEM_REALMS,
+    MORTAL_STAGE_PROGRESSION,
     getRealmIndex,
     getMaxQi,
     getQiRatePerMinute,

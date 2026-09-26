@@ -28,8 +28,9 @@ export function WorldPageContent() {
   const [locationData, setLocationData] = useState<any>(null);
   const [travelStatus, setTravelStatus] = useState<any>(null);
   const [restData, setRestData] = useState<any>(null);
-  const [currentStamina, setCurrentStamina] = useState<number>(0);
-  const [maxStamina, setMaxStamina] = useState<number>(100);
+  const currentStamina = useUIStore(s => s.currentStamina);
+  const maxStamina = useUIStore(s => s.maxStamina);
+  const setStamina = useUIStore(s => s.setStamina);
   const [restHours, setRestHours] = useState<number>(1);
   const [settlements, setSettlements] = useState<any[]>([]);
   const [edges, setEdges] = useState<any>({});
@@ -100,10 +101,11 @@ export function WorldPageContent() {
         api.get('/world/climate').catch(() => ({ data: null }))
       ]);
       setLocationData(locRes.data);
-      if (travelRes.data.travel) {
-        setTravelStatus(travelRes.data.travel);
-        if (travelRes.data.currentStamina !== undefined) setCurrentStamina(travelRes.data.currentStamina);
-        if (travelRes.data.maxStamina !== undefined) setMaxStamina(travelRes.data.maxStamina);
+      if (travelRes.data) {
+        setTravelStatus(travelRes.data.travel || null);
+        if (travelRes.data.currentStamina !== undefined) {
+          setStamina(travelRes.data.currentStamina, travelRes.data.maxStamina);
+        }
       }
       setSettlements(setRes.data.settlements || []);
       setEdges(setRes.data.edges || {});
@@ -121,12 +123,11 @@ export function WorldPageContent() {
   const fetchTravelStatus = async () => {
     try {
       const res = await api.get('/world/travel/status');
-      if (res.data.travel) {
-        setTravelStatus(res.data.travel);
-        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
-      } else {
-        setTravelStatus(null);
+      if (res.data) {
+        setTravelStatus(res.data.travel || null);
+        if (res.data.currentStamina !== undefined) {
+          setStamina(res.data.currentStamina, res.data.maxStamina);
+        }
       }
       if (res.data.currentLocation) {
          setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
@@ -177,8 +178,7 @@ export function WorldPageContent() {
     try {
       const res = await api.get("/world/rest/status");
       setRestData(res.data.rest);
-      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
     } catch (err) {
       console.error("Failed to fetch rest status", err);
     }
@@ -188,8 +188,7 @@ export function WorldPageContent() {
     try {
       const res = await api.post("/world/rest/start", { mode, hours: restHours });
       setRestData(res.data.rest);
-      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
       setMessage("Mulai beristirahat.");
     } catch (err: any) {
       setError(err.response?.data?.error || "Gagal mulai istirahat.");
@@ -200,8 +199,7 @@ export function WorldPageContent() {
     try {
       const res = await api.post("/world/rest/cancel");
       setRestData(res.data.rest);
-      if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-      if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
       setMessage("Berhenti beristirahat.");
     } catch (err: any) {
       setError(err.response?.data?.error || "Gagal membatalkan istirahat.");
@@ -221,8 +219,7 @@ export function WorldPageContent() {
         useEscortLetter: useEscort
       });
       setTravelStatus(res.data.travel);
-        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+      if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
       setMessage('Perjalanan dimulai!');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Gagal memulai perjalanan');
@@ -236,8 +233,7 @@ export function WorldPageContent() {
               useEscortLetter: false // Default to false from map UI click for now
           });
           setTravelStatus(res.data.travel);
-          if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-          if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+          if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
           setMessage(`Perjalanan ke ${destinationName} dimulai!`);
       } catch (err: any) {
           setError(err.response?.data?.error || 'Gagal memulai perjalanan');
@@ -394,8 +390,7 @@ export function WorldPageContent() {
                       try {
                         const res = await api.post('/world/travel/resolve-ambush', { choice: 'fight' });
                         setTravelStatus(res.data.travel);
-                        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-                        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+                        if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
                         if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
                         fetchData();
                       } catch (e: any) {
@@ -411,8 +406,7 @@ export function WorldPageContent() {
                       try {
                         const res = await api.post('/world/travel/resolve-ambush', { choice: 'surrender' });
                         setTravelStatus(res.data.travel);
-                        if (res.data.currentStamina !== undefined) setCurrentStamina(res.data.currentStamina);
-                        if (res.data.maxStamina !== undefined) setMaxStamina(res.data.maxStamina);
+                        if (res.data.currentStamina !== undefined) setStamina(res.data.currentStamina, res.data.maxStamina);
                         if (res.data.currentLocation) setLocationData((prev: any) => ({ ...prev, currentLocation: res.data.currentLocation }));
                         fetchData();
                       } catch (e: any) {

@@ -66,7 +66,9 @@ export const CultivationDataSchema = z.object({
     qiAmount: z.number()
   }).optional(),
   usablePills: z.array(UsablePillSchema).optional(),
-  moodCost: z.number().optional()
+  moodCost: z.number().optional(),
+  currentStamina: z.number().optional(),
+  maxStamina: z.number().optional()
 });
 
 export const BreakthroughResponseSchema = z.object({

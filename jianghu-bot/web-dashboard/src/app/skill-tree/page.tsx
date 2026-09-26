@@ -16,9 +16,11 @@ import {
   Sword, Flame, Zap, BookOpen, TreePine
 } from 'lucide-react';
 import Link from 'next/link';
+import LawConstellationTree from '@/components/cultivation/LawConstellationTree';
 
 export default function SkillTreePage() {
   const queryClient = useQueryClient();
+  const [viewMode, setViewMode] = useState<'constellation' | 'grid'>('constellation');
 
   // Fetch Law Status
   const { data: statusRes, isLoading: isStatusLoading } = useQuery<{ success: boolean; data: any }>({
@@ -397,9 +399,48 @@ export default function SkillTreePage() {
         </div>
       </Card>
 
-      {/* Skill Tree by Tier */}
+      {/* View Mode Toggle: Constellation vs Grid */}
+      <div className="flex items-center justify-between border-b border-stone-800 pb-2">
+        <h3 className="font-serif font-bold text-base text-amber-200">
+          Struktur Cabang Pohon Jurus
+        </h3>
+        <div className="flex items-center gap-1.5 bg-stone-900/90 p-1 rounded-xl border border-stone-800">
+          <button
+            type="button"
+            onClick={() => setViewMode('constellation')}
+            className={`px-3 py-1 rounded-lg text-xs font-serif font-bold transition-all ${
+              viewMode === 'constellation'
+                ? 'bg-amber-500 text-stone-950 shadow-md'
+                : 'text-stone-400 hover:text-stone-200'
+            }`}
+          >
+            ✨ Konstelasi Bintang (SVG)
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('grid')}
+            className={`px-3 py-1 rounded-lg text-xs font-serif font-bold transition-all ${
+              viewMode === 'grid'
+                ? 'bg-amber-500 text-stone-950 shadow-md'
+                : 'text-stone-400 hover:text-stone-200'
+            }`}
+          >
+            📜 Tampilan Grid Tier
+          </button>
+        </div>
+      </div>
+
       {isSkillsLoading ? (
         <LoadingState text="Memuat pohon jurus..." />
+      ) : viewMode === 'constellation' ? (
+        <LawConstellationTree
+          skills={skillsList}
+          availablePoints={availablePoints}
+          onAllocate={(skillId) => allocateSkillMutation.mutate(skillId)}
+          isAllocating={allocateSkillMutation.isPending}
+          combatLoadout={lawData.combatLoadout || []}
+          onToggleLoadout={handleToggleCombatLoadout}
+        />
       ) : (
         <div className="space-y-6">
           {Object.keys(tiers)

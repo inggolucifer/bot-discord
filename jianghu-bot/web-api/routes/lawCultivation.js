@@ -767,18 +767,32 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
     if (!law.unlockedSkillIds) law.unlockedSkillIds = [];
     law.unlockedSkillIds.push(skillId);
 
+    // Sinergi Law ke Spiritual Root XP (Automatic Dao Resonance)
+    const lawDef = LAW_DEFINITIONS[law.activeLawType];
+    const rootTarget = (lawDef?.rootKey || (skillDef.element ? skillDef.element.toLowerCase() : null));
+    let resonanceXp = 0;
+    if (rootTarget) {
+      if (!player.extendedStats) player.extendedStats = {};
+      if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
+      const currentXp = player.extendedStats.spiritualRoot[rootTarget] || 0;
+      player.extendedStats.spiritualRoot[rootTarget] = currentXp + 25;
+      resonanceXp = 25;
+      player.markModified('extendedStats');
+    }
+
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
-      message: `✨ Berhasil mempelajari jurus: ${skillDef.icon} ${skillDef.name}!`,
+      message: `✨ Berhasil mempelajari jurus: ${skillDef.icon} ${skillDef.name}!${resonanceXp > 0 ? ` (Resonansi Dao: +${resonanceXp} Spiritual Root ${rootTarget.toUpperCase()} XP)` : ''}`,
       data: {
         skillId: skillDef.skillId,
         name: skillDef.name,
         tier: skillDef.tier,
         remainingPoints: law.lawSkillPoints,
-        totalUnlocked: law.unlockedSkillIds.length
+        totalUnlocked: law.unlockedSkillIds.length,
+        daoResonance: resonanceXp > 0 ? { element: rootTarget, xpGranted: resonanceXp } : null
       }
     });
   } catch (error) {

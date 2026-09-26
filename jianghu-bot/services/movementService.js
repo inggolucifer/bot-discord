@@ -158,6 +158,12 @@ class MovementService {
       player.gridPosition.interiorInstanceId = null;
     }
 
+    // Akumulasi Langkah Menjadi Qi / True Qi (Roc Wind Qi & Body Tempering Step Endurance)
+    const { awardActiveCultivationQi } = require('../utils/lawCultivationEngine');
+    awardActiveCultivationQi(player, 'step_endurance', { steps: 1 });
+    player.markModified('cultivationLaw');
+    player.markModified('systemCultivation');
+
     await player.save();
 
     // 6. Broadcast Real-time Socket.io jika ada

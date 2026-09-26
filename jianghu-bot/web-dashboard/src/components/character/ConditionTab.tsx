@@ -161,9 +161,12 @@ export default function ConditionTab({ player, onRefresh }: ConditionTabProps) {
     knockback: Math.max(0, Math.floor(Number(rawConditions.knockback) || 0)),
   };
 
-  const inventory: InventoryItem[] = Array.isArray(player?.inventory) ? player.inventory : [];
+  const staTalent = player?.talents?.sta || 0;
+  const bodyBonus = (player?.bodyTemperingLevel || 0) * 2;
+  const calculatedMaxStamina = 100 + (staTalent * 2) + bodyBonus;
   const currentStamina = Math.floor(player?.currentStamina ?? player?.stats?.stamina ?? player?.energy?.current ?? 100);
-  const maxStamina = Math.floor(player?.maxStamina ?? player?.stats?.maxStamina ?? player?.maxEnergy ?? 100);
+  const maxStamina = Math.floor(player?.maxStamina ?? player?.stats?.maxStamina ?? calculatedMaxStamina);
+  const inventory: InventoryItem[] = Array.isArray(player?.inventory) ? player.inventory : [];
 
   // Filter daftar obat dan herba dari inventori
   const medicineItems = inventory.filter(inv => {
