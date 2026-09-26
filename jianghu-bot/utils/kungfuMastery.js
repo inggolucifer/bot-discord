@@ -371,6 +371,69 @@ function awardKungfuExp(player, skill, baseExp, options = {}) {
     };
 }
 
+/**
+ * Menghitung kapasitas maksimal kitab manual eksternal yang dapat dipelajari.
+ * Default: 4 Manual.
+ * Setiap 5 poin stat Core memberikan tambahan +1 kapasitas manual.
+ */
+function getMaxManualCapacity(player) {
+    const coreVal = player.kungfuSkills?.core || 0;
+    return 4 + Math.floor(coreVal / 5);
+}
+
+/**
+ * Validasi apakah karakter masih memiliki slot kosong untuk mempelajari kitab manual baru.
+ * Catatan: Hanya membatasi Kitab Manual Eksternal (player.manuals), BUKAN Jurus Law bawaan tree.
+ */
+function canLearnNewManual(player) {
+    const currentCount = (player.manuals || []).length;
+    return currentCount < getMaxManualCapacity(player);
+}
+
+/**
+ * Formula XP pemakaian serangan tempur nyata yang dibutuhkan untuk naik level.
+ * Menggunakan kurva kuadratik Wuxia jangka panjang: 25 * level^2
+ * - Level 1 -> 2: 25 pukulan
+ * - Level 2 -> 3: 100 pukulan (sekitar 100 pukulan tempur riil)
+ * - Level 3 -> 4: 225 pukulan
+ * - Level 4 -> 5: 400 pukulan
+ * - Level 5 -> 6: 625 pukulan
+ * - Level 6 -> 7: 900 pukulan
+ * - Level 7 -> 8: 1.225 pukulan
+ * - Level 8 -> 9: 1.600 pukulan
+ * - Level 9 -> 10: 2.025 pukulan (Puncak Dao Beladiri)
+ */
+function getRequiredSkillCombatExp(level) {
+    const l = Math.max(1, Number(level) || 1);
+    return Math.floor(25 * Math.pow(l, 2));
+}
+
+/**
+ * Biaya SP untuk membuka jurus Law berbasis Tier (Anti-monoton).
+ */
+function getSkillPointCost(tier) {
+    const t = Number(tier) || 1;
+    if (t === 1) return 1;
+    if (t === 2) return 2;
+    if (t === 3) return 3;
+    if (t === 4) return 5;
+    if (t >= 5) return 7;
+    return 1;
+}
+
+/**
+ * Batas maksimum level jurus Law berdasarkan Tier.
+ */
+function getMaxSkillLevel(tier) {
+    const t = Number(tier) || 1;
+    if (t === 1) return 3;
+    if (t === 2) return 5;
+    if (t === 3) return 7;
+    if (t === 4) return 9;
+    if (t >= 5) return 10;
+    return 5;
+}
+
 module.exports = {
     KUNGFU_SKILLS,
     getXpRequiredForLevel,
@@ -381,5 +444,10 @@ module.exports = {
     getStealingSuccessBonus,
     resolveWeaponDiscipline,
     checkItemKungfuRequirement,
-    awardKungfuExp
+    awardKungfuExp,
+    getMaxManualCapacity,
+    canLearnNewManual,
+    getRequiredSkillCombatExp,
+    getSkillPointCost,
+    getMaxSkillLevel
 };

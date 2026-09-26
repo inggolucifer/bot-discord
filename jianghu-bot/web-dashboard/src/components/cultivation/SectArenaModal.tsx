@@ -521,7 +521,7 @@ export default function SectArenaModal({ isOpen = true, onClose = () => {}, isSt
                         <Button
                           size="sm"
                           onClick={() => challengeMutation.mutate(rival.rank)}
-                          disabled={isChallenging || (overview?.myEntry?.challengesRemaining || 0) <= 0}
+                          disabled={isChallenging || (overview?.myEntry?.challengesRemaining || 0) <= 0 || rival.rank >= myRank}
                           className="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold px-3 py-1.5 h-auto text-xs shrink-0 shadow-lg shadow-red-950 border border-amber-400/50 font-serif"
                         >
                           {isChallenging ? (
@@ -634,7 +634,7 @@ export default function SectArenaModal({ isOpen = true, onClose = () => {}, isSt
                   ladderRes.data.entries.map((entry: LadderEntry) => {
                     const isMe = entry.discordId === overview?.myEntry?.discordId;
                     const rStyle = getRankStyle(entry.rank);
-                    const canChallenge = myRank > entry.rank && entry.rank >= Math.max(1, myRank - 5);
+                    const canChallenge = !isMe && myRank > 1 && myRank > entry.rank && entry.rank >= Math.max(1, myRank - 5);
 
                     return (
                       <tr

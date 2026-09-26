@@ -406,5 +406,8 @@ export interface LawSkillItem {
   isUnlocked: boolean;
   isEquipped: boolean;
   canUnlock: boolean;
+  level?: number;
+  exp?: number;
+  reqExp?: number;
 }
 

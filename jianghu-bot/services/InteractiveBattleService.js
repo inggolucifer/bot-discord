@@ -238,35 +238,50 @@ class InteractiveBattleService {
 
     // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
     let lawSkillsFormatted = [];
-    if (player.cultivationLaw?.combatLoadout?.length > 0) {
+    const activeSkillIds = (player.cultivationLaw?.combatLoadout?.length > 0)
+      ? player.cultivationLaw.combatLoadout
+      : (player.cultivationLaw?.unlockedSkillIds || []);
+
+    if (activeSkillIds.length > 0) {
       try {
         const LawSkillDefinition = require('../models/LawSkillDefinition');
         const loadedSkillDefs = await LawSkillDefinition.find({
-          skillId: { $in: player.cultivationLaw.combatLoadout }
+          skillId: { $in: activeSkillIds }
         }).lean();
 
         const isBody = player.cultivationLaw.activeLawType === 'body_tempering';
-        lawSkillsFormatted = loadedSkillDefs.map(def => ({
-          skillId: def.skillId,
-          name: def.name,
-          description: def.description,
-          type: def.targetType === 'self' ? 'buff' : (def.isPassive ? 'passive' : 'attack'),
-          icon: def.icon || '✨',
-          power: Math.round((def.damageMultiplier || 1.0) * 20),
-          qiCost: def.baseCost || 15,
-          costType: isBody ? 'true_qi' : (def.costType || 'qi'),
-          cooldown: def.cooldownTurns || 3,
-          currentCooldown: 0,
-          element: def.element || 'neutral',
-          critBonus: def.critBonus || 0,
-          stanceDmgMult: def.stanceDmgMult || 1.0,
-          aoeAll: def.targetType === 'all_enemies',
-          qiRegen: 0,
-          debuffChance: 0,
-          debuffType: null,
-          isBasicAttack: false,
-          isLawSkill: true
-        }));
+        lawSkillsFormatted = loadedSkillDefs
+          .filter(def => !def.isPassive)
+          .map(def => {
+            const law = player.cultivationLaw;
+            const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(def.skillId) : law.skillLevels[def.skillId]) : 1) || 1;
+            const basePwr = Math.round((def.damageMultiplier || 1.0) * 20);
+            const power = basePwr + (lvl - 1) * 6;
+
+            return {
+              skillId: def.skillId,
+              name: def.name,
+              description: def.description,
+              type: def.targetType === 'self' ? 'buff' : 'attack',
+              icon: def.icon || '✨',
+              power,
+              level: lvl,
+              tier: def.tier || 1,
+              qiCost: def.baseCost || 15,
+              costType: isBody ? 'true_qi' : (def.costType || 'qi'),
+              cooldown: def.cooldownTurns || 3,
+              currentCooldown: 0,
+              element: def.element || 'neutral',
+              critBonus: def.critBonus || 0,
+              stanceDmgMult: def.stanceDmgMult || 1.0,
+              aoeAll: def.targetType === 'all_enemies',
+              qiRegen: 0,
+              debuffChance: 0,
+              debuffType: null,
+              isBasicAttack: false,
+              isLawSkill: true
+            };
+          });
       } catch (err) {
         console.error('[BATTLE] Gagal memuat jurus Law:', err);
       }
@@ -808,6 +823,15 @@ class InteractiveBattleService {
         if (skill.qiRegen > 0) {
           session.player.qi = Math.min(session.player.maxQi, session.player.qi + skill.qiRegen);
         }
+
+        // PROGRES EXP COMBAT AKTIF (HANYA DI COMBAT ASLI SPASIAL / WILDERNESS / DUNGEON)
+        const isRealCombat = !session.battleConfig?.isProjection &&
+          session.battleConfig?.eventContext !== 'sect_arena' &&
+          session.battleConfig?.eventContext !== 'world_boss';
+
+        if (isRealCombat && !skill.isBasicAttack) {
+          await this.handleCombatSkillProgression(session, actorId, skill);
+        }
       }
     }
   }
@@ -1109,6 +1133,23 @@ class InteractiveBattleService {
   static resolveVictory(session) {
     session.status = 'won';
 
+    // ZERO-REWARD POLICY UNTUK SECT ARENA (HANYA KATA-KATA KEHORMATAN & PERUBAHAN PERINGKAT)
+    if (session.battleConfig?.eventContext === 'sect_arena') {
+      session.rewards = {
+        exp: 0,
+        silver: 0,
+        kungfuExp: [],
+        items: []
+      };
+      session.logs.push({
+        tick: session.currentTick,
+        actor: 'System',
+        action: 'end',
+        message: `🏆 Pertarungan Gelanggang Sekte selesai! Kamu membuktikan keunggulan ilmu beladirimu di hadapan para tetua dan murid sekte!`
+      });
+      return;
+    }
+
     // 1. Hitung Total EXP & Perak dari Semua Musuh
     let totalExp = 0;
     let totalSilver = 0;
@@ -1169,6 +1210,145 @@ class InteractiveBattleService {
       action: 'end',
       message: `🏆 Kemenangan gemilang! Berhasil menumpas seluruh musuh dan memperoleh +${totalExp} EXP, +${totalSilver} Keping Perak, serta +${kungfuAmount} KungFu XP (${basicAttackSkill?.name})!`
     });
+  }
+
+  /**
+   * Handle Active Combat Skill XP Progression:
+   * Menambah +1 Attack XP setiap kali jurus dilancarkan di real combat.
+   * Ketika batas XP tercapai:
+   * 1. Level jurus naik +1 (hingga maxLevel sesuai tier).
+   * 2. Stat Core karakter naik permanen +1 (kungfuSkills.core += 1).
+   * 3. Kapasitas maksimum manual eksternal otomatis bertambah (4 + floor(core/5)).
+   * 4. Memberikan log pencerahan tempur ke sesi pertarungan.
+   */
+  static async handleCombatSkillProgression(session, actorId, skill) {
+    try {
+      const Player = require('../models/Player');
+      const { getRequiredSkillCombatExp, getMaxSkillLevel } = require('../utils/kungfuMastery');
+      const playerDoc = await Player.findOne({ discordId: actorId });
+      if (!playerDoc) return;
+
+      let leveledUp = false;
+      let newLevel = 1;
+      let skillDisplayName = skill.name;
+
+      // 1. Cek External Manual (player.manuals)
+      if (Array.isArray(playerDoc.manuals)) {
+        const manualEntry = playerDoc.manuals.find(m =>
+          m.manualId && (m.manualId.toString() === skill.skillId || (m.manualId._id && m.manualId._id.toString() === skill.skillId))
+        );
+
+        if (manualEntry) {
+          const curLvl = manualEntry.level || 1;
+          const maxLvl = manualEntry.maxLevel || 5;
+
+          if (curLvl < maxLvl) {
+            manualEntry.exp = (manualEntry.exp || 0) + 1;
+            const reqExp = getRequiredSkillCombatExp(curLvl);
+
+            if (manualEntry.exp >= reqExp) {
+              manualEntry.level = curLvl + 1;
+              manualEntry.exp = Math.max(0, manualEntry.exp - reqExp);
+              leveledUp = true;
+              newLevel = manualEntry.level;
+            }
+            playerDoc.markModified('manuals');
+          }
+        }
+      }
+
+      // 2. Cek Law Constellation Skill (player.cultivationLaw)
+      const law = playerDoc.cultivationLaw;
+      if (!leveledUp && law && Array.isArray(law.unlockedSkillIds) && law.unlockedSkillIds.includes(skill.skillId)) {
+        if (!law.skillLevels) law.skillLevels = new Map();
+        if (!law.skillExp) law.skillExp = new Map();
+
+        const curLvl = (law.skillLevels.get ? law.skillLevels.get(skill.skillId) : law.skillLevels[skill.skillId]) || 1;
+        const maxLvl = getMaxSkillLevel(skill.tier || 1);
+
+        if (curLvl < maxLvl) {
+          const curExp = ((law.skillExp.get ? law.skillExp.get(skill.skillId) : law.skillExp[skill.skillId]) || 0) + 1;
+          const reqExp = getRequiredSkillCombatExp(curLvl);
+
+          if (curExp >= reqExp) {
+            const nextLvl = curLvl + 1;
+            if (law.skillLevels.set) law.skillLevels.set(skill.skillId, nextLvl);
+            else law.skillLevels[skill.skillId] = nextLvl;
+
+            const excess = Math.max(0, curExp - reqExp);
+            if (law.skillExp.set) law.skillExp.set(skill.skillId, excess);
+            else law.skillExp[skill.skillId] = excess;
+
+            leveledUp = true;
+            newLevel = nextLvl;
+          } else {
+            if (law.skillExp.set) law.skillExp.set(skill.skillId, curExp);
+            else law.skillExp[skill.skillId] = curExp;
+          }
+          playerDoc.markModified('cultivationLaw');
+        }
+      }
+
+      // 3. Jika Naik Level: Validasi Rekor Tertinggi (Anti-Abuse Core Stat Farming)
+      if (leveledUp) {
+        if (!playerDoc.historicSkillMastery) playerDoc.historicSkillMastery = new Map();
+
+        // Tentukan key unik jurus (canonical manualId atau law skillId)
+        let skillKey = skill.skillId;
+        if (Array.isArray(playerDoc.manuals)) {
+          const matchedManual = playerDoc.manuals.find(m =>
+            m.manualId && (m.manualId.toString() === skill.skillId || (m.manualId._id && m.manualId._id.toString() === skill.skillId))
+          );
+          if (matchedManual) {
+            skillKey = matchedManual.manualId._id ? matchedManual.manualId._id.toString() : matchedManual.manualId.toString();
+          }
+        }
+
+        const previousPeak = (playerDoc.historicSkillMastery.get 
+          ? playerDoc.historicSkillMastery.get(skillKey) 
+          : playerDoc.historicSkillMastery[skillKey]) || 0;
+
+        if (newLevel > previousPeak) {
+          // Rekor baru dicapai: Update rekor dan berikan +1 Core Stat
+          if (playerDoc.historicSkillMastery.set) {
+            playerDoc.historicSkillMastery.set(skillKey, newLevel);
+          } else {
+            playerDoc.historicSkillMastery[skillKey] = newLevel;
+          }
+          playerDoc.markModified('historicSkillMastery');
+
+          if (!playerDoc.kungfuSkills) playerDoc.kungfuSkills = {};
+          playerDoc.kungfuSkills.core = (playerDoc.kungfuSkills.core || 0) + 1;
+          playerDoc.markModified('kungfuSkills');
+
+          session.logs.push({
+            tick: session.currentTick,
+            actor: 'System',
+            action: 'level_up',
+            message: `✨ [Pencerahan Tempur] Penguasaan jurus **${skillDisplayName}** menembus rekor baru ke Level ${newLevel}! Stat Core bertambah +1 (Total: ${playerDoc.kungfuSkills.core})!`
+          });
+        } else {
+          // Anti-Abuse Triggered: Pernah di-forget lalu dipelajari ulang
+          session.logs.push({
+            tick: session.currentTick,
+            actor: 'System',
+            action: 'level_up',
+            message: `✨ [Pemulihan Pemahaman] Penguasaan jurus **${skillDisplayName}** dipulihkan kembali ke Level ${newLevel}! (Rekor lampau: Level ${previousPeak}, Stat Core tidak bertambah demi mencegah exploit).`
+          });
+        }
+
+        // Sinkronkan juga level skill di sesi battle aktif jika ada
+        const inSessionSkill = session.player.skills.find(s => s.skillId === skill.skillId);
+        if (inSessionSkill) {
+          inSessionSkill.level = newLevel;
+          inSessionSkill.power = (inSessionSkill.power || 20) + 5;
+        }
+      }
+
+      await playerDoc.save();
+    } catch (err) {
+      console.error('[BATTLE] Gagal memproses progres XP jurus:', err);
+    }
   }
 
   /**

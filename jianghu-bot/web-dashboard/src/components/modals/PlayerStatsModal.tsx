@@ -12,6 +12,7 @@ import AlignmentBar from '@/components/character/AlignmentBar';
 import FallbackImage from '@/components/FallbackImage';
 import ConditionTab from '@/components/character/ConditionTab';
 import CharacterLayerRenderer from '@/components/character/CharacterLayerRenderer';
+import KitabDanHukumAlamView from '@/components/cultivation/KitabDanHukumAlamView';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { PlayerProfile } from '@/types/game';
 import { getEnglishRealmDisplay } from '@/lib/realmUtils';
@@ -151,7 +152,7 @@ export default function PlayerStatsModal() {
   const navItems: { key: ActiveTab; label: string; icon: any }[] = [
     { key: 'stats', label: 'Stats', icon: User },
     { key: 'condition', label: 'Kondisi', icon: ShieldAlert },
-    { key: 'skills', label: 'Skills', icon: Zap },
+    { key: 'skills', label: 'Kitab & Jurus', icon: BookOpen },
     { key: 'artisan', label: 'Artisan', icon: Hammer },
     { key: 'item', label: 'Item', icon: Package },
     { key: 'experience', label: 'Experie', icon: Scroll },
@@ -465,39 +466,9 @@ export default function PlayerStatsModal() {
                   <ConditionTab player={player} onRefresh={fetchPlayerProfile} />
                 )}
 
-                {/* TAB 3: SKILLS (MANUALS & JURUS) */}
+                {/* TAB 3: SKILLS (KITAB & HUKUM ALAM TERPADU) */}
                 {activeTab === 'skills' && (
-                  <div className="space-y-4">
-                    <div className="bg-[#121622] border border-[#3b3323] p-4 rounded-xl">
-                      <h3 className="text-lg font-serif font-bold text-amber-300 mb-3 flex items-center gap-2">
-                        <Zap size={18} className="text-amber-400" />
-                        Jurus & Kitab Manual Teknik
-                      </h3>
-                      {player?.manuals && player.manuals.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {player.manuals.map((m: any, idx: number) => (
-                            <div key={idx} className="bg-[#181e2e] border border-[#38435d] p-3 rounded-lg flex gap-3">
-                              <div className="w-12 h-12 bg-amber-950/60 border border-amber-600/50 rounded-lg flex items-center justify-center shrink-0">
-                                📜
-                              </div>
-                              <div className="flex-1 text-xs">
-                                <h4 className="font-bold text-amber-200 text-sm">{m.name}</h4>
-                                <p className="text-stone-400 line-clamp-2 mt-0.5">{m.description || 'Kitab jurus rahasia.'}</p>
-                                <div className="mt-1 flex items-center justify-between text-[11px] text-amber-400">
-                                  <span>Tingkat: {Math.floor(m.level || 1)} / {Math.floor(m.maxLevel || 10)}</span>
-                                  <span>{m.effectType ? `${m.effectType} +${Math.floor(m.effectValue || 0)}` : ''}</span>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-stone-400 text-sm italic py-8 text-center">
-                          Belum ada kitab manual teknik yang dipelajari. Kunjungi paviliun sekte atau temukan warisan kuno di dungeon.
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                  <KitabDanHukumAlamView onRefresh={fetchPlayerProfile} />
                 )}
 
                 {/* TAB 3: ARTISAN (PROFESSIONS) */}

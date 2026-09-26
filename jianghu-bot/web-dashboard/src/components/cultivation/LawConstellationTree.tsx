@@ -286,6 +286,26 @@ export default function LawConstellationTree({
               {selectedSkill.description}
             </p>
 
+            {/* Level & Combat XP Indicator */}
+            {selectedSkill.isUnlocked && (
+              <div className="bg-amber-950/40 border border-amber-600/40 rounded-xl p-2.5 mb-3 text-xs">
+                <div className="flex items-center justify-between text-amber-200 font-serif font-bold mb-1">
+                  <span>Tingkat Penguasaan:</span>
+                  <span>Lv. {selectedSkill.level || 1} / {selectedSkill.maxLevel || 5}</span>
+                </div>
+                <div className="w-full bg-stone-900 rounded-full h-2 overflow-hidden border border-stone-800">
+                  <div 
+                    className="bg-gradient-to-r from-amber-500 to-yellow-300 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(100, Math.floor(((selectedSkill.exp || 0) / (selectedSkill.reqExp || 10)) * 100))}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono mt-1">
+                  <span>⚔️ XP Serangan Tempur Riil</span>
+                  <span>{selectedSkill.exp || 0} / {selectedSkill.reqExp || 10} XP</span>
+                </div>
+              </div>
+            )}
+
             {/* Combat Specs */}
             {!selectedSkill.isPassive && (
               <div className="grid grid-cols-2 gap-2 text-[11px] font-mono bg-black/60 p-2.5 rounded-xl border border-stone-800/80 mb-3">
