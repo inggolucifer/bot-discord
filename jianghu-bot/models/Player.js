@@ -274,14 +274,31 @@ const cultivationLawSchema = new mongoose.Schema({
   miniBreakthroughCooldownUntil: { type: Date, default: null },
   majorBreakthroughCooldownUntil: { type: Date, default: null },
 
+  // Universal Essence Bar & Digestion (Siklus Pengisian & Pencernaan Esensi 1-3 Tahun)
+  currentEssence: { type: Number, default: 80, min: 0 },
+  maxEssence: { type: Number, default: 100 },
+  lastEssenceDigestAt: { type: Date, default: Date.now },
+
+  // Fasilitas Kultivasi Khusus Law
+  facilities: {
+    abyssalAltarTier: { type: Number, default: 0 }, // 0-3 (Altar Kurban Darah Abyss - Demonic Altar Khusus di Lahan Peta!)
+    bodyCauldronTier: { type: Number, default: 0 }, // 0-4 (Kuali Bak Mandi Raga - Personal Tool)
+    guCrucibleTier: { type: Number, default: 1 }    // 1-4 (Kendi Penyuling Gu Purba - Personal Tool)
+  },
+
   // Gu Master Specific (Aperture Slot)
   guSlots: [{
     guItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     guName: { type: String, default: null },
-    guType: { type: String, enum: ['attack', 'defense', 'healing', 'support', null], default: null },
-    level: { type: Number, default: 1 },
-    hunger: { type: Number, default: 100 },            // 0-100; 0 = hibernasi (tidak bisa dipanggil bertarung)
-    lastFedAt: { type: Date, default: null }
+    guType: { type: String, enum: ['attack', 'defense', 'healing', 'speed', 'support', 'special', null], default: null },
+    tier: { type: Number, default: 1, min: 1, max: 5 },
+    level: { type: Number, default: 1, min: 1, max: 10 },
+    hunger: { type: Number, default: 80 },             // Satiety alias
+    satiety: { type: Number, default: 80, min: 0, max: 100 }, // 0-100; 0 = hibernasi
+    bonusAtk: { type: Number, default: 5 },
+    bonusDef: { type: Number, default: 3 },
+    specialEffect: { type: String, default: null },
+    lastFedAt: { type: Date, default: Date.now }
   }],
 
   // Body Tempering Specific (9 Body Parts Tempering Progress)

@@ -519,6 +519,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const [ordinaryConfirmModalOpen, setOrdinaryConfirmModalOpen] = useState(false);
   const [customEntityName, setCustomEntityName] = useState('');
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>('skin');
+  const [fuseSlotA, setFuseSlotA] = useState<number>(0);
+  const [fuseSlotB, setFuseSlotB] = useState<number>(1);
 
   // Heavenly Tribulation Modal States
   const [tribulationModalOpen, setTribulationModalOpen] = useState(false);
@@ -2222,10 +2224,71 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       {/* RINCIAN SPESIALISASI LAW (Selalu tampil, tanpa sub-tab) */}
       {
         <div className="space-y-6">
+          {/* UNIVERSAL ESSENCE BAR & SIKLUS PENCERNAAN KOSMIK */}
+          <Card className="border border-stone-800 bg-stone-950/90 p-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-800/80 pb-2.5">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl p-1.5 rounded-lg bg-cyan-950/40 border border-cyan-500/30">🌌</span>
+                <div>
+                  <h4 className="font-serif font-bold text-sm text-stone-200 flex items-center gap-2">
+                    Intisari Esensi Kosmik ({lawData.energyLabel || 'Esensi Dao'})
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                      (lawData.currentEssence || 0) > 20 
+                        ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-400' 
+                        : (lawData.currentEssence || 0) > 0 
+                          ? 'bg-amber-950/60 border-amber-500/40 text-amber-400' 
+                          : 'bg-red-950/60 border-red-500/40 text-red-400 animate-pulse'
+                    }`}>
+                      {(lawData.currentEssence || 0) > 20 ? '🟢 Mencerna Optimal (+100% Qi)' : (lawData.currentEssence || 0) > 0 ? '🟡 Esensi Menipis' : '🔴 Kelaparan / Mandek (-85% Qi)'}
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-stone-400">
+                    Kultivator menyerap bahan esensi untuk dicerna menjadi laju Progres Qi dantian secara bertahap saat bermeditasi.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => lawActionMutation.mutate({ endpoint: 'essence/feed', payload: { feedType: 'item' } })}
+                  disabled={lawActionMutation.isPending}
+                  className="bg-cyan-600 hover:bg-cyan-500 text-stone-950 font-bold text-xs py-1.5 h-auto"
+                >
+                  ⚡ Serap Esensi dari Tas
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => lawActionMutation.mutate({ endpoint: 'essence/feed', payload: { feedType: 'blood' } })}
+                  disabled={lawActionMutation.isPending}
+                  className="border-rose-800/80 text-rose-300 hover:bg-rose-950/50 text-xs py-1.5 h-auto"
+                >
+                  🩸 Tetes Darah (-15 Vit)
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-stone-400">Kapasitas Penampungan Esensi (Ranah {lawData.rank}):</span>
+                <span className="text-cyan-300 font-bold">
+                  {Math.floor(lawData.currentEssence || 0)} / {lawData.maxEssence || 100} ({lawData.essencePercent || 0}%)
+                </span>
+              </div>
+              <div className="w-full h-2.5 bg-stone-900 rounded-full overflow-hidden border border-stone-800">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-600 via-teal-500 to-emerald-400 rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, lawData.essencePercent || 0)}%` }}
+                />
+              </div>
+            </div>
+          </Card>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* 1. SISI KIRI: SPESIALISASI INTERAKTIF SESUAI HUKUM */}
 
-            {/* KASUS A: PENEMPAAN RAGA SUCI (9 BAGIAN RAGA) */}
+            {/* KASUS A: PENEMPAAN RAGA SUCI (9 BAGIAN RAGA & KUALI BAK MANDI RAGA) */}
             {lawData.activeLawType === 'body_tempering' && (
               <Card className="border border-amber-500/40 bg-stone-950/80 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-3">
@@ -2240,6 +2303,32 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       </p>
                     </div>
                   </div>
+                </div>
+
+                {/* Fasilitas Kuali Bak Mandi Rempah Raga */}
+                <div className="bg-amber-950/20 p-3 rounded-lg border border-amber-600/30 flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                      <span>🛁</span> Kuali Bak Mandi Raga: <span className="font-mono text-stone-200">
+                        {(lawData.facilities?.bodyCauldronTier || 0) === 0 ? 'Belum Dibuat' : `Tier ${lawData.facilities?.bodyCauldronTier}`}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-stone-400">
+                      {(lawData.facilities?.bodyCauldronTier || 0) === 0
+                        ? 'Wajib membuat Kuali Bak Mandi rempah untuk meracik rendaman herbal penempaan.'
+                        : 'Wadah perendaman aktif untuk penempaan 9 bagian raga vajra.'}
+                    </p>
+                  </div>
+                  {(lawData.facilities?.bodyCauldronTier || 0) < 4 && (
+                    <Button
+                      size="sm"
+                      onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'body_cauldron' } })}
+                      disabled={lawActionMutation.isPending}
+                      className="bg-amber-700 hover:bg-amber-600 text-stone-950 font-bold text-xs py-1 h-auto"
+                    >
+                      {(lawData.facilities?.bodyCauldronTier || 0) === 0 ? '🔨 Buat Bak Mandi' : '⬆️ Upgrade Bak Mandi'}
+                    </Button>
+                  )}
                 </div>
 
                 {/* 9 Bagian Tubuh Grid */}
@@ -2295,10 +2384,10 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         <Button
                           size="sm"
                           onClick={() => lawActionMutation.mutate({ endpoint: 'body/temper', payload: { part: currentPart.id } })}
-                          disabled={lawActionMutation.isPending}
+                          disabled={lawActionMutation.isPending || (lawData.facilities?.bodyCauldronTier || 0) < 1}
                           className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-1.5 h-auto"
                         >
-                          💪 Tempa Bagian Ini (-15 Copper, +10%, +50 True Qi)
+                          💪 Mandi Rendaman Herba (+12%, +60 True Qi)
                         </Button>
                         <Button
                           variant="outline"
@@ -2316,7 +2405,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               </Card>
             )}
 
-            {/* KASUS B: GU MASTER (SEPULUH RIBU GU) */}
+            {/* KASUS B: GU MASTER (BAR KENYANG, DUAL FEED & MEJA FUSI GU) */}
             {lawData.activeLawType === 'gu_master' && (
               <Card className="border border-emerald-500/40 bg-stone-950/80 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-3">
@@ -2327,53 +2416,136 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         Rongga Serangga Gu Purba (Gu Aperture)
                       </h3>
                       <p className="text-xs text-stone-400">
-                        Memberi pakan herba beracun dan memfusikan cacing Gu demi mutasi biologis.
+                        Pemberian pakan esensi serangga dan fusi cacing Gu demi menghasilkan varietas mutasi langka.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {(lawData.guSlots && lawData.guSlots.length > 0 ? lawData.guSlots : [
-                    { guName: 'Gu Cacing Sutra Roh', guType: 'healing', level: 1, hunger: 80 }
-                  ]).map((gu, gIdx) => (
-                    <div key={gIdx} className="bg-black/50 p-3.5 rounded-lg border border-stone-800 flex items-center justify-between gap-4">
-                      <div>
-                        <div className="font-serif font-bold text-stone-200 text-xs flex items-center gap-1.5">
-                          <span>🐛</span> {gu.guName} <span className="font-mono text-[10px] text-emerald-400 font-normal">(Lv. {gu.level})</span>
-                        </div>
-                        <span className="text-[10px] text-stone-400 font-mono">Tipe: {gu.guType}</span>
-                        <div className="w-28 h-1.5 bg-stone-800 rounded-full mt-2 overflow-hidden">
-                          <div
-                            className="h-full bg-emerald-500"
-                            style={{ width: `${Math.min(100, gu.hunger || 50)}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => lawActionMutation.mutate({ endpoint: 'gu/feed', payload: { slotIndex: gIdx } })}
-                          disabled={lawActionMutation.isPending}
-                          className="bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold text-xs py-1 h-auto"
-                        >
-                          🍖 Beri Pakan (-10 C)
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                {/* Fasilitas Kendi Penyuling Gu */}
+                <div className="bg-emerald-950/20 p-2.5 rounded-lg border border-emerald-600/30 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-serif font-bold text-emerald-300 flex items-center gap-1.5">
+                      <span>🏺</span> Kendi Penyuling Gu: <strong className="font-mono text-stone-200">Tier {lawData.facilities?.guCrucibleTier || 1}</strong>
+                    </span>
+                    <span className="text-[10px] text-stone-400 block">Menentukan batas maksimal mutasi tier cacing Gu dan peluang sintesis fusi aperture batin.</span>
+                  </div>
+                  {(lawData.facilities?.guCrucibleTier || 1) < 4 && (
+                    <Button
+                      size="sm"
+                      onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'gu_crucible' } })}
+                      disabled={lawActionMutation.isPending}
+                      className="bg-emerald-700 hover:bg-emerald-600 text-stone-950 font-bold text-[10px] py-0.5 px-2 h-auto"
+                    >
+                      ⬆️ Upgrade Kendi
+                    </Button>
+                  )}
                 </div>
 
-                <div className="pt-2 border-t border-stone-800 flex justify-between items-center">
-                  <span className="text-xs text-stone-400">Fusi Eksperimental Rongga:</span>
+                {/* Daftar Slot Cacing Gu */}
+                <div className="space-y-2.5">
+                  {(lawData.guSlots && lawData.guSlots.length > 0 ? lawData.guSlots : [
+                    { guName: 'Gu Cacing Sutra Roh', guType: 'healing', tier: 1, level: 1, satiety: 80, hunger: 80 }
+                  ]).map((gu, gIdx) => {
+                    const satietyVal = gu.satiety !== undefined ? gu.satiety : (gu.hunger || 50);
+                    const satietyStatus = satietyVal >= 70 ? 'Kenyang (Mencerna)' : satietyVal >= 20 ? 'Lapar' : 'Hibernasi';
+                    const satietyColor = satietyVal >= 70 ? 'bg-emerald-500' : satietyVal >= 20 ? 'bg-amber-500' : 'bg-red-500';
+
+                    return (
+                      <div key={gIdx} className="bg-black/50 p-3 rounded-lg border border-stone-800 flex flex-wrap items-center justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="font-serif font-bold text-stone-200 text-xs flex items-center gap-1.5">
+                            <span>🐛</span> {gu.guName} 
+                            <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+                              Tier {gu.tier || 1} • Lv.{gu.level}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[10px] text-stone-400 font-mono">
+                            <span>Tipe: {gu.guType}</span>
+                            <span>•</span>
+                            <span className="text-stone-300">Kekenyangan: {satietyVal}% ({satietyStatus})</span>
+                          </div>
+                          <div className="w-36 h-1.5 bg-stone-800 rounded-full overflow-hidden">
+                            <div className={`h-full ${satietyColor}`} style={{ width: `${Math.min(100, satietyVal)}%` }} />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            size="sm"
+                            onClick={() => lawActionMutation.mutate({ endpoint: 'gu/feed', payload: { slotIndex: gIdx, feedType: 'item' } })}
+                            disabled={lawActionMutation.isPending}
+                            className="bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold text-xs py-1 h-auto"
+                          >
+                            🍖 Pakan Tas
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => lawActionMutation.mutate({ endpoint: 'gu/feed', payload: { slotIndex: gIdx, feedType: 'blood' } })}
+                            disabled={lawActionMutation.isPending}
+                            className="border-rose-900 text-rose-300 hover:bg-rose-950/40 text-xs py-1 h-auto"
+                          >
+                            🩸 Darah (-15 Vit)
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Meja Fusi Gu Interaktif (Slot A + Slot B) */}
+                <div className="pt-3 border-t border-stone-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-serif font-bold text-xs text-stone-300 flex items-center gap-1">
+                      <span>🔄</span> Meja Sintesis Fusi Gu:
+                    </span>
+                    <span className="text-[10px] font-mono text-emerald-400">
+                      Peluang: {Math.min(95, 50 + (lawData.rank * 6) + (((lawData.facilities?.guCrucibleTier || 1) - 1) * 8))}%
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-[10px] text-stone-500 block mb-1">Cacing Gu Induk A:</span>
+                      <select
+                        aria-label="Pilih Cacing Gu Induk A untuk fusi"
+                        value={fuseSlotA}
+                        onChange={(e) => setFuseSlotA(Number(e.target.value))}
+                        className="w-full bg-stone-900 border border-stone-700 rounded p-1.5 text-xs text-stone-200"
+                      >
+                        {(lawData.guSlots || []).map((g, idx) => (
+                          <option key={idx} value={idx}>
+                            #{idx + 1} {g.guName} (T{g.tier || 1})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] text-stone-500 block mb-1">Cacing Gu Induk B:</span>
+                      <select
+                        aria-label="Pilih Cacing Gu Induk B untuk fusi"
+                        value={fuseSlotB}
+                        onChange={(e) => setFuseSlotB(Number(e.target.value))}
+                        className="w-full bg-stone-900 border border-stone-700 rounded p-1.5 text-xs text-stone-200"
+                      >
+                        {(lawData.guSlots || []).map((g, idx) => (
+                          <option key={idx} value={idx}>
+                            #{idx + 1} {g.guName} (T{g.tier || 1})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
                   <Button
                     size="sm"
-                    onClick={() => lawActionMutation.mutate({ endpoint: 'gu/fuse' })}
-                    disabled={lawActionMutation.isPending}
-                    className="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold text-xs py-1.5 h-auto shadow"
+                    onClick={() => lawActionMutation.mutate({ endpoint: 'gu/fuse', payload: { slotA: fuseSlotA, slotB: fuseSlotB } })}
+                    disabled={lawActionMutation.isPending || (lawData.guSlots || []).length < 2 || fuseSlotA === fuseSlotB}
+                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
                   >
-                    🔄 Fusi Dua Gu (+120 Qi)
+                    🔄 Fusi Dua Gu Terpilih (+150 Qi & Mutasi Tier Baru)
                   </Button>
                 </div>
               </Card>
@@ -2395,6 +2567,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     </div>
                   </div>
                 </div>
+
 
                 <div className="space-y-3 bg-black/40 p-4 rounded-lg border border-stone-800 text-xs">
                   <div className="flex justify-between text-stone-300">
@@ -2427,7 +2600,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   disabled={lawActionMutation.isPending}
                   className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-2 h-auto"
                 >
-                  🗡️ Asah & Salurkan Qi Pusaka (-5 Copper, +20 Intisari, +45 Qi)
+                  🗡️ Asah & Salurkan Qi Pusaka (+35 Intisari, +45 Qi)
                 </Button>
               </Card>
             )}
@@ -2448,6 +2621,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     </div>
                   </div>
                 </div>
+
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="bg-black/40 p-3 rounded-lg border border-stone-800 space-y-1">
@@ -2477,12 +2651,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   disabled={lawActionMutation.isPending}
                   className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-2 h-auto"
                 >
-                  🍖 Beri Pakan Daging Roh (-10 Copper, HP Penuh, +25 Intisari, +40 Qi)
+                  🐾 Beri Pakan Daging Roh (+40 Intisari Satwa, HP Penuh, +40 Qi)
                 </Button>
               </Card>
             )}
 
-            {/* KASUS E: JALUR IBLIS (DEMONIC DAO LAWS) */}
+            {/* KASUS E: JALUR IBLIS (DEMONIC DAO LAWS & ALTAR ABYSS) */}
             {lawData.category === 'demonic' && (
               <Card className="border border-red-500/40 bg-stone-950/80 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-3">
@@ -2579,19 +2753,48 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
                 {lawData.activeLawType === 'demonic_abyssal_pact' && (
                   <div className="space-y-3">
-                    <div className="bg-black/40 p-3 rounded-lg border border-stone-800 flex justify-between items-center text-xs">
-                      <span className="text-stone-400">Tenggat Upeti Jurang Abyss:</span>
-                      <strong className="text-purple-300 font-mono">
-                        {lawData.demonicData?.abyssalTributeDueAt ? new Date(lawData.demonicData.abyssalTributeDueAt).toLocaleDateString() : 'Belum Ada Upeti'}
-                      </strong>
+                    {/* Altar Kurban Darah Abyss Status */}
+                    <div className="bg-purple-950/30 p-2.5 rounded-lg border border-purple-600/30 flex items-center justify-between text-xs">
+                      <div>
+                        <span className="font-serif font-bold text-purple-300 flex items-center gap-1.5">
+                          <span>🏛️</span> Altar Kurban Darah Abyss: <strong className="font-mono text-stone-200">
+                            {(lawData.facilities?.abyssalAltarTier || 0) === 0 ? 'Belum Didirikan' : `Tier ${lawData.facilities?.abyssalAltarTier}`}
+                          </strong>
+                          {(lawData.facilities?.abyssalAltarTier || 0) > 0 ? (
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
+                              📍 Aset Lahan Aktif
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-950/80 border border-amber-500/40 text-amber-400">
+                              ⚠️ Butuh Kavling Lahan
+                            </span>
+                          )}
+                        </span>
+                        <span className="text-[10px] text-stone-400 block">
+                          {(lawData.facilities?.abyssalAltarTier || 0) === 0 
+                            ? 'Wajib memiliki kavling tanah di Peta (/world) untuk mendirikan Altar fisik!' 
+                            : `Tenggat Upeti: ${lawData.demonicData?.abyssalTributeDueAt ? new Date(lawData.demonicData.abyssalTributeDueAt).toLocaleDateString() : 'Belum Ada Upeti'}`}
+                        </span>
+                      </div>
+                      {(lawData.facilities?.abyssalAltarTier || 0) < 3 && (
+                        <Button
+                          size="sm"
+                          onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'abyssal_altar' } })}
+                          disabled={lawActionMutation.isPending}
+                          className="bg-purple-700 hover:bg-purple-600 text-stone-950 font-bold text-[10px] py-0.5 px-2 h-auto"
+                        >
+                          {(lawData.facilities?.abyssalAltarTier || 0) === 0 ? '🔨 Dirikan di Lahan' : '⬆️ Upgrade Altar'}
+                        </Button>
+                      )}
                     </div>
+
                     <Button
                       size="sm"
                       onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/pact-tribute' })}
-                      disabled={lawActionMutation.isPending}
+                      disabled={lawActionMutation.isPending || (lawData.facilities?.abyssalAltarTier || 0) < 1}
                       className="w-full bg-purple-950 hover:bg-purple-900 text-purple-200 border border-purple-500/30 font-bold text-xs py-2 h-auto"
                     >
-                      📜 Setor Upeti Kurban (-20 Copper, Perpanjang 7 Hari, +80 Qi)
+                      📜 Setor Upeti Kurban di Altar (+90 Qi, Perpanjang Kontrak)
                     </Button>
                   </div>
                 )}
@@ -2615,7 +2818,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               </Card>
             )}
 
-            {/* KASUS F: JALUR 6 ELEMEN DAO (DIVINE ELEMENTAL) */}
+            {/* KASUS F: JALUR 6 ELEMEN DAO (DIVINE ELEMENTAL DENGAN RITUAL RESONANSI AKTIF) */}
             {lawData.category === 'elemental' && (
               <Card className="border border-blue-500/40 bg-stone-950/80 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-3">
@@ -2626,11 +2829,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         Resonansi Elemen Dao: {lawData.element || 'Intisari Semesta'}
                       </h3>
                       <p className="text-xs text-stone-400">
-                        Menyelaraskan meridian dengan denyut elemen langit dan bumi.
+                        Menyelaraskan meridian dengan denyut elemen langit dan bumi untuk memicu terobosan batin.
                       </p>
                     </div>
                   </div>
                 </div>
+
 
                 <div className="space-y-2.5 text-xs bg-black/40 p-4 rounded-lg border border-stone-800">
                   <div className="flex justify-between text-stone-300">
@@ -2647,9 +2851,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </div>
                 </div>
 
-                <p className="text-[11px] text-stone-500 leading-relaxed italic">
-                  *Kultivator elemen menguasai cuaca dan resonansi spasial di atas grid Tale of Immortal.
-                </p>
+                <Button
+                  size="sm"
+                  onClick={() => lawActionMutation.mutate({ endpoint: 'element/resonate' })}
+                  disabled={lawActionMutation.isPending}
+                  className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
+                >
+                  🌀 Ritual Resonansi Elemen (+30 Root XP, +50 Qi)
+                </Button>
               </Card>
             )}
 

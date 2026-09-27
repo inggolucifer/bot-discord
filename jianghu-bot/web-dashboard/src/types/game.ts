@@ -326,6 +326,7 @@ export interface LawStatusData {
   lawName: string | null;
   category: string | null;
   qiType: 'qi' | 'true_qi';
+  energyLabel?: string;
   rank: number;
   stage: number;
   rankDisplayName: string;
@@ -346,7 +347,27 @@ export interface LawStatusData {
   combatLoadout: string[];
   boundEntity?: BoundEntityData | null;
   bodyTemperingParts?: Record<string, number>;
-  guSlots?: Array<{ guName: string; guType: string; level: number; hunger: number; lastFedAt?: string | Date }>;
+  guSlots?: Array<{
+    guItemId?: string | null;
+    guName: string;
+    guType: string;
+    tier?: number;
+    level: number;
+    hunger: number;
+    satiety?: number;
+    bonusAtk?: number;
+    bonusDef?: number;
+    specialEffect?: string | null;
+    lastFedAt?: string | Date;
+  }>;
+  currentEssence?: number;
+  maxEssence?: number;
+  essencePercent?: number;
+  facilities?: {
+    abyssalAltarTier?: number;
+    bodyCauldronTier?: number;
+    guCrucibleTier?: number;
+  };
   demonicData?: {
     turbidCoresConsumed?: number;
     corruptionIndex?: number;
