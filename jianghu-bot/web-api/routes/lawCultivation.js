@@ -667,9 +667,9 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// GET /law/skill-tree — Pohon skill tersedia untuk law aktif
+// GET /law/skill-tree & /law/skills — Pohon skill tersedia untuk law aktif
 // ═══════════════════════════════════════════════════════════════
-router.get('/skill-tree', authenticateToken, async (req, res) => {
+router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
   try {
     const player = await resolvePlayer(req);
     const law = player.cultivationLaw;
@@ -830,13 +830,13 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// POST /law/combat-loadout — Update loadout jurus aktif (max 4)
+// POST /law/combat-loadout & /law/loadout — Update loadout jurus aktif (max 4)
 // ═══════════════════════════════════════════════════════════════
 const loadoutSchema = z.object({
   skillIds: z.array(z.string()).max(4)
 });
 
-router.post('/combat-loadout', authenticateToken, async (req, res) => {
+router.post(['/combat-loadout', '/loadout'], authenticateToken, async (req, res) => {
   const validation = loadoutSchema.safeParse(req.body);
   if (!validation.success) return res.status(400).json({ error: 'Loadout tidak valid. Maksimal 4 jurus.' });
 
