@@ -690,7 +690,8 @@ router.get('/skill-tree', authenticateToken, async (req, res) => {
     });
 
     const skillTree = skills.map(skill => {
-      const cost = skill.skillPointCost || getSkillPointCost(skill.tier || 1);
+      const tierCost = getSkillPointCost(skill.tier || 1);
+      const cost = (skill.skillPointCost && skill.skillPointCost >= tierCost) ? skill.skillPointCost : tierCost;
       const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(skill.skillId) : law.skillLevels[skill.skillId]) : 1) || 1;
       const exp = (law.skillExp ? (law.skillExp.get ? law.skillExp.get(skill.skillId) : law.skillExp[skill.skillId]) : 0) || 0;
       const maxLvl = getMaxSkillLevel(skill.tier || 1);
@@ -771,7 +772,8 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
     }
 
     // Cek skill points (Tier-scaled: Tier 1=1, Tier 2=2, Tier 3=3, Tier 4=5, Tier 5=7)
-    const cost = skillDef.skillPointCost || getSkillPointCost(skillDef.tier || 1);
+    const tierCost = getSkillPointCost(skillDef.tier || 1);
+    const cost = (skillDef.skillPointCost && skillDef.skillPointCost >= tierCost) ? skillDef.skillPointCost : tierCost;
     if ((law.lawSkillPoints || 0) < cost) {
       return res.status(400).json({ error: `Poin skill tidak cukup. Butuh ${cost} SP (Tier ${skillDef.tier || 1}), punya ${law.lawSkillPoints || 0} SP.` });
     }

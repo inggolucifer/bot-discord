@@ -289,6 +289,24 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
    - Modal penuh (`PlayerStatsModal`, `NpcInteractionModal`, `BattleArena`, `DashboardModal`) saling menutup satu sama lain saat dibuka.
    - Di viewport mobile landscape (tinggi 360–420px) maupun portrait, setiap modal menggunakan `max-h-[96vh]` dengan `overflow-y-auto custom-scrollbar` mandiri tanpa ada elemen yang saling menimpa atau terpotong.
 
+### 3.11. Arsitektur Tri-Tab (Kultivasi, Pohon Dao, Kitab & Jurus) & Biaya SP Bertingkat
+1. **Tab Kultivasi & Ranah (`/cultivation` / `LawCultivationTab.tsx`)**:
+   - Khusus 100% olah batin & raga: Dantian, Qi, Pencerahan Harian (*Epiphany*), Batas Level Cap, Terobosan Ranah, Pil Terobosan, 90 Tahapan Ranah, dan Panel Unik 15 Law (Aperture Gu, 9 Raga Vajra, Inti Siluman/Kotoran, Racun, Pusaka Batin, Satwa Kembar).
+   - Pohon konstelasi ditiadakan dari tab ini dan dialihkan ke rute Pohon Dao.
+2. **Tab Pohon Dao / Skill Tree (`/skill-tree` / `SkillTreeClient.tsx`)**:
+   - Halaman mandiri dedicated dengan kanvas konstelasi rasi bintang 5 Tier beresolusi penuh dan garis SVG berpendar.
+   - **Skala Biaya SP Bertingkat (Anti-Flat 1 SP)**:
+     - **Tier 1 (Fondasi)**: **1 SP** (Max Lv. 3)
+     - **Tier 2 (Ilmu Mendalam)**: **2 SP** (Max Lv. 5)
+     - **Tier 3 (Domain Semesta / AoE)**: **3 SP** (Max Lv. 7)
+     - **Tier 4 (Avatar Agung)**: **5 SP** (Max Lv. 9)
+     - **Tier 5 (Mahadewa / 1000% Cataclysm)**: **7 SP** (Max Lv. 10)
+   - Batas takdir ~105 SP seumur hidup (~50% cabang pohon rasi bintang).
+3. **Tab Kitab & Jurus (`/skills` di Navbar / `KitabDanHukumAlamView.tsx`)**:
+   - **Manual Eksternal**: Kuota kapasitas $4 + \lfloor\text{core}/5\rfloor$, tombol forget, dan proteksi Anti-Abuse Core Stat Farming (`historicSkillMastery`).
+   - **Jurus Bawaan Law**: Bebas kuota manual (0 slot), permanen (tidak bisa dilupakan), naik level via combat riil $\lfloor 25 \times \text{level}^2 \rfloor$.
+   - **Dock Loadout Tempur 4-Slot (Sistem 4+1)**: Slot 0 otomatis Basic Attack Adaptif Senjata; Slot 1–4 memadukan bebas manual luar dan jurus Law.
+
 ---
 
 ## 4. Standar `globalAssets.ts`

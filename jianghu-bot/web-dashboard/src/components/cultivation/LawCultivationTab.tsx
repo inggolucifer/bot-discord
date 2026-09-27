@@ -2817,33 +2817,34 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             </Card>
           </div>
 
-          {/* KONSTELASI POHON JURUS HUKUM SEMESTA (CONSTELLATION SKILL TREE) */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base sm:text-lg font-serif font-bold text-amber-200 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-400" />
-                Konstelasi Jurus & Percabangan Dao ({lawData.lawName})
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                  Poin Dao Tersedia: <strong className="text-amber-200">{availablePoints} SP</strong>
-                </span>
-                <Link href="/skill-tree">
-                  <Button size="sm" variant="outline" className="text-xs border-amber-500/40 text-amber-300 hover:bg-amber-500/10">
-                    Buka Halaman Penuh ➔
-                  </Button>
-                </Link>
+          {/* BANNER TAUTAN POHON DAO (DEDICATED SKILL TREE PORTAL) */}
+          <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-stone-950 via-[#0d131f] to-stone-950 p-5 shadow-2xl backdrop-blur-md">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-2xl shadow-inner">
+                  🌌
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif font-bold text-base text-amber-200">
+                      Konstelasi Jurus & Pohon Dao ({lawData.lawName})
+                    </h3>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300">
+                      Tersedia: {availablePoints} SP
+                    </span>
+                  </div>
+                  <p className="text-xs text-stone-400 mt-0.5">
+                    Ruang kultivasi ini dikhususkan untuk meditasi & terobosan ranah. Alokasikan Poin Dao dan buka percabangan rasi bintang di tab Pohon Dao.
+                  </p>
+                </div>
               </div>
+              <Link href="/skill-tree">
+                <Button className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-stone-950 font-serif font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg border border-amber-400/40 transition-all flex items-center gap-2 shrink-0 cursor-pointer active:scale-95">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Buka Pohon Dao ➔</span>
+                </Button>
+              </Link>
             </div>
-
-            <LawConstellationTree
-              skills={skillsList}
-              availablePoints={availablePoints}
-              onAllocate={(skillId) => allocateSkillMutation.mutate(skillId)}
-              isAllocating={allocateSkillMutation.isPending}
-              combatLoadout={lawData.combatLoadout || []}
-              onToggleLoadout={handleToggleCombatLoadout}
-            />
           </div>
 
           {/* ROADMAP PANJANG: 90 STAGE KULTIVASI (RANK 0 - 8) */}

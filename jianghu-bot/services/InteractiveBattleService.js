@@ -166,7 +166,9 @@ class InteractiveBattleService {
     const tacklePower = 10 + Math.floor(weaponBaseAtk * 0.3) + Math.floor(kungfuLevel * 0.1);
     const basicAttack = this.buildAdaptiveBasicAttack(weaponDiscipline, tacklePower);
 
-    // 4. Hanya tambahkan manual teknik yang sudah dipelajari dari player.manuals
+    // 4. Hanya tambahkan manual teknik yang sudah dipelajari dari player.manuals (difilter oleh combatLoadout jika loadout ada)
+    const loadout = player.cultivationLaw?.combatLoadout || [];
+    const hasLoadout = Array.isArray(loadout) && loadout.length > 0;
     const manualSkills = [];
     if (Array.isArray(player.manuals)) {
       for (const m of player.manuals) {
@@ -176,6 +178,7 @@ class InteractiveBattleService {
         if (!isPopulated) continue;
 
         const sId = manual._id ? manual._id.toString() : (manual.key || manual.name);
+        if (hasLoadout && !loadout.includes(sId)) continue; // Filter hanya jurus terpasang di loadout
         if (manualSkills.some(s => s.skillId === sId)) continue; // Hindari duplikasi
 
         const sType = manual.type === 'healing' ? 'heal' : (manual.type === 'defend' ? 'defend' : 'attack');
@@ -315,7 +318,12 @@ class InteractiveBattleService {
       buffs: [],
       debuffs: [],
       conditions: normalizeConditions(player.conditions),
-      skills: [...this.formatPlayerSkills(player), ...lawSkillsFormatted]
+      skills: (() => {
+        const allFormatted = [...this.formatPlayerSkills(player), ...lawSkillsFormatted];
+        const basicAtk = allFormatted.find(s => s.isBasicAttack);
+        const activePool = allFormatted.filter(s => !s.isBasicAttack).slice(0, 4);
+        return basicAtk ? [basicAtk, ...activePool] : activePool;
+      })()
     };
 
     // Konversi Sekutu (Allies: NPC / Pet)

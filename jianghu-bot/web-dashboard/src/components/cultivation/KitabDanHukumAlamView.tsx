@@ -24,6 +24,7 @@ interface ManualTechnique {
   description: string;
   basePower: number;
   qiCost: number;
+  isEquipped?: boolean;
 }
 
 interface LawSkillTechnique {
@@ -392,16 +393,32 @@ export default function KitabDanHukumAlamView({ onRefresh }: KitabDanHukumAlamVi
                           </div>
                         </div>
 
-                        {/* Tombol Lupakan Manual */}
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setManualToForget(m)}
-                          className="text-stone-500 hover:text-rose-400 hover:bg-rose-950/40 p-1.5 h-auto text-xs shrink-0"
-                          title="Lupakan Manual (Kosongkan Slot)"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
+                        {/* Tombol Aksi Manual: Pasang Loadout & Lupakan */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {m.type !== 'passive' && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleToggleLoadout(m.manualId)}
+                              className={`text-[10px] px-2.5 py-1 h-auto font-serif ${
+                                (techData?.combatLoadout || []).includes(m.manualId)
+                                  ? 'border-rose-600 bg-rose-950/40 text-rose-300 hover:bg-rose-900/60'
+                                  : 'border-amber-600/70 bg-amber-950/40 text-amber-200 hover:bg-amber-900/60'
+                              }`}
+                            >
+                              {(techData?.combatLoadout || []).includes(m.manualId) ? 'Lepas Loadout' : '+ Pasang'}
+                            </Button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setManualToForget(m)}
+                            className="text-stone-500 hover:text-rose-400 hover:bg-rose-950/40 p-1.5 h-auto text-xs"
+                            title="Lupakan Manual (Kosongkan Slot)"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
                       </div>
 
                       <p className="text-xs text-stone-400 line-clamp-2 font-sans mb-3">

@@ -263,4 +263,32 @@ Komponen terpadu `KitabDanHukumAlamView.tsx` menampilkan:
 
 ---
 
+## 6. Arsitektur Pemisahan Tri-Tab & Biaya SP Bertingkat (Tier-Scaled SP)
+
+### 6.1. Pemisahan Sakral 3 Tab di Web Dashboard
+1. **Tab Kultivasi & Ranah (`/cultivation` / `LawCultivationTab.tsx`)**:
+   - **Fokus Murni**: 100% didedikasikan untuk meditasi batin, akumulasi Qi dantian, pemulihan luka, pencerahan harian (*Epiphany*), terobosan ranah (*Breakthroughs*), konsumsi pil terobosan, 90 tahapan jejak ranah, dan panel unik 15 Law (Aperture cacing Gu, tempa 9 raga Vajra, peleburan inti siluman/aura kotor, infusi artefak batin, perawatan satwa roh kembar).
+   - **Zero Clutter**: Blok pohon konstelasi dipisahkan dari tab ini dan dialihkan ke Pohon Dao (`/skill-tree`).
+2. **Tab Pohon Dao / Skill Tree (`/skill-tree` / `SkillTreeClient.tsx`)**:
+   - **Halaman Penuh Mandiri**: Kanvas rasi bintang 5 Tier dengan garis SVG berpendar (kuning aktif, biru siap dibuka, abu-abu terkunci).
+   - **Sistem Biaya SP Bertingkat (Anti-Flat 1 SP)**: Menghapus biaya 1 SP untuk semua jurus.
+   - **Hukum Pembatasan Takdir**: Menegakkan batas ~105 SP seumur hidup sehingga pemain hanya bisa memaksimalkan ~50% percabangan rasi bintang.
+3. **Tab Kitab & Jurus (`/skills` di Navbar / `KitabDanHukumAlamView.tsx`)**:
+   - **Pusat Inventori Jurus Terpadu**: Menghubungkan Kitab Manual Eksternal (dibatasi kuota Core stat $4 + \lfloor\text{core}/5\rfloor$ dan memiliki tombol forget) dengan Jurus Bawaan Law (bebas kuota, permanen, XP tempur kuadratik).
+   - **Dock Loadout Tempur 4-Slot**: Slot 0 otomatis Basic Attack Adaptif; Slot 1–4 bebas memadukan manual luar dan jurus Law.
+
+### 6.2. Skala Biaya Poin Skill Bertingkat (Tier-Scaled SP Cost)
+| Tier Jurus | Kedudukan Esoteris | Biaya SP | Syarat Rank Law | Batas Max Level |
+|---|---|:---:|:---:|:---:|
+| **Tier 1** | **Fondasi Law & Spesialisasi Awal** | **1 SP** | Rank 0 - 1 | Lv. 3 |
+| **Tier 2** | **Ilmu Mendalam & Buff Pertahanan** | **2 SP** | Rank 2 - 3 | Lv. 5 |
+| **Tier 3** | **Domain Semesta & Manipulasi Ruang (AoE)** | **3 SP** | Rank 4 - 5 | Lv. 7 |
+| **Tier 4** | **Penjelmaan Avatar Agung (Wujud Purba)** | **5 SP** | Rank 6 - 7 | Lv. 9 |
+| **Tier 5** | **Mahadewa / Bencana Bintang Purba (1000% DMG)** | **7 SP** | Rank 8 | Lv. 10 |
+
+- Backend (`lawCultivation.js`) dan database MongoDB (`LawSkillDefinition`) secara otoritatif menegakkan biaya ini.
+
+---
+
 *Dokumen ini mengikat secara hukum kode pada seluruh sistem backend `jianghu-bot/web-api` dan frontend `jianghu-bot/web-dashboard`.*
+

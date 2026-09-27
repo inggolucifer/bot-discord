@@ -1,19 +1,19 @@
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/query/getQueryClient';
 import { cookies } from 'next/headers';
-import SkillsClient from './SkillsClient';
+import SkillTreeClient from './SkillTreeClient';
 import api from '@/lib/api';
 
-export default async function SkillsPage() {
+export default async function SkillTreePage() {
     const queryClient = getQueryClient();
     const cookieStore = await cookies();
     const token = cookieStore.get('accessToken')?.value;
 
     if (token) {
         await queryClient.prefetchQuery({
-            queryKey: ['myTechniques'],
+            queryKey: ['lawSkills'],
             queryFn: async () => {
-                const { data } = await api.get('/manuals/my-techniques', {
+                const { data } = await api.get('/cultivation/law/skills', {
                     headers: {
                         Cookie: `accessToken=${token}`
                     }
@@ -25,7 +25,7 @@ export default async function SkillsPage() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <SkillsClient />
+            <SkillTreeClient />
         </HydrationBoundary>
     );
 }
