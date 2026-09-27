@@ -63,7 +63,8 @@ router.get('/my-techniques', authenticateToken, async (req, res) => {
                 element: manualObj.element || 'neutral',
                 description: manualObj.description || '',
                 basePower: manualObj.basePower || 20,
-                qiCost: manualObj.qiCost || 15
+                qiCost: manualObj.qiCost || 15,
+                isEquipped: (law?.combatLoadout || []).includes(manualObj._id.toString())
             };
         }).filter(Boolean);
 

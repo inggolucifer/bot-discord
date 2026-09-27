@@ -11,14 +11,14 @@ export default async function SkillsPage() {
 
     if (token) {
         await queryClient.prefetchQuery({
-            queryKey: ['playerProfile'],
+            queryKey: ['myTechniques'],
             queryFn: async () => {
-                const { data } = await api.get('/player/profile', {
+                const { data } = await api.get('/manuals/my-techniques', {
                     headers: {
                         Cookie: `accessToken=${token}`
                     }
                 });
-                return data.data; // profile endpoint usually returns { success: true, data: { ... } }
+                return data;
             }
         });
     }

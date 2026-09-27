@@ -17,6 +17,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const Item = require('../models/Item');
 const LawSkillDefinition = require('../models/LawSkillDefinition');
+const { getSkillPointCost } = require('../utils/kungfuMastery');
 
 const DEFAULT_GUILD_ID = process.env.DEFAULT_GUILD_ID || 'default_guild';
 
@@ -948,6 +949,7 @@ async function seedLawMasterEcosystem(options = { reset: false, guildId: DEFAULT
   for (const [lawType, config] of Object.entries(ALL_LAW_CONFIGS)) {
     const skills = createLawSkills(lawType, config);
     for (const skill of skills) {
+      skill.skillPointCost = getSkillPointCost(skill.tier || 1);
       await LawSkillDefinition.findOneAndUpdate(
         { skillId: skill.skillId },
         skill,
