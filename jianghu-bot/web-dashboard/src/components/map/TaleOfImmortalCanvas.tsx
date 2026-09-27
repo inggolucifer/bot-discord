@@ -542,6 +542,12 @@ export default function TaleOfImmortalCanvas({
                 else if (n.includes('kayu') || n.includes('pemotongan')) bIcon = '🪓';
                 else if (n.includes('ikan') || n.includes('pemancingan') || n.includes('tambak') || t === 'fish_pond') bIcon = '🐟';
                 else if (n.includes('toko') || n.includes('kios') || n.includes('warung') || t === 'shop') bIcon = '🏪';
+                else if (n.includes('bak mandi raga')) bIcon = '💪';
+                else if (n.includes('kendi penyuling gu')) bIcon = '🪱';
+                else if (n.includes('kurban darah abyss')) bIcon = '🩸';
+                else if (n.includes('tempa jiwa nether')) bIcon = '🗡️';
+                else if (n.includes('penangkaran siluman')) bIcon = '🐾';
+                else if (n.includes('pagoda resonansi')) bIcon = '🌀';
 
                 ctx.font = `${Math.max(10, 13 * camera.zoom)}px sans-serif`;
                 ctx.textAlign = 'center';

@@ -20,6 +20,8 @@ const express = require('express');
 const router = express.Router();
 const Player = require('../../models/Player');
 const Item = require('../../models/Item');
+const ZoneTile = require('../../models/ZoneTile');
+const Asset = require('../../models/Asset');
 const LawSkillDefinition = require('../../models/LawSkillDefinition');
 const { authenticateToken } = require('../middlewares/auth');
 const LockManager = require('../utils/lockManager');
@@ -910,102 +912,501 @@ function detectLawTypeFromItem(item) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// LAW-SPECIFIC ENDPOINTS (§12 & Phase B-G)
+// LAW-SPECIFIC ENDPOINTS (§12 & Master Overhaul)
 // ═══════════════════════════════════════════════════════════════
 
-// 1. GU MASTER
+// 0. UNIVERSAL ESSENCE FEEDER (Untuk Seluruh 15 Law)
+router.post('/essence/feed', authenticateToken, async (req, res) => {
+  const { feedType, itemId } = req.body;
+  try {
+    const player = await resolvePlayer(req);
+    const law = player.cultivationLaw;
+    if (!law?.activeLawType) {
+      return res.status(400).json({ error: 'Belum memilih Hukum Semesta (Law).' });
+    }
+
+    const { getMaxEssence } = require('../../utils/lawCultivationEngine');
+    const maxEss = law.maxEssence || getMaxEssence(law.rank || 0);
+
+    if (feedType === 'blood') {
+      const currentVit = player.extendedStats?.vitality ?? player.vitality ?? 100;
+      if (currentVit < 15) {
+        return res.status(400).json({ error: 'Vitality fisik terlalu lemah untuk meneteskan darah (butuh minimal 15 Vitality).' });
+      }
+      if (!player.extendedStats) player.extendedStats = {};
+      player.extendedStats.vitality = Math.max(0, currentVit - 15);
+      player.vitality = player.extendedStats.vitality;
+
+      law.currentEssence = Math.min(maxEss, (law.currentEssence || 0) + 35);
+      player.markModified('extendedStats');
+      player.markModified('cultivationLaw');
+      await player.save();
+
+      return res.json({
+        success: true,
+        message: `🩸 Tetes Darah Sendiri berhasil! Bar Esensi terisi +35 (${Math.floor(law.currentEssence)}/${maxEss}) [-15 Vitality].`,
+        data: { currentEssence: law.currentEssence, maxEssence: maxEss, vitality: player.extendedStats.vitality }
+      });
+    }
+
+    // Mode Item Esensi
+    await player.populate({ path: 'inventory.itemId' });
+    const invIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      if (itemId && (inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId)) return true;
+      const tags = inv.itemId.tags || [];
+      return tags.includes('essence') || tags.includes('catalyst') || tags.includes('gu_feed') || tags.includes('medicinal_herb') || tags.includes('beast_meat');
+    });
+
+    if (invIndex === -1) {
+      return res.status(400).json({ error: 'Tidak ada item bahan esensi yang cocok di dalam tas inventori.' });
+    }
+
+    const inv = player.inventory[invIndex];
+    const item = inv.itemId;
+    const itemTier = item.tier || 1;
+    const playerRank = law.rank || 0;
+
+    // Hitung perolehan esensi dengan Tier Affinity Decay
+    const decay = Math.max(0.2, 1 - Math.max(0, playerRank - itemTier) * 0.35);
+    const baseEssence = 30 * Math.pow(2.2, Math.max(0, itemTier - 1));
+    const essenceGain = Math.max(15, Math.floor(baseEssence * decay));
+
+    inv.quantity -= 1;
+    if (inv.quantity <= 0) {
+      player.inventory.splice(invIndex, 1);
+    }
+
+    law.currentEssence = Math.min(maxEss, (law.currentEssence || 0) + essenceGain);
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + Math.floor(essenceGain * 0.5));
+
+    player.markModified('inventory');
+    player.markModified('cultivationLaw');
+    await player.save();
+
+    res.json({
+      success: true,
+      message: `✨ Berhasil menyerap ${item.name}! Bar Esensi terisi +${essenceGain} (${Math.floor(law.currentEssence)}/${maxEss})!`,
+      data: { currentEssence: law.currentEssence, maxEssence: maxEss, qi: law.qi }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error feeding essence:', error);
+    res.status(500).json({ error: 'Gagal menyerap bahan esensi.' });
+  }
+});
+
+// 0.1 FASILITAS ALTAR KHUSUS (Build / Upgrade Altar)
+router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) => {
+  const { facilityType } = req.body;
+  try {
+    const player = await resolvePlayer(req);
+    const law = player.cultivationLaw;
+    if (!law?.activeLawType) {
+      return res.status(400).json({ error: 'Belum memilih Hukum Semesta (Law).' });
+    }
+
+    if (!law.facilities) {
+      law.facilities = {
+        bodyCauldronTier: 0,
+        abyssalAltarTier: 0,
+        guCrucibleTier: 1
+      };
+    }
+
+    await player.populate({ path: 'inventory.itemId' });
+
+    let facilityName = '';
+    let currentTier = 0;
+    let nextTier = 0;
+    let requiredMaterials = []; // [{ name, qty }]
+    let costSilver = 0;
+    let isAltarOnMap = false;
+
+    if (facilityType === 'body_cauldron') {
+      facilityName = 'Kuali Bak Mandi Raga';
+      currentTier = law.facilities.bodyCauldronTier || 0;
+      nextTier = currentTier + 1;
+      if (nextTier > 4) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 4).` });
+
+      if (nextTier === 1) {
+        requiredMaterials = [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
+        costSilver = 30;
+      } else if (nextTier === 2) {
+        requiredMaterials = [{ name: 'Herba Tulang Besi', qty: 5 }, { name: 'Bijih Besi Tempa', qty: 5 }];
+        costSilver = 100;
+      } else if (nextTier === 3) {
+        requiredMaterials = [{ name: 'Darah Siluman Berenergi', qty: 3 }];
+        costSilver = 250;
+      } else {
+        costSilver = 500;
+      }
+    } else if (facilityType === 'gu_crucible') {
+      facilityName = 'Kendi Penyuling Gu Purba';
+      currentTier = law.facilities.guCrucibleTier || 1;
+      nextTier = currentTier + 1;
+      if (nextTier > 4) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 4).` });
+
+      if (nextTier === 2) {
+        requiredMaterials = [{ name: 'Intisari Serangga Gu', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
+        costSilver = 80;
+      } else {
+        requiredMaterials = [{ name: 'Madu Ratu Kalajengking Roh', qty: 3 }];
+        costSilver = 250;
+      }
+    } else if (facilityType === 'abyssal_altar') {
+      // KHUSUS DEMONIC ABYSSAL PATH: MEMERLUKAN ALTAR DI LAHAN PETA DUNIA!
+      isAltarOnMap = true;
+      facilityName = 'Altar Kurban Darah Abyss';
+      currentTier = law.facilities.abyssalAltarTier || 0;
+      nextTier = currentTier + 1;
+      if (nextTier > 3) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 3).` });
+
+      if (nextTier === 1) {
+        requiredMaterials = [{ name: 'Batu Obsidian Hitam Abyss', qty: 3 }, { name: 'Botol Esensi Darah Segar', qty: 2 }];
+        costSilver = 50;
+      } else if (nextTier === 2) {
+        requiredMaterials = [{ name: 'Batu Obsidian Hitam Abyss', qty: 5 }, { name: 'Inti Siluman Kotor', qty: 3 }];
+        costSilver = 200;
+      } else {
+        costSilver = 500;
+      }
+    } else {
+      return res.status(400).json({ error: 'Jenis fasilitas tidak valid.' });
+    }
+
+    // Validasi Khusus Altar Demonic: Wajib Memiliki Kavling Lahan di Peta Dunia
+    let targetPlot = null;
+    if (isAltarOnMap) {
+      const ownedPlots = await ZoneTile.find({ ownerId: player.discordId });
+      if (!ownedPlots || ownedPlots.length === 0) {
+        return res.status(400).json({
+          error: 'Praktisi Kontrak Iblis Abyss wajib memiliki kavling tanah di peta Jianghu (/world) untuk mendirikan Altar Kurban Darah Abyss!'
+        });
+      }
+      targetPlot = ownedPlots.find(p => !p.buildingName || p.buildingName.includes(facilityName)) || ownedPlots[0];
+    }
+
+    // Validasi Silver
+    if ((player.currency?.silver || 0) < costSilver) {
+      return res.status(400).json({ error: `Saldo Perak tidak cukup. Butuh ${costSilver} Silver untuk pembuatan/upgrade.` });
+    }
+
+    // Validasi Bahan di Inventory
+    for (const reqMat of requiredMaterials) {
+      const inv = player.inventory.find(i => i.itemId?.name === reqMat.name && i.quantity >= reqMat.qty);
+      if (!inv) {
+        return res.status(400).json({ error: `Bahan tidak mencukupi: Butuh ${reqMat.qty}x ${reqMat.name}.` });
+      }
+    }
+
+    // Potong Bahan
+    for (const reqMat of requiredMaterials) {
+      const invIndex = player.inventory.findIndex(i => i.itemId?.name === reqMat.name);
+      if (invIndex !== -1) {
+        player.inventory[invIndex].quantity -= reqMat.qty;
+        if (player.inventory[invIndex].quantity <= 0) {
+          player.inventory.splice(invIndex, 1);
+        }
+      }
+    }
+
+    player.currency.silver -= costSilver;
+
+    // Jika Altar Demonic: Pasang Fisik di Petak Peta & Daftarkan Aset
+    if (isAltarOnMap && targetPlot) {
+      targetPlot.buildingName = facilityName;
+      targetPlot.buildingType = 'crafting_station';
+      targetPlot.label = `${facilityName} [T${nextTier}] (${player.characterName})`;
+      targetPlot.isOccupied = true;
+      await targetPlot.save();
+
+      const assetDoc = await Asset.findOne({ name: facilityName });
+      if (!player.assets) player.assets = [];
+      const existingAssetIdx = player.assets.findIndex(a => a.name === facilityName);
+      if (existingAssetIdx !== -1) {
+        player.assets[existingAssetIdx].status = 'active';
+        player.assets[existingAssetIdx].placement = {
+          zoneId: targetPlot.zoneId,
+          tileX: targetPlot.tileX,
+          tileY: targetPlot.tileY
+        };
+      } else {
+        if ((player.assets.length + 1) > (player.assetSlots || 1)) {
+          player.assetSlots = player.assets.length + 1;
+        }
+        player.assets.push({
+          assetId: assetDoc ? assetDoc._id : new mongoose.Types.ObjectId(),
+          name: facilityName,
+          quantity: 1,
+          status: 'active',
+          placement: {
+            zoneId: targetPlot.zoneId,
+            tileX: targetPlot.tileX,
+            tileY: targetPlot.tileY
+          },
+          isOpenToPublic: false,
+          isPubliclyVisible: true
+        });
+      }
+      player.markModified('assets');
+    }
+
+    // Update Status Fasilitas Law
+    if (facilityType === 'body_cauldron') law.facilities.bodyCauldronTier = nextTier;
+    if (facilityType === 'gu_crucible') law.facilities.guCrucibleTier = nextTier;
+    if (facilityType === 'abyssal_altar') law.facilities.abyssalAltarTier = nextTier;
+
+    player.markModified('inventory');
+    player.markModified('currency');
+    player.markModified('cultivationLaw');
+    await player.save();
+
+    const successMsg = isAltarOnMap && targetPlot
+      ? `🏛️ Berhasil mendirikan/memperkuat ${facilityName} ke Tier ${nextTier} di atas kavling lahan (${targetPlot.tileX}, ${targetPlot.tileY})! Aset iblis resmi berdiri di peta dunia.`
+      : `✨ Berhasil membuat/meng-upgrade ${facilityName} ke Tier ${nextTier}!`;
+
+    res.json({
+      success: true,
+      message: successMsg,
+      data: {
+        facilities: law.facilities,
+        plot: targetPlot ? { zoneId: targetPlot.zoneId, tileX: targetPlot.tileX, tileY: targetPlot.tileY } : null
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error building facility:', error);
+    res.status(500).json({ error: 'Gagal membangun fasilitas altar.' });
+  }
+});
+
+// 1. GU MASTER (Dual Mode Feed & Real Synthesis)
 router.post('/gu/feed', authenticateToken, async (req, res) => {
-  const { slotIndex } = req.body;
+  const { slotIndex, feedType, itemId } = req.body;
   try {
     const player = await resolvePlayer(req);
     const law = player.cultivationLaw;
     if (law?.activeLawType !== 'gu_master') {
       return res.status(400).json({ error: 'Hanya praktisi Gu Master yang dapat memberi pakan cacing Gu.' });
     }
-    const costCopper = 10;
-    if ((player.currency?.copper || 0) < costCopper) {
-      return res.status(400).json({ error: `Koin Tembaga tidak cukup. Butuh ${costCopper} Copper.` });
-    }
-    player.currency.copper -= costCopper;
+
     if (!law.guSlots || law.guSlots.length === 0) {
       law.guSlots = [{
         guName: 'Gu Cacing Sutra Roh',
         guType: 'healing',
+        tier: 1,
         level: 1,
-        hunger: 100,
+        satiety: 80,
+        hunger: 80,
+        bonusAtk: 5,
+        bonusDef: 3,
         lastFedAt: new Date()
       }];
-    } else {
-      const idx = Math.max(0, Math.min(law.guSlots.length - 1, Number(slotIndex) || 0));
-      law.guSlots[idx].hunger = Math.min(100, (law.guSlots[idx].hunger || 0) + 35);
-      law.guSlots[idx].lastFedAt = new Date();
     }
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 40);
-    player.markModified('currency');
+
+    const idx = Math.max(0, Math.min(law.guSlots.length - 1, Number(slotIndex) || 0));
+    const targetGu = law.guSlots[idx];
+
+    if (feedType === 'blood') {
+      const currentVit = player.extendedStats?.vitality ?? player.vitality ?? 100;
+      if (currentVit < 15) {
+        return res.status(400).json({ error: 'Vitality fisik terlalu lemah untuk meneteskan darah.' });
+      }
+      if (!player.extendedStats) player.extendedStats = {};
+      player.extendedStats.vitality = Math.max(0, currentVit - 15);
+      player.vitality = player.extendedStats.vitality;
+
+      targetGu.satiety = Math.min(100, (targetGu.satiety !== undefined ? targetGu.satiety : (targetGu.hunger || 50)) + 35);
+      targetGu.hunger = targetGu.satiety;
+      targetGu.lastFedAt = new Date();
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + 35);
+
+      player.markModified('extendedStats');
+      player.markModified('cultivationLaw');
+      await player.save();
+
+      return res.json({
+        success: true,
+        message: `🩸 Tetes Darah Sendiri berhasil! ${targetGu.guName} kenyang ${targetGu.satiety}% (-15 Vitality, +35 Qi)!`,
+        data: { guSlots: law.guSlots, qi: law.qi, vitality: player.extendedStats.vitality }
+      });
+    }
+
+    // Mode Item Esensi dari Tas
+    await player.populate({ path: 'inventory.itemId' });
+    const invIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      if (itemId && (inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId)) return true;
+      const tags = inv.itemId.tags || [];
+      const name = (inv.itemId.name || '').toLowerCase();
+      return tags.includes('gu_feed') || tags.includes('gu_essence') || name.includes('serangga') || name.includes('madu') || name.includes('daging');
+    });
+
+    if (invIndex === -1) {
+      return res.status(400).json({ error: 'Bahan pakan cacing Gu tidak ditemukan di tas inventori. Gunakan mode Tetes Darah Sendiri!' });
+    }
+
+    const inv = player.inventory[invIndex];
+    inv.quantity -= 1;
+    if (inv.quantity <= 0) {
+      player.inventory.splice(invIndex, 1);
+    }
+
+    targetGu.satiety = Math.min(100, (targetGu.satiety !== undefined ? targetGu.satiety : (targetGu.hunger || 50)) + 60);
+    targetGu.hunger = targetGu.satiety;
+    targetGu.lastFedAt = new Date();
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + 50);
+
+    player.markModified('inventory');
     player.markModified('cultivationLaw');
     await player.save();
+
     res.json({
       success: true,
-      message: '✨ Berhasil memberi pakan serangga Gu (-10 Copper, +40 Qi)!',
+      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${inv.itemId.name}! Kekenyangan ${targetGu.satiety}% (+50 Qi)!`,
       data: { guSlots: law.guSlots, qi: law.qi }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error feeding Gu:', error);
     res.status(500).json({ error: 'Gagal memberi pakan serangga Gu.' });
   }
 });
 
 router.post('/gu/fuse', authenticateToken, async (req, res) => {
+  const { slotA, slotB } = req.body;
   try {
     const player = await resolvePlayer(req);
     const law = player.cultivationLaw;
     if (law?.activeLawType !== 'gu_master') {
       return res.status(400).json({ error: 'Hanya praktisi Gu Master yang dapat memfusikan Gu.' });
     }
-    const successRate = Math.min(95, 60 + (law.rank || 0) * 5);
+
+    if (slotA === undefined || slotB === undefined || slotA === slotB) {
+      return res.status(400).json({ error: 'Pilih dua cacing Gu yang berbeda dari slot rongga untuk difusikan.' });
+    }
+
+    if (!law.guSlots || !law.guSlots[slotA] || !law.guSlots[slotB]) {
+      return res.status(400).json({ error: 'Slot Gu yang dipilih tidak valid.' });
+    }
+
+    const gu1 = law.guSlots[slotA];
+    const gu2 = law.guSlots[slotB];
+    const crucibleTier = law.facilities?.guCrucibleTier || 1;
+
+    // Peluang sukses berbasis Rank Law + Tier Kendi
+    const baseSuccessRate = Math.min(95, 50 + (law.rank || 0) * 6 + (crucibleTier - 1) * 8);
     const roll = Math.random() * 100;
-    if (roll <= successRate) {
-      law.qi = Math.min(law.maxQi, (law.qi || 0) + 120);
+
+    if (roll <= baseSuccessRate) {
+      // FUSI SUKSES: Hasilkan cacing mutasi tier lebih tinggi!
+      const newTier = Math.min(5, Math.max(gu1.tier || 1, gu2.tier || 1) + 1);
+      const mutatedGu = {
+        guName: `Gu Mutasi ${gu1.guType.toUpperCase()}-${gu2.guType.toUpperCase()} Purba`,
+        guType: gu1.guType,
+        tier: newTier,
+        level: 1,
+        satiety: 100,
+        hunger: 100,
+        bonusAtk: (gu1.bonusAtk || 5) + (gu2.bonusAtk || 5) + 8,
+        bonusDef: (gu1.bonusDef || 3) + (gu2.bonusDef || 3) + 5,
+        specialEffect: 'dual_essence_venom',
+        lastFedAt: new Date()
+      };
+
+      // Hapus kedua gu lama, gantikan dengan gu hasil mutasi
+      const remaining = law.guSlots.filter((_, idx) => idx !== Number(slotA) && idx !== Number(slotB));
+      remaining.push(mutatedGu);
+      law.guSlots = remaining;
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + 150);
+
       player.markModified('cultivationLaw');
       await player.save();
-      res.json({ success: true, message: `✨ Fusi Serangga Gu berhasil! Menghasilkan intisari baru (+120 Qi)!` });
+
+      return res.json({
+        success: true,
+        message: `✨ FUSI BERHASIL! Terlahir cacing mutasi baru: ${mutatedGu.guName} (Tier ${mutatedGu.tier})! +150 Qi Dantian!`,
+        data: { guSlots: law.guSlots, qi: law.qi }
+      });
     } else {
-      res.json({ success: false, message: 'Fusi Gu tidak stabil, namun dantian menyerap sisa hawa serangga.' });
+      // FUSI GAGAL
+      gu1.satiety = Math.max(10, (gu1.satiety || 50) - 30);
+      gu1.hunger = gu1.satiety;
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + 40);
+
+      player.markModified('cultivationLaw');
+      await player.save();
+
+      return res.json({
+        success: false,
+        message: '💥 Fusi Gu tidak stabil! Reaksi biologis gagal, namun dantian menyerap residu intisari (+40 Qi).',
+        data: { guSlots: law.guSlots, qi: law.qi }
+      });
     }
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error fusing Gu:', error);
     res.status(500).json({ error: 'Gagal memfusikan Gu.' });
   }
 });
 
-// 2. BODY TEMPERING (True Qi)
+// 2. BODY TEMPERING (Altar Cauldron Gated & True Qi)
 router.post('/body/temper', authenticateToken, async (req, res) => {
-  const { part } = req.body;
+  const { part, feedType } = req.body;
   try {
     const player = await resolvePlayer(req);
     const law = player.cultivationLaw;
     if (law?.activeLawType !== 'body_tempering') {
       return res.status(400).json({ error: 'Hanya praktisi Penempaan Raga Suci yang dapat menempa fisik.' });
     }
-    const costCopper = 15;
-    if ((player.currency?.copper || 0) < costCopper) {
-      return res.status(400).json({ error: `Koin Tembaga tidak cukup untuk ramuan mandi rempah. Butuh ${costCopper} Copper.` });
+
+    const cauldronTier = law.facilities?.bodyCauldronTier || 0;
+    if (cauldronTier < 1) {
+      return res.status(400).json({
+        error: 'Wajib menyiapkan Kuali Bak Mandi Raga terlebih dahulu sebelum melakukan mandi penempaan rempah!'
+      });
     }
+
     if (!law.bodyTemperingParts) {
       law.bodyTemperingParts = { head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0 };
     }
     const targetPart = (part && law.bodyTemperingParts[part] !== undefined) ? part : 'skin';
-    player.currency.copper -= costCopper;
-    law.bodyTemperingParts[targetPart] = Math.min(100, (law.bodyTemperingParts[targetPart] || 0) + 10);
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 50);
 
-    player.markModified('currency');
+    // Mode Vitality Internal atau Mode Bahan Rempah
+    if (feedType === 'vitality') {
+      const currentVit = player.extendedStats?.vitality ?? player.vitality ?? 100;
+      if (currentVit < 20) {
+        return res.status(400).json({ error: 'Vitalitas tubuh terlalu lemah untuk memeras True Qi (butuh 20 Vitality).' });
+      }
+      if (!player.extendedStats) player.extendedStats = {};
+      player.extendedStats.vitality = Math.max(0, currentVit - 20);
+      player.vitality = player.extendedStats.vitality;
+    } else {
+      await player.populate({ path: 'inventory.itemId' });
+      const herbIndex = player.inventory.findIndex(inv => {
+        if (!inv.itemId || inv.quantity < 1) return false;
+        const name = (inv.itemId.name || '').toLowerCase();
+        return name.includes('tulang besi') || name.includes('darah') || name.includes('herba');
+      });
+
+      if (herbIndex !== -1) {
+        player.inventory[herbIndex].quantity -= 1;
+        if (player.inventory[herbIndex].quantity <= 0) player.inventory.splice(herbIndex, 1);
+        player.markModified('inventory');
+      }
+    }
+
+    law.bodyTemperingParts[targetPart] = Math.min(100, (law.bodyTemperingParts[targetPart] || 0) + 12);
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + 60);
+
+    player.markModified('extendedStats');
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
-      message: `💪 Berhasil menempa bagian raga: ${targetPart} (+10% kematangan raga, +50 True Qi)!`,
+      message: `💪 Mandi penempaan raga berhasil! Bagian [${targetPart}] kematangan +12% (+60 True Qi)!`,
       data: { bodyTemperingParts: law.bodyTemperingParts, qi: law.qi }
     });
   } catch (error) {
@@ -1021,19 +1422,23 @@ router.post('/body/gather-essence', authenticateToken, async (req, res) => {
     if (law?.activeLawType !== 'body_tempering') {
       return res.status(400).json({ error: 'Hanya praktisi Penempaan Raga Suci yang dapat memeras True Qi.' });
     }
-    if ((player.vitality || 100) < 15) {
+    const currentVit = player.extendedStats?.vitality ?? player.vitality ?? 100;
+    if (currentVit < 15) {
       return res.status(400).json({ error: 'Vitality fisik terlalu lemah (butuh minimal 15 Vitality).' });
     }
-    player.vitality = Math.max(0, (player.vitality || 100) - 15);
+    if (!player.extendedStats) player.extendedStats = {};
+    player.extendedStats.vitality = Math.max(0, currentVit - 15);
+    player.vitality = player.extendedStats.vitality;
     law.qi = Math.min(law.maxQi, (law.qi || 0) + 75);
 
+    player.markModified('extendedStats');
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
       message: '🔥 Berhasil memeras intisari fisik menjadi +75 True Qi (-15 Vitality)!',
-      data: { vitality: player.vitality, qi: law.qi }
+      data: { vitality: player.extendedStats.vitality, qi: law.qi }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -1052,12 +1457,24 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     if (!law.boundEntity) {
       return res.status(400).json({ error: 'Belum ada pusaka jiwa yang terikat.' });
     }
-    const costCopper = 5;
-    if ((player.currency?.copper || 0) < costCopper) {
-      return res.status(400).json({ error: `Koin Tembaga tidak cukup untuk batu asah roh. Butuh ${costCopper} Copper.` });
+
+    // Konsumsi item mineral / asah jika ada di tas
+    await player.populate({ path: 'inventory.itemId' });
+    const oreIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      const name = (inv.itemId.name || '').toLowerCase();
+      return name.includes('asah') || name.includes('besi') || name.includes('batu') || name.includes('mineral');
+    });
+
+    let essenceGain = 20;
+    if (oreIndex !== -1) {
+      player.inventory[oreIndex].quantity -= 1;
+      if (player.inventory[oreIndex].quantity <= 0) player.inventory.splice(oreIndex, 1);
+      player.markModified('inventory');
+      essenceGain = 35;
     }
-    player.currency.copper -= costCopper;
-    law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + 20);
+
+    law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + essenceGain);
     law.qi = Math.min(law.maxQi, (law.qi || 0) + 45);
 
     if (law.boundEntity.essence >= (law.boundEntity.maxEssence || 100)) {
@@ -1067,13 +1484,12 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
       law.boundEntity.evolutionStage = stages[Math.min(stages.length - 1, law.boundEntity.rankLevel)];
     }
 
-    player.markModified('currency');
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
-      message: `🗡️ Berhasil mengasah dan menginfus pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} (+20 Intisari, +45 Qi)!`,
+      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} (+${essenceGain} Intisari, +45 Qi)!`,
       data: { boundEntity: law.boundEntity, qi: law.qi }
     });
   } catch (error) {
@@ -1093,12 +1509,23 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     if (!law.boundEntity) {
       return res.status(400).json({ error: 'Belum ada satwa roh yang terikat.' });
     }
-    const costCopper = 10;
-    if ((player.currency?.copper || 0) < costCopper) {
-      return res.status(400).json({ error: `Koin Tembaga tidak cukup untuk pakan daging roh. Butuh ${costCopper} Copper.` });
+
+    await player.populate({ path: 'inventory.itemId' });
+    const meatIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      const name = (inv.itemId.name || '').toLowerCase();
+      return name.includes('daging') || name.includes('ikan') || name.includes('jantung');
+    });
+
+    let essenceGain = 25;
+    if (meatIndex !== -1) {
+      player.inventory[meatIndex].quantity -= 1;
+      if (player.inventory[meatIndex].quantity <= 0) player.inventory.splice(meatIndex, 1);
+      player.markModified('inventory');
+      essenceGain = 40;
     }
-    player.currency.copper -= costCopper;
-    law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + 25);
+
+    law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + essenceGain);
     law.boundEntity.beastCurrentHp = law.boundEntity.beastMaxHp || 120;
     law.boundEntity.lastFeedAt = new Date();
     law.qi = Math.min(law.maxQi, (law.qi || 0) + 40);
@@ -1114,13 +1541,12 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
       law.boundEntity.evolutionStage = evoStages[Math.min(evoStages.length - 1, law.boundEntity.rankLevel)];
     }
 
-    player.markModified('currency');
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
-      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan pakan dengan lahap (+25 Intisari Satwa, HP Penuh, +40 Qi)!`,
+      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan pakan dengan lahap (+${essenceGain} Intisari Satwa, HP Penuh, +40 Qi)!`,
       data: { boundEntity: law.boundEntity, qi: law.qi }
     });
   } catch (error) {
@@ -1137,6 +1563,20 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     if (law?.activeLawType !== 'demonic_turbid_core') {
       return res.status(400).json({ error: 'Hanya praktisi Pelebur Inti Siluman yang dapat menyerap inti kotor.' });
     }
+
+    await player.populate({ path: 'inventory.itemId' });
+    const coreIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      const name = (inv.itemId.name || '').toLowerCase();
+      return name.includes('inti') || name.includes('core');
+    });
+
+    if (coreIndex !== -1) {
+      player.inventory[coreIndex].quantity -= 1;
+      if (player.inventory[coreIndex].quantity <= 0) player.inventory.splice(coreIndex, 1);
+      player.markModified('inventory');
+    }
+
     if (!law.demonicData) law.demonicData = {};
     law.demonicData.turbidCoresConsumed = (law.demonicData.turbidCoresConsumed || 0) + 1;
     law.demonicData.corruptionIndex = Math.min(100, (law.demonicData.corruptionIndex || 0) + 3);
@@ -1239,22 +1679,25 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
     if (law?.activeLawType !== 'demonic_abyssal_pact') {
       return res.status(400).json({ error: 'Hanya praktisi Kontrak Iblis Abyss yang dapat menyetor upeti.' });
     }
-    const costCopper = 20;
-    if ((player.currency?.copper || 0) < costCopper) {
-      return res.status(400).json({ error: `Koin Tembaga tidak cukup. Butuh ${costCopper} Copper untuk upeti.` });
-    }
-    if (!law.demonicData) law.demonicData = {};
-    player.currency.copper -= costCopper;
-    law.demonicData.abyssalTributeDueAt = new Date(Date.now() + 7 * 24 * 3600 * 1000); // Perpanjang 7 hari
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 80);
 
-    player.markModified('currency');
+    const altarTier = law.facilities?.abyssalAltarTier || 0;
+    if (altarTier < 1) {
+      return res.status(400).json({
+        error: 'Wajib mendirikan Altar Kurban Darah Abyss terlebih dahulu sebelum menyetor upeti kurban!'
+      });
+    }
+
+    const tributeDurationDays = altarTier === 1 ? 7 : (altarTier === 2 ? 15 : 30);
+    if (!law.demonicData) law.demonicData = {};
+    law.demonicData.abyssalTributeDueAt = new Date(Date.now() + tributeDurationDays * 24 * 3600 * 1000);
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + 90);
+
     player.markModified('cultivationLaw');
     await player.save();
 
     res.json({
       success: true,
-      message: '📜 Berhasil menyetor upeti kurban ke jurang Abyss (-20 Copper, tenggat diperpanjang 7 hari, +80 Qi)!',
+      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss! Tenggat kontrak diperpanjang ${tributeDurationDays} hari (+90 Qi)!`,
       data: { demonicData: law.demonicData, qi: law.qi }
     });
   } catch (error) {
@@ -1282,6 +1725,59 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
     res.status(500).json({ error: 'Gagal menyerap hawa Yin.' });
+  }
+});
+
+// 6. 6 DIVINE ELEMENTAL LAWS (Ritual Resonansi Elemen Aktif)
+router.post('/element/resonate', authenticateToken, async (req, res) => {
+  const { elementKey } = req.body;
+  try {
+    const player = await resolvePlayer(req);
+    const law = player.cultivationLaw;
+    if (!law?.activeLawType || !law.activeLawType.startsWith('element_')) {
+      return res.status(400).json({ error: 'Hanya praktisi 6 Elemen Kosmik yang dapat melakukan ritual resonansi elemen.' });
+    }
+
+    const { LAW_DEFINITIONS } = require('../../utils/lawCultivationEngine');
+    const lawDef = LAW_DEFINITIONS[law.activeLawType];
+    const targetRoot = elementKey || lawDef?.rootKey || 'fire';
+
+    // Konsumsi 10 Esensi atau 15 Vitality
+    if ((law.currentEssence || 0) >= 10) {
+      law.currentEssence -= 10;
+    } else {
+      const currentVit = player.extendedStats?.vitality ?? player.vitality ?? 100;
+      if (currentVit < 15) {
+        return res.status(400).json({ error: 'Esensi dan Vitalitas tidak mencukupi untuk ritual resonansi.' });
+      }
+      if (!player.extendedStats) player.extendedStats = {};
+      player.extendedStats.vitality = Math.max(0, currentVit - 15);
+      player.vitality = player.extendedStats.vitality;
+    }
+
+    if (!player.extendedStats) player.extendedStats = {};
+    if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
+    player.extendedStats.spiritualRoot[targetRoot] = (player.extendedStats.spiritualRoot[targetRoot] || 0) + 30;
+
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + 50);
+
+    player.markModified('extendedStats');
+    player.markModified('cultivationLaw');
+    await player.save();
+
+    res.json({
+      success: true,
+      message: `🌀 Ritual Resonansi Elemen ${targetRoot.toUpperCase()} Berhasil (+30 Spiritual Root XP, +50 Qi)!`,
+      data: {
+        qi: law.qi,
+        currentEssence: law.currentEssence,
+        rootXp: player.extendedStats.spiritualRoot[targetRoot]
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error resonating element:', error);
+    res.status(500).json({ error: 'Gagal melakukan ritual resonansi elemen.' });
   }
 });
 

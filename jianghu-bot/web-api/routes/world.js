@@ -2997,6 +2997,15 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
             isOpenToPublic: tile.isOpenToPublic,
             isPubliclyVisible: true
         });
+        // Sinkronisasi otomatis ke Law Cultivation jika bangunan adalah Altar Kurban Darah Abyss (Demonic Path)
+        if (player.cultivationLaw && buildingName.includes('Altar Kurban Darah Abyss')) {
+            if (!player.cultivationLaw.facilities) {
+                player.cultivationLaw.facilities = { abyssalAltarTier: 0, bodyCauldronTier: 0, guCrucibleTier: 1 };
+            }
+            player.cultivationLaw.facilities.abyssalAltarTier = Math.max(1, player.cultivationLaw.facilities.abyssalAltarTier || 0);
+            player.markModified('cultivationLaw');
+        }
+
         player.markModified('assets');
         player.markModified('currency');
         await player.save();

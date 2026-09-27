@@ -258,15 +258,31 @@ function getDailyChannelCap(streakDays, premiumBonusMinutes = 0, eventBonusMinut
 }
 
 /**
+ * Menghitung kapasitas maksimal Bar Esensi berdasarkan Ranah (Rank 0 s/d 8)
+ * Formula: MaxEssence(rank) = floor(100 * (2.5 ^ rank))
+ * Rank 0: 100, Rank 1: 250, Rank 2: 625, Rank 3: 1562, Rank 8: 152587
+ */
+function getMaxEssence(rank = 0) {
+  return Math.floor(100 * Math.pow(2.5, rank || 0));
+}
+
+/**
+ * Menghitung laju pencernaan esensi per menit channeling.
+ */
+function getEssenceDigestRate(rank = 0) {
+  return Math.max(1, Math.floor(2 * Math.pow(1.5, rank || 0)));
+}
+
+/**
  * Menghitung jumlah Qi yang didapat dari channeling sejak lastChannelSyncAt.
- * Server-authoritative: berdasarkan delta waktu server, bukan timer browser.
+ * Server-authoritative: berdasarkan delta waktu server, dipengaruhi oleh status Bar Esensi.
  * @param {object} player - Mongoose Player document
- * @returns {{ qiGained: number, minutesElapsed: number, isCapReached: boolean }}
+ * @returns {{ qiGained: number, minutesElapsed: number, isCapReached: boolean, essenceConsumed: number, isEssenceDepleted: boolean }}
  */
 function calculateChannelingProgress(player) {
   const law = player.cultivationLaw;
   if (!law || !law.isChanneling || !law.lastChannelSyncAt) {
-    return { qiGained: 0, minutesElapsed: 0, isCapReached: false };
+    return { qiGained: 0, minutesElapsed: 0, isCapReached: false, essenceConsumed: 0, isEssenceDepleted: false };
   }
 
   const now = Date.now();
@@ -280,11 +296,28 @@ function calculateChannelingProgress(player) {
   const minutesRemaining = Math.max(0, dailyCap - minutesUsedToday);
   const effectiveMinutes = Math.min(minutesElapsed, minutesRemaining);
 
-  const rate = getChannelQiRate(law.rank);
-  const qiGained = Math.floor(effectiveMinutes * rate);
+  const baseRate = getChannelQiRate(law.rank || 0);
+  const maxEss = law.maxEssence || getMaxEssence(law.rank || 0);
+  const currentEss = law.currentEssence !== undefined ? law.currentEssence : 80;
+
+  // Laju pencernaan esensi
+  const digestRate = getEssenceDigestRate(law.rank || 0);
+  const requiredEssence = effectiveMinutes * digestRate;
+  const essenceConsumed = Math.min(currentEss, requiredEssence);
+  const isEssenceDepleted = currentEss <= 0;
+
+  // Efisiensi Qi: Jika ada esensi yang dicerna -> 100% Qi + bonus. Jika esensi habis -> 15% Qi (starving penalty)
+  let qiMultiplier = 1.0;
+  if (isEssenceDepleted) {
+    qiMultiplier = 0.15; // Penalty kelaparan / mandek
+  } else if (essenceConsumed >= requiredEssence) {
+    qiMultiplier = 1.10; // Bonus nutrisi esensi optimal (+10%)
+  }
+
+  const qiGained = Math.floor(effectiveMinutes * baseRate * qiMultiplier);
   const isCapReached = minutesUsedToday + effectiveMinutes >= dailyCap;
 
-  return { qiGained, minutesElapsed: effectiveMinutes, isCapReached };
+  return { qiGained, minutesElapsed: effectiveMinutes, isCapReached, essenceConsumed, isEssenceDepleted };
 }
 
 /**
@@ -293,7 +326,7 @@ function calculateChannelingProgress(player) {
  * @returns {{ newQi: number, minutesSynced: number, isCapReached: boolean }}
  */
 function syncLawChanneling(player) {
-  const { qiGained, minutesElapsed, isCapReached } = calculateChannelingProgress(player);
+  const { qiGained, minutesElapsed, isCapReached, essenceConsumed } = calculateChannelingProgress(player);
 
   if (qiGained > 0) {
     player.cultivationLaw.qi = Math.min(
@@ -303,7 +336,24 @@ function syncLawChanneling(player) {
     player.cultivationLaw.dailyData.channelMinutesToday += minutesElapsed;
   }
 
+  // Konsumsi Universal Essence
+  if (essenceConsumed > 0 && player.cultivationLaw.currentEssence !== undefined) {
+    player.cultivationLaw.currentEssence = Math.max(0, player.cultivationLaw.currentEssence - essenceConsumed);
+  }
+
+  // Khusus Gu Master: cerna satiety cacing Gu di rongga Aperture
+  if (player.cultivationLaw.activeLawType === 'gu_master' && Array.isArray(player.cultivationLaw.guSlots)) {
+    const guDigestPoints = Math.max(1, Math.floor(minutesElapsed * 0.5));
+    for (const gu of player.cultivationLaw.guSlots) {
+      if (gu.satiety !== undefined && gu.satiety > 0) {
+        gu.satiety = Math.max(0, gu.satiety - guDigestPoints);
+        gu.hunger = gu.satiety; // sync alias
+      }
+    }
+  }
+
   player.cultivationLaw.lastChannelSyncAt = new Date();
+  player.cultivationLaw.lastEssenceDigestAt = new Date();
 
   if (isCapReached) {
     player.cultivationLaw.isChanneling = false;
@@ -1044,7 +1094,31 @@ function getLawStatus(player) {
     bodyTemperingParts: law.bodyTemperingParts || {
       head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0
     },
-    guSlots: law.guSlots || [],
+    guSlots: (law.guSlots || []).map(g => ({
+      guItemId: g.guItemId || null,
+      guName: g.guName,
+      guType: g.guType,
+      tier: g.tier || 1,
+      level: g.level || 1,
+      hunger: g.satiety !== undefined ? g.satiety : (g.hunger || 80),
+      satiety: g.satiety !== undefined ? g.satiety : (g.hunger || 80),
+      bonusAtk: g.bonusAtk || 5,
+      bonusDef: g.bonusDef || 3,
+      specialEffect: g.specialEffect || null,
+      lastFedAt: g.lastFedAt || null
+    })),
+
+    // Universal Essence System
+    currentEssence: law.currentEssence !== undefined ? Math.floor(law.currentEssence) : 80,
+    maxEssence: law.maxEssence || getMaxEssence(law.rank || 0),
+    essencePercent: Math.min(100, Math.floor(((law.currentEssence !== undefined ? law.currentEssence : 80) / (law.maxEssence || getMaxEssence(law.rank || 0))) * 100)),
+
+    // Cultivation Facilities (Khusus Altar: Hanya Demonic Abyssal Altar di Lahan Peta)
+    facilities: law.facilities || {
+      abyssalAltarTier: 0,
+      bodyCauldronTier: 0,
+      guCrucibleTier: 1
+    },
 
     canMiniBreakthrough: (law.qi >= law.maxQi) && (law.stage < 9),
     miniBreakthroughReady: (law.qi >= law.maxQi) && (law.stage < 9),
@@ -1092,11 +1166,13 @@ module.exports = {
   TRIBULATION_RANKS,
   BASE_CHANNEL_CAP_MINUTES,
 
-  // Qi Calculation
+  // Qi & Essence Calculation
   getBaseQiRequired,
   getStageMult,
   getQiRequired,
   getChannelQiRate,
+  getMaxEssence,
+  getEssenceDigestRate,
 
   // Daily Cap
   getDailyChannelCap,
