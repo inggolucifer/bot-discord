@@ -449,7 +449,7 @@ router.post('/ordinary/confirm', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error confirming ordinary path:', error);
     res.status(500).json({ error: 'Gagal mengonfirmasi jalur Kultivator Biasa.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
   }
 });
 
@@ -463,6 +463,7 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
   if (!releaseLock) {
     return res.status(429).json({ error: 'Aksi meditasi sedang diproses. Mohon tunggu sejenak.' });
   }
+  let cdRelease = null;
 
   try {
     const player = await resolvePlayer(req);
@@ -491,7 +492,7 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
     const DungeonInstance = require('../../models/DungeonInstance');
     const activeDungeon = await DungeonInstance.findOne({
       discordId: player.discordId,
-      status: { $in: ['active', 'ongoing'] }
+      status: 'exploring'
     }).lean();
     if (activeDungeon) {
       return res.status(400).json({ error: 'Kamu sedang menjelajahi gua kuno. Keluar dari dungeon terlebih dahulu.' });
@@ -499,8 +500,8 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
 
     // Cooldown Start/Stop
     const cooldownLock = `law_channel_cd_${userId}`;
-    const cdAcquired = await LockManager.acquire(cooldownLock, 5000);
-    if (!cdAcquired) {
+    cdRelease = await LockManager.acquire(cooldownLock, 5000);
+    if (!cdRelease) {
        return res.status(429).json({ error: 'Napas spiritualmu belum stabil. Beri jeda beberapa detik sebelum mengubah aliran meditasi.' });
     }
 
@@ -542,7 +543,8 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error starting channel:', error);
     res.status(500).json({ error: 'Terjadi kesalahan saat memulai meditasi.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
+    if (typeof cdRelease === 'function') cdRelease();
   }
 });
 
@@ -556,6 +558,7 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
   if (!releaseLock) {
     return res.status(429).json({ error: 'Aksi meditasi sedang diproses. Mohon tunggu sejenak.' });
   }
+  let cdRelease = null;
 
   try {
     const player = await resolvePlayer(req);
@@ -606,7 +609,8 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error stopping channel:', error);
     res.status(500).json({ error: 'Terjadi kesalahan saat menghentikan meditasi.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
+    if (typeof cdRelease === 'function') cdRelease();
   }
 });
 
