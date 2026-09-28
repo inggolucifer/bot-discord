@@ -574,8 +574,8 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
 
     // Cooldown Start/Stop
     const cooldownLock = `law_channel_cd_${userId}`;
-    const cdAcquired = await LockManager.acquire(cooldownLock, 5000);
-    if (!cdAcquired) {
+    cdRelease = await LockManager.acquire(cooldownLock, 5000);
+    if (!cdRelease) {
        return res.status(429).json({ error: 'Napas spiritualmu belum stabil. Beri jeda beberapa detik sebelum mengubah aliran meditasi.' });
     }
 
