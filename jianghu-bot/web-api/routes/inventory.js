@@ -138,8 +138,6 @@ router.post('/discard', authenticateToken, async (req, res) => {
             player.inventory.splice(inventoryIndex, 1);
         }
         player.markModified('inventory');
-
-        player.markModified('inventory');
         await player.save();
 
         res.json({ success: true, message: 'Item berhasil dibuang.' });
@@ -244,7 +242,8 @@ router.post('/craft', authenticateToken, async (req, res) => {
                 progressHours: 0
             });
         }
-        player.markModified('craftingQueue');
+
+        player.markModified('assets');
         player.markModified('inventory');
         await player.save();
 
