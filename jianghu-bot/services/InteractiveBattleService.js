@@ -214,6 +214,112 @@ class InteractiveBattleService {
   }
 
   /**
+   * Memuat dan memformat jurus Law dari LawSkillDefinition secara otoritatif:
+   * Mengklasifikasikan jurus diri (heal, defend, buff) dan status efek (stun, poison, burn)
+   */
+  static async loadAndFormatLawSkills(player) {
+    if (!player.cultivationLaw?.activeLawType) return [];
+    const activeSkillIds = (player.cultivationLaw?.combatLoadout?.length > 0)
+      ? player.cultivationLaw.combatLoadout
+      : (player.cultivationLaw?.unlockedSkillIds || []);
+
+    if (!activeSkillIds || activeSkillIds.length === 0) return [];
+
+    try {
+      const LawSkillDefinition = require('../models/LawSkillDefinition');
+      const loadedSkillDefs = await LawSkillDefinition.find({
+        skillId: { $in: activeSkillIds }
+      }).lean();
+
+      const isBody = player.cultivationLaw.activeLawType === 'body_tempering';
+      return loadedSkillDefs
+        .filter(def => !def.isPassive)
+        .map(def => {
+          const law = player.cultivationLaw;
+          const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(def.skillId) : law.skillLevels[def.skillId]) : 1) || 1;
+          const basePwr = Math.round((def.damageMultiplier || 1.0) * 20);
+          const power = basePwr + (lvl - 1) * 6;
+
+          // Klasifikasi tipe jurus
+          let sType = 'attack';
+          if (def.targetType === 'self') {
+            const combinedText = (def.name + ' ' + def.description).toLowerCase();
+            if (/pulih|heal|sembuh|mata air|regenerasi|darah/i.test(combinedText)) {
+              sType = 'heal';
+            } else if (/perisai|zirah|benteng|pelindung|cangkang|aegis|reduksi/i.test(combinedText)) {
+              sType = 'defend';
+            } else {
+              sType = 'buff';
+            }
+          }
+
+          // Klasifikasi status efek (Debuff/DoT)
+          let debuffType = null;
+          let debuffChance = 0;
+          if (def.statusEffects && def.statusEffects.length > 0) {
+            debuffType = def.statusEffects[0].effect;
+            debuffChance = (def.statusEffects[0].chancePercent || 100) / 100;
+          } else {
+            const combinedText = (def.name + ' ' + def.description).toLowerCase();
+            if (/freeze|beku|es|trisula es|glacier/i.test(combinedText)) {
+              debuffType = 'stun';
+              debuffChance = 0.35;
+            } else if (/racun|venom|poison|bisa|korosif/i.test(combinedText)) {
+              debuffType = 'poison';
+              debuffChance = 0.40;
+            } else if (/stun|lumpuh|totokan|kaku/i.test(combinedText)) {
+              debuffType = 'stun';
+              debuffChance = 0.35;
+            } else if (/bakar|burn|flame|api|lahar/i.test(combinedText)) {
+              debuffType = 'burn';
+              debuffChance = 0.40;
+            }
+          }
+
+          return {
+            skillId: def.skillId,
+            name: def.name,
+            description: def.description,
+            type: sType,
+            icon: def.icon || '✨',
+            power,
+            level: lvl,
+            tier: def.tier || 1,
+            qiCost: def.baseCost || 15,
+            costType: isBody ? 'true_qi' : (def.costType || 'qi'),
+            cooldown: def.cooldownTurns || 3,
+            currentCooldown: 0,
+            element: def.element || 'neutral',
+            critBonus: def.critBonus || 0,
+            stanceDmgMult: def.stanceDmgMult || 1.0,
+            aoeAll: def.targetType === 'all_enemies',
+            qiRegen: 0,
+            debuffChance,
+            debuffType,
+            isBasicAttack: false,
+            isLawSkill: true
+          };
+        });
+    } catch (err) {
+      console.error('[BATTLE] Gagal memuat jurus Law:', err);
+      return [];
+    }
+  }
+
+  /**
+   * Format & generate skill pool lengkap pemain (termasuk jurus Law):
+   * Basic Attack adaptif + Manual Teknik + Jurus Law Aktif
+   */
+  static async formatPlayerSkillsWithLaw(player) {
+    const basicAndManuals = this.formatPlayerSkills(player);
+    const lawSkills = await this.loadAndFormatLawSkills(player);
+    const allFormatted = [...basicAndManuals, ...lawSkills];
+    const basicAtk = allFormatted.find(s => s.isBasicAttack);
+    const activePool = allFormatted.filter(s => !s.isBasicAttack).slice(0, 4);
+    return basicAtk ? [basicAtk, ...activePool] : activePool;
+  }
+
+  /**
    * Mulai pertempuran baru (PvE / PvP / Boss / Multi-Enemy / Allies)
    */
   static async startBattle(player, enemiesInput, type = 'pve', zoneId = 'unknown', alliesInput = [], options = {}) {
@@ -234,61 +340,17 @@ class InteractiveBattleService {
     const currentHp = isProjection
       ? maxHp
       : ((player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp)) ? player.currentHp : maxHp);
-    const maxQi = player.maxQi || 100;
+    const realmIdx = player.cultivationLaw?.rank ?? player.systemCultivation?.realmIndex ?? 0;
+    const energyStat = player.extendedStats?.energy ?? 100;
+    const focusStat = player.extendedStats?.focus ?? 100;
+    const calculatedMaxCombatQi = 50 + (realmIdx * 25) + Math.floor(energyStat * 0.5) + Math.floor(focusStat * 0.3);
+    const maxQi = player.maxQi || calculatedMaxCombatQi;
     const currentQi = isProjection
       ? Math.max(50, Math.floor(maxQi * 0.5))
-      : ((player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0) ? player.currentQi : 30); // Qi awal pertarungan
+      : ((player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0) ? Math.min(maxQi, player.currentQi) : Math.min(maxQi, 35)); // Qi awal pertarungan
 
     // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
-    let lawSkillsFormatted = [];
-    const activeSkillIds = (player.cultivationLaw?.combatLoadout?.length > 0)
-      ? player.cultivationLaw.combatLoadout
-      : (player.cultivationLaw?.unlockedSkillIds || []);
-
-    if (activeSkillIds.length > 0) {
-      try {
-        const LawSkillDefinition = require('../models/LawSkillDefinition');
-        const loadedSkillDefs = await LawSkillDefinition.find({
-          skillId: { $in: activeSkillIds }
-        }).lean();
-
-        const isBody = player.cultivationLaw.activeLawType === 'body_tempering';
-        lawSkillsFormatted = loadedSkillDefs
-          .filter(def => !def.isPassive)
-          .map(def => {
-            const law = player.cultivationLaw;
-            const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(def.skillId) : law.skillLevels[def.skillId]) : 1) || 1;
-            const basePwr = Math.round((def.damageMultiplier || 1.0) * 20);
-            const power = basePwr + (lvl - 1) * 6;
-
-            return {
-              skillId: def.skillId,
-              name: def.name,
-              description: def.description,
-              type: def.targetType === 'self' ? 'buff' : 'attack',
-              icon: def.icon || '✨',
-              power,
-              level: lvl,
-              tier: def.tier || 1,
-              qiCost: def.baseCost || 15,
-              costType: isBody ? 'true_qi' : (def.costType || 'qi'),
-              cooldown: def.cooldownTurns || 3,
-              currentCooldown: 0,
-              element: def.element || 'neutral',
-              critBonus: def.critBonus || 0,
-              stanceDmgMult: def.stanceDmgMult || 1.0,
-              aoeAll: def.targetType === 'all_enemies',
-              qiRegen: 0,
-              debuffChance: 0,
-              debuffType: null,
-              isBasicAttack: false,
-              isLawSkill: true
-            };
-          });
-      } catch (err) {
-        console.error('[BATTLE] Gagal memuat jurus Law:', err);
-      }
-    }
+    const lawSkillsFormatted = await this.loadAndFormatLawSkills(player);
 
     const playerEntity = {
       entityId: player.discordId,
@@ -362,9 +424,11 @@ class InteractiveBattleService {
       }]
     }));
 
-    // Tambahkan Satwa Roh sebagai Sekutu jika pemain mengikat Law Satwa (Natal Beast)
-    if (player.cultivationLaw?.activeLawType === 'natal_beast' && player.cultivationLaw.boundEntity?.entityType === 'beast') {
-      const b = player.cultivationLaw.boundEntity;
+    // Tambahkan Satwa Roh sebagai Sekutu jika pemain mengikat Law Satwa (Natal Beast), telah menetas, dan tidak terluka parah (HP > 0)
+    const isBeastEgg = player.cultivationLaw?.boundEntity?.isEgg === true && (player.cultivationLaw?.rank || 0) === 0;
+    const b = player.cultivationLaw?.boundEntity;
+    const beastHp = b && b.beastCurrentHp !== undefined && b.beastCurrentHp !== null ? b.beastCurrentHp : (b?.beastMaxHp || 120);
+    if (player.cultivationLaw?.activeLawType === 'natal_beast' && b?.entityType === 'beast' && !isBeastEgg && beastHp > 0) {
       allies.unshift({
         entityId: `beast_${player.discordId}`,
         entityType: 'beast_companion',
@@ -375,7 +439,7 @@ class InteractiveBattleService {
         tierSize: 'small',
         isAlly: true,
         allyType: 'beast',
-        hp: b.beastCurrentHp || 120,
+        hp: beastHp,
         maxHp: b.beastMaxHp || 120,
         qi: 0,
         maxQi: 50,
@@ -629,14 +693,15 @@ class InteractiveBattleService {
         // Tangkis / Bertahan
         session.player.stance = Math.min(session.player.maxStance, session.player.stance + 35);
         session.player.qi = Math.min(session.player.maxQi, session.player.qi + 15);
-        session.player.buffs = (session.player.buffs || []).filter(b => b.name !== 'Kuda-Kuda Bertahan');
+        const buffName = skill.name || 'Kuda-Kuda Bertahan';
+        session.player.buffs = (session.player.buffs || []).filter(b => b.name !== buffName);
         session.player.buffs.push({
-          name: 'Kuda-Kuda Bertahan',
+          name: buffName,
           type: 'defense_up',
           value: 0.5,
-          duration: 1,
-          icon: '🛡️',
-          description: 'Mengurangi damage serangan 50%'
+          duration: skill.isLawSkill ? 2 : 1,
+          icon: skill.icon || '🛡️',
+          description: skill.description || 'Mengurangi damage serangan 50%'
         });
 
         session.logs.push({
@@ -644,7 +709,7 @@ class InteractiveBattleService {
           actor: session.player.name,
           action: 'skill',
           skillName: skill.name,
-          message: `🛡️ ${session.player.name} memasang ${skill.name}! Memulihkan 35 Stance, +15 Qi, dan menahan 50% damage lawan ronde ini.`
+          message: `🛡️ ${session.player.name} memasang ${skill.name}! Memulihkan 35 Stance, +15 Qi, dan menahan 50% damage lawan.`
         });
       } else if (skill.type === 'heal') {
         // Pemulihan HP (Terpotong 50% jika terkena Incinerated)
@@ -665,6 +730,24 @@ class InteractiveBattleService {
           action: 'skill',
           skillName: skill.name,
           message: `✨ ${session.player.name} merapal ${skill.name} dan memulihkan ${healAmt} HP!${healNote}`
+        });
+      } else if (skill.type === 'buff') {
+        session.player.buffs = session.player.buffs || [];
+        const atkBoost = 0.35 + (skill.level || 1) * 0.05;
+        session.player.buffs.push({
+          name: skill.name,
+          type: 'attack_up',
+          value: atkBoost,
+          duration: 3,
+          icon: skill.icon || '🔥',
+          description: skill.description
+        });
+        session.logs.push({
+          tick: session.currentTick,
+          actor: session.player.name,
+          action: 'skill',
+          skillName: skill.name,
+          message: `🌟 ${session.player.name} mengaktifkan wujud/mantra [${skill.name}]! Memperoleh peningkatan ATK +${Math.round(atkBoost * 100)}% selama 3 ronde!`
         });
       } else {
         // Cek Psychosis (Penyimpangan Qi): Hilang kontrol dan tidak dapat membedakan teman/lawan
@@ -731,6 +814,12 @@ class InteractiveBattleService {
             const targetDef = Math.max(1, target.defense || 5);
             let damage = Math.max(1, Math.floor((session.player.attack * (skill.power / 10)) / (targetDef / 10 + 1)));
 
+            // Bonus ATK Buff jika pemain memiliki buff attack_up
+            const atkBuff = Array.isArray(session.player.buffs) && session.player.buffs.find(b => b.type === 'attack_up' && b.duration > 0);
+            if (atkBuff) {
+              damage = Math.floor(damage * (1 + (atkBuff.value || 0.35)));
+            }
+
             // Bonus Drunken Kungfu / Wine Art jika mabuk
             let drunkenNote = '';
             if (isWineSkill && intoxVal > 0) {
@@ -787,7 +876,7 @@ class InteractiveBattleService {
               });
             }
 
-            // Efek Debuff Racun / Stun
+            // Efek Debuff Racun / Stun / Burn
             let debuffTriggeredMsg = '';
             if (!target.isDead && skill.debuffChance > 0 && Math.random() < skill.debuffChance) {
               if (skill.debuffType === 'poison') {
@@ -797,7 +886,7 @@ class InteractiveBattleService {
               } else if (skill.debuffType === 'stun') {
                 target.debuffs = target.debuffs || [];
                 target.debuffs.push({
-                  name: 'Totokan Meridian',
+                  name: skill.name || 'Totokan Meridian',
                   type: 'stun',
                   value: 1,
                   duration: 1,
@@ -805,10 +894,15 @@ class InteractiveBattleService {
                   description: 'Lumpuh tidak dapat bergerak'
                 });
                 debuffTriggeredMsg = ' ⚡ (Lumpuh / Stun 1 Ronde!)';
+              } else if (skill.debuffType === 'burn') {
+                target.conditions = normalizeConditions(target.conditions);
+                target.conditions.burn = Math.min(100, target.conditions.burn + 25);
+                debuffTriggeredMsg = ' 🔥 (Membakar target +25 Burn!)';
               }
             }
 
             let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} menghasilkan ${damage} DMG!`;
+            if (atkBuff) logMsg += ' 🌟 (Buff ATK!)';
             if (drunkenNote) logMsg += drunkenNote;
             if (isCrit) logMsg += ' 💥 (Kritikal!)';
             if (target.stance <= 0 && target.stance + stanceDmg > 0) logMsg += ' ⚡ (Stance Hancur!)';
@@ -886,7 +980,8 @@ class InteractiveBattleService {
 
     // 7. Balasan Serangan AI Musuh yang Aktif dan Hidup
     const aliveEnemies = session.enemies.filter(e => !e.isDead);
-    const hasDefendBuff = Array.isArray(session.player.buffs) && session.player.buffs.some(b => b.name === 'Kuda-Kuda Bertahan');
+    const defBuff = Array.isArray(session.player.buffs) && session.player.buffs.find(b => b.name === 'Kuda-Kuda Bertahan' || b.type === 'defense_up');
+    const hasDefendBuff = !!defBuff;
 
     for (const enemy of aliveEnemies) {
       if (session.player.isDead) break;
@@ -938,34 +1033,63 @@ class InteractiveBattleService {
           || { skillId: 'basic_attack', name: 'Serangan Liar', power: 12 };
       }
 
-      let eDamage = Math.max(1, Math.floor((enemy.attack * (eSkill.power / 10)) / (session.player.defense / 10 + 1)));
-      if (hasDefendBuff) {
-        eDamage = Math.max(1, Math.floor(eDamage * 0.5));
+      // Target selection: Player or Living Ally
+      const livingAllies = (session.allies || []).filter(a => !a.isDead);
+      const shouldTargetAlly = livingAllies.length > 0 && Math.random() < 0.30;
+      const targetEntity = shouldTargetAlly ? livingAllies[Math.floor(Math.random() * livingAllies.length)] : session.player;
+      const isTargetPlayer = targetEntity === session.player;
+
+      let eDamage = Math.max(1, Math.floor((enemy.attack * (eSkill.power / 10)) / ((targetEntity.defense || 10) / 10 + 1)));
+      if (isTargetPlayer && hasDefendBuff) {
+        const redFactor = defBuff.value || 0.5;
+        eDamage = Math.max(1, Math.floor(eDamage * (1 - redFactor)));
       }
       eDamage = Math.max(1, Math.floor(eDamage * (0.85 + Math.random() * 0.3)));
 
-      const eStanceDmg = Math.max(3, Math.floor(eDamage * 0.2));
-      session.player.stance = Math.max(0, session.player.stance - eStanceDmg);
-      session.player.hp = Math.max(0, session.player.hp - eDamage);
+      if (isTargetPlayer) {
+        const eStanceDmg = Math.max(3, Math.floor(eDamage * 0.2));
+        session.player.stance = Math.max(0, session.player.stance - eStanceDmg);
+        session.player.hp = Math.max(0, session.player.hp - eDamage);
 
-      if (session.player.hp <= 0) {
-        session.player.hp = 0;
-        session.player.isDead = true;
+        if (session.player.hp <= 0) {
+          session.player.hp = 0;
+          session.player.isDead = true;
+        }
+
+        let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke ${session.player.name} menghasilkan ${eDamage} DMG!`;
+        if (hasDefendBuff) eLogMsg += ` 🛡️ (Tertahan ${defBuff.name || 'Pertahanan'} -${Math.round((defBuff.value || 0.5) * 100)}%!)`;
+        if (session.player.isDead) eLogMsg += ` 💀 (${session.player.name} gugur!)`;
+
+        session.logs.push({
+          tick: session.currentTick,
+          actor: enemy.name,
+          target: session.player.name,
+          action: 'skill',
+          skillName: eSkill.name,
+          damage: eDamage,
+          message: eLogMsg
+        });
+      } else {
+        // Ally takes damage
+        targetEntity.hp = Math.max(0, targetEntity.hp - eDamage);
+        if (targetEntity.hp <= 0) {
+          targetEntity.hp = 0;
+          targetEntity.isDead = true;
+        }
+
+        let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke sekutu ${targetEntity.name} menghasilkan ${eDamage} DMG!`;
+        if (targetEntity.isDead) eLogMsg += ` 💀 (${targetEntity.name} terluka parah dan tumbang!)`;
+
+        session.logs.push({
+          tick: session.currentTick,
+          actor: enemy.name,
+          target: targetEntity.name,
+          action: 'skill',
+          skillName: eSkill.name,
+          damage: eDamage,
+          message: eLogMsg
+        });
       }
-
-      let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke ${session.player.name} menghasilkan ${eDamage} DMG!`;
-      if (hasDefendBuff) eLogMsg += ' 🛡️ (Tertahan Kuda-Kuda Bertahan -50%!)';
-      if (session.player.isDead) eLogMsg += ` 💀 (${session.player.name} gugur!)`;
-
-      session.logs.push({
-        tick: session.currentTick,
-        actor: enemy.name,
-        target: session.player.name,
-        action: 'skill',
-        skillName: eSkill.name,
-        damage: eDamage,
-        message: eLogMsg
-      });
 
       if (eSkill.cooldown) eSkill.currentCooldown = eSkill.cooldown;
     }
@@ -986,6 +1110,20 @@ class InteractiveBattleService {
 
     // 9. Tick Efek Status (Poison DoT, Bleed, Burn, Frozen, Psychosis, dll.)
     this.processStatusEffects(session, { actionType, isStandby: actionType === 'defend' });
+
+    // Cek Kekalahan Pemain dari DoT
+    if (session.player.isDead) {
+      session.status = 'lost';
+      session.logs.push({
+        tick: session.currentTick,
+        actor: 'System',
+        action: 'end',
+        message: `💀 ${session.player.name} telah kehabisan darah akibat luka dalam/kondisi fatal... Pertempuran berakhir dengan kekalahan!`
+      });
+      session.turnQueue = [];
+      await session.save();
+      return session;
+    }
 
     // 10. Re-check Musuh Mati dari Efek Racun DoT & Promosi Queue
     this.promoteEnemiesFromQueue(session);
@@ -1022,6 +1160,13 @@ class InteractiveBattleService {
       await session.save();
       return session;
     }
+    // Regenerasi Taktis Tempur per Putaran Sesuai Master Plan Section 1.3
+    const playerRealmIdx = session.player.level ? Math.min(8, Math.floor(session.player.level / 20)) : 0;
+    const playerVit = session.player.vitality || 100;
+    const roundQiRegen = 5 + (playerRealmIdx * 2) + Math.floor(playerVit * 0.05);
+    session.player.qi = Math.min(session.player.maxQi || 100, (session.player.qi || 0) + roundQiRegen);
+    session.player.stance = Math.min(session.player.maxStance || 100, (session.player.stance || 0) + 5);
+
     session.player.atb = 1000;
     session.turnQueue = [session.player.entityId]; // Siap untuk aksi selanjutnya
 

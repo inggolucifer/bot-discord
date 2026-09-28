@@ -201,6 +201,16 @@ const LAW_CATALOG = [
   }
 ];
 
+// Pemetaan Wadah Esensi Elemen Kosmik Otoritatif
+export const ELEMENT_RESERVOIR_NAMES: Record<string, { name: string; icon: string; color: string; gradient: string; tags: string[] }> = {
+  element_phoenix_fire:     { name: 'Samadhi Flame Reservoir',    icon: '🔥', color: '#ef4444', gradient: 'from-red-600 via-orange-500 to-amber-400', tags: ['fire', 'flame', 'api', 'phoenix', 'bara', 'lahar'] },
+  element_azure_water:      { name: 'Azure Tide Reservoir',       icon: '💧', color: '#0ea5e9', gradient: 'from-cyan-600 via-blue-500 to-teal-400', tags: ['water', 'air', 'es', 'azure', 'embun', 'tianhe'] },
+  element_xuanwu_earth:     { name: 'Leyline Earth Reservoir',    icon: '🗿', color: '#d97706', gradient: 'from-amber-600 via-yellow-600 to-stone-400', tags: ['earth', 'tanah', 'batu', 'xuanwu', 'karang', 'leyline'] },
+  element_qingdi_wood:      { name: 'Life Wood Reservoir',        icon: '🌿', color: '#22c55e', gradient: 'from-emerald-600 via-green-500 to-lime-400', tags: ['wood', 'kayu', 'herba', 'qingdi', 'tumbuhan', 'hayat'] },
+  element_roc_wind:         { name: 'Astral Gale Reservoir',      icon: '🌪️', color: '#06b6d4', gradient: 'from-sky-500 via-cyan-400 to-indigo-400', tags: ['wind', 'angin', 'badai', 'roc', 'gale', 'topan'] },
+  element_godthunder_light: { name: 'Heavenly Thunder Reservoir', icon: '⚡', color: '#a855f7', gradient: 'from-purple-600 via-fuchsia-500 to-indigo-400', tags: ['thunder', 'petir', 'kilat', 'guntur', 'halilintar'] }
+};
+
 // Contoh Benda & Satwa Common untuk Slot 2
 const COMMON_PRESETS = [
   { id: 'common_sword', name: 'Pedang Besi Patah', type: 'artifact', icon: '🗡️' },
@@ -223,6 +233,31 @@ const BODY_PARTS_INFO = [
   { id: 'leftLeg', name: 'Kaki Kiri Gesit', icon: '🦵', desc: 'Kelincahan langkah gerak, meningkatkan peluang elak.' },
   { id: 'rightLeg', name: 'Kaki Kanan Kokoh', icon: '🦿', desc: 'Kuda-kuda bumi kokoh & kecepatan jelajah peta dunia.' },
   { id: 'dantian', name: 'Dantian Daging Fana', icon: '🌀', desc: 'Wadah sejati pembentukan True Qi yang murni dari daging fana.' }
+];
+
+export const NATURAL_ESSENCES_LIST = [
+  { key: 'gale', name: 'Angin Liar', icon: '🌪️', domain: 'Cuaca Berangin', bonus: '+Agility & Travel Speed' },
+  { key: 'typhoon', name: 'Topan Samudra', icon: '⛈️', domain: 'Badai Topan Laut', bonus: '+Agility & Combo Rate' },
+  { key: 'thunder', name: 'Petir Dewa', icon: '⚡', domain: 'Cuaca Badai Petir', bonus: '+Crit DMG & Crit Rate' },
+  { key: 'rain', name: 'Hujan Deras', icon: '🌧️', domain: 'Cuaca Hujan', bonus: '+Max Vitality' },
+  { key: 'mist', name: 'Halimun Lembah', icon: '🌫️', domain: 'Halimun Pagi / Gunung', bonus: '+Focus & Crit Resist' },
+  { key: 'frost', name: 'Salju Abadi', icon: '❄️', domain: 'Tundra / Hawa Dingin', bonus: '+DEF & Crit DMG Reduce' },
+  { key: 'sandstorm', name: 'Badai Pasir', icon: '🌪️', domain: 'Gurun Suci / Badai Pasir', bonus: '+DEF & Martial RES' },
+  { key: 'solar', name: 'Surya Murni', icon: '☀️', domain: 'Siang Terik (09:00-15:00)', bonus: '+ATK & Crit Rate' },
+  { key: 'lunar', name: 'Embun Rembulan', icon: '🌙', domain: 'Malam Purnama (19:00-05:00)', bonus: '+Spiritual RES & Focus' },
+  { key: 'astral', name: 'Rasi Bintang', icon: '✨', domain: 'Tengah Malam Berbintang', bonus: '+Insight & Luck' },
+  { key: 'dawn', name: 'Cahaya Fajar', icon: '🌅', domain: 'Subuh/Fajar (05:00-08:00)', bonus: '+Vitality Regen & Lifespan' },
+  { key: 'twilight', name: 'Lembayung Senja', icon: '🌇', domain: 'Senja (17:00-19:00)', bonus: '+Agility & Counter' },
+  { key: 'eclipse', name: 'Gerhana Purba', icon: '🌑', domain: 'Gerhana Semesta', bonus: '+All Stats +3%' },
+  { key: 'meteor', name: 'Batu Bintang', icon: '☄️', domain: 'Hujan Meteor Jatuh', bonus: '+ATK & Crit DMG' },
+  { key: 'grass', name: 'Embun Rumput', icon: '🌿', domain: 'Padang Rumput Hijau', bonus: '+Max HP & Vitality' },
+  { key: 'pool', name: 'Sendang Roh', icon: '💧', domain: 'Danau & Sendang Air', bonus: '+Spiritual RES & True Qi' },
+  { key: 'ocean', name: 'Gelombang Laut', icon: '🌊', domain: 'Dermaga & Lautan Bebas', bonus: '+Max HP & Stance' },
+  { key: 'earth', name: 'Tanah Purba', icon: '🗿', domain: 'Lembah & Daratan Tengah', bonus: '+DEF & Martial RES' },
+  { key: 'magma', name: 'Lahar Gunung Api', icon: '🌋', domain: 'Kawah & Gunung Berapi', bonus: '+ATK & Kebal Bakar' },
+  { key: 'miasma', name: 'Miasma Beracun', icon: '☣️', domain: 'Rawa & Hutan Beracun', bonus: '+Venom RES & DEF' },
+  { key: 'sulfur', name: 'Uap Belerang', icon: '♨️', domain: 'Mata Air Panas Geotermal', bonus: '+Body Stamina Cap' },
+  { key: 'crystal', name: 'Kristal Bumi', icon: '💎', domain: 'Gua Bawah Tanah / Tambang', bonus: '+DEF & Hardening' },
 ];
 
 export const MASTER_REALM_ROADMAP = [
@@ -518,9 +553,23 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const [slot2PickerOpen, setSlot2PickerOpen] = useState(false);
   const [ordinaryConfirmModalOpen, setOrdinaryConfirmModalOpen] = useState(false);
   const [customEntityName, setCustomEntityName] = useState('');
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>('skin');
+  const [selectedEssenceKey, setSelectedEssenceKey] = useState<string>('earth');
   const [fuseSlotA, setFuseSlotA] = useState<number>(0);
   const [fuseSlotB, setFuseSlotB] = useState<number>(1);
+  const [isPillModalOpen, setIsPillModalOpen] = useState(false);
+  const [isElementAbsorbModalOpen, setIsElementAbsorbModalOpen] = useState(false);
+  const [isArtifactPickerOpen, setIsArtifactPickerOpen] = useState(false);
+  const [isBeastFoodPickerOpen, setIsBeastFoodPickerOpen] = useState(false);
+  const [isTurbidCorePickerOpen, setIsTurbidCorePickerOpen] = useState(false);
+  const [isGuFeedPickerOpen, setIsGuFeedPickerOpen] = useState(false);
+  const [selectedGuSlotForFeed, setSelectedGuSlotForFeed] = useState<number>(0);
+  const [isBloodVialPickerOpen, setIsBloodVialPickerOpen] = useState(false);
+  const [isVenomPickerOpen, setIsVenomPickerOpen] = useState(false);
+  const [isAbyssalOfferingPickerOpen, setIsAbyssalOfferingPickerOpen] = useState(false);
+  const [isNetherYinPickerOpen, setIsNetherYinPickerOpen] = useState(false);
+  const [temperingCountdown, setTemperingCountdown] = useState<number>(0);
 
   // Heavenly Tribulation Modal States
   const [tribulationModalOpen, setTribulationModalOpen] = useState(false);
@@ -563,6 +612,22 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   });
 
   const lawData = statusRes?.data;
+
+  // Countdown Timer untuk Penempaan Raga Suci
+  useEffect(() => {
+    if (lawData?.temperingStatus?.isTempering && lawData.temperingStatus.finishAt) {
+      const updateCountdown = () => {
+        const finishTime = new Date(lawData.temperingStatus!.finishAt).getTime();
+        const remaining = Math.max(0, Math.ceil((finishTime - Date.now()) / 1000));
+        setTemperingCountdown(remaining);
+      };
+      updateCountdown();
+      const interval = setInterval(updateCountdown, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setTemperingCountdown(0);
+    }
+  }, [lawData?.temperingStatus?.isTempering, lawData?.temperingStatus?.finishAt]);
 
   // Fetch Law Skills Tree
   const { data: skillsRes, isLoading: isSkillsLoading } = useQuery<{ success: boolean; data: { skills: LawSkillItem[]; availablePoints: number } }>({
@@ -643,6 +708,50 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melakukan terobosan rank.', type: 'error' });
+    }
+  });
+
+  const setPillMutation = useMutation({
+    mutationFn: async (itemId: string) => {
+      const { data } = await api.post('/cultivation/law/breakthrough/set-pill', { itemId });
+      return data;
+    },
+    onSuccess: (res) => {
+      toast.show({ message: res.message || 'Pil penerobosan berhasil dipasang!', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      setIsPillModalOpen(false);
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error || 'Gagal memasang pil penerobosan.', type: 'error' });
+    }
+  });
+
+  const removePillMutation = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.post('/cultivation/law/breakthrough/remove-pill');
+      return data;
+    },
+    onSuccess: (res) => {
+      toast.show({ message: res.message || 'Pil penerobosan berhasil dilepas.', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error || 'Gagal melepas pil penerobosan.', type: 'error' });
+    }
+  });
+
+  const renameEntityMutation = useMutation({
+    mutationFn: async (customName: string) => {
+      const { data } = await api.post('/cultivation/law/natal/rename', { customName });
+      return data;
+    },
+    onSuccess: (res) => {
+      toast.show({ message: res.message || 'Nama entitas berhasil diubah!', type: 'success' });
+      queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      setIsRenameModalOpen(false);
+    },
+    onError: (err: any) => {
+      toast.show({ message: err.response?.data?.error || 'Gagal mengubah nama entitas.', type: 'error' });
     }
   });
 
@@ -2141,6 +2250,43 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               {lawData.isChanneling ? "⏹️ Hentikan Meditasi" : "🧘 Mulai Meditasi"}
             </Button>
 
+            {/* Breakthrough Pill Slot */}
+            <div className="flex items-center gap-1.5 bg-black/60 border border-stone-800 rounded-lg p-1.5">
+              {lawData.breakthroughPillSlot ? (
+                <div className="flex items-center gap-1.5 text-xs">
+                  <span className="text-base">💊</span>
+                  <div className="leading-tight">
+                    <span className="font-serif font-bold text-amber-300 block text-[11px] truncate max-w-[120px]">
+                      {lawData.breakthroughPillSlot.name}
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400 block">
+                      +20% Sukses • Anti-Deviasi
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => removePillMutation.mutate()}
+                    disabled={removePillMutation.isPending}
+                    className="h-6 w-6 p-0 text-stone-400 hover:text-rose-400 text-xs ml-1"
+                    title="Lepas Pil"
+                  >
+                    ✕
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsPillModalOpen(true)}
+                  className="border-dashed border-amber-600/40 hover:border-amber-500 bg-amber-950/20 text-amber-300 hover:text-amber-200 text-xs py-1 px-2.5 h-auto flex items-center gap-1.5"
+                >
+                  <span>💊</span>
+                  <span className="text-[11px]">Pasang Pil</span>
+                </Button>
+              )}
+            </div>
+
             <Button
               size="sm"
               onClick={() => miniBreakthroughMutation.mutate()}
@@ -2162,6 +2308,38 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             )}
           </div>
         </div>
+
+        {/* Major Breakthrough Blocking Warning Banner */}
+        {lawData.stage === 9 && !lawData.canMajorBreakthrough && lawData.majorBreakthroughBlockingReason && (
+          <div className="mt-4 p-3 rounded-lg border border-amber-500/40 bg-amber-950/30 text-amber-300 text-xs flex items-center gap-2">
+            <span className="text-base flex-shrink-0">⚠️</span>
+            <span>
+              <strong>Syarat Belum Terpenuhi:</strong> {lawData.majorBreakthroughBlockingReason}
+            </span>
+          </div>
+        )}
+
+        {/* Tribulation Wave Preview Banner */}
+        {lawData.stage === 9 && lawData.requiresTribulation && lawData.tribulationDetails && (
+          <div className="mt-4 p-3 rounded-lg border border-purple-500/40 bg-purple-950/30 text-purple-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xl flex-shrink-0">⚡</span>
+              <div>
+                <p className="font-serif font-bold text-amber-300">Menghadapi Tribulasi Langit 3 Gelombang</p>
+                <p className="text-[11px] text-stone-400">
+                  Daya Tahan Fisik (Survival HP): <strong className="text-stone-200 font-mono">{lawData.tribulationDetails.survivalHP} HP</strong> • Maks Gelombang: <strong className="text-stone-200 font-mono">{lawData.tribulationDetails.maxWaveDmg} DMG</strong>
+                </p>
+              </div>
+            </div>
+            <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded border self-start sm:self-auto ${
+              lawData.tribulationDetails.canSurvive
+                ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300'
+                : 'bg-rose-950/60 border-rose-500/50 text-rose-300'
+            }`}>
+              {lawData.tribulationDetails.canSurvive ? '✓ Siap Menahan Petir' : '⚠️ Berisiko Gagal (Tingkatkan HP/DEF)'}
+            </span>
+          </div>
+        )}
 
         {/* Progress Bar Qi / True Qi */}
         <div className="mt-6 pt-5 border-t border-stone-800/80 space-y-2">
@@ -2288,7 +2466,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* 1. SISI KIRI: SPESIALISASI INTERAKTIF SESUAI HUKUM */}
 
-            {/* KASUS A: PENEMPAAN RAGA SUCI (9 BAGIAN RAGA & KUALI BAK MANDI RAGA) */}
+            {/* KASUS A: PENEMPAAN RAGA SUCI (22 INTISARI ALAM PURBA & 9 BAGIAN RAGA VAJRA) */}
             {lawData.activeLawType === 'body_tempering' && (
               <Card className="border border-amber-500/40 bg-stone-950/80 p-5 space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-3">
@@ -2296,10 +2474,10 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     <span className="text-3xl p-2 rounded-lg bg-amber-950/40 border border-amber-500/30">💪</span>
                     <div>
                       <h3 className="font-serif font-bold text-base text-amber-200">
-                        Penempaan 9 Bagian Raga Suci
+                        Penempaan 9 Bagian Raga Suci (Vajra Tyrant Body)
                       </h3>
                       <p className="text-xs text-stone-400">
-                        Memeras daging fana & mandi rempah untuk memproduksi <strong className="text-amber-400">True Qi (真气)</strong>.
+                        Menghirup 22 intisari alam purba saat bertualang & mandi kuali rempah untuk membentuk <strong className="text-amber-400">True Qi (真气)</strong>.
                       </p>
                     </div>
                   </div>
@@ -2332,62 +2510,192 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </div>
 
                 {/* 9 Bagian Tubuh Grid */}
-                <div className="grid grid-cols-3 gap-2.5">
-                  {BODY_PARTS_INFO.map((part) => {
-                    const progress = lawData.bodyTemperingParts?.[part.id] || 0;
-                    const isSelected = selectedBodyPart === part.id;
-                    return (
-                      <button
-                        key={part.id}
-                        type="button"
-                        onClick={() => setSelectedBodyPart(part.id)}
-                        className={`p-2.5 rounded-lg border text-left transition-all ${
-                          isSelected
-                            ? 'border-amber-400 bg-amber-500/20 shadow-md shadow-amber-500/10'
-                            : 'border-stone-800 bg-black/40 hover:border-stone-700'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-base">{part.icon}</span>
-                          <span className="font-mono text-[10px] text-amber-300 font-bold">{progress}%</span>
-                        </div>
-                        <div className="text-xs font-serif font-semibold text-stone-200 truncate">
-                          {part.name.split(' ')[0]}
-                        </div>
-                        <div className="w-full h-1 bg-stone-800 rounded-full mt-1.5 overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-amber-600 to-yellow-400"
-                            style={{ width: `${Math.min(100, progress)}%` }}
-                          />
-                        </div>
-                      </button>
-                    );
-                  })}
+                <div>
+                  <div className="text-xs font-serif font-semibold text-stone-300 mb-2 flex items-center justify-between">
+                    <span>9 Bagian Raga Suci (Pilih Target):</span>
+                    <span className="text-[10px] text-stone-500 font-mono">Tingkat Penempaan</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {BODY_PARTS_INFO.map((part) => {
+                      const progress = lawData.bodyTemperingParts?.[part.id] || 0;
+                      const isSelected = selectedBodyPart === part.id;
+                      return (
+                        <button
+                          key={part.id}
+                          type="button"
+                          onClick={() => setSelectedBodyPart(part.id)}
+                          className={`p-2.5 rounded-lg border text-left transition-all ${
+                            isSelected
+                              ? 'border-amber-400 bg-amber-500/20 shadow-md shadow-amber-500/10'
+                              : 'border-stone-800 bg-black/40 hover:border-stone-700'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-base">{part.icon}</span>
+                            <span className="font-mono text-[10px] text-amber-300 font-bold">{progress}%</span>
+                          </div>
+                          <div className="text-xs font-serif font-semibold text-stone-200 truncate">
+                            {part.name.split(' ')[0]}
+                          </div>
+                          <div className="w-full h-1 bg-stone-800 rounded-full mt-1.5 overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-amber-600 to-yellow-400"
+                              style={{ width: `${Math.min(100, progress)}%` }}
+                            />
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                {/* Info Bagian Terpilih & Aksi Tempa */}
+                {/* Penyimpanan 22 Intisari Alam Purba (Physical Storage) */}
+                <div className="space-y-2 bg-stone-900/60 p-3 rounded-lg border border-stone-800">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                      <span>🌬️</span> Penyimpanan Intisari Alam (Internal Storage):
+                    </span>
+                    <span className="font-mono text-[10px] text-stone-400">
+                      Kapasitas: <strong className="text-amber-300">{lawData.maxBodyEssenceStorage || 15}</strong> per Intisari
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-stone-400 leading-tight">
+                    Dihirup secara otomatis saat melangkah di peta dunia berdasarkan cuaca (hujan, badai, kabut), waktu (fajar, siang, senja, malam), dan medan (rawa, gunung, sungai).
+                  </p>
+                  
+                  {/* Grid 22 Intisari */}
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5 pt-1 max-h-36 overflow-y-auto custom-scrollbar">
+                    {NATURAL_ESSENCES_LIST.map((ess) => {
+                      const count = lawData.bodyEssenceStorage?.[ess.key] || 0;
+                      const maxCap = lawData.maxBodyEssenceStorage || 15;
+                      const isSelected = selectedEssenceKey === ess.key;
+                      const hasEssence = count > 0;
+
+                      return (
+                        <button
+                          key={ess.key}
+                          type="button"
+                          onClick={() => setSelectedEssenceKey(ess.key)}
+                          title={`${ess.name} (${ess.domain}) - ${ess.bonus}`}
+                          className={`p-1.5 rounded border text-left flex flex-col items-center justify-between transition-all ${
+                            isSelected
+                              ? 'border-amber-400 bg-amber-500/25 shadow-sm'
+                              : hasEssence
+                              ? 'border-stone-700 bg-black/60 hover:border-stone-600'
+                              : 'border-stone-800/60 bg-black/30 opacity-40 hover:opacity-70'
+                          }`}
+                        >
+                          <span className="text-sm">{ess.icon}</span>
+                          <span className="text-[9px] font-serif text-stone-300 truncate w-full text-center mt-0.5">
+                            {ess.name.replace('Intisari ', '')}
+                          </span>
+                          <span className={`text-[10px] font-mono font-bold mt-0.5 ${hasEssence ? 'text-amber-300' : 'text-stone-600'}`}>
+                            {count}/{maxCap}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Info Bagian Terpilih & Panel Penempaan Raga */}
                 {(() => {
                   const currentPart = BODY_PARTS_INFO.find(p => p.id === selectedBodyPart) || BODY_PARTS_INFO[0];
                   const currentProgress = lawData.bodyTemperingParts?.[currentPart.id] || 0;
+                  const currentEssence = NATURAL_ESSENCES_LIST.find(e => e.key === selectedEssenceKey) || NATURAL_ESSENCES_LIST[0];
+                  const essenceCount = lawData.bodyEssenceStorage?.[currentEssence.key] || 0;
+
+                  const isTemperingActive = Boolean(lawData.temperingStatus?.isTempering);
+                  const isFinished = temperingCountdown === 0 && isTemperingActive;
+
                   return (
                     <div className="bg-black/50 p-3.5 rounded-lg border border-stone-800 space-y-3">
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-serif font-bold text-amber-300 flex items-center gap-1.5">
                           <span>{currentPart.icon}</span> {currentPart.name}
                         </span>
-                        <span className="font-mono text-stone-400">Tingkat Penempaan: {currentProgress}%</span>
+                        <span className="font-mono text-stone-400">Tingkat Penempaan: <strong className="text-amber-300">{currentProgress}%</strong></span>
                       </div>
                       <p className="text-[11px] text-stone-400 leading-relaxed">
                         {currentPart.desc}
                       </p>
-                      <div className="flex flex-wrap items-center gap-2 pt-1">
+
+                      {/* State 1: Sedang Menempa (Live Countdown) */}
+                      {isTemperingActive ? (
+                        <div className="p-3 rounded-lg border border-amber-500/50 bg-amber-950/20 space-y-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-amber-200 flex items-center gap-1.5">
+                              <Loader2 size={14} className="animate-spin text-amber-400" />
+                              Penempaan Berlangsung: {BODY_PARTS_INFO.find(p => p.id === lawData.temperingStatus?.partTarget)?.name || 'Bagian Raga'}
+                            </span>
+                            <span className="font-mono font-bold text-amber-400 text-sm">
+                              {Math.floor(temperingCountdown / 60).toString().padStart(2, '0')}:{(temperingCountdown % 60).toString().padStart(2, '0')}
+                            </span>
+                          </div>
+                          <div className="w-full h-2 bg-stone-900 rounded-full overflow-hidden border border-stone-800">
+                            <div
+                              className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-300"
+                              style={{
+                                width: `${Math.max(0, Math.min(100, 100 - ((temperingCountdown / (lawData.temperingStatus?.durationSeconds || 30)) * 100)))}%`
+                              }}
+                            />
+                          </div>
+
+                          {isFinished ? (
+                            <Button
+                              size="sm"
+                              onClick={() => lawActionMutation.mutate({ endpoint: 'body/temper-claim' })}
+                              disabled={lawActionMutation.isPending}
+                              className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
+                            >
+                              🎉 Penempaan Selesai! Klaim Hasil (+True Qi & Peningkatan Raga)
+                            </Button>
+                          ) : (
+                            <p className="text-[10px] text-stone-400 text-center font-mono">
+                              Menyerap intisari ke dalam serat daging... Harap tunggu hingga timer selesai.
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        /* State 2: Siap Menempa dengan Intisari */
+                        <div className="p-2.5 rounded-lg border border-stone-800 bg-stone-900/40 space-y-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-stone-300 font-semibold flex items-center gap-1">
+                              <span>{currentEssence.icon}</span> Infus: <strong className="text-amber-200">{currentEssence.name}</strong>
+                            </span>
+                            <span className={`font-mono text-[11px] ${essenceCount > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                              Tersedia: {essenceCount}x
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-stone-400 flex items-center justify-between">
+                            <span>Bonus Permanen: <strong className="text-amber-300 font-mono">{currentEssence.bonus}</strong></span>
+                            <span className="text-stone-500">{currentEssence.domain}</span>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            onClick={() => lawActionMutation.mutate({
+                              endpoint: 'body/temper-start',
+                              payload: { partId: currentPart.id, essenceKey: currentEssence.key }
+                            })}
+                            disabled={lawActionMutation.isPending || essenceCount < 1}
+                            className="w-full bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-bold text-xs py-2 h-auto shadow disabled:opacity-50"
+                          >
+                            {essenceCount >= 1 ? `🔥 Tempa ${currentPart.name} dengan ${currentEssence.name}` : `⚠️ Butuh 1x ${currentEssence.name}`}
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Aksi Tambahan Mandi Bak Rempah & Peras Fisik */}
+                      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-stone-800/60">
                         <Button
                           size="sm"
+                          variant="outline"
                           onClick={() => lawActionMutation.mutate({ endpoint: 'body/temper', payload: { part: currentPart.id } })}
                           disabled={lawActionMutation.isPending || (lawData.facilities?.bodyCauldronTier || 0) < 1}
-                          className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-1.5 h-auto"
+                          className="border-amber-700/60 text-amber-300 hover:bg-amber-950/40 text-xs py-1.5 h-auto"
                         >
-                          💪 Mandi Rendaman Herba (+12%, +60 True Qi)
+                          🛁 Mandi Rendaman Herba (+12%, +60 True Qi)
                         </Button>
                         <Button
                           variant="outline"
@@ -2473,11 +2781,13 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         <div className="flex items-center gap-1.5">
                           <Button
                             size="sm"
-                            onClick={() => lawActionMutation.mutate({ endpoint: 'gu/feed', payload: { slotIndex: gIdx, feedType: 'item' } })}
-                            disabled={lawActionMutation.isPending}
+                            onClick={() => {
+                              setSelectedGuSlotForFeed(gIdx);
+                              setIsGuFeedPickerOpen(true);
+                            }}
                             className="bg-emerald-600 hover:bg-emerald-500 text-stone-950 font-bold text-xs py-1 h-auto"
                           >
-                            🍖 Pakan Tas
+                            🍖 Pakan Tas (Pilih)
                           </Button>
                           <Button
                             variant="outline"
@@ -2494,25 +2804,35 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   })}
                 </div>
 
-                {/* Meja Fusi Gu Interaktif (Slot A + Slot B) */}
+                {/* Meja Fusi Gu Interaktif (Gu Prioritas + Gu Pengorbanan) */}
                 <div className="pt-3 border-t border-stone-800 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="font-serif font-bold text-xs text-stone-300 flex items-center gap-1">
                       <span>🔄</span> Meja Sintesis Fusi Gu:
                     </span>
                     <span className="text-[10px] font-mono text-emerald-400">
-                      Peluang: {Math.min(95, 50 + (lawData.rank * 6) + (((lawData.facilities?.guCrucibleTier || 1) - 1) * 8))}%
+                      Peluang Sukses: {Math.min(95, 50 + (lawData.rank * 6) + (((lawData.facilities?.guCrucibleTier || 1) - 1) * 8))}%
                     </span>
+                  </div>
+
+                  {/* Peringatan Pengorbanan Mutlak */}
+                  <div className="p-2.5 rounded bg-rose-950/30 border border-rose-600/40 text-[11px] text-rose-300 space-y-1">
+                    <div className="font-bold flex items-center gap-1 text-rose-400">
+                      <span>⚠️</span> ATURAN PENGORBANAN MUTLAK:
+                    </div>
+                    <p className="text-[10px] text-stone-300 leading-relaxed">
+                      Gu Pengorbanan <strong>PASTI AKAN HANCUR & LENYAP SELAMANYA</strong> baik fusi sukses ataupun gagal! Jika sukses, Gu Prioritas naik ke Tier berikutnya (+150 Qi). Jika gagal, energi Gu Pengorbanan diserap menjadi 100% Kekenyangan & XP (+40 Qi) bagi Gu Prioritas.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="text-[10px] text-stone-500 block mb-1">Cacing Gu Induk A:</span>
+                      <span className="text-[10px] text-emerald-400 font-semibold block mb-1">⭐ Gu Prioritas (Target Mutasi):</span>
                       <select
-                        aria-label="Pilih Cacing Gu Induk A untuk fusi"
+                        aria-label="Pilih Cacing Gu Prioritas untuk fusi"
                         value={fuseSlotA}
                         onChange={(e) => setFuseSlotA(Number(e.target.value))}
-                        className="w-full bg-stone-900 border border-stone-700 rounded p-1.5 text-xs text-stone-200"
+                        className="w-full bg-stone-900 border border-emerald-700/60 rounded p-1.5 text-xs text-emerald-200"
                       >
                         {(lawData.guSlots || []).map((g, idx) => (
                           <option key={idx} value={idx}>
@@ -2523,12 +2843,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     </div>
 
                     <div>
-                      <span className="text-[10px] text-stone-500 block mb-1">Cacing Gu Induk B:</span>
+                      <span className="text-[10px] text-rose-400 font-semibold block mb-1">💀 Gu Pengorbanan (Akan Dihapus):</span>
                       <select
-                        aria-label="Pilih Cacing Gu Induk B untuk fusi"
+                        aria-label="Pilih Cacing Gu Pengorbanan untuk fusi"
                         value={fuseSlotB}
                         onChange={(e) => setFuseSlotB(Number(e.target.value))}
-                        className="w-full bg-stone-900 border border-stone-700 rounded p-1.5 text-xs text-stone-200"
+                        className="w-full bg-stone-900 border border-rose-700/60 rounded p-1.5 text-xs text-rose-200"
                       >
                         {(lawData.guSlots || []).map((g, idx) => (
                           <option key={idx} value={idx}>
@@ -2541,11 +2861,19 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
                   <Button
                     size="sm"
-                    onClick={() => lawActionMutation.mutate({ endpoint: 'gu/fuse', payload: { slotA: fuseSlotA, slotB: fuseSlotB } })}
+                    onClick={() => lawActionMutation.mutate({
+                      endpoint: 'gu/fuse',
+                      payload: {
+                        prioritySlot: fuseSlotA,
+                        sacrificeSlot: fuseSlotB,
+                        slotA: fuseSlotA,
+                        slotB: fuseSlotB
+                      }
+                    })}
                     disabled={lawActionMutation.isPending || (lawData.guSlots || []).length < 2 || fuseSlotA === fuseSlotB}
                     className="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
                   >
-                    🔄 Fusi Dua Gu Terpilih (+150 Qi & Mutasi Tier Baru)
+                    🔄 Korbankan #{fuseSlotB + 1} & Fusi ke #{fuseSlotA + 1}
                   </Button>
                 </div>
               </Card>
@@ -2558,16 +2886,28 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <div className="flex items-center gap-3">
                     <span className="text-3xl p-2 rounded-lg bg-amber-950/40 border border-amber-500/30">🗡️</span>
                     <div>
-                      <h3 className="font-serif font-bold text-base text-amber-300">
-                        {lawData.boundEntity?.customName || lawData.boundEntity?.originalName || 'Pusaka Jiwa Kelahiran'}
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-serif font-bold text-base text-amber-300">
+                          {lawData.boundEntity?.customName || lawData.boundEntity?.originalName || 'Pusaka Jiwa Kelahiran'}
+                        </h3>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setCustomEntityName(lawData.boundEntity?.customName || lawData.boundEntity?.originalName || '');
+                            setIsRenameModalOpen(true);
+                          }}
+                          className="h-6 px-1.5 text-[10px] text-stone-400 hover:text-amber-300 hover:bg-stone-900 border border-stone-800"
+                        >
+                          ✏️ Ubah Nama
+                        </Button>
+                      </div>
                       <p className="text-xs text-stone-400">
-                        Pusaka jiwa yang ditempa seumur hidup, tumbuh seiring kehendak pendekar.
+                        Pusaka jiwa yang diasah dan ditempa seumur hidup, tumbuh seiring kehendak pendekar.
                       </p>
                     </div>
                   </div>
                 </div>
-
 
                 <div className="space-y-3 bg-black/40 p-4 rounded-lg border border-stone-800 text-xs">
                   <div className="flex justify-between text-stone-300">
@@ -2578,6 +2918,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     <span>Tingkat Pusaka:</span>
                     <strong className="text-stone-200 font-mono">Rank {lawData.boundEntity?.rankLevel || 0}</strong>
                   </div>
+
+                  {/* Statistik Bawaan Pusaka */}
+                  <div className="grid grid-cols-2 gap-2 bg-stone-900/60 p-2.5 rounded border border-stone-800 text-[11px] font-mono">
+                    <span className="text-amber-300">⚔️ ATK: +{lawData.boundEntity?.artifactAtk || 15}</span>
+                    <span className="text-blue-300">🛡️ DEF: +{lawData.boundEntity?.artifactDef || 10}</span>
+                    <span className="text-orange-300">💥 CRIT: +{lawData.boundEntity?.artifactCrit || 5}%</span>
+                    <span className="text-purple-300">🔮 RES: +{lawData.boundEntity?.artifactRes || 5}</span>
+                  </div>
+
                   <div className="space-y-1 pt-1">
                     <div className="flex justify-between text-stone-400 text-[11px]">
                       <span>Intisari Jiwa Pusaka:</span>
@@ -2594,14 +2943,24 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </div>
                 </div>
 
-                <Button
-                  size="sm"
-                  onClick={() => lawActionMutation.mutate({ endpoint: 'artifact/infuse' })}
-                  disabled={lawActionMutation.isPending}
-                  className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-2 h-auto"
-                >
-                  🗡️ Asah & Salurkan Qi Pusaka (+35 Intisari, +45 Qi)
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    size="sm"
+                    onClick={() => setIsArtifactPickerOpen(true)}
+                    className="w-full bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
+                  >
+                    ⛏️ Asah Pusaka dari Tas (Pilih Mineral & Batu Asah)
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => lawActionMutation.mutate({ endpoint: 'artifact/infuse' })}
+                    disabled={lawActionMutation.isPending}
+                    className="w-full border-stone-700 text-stone-300 hover:bg-stone-800 text-xs py-1.5 h-auto"
+                  >
+                    🗡️ Salurkan Qi Dantian (+20 Intisari, +45 Qi)
+                  </Button>
+                </div>
               </Card>
             )}
 
@@ -2612,9 +2971,22 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <div className="flex items-center gap-3">
                     <span className="text-3xl p-2 rounded-lg bg-amber-950/40 border border-amber-500/30">🐾</span>
                     <div>
-                      <h3 className="font-serif font-bold text-base text-amber-300">
-                        {lawData.boundEntity?.customName || lawData.boundEntity?.originalName || 'Satwa Roh Kelahiran'}
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-serif font-bold text-base text-amber-300">
+                          {lawData.boundEntity?.customName || lawData.boundEntity?.originalName || 'Satwa Roh Kelahiran'}
+                        </h3>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setCustomEntityName(lawData.boundEntity?.customName || lawData.boundEntity?.originalName || '');
+                            setIsRenameModalOpen(true);
+                          }}
+                          className="h-6 px-1.5 text-[10px] text-stone-400 hover:text-amber-300 hover:bg-stone-900 border border-stone-800"
+                        >
+                          ✏️ Ubah Nama
+                        </Button>
+                      </div>
                       <p className="text-xs text-stone-400">
                         Sahabat darah yang bertarung di sisimu di setiap medan pertempuran.
                       </p>
@@ -2622,6 +2994,26 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </div>
                 </div>
 
+                {/* Status Telur vs Satwa Aktif */}
+                {lawData.boundEntity?.isEgg && (lawData.rank === 0) ? (
+                  <div className="p-3 rounded-lg border border-amber-500/50 bg-amber-950/20 text-xs space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-300">
+                      <span className="text-xl animate-pulse">🥚</span> Telur Satwa Purba (Inkubasi Batin)
+                    </div>
+                    <p className="text-[10px] text-stone-300 leading-relaxed">
+                      Telur berdenyut hangat menyerap hawa batinmu. Akan menetas menjadi Anak Satwa Roh saat kamu menerobos ke Ranah Pemurnian Qi (Rank 1).
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-2.5 rounded-lg border border-emerald-500/40 bg-emerald-950/20 text-xs flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-emerald-300 font-bold font-serif">
+                      <span>🐺</span> Satwa Roh Aktif (Berdampingan di Medan Tempur)
+                    </div>
+                    <span className="text-[10px] font-mono bg-emerald-900/60 px-2 py-0.5 rounded text-emerald-200">
+                      Sekutu Tempur
+                    </span>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="bg-black/40 p-3 rounded-lg border border-stone-800 space-y-1">
@@ -2645,14 +3037,24 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </span>
                 </div>
 
-                <Button
-                  size="sm"
-                  onClick={() => lawActionMutation.mutate({ endpoint: 'beast/feed' })}
-                  disabled={lawActionMutation.isPending}
-                  className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-2 h-auto"
-                >
-                  🐾 Beri Pakan Daging Roh (+40 Intisari Satwa, HP Penuh, +40 Qi)
-                </Button>
+                <div className="space-y-2">
+                  <Button
+                    size="sm"
+                    onClick={() => setIsBeastFoodPickerOpen(true)}
+                    className="w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
+                  >
+                    🍖 Beri Pakan Daging dari Tas (Pilih Daging/Ikan)
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => lawActionMutation.mutate({ endpoint: 'beast/feed' })}
+                    disabled={lawActionMutation.isPending}
+                    className="w-full border-stone-700 text-stone-300 hover:bg-stone-800 text-xs py-1.5 h-auto"
+                  >
+                    🐾 Pakan Darurat Dantian (+25 Intisari, +40 Qi)
+                  </Button>
+                </div>
               </Card>
             )}
 
@@ -2686,14 +3088,24 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         <strong className="text-red-400 font-mono">{lawData.demonicData?.corruptionIndex || 0}%</strong>
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/turbid-absorb' })}
-                      disabled={lawActionMutation.isPending}
-                      className="w-full bg-red-700 hover:bg-red-600 text-white font-bold text-xs py-2 h-auto"
-                    >
-                      💀 Lahap Inti Siluman (+80 Qi, +3 Korupsi)
-                    </Button>
+                    <div className="space-y-2">
+                      <Button
+                        size="sm"
+                        onClick={() => setIsTurbidCorePickerOpen(true)}
+                        className="w-full bg-gradient-to-r from-red-700 to-rose-600 hover:from-red-600 hover:to-rose-500 text-white font-bold text-xs py-2 h-auto shadow"
+                      >
+                        💀 Lahap Inti Siluman dari Tas (Pilih Core)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/turbid-absorb' })}
+                        disabled={lawActionMutation.isPending}
+                        className="w-full border-red-800/80 text-red-300 hover:bg-red-950/40 text-xs py-1.5 h-auto"
+                      >
+                        🔥 Lahap Inti Cepat (+80 Qi, +3 Korupsi)
+                      </Button>
+                    </div>
                   </div>
                 )}
 
@@ -2713,23 +3125,34 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         <strong className="text-red-400 font-mono">{lawData.demonicData?.infamy || 0}</strong>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-2">
                       <Button
                         size="sm"
-                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/blood-harvest' })}
-                        disabled={lawActionMutation.isPending}
-                        className="bg-rose-800 hover:bg-rose-700 text-white font-bold text-xs py-1.5 h-auto"
+                        onClick={() => setIsBloodVialPickerOpen(true)}
+                        className="w-full bg-gradient-to-r from-rose-900 to-red-800 hover:from-rose-800 hover:to-red-700 text-white font-bold text-xs py-2 h-auto shadow"
                       >
-                        🩸 Panen Esensi Darah (+65 Qi)
+                        🩸 Panen Botol Darah dari Tas (Pilih Darah)
                       </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/soul-banner' })}
-                        disabled={lawActionMutation.isPending}
-                        className="bg-purple-900 hover:bg-purple-800 text-white font-bold text-xs py-1.5 h-auto"
-                      >
-                        👻 Segel Arwah ke Panji (+70 Qi)
-                      </Button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/blood-harvest' })}
+                          disabled={lawActionMutation.isPending}
+                          className="border-rose-800/80 text-rose-300 hover:bg-rose-950/40 text-xs py-1.5 h-auto"
+                        >
+                          🩸 Panen Cepat (+65 Qi)
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/soul-banner' })}
+                          disabled={lawActionMutation.isPending}
+                          className="border-purple-800/80 text-purple-300 hover:bg-purple-950/40 text-xs py-1.5 h-auto"
+                        >
+                          👻 Segel Arwah (+70 Qi)
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -2740,14 +3163,24 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <span className="text-stone-400">Tingkat Imunitas Racun Tubuh:</span>
                       <strong className="text-emerald-400 font-mono">Lv. {lawData.demonicData?.venomToxinLevel || 0}</strong>
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/venom-ingest' })}
-                      disabled={lawActionMutation.isPending}
-                      className="w-full bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs py-2 h-auto"
-                    >
-                      🧪 Tenggak Racun Maut (+1 Toleransi Racun, +75 Qi)
-                    </Button>
+                    <div className="space-y-2">
+                      <Button
+                        size="sm"
+                        onClick={() => setIsVenomPickerOpen(true)}
+                        className="w-full bg-gradient-to-r from-emerald-800 to-teal-700 hover:from-emerald-700 hover:to-teal-600 text-white font-bold text-xs py-2 h-auto shadow"
+                      >
+                        🧪 Minum Racun dari Tas (Pilih Racun)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/venom-ingest' })}
+                        disabled={lawActionMutation.isPending}
+                        className="w-full border-emerald-800/80 text-emerald-300 hover:bg-emerald-950/40 text-xs py-1.5 h-auto"
+                      >
+                        🧪 Minum Cepat (+1 Toleransi Racun, +75 Qi)
+                      </Button>
+                    </div>
                   </div>
                 )}
 
@@ -2788,14 +3221,25 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       )}
                     </div>
 
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/pact-tribute' })}
-                      disabled={lawActionMutation.isPending || (lawData.facilities?.abyssalAltarTier || 0) < 1}
-                      className="w-full bg-purple-950 hover:bg-purple-900 text-purple-200 border border-purple-500/30 font-bold text-xs py-2 h-auto"
-                    >
-                      📜 Setor Upeti Kurban di Altar (+90 Qi, Perpanjang Kontrak)
-                    </Button>
+                    <div className="space-y-2">
+                      <Button
+                        size="sm"
+                        onClick={() => setIsAbyssalOfferingPickerOpen(true)}
+                        disabled={(lawData.facilities?.abyssalAltarTier || 0) < 1}
+                        className="w-full bg-gradient-to-r from-purple-900 to-indigo-800 hover:from-purple-800 hover:to-indigo-700 text-white font-bold text-xs py-2 h-auto shadow"
+                      >
+                        🩸 Persembahkan Kurban dari Tas (Pilih Bahan)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/pact-tribute' })}
+                        disabled={lawActionMutation.isPending || (lawData.facilities?.abyssalAltarTier || 0) < 1}
+                        className="w-full border-purple-800/80 text-purple-300 hover:bg-purple-950/40 text-xs py-1.5 h-auto"
+                      >
+                        📜 Setor Upeti Cepat (+90 Qi, Perpanjang Kontrak)
+                      </Button>
+                    </div>
                   </div>
                 )}
 
@@ -2805,62 +3249,117 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <span className="text-stone-400">Resonansi Kubur Yin Nether:</span>
                       <strong className="text-indigo-400 font-mono">Aura Kematian Dingin</strong>
                     </div>
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/nether-channel' })}
-                      disabled={lawActionMutation.isPending}
-                      className="w-full bg-indigo-950 hover:bg-indigo-900 text-indigo-200 border border-indigo-500/30 font-bold text-xs py-2 h-auto"
-                    >
-                      🌑 Salurkan Hawa Dingin Kubur (+85 Qi, -5 Mood)
-                    </Button>
+                    <div className="space-y-2">
+                      <Button
+                        size="sm"
+                        onClick={() => setIsNetherYinPickerOpen(true)}
+                        className="w-full bg-gradient-to-r from-indigo-950 to-slate-900 hover:from-indigo-900 hover:to-slate-800 text-indigo-200 border border-indigo-500/40 font-bold text-xs py-2 h-auto shadow"
+                      >
+                        💀 Serap Batu Yin dari Tas (Pilih Batu)
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/nether-channel' })}
+                        disabled={lawActionMutation.isPending}
+                        className="w-full border-indigo-800/80 text-indigo-300 hover:bg-indigo-950/40 text-xs py-1.5 h-auto"
+                      >
+                        🌑 Salurkan Hawa Dingin Kubur (+70 Qi)
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Card>
             )}
 
-            {/* KASUS F: JALUR 6 ELEMEN DAO (DIVINE ELEMENTAL DENGAN RITUAL RESONANSI AKTIF) */}
-            {lawData.category === 'elemental' && (
-              <Card className="border border-blue-500/40 bg-stone-950/80 p-5 space-y-4">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl p-2 rounded-lg bg-blue-950/40 border border-blue-500/30">🌀</span>
-                    <div>
-                      <h3 className="font-serif font-bold text-base text-blue-200">
-                        Resonansi Elemen Dao: {lawData.element || 'Intisari Semesta'}
-                      </h3>
-                      <p className="text-xs text-stone-400">
-                        Menyelaraskan meridian dengan denyut elemen langit dan bumi untuk memicu terobosan batin.
-                      </p>
+            {/* KASUS F: JALUR 6 ELEMEN DAO (DIVINE ELEMENTAL DENGAN WADAH ELEMEN & RESERVOIR BAR) */}
+            {lawData.category === 'elemental' && (() => {
+              const resMeta = (lawData.activeLawType ? ELEMENT_RESERVOIR_NAMES[lawData.activeLawType] : null) || {
+                name: 'Cosmic Essence Reservoir',
+                icon: '🌌',
+                color: '#06b6d4',
+                gradient: 'from-cyan-600 via-blue-500 to-teal-400'
+              };
+              const essVal = Math.floor(lawData.currentEssence || 0);
+              const maxEssVal = lawData.maxEssence || 100;
+              const essPct = Math.min(100, Math.floor((essVal / maxEssVal) * 100));
+
+              return (
+                <Card className="border border-blue-500/40 bg-stone-950/80 p-5 space-y-4">
+                  <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl p-2 rounded-lg bg-blue-950/40 border border-blue-500/30">
+                        {resMeta.icon}
+                      </span>
+                      <div>
+                        <h3 className="font-serif font-bold text-base text-blue-200">
+                          {resMeta.name}
+                        </h3>
+                        <p className="text-xs text-stone-400">
+                          Wadah penampungan esensi {lawData.element}. Mengonsumsi item elemen selaras untuk dicerna menjadi Qi & Spiritual Root XP.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
+                  {/* Reservoir Bar */}
+                  <div className="space-y-1.5 bg-black/40 p-3.5 rounded-lg border border-stone-800">
+                    <div className="flex justify-between text-xs font-mono">
+                      <span className="text-stone-300 font-serif flex items-center gap-1.5">
+                        <span>{resMeta.icon}</span> Kapasitas Wadah:
+                      </span>
+                      <span className="text-cyan-300 font-bold">
+                        {essVal} / {maxEssVal} ({essPct}%)
+                      </span>
+                    </div>
+                    <div className="w-full h-3 bg-stone-900 rounded-full overflow-hidden border border-stone-800">
+                      <div
+                        className={`h-full bg-gradient-to-r ${resMeta.gradient} rounded-full transition-all duration-500`}
+                        style={{ width: `${essPct}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-stone-400 pt-1">
+                      <span>Tingkat Ranah: Tier {lawData.rank + 1}</span>
+                      <span className="font-mono text-emerald-400">Pencernaan Aktif (+{lawData.channelRatePerMinute} Qi/mnt)</span>
+                    </div>
+                  </div>
 
-                <div className="space-y-2.5 text-xs bg-black/40 p-4 rounded-lg border border-stone-800">
-                  <div className="flex justify-between text-stone-300">
-                    <span>Penetrasi Serangan Elemen:</span>
-                    <strong className="text-cyan-400 font-mono">+{(lawData.rank + 1) * 3}%</strong>
+                  <div className="space-y-2.5 text-xs bg-black/40 p-3.5 rounded-lg border border-stone-800">
+                    <div className="flex justify-between text-stone-300">
+                      <span>Penetrasi Serangan Elemen:</span>
+                      <strong className="text-cyan-400 font-mono">+{(lawData.rank + 1) * 3}%</strong>
+                    </div>
+                    <div className="flex justify-between text-stone-300">
+                      <span>Resistensi Elemen Terkait:</span>
+                      <strong className="text-emerald-400 font-mono">+{(lawData.rank + 1) * 5}%</strong>
+                    </div>
+                    <div className="flex justify-between text-stone-300">
+                      <span>Bonus Pertumbuhan Akar Spiritual:</span>
+                      <strong className="text-amber-400 font-mono">+{8 + (lawData.rank * 2)} XP per Aksi</strong>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-stone-300">
-                    <span>Resistensi Elemen Terkait:</span>
-                    <strong className="text-emerald-400 font-mono">+{(lawData.rank + 1) * 5}%</strong>
-                  </div>
-                  <div className="flex justify-between text-stone-300">
-                    <span>Bonus Pertumbuhan Akar Spiritual:</span>
-                    <strong className="text-amber-400 font-mono">+{8 + (lawData.rank * 2)} XP per Aksi</strong>
-                  </div>
-                </div>
 
-                <Button
-                  size="sm"
-                  onClick={() => lawActionMutation.mutate({ endpoint: 'element/resonate' })}
-                  disabled={lawActionMutation.isPending}
-                  className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
-                >
-                  🌀 Ritual Resonansi Elemen (+30 Root XP, +50 Qi)
-                </Button>
-              </Card>
-            )}
+                  <div className="space-y-2">
+                    <Button
+                      size="sm"
+                      onClick={() => setIsElementAbsorbModalOpen(true)}
+                      className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-stone-950 font-bold text-xs py-2 h-auto shadow"
+                    >
+                      {resMeta.icon} Serap Item Elemen dari Tas (Pilih Item)
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => lawActionMutation.mutate({ endpoint: 'element/resonate' })}
+                      disabled={lawActionMutation.isPending}
+                      className="w-full border-blue-800/80 text-blue-300 hover:bg-blue-950/40 text-xs py-1.5 h-auto"
+                    >
+                      🌀 Ritual Resonansi Elemen (+30 Root XP, +50 Qi)
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })()}
 
             {/* 2. SISI KANAN: KARTU SYARAT BREAKTHROUGH & TRIBULASI */}
             <Card className="border border-stone-800 bg-stone-900/60 p-5 space-y-4">
@@ -2876,9 +3375,64 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
               {lawData.stage < 9 ? (
                 <div className="space-y-2.5 text-xs">
+                  {/* Slot Pil Penerobosan Mini */}
+                  <div className="p-2.5 rounded-lg border border-amber-500/30 bg-black/40 space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-serif font-bold text-amber-300 flex items-center gap-1.5">
+                        <span>💊</span> Slot Pil Penerobosan:
+                      </span>
+                      {lawData.breakthroughPillSlot && (
+                        <button
+                          type="button"
+                          onClick={() => lawActionMutation.mutate({ endpoint: 'breakthrough/remove-pill' })}
+                          disabled={lawActionMutation.isPending}
+                          className="text-[10px] text-rose-400 hover:text-rose-300 underline font-sans"
+                        >
+                          Lepas Pil
+                        </button>
+                      )}
+                    </div>
+
+                    {lawData.breakthroughPillSlot ? (
+                      <div className="flex items-center justify-between bg-amber-950/20 border border-amber-500/40 p-2 rounded text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{lawData.breakthroughPillSlot.icon || '💊'}</span>
+                          <div>
+                            <div className="font-bold text-amber-200">{lawData.breakthroughPillSlot.name}</div>
+                            <div className="text-[10px] text-emerald-400 font-mono">
+                              +20% Sukses • Proteksi Anti-Deviasi Qi
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-mono">
+                          Terpasang
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between border border-dashed border-stone-700 p-2 rounded text-xs">
+                        <span className="text-[10px] text-stone-400">
+                          Pasang pil untuk +20% peluang sukses dan anti-loss.
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setIsPillModalOpen(true)}
+                          className="border-amber-600/60 text-amber-300 hover:bg-amber-950/30 text-xs py-0.5 px-2 h-auto whitespace-nowrap"
+                        >
+                          + Pasang Pil
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex justify-between py-1.5 border-b border-stone-800/80 text-stone-300">
                     <span>Peluang Keberhasilan:</span>
-                    <strong className="text-emerald-400 font-mono">{lawData.miniBreakthroughSuccessRate}%</strong>
+                    <strong className="text-emerald-400 font-mono">
+                      {Math.min(100, lawData.miniBreakthroughSuccessRate + (lawData.breakthroughPillSlot ? 20 : 0))}%
+                      {lawData.breakthroughPillSlot && (
+                        <span className="text-[10px] text-yellow-300 ml-1 font-sans">(+20% dari Pil)</span>
+                      )}
+                    </strong>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-stone-800/80 text-stone-300">
                     <span>Konsumsi Vitality & Mood:</span>
@@ -2908,6 +3462,56 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </div>
               ) : (
                 <div id="major-breakthrough-section" className="space-y-3.5 text-xs">
+                  {/* Slot Pil Penerobosan Major */}
+                  <div className="p-2.5 rounded-lg border border-purple-500/40 bg-purple-950/20 space-y-1.5">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-serif font-bold text-purple-300 flex items-center gap-1.5">
+                        <span>💊</span> Slot Pil Penerobosan Agung:
+                      </span>
+                      {lawData.breakthroughPillSlot && (
+                        <button
+                          type="button"
+                          onClick={() => lawActionMutation.mutate({ endpoint: 'breakthrough/remove-pill' })}
+                          disabled={lawActionMutation.isPending}
+                          className="text-[10px] text-rose-400 hover:text-rose-300 underline font-sans"
+                        >
+                          Lepas Pil
+                        </button>
+                      )}
+                    </div>
+
+                    {lawData.breakthroughPillSlot ? (
+                      <div className="flex items-center justify-between bg-black/40 border border-purple-500/40 p-2 rounded text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{lawData.breakthroughPillSlot.icon || '💊'}</span>
+                          <div>
+                            <div className="font-bold text-purple-200">{lawData.breakthroughPillSlot.name}</div>
+                            <div className="text-[10px] text-emerald-400 font-mono">
+                              +20% Sukses • Proteksi Anti-Deviasi Qi
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded font-mono">
+                          Terpasang
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between border border-dashed border-purple-800/60 p-2 rounded text-xs">
+                        <span className="text-[10px] text-purple-300/80">
+                          Pasang pil untuk +20% peluang sukses dan melindungi dantian dari kehilangan Qi.
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setIsPillModalOpen(true)}
+                          className="border-purple-500/60 text-purple-300 hover:bg-purple-950/40 text-xs py-0.5 px-2 h-auto whitespace-nowrap"
+                        >
+                          + Pasang Pil
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Peringatan Tribulasi Langit */}
                   <div className="p-3 rounded-lg border border-purple-500/40 bg-purple-950/20 text-purple-200 space-y-1">
                     <div className="font-bold flex items-center gap-1.5 text-purple-300">
@@ -2988,11 +3592,20 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <div className="space-y-1.5 bg-stone-950/50 p-2.5 rounded-lg border border-stone-800/80">
                     <div className="flex justify-between text-stone-300">
                       <span>Peluang Keberhasilan:</span>
-                      <strong className="text-purple-400 font-mono text-sm">{lawData.majorBreakthroughSuccessRate}%</strong>
+                      <strong className="text-purple-400 font-mono text-sm">
+                        {Math.min(100, lawData.majorBreakthroughSuccessRate + (lawData.breakthroughPillSlot ? 20 : 0))}%
+                        {lawData.breakthroughPillSlot && (
+                          <span className="text-[10px] text-yellow-300 ml-1 font-sans">(+20% dari Pil)</span>
+                        )}
+                      </strong>
                     </div>
                     <div className="flex justify-between text-stone-400 text-[11px]">
                       <span>Penalti Kegagalan:</span>
-                      <span className="font-mono text-rose-400">-50% Qi Dantian • Cedera Berat</span>
+                      {lawData.breakthroughPillSlot ? (
+                        <span className="font-mono text-emerald-400 font-bold">🛡️ Dilindungi Pil (Tanpa Kehilangan Qi Dantian)</span>
+                      ) : (
+                        <span className="font-mono text-rose-400">-50% Qi Dantian • Cedera Berat</span>
+                      )}
                     </div>
                   </div>
 
@@ -3119,6 +3732,1118 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             newRealmName={tribulationNewRealm}
             newLevelCap={tribulationNewLevelCap}
           />
+
+          {/* Modal Pilih Pil Penerobosan */}
+          <Modal
+            isOpen={isPillModalOpen}
+            onClose={() => setIsPillModalOpen(false)}
+            title="Pilih Pil Pendukung Penerobosan (+20% Sukses & Anti-Deviasi)"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
+                Memasang pil penerobosan memberikan <strong>+20% bonus peluang keberhasilan</strong> dan <strong>mencegah dantian kehilangan Qi</strong> jika penerobosan mengalami kegagalan. Pil hanya akan dikonsumsi saat kamu menekan tombol eksekusi terobosan.
+              </div>
+
+              {(() => {
+                const pills = inventoryItems.filter(item => 
+                  item.category === 'pill' || 
+                  (item.tags && item.tags.includes('breakthrough_pill')) || 
+                  (item.name && item.name.toLowerCase().includes('pil'))
+                );
+
+                if (pills.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">💊</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Pil di Tas Inventori</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kamu dapat meracik Pil Penguat Qi / Pil Terobosan melalui profesi Alkimia, atau membelinya di Paviliun Harta Kota.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {pills.map((pill: any) => (
+                      <div
+                        key={pill.id || pill._id}
+                        className="p-3 rounded-lg border border-stone-800 bg-stone-900/60 hover:border-amber-500/50 transition-all flex items-center justify-between gap-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
+                            {pill.emoji || '💊'}
+                          </span>
+                          <div>
+                            <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
+                              <span>{pill.name}</span>
+                              <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                x{pill.quantity || 1}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                              {pill.description || 'Pil spiritual penopang terobosan kultivasi.'}
+                            </p>
+                            <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                              +20% Peluang Sukses • Proteksi Anti-Deviasi
+                            </span>
+                          </div>
+                        </div>
+
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            lawActionMutation.mutate({
+                              endpoint: 'breakthrough/set-pill',
+                              payload: { itemId: pill.id || pill._id }
+                            });
+                            setIsPillModalOpen(false);
+                          }}
+                          disabled={lawActionMutation.isPending}
+                          className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-1 px-3 h-auto whitespace-nowrap"
+                        >
+                          Pasang
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 1: Serap Item Elemen dari Tas */}
+          <Modal
+            isOpen={isElementAbsorbModalOpen}
+            onClose={() => setIsElementAbsorbModalOpen(false)}
+            title="Serap Intisari Item Elemen ke Wadah Batin"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-blue-950/20 border border-blue-600/30 text-xs text-stone-300 leading-relaxed">
+                Menyerap item esensi yang selaras mengisi <strong>Wadah Esensi Elemen</strong>, menganugerahkan <strong>Spiritual Root XP</strong>, dan memberikan <strong>Qi Kultivasi Dantian</strong> secara langsung. Item ber-Tier di atas ranahmu akan ditolak dantian.
+              </div>
+
+              {(() => {
+                const resMeta = (lawData.activeLawType ? ELEMENT_RESERVOIR_NAMES[lawData.activeLawType] : null) || { tags: [] as string[] };
+                const playerTier = (lawData.rank || 0) + 1;
+
+                const matchingItems = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const desc = (item.description || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags.map((t: string) => t.toLowerCase()) : [];
+                  const elem = (item.element || '').toLowerCase();
+                  return (resMeta.tags || []).some((tag: string) => tags.includes(tag) || name.includes(tag) || desc.includes(tag))
+                    || elem.includes(resMeta.tags?.[0] || '')
+                    || item.category?.startsWith('element_')
+                    || item.category === 'herb'
+                    || item.category === 'material';
+                });
+
+                if (matchingItems.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🌌</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Item Elemen Selaras di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kamu dapat memanen herba elemental dari grid peta, menambang mineral spiritual, atau membelinya di pasar kota.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {matchingItems.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-blue-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-blue-950/30 border border-blue-500/30">
+                              {item.emoji || '💎'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-blue-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Intisari spiritual berelemen selaras.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% (+Root XP &amp; Qi)
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'element/absorb',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsElementAbsorbModalOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-blue-600 hover:bg-blue-500 text-stone-950'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Serap'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 2: Asah Pusaka Jiwa dari Tas (Mineral & Batu Asah) */}
+          <Modal
+            isOpen={isArtifactPickerOpen}
+            onClose={() => setIsArtifactPickerOpen(false)}
+            title="Pilih Mineral & Batu Asah untuk Pusaka Jiwa"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
+                Melebur mineral, batu asah, dan bijih besi untuk memperkuat intisari pusaka jiwa kelahiranmu. Pusaka akan berevolusi dan meningkatkan bonus stat ATK &amp; DEF permanen!
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const ores = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  return name.includes('asah') || name.includes('besi') || name.includes('batu') || name.includes('mineral') || name.includes('bijih') || item.category === 'material' || item.category === 'mineral';
+                });
+
+                if (ores.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">⛏️</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Mineral di Tas Inventori</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kamu dapat menambang bijih besi di tebing batu dan gua labirin, atau membelinya di Pandai Besi kota.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {ores.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-amber-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
+                              {item.emoji || '🪨'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Bahan mineral untuk mengasah pusaka jiwa.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⚔️ Menambah Intisari Pusaka &amp; +45 Qi
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'artifact/infuse',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsArtifactPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-amber-600 hover:bg-amber-500 text-stone-950'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Asah'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 3: Beri Pakan Daging Satwa Roh dari Tas */}
+          <Modal
+            isOpen={isBeastFoodPickerOpen}
+            onClose={() => setIsBeastFoodPickerOpen(false)}
+            title="Pilih Daging & Pakan Satwa Roh dari Tas"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-orange-950/20 border border-orange-600/30 text-xs text-stone-300 leading-relaxed">
+                Memberikan daging siluman, ikan roh, atau ransum bergizi memulihkan HP satwa secara penuh, menambah intisari evolusi, dan menghasilkan Qi simbiotik.
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const meats = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  return name.includes('daging') || name.includes('ikan') || name.includes('jantung') || item.category === 'food' || item.category === 'meat' || item.category === 'herb';
+                });
+
+                if (meats.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🍖</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Pakan Daging di Tas Inventori</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kamu dapat berburu monster di peta liar, memancing di danau/dermaga, atau membeli daging di kedai kota.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {meats.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-orange-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-orange-950/30 border border-orange-500/30">
+                              {item.emoji || '🍖'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-orange-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Pakan segar penutrisi satwa roh.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  🐾 Pulihkan HP Satwa Penuh &amp; +40 Qi
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'beast/feed',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsBeastFoodPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-orange-600 hover:bg-orange-500 text-stone-950'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Pakan'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 4: Lahap Inti Siluman Kotor dari Tas */}
+          <Modal
+            isOpen={isTurbidCorePickerOpen}
+            onClose={() => setIsTurbidCorePickerOpen(false)}
+            title="Pilih Inti Siluman Kotor untuk Dilahap"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-red-950/20 border border-red-600/30 text-xs text-stone-300 leading-relaxed">
+                Melahap inti monster siluman secara instan menyuntikkan Qi kultivasi yang masif ke dalam dantian iblis, namun meningkatkan <strong>Indeks Korupsi Batin</strong> (+3%).
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const cores = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return name.includes('inti') || name.includes('core') || item.category === 'core' || tags.includes('beast_core');
+                });
+
+                if (cores.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">👹</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Inti Siluman di Tas Inventori</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kalahkan monster buas dan siluman di peta dunia atau labirin gua kuno untuk memanen intinya.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {cores.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-red-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-red-950/30 border border-red-500/30">
+                              {item.emoji || '🔮'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-red-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Inti monster padat dengan aura siluman liar.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  💀 +80 Qi • +3% Korupsi Batin
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'demonic/turbid-absorb',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsTurbidCorePickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-red-700 hover:bg-red-600 text-white'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Lahap'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 5: Pakan Cacing Gu dari Tas */}
+          <Modal
+            isOpen={isGuFeedPickerOpen}
+            onClose={() => setIsGuFeedPickerOpen(false)}
+            title="Pilih Pakan untuk Cacing Gu"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-emerald-950/20 border border-emerald-600/30 text-xs text-stone-300 leading-relaxed">
+                Pilih intisari serangga, madu ratu roh, atau daging monster untuk memulihkan kekenyangan cacing Gu di rongga aperture.
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const feeds = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return tags.includes('gu_feed') || tags.includes('gu_essence') || name.includes('serangga') || name.includes('madu') || name.includes('daging');
+                });
+
+                if (feeds.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🐛</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Pakan Gu di Tas Inventori</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kumpulkan serangga tanah, madu ratu, atau daging monster di alam liar. Atau gunakan opsi Tetes Darah Sendiri.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {feeds.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-emerald-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-emerald-950/30 border border-emerald-500/30">
+                              {item.emoji || '🐛'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-emerald-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Pakan berenergi tinggi kesukaan cacing Gu purba.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  🍖 +60% Kekenyangan Gu • +50 Qi
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'gu/feed',
+                                payload: {
+                                  slotIndex: selectedGuSlotForFeed,
+                                  feedType: 'item',
+                                  itemId: item.id || item._id
+                                }
+                              });
+                              setIsGuFeedPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Beri Makan'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 6: Panen Botol Darah dari Tas */}
+          <Modal
+            isOpen={isBloodVialPickerOpen}
+            onClose={() => setIsBloodVialPickerOpen(false)}
+            title="Pilih Botol Esensi Darah untuk Dipanen"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-rose-950/20 border border-rose-600/30 text-xs text-stone-300 leading-relaxed">
+                Meminum botol esensi darah meningkatkan cadangan darah kultivator (+1 Botol Tersimpan, +Qi, +5 Status Buronan).
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const vials = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return tags.includes('blood_vial') || name.includes('darah') || name.includes('blood');
+                });
+
+                if (vials.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🩸</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Botol Darah di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kalahkan musuh manusia atau monster berdarah untuk mengumpulkan botol esensi darah.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {vials.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-rose-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-rose-950/30 border border-rose-500/30">
+                              {item.emoji || '🩸'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-rose-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Esensi darah kental berdenyut hangat.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🩸 +1 Koleksi Botol • +90 Qi • +5 Infamy
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'demonic/blood-harvest',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsBloodVialPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-rose-800 hover:bg-rose-700 text-white'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Panen'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 7: Minum Racun Maut dari Tas */}
+          <Modal
+            isOpen={isVenomPickerOpen}
+            onClose={() => setIsVenomPickerOpen(false)}
+            title="Pilih Racun Mematikan untuk Diminum"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-emerald-950/20 border border-emerald-600/30 text-xs text-stone-300 leading-relaxed">
+                Meminum racun memicu rasa sakit dan mengurangi HP (-25%), namun <strong>mentok di 1 HP</strong> (Proteksi Non-Kematian) serta meningkatkan Toleransi Racun (+1) dan Qi.
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const poisons = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return tags.includes('venom') || tags.includes('poison') || tags.includes('venom_sac') || name.includes('racun') || name.includes('bisa') || name.includes('empedu') || name.includes('jamur');
+                });
+
+                if (poisons.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🧪</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Racun di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Racik ramuan beracun di meja Alkimia atau buru monster rawa berbisa.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {poisons.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-emerald-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-emerald-950/30 border border-emerald-500/30">
+                              {item.emoji || '🧪'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-emerald-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Cairan pekat dengan bisa korosif menyengat.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  🧪 +1 Toleransi Racun • +75 Qi • -25% HP (Aman)
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'demonic/venom-ingest',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsVenomPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-emerald-700 hover:bg-emerald-600 text-white'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Tenggak'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 8: Kurban Persembahan Altar Abyss */}
+          <Modal
+            isOpen={isAbyssalOfferingPickerOpen}
+            onClose={() => setIsAbyssalOfferingPickerOpen(false)}
+            title="Pilih Kurban Persembahan Altar Abyss"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-purple-950/20 border border-purple-600/30 text-xs text-stone-300 leading-relaxed">
+                Persembahkan botol darah, inti siluman, atau batu obsidian di atas Altar Abyss milikmu untuk memperpanjang masa perjanjian iblis dan memanen Qi.
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const offerings = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return tags.includes('blood_vial') || tags.includes('beast_core') || tags.includes('abyssal') || name.includes('darah') || name.includes('daging') || name.includes('inti') || name.includes('obsidian');
+                });
+
+                if (offerings.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🏛️</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Item Persembahan di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Kumpulkan botol darah, daging segar, inti siluman, atau batu obsidian untuk dipersembahkan.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {offerings.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-purple-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-purple-950/30 border border-purple-500/30">
+                              {item.emoji || '🏛️'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-purple-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Bahan persembahan berhawa kematian tebal.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-purple-300 font-bold block mt-0.5">
+                                  📜 Perpanjang Kontrak Iblis • +90 Qi
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'demonic/pact-tribute',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsAbyssalOfferingPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-purple-800 hover:bg-purple-700 text-white'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Kurbankan'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 9: Serap Batu Yin Nether dari Tas */}
+          <Modal
+            isOpen={isNetherYinPickerOpen}
+            onClose={() => setIsNetherYinPickerOpen(false)}
+            title="Pilih Batu Yin Netherworld untuk Diserap"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-indigo-950/20 border border-indigo-600/30 text-xs text-stone-300 leading-relaxed">
+                Menyerap energi dingin dari batu kuburan kuno dan kristal Netherworld memperkuat akumulasi Qi Gelap Sembilan Yin (+100 Qi).
+              </div>
+
+              {(() => {
+                const playerTier = (lawData.rank || 0) + 1;
+                const stones = inventoryItems.filter(item => {
+                  const name = (item.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : [];
+                  return tags.includes('yin_stone') || name.includes('yin') || name.includes('kubur') || name.includes('karang') || name.includes('nether');
+                });
+
+                if (stones.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">🌑</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Batu Yin di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Eksplorasi wilayah makam kuno atau jurang kematian untuk menambang batu berhawa Yin.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {stones.map((item: any) => {
+                      const itemTier = item.tier || 1;
+                      const isLocked = itemTier > playerTier;
+
+                      return (
+                        <div
+                          key={item.id || item._id}
+                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
+                            isLocked
+                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
+                              : 'border-stone-800 bg-stone-900/60 hover:border-indigo-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-indigo-950/30 border border-indigo-500/30">
+                              {item.emoji || '🌑'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-indigo-200 flex items-center gap-1.5">
+                                <span>{item.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{item.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {item.description || 'Batu dingin menusuk tulang bertuah Nether.'}
+                              </p>
+                              {isLocked ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : (
+                                <span className="text-[9px] font-mono text-indigo-300 font-bold block mt-0.5">
+                                  🌑 +100 Qi Yin Gelap
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={isLocked || lawActionMutation.isPending}
+                            onClick={() => {
+                              lawActionMutation.mutate({
+                                endpoint: 'demonic/nether-channel',
+                                payload: { itemId: item.id || item._id }
+                              });
+                              setIsNetherYinPickerOpen(false);
+                            }}
+                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
+                              isLocked
+                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
+                                : 'bg-indigo-900 hover:bg-indigo-800 text-white'
+                            }`}
+                          >
+                            {isLocked ? 'Terkunci' : 'Serap'}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 10: Pasang Pil Penerobosan dari Inventori */}
+          <Modal
+            isOpen={isPillModalOpen}
+            onClose={() => setIsPillModalOpen(false)}
+            title="Pilih Pil Penerobosan untuk Dipasang"
+          >
+            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
+                Memasang pil penerobosan memberikan <strong>+20% Peluang Keberhasilan</strong> serta <strong>Proteksi Deviasi Qi</strong> (mencegah kehilangan Xiuwei jika terobosan gagal). Pil akan terkonsumsi saat ritual penerobosan dijalankan.
+              </div>
+
+              {(() => {
+                const pills = inventoryItems.filter((item: any) => {
+                  const cat = (item.category || item.itemId?.category || '').toLowerCase();
+                  const name = (item.name || item.itemId?.name || '').toLowerCase();
+                  const tags = Array.isArray(item.tags) ? item.tags : (item.itemId?.tags || []);
+                  return cat === 'pill' || cat === 'alchemy' || tags.includes('breakthrough_pill') || tags.includes('pill') || name.includes('pil');
+                });
+
+                if (pills.length === 0) {
+                  return (
+                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
+                      <span className="text-3xl block">💊</span>
+                      <p className="font-semibold text-stone-300">Tidak ada Pil Penerobosan di Tas</p>
+                      <p className="text-[11px] text-stone-500">
+                        Racik pil di Balai Alkimia atau peroleh dari hadiah gelanggang/bos dunia.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-2">
+                    {pills.map((invItem: any) => {
+                      const itemDoc = invItem.itemId || invItem;
+                      const itemTier = itemDoc.tier || 1;
+                      const itemId = itemDoc._id || itemDoc.id || invItem._id;
+
+                      return (
+                        <div
+                          key={itemId}
+                          className="p-3 rounded-lg border transition-all flex items-center justify-between gap-3 border-stone-800 bg-stone-900/60 hover:border-amber-500/50"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
+                              {itemDoc.icon || itemDoc.emoji || '💊'}
+                            </span>
+                            <div>
+                              <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
+                                <span>{itemDoc.name}</span>
+                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
+                                  Tier {itemTier} • x{invItem.quantity || 1}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
+                                {itemDoc.description || 'Pil penyempurna dantian untuk menembus batas ranah.'}
+                              </p>
+                              <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                ✨ +20% Peluang Sukses • Anti-Deviasi Qi
+                              </span>
+                            </div>
+                          </div>
+
+                          <Button
+                            size="sm"
+                            disabled={setPillMutation.isPending}
+                            onClick={() => {
+                              setPillMutation.mutate(itemId.toString());
+                            }}
+                            className="text-xs py-1 px-3 h-auto whitespace-nowrap font-bold bg-amber-600 hover:bg-amber-500 text-stone-950"
+                          >
+                            Pasang
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+          </Modal>
+
+          {/* Modal 11: Ubah Nama Pusaka/Satwa Jiwa */}
+          <Modal
+            isOpen={isRenameModalOpen}
+            onClose={() => setIsRenameModalOpen(false)}
+            title={`Ubah Nama ${lawData.activeLawType === 'natal_beast' ? 'Satwa Roh' : 'Pusaka Jiwa'}`}
+          >
+            <div className="space-y-4 p-2 text-stone-200">
+              <p className="text-xs text-stone-400 leading-relaxed">
+                Torehkan nama sejati pada ikatan jiwamu. Nama ini akan tampil di profil, status lembar pendekar, dan log pertempuran.
+              </p>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-serif text-stone-300">Nama Baru (2 - 24 Karakter):</label>
+                <input
+                  type="text"
+                  value={customEntityName}
+                  onChange={(e) => setCustomEntityName(e.target.value)}
+                  maxLength={24}
+                  placeholder="Contoh: Pedang Naga Azure / Harimau Halilintar"
+                  className="w-full bg-black/60 border border-stone-700 rounded-lg p-2.5 text-xs text-amber-200 placeholder-stone-600 focus:outline-none focus:border-amber-500 font-serif"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-stone-800">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setIsRenameModalOpen(false)}
+                  className="text-xs border-stone-700 text-stone-400"
+                >
+                  Batal
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={customEntityName.trim().length < 2 || renameEntityMutation.isPending}
+                  onClick={() => renameEntityMutation.mutate(customEntityName.trim())}
+                  className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs"
+                >
+                  Simpan Nama
+                </Button>
+              </div>
+            </div>
+          </Modal>
         </div>
       }
     </div>

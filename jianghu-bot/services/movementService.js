@@ -142,9 +142,13 @@ class MovementService {
     const newStamina = Math.max(0, currentStamina - finalStaminaCost);
     player.currentStamina = newStamina;
 
-    // Terapkan damage racun jika melangkah dalam kondisi terpoison
+    // Terapkan damage racun jika melangkah dalam kondisi terpoison (mentok di 1 HP sampai efek racun hilang)
     if (condCheck.stepDamage > 0) {
       player.currentHp = Math.max(1, (player.currentHp || 100) - condCheck.stepDamage);
+      if (player.conditions?.poison > 0) {
+        player.conditions.poison = Math.max(0, player.conditions.poison - 2);
+        player.markModified('conditions');
+      }
     }
 
     if (!player.gridPosition) player.gridPosition = {};
@@ -159,8 +163,62 @@ class MovementService {
     }
 
     // Akumulasi Langkah Menjadi Qi / True Qi (Roc Wind Qi & Body Tempering Step Endurance)
-    const { awardActiveCultivationQi } = require('../utils/lawCultivationEngine');
+    const { awardActiveCultivationQi, harvestEnvironmentalEssence } = require('../utils/lawCultivationEngine');
     awardActiveCultivationQi(player, 'step_endurance', { steps: 1 });
+
+    // Inhalasi Esensi Alam Spontan (Khusus Jalur Penempaan Raga Suci)
+    let environmentalInhalation = null;
+    if (player.cultivationLaw?.activeLawType === 'body_tempering') {
+      try {
+        const WeatherConfig = require('../models/WeatherConfig');
+        const weatherDoc = await WeatherConfig.findOne({ configId: 'global' }).lean();
+        const currentWeather = weatherDoc?.currentWeather || 'Cerah';
+        const currentHour = new Date().getHours();
+        const currentRegion = player.currentLocation?.regionSlug || 'central_plains';
+
+        const harvest = harvestEnvironmentalEssence(player, {
+          weather: currentWeather,
+          hour: currentHour,
+          regionSlug: currentRegion
+        });
+        if (harvest && harvest.success) {
+          environmentalInhalation = harvest;
+        }
+      } catch (err) {
+        console.error('[MOVEMENT-SERVICE] Error harvesting essence:', err);
+      }
+    }
+
+    // Pemantauan Wilayah Gelap Nether (Khusus Jalur Bayangan Sembilan Yin)
+    if (player.cultivationLaw?.activeLawType === 'demonic_nether_darkness') {
+      if (!player.cultivationLaw.demonicData) {
+        player.cultivationLaw.demonicData = {};
+      }
+      const demonicData = player.cultivationLaw.demonicData;
+      const tileName = (passCheck.tile?.label || passCheck.tile?.buildingName || passCheck.tile?.terrainType || '').toLowerCase();
+      const currentZone = (zoneId || '').toLowerCase();
+      const currentRegion = (player.currentLocation?.regionSlug || '').toLowerCase();
+
+      const isNetherTerritory =
+        tileName.includes('nether') || tileName.includes('makam') || tileName.includes('kubur') || tileName.includes('jurang') || tileName.includes('yin') ||
+        currentZone.includes('nether') || currentZone.includes('cemetery') || currentZone.includes('grave') ||
+        currentRegion.includes('nether') || currentRegion.includes('cemetery') || currentRegion.includes('abyss');
+
+      if (isNetherTerritory) {
+        demonicData.hasNetherDebuff = false;
+        demonicData.leftNetherTerritoryAt = null;
+      } else {
+        if (!demonicData.leftNetherTerritoryAt) {
+          demonicData.leftNetherTerritoryAt = new Date();
+        }
+        const safeLimitSeconds = demonicData.netherExileTimerSeconds || (43200 * Math.max(1, (player.cultivationLaw.rank || 0) + 1));
+        const secondsOutside = (Date.now() - new Date(demonicData.leftNetherTerritoryAt).getTime()) / 1000;
+        if (secondsOutside > safeLimitSeconds) {
+          demonicData.hasNetherDebuff = true;
+        }
+      }
+    }
+
     player.markModified('cultivationLaw');
     player.markModified('systemCultivation');
 
@@ -188,6 +246,7 @@ class MovementService {
       staminaCost: finalStaminaCost,
       currentStamina: newStamina,
       maxStamina,
+      environmentalInhalation,
       tileInfo: passCheck.tile ? {
         type: passCheck.tile.tileType,
         terrain: passCheck.tile.terrainType,

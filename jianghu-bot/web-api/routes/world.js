@@ -2497,7 +2497,8 @@ router.post('/zone/resolve-move', authenticateToken, async (req, res) => {
                 terrainType: destTile?.terrainType || 'plains',
                 stealthRating: (player.kungfuSkills?.qinggong || 0) * 0.01,
                 mountType: player.equippedMount,
-                dangerLevel: zoneConfig?.ambientDangerTier || 1.0
+                dangerLevel: zoneConfig?.ambientDangerTier || 1.0,
+                infamy: player.infamy || player.cultivationLaw?.demonicData?.infamy || 0
             });
 
             if (ambushEval.triggered || isHazard) {

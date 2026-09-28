@@ -398,7 +398,7 @@ router.post('/start', authenticateToken, async (req, res) => {
                 qi: targetPlayer.currentQi,
                 maxQi: targetPlayer.maxQi,
                 stance: targetPlayer.stats?.stance || 100,
-                skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
+                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
             }];
         } else if (targetType === 'world_boss') {
             const now = new Date();
@@ -527,7 +527,7 @@ router.post('/start', authenticateToken, async (req, res) => {
                 qi: targetPlayer.currentQi || 50,
                 maxQi: targetPlayer.maxQi || 100,
                 stance: 100,
-                skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
+                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
             }];
 
             const session = await InteractiveBattleService.startBattle(
@@ -879,12 +879,17 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                  }
 
                  player.currentHp = session.player.hp;
-                 player.currentQi = session.player.qi;
-                 if (session.player.conditions) {
-                     player.conditions = session.player.conditions;
-                     player.markModified('conditions');
-                 }
-                 player.markModified('inventory');
+                  player.currentQi = session.player.qi;
+                  if (session.player.conditions) {
+                      player.conditions = session.player.conditions;
+                      player.markModified('conditions');
+                  }
+                  const beastAlly = session.allies?.find(a => a.entityType === 'beast_companion');
+                  if (beastAlly && player.cultivationLaw?.boundEntity?.entityType === 'beast') {
+                      player.cultivationLaw.boundEntity.beastCurrentHp = Math.max(0, beastAlly.hp);
+                      player.markModified('cultivationLaw');
+                  }
+                  player.markModified('inventory');
 
                  // Catat progres misi harian dailyHub
                  const todayStr = new Date().toISOString().slice(0, 10);
@@ -912,14 +917,35 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                      player.conditions = session.player.conditions;
                      player.markModified('conditions');
                  }
-                 applyVitalityLossOnDeath(player);
+                 const beastAlly = session.allies?.find(a => a.entityType === 'beast_companion');
+                  if (beastAlly && player.cultivationLaw?.boundEntity?.entityType === 'beast') {
+                      player.cultivationLaw.boundEntity.beastCurrentHp = Math.max(0, beastAlly.hp);
+                      player.markModified('cultivationLaw');
+                  }
+                  applyVitalityLossOnDeath(player);
                  // Waktu pemulihan 4 jam diam di tempat
                  player.deathRecoveryUntil = new Date(Date.now() + 4 * 60 * 60 * 1000);
                  player.lastKilledAt = new Date();
                  player.lastKilledByMonster = session.enemies[0]?.name || 'Siluman Liar';
                  await player.save();
              }
-        }
+        } else if (session.status === 'fled') {
+              const player = await Player.findOne({ discordId: userId });
+              if (player) {
+                  player.currentHp = Math.max(1, session.player.hp);
+                  player.currentQi = session.player.qi;
+                  if (session.player.conditions) {
+                      player.conditions = session.player.conditions;
+                      player.markModified('conditions');
+                  }
+                  const beastAlly = session.allies?.find(a => a.entityType === 'beast_companion');
+                  if (beastAlly && player.cultivationLaw?.boundEntity?.entityType === 'beast') {
+                      player.cultivationLaw.boundEntity.beastCurrentHp = Math.max(0, beastAlly.hp);
+                      player.markModified('cultivationLaw');
+                  }
+                  await player.save();
+              }
+         }
 
         res.json({ success: true, session });
     } catch (err) {
