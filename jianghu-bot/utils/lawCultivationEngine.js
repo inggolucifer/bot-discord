@@ -197,6 +197,481 @@ const LAW_RANK_NAMES = {
 const TRIBULATION_RANKS = [3, 5, 7, 8];
 
 /**
+ * 22 Esensi Alam Primordial untuk Jalur Penempaan Raga Suci (Body Tempering)
+ * Terhubung dengan kondisi cuaca dunia, waktu nyata, dan bioma peta.
+ */
+const NATURAL_ESSENCES = {
+  // Domain 1: Angin, Cuaca & Badai
+  gale: {
+    key: 'gale',
+    name: 'Angin Liar',
+    fullName: 'Intisari Angin Liar (Gale Essence)',
+    icon: '🌪️',
+    domain: 'weather',
+    statBonus: { agility: 2, travelSpeed: 1 },
+    desc: 'Hembusan angin ngarai curam memperingan bobot langkah dan meningkatkan kelincahan.',
+    weatherReq: ['Cerah', 'Mendung'],
+    biomeReq: ['azure_mountain_range', 'central_plains'],
+    epiphanyMsg: 'Hembusan angin ngarai menderu kencang menerpa wajahmu, pori-pori kulitmu menyerap 1x Intisari Angin Liar (Gale Essence)!'
+  },
+  typhoon: {
+    key: 'typhoon',
+    name: 'Topan Samudra',
+    fullName: 'Intisari Pusaran Topan Samudra (Typhoon Essence)',
+    icon: '⛈️',
+    domain: 'weather',
+    statBonus: { agility: 1, comboRate: 1 },
+    desc: 'Pusaran daya sentrifugal topan laut memicu serangan beruntun bertubi-tubi.',
+    weatherReq: ['Hujan', 'Badai Beracun'],
+    biomeReq: ['eastern_sea_region'],
+    epiphanyMsg: 'Deru ombak badai samudra memutar pusaran angin kencang, tubuhmu menyerap 1x Intisari Topan Samudra (Typhoon Essence)!'
+  },
+  thunder: {
+    key: 'thunder',
+    name: 'Petir Dewa',
+    fullName: 'Intisari Petir Langit (Thunder Essence)',
+    icon: '⚡',
+    domain: 'weather',
+    statBonus: { critDmg: 5, critRate: 1 },
+    desc: 'Getaran kilat langit menyengat meridian dan meningkatkan daya hancur pukulan kritikal.',
+    weatherReq: ['Hujan', 'Mendung'],
+    biomeReq: ['azure_mountain_range'],
+    epiphanyMsg: 'Sambaran kilat melintas di langit mendung, getaran statis menyengat ototmu memberi 1x Intisari Petir Dewa (Thunder Essence)!'
+  },
+  rain: {
+    key: 'rain',
+    name: 'Hujan Deras',
+    fullName: 'Intisari Titisan Hujan Deras (Raindrop Essence)',
+    icon: '🌧️',
+    domain: 'weather',
+    statBonus: { maxVitality: 5, vitality: 5 },
+    desc: 'Titisan air hujan membasuh dan melenturkan sendi-sendi pergerakan tubuh.',
+    weatherReq: ['Hujan'],
+    biomeReq: ['central_plains', 'eastern_sea_region'],
+    epiphanyMsg: 'Titisan gerimis dingin menyentuh pundakmu, pori-pori ototmu menyerap 1x Intisari Hujan Deras (Raindrop Essence)!'
+  },
+  mist: {
+    key: 'mist',
+    name: 'Halimun Lembah',
+    fullName: 'Intisari Kabut Halimun Lembah (Mountain Mist Essence)',
+    icon: '🌫️',
+    domain: 'weather',
+    statBonus: { focus: 2, critResist: 1 },
+    desc: 'Kabut gunung menyamarkan siluet raga dan mempertajam insting menghindar.',
+    weatherReq: ['Mendung', 'Cerah'],
+    hourReq: [5, 8],
+    biomeReq: ['azure_mountain_range'],
+    epiphanyMsg: 'Kabut tebal halimun pagi menyelimuti puncak pegunungan, tubuhmu menghisap 1x Intisari Halimun Lembah (Mist Essence)!'
+  },
+  frost: {
+    key: 'frost',
+    name: 'Salju Abadi',
+    fullName: 'Intisari Hawa Beku Salju Abadi (Frost Essence)',
+    icon: '❄️',
+    domain: 'weather',
+    statBonus: { baseDef: 2, critDmgReduce: 1 },
+    desc: 'Hawa sedingin es glasier memadatkan lapisan kulit menjadi perisai beku.',
+    weatherReq: ['Mendung', 'Cerah'],
+    biomeReq: ['northern_desolate_territory'],
+    epiphanyMsg: 'Hawa dingin beku menusuk sumsum tulang di tundra utara, mengkristalkan 1x Intisari Salju Abadi (Frost Essence)!'
+  },
+  sandstorm: {
+    key: 'sandstorm',
+    name: 'Badai Pasir',
+    fullName: 'Intisari Badai Pasir Mengamuk (Sandstorm Essence)',
+    icon: '🌪️',
+    domain: 'weather',
+    statBonus: { baseDef: 3, martialRes: 1 },
+    desc: 'Gesekan butiran pasir mengasah kulit menjadi sekeras intan padang gurun.',
+    weatherReq: ['Cerah', 'Mendung'],
+    biomeReq: ['western_sacred_deserts'],
+    epiphanyMsg: 'Pusaran badai pasir mengamuk di gurun suci, mengasah kulitmu memberi 1x Intisari Badai Pasir (Sandstorm Essence)!'
+  },
+
+  // Domain 2: Kosmik, Langit & Waktu
+  solar: {
+    key: 'solar',
+    name: 'Surya Murni',
+    fullName: 'Intisari Surya Murni (Solar Essence)',
+    icon: '☀️',
+    domain: 'celestial',
+    statBonus: { baseAtk: 2, critRate: 1 },
+    desc: 'Cahaya Yang murni memanaskan aliran darah otot untuk melancarkan serangan penetrasi.',
+    weatherReq: ['Cerah'],
+    hourReq: [9, 15],
+    biomeReq: ['central_plains', 'western_sacred_deserts'],
+    epiphanyMsg: 'Pancaran terik mentari membakar meridian raga, menghasilkan 1x Intisari Surya Murni (Solar Essence)!'
+  },
+  lunar: {
+    key: 'lunar',
+    name: 'Embun Rembulan',
+    fullName: 'Intisari Embun Rembulan (Lunar Essence)',
+    icon: '🌙',
+    domain: 'celestial',
+    statBonus: { spiritualRes: 2, focus: 2 },
+    desc: 'Sinar rembulan menenangkan gejolak amarah dan meredam serangan energi sihir.',
+    hourReq: [19, 5],
+    biomeReq: ['azure_mountain_range', 'eastern_sea_region'],
+    epiphanyMsg: 'Keheningan malam di bawah sinar rembulan menyejukkan batinmu, menyerap 1x Intisari Rembulan (Lunar Essence)!'
+  },
+  astral: {
+    key: 'astral',
+    name: 'Rasi Bintang',
+    fullName: 'Intisari Rasi Bintang Tujuh (Astral Essence)',
+    icon: '✨',
+    domain: 'celestial',
+    statBonus: { insight: 1, luck: 1, critRate: 1 },
+    desc: 'Bintang utara menyelaraskan titik akupuntur raga dengan harmoni semesta.',
+    hourReq: [0, 4],
+    biomeReq: ['azure_mountain_range', 'central_plains'],
+    epiphanyMsg: 'Kerlip rasi bintang tengah malam memancarkan cahaya perak, meneteskan 1x Intisari Bintang (Astral Essence)!'
+  },
+  dawn: {
+    key: 'dawn',
+    name: 'Fajar Sinar Ungu',
+    fullName: 'Intisari Fajar Sinar Ungu (Dawn Aurora Essence)',
+    icon: '🌅',
+    domain: 'celestial',
+    statBonus: { baseHp: 15, baseAtk: 1, baseDef: 1, luck: 1 },
+    desc: 'Kilau ungu saat matahari terbit menyucikan racun fana dan meningkatkan takdir keberuntungan.',
+    hourReq: [5, 7],
+    biomeReq: ['central_plains', 'azure_mountain_range', 'eastern_sea_region'],
+    epiphanyMsg: 'Sinar ungu merekah dari ufuk timur di waktu fajar, menghadiahkan 1x Intisari Fajar Ungu (Dawn Essence)!'
+  },
+  twilight: {
+    key: 'twilight',
+    name: 'Lembayung Senja',
+    fullName: 'Intisari Lembayung Senja (Twilight Essence)',
+    icon: '🌇',
+    domain: 'celestial',
+    statBonus: { agility: 2, travelSpeed: 2 },
+    desc: 'Remang senja memudahkan tubuh menyatu dengan bayang-bayang alam.',
+    hourReq: [17, 19],
+    biomeReq: ['western_sacred_deserts', 'central_plains'],
+    epiphanyMsg: 'Cahaya lembayung senja membaur dengan bayangan tubuhmu, menghasilkan 1x Intisari Senja (Twilight Essence)!'
+  },
+  eclipse: {
+    key: 'eclipse',
+    name: 'Gerhana Purba',
+    fullName: 'Intisari Gerhana Kosmik Purba (Eclipse Essence)',
+    icon: '🌑',
+    domain: 'celestial',
+    statBonus: { baseAtk: 3, critDmg: 5 },
+    desc: 'Pertemuan matahari dan bulan menciptakan keseimbangan Yin-Yang sejati yang menembus armor.',
+    biomeReq: ['central_plains', 'azure_mountain_range', 'southern_demon_domain'],
+    epiphanyMsg: 'Fenomena langit langka menutupi sang surya, mengalirkan 1x Intisari Gerhana Purba (Eclipse Essence)!'
+  },
+  meteor: {
+    key: 'meteor',
+    name: 'Debu Bintang',
+    fullName: 'Intisari Debu Bintang Jatuh (Meteor Stardust Essence)',
+    icon: '🌠',
+    domain: 'celestial',
+    statBonus: { critRate: 2, critDmg: 6 },
+    desc: 'Gesekan batu meteor di langit malam menyuntikkan daya ledak kritikal dahsyat.',
+    hourReq: [21, 4],
+    biomeReq: ['western_sacred_deserts', 'northern_desolate_territory'],
+    epiphanyMsg: 'Bintang jatuh melesat membelah langit malam, menyuntikkan 1x Intisari Debu Bintang (Meteor Essence)!'
+  },
+
+  // Domain 3: Bentang Alam & Kehidupan
+  grass: {
+    key: 'grass',
+    name: 'Tumbuhan Hayat',
+    fullName: 'Intisari Tumbuhan Hayat (Life Wood Essence)',
+    icon: '🌿',
+    domain: 'terrestrial',
+    statBonus: { baseHp: 25, maxLifespan: 1 },
+    desc: 'Klorofil dan getah tanaman hutan belantara meremajakan sel dan memperpanjang umur.',
+    biomeReq: ['central_plains'],
+    epiphanyMsg: 'Aroma wangi herba hutan menyegarkan pernapasanmu, menyerap 1x Intisari Tumbuhan Hayat (Grass Essence)!'
+  },
+  pool: {
+    key: 'pool',
+    name: 'Tirta Telaga',
+    fullName: 'Intisari Tirta Telaga Jernih (Pool Essence)',
+    icon: '💧',
+    domain: 'terrestrial',
+    statBonus: { maxVitality: 8, vitality: 8 },
+    desc: 'Kesejukan air danau pedalaman membasuh racun kelelahan dan memulihkan vitalitas.',
+    biomeReq: ['central_plains', 'eastern_sea_region'],
+    epiphanyMsg: 'Gemericik air danau jernih membasuh keletihan ototmu, menghasilkan 1x Intisari Tirta Telaga (Pool Essence)!'
+  },
+  ocean: {
+    key: 'ocean',
+    name: 'Gelombang Samudra',
+    fullName: 'Intisari Gelombang Samudra Raya (Ocean Tide Essence)',
+    icon: '🌊',
+    domain: 'terrestrial',
+    statBonus: { baseHp: 20, martialRes: 2 },
+    desc: 'Hantaman deburan ombak laut memberi daya dorong berat pada setiap benturan tubuh.',
+    biomeReq: ['eastern_sea_region'],
+    epiphanyMsg: 'Deburan ombak samudra menghantam kokoh tubuhmu, menyerap 1x Intisari Gelombang Samudra (Ocean Essence)!'
+  },
+  earth: {
+    key: 'earth',
+    name: 'Urat Bumi',
+    fullName: 'Intisari Urat Bumi Karang Wadas (Earth Leyline Essence)',
+    icon: '🗿',
+    domain: 'terrestrial',
+    statBonus: { baseDef: 3, martialRes: 2 },
+    desc: 'Stabilitas urat batu leylines mengokohkan kuda-kuda kaki agar tak tergoyahkan.',
+    biomeReq: ['azure_mountain_range', 'central_plains'],
+    epiphanyMsg: 'Denyut energi leylines bumi terasa di telapak kakimu, menyerap 1x Intisari Urat Bumi (Earth Essence)!'
+  },
+
+  // Domain 4: Ekstrem & Vulkanik
+  magma: {
+    key: 'magma',
+    name: 'Bara Lahar',
+    fullName: 'Intisari Bara Lahar Kawah Berapi (Magma Essence)',
+    icon: '🌋',
+    domain: 'extreme',
+    statBonus: { baseAtk: 3, martialRes: 1 },
+    desc: 'Panas magma kawah berapi mengubah darah raga mendidih dengan aura pembakar.',
+    biomeReq: ['southern_demon_domain'],
+    epiphanyMsg: 'Hawa panas kawah vulkanik membakar kulit fana, mengkristalkan 1x Intisari Bara Lahar (Magma Essence)!'
+  },
+  miasma: {
+    key: 'miasma',
+    name: 'Racun Rawa',
+    fullName: 'Intisari Kabut Racun Rawa Kuno (Miasma Essence)',
+    icon: '☠️',
+    domain: 'extreme',
+    statBonus: { spiritualRes: 2, critResist: 2 },
+    desc: 'Kabut beracun rawa iblis melatih pori-pori kulit kebal terhadap segala racun.',
+    weatherReq: ['Badai Beracun'],
+    biomeReq: ['southern_demon_domain'],
+    epiphanyMsg: 'Uap ungu beracun rawa purba dihirup oleh kulitmu, menghasilkan 1x Intisari Racun Rawa (Miasma Essence)!'
+  },
+  sulfur: {
+    key: 'sulfur',
+    name: 'Uap Belerang',
+    fullName: 'Intisari Asap Panas Belerang (Sulfur Essence)',
+    icon: '💨',
+    domain: 'extreme',
+    statBonus: { baseDef: 2, critDmgReduce: 2 },
+    desc: 'Asap belerang geotermal menguapkan sisa kotoran daging dan mengeraskan kulit terluar.',
+    biomeReq: ['southern_demon_domain'],
+    epiphanyMsg: 'Asap panas belerang menyengat rongga pernapasan, mengendapkan 1x Intisari Uap Belerang (Sulfur Essence)!'
+  },
+  crystal: {
+    key: 'crystal',
+    name: 'Kristal Gua',
+    fullName: 'Intisari Kristal Gua Bawah Tanah (Crystal Essence)',
+    icon: '💎',
+    domain: 'extreme',
+    statBonus: { focus: 3, insight: 1 },
+    desc: 'Resonansi kristal gua bawah tanah menajamkan refleks indra dalam kegelapan labirin.',
+    biomeReq: ['azure_mountain_range', 'southern_demon_domain'],
+    epiphanyMsg: 'Kilau kristal gua bawah tanah meresonansi batinmu, menyerap 1x Intisari Kristal Gua (Crystal Essence)!'
+  }
+};
+
+/**
+ * Batas penyimpanan maksimal per jenis esensi di dalam pori-pori raga:
+ * Formula: 15 * (rank + 1)
+ */
+function getMaxEssenceStorage(rank = 0) {
+  return 15 * (rank + 1);
+}
+
+/**
+ * Durasi penempaan bagian tubuh (detik) per rank
+ */
+function getTemperingDurationSeconds(rank = 0) {
+  switch (rank) {
+    case 0: return 30; // 30s di Mortal
+    case 1: return 60; // 1m di Qi Refining
+    case 2: return 120; // 2m di Foundation
+    case 3: return 180; // 3m di Golden Core
+    default: return 300; // 5m di ranah tinggi
+  }
+}
+
+/**
+ * Pemanenan spontan esensi alam saat melangkah atau bernapas di alam terbuka
+ */
+function harvestEnvironmentalEssence(player, context = {}) {
+  if (!player || !player.cultivationLaw) return null;
+  const law = player.cultivationLaw;
+  if (law.activeLawType !== 'body_tempering') return null;
+
+  if (!law.bodyEssenceStorage) {
+    law.bodyEssenceStorage = {};
+  }
+
+  // Peluang random 20% pemicu inhalasi alam
+  const roll = Math.random();
+  if (roll > 0.25) return null;
+
+  const weather = context.weather || 'Cerah';
+  const hour = context.hour !== undefined ? context.hour : (new Date().getHours());
+  const regionSlug = context.regionSlug || player.currentLocation?.regionSlug || 'central_plains';
+
+  const matching = Object.values(NATURAL_ESSENCES).filter(ess => {
+    if (ess.weatherReq && !ess.weatherReq.includes(weather)) return false;
+    if (ess.hourReq) {
+      const [from, to] = ess.hourReq;
+      if (from <= to) {
+        if (hour < from || hour > to) return false;
+      } else {
+        if (hour < from && hour > to) return false;
+      }
+    }
+    if (ess.biomeReq && !ess.biomeReq.includes(regionSlug)) return false;
+    return true;
+  });
+
+  if (matching.length === 0) {
+    if (weather === 'Hujan') matching.push(NATURAL_ESSENCES.rain);
+    else if (hour >= 19 || hour <= 5) matching.push(NATURAL_ESSENCES.lunar);
+    else matching.push(NATURAL_ESSENCES.solar);
+  }
+
+  const selected = matching[Math.floor(Math.random() * matching.length)];
+  const maxStorage = getMaxEssenceStorage(law.rank || 0);
+  const currentCount = law.bodyEssenceStorage[selected.key] || 0;
+
+  if (currentCount >= maxStorage) {
+    return {
+      success: false,
+      full: true,
+      essenceKey: selected.key,
+      essenceName: selected.name,
+      message: `Penyimpanan pori-pori untuk ${selected.name} telah mencapai batas maksimal (${maxStorage}).`
+    };
+  }
+
+  law.bodyEssenceStorage[selected.key] = currentCount + 1;
+  return {
+    success: true,
+    essenceKey: selected.key,
+    essenceName: selected.name,
+    icon: selected.icon,
+    fullName: selected.fullName,
+    message: selected.epiphanyMsg,
+    currentCount: law.bodyEssenceStorage[selected.key],
+    maxStorage
+  };
+}
+
+/**
+ * Memulai penempaan salah satu dari 9 bagian tubuh menggunakan 1 esensi alam
+ */
+function startBodyTemperingPart(player, partId, essenceKey) {
+  const law = player.cultivationLaw;
+  if (!law || law.activeLawType !== 'body_tempering') {
+    throw new Error('Hanya pendekar Penempaan Raga yang dapat menempah bagian tubuh.');
+  }
+
+  if (law.isTemperingPart && law.temperingFinishAt && new Date() < new Date(law.temperingFinishAt)) {
+    const rem = Math.ceil((new Date(law.temperingFinishAt).getTime() - Date.now()) / 1000);
+    throw new Error(`Penempaan bagian [${law.temperingPartTarget}] sedang berlangsung (sisa ${rem} detik).`);
+  }
+
+  const validParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
+  if (!validParts.includes(partId)) {
+    throw new Error(`Bagian tubuh '${partId}' tidak valid.`);
+  }
+
+  const cleanKey = essenceKey ? essenceKey.replace(/^essence_/, '') : '';
+  const essenceDef = NATURAL_ESSENCES[cleanKey] || NATURAL_ESSENCES[essenceKey];
+  if (!essenceDef) {
+    throw new Error(`Esensi '${essenceKey}' tidak dikenali.`);
+  }
+
+  const currentStored = law.bodyEssenceStorage?.[cleanKey] !== undefined
+    ? law.bodyEssenceStorage[cleanKey]
+    : (law.bodyEssenceStorage?.[essenceKey] || 0);
+  if (currentStored <= 0) {
+    throw new Error(`Kamu tidak memiliki ${essenceDef.fullName} di penyimpanan batin raga.`);
+  }
+
+  const durationSec = getTemperingDurationSeconds(law.rank || 0);
+  law.isTemperingPart = true;
+  law.temperingPartTarget = partId;
+  law.temperingEssenceUsed = cleanKey;
+  law.temperingFinishAt = new Date(Date.now() + durationSec * 1000);
+
+  return {
+    partId,
+    essenceKey: cleanKey,
+    durationSec,
+    finishAt: law.temperingFinishAt
+  };
+}
+
+/**
+ * Menyelesaikan dan mengklaim penempaan bagian tubuh
+ */
+function claimBodyTemperingPart(player) {
+  const law = player.cultivationLaw;
+  if (!law || law.activeLawType !== 'body_tempering') {
+    throw new Error('Hanya pendekar Penempaan Raga yang dapat menempah bagian tubuh.');
+  }
+
+  if (!law.isTemperingPart) {
+    throw new Error('Tidak ada proses penempaan bagian tubuh yang sedang berlangsung.');
+  }
+
+  if (new Date() < new Date(law.temperingFinishAt)) {
+    const rem = Math.ceil((new Date(law.temperingFinishAt).getTime() - Date.now()) / 1000);
+    throw new Error(`Penempaan belum selesai. Sisa waktu: ${rem} detik.`);
+  }
+
+  const partId = law.temperingPartTarget;
+  const rawKey = law.temperingEssenceUsed;
+  const cleanKey = rawKey ? rawKey.replace(/^essence_/, '') : '';
+  const essenceDef = NATURAL_ESSENCES[cleanKey] || NATURAL_ESSENCES[rawKey] || { name: rawKey, statBonus: {} };
+
+  // Konsumsi 1 esensi
+  if (law.bodyEssenceStorage) {
+    if (law.bodyEssenceStorage[cleanKey] > 0) {
+      law.bodyEssenceStorage[cleanKey] -= 1;
+    } else if (law.bodyEssenceStorage[rawKey] > 0) {
+      law.bodyEssenceStorage[rawKey] -= 1;
+    }
+  }
+
+  // Tingkatkan level / progress bagian tubuh (+1 level)
+  if (!law.bodyTemperingParts) law.bodyTemperingParts = {};
+  const currentLevel = law.bodyTemperingParts[partId] || 0;
+  law.bodyTemperingParts[partId] = currentLevel + 1;
+
+  // Injeksi True Qi ke dantian
+  const trueQiGained = 60 + (law.rank || 0) * 20;
+  law.qi = (law.qi || 0) + trueQiGained;
+
+  // Terapkan bonus stat permanen ke karakter
+  if (!player.extendedStats) player.extendedStats = {};
+  if (essenceDef.statBonus) {
+    for (const [stat, val] of Object.entries(essenceDef.statBonus)) {
+      if (player.extendedStats[stat] !== undefined) {
+        player.extendedStats[stat] += val;
+      } else if (player.stats && player.stats[stat] !== undefined) {
+        player.stats[stat] += val;
+      }
+    }
+  }
+
+  // Reset status aktif penempaan
+  law.isTemperingPart = false;
+  law.temperingPartTarget = null;
+  law.temperingEssenceUsed = null;
+  law.temperingFinishAt = null;
+
+  return {
+    partId,
+    newLevel: law.bodyTemperingParts[partId],
+    essenceUsed: cleanKey,
+    trueQiGained,
+    statBonus: essenceDef.statBonus,
+    essenceRemaining: law.bodyEssenceStorage?.[cleanKey] || 0
+  };
+}
+
+/**
  * Channeling Cap Constants
  */
 const BASE_CHANNEL_CAP_MINUTES = 90;
@@ -285,12 +760,15 @@ function calculateChannelingProgress(player) {
     return { qiGained: 0, minutesElapsed: 0, isCapReached: false, essenceConsumed: 0, isEssenceDepleted: false };
   }
 
+  // Pastikan daily cap direset jika tengah malam (00:00 WIB) telah terlewati
+  checkAndResetDailyCap(player);
+
   const now = Date.now();
   const elapsed = (now - new Date(law.lastChannelSyncAt).getTime()) / 60000; // menit
   const minutesElapsed = Math.max(0, elapsed);
 
   // Daily cap check
-  const streakDays = law.dailyData?.dailyStreakDays || 0;
+  const streakDays = law.dailyData?.dailyStreakDays || player.dailyStreak || 0;
   const dailyCap = getDailyChannelCap(streakDays);
   const minutesUsedToday = law.dailyData?.channelMinutesToday || 0;
   const minutesRemaining = Math.max(0, dailyCap - minutesUsedToday);
@@ -315,7 +793,7 @@ function calculateChannelingProgress(player) {
   }
 
   const qiGained = Math.floor(effectiveMinutes * baseRate * qiMultiplier);
-  const isCapReached = minutesUsedToday + effectiveMinutes >= dailyCap;
+  const isCapReached = (minutesUsedToday + effectiveMinutes) >= dailyCap;
 
   return { qiGained, minutesElapsed: effectiveMinutes, isCapReached, essenceConsumed, isEssenceDepleted };
 }
@@ -323,28 +801,41 @@ function calculateChannelingProgress(player) {
 /**
  * Sinkronisasi Qi channeling ke database (dipanggil saat stop channel atau cek status).
  * @param {object} player - Mongoose Player document (mutable)
- * @returns {{ newQi: number, minutesSynced: number, isCapReached: boolean }}
+ * @returns {{ qiGained: number, totalQi: number, newQi: number, minutesSynced: number, isCapReached: boolean, isQiFull: boolean }}
  */
 function syncLawChanneling(player) {
   const { qiGained, minutesElapsed, isCapReached, essenceConsumed } = calculateChannelingProgress(player);
 
+  const law = player.cultivationLaw;
+  if (!law) return { qiGained: 0, totalQi: 0, newQi: 0, minutesSynced: 0, isCapReached: false, isQiFull: false };
+
+  const streakDays = law.dailyData?.dailyStreakDays || player.dailyStreak || 0;
+  const dailyCap = getDailyChannelCap(streakDays);
+
   if (qiGained > 0) {
-    player.cultivationLaw.qi = Math.min(
-      player.cultivationLaw.qi + qiGained,
-      player.cultivationLaw.maxQi
+    law.qi = Math.min(
+      law.maxQi,
+      Math.floor((law.qi || 0) + qiGained)
     );
-    player.cultivationLaw.dailyData.channelMinutesToday += minutesElapsed;
+  }
+
+  if (minutesElapsed > 0) {
+    const currentUsed = law.dailyData?.channelMinutesToday || 0;
+    law.dailyData.channelMinutesToday = Math.min(
+      dailyCap,
+      Math.round((currentUsed + minutesElapsed) * 100) / 100
+    );
   }
 
   // Konsumsi Universal Essence
-  if (essenceConsumed > 0 && player.cultivationLaw.currentEssence !== undefined) {
-    player.cultivationLaw.currentEssence = Math.max(0, player.cultivationLaw.currentEssence - essenceConsumed);
+  if (essenceConsumed > 0 && law.currentEssence !== undefined) {
+    law.currentEssence = Math.max(0, Math.round((law.currentEssence - essenceConsumed) * 10) / 10);
   }
 
   // Khusus Gu Master: cerna satiety cacing Gu di rongga Aperture
-  if (player.cultivationLaw.activeLawType === 'gu_master' && Array.isArray(player.cultivationLaw.guSlots)) {
+  if (law.activeLawType === 'gu_master' && Array.isArray(law.guSlots)) {
     const guDigestPoints = Math.max(1, Math.floor(minutesElapsed * 0.5));
-    for (const gu of player.cultivationLaw.guSlots) {
+    for (const gu of law.guSlots) {
       if (gu.satiety !== undefined && gu.satiety > 0) {
         gu.satiety = Math.max(0, gu.satiety - guDigestPoints);
         gu.hunger = gu.satiety; // sync alias
@@ -352,14 +843,22 @@ function syncLawChanneling(player) {
     }
   }
 
-  player.cultivationLaw.lastChannelSyncAt = new Date();
-  player.cultivationLaw.lastEssenceDigestAt = new Date();
+  law.lastChannelSyncAt = new Date();
+  law.lastEssenceDigestAt = new Date();
 
-  if (isCapReached) {
-    player.cultivationLaw.isChanneling = false;
+  const isQiFull = (law.qi >= law.maxQi);
+  if (isCapReached || isQiFull) {
+    law.isChanneling = false;
   }
 
-  return { newQi: player.cultivationLaw.qi, minutesSynced: minutesElapsed, isCapReached };
+  return {
+    qiGained,
+    totalQi: law.qi,
+    newQi: law.qi,
+    minutesSynced: minutesElapsed,
+    isCapReached,
+    isQiFull
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -442,7 +941,7 @@ function getMiniBreakthroughFailCooldown(stage) {
  * @param {object} player - Mongoose Player document (mutable)
  * @returns {{ success: boolean, message: string, rewards?: object, penalties?: object }}
  */
-function attemptMiniBreakthrough(player) {
+function attemptMiniBreakthrough(player, options = {}) {
   const law = player.cultivationLaw;
   if (!law || !law.activeLawType) {
     return { success: false, message: 'Belum memilih Hukum Semesta (Law).' };
@@ -464,8 +963,17 @@ function attemptMiniBreakthrough(player) {
     return { success: false, message: `Masih dalam masa pemulihan. Sisa: ${remaining} menit.` };
   }
 
-  // Roll RNG
-  const successRate = getMiniBreakthroughSuccessRate(law.stage);
+  // Auto-detect slotted breakthrough pill
+  if (law.breakthroughPillSlot) {
+    options.pillBonusRate = options.pillBonusRate || 20;
+    options.pillProtectLoss = options.pillProtectLoss !== undefined ? options.pillProtectLoss : true;
+    law.breakthroughPillSlot = null; // Terkonsumsi saat ritual penerobosan
+  }
+
+  // Roll RNG dengan bonus pil jika ada
+  const baseRate = getMiniBreakthroughSuccessRate(law.stage);
+  const pillBonus = options.pillBonusRate || 0;
+  const successRate = Math.min(95, baseRate + pillBonus);
   const roll = Math.random() * 100;
   const isSuccess = roll <= successRate;
 
@@ -522,16 +1030,22 @@ function attemptMiniBreakthrough(player) {
       }
     };
   } else {
-    // Penalti gagal (§5.3)
-    const qiPenalty = Math.floor(law.maxQi * 0.15);
+    // Penalti gagal (§5.3) dengan proteksi pil
+    const qiPenalty = options.pillProtectLoss ? 0 : Math.floor(law.maxQi * 0.15);
     law.qi = Math.max(0, law.qi - qiPenalty);
-    const cooldownMs = getMiniBreakthroughFailCooldown(law.stage);
+    const cooldownMs = options.pillProtectLoss
+      ? Math.floor(getMiniBreakthroughFailCooldown(law.stage) / 2)
+      : getMiniBreakthroughFailCooldown(law.stage);
     law.miniBreakthroughCooldownUntil = new Date(Date.now() + cooldownMs);
+
+    const failMsg = options.pillProtectLoss
+      ? 'Penerobosan Gagal! Namun khasiat Pil Penerobosan melindungi dantianmu dari deviasi (Qi tidak berkurang)!'
+      : `Penerobosan Gagal! Qi berkurang ${qiPenalty}. Pulihkan diri.`;
 
     return {
       success: true,
       isSuccess: false,
-      message: `Penerobosan Gagal! Qi berkurang ${qiPenalty}. Pulihkan diri.`,
+      message: failMsg,
       penalties: {
         qiLost: qiPenalty,
         cooldownMs,
@@ -599,13 +1113,14 @@ function calculateSurvivalHP(player) {
 /**
  * Menjalankan simulasi tribulasi langit 3 gelombang.
  * @param {object} player - Mongoose Player document
+ * @param {number} [targetRank] - Target rank yang ingin dicapai (3, 5, 7, 8)
  * @returns {{ survived: boolean, wavesCleared: number, totalDamage: number, survivalHP: number, waveDetails: Array }}
  */
-function runTribulation(player) {
+function runTribulation(player, targetRank = null) {
   const law = player.cultivationLaw;
   const lawDef = LAW_DEFINITIONS[law.activeLawType];
   const pathMod = lawDef?.pathMod || 1.0;
-  const rank = law.rank;
+  const rank = targetRank !== null && targetRank !== undefined ? targetRank : ((law.rank || 0) + 1);
   const survivalHP = calculateSurvivalHP(player);
 
   const waveDetails = [];
@@ -631,7 +1146,7 @@ function runTribulation(player) {
  * @param {object} player - Mongoose Player document (mutable)
  * @returns {{ success: boolean, isSuccess?: boolean, message: string, rewards?: object, penalties?: object, tribulation?: object }}
  */
-function attemptMajorBreakthrough(player) {
+function attemptMajorBreakthrough(player, options = {}) {
   const law = player.cultivationLaw;
   if (!law || !law.activeLawType) {
     return { success: false, message: 'Belum memilih Hukum Semesta (Law).' };
@@ -645,6 +1160,30 @@ function attemptMajorBreakthrough(player) {
     return { success: false, message: 'Sudah mencapai Rank tertinggi (8).' };
   }
 
+  const targetRank = law.rank + 1;
+
+  // 1. Validasi Syarat Level Karakter & Realm (Mutual Gate)
+  if (!meetsLawRankRequirements(player, targetRank)) {
+    const reqData = LAW_RANK_REALM_REQUIREMENTS[targetRank];
+    return {
+      success: false,
+      message: `Kapasitas fisik belum siap untuk menembus Rank ${targetRank}. Capai Level ${reqData?.minLevel || 1} terlebih dahulu.`
+    };
+  }
+
+  // 2. Validasi Khusus Penempaan Raga (Body Tempering: 9 Bagian Tubuh)
+  if (law.activeLawType === 'body_tempering') {
+    const parts = law.bodyTemperingParts || {};
+    const requiredParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
+    const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < targetRank);
+    if (unreadyParts.length > 0) {
+      return {
+        success: false,
+        message: `Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${targetRank} (Belum siap: ${unreadyParts.join(', ')}).`
+      };
+    }
+  }
+
   if (law.qi < law.maxQi) {
     return { success: false, message: `Qi belum penuh. ${Math.floor(law.qi)}/${law.maxQi}` };
   }
@@ -656,8 +1195,8 @@ function attemptMajorBreakthrough(player) {
 
   // Tribulasi Langit (Rank 3, 5, 7, 8)
   let tribResult = null;
-  if (requiresTribulation(law.rank)) {
-    tribResult = runTribulation(player);
+  if (requiresTribulation(targetRank)) {
+    tribResult = runTribulation(player, targetRank);
     if (!tribResult.survived) {
       // Tribulasi GAGAL — penalti berat
       const cooldownMs = getMajorBreakthroughFailCooldown(law.rank) + (24 * 3600 * 1000) + (law.rank * 4 * 3600 * 1000);
@@ -678,8 +1217,17 @@ function attemptMajorBreakthrough(player) {
     }
   }
 
-  // Roll RNG untuk major breakthrough
-  const successRate = getMajorBreakthroughSuccessRate(law.rank);
+  // Auto-detect slotted breakthrough pill
+  if (law.breakthroughPillSlot) {
+    options.pillBonusRate = options.pillBonusRate || 20;
+    options.pillProtectLoss = options.pillProtectLoss !== undefined ? options.pillProtectLoss : true;
+    law.breakthroughPillSlot = null; // Terkonsumsi saat ritual penerobosan
+  }
+
+  // Roll RNG untuk major breakthrough dengan bonus pil jika ada
+  const baseRate = getMajorBreakthroughSuccessRate(law.rank);
+  const pillBonus = options.pillBonusRate || 0;
+  const successRate = Math.min(95, baseRate + pillBonus);
   const roll = Math.random() * 100;
   const isSuccess = roll <= successRate;
 
@@ -726,18 +1274,24 @@ function attemptMajorBreakthrough(player) {
       }
     };
   } else {
-    // Major fail — penalti
-    const cooldownMs = getMajorBreakthroughFailCooldown(law.rank);
-    law.qi = Math.max(0, law.qi - Math.floor(law.maxQi * 0.25));
+    // Major fail — penalti (dapat diredam pil)
+    const baseCooldownMs = getMajorBreakthroughFailCooldown(law.rank);
+    const cooldownMs = options.pillProtectLoss ? Math.floor(baseCooldownMs / 2) : baseCooldownMs;
+    const qiLost = options.pillProtectLoss ? 0 : Math.floor(law.maxQi * 0.25);
+    law.qi = Math.max(0, law.qi - qiLost);
     law.majorBreakthroughCooldownUntil = new Date(Date.now() + cooldownMs);
+
+    const failMsg = options.pillProtectLoss
+      ? 'Penerobosan Besar Gagal! Namun khasiat Pil Penerobosan menyerap deviasi batin sehingga Xiuwei tidak berkurang!'
+      : 'Penerobosan Besar GAGAL. Qi mengalami deviasi. Pulihkan diri.';
 
     return {
       success: true,
       isSuccess: false,
-      message: 'Penerobosan Besar GAGAL. Qi mengalami deviasi. Pulihkan diri.',
+      message: failMsg,
       tribulation: tribResult,
       penalties: {
-        qiLost: Math.floor(law.maxQi * 0.25),
+        qiLost,
         cooldownMs,
         cooldownHours: Math.ceil(cooldownMs / 3600000)
       }
@@ -907,7 +1461,18 @@ function awardActiveCultivationQi(player, triggerType, context = {}) {
  */
 function checkAndResetDailyCap(player) {
   const law = player.cultivationLaw;
-  if (!law || !law.dailyData) return false;
+  if (!law) return false;
+  if (!law.dailyData) {
+    law.dailyData = {
+      channelMinutesToday: 0,
+      dailyStreakDays: player.dailyStreak || 1,
+      lastDailyResetAt: new Date(),
+      lastEpiphanyClaimAt: null,
+      dailyMissionsCompleted: 0,
+      dailyMissionIds: []
+    };
+    return true;
+  }
 
   const lastReset = law.dailyData.lastDailyResetAt ? new Date(law.dailyData.lastDailyResetAt) : new Date(0);
   const now = new Date();
@@ -1012,8 +1577,22 @@ function getLawStatus(player) {
   const minutesUsed = law.dailyData?.channelMinutesToday || 0;
   const streakBonus = Math.min(35, streakDays * 5);
 
+  // Live channeling computation for status display (non-mutating)
+  let currentQi = law.qi || 0;
+  let currentMinutesUsed = minutesUsed;
+  let isChannelingActive = !!law.isChanneling;
+
+  if (isChannelingActive && law.lastChannelSyncAt) {
+    const progress = calculateChannelingProgress(player);
+    currentQi = Math.min(law.maxQi || 1260, currentQi + progress.qiGained);
+    currentMinutesUsed = Math.min(dailyCap, currentMinutesUsed + progress.minutesElapsed);
+  }
+
+  const isCapReached = (currentMinutesUsed >= dailyCap);
+  const isQiFull = (currentQi >= (law.maxQi || 1260));
+
   const totalStages = (law.rank * 10) + law.stage;
-  const qiPercent = law.maxQi > 0 ? Math.min(100, Math.floor((law.qi / law.maxQi) * 100)) : 0;
+  const qiPercent = law.maxQi > 0 ? Math.min(100, Math.floor((currentQi / law.maxQi) * 100)) : 0;
   const channelRate = getChannelQiRate(law.rank);
 
   const canClaimEpiphany = !isClaimedToday(law.dailyData?.lastEpiphanyClaimAt);
@@ -1037,8 +1616,8 @@ function getLawStatus(player) {
   if (law.stage === 9) {
     if (!isLevelMet) {
       majorBlockingReason = `Kapasitas fisik belum siap. Capai Level ${requiredLevel} (saat ini Lv. ${charLevel}).`;
-    } else if (law.qi < law.maxQi) {
-      majorBlockingReason = `Akumulasi Qi belum mencapai batas maksimal (${Math.floor(law.qi)}/${law.maxQi}).`;
+    } else if (currentQi < law.maxQi) {
+      majorBlockingReason = `Akumulasi Qi belum mencapai batas maksimal (${Math.floor(currentQi)}/${law.maxQi}).`;
     } else if (willFaceTribulation && !canSurviveTribulation) {
       majorBlockingReason = `Peringatan Kematian: Survival HP (${survivalHP}) tidak cukup menahan Petir Tribulasi (${maxWaveDmg} DMG). Tingkatkan DEF/Vitalitas.`;
     }
@@ -1062,20 +1641,20 @@ function getLawStatus(player) {
     rankDisplayName: rankDisplayName || `Tingkat ${law.rank || 0}`,
     totalStages,
 
-    qi: Math.floor(law.qi || 0),
+    qi: Math.floor(currentQi),
     maxQi: law.maxQi || 1260,
     qiPercent,
     qiProgressPercent: qiPercent,
     channelRate,
     channelRatePerMinute: channelRate,
 
-    isChanneling: !!law.isChanneling,
+    isChanneling: isChannelingActive,
     dailyChannelCap: dailyCap,
     dailyChannelCapMinutes: dailyCap,
-    dailyChannelUsed: Math.floor(minutesUsed),
-    channelMinutesUsedToday: Math.floor(minutesUsed),
-    dailyChannelRemaining: Math.max(0, dailyCap - minutesUsed),
-    remainingChannelMinutesToday: Math.max(0, dailyCap - minutesUsed),
+    dailyChannelUsed: Math.floor(currentMinutesUsed),
+    channelMinutesUsedToday: Math.floor(currentMinutesUsed),
+    dailyChannelRemaining: Math.max(0, dailyCap - currentMinutesUsed),
+    remainingChannelMinutesToday: Math.max(0, dailyCap - currentMinutesUsed),
 
     loginStreak: streakDays,
     streakBonusMinutes: streakBonus,
@@ -1094,19 +1673,45 @@ function getLawStatus(player) {
     bodyTemperingParts: law.bodyTemperingParts || {
       head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0
     },
-    guSlots: (law.guSlots || []).map(g => ({
-      guItemId: g.guItemId || null,
-      guName: g.guName,
-      guType: g.guType,
-      tier: g.tier || 1,
-      level: g.level || 1,
-      hunger: g.satiety !== undefined ? g.satiety : (g.hunger || 80),
-      satiety: g.satiety !== undefined ? g.satiety : (g.hunger || 80),
-      bonusAtk: g.bonusAtk || 5,
-      bonusDef: g.bonusDef || 3,
-      specialEffect: g.specialEffect || null,
-      lastFedAt: g.lastFedAt || null
-    })),
+    // Penyimpanan Internal 22 Esensi Alam Raga Suci
+    bodyEssenceStorage: law.bodyEssenceStorage || {},
+    maxBodyEssenceStorage: getMaxEssenceStorage(law.rank || 0),
+    naturalEssencesCatalog: NATURAL_ESSENCES,
+    temperingStatus: {
+      isTempering: !!law.isTemperingPart,
+      targetPart: law.temperingPartTarget || null,
+      essenceUsed: law.temperingEssenceUsed || null,
+      finishAt: law.temperingFinishAt || null,
+      isFinished: law.temperingFinishAt ? (new Date() >= new Date(law.temperingFinishAt)) : false,
+      remainingSeconds: law.temperingFinishAt ? Math.max(0, Math.ceil((new Date(law.temperingFinishAt).getTime() - Date.now()) / 1000)) : 0
+    },
+    breakthroughPillSlot: law.breakthroughPillSlot ? {
+      _id: (law.breakthroughPillSlot._id || law.breakthroughPillSlot).toString(),
+      name: law.breakthroughPillSlot.name || 'Pil Penerobosan',
+      tier: law.breakthroughPillSlot.tier || (law.breakthroughPillSlot.rank === 'uncommon' ? 2 : law.breakthroughPillSlot.rank === 'rare' ? 3 : 1),
+      icon: law.breakthroughPillSlot.icon || '💊',
+      rarity: law.breakthroughPillSlot.rank || law.breakthroughPillSlot.rarity || 'Common',
+      description: law.breakthroughPillSlot.description || 'Meningkatkan peluang keberhasilan terobosan sebesar +20% dan melindungi dantian dari kehilangan Qi.'
+    } : null,
+    guSlots: (law.guSlots || []).map(g => {
+      const baseSatiety = g.satiety !== undefined ? g.satiety : (g.hunger !== undefined ? g.hunger : 80);
+      const hoursSinceFed = g.lastFedAt ? (Date.now() - new Date(g.lastFedAt).getTime()) / 3600000 : 0;
+      const decay = Math.floor(hoursSinceFed * 2); // 2% satiety decay per hour
+      const effectiveSatiety = Math.max(0, Math.min(100, baseSatiety - decay));
+      return {
+        guItemId: g.guItemId || null,
+        guName: g.guName,
+        guType: g.guType,
+        tier: g.tier || 1,
+        level: g.level || 1,
+        hunger: effectiveSatiety,
+        satiety: effectiveSatiety,
+        bonusAtk: g.bonusAtk || 5,
+        bonusDef: g.bonusDef || 3,
+        specialEffect: g.specialEffect || null,
+        lastFedAt: g.lastFedAt || null
+      };
+    }),
 
     // Universal Essence System
     currentEssence: law.currentEssence !== undefined ? Math.floor(law.currentEssence) : 80,
@@ -1165,6 +1770,7 @@ module.exports = {
   LAW_TYPE_ENUM: Object.keys(LAW_DEFINITIONS),
   TRIBULATION_RANKS,
   BASE_CHANNEL_CAP_MINUTES,
+  NATURAL_ESSENCES,
 
   // Qi & Essence Calculation
   getBaseQiRequired,
@@ -1173,6 +1779,13 @@ module.exports = {
   getChannelQiRate,
   getMaxEssence,
   getEssenceDigestRate,
+
+  // Body Tempering & Environmental Essences
+  getMaxEssenceStorage,
+  getTemperingDurationSeconds,
+  harvestEnvironmentalEssence,
+  startBodyTemperingPart,
+  claimBodyTemperingPart,
 
   // Daily Cap
   getDailyChannelCap,

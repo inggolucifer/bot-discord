@@ -203,12 +203,21 @@ const boundEntitySchema = new mongoose.Schema({
   evolutionStage: { type: String, default: 'Mortal' }, // Mortal -> Spirit -> Earth -> Heaven -> Primordial
   essence: { type: Number, default: 0 },               // Beast Essence Bar / Artifact Infusion Bar
   maxEssence: { type: Number, default: 100 },
+  imageUrl: { type: String, default: null },
+  // Khusus Satwa Roh
+  isEgg: { type: Boolean, default: false },
+  hatchedAt: { type: Date, default: null },
   beastCurrentHp: { type: Number, default: 100 },
   beastMaxHp: { type: Number, default: 100 },
   beastAtk: { type: Number, default: 15 },
   beastDef: { type: Number, default: 10 },
   beastSpd: { type: Number, default: 12 },
-  lastFeedAt: { type: Date, default: null }
+  lastFeedAt: { type: Date, default: null },
+  // Khusus Pusaka Jiwa
+  artifactAtk: { type: Number, default: 15 },
+  artifactDef: { type: Number, default: 10 },
+  artifactCrit: { type: Number, default: 5 },
+  artifactRes: { type: Number, default: 5 }
 }, { _id: false });
 
 const demonicDataSchema = new mongoose.Schema({
@@ -290,7 +299,7 @@ const cultivationLawSchema = new mongoose.Schema({
   guSlots: [{
     guItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     guName: { type: String, default: null },
-    guType: { type: String, enum: ['attack', 'defense', 'healing', 'speed', 'support', 'special', null], default: null },
+    guType: { type: String, default: 'attack' },
     tier: { type: Number, default: 1, min: 1, max: 5 },
     level: { type: Number, default: 1, min: 1, max: 10 },
     hunger: { type: Number, default: 80 },             // Satiety alias
@@ -301,7 +310,37 @@ const cultivationLawSchema = new mongoose.Schema({
     lastFedAt: { type: Date, default: Date.now }
   }],
 
-  // Body Tempering Specific (9 Body Parts Tempering Progress)
+  // Body Tempering Specific: Penyimpanan Internal 22 Esensi Alam Primordial
+  bodyEssenceStorage: {
+    // Domain Angin, Cuaca & Badai
+    gale: { type: Number, default: 0 },
+    typhoon: { type: Number, default: 0 },
+    thunder: { type: Number, default: 0 },
+    rain: { type: Number, default: 0 },
+    mist: { type: Number, default: 0 },
+    frost: { type: Number, default: 0 },
+    sandstorm: { type: Number, default: 0 },
+    // Domain Kosmik, Langit & Waktu
+    solar: { type: Number, default: 0 },
+    lunar: { type: Number, default: 0 },
+    astral: { type: Number, default: 0 },
+    dawn: { type: Number, default: 0 },
+    twilight: { type: Number, default: 0 },
+    eclipse: { type: Number, default: 0 },
+    meteor: { type: Number, default: 0 },
+    // Domain Bentang Alam & Kehidupan
+    grass: { type: Number, default: 0 },
+    pool: { type: Number, default: 0 },
+    ocean: { type: Number, default: 0 },
+    earth: { type: Number, default: 0 },
+    // Domain Ekstrem & Vulkanik
+    magma: { type: Number, default: 0 },
+    miasma: { type: Number, default: 0 },
+    sulfur: { type: Number, default: 0 },
+    crystal: { type: Number, default: 0 }
+  },
+
+  // Body Tempering Specific: 9 Body Parts Level / Progress
   bodyTemperingParts: {
     head: { type: Number, default: 0 },
     torso: { type: Number, default: 0 },
@@ -312,7 +351,16 @@ const cultivationLawSchema = new mongoose.Schema({
     spine: { type: Number, default: 0 },
     dantian: { type: Number, default: 0 },
     skin: { type: Number, default: 0 }
-  }
+  },
+
+  // Active Body Tempering Process Tracking
+  isTemperingPart: { type: Boolean, default: false },
+  temperingPartTarget: { type: String, default: null },
+  temperingEssenceUsed: { type: String, default: null },
+  temperingFinishAt: { type: Date, default: null },
+
+  // Breakthrough Pill Slot: Slot Pil Penerobosan Nyata
+  breakthroughPillSlot: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null }
 }, { _id: false });
 
 const playerSchema = new mongoose.Schema({
@@ -413,6 +461,7 @@ const playerSchema = new mongoose.Schema({
 
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 },
+  infamy: { type: Number, default: 0 },
 
   biography: { type: String, default: '', maxlength: 500 },
   nickname: { type: String, default: null },
@@ -498,6 +547,7 @@ const playerSchema = new mongoose.Schema({
   reputation:     { type: Number, default: 100 },
   reputationTitle: { type: String, default: 'Novice Cultivator' },
   laws: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Law' }], default: [] },
+  cultivationLaw: { type: cultivationLawSchema, default: () => ({}) },
   manuals: { type: [playerManualSchema], default: [] },
   historicSkillMastery: { type: Map, of: Number, default: () => new Map() }, // Catatan rekor level tertinggi per manual/skill (Anti-Abuse Core Stat Farming)
   isNormalCultivator: { type: Boolean, default: false, index: true },

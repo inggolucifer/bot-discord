@@ -342,15 +342,31 @@ function processCombatTurnConditions(entity, actionContext = {}) {
       });
     } else {
       const dmg = Math.max(2, Math.floor(entity.maxHp * (conds.poison * COMBAT_COND.POISON_DAMAGE_FACTOR)));
-      entity.hp = Math.max(0, entity.hp - dmg);
-      if (entity.hp <= 0) entity.isDead = true;
+      const isPoisonLawCultivator = entity.cultivationLaw?.activeLawType === 'demonic_myriad_venom';
 
-      events.push({
-        type: 'poison_damage',
-        actor: entity.name,
-        damage: dmg,
-        message: `☠️ Racun menggerogoti organ tubuh ${entity.name} saat beraksi, merenggut ${dmg} HP!${entity.isDead ? ` 💀 (${entity.name} gugur oleh racun!)` : ''}`
-      });
+      if (isPoisonLawCultivator) {
+        // Praktisi Myriad Venom: Efek racun mengikis hingga sisa 1 HP (tidak mati oleh racun sendiri) sampai racun mereda.
+        // Namun jika diserang lawan di pertempuran, HP tetap turun ke 0 dan tewas!
+        entity.hp = Math.max(1, entity.hp - dmg);
+        conds.poison = Math.max(0, conds.poison - (COMBAT_COND.POISON_DECAY_PER_TURN || 5));
+
+        events.push({
+          type: 'poison_damage',
+          actor: entity.name,
+          damage: dmg,
+          message: `☠️ Hawa racun batin menggerogoti meridian ${entity.name}, merenggut ${dmg} HP (Sisa: ${entity.hp} HP)! Racun mereda ke ${conds.poison}.`
+        });
+      } else {
+        entity.hp = Math.max(0, entity.hp - dmg);
+        if (entity.hp <= 0) entity.isDead = true;
+
+        events.push({
+          type: 'poison_damage',
+          actor: entity.name,
+          damage: dmg,
+          message: `☠️ Racun menggerogoti organ tubuh ${entity.name} saat beraksi, merenggut ${dmg} HP!${entity.isDead ? ` 💀 (${entity.name} gugur oleh racun!)` : ''}`
+        });
+      }
     }
   }
 

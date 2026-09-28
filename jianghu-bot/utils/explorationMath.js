@@ -213,7 +213,8 @@ function evaluateAmbush({
     stealthRating = 0, // 0.0 s/d 1.0 (dari Qinggong)
     mountType = null,
     weatherMultiplier = 1.0, // kabut tebal = 1.4, cerah = 1.0
-    dangerLevel = 1.0 // indeks bahaya zona
+    dangerLevel = 1.0, // indeks bahaya zona
+    infamy = 0 // Reputasi jahat/buronan iblis (meningkatkan peluang disergap)
 }) {
     const terrain = TERRAIN_PROPERTIES[terrainType] || TERRAIN_PROPERTIES.plains;
     const P_a = terrain.ambushRate;
@@ -222,12 +223,13 @@ function evaluateAmbush({
     const mountStealth = mount ? mount.stealthBonus : 0;
 
     const totalStealth = Math.min(0.85, Math.max(0, stealthRating + mountStealth));
-    const P_actual = P_a * (1 - totalStealth) * weatherMultiplier * dangerLevel;
+    const infamyBonus = Math.min(0.40, Math.max(0, (infamy || 0) * 0.005));
+    const P_actual = (P_a * (1 - totalStealth) * weatherMultiplier * dangerLevel) + infamyBonus;
 
     const roll = Math.random();
     return {
         triggered: roll < P_actual,
-        actualProbability: Math.min(1.0, P_actual),
+        actualProbability: Math.min(1.0, Math.max(0, P_actual)),
         roll
     };
 }

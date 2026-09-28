@@ -318,6 +318,12 @@ export interface BoundEntityData {
   beastAtk?: number;
   beastDef?: number;
   beastSpd?: number;
+  artifactAtk?: number;
+  artifactDef?: number;
+  artifactCrit?: number;
+  artifactRes?: number;
+  isEgg?: boolean;
+  hatchedAt?: string | null;
 }
 
 export interface LawStatusData {
@@ -389,6 +395,14 @@ export interface LawStatusData {
   };
   miniBreakthroughSuccessRate: number;
   majorBreakthroughSuccessRate: number;
+  breakthroughPillSlot?: {
+    _id: string;
+    name: string;
+    tier: number;
+    icon?: string;
+    rarity?: string;
+    description?: string;
+  } | null;
   miniBreakthroughCooldownUntil?: string | null;
   majorBreakthroughCooldownUntil?: string | null;
   canClaimEpiphany: boolean;
@@ -404,6 +418,24 @@ export interface LawStatusData {
     canSurvive: boolean;
     tribulationTitle?: string;
   } | null;
+  bodyEssenceStorage?: Record<string, number>;
+  maxBodyEssenceStorage?: number;
+  naturalEssencesCatalog?: Record<string, {
+    name: string;
+    icon: string;
+    domain: string;
+    statBonus: Record<string, number>;
+    statBonusLabel: string;
+    narrative: string;
+  }>;
+  temperingStatus?: {
+    isTempering: boolean;
+    partTarget: string | null;
+    essenceUsed: string | null;
+    finishAt: number;
+    durationSeconds: number;
+    remainingSeconds: number;
+  };
 }
 
 export interface LawSkillItem {

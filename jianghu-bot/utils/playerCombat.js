@@ -158,6 +158,20 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     mult.def += lawProgressionMult;
     mult.spd += lawProgressionMult * 0.5;
 
+    // Law Skill Tree Investment Bonus (+0.4% per skill level invested)
+    if (law.skillLevels) {
+      let totalSpInvested = 0;
+      const entries = law.skillLevels instanceof Map ? Array.from(law.skillLevels.entries()) : Object.entries(law.skillLevels);
+      for (const [, lvl] of entries) {
+        if (typeof lvl === 'number' && lvl > 0) totalSpInvested += lvl;
+      }
+      if (totalSpInvested > 0) {
+        mult.hp += totalSpInvested * 0.004;
+        mult.atk += totalSpInvested * 0.004;
+        mult.def += totalSpInvested * 0.004;
+      }
+    }
+
     // Law Specialization Bonuses
     switch (law.activeLawType) {
       case 'element_phoenix_fire':
@@ -188,15 +202,30 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
       case 'natal_artifact':
         if (law.boundEntity?.entityType === 'artifact') {
           const artRank = law.boundEntity.rankLevel || rank;
-          flat.atk += artRank * 25;
-          flat.def += artRank * 15;
+          flat.atk += (law.boundEntity.artifactAtk || (artRank * 25));
+          flat.def += (law.boundEntity.artifactDef || (artRank * 15));
         }
         break;
       case 'natal_beast':
         if (law.boundEntity?.entityType === 'beast') {
           const beastRank = law.boundEntity.rankLevel || rank;
-          flat.hp += beastRank * 50;
-          flat.atk += beastRank * 15;
+          flat.hp += (law.boundEntity.beastMaxHp ? Math.floor(law.boundEntity.beastMaxHp * 0.5) : (beastRank * 50));
+          flat.atk += (law.boundEntity.beastAtk || (beastRank * 15));
+          flat.def += (law.boundEntity.beastDef || (beastRank * 10));
+        }
+        break;
+      case 'gu_master':
+        if (Array.isArray(law.guSlots)) {
+          for (const g of law.guSlots) {
+            const baseSatiety = g.satiety !== undefined ? g.satiety : (g.hunger || 0);
+            const hoursSinceFed = g.lastFedAt ? (Date.now() - new Date(g.lastFedAt).getTime()) / 3600000 : 0;
+            const effectiveSatiety = Math.max(0, Math.min(100, baseSatiety - Math.floor(hoursSinceFed * 2)));
+            if (effectiveSatiety > 0) {
+              const satietyRatio = Math.min(1.0, effectiveSatiety / 50);
+              flat.atk += Math.floor((g.bonusAtk || (rank * 8 + 5)) * satietyRatio);
+              flat.def += Math.floor((g.bonusDef || (rank * 5 + 3)) * satietyRatio);
+            }
+          }
         }
         break;
       case 'demonic_turbid_core':
@@ -207,6 +236,35 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         const corruption = law.demonicData?.corruptionIndex || 0;
         mult.atk += Math.floor(corruption / 10) * 0.01; // +1% ATK per 10 corruption
         mult.atk += rank * 0.035;                      // Demonic high offense
+
+        if (law.activeLawType === 'demonic_blood_soul' && law.demonicData?.soulBannerCaptures) {
+          flat.atk += Math.min(rank * 60 + 30, (law.demonicData.soulBannerCaptures || 0) * 3);
+        }
+        if (law.activeLawType === 'demonic_myriad_venom' && law.demonicData?.venomToxinLevel) {
+          flat.atk += Math.min(rank * 50 + 25, (law.demonicData.venomToxinLevel || 0) * 2);
+        }
+
+        // Sanksi Keterlambatan Upeti Altar Kurban Darah Abyss
+        if (law.activeLawType === 'demonic_abyssal_pact' && law.demonicData?.abyssalTributeDueAt) {
+          const now = Date.now();
+          const dueTime = new Date(law.demonicData.abyssalTributeDueAt).getTime();
+          if (now > dueTime) {
+            const overdueDays = (now - dueTime) / (24 * 3600 * 1000);
+            const penaltyMult = overdueDays >= 7 ? 0.4 : 0.7; // -30% stat jika lewat, -60% jika lewat >7 hari
+            mult.hp *= penaltyMult;
+            mult.atk *= penaltyMult;
+            mult.def *= penaltyMult;
+            mult.spd *= penaltyMult;
+          }
+        }
+
+        // Sanksi Terbakar Cahaya Yang di Luar Wilayah Kegelapan (Nether Debuff)
+        if (law.activeLawType === 'demonic_nether_darkness' && law.demonicData?.hasNetherDebuff) {
+          mult.hp *= 0.5;
+          mult.atk *= 0.5;
+          mult.def *= 0.5;
+          mult.spd *= 0.5;
+        }
         break;
     }
   }
@@ -265,5 +323,6 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
 }
 
 module.exports = {
-  calculatePlayerStats
+  calculatePlayerStats,
+  calculatePlayerCombatStats: calculatePlayerStats
 };

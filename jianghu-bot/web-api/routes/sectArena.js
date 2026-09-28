@@ -336,7 +336,7 @@ router.post('/challenge', authenticateToken, async (req, res) => {
       qi: targetPlayer.currentQi || 50,
       maxQi: targetPlayer.maxQi || 100,
       stance: 100,
-      skills: InteractiveBattleService.formatPlayerSkills(targetPlayer)
+      skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
     }];
 
     // Bawa sekutu jika ada
