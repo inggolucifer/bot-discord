@@ -46,6 +46,7 @@ const itemSchema = new mongoose.Schema({
   staminaReduction: { type: Number, default: 0 }, // Pengurangan stamina tetap per petak (misal 0.5 s/d 2.0)
   staminaReductionPercent: { type: Number, default: 0 }, // Pengurangan stamina persentase (misal 20 = diskon 20%)
 
+  tags: { type: [String], default: [] },
   // Cultivation Law & Companion Attributes
   lawType: { type: String, default: null },
   isLawManual: { type: Boolean, default: false },
