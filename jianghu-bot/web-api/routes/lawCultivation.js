@@ -251,12 +251,7 @@ router.post('/bind', authenticateToken, async (req, res) => {
         throw new CustomError(`Kitab Hukum "${manualItem.name}" tidak ditemukan di inventori tasmu. Dapatkan terlebih dahulu dari quest, eksplorasi, atau pasar.`, 400);
       }
 
-      // Konsumsi manual dari inventori
-      manualInv.quantity -= 1;
-      if (manualInv.quantity <= 0) {
-        player.inventory = player.inventory.filter(i => i.itemId.toString() !== manualItem._id.toString());
-      }
-      player.markModified('inventory');
+      let companionItem = null;
 
       // Validasi Slot 2: Persyaratan Law
       const reqConfig = LAW_BINDING_REQUIREMENTS[lawType];
@@ -265,7 +260,6 @@ router.post('/bind', authenticateToken, async (req, res) => {
           throw new CustomError(`Hukum Semesta ${LAW_DEFINITIONS[lawType].name} membutuhkan item persyaratan di Slot 2: ${reqConfig.name}.`, 400);
         }
 
-        let companionItem = null;
         if (mongoose.Types.ObjectId.isValid(slot2CompanionItemId)) {
           companionItem = await Item.findById(slot2CompanionItemId).session(session);
         }
@@ -276,6 +270,29 @@ router.post('/bind', authenticateToken, async (req, res) => {
           throw new CustomError('Item persyaratan Slot 2 tidak ditemukan di dunia Jianghu.', 400);
         }
 
+        if (companionItem.category === 'law') {
+            throw new CustomError('Item Kitab Hukum (Law) tidak dapat dijadikan tumbal untuk Slot 2.', 400);
+        }
+
+        let isValidCompanion = false;
+        if (reqConfig.tag && Array.isArray(companionItem.tags) && companionItem.tags.includes(reqConfig.tag)) {
+            isValidCompanion = true;
+        } else if (lawType === 'natal_artifact') {
+            const validCategories = ['weapon', 'artifact', 'material', 'accessories'];
+            if (companionItem.rank === 'Common' && validCategories.includes(companionItem.category)) {
+                isValidCompanion = true;
+            }
+        } else if (lawType === 'natal_beast') {
+            const validCategories = ['pet', 'material'];
+            if (companionItem.rank === 'Common' && validCategories.includes(companionItem.category)) {
+                isValidCompanion = true;
+            }
+        }
+
+        if (!isValidCompanion) {
+            throw new CustomError(`Item Slot 2 tidak memenuhi syarat. Dibutuhkan item dengan tag '${reqConfig.tag}' (${reqConfig.name}).`, 400);
+        }
+
         let companionInv = player.inventory.find(i => i.itemId.toString() === companionItem._id.toString());
         if (!companionInv || companionInv.quantity < 1) {
           throw new CustomError(`Item persyaratan "${companionItem.name}" tidak ada di inventori tasmu (butuh minimal 1).`, 400);
@@ -284,10 +301,20 @@ router.post('/bind', authenticateToken, async (req, res) => {
         // Konsumsi item persyaratan dari tas
         companionInv.quantity -= 1;
         if (companionInv.quantity <= 0) {
-          player.inventory = player.inventory.filter(i => i.itemId.toString() !== companionItem._id.toString());
+            const idx = player.inventory.findIndex(i => i.itemId.toString() === companionItem._id.toString());
+            if (idx > -1) player.inventory.splice(idx, 1);
         }
-        player.markModified('inventory');
+      }
 
+      // Konsumsi manual dari inventori
+      manualInv.quantity -= 1;
+      if (manualInv.quantity <= 0) {
+        const idx = player.inventory.findIndex(i => i.itemId.toString() === manualItem._id.toString());
+        if (idx > -1) player.inventory.splice(idx, 1);
+      }
+      player.markModified('inventory');
+
+      if (reqConfig && reqConfig.slot2Required) {
         // Jika Law berwujud Companion Entity (Natal Artifact / Natal Beast), inisialisasi boundEntity
         if (lawType === 'natal_artifact' || lawType === 'natal_beast') {
           const entityType = lawType === 'natal_artifact' ? 'artifact' : 'beast';
@@ -325,10 +352,31 @@ router.post('/bind', authenticateToken, async (req, res) => {
       player.cultivationLaw.lawLevelCapBonus = 0;
       player.cultivationLaw.lawSkillPoints = 0;
 
+      if (lawType === 'body_tempering') {
+          player.cultivationLaw.bodyEssenceStorage = {};
+          player.cultivationLaw.bodyTemperingParts = {
+              head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0
+          };
+      }
+
       player.markModified('cultivationLaw');
       await player.save({ session });
 
       const lawDef = LAW_DEFINITIONS[lawType];
+
+      const TransactionLog = require('../../models/TransactionLog');
+      await TransactionLog.create([{
+        guildId: player.guildId || userId,
+        type: 'law_bind',
+        userId: player.discordId,
+        description: `[${player.characterName}] mematri Hukum Semesta "${lawDef.name}" (manual: ${manualItem.name}${companionItem ? `, companion: ${companionItem.name}` : ''})`,
+        note: JSON.stringify({
+          lawType,
+          manualItemId: manualItem._id,
+          companionItemId: companionItem?._id || null
+        })
+      }], { session });
+
       const rankName = LAW_RANK_NAMES[lawType]?.[0] || 'Rank 0';
 
       res.json({
@@ -401,7 +449,7 @@ router.post('/ordinary/confirm', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error confirming ordinary path:', error);
     res.status(500).json({ error: 'Gagal mengonfirmasi jalur Kultivator Biasa.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
   }
 });
 
@@ -415,6 +463,7 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
   if (!releaseLock) {
     return res.status(429).json({ error: 'Aksi meditasi sedang diproses. Mohon tunggu sejenak.' });
   }
+  let cdRelease = null;
 
   try {
     const player = await resolvePlayer(req);
@@ -422,6 +471,38 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
 
     if (!law?.activeLawType) {
       return res.status(400).json({ error: 'Belum memilih Hukum Semesta (Law).' });
+    }
+
+    if (player.status !== 'active') {
+      return res.status(400).json({ error: `Karaktermu berstatus ${player.status}.` });
+    }
+    if (player.deathRecoveryUntil && player.deathRecoveryUntil > new Date()) {
+      return res.status(400).json({ error: 'Kondisi tubuhmu masih lemah dari kematian. Tunggu masa pemulihan selesai sebelum bermeditasi.' });
+    }
+
+    const BattleSession = require('../../models/BattleSession');
+    const activeBattle = await BattleSession.findOne({
+      'player.entityId': player.discordId,
+      status: 'ongoing'
+    }).lean();
+    if (activeBattle) {
+      return res.status(400).json({ error: 'Kamu sedang dalam pertempuran. Selesaikan atau kabur terlebih dahulu sebelum bermeditasi.' });
+    }
+
+    const DungeonInstance = require('../../models/DungeonInstance');
+    const activeDungeon = await DungeonInstance.findOne({
+      discordId: player.discordId,
+      status: 'exploring'
+    }).lean();
+    if (activeDungeon) {
+      return res.status(400).json({ error: 'Kamu sedang menjelajahi gua kuno. Keluar dari dungeon terlebih dahulu.' });
+    }
+
+    // Cooldown Start/Stop
+    const cooldownLock = `law_channel_cd_${userId}`;
+    cdRelease = await LockManager.acquire(cooldownLock, 5000);
+    if (!cdRelease) {
+       return res.status(429).json({ error: 'Napas spiritualmu belum stabil. Beri jeda beberapa detik sebelum mengubah aliran meditasi.' });
     }
 
     if (law.isChanneling) {
@@ -462,7 +543,8 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error starting channel:', error);
     res.status(500).json({ error: 'Terjadi kesalahan saat memulai meditasi.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
+    if (typeof cdRelease === 'function') cdRelease();
   }
 });
 
@@ -476,6 +558,7 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
   if (!releaseLock) {
     return res.status(429).json({ error: 'Aksi meditasi sedang diproses. Mohon tunggu sejenak.' });
   }
+  let cdRelease = null;
 
   try {
     const player = await resolvePlayer(req);
@@ -487,6 +570,13 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
 
     if (!law.isChanneling) {
       return res.status(400).json({ error: 'Tidak sedang bermeditasi.' });
+    }
+
+    // Cooldown Start/Stop
+    const cooldownLock = `law_channel_cd_${userId}`;
+    cdRelease = await LockManager.acquire(cooldownLock, 5000);
+    if (!cdRelease) {
+       return res.status(429).json({ error: 'Napas spiritualmu belum stabil. Beri jeda beberapa detik sebelum mengubah aliran meditasi.' });
     }
 
     // Pastikan daily cap dicek terlebih dahulu jika melewati tengah malam
@@ -519,7 +609,8 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
     console.error('[LAW-API] Error stopping channel:', error);
     res.status(500).json({ error: 'Terjadi kesalahan saat menghentikan meditasi.' });
   } finally {
-    releaseLock();
+    if (typeof releaseLock === 'function') releaseLock();
+    if (typeof cdRelease === 'function') cdRelease();
   }
 });
 
@@ -1093,23 +1184,40 @@ router.post(['/combat-loadout', '/loadout'], authenticateToken, async (req, res)
 // Helper: Deteksi law type dari nama item (fallback jika lawType field belum di-seed)
 // ═══════════════════════════════════════════════════════════════
 function detectLawTypeFromItem(item) {
-  const name = (item.name || '').toLowerCase();
+  if (item.lawType && LAW_DEFINITIONS[item.lawType]) {
+    return item.lawType;
+  }
+  if (Array.isArray(item.tags)) {
+    for (const tag of item.tags) {
+      if (LAW_DEFINITIONS[tag]) return tag;
+    }
+  }
+
+  const name = (item.name || '').toLowerCase().replace(/\s+/g, '');
+
+  for (const [key, lawDef] of Object.entries(LAW_DEFINITIONS)) {
+      const defName = lawDef.name.toLowerCase().replace(/\s+/g, '');
+      if (name.includes(defName) || defName.includes(name)) {
+          return key;
+      }
+  }
+
   const mapping = {
-    'api phoenix': 'element_phoenix_fire',
-    'samudra naga azure': 'element_azure_water',
-    'inti bumi xuanwu': 'element_xuanwu_earth',
-    'pohon hayat qingdi': 'element_qingdi_wood',
-    'sayap badai roc': 'element_roc_wind',
-    'petir hukuman dewa': 'element_godthunder_light',
-    'penempaan raga': 'body_tempering',
-    'sepuluh ribu gu': 'gu_master',
-    'pusaka kelahiran': 'natal_artifact',
-    'satwa roh purba': 'natal_beast',
-    'pelebur inti siluman': 'demonic_turbid_core',
-    'penghisap darah': 'demonic_blood_soul',
-    'seribu racun': 'demonic_myriad_venom',
-    'kontrak iblis': 'demonic_abyssal_pact',
-    'bayangan sembilan yin': 'demonic_nether_darkness'
+    'apiphoenix': 'element_phoenix_fire',
+    'samudranagaazure': 'element_azure_water',
+    'intibumixuanwu': 'element_xuanwu_earth',
+    'pohonhayatqingdi': 'element_qingdi_wood',
+    'sayapbadairoc': 'element_roc_wind',
+    'petirhukumandewa': 'element_godthunder_light',
+    'penempaanraga': 'body_tempering',
+    'sepuluhribugu': 'gu_master',
+    'pusakakelahiran': 'natal_artifact',
+    'satwarohpurba': 'natal_beast',
+    'peleburintisiluman': 'demonic_turbid_core',
+    'penghisapdarah': 'demonic_blood_soul',
+    'seriburacun': 'demonic_myriad_venom',
+    'kontrakiblis': 'demonic_abyssal_pact',
+    'bayangansembilanyin': 'demonic_nether_darkness'
   };
 
   for (const [keyword, lawType] of Object.entries(mapping)) {

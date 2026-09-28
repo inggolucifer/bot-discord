@@ -80,6 +80,7 @@ router.post('/equip', authenticateToken, async (req, res) => {
         // Sinkronisasi status tunggangan aktif pemain
         if (slot === 'mount') {
             player.equippedMount = item.mountType || item.name.toLowerCase().replace(/\s+/g, '_');
+            player.markModified('equippedMount');
         }
 
         player.markModified('inventory');
@@ -173,6 +174,7 @@ router.post('/unequip', authenticateToken, async (req, res) => {
         player.equipment[slot] = null;
         if (slot === 'mount') {
             player.equippedMount = null;
+            player.markModified('equippedMount');
         }
         player.markModified('inventory');
         player.markModified('equipment');
