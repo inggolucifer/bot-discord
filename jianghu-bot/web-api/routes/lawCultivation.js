@@ -1644,7 +1644,7 @@ router.post('/gu/fuse', authenticateToken, async (req, res) => {
     // Formula Peluang Fusi Berbasis Tier Sesuai Master Plan
     const tierP = priorityGu.tier || 1;
     const tierS = sacrificeGu.tier || 1;
-    const successRate = Math.max(10, Math.min(95, 85 - (tierP * 18) + (tierS * 6) + (crucibleTier - 1) * 5));
+    const successRate = Math.max(10, 85 - (tierP * 18) + (crucibleTier * 6));
     const roll = Math.random() * 100;
     const isSuccess = roll <= successRate;
 
