@@ -46,7 +46,8 @@ const {
   getLawStatus,
   startBodyTemperingPart,
   claimBodyTemperingPart,
-  getMaxEssenceStorage
+  getMaxEssenceStorage,
+  getTierAffinity
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -872,9 +873,10 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
       if (law.activeLawType === 'body_tempering') {
         const parts = law.bodyTemperingParts || {};
         const requiredParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
-        const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < targetRank);
+        const requiredLevel = targetRank * 2;
+        const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < requiredLevel);
         if (unreadyParts.length > 0) {
-          throw new CustomError(`Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${targetRank} (Belum siap: ${unreadyParts.join(', ')}).`, 400);
+          throw new CustomError(`Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${requiredLevel} (Belum siap: ${unreadyParts.join(', ')}).`, 400);
         }
       }
 
@@ -1280,12 +1282,15 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     const inv = player.inventory[invIndex];
     const item = inv.itemId;
     const itemTier = item.tier || 1;
-    const playerRank = law.rank || 0;
+    const playerTier = Number(law.rank) || 0;
 
-    // Hitung perolehan esensi dengan Tier Affinity Decay
-    const decay = Math.max(0.2, 1 - Math.max(0, playerRank - itemTier) * 0.35);
+    const affinity = getTierAffinity(playerTier, itemTier);
+    if (!affinity.allowed) {
+      return res.status(400).json({ error: affinity.reason });
+    }
+
     const baseEssence = 30 * Math.pow(2.2, Math.max(0, itemTier - 1));
-    const essenceGain = Math.max(15, Math.floor(baseEssence * decay));
+    const essenceGain = Math.max(15, Math.floor(baseEssence * affinity.efficiency));
 
     inv.quantity -= 1;
     if (inv.quantity <= 0) {
@@ -1496,7 +1501,165 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
   }
 });
 
-// 1. GU MASTER (Dual Mode Feed & Real Synthesis)
+// 1. GU MASTER (Dual Mode Feed, Real Synthesis, & Unequip)
+router.post('/gu/equip', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `law_gu_equip_${userId}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Aksi sedang diproses.' });
+
+  try {
+    const player = await resolvePlayer(req);
+    const law = player.cultivationLaw;
+    if (law?.activeLawType !== 'gu_master') {
+      return res.status(400).json({ error: 'Hanya praktisi Gu Master yang dapat meng-equip Gu.' });
+    }
+
+    const { itemId } = req.body;
+    if (!itemId) {
+      return res.status(400).json({ error: 'ID item Gu tidak valid.' });
+    }
+
+    const { getGuMaxSlots } = require('../../utils/lawCultivationEngine');
+    const maxSlots = getGuMaxSlots(Number(law.rank) || 0);
+    const currentSlotsCount = (law.guSlots || []).length;
+
+    if (currentSlotsCount >= maxSlots) {
+      return res.status(400).json({ error: `Rongga Dantianmu telah penuh! (Maksimal ${maxSlots} slot Gu pada ranah saat ini). Lepas cacing Gu lain terlebih dahulu.` });
+    }
+
+    await player.populate({ path: 'inventory.itemId' });
+    const invIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      return (inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId);
+    });
+
+    if (invIndex === -1) {
+      return res.status(400).json({ error: 'Item Gu tidak ditemukan di dalam tas inventori.' });
+    }
+
+    const inv = player.inventory[invIndex];
+    const item = inv.itemId;
+    const tags = item.tags || [];
+
+    if (!tags.includes('gu_larva') && item.category !== 'pet' && item.category !== 'material') {
+      return res.status(400).json({ error: 'Item ini bukan jenis cacing Gu yang bisa ditanam ke dalam rongga.' });
+    }
+
+    inv.quantity -= 1;
+    if (inv.quantity <= 0) {
+      player.inventory.splice(invIndex, 1);
+    }
+
+    const newGu = {
+      guItemId: item._id,
+      guName: item.name,
+      guType: 'attack',
+      tier: item.tier || 1,
+      level: 1,
+      satiety: 80,
+      hunger: 80,
+      bonusAtk: 5 + (item.tier || 1) * 2,
+      bonusDef: 3 + (item.tier || 1),
+      lastFedAt: new Date()
+    };
+
+    if (!law.guSlots) law.guSlots = [];
+    law.guSlots.push(newGu);
+
+    player.markModified('inventory');
+    player.markModified('cultivationLaw');
+    await player.save();
+
+    res.json({
+      success: true,
+      message: `🐛 Berhasil menanam [${item.name}] ke dalam pembuluh darah meridianmu!`,
+      data: { guSlots: law.guSlots }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    res.status(500).json({ error: 'Gagal meng-equip Gu.' });
+  } finally {
+    releaseLock();
+  }
+});
+
+router.post('/gu/unequip', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `law_gu_unequip_${userId}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Aksi sedang diproses.' });
+
+  try {
+    const player = await resolvePlayer(req);
+    const law = player.cultivationLaw;
+    if (law?.activeLawType !== 'gu_master') {
+      return res.status(400).json({ error: 'Hanya praktisi Gu Master yang dapat melepas Gu.' });
+    }
+
+    const { slotIndex, force } = req.body;
+    const idx = Number(slotIndex);
+    if (isNaN(idx) || !law.guSlots || idx < 0 || idx >= law.guSlots.length) {
+      return res.status(400).json({ error: 'Slot Gu yang dipilih tidak valid.' });
+    }
+
+    const guToUnequip = law.guSlots[idx];
+
+    await player.populate({ path: 'inventory.itemId' });
+    const pillIndex = player.inventory.findIndex(inv => {
+      if (!inv.itemId || inv.quantity < 1) return false;
+      const tags = inv.itemId.tags || [];
+      return tags.includes('sedative_pill');
+    });
+
+    let message = '';
+    if (pillIndex !== -1) {
+      player.inventory[pillIndex].quantity -= 1;
+      if (player.inventory[pillIndex].quantity <= 0) {
+        player.inventory.splice(pillIndex, 1);
+      }
+      player.markModified('inventory');
+      message = `🐛 Berhasil melepas [${guToUnequip.guName}] dengan aman menggunakan Pil Penenang Gu.`;
+    } else {
+      if (!force) {
+        return res.status(400).json({
+          error: `Melepas cacing Gu yang telah mengaitkan capitnya ke meridian membutuhkan 'Pil Penenang Gu'. Jika dipaksa, kamu akan menderita Backlash Meridian (-20% HP & Vitality selama 2 jam). Gunakan force=true untuk memaksa.`
+        });
+      }
+
+      if (!player.extendedStats) player.extendedStats = {};
+      const currentVit = player.extendedStats.vitality || player.vitality || 100;
+      player.extendedStats.vitality = Math.max(1, currentVit - 20);
+      player.vitality = player.extendedStats.vitality;
+      player.markModified('extendedStats');
+
+      const currentHp = player.currentHp || player.maxHp || 100;
+      player.currentHp = Math.max(1, Math.floor(currentHp * 0.8));
+
+      if (!law.demonicData) law.demonicData = {};
+      law.demonicData.guBacklashUntil = new Date(Date.now() + 2 * 3600 * 1000);
+
+      message = `💥 [BACKLASH] Kamu mencabut [${guToUnequip.guName}] secara paksa! Pembuluh meridian robek (-20% HP, -20 Vitality) dan tubuh melemah selama 2 jam.`;
+    }
+
+    law.guSlots.splice(idx, 1);
+
+    player.markModified('cultivationLaw');
+    await player.save();
+
+    res.json({
+      success: true,
+      message,
+      data: { guSlots: law.guSlots, vitality: player.vitality, currentHp: player.currentHp }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    res.status(500).json({ error: 'Gagal melepas Gu.' });
+  } finally {
+    releaseLock();
+  }
+});
+
 router.post('/gu/feed', authenticateToken, async (req, res) => {
   const { slotIndex, feedType, itemId } = req.body;
   try {
@@ -1569,16 +1732,16 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     const inv = player.inventory[invIndex];
     const itemDoc = inv.itemId;
     const itemTier = itemDoc.tier || itemDoc.rank || 1;
-    const playerTier = (law.rank || 0) + 1;
+    const playerTier = Number(law.rank) || 0;
 
-    if (itemTier > playerTier) {
+    const affinity = getTierAffinity(playerTier, itemTier);
+    if (!affinity.allowed) {
       return res.status(400).json({
         error: `Intisari pakan ini terlalu pekat (Tier ${itemTier}). Rongga cacing Gu milikmu belum sanggup mencerna nutrisi melampaui ranahmu (Tier ${playerTier}).`
       });
     }
 
-    const tierDiff = Math.max(0, playerTier - itemTier);
-    const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
+    const eff = affinity.efficiency;
     const satietyGain = Math.round(60 * eff);
     const qiGain = Math.round(50 * itemTier * eff);
 
@@ -1892,15 +2055,16 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
       const itemSlot = player.inventory[oreIndex];
       itemUsedName = itemSlot.itemId.name || 'Mineral';
       const itemTier = itemSlot.itemId.tier || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
       // Tier Rule
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Pusaka jiwa belum mampu menyerap ${itemUsedName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
+      const eff = affinity.efficiency;
       essenceGain = Math.round(35 * itemTier * eff);
 
       itemSlot.quantity -= 1;
@@ -1973,14 +2137,15 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
       const itemSlot = player.inventory[meatIndex];
       foodName = itemSlot.itemId.name || 'Daging Roh';
       const itemTier = itemSlot.itemId.tier || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Satwa roh belum mampu mencerna pakan ${foodName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
+      const eff = affinity.efficiency;
       essenceGain = Math.round(40 * itemTier * eff);
 
       itemSlot.quantity -= 1;
@@ -2087,19 +2252,24 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
 
     let coreName = 'Inti Siluman Kotor';
     let qiBonus = 80;
+    let efficiencyMsg = '';
     if (coreIndex !== -1) {
       const itemSlot = player.inventory[coreIndex];
       coreName = itemSlot.itemId.name || 'Inti Siluman';
       const itemTier = itemSlot.itemId.tier || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Dantian iblis menolak inti siluman Tier ${itemTier} yang melampaui ranahmu (setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
+      const eff = affinity.efficiency;
       qiBonus = Math.round(80 * itemTier * eff);
+      if (eff < 1.0) {
+        efficiencyMsg = ` (Efisiensi ${Math.round(eff * 100)}%)`;
+      }
 
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(coreIndex, 1);
@@ -2149,16 +2319,16 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Darah ini terlalu pekat/tinggi (Tier ${itemTier}). Wadah dantianmu belum mampu menampung intisari darah melebihi ranahmu (Tier ${playerTier}).`
         });
       }
 
-      const tierDiff = Math.max(0, playerTier - itemTier);
-      const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
+      const eff = affinity.efficiency;
       qiBonus = Math.round(90 * itemTier * eff);
       sourceName = itemDoc.name;
 
@@ -2213,16 +2383,16 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Arwah ini terlalu kuat dan liar (Tier ${itemTier}). Panji Sembilan Ruh milikmu belum mampu membelenggu jiwa melampaui ranahmu (Tier ${playerTier}).`
         });
       }
 
-      const tierDiff = Math.max(0, playerTier - itemTier);
-      const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
+      const eff = affinity.efficiency;
       qiBonus = Math.round(95 * itemTier * eff);
       soulSource = itemDoc.name;
 
@@ -2275,9 +2445,10 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Tingkat keganasan racun ini terlalu tinggi (Tier ${itemTier}). Dantianmu akan langsung hancur jika meminum racun melampaui ranahmu (Tier ${playerTier}).`
         });
@@ -2383,9 +2554,10 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Darah persembahan ini terlalu suci/tinggi (Tier ${itemTier}). Altar Abyss milikmu belum mampu menampung intisari melebihi ranahmu (Tier ${playerTier}).`
         });
@@ -2441,16 +2613,18 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      const playerTier = Number(law.rank) || 0;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
           error: `Hawa kematian item ini terlalu pekat (Tier ${itemTier}). Tubuhmu belum mampu menampung energi Yin melampaui ranahmu (Tier ${playerTier}).`
         });
       }
 
+      const eff = affinity.efficiency;
       absorbSource = itemDoc.name;
-      qiBonus = 100;
+      qiBonus = Math.round(100 * eff);
       invEntry.quantity -= 1;
       if (invEntry.quantity <= 0) {
         player.inventory.splice(invIndex, 1);
@@ -2542,7 +2716,7 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
     // Tier Rule Formula:
     // Item Tier vs Player Rank (Player Tier = rank + 1, e.g. Rank 0 = Tier 1)
     const itemTier = item.tier || (item.rank === 'uncommon' ? 2 : item.rank === 'rare' ? 3 : item.rank === 'epic' ? 4 : item.rank === 'legendary' ? 5 : 1);
-    const playerTier = (law.rank || 0) + 1;
+    const playerTier = Number(law.rank) || 0;
 
     // Jika itemTier > playerTier -> Terkunci / Ditolak Dantian
     if (itemTier > playerTier) {
