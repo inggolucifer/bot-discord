@@ -104,18 +104,22 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 ---
 
-## P. PROGRESSION 24–36 BULAN & ESSENCE GATE
+## P. PROGRESSION 7-HARI RANK 0, TOTAL 2–3 TAHUN & ESSENCE GATE
 
 | ID | Skenario | Ekspektasi | Status |
 |---|---|---|---|
-| P-01 | **Channel saat currentEssence = 0** | Meditasi dengan bar esensi kosong.<br>• *Hasil*: `qiGained = 0`, `isEssenceDepleted = true`, pesan edukatif Dantiam kosong. | [ ] PASS |
-| P-02 | **Isi bar sesuai law tags lalu channel** | Serap item sesuai profil Law lalu lakukan channeling meditasi.<br>• *Hasil*: `currentEssence` bertambah saat absorb; saat channel, `cultivationLaw.qi` bertambah dan `currentEssence` berkurang sesuai digest rate. | [ ] PASS |
-| P-03 | **Item law salah tag** | Serap item bahan spiritual yang tidak cocok dengan tag Law aktif.<br>• *Hasil*: Ditolak HTTP 400 *"Item [...] tidak memiliki intisari yang cocok..."*. | [ ] PASS |
-| P-04 | **Over-tier item** | Serap item dengan Tier > Ranah pemain (misal Tier 3 pada Rank 0).<br>• *Hasil*: Ditolak HTTP 400 sesuai `getTierAffinity(playerTier, itemTier).allowed === false`. | [ ] PASS |
-| P-05 | **Daily demonic cap** | Melebihi batas konsumsi harian demonic (turbid, blood, venom, dll).<br>• *Hasil*: Ditolak HTTP 429, reset otomatis pada pukul 00:00 WIB. | [ ] PASS |
-| P-06 | **Estimasi script totalDays** | Jalankan `node jianghu-bot/scripts/estimate_law_days.js`.<br>• *Hasil*: Total hari Rank 0..8 berada dalam rentang target [700, 1100] hari (~24–36 bulan kalender nyata / 970.6 hari). | [ ] PASS |
-| P-07 | **Combat skill** | Mengeluarkan jurus sakti di arena pertarungan.<br>• *Hasil*: `session.player.qi` (Combat Qi) berkurang, sedangkan `cultivationLaw.qi` (Xiuwei) **TIDAK PERNAH BERKURANG**. | [ ] PASS |
-| P-08 | **Bootstrap hanya sekali di awal** | Login/Status karakter baru Rank 0 dengan Qi 0 dan Essence 0.<br>• *Hasil*: Diberikan bootstrap 30 Esensi (`BOOTSTRAP_ESSENCE`) dan flag `essenceBootstrapDone = true`. Pemain endgame yang mengosongkan bar tidak akan di-refill. | [ ] PASS |
+| P-01 | **Rank 0 Onboarding 7 Hari** | Pemain baru melakukan channeling rajin dengan stok esensi cukup (70 mnt/hari).<br>• *Hasil*: Menyelesaikan Rank 0 (Stage 0..9) dalam **±7.0 hari** (total 13.715 Qi). Mini-breakthrough Stage 0 tercapai pada Hari ke-1 (~30 menit). | [ ] PASS |
+| P-02 | **Total Waktu Rank 0..8 (~2.5–3.5 Tahun)** | Evaluasi waktu kumulatif channel efektif dari Rank 0 hingga Rank 8.<br>• *Hasil*: Jumlah hari efektif berada di rentang [850, 1100] hari (kalibrasi tepat **934.99 hari / 30.7 bulan kalender murni**). | [ ] PASS |
+| P-03 | **Channel saat currentEssence = 0 (Mutlak 0 Qi)** | Meditasi dengan bar esensi kosong (`currentEssence <= 0`).<br>• *Hasil*: `qiGained = 0`, `isEssenceDepleted = true`, **TIDAK ADA drip Qi 15%**. Meditasi terhenti hingga esensi diserap. | [ ] PASS |
+| P-04 | **Isi bar sesuai law tags lalu channel** | Serap item sesuai profil Law lalu lakukan channeling meditasi.<br>• *Hasil*: `currentEssence` bertambah saat absorb; saat channel, `cultivationLaw.qi` bertambah dan `currentEssence` berkurang sesuai digest rate. | [ ] PASS |
+| P-05 | **Item law salah tag** | Serap item bahan spiritual yang tidak cocok dengan tag Law aktif.<br>• *Hasil*: Ditolak HTTP 400 *"Item [...] tidak memiliki intisari yang cocok..."*. | [ ] PASS |
+| P-06 | **Over-tier item** | Serap item dengan Tier > Ranah pemain (misal Tier 3 pada Rank 0).<br>• *Hasil*: Ditolak HTTP 400 sesuai `getTierAffinity(playerTier, itemTier).allowed === false`. | [ ] PASS |
+| P-07 | **Daily demonic cap** | Melebihi batas konsumsi harian demonic (turbid, blood, venom, dll).<br>• *Hasil*: Ditolak HTTP 429, reset otomatis pada pukul 00:00 WIB. | [ ] PASS |
+| P-08 | **Estimasi script assertions** | Jalankan `node jianghu-bot/scripts/estimate_law_days.js`.<br>• *Hasil*: Script memvalidasi `assert(rank0Days >= 6 && rank0Days <= 8)` dan `assert(sumDays >= 850 && sumDays <= 1100)` dengan status **LULUS**. | [ ] PASS |
+| P-09 | **Combat Qi Isolation** | Mengeluarkan jurus sakti di arena pertarungan.<br>• *Hasil*: `session.player.qi` (Combat Qi) berkurang, sedangkan `cultivationLaw.qi` (Xiuwei) **TIDAK PERNAH BERKURANG**. | [ ] PASS |
+| P-10 | **Bootstrap 40 Esensi di Awal** | Login/Status karakter baru Rank 0 dengan Qi 0 dan Essence 0.<br>• *Hasil*: Diberikan bootstrap 40 Esensi (`BOOTSTRAP_ESSENCE: 40`) dan flag `essenceBootstrapDone = true`. Pemain endgame yang mengosongkan bar tidak akan di-refill. | [ ] PASS |
+| P-11 | **Soft Addiction Hooks & ProgressionFeel Payload** | Request `GET /law/status`.<br>• *Hasil*: Mengembalikan payload `progressionFeel: { rankTargetDays: 7, stageProgressPct, etaMinutesThisStage, etaDaysThisStage, etaDaysThisRank, essenceMinutesLeft, dailyCapMinutes, nextDopamine, hintText }` serta `essence.etaDaysToNextStage`. | [ ] PASS |
+| P-12 | **Daily Epiphany Balance (+5% Qi & +10 Essence)** | Klaim pencerahan harian via `claimDailyEpiphany`.<br>• *Hasil*: Memberikan $+5\%$ Qi dari maxQi stage saat ini (bukan 10%), $+10$ Esensi, $+25\sim40$ Tembaga, dan tercatat di `lastEpiphanyClaimAt`. | [ ] PASS |
 
 ---
 
@@ -136,7 +140,7 @@ git grep -n "^<<<<<<<"
 git grep -n "^======="
 git grep -n "^>>>>>>>"
 
-# 3. Jalankan estimasi progresi 24-36 bulan
+# 3. Jalankan estimasi progresi 7 hari Rank 0 + 2.5 tahun Rank 0..8
 node jianghu-bot/scripts/estimate_law_days.js
 
 # 4. Jalankan seeding item penting Law
