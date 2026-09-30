@@ -1175,11 +1175,12 @@ function attemptMajorBreakthrough(player, options = {}) {
   if (law.activeLawType === 'body_tempering') {
     const parts = law.bodyTemperingParts || {};
     const requiredParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
-    const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < targetRank);
+    const requiredLevel = targetRank * 2;
+    const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < requiredLevel);
     if (unreadyParts.length > 0) {
       return {
         success: false,
-        message: `Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${targetRank} (Belum siap: ${unreadyParts.join(', ')}).`
+        message: `Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${requiredLevel} (Belum siap: ${unreadyParts.join(', ')}).`
       };
     }
   }
@@ -1673,7 +1674,21 @@ function getLawStatus(player) {
     combatLoadout: law.combatLoadout || [],
 
     boundEntity: law.boundEntity || null,
-    demonicData: law.demonicData || null,
+    demonicData: law.demonicData ? {
+      turbidCoresConsumed: law.demonicData.turbidCoresConsumed || 0,
+      corruptionIndex: law.demonicData.corruptionIndex || 0,
+      bloodEssenceVials: law.demonicData.bloodEssenceVials || 0,
+      soulBannerCaptures: law.demonicData.soulBannerCaptures || 0,
+      infamy: law.demonicData.infamy || 0,
+      venomToxinLevel: law.demonicData.venomToxinLevel || 0,
+      venomTolerancePct: law.demonicData.venomTolerancePct || 0,
+      abyssalTributeDueAt: law.demonicData.abyssalTributeDueAt || null,
+      abyssalTributeStreak: law.demonicData.abyssalTributeStreak || 0,
+      netherExileTimerSeconds: law.demonicData.netherExileTimerSeconds || 86400,
+      hasNetherDebuff: law.demonicData.hasNetherDebuff || false,
+      guBacklashUntil: law.demonicData.guBacklashUntil || null,
+      leftNetherTerritoryAt: law.demonicData.leftNetherTerritoryAt || null
+    } : null,
     bodyTemperingParts: law.bodyTemperingParts || {
       head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0
     },
@@ -1750,8 +1765,8 @@ function getLawStatus(player) {
       silverCost: Math.ceil(getMiniBreakthroughCost(law.rank || 0, law.stage || 0) / 100),
       materialName: 'Herba Penguat Intisari'
     },
-    miniBreakthroughSuccessRate: getMiniBreakthroughSuccessRate(law.rank || 0, law.stage || 0),
-    majorBreakthroughSuccessRate: getMajorBreakthroughSuccessRate(law.rank || 0),
+    miniBreakthroughSuccessRate: Math.min(95, getMiniBreakthroughSuccessRate(law.stage || 0) + (law.breakthroughPillSlot ? 20 : 0)),
+    majorBreakthroughSuccessRate: Math.min(95, getMajorBreakthroughSuccessRate(law.rank || 0) + (law.breakthroughPillSlot ? 20 : 0)),
 
     miniCooldownUntil: law.miniBreakthroughCooldownUntil || null,
     miniBreakthroughCooldownUntil: law.miniBreakthroughCooldownUntil || null,
@@ -1764,10 +1779,45 @@ function getLawStatus(player) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// TIER AFFINITY & COMBAT QI CALCULATIONS (Master Plan Fase A & B)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Efisiensi konsumsi item berdasarkan tier (Master Plan §5.1)
+ */
+function getTierAffinity(playerTier, itemTier) {
+  const p = Number(playerTier) || 0;
+  const t = Number(itemTier) || 1;
+  if (t > p) {
+    return { allowed: false, efficiency: 0, reason: 'Item di atas ranahmu. Dantian menolak menyerap.' };
+  }
+  if (t === p) {
+    return { allowed: true, efficiency: 1 };
+  }
+  const efficiency = Math.max(0.15, 1 - (p - t) * 0.40);
+  return { allowed: true, efficiency };
+}
+
+/**
+ * Menghitung batas maksimal Gu yang bisa di-equip per rank (Fase B)
+ */
+function getGuMaxSlots(rank) {
+  if (rank <= 0) return 1;
+  if (rank === 1) return 2;
+  if (rank === 2) return 3;
+  if (rank === 3) return 4;
+  return 5;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
 module.exports = {
+  // Helpers Fase A & B
+  getTierAffinity,
+  getGuMaxSlots,
+
   // Constants
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,

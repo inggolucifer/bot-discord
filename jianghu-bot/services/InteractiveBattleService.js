@@ -340,14 +340,14 @@ class InteractiveBattleService {
     const currentHp = isProjection
       ? maxHp
       : ((player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp)) ? player.currentHp : maxHp);
-    const realmIdx = player.cultivationLaw?.rank ?? player.systemCultivation?.realmIndex ?? 0;
-    const energyStat = player.extendedStats?.energy ?? 100;
+    const { getRealmIndex } = require('../utils/cultivation');
+    const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const energyStat = player.extendedStats?.innerEnergy ?? player.extendedStats?.energy ?? 100;
     const focusStat = player.extendedStats?.focus ?? 100;
-    const calculatedMaxCombatQi = 50 + (realmIdx * 25) + Math.floor(energyStat * 0.5) + Math.floor(focusStat * 0.3);
-    const maxQi = player.maxQi || calculatedMaxCombatQi;
-    const currentQi = isProjection
-      ? Math.max(50, Math.floor(maxQi * 0.5))
-      : ((player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0) ? Math.min(maxQi, player.currentQi) : Math.min(maxQi, 35)); // Qi awal pertarungan
+
+    // Formula MaxCombatQi: 50 + (RealmIndex * 25) + floor(Energy * 0.5) + floor(Focus * 0.3)
+    const maxQi = 50 + (realmIdx * 25) + Math.floor(energyStat * 0.5) + Math.floor(focusStat * 0.3);
+    const currentQi = maxQi; // Mulai battle selalu penuh (atau bisa disesuaikan, tapi defaultnya penuh sesuai Master Plan jika projection, atau kita set maxQi)
 
     // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
     const lawSkillsFormatted = await this.loadAndFormatLawSkills(player);
