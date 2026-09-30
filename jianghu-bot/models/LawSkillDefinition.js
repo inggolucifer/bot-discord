@@ -22,7 +22,9 @@ const lawSkillDefinitionSchema = new mongoose.Schema({
       'element_qingdi_wood', 'element_roc_wind', 'element_godthunder_light',
       'body_tempering', 'gu_master', 'natal_artifact', 'natal_beast',
       'demonic_turbid_core', 'demonic_blood_soul', 'demonic_myriad_venom',
-      'demonic_abyssal_pact', 'demonic_nether_darkness'
+      'demonic_abyssal_pact', 'demonic_nether_darkness',
+      'righteous_heavenly_merit', 'righteous_pure_yang', 'righteous_sword_heart',
+      'righteous_formation_array', 'righteous_karmic_mirror'
     ]
   },
   tier: { type: Number, required: true, min: 1, max: 5 },               // Tier 1 = dasar, Tier 5 = Rank 8 ultimate

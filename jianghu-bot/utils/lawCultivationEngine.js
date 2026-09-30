@@ -164,6 +164,60 @@ const LAW_DEFINITIONS = {
     category: 'demonic',  
     element: 'Dark', 
     stageBonus: { agility: 4, atk: 6, lifespan: 3 }
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 5 RIGHTEOUS / ORTHODOX LAWS (Jalur Jasa, Yang, Pedang, Formasi, Karma)
+  // ═══════════════════════════════════════════════════════════════
+  righteous_heavenly_merit: {
+    name: 'Hukum Jasa Langit',
+    qiType: 'qi',
+    energyLabel: 'Merit Qi',
+    pathMod: 1.08,
+    category: 'righteous',
+    element: 'Merit',
+    faction: 'righteous',
+    stageBonus: { hp: 20, def: 4, spiritualRes: 3, lifespan: 5, rootExp: 0 }
+  },
+  righteous_pure_yang: {
+    name: 'Kitab Yang Murni',
+    qiType: 'qi',
+    energyLabel: 'Pure Yang Qi',
+    pathMod: 1.10,
+    category: 'righteous',
+    element: 'Yang',
+    faction: 'righteous',
+    stageBonus: { atk: 5, spiritualRes: 5, lifespan: 4 }
+  },
+  righteous_sword_heart: {
+    name: 'Hati Pedang',
+    qiType: 'qi',
+    energyLabel: 'Sword Intent Qi',
+    pathMod: 1.12,
+    category: 'righteous',
+    element: 'Metal',
+    faction: 'righteous',
+    stageBonus: { atk: 9, crit: 3, lifespan: 3 }
+  },
+  righteous_formation_array: {
+    name: 'Formasi Bendera',
+    qiType: 'qi',
+    energyLabel: 'Array Qi',
+    pathMod: 1.06,
+    category: 'righteous',
+    element: 'Earth',
+    faction: 'righteous',
+    stageBonus: { def: 8, hp: 25, martialRes: 3, lifespan: 4 }
+  },
+  righteous_karmic_mirror: {
+    name: 'Cermin Karma',
+    qiType: 'qi',
+    energyLabel: 'Karma Clarity Qi',
+    pathMod: 1.14,
+    category: 'righteous',
+    element: 'Spirit',
+    faction: 'righteous',
+    stageBonus: { spiritualRes: 6, def: 4, lifespan: 4 }
   }
 };
 
@@ -301,6 +355,11 @@ const LAW_PROGRESSION = {
   FILL_GU_FEED_BASE: 15,
   FILL_NATAL_INFUSE_BASE: 16,
   FILL_BODY_TEMPER_TRUE_QI_TO_ESSENCE: 0,
+  FILL_RIGHTEOUS_MERIT: 18,
+  FILL_RIGHTEOUS_YANG: 18,
+  FILL_RIGHTEOUS_SWORD: 17,
+  FILL_RIGHTEOUS_ARRAY: 20,
+  FILL_RIGHTEOUS_KARMA: 16,
 
   MAX_ESSENCE_GAIN_PER_ACTION: 35,
   BOOTSTRAP_ESSENCE: 40,  // rank 0 awal tidak frustrasi
@@ -331,7 +390,12 @@ const LAW_RANK_NAMES = {
   demonic_blood_soul:       ['Penghisap Setetes Darah', 'Peminum Darah Fana', 'Pengikat Ruh Lemah', 'Panji Ruh Pertama', 'Pencabut Nyawa Diam', 'Lautan Darah Beriak', 'Penguasa Sembilan Ruh', 'Raja Neraka Darah', 'Iblis Darah Sempurna'],
   demonic_myriad_venom:     ['Penjilat Bisa Ringan', 'Peminum Racun Encer', 'Tubuh Toleran Racun', 'Kantung Bisa Terbentuk', 'Racun Seribu Jenis', 'Tubuh Kebal Maut', 'Naga Racun Korosi', 'Lautan Racun Pemusnah', 'Iblis Racun Sempurna'],
   demonic_abyssal_pact:     ['Bisikan Iblis Samar', 'Kontrak Pertama', 'Perjanjian Darah', 'Wadah Iblis Muda', 'Segel Keempat Terbuka', 'Tangan Kanan Iblis', 'Perwujudan Abyss', 'Pewaris Tahta Iblis', 'Iblis Pact Sempurna'],
-  demonic_nether_darkness:  ['Bayangan Pudar', 'Kabut Yin Tipis', 'Kegelapan Merayap', 'Jubah Malam Abadi', 'Domain Bayangan', 'Penguasa Nether Yin', 'Kekosongan Sembilan Lapis', 'Raja Kegelapan Kuno', 'Iblis Nether Sempurna']
+  demonic_nether_darkness:  ['Bayangan Pudar', 'Kabut Yin Tipis', 'Kegelapan Merayap', 'Jubah Malam Abadi', 'Domain Bayangan', 'Penguasa Nether Yin', 'Kekosongan Sembilan Lapis', 'Raja Kegelapan Kuno', 'Iblis Nether Sempurna'],
+  righteous_heavenly_merit: ['Kebaikan Pemula', 'Pahala Fana', 'Kebajikan Terpancar', 'Jasa Langit Awal', 'Pelindung Dharma', 'Jasa Kebajikan Batin', 'Mahkota Kebajikan Suci', 'Avatar Jasa Langit', 'Jasa Agung Sempurna'],
+  righteous_pure_yang:      ['Percikan Yang Murni', 'Napas Fajar', 'Api Yang Sejati', 'Darah Emas Murni', 'Tubuh Yang Tak Ternoda', 'Matahari Batin', 'Cahaya Yang Primordial', 'Penguasa Yang Surgawi', 'Yang Abadi Sempurna'],
+  righteous_sword_heart:    ['Niat Pedang Pemula', 'Ketajaman Baja', 'Kilatan Bilah Jernih', 'Hati Pedang Bersatu', 'Bilah Terbang Rohani', 'Penguasa Sembilan Pedang', 'Domain Seribu Bilah', 'Pedang Kuno Primordial', 'Dewa Pedang Sempurna'],
+  righteous_formation_array:['Bendera Formasi Pemula', 'Pola Grid Dasar', 'Segel Delapan Penjuru', 'Fondasi Array Kokoh', 'Pengendali Leylines', 'Domain Formasi Agung', 'Matriks Bintang Langit', 'Segel Primordial Semesta', 'Master Formasi Sempurna'],
+  righteous_karmic_mirror:  ['Pantulan Air Jernih', 'Cermin Debu Hilang', 'Kilau Karma Awal', 'Penglihatan Sebab Akibat', 'Cermin Hati Bersih', 'Hakim Benang Takdir', 'Mata Hukum Karma', 'Cermin Langit Tanpa Cela', 'Karma Agung Sempurna']
 };
 
 /**
@@ -436,6 +500,54 @@ const LAW_ESSENCE_PROFILE = {
     fillTags: ['yin_stone', 'nether', 'dark', 'essence'],
     fillCategories: ['material'],
     emptyHint: 'Serap batu Yin / esensi kegelapan.'
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 5 RIGHTEOUS ESSENCE PROFILES
+  // ═══════════════════════════════════════════════════════════════
+  righteous_heavenly_merit: {
+    barName: 'Merit Reservoir',
+    fillTags: ['merit_seal', 'commendation_token', 'relief_receipt'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap Segel Jasa / Token Pujian hasil quest resmi.',
+    dailyAbsorbField: 'meritAbsorbsToday',
+    dailyAbsorbMax: 25
+  },
+  righteous_pure_yang: {
+    barName: 'Yang Purity Reservoir',
+    fillTags: ['yang_crystal', 'sun_essence_pill', 'white_jade_fragment'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap Kristal Yang / Pil Matahari / Pecahan Giok Putih. Tas harus bebas item demonic kotor.',
+    dailyAbsorbField: 'yangAbsorbsToday',
+    dailyAbsorbMax: 20,
+    requireCleanInventory: true
+  },
+  righteous_sword_heart: {
+    barName: 'Sword Intent Reservoir',
+    fillTags: ['sword_oil', 'whetstone_spirit', 'broken_blade_shard', 'sword_manual_scrap'],
+    fillCategories: ['material'],
+    emptyHint: 'Asah bilah dengan minyak/batu asah roh atau pecahan pedang. Wajib menenteng pedang.',
+    dailyAbsorbField: 'swordAbsorbsToday',
+    dailyAbsorbMax: 20,
+    requireEquippedSword: true
+  },
+  righteous_formation_array: {
+    barName: 'Array Qi Reservoir',
+    fillTags: ['array_flag', 'formation_plate', 'spirit_compass'],
+    fillCategories: ['material'],
+    emptyHint: 'Tanam intisari bendera/lempeng formasi di atas Formation Hub milikmu.',
+    dailyAbsorbField: 'arrayAbsorbsToday',
+    dailyAbsorbMax: 15,
+    requireFormationHubTile: true
+  },
+  righteous_karmic_mirror: {
+    barName: 'Karma Clarity Reservoir',
+    fillTags: ['karma_mirror_shard', 'judgment_talisman', 'confessional_incense'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap pecahan cermin karma / jimat vonis / dupa pengakuan.',
+    dailyAbsorbField: 'karmaAbsorbsToday',
+    dailyAbsorbMax: 15,
+    rejectIfInfamyAbove: 30
   },
 };
 
@@ -2072,7 +2184,12 @@ function checkAndResetDailyCap(player) {
       soulBannerToday: 0,
       venomDrinksToday: 0,
       essenceConvertsToday: 0,
-      worldQiToday: 0
+      worldQiToday: 0,
+      meritAbsorbsToday: 0,
+      yangAbsorbsToday: 0,
+      swordAbsorbsToday: 0,
+      arrayAbsorbsToday: 0,
+      karmaAbsorbsToday: 0
     };
     return true;
   }
@@ -2096,6 +2213,11 @@ function checkAndResetDailyCap(player) {
     law.dailyData.venomDrinksToday = 0;
     law.dailyData.essenceConvertsToday = 0;
     law.dailyData.worldQiToday = 0;
+    law.dailyData.meritAbsorbsToday = 0;
+    law.dailyData.yangAbsorbsToday = 0;
+    law.dailyData.swordAbsorbsToday = 0;
+    law.dailyData.arrayAbsorbsToday = 0;
+    law.dailyData.karmaAbsorbsToday = 0;
     return true;
   }
   return false;
