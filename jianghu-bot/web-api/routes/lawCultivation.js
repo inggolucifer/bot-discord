@@ -1537,28 +1537,42 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
           tier: node.tier || 1,
           skillPointCost: node.costPerLevel || 1,
           requiredRank: node.requiredRank || 0,
+          requires: node.requires || [],
           requiredParentSkillId: (node.requires && node.requires[0]) || null,
-          maxLevel: node.maxLevel || 5
+          maxLevel: node.maxLevel || 5,
+          icon: node.icon || '⚡',
+          effects: node.effects
         };
       }
     }
-    if (!skillDef) {
+    if (!skillDef || skillDef.lawType !== law.activeLawType) {
       return res.status(404).json({ error: 'Skill tidak ditemukan untuk jalur Law ini.' });
     }
 
-    // Cek apakah sudah unlock
-    if ((law.unlockedSkillIds || []).includes(skillId)) {
-      return res.status(400).json({ error: 'Skill ini sudah dipelajari.' });
+    // Cek currentLevel & maxLevel
+    const skillLevels = law.skillLevels instanceof Map
+      ? Object.fromEntries(law.skillLevels)
+      : (law.skillLevels || {});
+    const currentLevel = Number(skillLevels[skillId] || ((law.unlockedSkillIds || []).includes(skillId) ? 1 : 0));
+    const maxLevel = skillDef.maxLevel || 5;
+
+    if (currentLevel >= maxLevel) {
+      return res.status(400).json({ error: `Skill [${skillDef.name}] sudah mencapai level maksimal (${maxLevel}).` });
     }
 
     // Cek rank requirement
-    if (law.rank < (skillDef.requiredRank || 0)) {
+    if ((law.rank || 0) < (skillDef.requiredRank || 0)) {
       return res.status(400).json({ error: `Rank Law belum cukup. Butuh Rank ${skillDef.requiredRank}.` });
     }
 
-    // Cek parent skill
-    if (skillDef.requiredParentSkillId && !(law.unlockedSkillIds || []).includes(skillDef.requiredParentSkillId)) {
-      return res.status(400).json({ error: 'Skill prasyarat belum dipelajari.' });
+    // Cek requires (semua skill prasyarat harus sudah dipelajari)
+    const requires = Array.isArray(skillDef.requires)
+      ? skillDef.requires
+      : (skillDef.requiredParentSkillId ? [skillDef.requiredParentSkillId] : []);
+    for (const reqSkillId of requires) {
+      if (!(law.unlockedSkillIds || []).includes(reqSkillId)) {
+        return res.status(400).json({ error: `Skill prasyarat [${reqSkillId}] belum dipelajari.` });
+      }
     }
 
     // Cek skill points (Tier-scaled: Tier 1=1, Tier 2=2, Tier 3=3, Tier 4=5, Tier 5=7)
@@ -1570,25 +1584,24 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
 
     // Alokasikan SP
     law.lawSkillPoints -= cost;
+    const nextLevel = currentLevel + 1;
     if (!law.unlockedSkillIds) law.unlockedSkillIds = [];
-    law.unlockedSkillIds.push(skillId);
-
-    // Inisialisasi Level 1 dan Exp 0
-    if (!law.skillLevels) law.skillLevels = new Map();
-    if (!law.skillExp) law.skillExp = new Map();
-    if (law.skillLevels.set) {
-      law.skillLevels.set(skillId, 1);
-      law.skillExp.set(skillId, 0);
-    } else {
-      law.skillLevels[skillId] = 1;
-      law.skillExp[skillId] = 0;
+    if (!law.unlockedSkillIds.includes(skillId)) {
+      law.unlockedSkillIds.push(skillId);
     }
 
-    // Sinergi Law ke Spiritual Root XP (Automatic Dao Resonance)
+    if (!law.skillLevels) law.skillLevels = new Map();
+    if (law.skillLevels.set) {
+      law.skillLevels.set(skillId, nextLevel);
+    } else {
+      law.skillLevels[skillId] = nextLevel;
+    }
+
+    // Sinergi Law ke Spiritual Root XP (Automatic Dao Resonance pada unlock awal)
     const lawDef = LAW_DEFINITIONS[law.activeLawType];
     const rootTarget = (lawDef?.rootKey || (skillDef.element ? skillDef.element.toLowerCase() : null));
     let resonanceXp = 0;
-    if (rootTarget) {
+    if (rootTarget && currentLevel === 0) {
       if (!player.extendedStats) player.extendedStats = {};
       if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
       const currentXp = player.extendedStats.spiritualRoot[rootTarget] || 0;
@@ -1602,11 +1615,15 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `✨ Berhasil mempelajari jurus: ${skillDef.icon} ${skillDef.name}!${resonanceXp > 0 ? ` (Resonansi Dao: +${resonanceXp} Spiritual Root ${rootTarget.toUpperCase()} XP)` : ''}`,
+      message: currentLevel === 0
+        ? `✨ Berhasil mempelajari jurus: ${skillDef.icon || '⚡'} ${skillDef.name} (Lv. 1)!${resonanceXp > 0 ? ` (Resonansi Dao: +${resonanceXp} Spiritual Root ${rootTarget.toUpperCase()} XP)` : ''}`
+        : `⚡ Berhasil meningkatkan level jurus: ${skillDef.icon || '⚡'} ${skillDef.name} ke Lv. ${nextLevel}!`,
       data: {
         skillId: skillDef.skillId,
         name: skillDef.name,
         tier: skillDef.tier,
+        level: nextLevel,
+        maxLevel: maxLevel,
         remainingPoints: law.lawSkillPoints,
         totalUnlocked: law.unlockedSkillIds.length,
         daoResonance: resonanceXp > 0 ? { element: rootTarget, xpGranted: resonanceXp } : null
