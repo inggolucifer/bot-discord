@@ -585,9 +585,9 @@ function harvestEnvironmentalEssence(player, context = {}) {
     law.bodyEssenceStorage = {};
   }
 
-  // Peluang random 20% pemicu inhalasi alam (Master Plan §3.3 rentang 15-25%)
+  // Peluang random pemicu inhalasi alam (LAW_BALANCE.BODY_MOVE_HARVEST_CHANCE: 0.12)
   const roll = Math.random();
-  if (roll > 0.20) return null;
+  if (roll > LAW_BALANCE.BODY_MOVE_HARVEST_CHANCE) return null;
 
   const weather = context.weather || 'Cerah';
   const hour = context.hour !== undefined ? context.hour : (new Date().getHours());
@@ -1809,7 +1809,11 @@ function checkAndResetDailyCap(player) {
       lastDailyResetAt: new Date(),
       lastEpiphanyClaimAt: null,
       dailyMissionsCompleted: 0,
-      dailyMissionIds: []
+      dailyMissionIds: [],
+      turbidAbsorbsToday: 0,
+      bloodHarvestsToday: 0,
+      soulBannerToday: 0,
+      venomDrinksToday: 0
     };
     return true;
   }
@@ -1827,6 +1831,10 @@ function checkAndResetDailyCap(player) {
     law.dailyData.lastDailyResetAt = now;
     law.dailyData.dailyMissionsCompleted = 0;
     law.dailyData.dailyMissionIds = [];
+    law.dailyData.turbidAbsorbsToday = 0;
+    law.dailyData.bloodHarvestsToday = 0;
+    law.dailyData.soulBannerToday = 0;
+    law.dailyData.venomDrinksToday = 0;
     return true;
   }
   return false;
