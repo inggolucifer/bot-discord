@@ -90,6 +90,8 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         critDr: player.extendedStats?.critDmgReduce || 0,
         martialRes: player.extendedStats?.martialRes || 0,
         spiritualRes: player.extendedStats?.spiritualRes || 0,
+        reflectPct: player.extendedStats?.reflectPct !== undefined ? player.extendedStats.reflectPct : (baseStats.reflectPct || 0),
+        onFormationHome: !!(player.extendedStats?.onFormationHome || baseStats.onFormationHome),
         _base: baseStats._base,
         _equip: baseStats._equip,
         _unarmedBonus: baseStats._unarmedBonus,

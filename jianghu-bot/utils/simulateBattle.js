@@ -2,6 +2,7 @@ const { getComputedStats } = require('./statCalculator');
 const { COMBO_HIT_MULTIPLIER, BASE_CRIT_RATE, BASE_COMBO_RATE } = require('../config/combatRates');
 const COMBAT_COND = require('../config/combatConditions');
 const { resolveWeaponDiscipline, getKungfuLevel, getStealingSuccessBonus } = require('./kungfuMastery');
+const { getLawCombatModifiers } = require('./lawCultivationEngine');
 
 function cloneConditions(conds) {
     if (!conds || !Array.isArray(conds)) return [];
@@ -371,6 +372,11 @@ function simulateBattle(challenger, opponent, options = {}) {
              dmg = Math.floor(dmg * multiplier);
         }
 
+        const lawMod = getLawCombatModifiers(attacker, defender);
+        if (lawMod.damageMultiplier && lawMod.damageMultiplier !== 1.0 && !hitSelf) {
+             dmg = Math.floor(dmg * lawMod.damageMultiplier);
+        }
+
         dmg = Math.max(1, dmg);
 
         // Calculate hits (Combo)
@@ -465,6 +471,11 @@ function simulateBattle(challenger, opponent, options = {}) {
              let reflectDmg = Math.floor(totalDmgDone * (defReflectSkill.value - 1));
              if (currentAttacker === 1) p1Hp -= reflectDmg; else p2Hp -= reflectDmg;
              pushLog(`🪞 **${defender.characterName}** memicu **[${defReflectSkill.name}]** memantulkan **${reflectDmg}** damage!`, 'reflect', { target: currentAttacker, damage: reflectDmg });
+        } else if (totalDmgDone > 0 && !hitSelf && defStats.reflectPct > 0) {
+             const reflectPct = Math.min(0.25, defStats.reflectPct);
+             let reflectDmg = Math.max(1, Math.floor(totalDmgDone * reflectPct));
+             if (currentAttacker === 1) p1Hp -= reflectDmg; else p2Hp -= reflectDmg;
+             pushLog(`🪞 **${defender.characterName}** memantulkan [Cermin Karma] **${reflectDmg}** damage!`, 'reflect', { target: currentAttacker, damage: reflectDmg });
         }
 
         round++;

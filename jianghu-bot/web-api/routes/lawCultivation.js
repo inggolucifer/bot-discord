@@ -55,7 +55,9 @@ const {
   LAW_PROGRESSION,
   LAW_ESSENCE_PROFILE,
   LAW_SKILL_TREES,
-  getMaxEssence
+  getMaxEssence,
+  isPlayerWieldingSword,
+  isOnOwnFormationHub
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -73,35 +75,6 @@ async function resolvePlayer(req, session = null) {
   return player;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// Helper: Memeriksa apakah pemain sedang menenteng/menggunakan pedang
-// ═══════════════════════════════════════════════════════════════
-function isPlayerWieldingSword(player) {
-  if (!player.inventory) return false;
-  const equipmentSlotValues = player.equipment
-    ? Object.values(player.equipment instanceof Map ? Object.fromEntries(player.equipment) : player.equipment)
-        .filter(v => v !== null && v !== undefined)
-        .map(v => v.toString())
-    : [];
-
-  for (const invItem of player.inventory) {
-    const isActuallyEquipped = invItem.isEquipped ||
-      (invItem._id && equipmentSlotValues.includes(invItem._id.toString())) ||
-      (invItem.itemId?._id && equipmentSlotValues.includes(invItem.itemId._id.toString())) ||
-      (invItem.itemId && equipmentSlotValues.includes(invItem.itemId.toString()));
-
-    if (!isActuallyEquipped) continue;
-    const item = (invItem.itemId && typeof invItem.itemId === 'object') ? invItem.itemId : invItem;
-    if (item && (item.category === 'weapon' || item.weaponType || item.subtype === 'weapon')) {
-      const tags = Array.isArray(item.tags) ? item.tags : [];
-      if (tags.includes('sword') || tags.includes('oath_sword')) return true;
-      const name = (item.name || '').toLowerCase();
-      const subtype = (item.subtype || item.weaponType || '').toLowerCase();
-      if (/(sword|pedang|jian)/i.test(name) || /(sword|pedang|jian)/i.test(subtype)) return true;
-    }
-  }
-  return false;
-}
 
 // ═══════════════════════════════════════════════════════════════
 // GET /law/status — State lengkap Law Cultivation
