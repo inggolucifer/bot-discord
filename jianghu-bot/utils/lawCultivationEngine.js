@@ -2984,6 +2984,136 @@ const LAW_SKILL_TREES = {
 };
 
 // ═══════════════════════════════════════════════════════════════
+// COMBAT & SPATIAL HELPERS (SWORD, FORMATION HUB, LAW MODIFIERS)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Memeriksa apakah pemain sedang menggunakan senjata bertipe pedang.
+ * Sumber kebenaran tunggal untuk absorb gate dan combat calculations.
+ * @param {Object} player
+ * @returns {boolean}
+ */
+function isPlayerWieldingSword(player) {
+  if (!player || !player.inventory) return false;
+  const equipmentSlotValues = player.equipment
+    ? Object.values(player.equipment instanceof Map ? Object.fromEntries(player.equipment) : player.equipment)
+        .filter(v => v !== null && v !== undefined)
+        .map(v => v.toString())
+    : [];
+
+  for (const invItem of player.inventory) {
+    const isActuallyEquipped = invItem.isEquipped ||
+      (invItem._id && equipmentSlotValues.includes(invItem._id.toString())) ||
+      (invItem.itemId?._id && equipmentSlotValues.includes(invItem.itemId._id.toString())) ||
+      (invItem.itemId && equipmentSlotValues.includes(invItem.itemId.toString()));
+
+    if (!isActuallyEquipped) continue;
+    const item = (invItem.itemId && typeof invItem.itemId === 'object') ? invItem.itemId : invItem;
+    if (item && (item.category === 'weapon' || item.weaponType || item.subtype === 'weapon')) {
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      if (tags.includes('sword') || tags.includes('oath_sword')) return true;
+      const name = (item.name || '').toLowerCase();
+      const subtype = (item.subtype || item.weaponType || '').toLowerCase();
+      if (/(sword|pedang|jian)/i.test(name) || /(sword|pedang|jian)/i.test(subtype)) return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Memeriksa apakah pemain sedang berada di petak Hub Formasi miliknya sendiri.
+ * @param {Object} player
+ * @param {Object} [cachedHubTile] - Opsional tile dari DB query
+ * @returns {boolean}
+ */
+function isOnOwnFormationHub(player, cachedHubTile = null) {
+  if (!player) return false;
+  let hubTileX;
+  let hubTileY;
+  let hubZoneId;
+
+  // 1. Cek dari player.assets
+  const hubAsset = player.assets?.find(a => a.name && /(Hub Formasi|Formation Hub)/i.test(a.name) && a.status === 'active' && a.placement?.tileX !== undefined);
+  if (hubAsset?.placement) {
+    hubTileX = hubAsset.placement.tileX;
+    hubTileY = hubAsset.placement.tileY;
+    hubZoneId = hubAsset.placement.zoneId;
+  } else if (cachedHubTile) {
+    hubTileX = cachedHubTile.tileX;
+    hubTileY = cachedHubTile.tileY;
+    hubZoneId = cachedHubTile.zoneId;
+  }
+
+  if (hubTileX === undefined || hubTileY === undefined) return false;
+
+  const playerTileX = player.gridPosition?.tileX;
+  const playerTileY = player.gridPosition?.tileY;
+  const playerZoneId = player.gridPosition?.zoneId;
+
+  return (playerTileX === hubTileX && playerTileY === hubTileY) && (!hubZoneId || playerZoneId === hubZoneId);
+}
+
+/**
+ * Menghitung modifier tempur dinamis antar dua entitas (attacker vs defender) berdasarkan Law.
+ * @param {Object} attacker - Player document atau battle entity
+ * @param {Object} defender - Player document, mob, atau battle entity
+ * @returns {Object} { damageMultiplier, isMeritBonus, isYangBonus, bonusDesc }
+ */
+function getLawCombatModifiers(attacker, defender) {
+  const result = {
+    damageMultiplier: 1.0,
+    isMeritBonus: false,
+    isYangBonus: false,
+    bonusDesc: null
+  };
+
+  if (!attacker || !defender) return result;
+
+  // Resolusi Law Attacker
+  const lawType = attacker.cultivationLaw?.activeLawType
+    || attacker.activeLawType
+    || attacker.lawType
+    || (attacker.laws && attacker.laws.find(l => l.isActive)?.lawType)
+    || null;
+
+  if (!lawType) return result;
+
+  const rank = Number(attacker.cultivationLaw?.rank ?? attacker.lawRank ?? 0);
+
+  // Status Defender (Wanted, Demonic, Corrupt, Undead)
+  const isWanted = !!(defender.isWantedByOrthodox || defender.wanted || (defender.infamy && defender.infamy > 50));
+
+  const defTags = Array.isArray(defender.tags) ? defender.tags : [];
+  const defCategory = (defender.category || defender.enemyType || '').toLowerCase();
+  const defName = (defender.name || defender.characterName || '').toLowerCase();
+  const defLawType = defender.cultivationLaw?.activeLawType || defender.activeLawType || defender.lawType || '';
+
+  const isCorruptOrDemonic = isWanted ||
+    (typeof defLawType === 'string' && defLawType.startsWith('demonic_')) ||
+    defTags.some(t => ['demonic', 'undead', 'corrupt', 'ghost', 'yin', 'iblis', 'siluman_hitam'].includes(t)) ||
+    ['demonic', 'undead', 'corrupt', 'ghost'].includes(defCategory) ||
+    /(iblis|siluman|mayat|hantu|abyss|korup)/i.test(defName);
+
+  // 1. Righteous Heavenly Merit: Bonus vs Wanted / Demonic / Undead / Corrupt
+  if (lawType === 'righteous_heavenly_merit' && isCorruptOrDemonic) {
+    const bonus = Math.max(0.04, (rank || 1) * (LAW_BALANCE.MERIT_VS_WANTED_ATK_MULT || 0.04));
+    result.damageMultiplier *= (1 + bonus);
+    result.isMeritBonus = true;
+    result.bonusDesc = `⚡ [Jasa Langit: +${Math.round(bonus * 100)}% vs Iblis/Buronan]`;
+  }
+
+  // 2. Righteous Pure Yang: Bonus vs Corrupt / Demonic / Ghost / Yin
+  if (lawType === 'righteous_pure_yang' && isCorruptOrDemonic) {
+    const bonus = Math.max(0.03, (rank || 1) * (LAW_BALANCE.YANG_VS_CORRUPTION_ATK || 0.03));
+    result.damageMultiplier *= (1 + bonus);
+    result.isYangBonus = true;
+    result.bonusDesc = `☀️ [Yang Murni: +${Math.round(bonus * 100)}% Penumpasan Kegelapan]`;
+  }
+
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
@@ -2999,6 +3129,11 @@ module.exports = {
   TRIBULATION_RANKS,
   BASE_CHANNEL_CAP_MINUTES,
   NATURAL_ESSENCES,
+
+  // Combat & Spatial Helpers
+  isPlayerWieldingSword,
+  isOnOwnFormationHub,
+  getLawCombatModifiers,
 
   // Qi & Essence Calculation
   getBaseQiRequired,

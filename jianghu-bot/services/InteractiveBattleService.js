@@ -8,6 +8,7 @@ const {
   processCombatTurnConditions
 } = require('../utils/conditionEngine');
 const COMBAT_COND = require('../config/combatConditions');
+const { getLawCombatModifiers } = require('../utils/lawCultivationEngine');
 
 class InteractiveBattleService {
   /**
@@ -372,6 +373,10 @@ class InteractiveBattleService {
       attack: computedStats.atk || player.stats?.atk || 15,
       defense: computedStats.def || player.stats?.def || 10,
       speed: computedStats.spd || player.stats?.spd || 10,
+      reflectPct: computedStats.reflectPct || player.extendedStats?.reflectPct || 0,
+      activeLawType: player.cultivationLaw?.activeLawType || null,
+      lawRank: player.cultivationLaw?.rank || 0,
+      isWantedByOrthodox: !!player.isWantedByOrthodox,
       atb: 1000,
       maxAtb: 1000,
       stance: player.stats?.stance || 100,
@@ -828,6 +833,14 @@ class InteractiveBattleService {
               drunkenNote = ` 🍶 [Drunken DMG +${Math.floor(intoxVal * 0.6)}%]`;
             }
 
+            // Bonus Law Combat Modifiers (Righteous Heavenly Merit vs Wanted/Corrupt, Pure Yang vs Demonic)
+            let lawNote = '';
+            const lawMod = getLawCombatModifiers(session.player, target);
+            if (lawMod.damageMultiplier && lawMod.damageMultiplier !== 1.0) {
+              damage = Math.floor(damage * lawMod.damageMultiplier);
+              if (lawMod.bonusDesc) lawNote = ` ${lawMod.bonusDesc}`;
+            }
+
             if (isStanceBroken) damage = Math.floor(damage * 1.5);
 
             const critRate = 0.10 + (skill.critBonus || 0);
@@ -904,6 +917,7 @@ class InteractiveBattleService {
             let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} menghasilkan ${damage} DMG!`;
             if (atkBuff) logMsg += ' 🌟 (Buff ATK!)';
             if (drunkenNote) logMsg += drunkenNote;
+            if (lawNote) logMsg += lawNote;
             if (isCrit) logMsg += ' 💥 (Kritikal!)';
             if (target.stance <= 0 && target.stance + stanceDmg > 0) logMsg += ' ⚡ (Stance Hancur!)';
             if (debuffTriggeredMsg) logMsg += debuffTriggeredMsg;
@@ -1071,6 +1085,25 @@ class InteractiveBattleService {
           damage: eDamage,
           message: eLogMsg
         });
+
+        // B1. Reflect Hook (Karmic Mirror / Skill Tree)
+        const reflectPct = Math.min(0.25, session.player.reflectPct || 0);
+        if (reflectPct > 0 && eDamage > 0 && !enemy.isDead) {
+          const reflectedDmg = Math.max(1, Math.floor(eDamage * reflectPct));
+          enemy.hp = Math.max(0, enemy.hp - reflectedDmg);
+          if (enemy.hp <= 0) {
+            enemy.hp = 0;
+            enemy.isDead = true;
+          }
+          session.logs.push({
+            tick: session.currentTick,
+            actor: session.player.name,
+            target: enemy.name,
+            action: 'reflect',
+            damage: reflectedDmg,
+            message: `🪞 Cermin Karma memantulkan ${reflectedDmg} DMG (${Math.round(reflectPct * 100)}%) kembali ke ${enemy.name}!${enemy.isDead ? ` 💀 (${enemy.name} binasa!)` : ''}`
+          });
+        }
       } else {
         // Ally takes damage
         targetEntity.hp = Math.max(0, targetEntity.hp - eDamage);
