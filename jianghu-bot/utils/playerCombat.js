@@ -250,11 +250,15 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           const dueTime = new Date(law.demonicData.abyssalTributeDueAt).getTime();
           if (now > dueTime) {
             const overdueDays = (now - dueTime) / (24 * 3600 * 1000);
-            const penaltyMult = overdueDays >= 7 ? 0.4 : 0.7; // -30% stat jika lewat, -60% jika lewat >7 hari
+            const curseLevel = overdueDays >= 7 ? 2 : 1;
+            if (law.demonicData) law.demonicData.abyssalCurseLevel = curseLevel;
+            const penaltyMult = curseLevel === 2 ? 0.4 : 0.7; // -30% stat jika lewat, -60% jika lewat >7 hari
             mult.hp *= penaltyMult;
             mult.atk *= penaltyMult;
             mult.def *= penaltyMult;
             mult.spd *= penaltyMult;
+          } else {
+            if (law.demonicData) law.demonicData.abyssalCurseLevel = 0;
           }
         }
 
