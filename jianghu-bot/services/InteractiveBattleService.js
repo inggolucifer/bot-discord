@@ -340,14 +340,13 @@ class InteractiveBattleService {
     const currentHp = isProjection
       ? maxHp
       : ((player.currentHp !== null && player.currentHp !== undefined && !isNaN(player.currentHp)) ? player.currentHp : maxHp);
-    const realmIdx = player.cultivationLaw?.rank ?? player.systemCultivation?.realmIndex ?? 0;
-    const energyStat = player.extendedStats?.energy ?? 100;
-    const focusStat = player.extendedStats?.focus ?? 100;
-    const calculatedMaxCombatQi = 50 + (realmIdx * 25) + Math.floor(energyStat * 0.5) + Math.floor(focusStat * 0.3);
-    const maxQi = player.maxQi || calculatedMaxCombatQi;
-    const currentQi = isProjection
-      ? Math.max(50, Math.floor(maxQi * 0.5))
-      : ((player.currentQi !== null && player.currentQi !== undefined && player.currentQi > 0) ? Math.min(maxQi, player.currentQi) : Math.min(maxQi, 35)); // Qi awal pertarungan
+
+    // Master Plan §1.2 & §1.3: Dikotomi Mutlak Combat Qi (MP) vs Cultivation Qi (Xiuwei Dantian)
+    // Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
+    const { getMaxCombatQi } = require('../utils/lawCultivationEngine');
+    const calculatedMaxCombatQi = getMaxCombatQi(player);
+    const maxQi = calculatedMaxCombatQi;
+    const currentQi = maxQi; // Modal awal ronde tempur selalu terisi penuh dari kapasitas tempur
 
     // Load Law Skills from LawSkillDefinition if player has equipped them in combatLoadout
     const lawSkillsFormatted = await this.loadAndFormatLawSkills(player);
@@ -680,12 +679,13 @@ class InteractiveBattleService {
       if ((skill.currentCooldown || 0) > 0) {
         throw new Error(`Jurus "${skill.name}" masih dalam jeda (${skill.currentCooldown} ronde lagi)!`);
       }
+      // Combat Qi ≠ Cultivation Qi (Master Plan §1.2): Skill cost HANYA mengurangi Combat Qi battleSession (MP tempur)
       const energyName = session.player.qiType === 'true_qi' ? 'True Qi' : 'Qi';
       if (session.player.qi < (skill.qiCost || 0)) {
-        throw new Error(`${energyName} tidak cukup untuk "${skill.name}" (Butuh ${skill.qiCost} ${energyName}, kamu punya ${session.player.qi} ${energyName})!`);
+        throw new Error(`${energyName} tempur tidak cukup untuk "${skill.name}" (Butuh ${skill.qiCost} ${energyName}, kamu punya ${session.player.qi} ${energyName})! Gunakan Basic Attack untuk memulihkan ${energyName}.`);
       }
 
-      // Konsumsi Qi / True Qi & Pasang Cooldown
+      // Konsumsi Qi / True Qi Tempur & Pasang Cooldown (TIDAK MEMENGARUHI cultivationLaw.qi)
       session.player.qi -= (skill.qiCost || 0);
       skill.currentCooldown = skill.cooldown || 0;
 
@@ -921,9 +921,11 @@ class InteractiveBattleService {
           });
         }
 
-        // Regenerasi Qi dari basic attack jika ada
-        if (skill.qiRegen > 0) {
-          session.player.qi = Math.min(session.player.maxQi, session.player.qi + skill.qiRegen);
+        // Regenerasi Qi dari basic attack (Master Plan §1.2 & prompt A2: Basic attack +5 Combat Qi)
+        // Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
+        const basicQiGain = skill.isBasicAttack ? (skill.qiRegen > 0 ? skill.qiRegen : 5) : (skill.qiRegen || 0);
+        if (basicQiGain > 0) {
+          session.player.qi = Math.min(session.player.maxQi, session.player.qi + basicQiGain);
         }
 
         // PROGRES EXP COMBAT AKTIF (HANYA DI COMBAT ASLI SPASIAL / WILDERNESS / DUNGEON)
@@ -1144,7 +1146,9 @@ class InteractiveBattleService {
       });
     });
 
-    session.player.qi = Math.min(session.player.maxQi, session.player.qi + 10);
+    // 11. Akhir Ronde: Kurangi Cooldown, Regenerasi Alami Stance (+10)
+    // Regenerasi Taktis Tempur per Putaran Sesuai Master Plan §1.3 & §5.4
+    // Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
     session.player.stance = Math.min(session.player.maxStance, session.player.stance + 10);
 
     session.currentTick += 1;
@@ -1160,12 +1164,10 @@ class InteractiveBattleService {
       await session.save();
       return session;
     }
-    // Regenerasi Taktis Tempur per Putaran Sesuai Master Plan Section 1.3
-    const playerRealmIdx = session.player.level ? Math.min(8, Math.floor(session.player.level / 20)) : 0;
-    const playerVit = session.player.vitality || 100;
-    const roundQiRegen = 5 + (playerRealmIdx * 2) + Math.floor(playerVit * 0.05);
+
+    const { getCombatQiRegenPerRound } = require('../utils/lawCultivationEngine');
+    const roundQiRegen = getCombatQiRegenPerRound(session.player);
     session.player.qi = Math.min(session.player.maxQi || 100, (session.player.qi || 0) + roundQiRegen);
-    session.player.stance = Math.min(session.player.maxStance || 100, (session.player.stance || 0) + 5);
 
     session.player.atb = 1000;
     session.turnQueue = [session.player.entityId]; // Siap untuk aksi selanjutnya
