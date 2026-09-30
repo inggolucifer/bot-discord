@@ -856,8 +856,10 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       law.currentEssence = Math.min(maxEss, oldEss + essenceGain);
       law.maxEssence = maxEss;
 
-      // Residual instant Qi kecil (+5 Qi)
-      const instantQi = Math.min(5, Math.floor(5 * affinity.efficiency));
+      // Residual instant Qi (dikontrol LAW_PROGRESSION.INSTANT_QI_ON_ABSORB)
+      const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+        ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(5 * affinity.efficiency))
+        : 0;
       if (instantQi > 0) {
         law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
       }
@@ -898,9 +900,10 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       player.markModified('cultivationLaw');
       await player.save({ session });
 
+      const instantMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
       responseData = {
         success: true,
-        message: `✨ Berhasil menyerap [${itemDoc.name}] ke dalam ${profile.barName}! (+${essenceGain} Esensi, +${instantQi} Qi residu)`,
+        message: `✨ Berhasil menyerap [${itemDoc.name}] ke dalam ${profile.barName}! (+${essenceGain} Esensi${instantMsg})`,
         data: {
           essenceGain,
           currentEssence: Math.floor(law.currentEssence),
@@ -1629,7 +1632,12 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     }
 
     law.currentEssence = Math.min(maxEss, (law.currentEssence || 0) + essenceGain);
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + Math.floor(essenceGain * 0.5));
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(essenceGain * 0.5))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     player.markModified('inventory');
     player.markModified('cultivationLaw');
@@ -1882,16 +1890,19 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
       law.currentEssence = Math.min(maxEss, oldEss + essenceGain);
       law.maxEssence = maxEss;
 
-      const instantQi = 5;
-      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+      const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0 ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, 5) : 0;
+      if (instantQi > 0) {
+        law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+      }
 
       player.markModified('extendedStats');
       player.markModified('cultivationLaw');
       await player.save();
 
+      const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
       return res.json({
         success: true,
-        message: `🩸 Tetes Darah Sendiri berhasil! ${targetGu.guName} kenyang ${targetGu.satiety}% (+${essenceGain} Esensi Aperture, +${instantQi} Qi residu, -15 Vitality)!`,
+        message: `🩸 Tetes Darah Sendiri berhasil! ${targetGu.guName} kenyang ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${qiMsg}, -15 Vitality)!`,
         data: { guSlots: law.guSlots, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi, vitality: player.extendedStats.vitality }
       });
     }
@@ -1931,7 +1942,9 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, oldEss + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * affinity.efficiency));
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * affinity.efficiency))
+      : 0;
 
     inv.quantity -= 1;
     if (inv.quantity <= 0) {
@@ -1941,15 +1954,18 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     targetGu.satiety = Math.min(100, currentEffectiveSatiety + satietyGain);
     targetGu.hunger = targetGu.satiety;
     targetGu.lastFedAt = new Date();
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     player.markModified('inventory');
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${itemDoc.name}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture, +${instantQi} Qi residu)!`,
+      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${itemDoc.name}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${qiMsg})!`,
       data: { guSlots: law.guSlots, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
     });
   } catch (error) {
@@ -2239,7 +2255,8 @@ router.post('/gu/fuse', authenticateToken, async (req, res) => {
         targetGu.lastFedAt = new Date();
         law.guSlots = updatedGuSlots;
         law.guMaxSlots = getGuMaxSlots(law.rank || 0);
-        const fuseQiGrant = LAW_BALANCE.GU_FUSION_SUCCESS_FLAT_QI || 100;
+        const maxFuseQi = Math.max(10, Math.floor(getQiRequired(law.rank || 0, law.stage || 0) * 0.02));
+        const fuseQiGrant = Math.min(LAW_BALANCE.GU_FUSION_SUCCESS_FLAT_QI || 100, maxFuseQi);
         law.qi = Math.min(law.maxQi, (law.qi || 0) + fuseQiGrant);
 
         player.markModified('cultivationLaw');
@@ -2419,16 +2436,19 @@ router.post('/body/gather-essence', authenticateToken, async (req, res) => {
     const essenceGain = 15;
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
-    const instantQi = 5;
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0 ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, 5) : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     player.markModified('extendedStats');
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? ` & +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🔥 Berhasil memeras intisari fisik menjadi +${essenceGain} Esensi Reservoir Raga & +${instantQi} Qi residu (-15 Vitality)!`,
+      message: `🔥 Berhasil memeras intisari fisik menjadi +${essenceGain} Esensi Reservoir Raga${qiMsg} (-15 Vitality)!`,
       data: { vitality: player.extendedStats.vitality, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
     });
   } catch (error) {
@@ -2503,8 +2523,12 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + cultivatorEssenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * eff));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     if (law.boundEntity.essence >= (law.boundEntity.maxEssence || 100)) {
       law.boundEntity.essence = 0;
@@ -2518,9 +2542,10 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${itemUsedName} (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir, +${instantQi} Qi residu)!`,
+      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${itemUsedName} (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir${qiMsg})!`,
       data: { boundEntity: law.boundEntity, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
     });
   } catch (error) {
@@ -2597,8 +2622,12 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + cultivatorEssenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * eff));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     if (law.boundEntity.essence >= (law.boundEntity.maxEssence || 100)) {
       law.boundEntity.essence = 0;
@@ -2614,9 +2643,10 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${foodName} dengan lahap (+${essenceGain} Intisari Satwa, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh, +${instantQi} Qi residu)!`,
+      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${foodName} dengan lahap (+${essenceGain} Intisari Satwa, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh${qiMsg})!`,
       data: { boundEntity: law.boundEntity, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
     });
   } catch (error) {
@@ -2724,8 +2754,12 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * affinity.efficiency));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * affinity.efficiency))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     if (!law.demonicData) law.demonicData = {};
     law.demonicData.turbidCoresConsumed = (law.demonicData.turbidCoresConsumed || 0) + 1;
@@ -2735,9 +2769,10 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `👹 Berhasil melahap ${coreName} (+${essenceGain} Esensi Reservoir, +${instantQi} Qi residu, +3 Poin Korupsi Batin)!`,
+      message: `👹 Berhasil melahap ${coreName} (+${essenceGain} Esensi Reservoir${qiMsg}, +3 Poin Korupsi Batin)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
@@ -2814,8 +2849,12 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * eff));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     law.demonicData.bloodEssenceVials = (law.demonicData.bloodEssenceVials || 0) + 1;
     law.demonicData.infamy = (law.demonicData.infamy || 0) + LAW_BALANCE.INFAMY_PER_BLOOD_ACTION;
@@ -2829,9 +2868,10 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🩸 Berhasil memanen ${sourceName} (+${essenceGain} Esensi Reservoir, +1 Botol Darah, +${instantQi} Qi residu, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      message: `🩸 Berhasil memanen ${sourceName} (+${essenceGain} Esensi Reservoir, +1 Botol Darah${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
@@ -2909,8 +2949,12 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * eff));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     law.demonicData.soulBannerCaptures = (law.demonicData.soulBannerCaptures || 0) + 1;
     law.demonicData.infamy = (law.demonicData.infamy || 0) + LAW_BALANCE.INFAMY_PER_BLOOD_ACTION;
@@ -2923,9 +2967,10 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+${essenceGain} Esensi Reservoir, +1 Jiwa Tersegel, +${instantQi} Qi residu, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+${essenceGain} Esensi Reservoir, +1 Jiwa Tersegel${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
@@ -3016,15 +3061,20 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = Math.min(10, Math.floor(10 * eff));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+${essenceGain} Esensi Reservoir, +1 Toleransi Racun, +${instantQi} Qi residu, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
+      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+${essenceGain} Esensi Reservoir, +1 Toleransi Racun${qiMsg}, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
@@ -3129,8 +3179,12 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
       law.maxEssence = maxEss;
 
-      const instantQi = itemId ? Math.min(10, Math.floor(10 * eff)) : 5;
-      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+      const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+        ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, itemId ? Math.floor(10 * eff) : 5)
+        : 0;
+      if (instantQi > 0) {
+        law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+      }
 
       if (!law.demonicData) law.demonicData = {};
       law.demonicData.abyssalTributeDueAt = new Date(Date.now() + 7 * 24 * 3600 * 1000);
@@ -3151,9 +3205,10 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       };
     });
 
+    const qiMsg = resultData.instantQi > 0 ? `, +${resultData.instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${resultData.itemOfferingMsg} Tenggat kontrak diperpanjang 7 hari (+${resultData.essenceGain} Esensi Reservoir, +${resultData.instantQi} Qi residu, Kutukan Abyss dinetralkan)!`,
+      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${resultData.itemOfferingMsg} Tenggat kontrak diperpanjang 7 hari (+${resultData.essenceGain} Esensi Reservoir${qiMsg}, Kutukan Abyss dinetralkan)!`,
       data: resultData
     });
   } catch (error) {
@@ -3213,15 +3268,20 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
-    const instantQi = itemId ? Math.min(10, Math.floor(10 * eff)) : 5;
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, itemId ? Math.floor(10 * eff) : 5)
+      : 0;
+    if (instantQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
+    }
 
     player.markModified('cultivationLaw');
     await player.save();
 
+    const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🌑 Berhasil menyerap ${absorbSource} (+${essenceGain} Esensi Reservoir, +${instantQi} Qi residu)!`,
+      message: `🌑 Berhasil menyerap ${absorbSource} (+${essenceGain} Esensi Reservoir${qiMsg})!`,
       data: {
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3325,9 +3385,13 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
     if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
     player.extendedStats.spiritualRoot[targetElem.key] = (player.extendedStats.spiritualRoot[targetElem.key] || 0) + rootXpGain;
 
-    // Residual instant Qi kecil (+5 Qi)
-    const directQi = Math.min(5, Math.floor(5 * efficiency));
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + directQi);
+    // Residual instant Qi (dikontrol LAW_PROGRESSION.INSTANT_QI_ON_ABSORB)
+    const directQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(5 * efficiency))
+      : 0;
+    if (directQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + directQi);
+    }
 
     // Kurangi item dari tas
     itemSlot.quantity -= 1;
@@ -3341,10 +3405,11 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
 
     const effPercent = Math.round(efficiency * 100);
     const effNote = efficiency < 1.0 ? ` (Efisiensi ${effPercent}% karena Tier item di bawah ranah)` : ' (Efisiensi Optimal 100%)';
+    const qiMsg = directQi > 0 ? `, +${directQi} Qi residu` : '';
 
     res.json({
       success: true,
-      message: `✨ Berhasil menyerap '${item.name}' ke dalam ${targetElem.reservoir}! +${finalEssenceGain} Esensi Elemen${effNote}, +${rootXpGain} Spiritual Root XP, +${directQi} Qi residu.`,
+      message: `✨ Berhasil menyerap '${item.name}' ke dalam ${targetElem.reservoir}! +${finalEssenceGain} Esensi Elemen${effNote}, +${rootXpGain} Spiritual Root XP${qiMsg}.`,
       data: {
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3392,15 +3457,21 @@ router.post('/element/resonate', authenticateToken, async (req, res) => {
     if (!player.extendedStats.spiritualRoot) player.extendedStats.spiritualRoot = {};
     player.extendedStats.spiritualRoot[targetRoot] = (player.extendedStats.spiritualRoot[targetRoot] || 0) + 30;
 
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 10);
+    const resonateQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, 10)
+      : 0;
+    if (resonateQi > 0) {
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + resonateQi);
+    }
 
     player.markModified('extendedStats');
     player.markModified('cultivationLaw');
     await player.save();
 
+    const resonateQiMsg = resonateQi > 0 ? `, +${resonateQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🌀 Ritual Resonansi Elemen ${targetRoot.toUpperCase()} Berhasil (+30 Spiritual Root XP, +10 Qi residu)!`,
+      message: `🌀 Ritual Resonansi Elemen ${targetRoot.toUpperCase()} Berhasil (+30 Spiritual Root XP${resonateQiMsg})!`,
       data: {
         qi: law.qi,
         currentEssence: law.currentEssence,
