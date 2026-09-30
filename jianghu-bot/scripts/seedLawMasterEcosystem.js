@@ -961,6 +961,10 @@ async function seedLawMasterEcosystem(options = { reset: false, guildId: DEFAULT
   }
   console.log(`  ✅ Berhasil menyemai ${totalSkills} Definisi Skill Pohon Law.`);
 
+  // 4. SEED 5 HUKUM RIGHTEOUS
+  const { seedRighteousLawEcosystem } = require('./seedRighteousLawEcosystem');
+  await seedRighteousLawEcosystem({ guildId });
+
   console.log('\n=== SEEDER HUKUM SEMESTA SELESAI DENGAN SUKSES! ===\n');
 }
 
