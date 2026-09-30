@@ -227,10 +227,17 @@ const demonicDataSchema = new mongoose.Schema({
   soulBannerCaptures: { type: Number, default: 0 },    // Jumlah arwah terserap
   infamy: { type: Number, default: 0 },                // Poin buronan sekte ortodoks
   venomToxinLevel: { type: Number, default: 0 },       // Toleransi racun
+  venomTolerancePct: { type: Number, default: 0 },     // % Reduksi damage racun musuh
   venomTypesConsumed: { type: Number, default: 0 },    // Berapa jenis racun telah diminum
   abyssalPactTier: { type: Number, default: 0 },
   abyssalTributeDueAt: { type: Date, default: null },  // Tenggat waktu upeti iblis
-  corruptionIndex: { type: Number, default: 0 }        // +1% ATK per 10 corruption (bonus Demonic)
+  abyssalTributeStreak: { type: Number, default: 0 },  // Streak upeti
+  abyssalCurseLevel: { type: Number, default: 0 },     // 0 = Aman, 1 = -30%, 2 = -60%
+  corruptionIndex: { type: Number, default: 0 },       // +1% ATK per 10 corruption (bonus Demonic)
+  netherExileTimerSeconds: { type: Number, default: 43200 }, // Sisa detik aman di luar wilayah gelap
+  leftNetherTerritoryAt: { type: Date, default: null },
+  hasNetherDebuff: { type: Boolean, default: false },   // Debuff -50% saat timer habis
+  guBacklashUntil: { type: Date, default: null }        // Backlash unequip Gu tanpa sedative
 }, { _id: false });
 
 const lawDailyDataSchema = new mongoose.Schema({
@@ -296,6 +303,8 @@ const cultivationLawSchema = new mongoose.Schema({
   },
 
   // Gu Master Specific (Aperture Slot)
+  guMaxSlots: { type: Number, default: 1 },
+  guBacklashUntil: { type: Date, default: null },
   guSlots: [{
     guItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'Item', default: null },
     guName: { type: String, default: null },
