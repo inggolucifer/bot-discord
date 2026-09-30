@@ -336,7 +336,12 @@ router.post('/challenge', authenticateToken, async (req, res) => {
       qi: targetPlayer.currentQi || 50,
       maxQi: targetPlayer.maxQi || 100,
       stance: 100,
-      skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
+      skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer),
+      reflectPct: tComputed.reflectPct || targetPlayer.stats?.reflectPct || 0,
+      activeLawType: targetPlayer.cultivationLaw?.activeLawType || null,
+      lawRank: targetPlayer.cultivationLaw?.rank || 0,
+      isWantedByOrthodox: !!targetPlayer.isWantedByOrthodox,
+      tags: targetPlayer.tags || []
     }];
 
     // Bawa sekutu jika ada

@@ -4118,6 +4118,60 @@ function getLawCombatModifiers(attacker, defender) {
   return result;
 }
 
+/**
+ * applyLawDamageModifiers(attacker, defender, baseDamage, options = {})
+ * Menerapkan pengali damage situasional Law (Merit vs Wanted/Demonic, Pure Yang vs Corrupt)
+ * dan menghitung damage pantulan (reflect) dari Defender kembali ke Attacker jika Defender memiliki reflectPct > 0.
+ *
+ * @param {Object} attacker - Player document atau battle entity penyerang
+ * @param {Object} defender - Player document, monster, atau battle entity penerima serangan
+ * @param {number} baseDamage - Damage dasar yang telah dimitigasi pertahanan target
+ * @param {Object} [options]
+ * @param {boolean} [options.skipReflect=false] - Cegah infinite reflect loop jika damage adalah hasil pantulan
+ * @returns {{ finalDamage: number, reflectedDamage: number, logParts: string[], mod: Object, reflectPct: number }}
+ */
+function applyLawDamageModifiers(attacker, defender, baseDamage, options = {}) {
+  let dmg = Math.max(0, Math.floor(Number(baseDamage) || 0));
+  const logParts = [];
+
+  try {
+    // 1) Outgoing multiplier (Merit / Pure Yang vs wanted-demonic)
+    const mod = getLawCombatModifiers(attacker, defender);
+    if (mod.damageMultiplier && mod.damageMultiplier !== 1.0) {
+      dmg = Math.max(0, Math.floor(dmg * mod.damageMultiplier));
+      if (mod.bonusDesc) logParts.push(mod.bonusDesc);
+    }
+
+    // 2) Reflect dari DEFENDER ke ATTACKER (Karma / skill tree reflectPct)
+    // Cegah infinite loop: jika opsi skipReflect aktif, jangan pantulkan lagi
+    let reflectedDamage = 0;
+    let reflectPct = 0;
+
+    if (!options.skipReflect) {
+      const rawReflect = Number(
+        defender?.combatStats?.reflectPct ??
+        defender?.stats?.reflectPct ??
+        defender?.extendedStats?.reflectPct ??
+        defender?.reflectPct ??
+        0
+      );
+      reflectPct = Math.max(0, Math.min(0.25, rawReflect)); // CAP 25%
+
+      if (reflectPct > 0 && dmg > 0) {
+        reflectedDamage = Math.max(1, Math.floor(dmg * reflectPct));
+        if (reflectedDamage > 0) {
+          logParts.push(`🪞 Cermin Karma memantulkan ${reflectedDamage} DMG (${Math.round(reflectPct * 100)}%)`);
+        }
+      }
+    }
+
+    return { finalDamage: dmg, reflectedDamage, logParts, mod, reflectPct };
+  } catch (err) {
+    console.error('[applyLawDamageModifiers] Error applying law damage modifiers:', err);
+    return { finalDamage: dmg, reflectedDamage: 0, logParts: [], mod: { damageMultiplier: 1.0 }, reflectPct: 0 };
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════
@@ -4139,6 +4193,8 @@ module.exports = {
   isPlayerWieldingSword,
   isOnOwnFormationHub,
   getLawCombatModifiers,
+  applyLawCombatModifiers: applyLawDamageModifiers,
+  applyLawDamageModifiers,
   applyLawSkillTreeEffects,
 
   // Qi & Essence Calculation

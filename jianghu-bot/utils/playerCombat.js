@@ -1,6 +1,13 @@
 const { getRealmIndex } = require('./cultivation');
 const { getClimatePenalties } = require('./climate');
-const { LAW_BALANCE, isPlayerWieldingSword, isOnOwnFormationHub, applyLawSkillTreeEffects } = require('./lawCultivationEngine');
+const {
+  LAW_BALANCE,
+  isPlayerWieldingSword,
+  isOnOwnFormationHub,
+  applyLawSkillTreeEffects,
+  getLawCombatModifiers,
+  applyLawDamageModifiers
+} = require('./lawCultivationEngine');
 
 /**
  * Calculates the total combat stats of a player.
@@ -418,5 +425,7 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
 
 module.exports = {
   calculatePlayerStats,
-  calculatePlayerCombatStats: calculatePlayerStats
+  calculatePlayerCombatStats: calculatePlayerStats,
+  getLawCombatModifiers,
+  applyLawDamageModifiers
 };

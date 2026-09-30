@@ -8,7 +8,7 @@ const {
   processCombatTurnConditions
 } = require('../utils/conditionEngine');
 const COMBAT_COND = require('../config/combatConditions');
-const { getLawCombatModifiers } = require('../utils/lawCultivationEngine');
+const { getLawCombatModifiers, applyLawDamageModifiers } = require('../utils/lawCultivationEngine');
 
 class InteractiveBattleService {
   /**
@@ -490,6 +490,12 @@ class InteractiveBattleService {
       attack: e.attack || e.atk || 12,
       defense: e.defense || e.def || 6,
       speed: e.speed || e.spd || 8,
+      reflectPct: e.reflectPct || 0,
+      activeLawType: e.activeLawType || e.cultivationLaw?.activeLawType || null,
+      lawRank: e.lawRank || e.cultivationLaw?.rank || 0,
+      isWantedByOrthodox: !!e.isWantedByOrthodox,
+      tags: Array.isArray(e.tags) ? e.tags : (e.category ? [e.category] : []),
+      category: e.category || null,
       atb: 0,
       maxAtb: 1000,
       stance: e.stance || 100,
@@ -833,14 +839,6 @@ class InteractiveBattleService {
               drunkenNote = ` 🍶 [Drunken DMG +${Math.floor(intoxVal * 0.6)}%]`;
             }
 
-            // Bonus Law Combat Modifiers (Righteous Heavenly Merit vs Wanted/Corrupt, Pure Yang vs Demonic)
-            let lawNote = '';
-            const lawMod = getLawCombatModifiers(session.player, target);
-            if (lawMod.damageMultiplier && lawMod.damageMultiplier !== 1.0) {
-              damage = Math.floor(damage * lawMod.damageMultiplier);
-              if (lawMod.bonusDesc) lawNote = ` ${lawMod.bonusDesc}`;
-            }
-
             if (isStanceBroken) damage = Math.floor(damage * 1.5);
 
             const critRate = 0.10 + (skill.critBonus || 0);
@@ -848,6 +846,11 @@ class InteractiveBattleService {
             if (isCrit) damage = Math.floor(damage * 1.5);
 
             damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));
+
+            // Apply Law Combat Modifiers (Merit/Yang situational vs target + Target Reflect)
+            const lawRes = applyLawDamageModifiers(session.player, target, damage);
+            damage = lawRes.finalDamage;
+            let lawNote = lawRes.logParts.length > 0 ? ` ${lawRes.logParts.filter(p => !p.includes('memantulkan')).join(' ')}` : '';
 
             // Kurangi Stance dan HP
             const stanceMultiplier = skill.stanceDmgMult || 1.0;
@@ -862,6 +865,23 @@ class InteractiveBattleService {
 
             if (session.battleConfig && session.battleConfig.eventContext === 'world_boss') {
               session.battleConfig.totalBossDamageDealt = (session.battleConfig.totalBossDamageDealt || 0) + damage;
+            }
+
+            // Reflect dari Target kembali ke Player (Karmic Mirror / Skill Tree reflectPct)
+            if (lawRes.reflectedDamage > 0 && !session.player.isDead) {
+              session.player.hp = Math.max(0, session.player.hp - lawRes.reflectedDamage);
+              if (session.player.hp <= 0) {
+                session.player.hp = 0;
+                session.player.isDead = true;
+              }
+              session.logs.push({
+                tick: session.currentTick,
+                actor: target.name,
+                target: session.player.name,
+                action: 'reflect',
+                damage: lawRes.reflectedDamage,
+                message: `🪞 ${target.name} memantulkan ${lawRes.reflectedDamage} DMG (${Math.round(lawRes.reflectPct * 100)}%) kembali ke ${session.player.name}!${session.player.isDead ? ` 💀 (${session.player.name} gugur!)` : ''}`
+              });
             }
 
             // Resonansi Elemen (Skill Air padamkan Burn, Skill Api cairkan Frozen)
@@ -1062,6 +1082,10 @@ class InteractiveBattleService {
       }
       eDamage = Math.max(1, Math.floor(eDamage * (0.85 + Math.random() * 0.3)));
 
+      // Apply Law Damage Modifiers for Enemy attacking TargetEntity (and Player Reflect back to Enemy)
+      const lawRes = applyLawDamageModifiers(enemy, targetEntity, eDamage);
+      eDamage = lawRes.finalDamage;
+
       if (isTargetPlayer) {
         const eStanceDmg = Math.max(3, Math.floor(eDamage * 0.2));
         session.player.stance = Math.max(0, session.player.stance - eStanceDmg);
@@ -1074,6 +1098,7 @@ class InteractiveBattleService {
 
         let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke ${session.player.name} menghasilkan ${eDamage} DMG!`;
         if (hasDefendBuff) eLogMsg += ` 🛡️ (Tertahan ${defBuff.name || 'Pertahanan'} -${Math.round((defBuff.value || 0.5) * 100)}%!)`;
+        if (lawRes.logParts.length > 0) eLogMsg += ` ${lawRes.logParts.filter(p => !p.includes('memantulkan')).join(' ')}`;
         if (session.player.isDead) eLogMsg += ` 💀 (${session.player.name} gugur!)`;
 
         session.logs.push({
@@ -1087,10 +1112,8 @@ class InteractiveBattleService {
         });
 
         // B1. Reflect Hook (Karmic Mirror / Skill Tree)
-        const reflectPct = Math.min(0.25, session.player.reflectPct || 0);
-        if (reflectPct > 0 && eDamage > 0 && !enemy.isDead) {
-          const reflectedDmg = Math.max(1, Math.floor(eDamage * reflectPct));
-          enemy.hp = Math.max(0, enemy.hp - reflectedDmg);
+        if (lawRes.reflectedDamage > 0 && !enemy.isDead) {
+          enemy.hp = Math.max(0, enemy.hp - lawRes.reflectedDamage);
           if (enemy.hp <= 0) {
             enemy.hp = 0;
             enemy.isDead = true;
@@ -1100,8 +1123,8 @@ class InteractiveBattleService {
             actor: session.player.name,
             target: enemy.name,
             action: 'reflect',
-            damage: reflectedDmg,
-            message: `🪞 Cermin Karma memantulkan ${reflectedDmg} DMG (${Math.round(reflectPct * 100)}%) kembali ke ${enemy.name}!${enemy.isDead ? ` 💀 (${enemy.name} binasa!)` : ''}`
+            damage: lawRes.reflectedDamage,
+            message: `🪞 Cermin Karma memantulkan ${lawRes.reflectedDamage} DMG (${Math.round(lawRes.reflectPct * 100)}%) kembali ke ${enemy.name}!${enemy.isDead ? ` 💀 (${enemy.name} binasa!)` : ''}`
           });
         }
       } else {
