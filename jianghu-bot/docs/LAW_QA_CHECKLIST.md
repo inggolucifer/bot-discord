@@ -89,6 +89,21 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 ---
 
+## G. BALANCE PASS & ANTI-EXPLOIT VERIFICATIONS
+
+| ID | Skenario Uji | Prosedur & Ekspektasi | Status |
+|---|---|---|---|
+| G-01 | **Body Tempering vs Earth Scaling** | Bandingkan Rank 5 Body Tempering dengan Rank 5 Earth pada tingkat investasi setara.<br>• *Hasil*: HP/DEF Body Tempering tidak melebihi ~1.25× Earth, dengan trade-off ATK lebih rendah (~0.75× baseline). | [ ] PASS |
+| G-02 | **Blood Soul vs Thunder Baseline** | Evaluasi Rank 5 Blood Soul tanpa farm banner ekstrem vs Rank 5 Godthunder Light.<br>• *Hasil*: ATK Blood Soul tidak melebihi ~1.2× Thunder baseline (capped via `DEMONIC_RANK_ATK_MULT: 0.03` & `CORRUPTION_ATK_PERCENT_CAP: 0.06`). | [ ] PASS |
+| G-03 | **Gu Combat Top 3 Active Restriction** | Pemain Gu Master memiliki 5 slot Gu ter-equip di aperture.<br>• *Hasil*: Hanya 3 Gu terkuat (`GU_COMBAT_MAX_ACTIVE_SLOTS = 3`) yang berkontribusi stat bonus ke medan tempur, dengan scaling `GU_ATK_SCALE_PER_TIER = 0.85`. | [ ] PASS |
+| G-04 | **PathMod Channel Rate Penalty** | Bandingkan laju meditasi per menit antara Blood Soul (`pathMod: 1.45`) dan Earth (`pathMod: 1.05`) pada rank yang sama.<br>• *Hasil*: Channel rate Blood Soul lebih lambat (`Math.floor(baseRate / pathMod)`) sebagai harga atas daya serang dan kesulitan tribulasi. | [ ] PASS |
+| G-05 | **Batas Harian Penyerapan Inti Siluman (Turbid Max)** | Lakukan penyerapan inti siluman kotor sebanyak 20 kali dalam satu hari.<br>• *Hasil*: Percobaan ke-21 ditolak HTTP 429 *"Dantianmu telah jenuh menyerap inti siluman kotor hari ini (Maksimal 20/hari)..."*, reset pada pukul 00:00 WIB. | [ ] PASS |
+| G-06 | **Sanksi Tekanan Infamy & Status Buronan** | Tingkatkan infamy hingga $\ge 100$ melalui aksi demonic (blood/soul/venom).<br>• *Hasil*: Status `player.isWantedByOrthodox = true` aktif, dan di medan tempur menderita penalti stat ATK/DEF ($-2\%$ per 25 poin di atas 50, cap $-12\%$). | [ ] PASS |
+| G-07 | **Probabilitas Inhalasi Spontan Raga 12%** | Uji pemanggilan `harvestEnvironmentalEssence` saat melangkah.<br>• *Hasil*: Roll ambang batas menggunakan `LAW_BALANCE.BODY_MOVE_HARVEST_CHANCE` (0.12), mencegah eksploitasi akumulasi esensi pasif berlebihan. | [ ] PASS |
+| G-08 | **Gu Fusion Qi Flat Standard** | Sukseskan ritual fusi Gu di kendi penyuling.<br>• *Hasil*: Memberikan bonus $+100$ Qi Dantian (`LAW_BALANCE.GU_FUSION_SUCCESS_FLAT_QI`), mencegah lonjakan Qi eksploitatif. | [ ] PASS |
+
+---
+
 ## 2. CARA MENJALANKAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
