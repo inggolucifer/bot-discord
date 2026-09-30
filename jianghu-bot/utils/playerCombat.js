@@ -151,14 +151,14 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
     const stage = law.stage || 0;
     const totalStages = (rank * 10) + stage;
 
-    // +0.8% stats per stage completed across all laws (90 stages = max +72%)
-    const lawProgressionMult = totalStages * 0.008;
+    // Universal stage progression (+0.6% HP/ATK/DEF, +0.3% SPD per stage)
+    const lawProgressionMult = totalStages * LAW_BALANCE.STAT_MULT_PER_STAGE;
     mult.hp += lawProgressionMult;
     mult.atk += lawProgressionMult;
     mult.def += lawProgressionMult;
-    mult.spd += lawProgressionMult * 0.5;
+    mult.spd += lawProgressionMult * LAW_BALANCE.SPD_MULT_PER_STAGE_FACTOR;
 
-    // Law Skill Tree Investment Bonus (+0.4% per skill level invested)
+    // Law Skill Tree Investment Bonus (+0.3% per skill level invested)
     if (law.skillLevels) {
       let totalSpInvested = 0;
       const entries = law.skillLevels instanceof Map ? Array.from(law.skillLevels.entries()) : Object.entries(law.skillLevels);
@@ -166,64 +166,82 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         if (typeof lvl === 'number' && lvl > 0) totalSpInvested += lvl;
       }
       if (totalSpInvested > 0) {
-        mult.hp += totalSpInvested * 0.004;
-        mult.atk += totalSpInvested * 0.004;
-        mult.def += totalSpInvested * 0.004;
+        mult.hp += totalSpInvested * LAW_BALANCE.SKILL_TREE_MULT_PER_LEVEL;
+        mult.atk += totalSpInvested * LAW_BALANCE.SKILL_TREE_MULT_PER_LEVEL;
+        mult.def += totalSpInvested * LAW_BALANCE.SKILL_TREE_MULT_PER_LEVEL;
       }
     }
 
     // Law Specialization Bonuses
     switch (law.activeLawType) {
       case 'element_phoenix_fire':
-        mult.atk += rank * 0.03; // +3% ATK per rank
+        mult.atk += rank * LAW_BALANCE.FIRE_RANK_ATK_MULT;
         break;
       case 'element_azure_water':
-        mult.hp += rank * 0.03;  // +3% HP per rank
+        mult.hp += rank * LAW_BALANCE.WATER_RANK_HP_MULT;
+        mult.def += rank * LAW_BALANCE.WATER_RANK_DEF_MULT;
         break;
       case 'element_xuanwu_earth':
-        mult.def += rank * 0.04; // +4% DEF per rank
+        mult.def += rank * LAW_BALANCE.EARTH_RANK_DEF_MULT;
+        flat.def += rank * LAW_BALANCE.EARTH_RANK_FLAT_DEF;
         break;
       case 'element_qingdi_wood':
-        mult.hp += rank * 0.02;
-        flat.hp += rank * 60;
+        mult.hp += rank * LAW_BALANCE.WOOD_RANK_HP_MULT;
+        flat.hp += rank * LAW_BALANCE.WOOD_RANK_FLAT_HP;
+        if (player.extendedStats) {
+          player.extendedStats.vitality = (player.extendedStats.vitality || 100) + (rank * LAW_BALANCE.WOOD_RANK_VITALITY_FLAT);
+        }
         break;
       case 'element_roc_wind':
-        mult.spd += rank * 0.04; // +4% SPD per rank
+        mult.spd += rank * LAW_BALANCE.WIND_RANK_SPD_MULT;
         break;
       case 'element_godthunder_light':
-        mult.atk += rank * 0.025;
-        mult.spd += rank * 0.02;
+        mult.atk += rank * LAW_BALANCE.THUNDER_RANK_ATK_MULT;
+        mult.spd += rank * LAW_BALANCE.THUNDER_RANK_SPD_MULT;
         break;
       case 'body_tempering':
-        mult.hp += rank * 0.06;  // Raga Suci: massive HP & DEF scaling
-        mult.def += rank * 0.06;
-        flat.hp += rank * 100;
+        // Raga Suci: tanky & resilient without breaking balance (Master Plan §5.4)
+        mult.hp += rank * LAW_BALANCE.BODY_RANK_HP_MULT;
+        mult.def += rank * LAW_BALANCE.BODY_RANK_DEF_MULT;
+        flat.hp += rank * LAW_BALANCE.BODY_RANK_FLAT_HP;
         break;
       case 'natal_artifact':
         if (law.boundEntity?.entityType === 'artifact') {
           const artRank = law.boundEntity.rankLevel || rank;
-          flat.atk += (law.boundEntity.artifactAtk || (artRank * 25));
-          flat.def += (law.boundEntity.artifactDef || (artRank * 15));
+          flat.atk += (law.boundEntity.artifactAtk || (artRank * LAW_BALANCE.NATAL_FALLBACK_ATK_PER_RANK));
+          flat.def += (law.boundEntity.artifactDef || (artRank * LAW_BALANCE.NATAL_FALLBACK_DEF_PER_RANK));
         }
         break;
       case 'natal_beast':
         if (law.boundEntity?.entityType === 'beast') {
           const beastRank = law.boundEntity.rankLevel || rank;
-          flat.hp += (law.boundEntity.beastMaxHp ? Math.floor(law.boundEntity.beastMaxHp * 0.5) : (beastRank * 50));
-          flat.atk += (law.boundEntity.beastAtk || (beastRank * 15));
-          flat.def += (law.boundEntity.beastDef || (beastRank * 10));
+          flat.hp += (law.boundEntity.beastMaxHp ? Math.floor(law.boundEntity.beastMaxHp * LAW_BALANCE.NATAL_BEAST_HP_SHARE) : (beastRank * 40));
+          flat.atk += (law.boundEntity.beastAtk || (beastRank * LAW_BALANCE.NATAL_BEAST_FALLBACK_ATK_PER_RANK));
+          flat.def += (law.boundEntity.beastDef || (beastRank * LAW_BALANCE.NATAL_BEAST_FALLBACK_DEF_PER_RANK));
         }
         break;
       case 'gu_master':
         if (Array.isArray(law.guSlots)) {
-          for (const g of law.guSlots) {
-            const baseSatiety = g.satiety !== undefined ? g.satiety : (g.hunger || 0);
-            const hoursSinceFed = g.lastFedAt ? (Date.now() - new Date(g.lastFedAt).getTime()) / 3600000 : 0;
-            const effectiveSatiety = Math.max(0, Math.min(100, baseSatiety - Math.floor(hoursSinceFed * 2)));
-            if (effectiveSatiety > 0) {
-              const satietyRatio = Math.min(1.0, effectiveSatiety / 50);
-              flat.atk += Math.floor((g.bonusAtk || (rank * 8 + 5)) * satietyRatio);
-              flat.def += Math.floor((g.bonusDef || (rank * 5 + 3)) * satietyRatio);
+          // Sort Gu by combat effectiveness and take only top GU_COMBAT_MAX_ACTIVE_SLOTS (3)
+          const activeGu = [...law.guSlots]
+            .map(g => {
+              const baseSatiety = g.satiety !== undefined ? g.satiety : (g.hunger || 0);
+              const hoursSinceFed = g.lastFedAt ? (Date.now() - new Date(g.lastFedAt).getTime()) / 3600000 : 0;
+              const effectiveSatiety = Math.max(0, Math.min(100, baseSatiety - Math.floor(hoursSinceFed * 2)));
+              const bAtk = g.bonusAtk || (rank * 8 + 5);
+              const bDef = g.bonusDef || (rank * 5 + 3);
+              const score = (bAtk + bDef) + ((g.tier || 1) * (g.level || 1));
+              return { ...g, effectiveSatiety, bAtk, bDef, score };
+            })
+            .sort((a, b) => b.score - a.score)
+            .slice(0, LAW_BALANCE.GU_COMBAT_MAX_ACTIVE_SLOTS);
+
+          for (const g of activeGu) {
+            if (g.effectiveSatiety > 0) {
+              const satietyRatio = Math.min(1.0, g.effectiveSatiety / 50);
+              const effectiveAtk = Math.floor(g.bAtk * LAW_BALANCE.GU_ATK_SCALE_PER_TIER);
+              flat.atk += Math.floor(effectiveAtk * satietyRatio);
+              flat.def += Math.floor(g.bDef * satietyRatio);
             }
           }
         }
@@ -233,20 +251,25 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
       case 'demonic_myriad_venom':
       case 'demonic_abyssal_pact':
       case 'demonic_nether_darkness':
+        // Demonic shared offensive scaling
+        mult.atk += rank * LAW_BALANCE.DEMONIC_RANK_ATK_MULT;
         const corruption = law.demonicData?.corruptionIndex || 0;
-        mult.atk += Math.floor(corruption / 10) * 0.01; // +1% ATK per 10 corruption
-        mult.atk += rank * 0.035;                      // Demonic high offense
+        const corrPct = Math.min(
+          LAW_BALANCE.CORRUPTION_ATK_PERCENT_CAP,
+          Math.floor(corruption / 10) * LAW_BALANCE.CORRUPTION_ATK_PERCENT_PER_10
+        );
+        mult.atk += corrPct;
 
         if (law.activeLawType === 'demonic_blood_soul' && law.demonicData?.soulBannerCaptures) {
-          flat.atk += Math.min(rank * 60 + 30, (law.demonicData.soulBannerCaptures || 0) * 3);
+          const cap = LAW_BALANCE.SOUL_BANNER_ATK_CAP_BASE + (rank * LAW_BALANCE.SOUL_BANNER_ATK_CAP_PER_RANK);
+          flat.atk += Math.min(cap, (law.demonicData.soulBannerCaptures || 0) * LAW_BALANCE.SOUL_BANNER_ATK_PER_CAPTURE);
         }
         if (law.activeLawType === 'demonic_myriad_venom' && law.demonicData?.venomToxinLevel) {
-          flat.atk += Math.min(rank * 50 + 25, (law.demonicData.venomToxinLevel || 0) * 2);
+          const venomCap = LAW_BALANCE.VENOM_ATK_CAP_BASE + (rank * LAW_BALANCE.VENOM_ATK_CAP_PER_RANK);
+          flat.atk += Math.min(venomCap, (law.demonicData.venomToxinLevel || 0) * LAW_BALANCE.VENOM_ATK_PER_LEVEL);
         }
 
         // Sanksi Keterlambatan Upeti Altar Kurban Darah Abyss (Master Plan §3.7)
-        // Level 1 (lewat 0-7 hari): multiplier 0.70 (-30% HP, ATK, DEF, SPD)
-        // Level 2 (lewat >7 hari): multiplier 0.40 (-60% HP, ATK, DEF, SPD)
         if (law.activeLawType === 'demonic_abyssal_pact' && law.demonicData?.abyssalTributeDueAt) {
           const now = Date.now();
           const dueTime = new Date(law.demonicData.abyssalTributeDueAt).getTime();
@@ -254,7 +277,7 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
             const overdueDays = (now - dueTime) / (24 * 3600 * 1000);
             const curseLevel = overdueDays >= 7 ? 2 : 1;
             if (law.demonicData) law.demonicData.abyssalCurseLevel = curseLevel;
-            const penaltyMult = curseLevel === 2 ? 0.4 : 0.7; // -30% stat jika lewat, -60% jika lewat >7 hari
+            const penaltyMult = curseLevel === 2 ? LAW_BALANCE.ABYSS_CURSE_MULT_L2 : LAW_BALANCE.ABYSS_CURSE_MULT_L1;
             mult.hp *= penaltyMult;
             mult.atk *= penaltyMult;
             mult.def *= penaltyMult;
@@ -265,14 +288,22 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         }
 
         // Sanksi Terbakar Cahaya Yang di Luar Wilayah Kegelapan (Nether Debuff) (Master Plan §3.8)
-        // multiplier 0.50 (-50% HP, ATK, DEF, SPD)
         if (law.activeLawType === 'demonic_nether_darkness' && law.demonicData?.hasNetherDebuff) {
-          mult.hp *= 0.5;
-          mult.atk *= 0.5;
-          mult.def *= 0.5;
-          mult.spd *= 0.5;
+          mult.hp *= LAW_BALANCE.NETHER_DEBUFF_MULT;
+          mult.atk *= LAW_BALANCE.NETHER_DEBUFF_MULT;
+          mult.def *= LAW_BALANCE.NETHER_DEBUFF_MULT;
+          mult.spd *= LAW_BALANCE.NETHER_DEBUFF_MULT;
         }
         break;
+    }
+
+    // Infamy Combat Penalty: Kultivator iblis dengan infamy tinggi menderita tekanan batin / perburuan
+    const infamy = player.infamy || law.demonicData?.infamy || 0;
+    if (infamy > LAW_BALANCE.INFAMY_STAT_PENALTY_START) {
+      const steps = Math.floor((infamy - LAW_BALANCE.INFAMY_STAT_PENALTY_START) / LAW_BALANCE.INFAMY_STAT_PENALTY_STEP);
+      const pen = Math.min(LAW_BALANCE.INFAMY_STAT_PENALTY_CAP, steps * LAW_BALANCE.INFAMY_STAT_PENALTY_PER_STEP);
+      mult.atk *= (1 - pen);
+      mult.def *= (1 - pen);
     }
   }
 
