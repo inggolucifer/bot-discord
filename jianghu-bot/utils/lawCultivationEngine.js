@@ -830,6 +830,51 @@ function getCombatQiRegenPerRound(player) {
   return 5 + (realmIdx * 2) + Math.floor(vitalityStat * 0.05);
 }
 
+// ═══════════════════════════════════════════════════════════════
+// NETHER DARKNESS HELPERS (Master Plan §3.8)
+// ═══════════════════════════════════════════════════════════════
+
+const NETHER_DARKNESS_ZONES = [
+  'nether_chasm',
+  'ghost_cemetery',
+  'ancient_tomb',
+  'southern_demon_domain',
+  'shadow_valley',
+  'dark_abyss',
+  'underworld_crevasse'
+];
+
+function isNetherTerritory(zoneId, regionSlug, tileInfo = {}) {
+  const z = (zoneId || '').toLowerCase();
+  const r = (regionSlug || '').toLowerCase();
+  const t = (tileInfo.label || tileInfo.buildingName || tileInfo.terrainType || '').toLowerCase();
+
+  return (
+    NETHER_DARKNESS_ZONES.some(zone => z.includes(zone) || r.includes(zone)) ||
+    z.includes('nether') || z.includes('cemetery') || z.includes('grave') || z.includes('makam') || z.includes('abyss') ||
+    r.includes('nether') || r.includes('cemetery') || r.includes('demon') || r.includes('abyss') ||
+    t.includes('nether') || t.includes('makam') || t.includes('kubur') || t.includes('jurang') || t.includes('yin')
+  );
+}
+
+/**
+ * Batas durasi aman bertahan di luar wilayah gelap Nether (detik)
+ * Rank 0: 12 jam (43,200 detik)
+ * Rank 2: 24 jam (86,400 detik)
+ * Rank 4: 3 hari (259,200 detik)
+ * Rank 7+: 7 hari (604,800 detik)
+ * @param {number} rank
+ * @returns {number}
+ */
+function getNetherSafeLimitSeconds(rank = 0) {
+  const r = Number(rank) || 0;
+  if (r <= 0) return 12 * 3600;       // 12 jam (43,200s)
+  if (r === 1) return 18 * 3600;      // 18 jam
+  if (r === 2 || r === 3) return 24 * 3600; // 24 jam (86,400s)
+  if (r >= 4 && r < 7) return 3 * 24 * 3600; // 3 hari (259,200s)
+  return 7 * 24 * 3600;              // Rank 7+: 7 hari (604,800s)
+}
+
 /**
  * Menghitung jumlah Qi yang didapat dari channeling sejak lastChannelSyncAt.
  * Server-authoritative: berdasarkan delta waktu server, dipengaruhi oleh status Bar Esensi.
@@ -1852,6 +1897,18 @@ function getLawStatus(player) {
           d.abyssalCurseLevel = 0;
         }
       }
+      if (law.activeLawType === 'demonic_nether_darkness') {
+        const safeLimit = getNetherSafeLimitSeconds(law.rank || 0);
+        if (d.leftNetherTerritoryAt) {
+          const elapsed = Math.floor((Date.now() - new Date(d.leftNetherTerritoryAt).getTime()) / 1000);
+          const remaining = Math.max(0, safeLimit - elapsed);
+          d.netherExileTimerSeconds = remaining;
+          d.hasNetherDebuff = (remaining <= 0);
+        } else {
+          d.netherExileTimerSeconds = safeLimit;
+          d.hasNetherDebuff = false;
+        }
+      }
       return d;
     })(),
     bodyTemperingParts: law.bodyTemperingParts || {
@@ -2008,5 +2065,10 @@ module.exports = {
   awardActiveCultivationQi,
 
   // Status
-  getLawStatus
+  getLawStatus,
+
+  // Nether Darkness Helpers
+  NETHER_DARKNESS_ZONES,
+  isNetherTerritory,
+  getNetherSafeLimitSeconds
 };
