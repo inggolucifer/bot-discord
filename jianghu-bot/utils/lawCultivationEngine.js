@@ -2188,8 +2188,14 @@ function getLawStatus(player) {
   const law = player.cultivationLaw;
   if (!law) return { hasLaw: false, canBind: true };
 
-  // Bootstrap anti soft-lock (hanya sekali untuk pemain baru rank 0)
-  if (!law.essenceBootstrapDone && (law.currentEssence|0) === 0 && (law.qi|0) === 0 && (law.rank|0) === 0) {
+  // Bootstrap anti soft-lock (hanya setelah bind untuk pemain rank 0)
+  if (
+    law?.activeLawType &&
+    !law.essenceBootstrapDone &&
+    (law.rank || 0) === 0 &&
+    (law.qi || 0) === 0 &&
+    (law.currentEssence || 0) === 0
+  ) {
     law.currentEssence = LAW_PROGRESSION.BOOTSTRAP_ESSENCE;
     law.essenceBootstrapDone = true;
   }
