@@ -19,6 +19,7 @@ const Item = require('../../models/Item');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
 const WorldBossSeason = require('../../models/WorldBossSeason');
 const ArenaLadderEntry = require('../../models/ArenaLadderEntry');
+const { getMaxCombatQi } = require('../../utils/lawCultivationEngine');
 
 
 
@@ -395,8 +396,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                 attack: targetPlayer.stats?.attack || 10,
                 defense: targetPlayer.stats?.defense || 10,
                 speed: targetPlayer.stats?.speed || 10,
-                qi: targetPlayer.currentQi,
-                maxQi: targetPlayer.maxQi,
+                qi: getMaxCombatQi(targetPlayer),
+                maxQi: getMaxCombatQi(targetPlayer),
                 stance: targetPlayer.stats?.stance || 100,
                 skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
             }];
@@ -524,8 +525,8 @@ router.post('/start', authenticateToken, async (req, res) => {
                 attack: tAtk,
                 defense: tDef,
                 speed: tSpd,
-                qi: targetPlayer.currentQi || 50,
-                maxQi: targetPlayer.maxQi || 100,
+                qi: getMaxCombatQi(targetPlayer),
+                maxQi: getMaxCombatQi(targetPlayer),
                 stance: 100,
                 skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
             }];

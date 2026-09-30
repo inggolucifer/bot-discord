@@ -748,6 +748,41 @@ function getEssenceDigestRate(rank = 0) {
   return Math.max(1, Math.floor(2 * Math.pow(1.5, rank || 0)));
 }
 
+// ═══════════════════════════════════════════════════════════════
+// COMBAT QI VS CULTIVATION QI (Master Plan §1.2, §1.3 & §5.4)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Kapasitas Maksimal Qi Bertarung (Combat Qi / MP) sesuai Master Plan §1.3 & §5.4
+ * MaxCombatQi = 50 + (RealmIndex * 25) + floor(Stat_Energy * 0.5) + floor(Stat_Focus * 0.3)
+ * Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
+ * @param {object} player - Mongoose Player document
+ * @returns {number}
+ */
+function getMaxCombatQi(player) {
+  if (!player) return 50;
+  const { getRealmIndex } = require('./cultivation');
+  const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+  const energyStat = player.extendedStats?.energy ?? player.extendedStats?.innerEnergy ?? 100;
+  const focusStat = player.extendedStats?.focus ?? 100;
+  return 50 + (realmIdx * 25) + Math.floor(energyStat * 0.5) + Math.floor(focusStat * 0.3);
+}
+
+/**
+ * Regenerasi Qi Bertarung per Ronde Tempur sesuai Master Plan §1.3 & §5.4
+ * CombatQiRegenPerRound = 5 + (RealmIndex * 2) + floor(Stat_Vitality * 0.05)
+ * Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
+ * @param {object} player - Mongoose Player document
+ * @returns {number}
+ */
+function getCombatQiRegenPerRound(player) {
+  if (!player) return 5;
+  const { getRealmIndex } = require('./cultivation');
+  const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+  const vitalityStat = player.extendedStats?.vitality ?? player.vitality ?? 100;
+  return 5 + (realmIdx * 2) + Math.floor(vitalityStat * 0.05);
+}
+
 /**
  * Menghitung jumlah Qi yang didapat dari channeling sejak lastChannelSyncAt.
  * Server-authoritative: berdasarkan delta waktu server, dipengaruhi oleh status Bar Esensi.
@@ -1779,6 +1814,8 @@ module.exports = {
   getChannelQiRate,
   getMaxEssence,
   getEssenceDigestRate,
+  getMaxCombatQi,
+  getCombatQiRegenPerRound,
 
   // Body Tempering & Environmental Essences
   getMaxEssenceStorage,
