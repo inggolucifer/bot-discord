@@ -471,6 +471,7 @@ const playerSchema = new mongoose.Schema({
   level: { type: Number, default: 1 },
   exp: { type: Number, default: 0 },
   infamy: { type: Number, default: 0 },
+  isWantedByOrthodox: { type: Boolean, default: false }, // Flag buronan Aliansi Ortodoks (infamy >= 100)
 
   biography: { type: String, default: '', maxlength: 500 },
   nickname: { type: String, default: null },
