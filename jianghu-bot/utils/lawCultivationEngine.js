@@ -2186,7 +2186,20 @@ function meetsLawRankRequirements(player, targetRank) {
  */
 function getLawStatus(player) {
   const law = player.cultivationLaw;
-  if (!law) return { hasLaw: false, canBind: true };
+  const systemStage = player.systemCultivation?.stage || 1;
+  const systemRealm = player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)';
+  const { getRealmIndex } = require('./cultivation');
+  const realmIdx = getRealmIndex(systemRealm);
+
+  const mortalGate = {
+    systemRealm,
+    systemStage,
+    canBindLaw: realmIdx === 0 && systemStage >= 10 && !law?.activeLawType && !player.isNormalCultivator,
+    canChooseOrdinary: systemStage >= 10 && !law?.activeLawType && !player.isNormalCultivator,
+    needsStage10: realmIdx === 0 && systemStage < 10
+  };
+
+  if (!law) return { hasLaw: false, canBind: mortalGate.canBindLaw, mortalGate };
 
   // Bootstrap anti soft-lock (hanya setelah bind untuk pemain rank 0)
   if (
@@ -2290,17 +2303,24 @@ function getLawStatus(player) {
     nextDopamine = 'channel';
   }
 
+  const nextAction = (currentEssVal <= (digestRate * 10)) ? 'absorb' : (currentQi >= targetStageQi) ? 'breakthrough' : 'channel';
+
   const progressionFeel = {
-    rankTargetDays: LAW_PROGRESSION.RANK_TARGET_DAYS[rank] || 280,
+    rank,
+    stage,
+    qi: Math.floor(currentQi),
+    maxQi: targetStageQi,
     stageProgressPct: Number((targetStageQi > 0 ? (currentQi / targetStageQi) : 0).toFixed(4)),
     stageProgressPercent: Math.min(100, Math.floor((currentQi / targetStageQi) * 100)),
-    etaMinutesThisStage,
     etaDaysThisStage,
+    etaMinutesThisStage,
     etaDaysThisRank,
+    rankTargetDays: LAW_PROGRESSION.RANK_TARGET_DAYS[rank] || 280,
+    nextAction,
+    nextDopamine,
     essenceMinutesLeft,
     dailyCapMinutes: dailyCap,
     dailyMinutesUsed: Math.floor(currentMinutesUsed),
-    nextDopamine,
     channelMinutesRemainingToday: Math.max(0, dailyCap - currentMinutesUsed),
     hintText: currentQi >= targetStageQi
       ? (stage === 9 ? '⚡ Qi Dantiamu meluap! Bersiaplah menghadapi Terobosan Ranah Agung (Major Breakthrough)!' : '✨ Botol leher terobosan telah tercapai! Lakukan Penerobosan Stage!')
@@ -2310,6 +2330,7 @@ function getLawStatus(player) {
   };
 
   return {
+    mortalGate,
     isNormalCultivator: !!player.isNormalCultivator,
     hasLaw: !!law.activeLawType,
     activeLawType: law.activeLawType,
