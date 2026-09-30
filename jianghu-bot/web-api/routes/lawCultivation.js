@@ -49,7 +49,8 @@ const {
   getMaxEssenceStorage,
   getTierAffinity,
   getGuMaxSlots,
-  BREAKTHROUGH_PILL_CATALOG
+  BREAKTHROUGH_PILL_CATALOG,
+  LAW_BALANCE
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -603,9 +604,14 @@ router.post('/channel/start', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    let startMsg = '🧘 Meditasi dimulai. Qi mengalir perlahan ke dalam dantian...';
+    if (player.isWantedByOrthodox && Math.random() < 0.10) {
+      startMsg = '🧘 Meditasi dimulai. Hawa amarah buronan terasa gelisah; para pendekar sekte ortodoks mungkin sedang melacak jejakmu!';
+    }
+
     res.json({
       success: true,
-      message: '🧘 Meditasi dimulai. Qi mengalir perlahan ke dalam dantian...',
+      message: startMsg,
       data: { isChanneling: true, channelCapRemaining: Math.max(0, cap - used) }
     });
   } catch (error) {
@@ -1956,7 +1962,8 @@ router.post('/gu/fuse', authenticateToken, async (req, res) => {
         targetGu.lastFedAt = new Date();
         law.guSlots = updatedGuSlots;
         law.guMaxSlots = getGuMaxSlots(law.rank || 0);
-        law.qi = Math.min(law.maxQi, (law.qi || 0) + 150);
+        const fuseQiGrant = LAW_BALANCE.GU_FUSION_SUCCESS_FLAT_QI || 100;
+        law.qi = Math.min(law.maxQi, (law.qi || 0) + fuseQiGrant);
 
         player.markModified('cultivationLaw');
         await player.save({ session });
@@ -1964,7 +1971,7 @@ router.post('/gu/fuse', authenticateToken, async (req, res) => {
         responsePayload = {
           success: true,
           isSuccess: true,
-          message: `✨ FUSI BERHASIL! Gu Prioritas [${targetGu.guName}] berevolusi ke Tier ${targetGu.tier}! Gu Pengorbanan [${sacrificeName}] telah lenyap diserap. (+150 Qi Dantian)`,
+          message: `✨ FUSI BERHASIL! Gu Prioritas [${targetGu.guName}] berevolusi ke Tier ${targetGu.tier}! Gu Pengorbanan [${sacrificeName}] telah lenyap diserap. (+${fuseQiGrant} Qi Dantian)`,
           data: { guSlots: law.guSlots, qi: law.qi, upgradedGu: targetGu }
         };
       } else {
@@ -2357,6 +2364,12 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Hanya praktisi Pelebur Inti Siluman yang dapat menyerap inti kotor.' });
     }
 
+    checkAndResetDailyCap(player);
+    if (!law.dailyData) law.dailyData = {};
+    if ((law.dailyData.turbidAbsorbsToday || 0) >= LAW_BALANCE.DAILY_TURBID_ABSORB_MAX) {
+      throw new CustomError(`Dantianmu telah jenuh menyerap inti siluman kotor hari ini (Maksimal ${LAW_BALANCE.DAILY_TURBID_ABSORB_MAX}/hari). Istirahatkan dantianmu hingga pukul 00:00 WIB.`, 429);
+    }
+
     const { itemId } = req.body;
     await player.populate({ path: 'inventory.itemId' });
 
@@ -2402,6 +2415,7 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     if (!law.demonicData) law.demonicData = {};
     law.demonicData.turbidCoresConsumed = (law.demonicData.turbidCoresConsumed || 0) + 1;
     law.demonicData.corruptionIndex = Math.min(100, (law.demonicData.corruptionIndex || 0) + 3);
+    law.dailyData.turbidAbsorbsToday = (law.dailyData.turbidAbsorbsToday || 0) + 1;
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiBonus);
 
     player.markModified('cultivationLaw');
@@ -2410,7 +2424,7 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       message: `👹 Berhasil melahap ${coreName} (+${qiBonus} Qi, +3 Poin Korupsi Batin)!`,
-      data: { demonicData: law.demonicData, qi: law.qi }
+      data: { demonicData: law.demonicData, qi: law.qi, dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_TURBID_ABSORB_MAX - law.dailyData.turbidAbsorbsToday) }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2426,6 +2440,12 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Hanya praktisi Penghisap Darah yang dapat memanen darah.' });
     }
     if (!law.demonicData) law.demonicData = {};
+
+    checkAndResetDailyCap(player);
+    if (!law.dailyData) law.dailyData = {};
+    if ((law.dailyData.bloodHarvestsToday || 0) >= LAW_BALANCE.DAILY_BLOOD_HARVEST_MAX) {
+      throw new CustomError(`Darah hari ini sudah mengering (Maksimal ${LAW_BALANCE.DAILY_BLOOD_HARVEST_MAX} panen/hari). Tunggu hingga hawa darah bumi bangkit kembali pada pukul 00:00 WIB.`, 429);
+    }
 
     // E2: Validasi jenis target manusia / bandit jika context dikirimkan (Master Plan §3.5)
     const targetType = (req.body?.targetType || req.body?.targetCategory || '').toLowerCase();
@@ -2468,12 +2488,13 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     }
 
     law.demonicData.bloodEssenceVials = (law.demonicData.bloodEssenceVials || 0) + 1;
-    law.demonicData.infamy = (law.demonicData.infamy || 0) + 5;
+    law.demonicData.infamy = (law.demonicData.infamy || 0) + LAW_BALANCE.INFAMY_PER_BLOOD_ACTION;
     player.infamy = law.demonicData.infamy;
     // Ambang batas buronan Aliansi Ortodoks: infamy >= 100
-    player.isWantedByOrthodox = (player.infamy >= 100);
+    player.isWantedByOrthodox = (player.infamy >= LAW_BALANCE.INFAMY_WANTED_THRESHOLD);
     player.markModified('infamy');
     player.markModified('isWantedByOrthodox');
+    law.dailyData.bloodHarvestsToday = (law.dailyData.bloodHarvestsToday || 0) + 1;
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiBonus);
 
     player.markModified('cultivationLaw');
@@ -2481,8 +2502,8 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `🩸 Berhasil memanen ${sourceName} (+1 Botol Darah, +${qiBonus} Qi, +5 Status Buronan)!`,
-      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox }
+      message: `🩸 Berhasil memanen ${sourceName} (+1 Botol Darah, +${qiBonus} Qi, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox, dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_BLOOD_HARVEST_MAX - law.dailyData.bloodHarvestsToday) }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2498,6 +2519,12 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Hanya praktisi Penghisap Darah & Jiwa yang dapat mengikat Panji Ruh.' });
     }
     if (!law.demonicData) law.demonicData = {};
+
+    checkAndResetDailyCap(player);
+    if (!law.dailyData) law.dailyData = {};
+    if ((law.dailyData.soulBannerToday || 0) >= LAW_BALANCE.DAILY_SOUL_BANNER_MAX) {
+      throw new CustomError(`Panji Sembilan Ruh milikmu telah penuh dengan rintihan arwah hari ini (Maksimal ${LAW_BALANCE.DAILY_SOUL_BANNER_MAX} arwah/hari). Tunggu pembersihan pada pukul 00:00 WIB.`, 429);
+    }
 
     // E2: Validasi jenis target manusia / bandit jika context dikirimkan (Master Plan §3.5)
     const targetType = (req.body?.targetType || req.body?.targetCategory || '').toLowerCase();
@@ -2540,11 +2567,12 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     }
 
     law.demonicData.soulBannerCaptures = (law.demonicData.soulBannerCaptures || 0) + 1;
-    law.demonicData.infamy = (law.demonicData.infamy || 0) + 5;
+    law.demonicData.infamy = (law.demonicData.infamy || 0) + LAW_BALANCE.INFAMY_PER_BLOOD_ACTION;
     player.infamy = law.demonicData.infamy;
-    player.isWantedByOrthodox = (player.infamy >= 100);
+    player.isWantedByOrthodox = (player.infamy >= LAW_BALANCE.INFAMY_WANTED_THRESHOLD);
     player.markModified('infamy');
     player.markModified('isWantedByOrthodox');
+    law.dailyData.soulBannerToday = (law.dailyData.soulBannerToday || 0) + 1;
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiBonus);
 
     player.markModified('cultivationLaw');
@@ -2552,8 +2580,8 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+1 Jiwa Tersegel, +${qiBonus} Qi, +5 Status Buronan)!`,
-      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox }
+      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+1 Jiwa Tersegel, +${qiBonus} Qi, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox, dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_SOUL_BANNER_MAX - law.dailyData.soulBannerToday) }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2561,12 +2589,18 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
   }
 });
 
-router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
+router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken, async (req, res) => {
   try {
     const player = await resolvePlayer(req);
     const law = player.cultivationLaw;
     if (law?.activeLawType !== 'demonic_myriad_venom') {
       return res.status(400).json({ error: 'Hanya praktisi Racun Maut yang dapat meminum racun.' });
+    }
+
+    checkAndResetDailyCap(player);
+    if (!law.dailyData) law.dailyData = {};
+    if ((law.dailyData.venomDrinksToday || 0) >= LAW_BALANCE.DAILY_VENOM_DRINK_MAX) {
+      throw new CustomError(`Tubuhmu telah mencapai ambang batas penyerapan racun maut hari ini (Maksimal ${LAW_BALANCE.DAILY_VENOM_DRINK_MAX} cawan/hari). Istirahatkan pembuluh darahmu hingga pukul 00:00 WIB.`, 429);
     }
 
     let poisonName = 'Racun Mematikan';
@@ -2615,11 +2649,12 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
     if (!law.demonicData) law.demonicData = {};
     law.demonicData.venomToxinLevel = (law.demonicData.venomToxinLevel || 0) + 1;
     law.demonicData.venomTolerancePct = Math.min(80, (law.demonicData.venomToxinLevel || 0) * 5);
-    law.demonicData.infamy = (law.demonicData.infamy || 0) + 3;
+    law.demonicData.infamy = (law.demonicData.infamy || 0) + LAW_BALANCE.INFAMY_PER_VENOM_ACTION;
     player.infamy = law.demonicData.infamy;
-    player.isWantedByOrthodox = (player.infamy >= 100);
+    player.isWantedByOrthodox = (player.infamy >= LAW_BALANCE.INFAMY_WANTED_THRESHOLD);
     player.markModified('infamy');
     player.markModified('isWantedByOrthodox');
+    law.dailyData.venomDrinksToday = (law.dailyData.venomDrinksToday || 0) + 1;
     const qiGain = Math.round(75 * (affinity ? affinity.efficiency : 1));
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiGain);
 
@@ -2628,8 +2663,8 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+1 Toleransi Racun, +${qiGain} Qi)!`,
-      data: { demonicData: law.demonicData, qi: law.qi, currentHp: player.currentHp }
+      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+1 Toleransi Racun, +${qiGain} Qi, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
+      data: { demonicData: law.demonicData, qi: law.qi, currentHp: player.currentHp, isWantedByOrthodox: player.isWantedByOrthodox, dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_VENOM_DRINK_MAX - law.dailyData.venomDrinksToday) }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });

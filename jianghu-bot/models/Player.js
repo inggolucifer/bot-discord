@@ -249,7 +249,11 @@ const lawDailyDataSchema = new mongoose.Schema({
   dailyMissionIds: { type: [String], default: [] },    // 3 misi acak hari ini
   lastDailyChestClaimAt: { type: Date, default: null },
   weeklyMissionsCount: { type: Number, default: 0 },
-  lastWeeklyChestClaimAt: { type: Date, default: null }
+  lastWeeklyChestClaimAt: { type: Date, default: null },
+  turbidAbsorbsToday: { type: Number, default: 0 },
+  bloodHarvestsToday: { type: Number, default: 0 },
+  soulBannerToday: { type: Number, default: 0 },
+  venomDrinksToday: { type: Number, default: 0 }
 }, { _id: false });
 
 const cultivationLawSchema = new mongoose.Schema({
