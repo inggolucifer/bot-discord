@@ -183,7 +183,8 @@ router.get('/binding/inventory', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       data: {
-        isEligible: realmIdx === 0 && !isBound && !isOrdinary,
+        isEligible: realmIdx === 0 && stage >= 10 && !isBound && !isOrdinary,
+        canBindLaw: stage >= 10 && !isBound && !isOrdinary && realmIdx === 0,
         currentRealm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
         currentStage: stage,
         isBound,
@@ -234,11 +235,18 @@ router.post('/bind', authenticateToken, async (req, res) => {
         throw new CustomError('Kamu telah memilih Jalur Kultivator Biasa. Tubuh fana telah mengunci diri dari ikatan Hukum Semesta.', 400);
       }
 
-      // Validasi: Harus masih Mortal (realmIndex === 0)
+      // Validasi: Harus masih Mortal (realmIndex === 0) dan sudah mencapai Tahap 10
       const { getRealmIndex } = require('../../utils/cultivation');
       const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
       if (realmIdx > 0) {
         throw new CustomError('Dantianmu telah terikat ranah Qi. Hanya tubuh fana yang murni yang dapat menerima Hukum Semesta.', 400);
+      }
+      const stage = player.systemCultivation?.stage || 1;
+      if (realmIdx === 0 && stage < 10) {
+        throw new CustomError(
+          'Gerbang Hukum Semesta baru terbuka pada Fondasi Fana Tahap 10. Sempurnakan dulu tubuh fana-mu.',
+          400
+        );
       }
 
       // Validasi Slot 1: Manual Law Item
