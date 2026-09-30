@@ -795,9 +795,22 @@ function getQiRequired(rank, stage) {
  * Channeling Qi Rate per menit (Qi/menit) yang didapat saat meditasi.
  * Rate meningkat setiap rank naik.
  * BaseRate = 21 Qi/menit pada Rank 0, meningkat 1.8× per rank.
+ * 
+ * pathMod mempengaruhi laju Qi (Master Plan §5.4 & Balance Pass):
+ * - Mode 'penalty' (default anti-OP demonic): rate = floor(base / clamp(pathMod, 0.9, 1.6)).
+ *   Jalur dengan pathMod tinggi (misal demonic 1.35-1.55) mendapat laju meditasi lebih lambat sebagai harga kekuatan ofensif & tribulasi berat.
+ * - Mode 'bonus': rate = floor(base * clamp(pathMod, 0.9, 1.6)).
+ * @param {number} rank - Rank kultivasi law (0-8)
+ * @param {number} pathMod - PathMod dari LAW_DEFINITIONS (default 1.0)
+ * @returns {number} Qi rate per menit
  */
-function getChannelQiRate(rank) {
-  return Math.floor(21 * Math.pow(1.8, rank));
+function getChannelQiRate(rank, pathMod = 1.0) {
+  const base = Math.floor(21 * Math.pow(1.8, rank || 0));
+  const pm = Math.min(1.6, Math.max(0.9, Number(pathMod) || 1));
+  if (LAW_BALANCE.CHANNEL_PATHMOD_MODE === 'penalty') {
+    return Math.max(1, Math.floor(base / pm));
+  }
+  return Math.max(1, Math.floor(base * pm));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -983,9 +996,9 @@ function calculateChannelingProgress(player) {
   const dailyCap = getDailyChannelCap(streakDays);
   const minutesUsedToday = law.dailyData?.channelMinutesToday || 0;
   const minutesRemaining = Math.max(0, dailyCap - minutesUsedToday);
-  const effectiveMinutes = Math.min(minutesElapsed, minutesRemaining);
-
-  const baseRate = getChannelQiRate(law.rank || 0);
+  const lawDef = law.activeLawType ? LAW_DEFINITIONS[law.activeLawType] : null;
+  const pathMod = lawDef?.pathMod || 1.0;
+  const baseRate = getChannelQiRate(law.rank || 0, pathMod);
   const maxEss = law.maxEssence || getMaxEssence(law.rank || 0);
   const currentEss = law.currentEssence !== undefined ? law.currentEssence : 80;
 
@@ -1924,7 +1937,8 @@ function getLawStatus(player) {
 
   const totalStages = (law.rank * 10) + law.stage;
   const qiPercent = law.maxQi > 0 ? Math.min(100, Math.floor((currentQi / law.maxQi) * 100)) : 0;
-  const channelRate = getChannelQiRate(law.rank);
+  const pathMod = lawDef?.pathMod || 1.0;
+  const channelRate = getChannelQiRate(law.rank, pathMod);
 
   const canClaimEpiphany = !isClaimedToday(law.dailyData?.lastEpiphanyClaimAt);
 
@@ -1936,7 +1950,6 @@ function getLawStatus(player) {
   const requiredLevel = reqData?.minLevel || 1;
   const charLevel = player.level || 1;
 
-  const pathMod = lawDef?.pathMod || 1.0;
   const tribWaveDamages = [0, 1, 2].map(w => calculateTribulationWaveDamage(w, law.rank || 0, pathMod));
   const survivalHP = calculateSurvivalHP(player);
   const maxWaveDmg = Math.max(...tribWaveDamages);
