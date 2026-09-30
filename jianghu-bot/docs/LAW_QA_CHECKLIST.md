@@ -159,6 +159,23 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 ---
 
+## PMAX. PRODUCTION MAX (20 LAW ECOSYSTEM, COMBAT HOOKS, SKILL TREES, UNIQUE PANELS)
+
+| ID | Skenario Uji | Prosedur & Ekspektasi | Status |
+|---|---|---|---|
+| PMAX-01 | **Karmic Mirror Reflect in Battle Damage Pipeline** | Attacker menyerang pemain pengguna Cermin Karma (rank R).<br>• *Hasil*: Attacker menerima reflect damage sebesar `Math.floor(incoming * reflectPct)` (capped max 25% incoming damage). Ditampilkan di log tempur. | [ ] PASS |
+| PMAX-02 | **Merit Bonus vs Wanted / Demonic Targets in Battle** | Pemain Hukum Jasa Langit (rank R) menyerang target buronan (`isWantedByOrthodox === true`) atau mob bertag demonic/undead/corrupt.<br>• *Hasil*: `getLawCombatModifiers()` memberikan bonus ATK `+4% * rank` (tercatat di log `⚡ [Jasa Langit: +X% vs Iblis/Buronan]`). Target normal mendapat multiplier 1.0x. | [ ] PASS |
+| PMAX-03 | **Pure Yang Bonus vs Corrupted / Dark Targets in Battle** | Pemain Kitab Yang Murni (rank R) menyerang target bertag corrupt/undead/demonic/ghost/yin.<br>• *Hasil*: `getLawCombatModifiers()` memberikan multiplier damage `+3% * rank` (`☀️ [Yang Murni: +X% Penumpasan Kegelapan]`). | [ ] PASS |
+| PMAX-04 | **Sword Heart Armed vs Unarmed Penalty in Battle** | Evaluasi ATK Hati Pedang saat memasang pedang vs bertangan kosong / senjata non-pedang.<br>• *Hasil*: Saat memegang pedang, mendapat boost ATK dan Crit; saat tidak menggunakan pedang, menderita penalti `-15% ATK` (`SWORD_UNARMED_PENALTY: 0.85`). `isPlayerWieldingSword()` konsisten di absorb dan battle. | [ ] PASS |
+| PMAX-05 | **Formation Hub Spatial Defense & Home Buff** | Karakter Formasi Bendera berada di atas petak Hub Formasi miliknya sendiri (`isOnOwnFormationHub()`) vs di petak lain.<br>• *Hasil*: Saat di Home Hub, DEF dan HP dinaikkan `+8%` (`ARRAY_HOME_BONUS: 1.08`), `onFormationHome: true`. Saat roaming di luar hub, bonus home nonaktif. | [ ] PASS |
+| PMAX-06 | **20 Laws Skill Tree Nodes Effects in calculatePlayerStats** | Alokasikan SP ke node skill tree pada salah satu dari 20 Law. Panggil `calculatePlayerStats()`.<br>• *Hasil*: Efek pasif node (hpMult, atkMult, defMult, spdMult, flatAtk, reflectPct, res) langsung menaikkan stats total pemain secara terukur dan deterministik via `applyLawSkillTreeEffects()`. | [ ] PASS |
+| PMAX-07 | **Cross-Tree Allocation & Requirement Validation** | Coba panggil `POST /law/skill/allocate` untuk nodeId milik Law lain, atau coba alokasi Tier 2 tanpa menyelesaikan syarat node Tier 1 di `requires[]`.<br>• *Hasil*: Ditolak HTTP 404 (lintas law) atau HTTP 400 (prasyarat belum terpenuhi). | [ ] PASS |
+| PMAX-08 | **Status API uniquePanel & skillTree per Law Type** | Panggil `GET /law/status` untuk berbagai Law (Righteous Merit, Yang, Sword, Formation, Karma, Body Tempering, Gu Master, Demonic).<br>• *Hasil*: Mengembalikan payload `uniquePanel` yang spesifik dan relevan tanpa clutter (misal `wieldingSword` untuk sword, `onHub` untuk formation, `bodyParts` untuk body, `guSlots` untuk gu), serta `skillTree: { points, nodes }`. | [ ] PASS |
+| PMAX-09 | **World Activities Anti-Bypass & Daily Caps** | Pemain melakukan aktivitas dunia (mining/forging/herb/fish/battle).<br>• *Hasil*: Menerima intisari kecil via `awardActiveCultivationQi()` yang masuk ke bar esensi (cap 25/hari), BUKAN lonjakan Qi instan (cap residu 5 Qi/hari). Channeling tetap menjadi satu-satunya jalur utama konversi esensi menjadi xiuwei. | [ ] PASS |
+| PMAX-10 | **Formation Hub Facility Build/Upgrade Path** | Praktisi Formasi Bendera membangun Hub Formasi via `POST /facility/build-or-upgrade`.<br>• *Hasil*: Terpotong biaya material & emas, menempatkan `Formation Hub` di `player.assets` dengan koordinat `placement: { zoneId, tileX, tileY }`. Absorb esensi formasi selanjutnya dapat mendeteksi hub tersebut secara presisi. | [ ] PASS |
+
+---
+
 ## 2. CARA MENJALANKAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
@@ -179,6 +196,13 @@ git grep -n "^>>>>>>>"
 # 3. Jalankan estimasi progresi 7 hari Rank 0 + 2.5 tahun Rank 0..8
 node jianghu-bot/scripts/estimate_law_days.js
 
-# 4. Jalankan seeding item penting Law
-node jianghu-bot/scripts/seedLawHardeningItems.js
+# 4. Jalankan snapshot estimasi tempur Rank 5 untuk 20 Law
+node jianghu-bot/scripts/estimate_law_combat_rank5.js
+
+# 5. Jalankan test suite komprehensif production-max 18 checks
+node jianghu-bot/scripts/testRighteousLawsComprehensive.js
+
+# 6. Jalankan seeding item penting Law
+node jianghu-bot/scripts/seedLawMasterEcosystem.js
+node jianghu-bot/scripts/seedRighteousLawEcosystem.js
 ```
