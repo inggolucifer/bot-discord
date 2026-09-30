@@ -47,7 +47,8 @@ const {
   startBodyTemperingPart,
   claimBodyTemperingPart,
   getMaxEssenceStorage,
-  getTierAffinity
+  getTierAffinity,
+  getGuMaxSlots
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -1511,98 +1512,324 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
   }
 });
 
+// POST /gu/equip — Memasang Gu ke dalam slot rongga aperture (Master Plan §3.2)
+router.post('/gu/equip', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `law_gu_equip_${userId}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Aksi pasang Gu sedang diproses.' });
+
+  const { itemId } = req.body;
+  if (!itemId) {
+    releaseLock();
+    return res.status(400).json({ error: 'ID item Gu wajib disertakan.' });
+  }
+
+  try {
+    let resultData = null;
+    await withTransaction(async (session) => {
+      const player = await resolvePlayer(req, session);
+      const law = player.cultivationLaw;
+      if (law?.activeLawType !== 'gu_master') {
+        throw new CustomError('Hanya praktisi Gu Master yang dapat memasang cacing Gu ke rongga tubuh.', 400);
+      }
+
+      if (!law.guSlots) law.guSlots = [];
+      const maxSlots = getGuMaxSlots(law.rank || 0);
+      law.guMaxSlots = maxSlots;
+
+      if (law.guSlots.length >= maxSlots) {
+        throw new CustomError(`Rongga aperture Gu milikmu penuh! Rank ${law.rank || 0} hanya dapat menampung maksimal ${maxSlots} slot Gu. Naikkan ranah Law untuk memperluas rongga.`, 400);
+      }
+
+      await player.populate({ path: 'inventory.itemId' });
+      const invIndex = player.inventory.findIndex(inv => {
+        if (!inv.itemId || inv.quantity < 1) return false;
+        return inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId;
+      });
+
+      if (invIndex === -1) {
+        throw new CustomError('Item Gu tidak ditemukan di tas inventori.', 404);
+      }
+
+      const inv = player.inventory[invIndex];
+      const itemDoc = inv.itemId;
+      const tags = itemDoc.tags || [];
+      const cat = (itemDoc.category || '').toLowerCase();
+      const isGuItem = tags.includes('gu') || tags.includes('gu_larva') || tags.includes('gu_master') || cat === 'gu' || (itemDoc.name || '').toLowerCase().includes('gu ');
+
+      if (!isGuItem) {
+        throw new CustomError('Item ini bukan entitas Gu yang sah dan tidak dapat diserap ke dalam rongga aperture.', 400);
+      }
+
+      // Potong 1 item dari tas inventori
+      inv.quantity -= 1;
+      if (inv.quantity <= 0) {
+        player.inventory.splice(invIndex, 1);
+      }
+
+      const itemTier = Number(itemDoc.tier) || Number(itemDoc.rank) || 1;
+      const newGu = {
+        guItemId: itemDoc._id,
+        guName: itemDoc.name,
+        guType: itemDoc.guType || 'attack',
+        tier: itemTier,
+        level: 1,
+        satiety: 80,
+        hunger: 80,
+        bonusAtk: (itemDoc.stats?.atk || itemDoc.stats?.attack || (10 * itemTier)),
+        bonusDef: (itemDoc.stats?.def || itemDoc.stats?.defense || (6 * itemTier)),
+        lastFedAt: new Date()
+      };
+
+      law.guSlots.push(newGu);
+      player.markModified('inventory');
+      player.markModified('cultivationLaw');
+      await player.save({ session });
+
+      resultData = {
+        guSlots: law.guSlots,
+        guMaxSlots: law.guMaxSlots,
+        equippedGu: newGu
+      };
+    });
+
+    return res.json({
+      success: true,
+      message: `🪲 Berhasil menanamkan [${resultData.equippedGu.guName}] ke dalam rongga aperture (${resultData.guSlots.length}/${resultData.guMaxSlots} slot)!`,
+      data: resultData
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error equipping Gu:', error);
+    res.status(500).json({ error: error.message || 'Gagal memasang Gu ke aperture.' });
+  } finally {
+    releaseLock();
+  }
+});
+
+// POST /gu/unequip — Melepaskan Gu dari rongga aperture (Master Plan §3.2)
+router.post('/gu/unequip', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `law_gu_unequip_${userId}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Aksi lepas Gu sedang diproses.' });
+
+  const { slotIndex } = req.body;
+  if (slotIndex === undefined || slotIndex === null) {
+    releaseLock();
+    return res.status(400).json({ error: 'Index slot Gu wajib disertakan.' });
+  }
+
+  try {
+    let resultData = null;
+    let hadSedative = false;
+    let backlashMsg = '';
+
+    await withTransaction(async (session) => {
+      const player = await resolvePlayer(req, session);
+      const law = player.cultivationLaw;
+      if (law?.activeLawType !== 'gu_master') {
+        throw new CustomError('Hanya praktisi Gu Master yang dapat melepaskan Gu dari rongga tubuh.', 400);
+      }
+
+      const idx = Number(slotIndex);
+      if (!law.guSlots || idx < 0 || idx >= law.guSlots.length) {
+        throw new CustomError('Slot Gu yang dipilih tidak valid atau kosong.', 400);
+      }
+
+      const targetGu = law.guSlots[idx];
+      const guName = targetGu.guName || 'Cacing Gu';
+
+      // Cek apakah pemain memiliki Pil Penenang Gu di tas
+      await player.populate({ path: 'inventory.itemId' });
+      const sedativeIndex = player.inventory.findIndex(inv => {
+        if (!inv.itemId || inv.quantity < 1) return false;
+        const tags = inv.itemId.tags || [];
+        const name = (inv.itemId.name || '').toLowerCase();
+        return tags.includes('sedative_pill') || tags.includes('gu_sedative') || name.includes('penenang gu') || name.includes('pil penenang');
+      });
+
+      if (sedativeIndex !== -1) {
+        // Konsumsi 1 Pil Penenang Gu -> Unequip bersih tanpa luka/backlash
+        hadSedative = true;
+        player.inventory[sedativeIndex].quantity -= 1;
+        if (player.inventory[sedativeIndex].quantity <= 0) {
+          player.inventory.splice(sedativeIndex, 1);
+        }
+      } else {
+        // Tanpa pil penenang -> Backlash keras! (HP -20%, Vitality -20%, debuff 2 jam)
+        hadSedative = false;
+        const maxHp = player.combatStats?.maxHp || 100;
+        const hpDmg = Math.floor(maxHp * 0.20);
+        if (!player.combatStats) player.combatStats = {};
+        player.combatStats.hp = Math.max(1, (player.combatStats.hp || maxHp) - hpDmg);
+
+        if (player.extendedStats?.vitality !== undefined) {
+          player.extendedStats.vitality = Math.max(0, Math.floor(player.extendedStats.vitality * 0.80));
+        }
+        if (player.vitality !== undefined) {
+          player.vitality = Math.max(0, Math.floor(player.vitality * 0.80));
+        }
+
+        const backlashDuration = 2 * 3600 * 1000; // 2 jam
+        const backlashUntil = new Date(Date.now() + backlashDuration);
+        law.guBacklashUntil = backlashUntil;
+        if (!player.demonicData) player.demonicData = {};
+        player.demonicData.guBacklashUntil = backlashUntil;
+
+        backlashMsg = `⚠️ Tanpa Pil Penenang Gu, pencabutan paksa menimbulkan luka dalam (Backlash)! HP -20% (-${hpDmg} HP), Vitality -20%, dan Dantian terguncang selama 2 jam!`;
+      }
+
+      // Kembalikan Gu ke inventori jika targetGu memiliki guItemId
+      if (targetGu.guItemId) {
+        const existingInv = player.inventory.find(inv => inv.itemId?._id?.toString() === targetGu.guItemId.toString());
+        if (existingInv) {
+          existingInv.quantity += 1;
+        } else {
+          player.inventory.push({ itemId: targetGu.guItemId, quantity: 1 });
+        }
+      }
+
+      // Hapus dari guSlots
+      law.guSlots.splice(idx, 1);
+      law.guMaxSlots = getGuMaxSlots(law.rank || 0);
+
+      player.markModified('inventory');
+      player.markModified('combatStats');
+      player.markModified('extendedStats');
+      player.markModified('cultivationLaw');
+      player.markModified('demonicData');
+      await player.save({ session });
+
+      resultData = {
+        guSlots: law.guSlots,
+        guMaxSlots: law.guMaxSlots,
+        removedGuName: guName,
+        hadSedative,
+        guBacklashUntil: law.guBacklashUntil
+      };
+    });
+
+    const msg = hadSedative
+      ? `✨ Berhasil melepaskan [${resultData.removedGuName}] dari rongga menggunakan Pil Penenang Gu tanpa luka.`
+      : `🩸 Berhasil melepaskan [${resultData.removedGuName}] secara paksa! ${backlashMsg}`;
+
+    return res.json({
+      success: true,
+      message: msg,
+      data: resultData
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error unequipping Gu:', error);
+    res.status(500).json({ error: error.message || 'Gagal melepaskan Gu dari aperture.' });
+  } finally {
+    releaseLock();
+  }
+});
+
+// POST /gu/fuse — Fusi dua cacing Gu di Kendi Penyuling Gu (Master Plan §3.2)
 router.post('/gu/fuse', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const lockKey = `law_gu_fuse_${userId}`;
   const releaseLock = await LockManager.acquire(lockKey);
   if (!releaseLock) return res.status(429).json({ error: 'Aksi fusi Gu sedang diproses.' });
 
-  const { slotA, slotB } = req.body;
+  const { slotA, slotB, prioritySlot, sacrificeSlot } = req.body;
+  const pSlot = prioritySlot !== undefined ? prioritySlot : slotA;
+  const sSlot = sacrificeSlot !== undefined ? sacrificeSlot : slotB;
+
+  if (pSlot === undefined || sSlot === undefined || Number(pSlot) === Number(sSlot)) {
+    releaseLock();
+    return res.status(400).json({ error: 'Pilih Gu Prioritas dan Gu Pengorbanan yang berbeda dari slot rongga untuk difusikan.' });
+  }
+
   try {
-    const player = await resolvePlayer(req);
-    const law = player.cultivationLaw;
-    if (law?.activeLawType !== 'gu_master') {
-      return res.status(400).json({ error: 'Hanya praktisi Gu Master yang dapat memfusikan Gu.' });
-    }
+    let responsePayload = null;
 
-    // Support payload prioritySlot & sacrificeSlot (atau slotA & slotB)
-    const prioritySlot = req.body.prioritySlot !== undefined ? req.body.prioritySlot : req.body.slotA;
-    const sacrificeSlot = req.body.sacrificeSlot !== undefined ? req.body.sacrificeSlot : req.body.slotB;
+    await withTransaction(async (session) => {
+      const player = await resolvePlayer(req, session);
+      const law = player.cultivationLaw;
+      if (law?.activeLawType !== 'gu_master') {
+        throw new CustomError('Hanya praktisi Gu Master yang dapat memfusikan Gu.', 400);
+      }
 
-    if (prioritySlot === undefined || sacrificeSlot === undefined || Number(prioritySlot) === Number(sacrificeSlot)) {
-      return res.status(400).json({ error: 'Pilih Gu Prioritas dan Gu Pengorbanan yang berbeda dari slot rongga untuk difusikan.' });
-    }
+      const pIdx = Number(pSlot);
+      const sIdx = Number(sSlot);
 
-    const pIdx = Number(prioritySlot);
-    const sIdx = Number(sacrificeSlot);
+      if (!law.guSlots || !law.guSlots[pIdx] || !law.guSlots[sIdx]) {
+        throw new CustomError('Slot Gu yang dipilih tidak valid.', 400);
+      }
 
-    if (!law.guSlots || !law.guSlots[pIdx] || !law.guSlots[sIdx]) {
-      return res.status(400).json({ error: 'Slot Gu yang dipilih tidak valid.' });
-    }
+      const priorityGu = law.guSlots[pIdx];
+      const sacrificeGu = law.guSlots[sIdx];
+      const crucibleTier = law.facilities?.guCrucibleTier || 1;
 
-    const priorityGu = law.guSlots[pIdx];
-    const sacrificeGu = law.guSlots[sIdx];
-    const crucibleTier = law.facilities?.guCrucibleTier || 1;
+      // Formula exact plan (§3.2):
+      // Rate = max(10%, 85% - (Tier_prioritas * 18%) + (Tier_kendi_atau_crucible * 6%))
+      const tierP = priorityGu.tier || 1;
+      const successRate = Math.max(10, Math.min(95, 85 - (tierP * 18) + (crucibleTier * 6)));
+      const roll = Math.random() * 100;
+      const isSuccess = roll <= successRate;
 
-    // Formula Peluang Fusi Berbasis Tier Sesuai Master Plan
-    const tierP = priorityGu.tier || 1;
-    const tierS = sacrificeGu.tier || 1;
-    const successRate = Math.max(10, Math.min(95, 85 - (tierP * 18) + (tierS * 6) + (crucibleTier - 1) * 5));
-    const roll = Math.random() * 100;
-    const isSuccess = roll <= successRate;
+      // GU PENGORBANAN PASTI LENYAP! Hapus sacrificeGu dari rongga
+      const sacrificeName = sacrificeGu.guName;
+      const updatedGuSlots = law.guSlots.filter((_, idx) => idx !== sIdx);
 
-    // GU PENGORBANAN PASTI LENYAP! Hapus sacrificeGu dari rongga
-    const sacrificeName = sacrificeGu.guName;
-    const updatedGuSlots = law.guSlots.filter((_, idx) => idx !== sIdx);
+      // Cari index baru dari priorityGu setelah penghapusan
+      const newPIdx = updatedGuSlots.findIndex(g => g === priorityGu || (g.guName === priorityGu.guName && g.tier === priorityGu.tier));
+      const targetGu = newPIdx !== -1 ? updatedGuSlots[newPIdx] : priorityGu;
 
-    // Cari index baru dari priorityGu setelah penghapusan
-    const newPIdx = updatedGuSlots.findIndex(g => g === priorityGu || (g.guName === priorityGu.guName && g.tier === priorityGu.tier));
-    const targetGu = newPIdx !== -1 ? updatedGuSlots[newPIdx] : priorityGu;
+      if (isSuccess) {
+        // FUSI SUKSES: Tingkatkan Tier Gu Prioritas
+        const oldTier = targetGu.tier || 1;
+        targetGu.tier = Math.min(5, oldTier + 1);
+        targetGu.bonusAtk = (targetGu.bonusAtk || 5) + 12;
+        targetGu.bonusDef = (targetGu.bonusDef || 3) + 8;
+        targetGu.satiety = 100;
+        targetGu.hunger = 100;
+        targetGu.lastFedAt = new Date();
+        law.guSlots = updatedGuSlots;
+        law.guMaxSlots = getGuMaxSlots(law.rank || 0);
+        law.qi = Math.min(law.maxQi, (law.qi || 0) + 150);
 
-    if (isSuccess) {
-      // FUSI SUKSES: Tingkatkan Tier Gu Prioritas
-      const oldTier = targetGu.tier || 1;
-      targetGu.tier = Math.min(5, oldTier + 1);
-      targetGu.bonusAtk = (targetGu.bonusAtk || 5) + 12;
-      targetGu.bonusDef = (targetGu.bonusDef || 3) + 8;
-      targetGu.satiety = 100;
-      targetGu.hunger = 100;
-      targetGu.lastFedAt = new Date();
-      law.guSlots = updatedGuSlots;
-      law.qi = Math.min(law.maxQi, (law.qi || 0) + 150);
+        player.markModified('cultivationLaw');
+        await player.save({ session });
 
-      player.markModified('cultivationLaw');
-      await player.save();
+        responsePayload = {
+          success: true,
+          isSuccess: true,
+          message: `✨ FUSI BERHASIL! Gu Prioritas [${targetGu.guName}] berevolusi ke Tier ${targetGu.tier}! Gu Pengorbanan [${sacrificeName}] telah lenyap diserap. (+150 Qi Dantian)`,
+          data: { guSlots: law.guSlots, qi: law.qi, upgradedGu: targetGu }
+        };
+      } else {
+        // FUSI GAGAL: Gu Pengorbanan TETAP LENYAP, tapi diserap sebagai nutrisi makanan
+        targetGu.satiety = 100;
+        targetGu.hunger = 100;
+        targetGu.level = (targetGu.level || 1) + 1;
+        targetGu.lastFedAt = new Date();
+        law.guSlots = updatedGuSlots;
+        law.guMaxSlots = getGuMaxSlots(law.rank || 0);
+        law.qi = Math.min(law.maxQi, (law.qi || 0) + 40);
 
-      return res.json({
-        success: true,
-        isSuccess: true,
-        message: `✨ FUSI BERHASIL! Gu Prioritas [${targetGu.guName}] berevolusi ke Tier ${targetGu.tier}! Gu Pengorbanan [${sacrificeName}] telah lenyap diserap. (+150 Qi Dantian)`,
-        data: { guSlots: law.guSlots, qi: law.qi, upgradedGu: targetGu }
-      });
-    } else {
-      // FUSI GAGAL: Gu Pengorbanan TETAP LENYAP, tapi diserap sebagai nutrisi makanan
-      targetGu.satiety = 100;
-      targetGu.hunger = 100;
-      targetGu.level = (targetGu.level || 1) + 1;
-      targetGu.lastFedAt = new Date();
-      law.guSlots = updatedGuSlots;
-      law.qi = Math.min(law.maxQi, (law.qi || 0) + 40);
+        player.markModified('cultivationLaw');
+        await player.save({ session });
 
-      player.markModified('cultivationLaw');
-      await player.save();
+        responsePayload = {
+          success: false,
+          isSuccess: false,
+          message: `💥 Fusi Gu gagal menembus Tier baru! Gu Pengorbanan [${sacrificeName}] lenyap diserap oleh [${targetGu.guName}] sebagai nutrisi (Kekenyangan 100% + 40 Qi).`,
+          data: { guSlots: law.guSlots, qi: law.qi, priorityGu: targetGu }
+        };
+      }
+    });
 
-      return res.json({
-        success: false,
-        isSuccess: false,
-        message: `💥 Fusi Gu gagal menembus Tier baru! Gu Pengorbanan [${sacrificeName}] lenyap diserap oleh [${targetGu.guName}] sebagai nutrisi (Kekenyangan 100% + 40 Qi).`,
-        data: { guSlots: law.guSlots, qi: law.qi, priorityGu: targetGu }
-      });
-    }
+    return res.json(responsePayload);
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
     console.error('[LAW-API] Error fusing Gu:', error);
-    res.status(500).json({ error: 'Gagal memfusikan Gu.' });
+    res.status(500).json({ error: error.message || 'Gagal memfusikan Gu.' });
   } finally {
     releaseLock();
   }

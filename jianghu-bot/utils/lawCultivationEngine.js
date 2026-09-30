@@ -776,6 +776,25 @@ function getTierAffinity(playerTier, itemTier) {
   return { allowed: true, efficiency };
 }
 
+/**
+ * Batas maksimal slot Gu yang dapat di-equip berdasarkan rank Law (Master Plan §3.2)
+ * Rank 0: 1 slot
+ * Rank 1: 2 slot
+ * Rank 2: 3 slot
+ * Rank 3: 4 slot
+ * Rank 4+: 5 slot (maksimal)
+ * @param {number} rank
+ * @returns {number}
+ */
+function getGuMaxSlots(rank = 0) {
+  const r = Number(rank) || 0;
+  if (r <= 0) return 1;
+  if (r === 1) return 2;
+  if (r === 2) return 3;
+  if (r === 3) return 4;
+  return 5;
+}
+
 // ═══════════════════════════════════════════════════════════════
 // COMBAT QI VS CULTIVATION QI (Master Plan §1.2, §1.3 & §5.4)
 // ═══════════════════════════════════════════════════════════════
@@ -1308,6 +1327,10 @@ function attemptMajorBreakthrough(player, options = {}) {
     const newRankName = rankNames?.[law.rank] || `Rank ${law.rank}`;
     const lawDef = LAW_DEFINITIONS[law.activeLawType];
 
+    if (law.activeLawType === 'gu_master') {
+      law.guMaxSlots = getGuMaxSlots(law.rank);
+    }
+
     // Penerapan lonjakan 5 Pilar Mayor saat kenaikan Rank
     if (!player.stats) player.stats = {};
     if (!player.extendedStats) player.extendedStats = {};
@@ -1775,6 +1798,8 @@ function getLawStatus(player) {
         lastFedAt: g.lastFedAt || null
       };
     }),
+    guMaxSlots: getGuMaxSlots(law.rank || 0),
+    guBacklashUntil: law.guBacklashUntil || player.demonicData?.guBacklashUntil || null,
 
     // Universal Essence System
     currentEssence: law.currentEssence !== undefined ? Math.floor(law.currentEssence) : 80,
@@ -1843,6 +1868,7 @@ module.exports = {
   getMaxEssence,
   getEssenceDigestRate,
   getTierAffinity,
+  getGuMaxSlots,
   getMaxCombatQi,
   getCombatQiRegenPerRound,
 
