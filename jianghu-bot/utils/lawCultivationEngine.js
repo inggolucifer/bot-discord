@@ -1839,7 +1839,21 @@ function getLawStatus(player) {
     combatLoadout: law.combatLoadout || [],
 
     boundEntity: law.boundEntity || null,
-    demonicData: law.demonicData || null,
+    demonicData: (() => {
+      if (!law.demonicData) return null;
+      const d = (typeof law.demonicData.toObject === 'function') ? law.demonicData.toObject() : { ...law.demonicData };
+      if (law.activeLawType === 'demonic_abyssal_pact' && d.abyssalTributeDueAt) {
+        const dueTime = new Date(d.abyssalTributeDueAt).getTime();
+        const now = Date.now();
+        if (now > dueTime) {
+          const overdueDays = (now - dueTime) / (24 * 3600 * 1000);
+          d.abyssalCurseLevel = overdueDays >= 7 ? 2 : 1;
+        } else {
+          d.abyssalCurseLevel = 0;
+        }
+      }
+      return d;
+    })(),
     bodyTemperingParts: law.bodyTemperingParts || {
       head: 0, torso: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0, spine: 0, dantian: 0, skin: 0
     },

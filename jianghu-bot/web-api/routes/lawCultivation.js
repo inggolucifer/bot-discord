@@ -2550,98 +2550,110 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
 });
 
 router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `law_demonic_tribute_${userId}`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Upeti Abyss sedang diproses.' });
+
   try {
-    const player = await resolvePlayer(req);
-    const law = player.cultivationLaw;
-    if (law?.activeLawType !== 'demonic_abyssal_pact') {
-      return res.status(400).json({ error: 'Hanya praktisi Kontrak Iblis Abyss yang dapat menyetor upeti.' });
-    }
-
-    const altarTier = law.facilities?.abyssalAltarTier || 0;
-    if (altarTier < 1) {
-      return res.status(400).json({
-        error: 'Wajib mendirikan Altar Kurban Darah Abyss terlebih dahulu sebelum menyetor upeti kurban!'
-      });
-    }
-
-    // Validasi Koordinat Posisi Pemain: Wajib Berdiri Tepat di Petak Altar Abyss
-    const altarAsset = player.assets?.find(a => a.name === 'Altar Kurban Darah Abyss' && a.status === 'active' && a.placement?.tileX !== undefined);
-    let altarTileX = altarAsset?.placement?.tileX;
-    let altarTileY = altarAsset?.placement?.tileY;
-    let altarZoneId = altarAsset?.placement?.zoneId;
-
-    if (altarTileX === undefined) {
-      const altarTile = await ZoneTile.findOne({
-        ownerId: player.discordId,
-        buildingName: { $regex: /Altar Kurban Darah Abyss/i }
-      });
-      if (altarTile) {
-        altarTileX = altarTile.tileX;
-        altarTileY = altarTile.tileY;
-        altarZoneId = altarTile.zoneId;
+    let resultData = null;
+    await withTransaction(async (session) => {
+      const player = await resolvePlayer(req, session);
+      const law = player.cultivationLaw;
+      if (law?.activeLawType !== 'demonic_abyssal_pact') {
+        throw new CustomError('Hanya praktisi Kontrak Iblis Abyss yang dapat menyetor upeti.', 400);
       }
-    }
 
-    if (altarTileX !== undefined && altarTileY !== undefined) {
+      // Validasi Koordinat Posisi Pemain: Wajib Berdiri Tepat di Petak Altar Abyss (Master Plan §3.7)
+      const altarAsset = player.assets?.find(a => a.name === 'Altar Kurban Darah Abyss' && a.status === 'active' && a.placement?.tileX !== undefined);
+      let altarTileX = altarAsset?.placement?.tileX;
+      let altarTileY = altarAsset?.placement?.tileY;
+      let altarZoneId = altarAsset?.placement?.zoneId;
+
+      if (altarTileX === undefined) {
+        const altarTile = await ZoneTile.findOne({
+          ownerId: player.discordId,
+          buildingName: { $regex: /Altar Kurban Darah Abyss/i }
+        }).session(session);
+        if (altarTile) {
+          altarTileX = altarTile.tileX;
+          altarTileY = altarTile.tileY;
+          altarZoneId = altarTile.zoneId;
+        }
+      }
+
+      if (altarTileX === undefined || altarTileY === undefined) {
+        throw new CustomError('Kamu harus berdiri di atas Altar Kurban Abyss milikmu untuk menyembah!', 400);
+      }
+
       const playerTileX = player.gridPosition?.tileX;
       const playerTileY = player.gridPosition?.tileY;
       const playerZoneId = player.gridPosition?.zoneId;
       const isSamePos = (playerTileX === altarTileX && playerTileY === altarTileY) && (!altarZoneId || playerZoneId === altarZoneId);
       if (!isSamePos) {
-        return res.status(400).json({
-          error: `Kamu harus berdiri tepat di atas petak koordinat Altar Kurban Darah Abyss milikmu (${altarTileX}, ${altarTileY}) di peta untuk menyetor upeti kurban! Posisi saat ini: (${playerTileX || 0}, ${playerTileY || 0}).`
-        });
-      }
-    }
-
-    // Opsi konsumsi persembahan dari tas jika ada itemId
-    const { itemId } = req.body || {};
-    let itemOfferingMsg = '';
-    if (itemId) {
-      await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString())
-      );
-      if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
-        return res.status(400).json({ error: 'Item persembahan kurban tidak ditemukan di inventori tasmu.' });
+        throw new CustomError('Kamu harus berdiri di atas Altar Kurban Abyss milikmu untuk menyembah!', 400);
       }
 
-      const invEntry = player.inventory[invIndex];
-      const itemDoc = invEntry.itemId;
-      const itemTier = itemDoc.tier || itemDoc.rank || 1;
-      const playerTier = (law.rank || 0) + 1;
+      // Opsi konsumsi persembahan dari tas jika ada itemId
+      const { itemId } = req.body || {};
+      let itemOfferingMsg = '';
+      let qiGain = 90;
 
-      const affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Altar Abyss milikmu belum mampu menampung intisari Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
-        });
+      if (itemId) {
+        await player.populate({ path: 'inventory.itemId' });
+        const invIndex = player.inventory.findIndex(inv =>
+          inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString() || inv._id?.toString() === itemId.toString())
+        );
+        if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
+          throw new CustomError('Item persembahan kurban tidak ditemukan di inventori tasmu.', 400);
+        }
+
+        const invEntry = player.inventory[invIndex];
+        const itemDoc = invEntry.itemId;
+        const itemTier = itemDoc.tier || itemDoc.rank || 1;
+        const playerTier = (law.rank || 0) + 1;
+
+        const affinity = getTierAffinity(playerTier, itemTier);
+        if (!affinity.allowed) {
+          throw new CustomError(`${affinity.reason} Altar Abyss milikmu belum mampu menampung intisari Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`, 400);
+        }
+
+        qiGain = Math.round(90 * itemTier * affinity.efficiency);
+        invEntry.quantity -= 1;
+        if (invEntry.quantity <= 0) {
+          player.inventory.splice(invIndex, 1);
+        }
+        player.markModified('inventory');
+        itemOfferingMsg = ` Mengorbankan 1x ${itemDoc.name}.`;
       }
 
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
-      itemOfferingMsg = ` Mengorbankan 1x ${itemDoc.name}.`;
-    }
+      if (!law.demonicData) law.demonicData = {};
+      law.demonicData.abyssalTributeDueAt = new Date(Date.now() + 7 * 24 * 3600 * 1000);
+      law.demonicData.abyssalCurseLevel = 0; // Reset kutukan setelah upeti sukses
+      law.demonicData.abyssalTributeStreak = (law.demonicData.abyssalTributeStreak || 0) + 1;
+      law.qi = Math.min(law.maxQi, (law.qi || 0) + qiGain);
 
-    const tributeDurationDays = altarTier === 1 ? 7 : (altarTier === 2 ? 15 : 30);
-    if (!law.demonicData) law.demonicData = {};
-    law.demonicData.abyssalTributeDueAt = new Date(Date.now() + tributeDurationDays * 24 * 3600 * 1000);
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 90);
+      player.markModified('cultivationLaw');
+      await player.save({ session });
 
-    player.markModified('cultivationLaw');
-    await player.save();
+      resultData = {
+        demonicData: law.demonicData,
+        qi: law.qi,
+        itemOfferingMsg
+      };
+    });
 
     res.json({
       success: true,
-      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${itemOfferingMsg} Tenggat kontrak diperpanjang ${tributeDurationDays} hari (+90 Qi)!`,
-      data: { demonicData: law.demonicData, qi: law.qi }
+      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${resultData.itemOfferingMsg} Tenggat kontrak diperpanjang 7 hari (+${resultData.qi} Qi, Kutukan Abyss dinetralkan)!`,
+      data: resultData
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
-    res.status(500).json({ error: 'Gagal menyetor upeti iblis.' });
+    console.error('[LAW-API] Error in pact-tribute:', error);
+    res.status(500).json({ error: error.message || 'Gagal menyetor upeti iblis.' });
+  } finally {
+    releaseLock();
   }
 });
 
