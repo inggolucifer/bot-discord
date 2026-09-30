@@ -121,7 +121,12 @@ const LAW_BINDING_REQUIREMENTS = {
   demonic_blood_soul:       { slot2Required: true,  tag: 'blood_vial',         name: 'Botol Darah Monster Segar' },
   demonic_myriad_venom:     { slot2Required: true,  tag: 'venom_sac',          name: 'Kantung Racun Ular Rawa' },
   demonic_abyssal_pact:     { slot2Required: true,  tag: 'abyssal_scroll',     name: 'Perkamen Darah Gelap' },
-  demonic_nether_darkness:  { slot2Required: true,  tag: 'yin_stone',          name: 'Batu Yin Kuburan Tua' }
+  demonic_nether_darkness:  { slot2Required: true,  tag: 'yin_stone',          name: 'Batu Yin Kuburan Tua' },
+  righteous_heavenly_merit: { slot2Required: true,  tag: 'merit_seal',         name: 'Segel Jasa Langit (Tier 1)' },
+  righteous_pure_yang:      { slot2Required: true,  tag: 'yang_crystal',       name: 'Kristal Yang Murni' },
+  righteous_sword_heart:    { slot2Required: true,  tag: 'oath_sword',         name: 'Pedang Sumpah Common' },
+  righteous_formation_array:{ slot2Required: true,  tag: 'array_flag',         name: 'Bendera Formasi Awal' },
+  righteous_karmic_mirror:  { slot2Required: true,  tag: 'karma_mirror_shard', name: 'Pecahan Cermin Karma' }
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -169,7 +174,8 @@ router.get('/binding/inventory', authenticateToken, async (req, res) => {
         (item.category === 'pet' && item.rank === 'Common') ||
         (item.tags && item.tags.some(t => [
           'catalyst', 'fire_catalyst', 'water_catalyst', 'earth_catalyst', 'wood_catalyst', 'wind_catalyst', 'thunder_catalyst',
-          'gu_larva', 'common_artifact', 'common_beast', 'beast_core', 'blood_vial', 'venom_sac', 'abyssal_scroll', 'yin_stone'
+          'gu_larva', 'common_artifact', 'common_beast', 'beast_core', 'blood_vial', 'venom_sac', 'abyssal_scroll', 'yin_stone',
+          'merit_seal', 'yang_crystal', 'oath_sword', 'array_flag', 'karma_mirror_shard'
         ].includes(t)));
 
       if (isCandidateSlot2 && item.category !== 'law') {
@@ -315,6 +321,13 @@ router.post('/bind', authenticateToken, async (req, res) => {
         } else if (lawType === 'natal_beast') {
             const validCategories = ['pet', 'material'];
             if (companionItem.rank === 'Common' && validCategories.includes(companionItem.category)) {
+                isValidCompanion = true;
+            }
+        } else if (lawType === 'righteous_sword_heart') {
+            const isSwordLike = companionItem.category === 'weapon' &&
+              ((companionItem.rank || companionItem.rarity || '').toLowerCase() === 'common') &&
+              /(sword|pedang|jian)/i.test(`${companionItem.name || ''} ${companionItem.subtype || ''}`);
+            if (isSwordLike) {
                 isValidCompanion = true;
             }
         }
@@ -1562,7 +1575,12 @@ function detectLawTypeFromItem(item) {
     'penghisapdarah': 'demonic_blood_soul',
     'seriburacun': 'demonic_myriad_venom',
     'kontrakiblis': 'demonic_abyssal_pact',
-    'bayangansembilanyin': 'demonic_nether_darkness'
+    'bayangansembilanyin': 'demonic_nether_darkness',
+    'jasalangit': 'righteous_heavenly_merit',
+    'yangmurni': 'righteous_pure_yang',
+    'hatipedang': 'righteous_sword_heart',
+    'formasibendera': 'righteous_formation_array',
+    'cerminkarma': 'righteous_karmic_mirror'
   };
 
   for (const [keyword, lawType] of Object.entries(mapping)) {
