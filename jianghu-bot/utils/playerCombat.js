@@ -1,5 +1,6 @@
 const { getRealmIndex } = require('./cultivation');
 const { getClimatePenalties } = require('./climate');
+const { LAW_BALANCE } = require('./lawCultivationEngine');
 
 /**
  * Calculates the total combat stats of a player.
@@ -293,6 +294,76 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           mult.atk *= LAW_BALANCE.NETHER_DEBUFF_MULT;
           mult.def *= LAW_BALANCE.NETHER_DEBUFF_MULT;
           mult.spd *= LAW_BALANCE.NETHER_DEBUFF_MULT;
+        }
+        break;
+
+      case 'righteous_heavenly_merit':
+        mult.hp += rank * LAW_BALANCE.MERIT_RANK_HP_MULT;
+        mult.def += rank * LAW_BALANCE.MERIT_RANK_DEF_MULT;
+        flat.atk += rank * 8;
+        if (player.extendedStats) {
+          player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (rank * 3);
+        }
+        break;
+
+      case 'righteous_pure_yang':
+        mult.atk += rank * LAW_BALANCE.YANG_RANK_ATK_MULT;
+        if (player.extendedStats) {
+          player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (rank * LAW_BALANCE.YANG_RANK_SPIRIT_RES);
+        }
+        break;
+
+      case 'righteous_sword_heart':
+        mult.atk += rank * LAW_BALANCE.SWORD_RANK_ATK_MULT;
+        let hasSword = false;
+        if (player.inventory && player.inventory.length > 0) {
+          const equipmentSlotValues = player.equipment
+            ? Object.values(player.equipment instanceof Map ? Object.fromEntries(player.equipment) : player.equipment)
+                .filter(v => v !== null && v !== undefined)
+                .map(v => v.toString())
+            : [];
+          for (const invItem of player.inventory) {
+            const isActuallyEquipped = invItem.isEquipped ||
+              (invItem._id && equipmentSlotValues.includes(invItem._id.toString())) ||
+              (invItem.itemId?._id && equipmentSlotValues.includes(invItem.itemId._id.toString())) ||
+              (invItem.itemId && equipmentSlotValues.includes(invItem.itemId.toString()));
+            if (!isActuallyEquipped) continue;
+            const item = (invItem.itemId && typeof invItem.itemId === 'object') ? invItem.itemId : invItem;
+            if (item && (item.category === 'weapon' || item.weaponType || item.subtype === 'weapon')) {
+              const tags = Array.isArray(item.tags) ? item.tags : [];
+              if (tags.includes('sword') || tags.includes('oath_sword')) { hasSword = true; break; }
+              const name = (item.name || '').toLowerCase();
+              const subtype = (item.subtype || item.weaponType || '').toLowerCase();
+              if (/(sword|pedang|jian)/i.test(name) || /(sword|pedang|jian)/i.test(subtype)) { hasSword = true; break; }
+            }
+          }
+        }
+        if (!hasSword) {
+          mult.atk *= LAW_BALANCE.SWORD_UNARMED_PENALTY;
+        }
+        if (player.extendedStats) {
+          player.extendedStats.crit = (player.extendedStats.crit || 0) + (rank * LAW_BALANCE.SWORD_RANK_CRIT);
+        }
+        break;
+
+      case 'righteous_formation_array':
+        mult.def += rank * LAW_BALANCE.ARRAY_RANK_DEF_MULT;
+        mult.hp += rank * LAW_BALANCE.ARRAY_RANK_HP_MULT;
+        if (player.extendedStats) {
+          player.extendedStats.martialRes = (player.extendedStats.martialRes || 0) + (rank * 3);
+        }
+        break;
+
+      case 'righteous_karmic_mirror':
+        mult.def += rank * LAW_BALANCE.KARMA_RANK_DEF_MULT;
+        if (player.extendedStats) {
+          player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (rank * 4);
+          player.extendedStats.reflectPct = (player.extendedStats.reflectPct || 0) + (rank * LAW_BALANCE.KARMA_REFLECT_PCT);
+        }
+        const ownInfamy = player.infamy || 0;
+        if (ownInfamy > 50) {
+          const karmaPen = Math.min(0.12, (ownInfamy - 50) * LAW_BALANCE.KARMA_INFAMY_SELF_PENALTY);
+          mult.atk *= (1 - karmaPen);
         }
         break;
     }
