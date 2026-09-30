@@ -48,6 +48,7 @@ const {
   claimBodyTemperingPart,
   getMaxEssenceStorage,
   getTierAffinity,
+  resolveItemTier,
   getGuMaxSlots,
   BREAKTHROUGH_PILL_CATALOG,
   LAW_BALANCE,
@@ -816,7 +817,7 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       }
 
       // Validasi Tier Affinity
-      const itemTier = itemDoc.tier || itemDoc.rank || 1;
+      const itemTier = resolveItemTier(itemDoc);
       const playerTier = (law.rank || 0) + 1;
       const affinity = getTierAffinity(playerTier, itemTier);
       if (!affinity.allowed) {
@@ -1611,7 +1612,7 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
 
     const inv = player.inventory[invIndex];
     const item = inv.itemId;
-    const itemTier = item.tier || 1;
+    const itemTier = resolveItemTier(item);
     const playerTier = (law.rank || 0) + 1;
 
     const affinity = getTierAffinity(playerTier, itemTier);
@@ -1911,7 +1912,7 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
 
     const inv = player.inventory[invIndex];
     const itemDoc = inv.itemId;
-    const itemTier = itemDoc.tier || itemDoc.rank || 1;
+    const itemTier = resolveItemTier(itemDoc);
     const playerTier = (law.rank || 0) + 1;
 
     const affinity = getTierAffinity(playerTier, itemTier);
@@ -2471,13 +2472,16 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
 
     let essenceGain = 20;
     let itemUsedName = 'Hawa Murni';
+    let itemTier = 1;
+    let affinity = { allowed: true, efficiency: 1.0 };
+
     if (oreIndex !== -1) {
       const itemSlot = player.inventory[oreIndex];
       itemUsedName = itemSlot.itemId.name || 'Mineral';
-      const itemTier = itemSlot.itemId.tier || 1;
+      itemTier = resolveItemTier(itemSlot.itemId);
       const playerTier = (law.rank || 0) + 1;
 
-      const affinity = getTierAffinity(playerTier, itemTier);
+      affinity = getTierAffinity(playerTier, itemTier);
       if (!affinity.allowed) {
         return res.status(400).json({
           error: `${affinity.reason} Pusaka jiwa belum mampu menyerap ${itemUsedName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
@@ -2492,8 +2496,7 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
 
     law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + essenceGain);
 
-    const itemTier = oreIndex !== -1 ? (player.inventory[oreIndex]?.itemId?.tier || 1) : 1;
-    const eff = (typeof affinity !== 'undefined' && affinity) ? affinity.efficiency : 1.0;
+    const eff = affinity.efficiency || 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE * itemTier * eff);
     const cultivatorEssenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -2561,13 +2564,16 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
 
     let essenceGain = 25;
     let foodName = 'Ransum Biasa';
+    let itemTier = 1;
+    let affinity = { allowed: true, efficiency: 1.0 };
+
     if (meatIndex !== -1) {
       const itemSlot = player.inventory[meatIndex];
       foodName = itemSlot.itemId.name || 'Daging Roh';
-      const itemTier = itemSlot.itemId.tier || 1;
+      itemTier = resolveItemTier(itemSlot.itemId);
       const playerTier = (law.rank || 0) + 1;
 
-      const affinity = getTierAffinity(playerTier, itemTier);
+      affinity = getTierAffinity(playerTier, itemTier);
       if (!affinity.allowed) {
         return res.status(400).json({
           error: `${affinity.reason} Satwa roh belum mampu mencerna pakan ${foodName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
@@ -2584,8 +2590,7 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     law.boundEntity.beastCurrentHp = law.boundEntity.beastMaxHp || 120;
     law.boundEntity.lastFeedAt = new Date();
 
-    const itemTier = meatIndex !== -1 ? (player.inventory[meatIndex]?.itemId?.tier || 1) : 1;
-    const eff = (typeof affinity !== 'undefined' && affinity) ? affinity.efficiency : 1.0;
+    const eff = affinity.efficiency || 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE * itemTier * eff);
     const cultivatorEssenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -2699,10 +2704,10 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     if (coreIndex !== -1) {
       const itemSlot = player.inventory[coreIndex];
       coreName = itemSlot.itemId.name || 'Inti Siluman';
-      const itemTier = itemSlot.itemId.tier || 1;
+      itemTier = resolveItemTier(itemSlot.itemId);
       const playerTier = (law.rank || 0) + 1;
 
-      const affinity = getTierAffinity(playerTier, itemTier);
+      affinity = getTierAffinity(playerTier, itemTier);
       if (!affinity.allowed) {
         return res.status(400).json({
           error: `${affinity.reason} Dantian iblis menolak inti siluman Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
@@ -2783,7 +2788,7 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = itemDoc.tier || itemDoc.rank || 1;
+      itemTier = resolveItemTier(itemDoc);
       const playerTier = (law.rank || 0) + 1;
 
       const affinity = getTierAffinity(playerTier, itemTier);
@@ -2878,7 +2883,7 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = itemDoc.tier || itemDoc.rank || 1;
+      itemTier = resolveItemTier(itemDoc);
       const playerTier = (law.rank || 0) + 1;
 
       const affinity = getTierAffinity(playerTier, itemTier);
@@ -2951,7 +2956,8 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     }
 
     let poisonName = 'Racun Mematikan';
-    let affinity = null;
+    let itemTier = 1;
+    let affinity = { allowed: true, efficiency: 1.0 };
     const { itemId } = req.body || {};
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
@@ -2964,7 +2970,7 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      const itemTier = itemDoc.tier || itemDoc.rank || 1;
+      itemTier = resolveItemTier(itemDoc);
       const playerTier = (law.rank || 0) + 1;
 
       affinity = getTierAffinity(playerTier, itemTier);
@@ -3003,7 +3009,6 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     player.markModified('isWantedByOrthodox');
     law.dailyData.venomDrinksToday = (law.dailyData.venomDrinksToday || 0) + 1;
 
-    const itemTier = itemId ? (itemDoc.tier || itemDoc.rank || 1) : 1;
     const eff = affinity ? affinity.efficiency : 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
@@ -3101,7 +3106,7 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
 
         const invEntry = player.inventory[invIndex];
         const itemDoc = invEntry.itemId;
-        itemTier = itemDoc.tier || itemDoc.rank || 1;
+        itemTier = resolveItemTier(itemDoc);
         const playerTier = (law.rank || 0) + 1;
 
         const affinity = getTierAffinity(playerTier, itemTier);
@@ -3183,7 +3188,7 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = itemDoc.tier || itemDoc.rank || 1;
+      itemTier = resolveItemTier(itemDoc);
       const playerTier = (law.rank || 0) + 1;
 
       const affinity = getTierAffinity(playerTier, itemTier);
@@ -3297,7 +3302,7 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
 
     // Tier Rule Formula:
     // Item Tier vs Player Rank (Player Tier = rank + 1, e.g. Rank 0 = Tier 1)
-    const itemTier = item.tier || (item.rank === 'uncommon' ? 2 : item.rank === 'rare' ? 3 : item.rank === 'epic' ? 4 : item.rank === 'legendary' ? 5 : 1);
+    const itemTier = resolveItemTier(item);
     const playerTier = (law.rank || 0) + 1;
 
     const affinity = getTierAffinity(playerTier, itemTier);
