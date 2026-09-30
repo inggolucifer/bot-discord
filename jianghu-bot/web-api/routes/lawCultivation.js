@@ -73,6 +73,36 @@ async function resolvePlayer(req, session = null) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// Helper: Memeriksa apakah pemain sedang menenteng/menggunakan pedang
+// ═══════════════════════════════════════════════════════════════
+function isPlayerWieldingSword(player) {
+  if (!player.inventory) return false;
+  const equipmentSlotValues = player.equipment
+    ? Object.values(player.equipment instanceof Map ? Object.fromEntries(player.equipment) : player.equipment)
+        .filter(v => v !== null && v !== undefined)
+        .map(v => v.toString())
+    : [];
+
+  for (const invItem of player.inventory) {
+    const isActuallyEquipped = invItem.isEquipped ||
+      (invItem._id && equipmentSlotValues.includes(invItem._id.toString())) ||
+      (invItem.itemId?._id && equipmentSlotValues.includes(invItem.itemId._id.toString())) ||
+      (invItem.itemId && equipmentSlotValues.includes(invItem.itemId.toString()));
+
+    if (!isActuallyEquipped) continue;
+    const item = (invItem.itemId && typeof invItem.itemId === 'object') ? invItem.itemId : invItem;
+    if (item && (item.category === 'weapon' || item.weaponType || item.subtype === 'weapon')) {
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      if (tags.includes('sword') || tags.includes('oath_sword')) return true;
+      const name = (item.name || '').toLowerCase();
+      const subtype = (item.subtype || item.weaponType || '').toLowerCase();
+      if (/(sword|pedang|jian)/i.test(name) || /(sword|pedang|jian)/i.test(subtype)) return true;
+    }
+  }
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // GET /law/status — State lengkap Law Cultivation
 // ═══════════════════════════════════════════════════════════════
 router.get('/status', authenticateToken, async (req, res) => {
@@ -864,11 +894,97 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
         }
       }
 
+      // Validasi Batas Harian Generik (Righteous Laws & Profile Daily Caps)
+      if (profile.dailyAbsorbField && profile.dailyAbsorbMax) {
+        const currentCount = law.dailyData[profile.dailyAbsorbField] || 0;
+        if (currentCount >= profile.dailyAbsorbMax) {
+          throw new CustomError(`Batas harian penyerapan ${profile.barName} telah tercapai (Maksimal ${profile.dailyAbsorbMax}/hari). Istirahatkan dantianmu hingga pukul 00:00 WIB.`, 429);
+        }
+      }
+
+      // Validasi Syarat Khusus Profil Law (Special Gates)
+      // 1. Pure Yang: Tas harus bebas item demonic kotor
+      if (profile.requireCleanInventory) {
+        const dirtyTags = ['blood_vial', 'turbid_core', 'venom_sac', 'abyssal', 'demonic'];
+        const hasDirtyItem = player.inventory.some(inv => {
+          if (!inv || !inv.itemId || inv.quantity <= 0) return false;
+          const tags = Array.isArray(inv.itemId.tags) ? inv.itemId.tags : [];
+          return tags.some(t => dirtyTags.includes(t)) || (inv.itemId.category === 'demonic');
+        });
+        if (hasDirtyItem) {
+          throw new CustomError('Kitab Yang Murni menolak intisari karena tasmu tercemar hawa kotor! Bersihkan tasmu dari benda iblis (darah, inti kotor, kantung bisa, atau sisa abyss) sebelum menyerap intisari Yang.', 400);
+        }
+      }
+
+      // 2. Sword Heart: Wajib menenteng senjata pedang yang sedang digunakan
+      if (profile.requireEquippedSword) {
+        if (!isPlayerWieldingSword(player)) {
+          throw new CustomError('Hati Pedang membutuhkan pedang yang sedang digunakan! Pasang (equip) senjata berjenis pedang terlebih dahulu untuk mengasah niat pedang.', 400);
+        }
+      }
+
+      // 3. Formation Array: Wajib berdiri tepat di atas Formation Hub milik sendiri
+      if (profile.requireFormationHubTile) {
+        const hubAsset = player.assets?.find(a => a.name && /(Hub Formasi|Formation Hub)/i.test(a.name) && a.status === 'active' && a.placement?.tileX !== undefined);
+        let hubTileX = hubAsset?.placement?.tileX;
+        let hubTileY = hubAsset?.placement?.tileY;
+        let hubZoneId = hubAsset?.placement?.zoneId;
+
+        if (hubTileX === undefined) {
+          const hubTile = await ZoneTile.findOne({
+            ownerId: player.discordId,
+            $or: [
+              { buildingName: { $regex: /(Hub Formasi|Formation Hub)/i } },
+              { label: { $regex: /(Hub Formasi|Formation Hub)/i } }
+            ]
+          }).session(session);
+          if (hubTile) {
+            hubTileX = hubTile.tileX;
+            hubTileY = hubTile.tileY;
+            hubZoneId = hubTile.zoneId;
+          }
+        }
+
+        if (hubTileX === undefined || hubTileY === undefined) {
+          throw new CustomError('Kamu belum mendirikan Hub Formasi! Bangun Hub Formasi terlebih dahulu di kavling tanahmu melalui fasilitas Law (/facility/build-or-upgrade).', 400);
+        }
+
+        const playerTileX = player.gridPosition?.tileX;
+        const playerTileY = player.gridPosition?.tileY;
+        const playerZoneId = player.gridPosition?.zoneId;
+        const isSamePos = (playerTileX === hubTileX && playerTileY === hubTileY) && (!hubZoneId || playerZoneId === hubZoneId);
+        if (!isSamePos) {
+          throw new CustomError(`Kamu harus berdiri tepat di atas Hub Formasi milikmu (${hubTileX}, ${hubTileY}) untuk menanam intisari formasi!`, 400);
+        }
+      }
+
+      // 4. Karmic Mirror: Tolak jika Infamy > 30
+      if (profile.rejectIfInfamyAbove !== undefined) {
+        const currentInfamy = player.infamy || 0;
+        if (currentInfamy > profile.rejectIfInfamyAbove) {
+          throw new CustomError(`Cermin Karma menolak menyerap intisari karena noda karmamu terlalu pekat (Infamy: ${currentInfamy} > ${profile.rejectIfInfamyAbove}). Bersihkan nodamu terlebih dahulu!`, 400);
+        }
+      }
+
       // Hitung perolehan esensi
       let baseFill = LAW_PROGRESSION.FILL_ELEMENT_BASE;
-      if (law.activeLawType.startsWith('demonic_')) baseFill = LAW_PROGRESSION.FILL_DEMONIC_BASE;
-      else if (law.activeLawType === 'gu_master') baseFill = LAW_PROGRESSION.FILL_GU_FEED_BASE;
-      else if (law.activeLawType.startsWith('natal_')) baseFill = LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE;
+      if (law.activeLawType.startsWith('demonic_')) {
+        baseFill = LAW_PROGRESSION.FILL_DEMONIC_BASE;
+      } else if (law.activeLawType === 'gu_master') {
+        baseFill = LAW_PROGRESSION.FILL_GU_FEED_BASE;
+      } else if (law.activeLawType.startsWith('natal_')) {
+        baseFill = LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE;
+      } else if (law.activeLawType === 'righteous_heavenly_merit') {
+        baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_MERIT;
+      } else if (law.activeLawType === 'righteous_pure_yang') {
+        baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_YANG;
+      } else if (law.activeLawType === 'righteous_sword_heart') {
+        baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_SWORD;
+      } else if (law.activeLawType === 'righteous_formation_array') {
+        baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_ARRAY;
+      } else if (law.activeLawType === 'righteous_karmic_mirror') {
+        baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_KARMA;
+      }
 
       const rawGain = Math.floor(baseFill * itemTier * affinity.efficiency);
       const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
@@ -911,6 +1027,11 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
         law.dailyData.venomDrinksToday = (law.dailyData.venomDrinksToday || 0) + 1;
         player.markModified('infamy');
         player.markModified('isWantedByOrthodox');
+      }
+
+      // Increment Batas Harian Esensi Profil
+      if (profile.dailyAbsorbField) {
+        law.dailyData[profile.dailyAbsorbField] = (law.dailyData[profile.dailyAbsorbField] || 0) + 1;
       }
 
       // Deduct item
@@ -1696,7 +1817,8 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
       law.facilities = {
         bodyCauldronTier: 0,
         abyssalAltarTier: 0,
-        guCrucibleTier: 1
+        guCrucibleTier: 1,
+        formationHubTier: 0
       };
     }
 
@@ -1757,17 +1879,40 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
       } else {
         costSilver = 500;
       }
+    } else if (facilityType === 'formation_hub') {
+      // KHUSUS RIGHTEOUS FORMATION ARRAY PATH: MEMERLUKAN HUB FORMASI DI LAHAN PETA DUNIA!
+      if (law.activeLawType !== 'righteous_formation_array') {
+        return res.status(400).json({ error: 'Hanya praktisi Formasi Bendera yang dapat membangun Hub Formasi.' });
+      }
+      isAltarOnMap = true;
+      facilityName = 'Hub Formasi Bendera';
+      currentTier = law.facilities.formationHubTier || 0;
+      nextTier = currentTier + 1;
+      if (nextTier > 3) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 3).` });
+
+      if (nextTier === 1) {
+        requiredMaterials = [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
+        costSilver = 40;
+      } else if (nextTier === 2) {
+        requiredMaterials = [{ name: 'Bijih Besi Tempa', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
+        costSilver = 150;
+      } else {
+        requiredMaterials = [{ name: 'Bijih Besi Tempa', qty: 10 }];
+        costSilver = 350;
+      }
     } else {
       return res.status(400).json({ error: 'Jenis fasilitas tidak valid.' });
     }
 
-    // Validasi Khusus Altar Demonic: Wajib Memiliki Kavling Lahan di Peta Dunia
+    // Validasi Khusus Fasilitas Peta: Wajib Memiliki Kavling Lahan di Peta Dunia
     let targetPlot = null;
     if (isAltarOnMap) {
       const ownedPlots = await ZoneTile.find({ ownerId: player.discordId });
       if (!ownedPlots || ownedPlots.length === 0) {
         return res.status(400).json({
-          error: 'Praktisi Kontrak Iblis Abyss wajib memiliki kavling tanah di peta Jianghu (/world) untuk mendirikan Altar Kurban Darah Abyss!'
+          error: facilityType === 'formation_hub'
+            ? 'Praktisi Formasi Bendera wajib memiliki kavling tanah di peta Jianghu (/world) untuk mendirikan Hub Formasi Bendera!'
+            : 'Praktisi Kontrak Iblis Abyss wajib memiliki kavling tanah di peta Jianghu (/world) untuk mendirikan Altar Kurban Darah Abyss!'
         });
       }
       targetPlot = ownedPlots.find(p => !p.buildingName || p.buildingName.includes(facilityName)) || ownedPlots[0];
@@ -1842,6 +1987,7 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
     if (facilityType === 'body_cauldron') law.facilities.bodyCauldronTier = nextTier;
     if (facilityType === 'gu_crucible') law.facilities.guCrucibleTier = nextTier;
     if (facilityType === 'abyssal_altar') law.facilities.abyssalAltarTier = nextTier;
+    if (facilityType === 'formation_hub') law.facilities.formationHubTier = nextTier;
 
     player.markModified('inventory');
     player.markModified('currency');
@@ -1849,7 +1995,7 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
     await player.save();
 
     const successMsg = isAltarOnMap && targetPlot
-      ? `🏛️ Berhasil mendirikan/memperkuat ${facilityName} ke Tier ${nextTier} di atas kavling lahan (${targetPlot.tileX}, ${targetPlot.tileY})! Aset iblis resmi berdiri di peta dunia.`
+      ? `🏛️ Berhasil mendirikan/memperkuat ${facilityName} ke Tier ${nextTier} di atas kavling lahan (${targetPlot.tileX}, ${targetPlot.tileY})! Fasilitas resmi berdiri di peta dunia.`
       : `✨ Berhasil membuat/meng-upgrade ${facilityName} ke Tier ${nextTier}!`;
 
     res.json({
