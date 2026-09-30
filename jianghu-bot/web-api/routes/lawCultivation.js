@@ -2653,7 +2653,7 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       }
 
       // Validasi Koordinat Posisi Pemain: Wajib Berdiri Tepat di Petak Altar Abyss (Master Plan §3.7)
-      const altarAsset = player.assets?.find(a => a.name === 'Altar Kurban Darah Abyss' && a.status === 'active' && a.placement?.tileX !== undefined);
+      const altarAsset = player.assets?.find(a => a.name && /Altar Kurban Darah Abyss/i.test(a.name) && a.status === 'active' && a.placement?.tileX !== undefined);
       let altarTileX = altarAsset?.placement?.tileX;
       let altarTileY = altarAsset?.placement?.tileY;
       let altarZoneId = altarAsset?.placement?.zoneId;
@@ -2661,7 +2661,10 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       if (altarTileX === undefined) {
         const altarTile = await ZoneTile.findOne({
           ownerId: player.discordId,
-          buildingName: { $regex: /Altar Kurban Darah Abyss/i }
+          $or: [
+            { buildingName: { $regex: /Altar Kurban Darah Abyss/i } },
+            { label: { $regex: /Altar Kurban Darah Abyss/i } }
+          ]
         }).session(session);
         if (altarTile) {
           altarTileX = altarTile.tileX;
