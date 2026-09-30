@@ -501,9 +501,9 @@ function harvestEnvironmentalEssence(player, context = {}) {
     law.bodyEssenceStorage = {};
   }
 
-  // Peluang random 20% pemicu inhalasi alam
+  // Peluang random 20% pemicu inhalasi alam (Master Plan §3.3 rentang 15-25%)
   const roll = Math.random();
-  if (roll > 0.25) return null;
+  if (roll > 0.20) return null;
 
   const weather = context.weather || 'Cerah';
   const hour = context.hour !== undefined ? context.hour : (new Date().getHours());
@@ -925,6 +925,35 @@ function syncLawChanneling(player) {
     }
   }
 
+  // Khusus Body Tempering: Meditasi Outdoor menghasilkan esensi alam dominan (Master Plan §3.3)
+  // Setiap IntervalMenit = 15 * 2^rank menit channeling efektif, +1 essence dominan bioma.
+  if (law.activeLawType === 'body_tempering') {
+    const isSettlement = player.currentLocation?.isSettlement || player.isInSettlement || (player.gridPosition?.interiorInstanceId != null);
+    if (!isSettlement && minutesElapsed > 0) {
+      if (!law.bodyEssenceStorage) law.bodyEssenceStorage = {};
+      const rank = law.rank || 0;
+      const intervalMinutes = 15 * Math.pow(2, rank);
+      law.bodyOutdoorChannelMinutes = (law.bodyOutdoorChannelMinutes || 0) + minutesElapsed;
+
+      if (law.bodyOutdoorChannelMinutes >= intervalMinutes) {
+        const count = Math.floor(law.bodyOutdoorChannelMinutes / intervalMinutes);
+        law.bodyOutdoorChannelMinutes %= intervalMinutes;
+
+        const regionSlug = player.currentLocation?.regionSlug || 'central_plains';
+        const biomeEssences = Object.values(NATURAL_ESSENCES).filter(ess => ess.biomeReq && ess.biomeReq.includes(regionSlug));
+        const chosenEssence = (biomeEssences.length > 0)
+          ? biomeEssences[Math.floor(Math.random() * biomeEssences.length)]
+          : NATURAL_ESSENCES.earth;
+
+        const maxStorage = getMaxEssenceStorage(rank);
+        const currentCount = law.bodyEssenceStorage[chosenEssence.key] || 0;
+        if (currentCount < maxStorage) {
+          law.bodyEssenceStorage[chosenEssence.key] = Math.min(maxStorage, currentCount + count);
+        }
+      }
+    }
+  }
+
   law.lastChannelSyncAt = new Date();
   law.lastEssenceDigestAt = new Date();
 
@@ -1253,15 +1282,30 @@ function attemptMajorBreakthrough(player, options = {}) {
     };
   }
 
-  // 2. Validasi Khusus Penempaan Raga (Body Tempering: 9 Bagian Tubuh)
+  // 2. Validasi Khusus Penempaan Raga (Body Tempering: 9 Bagian Tubuh) (Master Plan §3.3 & §5.3)
+  // Tabel Syarat Level 9 Bagian Tubuh Penempaan Raga:
+  // - Menuju Rank 1: tiap bagian >= Lv. 2
+  // - Menuju Rank 2: tiap bagian >= Lv. 4
+  // - Menuju Rank 3: tiap bagian >= Lv. 6
+  // - Menuju Rank 4: tiap bagian >= Lv. 8
+  // - Menuju Rank 5: tiap bagian >= Lv. 10
+  // - Menuju Rank 6: tiap bagian >= Lv. 12
+  // - Menuju Rank 7: tiap bagian >= Lv. 14
+  // - Menuju Rank 8: tiap bagian >= Lv. 16
   if (law.activeLawType === 'body_tempering') {
     const parts = law.bodyTemperingParts || {};
     const requiredParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
-    const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < targetRank);
+    const requiredLevel = targetRank * 2;
+    const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < requiredLevel);
     if (unreadyParts.length > 0) {
+      const partLabels = {
+        head: 'Kepala', torso: 'Dada', leftArm: 'Lengan Kiri', rightArm: 'Lengan Kanan',
+        leftLeg: 'Kaki Kiri', rightLeg: 'Kaki Kanan', spine: 'Tulang Punggung', dantian: 'Dantian Raga', skin: 'Kulit Luar'
+      };
+      const unreadyList = unreadyParts.map(p => `${partLabels[p] || p} (${parts[p] || 0}/${requiredLevel})`).join(', ');
       return {
         success: false,
-        message: `Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${targetRank} (Belum siap: ${unreadyParts.join(', ')}).`
+        message: `Penempaan Raga belum tuntas. Menuju Rank ${targetRank}, seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${requiredLevel}. Belum siap: ${unreadyList}.`
       };
     }
   }

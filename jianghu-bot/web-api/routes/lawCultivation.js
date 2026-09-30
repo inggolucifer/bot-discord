@@ -787,13 +787,20 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
         throw new CustomError(`Ranah karaktermu belum memenuhi syarat. Butuh Realm Index ≥ ${req_data?.minRealmIndex} dan Level ≥ ${req_data?.minLevel}.`, 400);
       }
 
-      // Validasi Khusus Penempaan Raga Suci (Body Tempering: 9 Bagian Tubuh)
+      // Validasi Khusus Penempaan Raga Suci (Body Tempering: 9 Bagian Tubuh) (Master Plan §3.3 & §5.3)
+      // Tabel Syarat Level 9 Bagian Tubuh: Menuju Rank R, tiap bagian wajib >= Lv. R * 2
       if (law.activeLawType === 'body_tempering') {
         const parts = law.bodyTemperingParts || {};
         const requiredParts = ['head', 'torso', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg', 'spine', 'dantian', 'skin'];
-        const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < targetRank);
+        const requiredLevel = targetRank * 2;
+        const unreadyParts = requiredParts.filter(p => (parts[p] || 0) < requiredLevel);
         if (unreadyParts.length > 0) {
-          throw new CustomError(`Penempaan Raga belum tuntas. Seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${targetRank} (Belum siap: ${unreadyParts.join(', ')}).`, 400);
+          const partLabels = {
+            head: 'Kepala', torso: 'Dada', leftArm: 'Lengan Kiri', rightArm: 'Lengan Kanan',
+            leftLeg: 'Kaki Kiri', rightLeg: 'Kaki Kanan', spine: 'Tulang Punggung', dantian: 'Dantian Raga', skin: 'Kulit Luar'
+          };
+          const unreadyList = unreadyParts.map(p => `${partLabels[p] || p} (${parts[p] || 0}/${requiredLevel})`).join(', ');
+          throw new CustomError(`Penempaan Raga belum tuntas. Menuju Rank ${targetRank}, seluruh 9 bagian tubuh wajib mencapai minimal Lv. ${requiredLevel}. Belum siap: ${unreadyList}.`, 400);
         }
       }
 
