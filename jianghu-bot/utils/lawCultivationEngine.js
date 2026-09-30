@@ -20,8 +20,8 @@ const { isClaimedToday, isClaimedYesterday } = require('./dailyClaim');
 
 /**
  * 15 Law Enum & Metadata
- * PathMod Tribulasi menentukan pengganda damage gelombang petir.
- * Semakin tinggi PathMod, semakin sulit tribulasi tetapi Qi lebih cepat.
+ * pathMod: Semakin tinggi pathMod, semakin sulit petir tribulasi dan laju channel lebih lambat (LAW_BALANCE.CHANNEL_PATHMOD_MODE = 'penalty').
+ * essence bar: Bar Konsumsi/Reservoir wajib > 0 untuk memperoleh Xiuwei / Qi kultivasi (Bar kosong = 0 Qi).
  */
 const LAW_DEFINITIONS = {
   element_phoenix_fire:     { 
@@ -1868,15 +1868,16 @@ function awardActiveCultivationQi(player, triggerType, context = {}) {
   const lawDef = LAW_DEFINITIONS[activeLawType];
 
   let lawQiGained = 0;
+  let essenceGained = 0;
   let systemQiGained = 0;
   let message = '';
 
   switch (triggerType) {
     case 'battle_hit':
       if (activeLawType === 'body_tempering') {
-        lawQiGained = 12; // True Qi dari pukulan fisik
+        essenceGained = 2;
       } else {
-        lawQiGained = 4;
+        essenceGained = 1;
       }
       break;
 
@@ -1884,101 +1885,130 @@ function awardActiveCultivationQi(player, triggerType, context = {}) {
       const monsterTier = context.monsterTier || 1;
       systemQiGained = Math.floor(35 * monsterTier);
       if (activeLawType === 'body_tempering') {
-        lawQiGained = 35;
-        message = '💪 Otot dan urat menyerap hawa pertarungan (+35 True Qi)!';
+        essenceGained = 5;
+        lawQiGained = 3;
+        message = '💪 Otot dan urat menyerap hawa pertarungan (+5 Esensi Raga, +3 True Qi residu)!';
       } else if (activeLawType === 'demonic_blood_soul') {
-        lawQiGained = 50;
-        message = '🩸 Memanen darah musuh yang gugur (+50 Blood Qi)!';
+        essenceGained = 5;
+        lawQiGained = 3;
+        message = '🩸 Memanen darah musuh yang gugur (+5 Esensi Darah, +3 Blood Qi residu)!';
       } else if (activeLawType === 'natal_beast') {
-        lawQiGained = 35;
+        essenceGained = 5;
+        lawQiGained = 3;
         if (law.boundEntity) {
           law.boundEntity.beastCurrentHp = Math.min(law.boundEntity.beastMaxHp || 120, (law.boundEntity.beastCurrentHp || 120) + 15);
         }
-        message = '🐾 Bertarung berdampingan dengan satwa roh (+35 Symbiotic Qi)!';
+        message = '🐾 Bertarung berdampingan dengan satwa roh (+5 Esensi Ikatan, +3 Qi residu)!';
       } else {
-        lawQiGained = 25;
+        essenceGained = 3;
+        lawQiGained = 2;
       }
       break;
 
     case 'meat_eaten':
       if (activeLawType === 'body_tempering') {
-        lawQiGained = 80;
-        message = '🍖 Daging binatang buas dicerna menjadi intisari raga (+80 True Qi)!';
+        essenceGained = 6;
+        lawQiGained = 3;
+        message = '🍖 Daging binatang buas dicerna menjadi intisari raga (+6 Esensi Raga, +3 True Qi residu)!';
       } else {
-        lawQiGained = 30;
+        essenceGained = 3;
+        lawQiGained = 1;
       }
       break;
 
     case 'step_endurance':
       const steps = context.steps || 1;
-      if (activeLawType === 'element_roc_wind') {
-        lawQiGained = Math.floor(steps * 1.5);
-      } else if (activeLawType === 'body_tempering') {
-        lawQiGained = Math.floor(steps * 1.2);
-      } else {
-        lawQiGained = Math.floor(steps * 0.4);
-      }
+      essenceGained = steps >= 5 ? 1 : 0;
+      lawQiGained = 0;
       systemQiGained = Math.floor(steps * 0.5);
       break;
 
     case 'fish_caught':
       if (activeLawType === 'element_azure_water') {
-        lawQiGained = 40;
-        message = '💧 Menyerap embun air danau bersama ikan roh (+40 Azure Qi)!';
+        essenceGained = 5;
+        lawQiGained = 2;
+        message = '💧 Menyerap embun air danau bersama ikan roh (+5 Esensi Azure, +2 Qi residu)!';
       } else {
-        lawQiGained = 15;
+        essenceGained = 2;
+        lawQiGained = 1;
       }
       systemQiGained = 20;
       break;
 
     case 'ore_mined':
       if (activeLawType === 'element_xuanwu_earth') {
-        lawQiGained = 35;
-        message = '🗿 Menyerap hawa bumi leylines dari rekahan batu (+35 Leyline Qi)!';
+        essenceGained = 5;
+        lawQiGained = 2;
+        message = '🗿 Menyerap hawa bumi leylines dari rekahan batu (+5 Esensi Leyline, +2 Qi residu)!';
       } else {
-        lawQiGained = 15;
+        essenceGained = 2;
+        lawQiGained = 1;
       }
       systemQiGained = 20;
       break;
 
     case 'herb_harvested':
       if (activeLawType === 'element_qingdi_wood') {
-        lawQiGained = 40;
-        message = '🌿 Intisari getah tanaman obat meresap ke pori-pori (+40 Life Qi)!';
+        essenceGained = 5;
+        lawQiGained = 2;
+        message = '🌿 Intisari getah tanaman obat meresap ke pori-pori (+5 Esensi Hayat, +2 Qi residu)!';
       } else {
-        lawQiGained = 15;
+        essenceGained = 2;
+        lawQiGained = 1;
       }
       systemQiGained = 20;
       break;
 
     case 'equipment_forged':
       if (activeLawType === 'natal_artifact') {
-        lawQiGained = 50;
-        message = '🗡️ Hawa dentingan palu beresonansi dengan pusaka jiwa (+50 Soul Qi)!';
+        essenceGained = 5;
+        lawQiGained = 3;
+        message = '🗡️ Hawa dentingan palu beresonansi dengan pusaka jiwa (+5 Esensi Pusaka, +3 Qi residu)!';
       } else {
-        lawQiGained = 20;
+        essenceGained = 3;
+        lawQiGained = 1;
       }
       systemQiGained = 25;
       break;
 
     case 'crit_landed':
       if (activeLawType === 'element_godthunder_light') {
-        lawQiGained = 20;
-        message = '⚡ Sengatan kilat surgawi menyambar meridian (+20 Lightning Qi)!';
+        essenceGained = 2;
+        lawQiGained = 1;
+        message = '⚡ Sengatan kilat surgawi menyambar meridian (+2 Esensi Petir, +1 Qi residu)!';
       } else {
-        lawQiGained = 5;
+        essenceGained = 1;
+        lawQiGained = 0;
       }
       break;
 
     default:
-      lawQiGained = 10;
+      essenceGained = 1;
+      lawQiGained = 0;
       systemQiGained = 10;
   }
 
   // Akumulasikan ke cultivationLaw jika pemain mengikat Law
-  if (law && law.activeLawType && lawQiGained > 0) {
-    const maxQ = law.maxQi || 1000;
-    law.qi = Math.min(maxQ, (law.qi || 0) + lawQiGained);
+  if (law && law.activeLawType) {
+    if (essenceGained > 0) {
+      const maxEss = getMaxEssence(law.rank || 0);
+      law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGained);
+      law.maxEssence = maxEss;
+    }
+
+    if (lawQiGained > 0) {
+      checkAndResetDailyCap(player);
+      if (!law.dailyData) law.dailyData = {};
+      const worldQiToday = law.dailyData.worldQiToday || 0;
+      const DAILY_WORLD_QI_CAP = 30; // Batas Qi duniawi harian agar tidak merusak target 2-3 tahun
+      const allowed = Math.max(0, DAILY_WORLD_QI_CAP - worldQiToday);
+      const actualGrant = Math.min(lawQiGained, allowed);
+      if (actualGrant > 0) {
+        law.qi = Math.min(law.maxQi || 1000, (law.qi || 0) + actualGrant);
+        law.dailyData.worldQiToday = worldQiToday + actualGrant;
+      }
+      lawQiGained = actualGrant;
+    }
   }
 
   // Akumulasikan ke systemCultivation (fondasi ranah)
@@ -1991,6 +2021,7 @@ function awardActiveCultivationQi(player, triggerType, context = {}) {
 
   return {
     lawQiGained,
+    essenceGained,
     systemQiGained,
     energyLabel: lawDef?.energyLabel || 'Qi',
     message
@@ -2021,7 +2052,9 @@ function checkAndResetDailyCap(player) {
       turbidAbsorbsToday: 0,
       bloodHarvestsToday: 0,
       soulBannerToday: 0,
-      venomDrinksToday: 0
+      venomDrinksToday: 0,
+      essenceConvertsToday: 0,
+      worldQiToday: 0
     };
     return true;
   }
@@ -2043,6 +2076,8 @@ function checkAndResetDailyCap(player) {
     law.dailyData.bloodHarvestsToday = 0;
     law.dailyData.soulBannerToday = 0;
     law.dailyData.venomDrinksToday = 0;
+    law.dailyData.essenceConvertsToday = 0;
+    law.dailyData.worldQiToday = 0;
     return true;
   }
   return false;
@@ -2127,6 +2162,12 @@ function meetsLawRankRequirements(player, targetRank) {
 function getLawStatus(player) {
   const law = player.cultivationLaw;
   if (!law) return { hasLaw: false, canBind: true };
+
+  // Bootstrap anti soft-lock (hanya sekali untuk pemain baru rank 0)
+  if (!law.essenceBootstrapDone && (law.currentEssence|0) === 0 && (law.qi|0) === 0 && (law.rank|0) === 0) {
+    law.currentEssence = LAW_PROGRESSION.BOOTSTRAP_ESSENCE;
+    law.essenceBootstrapDone = true;
+  }
 
   const lawDef = law.activeLawType ? LAW_DEFINITIONS[law.activeLawType] : null;
   const rankNames = law.activeLawType ? LAW_RANK_NAMES[law.activeLawType] : null;

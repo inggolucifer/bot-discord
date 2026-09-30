@@ -81,6 +81,14 @@ router.get('/status', authenticateToken, async (req, res) => {
     // Reset daily cap jika hari sudah berganti
     checkAndResetDailyCap(player);
 
+    const law = player.cultivationLaw;
+    if (law && !law.essenceBootstrapDone && (law.currentEssence|0) === 0 && (law.qi|0) === 0 && (law.rank|0) === 0) {
+      law.currentEssence = LAW_PROGRESSION.BOOTSTRAP_ESSENCE;
+      law.essenceBootstrapDone = true;
+      player.markModified('cultivationLaw');
+      await player.save();
+    }
+
     const status = getLawStatus(player);
     res.json({ success: true, data: status });
   } catch (error) {
