@@ -48,7 +48,8 @@ const {
   claimBodyTemperingPart,
   getMaxEssenceStorage,
   getTierAffinity,
-  getGuMaxSlots
+  getGuMaxSlots,
+  BREAKTHROUGH_PILL_CATALOG
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -677,10 +678,14 @@ router.post('/breakthrough/set-pill', authenticateToken, async (req, res) => {
     }
 
     const targetRank = (law.rank || 0) + 1;
-    const pillTier = pillDoc.tier || (pillDoc.rank === 'uncommon' ? 2 : pillDoc.rank === 'rare' ? 3 : (pillDoc.rank === 'epic' ? 4 : 1));
-    if (pillTier > targetRank) {
+    const pillTier = Number(pillDoc.tier) || (pillDoc.rank === 'uncommon' ? 2 : pillDoc.rank === 'rare' ? 3 : (pillDoc.rank === 'epic' ? 4 : 1));
+    const catalogEntry = BREAKTHROUGH_PILL_CATALOG[targetRank];
+
+    // Master Plan §5.2: item harus category/tag breakthrough_pill dan tier cocok target rank (±0)
+    if (pillTier !== targetRank) {
+      const catalogInfo = catalogEntry ? ` [Katalog Rekomendasi: ${catalogEntry.name} (Tier ${catalogEntry.tier})]` : '';
       return res.status(400).json({
-        error: `Pil [${pillDoc.name}] bertier ${pillTier}, melebihi batas penerobosan Rank ${targetRank}! Dantian menolak menyerap pil melampaui ranah tujuan.`
+        error: `Pil [${pillDoc.name}] bertier ${pillTier}, tidak cocok dengan target Rank ${targetRank}! Pil penerobosan wajib bertier persis ${targetRank} (±0).${catalogInfo}`
       });
     }
 
@@ -688,14 +693,15 @@ router.post('/breakthrough/set-pill', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const expectedRate = catalogEntry ? catalogEntry.successRate : Math.min(95, Math.max(85, 95 - ((law.rank || 0) * 2)));
     res.json({
       success: true,
-      message: `💊 Pil [${pillDoc.name}] berhasil dipasang ke slot penerobosan! (+20% Peluang Sukses & Proteksi Deviasi Qi)`,
+      message: `💊 Pil [${pillDoc.name}] (Tier ${pillTier}) berhasil dipasang ke slot penerobosan! (Peluang Sukses ${expectedRate}% & Proteksi Deviasi Qi)`,
       data: {
         pill: {
           id: pillDoc._id,
           name: pillDoc.name,
-          tier: pillDoc.tier || 1,
+          tier: pillTier,
           description: pillDoc.description
         }
       }
@@ -893,7 +899,7 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
             player.inventory.splice(pillIdx, 1);
           }
           player.markModified('inventory');
-          pillOptions = { pillBonusRate: 20, pillProtectLoss: true };
+          pillOptions = { hasMatchingPill: true, pillProtectLoss: true };
           law.breakthroughPillSlot = null; // Terkonsumsi
         } else {
           law.breakthroughPillSlot = null;
@@ -904,30 +910,6 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
 
       if (result.isSuccess) {
         applyMoodDelta(player, -15);
-
-        // Juga naikkan rank boundEntity jika ada
-        if (law.boundEntity?.entityType) {
-          law.boundEntity.rankLevel = law.rank;
-          const evolStages = ['Mortal', 'Spirit', 'Earth', 'Heaven', 'Primordial', 'Celestial', 'Void', 'Chaos', 'Apex'];
-          law.boundEntity.evolutionStage = evolStages[Math.min(law.rank, evolStages.length - 1)];
-
-          if (law.boundEntity.entityType === 'beast') {
-            if (law.rank >= 1 && law.boundEntity.isEgg) {
-              law.boundEntity.isEgg = false;
-              law.boundEntity.hatchedAt = new Date();
-            }
-            law.boundEntity.beastAtk = 15 + law.rank * 15;
-            law.boundEntity.beastDef = 10 + law.rank * 10;
-            law.boundEntity.beastMaxHp = 100 + law.rank * 60;
-            law.boundEntity.beastCurrentHp = law.boundEntity.beastMaxHp;
-            law.boundEntity.beastSpd = 12 + law.rank * 5;
-          } else if (law.boundEntity.entityType === 'artifact') {
-            law.boundEntity.artifactAtk = 15 + law.rank * 15;
-            law.boundEntity.artifactDef = 10 + law.rank * 10;
-            law.boundEntity.artifactCrit = 5 + law.rank * 2;
-            law.boundEntity.artifactRes = 5 + law.rank * 2;
-          }
-        }
       } else {
         applyMoodDelta(player, -20);
       }
