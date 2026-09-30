@@ -252,6 +252,70 @@ const LAW_BALANCE = {
 };
 
 /**
+ * ═══════════════════════════════════════════════════════════════
+ * LAW PROGRESSION CONFIGURATION (24–36 BULAN REAL-TIME TARGET)
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * Filosofi Desain:
+ * - Pemain rajin membutuhkan waktu ~24–36 bulan kalender nyata (700–1100 hari channeling murni)
+ *   untuk mencapai Rank Law tinggi (Rank 7–8 / ranah puncak Wuxia).
+ * - Simulasi Mental (60 mnt/hari, pathMod 1.0, essence selalu terisi):
+ *   Rank 0: Qi=26,178, rate=12/m  -> 36.4 hari
+ *   Rank 1: Qi=57,592, rate=21/m  -> 45.7 hari
+ *   Rank 2: Qi=126,707, rate=36/m -> 58.7 hari
+ *   Rank 3: Qi=278,755, rate=64/m -> 72.6 hari
+ *   Rank 4: Qi=613,274, rate=112/m -> 91.3 hari
+ *   Rank 5: Qi=1,349,205, rate=196/m -> 114.7 hari
+ *   Rank 6: Qi=2,968,271, rate=344/m -> 143.8 hari
+ *   Rank 7: Qi=6,530,215, rate=603/m -> 180.5 hari
+ *   Rank 8: Qi=14,366,496, rate=1055/m -> 227.0 hari
+ *   TOTAL KULTIVASI MURNI: ~970.6 HARI (~31.9 BULAN = ~2.65 TAHUN)
+ *   (Dengan farming bahan, cooldown kegagalan, dan tribulasi: real-time ~24-36 bulan)
+ */
+const LAW_PROGRESSION = {
+  // --- Kebutuhan Qi Per Rank & Stage ---
+  BASE_QI_RANK0: 2200,           // Fondasi awal dinaikkan dari 1260
+  QI_RANK_GROWTH: 2.2,           // Kurva pertumbuhan Qi eksponensial per rank
+  STAGE_MULT_BASE: 0.65,
+  STAGE_MULT_PER_STAGE: 0.12,    // Stage 0..9 (Stage 0 = 0.65x s/d Stage 9 = 1.73x)
+
+  // --- Laju Channeling Qi (Qi/menit) ---
+  CHANNEL_BASE_RATE: 12,         // Base rate 12 Qi/menit di Rank 0
+  CHANNEL_RATE_GROWTH: 1.75,     // Pertumbuhan laju Qi per rank
+  // Catatan: pathMod penalty tetap berlaku via LAW_BALANCE.CHANNEL_PATHMOD_MODE = 'penalty'
+
+  // --- Daily Channeling Minute Cap Lebih Ketat ---
+  BASE_CHANNEL_CAP_MINUTES: 60,  // Base cap 60 menit (was 90)
+  STREAK_BONUS_PER_DAY: 3,       // +3 menit per streak day (was 5)
+  MAX_STREAK_DAYS: 7,            // Max streak 7 hari (+21 menit -> total max cap 81 menit/hari)
+
+  // --- Essence Gate (WAJIB) ---
+  ESSENCE_EMPTY_QI_MULTIPLIER: 0,     // 0: Bar kosong = sama sekali TIDAK ADA Qi kultivasi (no 15% drip)
+  ESSENCE_FULL_DIGEST_BONUS: 1.0,     // Bonus pencernaan optimal 1.0 (anti lonjakan instan)
+
+  // --- Laju Cerna Esensi (bar -> Qi) ---
+  DIGEST_BASE: 1.0,              // Esensi tercerna per menit channel efektif di Rank 0
+  DIGEST_GROWTH: 1.35,           // Rank tinggi mencerna esensi lebih banyak per menit
+
+  // --- Kapasitas Maksimal Bar Esensi Per Rank ---
+  MAX_ESSENCE_BASE: 100,
+  MAX_ESSENCE_GROWTH: 1.85,      // Pertumbuhan kapasitas bar esensi per rank
+
+  // --- Pengisian Bar dari Konsumsi Bahan Spiritual (setelah tier affinity) ---
+  FILL_ELEMENT_BASE: 18,
+  FILL_DEMONIC_BASE: 22,
+  FILL_GU_FEED_BASE: 15,
+  FILL_NATAL_INFUSE_BASE: 16,
+  FILL_BODY_TEMPER_TRUE_QI_TO_ESSENCE: 0, // Body Tempering memproses via ritual raga & konversi esensi
+
+  // Anti-instant: batas perolehan esensi per aksi konsumsi
+  MAX_ESSENCE_GAIN_PER_ACTION: 40,
+
+  // Bootstrap anti soft-lock (diberikan sekali di awal)
+  BOOTSTRAP_ESSENCE: 30,
+};
+
+/**
  * Nama Rank Unik per Law (Rank 0 s/d 8)
  * Setiap Law memiliki penamaan rank berbeda sesuai jalur.
  * Format: LAW_RANK_NAMES[lawType][rankIndex]
@@ -756,31 +820,33 @@ function claimBodyTemperingPart(player) {
 }
 
 /**
- * Channeling Cap Constants
+ * Channeling Cap Constants (Merujuk ke LAW_PROGRESSION sebagai single source of truth)
  */
-const BASE_CHANNEL_CAP_MINUTES = 90;
-const STREAK_BONUS_PER_DAY = 5;      // +5 menit per hari streak
-const MAX_STREAK_DAYS = 7;
-const MAX_STREAK_BONUS = STREAK_BONUS_PER_DAY * MAX_STREAK_DAYS; // +35 menit
+const BASE_CHANNEL_CAP_MINUTES = LAW_PROGRESSION.BASE_CHANNEL_CAP_MINUTES;
+const STREAK_BONUS_PER_DAY = LAW_PROGRESSION.STREAK_BONUS_PER_DAY;
+const MAX_STREAK_DAYS = LAW_PROGRESSION.MAX_STREAK_DAYS;
+const MAX_STREAK_BONUS = STREAK_BONUS_PER_DAY * MAX_STREAK_DAYS; // +21 menit
 
 // ═══════════════════════════════════════════════════════════════
-// QI CALCULATION (Formula §2.3 & §2.4)
+// QI CALCULATION (Formula §2.3 & §2.4 terkalibrasi target 24–36 bulan)
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * BaseQiRequired(rank) = 1260 × (2.4 ^ rank)
+ * BaseQiRequired(rank) = BASE_QI_RANK0 × (QI_RANK_GROWTH ^ rank)
  * Menghasilkan kebutuhan Qi dasar untuk satu stage di rank tertentu.
  */
 function getBaseQiRequired(rank) {
-  return Math.floor(1260 * Math.pow(2.4, rank));
+  const r = Number(rank) || 0;
+  return Math.floor(LAW_PROGRESSION.BASE_QI_RANK0 * Math.pow(LAW_PROGRESSION.QI_RANK_GROWTH, r));
 }
 
 /**
- * StageMult(stage) = 0.6 + (stage × 0.1)
- * Stage 0 = 0.6x, Stage 9 = 1.5x
+ * StageMult(stage) = STAGE_MULT_BASE + (stage × STAGE_MULT_PER_STAGE)
+ * Stage 0 = 0.65x, Stage 9 = 1.73x
  */
 function getStageMult(stage) {
-  return 0.6 + (stage * 0.1);
+  const s = Math.max(0, Math.min(9, Number(stage) || 0));
+  return LAW_PROGRESSION.STAGE_MULT_BASE + (s * LAW_PROGRESSION.STAGE_MULT_PER_STAGE);
 }
 
 /**
@@ -794,7 +860,7 @@ function getQiRequired(rank, stage) {
 /**
  * Channeling Qi Rate per menit (Qi/menit) yang didapat saat meditasi.
  * Rate meningkat setiap rank naik.
- * BaseRate = 21 Qi/menit pada Rank 0, meningkat 1.8× per rank.
+ * BaseRate = 12 Qi/menit pada Rank 0, meningkat 1.75× per rank.
  * 
  * pathMod mempengaruhi laju Qi (Master Plan §5.4 & Balance Pass):
  * - Mode 'penalty' (default anti-OP demonic): rate = floor(base / clamp(pathMod, 0.9, 1.6)).
@@ -805,7 +871,9 @@ function getQiRequired(rank, stage) {
  * @returns {number} Qi rate per menit
  */
 function getChannelQiRate(rank, pathMod = 1.0) {
-  const base = Math.floor(21 * Math.pow(1.8, rank || 0));
+  const base = Math.floor(
+    LAW_PROGRESSION.CHANNEL_BASE_RATE * Math.pow(LAW_PROGRESSION.CHANNEL_RATE_GROWTH, rank || 0)
+  );
   const pm = Math.min(1.6, Math.max(0.9, Number(pathMod) || 1));
   if (LAW_BALANCE.CHANNEL_PATHMOD_MODE === 'penalty') {
     return Math.max(1, Math.floor(base / pm));
@@ -825,24 +893,28 @@ function getChannelQiRate(rank, pathMod = 1.0) {
  * @returns {number} Total menit channeling yang diizinkan hari ini
  */
 function getDailyChannelCap(streakDays, premiumBonusMinutes = 0, eventBonusMinutes = 0) {
-  const streakBonus = Math.min(streakDays, MAX_STREAK_DAYS) * STREAK_BONUS_PER_DAY;
-  return BASE_CHANNEL_CAP_MINUTES + streakBonus + premiumBonusMinutes + eventBonusMinutes;
+  const streakBonus = Math.min(streakDays || 0, LAW_PROGRESSION.MAX_STREAK_DAYS) * LAW_PROGRESSION.STREAK_BONUS_PER_DAY;
+  return LAW_PROGRESSION.BASE_CHANNEL_CAP_MINUTES + streakBonus + (premiumBonusMinutes || 0) + (eventBonusMinutes || 0);
 }
 
 /**
  * Menghitung kapasitas maksimal Bar Esensi berdasarkan Ranah (Rank 0 s/d 8)
- * Formula: MaxEssence(rank) = floor(100 * (2.5 ^ rank))
- * Rank 0: 100, Rank 1: 250, Rank 2: 625, Rank 3: 1562, Rank 8: 152587
+ * Formula: MaxEssence(rank) = floor(MAX_ESSENCE_BASE * (MAX_ESSENCE_GROWTH ^ rank))
  */
 function getMaxEssence(rank = 0) {
-  return Math.floor(100 * Math.pow(2.5, rank || 0));
+  return Math.floor(
+    LAW_PROGRESSION.MAX_ESSENCE_BASE * Math.pow(LAW_PROGRESSION.MAX_ESSENCE_GROWTH, rank || 0)
+  );
 }
 
 /**
  * Menghitung laju pencernaan esensi per menit channeling.
  */
 function getEssenceDigestRate(rank = 0) {
-  return Math.max(1, Math.floor(2 * Math.pow(1.5, rank || 0)));
+  return Math.max(
+    1,
+    Math.floor(LAW_PROGRESSION.DIGEST_BASE * Math.pow(LAW_PROGRESSION.DIGEST_GROWTH, rank || 0))
+  );
 }
 
 /**
@@ -2146,6 +2218,7 @@ function getLawStatus(player) {
 module.exports = {
   // Constants
   LAW_BALANCE,
+  LAW_PROGRESSION,
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,
   LAW_TYPE_ENUM: Object.keys(LAW_DEFINITIONS),
