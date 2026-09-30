@@ -1215,7 +1215,8 @@ function calculateChannelingProgress(player) {
   const minutesFunded = Math.min(effectiveMinutes, maxFundableMinutes);
   const essenceConsumed = Math.min(currentEss, Math.round(minutesFunded * digestRate * 10) / 10);
 
-  const qiGained = Math.floor(minutesFunded * baseRate * LAW_PROGRESSION.ESSENCE_FULL_DIGEST_BONUS);
+  const digestBonus = LAW_PROGRESSION.ESSENCE_DIGEST_BONUS !== undefined ? LAW_PROGRESSION.ESSENCE_DIGEST_BONUS : (LAW_PROGRESSION.ESSENCE_FULL_DIGEST_BONUS || 1.0);
+  const qiGained = Math.floor(minutesFunded * baseRate * digestBonus);
 
   return {
     qiGained,
@@ -2083,9 +2084,9 @@ function checkAndResetDailyCap(player) {
 
 /**
  * Klaim pencerahan harian (Daily Epiphany).
- * Memberikan 10% dari batas Qi stage saat ini secara instan + 25-40 Copper.
+ * Memberikan 5% dari batas Qi stage saat ini secara instan + 10 Esensi + 25-40 Copper.
  * @param {object} player - Mongoose Player document (mutable)
- * @returns {{ success: boolean, message: string, qiGranted?: number, copperGranted?: number }}
+ * @returns {{ success: boolean, message: string, qiGranted?: number, essenceGranted?: number, copperGranted?: number }}
  */
 function claimDailyEpiphany(player) {
   const law = player.cultivationLaw;
@@ -2099,9 +2100,15 @@ function claimDailyEpiphany(player) {
     return { success: false, message: 'Pencerahan harian sudah diklaim hari ini. Reset pada jam 00:00 WIB.' };
   }
 
-  // +10% Qi instan
-  const qiGranted = Math.floor(law.maxQi * 0.10);
+  // +5% Qi instan (C1 & C4: menjaga keseimbangan kurva 7 hari Rank 0)
+  const qiGranted = Math.floor(law.maxQi * 0.05);
   law.qi = Math.min(law.qi + qiGranted, law.maxQi);
+
+  // +10 Esensi untuk menjaga habit loop meditasi harian
+  const essenceGranted = 10;
+  const maxEss = law.maxEssence || getMaxEssence(law.rank || 0);
+  law.currentEssence = Math.min(maxEss, (Number(law.currentEssence) || 0) + essenceGranted);
+
   law.dailyData.lastEpiphanyClaimAt = new Date();
 
   // +25 s/d 40 Copper (random)
@@ -2112,8 +2119,9 @@ function claimDailyEpiphany(player) {
 
   return {
     success: true,
-    message: `✨ Pencerahan Harian! +${qiGranted} Qi & +${copperGranted} Tembaga.`,
+    message: `✨ Pencerahan Harian! +${qiGranted} Qi, +${essenceGranted} Esensi & +${copperGranted} Tembaga.`,
     qiGranted,
+    essenceGranted,
     copperGranted
   };
 }
