@@ -1021,6 +1021,20 @@ function getEssenceDigestRate(rank = 0) {
 }
 
 /**
+ * Mengonversi dokumen Item atau objek item menjadi Tier numerik (1-6).
+ * Memeriksa itemDoc.tier terlebih dahulu; jika tidak ada, memetakan dari rank/rarity.
+ * @param {object} itemDoc
+ * @returns {number}
+ */
+function resolveItemTier(itemDoc) {
+  if (!itemDoc) return 1;
+  if (itemDoc.tier != null && !Number.isNaN(Number(itemDoc.tier))) return Number(itemDoc.tier);
+  const rankMap = { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5, mythic: 6 };
+  const r = String(itemDoc.rank || itemDoc.rarity || '').toLowerCase();
+  return rankMap[r] || 1;
+}
+
+/**
  * Efisiensi konsumsi item berdasarkan tier (Master Plan §5.1)
  * playerTier = rank Law ATAU tier realm yang relevan (gunakan (law.rank || 0) + 1 sebagai default untuk Law consumption)
  * itemTier = item.tier (number, default 1)
@@ -2488,6 +2502,7 @@ module.exports = {
   getMaxEssence,
   getEssenceDigestRate,
   getTierAffinity,
+  resolveItemTier,
   getGuMaxSlots,
   getMaxCombatQi,
   getCombatQiRegenPerRound,
