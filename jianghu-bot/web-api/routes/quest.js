@@ -406,6 +406,26 @@ router.post('/:questId/claim', authenticateToken, async (req, res) => {
                  }
             }
 
+            // D2. Hook Law Item Sink: Peluang perolehan Segel Jasa Langit (merit_seal) sesuai ranah pemain
+            const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+            const sealTier = Math.min(8, Math.max(1, realmIdx + 1));
+            if (Math.random() < 0.40) {
+                const meritItem = await Item.findOne({
+                    tags: 'merit_seal',
+                    tier: sealTier
+                }).session(session) || await Item.findOne({ tags: 'merit_seal', tier: 1 }).session(session);
+
+                if (meritItem) {
+                    const invItem = player.inventory.find(i => i.itemId.toString() === meritItem._id.toString());
+                    if (invItem) {
+                        invItem.quantity += 1;
+                    } else {
+                        player.inventory.push({ itemId: meritItem._id, quantity: 1 });
+                    }
+                    grantMessage.push(`1x ${meritItem.name} (Segel Jasa)`);
+                }
+            }
+
             questEntry.status = 'claimed';
             questEntry.claimedAt = new Date();
             questEntry.lastTouchedAt = new Date();

@@ -2137,17 +2137,27 @@ function awardActiveCultivationQi(player, triggerType, context = {}) {
 
   // Akumulasikan ke cultivationLaw jika pemain mengikat Law
   if (law && law.activeLawType) {
+    checkAndResetDailyCap(player);
+    if (!law.dailyData) law.dailyData = {};
+
     if (essenceGained > 0) {
-      const maxEss = getMaxEssence(law.rank || 0);
-      law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGained);
-      law.maxEssence = maxEss;
+      const worldEssenceToday = law.dailyData.worldEssenceToday || 0;
+      const DAILY_WORLD_ESSENCE_CAP = 25; // Batas harian akumulasi esensi duniawi (anti-bypass)
+      const allowedEssence = Math.max(0, DAILY_WORLD_ESSENCE_CAP - worldEssenceToday);
+      const actualEssence = Math.min(essenceGained, allowedEssence);
+      if (actualEssence > 0) {
+        const maxEss = getMaxEssence(law.rank || 0);
+        law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 0) + actualEssence);
+        law.maxEssence = maxEss;
+        law.dailyData.worldEssenceToday = worldEssenceToday + actualEssence;
+      }
+      essenceGained = actualEssence;
     }
 
+    // Direct law.qi from world hooks strictly capped to avoid bypassing channeling progression curve
     if (lawQiGained > 0) {
-      checkAndResetDailyCap(player);
-      if (!law.dailyData) law.dailyData = {};
       const worldQiToday = law.dailyData.worldQiToday || 0;
-      const DAILY_WORLD_QI_CAP = 30; // Batas Qi duniawi harian agar tidak merusak target 2-3 tahun
+      const DAILY_WORLD_QI_CAP = 5; // Minimal residual Qi only (anti-bypass)
       const allowed = Math.max(0, DAILY_WORLD_QI_CAP - worldQiToday);
       const actualGrant = Math.min(lawQiGained, allowed);
       if (actualGrant > 0) {
