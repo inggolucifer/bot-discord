@@ -1217,11 +1217,18 @@ function attemptMiniBreakthrough(player, options = {}) {
 
 /**
  * Major breakthrough success rate.
- * Formula: 85% - (rank × 5%)
- * Rank 0→1: 85%, Rank 7→8: 50%
+/**
+ * Peluang sukses major breakthrough (Master Plan §5.2).
+ * Dengan pil cocok: rentang 85–95% (data-driven dari BREAKTHROUGH_PILL_CATALOG).
+ * Tanpa pil: rentang 30–40%.
  */
-function getMajorBreakthroughSuccessRate(rank) {
-  return Math.max(30, 85 - (rank * 5));
+function getMajorBreakthroughSuccessRate(rank, hasPill = false) {
+  const targetRank = (Number(rank) || 0) + 1;
+  if (hasPill) {
+    const catalogEntry = BREAKTHROUGH_PILL_CATALOG[targetRank];
+    return catalogEntry ? catalogEntry.successRate : Math.min(95, Math.max(85, 95 - (rank * 2)));
+  }
+  return Math.min(40, Math.max(30, 40 - (rank * 2)));
 }
 
 /**
@@ -1296,6 +1303,21 @@ function runTribulation(player, targetRank = null) {
   const totalDamage = waveDetails.reduce((sum, w) => sum + w.damage, 0);
   return { survived, wavesCleared: waveDetails.filter(w => w.survived).length, totalDamage, survivalHP, waveDetails };
 }
+
+// ═══════════════════════════════════════════════════════════════
+// BREAKTHROUGH PILL CATALOG (Master Plan §5.2)
+// ═══════════════════════════════════════════════════════════════
+
+const BREAKTHROUGH_PILL_CATALOG = {
+  1: { targetRank: 1, name: 'Pil Pembersih Sumsum Fana', tier: 1, tag: 'breakthrough_pill', successRate: 95 },
+  2: { targetRank: 2, name: 'Pil Pembentukan Fondasi Sembilan Awan', tier: 2, tag: 'breakthrough_pill', successRate: 92 },
+  3: { targetRank: 3, name: 'Pil Inti Emas Sembilan Revolusi', tier: 3, tag: 'breakthrough_pill', successRate: 90 },
+  4: { targetRank: 4, name: 'Pil Kelahiran Roh Bayi Primordial', tier: 4, tag: 'breakthrough_pill', successRate: 88 },
+  5: { targetRank: 5, name: 'Pil Transformasi Jiwa Ilahi', tier: 5, tag: 'breakthrough_pill', successRate: 86 },
+  6: { targetRank: 6, name: 'Pil Pembelah Kekosongan Void', tier: 6, tag: 'breakthrough_pill', successRate: 85 },
+  7: { targetRank: 7, name: 'Pil Penyeberang Petir Sembilan Kesengsaraan', tier: 7, tag: 'breakthrough_pill', successRate: 85 },
+  8: { targetRank: 8, name: 'Pil Kenaikan Abadi Nirwana', tier: 8, tag: 'breakthrough_pill', successRate: 85 }
+};
 
 /**
  * Eksekusi major breakthrough (Stage 9 → Rank+1 Stage 0).
@@ -1388,17 +1410,23 @@ function attemptMajorBreakthrough(player, options = {}) {
     }
   }
 
-  // Auto-detect slotted breakthrough pill
+  // Auto-detect slotted breakthrough pill & catalog validation (Master Plan §5.2)
+  const catalogEntry = BREAKTHROUGH_PILL_CATALOG[targetRank];
+  let hasPill = !!options.hasMatchingPill;
   if (law.breakthroughPillSlot) {
-    options.pillBonusRate = options.pillBonusRate || 20;
-    options.pillProtectLoss = options.pillProtectLoss !== undefined ? options.pillProtectLoss : true;
+    hasPill = true;
+    options.pillProtectLoss = true;
     law.breakthroughPillSlot = null; // Terkonsumsi saat ritual penerobosan
   }
 
-  // Roll RNG untuk major breakthrough dengan bonus pil jika ada
-  const baseRate = getMajorBreakthroughSuccessRate(law.rank);
-  const pillBonus = options.pillBonusRate || 0;
-  const successRate = Math.min(95, baseRate + pillBonus);
+  // Roll RNG untuk major breakthrough (Master Plan §5.2)
+  // Dengan pil cocok: success rate naik ke rentang 85–95%
+  // Tanpa pil: rate rendah 30–40%; gagal -> Qi hilang ~50%
+  let successRate = getMajorBreakthroughSuccessRate(law.rank, hasPill);
+  if (hasPill && options.pillBonusRate) {
+    successRate = Math.min(95, successRate + options.pillBonusRate);
+  }
+
   const roll = Math.random() * 100;
   const isSuccess = roll <= successRate;
 
@@ -1492,13 +1520,13 @@ function attemptMajorBreakthrough(player, options = {}) {
     // Major fail — penalti (dapat diredam pil)
     const baseCooldownMs = getMajorBreakthroughFailCooldown(law.rank);
     const cooldownMs = options.pillProtectLoss ? Math.floor(baseCooldownMs / 2) : baseCooldownMs;
-    const qiLost = options.pillProtectLoss ? 0 : Math.floor(law.maxQi * 0.25);
+    const qiLost = options.pillProtectLoss ? 0 : Math.floor(law.maxQi * 0.50); // Tanpa pil: deviasi parah kehilangan ~50% Qi
     law.qi = Math.max(0, law.qi - qiLost);
     law.majorBreakthroughCooldownUntil = new Date(Date.now() + cooldownMs);
 
     const failMsg = options.pillProtectLoss
       ? 'Penerobosan Besar Gagal! Namun khasiat Pil Penerobosan menyerap deviasi batin sehingga Xiuwei tidak berkurang!'
-      : 'Penerobosan Besar GAGAL. Qi mengalami deviasi. Pulihkan diri.';
+      : 'Penerobosan Besar GAGAL. Qi mengalami deviasi parah (-50% Xiuwei). Pulihkan diri.';
 
     return {
       success: true,
@@ -1990,7 +2018,7 @@ function getLawStatus(player) {
       materialName: 'Herba Penguat Intisari'
     },
     miniBreakthroughSuccessRate: getMiniBreakthroughSuccessRate(law.rank || 0, law.stage || 0),
-    majorBreakthroughSuccessRate: getMajorBreakthroughSuccessRate(law.rank || 0),
+    majorBreakthroughSuccessRate: getMajorBreakthroughSuccessRate(law.rank || 0, !!law.breakthroughPillSlot),
 
     miniCooldownUntil: law.miniBreakthroughCooldownUntil || null,
     miniBreakthroughCooldownUntil: law.miniBreakthroughCooldownUntil || null,
@@ -2045,6 +2073,7 @@ module.exports = {
   getLevelCap,
 
   // Breakthrough
+  BREAKTHROUGH_PILL_CATALOG,
   getMiniBreakthroughCost,
   getMiniBreakthroughSuccessRate,
   getMiniBreakthroughFailCooldown,
