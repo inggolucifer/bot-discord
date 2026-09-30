@@ -1047,6 +1047,10 @@ function getNetherSafeLimitSeconds(rank = 0) {
 /**
  * Menghitung jumlah Qi yang didapat dari channeling sejak lastChannelSyncAt.
  * Server-authoritative: berdasarkan delta waktu server, dipengaruhi oleh status Bar Esensi.
+ * 
+ * ATURAN MUTLAK (§2.1 & Balance Pass):
+ * - Qi KULTIVASI (cultivationLaw.qi) HANYA bertambah jika BAR KONSUMSI/ESENSI > 0 dan sedang dicerna.
+ * - Bar kosong = 0 Qi kultivasi (tanpa toleransi 15% drip).
  * @param {object} player - Mongoose Player document
  * @returns {{ qiGained: number, minutesElapsed: number, isCapReached: boolean, essenceConsumed: number, isEssenceDepleted: boolean }}
  */
@@ -1068,42 +1072,67 @@ function calculateChannelingProgress(player) {
   const dailyCap = getDailyChannelCap(streakDays);
   const minutesUsedToday = law.dailyData?.channelMinutesToday || 0;
   const minutesRemaining = Math.max(0, dailyCap - minutesUsedToday);
+
+  // Batasi waktu channeling efektif dengan sisa batas harian
+  const effectiveMinutes = Math.min(minutesElapsed, minutesRemaining);
+  const isCapReached = (minutesUsedToday + effectiveMinutes) >= dailyCap;
+
+  if (effectiveMinutes <= 0) {
+    return {
+      qiGained: 0,
+      minutesElapsed: 0,
+      isCapReached,
+      essenceConsumed: 0,
+      isEssenceDepleted: (Number(law.currentEssence) || 0) <= 0
+    };
+  }
+
   const lawDef = law.activeLawType ? LAW_DEFINITIONS[law.activeLawType] : null;
   const pathMod = lawDef?.pathMod || 1.0;
   const baseRate = getChannelQiRate(law.rank || 0, pathMod);
-  const maxEss = law.maxEssence || getMaxEssence(law.rank || 0);
-  const currentEss = law.currentEssence !== undefined ? law.currentEssence : 80;
+  const currentEss = Math.max(0, Number(law.currentEssence) || 0);
 
   // Laju pencernaan esensi
   const digestRate = getEssenceDigestRate(law.rank || 0);
-  const requiredEssence = effectiveMinutes * digestRate;
-  const essenceConsumed = Math.min(currentEss, requiredEssence);
   const isEssenceDepleted = currentEss <= 0;
 
-  // Efisiensi Qi: Jika ada esensi yang dicerna -> 100% Qi + bonus. Jika esensi habis -> 15% Qi (starving penalty)
-  let qiMultiplier = 1.0;
   if (isEssenceDepleted) {
-    qiMultiplier = 0.15; // Penalty kelaparan / mandek
-  } else if (essenceConsumed >= requiredEssence) {
-    qiMultiplier = 1.10; // Bonus nutrisi esensi optimal (+10%)
+    // ATURAN MUTLAK: Bar esensi kosong = sama sekali TIDAK ADA Qi kultivasi (tanpa 15% drip)
+    return {
+      qiGained: 0,
+      minutesElapsed: effectiveMinutes,
+      isCapReached,
+      essenceConsumed: 0,
+      isEssenceDepleted: true
+    };
   }
 
-  const qiGained = Math.floor(effectiveMinutes * baseRate * qiMultiplier);
-  const isCapReached = (minutesUsedToday + effectiveMinutes) >= dailyCap;
+  // Hanya menit yang tertutupi stok esensi yang menghasilkan Qi
+  const maxFundableMinutes = currentEss / digestRate;
+  const minutesFunded = Math.min(effectiveMinutes, maxFundableMinutes);
+  const essenceConsumed = Math.min(currentEss, Math.round(minutesFunded * digestRate * 10) / 10);
 
-  return { qiGained, minutesElapsed: effectiveMinutes, isCapReached, essenceConsumed, isEssenceDepleted };
+  const qiGained = Math.floor(minutesFunded * baseRate * LAW_PROGRESSION.ESSENCE_FULL_DIGEST_BONUS);
+
+  return {
+    qiGained,
+    minutesElapsed: effectiveMinutes,
+    isCapReached,
+    essenceConsumed,
+    isEssenceDepleted: (currentEss - essenceConsumed) <= 0
+  };
 }
 
 /**
  * Sinkronisasi Qi channeling ke database (dipanggil saat stop channel atau cek status).
  * @param {object} player - Mongoose Player document (mutable)
- * @returns {{ qiGained: number, totalQi: number, newQi: number, minutesSynced: number, isCapReached: boolean, isQiFull: boolean }}
+ * @returns {{ qiGained: number, totalQi: number, newQi: number, minutesSynced: number, isCapReached: boolean, isQiFull: boolean, essenceConsumed: number, isEssenceDepleted: boolean }}
  */
 function syncLawChanneling(player) {
-  const { qiGained, minutesElapsed, isCapReached, essenceConsumed } = calculateChannelingProgress(player);
+  const { qiGained, minutesElapsed, isCapReached, essenceConsumed, isEssenceDepleted } = calculateChannelingProgress(player);
 
   const law = player.cultivationLaw;
-  if (!law) return { qiGained: 0, totalQi: 0, newQi: 0, minutesSynced: 0, isCapReached: false, isQiFull: false };
+  if (!law) return { qiGained: 0, totalQi: 0, newQi: 0, minutesSynced: 0, isCapReached: false, isQiFull: false, essenceConsumed: 0, isEssenceDepleted: false };
 
   const streakDays = law.dailyData?.dailyStreakDays || player.dailyStreak || 0;
   const dailyCap = getDailyChannelCap(streakDays);
@@ -1182,7 +1211,9 @@ function syncLawChanneling(player) {
     newQi: law.qi,
     minutesSynced: minutesElapsed,
     isCapReached,
-    isQiFull
+    isQiFull,
+    essenceConsumed,
+    isEssenceDepleted: (law.currentEssence || 0) <= 0
   };
 }
 

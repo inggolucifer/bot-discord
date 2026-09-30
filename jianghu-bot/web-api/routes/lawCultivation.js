@@ -663,9 +663,14 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
-    const gainedMsg = result.qiGained > 0
-      ? `+${Math.floor(result.qiGained)} Qi terserap (${Math.floor(result.minutesSynced)} menit).`
-      : `Meditasi baru saja dimulai (kurang dari 1 menit). Belum ada Qi terserap.`;
+    let gainedMsg = '';
+    if (result.qiGained > 0) {
+      gainedMsg = `+${Math.floor(result.qiGained)} Qi terserap (${Math.floor(result.minutesSynced)} menit).`;
+    } else if (result.isEssenceDepleted) {
+      gainedMsg = `Dantianmu kosong dari esensi hukum (${Math.floor(result.minutesSynced)} menit meditasi). Serap bahan spiritual sesuai jalurnya agar meditasi menghasilkan Xiuwei.`;
+    } else {
+      gainedMsg = `Meditasi baru saja dimulai (kurang dari 1 menit). Belum ada Qi terserap.`;
+    }
 
     res.json({
       success: true,
@@ -677,7 +682,10 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
         maxQi: law.maxQi,
         minutesSynced: Math.floor(result.minutesSynced),
         isCapReached: result.isCapReached,
-        isQiFull: result.isQiFull
+        isQiFull: result.isQiFull,
+        essenceConsumed: result.essenceConsumed || 0,
+        currentEssence: law.currentEssence || 0,
+        isEssenceDepleted: (law.currentEssence || 0) <= 0
       }
     });
   } catch (error) {
