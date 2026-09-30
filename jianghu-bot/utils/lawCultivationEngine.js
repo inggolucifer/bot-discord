@@ -1163,7 +1163,19 @@ function getEssenceDigestRate(rank = 0) {
 function resolveItemTier(itemDoc) {
   if (!itemDoc) return 1;
   if (itemDoc.tier != null && !Number.isNaN(Number(itemDoc.tier))) return Number(itemDoc.tier);
-  const rankMap = { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5, mythic: 6 };
+  if (itemDoc.itemTier != null && !Number.isNaN(Number(itemDoc.itemTier))) return Number(itemDoc.itemTier);
+  const rankMap = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
+    epic: 4,
+    legendary: 5,
+    mythic: 6,
+    mythical: 6,
+    mortal: 1,
+    spiritual: 2,
+    immortal: 3
+  };
   const r = String(itemDoc.rank || itemDoc.rarity || '').toLowerCase();
   return rankMap[r] || 1;
 }
@@ -1192,7 +1204,7 @@ function getTierAffinity(playerTier, itemTier) {
     return { allowed: true, efficiency: 1 };
   }
   // t < p
-  const efficiency = Math.max(0.15, 1 - (p - t) * 0.40);
+  const efficiency = Math.round(Math.max(0.15, 1 - (p - t) * 0.40) * 100) / 100;
   return { allowed: true, efficiency };
 }
 
@@ -3973,7 +3985,21 @@ function applyLawSkillTreeEffects(player, mult, flat) {
  * @returns {boolean}
  */
 function isPlayerWieldingSword(player) {
-  if (!player || !player.inventory) return false;
+  if (!player) return false;
+
+  // 1. Cek langsung jika player.equipment.weapon adalah objek weapon terpopulasi
+  const eqWeapon = player.equipment instanceof Map
+    ? player.equipment.get('weapon')
+    : player.equipment?.weapon;
+  if (eqWeapon && typeof eqWeapon === 'object') {
+    const tags = Array.isArray(eqWeapon.tags) ? eqWeapon.tags : [];
+    if (tags.includes('sword') || tags.includes('oath_sword')) return true;
+    const name = (eqWeapon.name || '').toLowerCase();
+    const subtype = (eqWeapon.subtype || eqWeapon.weaponType || '').toLowerCase();
+    if (/(sword|pedang|jian)/i.test(name) || /(sword|pedang|jian)/i.test(subtype)) return true;
+  }
+
+  if (!player.inventory) return false;
   const equipmentSlotValues = player.equipment
     ? Object.values(player.equipment instanceof Map ? Object.fromEntries(player.equipment) : player.equipment)
         .filter(v => v !== null && v !== undefined)
