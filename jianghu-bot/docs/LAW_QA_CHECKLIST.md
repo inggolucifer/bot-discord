@@ -123,6 +123,21 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 ---
 
+## H. HARDENING LAW SYSTEM: GERBANG STAGE 10, BUGFIX TURBID, ESSENCE-FIRST QI & POLISH
+
+| ID | Skenario | Ekspektasi | Status |
+|---|---|---|---|
+| H-01 | **Bind di Mortal Stage 5** | Karakter Mortal Tahap 5 mencoba mematri Hukum Semesta via `POST /law/bind`.<br>• *Hasil*: Ditolak HTTP 400 *"Gerbang Hukum Semesta baru terbuka pada Fondasi Fana Tahap 10. Sempurnakan dulu tubuh fana-mu."*. | [ ] PASS |
+| H-02 | **Bind di Mortal Stage 10** | Karakter Mortal Tahap 10 mematri Hukum Semesta via `POST /law/bind`.<br>• *Hasil*: Sukses (HTTP 200), terdaftar `activeLawType`, dan langsung di-bootstrap dengan 40 Esensi (`BOOTSTRAP_ESSENCE: 40`), `essenceBootstrapDone = true`, `maxEssence = 100`, `qi = 0`. | [ ] PASS |
+| H-03 | **Channel Tanpa Law** | Karakter Mortal tanpa Law aktif mencoba `POST /law/channel/start`.<br>• *Hasil*: Ditolak HTTP 400 *"Kamu belum memilih dan mematri Hukum Semesta..."*. | [ ] PASS |
+| H-04 | **Mortal systemCultivation Tanpa Essence** | Karakter Mortal bermeditasi jalur fana biasa (`systemCultivation`).<br>• *Hasil*: Tetap berjalan normal tanpa memerlukan `currentEssence` Law (Fondasi Fana tidak memakai bar esensi Law). | [ ] PASS |
+| H-05 | **Turbid Item Tier 3** | Praktisi Turbid Core melahap inti monster Tier 3.<br>• *Hasil*: Penambahan esensi dihitung menggunakan `itemTier = 3` dan efisiensi tier affinity (bukan terselubung variable shadow menjadi Tier 1). `resolveItemTier()` konsisten di semua absorb routes. | [ ] PASS |
+| H-06 | **Absorb Spam & Essence-First** | Pemain melakukan spam konsumsi item esensi berkali-kali.<br>• *Hasil*: `currentEssence` bertambah hingga batas maksimal, namun Qi kultivasi (`cultivationLaw.qi`) **TIDAK MELONJAK** dari instant Qi (`INSTANT_QI_ON_ABSORB: 0`). Kemajuan Qi murni melalui channel + digest bar. | [ ] PASS |
+| H-07 | **Essence 0 Channel Mutlak 0 Qi** | Memulai atau menyinkronkan channeling saat `currentEssence = 0`.<br>• *Hasil*: `qiGained = 0`, dantian tidak menghasilkan Qi kultivasi sama sekali hingga esensi diisi ulang. | [ ] PASS |
+| H-08 | **Formula Hari Rank 0 Tetap ~7 Hari** | Verifikasi kurva progresi Rank 0 via `estimate_law_days.js`.<br>• *Hasil*: Progresi Rank 0 tetap terkalibrasi pada **±7 hari** (target ~7 hari), dan total Rank 0..8 tetap **~2.56 tahun** (935 hari channeling efektif). | [ ] PASS |
+
+---
+
 ## 2. CARA MENJALANKAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
