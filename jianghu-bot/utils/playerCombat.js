@@ -1,6 +1,6 @@
 const { getRealmIndex } = require('./cultivation');
 const { getClimatePenalties } = require('./climate');
-const { LAW_BALANCE, isPlayerWieldingSword, isOnOwnFormationHub } = require('./lawCultivationEngine');
+const { LAW_BALANCE, isPlayerWieldingSword, isOnOwnFormationHub, applyLawSkillTreeEffects } = require('./lawCultivationEngine');
 
 /**
  * Calculates the total combat stats of a player.
@@ -357,6 +357,8 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
       mult.atk *= (1 - pen);
       mult.def *= (1 - pen);
     }
+    // Apply passive effects from allocated skill tree nodes
+    applyLawSkillTreeEffects(player, mult, flat);
   }
 
   // 3. Final Calculation: (Base + Flat) * Multiplier
