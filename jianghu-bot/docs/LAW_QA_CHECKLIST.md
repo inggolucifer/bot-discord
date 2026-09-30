@@ -104,6 +104,21 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 ---
 
+## P. PROGRESSION 24–36 BULAN & ESSENCE GATE
+
+| ID | Skenario | Ekspektasi | Status |
+|---|---|---|---|
+| P-01 | **Channel saat currentEssence = 0** | Meditasi dengan bar esensi kosong.<br>• *Hasil*: `qiGained = 0`, `isEssenceDepleted = true`, pesan edukatif Dantiam kosong. | [ ] PASS |
+| P-02 | **Isi bar sesuai law tags lalu channel** | Serap item sesuai profil Law lalu lakukan channeling meditasi.<br>• *Hasil*: `currentEssence` bertambah saat absorb; saat channel, `cultivationLaw.qi` bertambah dan `currentEssence` berkurang sesuai digest rate. | [ ] PASS |
+| P-03 | **Item law salah tag** | Serap item bahan spiritual yang tidak cocok dengan tag Law aktif.<br>• *Hasil*: Ditolak HTTP 400 *"Item [...] tidak memiliki intisari yang cocok..."*. | [ ] PASS |
+| P-04 | **Over-tier item** | Serap item dengan Tier > Ranah pemain (misal Tier 3 pada Rank 0).<br>• *Hasil*: Ditolak HTTP 400 sesuai `getTierAffinity(playerTier, itemTier).allowed === false`. | [ ] PASS |
+| P-05 | **Daily demonic cap** | Melebihi batas konsumsi harian demonic (turbid, blood, venom, dll).<br>• *Hasil*: Ditolak HTTP 429, reset otomatis pada pukul 00:00 WIB. | [ ] PASS |
+| P-06 | **Estimasi script totalDays** | Jalankan `node jianghu-bot/scripts/estimate_law_days.js`.<br>• *Hasil*: Total hari Rank 0..8 berada dalam rentang target [700, 1100] hari (~24–36 bulan kalender nyata / 970.6 hari). | [ ] PASS |
+| P-07 | **Combat skill** | Mengeluarkan jurus sakti di arena pertarungan.<br>• *Hasil*: `session.player.qi` (Combat Qi) berkurang, sedangkan `cultivationLaw.qi` (Xiuwei) **TIDAK PERNAH BERKURANG**. | [ ] PASS |
+| P-08 | **Bootstrap hanya sekali di awal** | Login/Status karakter baru Rank 0 dengan Qi 0 dan Essence 0.<br>• *Hasil*: Diberikan bootstrap 30 Esensi (`BOOTSTRAP_ESSENCE`) dan flag `essenceBootstrapDone = true`. Pemain endgame yang mengosongkan bar tidak akan di-refill. | [ ] PASS |
+
+---
+
 ## 2. CARA MENJALANKAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
@@ -112,6 +127,7 @@ Jalankan perintah pengujian konsistensi dan sintaks di terminal:
 # 1. Verifikasi sintaks dan require module
 node --check jianghu-bot/web-api/routes/lawCultivation.js
 node --check jianghu-bot/utils/lawCultivationEngine.js
+node --check jianghu-bot/models/Player.js
 node --check jianghu-bot/utils/playerCombat.js
 node --check jianghu-bot/services/movementService.js
 
@@ -120,6 +136,9 @@ git grep -n "^<<<<<<<"
 git grep -n "^======="
 git grep -n "^>>>>>>>"
 
-# 3. Jalankan seeding item penting Law
+# 3. Jalankan estimasi progresi 24-36 bulan
+node jianghu-bot/scripts/estimate_law_days.js
+
+# 4. Jalankan seeding item penting Law
 node jianghu-bot/scripts/seedLawHardeningItems.js
 ```
