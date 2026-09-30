@@ -244,7 +244,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           flat.atk += Math.min(rank * 50 + 25, (law.demonicData.venomToxinLevel || 0) * 2);
         }
 
-        // Sanksi Keterlambatan Upeti Altar Kurban Darah Abyss
+        // Sanksi Keterlambatan Upeti Altar Kurban Darah Abyss (Master Plan §3.7)
+        // Level 1 (lewat 0-7 hari): multiplier 0.70 (-30% HP, ATK, DEF, SPD)
+        // Level 2 (lewat >7 hari): multiplier 0.40 (-60% HP, ATK, DEF, SPD)
         if (law.activeLawType === 'demonic_abyssal_pact' && law.demonicData?.abyssalTributeDueAt) {
           const now = Date.now();
           const dueTime = new Date(law.demonicData.abyssalTributeDueAt).getTime();
@@ -262,7 +264,8 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           }
         }
 
-        // Sanksi Terbakar Cahaya Yang di Luar Wilayah Kegelapan (Nether Debuff)
+        // Sanksi Terbakar Cahaya Yang di Luar Wilayah Kegelapan (Nether Debuff) (Master Plan §3.8)
+        // multiplier 0.50 (-50% HP, ATK, DEF, SPD)
         if (law.activeLawType === 'demonic_nether_darkness' && law.demonicData?.hasNetherDebuff) {
           mult.hp *= 0.5;
           mult.atk *= 0.5;
