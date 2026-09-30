@@ -168,6 +168,90 @@ const LAW_DEFINITIONS = {
 };
 
 /**
+ * LAW_BALANCE (Master Plan §5.4 & Balance Pass)
+ * Satu-satunya sumber kebenaran (Single Source of Truth) untuk konstanta perimbangan 15 Law.
+ */
+const LAW_BALANCE = {
+  // Universal progression (semua law)
+  STAT_MULT_PER_STAGE: 0.006,        // was 0.008 — turunkan sedikit anti explosion
+  SPD_MULT_PER_STAGE_FACTOR: 0.5,    // spd dapat setengah dari hp/atk/def
+  SKILL_TREE_MULT_PER_LEVEL: 0.003,  // was 0.004
+
+  // Channel: pathMod mempengaruhi laju Qi (perbaiki inkonsistensi dokumentasi)
+  // effectiveRate = baseRate * (1 / pathMod)  → pathMod tinggi = channel LEBIH LAMBAT (harga tribulasi+power)
+  CHANNEL_PATHMOD_MODE: 'penalty',   // 'penalty' | 'bonus'
+  // penalty: rate *= (1 / clamp(pathMod, 0.9, 1.6))
+  // bonus:   rate *= clamp(pathMod, 0.9, 1.6)
+
+  // Demonic stacking caps
+  CORRUPTION_ATK_PERCENT_PER_10: 0.01,
+  CORRUPTION_ATK_PERCENT_CAP: 0.06,      // max +6% dari corruption (bukan 10% full 100)
+  DEMONIC_RANK_ATK_MULT: 0.03,           // was 0.05 / 0.035 — samakan ke elemen ofensif
+  SOUL_BANNER_ATK_PER_CAPTURE: 2,        // was 3
+  SOUL_BANNER_ATK_CAP_BASE: 20,
+  SOUL_BANNER_ATK_CAP_PER_RANK: 35,      // cap = 20 + rank*35 (was rank*60+30 — lebih ketat)
+  VENOM_ATK_PER_LEVEL: 1.5,              // was 2
+  VENOM_ATK_CAP_BASE: 15,
+  VENOM_ATK_CAP_PER_RANK: 30,
+
+  // Daily anti-farm (per discordId, reset WIB sama seperti daily cap)
+  DAILY_TURBID_ABSORB_MAX: 20,
+  DAILY_BLOOD_HARVEST_MAX: 15,
+  DAILY_SOUL_BANNER_MAX: 15,
+  DAILY_VENOM_DRINK_MAX: 15,
+
+  // Gu
+  GU_COMBAT_MAX_ACTIVE_SLOTS: 3,         // dari max 5 equip, hanya 3 terkuat masuk combat
+  GU_ATK_SCALE_PER_TIER: 0.85,           // multiplier ke bonusAtk efektif di combat
+  GU_FUSION_SUCCESS_FLAT_QI: 100,        // was 150 jika masih 150
+
+  // Body tempering
+  BODY_RANK_HP_MULT: 0.035,              // was 0.06
+  BODY_RANK_DEF_MULT: 0.035,             // was 0.06
+  BODY_RANK_FLAT_HP: 55,                 // was 100
+  BODY_MOVE_HARVEST_CHANCE: 0.12,        // was ~0.20–0.25 jika ada — turunkan passive
+
+  // Elemen underpowered buffs
+  EARTH_RANK_DEF_MULT: 0.045,            // sedikit di atas 0.04
+  EARTH_RANK_FLAT_DEF: 8,                // per rank ke flat.def (rank * 8)
+  WATER_RANK_HP_MULT: 0.035,
+  WATER_RANK_DEF_MULT: 0.015,
+  WOOD_RANK_HP_MULT: 0.03,
+  WOOD_RANK_FLAT_HP: 70,                 // was 60
+  WOOD_RANK_VITALITY_FLAT: 3,            // per rank ke extendedStats jika pipeline support
+
+  // Thunder (tetap kuat tapi tidak dewa)
+  THUNDER_RANK_ATK_MULT: 0.022,          // was 0.025
+  THUNDER_RANK_SPD_MULT: 0.018,          // was 0.02
+
+  // Fire / wind fine-tune
+  FIRE_RANK_ATK_MULT: 0.028,             // was 0.03
+  WIND_RANK_SPD_MULT: 0.038,
+
+  // Natal
+  NATAL_ARTIFACT_USE_BOUND_STATS_FIRST: true,
+  NATAL_FALLBACK_ATK_PER_RANK: 12,       // was 25 — fallback tidak boleh lebih gila dari bound stats
+  NATAL_FALLBACK_DEF_PER_RANK: 8,        // was 15
+  NATAL_BEAST_HP_SHARE: 0.35,            // was 0.5 dari beastMaxHp
+  NATAL_BEAST_FALLBACK_ATK_PER_RANK: 10, // was 15
+  NATAL_BEAST_FALLBACK_DEF_PER_RANK: 7,
+
+  // Infamy
+  INFAMY_WANTED_THRESHOLD: 100,          // existing
+  INFAMY_PER_BLOOD_ACTION: 5,
+  INFAMY_PER_VENOM_ACTION: 3,
+  INFAMY_STAT_PENALTY_START: 50,         // mulai -2% atk/def per 25 infamy di atas 50, cap -12%
+  INFAMY_STAT_PENALTY_STEP: 25,
+  INFAMY_STAT_PENALTY_PER_STEP: 0.02,
+  INFAMY_STAT_PENALTY_CAP: 0.12,
+
+  // Abyss / nether (pertahankan severity)
+  ABYSS_CURSE_MULT_L1: 0.70,
+  ABYSS_CURSE_MULT_L2: 0.40,
+  NETHER_DEBUFF_MULT: 0.50
+};
+
+/**
  * Nama Rank Unik per Law (Rank 0 s/d 8)
  * Setiap Law memiliki penamaan rank berbeda sesuai jalur.
  * Format: LAW_RANK_NAMES[lawType][rankIndex]
@@ -2040,6 +2124,7 @@ function getLawStatus(player) {
 
 module.exports = {
   // Constants
+  LAW_BALANCE,
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,
   LAW_TYPE_ENUM: Object.keys(LAW_DEFINITIONS),
