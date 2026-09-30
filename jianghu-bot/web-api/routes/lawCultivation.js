@@ -83,7 +83,13 @@ router.get('/status', authenticateToken, async (req, res) => {
     checkAndResetDailyCap(player);
 
     const law = player.cultivationLaw;
-    if (law && !law.essenceBootstrapDone && (law.currentEssence|0) === 0 && (law.qi|0) === 0 && (law.rank|0) === 0) {
+    if (
+      law?.activeLawType &&
+      !law.essenceBootstrapDone &&
+      (law.rank || 0) === 0 &&
+      (law.qi || 0) === 0 &&
+      (law.currentEssence || 0) === 0
+    ) {
       law.currentEssence = LAW_PROGRESSION.BOOTSTRAP_ESSENCE;
       law.essenceBootstrapDone = true;
       player.markModified('cultivationLaw');
@@ -440,6 +446,9 @@ router.post('/bind', authenticateToken, async (req, res) => {
       player.cultivationLaw.stage = 0;
       player.cultivationLaw.qi = 0;
       player.cultivationLaw.maxQi = getQiRequired(0, 0);
+      player.cultivationLaw.currentEssence = LAW_PROGRESSION.BOOTSTRAP_ESSENCE;
+      player.cultivationLaw.essenceBootstrapDone = true;
+      player.cultivationLaw.maxEssence = getMaxEssence(0);
       player.cultivationLaw.lawLevelCapBonus = 0;
       player.cultivationLaw.lawSkillPoints = 0;
 
