@@ -253,7 +253,9 @@ const lawDailyDataSchema = new mongoose.Schema({
   turbidAbsorbsToday: { type: Number, default: 0 },
   bloodHarvestsToday: { type: Number, default: 0 },
   soulBannerToday: { type: Number, default: 0 },
-  venomDrinksToday: { type: Number, default: 0 }
+  venomDrinksToday: { type: Number, default: 0 },
+  essenceConvertsToday: { type: Number, default: 0 },
+  worldQiToday: { type: Number, default: 0 }
 }, { _id: false });
 
 const cultivationLawSchema = new mongoose.Schema({
@@ -298,6 +300,7 @@ const cultivationLawSchema = new mongoose.Schema({
   currentEssence: { type: Number, default: 80, min: 0 },
   maxEssence: { type: Number, default: 100 },
   lastEssenceDigestAt: { type: Date, default: Date.now },
+  essenceBootstrapDone: { type: Boolean, default: false },
 
   // Fasilitas Kultivasi Khusus Law
   facilities: {
