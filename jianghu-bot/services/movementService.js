@@ -163,7 +163,7 @@ class MovementService {
     }
 
     // Akumulasi Langkah Menjadi Qi / True Qi (Roc Wind Qi & Body Tempering Step Endurance)
-    const { awardActiveCultivationQi, harvestEnvironmentalEssence } = require('../utils/lawCultivationEngine');
+    const { awardActiveCultivationQi, harvestEnvironmentalEssence, isNetherTerritory, getNetherSafeLimitSeconds } = require('../utils/lawCultivationEngine');
     awardActiveCultivationQi(player, 'step_endurance', { steps: 1 });
 
     // Inhalasi Esensi Alam Spontan (Khusus Jalur Penempaan Raga Suci)
@@ -189,33 +189,28 @@ class MovementService {
       }
     }
 
-    // Pemantauan Wilayah Gelap Nether (Khusus Jalur Bayangan Sembilan Yin)
+    // Pemantauan Wilayah Gelap Nether (Khusus Jalur Bayangan Sembilan Yin) (Master Plan §3.8)
     if (player.cultivationLaw?.activeLawType === 'demonic_nether_darkness') {
       if (!player.cultivationLaw.demonicData) {
         player.cultivationLaw.demonicData = {};
       }
       const demonicData = player.cultivationLaw.demonicData;
-      const tileName = (passCheck.tile?.label || passCheck.tile?.buildingName || passCheck.tile?.terrainType || '').toLowerCase();
-      const currentZone = (zoneId || '').toLowerCase();
       const currentRegion = (player.currentLocation?.regionSlug || '').toLowerCase();
+      const inNether = isNetherTerritory(zoneId, currentRegion, passCheck.tile || {});
 
-      const isNetherTerritory =
-        tileName.includes('nether') || tileName.includes('makam') || tileName.includes('kubur') || tileName.includes('jurang') || tileName.includes('yin') ||
-        currentZone.includes('nether') || currentZone.includes('cemetery') || currentZone.includes('grave') ||
-        currentRegion.includes('nether') || currentRegion.includes('cemetery') || currentRegion.includes('abyss');
-
-      if (isNetherTerritory) {
+      if (inNether) {
         demonicData.hasNetherDebuff = false;
         demonicData.leftNetherTerritoryAt = null;
+        demonicData.netherExileTimerSeconds = getNetherSafeLimitSeconds(player.cultivationLaw.rank || 0);
       } else {
         if (!demonicData.leftNetherTerritoryAt) {
           demonicData.leftNetherTerritoryAt = new Date();
         }
-        const safeLimitSeconds = demonicData.netherExileTimerSeconds || (43200 * Math.max(1, (player.cultivationLaw.rank || 0) + 1));
-        const secondsOutside = (Date.now() - new Date(demonicData.leftNetherTerritoryAt).getTime()) / 1000;
-        if (secondsOutside > safeLimitSeconds) {
-          demonicData.hasNetherDebuff = true;
-        }
+        const safeLimitSeconds = getNetherSafeLimitSeconds(player.cultivationLaw.rank || 0);
+        const secondsOutside = Math.floor((Date.now() - new Date(demonicData.leftNetherTerritoryAt).getTime()) / 1000);
+        const remainingSeconds = Math.max(0, safeLimitSeconds - secondsOutside);
+        demonicData.netherExileTimerSeconds = remainingSeconds;
+        demonicData.hasNetherDebuff = (remainingSeconds <= 0);
       }
     }
 
