@@ -19,7 +19,12 @@ const Item = require('../../models/Item');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
 const WorldBossSeason = require('../../models/WorldBossSeason');
 const ArenaLadderEntry = require('../../models/ArenaLadderEntry');
-const { getMaxCombatQi } = require('../../utils/lawCultivationEngine');
+const {
+    getMaxCombatQi,
+    awardActiveCultivationQi,
+    getLawCombatModifiers,
+    applyLawDamageModifiers
+} = require('../../utils/lawCultivationEngine');
 
 
 
@@ -360,7 +365,9 @@ router.post('/start', authenticateToken, async (req, res) => {
                 attack: mAtk,
                 defense: mDef,
                 speed: mSpd,
-                skills: mSkills
+                skills: mSkills,
+                tags: Array.isArray(mData.tags) ? mData.tags : (mData.category ? [mData.category] : []),
+                category: mData.category || null
             }];
         } else if (targetType === 'ambush') {
             enemies = [{
@@ -380,9 +387,12 @@ router.post('/start', authenticateToken, async (req, res) => {
                 ]
             }];
         } else if (targetType === 'player') {
-            const targetPlayer = await Player.findOne({ discordId: targetId }).populate('manuals.manualId');
+            const targetPlayer = await Player.findOne({ discordId: targetId })
+                .populate('laws')
+                .populate('manuals.manualId');
             if (!targetPlayer) return res.status(404).json({ error: 'Target player tidak ditemukan' });
             
+            const tStats = getComputedStats(targetPlayer, targetPlayer.laws || [], targetPlayer.manuals || []);
             battleType = 'pvp';
             enemies = [{
                 id: targetPlayer.discordId,
@@ -393,13 +403,18 @@ router.post('/start', authenticateToken, async (req, res) => {
                 tierSize: 'small',
                 hp: targetPlayer.currentHp || targetPlayer.maxHp,
                 maxHp: targetPlayer.maxHp,
-                attack: targetPlayer.stats?.attack || 10,
-                defense: targetPlayer.stats?.defense || 10,
-                speed: targetPlayer.stats?.speed || 10,
+                attack: tStats.atk || targetPlayer.stats?.attack || 10,
+                defense: tStats.def || targetPlayer.stats?.defense || 10,
+                speed: tStats.spd || targetPlayer.stats?.speed || 10,
                 qi: getMaxCombatQi(targetPlayer),
                 maxQi: getMaxCombatQi(targetPlayer),
                 stance: targetPlayer.stats?.stance || 100,
-                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
+                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer),
+                reflectPct: tStats.reflectPct || targetPlayer.stats?.reflectPct || 0,
+                activeLawType: targetPlayer.cultivationLaw?.activeLawType || null,
+                lawRank: targetPlayer.cultivationLaw?.rank || 0,
+                isWantedByOrthodox: !!targetPlayer.isWantedByOrthodox,
+                tags: targetPlayer.tags || []
             }];
         } else if (targetType === 'world_boss') {
             const now = new Date();
@@ -528,7 +543,12 @@ router.post('/start', authenticateToken, async (req, res) => {
                 qi: getMaxCombatQi(targetPlayer),
                 maxQi: getMaxCombatQi(targetPlayer),
                 stance: 100,
-                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer)
+                skills: await InteractiveBattleService.formatPlayerSkillsWithLaw(targetPlayer),
+                reflectPct: tComputed.reflectPct || targetPlayer.stats?.reflectPct || 0,
+                activeLawType: targetPlayer.cultivationLaw?.activeLawType || null,
+                lawRank: targetPlayer.cultivationLaw?.rank || 0,
+                isWantedByOrthodox: !!targetPlayer.isWantedByOrthodox,
+                tags: targetPlayer.tags || []
             }];
 
             const session = await InteractiveBattleService.startBattle(
