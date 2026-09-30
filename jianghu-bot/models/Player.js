@@ -191,6 +191,8 @@ const LAW_TYPE_ENUM = [
   'body_tempering', 'gu_master', 'natal_artifact', 'natal_beast',
   'demonic_turbid_core', 'demonic_blood_soul', 'demonic_myriad_venom',
   'demonic_abyssal_pact', 'demonic_nether_darkness',
+  'righteous_heavenly_merit', 'righteous_pure_yang', 'righteous_sword_heart',
+  'righteous_formation_array', 'righteous_karmic_mirror',
   null
 ];
 
@@ -255,7 +257,12 @@ const lawDailyDataSchema = new mongoose.Schema({
   soulBannerToday: { type: Number, default: 0 },
   venomDrinksToday: { type: Number, default: 0 },
   essenceConvertsToday: { type: Number, default: 0 },
-  worldQiToday: { type: Number, default: 0 }
+  worldQiToday: { type: Number, default: 0 },
+  meritAbsorbsToday: { type: Number, default: 0 },
+  yangAbsorbsToday: { type: Number, default: 0 },
+  swordAbsorbsToday: { type: Number, default: 0 },
+  arrayAbsorbsToday: { type: Number, default: 0 },
+  karmaAbsorbsToday: { type: Number, default: 0 }
 }, { _id: false });
 
 const cultivationLawSchema = new mongoose.Schema({
@@ -306,7 +313,8 @@ const cultivationLawSchema = new mongoose.Schema({
   facilities: {
     abyssalAltarTier: { type: Number, default: 0 }, // 0-3 (Altar Kurban Darah Abyss - Demonic Altar Khusus di Lahan Peta!)
     bodyCauldronTier: { type: Number, default: 0 }, // 0-4 (Kuali Bak Mandi Raga - Personal Tool)
-    guCrucibleTier: { type: Number, default: 1 }    // 1-4 (Kendi Penyuling Gu Purba - Personal Tool)
+    guCrucibleTier: { type: Number, default: 1 },   // 1-4 (Kendi Penyuling Gu Purba - Personal Tool)
+    formationHubTier: { type: Number, default: 0 }  // 0-3 (Hub Formasi Bendera - Righteous Facility)
   },
 
   // Gu Master Specific (Aperture Slot)
