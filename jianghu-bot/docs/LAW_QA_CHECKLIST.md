@@ -163,9 +163,9 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 
 | ID | Skenario Uji | Prosedur & Ekspektasi | Status |
 |---|---|---|---|
-| PMAX-01 | **Karmic Mirror Reflect in Battle Damage Pipeline** | Attacker menyerang pemain pengguna Cermin Karma (rank R).<br>• *Hasil*: Attacker menerima reflect damage sebesar `Math.floor(incoming * reflectPct)` (capped max 25% incoming damage). Ditampilkan di log tempur. | [ ] PASS |
-| PMAX-02 | **Merit Bonus vs Wanted / Demonic Targets in Battle** | Pemain Hukum Jasa Langit (rank R) menyerang target buronan (`isWantedByOrthodox === true`) atau mob bertag demonic/undead/corrupt.<br>• *Hasil*: `getLawCombatModifiers()` memberikan bonus ATK `+4% * rank` (tercatat di log `⚡ [Jasa Langit: +X% vs Iblis/Buronan]`). Target normal mendapat multiplier 1.0x. | [ ] PASS |
-| PMAX-03 | **Pure Yang Bonus vs Corrupted / Dark Targets in Battle** | Pemain Kitab Yang Murni (rank R) menyerang target bertag corrupt/undead/demonic/ghost/yin.<br>• *Hasil*: `getLawCombatModifiers()` memberikan multiplier damage `+3% * rank` (`☀️ [Yang Murni: +X% Penumpasan Kegelapan]`). | [ ] PASS |
+| PMAX-01 / PMAX-reflect-battle | **Karmic Mirror Reflect in Battle Damage Pipeline** | Attacker menyerang pemain pengguna Cermin Karma / defender ber-reflectPct.<br>• *Hasil*: Attacker menerima reflect damage sebesar `Math.floor(incoming * reflectPct)` (capped max 25% incoming damage, anti-loop skipReflect, HP floor >= 0). Ditampilkan di log tempur `🪞 Cermin Karma memantulkan X DMG`. Teruji di BW-04 & BW-05. | [x] PASS |
+| PMAX-02 / PMAX-merit-vs-wanted-battle | **Merit Bonus vs Wanted / Demonic Targets in Battle** | Pemain Hukum Jasa Langit (rank R) menyerang target buronan (`isWantedByOrthodox === true`) atau mob bertag demonic/undead/corrupt.<br>• *Hasil*: `getLawCombatModifiers()` memberikan bonus ATK `+4% * rank` (tercatat di log `⚡ [Jasa Langit: +X% vs Iblis/Buronan]`). Target normal mendapat multiplier 1.0x. Teruji di BW-01 & BW-02. | [x] PASS |
+| PMAX-03 | **Pure Yang Bonus vs Corrupted / Dark Targets in Battle** | Pemain Kitab Yang Murni (rank R) menyerang target bertag corrupt/undead/demonic/ghost/yin.<br>• *Hasil*: `getLawCombatModifiers()` memberikan multiplier damage `+3% * rank` (`☀️ [Yang Murni: +X% Penumpasan Kegelapan]`). Teruji di BW-03. | [x] PASS |
 | PMAX-04 | **Sword Heart Armed vs Unarmed Penalty in Battle** | Evaluasi ATK Hati Pedang saat memasang pedang vs bertangan kosong / senjata non-pedang.<br>• *Hasil*: Saat memegang pedang, mendapat boost ATK dan Crit; saat tidak menggunakan pedang, menderita penalti `-15% ATK` (`SWORD_UNARMED_PENALTY: 0.85`). `isPlayerWieldingSword()` konsisten di absorb dan battle. | [ ] PASS |
 | PMAX-05 | **Formation Hub Spatial Defense & Home Buff** | Karakter Formasi Bendera berada di atas petak Hub Formasi miliknya sendiri (`isOnOwnFormationHub()`) vs di petak lain.<br>• *Hasil*: Saat di Home Hub, DEF dan HP dinaikkan `+8%` (`ARRAY_HOME_BONUS: 1.08`), `onFormationHome: true`. Saat roaming di luar hub, bonus home nonaktif. | [ ] PASS |
 | PMAX-06 | **20 Laws Skill Tree Nodes Effects in calculatePlayerStats** | Alokasikan SP ke node skill tree pada salah satu dari 20 Law. Panggil `calculatePlayerStats()`.<br>• *Hasil*: Efek pasif node (hpMult, atkMult, defMult, spdMult, flatAtk, reflectPct, res) langsung menaikkan stats total pemain secara terukur dan deterministik via `applyLawSkillTreeEffects()`. | [ ] PASS |
@@ -205,4 +205,7 @@ node jianghu-bot/scripts/testRighteousLawsComprehensive.js
 # 6. Jalankan seeding item penting Law
 node jianghu-bot/scripts/seedLawMasterEcosystem.js
 node jianghu-bot/scripts/seedRighteousLawEcosystem.js
+
+# 7. Jalankan test suite combat battle wire BW-01 s/d BW-06
+node jianghu-bot/scripts/testLawCombatBattleWire.js
 ```
