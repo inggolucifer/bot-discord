@@ -1,4 +1,4 @@
-# CHECKLIST QA PRODUCTION SISTEM 15 HUKUM SEMESTA (IMMORTAL-X)
+# CHECKLIST QA PRODUCTION SISTEM 20 HUKUM SEMESTA (IMMORTAL-X)
 > Dokumen Otoritatif Verifikasi Kualitas, Uji Smoke, dan Protokol Anti-Regresi
 
 ---
@@ -135,6 +135,27 @@ Dokumen ini berisi panduan pengujian manual maupun otomatis untuk memastikan sel
 | H-06 | **Absorb Spam & Essence-First** | Pemain melakukan spam konsumsi item esensi berkali-kali.<br>• *Hasil*: `currentEssence` bertambah hingga batas maksimal, namun Qi kultivasi (`cultivationLaw.qi`) **TIDAK MELONJAK** dari instant Qi (`INSTANT_QI_ON_ABSORB: 0`). Kemajuan Qi murni melalui channel + digest bar. | [ ] PASS |
 | H-07 | **Essence 0 Channel Mutlak 0 Qi** | Memulai atau menyinkronkan channeling saat `currentEssence = 0`.<br>• *Hasil*: `qiGained = 0`, dantian tidak menghasilkan Qi kultivasi sama sekali hingga esensi diisi ulang. | [ ] PASS |
 | H-08 | **Formula Hari Rank 0 Tetap ~7 Hari** | Verifikasi kurva progresi Rank 0 via `estimate_law_days.js`.<br>• *Hasil*: Progresi Rank 0 tetap terkalibrasi pada **±7 hari** (target ~7 hari), dan total Rank 0..8 tetap **~2.56 tahun** (935 hari channeling efektif). | [ ] PASS |
+
+---
+
+## R. 5 HUKUM SEMESTA RIGHTEOUS BARU (MERIT, PURE YANG, SWORD HEART, FORMATION, KARMIC MIRROR)
+
+| ID | Skenario Uji | Prosedur & Ekspektasi | Status |
+|---|---|---|---|
+| R-01 | **Gerbang Mortal Stage 10 Bind** | Coba bind 5 Law Righteous pada Mortal Stage 9 vs Stage 10.<br>• *Hasil*: Stage 9 ditolak HTTP 400 *"Gerbang Hukum Semesta baru terbuka pada Fondasi Fana Tahap 10..."*; Stage 10 berhasil mematri Law secara permanen. | [ ] PASS |
+| R-02 | **Validasi Slot 2 & Larangan Category Law** | Bind Law Righteous dengan item Slot 2 salah tag, atau item berkategori `law`.<br>• *Hasil*: Ditolak HTTP 400. Khusus `righteous_sword_heart`, menerima tag `oath_sword` ATAU senjata pedang berkategori `weapon` rank Common. | [ ] PASS |
+| R-03 | **Tier Affinity Konsisten (Player Tier = Rank + 1)** | Praktisi Rank 2 (Player Tier 3) menyerap item Tier 3, Tier 1, dan Tier 4.<br>• *Hasil*: Tier 3 sukses efisiensi 100%; Tier 1 sukses efisiensi berkurang (tidak efisien); Tier 4 ditolak over-tier (`allowed: false`). | [ ] PASS |
+| R-04 | **Essence Kosong Channel Mutlak 0 Qi** | Bar esensi kosong (`currentEssence = 0`) saat channeling Law Righteous.<br>• *Hasil*: `qiGained = 0`, tidak ada Qi instan atau kebocoran Qi. | [ ] PASS |
+| R-05 | **Absorb Zero Instant Qi** | Serap item bahan spiritual bertag.<br>• *Hasil*: Hanya mengisi `currentEssence` reservoir, `cultivationLaw.qi` bertambah 0 (`INSTANT_QI_ON_ABSORB: 0`). | [ ] PASS |
+| R-06 | **Pure Yang Clean Inventory Gate** | Praktisi Kitab Yang Murni memiliki item berhawa iblis (`blood_vial`, `turbid_core`, `venom_sac`, `abyssal`, `demonic`) di dalam tas saat absorb.<br>• *Hasil*: Ditolak HTTP 400 *"Kitab Yang Murni menolak intisari karena tasmu tercemar hawa kotor!..."*. | [ ] PASS |
+| R-07 | **Sword Heart Equipped Sword Gate** | Praktisi Hati Pedang mencoba menyerap esensi pedang tanpa meng-equip senjata berjenis pedang.<br>• *Hasil*: Ditolak HTTP 400 *"Hati Pedang membutuhkan pedang yang sedang digunakan! Pasang (equip) senjata berjenis pedang..."*. | [ ] PASS |
+| R-08 | **Formation Array Hub Tile Gate** | Praktisi Formasi Bendera mencoba menyerap esensi formasi di luar Hub Formasi miliknya.<br>• *Hasil*: Ditolak HTTP 400 *"Kamu harus berdiri tepat di atas Hub Formasi milikmu..."*. | [ ] PASS |
+| R-09 | **Karmic Mirror Infamy Gate (Max 30)** | Praktisi Cermin Karma dengan `infamy > 30` mencoba menyerap esensi karma.<br>• *Hasil*: Ditolak HTTP 400 *"Cermin Karma menolak menyerap intisari karena noda karmamu terlalu pekat (Infamy: ... > 30)..."*. | [ ] PASS |
+| R-10 | **Batas Harian Absorb Per Law (Daily Cap)** | Menyerap bahan esensi melebihi daily cap harian (Merit: 25, Yang: 20, Sword: 20, Array: 15, Karma: 15).<br>• *Hasil*: Ditolak HTTP 429 *"Batas harian penyerapan ... telah tercapai..."*, reset bersama pada pukul 00:00 WIB. | [ ] PASS |
+| R-11 | **Skill Tree Node Law Lain Ditolak** | Pemain Law A mencoba alokasi SP ke skillId milik Law B via `/law/skill/allocate`.<br>• *Hasil*: Ditolak HTTP 404 *"Skill tidak ditemukan untuk jalur Law ini."*. | [ ] PASS |
+| R-12 | **Combat Stats Righteous Seimbang** | Verifikasi formula tempur 5 Law Righteous di `playerCombat.js`.<br>• *Hasil*: Scaling moderat sesuai `LAW_BALANCE` (Merit HP/DEF, Yang ATK/SpiritualRes, Sword ATK/Crit/Unarmed penalty 0.85, Array DEF/HP, Karma DEF/SpiritualRes/Reflect/Infamy self penalty). | [ ] PASS |
+| R-13 | **Zero Regresi 15 Law Eksisting** | Uji alur channeling, terobosan, Gu master, body tempering, dan demonic laws eksisting.<br>• *Hasil*: Seluruh mekanisme 15 Law lama berjalan 100% normal dan tidak terpengaruh. | [ ] PASS |
+| R-14 | **Validasi Kode & Zero Conflict Markers** | Seluruh file dicek via `node --check` dan grep regex merge markers.<br>• *Hasil*: Zero error sintaks, zero marker `<<<<<<<`, zero regresi. | [ ] PASS |
 
 ---
 

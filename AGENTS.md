@@ -291,7 +291,7 @@ Mengikuti standar visual Wuxia premium Tale of Immortal dengan kebijakan **Zero-
 
 ### 3.11. Arsitektur Tri-Tab (Kultivasi, Pohon Dao, Kitab & Jurus) & Biaya SP Bertingkat
 1. **Tab Kultivasi & Ranah (`/cultivation` / `LawCultivationTab.tsx`)**:
-   - Khusus 100% olah batin & raga: Dantian, Qi, Pencerahan Harian (*Epiphany*), Batas Level Cap, Terobosan Ranah, Pil Terobosan, 90 Tahapan Ranah, dan Panel Unik 15 Law (Aperture Gu, 9 Raga Vajra, Inti Siluman/Kotoran, Racun, Pusaka Batin, Satwa Kembar).
+   - Khusus 100% olah batin & raga: Dantian, Qi, Pencerahan Harian (*Epiphany*), Batas Level Cap, Terobosan Ranah, Pil Terobosan, 90 Tahapan Ranah, dan Panel Unik 20 Law (Aperture Gu, 9 Raga Vajra, Inti Siluman/Kotoran, Racun, Pusaka Batin, Satwa Kembar, serta 5 Law Righteous: Jasa Langit, Yang Murni, Hati Pedang, Formasi Bendera, Cermin Karma).
    - Pohon konstelasi ditiadakan dari tab ini dan dialihkan ke rute Pohon Dao.
 2. **Tab Pohon Dao / Skill Tree (`/skill-tree` / `SkillTreeClient.tsx`)**:
    - Halaman mandiri dedicated dengan kanvas konstelasi rasi bintang 5 Tier beresolusi penuh dan garis SVG berpendar.
