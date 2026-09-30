@@ -2188,20 +2188,23 @@ function getLawStatus(player) {
   let currentQi = law.qi || 0;
   let currentMinutesUsed = minutesUsed;
   let isChannelingActive = !!law.isChanneling;
+  const rank = Math.max(0, Math.min(8, Number(law.rank) || 0));
+  const stage = Math.max(0, Math.min(9, Number(law.stage) || 0));
+  const targetStageQi = law.maxQi || getQiRequired(rank, stage);
 
   if (isChannelingActive && law.lastChannelSyncAt) {
     const progress = calculateChannelingProgress(player);
-    currentQi = Math.min(law.maxQi || 1260, currentQi + progress.qiGained);
+    currentQi = Math.min(targetStageQi, currentQi + progress.qiGained);
     currentMinutesUsed = Math.min(dailyCap, currentMinutesUsed + progress.minutesElapsed);
   }
 
   const isCapReached = (currentMinutesUsed >= dailyCap);
-  const isQiFull = (currentQi >= (law.maxQi || 1260));
+  const isQiFull = (currentQi >= targetStageQi);
 
-  const totalStages = (law.rank * 10) + law.stage;
-  const qiPercent = law.maxQi > 0 ? Math.min(100, Math.floor((currentQi / law.maxQi) * 100)) : 0;
+  const totalStages = (rank * 10) + stage;
+  const qiPercent = targetStageQi > 0 ? Math.min(100, Math.floor((currentQi / targetStageQi) * 100)) : 0;
   const pathMod = lawDef?.pathMod || 1.0;
-  const channelRate = getChannelQiRate(law.rank, pathMod);
+  const channelRate = getChannelQiRate(rank, pathMod);
 
   const canClaimEpiphany = !isClaimedToday(law.dailyData?.lastEpiphanyClaimAt);
 
@@ -2220,15 +2223,66 @@ function getLawStatus(player) {
   const canSurviveTribulation = !willFaceTribulation || (survivalHP >= maxWaveDmg);
 
   let majorBlockingReason = null;
-  if (law.stage === 9) {
+  if (stage === 9) {
     if (!isLevelMet) {
       majorBlockingReason = `Kapasitas fisik belum siap. Capai Level ${requiredLevel} (saat ini Lv. ${charLevel}).`;
-    } else if (currentQi < law.maxQi) {
-      majorBlockingReason = `Akumulasi Qi belum mencapai batas maksimal (${Math.floor(currentQi)}/${law.maxQi}).`;
+    } else if (currentQi < targetStageQi) {
+      majorBlockingReason = `Akumulasi Qi belum mencapai batas maksimal (${Math.floor(currentQi)}/${targetStageQi}).`;
     } else if (willFaceTribulation && !canSurviveTribulation) {
       majorBlockingReason = `Peringatan Kematian: Survival HP (${survivalHP}) tidak cukup menahan Petir Tribulasi (${maxWaveDmg} DMG). Tingkatkan DEF/Vitalitas.`;
     }
   }
+
+  // Progression Feel & ETA Calculations (Loop Kecanduan §C1 & §C5)
+  const remainingQiThisStage = Math.max(0, targetStageQi - currentQi);
+  const effectiveRate = Math.max(1, channelRate);
+  const dailyEffectiveMinutes = Math.max(1, dailyCap);
+  const dailyEffectiveQi = effectiveRate * dailyEffectiveMinutes;
+
+  // ETA untuk stage saat ini
+  const etaMinutesThisStage = Math.ceil(remainingQiThisStage / effectiveRate);
+  const etaDaysThisStage = Number((remainingQiThisStage / dailyEffectiveQi).toFixed(2));
+
+  // ETA untuk seluruh sisa stage di rank saat ini (termasuk stage saat ini)
+  let remainingQiThisRank = remainingQiThisStage;
+  for (let s = stage + 1; s <= 9; s++) {
+    remainingQiThisRank += getQiRequired(rank, s);
+  }
+  const etaDaysThisRank = Number((remainingQiThisRank / dailyEffectiveQi).toFixed(2));
+
+  const digestRate = getEssenceDigestRate(rank);
+  const currentEssVal = Math.floor(law.currentEssence !== undefined ? law.currentEssence : 40);
+  const essenceMinutesLeft = Math.floor(currentEssVal / Math.max(1, digestRate));
+
+  let nextDopamine = 'channel';
+  if (currentQi >= targetStageQi) {
+    nextDopamine = stage === 9 ? 'major_breakthrough_ready' : 'breakthrough_ready';
+  } else if (currentQi >= targetStageQi * 0.85) {
+    nextDopamine = 'breakthrough_imminent';
+  } else if (currentEssVal <= (digestRate * 10)) {
+    nextDopamine = 'need_absorb';
+  } else if (dailyCap - currentMinutesUsed > 0) {
+    nextDopamine = 'channel';
+  }
+
+  const progressionFeel = {
+    rankTargetDays: LAW_PROGRESSION.RANK_TARGET_DAYS[rank] || 280,
+    stageProgressPct: Number((targetStageQi > 0 ? (currentQi / targetStageQi) : 0).toFixed(4)),
+    stageProgressPercent: Math.min(100, Math.floor((currentQi / targetStageQi) * 100)),
+    etaMinutesThisStage,
+    etaDaysThisStage,
+    etaDaysThisRank,
+    essenceMinutesLeft,
+    dailyCapMinutes: dailyCap,
+    dailyMinutesUsed: Math.floor(currentMinutesUsed),
+    nextDopamine,
+    channelMinutesRemainingToday: Math.max(0, dailyCap - currentMinutesUsed),
+    hintText: currentQi >= targetStageQi
+      ? (stage === 9 ? '⚡ Qi Dantiamu meluap! Bersiaplah menghadapi Terobosan Ranah Agung (Major Breakthrough)!' : '✨ Botol leher terobosan telah tercapai! Lakukan Penerobosan Stage!')
+      : currentEssVal <= 0
+        ? '⚠️ Reservoir esensi kosong! Meditasi terhenti sampai kamu menyerap bahan spiritual.'
+        : `🧘 Meditasi sekitar ±${etaMinutesThisStage} menit lagi untuk menerobos ke Stage berikutnya.`
+  };
 
   return {
     isNormalCultivator: !!player.isNormalCultivator,
@@ -2243,13 +2297,13 @@ function getLawStatus(player) {
     energyLabel: lawDef?.energyLabel || (lawDef?.qiType === 'true_qi' ? 'True Qi (真气)' : 'Qi Spiritual (灵气)'),
     pathMod: pathMod,
 
-    rank: law.rank || 0,
-    stage: law.stage || 0,
-    rankDisplayName: rankDisplayName || `Tingkat ${law.rank || 0}`,
+    rank,
+    stage,
+    rankDisplayName: rankDisplayName || `Tingkat ${rank}`,
     totalStages,
 
     qi: Math.floor(currentQi),
-    maxQi: law.maxQi || 1260,
+    maxQi: targetStageQi,
     qiPercent,
     qiProgressPercent: qiPercent,
     channelRate,
@@ -2349,19 +2403,23 @@ function getLawStatus(player) {
     guBacklashUntil: law.guBacklashUntil || player.demonicData?.guBacklashUntil || null,
 
     // Universal Essence System
-    currentEssence: Math.floor(law.currentEssence !== undefined ? law.currentEssence : 80),
-    maxEssence: law.maxEssence || getMaxEssence(law.rank || 0),
-    essencePercent: Math.min(100, Math.floor(((law.currentEssence !== undefined ? law.currentEssence : 80) / (law.maxEssence || getMaxEssence(law.rank || 0))) * 100)),
+    currentEssence: currentEssVal,
+    maxEssence: law.maxEssence || getMaxEssence(rank),
+    essencePercent: Math.min(100, Math.floor((currentEssVal / (law.maxEssence || getMaxEssence(rank))) * 100)),
     essence: {
-      current: Math.floor(law.currentEssence !== undefined ? law.currentEssence : 80),
-      max: law.maxEssence || getMaxEssence(law.rank || 0),
+      current: currentEssVal,
+      max: law.maxEssence || getMaxEssence(rank),
       barName: (law.activeLawType && LAW_ESSENCE_PROFILE[law.activeLawType]?.barName) || 'Reservoir Esensi Hukum',
-      isDepleted: (law.currentEssence !== undefined ? law.currentEssence : 80) <= 0,
+      isDepleted: currentEssVal <= 0,
       emptyHint: (law.activeLawType && LAW_ESSENCE_PROFILE[law.activeLawType]?.emptyHint) || 'Serap bahan spiritual sesuai jalurnya agar meditasi menghasilkan Xiuwei.',
-      digestRatePerMinute: getEssenceDigestRate(law.rank || 0),
+      digestRatePerMinute: digestRate,
       channelRatePerMinute: channelRate,
-      minutesFundable: Math.floor((law.currentEssence !== undefined ? law.currentEssence : 80) / Math.max(1, getEssenceDigestRate(law.rank || 0)))
+      minutesFundable: essenceMinutesLeft,
+      etaDaysToNextStage: etaDaysThisStage
     },
+
+    // Soft Addiction Hooks & Progression Metrics (Master Plan §5.4 & C5)
+    progressionFeel,
 
     // Cultivation Facilities (Khusus Altar: Hanya Demonic Abyssal Altar di Lahan Peta)
     facilities: law.facilities || {
@@ -2370,10 +2428,10 @@ function getLawStatus(player) {
       guCrucibleTier: 1
     },
 
-    canMiniBreakthrough: (law.qi >= law.maxQi) && (law.stage < 9),
-    miniBreakthroughReady: (law.qi >= law.maxQi) && (law.stage < 9),
-    canMajorBreakthrough: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8) && isLevelMet,
-    majorBreakthroughReady: (law.qi >= law.maxQi) && (law.stage === 9) && (law.rank < 8) && isLevelMet,
+    canMiniBreakthrough: (currentQi >= targetStageQi) && (stage < 9),
+    miniBreakthroughReady: (currentQi >= targetStageQi) && (stage < 9),
+    canMajorBreakthrough: (currentQi >= targetStageQi) && (stage === 9) && (rank < 8) && isLevelMet,
+    majorBreakthroughReady: (currentQi >= targetStageQi) && (stage === 9) && (rank < 8) && isLevelMet,
     majorBreakthroughBlockingReason: majorBlockingReason,
     requiresTribulation: willFaceTribulation,
 
