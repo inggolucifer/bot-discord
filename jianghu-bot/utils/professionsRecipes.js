@@ -772,6 +772,37 @@ const RECIPES = {
             { name: "Air Bersih", quantity: 10 }
         ],
         output: { name: "Bunga Teratai Sembilan Warna", quantity: 1 }
+    },
+    // Law Cultivation Material Sinks (§D3, §D4, §D6)
+    "Batu Asah Niat Pedang": {
+        profession: "smithing",
+        toolType: "forge",
+        minToolTier: 1,
+        materials: [
+            { name: "Bijih Besi Tempa", quantity: 3 },
+            { name: "Batu Kasar Gunung", quantity: 2 }
+        ],
+        output: { name: "Batu Asah Intisari Pedang (Tier 1)", quantity: 1 }
+    },
+    "Jimat Penghakiman Nurani": {
+        profession: "talismans",
+        toolType: "talisman_brush",
+        minToolTier: 1,
+        materials: [
+            { name: "Kertas Jimat Kuning", quantity: 2 },
+            { name: "Tinta Spiritual", quantity: 1 }
+        ],
+        output: { name: "Jimat Vonis Karma (Tier 1)", quantity: 1 }
+    },
+    "Kristal Yang Murni (Pemurnian)": {
+        profession: "alchemy",
+        toolType: "alchemical_cauldron",
+        minToolTier: 1,
+        materials: [
+            { name: "Batu Kasar Gunung", quantity: 5 },
+            { name: "Herba Tulang Besi", quantity: 2 }
+        ],
+        output: { name: "Kristal Yang Murni (Tier 1)", quantity: 1 }
     }
 };
 
