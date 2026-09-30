@@ -339,6 +339,111 @@ const LAW_RANK_NAMES = {
 };
 
 /**
+ * ═══════════════════════════════════════════════════════════════
+ * PROFIL RESERVOIR ESENSI PER LAW (Satu Bar, Sumber Berbeda)
+ * ═══════════════════════════════════════════════════════════════
+ * Setiap Hukum Semesta memiliki penamaan Bar Esensi, tag material pengisi,
+ * dan petunjuk unik saat reservoir kosong.
+ */
+const LAW_ESSENCE_PROFILE = {
+  element_phoenix_fire: {
+    barName: 'Samadhi Flame Reservoir',
+    fillTags: ['fire_catalyst', 'fire_essence', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap intisari api / katalis api untuk mengisi bar.'
+  },
+  element_azure_water: {
+    barName: 'Azure Tide Reservoir',
+    fillTags: ['water_catalyst', 'water_essence', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap intisari air murni untuk mengisi bar.'
+  },
+  element_xuanwu_earth: {
+    barName: 'Leyline Earth Reservoir',
+    fillTags: ['earth_catalyst', 'earth_essence', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap saripati tanah kuno untuk mengisi bar.'
+  },
+  element_qingdi_wood: {
+    barName: 'Life Wood Reservoir',
+    fillTags: ['wood_catalyst', 'wood_essence', 'herb', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap getah pohon purba / herba kayu untuk mengisi bar.'
+  },
+  element_roc_wind: {
+    barName: 'Astral Gale Reservoir',
+    fillTags: ['wind_catalyst', 'wind_essence', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap bulu angin astral / hembusan langit untuk mengisi bar.'
+  },
+  element_godthunder_light: {
+    barName: 'Heavenly Thunder Reservoir',
+    fillTags: ['thunder_catalyst', 'thunder_essence', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap pecahan batu petir langit untuk mengisi bar.'
+  },
+
+  body_tempering: {
+    barName: 'True Body Essence Reservoir',
+    fillTags: ['body_essence', 'flesh', 'mineral', 'material', 'essence'],
+    fillCategories: ['material'],
+    usesBodyStorage: true,
+    emptyHint: 'Tempa raga / konversi esensi alam untuk mengisi reservoir raga.'
+  },
+
+  gu_master: {
+    barName: 'Gu Aperture Nutrition',
+    fillTags: ['gu_food', 'gu_larva', 'material', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Beri pakan Gu / nutrisi aperture.'
+  },
+
+  natal_artifact: {
+    barName: 'Soul Resonance Reservoir',
+    fillTags: ['ore', 'whetstone', 'material', 'common_artifact', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Infus mineral / asah pusaka jiwa.'
+  },
+  natal_beast: {
+    barName: 'Blood Oath Reservoir',
+    fillTags: ['beast_food', 'meat', 'material', 'beast_egg', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Beri makan satwa roh.'
+  },
+
+  demonic_turbid_core: {
+    barName: 'Turbid Qi Reservoir',
+    fillTags: ['beast_core', 'turbid_core', 'core', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap inti siluman kotor.'
+  },
+  demonic_blood_soul: {
+    barName: 'Blood Essence Reservoir',
+    fillTags: ['blood_vial', 'blood', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Panen darah & jiwa (batas harian tetap).'
+  },
+  demonic_myriad_venom: {
+    barName: 'Poison Saturation Reservoir',
+    fillTags: ['venom_sac', 'poison', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Minum racun bertier (HP floor 1, batas harian).'
+  },
+  demonic_abyssal_pact: {
+    barName: 'Abyssal Tribute Reservoir',
+    fillTags: ['abyssal', 'blood_vial', 'obsidian', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Persembahan di atas Altar Abyss milikmu.'
+  },
+  demonic_nether_darkness: {
+    barName: 'Darkness Reservoir',
+    fillTags: ['yin_stone', 'nether', 'dark', 'essence'],
+    fillCategories: ['material'],
+    emptyHint: 'Serap batu Yin / esensi kegelapan.'
+  },
+};
+
+/**
  * Rank kultivasi yang memicu Tribulasi Langit (gelombang petir).
  * Rank lain hanya menggunakan roll RNG biasa.
  */
@@ -2197,9 +2302,19 @@ function getLawStatus(player) {
     guBacklashUntil: law.guBacklashUntil || player.demonicData?.guBacklashUntil || null,
 
     // Universal Essence System
-    currentEssence: law.currentEssence !== undefined ? Math.floor(law.currentEssence) : 80,
+    currentEssence: Math.floor(law.currentEssence !== undefined ? law.currentEssence : 80),
     maxEssence: law.maxEssence || getMaxEssence(law.rank || 0),
     essencePercent: Math.min(100, Math.floor(((law.currentEssence !== undefined ? law.currentEssence : 80) / (law.maxEssence || getMaxEssence(law.rank || 0))) * 100)),
+    essence: {
+      current: Math.floor(law.currentEssence !== undefined ? law.currentEssence : 80),
+      max: law.maxEssence || getMaxEssence(law.rank || 0),
+      barName: (law.activeLawType && LAW_ESSENCE_PROFILE[law.activeLawType]?.barName) || 'Reservoir Esensi Hukum',
+      isDepleted: (law.currentEssence !== undefined ? law.currentEssence : 80) <= 0,
+      emptyHint: (law.activeLawType && LAW_ESSENCE_PROFILE[law.activeLawType]?.emptyHint) || 'Serap bahan spiritual sesuai jalurnya agar meditasi menghasilkan Xiuwei.',
+      digestRatePerMinute: getEssenceDigestRate(law.rank || 0),
+      channelRatePerMinute: channelRate,
+      minutesFundable: Math.floor((law.currentEssence !== undefined ? law.currentEssence : 80) / Math.max(1, getEssenceDigestRate(law.rank || 0)))
+    },
 
     // Cultivation Facilities (Khusus Altar: Hanya Demonic Abyssal Altar di Lahan Peta)
     facilities: law.facilities || {
@@ -2252,6 +2367,7 @@ module.exports = {
   LAW_PROGRESSION,
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,
+  LAW_ESSENCE_PROFILE,
   LAW_TYPE_ENUM: Object.keys(LAW_DEFINITIONS),
   TRIBULATION_RANKS,
   BASE_CHANNEL_CAP_MINUTES,
