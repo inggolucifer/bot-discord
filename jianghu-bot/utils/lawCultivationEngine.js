@@ -748,6 +748,34 @@ function getEssenceDigestRate(rank = 0) {
   return Math.max(1, Math.floor(2 * Math.pow(1.5, rank || 0)));
 }
 
+/**
+ * Efisiensi konsumsi item berdasarkan tier (Master Plan §5.1)
+ * playerTier = rank Law ATAU tier realm yang relevan (gunakan (law.rank || 0) + 1 sebagai default untuk Law consumption)
+ * itemTier = item.tier (number, default 1)
+ * @param {number|object} playerTier
+ * @param {number} itemTier
+ * @returns {{ allowed: boolean, efficiency: number, reason?: string }}
+ */
+function getTierAffinity(playerTier, itemTier) {
+  let p = typeof playerTier === 'object' && playerTier !== null
+    ? ((playerTier.rank !== undefined ? playerTier.rank : playerTier.cultivationLaw?.rank) ?? 0) + 1
+    : Number(playerTier);
+  if (isNaN(p)) p = 1;
+  // Jika rank 0 dioper langsung (p === 0), rank 0 fana setara Tier 1
+  if (p === 0) p = 1;
+
+  const t = Number(itemTier) || 1;
+  if (t > p) {
+    return { allowed: false, efficiency: 0, reason: 'Item di atas ranahmu. Dantian menolak menyerap.' };
+  }
+  if (t === p) {
+    return { allowed: true, efficiency: 1 };
+  }
+  // t < p
+  const efficiency = Math.max(0.15, 1 - (p - t) * 0.40);
+  return { allowed: true, efficiency };
+}
+
 // ═══════════════════════════════════════════════════════════════
 // COMBAT QI VS CULTIVATION QI (Master Plan §1.2, §1.3 & §5.4)
 // ═══════════════════════════════════════════════════════════════
@@ -1814,6 +1842,7 @@ module.exports = {
   getChannelQiRate,
   getMaxEssence,
   getEssenceDigestRate,
+  getTierAffinity,
   getMaxCombatQi,
   getCombatQiRegenPerRound,
 

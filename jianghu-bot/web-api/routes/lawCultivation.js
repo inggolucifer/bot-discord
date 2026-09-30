@@ -46,7 +46,8 @@ const {
   getLawStatus,
   startBodyTemperingPart,
   claimBodyTemperingPart,
-  getMaxEssenceStorage
+  getMaxEssenceStorage,
+  getTierAffinity
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -603,6 +604,14 @@ router.post('/breakthrough/set-pill', authenticateToken, async (req, res) => {
     const isPill = cat === 'pill' || cat === 'alchemy' || tags.includes('breakthrough_pill') || (pillDoc.name || '').toLowerCase().includes('pil');
     if (!isPill) {
       return res.status(400).json({ error: 'Item yang dipilih bukan jenis pil penerobosan.' });
+    }
+
+    const targetRank = (law.rank || 0) + 1;
+    const pillTier = pillDoc.tier || (pillDoc.rank === 'uncommon' ? 2 : pillDoc.rank === 'rare' ? 3 : (pillDoc.rank === 'epic' ? 4 : 1));
+    if (pillTier > targetRank) {
+      return res.status(400).json({
+        error: `Pil [${pillDoc.name}] bertier ${pillTier}, melebihi batas penerobosan Rank ${targetRank}! Dantian menolak menyerap pil melampaui ranah tujuan.`
+      });
     }
 
     law.breakthroughPillSlot = pillDoc._id;
@@ -1172,12 +1181,15 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     const inv = player.inventory[invIndex];
     const item = inv.itemId;
     const itemTier = item.tier || 1;
-    const playerRank = law.rank || 0;
+    const playerTier = (law.rank || 0) + 1;
 
-    // Hitung perolehan esensi dengan Tier Affinity Decay
-    const decay = Math.max(0.2, 1 - Math.max(0, playerRank - itemTier) * 0.35);
+    const affinity = getTierAffinity(playerTier, itemTier);
+    if (!affinity.allowed) {
+      return res.status(400).json({ error: affinity.reason || 'Item di atas ranahmu. Dantian menolak menyerap.' });
+    }
+
     const baseEssence = 30 * Math.pow(2.2, Math.max(0, itemTier - 1));
-    const essenceGain = Math.max(15, Math.floor(baseEssence * decay));
+    const essenceGain = Math.max(15, Math.floor(baseEssence * affinity.efficiency));
 
     inv.quantity -= 1;
     if (inv.quantity <= 0) {
@@ -1463,16 +1475,15 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     const itemTier = itemDoc.tier || itemDoc.rank || 1;
     const playerTier = (law.rank || 0) + 1;
 
-    if (itemTier > playerTier) {
+    const affinity = getTierAffinity(playerTier, itemTier);
+    if (!affinity.allowed) {
       return res.status(400).json({
-        error: `Intisari pakan ini terlalu pekat (Tier ${itemTier}). Rongga cacing Gu milikmu belum sanggup mencerna nutrisi melampaui ranahmu (Tier ${playerTier}).`
+        error: `${affinity.reason} Rongga cacing Gu milikmu belum sanggup mencerna nutrisi Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
       });
     }
 
-    const tierDiff = Math.max(0, playerTier - itemTier);
-    const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
-    const satietyGain = Math.round(60 * eff);
-    const qiGain = Math.round(50 * itemTier * eff);
+    const satietyGain = Math.round(60 * affinity.efficiency);
+    const qiGain = Math.round(50 * itemTier * affinity.efficiency);
 
     inv.quantity -= 1;
     if (inv.quantity <= 0) {
@@ -1786,14 +1797,13 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
       const itemTier = itemSlot.itemId.tier || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      // Tier Rule
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Pusaka jiwa belum mampu menyerap ${itemUsedName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
+          error: `${affinity.reason} Pusaka jiwa belum mampu menyerap ${itemUsedName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
-      essenceGain = Math.round(35 * itemTier * eff);
+      essenceGain = Math.round(35 * itemTier * affinity.efficiency);
 
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(oreIndex, 1);
@@ -1867,13 +1877,13 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
       const itemTier = itemSlot.itemId.tier || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Satwa roh belum mampu mencerna pakan ${foodName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
+          error: `${affinity.reason} Satwa roh belum mampu mencerna pakan ${foodName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
-      essenceGain = Math.round(40 * itemTier * eff);
+      essenceGain = Math.round(40 * itemTier * affinity.efficiency);
 
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(meatIndex, 1);
@@ -1985,13 +1995,13 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
       const itemTier = itemSlot.itemId.tier || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Dantian iblis menolak inti siluman Tier ${itemTier} yang melampaui ranahmu (setara Tier ${playerTier})!`
+          error: `${affinity.reason} Dantian iblis menolak inti siluman Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
         });
       }
-      const eff = itemTier === playerTier ? 1.0 : Math.max(0.2, 1 - (playerTier - itemTier) * 0.35);
-      qiBonus = Math.round(80 * itemTier * eff);
+      qiBonus = Math.round(80 * itemTier * affinity.efficiency);
 
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(coreIndex, 1);
@@ -2043,15 +2053,14 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Darah ini terlalu pekat/tinggi (Tier ${itemTier}). Wadah dantianmu belum mampu menampung intisari darah melebihi ranahmu (Tier ${playerTier}).`
+          error: `${affinity.reason} Wadah dantianmu belum mampu menampung intisari darah Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
         });
       }
 
-      const tierDiff = Math.max(0, playerTier - itemTier);
-      const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
-      qiBonus = Math.round(90 * itemTier * eff);
+      qiBonus = Math.round(90 * itemTier * affinity.efficiency);
       sourceName = itemDoc.name;
 
       invEntry.quantity -= 1;
@@ -2107,15 +2116,14 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Arwah ini terlalu kuat dan liar (Tier ${itemTier}). Panji Sembilan Ruh milikmu belum mampu membelenggu jiwa melampaui ranahmu (Tier ${playerTier}).`
+          error: `${affinity.reason} Panji Sembilan Ruh milikmu belum mampu membelenggu jiwa Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
         });
       }
 
-      const tierDiff = Math.max(0, playerTier - itemTier);
-      const eff = Math.max(0.15, 1 - (tierDiff * 0.40));
-      qiBonus = Math.round(95 * itemTier * eff);
+      qiBonus = Math.round(95 * itemTier * affinity.efficiency);
       soulSource = itemDoc.name;
 
       invEntry.quantity -= 1;
@@ -2169,9 +2177,10 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Tingkat keganasan racun ini terlalu tinggi (Tier ${itemTier}). Dantianmu akan langsung hancur jika meminum racun melampaui ranahmu (Tier ${playerTier}).`
+          error: `${affinity.reason} Tingkat keganasan racun ini terlalu tinggi (Tier ${itemTier}, Ranahmu setara Tier ${playerTier}).`
         });
       }
 
@@ -2196,10 +2205,12 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
 
     if (!law.demonicData) law.demonicData = {};
     law.demonicData.venomToxinLevel = (law.demonicData.venomToxinLevel || 0) + 1;
+    law.demonicData.venomTolerancePct = Math.min(80, (law.demonicData.venomToxinLevel || 0) * 5);
     law.demonicData.infamy = (law.demonicData.infamy || 0) + 3;
     player.infamy = law.demonicData.infamy;
     player.markModified('infamy');
-    law.qi = Math.min(law.maxQi, (law.qi || 0) + 75);
+    const qiGain = Math.round(75 * (affinity ? affinity.efficiency : 1));
+    law.qi = Math.min(law.maxQi, (law.qi || 0) + qiGain);
 
     player.markModified('cultivationLaw');
     await player.save();
@@ -2277,9 +2288,10 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      if (itemTier > playerTier) {
+      const affinity = getTierAffinity(playerTier, itemTier);
+      if (!affinity.allowed) {
         return res.status(400).json({
-          error: `Darah persembahan ini terlalu suci/tinggi (Tier ${itemTier}). Altar Abyss milikmu belum mampu menampung intisari melebihi ranahmu (Tier ${playerTier}).`
+          error: `${affinity.reason} Altar Abyss milikmu belum mampu menampung intisari Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
         });
       }
 
@@ -2436,19 +2448,14 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
     const itemTier = item.tier || (item.rank === 'uncommon' ? 2 : item.rank === 'rare' ? 3 : item.rank === 'epic' ? 4 : item.rank === 'legendary' ? 5 : 1);
     const playerTier = (law.rank || 0) + 1;
 
-    // Jika itemTier > playerTier -> Terkunci / Ditolak Dantian
-    if (itemTier > playerTier) {
+    const affinity = getTierAffinity(playerTier, itemTier);
+    if (!affinity.allowed) {
       return res.status(400).json({
-        error: `Dantian menolak intisari '${item.name}'! Tingkat energi item (Tier ${itemTier}) melampaui kapasitas ranahmu (setara Tier ${playerTier}). Item tier tinggi baru dapat diserap setelah kamu menerobos ke ranah berikutnya!`
+        error: `Dantian menolak intisari '${item.name}'! Tingkat energi item (Tier ${itemTier}) melampaui kapasitas ranahmu (setara Tier ${playerTier}). ${affinity.reason || 'Item tier tinggi baru dapat diserap setelah kamu menerobos ke ranah berikutnya!'}`
       });
     }
 
-    // Hitung Efisiensi: 100% jika sama, terpotong jika di bawah
-    let efficiency = 1.0;
-    if (itemTier < playerTier) {
-      efficiency = Math.max(0.15, 1 - (playerTier - itemTier) * 0.40);
-    }
-
+    const efficiency = affinity.efficiency;
     const baseEssenceGain = 25 * itemTier;
     const finalEssenceGain = Math.round(baseEssenceGain * efficiency);
 
