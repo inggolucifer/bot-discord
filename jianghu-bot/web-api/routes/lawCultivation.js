@@ -2339,6 +2339,12 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     }
     if (!law.demonicData) law.demonicData = {};
 
+    // E2: Validasi jenis target manusia / bandit jika context dikirimkan (Master Plan §3.5)
+    const targetType = (req.body?.targetType || req.body?.targetCategory || '').toLowerCase();
+    if (targetType && !['human', 'bandit', 'npc', 'cultivator'].includes(targetType)) {
+      return res.status(400).json({ error: 'Panen darah iblis hanya dapat dilakukan dari korban manusia, bandit, atau kultivator tewas!' });
+    }
+
     let sourceName = 'esensi darah segar';
     let qiBonus = 65;
     const { itemId } = req.body || {};
@@ -2376,7 +2382,10 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     law.demonicData.bloodEssenceVials = (law.demonicData.bloodEssenceVials || 0) + 1;
     law.demonicData.infamy = (law.demonicData.infamy || 0) + 5;
     player.infamy = law.demonicData.infamy;
+    // Ambang batas buronan Aliansi Ortodoks: infamy >= 100
+    player.isWantedByOrthodox = (player.infamy >= 100);
     player.markModified('infamy');
+    player.markModified('isWantedByOrthodox');
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiBonus);
 
     player.markModified('cultivationLaw');
@@ -2385,7 +2394,7 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       message: `🩸 Berhasil memanen ${sourceName} (+1 Botol Darah, +${qiBonus} Qi, +5 Status Buronan)!`,
-      data: { demonicData: law.demonicData, qi: law.qi }
+      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2401,6 +2410,12 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Hanya praktisi Penghisap Darah & Jiwa yang dapat mengikat Panji Ruh.' });
     }
     if (!law.demonicData) law.demonicData = {};
+
+    // E2: Validasi jenis target manusia / bandit jika context dikirimkan (Master Plan §3.5)
+    const targetType = (req.body?.targetType || req.body?.targetCategory || '').toLowerCase();
+    if (targetType && !['human', 'bandit', 'npc', 'cultivator'].includes(targetType)) {
+      return res.status(400).json({ error: 'Panji Ruh iblis hanya dapat mengikat arwah manusia, bandit, atau kultivator!' });
+    }
 
     let soulSource = 'arwah penasaran liar';
     let qiBonus = 70;
@@ -2439,7 +2454,9 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     law.demonicData.soulBannerCaptures = (law.demonicData.soulBannerCaptures || 0) + 1;
     law.demonicData.infamy = (law.demonicData.infamy || 0) + 5;
     player.infamy = law.demonicData.infamy;
+    player.isWantedByOrthodox = (player.infamy >= 100);
     player.markModified('infamy');
+    player.markModified('isWantedByOrthodox');
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiBonus);
 
     player.markModified('cultivationLaw');
@@ -2447,8 +2464,8 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+1 Jiwa Tersegel, +${qiBonus} Qi)!`,
-      data: { demonicData: law.demonicData, qi: law.qi }
+      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+1 Jiwa Tersegel, +${qiBonus} Qi, +5 Status Buronan)!`,
+      data: { demonicData: law.demonicData, qi: law.qi, isWantedByOrthodox: player.isWantedByOrthodox }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2465,6 +2482,7 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
     }
 
     let poisonName = 'Racun Mematikan';
+    let affinity = null;
     const { itemId } = req.body || {};
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
@@ -2480,7 +2498,7 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
       const itemTier = itemDoc.tier || itemDoc.rank || 1;
       const playerTier = (law.rank || 0) + 1;
 
-      const affinity = getTierAffinity(playerTier, itemTier);
+      affinity = getTierAffinity(playerTier, itemTier);
       if (!affinity.allowed) {
         return res.status(400).json({
           error: `${affinity.reason} Tingkat keganasan racun ini terlalu tinggi (Tier ${itemTier}, Ranahmu setara Tier ${playerTier}).`
@@ -2511,7 +2529,9 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
     law.demonicData.venomTolerancePct = Math.min(80, (law.demonicData.venomToxinLevel || 0) * 5);
     law.demonicData.infamy = (law.demonicData.infamy || 0) + 3;
     player.infamy = law.demonicData.infamy;
+    player.isWantedByOrthodox = (player.infamy >= 100);
     player.markModified('infamy');
+    player.markModified('isWantedByOrthodox');
     const qiGain = Math.round(75 * (affinity ? affinity.efficiency : 1));
     law.qi = Math.min(law.maxQi, (law.qi || 0) + qiGain);
 
@@ -2520,7 +2540,7 @@ router.post('/demonic/venom-ingest', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+1 Toleransi Racun, +75 Qi)!`,
+      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+1 Toleransi Racun, +${qiGain} Qi)!`,
       data: { demonicData: law.demonicData, qi: law.qi, currentHp: player.currentHp }
     });
   } catch (error) {

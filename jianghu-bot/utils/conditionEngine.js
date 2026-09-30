@@ -341,8 +341,13 @@ function processCombatTurnConditions(entity, actionContext = {}) {
         message: `🛡️ ${entity.name} menjaga ketenangan dantian (Standby). Racun terhambat dan tidak mengalir melukai tubuh!`
       });
     } else {
-      const dmg = Math.max(2, Math.floor(entity.maxHp * (conds.poison * COMBAT_COND.POISON_DAMAGE_FACTOR)));
+      let dmg = Math.max(2, Math.floor(entity.maxHp * (conds.poison * COMBAT_COND.POISON_DAMAGE_FACTOR)));
       const isPoisonLawCultivator = entity.cultivationLaw?.activeLawType === 'demonic_myriad_venom';
+      const tolerancePct = entity.cultivationLaw?.demonicData?.venomTolerancePct || (isPoisonLawCultivator ? 20 : 0);
+      if (tolerancePct > 0) {
+        // Reduksi damage racun berdasarkan toleransi bisanya (Master Plan §3.6)
+        dmg = Math.max(1, Math.floor(dmg * (1 - (tolerancePct / 100))));
+      }
 
       if (isPoisonLawCultivator) {
         // Praktisi Myriad Venom: Efek racun mengikis hingga sisa 1 HP (tidak mati oleh racun sendiri) sampai racun mereda.
