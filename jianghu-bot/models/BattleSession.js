@@ -26,6 +26,14 @@ const battleEntitySchema = new mongoose.Schema({
   atb: { type: Number, default: 0 },
   maxAtb: { type: Number, default: 100 },
   
+  // Law & Combat Alignment Attributes
+  reflectPct: { type: Number, default: 0 },
+  activeLawType: { type: String, default: null },
+  lawRank: { type: Number, default: 0 },
+  isWantedByOrthodox: { type: Boolean, default: false },
+  tags: [{ type: String }],
+  category: { type: String, default: null },
+
   // Stance Break & Qi Overload
   stance: { type: Number, default: 100 }, // 0 = broken
   maxStance: { type: Number, default: 100 },
