@@ -2648,6 +2648,342 @@ function getLawStatus(player) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// SKILL TREES UNTUK 5 HUKUM SEMESTA RIGHTEOUS
+// ═══════════════════════════════════════════════════════════════
+const LAW_SKILL_TREES = {
+  righteous_heavenly_merit: {
+    lawType: 'righteous_heavenly_merit',
+    name: 'Pohon Kebaikan Surgawi',
+    nodes: [
+      {
+        id: 'merit_resolve',
+        name: 'Tekad Jasa',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: [],
+        requiredRank: 0,
+        effects: { hpMult: 0.01 },
+        icon: '🛡️',
+        description: 'Mempertebal tekad kebajikan, meningkatkan batas HP sebesar +1% per level.'
+      },
+      {
+        id: 'merit_aegis',
+        name: 'Perisai Kebajikan',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: ['merit_resolve'],
+        requiredRank: 0,
+        effects: { defMult: 0.01 },
+        icon: '✨',
+        description: 'Pancaran aura kebajikan menahan benturan, meningkatkan DEF sebesar +1% per level.'
+      },
+      {
+        id: 'merit_smite',
+        name: 'Hukuman Langit',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['merit_aegis'],
+        requiredRank: 1,
+        effects: { atkWantedMult: 0.03, flatAtk: 5 },
+        icon: '⚡',
+        description: 'Menyalurkan murka langit terhadap penjahat buronan ortodoks, memberikan bonus ATK.'
+      },
+      {
+        id: 'merit_charity_flow',
+        name: 'Aliran Amal',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['merit_resolve'],
+        requiredRank: 1,
+        effects: { essenceGainPct: 0.02 },
+        icon: '🕊️',
+        description: 'Mempercepat penyerapan segel kebajikan ke dalam dantian (+2% esensi per level).'
+      },
+      {
+        id: 'merit_heaven_eye',
+        name: 'Mata Langit Suci',
+        tier: 3,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['merit_smite'],
+        requiredRank: 2,
+        effects: { spiritualRes: 4 },
+        icon: '👁️',
+        description: 'Mata batin menembus ilusi kefasikan, meningkatkan Spiritual Resistance sebesar +4 per level.'
+      }
+    ]
+  },
+  righteous_pure_yang: {
+    lawType: 'righteous_pure_yang',
+    name: 'Pohon Yang Murni',
+    nodes: [
+      {
+        id: 'yang_breath',
+        name: 'Napas Surya',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: [],
+        requiredRank: 0,
+        effects: { atkMult: 0.01 },
+        icon: '☀️',
+        description: 'Menghela napas intisari surya murni, meningkatkan ATK sebesar +1% per level.'
+      },
+      {
+        id: 'yang_purge',
+        name: 'Purifikasi Yang',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: ['yang_breath'],
+        requiredRank: 0,
+        effects: { poisonResist: 0.05, corruptionResist: 0.05 },
+        icon: '🔥',
+        description: 'Membakar racun dan hawa kotor di dalam meridian tubuh.'
+      },
+      {
+        id: 'yang_sun_brand',
+        name: 'Tera Mentari',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['yang_purge'],
+        requiredRank: 1,
+        effects: { dmgVsCorrupted: 0.04 },
+        icon: '🔆',
+        description: 'Menghanguskan musuh yang terkorupsi dengan daya bakar surya bertambah +4% per level.'
+      },
+      {
+        id: 'yang_cleanse_vessel',
+        name: 'Pembersihan Bejana',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['yang_breath'],
+        requiredRank: 1,
+        effects: { channelDarkPenaltyReduction: 0.20 },
+        icon: '🪷',
+        description: 'Menjaga kemurnian bejana kultivasi dari pengaruh wilayah gelap.'
+      },
+      {
+        id: 'yang_radiance',
+        name: 'Radiansi Kehidupan',
+        tier: 3,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['yang_sun_brand'],
+        requiredRank: 2,
+        effects: { lifespan: 2, vitality: 5 },
+        icon: '🌞',
+        description: 'Cahaya Yang murni memelihara sumsum kehidupan, meningkatkan usia dan vitalitas.'
+      }
+    ]
+  },
+  righteous_sword_heart: {
+    lawType: 'righteous_sword_heart',
+    name: 'Pohon Hati Pedang',
+    nodes: [
+      {
+        id: 'sword_stance',
+        name: 'Kuda-kuda Pedang',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: [],
+        requiredRank: 0,
+        effects: { atkMult: 0.015 },
+        icon: '🗡️',
+        description: 'Kuda-kuda dasar pendekar pedang sejati, meningkatkan ATK sebesar +1.5% per level.'
+      },
+      {
+        id: 'sword_edge',
+        name: 'Ketajaman Hati',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: ['sword_stance'],
+        requiredRank: 0,
+        effects: { crit: 0.4 },
+        icon: '⚔️',
+        description: 'Menajamkan niat pedang batin, memberikan bonus CRIT sebesar +0.4% per level.'
+      },
+      {
+        id: 'sword_draw',
+        name: 'Kilat Cabutan Pedang',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['sword_stance'],
+        requiredRank: 1,
+        effects: { spdMult: 0.015 },
+        icon: '⚡',
+        description: 'Gerakan menghunus pedang secepat kilat, meningkatkan SPD sebesar +1.5% per level.'
+      },
+      {
+        id: 'sword_oath_bond',
+        name: 'Ikatan Sumpah Bilah',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['sword_edge'],
+        requiredRank: 1,
+        effects: { unarmedPenaltyMitigation: 0.03 },
+        icon: '🤝',
+        description: 'Mematri jiwa ke dalam bilah pedang; meredam penalti pertarungan saat terpisah dari pedang.'
+      },
+      {
+        id: 'sword_one_strike',
+        name: 'Satu Tebasan Belah Awan',
+        tier: 3,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['sword_draw', 'sword_oath_bond'],
+        requiredRank: 2,
+        effects: { flatAtk: 8 },
+        icon: '🌠',
+        description: 'Intisari tebasan mutlak pendekar pedang, memberikan bonus flat ATK +8 per level.'
+      }
+    ]
+  },
+  righteous_formation_array: {
+    lawType: 'righteous_formation_array',
+    name: 'Pohon Formasi Bendera',
+    nodes: [
+      {
+        id: 'array_foundation',
+        name: 'Fondasi Formasi',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: [],
+        requiredRank: 0,
+        effects: { defMult: 0.015 },
+        icon: '🚩',
+        description: 'Menancapkan patok formasi kokoh, meningkatkan DEF sebesar +1.5% per level.'
+      },
+      {
+        id: 'array_bulwark',
+        name: 'Benteng Qi Susun Sembilan',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: ['array_foundation'],
+        requiredRank: 0,
+        effects: { hpMult: 0.012 },
+        icon: '🏰',
+        description: 'Menyusun lapis pelindung energi formasi, meningkatkan HP sebesar +1.2% per level.'
+      },
+      {
+        id: 'array_pulse',
+        name: 'Getaran Denyut Lempeng',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['array_foundation'],
+        requiredRank: 1,
+        effects: { martialRes: 3 },
+        icon: '🌀',
+        description: 'Mengalirkan resonansi gelombang tanah untuk menangkis serangan fisik (+3 Martial RES).'
+      },
+      {
+        id: 'array_domain',
+        name: 'Domain Wilayah Berdaulat',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['array_bulwark'],
+        requiredRank: 1,
+        effects: { homeBonusAdd: 0.02 },
+        icon: '🌐',
+        description: 'Memperkuat efisiensi tempur di dalam kawasan Hub Formasi milik sendiri.'
+      },
+      {
+        id: 'array_rebuild',
+        name: 'Restrukturisasi Formasi Kilat',
+        tier: 3,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['array_pulse', 'array_domain'],
+        requiredRank: 2,
+        effects: { repairEfficiency: 0.10 },
+        icon: '🛠️',
+        description: 'Pemahaman mendalam tentang tata letak formasi memudahkan perawatan dan upgrade Hub.'
+      }
+    ]
+  },
+  righteous_karmic_mirror: {
+    lawType: 'righteous_karmic_mirror',
+    name: 'Pohon Cermin Karma',
+    nodes: [
+      {
+        id: 'karma_stillness',
+        name: 'Ketenangan Cermin Datar',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: [],
+        requiredRank: 0,
+        effects: { defMult: 0.015 },
+        icon: '🪞',
+        description: 'Menjaga kejernihan batin laksana cermin air tenang, meningkatkan DEF sebesar +1.5% per level.'
+      },
+      {
+        id: 'karma_clarity',
+        name: 'Kekudusan Hati Nurani',
+        tier: 1,
+        maxLevel: 5,
+        costPerLevel: 1,
+        requires: ['karma_stillness'],
+        requiredRank: 0,
+        effects: { spiritualRes: 4 },
+        icon: '🕯️',
+        description: 'Memancarkan cahaya nurani yang menolak sihir jahat, meningkatkan Spiritual Resistance +4 per level.'
+      },
+      {
+        id: 'karma_retribution',
+        name: 'Pembalasan Karma Buruk',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['karma_stillness'],
+        requiredRank: 1,
+        effects: { reflectPct: 0.015 },
+        icon: '⚖️',
+        description: 'Memantulkan kembali karma jahat ke penyerang bertaraf infamy tinggi.'
+      },
+      {
+        id: 'karma_absolution',
+        name: 'Pengampunan Dosa',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 2,
+        requires: ['karma_clarity'],
+        requiredRank: 1,
+        effects: { infamyPenaltyReduction: 0.20 },
+        icon: '🕊️',
+        description: 'Meredam gesekan amarah batin jika tanpa sengaja terpapar dosa duniawi.'
+      },
+      {
+        id: 'karma_verdict',
+        name: 'Vonis Cermin Langit',
+        tier: 3,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['karma_retribution', 'karma_absolution'],
+        requiredRank: 2,
+        effects: { flatAtk: 6 },
+        icon: '⚡',
+        description: 'Mengeksekusi hukuman karma secara mutlak, memberikan flat ATK +6 per level.'
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
@@ -2658,6 +2994,7 @@ module.exports = {
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,
   LAW_ESSENCE_PROFILE,
+  LAW_SKILL_TREES,
   LAW_TYPE_ENUM: Object.keys(LAW_DEFINITIONS),
   TRIBULATION_RANKS,
   BASE_CHANNEL_CAP_MINUTES,

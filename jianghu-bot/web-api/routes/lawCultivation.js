@@ -54,6 +54,7 @@ const {
   LAW_BALANCE,
   LAW_PROGRESSION,
   LAW_ESSENCE_PROFILE,
+  LAW_SKILL_TREES,
   getMaxEssence
 } = require('../../utils/lawCultivationEngine');
 
@@ -1448,9 +1449,31 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
     }
 
     // Ambil semua skill definition untuk law ini
-    const skills = await LawSkillDefinition.find({ lawType: law.activeLawType })
+    let skills = await LawSkillDefinition.find({ lawType: law.activeLawType })
       .sort({ tier: 1, name: 1 })
       .lean();
+
+    // Fallback ke LAW_SKILL_TREES jika DB belum terisi
+    if (!skills || skills.length === 0) {
+      const tree = LAW_SKILL_TREES[law.activeLawType];
+      if (tree?.nodes) {
+        skills = tree.nodes.map(n => ({
+          skillId: n.id || n.skillId,
+          lawType: law.activeLawType,
+          tier: n.tier || 1,
+          name: n.name,
+          icon: n.icon || '⚡',
+          description: n.description || '',
+          isPassive: n.isPassive !== false,
+          maxLevel: n.maxLevel || 5,
+          requiredRank: n.requiredRank || 0,
+          requiredParentSkillId: (n.requires && n.requires[0]) || null,
+          skillPointCost: n.costPerLevel || 1
+        }));
+      } else {
+        skills = [];
+      }
+    }
 
     // Tandai mana yang sudah unlock dan level-nya
     const unlockedMap = {};
@@ -1528,7 +1551,24 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
     }
 
     // Cari skill definition
-    const skillDef = await LawSkillDefinition.findOne({ skillId, lawType: law.activeLawType }).lean();
+    let skillDef = await LawSkillDefinition.findOne({ skillId, lawType: law.activeLawType }).lean();
+    if (!skillDef) {
+      // Fallback ke LAW_SKILL_TREES jika DB belum terisi
+      const tree = LAW_SKILL_TREES[law.activeLawType];
+      const node = tree?.nodes?.find(n => (n.id === skillId || n.skillId === skillId));
+      if (node) {
+        skillDef = {
+          skillId: node.id || node.skillId,
+          lawType: law.activeLawType,
+          name: node.name,
+          tier: node.tier || 1,
+          skillPointCost: node.costPerLevel || 1,
+          requiredRank: node.requiredRank || 0,
+          requiredParentSkillId: (node.requires && node.requires[0]) || null,
+          maxLevel: node.maxLevel || 5
+        };
+      }
+    }
     if (!skillDef) {
       return res.status(404).json({ error: 'Skill tidak ditemukan untuk jalur Law ini.' });
     }
