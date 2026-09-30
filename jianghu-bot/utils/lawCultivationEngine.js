@@ -1375,6 +1375,46 @@ function attemptMajorBreakthrough(player, options = {}) {
       law.guMaxSlots = getGuMaxSlots(law.rank);
     }
 
+    // D3: Evolusi Beast & Artifact saat Major Breakthrough Success (Master Plan §2.1 & §2.2)
+    if (law.activeLawType === 'natal_beast' && law.boundEntity) {
+      const b = law.boundEntity;
+      b.rankLevel = law.rank;
+      if (law.rank >= 7) {
+        b.evolutionStage = 'Avatar / Soul Fusion';
+        b.isEgg = false;
+      } else if (law.rank >= 5) {
+        b.evolutionStage = 'Siluman';
+        b.isEgg = false;
+      } else if (law.rank >= 3) {
+        b.evolutionStage = 'Dewasa';
+        b.isEgg = false;
+      } else if (law.rank >= 1) {
+        b.evolutionStage = 'Anak Satwa Roh';
+        if (b.isEgg) {
+          b.isEgg = false;
+          b.hatchedAt = new Date();
+        }
+      } else {
+        b.evolutionStage = 'Telur Purba';
+        b.isEgg = true;
+      }
+
+      // Kenaikan stat deterministik per rank (Master Plan §2.2)
+      b.beastAtk = 15 + (law.rank * 15);
+      b.beastDef = 10 + (law.rank * 10);
+      b.beastMaxHp = 100 + (law.rank * 60);
+      b.beastCurrentHp = b.beastMaxHp;
+    }
+
+    if (law.activeLawType === 'natal_artifact' && law.boundEntity) {
+      const a = law.boundEntity;
+      a.rankLevel = law.rank;
+      a.artifactAtk = (a.artifactAtk || 15) + 15;
+      a.artifactDef = (a.artifactDef || 10) + 10;
+      a.artifactCrit = (a.artifactCrit || 5) + 2;
+      a.artifactRes = (a.artifactRes || 5) + 2;
+    }
+
     // Penerapan lonjakan 5 Pilar Mayor saat kenaikan Rank
     if (!player.stats) player.stats = {};
     if (!player.extendedStats) player.extendedStats = {};

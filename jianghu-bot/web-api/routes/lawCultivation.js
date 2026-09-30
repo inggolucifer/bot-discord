@@ -290,30 +290,99 @@ router.post('/bind', authenticateToken, async (req, res) => {
         }
         player.markModified('inventory');
 
-        // Jika Law berwujud Companion Entity (Natal Artifact / Natal Beast), inisialisasi boundEntity
+        // Jika Law berwujud Companion Entity (Natal Artifact / Natal Beast), inisialisasi boundEntity (Master Plan §2.1 & §2.2)
         if (lawType === 'natal_artifact' || lawType === 'natal_beast') {
           const entityType = lawType === 'natal_artifact' ? 'artifact' : 'beast';
-          player.cultivationLaw.boundEntity = {
-            entityType,
-            baseItemId: companionItem._id,
-            originalName: companionItem.name,
-            customName: customEntityName || companionItem.name,
-            rankLevel: 0,
-            evolutionStage: entityType === 'beast' ? 'Telur Purba' : 'Fana',
-            essence: 0,
-            maxEssence: 100,
-            isEgg: entityType === 'beast' ? true : false,
-            hatchedAt: null,
-            beastCurrentHp: entityType === 'beast' ? 100 : 0,
-            beastMaxHp: entityType === 'beast' ? 100 : 0,
-            beastAtk: entityType === 'beast' ? 15 : 0,
-            beastDef: entityType === 'beast' ? 10 : 0,
-            beastSpd: entityType === 'beast' ? 12 : 0,
-            artifactAtk: entityType === 'artifact' ? 15 : 0,
-            artifactDef: entityType === 'artifact' ? 10 : 0,
-            artifactCrit: entityType === 'artifact' ? 5 : 0,
-            artifactRes: entityType === 'artifact' ? 5 : 0
-          };
+          const cRank = (companionItem.rank || companionItem.rarity || 'Common').toLowerCase();
+          const cCat = (companionItem.category || '').toLowerCase();
+          const cTags = companionItem.tags || [];
+          const cName = (companionItem.name || '').toLowerCase();
+
+          // D1: Validasi ketat rank Common untuk Slot 2
+          if (cRank !== 'common') {
+            const label = entityType === 'artifact' ? 'Artefak Jiwa (Natal Artifact)' : 'Satwa Pendamping (Natal Beast)';
+            throw new CustomError(`${label} hanya dapat diikat dari wadah/bibit fana berkategori Common! Pusaka atau siluman tingkat tinggi menolak pengikatan jiwa fondasi fana.`, 400);
+          }
+
+          if (entityType === 'artifact') {
+            const allowedCats = ['weapon', 'artifact', 'material', 'accessories', 'equipment'];
+            if (!allowedCats.includes(cCat) && !cTags.includes('common_artifact')) {
+              throw new CustomError('Wadah Artefak Jiwa harus berupa benda berwujud pusaka, senjata, atau material fana (Common)!', 400);
+            }
+
+            // D2: Inherit stats dari jenis item pusaka
+            let artAtk = 15;
+            let artDef = 10;
+            let artCrit = 5;
+            let artRes = 5;
+
+            if (cCat === 'weapon' || cName.includes('pedang') || cName.includes('golok') || cName.includes('tombak') || cName.includes('pisau') || cName.includes('belati')) {
+              artAtk = 15;
+              artCrit = 5;
+              artDef = 8;
+              artRes = 4;
+            } else if (cCat === 'armor' || cName.includes('perisai') || cName.includes('mangkuk') || cName.includes('zirah') || cName.includes('baju') || cName.includes('tameng')) {
+              artDef = 12;
+              artAtk = 8;
+              artCrit = 2;
+              artRes = 6;
+            } else if (cName.includes('cermin') || cName.includes('mirror') || cName.includes('mistik') || cName.includes('lonceng') || cName.includes('genta')) {
+              artRes = 8;
+              artAtk = 10;
+              artDef = 8;
+              artCrit = 4;
+            } else if (cName.includes('cincin') || cName.includes('gelang') || cName.includes('kalung') || cName.includes('wadah') || cName.includes('kendi')) {
+              artAtk = 10;
+              artDef = 10;
+              artCrit = 4;
+              artRes = 6;
+            }
+
+            player.cultivationLaw.boundEntity = {
+              entityType: 'artifact',
+              baseItemId: companionItem._id,
+              originalName: companionItem.name,
+              customName: customEntityName || companionItem.name,
+              imageUrl: companionItem.imageUrl || null,
+              rankLevel: 0,
+              evolutionStage: 'Fana',
+              essence: 0,
+              maxEssence: 100,
+              isEgg: false,
+              hatchedAt: null,
+              artifactAtk: artAtk,
+              artifactDef: artDef,
+              artifactCrit: artCrit,
+              artifactRes: artRes
+            };
+          } else {
+            // natal_beast: prioritaskan tag beast_egg atau common_beast; rank Common; category pet|material
+            const isBeastValid = cCat === 'pet' || cCat === 'material' || cTags.includes('beast_egg') || cTags.includes('common_beast') || cName.includes('telur') || cName.includes('satwa');
+            if (!isBeastValid) {
+              throw new CustomError('Satwa Pendamping harus berupa telur binatang buas (tag beast_egg) atau satwa fana berkategori pet/material!', 400);
+            }
+
+            const isEgg = cTags.includes('beast_egg') || cName.includes('telur') || cName.includes('egg');
+
+            player.cultivationLaw.boundEntity = {
+              entityType: 'beast',
+              baseItemId: companionItem._id,
+              originalName: companionItem.name,
+              customName: customEntityName || companionItem.name,
+              imageUrl: companionItem.imageUrl || null,
+              rankLevel: 0,
+              evolutionStage: isEgg ? 'Telur Purba' : 'Anak Satwa Roh',
+              essence: 0,
+              maxEssence: 100,
+              isEgg: isEgg,
+              hatchedAt: isEgg ? null : new Date(),
+              beastCurrentHp: 100,
+              beastMaxHp: 100,
+              beastAtk: 15,
+              beastDef: 10,
+              beastSpd: 12
+            };
+          }
         }
       }
 
