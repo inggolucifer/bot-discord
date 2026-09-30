@@ -304,6 +304,11 @@ const LAW_PROGRESSION = {
 
   MAX_ESSENCE_GAIN_PER_ACTION: 35,
   BOOTSTRAP_ESSENCE: 40,  // rank 0 awal tidak frustrasi
+
+  // Kebijakan Essence-First: Cultivation Qi utama berasal dari channel + digest bar
+  INSTANT_QI_ON_ABSORB: 0,       // set 0 untuk ketat; absorb hanya mengisi bar esensi
+  MAX_INSTANT_QI_PER_ACTION: 0,  // cap instant Qi per aksi absorb/feed
+  DAILY_INSTANT_QI_CAP: 50,      // jika INSTANT > 0, cap harian total
 };
 
 /**
