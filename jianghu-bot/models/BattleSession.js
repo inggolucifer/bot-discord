@@ -76,7 +76,8 @@ const battleEntitySchema = new mongoose.Schema({
     stacks: Number,
     duration: Number,
     kind: String,
-    desc: String
+    desc: String,
+    description: String
   }],
   bodySummary: { type: mongoose.Schema.Types.Mixed, default: null },
   

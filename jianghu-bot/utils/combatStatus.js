@@ -313,27 +313,34 @@ function getStatusBadges(entity) {
   // 1. Poison
   if (conds.poison > 0) {
     const sev = Math.max(1, Math.ceil(conds.poison / 20));
+    const descText = `Hawa beracun merenggut HP tiap ronde (${conds.poison}%)`;
     badges.push({
       id: 'poison',
       badge: '☠️',
       label: 'Racun',
       severity: sev,
       stacks: conds.poison,
+      duration: null,
       kind: 'debuff',
-      desc: `Hawa beracun merenggut HP tiap ronde (${conds.poison}%)`
+      description: descText,
+      desc: descText
     });
   }
 
   // 2. Bleed
   if (conds.bleed > 0) {
+    const sev = Math.max(1, Math.floor(conds.bleed));
+    const descText = `Pendarahan luka robek (-${Math.round(conds.bleed * 3)}% HP/turn)`;
     badges.push({
       id: 'bleed',
       badge: '🩸',
       label: 'Pendarahan',
-      severity: Math.floor(conds.bleed),
+      severity: sev,
       stacks: conds.bleed,
+      duration: null,
       kind: 'debuff',
-      desc: `Pendarahan luka robek (-${Math.round(conds.bleed * 3)}% HP/turn)`
+      description: descText,
+      desc: descText
     });
   }
 
@@ -341,61 +348,85 @@ function getStatusBadges(entity) {
   if (conds.injury > 0) {
     const sev = Math.floor(conds.injury);
     const penaltyPct = Math.round(sev * 3);
+    const descText = `Cedera organ dalam (-${penaltyPct}% ATK/DEF, -${Math.round(sev * 2)}% Qi)`;
     badges.push({
       id: 'injury',
       badge: '🦴',
       label: 'Cedera Dalam',
       severity: sev,
+      stacks: null,
+      duration: null,
       kind: 'condition',
-      desc: `Cedera organ dalam (-${penaltyPct}% ATK/DEF, -${Math.round(sev * 2)}% Qi)`
+      description: descText,
+      desc: descText
     });
   }
 
   // 4. Burn
   if (conds.burn > 0) {
+    const sev = Math.max(1, Math.ceil(conds.burn / 25));
+    const descText = `Kobaran api membakar tubuh (${conds.burn}%)`;
     badges.push({
       id: 'burn',
       badge: '🔥',
       label: 'Terbakar',
+      severity: sev,
       stacks: conds.burn,
+      duration: null,
       kind: 'debuff',
-      desc: `Kobaran api membakar tubuh (${conds.burn}%)`
+      description: descText,
+      desc: descText
     });
   }
 
   // 5. Frozen
   if (conds.frozen > 0) {
+    const sev = Math.max(1, Math.ceil(conds.frozen / 25));
+    const descText = conds.frozen >= 100 ? 'Membeku kaku (tidak dapat bergerak)' : `Hawa dingin es (${conds.frozen}%)`;
     badges.push({
       id: 'frozen',
       badge: '❄️',
       label: 'Membeku',
+      severity: sev,
       stacks: conds.frozen,
+      duration: null,
       kind: 'debuff',
-      desc: conds.frozen >= 100 ? 'Membeku kaku (tidak dapat bergerak)' : `Hawa dingin es (${conds.frozen}%)`
+      description: descText,
+      desc: descText
     });
   }
 
   // 6. Intox
   if (conds.intox > 0) {
+    const sev = Math.max(1, Math.ceil(conds.intox / 25));
+    const descText = `Pengaruh arak mengurangi akurasi serangan (${conds.intox}%)`;
     badges.push({
       id: 'intox',
       badge: '🍺',
       label: 'Mabuk',
+      severity: sev,
       stacks: conds.intox,
+      duration: null,
       kind: 'debuff',
-      desc: `Pengaruh arak mengurangi akurasi serangan (${conds.intox}%)`
+      description: descText,
+      desc: descText
     });
   }
 
   // 7. Psychosis
   if (conds.psychosis > 0) {
+    const sev = Math.max(1, Math.ceil(conds.psychosis / 25));
+    const descText = `Qi meridian tidak stabil (${conds.psychosis}%)`;
     badges.push({
       id: 'psychosis',
       badge: '🌀',
       label: 'Penyimpangan Qi',
+      severity: sev,
       stacks: conds.psychosis,
+      duration: null,
       kind: 'debuff',
-      desc: `Qi meridian tidak stabil (${conds.psychosis}%)`
+      description: descText,
+      desc: descText
     });
   }
 
@@ -403,13 +434,17 @@ function getStatusBadges(entity) {
   if (Array.isArray(entity.debuffs)) {
     entity.debuffs.forEach(d => {
       if (d.duration > 0) {
+        const descText = d.description || 'Kehilangan giliran bertindak';
         badges.push({
-          id: d.type || 'debuff',
+          id: d.type || 'stun',
           badge: d.badge || d.icon || '⚡',
           label: d.name || 'Lumpuh',
+          severity: 1,
+          stacks: null,
           duration: d.duration,
           kind: 'debuff',
-          desc: d.description || 'Kehilangan giliran bertindak'
+          description: descText,
+          desc: descText
         });
       }
     });
@@ -419,13 +454,17 @@ function getStatusBadges(entity) {
   if (Array.isArray(entity.buffs)) {
     entity.buffs.forEach(b => {
       if (b.duration > 0) {
+        const descText = b.description || 'Mereduksi kerusakan yang diterima';
         badges.push({
-          id: b.type || 'buff',
+          id: b.type || 'defense_up',
           badge: b.badge || b.icon || '🛡️',
           label: b.name || 'Bertahan',
+          severity: 1,
+          stacks: null,
           duration: b.duration,
           kind: 'buff',
-          desc: b.description || 'Mereduksi kerusakan yang diterima'
+          description: descText,
+          desc: descText
         });
       }
     });

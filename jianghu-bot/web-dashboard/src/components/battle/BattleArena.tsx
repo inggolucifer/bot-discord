@@ -346,6 +346,38 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
         );
     };
 
+    const renderUnifiedStatusBadges = (entity?: any, isPlayer: boolean = false) => {
+        if (!entity) return null;
+        if (Array.isArray(entity.statusBadges) && entity.statusBadges.length > 0) {
+            return (
+                <div className={`flex flex-wrap gap-1 ${isPlayer ? 'justify-start mt-0.5' : 'justify-center mt-1'} w-full`}>
+                    {entity.statusBadges.map((b: any, idx: number) => {
+                        const badgeColor = b.kind === 'buff' 
+                            ? 'bg-amber-950/90 text-amber-300 border-amber-700'
+                            : (b.id === 'poison' ? 'bg-emerald-950/90 text-emerald-300 border-emerald-700' :
+                               b.id === 'burn' ? 'bg-orange-950/90 text-orange-300 border-orange-700 animate-pulse' :
+                               b.id === 'frozen' ? 'bg-cyan-950/90 text-cyan-300 border-cyan-600' :
+                               b.id === 'bleed' ? 'bg-rose-950/90 text-rose-300 border-rose-700' :
+                               b.id === 'injury' ? 'bg-amber-950/90 text-amber-300 border-amber-700' :
+                               'bg-red-950/90 text-red-300 border-red-700/80');
+                        const infoText = b.duration ? `${b.duration}R` : (b.stacks ? `${b.stacks}%` : (b.severity ? `Lv.${b.severity}` : ''));
+                        return (
+                            <span 
+                                key={idx} 
+                                title={b.description || b.desc || `${b.label}: ${infoText}`}
+                                className={`text-[9px] px-1 py-0.2 rounded border font-mono flex items-center gap-0.5 shadow-sm ${badgeColor}`}
+                            >
+                                <span>{b.badge}</span>
+                                <span>{b.label} {infoText ? `[${infoText}]` : ''}</span>
+                            </span>
+                        );
+                    })}
+                </div>
+            );
+        }
+        return renderConditionBadges(entity.conditions, isPlayer);
+    };
+
     return createPortal(
         <div className="fixed inset-0 z-[99999] w-screen h-screen flex flex-col justify-between bg-[#070a14] font-sans select-none overflow-hidden text-gray-200">
             {/* Ambient Background Glow Effect */}
@@ -514,24 +546,8 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                         </div>
                                     </div>
 
-                                    {/* Status Debuff Badges (Poison, Stun, etc.) */}
-                                    {Array.isArray(enemy.debuffs) && enemy.debuffs.length > 0 && (
-                                        <div className="flex flex-wrap justify-center gap-1 mt-1.5 w-full">
-                                            {enemy.debuffs.map((d: any, dIdx: number) => (
-                                                <span 
-                                                    key={dIdx} 
-                                                    title={d.description || d.name}
-                                                    className="text-[9px] bg-red-950/90 text-red-300 border border-red-700/80 px-1 py-0.2 rounded font-mono flex items-center gap-0.5"
-                                                >
-                                                    <span>{d.icon || (d.type === 'poison' ? '☠️' : '⚡')}</span>
-                                                    <span>{d.duration}R</span>
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* Authoritative Conditions (Poison, Burn, Frozen, Knockback, etc.) */}
-                                    {renderConditionBadges(enemy.conditions)}
+                                    {/* Authoritative Unified Status & Conditions */}
+                                    {renderUnifiedStatusBadges(enemy)}
                                 </div>
                             );
                         })}
@@ -647,8 +663,8 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                             </div>
                         </div>
 
-                        {/* Authoritative Conditions (Poison, Burn, Frozen, Knockback, etc.) */}
-                        {renderConditionBadges(player?.conditions, true)}
+                        {/* Authoritative Unified Status & Conditions */}
+                        {renderUnifiedStatusBadges(player, true)}
 
                         {/* HP & Qi Bars Grid */}
                         <div className="grid grid-cols-2 gap-2">
