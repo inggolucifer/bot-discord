@@ -66,6 +66,19 @@ const battleEntitySchema = new mongoose.Schema({
     burn: { type: Number, default: 0 },
     knockback: { type: Number, default: 0 }
   },
+
+  // Badges & Body Summary for UI rendering
+  statusBadges: [{
+    id: String,
+    badge: String,
+    label: String,
+    severity: Number,
+    stacks: Number,
+    duration: Number,
+    kind: String,
+    desc: String
+  }],
+  bodySummary: { type: mongoose.Schema.Types.Mixed, default: null },
   
   // Skills
   skills: [{
