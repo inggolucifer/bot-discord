@@ -32,15 +32,15 @@ function getComputedStats(player, populatedLaws = [], populatedManuals = []) {
         spd += (player.talents.agi || 0) * 5;
     }
 
-    // Apply Injury Condition penalty:
-    // Semakin tinggi injury, semakin rendah Max MP / Qi, serta mereduksi ATK dan DEF secara drastis
-    const injury = Math.max(0, Math.floor(Number(player.conditions?.injury) || 0));
+    // Apply Injury Condition penalty (AGENTS.md & COMBAT_STATUS.INJURY):
+    // Setiap tingkat keparahan injury (1-10) mereduksi ATK/DEF -3% dan Max MP/Qi -2%
+    const injury = Math.max(0, Math.min(10, Math.floor(Number(player.conditions?.injury) || 0)));
     if (injury > 0) {
-        const penaltyRatio = Math.min(0.80, injury * 0.0045);
+        const penaltyRatio = Math.min(0.30, injury * 0.03);
         atk = Math.max(1, Math.floor(atk * (1 - penaltyRatio)));
         def = Math.max(1, Math.floor(def * (1 - penaltyRatio)));
 
-        const mpPenaltyRatio = Math.min(0.80, injury * 0.005);
+        const mpPenaltyRatio = Math.min(0.20, injury * 0.02);
         maxMp = Math.max(5, Math.floor(maxMp * (1 - mpPenaltyRatio)));
     }
 
