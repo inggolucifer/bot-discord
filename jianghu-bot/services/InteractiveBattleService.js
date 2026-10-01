@@ -330,9 +330,17 @@ class InteractiveBattleService {
       status: 'ongoing'
     });
 
-    // Hitung stat player
+    // Hitung stat player & 5 Pilar Tempur (Focus, Vitality, Mood, Luck, Body Tempering Parts)
     const { getComputedStats } = require('../utils/statCalculator');
-    const computedStats = getComputedStats(player, player.laws || [], player.manuals || []);
+    const { applyPillarCombatModifiers, getInjuryStatPenalties } = require('../utils/combatBody');
+    const { getStatusBadges } = require('../utils/combatStatus');
+    const rawComputedStats = getComputedStats(player, player.laws || [], player.manuals || []);
+    const computedStats = applyPillarCombatModifiers(rawComputedStats, player);
+
+    // Terapkan penalti Injury pada ATK & DEF
+    const injuryPenalties = getInjuryStatPenalties(player.conditions);
+    const finalAtk = Math.max(1, Math.floor((computedStats.atk || 15) * injuryPenalties.atkDefMult));
+    const finalDef = Math.max(1, Math.floor((computedStats.def || 10) * injuryPenalties.atkDefMult));
     const maxHp = computedStats.maxHp || player.stats?.maxHp || player.stats?.baseHp || 100;
 
     // SPIRITUAL PROJECTION / ARENA SPARRING CHECK:
@@ -344,7 +352,7 @@ class InteractiveBattleService {
 
     // Master Plan §1.2 & §1.3: Dikotomi Mutlak Combat Qi (MP) vs Cultivation Qi (Xiuwei Dantian)
     // Combat Qi ≠ Cultivation Qi (Master Plan §1.2)
-    const { getMaxCombatQi } = require('../utils/lawCultivationEngine');
+    const { getMaxCombatQi, isOnOwnFormationHub } = require('../utils/lawCultivationEngine');
     const calculatedMaxCombatQi = getMaxCombatQi(player);
     const maxQi = calculatedMaxCombatQi;
     const currentQi = maxQi; // Modal awal ronde tempur selalu terisi penuh dari kapasitas tempur
@@ -370,13 +378,14 @@ class InteractiveBattleService {
       qiType: player.cultivationLaw?.activeLawType === 'body_tempering' ? 'true_qi' : 'qi',
       stamina: player.currentStamina || 100,
       maxStamina: player.maxStamina || 100,
-      attack: computedStats.atk || player.stats?.atk || 15,
-      defense: computedStats.def || player.stats?.def || 10,
+      attack: finalAtk,
+      defense: finalDef,
       speed: computedStats.spd || player.stats?.spd || 10,
       reflectPct: computedStats.reflectPct || player.extendedStats?.reflectPct || 0,
       activeLawType: player.cultivationLaw?.activeLawType || null,
       lawRank: player.cultivationLaw?.rank || 0,
       isWantedByOrthodox: !!player.isWantedByOrthodox,
+      bodySummary: computedStats.bodySummary || null,
       atb: 1000,
       maxAtb: 1000,
       stance: player.stats?.stance || 100,
@@ -384,6 +393,7 @@ class InteractiveBattleService {
       buffs: [],
       debuffs: [],
       conditions: normalizeConditions(player.conditions),
+      statusBadges: getStatusBadges({ conditions: normalizeConditions(player.conditions), debuffs: [], buffs: [] }),
       skills: (() => {
         const allFormatted = [...this.formatPlayerSkills(player), ...lawSkillsFormatted];
         const basicAtk = allFormatted.find(s => s.isBasicAttack);
@@ -391,6 +401,19 @@ class InteractiveBattleService {
         return basicAtk ? [basicAtk, ...activePool] : activePool;
       })()
     };
+
+    // Righteous Formation Array Home Hub Bonus (Defense Up buff saat bertarung di atas Hub milik sendiri)
+    if (player.cultivationLaw?.activeLawType === 'righteous_formation_array' && isOnOwnFormationHub(player)) {
+      playerEntity.buffs.push({
+        name: 'Kubah Formasi Pelindung',
+        type: 'defense_up',
+        value: 0.5,
+        duration: 2,
+        icon: '🛡️',
+        description: 'Perlindungan formasi bendera di atas hub sendiri mereduksi 50% damage.'
+      });
+      playerEntity.statusBadges = getStatusBadges(playerEntity);
+    }
 
     // Konversi Sekutu (Allies: NPC / Pet)
     const allies = (alliesInput || []).slice(0, 3).map((a, idx) => ({
@@ -500,9 +523,10 @@ class InteractiveBattleService {
       maxAtb: 1000,
       stance: e.stance || 100,
       maxStance: e.stance || 100,
-      buffs: [],
-      debuffs: [],
+      buffs: Array.isArray(e.buffs) ? e.buffs : [],
+      debuffs: Array.isArray(e.debuffs) ? e.debuffs : [],
       conditions: normalizeConditions(e.conditions),
+      statusBadges: getStatusBadges({ conditions: normalizeConditions(e.conditions), debuffs: e.debuffs || [], buffs: e.buffs || [] }),
       skills: (e.skills && e.skills.length > 0) ? e.skills : [{
         skillId: 'basic_attack',
         name: 'Serangan Cakar Liar',
@@ -580,6 +604,19 @@ class InteractiveBattleService {
     }
 
     session.player.conditions = normalizeConditions(session.player.conditions);
+    const { onTurnStartLawExtras, onSkillHitLawExtras, getDefenseDamageMultiplier, getStatusBadges, applyStatus } = require('../utils/combatStatus');
+
+    // Sinergi Law pada awal giliran (Cleanse Pure Yang dll)
+    const turnStartExtras = onTurnStartLawExtras({ entity: session.player, session });
+    turnStartExtras.notes.forEach(note => {
+      session.logs.push({
+        tick: session.currentTick,
+        actor: session.player.name,
+        action: 'effect',
+        message: note
+      });
+    });
+
     const isPlayerFrozen = session.player.conditions.frozen >= COMBAT_COND.FROZEN_THRESHOLD;
     const isPlayerStunned = Array.isArray(session.player.debuffs) && session.player.debuffs.some(d => d.type === 'stun' && d.duration > 0);
 
@@ -847,6 +884,12 @@ class InteractiveBattleService {
 
             damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));
 
+            // Reduksi damage jika target memasang buff defense_up / kuda-kuda bertahan
+            const defMultiplier = getDefenseDamageMultiplier(target);
+            if (defMultiplier < 1.0) {
+              damage = Math.max(1, Math.floor(damage * defMultiplier));
+            }
+
             // Apply Law Combat Modifiers (Merit/Yang situational vs target + Target Reflect)
             const lawRes = applyLawDamageModifiers(session.player, target, damage);
             damage = lawRes.finalDamage;
@@ -861,6 +904,18 @@ class InteractiveBattleService {
             if (target.hp <= 0) {
               target.hp = 0;
               target.isDead = true;
+            }
+
+            // Sinergi Law saat serangan mendarat (Myriad Venom, Gu, Sword Heart bleed on crit, Heavy Hit injury)
+            const lawHitExtras = onSkillHitLawExtras({
+              attacker: session.player,
+              defender: target,
+              skill,
+              damage,
+              isCrit
+            });
+            if (lawHitExtras.notes && lawHitExtras.notes.length > 0) {
+              lawNote += ' ' + lawHitExtras.notes.join(' ');
             }
 
             if (session.battleConfig && session.battleConfig.eventContext === 'world_boss') {
@@ -913,26 +968,17 @@ class InteractiveBattleService {
             let debuffTriggeredMsg = '';
             if (!target.isDead && skill.debuffChance > 0 && Math.random() < skill.debuffChance) {
               if (skill.debuffType === 'poison') {
-                target.conditions = normalizeConditions(target.conditions);
-                target.conditions.poison = Math.min(100, target.conditions.poison + 20);
+                applyStatus(target, 'poison', { stacks: 20 });
                 debuffTriggeredMsg = ' ☠️ (Meracuni target +20 Poison!)';
               } else if (skill.debuffType === 'stun') {
-                target.debuffs = target.debuffs || [];
-                target.debuffs.push({
-                  name: skill.name || 'Totokan Meridian',
-                  type: 'stun',
-                  value: 1,
-                  duration: 1,
-                  icon: '⚡',
-                  description: 'Lumpuh tidak dapat bergerak'
-                });
+                applyStatus(target, 'stun', { duration: 1 });
                 debuffTriggeredMsg = ' ⚡ (Lumpuh / Stun 1 Ronde!)';
               } else if (skill.debuffType === 'burn') {
-                target.conditions = normalizeConditions(target.conditions);
-                target.conditions.burn = Math.min(100, target.conditions.burn + 25);
+                applyStatus(target, 'burn', { stacks: 25 });
                 debuffTriggeredMsg = ' 🔥 (Membakar target +25 Burn!)';
               }
             }
+            target.statusBadges = getStatusBadges(target);
 
             let logMsg = `⚔️ ${session.player.name} melancarkan ${skill.name} ke ${target.name} menghasilkan ${damage} DMG!`;
             if (atkBuff) logMsg += ' 🌟 (Buff ATK!)';
@@ -1075,10 +1121,21 @@ class InteractiveBattleService {
       const targetEntity = shouldTargetAlly ? livingAllies[Math.floor(Math.random() * livingAllies.length)] : session.player;
       const isTargetPlayer = targetEntity === session.player;
 
+      // Sinergi awal giliran musuh
+      const eTurnExtras = onTurnStartLawExtras({ entity: enemy, session });
+      eTurnExtras.notes.forEach(note => {
+        session.logs.push({
+          tick: session.currentTick,
+          actor: enemy.name,
+          action: 'effect',
+          message: note
+        });
+      });
+
+      const targetDefMult = getDefenseDamageMultiplier(targetEntity);
       let eDamage = Math.max(1, Math.floor((enemy.attack * (eSkill.power / 10)) / ((targetEntity.defense || 10) / 10 + 1)));
-      if (isTargetPlayer && hasDefendBuff) {
-        const redFactor = defBuff.value || 0.5;
-        eDamage = Math.max(1, Math.floor(eDamage * (1 - redFactor)));
+      if (targetDefMult < 1.0) {
+        eDamage = Math.max(1, Math.floor(eDamage * targetDefMult));
       }
       eDamage = Math.max(1, Math.floor(eDamage * (0.85 + Math.random() * 0.3)));
 
@@ -1097,8 +1154,22 @@ class InteractiveBattleService {
         }
 
         let eLogMsg = `🩸 ${enemy.name} melancarkan ${eSkill.name} ke ${session.player.name} menghasilkan ${eDamage} DMG!`;
-        if (hasDefendBuff) eLogMsg += ` 🛡️ (Tertahan ${defBuff.name || 'Pertahanan'} -${Math.round((defBuff.value || 0.5) * 100)}%!)`;
+        if (targetDefMult < 1.0) eLogMsg += ` 🛡️ (Tertahan Pertahanan -${Math.round((1 - targetDefMult) * 100)}%!)`;
         if (lawRes.logParts.length > 0) eLogMsg += ` ${lawRes.logParts.filter(p => !p.includes('memantulkan')).join(' ')}`;
+        
+        // Sinergi Law saat musuh melukai pemain (Heavy Hit injury dll)
+        const eLawHitExtras = onSkillHitLawExtras({
+          attacker: enemy,
+          defender: session.player,
+          skill: eSkill,
+          damage: eDamage,
+          isCrit: false
+        });
+        if (eLawHitExtras.notes && eLawHitExtras.notes.length > 0) {
+          eLogMsg += ' ' + eLawHitExtras.notes.join(' ');
+        }
+        session.player.statusBadges = getStatusBadges(session.player);
+
         if (session.player.isDead) eLogMsg += ` 💀 (${session.player.name} gugur!)`;
 
         session.logs.push({
@@ -1225,6 +1296,11 @@ class InteractiveBattleService {
     const roundQiRegen = getCombatQiRegenPerRound(session.player);
     session.player.qi = Math.min(session.player.maxQi || 100, (session.player.qi || 0) + roundQiRegen);
 
+    session.player.statusBadges = getStatusBadges(session.player);
+    session.enemies.forEach(e => {
+      e.statusBadges = getStatusBadges(e);
+    });
+
     session.player.atb = 1000;
     session.turnQueue = [session.player.entityId]; // Siap untuk aksi selanjutnya
 
@@ -1278,30 +1354,20 @@ class InteractiveBattleService {
    * Proses Status Effects & Conditions (Poison, Bleed, Burn, Frozen, dll.)
    */
   static processStatusEffects(session, actionContext = {}) {
-    // 1. Tick debuff lama (durasi stun / legacy)
-    if (Array.isArray(session.player.debuffs)) {
-      session.player.debuffs = session.player.debuffs.filter(d => {
-        d.duration -= 1;
-        return d.duration > 0;
-      });
-    }
+    const { tickStatuses, getStatusBadges } = require('../utils/combatStatus');
 
-    // 2. Tick buff player (Kuda-kuda bertahan)
-    if (Array.isArray(session.player.buffs)) {
-      session.player.buffs = session.player.buffs.filter(b => {
-        b.duration -= 1;
-        return b.duration > 0;
-      });
-    }
-
-    // 3. Tick Condition Engine untuk Pemain (Poison, Bleed, Burn, Frozen, dll.)
-    const playerConditionEvents = processCombatTurnConditions(session.player, actionContext);
-    playerConditionEvents.forEach(ev => {
+    // 1. Tick status terunifikasi untuk Pemain (Poison, Bleed, Burn, Injury decay, Stun decay, Buffs decay)
+    const playerTick = tickStatuses(session.player, {
+      maxHp: session.player.maxHp,
+      isStandby: !!actionContext.isStandby,
+      actionType: actionContext.actionType
+    });
+    playerTick.logs.forEach(msg => {
       session.logs.push({
         tick: session.currentTick,
         actor: 'System',
         action: 'condition_tick',
-        message: ev.message
+        message: msg
       });
     });
 
@@ -1309,25 +1375,21 @@ class InteractiveBattleService {
       session.player.hp = 0;
       session.player.isDead = true;
     }
+    session.player.statusBadges = getStatusBadges(session.player);
 
-    // 4. Tick debuff lama musuh aktif
+    // 2. Tick status terunifikasi untuk seluruh Musuh Aktif
     session.enemies.forEach(e => {
       if (e.isDead) return;
-      if (Array.isArray(e.debuffs)) {
-        e.debuffs = e.debuffs.filter(d => {
-          d.duration -= 1;
-          return d.duration > 0;
-        });
-      }
-
-      // 5. Tick Condition Engine untuk Musuh Aktif
-      const enemyConditionEvents = processCombatTurnConditions(e, { actionType: 'attack' });
-      enemyConditionEvents.forEach(ev => {
+      const enemyTick = tickStatuses(e, {
+        maxHp: e.maxHp,
+        actionType: 'attack'
+      });
+      enemyTick.logs.forEach(msg => {
         session.logs.push({
           tick: session.currentTick,
           actor: 'System',
           action: 'condition_tick',
-          message: ev.message
+          message: msg
         });
       });
 
@@ -1335,6 +1397,7 @@ class InteractiveBattleService {
         e.hp = 0;
         e.isDead = true;
       }
+      e.statusBadges = getStatusBadges(e);
     });
   }
 
