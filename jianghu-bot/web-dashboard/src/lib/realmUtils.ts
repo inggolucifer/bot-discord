@@ -23,171 +23,26 @@ export const STANDARD_REALMS_EN: Record<string, string> = {
 };
 
 export const LAW_RANK_NAMES_EN: Record<string, string[]> = {
-  element_phoenix_fire: [
-    'Flickering Spark',
-    'Kindling Flame',
-    'Young Phoenix Wing',
-    'First Nirvana',
-    'Awakened Phoenix Blaze',
-    'Core Magma Soul',
-    'Crown of Celestial Fire',
-    'Immortal Firebird',
-    'Apex Phoenix Primordial'
-  ],
-  element_azure_water: [
-    'Morning Dewdrop',
-    'Silver Stream',
-    'Azure Ocean Tide',
-    'Rushing Dragon Current',
-    'Pure Ocean Heart',
-    'Frozen Soul Glacier',
-    'Abyssal Maelstrom',
-    'Bottomless Celestial Sea',
-    'Perfect Azure Dragon'
-  ],
-  element_xuanwu_earth: [
-    'Bedrock Pebble',
-    'Solid Clay',
-    'Unyielding Granite',
-    'Earthsteel Cliff',
-    'Volcanic Core',
-    'Great Tectonic Plate',
-    'Leyline Sovereign',
-    'Ancient Xuanwu Carapace',
-    'Perfect Xuanwu'
-  ],
-  element_qingdi_wood: [
-    'First Sprout',
-    'Wild Grass Root',
-    'Iron Bamboo Spire',
-    'Gnarled Ancient Tree',
-    'Living Primeval Forest',
-    'World Tree Nexus',
-    'Blossoming Tree of Life',
-    'Celestial Canopy',
-    'Verdant Sovereign (Qingdi)'
-  ],
-  element_roc_wind: [
-    'Gentle Gale',
-    'Minor Dust Whirl',
-    'Prairie Gust',
-    'Razor Wind Blade',
-    'Sky Tempest',
-    'Soaring Roc Wings',
-    'Ninefold Storm',
-    'Astral Hurricane',
-    'Apex Ancient Roc'
-  ],
-  element_godthunder_light: [
-    'Static Spark',
-    'Fingertip Bolt',
-    'Stormcloud Flash',
-    'First Heavenly Thunder',
-    'Azure Lightning Arc',
-    'Pure Violet Thunder',
-    'Seventh Divine Tribulation',
-    'Ninefold Holy Lightning',
-    'God of Thunder'
-  ],
-  body_tempering: [
-    'Mortal Flesh',
-    'Iron Skin',
-    'Forged Steel Bones',
-    'Copper Sinew',
-    'Open Meridians',
-    'Golden Marrow',
-    'Dragon Blood Veins',
-    'Indestructible Vajra Body',
-    'Tyrant Primordial Body'
-  ],
-  gu_master: [
-    'Larva Planter',
-    'Hive Keeper',
-    'Gu Nurturer',
-    'Swarm Commander',
-    'Gu Fusion Master',
-    'Aperture Lord',
-    'Ten Thousand Swarm Sovereign',
-    'Chaos Hive Primordial',
-    'Apex Gu Emperor'
-  ],
-  natal_artifact: [
-    'Mortal Vestige',
-    'Luminescent Relic',
-    'Nascent Spirit Armament',
-    'Heart Core Artifact',
-    'Living Soul Treasure',
-    'Breathing Relic',
-    'Soul-Bound Primordial',
-    'Celestial Sovereign Relic',
-    'Perfect Natal Sovereign'
-  ],
-  natal_beast: [
-    'Mortal Companion',
-    'Lesser Spirit Beast',
-    'Young Talented Familiar',
-    'Ascending Spirit Beast',
-    'Metamorphic Familiar',
-    'Awakened Ancient Soul',
-    'Celestial Winged Beast',
-    'True Divine Beast',
-    'Apex Primordial Deity'
-  ],
-  demonic_turbid_core: [
-    'Turbid Qi Inhaler',
-    'Beast Core Absorber',
-    'Young Core Purifier',
-    'Monster Aura Smelter',
-    'Miasma Sovereign',
-    'Dark Core Glutton',
-    'Tyrant Core Eater',
-    'Devouring Beast King',
-    'Apex Devourer Fiend'
-  ],
-  demonic_blood_soul: [
-    'Blood Inhaler',
-    'Mortal Blood Drinker',
-    'Soul Binder',
-    'First Soul Banner',
-    'Silent Life Reaper',
-    'Rippling Blood Sea',
-    'Nine Soul Master',
-    'Lord of Blood Nether',
-    'Apex Blood Sovereign'
-  ],
-  demonic_myriad_venom: [
-    'Mild Toxin Licker',
-    'Venom Drinker',
-    'Toxin Immune Flesh',
-    'Venom Sac Awakening',
-    'Myriad Venom Alchemist',
-    'Death-Immune Poison Body',
-    'Corrosive Venom Drake',
-    'Abyssal Venom Sea',
-    'Apex Venom Fiend'
-  ],
-  demonic_abyssal_pact: [
-    'Abyssal Whisperer',
-    'First Pact Holder',
-    'Blood Contractor',
-    'Demon Vessel',
-    'Fourth Seal Unlocked',
-    'Abyssal Right Hand',
-    'Avatar of the Void',
-    'Abyss Throne Heir',
-    'Apex Demon Sovereign'
-  ],
-  demonic_nether_darkness: [
-    'Fading Shadow',
-    'Thin Yin Mist',
-    'Creeping Twilight',
-    'Eternal Night Mantle',
-    'Umbral Domain Master',
-    'Nether Yin Sovereign',
-    'Nine-Layer Void Walker',
-    'Ancient Darkness Lord',
-    'Apex Nether Monarch'
-  ]
+  element_phoenix_fire:     ['Ember Initiate', 'Kindling Flame', 'Young Firewings', 'First Nirvana', 'Rising Phoenix Blaze', 'Inner Magma Heart', 'Celestial Flame Crown', 'Eternal Firebird', 'Perfected Phoenix'],
+  element_azure_water:      ['Dewdrop Initiate', 'Silver Stream', 'Blue Sea Wave', 'Dragon Current', 'Clear Inner Ocean', 'Frozen Soul Glacier', 'Abyssal Maelstrom', 'Bottomless Sky Sea', 'Perfected Azure Dragon'],
+  element_xuanwu_earth:     ['Pebble Initiate', 'Hardened Clay', 'Coral Bastion', 'Steel Cliff', 'Volcanic Core', 'Continental Plate', 'Leyline Foundation', 'Primordial Xuanwu Shell', 'Perfected Xuanwu'],
+  element_qingdi_wood:      ['Sprout Initiate', 'Wildgrass Roots', 'Bamboo Trunk', 'Ancient Gnarled Tree', 'Living Wildwood', 'Worldroot Nexus', 'Flowering Tree of Life', 'Heaven-Canopy Grove', 'Perfected Green Emperor'],
+  element_roc_wind:         ['Breeze Initiate', 'Dust Spiral', 'Gale of the Plains', 'Razor Tempest', 'Storm of the Firmament', 'Roc Wings Unfurled', 'Nine Heavens Tornado', 'Astral Boundary Wind', 'Perfected Ancient Roc'],
+  element_godthunder_light: ['Static Initiate', 'Finger Lightning', 'Blackcloud Strike', 'First Heavenbolt', 'Blue Chain Lightning', 'Pure Violet Thunder', "Seventh Heaven's Judgment", 'Nine Sacred Bolts', 'Perfected Thunder God'],
+  body_tempering:           ['Common Skin Initiate', 'Hardened Flesh', 'Ironbone Temper', 'Steel-Wire Muscle', 'Open Meridians', 'Pure Golden Organs', 'Dragonblood Flow', 'Vajra Impervious Body', 'Perfected Physique'],
+  gu_master:                ['Worm Planter Initiate', 'Early Nest Keeper', 'Young Gu Breeder', 'Colony Controller', 'Gu Fusion Master', 'Aperture King', 'Lord of Ten Thousand', 'Primordial Chaos Cavity', 'Perfected Gu'],
+  natal_artifact:           ['Mundane Vessel Initiate', 'Glimmering Relic', 'Young Spirit Weapon', 'Inner Core Artifact', 'Living Inner Relic', 'Breathing Relic', 'Soulbound Weapon', 'Heavenly Relic', 'Perfected Relic'],
+  natal_beast:              ['Mundane Cub Initiate', 'Minor Spirit Beast', 'Gifted Young Beast', 'Growing Spirit Tiger', 'Metamorphic Beast', 'Awakened Ancient Spirit', 'Skyborne Spirit Beast', 'True Spirit Dragon', 'Perfected Spirit Beast'],
+  demonic_turbid_core:      ['Faint Miasma Initiate', 'Filth Core Absorber', 'Young Core Purger', 'Beast Aura Smelter', 'Miasma Sovereign', 'Black Haze Devourer', 'Dark Core Tyrant', 'Beast-Core Demon King', 'Perfected Core Demon'],
+  demonic_blood_soul:       ['Blood Sip Initiate', 'Mortal Blood Drinker', 'Weak Soul Binder', 'First Soul Banner', 'Silent Lifetaker', 'Surging Blood Sea', 'Nine-Soul Overlord', 'Blood Hell King', 'Perfected Blood Demon'],
+  demonic_myriad_venom:     ['Mild Venom Initiate', 'Diluted Poison Drinker', 'Toxin-Tolerant Flesh', 'Venom Sac Formed', 'Thousandfold Venom', 'Death-Immune Flesh', 'Corrosive Venom Dragon', 'Annihilating Venom Sea', 'Perfected Venom Demon'],
+  demonic_abyssal_pact:     ['Faint Whisper Initiate', 'First Contract', 'Blood Covenant', 'Young Demon Vessel', 'Fourth Seal Opened', "Demon's Right Hand", 'Abyss Incarnate', 'Abyssal Throne Heir', 'Perfected Pact Demon'],
+  demonic_nether_darkness:  ['Fading Shadow Initiate', 'Thin Yin Mist', 'Creeping Dark', 'Eternal Night Cloak', 'Shadow Domain', 'Nether Yin Lord', 'Nine-Layer Void', 'Ancient Darkness King', 'Perfected Nether Demon'],
+  righteous_heavenly_merit: ['Kindness Initiate', 'Merit Acolyte', 'Radiant Virtue', 'Early Heavenly Merit', 'Dharma Guardian', 'Inner Merit of Virtue', 'Sacred Crown of Virtue', 'Avatar of Heavenly Merit', 'Perfected Great Merit'],
+  righteous_pure_yang:      ['Pure Yang Initiate', 'Dawn Breath', 'True Yang Flame', 'Pure Golden Blood', 'Untainted Yang Body', 'Inner Sun', 'Primordial Yang Light', 'Heavenly Yang Sovereign', 'Perfected Eternal Yang'],
+  righteous_sword_heart:    ['Sword Intent Initiate', 'Steel Edge', 'Clear Blade Flash', 'United Sword Heart', 'Spirit Flying Blade', 'Lord of Nine Swords', 'Domain of a Thousand Blades', 'Primordial Ancient Sword', 'Perfected Sword God'],
+  righteous_formation_array:['Banner Initiate', 'Basic Grid Pattern', 'Eight-Direction Seal', 'Firm Array Foundation', 'Leyline Controller', 'Grand Formation Domain', 'Star Matrix of Heaven', 'Primordial World Seal', 'Perfected Formation Master'],
+  righteous_karmic_mirror:  ['Clear Reflection Initiate', 'Dustless Mirror', 'First Karmic Gleam', 'Cause-and-Effect Sight', 'Clear Heart Mirror', "Judge of Fate's Threads", 'Eye of Karmic Law', 'Flawless Heaven Mirror', 'Perfected Great Karma']
 };
 
 export interface RealmDisplayInfo {
