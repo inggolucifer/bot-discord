@@ -21,6 +21,16 @@ Dokumen ini adalah checklist pengujian kualitas operasional (*Quality Assurance*
 
 ---
 
+## 1.1. MATRIKS COMBAT POLISH & RUNTIME SAFETY (CD-11 s/d CD-13)
+
+| ID | Skenario Uji | Prosedur & Ekspektasi | Status |
+|---|---|---|---|
+| **CD-11** | **Single DoT Tick per Round (Anti-Double-Tick)** | Target dengan 40 stack racun menerima serangan dari penyerang dengan Hukum Laksa Bisa (menambah +25 stack = 65 stack). Periksa apakah damage racun hanya terjadi satu kali.<br>• *Hasil*: `onSkillHitLawExtras` tidak menduplikasi damage DoT di tengah aksi. DoT racun hanya dieksekusi tepat satu kali pada fase akhir ronde via `tickStatuses` (`hp: 100 -> 91`, tepat -9 HP). | [x] PASS (unit script) |
+| **CD-12** | **Stamina Mid-Battle Soft Penalties** | Karakter mengeksekusi aksi dalam kondisi stamina optimal (100), rendah (< 20%), dan habis (0).<br>• *Hasil*: Stamina 100 menghasilkan pengali normal (1.0x damage, 1.0x hit). Stamina < 20% menghasilkan penalti lunak (0.90x damage, 0.95x hit). Stamina 0 menghasilkan penalti 0.85x damage dan 0.90x hit tanpa memblokir basic attack total (mencegah soft-lock). | [x] PASS (unit script) |
+| **CD-13** | **statusBadges Always Array & Standardized Contract** | Panggil `getStatusBadges` pada entitas null, undefined, bersih tanpa efek, dan entitas debuffed.<br>• *Hasil*: Selalu mengembalikan `Array` (tidak pernah `undefined` atau `null`). Setiap badge mematuhi bentuk kontrak baku: `{ id, badge, label, severity, stacks, duration, description, desc, kind }`. | [x] PASS (unit script) |
+
+---
+
 ## 2. PANDUAN PENGUJIAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
