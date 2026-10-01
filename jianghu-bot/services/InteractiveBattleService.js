@@ -386,6 +386,7 @@ class InteractiveBattleService {
       lawRank: player.cultivationLaw?.rank || 0,
       isWantedByOrthodox: !!player.isWantedByOrthodox,
       bodySummary: computedStats.bodySummary || null,
+      luckRerollEligible: !!computedStats.luckRerollEligible,
       atb: 1000,
       maxAtb: 1000,
       stance: player.stats?.stance || 100,
@@ -910,7 +911,11 @@ class InteractiveBattleService {
             if (isStanceBroken) damage = Math.floor(damage * 1.5);
 
             const critRate = 0.10 + (skill.critBonus || 0);
-            const isCrit = Math.random() < critRate;
+            let isCrit = Math.random() < critRate;
+            if (!isCrit && session.player.luckRerollEligible) {
+              // Pilar Luck: reroll 1x jika serangan pertama gagal crit (maks 1 reroll)
+              isCrit = Math.random() < critRate;
+            }
             if (isCrit) damage = Math.floor(damage * 1.5);
 
             damage = Math.max(1, Math.floor(damage * (0.9 + Math.random() * 0.2)));

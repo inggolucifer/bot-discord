@@ -361,6 +361,10 @@ function simulateBattle(challenger, opponent, options = {}) {
         if (Math.random() < critChance) {
              dmg = Math.floor(dmg * (atkStats.critDmgRate || 1.5));
              isCrit = true;
+        } else if (atkStats.luckRerollEligible && Math.random() < critChance) {
+             // Pilar Luck: reroll 1x jika serangan pertama gagal crit (maks 1 reroll)
+             dmg = Math.floor(dmg * (atkStats.critDmgRate || 1.5));
+             isCrit = true;
         }
 
         if (atkAdvantage && !defAdvantage && !hitSelf) dmg = Math.floor(dmg * 1.15);
