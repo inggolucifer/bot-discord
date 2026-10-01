@@ -63,6 +63,7 @@ Kunci `lawType` di bawah ini adalah **satu-satunya kunci sah** yang terdaftar di
   - Item over-tier (`itemTier > playerTier`) ditolak untuk melindungi dantian pemain dari ledakan Qi.
   - Item under-tier dikenakan penalti efisiensi penyerapan bertingkat.
 - **Progresi Authoritative**: Dihitung dari `RANK_TARGET_DAYS` (Rank 0 = 7 hari ... akumulatif ~935 hari channel aktif untuk mencapai puncak keabadian). Dilarang keras memodifikasi kurva tanpa skrip estimasi matematis.
+- **LAW_RANK_NAMES English Epithets (Index 0–8)**: Setiap 20 Hukum Semesta memiliki julukan ranah berbahasa Inggris unik dari Rank 0 s/d Rank 8. Rank 0 adalah ranah permulaan Hukum Semesta yang sah setelah bind (Initiate/Novice), berbeda mutlak dari tahapan fana `systemCultivation` (Stage 1–10). Representasi ranah ke pemain terpusat lewat helper `formatLawRealmDisplay(playerOrLaw)`, yang selalu memuat julukan Inggris, Rank, dan Stage (contoh: `Ember Initiate · Rank 0 · Stage 0/9`).
 
 ---
 

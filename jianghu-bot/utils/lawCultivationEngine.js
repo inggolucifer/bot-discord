@@ -388,32 +388,69 @@ const LAW_PROGRESSION = {
 };
 
 /**
- * Nama Rank Unik per Law (Rank 0 s/d 8)
- * Setiap Law memiliki penamaan rank berbeda sesuai jalur.
- * Format: LAW_RANK_NAMES[lawType][rankIndex]
+ * Nama Rank Unik per Law (Rank 0 s/d 8) — English Xianxia Unique Epithets
+ * Setiap Law memiliki penamaan rank berbahasa Inggris unik sesuai jalur.
+ * Format: LAW_RANK_NAMES[lawType][rankIndex] (index 0..8)
+ * Rank 0: Initiate / Novice / Foundation of that specific Law path
+ * Rank 8: Perfected state of that specific Law path
  */
 const LAW_RANK_NAMES = {
-  element_phoenix_fire:     ['Percikan Api Kecil', 'Pembakaran Awal', 'Sayap Api Muda', 'Nirwana Pertama', 'Nyala Phoenix Bangkit', 'Lahar Inti Batin', 'Mahkota Api Surgawi', 'Burung Api Abadi', 'Phoenix Sempurna'],
-  element_azure_water:      ['Tetesan Embun Pagi', 'Aliran Sungai Perak', 'Gelombang Laut Biru', 'Arus Deras Naga', 'Samudra Batin Jernih', 'Glasier Jiwa Beku', 'Pusaran Abyssal', 'Lautan Langit Tanpa Dasar', 'Naga Azure Sempurna'],
-  element_xuanwu_earth:     ['Kerikil Dasar', 'Tanah Liat Padat', 'Batu Karang Kokoh', 'Tebing Baja Bumi', 'Inti Gunung Berapi', 'Lempeng Benua Agung', 'Fondasi Leylines', 'Cangkang Xuanwu Purba', 'Xuanwu Sempurna'],
-  element_qingdi_wood:      ['Tunas Biji Pertama', 'Akar Rumput Liar', 'Batang Bambu Kokoh', 'Pohon Tua Berurat', 'Hutan Belantara Hidup', 'Akar Dunia Terhubung', 'Pohon Hayat Berbunga', 'Kanopi Langit Surgawi', 'Kaisar Hijau Sempurna'],
-  element_roc_wind:         ['Hembusan Lembut', 'Pusaran Debu Kecil', 'Angin Kencang Padang', 'Topan Bilah Tajam', 'Badai Petir Langit', 'Sayap Roc Terbentang', 'Tornado Sembilan Langit', 'Angin Astral Pembatas', 'Roc Kuno Sempurna'],
-  element_godthunder_light: ['Percikan Statis', 'Kilat Jemari Kecil', 'Sambaran Awan Hitam', 'Petir Langit Pertama', 'Rantai Petir Biru', 'Petir Ungu Murni', 'Hukuman Langit Ketujuh', 'Sembilan Petir Suci', 'Dewa Petir Sempurna'],
-  body_tempering:           ['Kulit Fana Biasa', 'Pengerasan Daging', 'Tulang Besi Tempa', 'Otot Kawat Baja', 'Meridian Terbuka', 'Organ Emas Murni', 'Darah Naga Mengalir', 'Raga Vajra Tak Tertembus', 'Raga Sempurna'],
-  gu_master:                ['Penanam Ulat Kecil', 'Penjaga Sarang Awal', 'Peternak Gu Muda', 'Pengendali Koloni', 'Master Fusi Gu', 'Raja Aperture', 'Penguasa Sepuluh Ribu', 'Rongga Chaos Purba', 'Gu Sempurna'],
-  natal_artifact:           ['Benda Fana Biasa', 'Pusaka Berpendar', 'Senjata Roh Muda', 'Artefak Inti Batin', 'Pusaka Batin Hidup', 'Relik Bernapas', 'Senjata Jiwa Terikat', 'Pusaka Surgawi', 'Pusaka Sempurna'],
-  natal_beast:              ['Hewan Fana Biasa', 'Satwa Roh Kecil', 'Satwa Berbakat Muda', 'Macan Roh Tumbuh', 'Satwa Metamorfosis', 'Roh Purba Bangkit', 'Satwa Langit Terbang', 'Naga Roh Sejati', 'Satwa Sempurna'],
-  demonic_turbid_core:      ['Penghisap Hawa Lemah', 'Penyerap Inti Kotor', 'Pembersih Core Muda', 'Pelebur Aura Siluman', 'Penguasa Miasma', 'Pemakan Hawa Hitam', 'Tiran Core Gelap', 'Raja Siluman Pelebur', 'Iblis Core Sempurna'],
-  demonic_blood_soul:       ['Penghisap Setetes Darah', 'Peminum Darah Fana', 'Pengikat Ruh Lemah', 'Panji Ruh Pertama', 'Pencabut Nyawa Diam', 'Lautan Darah Beriak', 'Penguasa Sembilan Ruh', 'Raja Neraka Darah', 'Iblis Darah Sempurna'],
-  demonic_myriad_venom:     ['Penjilat Bisa Ringan', 'Peminum Racun Encer', 'Tubuh Toleran Racun', 'Kantung Bisa Terbentuk', 'Racun Seribu Jenis', 'Tubuh Kebal Maut', 'Naga Racun Korosi', 'Lautan Racun Pemusnah', 'Iblis Racun Sempurna'],
-  demonic_abyssal_pact:     ['Bisikan Iblis Samar', 'Kontrak Pertama', 'Perjanjian Darah', 'Wadah Iblis Muda', 'Segel Keempat Terbuka', 'Tangan Kanan Iblis', 'Perwujudan Abyss', 'Pewaris Tahta Iblis', 'Iblis Pact Sempurna'],
-  demonic_nether_darkness:  ['Bayangan Pudar', 'Kabut Yin Tipis', 'Kegelapan Merayap', 'Jubah Malam Abadi', 'Domain Bayangan', 'Penguasa Nether Yin', 'Kekosongan Sembilan Lapis', 'Raja Kegelapan Kuno', 'Iblis Nether Sempurna'],
-  righteous_heavenly_merit: ['Kebaikan Pemula', 'Pahala Fana', 'Kebajikan Terpancar', 'Jasa Langit Awal', 'Pelindung Dharma', 'Jasa Kebajikan Batin', 'Mahkota Kebajikan Suci', 'Avatar Jasa Langit', 'Jasa Agung Sempurna'],
-  righteous_pure_yang:      ['Percikan Yang Murni', 'Napas Fajar', 'Api Yang Sejati', 'Darah Emas Murni', 'Tubuh Yang Tak Ternoda', 'Matahari Batin', 'Cahaya Yang Primordial', 'Penguasa Yang Surgawi', 'Yang Abadi Sempurna'],
-  righteous_sword_heart:    ['Niat Pedang Pemula', 'Ketajaman Baja', 'Kilatan Bilah Jernih', 'Hati Pedang Bersatu', 'Bilah Terbang Rohani', 'Penguasa Sembilan Pedang', 'Domain Seribu Bilah', 'Pedang Kuno Primordial', 'Dewa Pedang Sempurna'],
-  righteous_formation_array:['Bendera Formasi Pemula', 'Pola Grid Dasar', 'Segel Delapan Penjuru', 'Fondasi Array Kokoh', 'Pengendali Leylines', 'Domain Formasi Agung', 'Matriks Bintang Langit', 'Segel Primordial Semesta', 'Master Formasi Sempurna'],
-  righteous_karmic_mirror:  ['Pantulan Air Jernih', 'Cermin Debu Hilang', 'Kilau Karma Awal', 'Penglihatan Sebab Akibat', 'Cermin Hati Bersih', 'Hakim Benang Takdir', 'Mata Hukum Karma', 'Cermin Langit Tanpa Cela', 'Karma Agung Sempurna']
+  element_phoenix_fire:     ['Ember Initiate', 'Kindling Flame', 'Young Firewings', 'First Nirvana', 'Rising Phoenix Blaze', 'Inner Magma Heart', 'Celestial Flame Crown', 'Eternal Firebird', 'Perfected Phoenix'],
+  element_azure_water:      ['Dewdrop Initiate', 'Silver Stream', 'Blue Sea Wave', 'Dragon Current', 'Clear Inner Ocean', 'Frozen Soul Glacier', 'Abyssal Maelstrom', 'Bottomless Sky Sea', 'Perfected Azure Dragon'],
+  element_xuanwu_earth:     ['Pebble Initiate', 'Hardened Clay', 'Coral Bastion', 'Steel Cliff', 'Volcanic Core', 'Continental Plate', 'Leyline Foundation', 'Primordial Xuanwu Shell', 'Perfected Xuanwu'],
+  element_qingdi_wood:      ['Sprout Initiate', 'Wildgrass Roots', 'Bamboo Trunk', 'Ancient Gnarled Tree', 'Living Wildwood', 'Worldroot Nexus', 'Flowering Tree of Life', 'Heaven-Canopy Grove', 'Perfected Green Emperor'],
+  element_roc_wind:         ['Breeze Initiate', 'Dust Spiral', 'Gale of the Plains', 'Razor Tempest', 'Storm of the Firmament', 'Roc Wings Unfurled', 'Nine Heavens Tornado', 'Astral Boundary Wind', 'Perfected Ancient Roc'],
+  element_godthunder_light: ['Static Initiate', 'Finger Lightning', 'Blackcloud Strike', 'First Heavenbolt', 'Blue Chain Lightning', 'Pure Violet Thunder', "Seventh Heaven's Judgment", 'Nine Sacred Bolts', 'Perfected Thunder God'],
+  body_tempering:           ['Common Skin Initiate', 'Hardened Flesh', 'Ironbone Temper', 'Steel-Wire Muscle', 'Open Meridians', 'Pure Golden Organs', 'Dragonblood Flow', 'Vajra Impervious Body', 'Perfected Physique'],
+  gu_master:                ['Worm Planter Initiate', 'Early Nest Keeper', 'Young Gu Breeder', 'Colony Controller', 'Gu Fusion Master', 'Aperture King', 'Lord of Ten Thousand', 'Primordial Chaos Cavity', 'Perfected Gu'],
+  natal_artifact:           ['Mundane Vessel Initiate', 'Glimmering Relic', 'Young Spirit Weapon', 'Inner Core Artifact', 'Living Inner Relic', 'Breathing Relic', 'Soulbound Weapon', 'Heavenly Relic', 'Perfected Relic'],
+  natal_beast:              ['Mundane Cub Initiate', 'Minor Spirit Beast', 'Gifted Young Beast', 'Growing Spirit Tiger', 'Metamorphic Beast', 'Awakened Ancient Spirit', 'Skyborne Spirit Beast', 'True Spirit Dragon', 'Perfected Spirit Beast'],
+  demonic_turbid_core:      ['Faint Miasma Initiate', 'Filth Core Absorber', 'Young Core Purger', 'Beast Aura Smelter', 'Miasma Sovereign', 'Black Haze Devourer', 'Dark Core Tyrant', 'Beast-Core Demon King', 'Perfected Core Demon'],
+  demonic_blood_soul:       ['Blood Sip Initiate', 'Mortal Blood Drinker', 'Weak Soul Binder', 'First Soul Banner', 'Silent Lifetaker', 'Surging Blood Sea', 'Nine-Soul Overlord', 'Blood Hell King', 'Perfected Blood Demon'],
+  demonic_myriad_venom:     ['Mild Venom Initiate', 'Diluted Poison Drinker', 'Toxin-Tolerant Flesh', 'Venom Sac Formed', 'Thousandfold Venom', 'Death-Immune Flesh', 'Corrosive Venom Dragon', 'Annihilating Venom Sea', 'Perfected Venom Demon'],
+  demonic_abyssal_pact:     ['Faint Whisper Initiate', 'First Contract', 'Blood Covenant', 'Young Demon Vessel', 'Fourth Seal Opened', "Demon's Right Hand", 'Abyss Incarnate', 'Abyssal Throne Heir', 'Perfected Pact Demon'],
+  demonic_nether_darkness:  ['Fading Shadow Initiate', 'Thin Yin Mist', 'Creeping Dark', 'Eternal Night Cloak', 'Shadow Domain', 'Nether Yin Lord', 'Nine-Layer Void', 'Ancient Darkness King', 'Perfected Nether Demon'],
+  righteous_heavenly_merit: ['Kindness Initiate', 'Merit Acolyte', 'Radiant Virtue', 'Early Heavenly Merit', 'Dharma Guardian', 'Inner Merit of Virtue', 'Sacred Crown of Virtue', 'Avatar of Heavenly Merit', 'Perfected Great Merit'],
+  righteous_pure_yang:      ['Pure Yang Initiate', 'Dawn Breath', 'True Yang Flame', 'Pure Golden Blood', 'Untainted Yang Body', 'Inner Sun', 'Primordial Yang Light', 'Heavenly Yang Sovereign', 'Perfected Eternal Yang'],
+  righteous_sword_heart:    ['Sword Intent Initiate', 'Steel Edge', 'Clear Blade Flash', 'United Sword Heart', 'Spirit Flying Blade', 'Lord of Nine Swords', 'Domain of a Thousand Blades', 'Primordial Ancient Sword', 'Perfected Sword God'],
+  righteous_formation_array:['Banner Initiate', 'Basic Grid Pattern', 'Eight-Direction Seal', 'Firm Array Foundation', 'Leyline Controller', 'Grand Formation Domain', 'Star Matrix of Heaven', 'Primordial World Seal', 'Perfected Formation Master'],
+  righteous_karmic_mirror:  ['Clear Reflection Initiate', 'Dustless Mirror', 'First Karmic Gleam', 'Cause-and-Effect Sight', 'Clear Heart Mirror', "Judge of Fate's Threads", 'Eye of Karmic Law', 'Flawless Heaven Mirror', 'Perfected Great Karma']
 };
+
+/**
+ * Format tampilan ranah Hukum Semesta (English Title + Rank + Stage).
+ * Contoh output:
+ * "Tiny Worm Planter · Rank 0 · Stage 3/9"
+ * atau compact: "Tiny Worm Planter (R0-S3)"
+ *
+ * @param {object} playerOrLaw - Player document atau cultivationLaw object
+ * @param {object} [options]
+ * @returns {object|null}
+ */
+function formatLawRealmDisplay(playerOrLaw, options = {}) {
+  const law = playerOrLaw?.cultivationLaw || playerOrLaw;
+  if (!law?.activeLawType) return null;
+
+  const rank = Number(law.rank) || 0;
+  const stage = Number(law.stage) || 0;
+  const titles = LAW_RANK_NAMES[law.activeLawType];
+  const title = (titles && titles[rank]) || `Rank ${rank}`;
+  const lawName = LAW_DEFINITIONS[law.activeLawType]?.name || law.activeLawType;
+
+  // Primary player-facing string
+  // Wajib ada title + rank + stage
+  return {
+    title,                             // English epithet only
+    lawName,
+    rank,
+    stage,
+    stageMax: 9,
+    rankMax: 8,
+    display: `${title} · Rank ${rank} · Stage ${stage}/9`,
+    displayCompact: `${title} (R${rank}-S${stage})`,
+    displayFull: `${lawName} — ${title} · Rank ${rank} · Stage ${stage}/9`
+  };
+}
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -1634,10 +1671,15 @@ function attemptMiniBreakthrough(player, options = {}) {
       player.extendedStats.spiritualRoot[lawDef.rootKey] = currentRootXp + (bonus.rootExp || 25);
     }
 
+    const realmDisplay = formatLawRealmDisplay(player);
+    const realmLabel = realmDisplay?.display || `${rankName} · Rank ${law.rank} · Stage ${law.stage}/9`;
+
     return {
       success: true,
       isSuccess: true,
-      message: `Penerobosan Berhasil! ${rankName} Stage ${law.stage}.`,
+      message: `Penerobosan Berhasil! ${realmLabel}.`,
+      realmDisplay,
+      realmLabel,
       rewards: {
         newStage: law.stage,
         newRank: law.rank,
@@ -1645,7 +1687,8 @@ function attemptMiniBreakthrough(player, options = {}) {
         skillPoints: 1,
         cooldownMs: 30 * 60 * 1000,
         maxQi: law.maxQi,
-        rankDisplayName: rankName,
+        rankDisplayName: realmDisplay?.title || rankName,
+        realmLabel,
         stageBonusGranted: bonus
       }
     };
@@ -1965,15 +2008,21 @@ function attemptMajorBreakthrough(player, options = {}) {
       player.extendedStats.spiritualRoot[lawDef.rootKey] = (player.extendedStats.spiritualRoot[lawDef.rootKey] || 0) + 100;
     }
 
+    const realmDisplay = formatLawRealmDisplay(player);
+    const realmLabel = realmDisplay?.display || `${newRankName} · Rank ${law.rank} · Stage 0/9`;
+
     return {
       success: true,
       isSuccess: true,
-      message: `🎉 PENEROBOSAN BESAR BERHASIL! Ranah naik ke: ${newRankName}!`,
+      message: `🎉 PENEROBOSAN BESAR BERHASIL! Ranah naik ke: ${realmLabel}!`,
+      realmDisplay,
+      realmLabel,
       tribulation: tribResult,
       rewards: {
         newRank: law.rank,
         newStage: 0,
-        rankDisplayName: newRankName,
+        rankDisplayName: realmDisplay?.title || newRankName,
+        realmLabel,
         levelCapBonus: 5,
         skillPoints: 3,
         cooldownMs: 4 * 3600 * 1000,
@@ -2376,7 +2425,9 @@ function getLawStatus(player) {
 
   const lawDef = law.activeLawType ? LAW_DEFINITIONS[law.activeLawType] : null;
   const rankNames = law.activeLawType ? LAW_RANK_NAMES[law.activeLawType] : null;
-  const rankDisplayName = rankNames?.[law.rank] || null;
+  const realmDisplay = formatLawRealmDisplay(player);
+  const rankDisplayName = realmDisplay?.title || rankNames?.[law.rank] || null;
+  const realmLabel = realmDisplay?.display || null;
 
   const streakDays = law.dailyData?.dailyStreakDays || player.dailyStreak || 0;
   const dailyCap = getDailyChannelCap(streakDays);
@@ -2506,7 +2557,9 @@ function getLawStatus(player) {
 
     rank,
     stage,
-    rankDisplayName: rankDisplayName || `Tingkat ${rank}`,
+    rankDisplayName: rankDisplayName || `Rank ${rank}`,
+    realmDisplay,
+    realmLabel,
     totalStages,
 
     qi: Math.floor(currentQi),
@@ -4250,8 +4303,9 @@ module.exports = {
   // Active Gathering
   awardActiveCultivationQi,
 
-  // Status
+  // Status & Display
   getLawStatus,
+  formatLawRealmDisplay,
 
   // Nether Darkness Helpers
   NETHER_DARKNESS_ZONES,

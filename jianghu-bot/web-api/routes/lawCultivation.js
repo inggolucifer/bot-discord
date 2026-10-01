@@ -34,6 +34,7 @@ const { getSkillPointCost, getMaxSkillLevel, getRequiredSkillCombatExp } = requi
 const {
   LAW_DEFINITIONS,
   LAW_RANK_NAMES,
+  formatLawRealmDisplay,
   NATURAL_ESSENCES,
   getQiRequired,
   syncLawChanneling,
@@ -495,17 +496,23 @@ router.post('/bind', authenticateToken, async (req, res) => {
       }], { session });
 
       const rankName = LAW_RANK_NAMES[lawType]?.[0] || 'Rank 0';
+      const realmDisplay = formatLawRealmDisplay(player.cultivationLaw);
+      const realmLabel = realmDisplay?.display || `${rankName} · Rank 0 · Stage 0/9`;
 
       res.json({
         success: true,
         message: `✨ Berhasil mematri ${lawDef.name} ke dalam fondasi fana! Perjalanan kultivasi dimulai sebagai "${rankName}".`,
+        realmDisplay,
+        realmLabel,
         data: {
           activeLawType: lawType,
           lawName: lawDef.name,
           rank: 0,
           stage: 0,
           maxQi: player.cultivationLaw.maxQi,
-          rankDisplayName: rankName,
+          rankDisplayName: realmDisplay?.title || rankName,
+          realmLabel,
+          realmDisplay,
           boundEntity: player.cultivationLaw.boundEntity?.entityType ? player.cultivationLaw.boundEntity : null
         }
       });
