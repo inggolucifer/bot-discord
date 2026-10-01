@@ -96,11 +96,44 @@ function getVitalityCombatPenalty(player) {
 
 /**
  * Pengali penalti stamina aksi saat stamina pemain sangat rendah di ronde tempur.
+ * - stamina < 20% max -> outbound damage * 0.90, hitChance * 0.95
+ * - stamina === 0     -> outbound damage * 0.85, hitChance * 0.90 (tetap bisa basic attack)
  */
 function getStaminaActionPenalty(sessionPlayer) {
-  if (!sessionPlayer) return 1.0;
-  const sta = Number(sessionPlayer.stamina ?? 100);
-  return sta < 20 ? 0.90 : 1.0;
+  if (!sessionPlayer) {
+    const numObj = new Number(1.0);
+    numObj.damageMult = 1.0;
+    numObj.hitChanceMult = 1.0;
+    numObj.isExhausted = false;
+    numObj.isTired = false;
+    return numObj;
+  }
+
+  const sta = Number(sessionPlayer.stamina !== undefined ? sessionPlayer.stamina : 100);
+  const maxSta = Number(sessionPlayer.maxStamina || 100);
+  const ratio = maxSta > 0 ? (sta / maxSta) : 1.0;
+
+  let damageMult = 1.0;
+  let hitChanceMult = 1.0;
+  let isExhausted = false;
+  let isTired = false;
+
+  if (sta <= 0) {
+    damageMult = 0.85;
+    hitChanceMult = 0.90;
+    isExhausted = true;
+  } else if (ratio < 0.20 || sta < 20) {
+    damageMult = 0.90;
+    hitChanceMult = 0.95;
+    isTired = true;
+  }
+
+  const numObj = new Number(damageMult);
+  numObj.damageMult = damageMult;
+  numObj.hitChanceMult = hitChanceMult;
+  numObj.isExhausted = isExhausted;
+  numObj.isTired = isTired;
+  return numObj;
 }
 
 /**

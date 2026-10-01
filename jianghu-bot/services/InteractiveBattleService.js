@@ -376,8 +376,8 @@ class InteractiveBattleService {
       qi: currentQi,
       maxQi: maxQi,
       qiType: player.cultivationLaw?.activeLawType === 'body_tempering' ? 'true_qi' : 'qi',
-      stamina: player.currentStamina || 100,
-      maxStamina: player.maxStamina || 100,
+      stamina: (player.currentStamina !== undefined && player.currentStamina !== null) ? player.currentStamina : (player.maxStamina ?? player.extendedStats?.maxStamina ?? 100),
+      maxStamina: player.maxStamina ?? player.extendedStats?.maxStamina ?? 100,
       attack: finalAtk,
       defense: finalDef,
       speed: computedStats.spd || player.stats?.spd || 10,
@@ -605,6 +605,14 @@ class InteractiveBattleService {
 
     session.player.conditions = normalizeConditions(session.player.conditions);
     const { onTurnStartLawExtras, onSkillHitLawExtras, getDefenseDamageMultiplier, getStatusBadges, applyStatus } = require('../utils/combatStatus');
+    const { getStaminaActionPenalty } = require('../utils/combatBody');
+
+    const STAMINA_COST = {
+      basic: 2,
+      skill: 4,
+      defend: 1,
+      item: 1
+    };
 
     // Sinergi Law pada awal giliran (Cleanse Pure Yang dll)
     const turnStartExtras = onTurnStartLawExtras({ entity: session.player, session });
@@ -689,6 +697,9 @@ class InteractiveBattleService {
         message: `🎒 ${session.player.name} menggunakan item [${item.name}].${buffMessage}`
       });
 
+      // Konsumsi Stamina Penggunaan Item (C2)
+      session.player.stamina = Math.max(0, (session.player.stamina ?? 100) - STAMINA_COST.item);
+
       // Tandai pemain sudah bertindak ronde ini
       session.turnQueue.shift(); // Hapus giliran pemain
 
@@ -736,6 +747,12 @@ class InteractiveBattleService {
       // Konsumsi Qi / True Qi Tempur & Pasang Cooldown (TIDAK MEMENGARUHI cultivationLaw.qi)
       session.player.qi -= (skill.qiCost || 0);
       skill.currentCooldown = skill.cooldown || 0;
+
+      // Konsumsi Stamina Aksi Tempur (C2)
+      const isBasic = !skill.qiCost && (skill.skillId === 'basic_attack' || skill.isBasicAttack);
+      const isDefend = skill.type === 'defend';
+      const staCost = isDefend ? STAMINA_COST.defend : (isBasic ? STAMINA_COST.basic : STAMINA_COST.skill);
+      session.player.stamina = Math.max(0, (session.player.stamina ?? 100) - staCost);
 
       if (skill.type === 'defend') {
         // Tangkis / Bertahan
@@ -842,7 +859,11 @@ class InteractiveBattleService {
             : [session.enemies.find(e => e.entityId === targetId && !e.isDead) || session.enemies.find(e => !e.isDead)].filter(Boolean);
 
           const intoxVal = session.player.conditions.intox || 0;
-          const missChance = intoxVal > 0 ? Math.min(0.35, intoxVal * COMBAT_COND.INTOX_MISS_RATE_PER_POINT) : 0;
+          const staPenalty = getStaminaActionPenalty(session.player);
+          let missChance = intoxVal > 0 ? Math.min(0.35, intoxVal * COMBAT_COND.INTOX_MISS_RATE_PER_POINT) : 0;
+          if (staPenalty.hitChanceMult < 1.0) {
+            missChance += (1 - staPenalty.hitChanceMult);
+          }
           const isWineSkill = skill.kungfuDiscipline === 'wineArt' || skill.name?.toLowerCase().includes('arak') || skill.name?.toLowerCase().includes('mabuk');
 
           for (const target of targets) {
@@ -874,6 +895,16 @@ class InteractiveBattleService {
               const wineMult = 1 + (intoxVal * COMBAT_COND.INTOX_WINE_ART_BONUS_PER_POINT);
               damage = Math.floor(damage * wineMult);
               drunkenNote = ` 🍶 [Drunken DMG +${Math.floor(intoxVal * 0.6)}%]`;
+            }
+
+            // Penalti Stamina Rendah (C3)
+            if (staPenalty.damageMult < 1.0) {
+              damage = Math.max(1, Math.floor(damage * staPenalty.damageMult));
+              if (staPenalty.isExhausted) {
+                drunkenNote += ' ⚠️ [Stamina Habis: DMG -15%]';
+              } else if (staPenalty.isTired) {
+                drunkenNote += ' ⚠️ [Stamina Rendah: DMG -10%]';
+              }
             }
 
             if (isStanceBroken) damage = Math.floor(damage * 1.5);
@@ -1295,6 +1326,13 @@ class InteractiveBattleService {
     const { getCombatQiRegenPerRound } = require('../utils/lawCultivationEngine');
     const roundQiRegen = getCombatQiRegenPerRound(session.player);
     session.player.qi = Math.min(session.player.maxQi || 100, (session.player.qi || 0) + roundQiRegen);
+
+    // Regenerasi stamina per ronde (C4)
+    const baseStaminaRegen = 3;
+    const bodyStaminaMult = session.player.bodyCombatMultipliers?.staminaMult || 1.0;
+    const roundStaminaRegen = Math.max(1, Math.round(baseStaminaRegen * bodyStaminaMult));
+    const maxStamina = session.player.maxStamina || 100;
+    session.player.stamina = Math.min(maxStamina, (session.player.stamina ?? maxStamina) + roundStaminaRegen);
 
     session.player.statusBadges = getStatusBadges(session.player);
     session.enemies.forEach(e => {
