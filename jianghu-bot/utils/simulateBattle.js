@@ -4,7 +4,7 @@ const COMBAT_COND = require('../config/combatConditions');
 const { resolveWeaponDiscipline, getKungfuLevel, getStealingSuccessBonus } = require('./kungfuMastery');
 const { getLawCombatModifiers, applyLawDamageModifiers } = require('./lawCultivationEngine');
 const { applyPillarCombatModifiers } = require('./combatBody');
-const { onSkillHitLawExtras, onTurnStartLawExtras, getStatusBadges } = require('./combatStatus');
+const { onSkillHitLawExtras, onTurnStartLawExtras, getStatusBadges, applyStatus, ensureCombatState } = require('./combatStatus');
 
 function cloneConditions(conds) {
     if (!conds || !Array.isArray(conds)) return [];
@@ -47,6 +47,10 @@ function simulateBattle(challenger, opponent, options = {}) {
 
     let p1Conditions = cloneConditions(challenger.combatConditions || []);
     let p2Conditions = cloneConditions(opponent.combatConditions || []);
+    challenger.maxHp = p1MaxHp;
+    opponent.maxHp = p2MaxHp;
+    ensureCombatState(challenger);
+    ensureCombatState(opponent);
 
     let p1Shield = 0;
     let p2Shield = 0;
@@ -296,15 +300,6 @@ function simulateBattle(challenger, opponent, options = {}) {
             pushLog(turnLawExtras.notes.join(' '), 'law_turn_extra', { target: currentAttacker });
         }
 
-        // Poison is triggered on offensive action
-        let poisonCond = atkConds.find(c => c.type === 'poison');
-        if (poisonCond) {
-            let poisonDmg = Math.floor(atkMaxHp * (COMBAT_COND.POISON_DOT_BASE * poisonCond.severity));
-            if (currentAttacker === 1) p1Hp -= poisonDmg; else p2Hp -= poisonDmg;
-            pushLog(`🤢 **${attacker.characterName}** terkena damage racun sebesar **${poisonDmg}**!`, 'poison_tick', { damage: poisonDmg, target: currentAttacker });
-            if (p1Hp <= 0 || p2Hp <= 0) break;
-        }
-
         let psychosisCond = atkConds.find(c => c.type === 'psychosis');
         let hitSelf = false;
         if (psychosisCond && Math.random() < COMBAT_COND.PSYCHOSIS_MISS_OR_SELF_HIT_CHANCE) {
@@ -443,14 +438,7 @@ function simulateBattle(challenger, opponent, options = {}) {
                 skill: i === 0 ? activeSkill?.name : null
             });
 
-            // Check for Injury (Hit Besar)
-            if (actualDmgToHp >= (actTargetIdx === 1 ? p1MaxHp : p2MaxHp) * COMBAT_COND.INJURY_THRESHOLD_PERCENT) {
-                let tConds = actTargetIdx === 1 ? p1Conditions : p2Conditions;
-                addCondition(tConds, 'injury', 1);
-                pushLog(`🦴 Serangan telak! **${actTarget.characterName}** menderita cedera dalam (Injury)!`, 'injury_apply', { target: actTargetIdx });
-            }
-
-            // Sinergi Law saat hit mendarat
+            // Sinergi Law saat hit mendarat (termasuk Heavy Hit injury >= 15% maxHp via onSkillHitLawExtras)
             const lawExtras = onSkillHitLawExtras({
                 attacker: attacker,
                 defender: actTarget,
@@ -478,11 +466,13 @@ function simulateBattle(challenger, opponent, options = {}) {
                   else p2Hp = Math.min(p2Stats.maxHp, p2Hp + heal);
                   pushLog(`🩸 **${attacker.characterName}** menyerap **${heal}** HP!`, 'heal', { target: currentAttacker, amount: heal });
              } else if (activeSkill.type === 'poison') {
+                  applyStatus(defender, 'poison', { stacks: 20 });
                   addCondition(defConds, 'poison', 1);
                   pushLog(`☠️ **${defender.characterName}** terkena racun!`, 'poison_apply', { target: currentAttacker === 1 ? 2 : 1 });
              } else if (activeSkill.type === 'stun') {
+                  applyStatus(defender, 'stun', { duration: 1 });
                   addCondition(defConds, 'frozen', 1, 1);
-                  pushLog(`💫 **${defender.characterName}** terkena efek Stun (Frozen)!`, 'stun_apply', { target: currentAttacker === 1 ? 2 : 1 });
+                  pushLog(`💫 **${defender.characterName}** terkena efek Stun!`, 'stun_apply', { target: currentAttacker === 1 ? 2 : 1 });
              }
         }
 
