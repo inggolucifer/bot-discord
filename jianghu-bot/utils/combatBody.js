@@ -174,6 +174,8 @@ function checkAndApplyHeavyHitInjury(target, incomingDamage) {
 
 /**
  * Terapkan modifikasi 5 Pilar Tempur (Focus, Vitality, Mood, Luck) ke snapshot stat tempur.
+ * CATATAN ARSITEKTUR: Fungsi ini hanya dipanggil SATU KALI pada saat inisialisasi battle snapshot (applied once at battle snapshot),
+ * untuk mencegah double-counting atau akumulasi liar antar-ronde.
  *
  * @param {Object} baseStats - Hasil kalkulasi dari getComputedStats()
  * @param {Object} player - Dokumen pemain
