@@ -138,6 +138,16 @@ d:\gitub\bot-discord\
   - Monster yang dikalahkan disimpan ke dalam koleksi database `DefeatedMonsterTile` dengan jadwal respawn (default 1 jam).
   - Endpoint peta `/api/world/tiles` menyaring dan menghapus monster dari petak tersebut sehingga tidak muncul lagi sampai masa respawn selesai.
 
+### 3.7.1. Law Cultivation (20 Laws) & Combat Depth
+Sistem 20 Hukum Semesta + kedalaman combat (status terunifikasi, body parts, pilar, sinergi faksi) didokumentasikan untuk agen di:
+
+- `docs/LAW_COMBAT_CONTEXT.md` (wajib baca sebelum edit Law/Combat)
+- `docs/LAW_QA_CHECKLIST.md`
+- `docs/COMBAT_QA.md`
+- `docs/LAW_OPERATIONS.md` (jika ada)
+
+Aturan emas: essence kosong = 0 Qi channel; bind stage ≥ 10; Combat Qi ≠ Cultivation Qi; status tick hanya lewat `utils/combatStatus.js`.
+
 ### 3.8. Kategori Senjata & Disiplin KungFu (Weapon Categories & Discipline Map)
 Setiap senjata di database `Item` (kategori `'weapon'`) dipetakan ke disiplin beladiri (`player.kungfuSkills`) menggunakan fungsi `resolveWeaponDiscipline(item)` di `utils/kungfuMastery.js`. Pemetaan ini menentukan nama aksi, ikon, elemen, dan efek pasif basic attack di medan tempur.
 
