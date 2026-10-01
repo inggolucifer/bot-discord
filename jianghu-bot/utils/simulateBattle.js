@@ -3,6 +3,8 @@ const { COMBO_HIT_MULTIPLIER, BASE_CRIT_RATE, BASE_COMBO_RATE } = require('../co
 const COMBAT_COND = require('../config/combatConditions');
 const { resolveWeaponDiscipline, getKungfuLevel, getStealingSuccessBonus } = require('./kungfuMastery');
 const { getLawCombatModifiers, applyLawDamageModifiers } = require('./lawCultivationEngine');
+const { applyPillarCombatModifiers } = require('./combatBody');
+const { onSkillHitLawExtras, onTurnStartLawExtras, getStatusBadges } = require('./combatStatus');
 
 function cloneConditions(conds) {
     if (!conds || !Array.isArray(conds)) return [];
@@ -35,8 +37,8 @@ function simulateBattle(challenger, opponent, options = {}) {
         p2StatsRaw = { ...p2StatsRaw, hp: p2StatsRaw.maxHp };
     }
 
-    const p1Stats = { ...p1StatsRaw, hp: p1StatsRaw.maxHp };
-    const p2Stats = { ...p2StatsRaw, hp: p2StatsRaw.maxHp };
+    const p1Stats = applyPillarCombatModifiers({ ...p1StatsRaw, hp: p1StatsRaw.maxHp }, challenger);
+    const p2Stats = applyPillarCombatModifiers({ ...p2StatsRaw, hp: p2StatsRaw.maxHp }, opponent);
 
     let p1Hp = typeof challenger.currentHp === 'number' ? Math.max(1, challenger.currentHp) : p1Stats.maxHp;
     let p2Hp = typeof opponent.currentHp === 'number' ? Math.max(1, opponent.currentHp) : p2Stats.maxHp;
@@ -288,6 +290,12 @@ function simulateBattle(challenger, opponent, options = {}) {
             }
         }
 
+        // Sinergi Law turn start (Pure Yang cleanse dll)
+        const turnLawExtras = onTurnStartLawExtras({ entity: attacker });
+        if (turnLawExtras.notes && turnLawExtras.notes.length > 0) {
+            pushLog(turnLawExtras.notes.join(' '), 'law_turn_extra', { target: currentAttacker });
+        }
+
         // Poison is triggered on offensive action
         let poisonCond = atkConds.find(c => c.type === 'poison');
         if (poisonCond) {
@@ -442,6 +450,18 @@ function simulateBattle(challenger, opponent, options = {}) {
                 pushLog(`🦴 Serangan telak! **${actTarget.characterName}** menderita cedera dalam (Injury)!`, 'injury_apply', { target: actTargetIdx });
             }
 
+            // Sinergi Law saat hit mendarat
+            const lawExtras = onSkillHitLawExtras({
+                attacker: attacker,
+                defender: actTarget,
+                skill: activeSkill,
+                damage: actualDmgToHp,
+                isCrit: isCrit && i === 0
+            });
+            if (lawExtras.notes && lawExtras.notes.length > 0) {
+                pushLog(lawExtras.notes.join(' '), 'law_hit_extra', { target: actTargetIdx });
+            }
+
             if (actTargetIdx === 1 && p1Hp <= 0) break;
             if (actTargetIdx === 2 && p2Hp <= 0) break;
         }
@@ -537,6 +557,8 @@ function simulateBattle(challenger, opponent, options = {}) {
         p2Stats,
         p1Conditions,
         p2Conditions,
+        p1StatusBadges: getStatusBadges({ conditions: p1Conditions }),
+        p2StatusBadges: getStatusBadges({ conditions: p2Conditions }),
         stealSuccess,
         stealAttempted,
         kungfuGains
