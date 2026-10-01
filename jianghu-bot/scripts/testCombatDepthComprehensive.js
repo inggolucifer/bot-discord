@@ -338,6 +338,130 @@ console.log('Test CD-10: statusBadges di response -> non-empty saat debuffed...'
   console.log('  ✅ CD-10 PASS: statusBadges memuat informasi lengkap untuk rendering UI.\n');
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// CD-11: Single DoT Tick per Round (Single Path, Anti-Double-Tick)
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('Test CD-11: Single DoT Tick per round (Anti-Double-Tick verification)...');
+{
+  const victim = {
+    name: 'Korban Racun',
+    hp: 100,
+    maxHp: 100,
+    conditions: { poison: 0 }
+  };
+
+  // Terapkan 40 stack racun lewat applyStatus
+  applyStatus(victim, 'poison', { stacks: 40 });
+  assert.strictEqual(victim.conditions.poison, 40, 'CD-11 FAIL: Poison should be 40 stacks');
+
+  // onSkillHitLawExtras TIDAK BOLEH mengurangi HP atau melakukan DoT tick langsung,
+  // tetapi Demonic Myriad Venom menambahkan +25 stack racun (40 + 25 = 65 stack)
+  const dummyAttacker = { name: 'Penyerang', activeLawType: 'demonic_myriad_venom' };
+  const hitExtras = onSkillHitLawExtras({
+    attacker: dummyAttacker,
+    defender: victim,
+    skill: { name: 'Pukulan Beracun' },
+    damage: 10,
+    isCrit: false
+  });
+  assert(victim.hp === 100, 'CD-11 FAIL: onSkillHitLawExtras must NOT tick DoT or mutate HP directly');
+  assert.strictEqual(victim.conditions.poison, 65, 'CD-11 FAIL: Demonic Myriad Venom should add +25 stacks to 65');
+
+  // Jalankan SATU KALI tickStatuses akhir ronde
+  // 65 stacks * 0.0015 * 100 maxHp = 9 DMG
+  const tickResult = tickStatuses(victim, { maxHp: 100 });
+  assert.strictEqual(tickResult.logs.length, 1, 'CD-11 FAIL: Exactly 1 poison tick log should be generated per round');
+  assert.strictEqual(victim.hp, 91, 'CD-11 FAIL: Exactly 9 DMG should be dealt (floor(100 * 65 * 0.0015) = 9)');
+
+  console.log(`  HP awal: 100 -> Racun 65 stacks -> HP setelah 1 ronde: ${victim.hp} (-9 HP, tepat 1 tick DoT)`);
+  console.log('  ✅ CD-11 PASS: Single-path status apply dan eliminasi double-tick terverifikasi 100% presisi.\n');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CD-12: Stamina Mid-Battle Soft Penalties (Penalti Lunak Tanpa Soft-Lock)
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('Test CD-12: Stamina mid-battle soft penalties...');
+{
+  // 1. Stamina Penuh (100/100) -> 1.0x damage, 1.0x hit
+  const pOptimal = getStaminaActionPenalty({ stamina: 100, maxStamina: 100 });
+  assert.strictEqual(Number(pOptimal), 1.0, 'CD-12 FAIL: Optimal stamina should have 1.0 mult');
+  assert.strictEqual(pOptimal.damageMult, 1.0, 'CD-12 FAIL: damageMult should be 1.0');
+  assert.strictEqual(pOptimal.hitChanceMult, 1.0, 'CD-12 FAIL: hitChanceMult should be 1.0');
+  assert.strictEqual(pOptimal.isTired, false, 'CD-12 FAIL: isTired should be false');
+  assert.strictEqual(pOptimal.isExhausted, false, 'CD-12 FAIL: isExhausted should be false');
+
+  // 2. Stamina Rendah (< 20%) -> 0.90x damage, 0.95x hit
+  const pLow = getStaminaActionPenalty({ stamina: 15, maxStamina: 100 });
+  assert.strictEqual(Number(pLow), 0.90, 'CD-12 FAIL: Low stamina should have 0.90 mult');
+  assert.strictEqual(pLow.damageMult, 0.90, 'CD-12 FAIL: Low stamina damageMult should be 0.90');
+  assert.strictEqual(pLow.hitChanceMult, 0.95, 'CD-12 FAIL: Low stamina hitChanceMult should be 0.95');
+  assert.strictEqual(pLow.isTired, true, 'CD-12 FAIL: isTired should be true');
+  assert.strictEqual(pLow.isExhausted, false, 'CD-12 FAIL: isExhausted should be false');
+
+  // 3. Stamina Habis (0) -> 0.85x damage, 0.90x hit (Tidak memblokir basic attack)
+  const pZero = getStaminaActionPenalty({ stamina: 0, maxStamina: 100 });
+  assert.strictEqual(Number(pZero), 0.85, 'CD-12 FAIL: Zero stamina should have 0.85 mult');
+  assert.strictEqual(pZero.damageMult, 0.85, 'CD-12 FAIL: Zero stamina damageMult should be 0.85');
+  assert.strictEqual(pZero.hitChanceMult, 0.90, 'CD-12 FAIL: Zero stamina hitChanceMult should be 0.90');
+  assert.strictEqual(pZero.isExhausted, true, 'CD-12 FAIL: isExhausted should be true');
+
+  console.log(`  Stamina 100 -> DMG Mult: ${pOptimal.damageMult}x, Hit: ${pOptimal.hitChanceMult}x`);
+  console.log(`  Stamina 15  -> DMG Mult: ${pLow.damageMult}x, Hit: ${pLow.hitChanceMult}x (Tired)`);
+  console.log(`  Stamina 0   -> DMG Mult: ${pZero.damageMult}x, Hit: ${pZero.hitChanceMult}x (Exhausted, Basic Attack Tetap Berjalan)`);
+  console.log('  ✅ CD-12 PASS: Penalti stamina lunak mid-battle bekerja proporsional tanpa soft-lock.\n');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CD-13: statusBadges Always Array & Standardized Contract
+// ─────────────────────────────────────────────────────────────────────────────
+console.log('Test CD-13: statusBadges always array & standardized contract...');
+{
+  // 1. Kasus null / undefined / empty entity -> selalu mengembalikan array []
+  const nullBadges = getStatusBadges(null);
+  const undefBadges = getStatusBadges(undefined);
+  const emptyBadges = getStatusBadges({});
+  assert(Array.isArray(nullBadges) && nullBadges.length === 0, 'CD-13 FAIL: Null entity must return []');
+  assert(Array.isArray(undefBadges) && undefBadges.length === 0, 'CD-13 FAIL: Undefined entity must return []');
+  assert(Array.isArray(emptyBadges) && emptyBadges.length === 0, 'CD-13 FAIL: Clean entity must return []');
+
+  // 2. Bentuk baku (contract schema) pada entitas berstatus
+  const debuffedEntity = {
+    conditions: { poison: 40, injury: 3 },
+    debuffs: [{ type: 'stun', duration: 1, name: 'Lumpuh (Stun)' }],
+    buffs: [{ type: 'defense_up', duration: 2, name: 'Pertahanan Baja' }]
+  };
+  const badges = getStatusBadges(debuffedEntity);
+  assert(Array.isArray(badges) && badges.length === 4, 'CD-13 FAIL: Should return 4 badges');
+
+  // Verifikasi setiap badge memuat seluruh field wajib
+  const requiredKeys = ['id', 'badge', 'label', 'severity', 'stacks', 'duration', 'description', 'desc', 'kind'];
+  badges.forEach(b => {
+    requiredKeys.forEach(k => {
+      assert(k in b, `CD-13 FAIL: Badge ${b.id} missing required contract key '${k}'`);
+    });
+  });
+
+  const poisonBadge = badges.find(b => b.id === 'poison');
+  assert.strictEqual(poisonBadge.badge, '☠️');
+  assert.strictEqual(poisonBadge.label, 'Racun');
+  assert.strictEqual(poisonBadge.severity, 2);
+  assert.strictEqual(poisonBadge.stacks, 40);
+  assert.strictEqual(poisonBadge.duration, null);
+  assert.strictEqual(typeof poisonBadge.description, 'string');
+  assert.strictEqual(poisonBadge.kind, 'debuff');
+
+  const stunBadge = badges.find(b => b.id === 'stun');
+  assert.strictEqual(stunBadge.badge, '⚡');
+  assert.strictEqual(stunBadge.duration, 1);
+  assert.strictEqual(stunBadge.stacks, null);
+
+  console.log('  Verifikasi kontrak badge Poison:');
+  console.log(`   - ID: ${poisonBadge.id}, Badge: ${poisonBadge.badge}, Label: ${poisonBadge.label}`);
+  console.log(`   - Severity: ${poisonBadge.severity}, Stacks: ${poisonBadge.stacks}, Duration: ${poisonBadge.duration}`);
+  console.log(`   - Description: "${poisonBadge.description}"`);
+  console.log('  ✅ CD-13 PASS: statusBadges selalu array dan mematuhi kontrak bentuk baku 100% konsisten.\n');
+}
+
 console.log('═══════════════════════════════════════════════════════════════════');
-console.log('🎉 SELURUH PENGUJIAN CD-01 S/D CD-10 LULUS 100% TANPA KESALAHAN!  ');
+console.log('🎉 SELURUH PENGUJIAN CD-01 S/D CD-13 LULUS 100% TANPA KESALAHAN!  ');
 console.log('═══════════════════════════════════════════════════════════════════\n');
