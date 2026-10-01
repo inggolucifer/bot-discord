@@ -7,13 +7,49 @@ Dokumen ini adalah ringkasan arsitektur otoritatif tertinggi untuk seluruh agen 
 
 ---
 
-## 1. Ringkasan Arsitektur
-- **20 Law Lengkap**: 
-  - 6 Elemen Semesta: `fire`, `water`, `wood`, `earth`, `metal`, `lightning`
-  - 2 Jalan Spesialis: `body_tempering`, `gu_master`
-  - 2 Aliran Bawaan/Natal: `yin_celestial`, `yang_celestial`
-  - 5 Aliran Demonic/Iblis: `demonic_turbid_core`, `demonic_blood_soul`, `demonic_myriad_venom`, `demonic_abyssal_pact`, `demonic_nether_darkness`
-  - 5 Aliran Righteous/Lurus: `righteous_heavenly_merit`, `righteous_pure_yang`, `righteous_sword_heart`, `righteous_formation_array`, `righteous_karmic_mirror`
+## 1. Ringkasan Arsitektur & Katalog 20 Law (`LAW_DEFINITIONS` Keys)
+
+Kunci `lawType` di bawah ini adalah **satu-satunya kunci sah** yang terdaftar di `jianghu-bot/utils/lawCultivationEngine.js` (`LAW_DEFINITIONS`). Dilarang keras menggunakan alias fiktif atau nama generik.
+
+### Elemen (6)
+| lawType | Nama (`name` field) |
+|---|---|
+| `element_phoenix_fire` | Api Phoenix Sejati |
+| `element_azure_water` | Samudra Naga Azure |
+| `element_xuanwu_earth` | Inti Bumi Xuanwu |
+| `element_qingdi_wood` | Pohon Hayat Qingdi |
+| `element_roc_wind` | Sayap Badai Roc Kuno |
+| `element_godthunder_light` | Petir Hukuman Dewa |
+
+### Spesial (4)
+| lawType | Nama (`name` field) |
+|---|---|
+| `body_tempering` | Penempaan Raga Suci |
+| `gu_master` | Rongga Sepuluh Ribu Gu |
+| `natal_artifact` | Pusaka Jiwa Kelahiran |
+| `natal_beast` | Satwa Roh Kelahiran |
+
+### Demonic (5)
+| lawType | Nama (`name` field) |
+|---|---|
+| `demonic_turbid_core` | Pelebur Inti Siluman |
+| `demonic_blood_soul` | Penghisap Darah & Jiwa |
+| `demonic_myriad_venom` | Seribu Racun Pemusnah |
+| `demonic_abyssal_pact` | Kontrak Iblis Abyss |
+| `demonic_nether_darkness` | Bayangan Sembilan Yin |
+
+### Righteous (5)
+| lawType | Nama (`name` field) |
+|---|---|
+| `righteous_heavenly_merit` | Hukum Jasa Langit |
+| `righteous_pure_yang` | Kitab Yang Murni |
+| `righteous_sword_heart` | Hati Pedang |
+| `righteous_formation_array` | Formasi Bendera |
+| `righteous_karmic_mirror` | Cermin Karma |
+
+---
+
+### Prinsip Fundamental Law Cultivation:
 - **Dual Track Cultivation**:
   - `systemCultivation`: Ranah kultivasi awal tubuh fana (Mortal Stage 1–10).
   - `cultivationLaw`: Terbuka secara permanen dan eksklusif setelah mengikat hukum alam pada Mortal Stage 10.
@@ -159,3 +195,12 @@ Diterapkan tepat **SATU KALI** pada saat inisialisasi sesi tempur (`applyPillarC
    - `node jianghu-bot/scripts/testCombatDepthComprehensive.js`
    - `node jianghu-bot/scripts/testLawCombatBattleWire.js`
    - `node jianghu-bot/scripts/testRighteousLawsComprehensive.js`
+
+---
+
+## 11. Verifikasi Anti-Drift
+Setiap kali menambah, memperbarui, atau menghapus Law, jalankan perintah berikut dari folder `jianghu-bot`:
+```bash
+node -e "const {LAW_DEFINITIONS}=require('./utils/lawCultivationEngine'); console.log(Object.keys(LAW_DEFINITIONS).sort().join('\n'))"
+```
+Pastikan seluruh daftar kunci `lawType` pada tabel di Seksi 1 dokumen ini selalu identik 1:1 dengan luaran perintah di atas.
