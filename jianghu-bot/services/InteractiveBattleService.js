@@ -926,8 +926,10 @@ class InteractiveBattleService {
               damage = Math.max(1, Math.floor(damage * defMultiplier));
             }
 
-            // Apply Law Combat Modifiers (Merit/Yang situational vs target + Target Reflect)
-            const lawRes = applyLawDamageModifiers(session.player, target, damage);
+            // Apply Law Combat Modifiers (Merit/Yang situational vs target, First Strike, and Target Reflect)
+            const hasHitDefender = !!target._hasBeenHitByPlayer;
+            const lawRes = applyLawDamageModifiers(session.player, target, damage, { hasHitDefender });
+            target._hasBeenHitByPlayer = true;
             damage = lawRes.finalDamage;
             let lawNote = lawRes.logParts.length > 0 ? ` ${lawRes.logParts.filter(p => !p.includes('memantulkan')).join(' ')}` : '';
 
@@ -938,8 +940,18 @@ class InteractiveBattleService {
             target.hp = Math.max(0, target.hp - damage);
 
             if (target.hp <= 0) {
+              const wasAlive = !target.isDead;
               target.hp = 0;
               target.isDead = true;
+              if (wasAlive && session.player && !session.player.isDead) {
+                const beastHealPct = Math.min(0.08, session.player.extendedStats?.beastHealOnKillPct || 0);
+                if (beastHealPct > 0) {
+                  const maxHp = session.player.maxHp || session.player.hp || 100;
+                  const healAmt = Math.max(1, Math.floor(maxHp * beastHealPct));
+                  session.player.hp = Math.min(maxHp, session.player.hp + healAmt);
+                  lawNote += ` 🐾 [Ikatan Binatang Buas: Menyerap vitalitas mangsa +${healAmt} HP]`;
+                }
+              }
             }
 
             // Sinergi Law saat serangan mendarat (Myriad Venom, Gu, Sword Heart bleed on crit, Heavy Hit injury)
