@@ -303,10 +303,12 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
             const curseLevel = overdueDays >= 7 ? 2 : 1;
             if (law.demonicData) law.demonicData.abyssalCurseLevel = curseLevel;
             const penaltyMult = curseLevel === 2 ? LAW_BALANCE.ABYSS_CURSE_MULT_L2 : LAW_BALANCE.ABYSS_CURSE_MULT_L1;
-            mult.hp *= penaltyMult;
-            mult.atk *= penaltyMult;
-            mult.def *= penaltyMult;
-            mult.spd *= penaltyMult;
+            const curseResist = Math.min(0.40, Number(player.extendedStats?.abyssalCurseResist || 0));
+            const effectivePenalty = penaltyMult + (1.0 - penaltyMult) * curseResist;
+            mult.hp *= effectivePenalty;
+            mult.atk *= effectivePenalty;
+            mult.def *= effectivePenalty;
+            mult.spd *= effectivePenalty;
           } else {
             if (law.demonicData) law.demonicData.abyssalCurseLevel = 0;
           }

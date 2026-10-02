@@ -2708,7 +2708,8 @@ function getLawStatus(player) {
           altarTier: law.facilities?.abyssalAltarTier || 0,
           netherExileTimerSeconds: law.demonicData?.netherExileTimerSeconds || 0,
           hasNetherDebuff: !!law.demonicData?.hasNetherDebuff,
-          abyssalCurseLevel: law.demonicData?.abyssalCurseLevel || 0
+          abyssalCurseLevel: law.demonicData?.abyssalCurseLevel || 0,
+          abyssalCurseResist: (player.extendedStats?.abyssalCurseResist || 0)
         };
       } else if (type === 'righteous_heavenly_merit') {
         panel.merit = {
@@ -2759,6 +2760,12 @@ function getLawStatus(player) {
       if (ext.yangCleanseChance) activeSignatures.push('yangCleanse');
       if (ext.swordBleedChance) activeSignatures.push('swordBleed');
       if (ext.reflectPct) activeSignatures.push('reflect');
+      if (ext.abyssalCurseResist) activeSignatures.push('abyssalCurseResist');
+      if (ext.netherZoneAtkBonus || ext.nightAtkPct) activeSignatures.push('netherZone');
+      if (ext.corruptionToDefPct) activeSignatures.push('corruptionToDef');
+      if (ext.guSlotAtkBonus || ext.poisonProcFromGu) activeSignatures.push('guSignature');
+      if (ext.artifactInfusionAtk) activeSignatures.push('artifactInfusion');
+      if (ext.beastHealOnKillPct) activeSignatures.push('beastHeal');
       if (activeSignatures.length > 0) panel.combatSignatures = activeSignatures;
 
       return panel;
@@ -4419,7 +4426,7 @@ const LAW_SKILL_TREES = {
         branchId: 'B',
         exclusiveGroup: 'main_path',
         effectType: 'system',
-        effects: { abyssalCurseResist: 0.04, defMult: 0.010, hpMult: 0.008 },
+        effects: { abyssalCurseResist: 0.06, spiritualRes: 2, defMult: 0.012 },
         icon: '🛡️',
         description: 'Selubung pelindung kegelapan abyss meredam benturan dan menangkis kutukan jurang maut.'
       },
@@ -4434,7 +4441,7 @@ const LAW_SKILL_TREES = {
         branchId: 'B',
         exclusiveGroup: 'main_path',
         effectType: 'system',
-        effects: { abyssalCurseResist: 0.05, defMult: 0.014, flatHp: 18 },
+        effects: { abyssalCurseResist: 0.06, defMult: 0.014, flatHp: 18 },
         icon: '🕳️',
         description: 'Perwujudan raga abyss mempertebal ketahanan kutukan dan pertahanan dari senjata fana.'
       }
