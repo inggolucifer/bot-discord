@@ -24,6 +24,95 @@ interface NodePosition {
   y: number; // percentage 0 - 100
 }
 
+function formatSkillEffects(eff: Record<string, any> | undefined, curLevel: number = 1): string[] {
+  if (!eff || Object.keys(eff).length === 0) return [];
+  const lvl = Math.max(1, curLevel);
+  const bullets: string[] = [];
+
+  for (const [k, v] of Object.entries(eff)) {
+    if (v === true) {
+      if (k === 'swordOnly') bullets.push('Khusus Senjata Pedang');
+      else if (k === 'homeOnly') bullets.push('Khusus di Wilayah Markas/Sekte');
+      else if (k === 'boundOnly') bullets.push('Khusus saat Entitas Terikat Aktif');
+      else bullets.push(`Kondisi: ${k}`);
+      continue;
+    }
+    if (typeof v === 'number') {
+      const curTotal = v * lvl;
+      if (k === 'atkMult') {
+        bullets.push(`+${(v * 100).toFixed(1)}% ATK per level (sekarang +${(curTotal * 100).toFixed(1)}% di Lv.${lvl})`);
+      } else if (k === 'defMult') {
+        bullets.push(`+${(v * 100).toFixed(1)}% DEF per level (sekarang +${(curTotal * 100).toFixed(1)}% di Lv.${lvl})`);
+      } else if (k === 'hpMult') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Max HP per level (sekarang +${(curTotal * 100).toFixed(1)}% di Lv.${lvl})`);
+      } else if (k === 'spdMult') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Speed per level (sekarang +${(curTotal * 100).toFixed(1)}% di Lv.${lvl})`);
+      } else if (k === 'flatAtk') {
+        bullets.push(`+${v} ATK flat per level (sekarang +${curTotal} di Lv.${lvl})`);
+      } else if (k === 'flatDef') {
+        bullets.push(`+${v} DEF flat per level (sekarang +${curTotal} di Lv.${lvl})`);
+      } else if (k === 'flatHp') {
+        bullets.push(`+${v} Max HP flat per level (sekarang +${curTotal} di Lv.${lvl})`);
+      } else if (k === 'flatSpd') {
+        bullets.push(`+${v} Speed flat per level (sekarang +${curTotal} di Lv.${lvl})`);
+      } else if (k === 'crit') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Crit Rate per level (sekarang +${(curTotal * 100).toFixed(1)}%)`);
+      } else if (k === 'spiritualRes') {
+        bullets.push(`+${v} Spiritual RES per level (sekarang +${curTotal})`);
+      } else if (k === 'martialRes') {
+        bullets.push(`+${v} Martial RES per level (sekarang +${curTotal})`);
+      } else if (k === 'burnProcStacks') {
+        bullets.push(`Burn proc +${v} stacks / hit (sekarang +${curTotal} stacks)`);
+      } else if (k === 'burnTickBonus') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Burn DoT Tick bonus`);
+      } else if (k === 'venomPoisonProc') {
+        bullets.push(`Venom poison proc +${v} stacks / hit (sekarang +${curTotal} stacks)`);
+      } else if (k === 'chillProcChance') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Peluang Pembekuan (Chill proc)`);
+      } else if (k === 'spdSlowOnHit') {
+        bullets.push(`-${(v * 100).toFixed(1)}% SPD target saat terkena serangan`);
+      } else if (k === 'poisonResist') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Resistensi Racun`);
+      } else if (k === 'corruptionResist') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Resistensi Korupsi`);
+      } else if (k === 'reflectPct') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Pantulan Kerusakan (Reflect)`);
+      } else if (k === 'combatHpRegenPct') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Pemulihan HP Tempur tiap ronde`);
+      } else if (k === 'essenceGainPct') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Efisiensi Serap Esensi`);
+      } else if (k === 'defenseUpProcChance') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Peluang Pertahanan Kuat (Shield proc)`);
+      } else if (k === 'swordBleedChance') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Peluang Pendarahan Pedang`);
+      } else if (k === 'atkWantedMult') {
+        bullets.push(`+${(v * 100).toFixed(1)}% ATK terhadap Buronan/Penjahat`);
+      } else if (k === 'dmgVsCorrupted') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Kerusakan terhadap Entitas Korup`);
+      } else if (k === 'lifesteal') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Lifesteal (Penyerapan Darah)`);
+      } else if (k === 'stunChance') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Peluang Melumpuhkan (Stun)`);
+      } else if (k === 'firstStrikeAtkPct') {
+        bullets.push(`+${(v * 100).toFixed(1)}% ATK pada Serangan Ronde Pertama`);
+      } else if (k === 'yangCleanseChance') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Peluang Menghilangkan Debuff`);
+      } else if (k === 'unarmedPenaltyMitigation') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Mitigasi Penalti Tangan Kosong`);
+      } else if (k === 'homeBonusAdd') {
+        bullets.push(`+${(v * 100).toFixed(1)}% Efektivitas Pertahanan Markas`);
+      } else if (k === 'cooldownRounds') {
+        bullets.push(`Cooldown: ${v} Ronde`);
+      } else {
+        const valStr = v < 1 ? `+${(v * 100).toFixed(1)}%` : `+${v}`;
+        bullets.push(`${k}: ${valStr}`);
+      }
+    }
+  }
+
+  return bullets;
+}
+
 export default function LawConstellationTree({
   skills,
   availablePoints,
@@ -290,133 +379,255 @@ export default function LawConstellationTree({
         </div>
 
         {/* Floating Detail Panel (When a Node is Selected) */}
-        {selectedSkill && (
-          <div className="absolute bottom-4 right-4 z-50 w-80 sm:w-96 bg-stone-950/95 border-2 border-amber-500/60 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-200">
-            <div className="flex items-start justify-between border-b border-stone-800 pb-2.5 mb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="text-2xl p-1.5 rounded-xl bg-black border border-stone-800">
-                  {selectedSkill.icon}
-                </span>
-                <div>
-                  <h4 className="font-serif font-bold text-sm sm:text-base text-amber-200">
-                    {selectedSkill.name}
-                  </h4>
-                  <div className="flex items-center gap-2 text-[10px] font-mono text-stone-400 mt-0.5">
-                    <span>Tier {selectedSkill.tier}</span>
-                    <span>•</span>
-                    <span className={selectedSkill.isPassive ? 'text-blue-400' : 'text-rose-400'}>
-                      {selectedSkill.isPassive ? 'Jurus Pasif' : 'Jurus Aktif'}
-                    </span>
-                    {selectedSkill.element && (
-                      <>
-                        <span>•</span>
-                        <span className="text-yellow-400">{selectedSkill.element}</span>
-                      </>
-                    )}
+        {selectedSkill && (() => {
+          const rawLevel = Number(selectedSkill.level ?? (selectedSkill as any).currentLevel ?? (selectedSkill.isUnlocked ? 1 : 0));
+          const maxLevel = selectedSkill.maxLevel || 5;
+          const costPerLevel = selectedSkill.costPerLevel || selectedSkill.skillPointCost || 1;
+          const effType = selectedSkill.effectType || (selectedSkill.isPassive ? 'passive' : 'combat_proc');
+          const isPassiveOrSystem = effType === 'passive' || effType === 'system';
+          const isCombatEquippable = effType === 'combat_proc';
+          const eff = selectedSkill.effects || {};
+
+          // Dynamic Type Label
+          const typeLabel = effType === 'passive'
+            ? 'Pasif'
+            : effType === 'combat_proc'
+            ? 'Proc Tempur'
+            : effType === 'system'
+            ? 'Sistem'
+            : 'Jurus Aktif';
+
+          const typeColorClass = effType === 'passive'
+            ? 'text-blue-400'
+            : effType === 'combat_proc'
+            ? 'text-rose-400'
+            : effType === 'system'
+            ? 'text-emerald-400'
+            : 'text-amber-400';
+
+          // Konsumsi
+          let consumptionText = '—';
+          if (effType === 'combat_proc') {
+            if (eff.combatQiCost) {
+              consumptionText = `${eff.combatQiCost} Combat Qi`;
+            } else {
+              consumptionText = 'Proc on hit';
+            }
+          } else if (!isPassiveOrSystem && selectedSkill.baseCost && selectedSkill.baseCost > 0) {
+            consumptionText = `${selectedSkill.baseCost} ${selectedSkill.costType}`;
+          }
+
+          // Pengganda DMG
+          let dmgMultiplierText = '—';
+          const dmgParts: string[] = [];
+          if (eff.atkMult) {
+            const curAtk = (Number(eff.atkMult) * 100 * Math.max(1, rawLevel)).toFixed(1);
+            dmgParts.push(`+${curAtk}% ATK`);
+          }
+          if (eff.flatAtk) {
+            const curFlat = Number(eff.flatAtk) * Math.max(1, rawLevel);
+            dmgParts.push(`+${curFlat} flat`);
+          }
+          if (eff.firstStrikeAtkPct) {
+            dmgParts.push(`+${(Number(eff.firstStrikeAtkPct) * 100).toFixed(1)}% 1st`);
+          }
+          if (dmgParts.length > 0) {
+            dmgMultiplierText = dmgParts.join(' / ');
+          } else if (selectedSkill.damageMultiplier && selectedSkill.damageMultiplier > 0) {
+            dmgMultiplierText = `${selectedSkill.damageMultiplier}×`;
+          }
+
+          // Cooldown
+          let cooldownText = '—';
+          if (eff.cooldownRounds) {
+            cooldownText = `${eff.cooldownRounds} Ronde`;
+          } else if (selectedSkill.cooldownTurns && selectedSkill.cooldownTurns > 0) {
+            cooldownText = `${selectedSkill.cooldownTurns} Ronde`;
+          }
+
+          // Target
+          let targetText = 'Diri';
+          if (eff.homeOnly) {
+            targetText = 'Kondisional (Markas)';
+          } else if (eff.swordOnly) {
+            targetText = 'Kondisional (Pedang)';
+          } else if (eff.atkWantedMult) {
+            targetText = 'Kondisional (Buronan)';
+          } else if (effType === 'combat_proc') {
+            targetText = 'Musuh';
+          } else if (selectedSkill.targetType) {
+            targetText = selectedSkill.targetType;
+          }
+
+          // Effects bullets
+          const effectBullets = formatSkillEffects(eff, rawLevel);
+
+          // Can upgrade check
+          const isMax = rawLevel >= maxLevel;
+          const canUpgrade = selectedSkill.canUpgrade ?? (
+            !isMax &&
+            !selectedSkill.lockedReason &&
+            availablePoints >= costPerLevel
+          );
+
+          return (
+            <div className="absolute bottom-4 right-4 z-50 w-80 sm:w-96 bg-stone-950/95 border-2 border-amber-500/60 rounded-2xl p-4 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-4 duration-200">
+              <div className="flex items-start justify-between border-b border-stone-800 pb-2.5 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl p-1.5 rounded-xl bg-black border border-stone-800">
+                    {selectedSkill.icon}
+                  </span>
+                  <div>
+                    <h4 className="font-serif font-bold text-sm sm:text-base text-amber-200">
+                      {selectedSkill.name}
+                    </h4>
+                    <div className="flex items-center gap-2 text-[10px] font-mono text-stone-400 mt-0.5">
+                      <span>Tier {selectedSkill.tier}</span>
+                      <span>•</span>
+                      <span className={typeColorClass}>
+                        {typeLabel}
+                      </span>
+                      {selectedSkill.element && (
+                        <>
+                          <span>•</span>
+                          <span className="text-yellow-400">{selectedSkill.element}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => setSelectedSkillId(null)}
+                  className="text-stone-500 hover:text-stone-300 p-1"
+                >
+                  <X size={16} />
+                </button>
               </div>
 
-              <button
-                onClick={() => setSelectedSkillId(null)}
-                className="text-stone-500 hover:text-stone-300 p-1"
-              >
-                <X size={16} />
-              </button>
-            </div>
+              <p className="text-xs text-stone-300 leading-relaxed font-sans mb-3">
+                {selectedSkill.description}
+              </p>
 
-            <p className="text-xs text-stone-300 leading-relaxed font-sans mb-3">
-              {selectedSkill.description}
-            </p>
-
-            {/* Level & Combat XP Indicator */}
-            {selectedSkill.isUnlocked && (
+              {/* Level & SP Progression Indicator (Replacing fake XP) */}
               <div className="bg-amber-950/40 border border-amber-600/40 rounded-xl p-2.5 mb-3 text-xs">
                 <div className="flex items-center justify-between text-amber-200 font-serif font-bold mb-1">
-                  <span>Tingkat Penguasaan:</span>
-                  <span>Lv. {selectedSkill.level || 1} / {selectedSkill.maxLevel || 5}</span>
+                  <span>Tingkat Penguasaan SP:</span>
+                  <span className="font-mono text-amber-300">
+                    Lv. {rawLevel} / {maxLevel}
+                  </span>
                 </div>
                 <div className="w-full bg-stone-900 rounded-full h-2 overflow-hidden border border-stone-800">
                   <div 
                     className="bg-gradient-to-r from-amber-500 to-yellow-300 h-full rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.floor(((selectedSkill.exp || 0) / (selectedSkill.reqExp || 10)) * 100))}%` }}
+                    style={{ width: `${Math.min(100, Math.floor((rawLevel / maxLevel) * 100))}%` }}
                   />
                 </div>
                 <div className="flex justify-between items-center text-[10px] text-stone-400 font-mono mt-1">
-                  <span>⚔️ XP Serangan Tempur Riil</span>
-                  <span>{selectedSkill.exp || 0} / {selectedSkill.reqExp || 10} XP</span>
+                  <span>✨ Biaya: {costPerLevel} SP</span>
+                  <span>{isMax ? 'Maksimal' : rawLevel === 0 ? 'Belum Dipelajari' : `${rawLevel}/${maxLevel} Tahap`}</span>
                 </div>
               </div>
-            )}
 
-            {/* Combat Specs */}
-            {!selectedSkill.isPassive && (
+              {/* Dynamic Combat Specs */}
               <div className="grid grid-cols-2 gap-2 text-[11px] font-mono bg-black/60 p-2.5 rounded-xl border border-stone-800/80 mb-3">
                 <div className="text-stone-400">
-                  Konsumsi: <strong className="text-stone-200">{selectedSkill.baseCost} {selectedSkill.costType}</strong>
+                  Konsumsi: <strong className="text-stone-200">{consumptionText}</strong>
                 </div>
                 <div className="text-stone-400">
-                  Cooldown: <strong className="text-stone-200">{selectedSkill.cooldownTurns} Ronde</strong>
+                  Cooldown: <strong className="text-stone-200">{cooldownText}</strong>
                 </div>
                 <div className="text-stone-400">
-                  Pengganda DMG: <strong className="text-amber-400">{selectedSkill.damageMultiplier}×</strong>
+                  Pengganda DMG: <strong className="text-amber-400">{dmgMultiplierText}</strong>
                 </div>
                 <div className="text-stone-400">
-                  Target: <strong className="text-stone-200 capitalize">{selectedSkill.targetType}</strong>
+                  Target: <strong className="text-stone-200 capitalize">{targetText}</strong>
                 </div>
               </div>
-            )}
 
-            {/* Locked Reason Notice */}
-            {!selectedSkill.isUnlocked && selectedSkill.lockedReason && (
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-950/50 border border-amber-600/40 text-amber-300 text-xs mb-3 font-sans">
-                <AlertTriangle size={15} className="text-amber-400 shrink-0" />
-                <span>
-                  {selectedSkill.lockedReason === 'need_sp' && 'Poin Skill (SP) tidak mencukupi.'}
-                  {selectedSkill.lockedReason === 'need_rank' && 'Tingkat kultivasi (Rank Law) belum mencukupi.'}
-                  {selectedSkill.lockedReason === 'need_parent' && 'Syarat node sebelumnya belum dipelajari.'}
-                  {selectedSkill.lockedReason === 'branch_locked' && 'Jalur cabang terkunci karena telah memilih cabang lain.'}
-                  {selectedSkill.lockedReason === 'max_level' && 'Tingkat penguasaan telah maksimal.'}
-                  {!['need_sp', 'need_rank', 'need_parent', 'branch_locked', 'max_level'].includes(selectedSkill.lockedReason) && selectedSkill.lockedReason}
-                </span>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2 pt-1">
-              {!selectedSkill.isUnlocked ? (
-                <Button
-                  size="sm"
-                  onClick={() => onAllocate(selectedSkill.skillId)}
-                  disabled={!selectedSkill.canUnlock || !!selectedSkill.lockedReason || isAllocating || availablePoints < (selectedSkill.skillPointCost || 1)}
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-bold font-serif text-xs py-2 h-auto shadow disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isAllocating ? 'Mempelajari...' : selectedSkill.lockedReason === 'branch_locked' ? 'Cabang Terkunci' : selectedSkill.lockedReason === 'need_rank' ? 'Rank Belum Cukup' : selectedSkill.lockedReason === 'need_parent' ? 'Node Terkunci' : selectedSkill.lockedReason === 'need_sp' ? 'SP Kurang' : `Pelajari (-${selectedSkill.skillPointCost || 1} SP)`}
-                </Button>
-              ) : (
-                <>
-                  {!selectedSkill.isPassive && onToggleLoadout && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onToggleLoadout(selectedSkill.skillId)}
-                      className={`flex-1 text-xs py-2 h-auto font-serif ${
-                        (combatLoadout || []).includes(selectedSkill.skillId)
-                          ? 'border-rose-700 bg-rose-950/40 text-rose-300 hover:bg-rose-900/60'
-                          : 'border-amber-600 bg-amber-950/40 text-amber-200 hover:bg-amber-900/60'
-                      }`}
-                    >
-                      {(combatLoadout || []).includes(selectedSkill.skillId) ? 'Lepas dari Loadout' : 'Pasang ke Loadout'}
-                    </Button>
-                  )}
-                  <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1 px-3">
-                    <CheckCircle2 size={14} /> Dikuasai
-                  </span>
-                </>
+              {/* Real Human-Readable Effects List */}
+              {effectBullets.length > 0 && (
+                <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-2.5 mb-3 text-xs">
+                  <div className="text-[11px] font-serif font-bold text-amber-300 mb-1.5 flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-amber-400" />
+                    <span>Efek Bintang Semesta:</span>
+                  </div>
+                  <ul className="space-y-1 text-[11px] text-stone-300 font-mono">
+                    {effectBullets.map((bullet, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="text-amber-500 mt-0.5">•</span>
+                        <span className="leading-snug">{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
+
+              {/* Locked Reason Notice */}
+              {!isMax && selectedSkill.lockedReason && (
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-950/50 border border-amber-600/40 text-amber-300 text-xs mb-3 font-sans">
+                  <AlertTriangle size={15} className="text-amber-400 shrink-0" />
+                  <span>
+                    {selectedSkill.lockedReason === 'need_sp' && 'Poin Skill (SP) tidak mencukupi.'}
+                    {selectedSkill.lockedReason === 'need_rank' && 'Tingkat kultivasi (Rank Law) belum mencukupi.'}
+                    {selectedSkill.lockedReason === 'need_parent' && 'Syarat node sebelumnya belum dipelajari.'}
+                    {selectedSkill.lockedReason === 'branch_locked' && 'Jalur cabang terkunci karena telah memilih cabang lain.'}
+                    {selectedSkill.lockedReason === 'max_level' && 'Tingkat penguasaan telah maksimal.'}
+                    {!['need_sp', 'need_rank', 'need_parent', 'branch_locked', 'max_level'].includes(selectedSkill.lockedReason) && selectedSkill.lockedReason}
+                  </span>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 pt-1">
+                {rawLevel === 0 ? (
+                  <Button
+                    size="sm"
+                    onClick={() => onAllocate(selectedSkill.skillId)}
+                    disabled={!canUpgrade || isAllocating}
+                    className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-bold font-serif text-xs py-2 h-auto shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isAllocating ? 'Mempelajari...' : selectedSkill.lockedReason === 'branch_locked' ? 'Cabang Terkunci' : selectedSkill.lockedReason === 'need_rank' ? 'Rank Belum Cukup' : selectedSkill.lockedReason === 'need_parent' ? 'Node Terkunci' : selectedSkill.lockedReason === 'need_sp' || availablePoints < costPerLevel ? 'SP Kurang' : `Pelajari (-${costPerLevel} SP)`}
+                  </Button>
+                ) : (
+                  <>
+                    {!isMax && (
+                      <Button
+                        size="sm"
+                        onClick={() => onAllocate(selectedSkill.skillId)}
+                        disabled={!canUpgrade || isAllocating}
+                        className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-bold font-serif text-xs py-2 h-auto shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isAllocating ? 'Meningkatkan...' : availablePoints < costPerLevel ? 'SP Kurang' : `Tingkatkan Lv.${rawLevel + 1} (-${costPerLevel} SP)`}
+                      </Button>
+                    )}
+                    {isCombatEquippable && onToggleLoadout ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onToggleLoadout(selectedSkill.skillId)}
+                        className={`text-xs py-2 h-auto font-serif ${
+                          (combatLoadout || []).includes(selectedSkill.skillId)
+                            ? 'border-rose-700 bg-rose-950/40 text-rose-300 hover:bg-rose-900/60'
+                            : 'border-amber-600 bg-amber-950/40 text-amber-200 hover:bg-amber-900/60'
+                        }`}
+                      >
+                        {(combatLoadout || []).includes(selectedSkill.skillId) ? 'Lepas Loadout' : 'Pasang Loadout'}
+                      </Button>
+                    ) : (
+                      <span className="text-[10px] text-stone-500 font-mono italic px-1">
+                        {isPassiveOrSystem ? 'Pasif Otomatis' : ''}
+                      </span>
+                    )}
+                    <span className="text-xs font-mono text-emerald-400 font-bold flex items-center gap-1 px-2 whitespace-nowrap">
+                      <CheckCircle2 size={14} /> Dikuasai
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
