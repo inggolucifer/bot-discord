@@ -457,6 +457,7 @@ export interface LawSkillItem {
   requiredRank: number;
   requiredParentSkillId?: string | null;
   skillPointCost: number;
+  costPerLevel?: number;
   costType: 'qi' | 'true_qi' | 'hp' | 'stamina' | 'none';
   baseCost: number;
   cooldownTurns: number;
