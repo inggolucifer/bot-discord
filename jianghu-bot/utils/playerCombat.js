@@ -180,6 +180,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
       }
     }
 
+    // Apply passive effects from allocated skill tree nodes first
+    applyLawSkillTreeEffects(player, mult, flat);
+
     // Law Specialization Bonuses
     switch (law.activeLawType) {
       case 'element_phoenix_fire':
@@ -324,7 +327,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         mult.atk += rank * LAW_BALANCE.SWORD_RANK_ATK_MULT;
         const hasSword = isPlayerWieldingSword(player);
         if (!hasSword) {
-          mult.atk *= LAW_BALANCE.SWORD_UNARMED_PENALTY;
+          const mitigation = Number(player.extendedStats?.unarmedPenaltyMitigation || 0);
+          const effectivePenalty = Math.min(1.0, LAW_BALANCE.SWORD_UNARMED_PENALTY + mitigation);
+          mult.atk *= effectivePenalty;
         }
         if (!player.extendedStats) player.extendedStats = {};
         player.extendedStats.crit = (player.extendedStats.crit || 0) + (rank * LAW_BALANCE.SWORD_RANK_CRIT);
@@ -334,8 +339,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
         mult.def += rank * LAW_BALANCE.ARRAY_RANK_DEF_MULT;
         mult.hp += rank * LAW_BALANCE.ARRAY_RANK_HP_MULT;
         if (isOnOwnFormationHub(player)) {
-          mult.def *= LAW_BALANCE.ARRAY_HOME_BONUS;
-          mult.hp *= LAW_BALANCE.ARRAY_HOME_BONUS;
+          const homeBonus = LAW_BALANCE.ARRAY_HOME_BONUS + Number(player.extendedStats?.homeBonusAdd || 0);
+          mult.def *= homeBonus;
+          mult.hp *= homeBonus;
           if (!player.extendedStats) player.extendedStats = {};
           player.extendedStats.onFormationHome = true;
         }
@@ -364,8 +370,6 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
       mult.atk *= (1 - pen);
       mult.def *= (1 - pen);
     }
-    // Apply passive effects from allocated skill tree nodes
-    applyLawSkillTreeEffects(player, mult, flat);
   }
 
   // 3. Final Calculation: (Base + Flat) * Multiplier
