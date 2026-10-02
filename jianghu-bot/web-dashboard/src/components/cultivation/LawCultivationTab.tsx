@@ -1183,29 +1183,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </button>
               </div>
             </div>
-
-            {/* Info Card Disiplin Beladiri */}
-            <div className="rounded-2xl border border-stone-800 bg-[#0d1017]/90 p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-stone-300 font-serif font-bold text-sm">
-                  <Sword className="w-4 h-4 text-amber-400" />
-                  <span>6 Disiplin Beladiri & Manual</span>
-                </div>
-                <Link href="/skill-tree">
-                  <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs">
-                    Pohon Manual ➔
-                  </Button>
-                </Link>
-              </div>
-              <p className="text-xs text-stone-400 leading-relaxed">
-                Kembangkan kemahiran bertarung melalui pertarungan dunia nyata dan latihan kitab jurus esoteris.
-              </p>
-            </div>
           </div>
         </div>
-
-        {/* Master Realm Roadmap Accordion */}
-        <MasterRealmRoadmapAccordion currentRealmIdx={normRealmIdx} />
 
         {/* Heavenly Tribulation Modal */}
         <HeavenlyTribulationModal
@@ -2157,26 +2136,12 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const skillsList = skillsRes?.data?.skills || [];
   const availablePoints = skillsRes?.data?.availablePoints ?? lawData.lawSkillPoints;
 
-  // English Wuxia Law Rank Title
-  const activeLawTypeKey = lawData.activeLawType || '';
-  const englishRankName = (LAW_RANK_NAMES_EN[activeLawTypeKey] && LAW_RANK_NAMES_EN[activeLawTypeKey][lawData.rank - 1])
-    || lawData.rankDisplayName
-    || 'Mortal Foundation';
+  // Authoritative Law Realm Display from API
+  const realmTitle = lawData.realmDisplay?.title || lawData.rankDisplayName || `Rank ${lawData.rank}`;
+  const realmFullDisplay = lawData.realmLabel || lawData.realmDisplay?.display || `${realmTitle} · Rank ${lawData.rank} · Stage ${lawData.stage}/9`;
 
   return (
     <div className="space-y-6">
-      {/* Max Level Cap Banner if reached Level Cap of this Realm */}
-      <MaxLevelCapBanner
-        currentLevel={livePlayer?.level || 1}
-        currentLevelCap={lawData.characterLevelCap || (20 + lawData.rank * 20)}
-        realmName={lawData.rankDisplayName}
-        canBreakthrough={lawData.canMajorBreakthrough}
-        onNavigateBreakthrough={() => {
-          const el = document.getElementById('major-breakthrough-section');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }}
-      />
-
       {/* 1. UNIFIED HERO CARD: LAW CULTIVATION & REALM MASTER BANNER */}
       <Card className="relative overflow-hidden border border-amber-500/40 bg-gradient-to-r from-[#17120c] via-black to-[#17120c] p-6 shadow-2xl">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
@@ -2200,12 +2165,9 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </span>
               </div>
               <p className="text-base text-stone-200 font-serif flex items-center flex-wrap gap-2">
-                <span>Realm:</span>
+                <span>Ranah:</span>
                 <span className="font-bold text-amber-300 text-lg sm:text-xl drop-shadow-[0_2px_8px_rgba(245,158,11,0.3)]">
-                  {englishRankName}
-                </span>
-                <span className="text-xs text-amber-400/90 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40">
-                  Stage {lawData.stage}/9
+                  {realmFullDisplay}
                 </span>
               </p>
               <div className="flex flex-wrap items-center gap-4 text-xs text-stone-400 pt-1">
@@ -2380,24 +2342,6 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
           </div>
         </div>
       </Card>
-
-      {/* CTA Link ke Skill Tree Mandiri */}
-      <div className="flex items-center justify-between p-3 rounded-xl border border-stone-800 bg-stone-950/50 backdrop-blur-md">
-        <div className="flex items-center gap-2 text-sm text-stone-400">
-          <TreePine className="w-4 h-4 text-emerald-400" />
-          <span className="font-serif">Pohon Jurus Law ({lawData.combatLoadout?.length || 0}/4 Equipped)</span>
-          {availablePoints > 0 && (
-            <span className="w-5 h-5 rounded-full bg-amber-500 text-stone-950 font-mono text-[10px] font-bold flex items-center justify-center">
-              {availablePoints}
-            </span>
-          )}
-        </div>
-        <Link href="/skill-tree">
-          <Button size="sm" className="bg-emerald-600/80 hover:bg-emerald-500 text-stone-950 font-bold text-xs">
-            🌳 Buka Pohon Jurus <ChevronRight className="w-3.5 h-3.5 ml-1" />
-          </Button>
-        </Link>
-      </div>
 
       {/* RINCIAN SPESIALISASI LAW (Selalu tampil, tanpa sub-tab) */}
       {
@@ -3638,89 +3582,6 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               )}
             </Card>
           </div>
-
-          {/* BANNER TAUTAN POHON DAO (DEDICATED SKILL TREE PORTAL) */}
-          <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-stone-950 via-[#0d131f] to-stone-950 p-5 shadow-2xl backdrop-blur-md">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-2xl shadow-inner">
-                  🌌
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-serif font-bold text-base text-amber-200">
-                      Konstelasi Jurus & Pohon Dao ({lawData.lawName})
-                    </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300">
-                      Tersedia: {availablePoints} SP
-                    </span>
-                  </div>
-                  <p className="text-xs text-stone-400 mt-0.5">
-                    Ruang kultivasi ini dikhususkan untuk meditasi & terobosan ranah. Alokasikan Poin Dao dan buka percabangan rasi bintang di tab Pohon Dao.
-                  </p>
-                </div>
-              </div>
-              <Link href="/skill-tree">
-                <Button className="bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-stone-950 font-serif font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg border border-amber-400/40 transition-all flex items-center gap-2 shrink-0 cursor-pointer active:scale-95">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Buka Pohon Dao ➔</span>
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* ROADMAP PANJANG: 90 STAGE KULTIVASI (RANK 0 - 8) */}
-          <Card className="border border-stone-800 bg-black/40 p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-stone-800 pb-2">
-              <h3 className="font-serif font-bold text-sm text-amber-300 flex items-center gap-2">
-                <Award className="w-4 h-4 text-amber-400" />
-                Jejak Kultivasi 1000 Hari (9 Rank × 10 Stage = 90 Tahapan)
-              </h3>
-              <span className="text-xs font-mono text-stone-500">
-                Tahap Saat Ini: Rank {lawData.rank} Stage {lawData.stage} ({lawData.rank * 10 + lawData.stage}/90)
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 md:grid-cols-9 gap-2">
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((rIdx) => {
-                const isCurrent = lawData.rank === rIdx;
-                const isPassed = lawData.rank > rIdx;
-                return (
-                  <div
-                    key={rIdx}
-                    className={`p-2.5 rounded-lg border text-center transition-all ${
-                      isCurrent
-                        ? 'border-amber-400 bg-amber-500/20 shadow-md shadow-amber-500/20'
-                        : isPassed
-                        ? 'border-emerald-700/60 bg-emerald-950/20 text-emerald-300'
-                        : 'border-stone-800/80 bg-stone-950/40 text-stone-600'
-                    }`}
-                  >
-                    <div className="font-mono text-[10px] font-bold">R{rIdx}</div>
-                    <div className="font-serif text-[11px] truncate mt-0.5">
-                      {isCurrent ? (
-                        <span className="text-amber-300 font-bold">{lawData.rankDisplayName.split(' ')[0]}</span>
-                      ) : isPassed ? (
-                        <span className="text-emerald-400">Tuntas</span>
-                      ) : (
-                        <span>Terkunci</span>
-                      )}
-                    </div>
-                    <div className="text-[9px] font-mono text-stone-500 mt-1">
-                      +{rIdx * 2} LvCap
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Master Realm Roadmap Accordion */}
-          <MasterRealmRoadmapAccordion
-            currentRealmIdx={lawData.rank}
-            activeLawType={lawData.activeLawType}
-            activeLawName={lawData.lawName}
-          />
 
           {/* Heavenly Tribulation Modal */}
           <HeavenlyTribulationModal
