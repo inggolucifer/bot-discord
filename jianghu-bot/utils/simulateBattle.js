@@ -294,10 +294,15 @@ function simulateBattle(challenger, opponent, options = {}) {
             }
         }
 
-        // Sinergi Law turn start (Pure Yang cleanse dll)
+        // Sinergi Law turn start (Pure Yang cleanse, combatHpRegenPct dll)
+        attacker.hp = currentAttacker === 1 ? p1Hp : p2Hp;
         const turnLawExtras = onTurnStartLawExtras({ entity: attacker });
         if (turnLawExtras.notes && turnLawExtras.notes.length > 0) {
             pushLog(turnLawExtras.notes.join(' '), 'law_turn_extra', { target: currentAttacker });
+        }
+        if (typeof attacker.hp === 'number') {
+            if (currentAttacker === 1) p1Hp = Math.min(p1MaxHp, attacker.hp);
+            else p2Hp = Math.min(p2MaxHp, attacker.hp);
         }
 
         let psychosisCond = atkConds.find(c => c.type === 'psychosis');
@@ -380,7 +385,10 @@ function simulateBattle(challenger, opponent, options = {}) {
         }
 
         if (!hitSelf) {
-             const lawRes = applyLawDamageModifiers(attacker, defender, dmg, { skipReflect: true });
+             const hasHitDefender = currentAttacker === 1 ? !!opponent._hasBeenHitByP1 : !!challenger._hasBeenHitByP2;
+             const lawRes = applyLawDamageModifiers(attacker, defender, dmg, { skipReflect: true, hasHitDefender });
+             if (currentAttacker === 1) opponent._hasBeenHitByP1 = true;
+             else challenger._hasBeenHitByP2 = true;
              dmg = lawRes.finalDamage;
         }
 
@@ -443,6 +451,8 @@ function simulateBattle(challenger, opponent, options = {}) {
             });
 
             // Sinergi Law saat hit mendarat (termasuk Heavy Hit injury >= 15% maxHp via onSkillHitLawExtras)
+            attacker.hp = currentAttacker === 1 ? p1Hp : p2Hp;
+            defender.hp = actTargetIdx === 1 ? p1Hp : p2Hp;
             const lawExtras = onSkillHitLawExtras({
                 attacker: attacker,
                 defender: actTarget,
@@ -453,9 +463,21 @@ function simulateBattle(challenger, opponent, options = {}) {
             if (lawExtras.notes && lawExtras.notes.length > 0) {
                 pushLog(lawExtras.notes.join(' '), 'law_hit_extra', { target: actTargetIdx });
             }
+            if (typeof attacker.hp === 'number') {
+                if (currentAttacker === 1) p1Hp = Math.min(p1MaxHp, attacker.hp);
+                else p2Hp = Math.min(p2MaxHp, attacker.hp);
+            }
 
             if (actTargetIdx === 1 && p1Hp <= 0) break;
-            if (actTargetIdx === 2 && p2Hp <= 0) break;
+            if (actTargetIdx === 2 && p2Hp <= 0) {
+                const beastHealPct = Math.min(0.08, challenger.extendedStats?.beastHealOnKillPct || 0);
+                if (beastHealPct > 0 && p1Hp > 0) {
+                    const healAmt = Math.max(1, Math.floor(p1MaxHp * beastHealPct));
+                    p1Hp = Math.min(p1MaxHp, p1Hp + healAmt);
+                    pushLog(`🐾 **${challenger.characterName}** menyerap vitalitas lawan gugur (+${healAmt} HP)!`, 'heal', { target: 1, amount: healAmt });
+                }
+                break;
+            }
         }
 
         if (activeSkill && totalDmgDone > 0 && !hitSelf) {

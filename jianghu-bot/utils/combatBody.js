@@ -166,6 +166,10 @@ function checkAndApplyHeavyHitInjury(target, incomingDamage) {
   const threshold = maxHp * COMBAT_STATUS.INJURY.applyOnHitPctOfMaxHp;
 
   if (incomingDamage >= threshold) {
+    const injuryResist = Math.min(0.40, Number(target.extendedStats?.injuryResist || 0));
+    if (injuryResist > 0 && Math.random() < injuryResist) {
+      return false;
+    }
     applyStatus(target, 'injury', { severity: 1 });
     return true;
   }

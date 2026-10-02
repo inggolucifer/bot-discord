@@ -221,6 +221,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           const artRank = law.boundEntity.rankLevel || rank;
           flat.atk += (law.boundEntity.artifactAtk || (artRank * LAW_BALANCE.NATAL_FALLBACK_ATK_PER_RANK));
           flat.def += (law.boundEntity.artifactDef || (artRank * LAW_BALANCE.NATAL_FALLBACK_DEF_PER_RANK));
+          if (player.extendedStats?.artifactInfusionAtk) {
+            flat.atk += player.extendedStats.artifactInfusionAtk;
+          }
         }
         break;
       case 'natal_beast':
@@ -256,6 +259,9 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
             }
           }
         }
+        if (player.extendedStats?.guSlotAtkBonus) {
+          flat.atk += player.extendedStats.guSlotAtkBonus;
+        }
         break;
       case 'demonic_turbid_core':
       case 'demonic_blood_soul':
@@ -270,6 +276,14 @@ function calculatePlayerStats(player, populatedLaws = [], populatedManuals = [])
           Math.floor(corruption / 10) * LAW_BALANCE.CORRUPTION_ATK_PERCENT_PER_10
         );
         mult.atk += corrPct;
+
+        if (law.activeLawType === 'demonic_turbid_core' && player.extendedStats?.corruptionToDefPct) {
+          const corrDefPct = Math.min(
+            0.10,
+            Math.floor(corruption / 10) * player.extendedStats.corruptionToDefPct
+          );
+          mult.def += corrDefPct;
+        }
 
         if (law.activeLawType === 'demonic_blood_soul' && law.demonicData?.soulBannerCaptures) {
           const cap = LAW_BALANCE.SOUL_BANNER_ATK_CAP_BASE + (rank * LAW_BALANCE.SOUL_BANNER_ATK_CAP_PER_RANK);

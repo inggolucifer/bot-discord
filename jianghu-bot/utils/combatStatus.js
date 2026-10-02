@@ -292,18 +292,26 @@ function getDefenseDamageMultiplier(entity) {
   if (!entity) return 1.0;
   ensureCombatState(entity);
 
+  let mult = 1.0;
+
   if (Array.isArray(entity.buffs)) {
     const defBuff = entity.buffs.find(b => b.type === 'defense_up' && b.duration > 0);
     if (defBuff) {
-      return Number(defBuff.value) || COMBAT_STATUS.DEFENSE_UP.damageTakenMult;
+      mult *= (Number(defBuff.value) || COMBAT_STATUS.DEFENSE_UP.damageTakenMult);
+    }
+  } else if (entity.actionType === 'defend') {
+    mult *= COMBAT_STATUS.DEFENSE_UP.damageTakenMult;
+  }
+
+  // Corrosion debuff: mengikis pertahanan (meningkatkan damage yang diterima)
+  if (Array.isArray(entity.debuffs)) {
+    const corrDebuff = entity.debuffs.find(d => d.type === 'corrosion' && d.duration > 0);
+    if (corrDebuff) {
+      mult *= (1 + (Number(corrDebuff.value) || 0.10));
     }
   }
 
-  if (entity.actionType === 'defend') {
-    return COMBAT_STATUS.DEFENSE_UP.damageTakenMult;
-  }
-
-  return 1.0;
+  return mult;
 }
 
 /**
@@ -548,7 +556,8 @@ function tickStatuses(entity, ctx = {}) {
 
   // 3. BURN TICK
   if (conds.burn > 0 && !entity.isDead) {
-    const dmg = Math.max(2, Math.floor(maxHp * (conds.burn * COMBAT_STATUS.BURN.baseHpPctPerStack)));
+    const burnBonus = Math.min(0.015, Number(entity.extendedStats?.burnTickBonus || ctx.burnTickBonus || 0));
+    const dmg = Math.max(2, Math.floor(maxHp * (conds.burn * (COMBAT_STATUS.BURN.baseHpPctPerStack + burnBonus))));
     entity.hp = Math.max(0, entity.hp - dmg);
     result.hpDelta -= dmg;
     conds.burn = Math.max(0, conds.burn - 5);
@@ -596,10 +605,16 @@ function tickStatuses(entity, ctx = {}) {
 /**
  * Sinergi Law saat serangan mendarat (Skill/Basic Hit):
  * - Demonic Myriad Venom: Menyuntikkan racun ke darah lawan
- * - Gu Master: Peluang racun jika Gu bertag poison
+ * - Gu Master: Peluang racun jika Gu bertag poison / poisonProcFromGu
  * - Pure Yang: Resist 30% efek racun yang masuk ke defender
- * - Sword Heart: Peluang bleed pada tebasan pedang kritikal
- * - Heavy Hit Injury: Jika damage >= 15% Max HP defender
+ * - Sword Heart: Peluang bleed pada tebasan pedang (crit / swordBleedChance)
+ * - Heavy Hit Injury: Jika damage >= 15% Max HP defender (bisa ditolak injuryResist)
+ * - Phoenix Fire: burnProcStacks on hit (Cap 15)
+ * - Azure Water: chillProcChance (Cap 25%) & spdSlowOnHit (Cap 20%)
+ * - Xuanwu Earth / Natal Relic: defenseUpProcChance on defender (Cap 20%)
+ * - God Thunder: stunProcChance on hit (Cap 15%)
+ * - Demonic Blood Soul: lifesteal on hit (Cap 8%)
+ * - Demonic Myriad Venom: corrosionDefShred (Cap 15%)
  */
 function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
   const notes = [];
@@ -611,14 +626,19 @@ function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
   const atkLaw = attacker.cultivationLaw?.activeLawType || attacker.activeLawType;
   const defLaw = defender.cultivationLaw?.activeLawType || defender.activeLawType;
 
-  // 1. Heavy Hit Injury Check (>= 15% Max HP)
+  // 1. Heavy Hit Injury Check (>= 15% Max HP) with injuryResist
   const maxHp = defender.maxHp || 100;
   if (damage >= maxHp * COMBAT_STATUS.INJURY.applyOnHitPctOfMaxHp) {
-    applyStatus(defender, 'injury', { severity: 1 });
-    notes.push('🦴 [Serangan Telak: Memicu Cedera Dalam!]');
+    const injuryResist = Math.min(0.40, Number(defender.extendedStats?.injuryResist || 0));
+    if (injuryResist > 0 && Math.random() < injuryResist) {
+      notes.push('🛡️ [Raga Baja: Berhasil menahan benturan dan menolak cedera dalam!]');
+    } else {
+      applyStatus(defender, 'injury', { severity: 1 });
+      notes.push('🦴 [Serangan Telak: Memicu Cedera Dalam!]');
+    }
   }
 
-  // 2. Demonic Myriad Venom -> Serangan otomatis menularkan racun
+  // 2. Demonic Myriad Venom & Venom Poison Proc
   if (atkLaw === 'demonic_myriad_venom') {
     let poisonStacks = 25;
     // Pure Yang Defender: Resistensi hawa kotor/racun (stacks berkurang 30%)
@@ -639,11 +659,13 @@ function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
     notes.push('☠️ [Hawa Racun Batin: Serangan menularkan racun ke meridian lawan!]');
   }
 
-  // 3. Gu Master -> Peluang racun jika membawa Gu bertag poison
+  // 3. Gu Master -> Peluang racun jika membawa Gu bertag poison / poisonProcFromGu
   if (atkLaw === 'gu_master') {
     const guSlots = attacker.cultivationLaw?.guSlots || [];
     const hasPoisonGu = guSlots.some(g => g && (g.guType === 'poison' || g.element === 'poison' || (g.tags && g.tags.includes('poison'))));
-    if (hasPoisonGu && Math.random() < 0.35) {
+    const extraPoison = Math.min(0.30, Number(attacker.extendedStats?.poisonProcFromGu || 0));
+    const guPoisonChance = (hasPoisonGu ? 0.35 : 0) + extraPoison;
+    if (guPoisonChance > 0 && Math.random() < guPoisonChance) {
       let poisonStacks = 20;
       if (defLaw === 'righteous_pure_yang') {
         poisonStacks = Math.floor(poisonStacks * 0.70);
@@ -653,10 +675,79 @@ function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
     }
   }
 
-  // 4. Righteous Sword Heart -> Peluang pendarahan (Bleed) saat serangan kritikal
-  if (atkLaw === 'righteous_sword_heart' && isCrit) {
+  // 4. Righteous Sword Heart -> Peluang pendarahan (Bleed) saat serangan kritikal atau swordBleedChance
+  const swordBleed = Math.min(0.25, Number(attacker.extendedStats?.swordBleedChance || 0));
+  if ((atkLaw === 'righteous_sword_heart' && isCrit) || (swordBleed > 0 && Math.random() < swordBleed)) {
     applyStatus(defender, 'bleed', { severity: 1 });
     notes.push('🗡️ [Hati Pedang: Tebasan memicu luka pendarahan robek!]');
+  }
+
+  // 5. Phoenix Fire -> burnProcStacks on hit (Cap 15)
+  const burnProc = Math.min(15, Number(attacker.extendedStats?.burnProcStacks || 0));
+  if (burnProc > 0) {
+    applyStatus(defender, 'burn', { stacks: burnProc });
+    notes.push(`🔥 [Api Feniks: Menyulut kobaran +${burnProc} stack api!]`);
+  }
+
+  // 6. Azure Water -> chillProcChance (Cap 25%) & spdSlowOnHit (Cap 20%)
+  const chillChance = Math.min(0.25, Number(attacker.extendedStats?.chillProcChance || 0));
+  if (chillChance > 0 && Math.random() < chillChance) {
+    const slowPct = Math.min(0.20, Number(attacker.extendedStats?.spdSlowOnHit || 0.10));
+    applyStatus(defender, 'chill', {
+      kind: 'debuff',
+      name: 'Hawa Dingin',
+      duration: 2,
+      value: slowPct,
+      badge: '❄️',
+      icon: '❄️',
+      description: `Gerakan melambat (-${Math.round(slowPct * 100)}% Kecepatan)`
+    });
+    if (typeof defender.speed === 'number' && defender.speed > 0) {
+      defender.speed = Math.max(1, Math.floor(defender.speed * (1 - slowPct)));
+    }
+    if (defender.conditions) {
+      defender.conditions.frozen = Math.min(100, (defender.conditions.frozen || 0) + 15);
+    }
+    notes.push(`❄️ [Air Biru: Hawa dingin membekukan meridian (-${Math.round(slowPct * 100)}% SPD)!]`);
+  }
+
+  // 7. Xuanwu Earth / Natal Relic -> Guard proc on Defender (defenseUpProcChance, Cap 20%)
+  const defUpChance = Math.min(0.20, Number(defender.extendedStats?.defenseUpProcChance || 0));
+  if (defUpChance > 0 && Math.random() < defUpChance) {
+    applyStatus(defender, 'defense_up', { duration: 1, damageTakenMult: 0.5 });
+    notes.push('🛡️ [Kuda-kuda Kokoh: Memicu Pertahanan Baja 1 Ronde!]');
+  }
+
+  // 8. God Thunder -> Shock Stun proc (stunProcChance, Cap 15%)
+  const stunChance = Math.min(0.15, Number(attacker.extendedStats?.stunProcChance || 0));
+  if (stunChance > 0 && Math.random() < stunChance) {
+    applyStatus(defender, 'stun', { duration: 1 });
+    notes.push('⚡ [Sengatan Petir Dewa: Melumpuhkan (Stun) saraf lawan 1 ronde!]');
+  }
+
+  // 9. Demonic Blood Soul -> Lifesteal on damage dealt (lifestealPct, Cap 8%)
+  const lifesteal = Math.min(0.08, Number(attacker.extendedStats?.lifestealPct || 0));
+  if (lifesteal > 0 && damage > 0) {
+    const healAmt = Math.max(1, Math.floor(damage * lifesteal));
+    const maxAtkHp = attacker.maxHp || 100;
+    const curHp = attacker.hp || maxAtkHp;
+    attacker.hp = Math.min(maxAtkHp, curHp + healAmt);
+    notes.push(`🩸 [Hisapan Darah: Memulihkan +${healAmt} HP dari luka lawan!]`);
+  }
+
+  // 10. Demonic Myriad Venom -> Acid Corrosion Def Shred (corrosionDefShred, Cap 15%)
+  const corrosion = Math.min(0.15, Number(attacker.extendedStats?.corrosionDefShred || 0));
+  if (corrosion > 0) {
+    applyStatus(defender, 'corrosion', {
+      kind: 'debuff',
+      name: 'Asam Korosif',
+      duration: 2,
+      value: corrosion,
+      badge: '☣️',
+      icon: '☣️',
+      description: `Zirah terkikis asam (-${Math.round(corrosion * 100)}% DEF)`
+    });
+    notes.push(`☣️ [Bisa Asam: Mengikis zirah pertahanan lawan (-${Math.round(corrosion * 100)}% DEF)!]`);
   }
 
   return { notes };
@@ -665,7 +756,7 @@ function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
 /**
  * Sinergi Law pada awal giliran (Turn Start):
  * - Pure Yang: Peluang membersihkan (cleanse) racun di meridian
- * - Formation Array: Bonus ketahanan perisai formasi
+ * - Qingdi Wood / Phoenix: Combat HP Regen per ronde
  */
 function onTurnStartLawExtras({ entity, session }) {
   const notes = [];
@@ -686,6 +777,15 @@ function onTurnStartLawExtras({ entity, session }) {
       entity.statusBadges = getStatusBadges(entity);
       notes.push(`☀️ [Hawa Murni Yang membakar racun meridian (-${cleansed} Racun)!]`);
     }
+  }
+
+  // 2. Qingdi Wood / Phoenix: Combat HP Regen per ronde (combatHpRegenPct, Cap 3% Max HP)
+  const hpRegenPct = Math.min(0.03, Number(entity.extendedStats?.combatHpRegenPct || 0));
+  if (hpRegenPct > 0 && entity.hp > 0) {
+    const maxHp = entity.maxHp || 100;
+    const healAmt = Math.max(1, Math.floor(maxHp * hpRegenPct));
+    entity.hp = Math.min(maxHp, entity.hp + healAmt);
+    notes.push(`🍃 [Pemulihan Hayat: Menyerap intisari alam, pulih +${healAmt} HP!]`);
   }
 
   return { notes };
