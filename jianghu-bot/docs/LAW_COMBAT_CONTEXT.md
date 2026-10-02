@@ -236,3 +236,50 @@ Setiap kali menambah, memperbarui, atau menghapus Law, jalankan perintah berikut
 node -e "const {LAW_DEFINITIONS}=require('./utils/lawCultivationEngine'); console.log(Object.keys(LAW_DEFINITIONS).sort().join('\n'))"
 ```
 Pastikan seluruh daftar kunci `lawType` pada tabel di Seksi 1 dokumen ini selalu identik 1:1 dengan luaran perintah di atas.
+
+---
+
+## 12. Skill Tree Signatures & Uniqueness (Target 9+/10)
+
+Setiap Law memiliki pohon 5-node terstruktur (Root, Path A, Cap A, Path B, Cap B) dengan cabang eksklusif (`exclusiveGroup: 'main_path'`) dan `branch_locked` yang mencegah pengambilan kedua jalur sekaligus. Anggaran SP dan hard power cap tetap dijaga ketat:
+
+### 12.1. Signature Combat Procs & Systems
+Setiap Law **wajib memiliki minimal 1 node** dengan `effectType: 'combat_proc'` atau `'system'` (bukan pohon pasif stat murni):
+- **Phoenix Fire (`element_phoenix_fire`)**: Path A = Crit/ATK pasif; Path B = `burnProcStacks` (Cap 15) & `burnTickBonus` DoT multiplier di `tickStatuses`.
+- **Azure Water (`element_azure_water`)**: Path A = HP/Spiritual RES; Path B = `chillProcChance` (Cap 25%) & `spdSlowOnHit` (Cap 20%) yang memperlambat pergerakan musuh di medan tempur.
+- **Xuanwu Earth (`element_xuanwu_earth`)**: Path A = DEF/HP; Path B = `defenseUpProcChance` (Cap 20%) saat terkena serangan musuh, memicu kuda-kuda bertahan (-50% damage taken).
+- **Qingdi Wood (`element_qingdi_wood`)**: Path A = HP/Vitality; Path B = `combatHpRegenPct` (Cap 3% Max HP/ronde) & `essenceGainPct` sistem percepatan kultivasi.
+- **Roc Wind (`element_roc_wind`)**: Path A = SPD/Agility; Path B = `firstStrikeAtkPct` (Cap 25% damage pembuka ronde pertama vs tiap musuh).
+- **God Thunder (`element_godthunder_light`)**: Path A = Raw ATK; Path B = `stunProcChance` (Cap 15% shock stun) & `bonusAtkOnStun` (Cap 20% damage vs target lumpuh).
+- **Body Tempering (`body_tempering`)**: Path A = Bone DEF/HP; Path B = `injuryResist` (Cap 40% menahan benturan Heavy Hit) & `unarmedPenaltyMitigation`.
+- **Gu Master (`gu_master`)**: Path A = Flat ATK & `guSlotAtkBonus` (Cap +20 ATK); Path B = `poisonProcFromGu` (Cap 30% suntikan racun aperture).
+- **Natal Artifact (`natal_artifact`)**: Path A = `boundOnly` + `artifactInfusionAtk` (Cap +25 ATK); Path B = `boundOnly` + `defMult` & `spiritualRes`.
+- **Natal Beast (`natal_beast`)**: Path A = `boundOnly` + `atkMult` & `crit`; Path B = `boundOnly` + `beastHealOnKillPct` (Cap 8% Max HP pulih saat memangsa musuh gugur).
+- **Demonic Turbid Core (`demonic_turbid_core`)**: Path A = HP/DEF pasif; Path B = `corruptionToDefPct` (Cap 10% korupsi dikonversi menjadi DEF tambahan) & `martialRes`.
+- **Demonic Blood Soul (`demonic_blood_soul`)**: Path A = ATK/Crit; Path B = `lifestealPct` (Cap 8% serapan darah dari damage serangan).
+- **Demonic Myriad Venom (`demonic_myriad_venom`)**: Path A = `venomPoisonProc` racun darah; Path B = `corrosionDefShred` (Cap 15% pengikisan zirah lawan).
+- **Demonic Abyssal Pact (`demonic_abyssal_pact`)**: Path A = Altar Power Void ATK; Path B = `abyssalCurseResist` & `defMult`.
+- **Demonic Nether Darkness (`demonic_nether_darkness`)**: Path A = SPD/Veil; Path B = `netherZoneAtkBonus` sergap malam/zona & `reflectPct`.
+- **Righteous Heavenly Merit (`righteous_heavenly_merit`)**: Path A = Divine Merit HP/DEF; Path B = `atkWantedMult` Smite vs Buronan/Iblis.
+- **Righteous Pure Yang (`righteous_pure_yang`)**: Path A = Yang ATK vs Kegelapan; Path B = `yangCleanseChance` pembersihan racun otomatis di awal ronde.
+- **Righteous Sword Heart (`righteous_sword_heart`)**: Path A = `swordOnly` Crit/ATK; Path B = `swordBleedChance` robekan pendarahan pada tebasan pedang.
+- **Righteous Formation Array (`righteous_formation_array`)**: Path A = Global Array ATK/DEF; Path B = `homeOnly` + `homeBonusAdd` & `essenceGainPct`.
+- **Righteous Karmic Mirror (`righteous_karmic_mirror`)**: Path A = Mirror DEF/Spirit RES; Path B = `reflectPct` pantulan karma (Hard Cap 25%).
+
+### 12.2. Batas Keamanan Global (Safety Caps)
+- `stunProcChance` $\le 0.15$
+- `lifestealPct` $\le 0.08$
+- `burnProcStacks` $\le 15$
+- `combatHpRegenPct` $\le 0.03$ (3% Max HP per ronde)
+- `reflectPct` $\le 0.25$ (25% pantulan damage)
+- `injuryResist` $\le 0.40$
+- `defenseUpProcChance` $\le 0.20$
+- `chillProcChance` $\le 0.25$
+- `spdSlowOnHit` $\le 0.20$
+- `firstStrikeAtkPct` $\le 0.25$
+- `bonusAtkOnStun` $\le 0.20$
+- `corruptionToDefPct` $\le 0.10$
+- `guSlotAtkBonus` $\le 20$
+- `artifactInfusionAtk` $\le 25$
+- `beastHealOnKillPct` $\le 0.08$
+
