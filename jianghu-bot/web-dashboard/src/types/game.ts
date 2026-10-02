@@ -397,8 +397,11 @@ export interface LawStatusData {
   miniBreakthroughCost: {
     moodCost: number;
     vitalityCost: number;
-    silverCost: number;
+    requiredQty?: number;
+    maxTier?: number;
+    silverCost?: number;
     materialName: string;
+    materialDescription?: string;
   };
   miniBreakthroughSuccessRate: number;
   majorBreakthroughSuccessRate: number;

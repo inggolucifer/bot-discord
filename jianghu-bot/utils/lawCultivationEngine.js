@@ -1576,6 +1576,142 @@ function getMiniBreakthroughCost(rank, stage) {
 }
 
 /**
+ * Helper authoritative untuk konsumsi material breakthrough (Stage & Rank)
+ * Menolak keras mata uang (copper/silver/gold), murni material kultivasi!
+ * @param {object} player - Mongoose Player document (populated or unpopulated inventory)
+ * @param {object} law - cultivationLaw object
+ * @param {boolean} isMajor - true jika major breakthrough (rank)
+ * @returns {{ consumedItemName: string, consumedQty: number, itemTier: number }}
+ */
+function consumeBreakthroughMaterials(player, law, isMajor = false) {
+  const rank = law?.rank || 0;
+  const stage = law?.stage || 0;
+  const playerTier = rank + 1;
+
+  const slottedPillId = law?.breakthroughPillSlot
+    ? (law.breakthroughPillSlot._id || law.breakthroughPillSlot)?.toString()
+    : null;
+
+  if (isMajor) {
+    // Major BT: Butuh 1 item katalis/material tingkat tinggi (tier >= playerTier)
+    const targetTier = playerTier;
+    let foundIdx = -1;
+    let foundItemDoc = null;
+
+    for (let i = 0; i < (player.inventory || []).length; i++) {
+      const inv = player.inventory[i];
+      if (!inv || inv.quantity <= 0) continue;
+      const item = inv.itemId || inv;
+      const invId = (item._id || item.id || item)?.toString();
+      if (invId === slottedPillId) continue;
+
+      const tier = resolveItemTier(item);
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      const cat = item.category;
+
+      const isEligible = (
+        tags.includes('breakthrough_catalyst') ||
+        tags.includes('catalyst') ||
+        tags.includes('spirit_stone') ||
+        tags.includes('breakthrough_material') ||
+        tags.includes('essence') ||
+        cat === 'material' ||
+        cat === 'herb'
+      );
+
+      if (isEligible && tier >= targetTier) {
+        foundIdx = i;
+        foundItemDoc = item;
+        break;
+      }
+    }
+
+    if (foundIdx === -1) {
+      const err = new Error(`Material terobosan besar tidak mencukupi! Membutuhkan minimal 1x Katalis / Batu Roh / Material Tier ${targetTier} di tas penyimpanan.`);
+      err.statusCode = 400;
+      throw err;
+    }
+
+    player.inventory[foundIdx].quantity -= 1;
+    const consumedName = foundItemDoc.name || 'Katalis Terobosan';
+    const consumedTier = resolveItemTier(foundItemDoc);
+    if (player.inventory[foundIdx].quantity <= 0) {
+      player.inventory.splice(foundIdx, 1);
+    }
+    if (typeof player.markModified === 'function') player.markModified('inventory');
+
+    return {
+      consumedItemName: consumedName,
+      consumedQty: 1,
+      itemTier: consumedTier
+    };
+  } else {
+    // Mini-BT (Stage): Butuh material/spirit_stone tier <= playerTier sebanyak qty = 2 + rank + floor(stage/3)
+    const requiredQty = 2 + rank + Math.floor(stage / 3);
+    const eligibleSlots = [];
+    let totalAvailable = 0;
+
+    for (let i = 0; i < (player.inventory || []).length; i++) {
+      const inv = player.inventory[i];
+      if (!inv || inv.quantity <= 0) continue;
+      const item = inv.itemId || inv;
+      const invId = (item._id || item.id || item)?.toString();
+      if (invId === slottedPillId) continue;
+
+      const tier = resolveItemTier(item);
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      const cat = item.category;
+
+      const isEligible = (
+        tags.includes('breakthrough_material') ||
+        tags.includes('spirit_stone') ||
+        tags.includes('essence') ||
+        tags.includes('catalyst') ||
+        cat === 'material' ||
+        cat === 'herb'
+      );
+
+      if (isEligible && tier <= playerTier) {
+        eligibleSlots.push({ index: i, tier, qty: inv.quantity, item });
+        totalAvailable += inv.quantity;
+      }
+    }
+
+    if (totalAvailable < requiredQty) {
+      const err = new Error(`Material terobosan stage tidak mencukupi! Membutuhkan ${requiredQty}x Batu Roh / Herba / Material Kultivasi (Tier ≤ ${playerTier}). Kamu hanya memiliki ${totalAvailable}x di tas.`);
+      err.statusCode = 400;
+      throw err;
+    }
+
+    eligibleSlots.sort((a, b) => a.tier - b.tier);
+
+    let needed = requiredQty;
+    const consumedNames = [];
+
+    for (const slot of eligibleSlots) {
+      if (needed <= 0) break;
+      const take = Math.min(needed, player.inventory[slot.index].quantity);
+      player.inventory[slot.index].quantity -= take;
+      needed -= take;
+      consumedNames.push(`${take}x ${slot.item.name || 'Material'}`);
+    }
+
+    for (let i = player.inventory.length - 1; i >= 0; i--) {
+      if (player.inventory[i].quantity <= 0) {
+        player.inventory.splice(i, 1);
+      }
+    }
+    if (typeof player.markModified === 'function') player.markModified('inventory');
+
+    return {
+      consumedItemName: consumedNames.join(', '),
+      consumedQty: requiredQty,
+      itemTier: playerTier
+    };
+  }
+}
+
+/**
  * Success rate mini-breakthrough.
  * Formula: 90% - (stage × 1%)
  * Stage 0 = 90%, Stage 8 = 82%, Stage 9 (major) handled separately.
@@ -2877,8 +3013,9 @@ function getLawStatus(player) {
     miniBreakthroughCost: {
       moodCost: 15,
       vitalityCost: 15,
-      silverCost: Math.ceil(getMiniBreakthroughCost(law.rank || 0, law.stage || 0) / 100),
-      materialName: 'Herba Penguat Intisari'
+      requiredQty: 2 + (law.rank || 0) + Math.floor((law.stage || 0) / 3),
+      maxTier: (law.rank || 0) + 1,
+      materialName: `Batu Roh / Material Kultivasi (Tier ≤ ${(law.rank || 0) + 1})`
     },
     miniBreakthroughSuccessRate: getMiniBreakthroughSuccessRate(law.rank || 0, law.stage || 0),
     majorBreakthroughSuccessRate: getMajorBreakthroughSuccessRate(law.rank || 0, !!law.breakthroughPillSlot),
@@ -5028,6 +5165,7 @@ module.exports = {
   // Breakthrough
   BREAKTHROUGH_PILL_CATALOG,
   getMiniBreakthroughCost,
+  consumeBreakthroughMaterials,
   getMiniBreakthroughSuccessRate,
   getMiniBreakthroughFailCooldown,
   attemptMiniBreakthrough,
