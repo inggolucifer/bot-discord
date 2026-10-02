@@ -336,6 +336,13 @@ export interface LawStatusData {
   rank: number;
   stage: number;
   rankDisplayName: string;
+  realmLabel?: string;
+  realmDisplay?: {
+    title?: string;
+    display?: string;
+    rankNumber?: number;
+    stageNumber?: number;
+  };
   qi: number;
   maxQi: number;
   qiProgressPercent: number;
