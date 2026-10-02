@@ -67,6 +67,37 @@ Kunci `lawType` di bawah ini adalah **satu-satunya kunci sah** yang terdaftar di
 
 ---
 
+## 1.1. Skill Tree (Build Choice & Scarcity)
+- **Sumber SP (Skill Points)**:
+  - Mini Breakthrough (Stage): +1 SP per stage.
+  - Major Breakthrough (Rank): +2 SP per rank (dikalibrasi dari +3 SP untuk menegakkan kelangkaan).
+  - Lifetime SP (Rank 0–8): $(9 \times 9) + (8 \times 2) = 97$ SP maksimal sepanjang hidup karakter.
+- **Struktur Pohon (Tepat 5 Node per Law)**:
+  ```text
+  [ROOT] Tier 1, maxLevel 5, cost 2 SP/lvl (Total 10 SP)
+     ├── [BRANCH_A] Tier 2, maxLevel 5, cost 3 SP/lvl (Total 15 SP)
+     │      └── [CAPSTONE_A] Tier 3, maxLevel 4, cost 4 SP/lvl (Total 16 SP)
+     └── [BRANCH_B] Tier 2, maxLevel 5, cost 3 SP/lvl (Total 15 SP) [Eksklusif vs Branch A]
+            └── [CAPSTONE_B] Tier 3, maxLevel 4, cost 4 SP/lvl (Total 16 SP)
+  ```
+- **Cabang Eksklusif (Mutual Exclusion)**:
+  - `branchId: 'A'` dan `branchId: 'B'` terikat dalam `exclusiveGroup: 'main_path'`.
+  - Mengalokasikan 1 poin ke Cabang A mengunci Cabang B secara permanen (`lockedReason: 'branch_locked'`), dan sebaliknya.
+  - Pemain dipaksa menentukan spesialisasi build (misalnya: Fire Offensive Burst vs Fire Healing/Immortal Flame).
+- **Ekonomi & Batasan Anggaran (Hard Budget Caps)**:
+  - Biaya satu jalur penuh (Root Max + Path Max + Capstone Max) = $10 + 15 + 16 = 41$ SP (dalam target anggaran 35–50 SP).
+  - Biaya kedua jalur sekaligus = $72$ SP (mustahil diambil bersamaan karena aturan mutual exclusion).
+  - Dilarang keras menetapkan `crit >= 0.5`, `atkMult >= 0.025`, `flatHp >= 35`, atau kombinasi stat OP di tingkat Capstone.
+- **Tipe Efek & Wiring Nyata (`effectType`)**:
+  - `passive`: Modifikasi stat permanen (`hpMult`, `atkMult`, `defMult`, `spdMult`, `flatHp`, `flatAtk`, `flatDef`, `flatSpd`, `crit`, `reflectPct` [maks 25%]).
+  - `combat_proc`: Memicu efek tempur situasional (misal: racun batin `venomPoisonProc`, tebasan pendarahan `bleed`, bonus vs buronan `atkWantedMult`, atau damage vs corrupt `dmgVsCorrupted`).
+  - `system`: Efek utilitas duniawi (misal: pemurnian racun `yangCleanseChance`, mitigasi unarmed `unarmedPenaltyMitigation`, efisiensi penyerapan esensi `essenceGainPct` [maks +15%], atau bonus hub formasi `homeBonusAdd`).
+- **Penegakan API (`/law/skill/allocate` & `/law/skill-tree`)**:
+  - GET `/law/skill-tree` mengembalikan `activeBranch`, `spentEstimate`, dan `lockedReason` (`'max_level' | 'branch_locked' | 'need_rank' | 'need_parent' | 'need_sp'`).
+  - POST `/law/skill/allocate` menolak alokasi yang melanggar prasyarat dengan pesan Bahasa Indonesia yang ramah pengguna.
+
+---
+
 ## 2. File Kritis Law Cultivation
 - `jianghu-bot/utils/lawCultivationEngine.js`:
   - `LAW_DEFINITIONS`, `LAW_PROGRESSION`, `ESSENCE_PROFILE`, `SKILL_TREES`.

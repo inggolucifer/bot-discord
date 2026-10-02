@@ -150,7 +150,13 @@ function applyStatus(entity, statusId, options = {}) {
 
   switch (key) {
     case 'poison': {
-      entity.conditions.poison = Math.min(100, entity.conditions.poison + (stacks || 20));
+      let incoming = stacks || 20;
+      const poisonResist = Number(entity.extendedStats?.poisonResist || entity.poisonResist || 0);
+      if (poisonResist > 0) {
+        const resistFraction = poisonResist <= 1.0 ? poisonResist : (poisonResist / 100);
+        incoming = Math.max(1, Math.floor(incoming * (1 - Math.min(0.75, resistFraction))));
+      }
+      entity.conditions.poison = Math.min(100, entity.conditions.poison + incoming);
       break;
     }
     case 'bleed': {
@@ -622,6 +628,15 @@ function onSkillHitLawExtras({ attacker, defender, skill, damage, isCrit }) {
     }
     applyStatus(defender, 'poison', { stacks: poisonStacks });
     notes.push('☠️ [Myriad Venom: Hawa racun menyusup ke meridian lawan!]');
+  } else if (Number(attacker.extendedStats?.venomPoisonProc || 0) > 0) {
+    const vProc = Number(attacker.extendedStats.venomPoisonProc);
+    let pStacks = Math.max(10, Math.floor(vProc * 100));
+    if (defLaw === 'righteous_pure_yang') {
+      pStacks = Math.floor(pStacks * 0.70);
+      notes.push('☀️ [Hawa Murni Yang menahan 30% racun lawan!]');
+    }
+    applyStatus(defender, 'poison', { stacks: pStacks });
+    notes.push('☠️ [Hawa Racun Batin: Serangan menularkan racun ke meridian lawan!]');
   }
 
   // 3. Gu Master -> Peluang racun jika membawa Gu bertag poison
@@ -659,9 +674,13 @@ function onTurnStartLawExtras({ entity, session }) {
 
   const lawType = entity.cultivationLaw?.activeLawType || entity.activeLawType;
 
-  // 1. Pure Yang Cleanse: 25% peluang memurnikan racun setiap awal giliran
-  if (lawType === 'righteous_pure_yang' && entity.conditions?.poison > 0) {
-    if (Math.random() < 0.25 || entity.conditions.poison >= 60) {
+  // 1. Pure Yang Cleanse: 25% + skill yangCleanseChance peluang memurnikan racun setiap awal giliran
+  const skillCleanseChance = Number(entity.extendedStats?.yangCleanseChance || 0);
+  const baseCleanseChance = (lawType === 'righteous_pure_yang') ? 0.25 : 0;
+  const totalCleanseChance = baseCleanseChance + skillCleanseChance;
+
+  if (totalCleanseChance > 0 && entity.conditions?.poison > 0) {
+    if (Math.random() < totalCleanseChance || entity.conditions.poison >= 60) {
       const cleansed = Math.min(entity.conditions.poison, 25);
       entity.conditions.poison = Math.max(0, entity.conditions.poison - cleansed);
       entity.statusBadges = getStatusBadges(entity);

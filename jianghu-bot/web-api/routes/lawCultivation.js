@@ -58,7 +58,8 @@ const {
   LAW_SKILL_TREES,
   getMaxEssence,
   isPlayerWieldingSword,
-  isOnOwnFormationHub
+  isOnOwnFormationHub,
+  applyLawSkillTreeEffects
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -967,7 +968,15 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
         baseFill = LAW_PROGRESSION.FILL_RIGHTEOUS_KARMA;
       }
 
-      const rawGain = Math.floor(baseFill * itemTier * affinity.efficiency);
+      // Bonus Skill Tree: essenceGainPct (cap +15%)
+      let essenceBonusMult = 1.0;
+      applyLawSkillTreeEffects(player, { hp: 0, atk: 0, def: 0, spd: 0 }, { hp: 0, atk: 0, def: 0, spd: 0 });
+      const skillEssenceBonus = Number(player.extendedStats?.essenceGainPct || 0);
+      if (skillEssenceBonus > 0) {
+        essenceBonusMult += Math.min(0.15, skillEssenceBonus);
+      }
+
+      const rawGain = Math.floor(baseFill * itemTier * affinity.efficiency * essenceBonusMult);
       const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
 
       const maxEss = getMaxEssence(law.rank || 0);
@@ -1428,60 +1437,87 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Belum memilih Hukum Semesta (Law).' });
     }
 
-    // Ambil semua skill definition untuk law ini
-    let skills = await LawSkillDefinition.find({ lawType: law.activeLawType })
-      .sort({ tier: 1, name: 1 })
-      .lean();
+    const tree = LAW_SKILL_TREES[law.activeLawType];
+    const skillLevels = law.skillLevels instanceof Map
+      ? Object.fromEntries(law.skillLevels)
+      : (law.skillLevels || {});
+    const unlocked = new Set(law.unlockedSkillIds || []);
 
-    // Fallback ke LAW_SKILL_TREES jika DB belum terisi
-    if (!skills || skills.length === 0) {
-      const tree = LAW_SKILL_TREES[law.activeLawType];
-      if (tree?.nodes) {
-        skills = tree.nodes.map(n => ({
-          skillId: n.id || n.skillId,
-          lawType: law.activeLawType,
-          tier: n.tier || 1,
-          name: n.name,
-          icon: n.icon || '⚡',
-          description: n.description || '',
-          isPassive: n.isPassive !== false,
-          maxLevel: n.maxLevel || 5,
-          requiredRank: n.requiredRank || 0,
-          requiredParentSkillId: (n.requires && n.requires[0]) || null,
-          skillPointCost: n.costPerLevel || 1
-        }));
-      } else {
-        skills = [];
+    let activeBranch = null;
+    let spentEstimate = 0;
+
+    for (const n of (tree?.nodes || [])) {
+      const nodeId = n.id || n.skillId;
+      const currentLevel = Number(skillLevels[nodeId] || (unlocked.has(nodeId) ? 1 : 0));
+      if (currentLevel > 0) {
+        spentEstimate += currentLevel * (n.costPerLevel || 1);
+        if (n.branchId && !activeBranch) {
+          activeBranch = n.branchId;
+        }
       }
     }
 
-    // Tandai mana yang sudah unlock dan level-nya
-    const unlockedMap = {};
-    (law.unlockedSkillIds || []).forEach(id => {
-      unlockedMap[id] = true;
-    });
+    const nodes = (tree?.nodes || []).map(n => {
+      const nodeId = n.id || n.skillId;
+      const currentLevel = Number(skillLevels[nodeId] || (unlocked.has(nodeId) ? 1 : 0));
+      const maxLevel = n.maxLevel || 5;
+      const cost = n.costPerLevel || 1;
 
-    const skillTree = skills.map(skill => {
-      const tierCost = getSkillPointCost(skill.tier || 1);
-      const cost = (skill.skillPointCost && skill.skillPointCost >= tierCost) ? skill.skillPointCost : tierCost;
-      const lvl = (law.skillLevels ? (law.skillLevels.get ? law.skillLevels.get(skill.skillId) : law.skillLevels[skill.skillId]) : 1) || 1;
-      const exp = (law.skillExp ? (law.skillExp.get ? law.skillExp.get(skill.skillId) : law.skillExp[skill.skillId]) : 0) || 0;
-      const maxLvl = getMaxSkillLevel(skill.tier || 1);
-      const reqExp = getRequiredSkillCombatExp(lvl);
+      let lockedReason = null;
+      if (currentLevel >= maxLevel) {
+        lockedReason = 'max_level';
+      } else if (n.branchId && n.exclusiveGroup) {
+        const isBranchLocked = (tree?.nodes || []).some(other =>
+          other.exclusiveGroup === n.exclusiveGroup &&
+          other.branchId &&
+          other.branchId !== n.branchId &&
+          Number(skillLevels[other.id || other.skillId] || (unlocked.has(other.id || other.skillId) ? 1 : 0)) > 0
+        );
+        if (isBranchLocked) {
+          lockedReason = 'branch_locked';
+        }
+      }
+
+      if (!lockedReason) {
+        if ((law.rank || 0) < (n.requiredRank || 0)) {
+          lockedReason = 'need_rank';
+        } else {
+          const reqs = Array.isArray(n.requires) ? n.requires : [];
+          const hasParent = reqs.every(reqId =>
+            Number(skillLevels[reqId] || (unlocked.has(reqId) ? 1 : 0)) > 0
+          );
+          if (!hasParent) {
+            lockedReason = 'need_parent';
+          } else if ((law.lawSkillPoints || 0) < cost) {
+            lockedReason = 'need_sp';
+          }
+        }
+      }
+
+      const canUpgrade = lockedReason === null;
 
       return {
-        ...skill,
+        id: nodeId,
+        skillId: nodeId,
+        name: n.name,
+        tier: n.tier || 1,
+        icon: n.icon || '⚡',
+        description: n.description || '',
+        currentLevel,
+        level: currentLevel,
+        maxLevel,
+        costPerLevel: cost,
         skillPointCost: cost,
-        level: lvl,
-        exp,
-        reqExp,
-        maxLevel: maxLvl,
-        isUnlocked: !!unlockedMap[skill.skillId],
-        isEquipped: (law.combatLoadout || []).includes(skill.skillId),
-        canUnlock: !unlockedMap[skill.skillId]
-          && law.rank >= (skill.requiredRank || 0)
-          && (law.lawSkillPoints || 0) >= cost
-          && (!skill.requiredParentSkillId || !!unlockedMap[skill.requiredParentSkillId])
+        branchId: n.branchId || null,
+        exclusiveGroup: n.exclusiveGroup || null,
+        effectType: n.effectType || 'passive',
+        unlocked: currentLevel > 0,
+        isUnlocked: currentLevel > 0,
+        canUnlock: currentLevel === 0 && canUpgrade,
+        canUpgrade,
+        lockedReason,
+        isEquipped: (law.combatLoadout || []).includes(nodeId),
+        effects: n.effects
       };
     });
 
@@ -1489,9 +1525,13 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
       success: true,
       data: {
         lawType: law.activeLawType,
-        availablePoints: law.lawSkillPoints,
-        totalUnlocked: law.unlockedSkillIds?.length || 0,
-        skills: skillTree
+        points: law.lawSkillPoints || 0,
+        availablePoints: law.lawSkillPoints || 0,
+        spentEstimate,
+        activeBranch,
+        totalUnlocked: (law.unlockedSkillIds || []).length,
+        nodes,
+        skills: nodes
       }
     });
   } catch (error) {
@@ -1530,83 +1570,96 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Belum memilih Hukum Semesta (Law).' });
     }
 
-    // Cari skill definition
-    let skillDef = await LawSkillDefinition.findOne({ skillId, lawType: law.activeLawType }).lean();
-    if (!skillDef) {
-      // Fallback ke LAW_SKILL_TREES jika DB belum terisi
-      const tree = LAW_SKILL_TREES[law.activeLawType];
-      const node = tree?.nodes?.find(n => (n.id === skillId || n.skillId === skillId));
-      if (node) {
-        skillDef = {
-          skillId: node.id || node.skillId,
-          lawType: law.activeLawType,
-          name: node.name,
-          tier: node.tier || 1,
-          skillPointCost: node.costPerLevel || 1,
-          requiredRank: node.requiredRank || 0,
-          requires: node.requires || [],
-          requiredParentSkillId: (node.requires && node.requires[0]) || null,
-          maxLevel: node.maxLevel || 5,
-          icon: node.icon || '⚡',
-          effects: node.effects
-        };
-      }
+    const tree = LAW_SKILL_TREES[law.activeLawType];
+    if (!tree?.nodes) {
+      return res.status(404).json({ error: 'Pohon skill tidak ditemukan untuk jalur Law ini.' });
     }
-    if (!skillDef || skillDef.lawType !== law.activeLawType) {
+
+    const node = tree.nodes.find(n => (n.id === skillId || n.skillId === skillId));
+    if (!node) {
       return res.status(404).json({ error: 'Skill tidak ditemukan untuk jalur Law ini.' });
     }
 
-    // Cek currentLevel & maxLevel
+    const nodeId = node.id || node.skillId;
     const skillLevels = law.skillLevels instanceof Map
       ? Object.fromEntries(law.skillLevels)
       : (law.skillLevels || {});
-    const currentLevel = Number(skillLevels[skillId] || ((law.unlockedSkillIds || []).includes(skillId) ? 1 : 0));
-    const maxLevel = skillDef.maxLevel || 5;
+    const unlocked = new Set(law.unlockedSkillIds || []);
+    const currentLevel = Number(skillLevels[nodeId] || (unlocked.has(nodeId) ? 1 : 0));
+    const maxLevel = node.maxLevel || 5;
 
     if (currentLevel >= maxLevel) {
-      return res.status(400).json({ error: `Skill [${skillDef.name}] sudah mencapai level maksimal (${maxLevel}).` });
+      return res.status(400).json({
+        error: `Skill [${node.name}] sudah mencapai level maksimal (${maxLevel}).`,
+        lockedReason: 'max_level'
+      });
     }
 
-    // Cek rank requirement
-    if ((law.rank || 0) < (skillDef.requiredRank || 0)) {
-      return res.status(400).json({ error: `Rank Law belum cukup. Butuh Rank ${skillDef.requiredRank}.` });
-    }
-
-    // Cek requires (semua skill prasyarat harus sudah dipelajari)
-    const requires = Array.isArray(skillDef.requires)
-      ? skillDef.requires
-      : (skillDef.requiredParentSkillId ? [skillDef.requiredParentSkillId] : []);
-    for (const reqSkillId of requires) {
-      if (!(law.unlockedSkillIds || []).includes(reqSkillId)) {
-        return res.status(400).json({ error: `Skill prasyarat [${reqSkillId}] belum dipelajari.` });
+    // Cabang Eksklusif Check (Mutual Exclusion)
+    if (node.branchId && node.exclusiveGroup) {
+      for (const otherNode of tree.nodes) {
+        const otherId = otherNode.id || otherNode.skillId;
+        if (otherNode.exclusiveGroup === node.exclusiveGroup && otherNode.branchId && otherNode.branchId !== node.branchId) {
+          const otherLvl = Number(skillLevels[otherId] || (unlocked.has(otherId) ? 1 : 0));
+          if (otherLvl > 0) {
+            return res.status(400).json({
+              error: `Kamu sudah memilih jalur cabang ${otherNode.branchId} ([${otherNode.name}]). Jalur cabang ${node.branchId} terkunci.`,
+              lockedReason: 'branch_locked'
+            });
+          }
+        }
       }
     }
 
-    // Cek skill points (Tier-scaled: Tier 1=1, Tier 2=2, Tier 3=3, Tier 4=5, Tier 5=7)
-    const tierCost = getSkillPointCost(skillDef.tier || 1);
-    const cost = (skillDef.skillPointCost && skillDef.skillPointCost >= tierCost) ? skillDef.skillPointCost : tierCost;
+    // Rank Requirement Check
+    if ((law.rank || 0) < (node.requiredRank || 0)) {
+      return res.status(400).json({
+        error: `Rank Law belum cukup. Butuh Rank ${node.requiredRank}, saat ini Rank ${law.rank || 0}.`,
+        lockedReason: 'need_rank'
+      });
+    }
+
+    // Prerequisite Check
+    const requires = Array.isArray(node.requires) ? node.requires : [];
+    for (const reqSkillId of requires) {
+      const reqLvl = Number(skillLevels[reqSkillId] || (unlocked.has(reqSkillId) ? 1 : 0));
+      if (reqLvl <= 0) {
+        const parentNode = tree.nodes.find(n => (n.id === reqSkillId || n.skillId === reqSkillId));
+        const parentName = parentNode ? parentNode.name : reqSkillId;
+        return res.status(400).json({
+          error: `Skill prasyarat [${parentName}] belum dipelajari.`,
+          lockedReason: 'need_parent'
+        });
+      }
+    }
+
+    // Skill Points Cost Check
+    const cost = node.costPerLevel || 1;
     if ((law.lawSkillPoints || 0) < cost) {
-      return res.status(400).json({ error: `Poin skill tidak cukup. Butuh ${cost} SP (Tier ${skillDef.tier || 1}), punya ${law.lawSkillPoints || 0} SP.` });
+      return res.status(400).json({
+        error: `Poin skill tidak cukup. Butuh ${cost} SP (Tier ${node.tier || 1}), punya ${law.lawSkillPoints || 0} SP.`,
+        lockedReason: 'need_sp'
+      });
     }
 
     // Alokasikan SP
     law.lawSkillPoints -= cost;
     const nextLevel = currentLevel + 1;
     if (!law.unlockedSkillIds) law.unlockedSkillIds = [];
-    if (!law.unlockedSkillIds.includes(skillId)) {
-      law.unlockedSkillIds.push(skillId);
+    if (!law.unlockedSkillIds.includes(nodeId)) {
+      law.unlockedSkillIds.push(nodeId);
     }
 
     if (!law.skillLevels) law.skillLevels = new Map();
     if (law.skillLevels.set) {
-      law.skillLevels.set(skillId, nextLevel);
+      law.skillLevels.set(nodeId, nextLevel);
     } else {
-      law.skillLevels[skillId] = nextLevel;
+      law.skillLevels[nodeId] = nextLevel;
     }
 
-    // Sinergi Law ke Spiritual Root XP (Automatic Dao Resonance pada unlock awal)
+    // Sinergi Law ke Spiritual Root XP
     const lawDef = LAW_DEFINITIONS[law.activeLawType];
-    const rootTarget = (lawDef?.rootKey || (skillDef.element ? skillDef.element.toLowerCase() : null));
+    const rootTarget = (lawDef?.rootKey || null);
     let resonanceXp = 0;
     if (rootTarget && currentLevel === 0) {
       if (!player.extendedStats) player.extendedStats = {};
@@ -1623,16 +1676,17 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       message: currentLevel === 0
-        ? `✨ Berhasil mempelajari jurus: ${skillDef.icon || '⚡'} ${skillDef.name} (Lv. 1)!${resonanceXp > 0 ? ` (Resonansi Dao: +${resonanceXp} Spiritual Root ${rootTarget.toUpperCase()} XP)` : ''}`
-        : `⚡ Berhasil meningkatkan level jurus: ${skillDef.icon || '⚡'} ${skillDef.name} ke Lv. ${nextLevel}!`,
+        ? `✨ Berhasil mempelajari jurus: ${node.icon || '⚡'} ${node.name} (Lv. 1)!${resonanceXp > 0 ? ` (Resonansi Dao: +${resonanceXp} Spiritual Root ${rootTarget.toUpperCase()} XP)` : ''}`
+        : `⚡ Berhasil meningkatkan level jurus: ${node.icon || '⚡'} ${node.name} ke Lv. ${nextLevel}!`,
       data: {
-        skillId: skillDef.skillId,
-        name: skillDef.name,
-        tier: skillDef.tier,
+        skillId: nodeId,
+        name: node.name,
+        tier: node.tier,
         level: nextLevel,
         maxLevel: maxLevel,
         remainingPoints: law.lawSkillPoints,
         totalUnlocked: law.unlockedSkillIds.length,
+        activeBranch: node.branchId || null,
         daoResonance: resonanceXp > 0 ? { element: rootTarget, xpGranted: resonanceXp } : null
       }
     });

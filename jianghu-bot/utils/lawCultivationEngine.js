@@ -1944,7 +1944,7 @@ function attemptMajorBreakthrough(player, options = {}) {
     law.qi = 0;
     law.maxQi = getQiRequired(law.rank, 0);
     law.lawLevelCapBonus += 5;      // Major bonus +5 Level Cap
-    law.lawSkillPoints += 3;         // Major bonus +3 Skill Points
+    law.lawSkillPoints += 2;         // Major bonus +2 Skill Points (Phase 6 Scarcity)
     law.majorBreakthroughCooldownUntil = new Date(Date.now() + 4 * 3600 * 1000); // 4 jam recovery
 
     const rankNames = LAW_RANK_NAMES[law.activeLawType];
@@ -2024,7 +2024,7 @@ function attemptMajorBreakthrough(player, options = {}) {
         rankDisplayName: realmDisplay?.title || newRankName,
         realmLabel,
         levelCapBonus: 5,
-        skillPoints: 3,
+        skillPoints: 2,
         cooldownMs: 4 * 3600 * 1000,
         maxQi: law.maxQi
       }
@@ -2597,12 +2597,59 @@ function getLawStatus(player) {
         : (law.skillLevels || {});
       const unlocked = new Set(law.unlockedSkillIds || []);
 
+      let activeBranch = null;
+      let spentEstimate = 0;
+
+      for (const n of (tree?.nodes || [])) {
+        const nodeId = n.id || n.skillId;
+        const currentLevel = Number(skillLevels[nodeId] || (unlocked.has(nodeId) ? 1 : 0));
+        if (currentLevel > 0) {
+          spentEstimate += currentLevel * (n.costPerLevel || 1);
+          if (n.branchId && !activeBranch) {
+            activeBranch = n.branchId;
+          }
+        }
+      }
+
       const nodes = (tree?.nodes || []).map(n => {
         const nodeId = n.id || n.skillId;
         const currentLevel = Number(skillLevels[nodeId] || (unlocked.has(nodeId) ? 1 : 0));
-        const reqParent = (n.requires && n.requires.length > 0) ? n.requires[0] : null;
-        const parentUnlocked = !reqParent || unlocked.has(reqParent);
-        const rankMet = (law.rank || 0) >= (n.requiredRank || 0);
+        const maxLevel = n.maxLevel || 5;
+        const cost = n.costPerLevel || 1;
+
+        let lockedReason = null;
+        if (currentLevel >= maxLevel) {
+          lockedReason = 'max_level';
+        } else if (n.branchId && n.exclusiveGroup) {
+          const isBranchLocked = (tree?.nodes || []).some(other =>
+            other.exclusiveGroup === n.exclusiveGroup &&
+            other.branchId &&
+            other.branchId !== n.branchId &&
+            Number(skillLevels[other.id || other.skillId] || (unlocked.has(other.id || other.skillId) ? 1 : 0)) > 0
+          );
+          if (isBranchLocked) {
+            lockedReason = 'branch_locked';
+          }
+        }
+
+        if (!lockedReason) {
+          if ((law.rank || 0) < (n.requiredRank || 0)) {
+            lockedReason = 'need_rank';
+          } else {
+            const reqs = Array.isArray(n.requires) ? n.requires : [];
+            const hasParent = reqs.every(reqId =>
+              Number(skillLevels[reqId] || (unlocked.has(reqId) ? 1 : 0)) > 0
+            );
+            if (!hasParent) {
+              lockedReason = 'need_parent';
+            } else if ((law.lawSkillPoints || 0) < cost) {
+              lockedReason = 'need_sp';
+            }
+          }
+        }
+
+        const canUpgrade = lockedReason === null;
+
         return {
           id: nodeId,
           name: n.name,
@@ -2610,17 +2657,25 @@ function getLawStatus(player) {
           icon: n.icon || '⚡',
           description: n.description,
           currentLevel,
-          maxLevel: n.maxLevel || 5,
-          costPerLevel: n.costPerLevel || 1,
+          level: currentLevel,
+          maxLevel,
+          costPerLevel: cost,
+          branchId: n.branchId || null,
+          exclusiveGroup: n.exclusiveGroup || null,
+          effectType: n.effectType || 'passive',
           unlocked: currentLevel > 0,
-          canUnlock: currentLevel === 0 && rankMet && parentUnlocked,
-          canUpgrade: currentLevel > 0 && currentLevel < (n.maxLevel || 5),
+          canUnlock: currentLevel === 0 && canUpgrade,
+          canUpgrade,
+          lockedReason,
           effects: n.effects
         };
       });
 
       return {
         points: law.lawSkillPoints || law.skillPoints || 0,
+        availablePoints: law.lawSkillPoints || law.skillPoints || 0,
+        spentEstimate,
+        activeBranch,
         nodes
       };
     })(),
@@ -2827,7 +2882,7 @@ function getLawStatus(player) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SKILL TREES UNTUK 5 HUKUM SEMESTA RIGHTEOUS
+// SKILL TREES UNTUK 20 HUKUM SEMESTA (SCARCITY, CABANG EKSKLUSIF & BALANCED)
 // ═══════════════════════════════════════════════════════════════
 const LAW_SKILL_TREES = {
   righteous_heavenly_merit: {
@@ -2836,63 +2891,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'merit_resolve',
-        name: 'Tekad Jasa',
+        name: 'Merit Resolve',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { hpMult: 0.01 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { hpMult: 0.010, flatHp: 10 },
         icon: '🛡️',
-        description: 'Mempertebal tekad kebajikan, meningkatkan batas HP sebesar +1% per level.'
+        description: 'Mempertebal tekad kebajikan batin, meningkatkan HP dasar.'
       },
       {
         id: 'merit_aegis',
-        name: 'Perisai Kebajikan',
-        tier: 1,
+        name: 'Aegis of Benevolence',
+        tier: 2,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 3,
         requires: ['merit_resolve'],
-        requiredRank: 0,
-        effects: { defMult: 0.01 },
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.010, spiritualRes: 2 },
         icon: '✨',
-        description: 'Pancaran aura kebajikan menahan benturan, meningkatkan DEF sebesar +1% per level.'
-      },
-      {
-        id: 'merit_smite',
-        name: 'Hukuman Langit',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['merit_aegis'],
-        requiredRank: 1,
-        effects: { atkWantedMult: 0.03, flatAtk: 5 },
-        icon: '⚡',
-        description: 'Menyalurkan murka langit terhadap penjahat buronan ortodoks, memberikan bonus ATK.'
-      },
-      {
-        id: 'merit_charity_flow',
-        name: 'Aliran Amal',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['merit_resolve'],
-        requiredRank: 1,
-        effects: { essenceGainPct: 0.02 },
-        icon: '🕊️',
-        description: 'Mempercepat penyerapan segel kebajikan ke dalam dantian (+2% esensi per level).'
+        description: 'Perisai kebajikan menahan benturan dan meningkatkan ketahanan spiritual.'
       },
       {
         id: 'merit_heaven_eye',
-        name: 'Mata Langit Suci',
+        name: 'Eye of Divine Merit',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['merit_aegis'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.014, flatHp: 18, spiritualRes: 3 },
+        icon: '👁️',
+        description: 'Puncak pencerahan kebajikan memancarkan aura perlindungan abadi.'
+      },
+      {
+        id: 'merit_smite',
+        name: 'Righteous Smite',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
+        requires: ['merit_resolve'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { atkWantedMult: 0.015, flatAtk: 5 },
+        icon: '⚡',
+        description: 'Menyalurkan murka langit saat menyerang penjahat atau buronan ortodoks.'
+      },
+      {
+        id: 'merit_judgment',
+        name: 'Heavenly Judgment',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
         requires: ['merit_smite'],
         requiredRank: 2,
-        effects: { spiritualRes: 4 },
-        icon: '👁️',
-        description: 'Mata batin menembus ilusi kefasikan, meningkatkan Spiritual Resistance sebesar +4 per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { atkWantedMult: 0.020, flatAtk: 5, essenceGainPct: 0.02 },
+        icon: '⚖️',
+        description: 'Pemberantasan mutlak terhadap kefasikan dan mempercepat penyerapan segel jasa.'
       }
     ]
   },
@@ -2902,63 +2972,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'yang_breath',
-        name: 'Napas Surya',
+        name: 'Pure Yang Breath',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { atkMult: 0.01 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, flatAtk: 3 },
         icon: '☀️',
-        description: 'Menghela napas intisari surya murni, meningkatkan ATK sebesar +1% per level.'
-      },
-      {
-        id: 'yang_purge',
-        name: 'Purifikasi Yang',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['yang_breath'],
-        requiredRank: 0,
-        effects: { poisonResist: 0.05, corruptionResist: 0.05 },
-        icon: '🔥',
-        description: 'Membakar racun dan hawa kotor di dalam meridian tubuh.'
+        description: 'Menghela napas surya murni, memperkuat serangan dasar.'
       },
       {
         id: 'yang_sun_brand',
-        name: 'Tera Mentari',
+        name: 'Solar Brand',
         tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['yang_purge'],
-        requiredRank: 1,
-        effects: { dmgVsCorrupted: 0.04 },
-        icon: '🔆',
-        description: 'Menghanguskan musuh yang terkorupsi dengan daya bakar surya bertambah +4% per level.'
-      },
-      {
-        id: 'yang_cleanse_vessel',
-        name: 'Pembersihan Bejana',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['yang_breath'],
-        requiredRank: 1,
-        effects: { channelDarkPenaltyReduction: 0.20 },
-        icon: '🪷',
-        description: 'Menjaga kemurnian bejana kultivasi dari pengaruh wilayah gelap.'
-      },
-      {
-        id: 'yang_radiance',
-        name: 'Radiansi Kehidupan',
-        tier: 3,
         maxLevel: 5,
         costPerLevel: 3,
+        requires: ['yang_breath'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 4, crit: 0.15 },
+        icon: '🔆',
+        description: 'Menghanguskan musuh dengan kobaran surya berdaya hancur tinggi.'
+      },
+      {
+        id: 'yang_zenith_core',
+        name: 'Zenith Sun Core',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
         requires: ['yang_sun_brand'],
         requiredRank: 2,
-        effects: { lifespan: 2, vitality: 5 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.015, flatAtk: 5, dmgVsCorrupted: 0.025 },
         icon: '🌞',
-        description: 'Cahaya Yang murni memelihara sumsum kehidupan, meningkatkan usia dan vitalitas.'
+        description: 'Inti matahari membakar habis hawa iblis dan musuh terkorupsi.'
+      },
+      {
+        id: 'yang_meridian_purge',
+        name: 'Meridian Purification',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['yang_breath'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'system',
+        effects: { poisonResist: 0.06, corruptionResist: 0.06, hpMult: 0.008 },
+        icon: '🔥',
+        description: 'Membakar racun dan hawa kotor di dalam meridian tubuh secara pasif.'
+      },
+      {
+        id: 'yang_radiant_cleanse',
+        name: 'Radiant Life Cleanse',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['yang_meridian_purge'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { poisonResist: 0.08, yangCleanseChance: 0.10, flatHp: 18 },
+        icon: '🪷',
+        description: 'Peluang membersihkan racun secara instan setiap awal ronde tempur.'
       }
     ]
   },
@@ -2968,63 +3053,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'sword_stance',
-        name: 'Kuda-kuda Pedang',
+        name: 'Sword Stance Foundation',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { atkMult: 0.015 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, crit: 0.15 },
         icon: '🗡️',
-        description: 'Kuda-kuda dasar pendekar pedang sejati, meningkatkan ATK sebesar +1.5% per level.'
+        description: 'Kuda-kuda dasar pedang mengasah fokus ketajaman serangan.'
       },
       {
         id: 'sword_edge',
-        name: 'Ketajaman Hati',
-        tier: 1,
+        name: 'Heart Blade Sharpness',
+        tier: 2,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 3,
         requires: ['sword_stance'],
-        requiredRank: 0,
-        effects: { crit: 0.4 },
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.20, flatAtk: 3, swordOnly: true },
         icon: '⚔️',
-        description: 'Menajamkan niat pedang batin, memberikan bonus CRIT sebesar +0.4% per level.'
-      },
-      {
-        id: 'sword_draw',
-        name: 'Kilat Cabutan Pedang',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['sword_stance'],
-        requiredRank: 1,
-        effects: { spdMult: 0.015 },
-        icon: '⚡',
-        description: 'Gerakan menghunus pedang secepat kilat, meningkatkan SPD sebesar +1.5% per level.'
-      },
-      {
-        id: 'sword_oath_bond',
-        name: 'Ikatan Sumpah Bilah',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['sword_edge'],
-        requiredRank: 1,
-        effects: { unarmedPenaltyMitigation: 0.03 },
-        icon: '🤝',
-        description: 'Mematri jiwa ke dalam bilah pedang; meredam penalti pertarungan saat terpisah dari pedang.'
+        description: 'Menajamkan niat pedang batin khusus saat menghunus senjata pedang.'
       },
       {
         id: 'sword_one_strike',
-        name: 'Satu Tebasan Belah Awan',
+        name: 'Cloud-Cleaving Slash',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['sword_edge'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, crit: 0.25, flatAtk: 4, swordOnly: true },
+        icon: '🌠',
+        description: 'Tebasan mutlak belah awan memberikan lonjakan ATK dan Crit saat bersenjata pedang.'
+      },
+      {
+        id: 'sword_flow',
+        name: 'Nimble Step & Flow',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['sword_draw', 'sword_oath_bond'],
+        requires: ['sword_stance'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.012, unarmedPenaltyMitigation: 0.04 },
+        icon: '⚡',
+        description: 'Kelincahan langkah gerak pedang dan meredam penalti saat terpisah dari pedang.'
+      },
+      {
+        id: 'sword_unity',
+        name: 'Heart-Blade Unity',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['sword_flow'],
         requiredRank: 2,
-        effects: { flatAtk: 8 },
-        icon: '🌠',
-        description: 'Intisari tebasan mutlak pendekar pedang, memberikan bonus flat ATK +8 per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.015, flatAtk: 4, unarmedPenaltyMitigation: 0.06 },
+        icon: '🤝',
+        description: 'Penyatuan raga dan pedang sejati; bertarung leluasa dalam kondisi apa pun.'
       }
     ]
   },
@@ -3034,63 +3134,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'array_foundation',
-        name: 'Fondasi Formasi',
+        name: 'Array Groundwork',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { defMult: 0.015 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { defMult: 0.008, flatDef: 2 },
         icon: '🚩',
-        description: 'Menancapkan patok formasi kokoh, meningkatkan DEF sebesar +1.5% per level.'
+        description: 'Fondasi formasi membentengi pertahanan dasar kultivator.'
       },
       {
         id: 'array_bulwark',
-        name: 'Benteng Qi Susun Sembilan',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['array_foundation'],
-        requiredRank: 0,
-        effects: { hpMult: 0.012 },
-        icon: '🏰',
-        description: 'Menyusun lapis pelindung energi formasi, meningkatkan HP sebesar +1.2% per level.'
-      },
-      {
-        id: 'array_pulse',
-        name: 'Getaran Denyut Lempeng',
+        name: 'Ninefold Array Bulwark',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['array_foundation'],
         requiredRank: 1,
-        effects: { martialRes: 3 },
-        icon: '🌀',
-        description: 'Mengalirkan resonansi gelombang tanah untuk menangkis serangan fisik (+3 Martial RES).'
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, hpMult: 0.010, martialRes: 2 },
+        icon: '🏰',
+        description: 'Susunan benteng pelindung qi formasi global di segala medan.'
+      },
+      {
+        id: 'array_grand_matrix',
+        name: 'Celestial Star Matrix',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['array_bulwark'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.015, flatHp: 18, martialRes: 3 },
+        icon: '🛡️',
+        description: 'Matriks bintang menahan hantaman fisik dan elemen di seluruh penjuru benua.'
       },
       {
         id: 'array_domain',
-        name: 'Domain Wilayah Berdaulat',
+        name: 'Sovereign Hub Domain',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['array_bulwark'],
+        costPerLevel: 3,
+        requires: ['array_foundation'],
         requiredRank: 1,
-        effects: { homeBonusAdd: 0.02 },
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'system',
+        effects: { homeOnly: true, defMult: 0.012, homeBonusAdd: 0.02, essenceGainPct: 0.02 },
         icon: '🌐',
-        description: 'Memperkuat efisiensi tempur di dalam kawasan Hub Formasi milik sendiri.'
+        description: 'Resonansi pertahanan dan percepatan esensi saat berada di atas Hub Formasi sendiri.'
       },
       {
-        id: 'array_rebuild',
-        name: 'Restrukturisasi Formasi Kilat',
+        id: 'array_sovereign_core',
+        name: 'Primordial Array Core',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
-        requires: ['array_pulse', 'array_domain'],
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['array_domain'],
         requiredRank: 2,
-        effects: { repairEfficiency: 0.10 },
-        icon: '🛠️',
-        description: 'Pemahaman mendalam tentang tata letak formasi memudahkan perawatan dan upgrade Hub.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'system',
+        effects: { homeOnly: true, defMult: 0.015, hpMult: 0.015, homeBonusAdd: 0.03 },
+        icon: '🏛️',
+        description: 'Dominasi mutlak atas wilayah Hub Formasi milik sendiri.'
       }
     ]
   },
@@ -3100,63 +3215,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'karma_stillness',
-        name: 'Ketenangan Cermin Datar',
+        name: 'Mirror Stillness',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { defMult: 0.015 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { defMult: 0.008, spiritualRes: 2 },
         icon: '🪞',
-        description: 'Menjaga kejernihan batin laksana cermin air tenang, meningkatkan DEF sebesar +1.5% per level.'
+        description: 'Kejernihan cermin batin menangkis getaran dan sihir.'
       },
       {
         id: 'karma_clarity',
-        name: 'Kekudusan Hati Nurani',
-        tier: 1,
+        name: 'Karmic Clarity',
+        tier: 2,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 3,
         requires: ['karma_stillness'],
-        requiredRank: 0,
-        effects: { spiritualRes: 4 },
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, hpMult: 0.010, spiritualRes: 2 },
         icon: '🕯️',
-        description: 'Memancarkan cahaya nurani yang menolak sihir jahat, meningkatkan Spiritual Resistance +4 per level.'
+        description: 'Cahaya nurani cermin mempertebal ketahanan pertahanan dan spiritual.'
+      },
+      {
+        id: 'karma_flawless',
+        name: 'Flawless Heaven Mirror',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['karma_clarity'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.015, flatHp: 18, spiritualRes: 3 },
+        icon: '✨',
+        description: 'Cermin langit tanpa cela menjadi kubah perlindungan kokoh tak tertembus.'
       },
       {
         id: 'karma_retribution',
-        name: 'Pembalasan Karma Buruk',
+        name: 'Karmic Retribution',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['karma_stillness'],
         requiredRank: 1,
-        effects: { reflectPct: 0.015 },
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { reflectPct: 0.008, flatAtk: 3 },
         icon: '⚖️',
-        description: 'Memantulkan kembali karma jahat ke penyerang bertaraf infamy tinggi.'
-      },
-      {
-        id: 'karma_absolution',
-        name: 'Pengampunan Dosa',
-        tier: 2,
-        maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['karma_clarity'],
-        requiredRank: 1,
-        effects: { infamyPenaltyReduction: 0.20 },
-        icon: '🕊️',
-        description: 'Meredam gesekan amarah batin jika tanpa sengaja terpapar dosa duniawi.'
+        description: 'Memantulkan sebagian kerusakan serangan lawan kembali ke penyerang.'
       },
       {
         id: 'karma_verdict',
-        name: 'Vonis Cermin Langit',
+        name: 'Verdict of the Threads',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
-        requires: ['karma_retribution', 'karma_absolution'],
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['karma_retribution'],
         requiredRank: 2,
-        effects: { flatAtk: 6 },
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { reflectPct: 0.012, flatAtk: 5, crit: 0.15 },
         icon: '⚡',
-        description: 'Mengeksekusi hukuman karma secara mutlak, memberikan flat ATK +6 per level.'
+        description: 'Vonis karma menghukum penyerang dengan pantulan luka dan tebasan balik tajam.'
       }
     ]
   },
@@ -3166,51 +3296,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'phoenix_blaze',
-        name: 'Kobaran Api Feniks',
+        name: 'Phoenix Spark',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { atkMult: 0.015 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, flatAtk: 2 },
         icon: '🔥',
-        description: 'Meningkatkan ATK sebesar +1.5% per level.'
-      },
-      {
-        id: 'phoenix_cauterize',
-        name: 'Pembakaran Meridian',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['phoenix_blaze'],
-        requiredRank: 0,
-        effects: { flatAtk: 5 },
-        icon: '💥',
-        description: 'Memberikan flat ATK +5 per level.'
+        description: 'Percikan api feniks mengobarkan daya hancur serangan dasar.'
       },
       {
         id: 'phoenix_inferno_burst',
-        name: 'Ledakan Api Nirwana',
+        name: 'Inferno Burst',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['phoenix_blaze'],
         requiredRank: 1,
-        effects: { crit: 0.8 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.20, flatAtk: 3 },
         icon: '☄️',
-        description: 'Meningkatkan Crit Rate sebesar +0.8% per level.'
+        description: 'Ledakan api nirwana mempertajam peluang serangan kritikal.'
       },
       {
-        id: 'phoenix_rebirth_aura',
-        name: 'Aura Abadi Feniks',
+        id: 'phoenix_nirvana_flare',
+        name: 'Nirvana Flame Crown',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
         requires: ['phoenix_inferno_burst'],
         requiredRank: 2,
-        effects: { hpMult: 0.02, flatAtk: 6 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.25, atkMult: 0.012, flatAtk: 4 },
         icon: '🦅',
-        description: 'Meningkatkan HP +2% dan flat ATK +6 per level.'
+        description: 'Puncak nyala feniks menembus zirah musuh dengan kobaran kritikal mematikan.'
+      },
+      {
+        id: 'phoenix_cauterize',
+        name: 'Blazing Force',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['phoenix_blaze'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 4 },
+        icon: '💥',
+        description: 'Membakar meridian internal untuk meningkatkan daya serang murni.'
+      },
+      {
+        id: 'phoenix_eternal_core',
+        name: 'Inner Magma Heart',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['phoenix_cauterize'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.015, flatAtk: 5, spdMult: 0.008 },
+        icon: '🌋',
+        description: 'Inti lahar abadi melipatgandakan serangan dan kelincahan gerak api.'
       }
     ]
   },
@@ -3219,52 +3376,79 @@ const LAW_SKILL_TREES = {
     name: 'Pohon Air Biru',
     nodes: [
       {
-        id: 'azure_flow',
-        name: 'Aliran Air Biru',
+        id: 'water_flow',
+        name: 'Azure Stream',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { spdMult: 0.015 },
-        icon: '🌊',
-        description: 'Meningkatkan SPD sebesar +1.5% per level.'
-      },
-      {
-        id: 'azure_mist_barrier',
-        name: 'Dinding Kabut Samudra',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['azure_flow'],
-        requiredRank: 0,
-        effects: { defMult: 0.012 },
-        icon: '💧',
-        description: 'Meningkatkan DEF sebesar +1.2% per level.'
-      },
-      {
-        id: 'azure_tidal_surge',
-        name: 'Pusaran Arus Pasang',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['azure_flow'],
-        requiredRank: 1,
-        effects: { spiritualRes: 3, flatHp: 25 },
-        icon: '🌫️',
-        description: 'Meningkatkan Spiritual RES +3 dan flat HP +25 per level.'
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { hpMult: 0.008, flatHp: 10 },
+        icon: '🌊',
+        description: 'Aliran air lembut menopang kesegaran dantian dan vitalitas.'
       },
       {
-        id: 'azure_abyssal_calm',
-        name: 'Heningnya Palung Biru',
-        tier: 3,
+        id: 'water_vital_tide',
+        name: 'Surging Tide Bulk',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['azure_tidal_surge'],
+        requires: ['water_flow'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.012, flatHp: 15 },
+        icon: '💧',
+        description: 'Pusaran arus pasang memperluas kapasitas tampung darah dan HP.'
+      },
+      {
+        id: 'water_bottomless_ocean',
+        name: 'Bottomless Sky Sea',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['water_vital_tide'],
         requiredRank: 2,
-        effects: { hpMult: 0.02, defMult: 0.015 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.015, flatHp: 20, defMult: 0.008 },
         icon: '🌀',
-        description: 'Meningkatkan HP +2% dan DEF +1.5% per level.'
+        description: 'Samudra batin tanpa dasar menyerap benturan dan melipatgandakan daya tahan.'
+      },
+      {
+        id: 'water_frost_barrier',
+        name: 'Glacial Barrier',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['water_flow'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spiritualRes: 3, defMult: 0.010 },
+        icon: '🌫️',
+        description: 'Membekukan kabut air menjadi dinding penahan sihir elemen.'
+      },
+      {
+        id: 'water_abyssal_glacier',
+        name: 'Frozen Soul Glacier',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['water_frost_barrier'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spiritualRes: 4, defMult: 0.014, flatDef: 4 },
+        icon: '🧊',
+        description: 'Glasier jiwa abadi menepis kutukan spiritual dan pukulan lawan.'
       }
     ]
   },
@@ -3273,52 +3457,79 @@ const LAW_SKILL_TREES = {
     name: 'Pohon Bumi Xuanwu',
     nodes: [
       {
-        id: 'xuanwu_bastion',
-        name: 'Perisai Kura-Kura Hitam',
+        id: 'xuanwu_pebble',
+        name: 'Bedrock Foundation',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { defMult: 0.02 },
-        icon: '⛰️',
-        description: 'Meningkatkan DEF sebesar +2% per level.'
-      },
-      {
-        id: 'xuanwu_granite_foundation',
-        name: 'Fondasi Granit Kuno',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['xuanwu_bastion'],
-        requiredRank: 0,
-        effects: { hpMult: 0.015 },
-        icon: '🪨',
-        description: 'Meningkatkan HP sebesar +1.5% per level.'
-      },
-      {
-        id: 'xuanwu_unyielding_plate',
-        name: 'Zirah Besi Bumi',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['xuanwu_bastion'],
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { defMult: 0.008, flatDef: 2 },
+        icon: '🪨',
+        description: 'Fondasi bebatuan bumi memperkokoh ketahanan pertahanan awal.'
+      },
+      {
+        id: 'xuanwu_bastion',
+        name: 'Granite Bastion',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['xuanwu_pebble'],
         requiredRank: 1,
-        effects: { martialRes: 4, flatDef: 6 },
-        icon: '🛡️',
-        description: 'Meningkatkan Martial RES +4 dan flat DEF +6 per level.'
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, flatDef: 3 },
+        icon: '⛰️',
+        description: 'Batu karang kokoh Xuanwu memperkuat daya tahan pertahanan baja.'
       },
       {
         id: 'xuanwu_mountain_domain',
-        name: 'Domain Gunung Berdiri',
+        name: 'Primordial Carapace',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['xuanwu_bastion'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.015, flatDef: 4, martialRes: 3 },
+        icon: '🏰',
+        description: 'Cangkang kura-kura purba menahan benturan senjata fisik terberat.'
+      },
+      {
+        id: 'xuanwu_tectonic_bulk',
+        name: 'Continental Plate Bulk',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['xuanwu_unyielding_plate'],
+        requires: ['xuanwu_pebble'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.010, flatHp: 15 },
+        icon: '🧱',
+        description: 'Lempeng benua agung mempertebal volume darah dan daya tampung raga.'
+      },
+      {
+        id: 'xuanwu_world_anchor',
+        name: 'Leyline World Anchor',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['xuanwu_tectonic_bulk'],
         requiredRank: 2,
-        effects: { defMult: 0.025, flatHp: 35 },
-        icon: '🏰',
-        description: 'Meningkatkan DEF +2.5% dan flat HP +35 per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.014, flatHp: 20, defMult: 0.008 },
+        icon: '🌋',
+        description: 'Jangkar bumi menambatkan raga ke urat semesta, kokoh tak tergoyahkan.'
       }
     ]
   },
@@ -3327,52 +3538,79 @@ const LAW_SKILL_TREES = {
     name: 'Pohon Hayat Qingdi',
     nodes: [
       {
-        id: 'qingdi_life_breath',
-        name: 'Napas Kehidupan Qingdi',
+        id: 'qingdi_sprout',
+        name: 'Verdant Sprout',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { hpMult: 0.018 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { hpMult: 0.008, flatHp: 10 },
         icon: '🌱',
-        description: 'Meningkatkan HP sebesar +1.8% per level.'
-      },
-      {
-        id: 'qingdi_regrowth',
-        name: 'Regenerasi Urat Kayu',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['qingdi_life_breath'],
-        requiredRank: 0,
-        effects: { flatHp: 25 },
-        icon: '🍃',
-        description: 'Meningkatkan flat HP +25 per level.'
+        description: 'Tunas kehidupan pertama memperkaya kesegaran dantian raga.'
       },
       {
         id: 'qingdi_bark_skin',
-        name: 'Kulit Pohon Dunia',
+        name: 'Ancient Wildwood Bulk',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
-        requires: ['qingdi_life_breath'],
+        costPerLevel: 3,
+        requires: ['qingdi_sprout'],
         requiredRank: 1,
-        effects: { defMult: 0.012, martialRes: 3 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.012, flatHp: 15 },
         icon: '🪵',
-        description: 'Meningkatkan DEF +1.2% dan Martial RES +3 per level.'
+        description: 'Kulit pohon purba menumbuhkan daya tahan HP luar biasa.'
       },
       {
         id: 'qingdi_evergreen_dao',
-        name: 'Dao Kayu Abadi',
+        name: 'Worldroot Nexus',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
         requires: ['qingdi_bark_skin'],
         requiredRank: 2,
-        effects: { hpMult: 0.025, flatHp: 40 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.015, flatHp: 20, defMult: 0.008 },
         icon: '🌳',
-        description: 'Meningkatkan HP +2.5% dan flat HP +40 per level.'
+        description: 'Akar dunia menghubungkan intisari hayat semesta ke dalam tubuh abadi.'
+      },
+      {
+        id: 'qingdi_sap_flow',
+        name: 'Living Sap Resonance',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['qingdi_sprout'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'system',
+        effects: { essenceGainPct: 0.02, spiritualRes: 2, flatHp: 12 },
+        icon: '🍃',
+        description: 'Getah hayat mempercepat penyerapan bahan herba dan intisari kayu.'
+      },
+      {
+        id: 'qingdi_heaven_grove',
+        name: 'Heaven-Canopy Grove',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['qingdi_sap_flow'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'system',
+        effects: { essenceGainPct: 0.03, defMult: 0.012, martialRes: 2 },
+        icon: '🎋',
+        description: 'Kanopi langit surgawi memayungi kultivator dari serangan fana dan sihir.'
       }
     ]
   },
@@ -3381,52 +3619,79 @@ const LAW_SKILL_TREES = {
     name: 'Pohon Badai Burung Roc',
     nodes: [
       {
-        id: 'roc_gale_step',
-        name: 'Langkah Angin Burung Roc',
+        id: 'roc_breeze',
+        name: 'Breeze Stride',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { spdMult: 0.02 },
-        icon: '🌪️',
-        description: 'Meningkatkan SPD sebesar +2% per level.'
-      },
-      {
-        id: 'roc_cutting_wind',
-        name: 'Bilah Angin Puyuh',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['roc_gale_step'],
-        requiredRank: 0,
-        effects: { flatAtk: 5 },
-        icon: '💨',
-        description: 'Meningkatkan flat ATK +5 per level.'
-      },
-      {
-        id: 'roc_aerial_strike',
-        name: 'Sambaran Sergap Udara',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['roc_gale_step'],
-        requiredRank: 1,
-        effects: { crit: 0.8, spdMult: 0.01 },
-        icon: '🦅',
-        description: 'Meningkatkan Crit Rate +0.8% dan SPD +1% per level.'
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { spdMult: 0.010, flatSpd: 2 },
+        icon: '💨',
+        description: 'Langkah angin lembut menambah kecepatan dan kelincahan dasar.'
       },
       {
-        id: 'roc_nine_heavens_soar',
-        name: 'Menembus Sembilan Langit',
-        tier: 3,
+        id: 'roc_tempest_stride',
+        name: 'Tempest Dash',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['roc_aerial_strike'],
+        requires: ['roc_breeze'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.012, flatSpd: 3 },
+        icon: '🌪️',
+        description: 'Pusaran badai melipatgandakan kecepatan gerak jelajah dan tempur.'
+      },
+      {
+        id: 'roc_nine_heavens',
+        name: 'Nine Heavens Soar',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['roc_tempest_stride'],
         requiredRank: 2,
-        effects: { atkMult: 0.02, spdMult: 0.02 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.015, flatSpd: 4, atkMult: 0.010 },
         icon: '🌌',
-        description: 'Meningkatkan ATK +2% dan SPD +2% per level.'
+        description: 'Sayap Roc membentang menembus batas langit dengan kelajuan tak tertandingi.'
+      },
+      {
+        id: 'roc_feather_blade',
+        name: 'Razor Tempest Feather',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['roc_breeze'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.18, flatAtk: 3 },
+        icon: '🦅',
+        description: 'Bilah angin setajam silet mengoyak pertahanan dengan serangan kritikal.'
+      },
+      {
+        id: 'roc_astral_cyclone',
+        name: 'Astral Hurricane Edge',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['roc_feather_blade'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.22, flatAtk: 4, spdMult: 0.008 },
+        icon: '🌪️',
+        description: 'Topan pembatas astral menghempaskan lawan dengan serangan kritikal mutlak.'
       }
     ]
   },
@@ -3436,51 +3701,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'thunder_spark',
-        name: 'Pijar Petir Dewa',
+        name: 'Static Spark',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { spdMult: 0.015, flatAtk: 4 },
-        icon: '⚡',
-        description: 'Meningkatkan SPD +1.5% dan flat ATK +4 per level.'
-      },
-      {
-        id: 'thunder_crack',
-        name: 'Guruh Membelah Bumi',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['thunder_spark'],
-        requiredRank: 0,
-        effects: { flatAtk: 6 },
-        icon: '🌩️',
-        description: 'Meningkatkan flat ATK +6 per level.'
-      },
-      {
-        id: 'thunder_divine_pierce',
-        name: 'Tusukan Petir Ilahi',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, flatAtk: 2 },
+        icon: '⚡',
+        description: 'Percikan petir dewa mengalirkan sengatan listrik ke senjata dan tinju.'
+      },
+      {
+        id: 'thunder_flash_strike',
+        name: 'Heavenbolt Strike',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
         requires: ['thunder_spark'],
         requiredRank: 1,
-        effects: { crit: 1.0 },
-        icon: '⚡',
-        description: 'Meningkatkan Crit Rate +1% per level.'
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 3 },
+        icon: '🌩️',
+        description: 'Sambaran awan hitam melipatgandakan kekuatan serangan penghancur.'
       },
       {
         id: 'thunder_wrath_judgment',
-        name: 'Penghakiman Guruh Langit',
+        name: 'Divine Thunder Wrath',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['thunder_flash_strike'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 5, spdMult: 0.008 },
+        icon: '⛈️',
+        description: 'Kemurkaan dewa petir menghukum musuh dengan kekuatan serangan murni dahsyat.'
+      },
+      {
+        id: 'thunder_piercing_volt',
+        name: 'Violet Chain Lightning',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['thunder_divine_pierce'],
+        requires: ['thunder_spark'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.18, flatAtk: 2 },
+        icon: '⚡',
+        description: 'Rantai petir biru menembus titik meridian dengan presisi kritikal.'
+      },
+      {
+        id: 'thunder_divine_pierce',
+        name: 'Judgment Piercer',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['thunder_piercing_volt'],
         requiredRank: 2,
-        effects: { atkMult: 0.03, flatAtk: 8 },
-        icon: '⛈️',
-        description: 'Meningkatkan ATK +3% dan flat ATK +8 per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { crit: 0.22, flatAtk: 4, spiritualRes: 2 },
+        icon: '👑',
+        description: 'Sembilan petir suci meremukkan musuh dengan ledakan kritikal terfokus.'
       }
     ]
   },
@@ -3490,51 +3782,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'body_iron_sinew',
-        name: 'Urat Kawat Tulang Besi',
+        name: 'Iron Sinew Temper',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { hpMult: 0.015, flatHp: 20 },
-        icon: '💪',
-        description: 'Meningkatkan HP +1.5% dan flat HP +20 per level.'
-      },
-      {
-        id: 'body_adamantine_skin',
-        name: 'Kulit Kebal Tembaga',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['body_iron_sinew'],
-        requiredRank: 0,
-        effects: { defMult: 0.015, flatDef: 4 },
-        icon: '🛡️',
-        description: 'Meningkatkan DEF +1.5% dan flat DEF +4 per level.'
-      },
-      {
-        id: 'body_giant_might',
-        name: 'Kekuatan Raksasa Kuno',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { hpMult: 0.008, flatHp: 10 },
+        icon: '💪',
+        description: 'Urat kawat baja meningkatkan daya tahan fisik tubuh fana.'
+      },
+      {
+        id: 'body_flesh_tempering',
+        name: 'Flesh Vessel Tempering',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
         requires: ['body_iron_sinew'],
         requiredRank: 1,
-        effects: { atkMult: 0.015, martialRes: 3 },
-        icon: '💥',
-        description: 'Meningkatkan ATK +1.5% dan Martial RES +3 per level.'
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.012, flatHp: 15 },
+        icon: '🩸',
+        description: 'Pengerasan daging dan pembuluh darah menampung cadangan HP melimpah.'
       },
       {
         id: 'body_immortal_vessel',
-        name: 'Wadah Fisik Tak Binasa',
+        name: 'Indestructible Vessel',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['body_flesh_tempering'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.015, flatHp: 20, martialRes: 2 },
+        icon: '🗿',
+        description: 'Wadah fisik tanpa binasa menjadi benteng tangguh yang menolak kematian.'
+      },
+      {
+        id: 'body_steel_bone',
+        name: 'Steel-Wire Bone',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['body_adamantine_skin', 'body_giant_might'],
+        requires: ['body_iron_sinew'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, flatDef: 3 },
+        icon: '🦴',
+        description: 'Tulang besi tempa menahan benturan senjata tajam dan tumpul.'
+      },
+      {
+        id: 'body_vajra_aegis',
+        name: 'Vajra Impervious Body',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['body_steel_bone'],
         requiredRank: 2,
-        effects: { hpMult: 0.025, defMult: 0.02 },
-        icon: '🗿',
-        description: 'Meningkatkan HP +2.5% dan DEF +2% per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.015, flatDef: 4, martialRes: 3 },
+        icon: '🛡️',
+        description: 'Raga Vajra tak tertembus menepis segala bentuk kerusakan fisik.'
       }
     ]
   },
@@ -3544,51 +3863,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'gu_symbiosis',
-        name: 'Simbiosis Serangga Gu',
+        name: 'Gu Symbiosis',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { flatHp: 25 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { flatHp: 12, flatAtk: 2 },
         icon: '🐛',
-        description: 'Meningkatkan flat HP +25 per level.'
+        description: 'Simbiosis harmonis bersama larva serangga Gu memperkuat tubuh.'
+      },
+      {
+        id: 'gu_swarm_ferocity',
+        name: 'Swarm Ferocity',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['gu_symbiosis'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 3 },
+        icon: '🦗',
+        description: 'Koloni serangga Gu menyerbu agresif melipatgandakan serangan.'
+      },
+      {
+        id: 'gu_swarm_emperor',
+        name: 'Lord of Ten Thousand Gu',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['gu_swarm_ferocity'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.15 },
+        icon: '👑',
+        description: 'Kekuasaan raja sepuluh ribu Gu memporak-porandakan barisan musuh.'
       },
       {
         id: 'gu_chitin_shell',
-        name: 'Pelindung Cangkang Chitin',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['gu_symbiosis'],
-        requiredRank: 0,
-        effects: { defMult: 0.012 },
-        icon: '🛡️',
-        description: 'Meningkatkan DEF +1.2% per level.'
-      },
-      {
-        id: 'gu_toxin_secretion',
-        name: 'Sekresi Bisa Alami',
+        name: 'Chitin Shell Armor',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['gu_symbiosis'],
         requiredRank: 1,
-        effects: { flatAtk: 6, spiritualRes: 3 },
-        icon: '🧪',
-        description: 'Meningkatkan flat ATK +6 dan Spiritual RES +3 per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, flatHp: 14 },
+        icon: '🛡️',
+        description: 'Cangkang chitin serangga keras menahan luka dan benturan senjata.'
       },
       {
-        id: 'gu_swarm_resonance',
-        name: 'Resonansi Sarang Seribu Gu',
+        id: 'gu_chaos_cavity',
+        name: 'Primordial Chaos Cavity',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
-        requires: ['gu_chitin_shell', 'gu_toxin_secretion'],
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['gu_chitin_shell'],
         requiredRank: 2,
-        effects: { atkMult: 0.02, hpMult: 0.015 },
-        icon: '🦗',
-        description: 'Meningkatkan ATK +2% dan HP +1.5% per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.014, hpMult: 0.012, flatHp: 18 },
+        icon: '🕳️',
+        description: 'Rongga chaos purba menyerap getaran luka dan memulihkan vitalitas.'
       }
     ]
   },
@@ -3597,52 +3943,79 @@ const LAW_SKILL_TREES = {
     name: 'Pohon Sukma Pusaka Natal',
     nodes: [
       {
-        id: 'artifact_harmonize',
-        name: 'Penyelarasan Sukma Artefak',
+        id: 'art_harmonize',
+        name: 'Vessel Harmonization',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { flatDef: 5, spiritualRes: 2 },
-        icon: '📿',
-        description: 'Meningkatkan flat DEF +5 dan Spiritual RES +2 per level.'
-      },
-      {
-        id: 'artifact_resonance',
-        name: 'Resonansi Inti Pusaka',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['artifact_harmonize'],
-        requiredRank: 0,
-        effects: { flatAtk: 5 },
-        icon: '🔮',
-        description: 'Meningkatkan flat ATK +5 per level.'
-      },
-      {
-        id: 'artifact_aegis',
-        name: 'Perisai Pusaka Pelindung',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['artifact_harmonize'],
-        requiredRank: 1,
-        effects: { defMult: 0.018, hpMult: 0.012 },
-        icon: '🛡️',
-        description: 'Meningkatkan DEF +1.8% dan HP +1.2% per level.'
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { flatAtk: 2, flatDef: 2 },
+        icon: '📿',
+        description: 'Penyelarasan batin ke dalam pusaka kelahiran meningkatkan kesiapan tempur.'
       },
       {
-        id: 'artifact_soul_fusion',
-        name: 'Peleburan Jiwa dan Benda',
-        tier: 3,
+        id: 'art_blade_resonance',
+        name: 'Bound Weapon Resonance',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['artifact_resonance', 'artifact_aegis'],
+        requires: ['art_harmonize'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 3, boundOnly: true },
+        icon: '🔮',
+        description: 'Resonansi pusaka kelahiran meningkatkan ATK saat pusaka terikat aktif.'
+      },
+      {
+        id: 'art_soul_cleaver',
+        name: 'Soulbound Edge',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['art_blade_resonance'],
         requiredRank: 2,
-        effects: { atkMult: 0.02, defMult: 0.02 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.15, boundOnly: true },
         icon: '✨',
-        description: 'Meningkatkan ATK +2% dan DEF +2% per level.'
+        description: 'Peleburan jiwa ke dalam artefak melancarkan serangan dahsyat berdaya tebas tinggi.'
+      },
+      {
+        id: 'art_relic_shield',
+        name: 'Relic Aegis',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['art_harmonize'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, flatDef: 3, boundOnly: true },
+        icon: '🛡️',
+        description: 'Pusaka kelahiran memproyeksikan kubah energi penangkis serangan lawan.'
+      },
+      {
+        id: 'art_sacred_vessel',
+        name: 'Perfected Heavenly Relic',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['art_relic_shield'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.014, flatHp: 18, spiritualRes: 3, boundOnly: true },
+        icon: '🏛️',
+        description: 'Relik pusaka surgawi sempurna melindungi jiwa dan raga dari kehancuran.'
       }
     ]
   },
@@ -3652,51 +4025,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'beast_instinct',
-        name: 'Naluri Pemangsa Liar',
+        name: 'Feral Instinct',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { spdMult: 0.015, crit: 0.4 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { flatAtk: 2, flatHp: 10 },
         icon: '🐾',
-        description: 'Meningkatkan SPD +1.5% dan Crit +0.4% per level.'
-      },
-      {
-        id: 'beast_pelt',
-        name: 'Bulu Tebal Satwa Roh',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['beast_instinct'],
-        requiredRank: 0,
-        effects: { defMult: 0.012, flatHp: 20 },
-        icon: '🐺',
-        description: 'Meningkatkan DEF +1.2% dan flat HP +20 per level.'
+        description: 'Naluri satwa pemangsa menajamkan kewaspadaan dan ketahanan fisik.'
       },
       {
         id: 'beast_feral_claws',
-        name: 'Cakar Pengoyak Zirah',
+        name: 'Rending Beast Claws',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['beast_instinct'],
         requiredRank: 1,
-        effects: { atkMult: 0.02, flatAtk: 5 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, crit: 0.15, boundOnly: true },
         icon: '🦅',
-        description: 'Meningkatkan ATK +2% dan flat ATK +5 per level.'
+        description: 'Cakar tajam satwa roh mengoyak pertahanan musuh dengan serangan kritikal.'
       },
       {
-        id: 'beast_bloodline_awakening',
-        name: 'Kebangkitan Darah Satwa Kuno',
+        id: 'beast_apex_predator',
+        name: 'True Spirit Dragon Claw',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['beast_feral_claws'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.18, boundOnly: true },
+        icon: '🐅',
+        description: 'Naga roh sejati menyemburkan kekuatan purba penembus segala zirah.'
+      },
+      {
+        id: 'beast_thick_fur',
+        name: 'Thick Pelt & Vitality',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['beast_pelt', 'beast_feral_claws'],
+        requires: ['beast_instinct'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.010, defMult: 0.010, boundOnly: true },
+        icon: '🐺',
+        description: 'Bulu tebal satwa pendamping menyerap hantaman dan mempertebal HP.'
+      },
+      {
+        id: 'beast_ancient_kinship',
+        name: 'Ancient Soul Metamorphosis',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['beast_thick_fur'],
         requiredRank: 2,
-        effects: { hpMult: 0.02, atkMult: 0.02 },
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.014, flatHp: 18, defMult: 0.010, boundOnly: true },
         icon: '🐉',
-        description: 'Meningkatkan HP +2% dan ATK +2% per level.'
+        description: 'Metamorfosis roh purba menyatukan aliran darah satwa dan majikan.'
       }
     ]
   },
@@ -3706,51 +4106,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'turbid_absorption',
-        name: 'Penyerapan Inti Keruh',
+        name: 'Turbid Qi Inhalation',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { hpMult: 0.018 },
-        icon: '🕳️',
-        description: 'Meningkatkan HP +1.8% per level.'
-      },
-      {
-        id: 'turbid_mire',
-        name: 'Rawa Keruh Peredam',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['turbid_absorption'],
-        requiredRank: 0,
-        effects: { defMult: 0.015, flatDef: 4 },
-        icon: '🌑',
-        description: 'Meningkatkan DEF +1.5% dan flat DEF +4 per level.'
-      },
-      {
-        id: 'turbid_chaos_pulse',
-        name: 'Denyut Kekacauan Kotor',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { hpMult: 0.008, defMult: 0.006 },
+        icon: '🕳️',
+        description: 'Menghirup hawa keruh untuk memperkeras ketahanan tubuh dasar.'
+      },
+      {
+        id: 'turbid_iron_mire',
+        name: 'Mire Armor Bulwark',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
         requires: ['turbid_absorption'],
         requiredRank: 1,
-        effects: { flatAtk: 6, spdMult: -0.005 },
-        icon: '🌪️',
-        description: 'Meningkatkan flat ATK +6 (SPD -0.5%) per level.'
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, flatHp: 14 },
+        icon: '🌑',
+        description: 'Rawa keruh membentuk lapisan zirah tebal peredam benturan senjata.'
       },
       {
         id: 'turbid_calamity_core',
-        name: 'Inti Bencana Siluman',
+        name: 'Dark Core Tyrant',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['turbid_iron_mire'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.015, flatHp: 20, martialRes: 2 },
+        icon: '☄️',
+        description: 'Inti siluman gelap menolak hancur di tengah badai serangan bertubi-tubi.'
+      },
+      {
+        id: 'turbid_dense_smelt',
+        name: 'Heavy Miasma Force',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['turbid_mire', 'turbid_chaos_pulse'],
+        requires: ['turbid_absorption'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { flatAtk: 3, hpMult: 0.010 },
+        icon: '🌪️',
+        description: 'Peleburan aura siluman menyuntikkan bobot hantaman pada setiap pukulan.'
+      },
+      {
+        id: 'turbid_tyrant_devourer',
+        name: 'Beast-Core Demon King',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['turbid_dense_smelt'],
         requiredRank: 2,
-        effects: { hpMult: 0.025, defMult: 0.02 },
-        icon: '☄️',
-        description: 'Meningkatkan HP +2.5% dan DEF +2% per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 4, hpMult: 0.012 },
+        icon: '👹',
+        description: 'Kekuatan raja siluman pelebur melancarkan pukulan berat berdaya rusak tinggi.'
       }
     ]
   },
@@ -3760,51 +4187,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'blood_surge',
-        name: 'Gelora Darah Siluman',
+        name: 'Blood Sip Surge',
         tier: 1,
         maxLevel: 5,
-        costPerLevel: 1,
+        costPerLevel: 2,
         requires: [],
         requiredRank: 0,
-        effects: { atkMult: 0.018, flatAtk: 4 },
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, flatAtk: 2 },
         icon: '🩸',
-        description: 'Meningkatkan ATK +1.8% dan flat ATK +4 per level.'
-      },
-      {
-        id: 'blood_vessel_hardening',
-        name: 'Pengerasan Pembuluh Darah',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['blood_surge'],
-        requiredRank: 0,
-        effects: { hpMult: 0.015 },
-        icon: '❤️',
-        description: 'Meningkatkan HP +1.5% per level.'
+        description: 'Hisapan darah pertama membakar amarah batin dan serangan dasar.'
       },
       {
         id: 'blood_carnage',
-        name: 'Pesta Darah Pembantaian',
+        name: 'Carnage Bloodlust',
         tier: 2,
         maxLevel: 5,
-        costPerLevel: 2,
+        costPerLevel: 3,
         requires: ['blood_surge'],
         requiredRank: 1,
-        effects: { crit: 0.6, flatAtk: 6 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, crit: 0.15 },
         icon: '🗡️',
-        description: 'Meningkatkan Crit +0.6% dan flat ATK +6 per level.'
+        description: 'Pesta pembantaian darah menajamkan serangan kritikal mematikan.'
       },
       {
         id: 'blood_demon_dominion',
-        name: 'Kekuasaan Raja Iblis Darah',
+        name: 'Blood Hell King',
         tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['blood_carnage'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.20 },
+        icon: '👑',
+        description: 'Penguasa lautan darah merobek musuh dengan lonjakan serangan dan kritikal tanpa ampun.'
+      },
+      {
+        id: 'blood_vital_gush',
+        name: 'Vessel Engorgement',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['blood_vessel_hardening', 'blood_carnage'],
+        requires: ['blood_surge'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.012, flatHp: 14 },
+        icon: '❤️',
+        description: 'Pengerasan pembuluh darah menyerap intisari fana untuk memperbesar HP.'
+      },
+      {
+        id: 'blood_immortal_sea',
+        name: 'Surging Blood Sea',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['blood_vital_gush'],
         requiredRank: 2,
-        effects: { atkMult: 0.025, hpMult: 0.02 },
-        icon: '👑',
-        description: 'Meningkatkan ATK +2.5% dan HP +2% per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { hpMult: 0.015, flatHp: 18, defMult: 0.008 },
+        icon: '🌊',
+        description: 'Lautan darah batin meregenerasi luka dan mempertahankan keabadian raga.'
       }
     ]
   },
@@ -3814,51 +4268,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'venom_circulation',
-        name: 'Peredaran Bisa Mematikan',
+        name: 'Mild Venom Sip',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { flatAtk: 5, spiritualRes: 2 },
-        icon: '🧪',
-        description: 'Meningkatkan flat ATK +5 dan Spiritual RES +2 per level.'
-      },
-      {
-        id: 'venom_tolerance',
-        name: 'Daya Tahan Racun Mutlak',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['venom_circulation'],
-        requiredRank: 0,
-        effects: { hpMult: 0.015 },
-        icon: '🐍',
-        description: 'Meningkatkan HP +1.5% per level.'
-      },
-      {
-        id: 'venom_corrosive_strike',
-        name: 'Serangan Peleleh Daging',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['venom_circulation'],
-        requiredRank: 1,
-        effects: { atkMult: 0.018, flatAtk: 6 },
-        icon: '☠️',
-        description: 'Meningkatkan ATK +1.8% dan flat ATK +6 per level.'
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { flatAtk: 2, spiritualRes: 2 },
+        icon: '🧪',
+        description: 'Peredaran bisa ringan melatih saraf menahan racun dan menambah ketajaman.'
       },
       {
-        id: 'venom_myriad_plague',
-        name: 'Wabah Sepuluh Ribu Racun',
-        tier: 3,
+        id: 'venom_viper_kiss',
+        name: 'Viper Kiss Toxin',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['venom_tolerance', 'venom_corrosive_strike'],
+        requires: ['venom_circulation'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { flatAtk: 3, venomPoisonProc: 5 },
+        icon: '🐍',
+        description: 'Serangan otomatis menyuntikkan tumpukan racun tambahan ke meridian musuh.'
+      },
+      {
+        id: 'venom_abyssal_plague',
+        name: 'Corrosive Venom Sea',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['venom_viper_kiss'],
         requiredRank: 2,
-        effects: { atkMult: 0.025, crit: 0.5 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'combat_proc',
+        effects: { atkMult: 0.012, flatAtk: 4, venomPoisonProc: 10 },
         icon: '☣️',
-        description: 'Meningkatkan ATK +2.5% dan Crit +0.5% per level.'
+        description: 'Wabah sepuluh ribu racun menenggelamkan lawan ke dalam racun korosif mematikan.'
+      },
+      {
+        id: 'venom_acid_flesh',
+        name: 'Corrosive Muscle Bulk',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['venom_circulation'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatHp: 12 },
+        icon: '☠️',
+        description: 'Daging yang terbiasa oleh bisa asam menguatkan daya tahan dan pukulan fisik.'
+      },
+      {
+        id: 'venom_dragon_rot',
+        name: 'Annihilating Venom Drake',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['venom_acid_flesh'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.014, flatAtk: 4, defMult: 0.010 },
+        icon: '🐉',
+        description: 'Raga kebal maut melancarkan tebasan korosif yang meremukkan pertahanan lawan.'
       }
     ]
   },
@@ -3868,51 +4349,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'abyss_contract',
-        name: 'Ikatan Jiwa Jurang Gelap',
+        name: 'Faint Whisper Contract',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { atkMult: 0.02 },
-        icon: '📜',
-        description: 'Meningkatkan ATK sebesar +2% per level.'
-      },
-      {
-        id: 'abyss_dark_armor',
-        name: 'Baju Zirah Kegelapan Abyss',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['abyss_contract'],
-        requiredRank: 0,
-        effects: { defMult: 0.015 },
-        icon: '🛡️',
-        description: 'Meningkatkan DEF sebesar +1.5% per level.'
-      },
-      {
-        id: 'abyss_sacrificial_might',
-        name: 'Daya Hancur Kurban Iblis',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { atkMult: 0.008, flatAtk: 2 },
+        icon: '📜',
+        description: 'Perjanjian darah awal membuka saluran kekuatan jurang abyss.'
+      },
+      {
+        id: 'abyss_void_slash',
+        name: 'Abyssal Might',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
         requires: ['abyss_contract'],
         requiredRank: 1,
-        effects: { flatAtk: 8, crit: 0.6 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 3 },
         icon: '🩸',
-        description: 'Meningkatkan flat ATK +8 dan Crit +0.6% per level.'
+        description: 'Kekuatan kurban iblis abyss melipatgandakan daya tebas serangan.'
+      },
+      {
+        id: 'abyss_throne_heir',
+        name: 'Abyssal Throne Heir',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['abyss_void_slash'],
+        requiredRank: 2,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.015, flatAtk: 5, crit: 0.15 },
+        icon: '👹',
+        description: 'Pewaris tahta kegelapan abyss menghantam lawan dengan murka kehampaan mutlak.'
+      },
+      {
+        id: 'abyss_umbral_mantle',
+        name: 'Dark Demon Armor',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['abyss_contract'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.012, hpMult: 0.010 },
+        icon: '🛡️',
+        description: 'Selubung pelindung kegelapan abyss meredam benturan dan luka parah.'
       },
       {
         id: 'abyss_fiend_embrace',
-        name: 'Pelukan Iblis Palung Abyss',
+        name: 'Abyss Incarnate Bulwark',
         tier: 3,
-        maxLevel: 5,
-        costPerLevel: 3,
-        requires: ['abyss_dark_armor', 'abyss_sacrificial_might'],
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['abyss_umbral_mantle'],
         requiredRank: 2,
-        effects: { atkMult: 0.025, hpMult: 0.02 },
-        icon: '👹',
-        description: 'Meningkatkan ATK +2.5% dan HP +2% per level.'
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { defMult: 0.014, hpMult: 0.014, flatHp: 18 },
+        icon: '🕳️',
+        description: 'Perwujudan raga abyss tak mempan senjata fana dan memperbesar kapasitas darah.'
       }
     ]
   },
@@ -3922,51 +4430,78 @@ const LAW_SKILL_TREES = {
     nodes: [
       {
         id: 'nether_shroud',
-        name: 'Selubung Hawa Kubur Nether',
+        name: 'Fading Shadow Shroud',
         tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: [],
-        requiredRank: 0,
-        effects: { spdMult: 0.018, spiritualRes: 3 },
-        icon: '🌑',
-        description: 'Meningkatkan SPD +1.8% dan Spiritual RES +3 per level.'
-      },
-      {
-        id: 'nether_chill',
-        name: 'Dingin Nether Penusuk Tulang',
-        tier: 1,
-        maxLevel: 5,
-        costPerLevel: 1,
-        requires: ['nether_shroud'],
-        requiredRank: 0,
-        effects: { flatAtk: 5 },
-        icon: '❄️',
-        description: 'Meningkatkan flat ATK +5 per level.'
-      },
-      {
-        id: 'nether_gloom_evasion',
-        name: 'Langkah Bayangan Nether',
-        tier: 2,
         maxLevel: 5,
         costPerLevel: 2,
-        requires: ['nether_shroud'],
-        requiredRank: 1,
-        effects: { spdMult: 0.02, crit: 0.5 },
-        icon: '👻',
-        description: 'Meningkatkan SPD +2% dan Crit +0.5% per level.'
+        requires: [],
+        requiredRank: 0,
+        branchId: null,
+        exclusiveGroup: null,
+        effectType: 'passive',
+        effects: { spdMult: 0.010, flatSpd: 2 },
+        icon: '🌑',
+        description: 'Selubung kabut yin tipis menyamarkan jejak dan menambah kelincahan.'
       },
       {
-        id: 'nether_abyssal_sovereign',
-        name: 'Penguasa Bayangan Akhirat',
-        tier: 3,
+        id: 'nether_shadow_veil',
+        name: 'Nether Yin Stride',
+        tier: 2,
         maxLevel: 5,
         costPerLevel: 3,
-        requires: ['nether_chill', 'nether_gloom_evasion'],
+        requires: ['nether_shroud'],
+        requiredRank: 1,
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.012, spiritualRes: 2 },
+        icon: '👻',
+        description: 'Langkah bayangan nether yin bergerak cepat menembus rintangan.'
+      },
+      {
+        id: 'nether_void_walker',
+        name: 'Nine-Layer Void Walker',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['nether_shadow_veil'],
         requiredRank: 2,
-        effects: { atkMult: 0.022, spdMult: 0.018 },
+        branchId: 'A',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { spdMult: 0.015, flatSpd: 4, atkMult: 0.010 },
+        icon: '🌌',
+        description: 'Pengelana kehampaan sembilan lapis menyerang secepat bayangan maut.'
+      },
+      {
+        id: 'nether_frost_terror',
+        name: 'Creeping Dark Ambush',
+        tier: 2,
+        maxLevel: 5,
+        costPerLevel: 3,
+        requires: ['nether_shroud'],
+        requiredRank: 1,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { flatAtk: 3, crit: 0.15 },
+        icon: '❄️',
+        description: 'Hawa dingin kuburan nether membekukan lawan dengan serangan sergap beracun.'
+      },
+      {
+        id: 'nether_monarch_gloom',
+        name: 'Ancient Darkness King',
+        tier: 3,
+        maxLevel: 4,
+        costPerLevel: 4,
+        requires: ['nether_frost_terror'],
+        requiredRank: 2,
+        branchId: 'B',
+        exclusiveGroup: 'main_path',
+        effectType: 'passive',
+        effects: { atkMult: 0.012, flatAtk: 4, crit: 0.20 },
         icon: '👑',
-        description: 'Meningkatkan ATK +2.2% dan SPD +1.8% per level.'
+        description: 'Raja kegelapan kuno melancarkan tikaman fatal berdaya serang kritikal tinggi.'
       }
     ]
   }
@@ -4006,6 +4541,11 @@ function applyLawSkillTreeEffects(player, mult, flat) {
     const eff = node.effects;
     if (!eff) continue;
 
+    // Condition checks: swordOnly, boundOnly, homeOnly
+    if (eff.swordOnly && !isPlayerWieldingSword(player)) continue;
+    if (eff.boundOnly && !law.boundEntity) continue;
+    if (eff.homeOnly && !isOnOwnFormationHub(player)) continue;
+
     // Multipliers
     if (eff.hpMult) mult.hp += eff.hpMult * level;
     if (eff.atkMult) mult.atk += eff.atkMult * level;
@@ -4021,9 +4561,26 @@ function applyLawSkillTreeEffects(player, mult, flat) {
     // Extended Stats
     if (!player.extendedStats) player.extendedStats = {};
     if (eff.crit) player.extendedStats.crit = (player.extendedStats.crit || 0) + (eff.crit * level);
-    if (eff.reflectPct) player.extendedStats.reflectPct = (player.extendedStats.reflectPct || 0) + (eff.reflectPct * level);
+    if (eff.reflectPct) {
+      const curReflect = player.extendedStats.reflectPct || 0;
+      player.extendedStats.reflectPct = Math.min(0.25, curReflect + (eff.reflectPct * level));
+    }
     if (eff.martialRes) player.extendedStats.martialRes = (player.extendedStats.martialRes || 0) + (eff.martialRes * level);
     if (eff.spiritualRes) player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (eff.spiritualRes * level);
+
+    // Wired unique effects
+    if (eff.poisonResist) player.extendedStats.poisonResist = (player.extendedStats.poisonResist || 0) + (eff.poisonResist * level);
+    if (eff.corruptionResist) player.extendedStats.corruptionResist = (player.extendedStats.corruptionResist || 0) + (eff.corruptionResist * level);
+    if (eff.unarmedPenaltyMitigation) player.extendedStats.unarmedPenaltyMitigation = (player.extendedStats.unarmedPenaltyMitigation || 0) + (eff.unarmedPenaltyMitigation * level);
+    if (eff.homeBonusAdd) player.extendedStats.homeBonusAdd = (player.extendedStats.homeBonusAdd || 0) + (eff.homeBonusAdd * level);
+    if (eff.essenceGainPct) {
+      const curGain = player.extendedStats.essenceGainPct || 0;
+      player.extendedStats.essenceGainPct = Math.min(0.15, curGain + (eff.essenceGainPct * level));
+    }
+    if (eff.atkWantedMult) player.extendedStats.skillAtkWantedMult = (player.extendedStats.skillAtkWantedMult || 0) + (eff.atkWantedMult * level);
+    if (eff.dmgVsCorrupted) player.extendedStats.skillDmgVsCorrupted = (player.extendedStats.skillDmgVsCorrupted || 0) + (eff.dmgVsCorrupted * level);
+    if (eff.yangCleanseChance) player.extendedStats.yangCleanseChance = (player.extendedStats.yangCleanseChance || 0) + (eff.yangCleanseChance * level);
+    if (eff.venomPoisonProc) player.extendedStats.venomPoisonProc = (player.extendedStats.venomPoisonProc || 0) + (eff.venomPoisonProc * level);
   }
 }
 
@@ -4154,7 +4711,9 @@ function getLawCombatModifiers(attacker, defender) {
 
   // 1. Righteous Heavenly Merit: Bonus vs Wanted / Demonic / Undead / Corrupt
   if (lawType === 'righteous_heavenly_merit' && isCorruptOrDemonic) {
-    const bonus = Math.max(0.04, (rank || 1) * (LAW_BALANCE.MERIT_VS_WANTED_ATK_MULT || 0.04));
+    const baseBonus = Math.max(0.04, (rank || 1) * (LAW_BALANCE.MERIT_VS_WANTED_ATK_MULT || 0.04));
+    const skillBonus = Number(attacker.extendedStats?.skillAtkWantedMult || 0);
+    const bonus = baseBonus + skillBonus;
     result.damageMultiplier *= (1 + bonus);
     result.isMeritBonus = true;
     result.bonusDesc = `⚡ [Jasa Langit: +${Math.round(bonus * 100)}% vs Iblis/Buronan]`;
@@ -4162,7 +4721,9 @@ function getLawCombatModifiers(attacker, defender) {
 
   // 2. Righteous Pure Yang: Bonus vs Corrupt / Demonic / Ghost / Yin
   if (lawType === 'righteous_pure_yang' && isCorruptOrDemonic) {
-    const bonus = Math.max(0.03, (rank || 1) * (LAW_BALANCE.YANG_VS_CORRUPTION_ATK || 0.03));
+    const baseBonus = Math.max(0.03, (rank || 1) * (LAW_BALANCE.YANG_VS_CORRUPTION_ATK || 0.03));
+    const skillBonus = Number(attacker.extendedStats?.skillDmgVsCorrupted || 0);
+    const bonus = baseBonus + skillBonus;
     result.damageMultiplier *= (1 + bonus);
     result.isYangBonus = true;
     result.bonusDesc = `☀️ [Yang Murni: +${Math.round(bonus * 100)}% Penumpasan Kegelapan]`;
