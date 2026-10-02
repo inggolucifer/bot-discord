@@ -3593,10 +3593,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.015, flatHp: 20, defMult: 0.008 },
+        effectType: 'system',
+        effects: { hpMult: 0.014, flatHp: 18, combatHpRegenPct: 0.006, essenceGainPct: 0.01 },
         icon: '🌳',
-        description: 'Akar dunia menghubungkan intisari hayat semesta ke dalam tubuh abadi.'
+        description: 'Akar dunia menghubungkan intisari hayat semesta, memulihkan HP raga dan mempercepat serapan esensi.'
       },
       {
         id: 'qingdi_sap_flow',
@@ -4484,10 +4484,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { spdMult: 0.015, flatSpd: 4, atkMult: 0.010 },
+        effectType: 'combat_proc',
+        effects: { spdMult: 0.014, flatSpd: 3, netherZoneAtkBonus: 0.02, reflectPct: 0.01 },
         icon: '🌌',
-        description: 'Pengelana kehampaan sembilan lapis menyerang secepat bayangan maut.'
+        description: 'Pengelana kehampaan sembilan lapis bergerak di balik selubung bayangan dan memantulkan sebagian luka lawan.'
       },
       {
         id: 'nether_frost_terror',
