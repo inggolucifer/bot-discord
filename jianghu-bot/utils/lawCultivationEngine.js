@@ -2926,10 +2926,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.010, spiritualRes: 2 },
+        effectType: 'system',
+        effects: { defMult: 0.010, spiritualRes: 2, essenceGainPct: 0.01 },
         icon: '✨',
-        description: 'Perisai kebajikan menahan benturan dan meningkatkan ketahanan spiritual.'
+        description: 'Perisai kebajikan menahan benturan, meningkatkan ketahanan spiritual dan efisiensi serap esensi.'
       },
       {
         id: 'merit_heaven_eye',
@@ -3250,10 +3250,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.012, hpMult: 0.010, spiritualRes: 2 },
+        effectType: 'system',
+        effects: { defMult: 0.012, hpMult: 0.010, spiritualRes: 2, essenceGainPct: 0.01 },
         icon: '🕯️',
-        description: 'Cahaya nurani cermin mempertebal ketahanan pertahanan dan spiritual.'
+        description: 'Cahaya nurani cermin mempertebal ketahanan pertahanan, spiritual, dan efisiensi serap esensi.'
       },
       {
         id: 'karma_flawless',
