@@ -3527,10 +3527,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.010, flatHp: 15 },
+        effectType: 'combat_proc',
+        effects: { defenseUpProcChance: 0.018, hpMult: 0.008 },
         icon: '🧱',
-        description: 'Lempeng benua agung mempertebal volume darah dan daya tampung raga.'
+        description: 'Lempeng benua agung berpeluang memicu Kuda-kuda Pertahanan Baja saat menerima serangan.'
       },
       {
         id: 'xuanwu_world_anchor',
@@ -3542,10 +3542,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.014, flatHp: 20, defMult: 0.008 },
+        effectType: 'combat_proc',
+        effects: { defenseUpProcChance: 0.025, flatHp: 18, martialRes: 2 },
         icon: '🌋',
-        description: 'Jangkar bumi menambatkan raga ke urat semesta, kokoh tak tergoyahkan.'
+        description: 'Jangkar bumi menambatkan raga ke urat semesta, memperbesar peluang pertahanan baja dan meredam luka fisik.'
       }
     ]
   },
@@ -3609,7 +3609,7 @@ const LAW_SKILL_TREES = {
         branchId: 'B',
         exclusiveGroup: 'main_path',
         effectType: 'system',
-        effects: { essenceGainPct: 0.02, spiritualRes: 2, flatHp: 12 },
+        effects: { essenceGainPct: 0.02, spiritualRes: 2, flatHp: 10 },
         icon: '🍃',
         description: 'Getah hayat mempercepat penyerapan bahan herba dan intisari kayu.'
       },
@@ -3623,10 +3623,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'system',
-        effects: { essenceGainPct: 0.03, defMult: 0.012, martialRes: 2 },
+        effectType: 'combat_proc',
+        effects: { combatHpRegenPct: 0.006, essenceGainPct: 0.012, defMult: 0.010 },
         icon: '🎋',
-        description: 'Kanopi langit surgawi memayungi kultivator dari serangan fana dan sihir.'
+        description: 'Kanopi langit surgawi memulihkan sebagian HP dantian di setiap akhir ronde tempur.'
       }
     ]
   },
@@ -3851,10 +3851,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.012, flatDef: 3 },
+        effectType: 'system',
+        effects: { injuryResist: 0.04, defMult: 0.010, flatDef: 2 },
         icon: '🦴',
-        description: 'Tulang besi tempa menahan benturan senjata tajam dan tumpul.'
+        description: 'Tulang besi kawat memperkokoh pertahanan dan memberikan kekebalan menolak cedera luka dalam.'
       },
       {
         id: 'body_vajra_aegis',
@@ -3866,10 +3866,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.015, flatDef: 4, martialRes: 3 },
+        effectType: 'system',
+        effects: { injuryResist: 0.04, defMult: 0.014, martialRes: 3 },
         icon: '🛡️',
-        description: 'Raga Vajra tak tertembus menepis segala bentuk kerusakan fisik.'
+        description: 'Raga Vajra tak tertembus menolak hantaman cedera berat dan menepis kerusakan fisik Jianghu.'
       }
     ]
   },
@@ -4175,10 +4175,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { flatAtk: 3, hpMult: 0.010 },
+        effectType: 'system',
+        effects: { corruptionToDefPct: 0.008, flatAtk: 2, hpMult: 0.008 },
         icon: '🌪️',
-        description: 'Peleburan aura siluman menyuntikkan bobot hantaman pada setiap pukulan.'
+        description: 'Peleburan aura siluman mengubah indeks korupsi kegelapan menjadi pertahanan pertahanan raga.'
       },
       {
         id: 'turbid_tyrant_devourer',
@@ -4190,10 +4190,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatAtk: 4, hpMult: 0.012 },
+        effectType: 'system',
+        effects: { corruptionToDefPct: 0.015, essenceGainPct: 0.02, flatAtk: 3, hpMult: 0.010 },
         icon: '👹',
-        description: 'Kekuatan raja siluman pelebur melancarkan pukulan berat berdaya rusak tinggi.'
+        description: 'Kekuatan raja siluman pelebur memaksimalkan konversi korupsi menjadi DEF dan mempercepat serapan esensi kotor.'
       }
     ]
   },
