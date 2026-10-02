@@ -3385,9 +3385,9 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     </span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-stone-800/80 text-stone-300">
-                    <span>Biaya Material:</span>
+                    <span>Syarat Material:</span>
                     <span className="font-mono text-amber-400">
-                      {lawData.miniBreakthroughCost?.silverCost || 5} Silver ({lawData.miniBreakthroughCost?.materialName || 'Herba Penguat Qi'})
+                      {lawData.miniBreakthroughCost?.requiredQty || (2 + (lawData.rank || 0) + Math.floor((lawData.stage || 0) / 3))}x Material (Tier ≤ {(lawData.rank || 0) + 1})
                     </span>
                   </div>
                   <div className="pt-2">

@@ -43,6 +43,7 @@ const {
   attemptMiniBreakthrough,
   attemptMajorBreakthrough,
   getMiniBreakthroughCost,
+  consumeBreakthroughMaterials,
   meetsLawRankRequirements,
   getLawStatus,
   startBodyTemperingPart,
@@ -1250,32 +1251,11 @@ router.post('/breakthrough/stage', authenticateToken, async (req, res) => {
         law.isChanneling = false;
       }
 
-      // Validasi biaya material (deduct Copper)
-      const cost = getMiniBreakthroughCost(law.rank, law.stage);
-      const totalCopper = (player.currency?.copper || 0)
-        + (player.currency?.silver || 0) * 100
-        + (player.currency?.gold || 0) * 10000;
+      // Populate inventory untuk validasi item material & pil
+      await player.populate({ path: 'inventory.itemId' });
 
-      if (totalCopper < cost) {
-        throw new CustomError(`Material tidak cukup. Butuh ${cost} Copper, kamu punya ${totalCopper} Copper.`, 400);
-      }
-
-      // Deduct dari copper terlebih dahulu
-      let remaining = cost;
-      if (player.currency.copper >= remaining) {
-        player.currency.copper -= remaining;
-        remaining = 0;
-      } else {
-        remaining -= player.currency.copper;
-        player.currency.copper = 0;
-        // Fallback ke silver
-        const silverNeeded = Math.ceil(remaining / 100);
-        if (player.currency.silver >= silverNeeded) {
-          player.currency.silver -= silverNeeded;
-          player.currency.copper += (silverNeeded * 100) - remaining;
-          remaining = 0;
-        }
-      }
+      // Validasi dan konsumsi material murni (bukan currency)
+      const materialResult = consumeBreakthroughMaterials(player, law, false);
 
       // Validasi mood
       const { assertMood, applyMoodDelta } = require('../../utils/moodManager');
@@ -1285,7 +1265,6 @@ router.post('/breakthrough/stage', authenticateToken, async (req, res) => {
       let pillOptions = {};
       if (law.breakthroughPillSlot) {
         const pillTargetId = (law.breakthroughPillSlot._id || law.breakthroughPillSlot)?.toString();
-        await player.populate({ path: 'inventory.itemId' });
         const pillIdx = player.inventory.findIndex(inv => {
           if (!inv.itemId) return false;
           const invId = (inv.itemId._id || inv.itemId)?.toString();
@@ -1305,6 +1284,9 @@ router.post('/breakthrough/stage', authenticateToken, async (req, res) => {
       }
 
       const result = attemptMiniBreakthrough(player, pillOptions);
+      if (materialResult?.consumedItemName) {
+        result.consumedMaterial = materialResult.consumedItemName;
+      }
 
       if (result.isSuccess) {
         applyMoodDelta(player, -5);
@@ -1313,7 +1295,6 @@ router.post('/breakthrough/stage', authenticateToken, async (req, res) => {
       }
 
       player.markModified('cultivationLaw');
-      player.markModified('currency');
       await player.save({ session });
 
       res.json(result);
