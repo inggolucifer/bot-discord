@@ -2745,6 +2745,22 @@ function getLawStatus(player) {
         };
       }
 
+      const activeSignatures = [];
+      const ext = player.extendedStats || {};
+      if (ext.burnProcStacks) activeSignatures.push('burnProc');
+      if (ext.chillProcChance) activeSignatures.push('chillProc');
+      if (ext.defenseUpProcChance) activeSignatures.push('defenseUpProc');
+      if (ext.combatHpRegenPct) activeSignatures.push('combatHpRegen');
+      if (ext.firstStrikeAtkPct) activeSignatures.push('firstStrike');
+      if (ext.stunProcChance) activeSignatures.push('stunProc');
+      if (ext.lifestealPct) activeSignatures.push('lifesteal');
+      if (ext.injuryResist) activeSignatures.push('injuryResist');
+      if (ext.venomPoisonProc) activeSignatures.push('venomPoisonProc');
+      if (ext.yangCleanseChance) activeSignatures.push('yangCleanse');
+      if (ext.swordBleedChance) activeSignatures.push('swordBleed');
+      if (ext.reflectPct) activeSignatures.push('reflect');
+      if (activeSignatures.length > 0) panel.combatSignatures = activeSignatures;
+
       return panel;
     })(),
 
@@ -3076,10 +3092,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { crit: 0.20, flatAtk: 3, swordOnly: true },
+        effectType: 'combat_proc',
+        effects: { crit: 0.20, flatAtk: 3, swordBleedChance: 0.03, swordOnly: true },
         icon: '⚔️',
-        description: 'Menajamkan niat pedang batin khusus saat menghunus senjata pedang.'
+        description: 'Menajamkan niat pedang batin khusus saat menghunus senjata pedang, memicu luka robek pendarahan.'
       },
       {
         id: 'sword_one_strike',
@@ -3091,10 +3107,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.014, crit: 0.25, flatAtk: 4, swordOnly: true },
+        effectType: 'combat_proc',
+        effects: { atkMult: 0.014, crit: 0.25, flatAtk: 4, swordBleedChance: 0.025, swordOnly: true },
         icon: '🌠',
-        description: 'Tebasan mutlak belah awan memberikan lonjakan ATK dan Crit saat bersenjata pedang.'
+        description: 'Tebasan mutlak belah awan memberikan lonjakan ATK, Crit, dan pendarahan saat bersenjata pedang.'
       },
       {
         id: 'sword_flow',
@@ -3349,10 +3365,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatAtk: 4 },
+        effectType: 'combat_proc',
+        effects: { burnProcStacks: 2, atkMult: 0.010, flatAtk: 2 },
         icon: '💥',
-        description: 'Membakar meridian internal untuk meningkatkan daya serang murni.'
+        description: 'Membakar meridian serangan lawan, menyuntikkan tumpukan api terbakar pada setiap hit.'
       },
       {
         id: 'phoenix_eternal_core',
@@ -3364,10 +3380,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.015, flatAtk: 5, spdMult: 0.008 },
+        effectType: 'combat_proc',
+        effects: { burnProcStacks: 1, burnTickBonus: 0.002, combatHpRegenPct: 0.005, flatAtk: 3 },
         icon: '🌋',
-        description: 'Inti lahar abadi melipatgandakan serangan dan kelincahan gerak api.'
+        description: 'Inti lahar abadi memperhebat kerusakan kobaran api dan memulihkan HP raga di setiap putaran.'
       }
     ]
   },
@@ -3430,10 +3446,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { spiritualRes: 3, defMult: 0.010 },
+        effectType: 'combat_proc',
+        effects: { chillProcChance: 0.03, spiritualRes: 2 },
         icon: '🌫️',
-        description: 'Membekukan kabut air menjadi dinding penahan sihir elemen.'
+        description: 'Membekukan kabut air saat menyerang, berpeluang memperlambat kecepatan aksi musuh.'
       },
       {
         id: 'water_abyssal_glacier',
@@ -3445,10 +3461,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { spiritualRes: 4, defMult: 0.014, flatDef: 4 },
+        effectType: 'combat_proc',
+        effects: { chillProcChance: 0.02, spdSlowOnHit: 0.03, defMult: 0.012, spiritualRes: 3 },
         icon: '🧊',
-        description: 'Glasier jiwa abadi menepis kutukan spiritual dan pukulan lawan.'
+        description: 'Glasier jiwa abadi memperkuat peluang pembekuan dan memangkas kecepatan lawan.'
       }
     ]
   },
@@ -3673,10 +3689,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { crit: 0.18, flatAtk: 3 },
+        effectType: 'combat_proc',
+        effects: { firstStrikeAtkPct: 0.03, crit: 0.15 },
         icon: '🦅',
-        description: 'Bilah angin setajam silet mengoyak pertahanan dengan serangan kritikal.'
+        description: 'Bilah bulu badai menyergap lawan dengan bonus kerusakan dahsyat pada serangan pertama pertempuran.'
       },
       {
         id: 'roc_astral_cyclone',
@@ -3688,10 +3704,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { crit: 0.22, flatAtk: 4, spdMult: 0.008 },
+        effectType: 'combat_proc',
+        effects: { firstStrikeAtkPct: 0.025, crit: 0.20, spdMult: 0.008 },
         icon: '🌪️',
-        description: 'Topan pembatas astral menghempaskan lawan dengan serangan kritikal mutlak.'
+        description: 'Topan pembatas astral melipatgandakan daya hancur serangan pembuka dan peluang kritikal.'
       }
     ]
   },
@@ -3754,10 +3770,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { crit: 0.18, flatAtk: 2 },
+        effectType: 'combat_proc',
+        effects: { stunProcChance: 0.015, flatAtk: 2 },
         icon: '⚡',
-        description: 'Rantai petir biru menembus titik meridian dengan presisi kritikal.'
+        description: 'Rantai petir ungu menyengat saraf lawan, berpeluang melumpuhkan (Stun) aksi lawan.'
       },
       {
         id: 'thunder_divine_pierce',
@@ -3769,10 +3785,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { crit: 0.22, flatAtk: 4, spiritualRes: 2 },
+        effectType: 'combat_proc',
+        effects: { stunProcChance: 0.015, bonusAtkOnStun: 0.04, flatAtk: 4 },
         icon: '👑',
-        description: 'Sembilan petir suci meremukkan musuh dengan ledakan kritikal terfokus.'
+        description: 'Petir penghukum melipatgandakan peluang kelumpuhan serta kerusakan serangan terhadap musuh yang sedang lumpuh.'
       }
     ]
   },
@@ -3886,10 +3902,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatAtk: 3 },
+        effectType: 'system',
+        effects: { atkMult: 0.012, guSlotAtkBonus: 2, flatAtk: 2 },
         icon: '🦗',
-        description: 'Koloni serangga Gu menyerbu agresif melipatgandakan serangan.'
+        description: 'Koloni serangga Gu menyerbu agresif menyuntikkan bonus ATK tambahan per slot serangga.'
       },
       {
         id: 'gu_swarm_emperor',
@@ -3901,10 +3917,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.15 },
+        effectType: 'system',
+        effects: { atkMult: 0.014, guSlotAtkBonus: 2.5, flatAtk: 3, crit: 0.15 },
         icon: '👑',
-        description: 'Kekuasaan raja sepuluh ribu Gu memporak-porandakan barisan musuh.'
+        description: 'Kekuasaan raja sepuluh ribu Gu memicu lonjakan ATK per slot serangga dan serangan kritikal.'
       },
       {
         id: 'gu_chitin_shell',
@@ -3916,10 +3932,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.012, flatHp: 14 },
+        effectType: 'combat_proc',
+        effects: { poisonProcFromGu: 0.03, poisonResist: 0.04, defMult: 0.010 },
         icon: '🛡️',
-        description: 'Cangkang chitin serangga keras menahan luka dan benturan senjata.'
+        description: 'Cangkang chitin keras menahan benturan dan meningkatkan frekuensi gigitan racun serangga Gu.'
       },
       {
         id: 'gu_chaos_cavity',
@@ -3931,10 +3947,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.014, hpMult: 0.012, flatHp: 18 },
+        effectType: 'combat_proc',
+        effects: { poisonProcFromGu: 0.03, hpMult: 0.012, defMult: 0.012, flatHp: 16 },
         icon: '🕳️',
-        description: 'Rongga chaos purba menyerap getaran luka dan memulihkan vitalitas.'
+        description: 'Rongga chaos purba menyerap getaran luka serta memperkuat peluang racun serangga beracun.'
       }
     ]
   },
@@ -3967,10 +3983,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatAtk: 3, boundOnly: true },
+        effectType: 'system',
+        effects: { atkMult: 0.012, artifactInfusionAtk: 2, flatAtk: 2, boundOnly: true },
         icon: '🔮',
-        description: 'Resonansi pusaka kelahiran meningkatkan ATK saat pusaka terikat aktif.'
+        description: 'Resonansi pusaka kelahiran mengalirkan bonus serangan khusus saat pusaka natal terikat aktif.'
       },
       {
         id: 'art_soul_cleaver',
@@ -3982,10 +3998,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'A',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.014, flatAtk: 4, crit: 0.15, boundOnly: true },
+        effectType: 'system',
+        effects: { atkMult: 0.014, artifactInfusionAtk: 3, flatAtk: 3, crit: 0.15, boundOnly: true },
         icon: '✨',
-        description: 'Peleburan jiwa ke dalam artefak melancarkan serangan dahsyat berdaya tebas tinggi.'
+        description: 'Peleburan jiwa ke dalam artefak melancarkan serangan dahsyat berdaya tebas dan kritikal tinggi.'
       },
       {
         id: 'art_relic_shield',
@@ -3997,10 +4013,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.012, flatDef: 3, boundOnly: true },
+        effectType: 'combat_proc',
+        effects: { defenseUpProcChance: 0.018, defMult: 0.010, boundOnly: true },
         icon: '🛡️',
-        description: 'Pusaka kelahiran memproyeksikan kubah energi penangkis serangan lawan.'
+        description: 'Pusaka kelahiran memproyeksikan kubah energi pertahanan baja saat menerima serangan.'
       },
       {
         id: 'art_sacred_vessel',
@@ -4012,10 +4028,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.014, flatHp: 18, spiritualRes: 3, boundOnly: true },
+        effectType: 'combat_proc',
+        effects: { defenseUpProcChance: 0.025, defMult: 0.014, flatHp: 18, boundOnly: true },
         icon: '🏛️',
-        description: 'Relik pusaka surgawi sempurna melindungi jiwa dan raga dari kehancuran.'
+        description: 'Relik pusaka surgawi sempurna melindungi raga dengan frekuensi pertahanan baja yang lebih tinggi.'
       }
     ]
   },
@@ -4078,10 +4094,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.010, defMult: 0.010, boundOnly: true },
+        effectType: 'combat_proc',
+        effects: { beastHealOnKillPct: 0.008, hpMult: 0.010, boundOnly: true },
         icon: '🐺',
-        description: 'Bulu tebal satwa pendamping menyerap hantaman dan mempertebal HP.'
+        description: 'Bulu tebal satwa pendamping menyerap vitalitas musuh yang gugur untuk memulihkan HP master.'
       },
       {
         id: 'beast_ancient_kinship',
@@ -4093,10 +4109,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.014, flatHp: 18, defMult: 0.010, boundOnly: true },
+        effectType: 'combat_proc',
+        effects: { beastHealOnKillPct: 0.010, hpMult: 0.014, flatHp: 18, boundOnly: true },
         icon: '🐉',
-        description: 'Metamorfosis roh purba menyatukan aliran darah satwa dan majikan.'
+        description: 'Metamorfosis roh purba meningkatkan pemulihan HP saat menumbangkan musuh di medan tempur.'
       }
     ]
   },
@@ -4240,10 +4256,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.012, flatHp: 14 },
+        effectType: 'combat_proc',
+        effects: { lifestealPct: 0.008, hpMult: 0.008 },
         icon: '❤️',
-        description: 'Pengerasan pembuluh darah menyerap intisari fana untuk memperbesar HP.'
+        description: 'Pengerasan pembuluh darah menyerap darah luka lawan untuk memulihkan HP (Lifesteal).'
       },
       {
         id: 'blood_immortal_sea',
@@ -4255,10 +4271,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { hpMult: 0.015, flatHp: 18, defMult: 0.008 },
+        effectType: 'combat_proc',
+        effects: { lifestealPct: 0.010, hpMult: 0.012, flatHp: 16 },
         icon: '🌊',
-        description: 'Lautan darah batin meregenerasi luka dan mempertahankan keabadian raga.'
+        description: 'Lautan darah batin memperkuat hisapan darah lifesteal dan memperbesar volume cadangan darah.'
       }
     ]
   },
@@ -4292,7 +4308,7 @@ const LAW_SKILL_TREES = {
         branchId: 'A',
         exclusiveGroup: 'main_path',
         effectType: 'combat_proc',
-        effects: { flatAtk: 3, venomPoisonProc: 5 },
+        effects: { flatAtk: 3, venomPoisonProc: 0.05 },
         icon: '🐍',
         description: 'Serangan otomatis menyuntikkan tumpukan racun tambahan ke meridian musuh.'
       },
@@ -4307,7 +4323,7 @@ const LAW_SKILL_TREES = {
         branchId: 'A',
         exclusiveGroup: 'main_path',
         effectType: 'combat_proc',
-        effects: { atkMult: 0.012, flatAtk: 4, venomPoisonProc: 10 },
+        effects: { atkMult: 0.012, flatAtk: 4, venomPoisonProc: 0.05 },
         icon: '☣️',
         description: 'Wabah sepuluh ribu racun menenggelamkan lawan ke dalam racun korosif mematikan.'
       },
@@ -4321,10 +4337,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatHp: 12 },
+        effectType: 'combat_proc',
+        effects: { corrosionDefShred: 0.015, poisonResist: 0.06, flatHp: 12 },
         icon: '☠️',
-        description: 'Daging yang terbiasa oleh bisa asam menguatkan daya tahan dan pukulan fisik.'
+        description: 'Bisa asam korosif mengikis lapisan zirah pertahanan lawan saat diserang.'
       },
       {
         id: 'venom_dragon_rot',
@@ -4336,10 +4352,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.014, flatAtk: 4, defMult: 0.010 },
+        effectType: 'combat_proc',
+        effects: { corrosionDefShred: 0.018, poisonResist: 0.08, atkMult: 0.012 },
         icon: '🐉',
-        description: 'Raga kebal maut melancarkan tebasan korosif yang meremukkan pertahanan lawan.'
+        description: 'Raga naga racun memuntahkan asam penghancur yang meremukkan pertahanan lawan dan meningkatkan daya tahan racun.'
       }
     ]
   },
@@ -4402,10 +4418,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.012, hpMult: 0.010 },
+        effectType: 'system',
+        effects: { abyssalCurseResist: 0.04, defMult: 0.010, hpMult: 0.008 },
         icon: '🛡️',
-        description: 'Selubung pelindung kegelapan abyss meredam benturan dan luka parah.'
+        description: 'Selubung pelindung kegelapan abyss meredam benturan dan menangkis kutukan jurang maut.'
       },
       {
         id: 'abyss_fiend_embrace',
@@ -4417,10 +4433,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { defMult: 0.014, hpMult: 0.014, flatHp: 18 },
+        effectType: 'system',
+        effects: { abyssalCurseResist: 0.05, defMult: 0.014, flatHp: 18 },
         icon: '🕳️',
-        description: 'Perwujudan raga abyss tak mempan senjata fana dan memperbesar kapasitas darah.'
+        description: 'Perwujudan raga abyss mempertebal ketahanan kutukan dan pertahanan dari senjata fana.'
       }
     ]
   },
@@ -4483,10 +4499,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 1,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { flatAtk: 3, crit: 0.15 },
+        effectType: 'combat_proc',
+        effects: { netherZoneAtkBonus: 0.02, flatAtk: 3, reflectPct: 0.006 },
         icon: '❄️',
-        description: 'Hawa dingin kuburan nether membekukan lawan dengan serangan sergap beracun.'
+        description: 'Hawa dingin kuburan nether melancarkan serangan sergap bayangan dan memantulkan luka lawan.'
       },
       {
         id: 'nether_monarch_gloom',
@@ -4498,10 +4514,10 @@ const LAW_SKILL_TREES = {
         requiredRank: 2,
         branchId: 'B',
         exclusiveGroup: 'main_path',
-        effectType: 'passive',
-        effects: { atkMult: 0.012, flatAtk: 4, crit: 0.20 },
+        effectType: 'combat_proc',
+        effects: { netherZoneAtkBonus: 0.025, atkMult: 0.012, flatAtk: 4, reflectPct: 0.008 },
         icon: '👑',
-        description: 'Raja kegelapan kuno melancarkan tikaman fatal berdaya serang kritikal tinggi.'
+        description: 'Raja kegelapan kuno melancarkan tikaman fatal dari balik bayangan dan memantulkan kerusakan.'
       }
     ]
   }
@@ -4515,19 +4531,29 @@ const LAW_SKILL_TREES = {
  */
 function applyLawSkillTreeEffects(player, mult, flat) {
   if (!player) return;
-  const law = player.cultivationLaw;
-  if (!law?.activeLawType) return;
+  if (!mult) mult = { hp: 0, atk: 0, def: 0, spd: 0 };
+  if (!flat) flat = { hp: 0, atk: 0, def: 0, spd: 0 };
+  const law = player.cultivationLaw || (player.laws && player.laws[0]);
+  const activeLawType = law?.activeLawType || law?.lawType || player.activeLawType;
+  if (!activeLawType) return;
 
-  const tree = LAW_SKILL_TREES[law.activeLawType];
+  const tree = LAW_SKILL_TREES[activeLawType];
   if (!tree?.nodes || tree.nodes.length === 0) return;
 
-  // Baca skillLevels dari law (bisa berupa Map atau plain object)
-  const skillLevels = law.skillLevels instanceof Map
-    ? Object.fromEntries(law.skillLevels)
-    : (law.skillLevels || {});
+  // Baca skillLevels dari law (bisa berupa Map atau plain object atau lawSkillTrees)
+  let skillLevels = {};
+  if (law?.skillLevels instanceof Map) {
+    skillLevels = Object.fromEntries(law.skillLevels);
+  } else if (law?.skillLevels) {
+    skillLevels = { ...law.skillLevels };
+  } else if (player.lawSkillTrees?.[activeLawType]?.nodes) {
+    for (const [nId, nData] of Object.entries(player.lawSkillTrees[activeLawType].nodes)) {
+      skillLevels[nId] = nData.currentLevel || (nData.purchased ? 1 : 0);
+    }
+  }
 
   // Fallback: jika skill ada di unlockedSkillIds tapi belum tercatat levelnya, anggap level 1
-  const unlocked = new Set(law.unlockedSkillIds || []);
+  const unlocked = new Set(law?.unlockedSkillIds || []);
 
   for (const node of tree.nodes) {
     const nodeId = node.id || node.skillId;
@@ -4581,6 +4607,89 @@ function applyLawSkillTreeEffects(player, mult, flat) {
     if (eff.dmgVsCorrupted) player.extendedStats.skillDmgVsCorrupted = (player.extendedStats.skillDmgVsCorrupted || 0) + (eff.dmgVsCorrupted * level);
     if (eff.yangCleanseChance) player.extendedStats.yangCleanseChance = (player.extendedStats.yangCleanseChance || 0) + (eff.yangCleanseChance * level);
     if (eff.venomPoisonProc) player.extendedStats.venomPoisonProc = (player.extendedStats.venomPoisonProc || 0) + (eff.venomPoisonProc * level);
+
+    // Signature Combat Procs & Systems with Hard Global Safety Caps
+    if (eff.burnProcStacks) {
+      const cur = player.extendedStats.burnProcStacks || 0;
+      player.extendedStats.burnProcStacks = Math.min(15, cur + (eff.burnProcStacks * level));
+    }
+    if (eff.burnTickBonus) {
+      const cur = player.extendedStats.burnTickBonus || 0;
+      player.extendedStats.burnTickBonus = Math.min(0.015, cur + (eff.burnTickBonus * level));
+    }
+    if (eff.chillProcChance) {
+      const cur = player.extendedStats.chillProcChance || 0;
+      player.extendedStats.chillProcChance = Math.min(0.25, cur + (eff.chillProcChance * level));
+    }
+    if (eff.spdSlowOnHit) {
+      const cur = player.extendedStats.spdSlowOnHit || 0;
+      player.extendedStats.spdSlowOnHit = Math.min(0.20, cur + (eff.spdSlowOnHit * level));
+    }
+    if (eff.defenseUpProcChance) {
+      const cur = player.extendedStats.defenseUpProcChance || 0;
+      player.extendedStats.defenseUpProcChance = Math.min(0.20, cur + (eff.defenseUpProcChance * level));
+    }
+    if (eff.combatHpRegenPct) {
+      const cur = player.extendedStats.combatHpRegenPct || 0;
+      player.extendedStats.combatHpRegenPct = Math.min(0.03, cur + (eff.combatHpRegenPct * level));
+    }
+    if (eff.firstStrikeAtkPct) {
+      const cur = player.extendedStats.firstStrikeAtkPct || 0;
+      player.extendedStats.firstStrikeAtkPct = Math.min(0.25, cur + (eff.firstStrikeAtkPct * level));
+    }
+    if (eff.stunProcChance) {
+      const cur = player.extendedStats.stunProcChance || 0;
+      player.extendedStats.stunProcChance = Math.min(0.15, cur + (eff.stunProcChance * level));
+    }
+    if (eff.bonusAtkOnStun) {
+      const cur = player.extendedStats.bonusAtkOnStun || 0;
+      player.extendedStats.bonusAtkOnStun = Math.min(0.20, cur + (eff.bonusAtkOnStun * level));
+    }
+    if (eff.injuryResist) {
+      const cur = player.extendedStats.injuryResist || 0;
+      player.extendedStats.injuryResist = Math.min(0.40, cur + (eff.injuryResist * level));
+    }
+    if (eff.guSlotAtkBonus) {
+      const cur = player.extendedStats.guSlotAtkBonus || 0;
+      player.extendedStats.guSlotAtkBonus = Math.min(20, cur + (eff.guSlotAtkBonus * level));
+    }
+    if (eff.poisonProcFromGu) {
+      const cur = player.extendedStats.poisonProcFromGu || 0;
+      player.extendedStats.poisonProcFromGu = Math.min(0.30, cur + (eff.poisonProcFromGu * level));
+    }
+    if (eff.artifactInfusionAtk) {
+      const cur = player.extendedStats.artifactInfusionAtk || 0;
+      player.extendedStats.artifactInfusionAtk = Math.min(25, cur + (eff.artifactInfusionAtk * level));
+    }
+    if (eff.beastHealOnKillPct) {
+      const cur = player.extendedStats.beastHealOnKillPct || 0;
+      player.extendedStats.beastHealOnKillPct = Math.min(0.08, cur + (eff.beastHealOnKillPct * level));
+    }
+    if (eff.corruptionToDefPct) {
+      const cur = player.extendedStats.corruptionToDefPct || 0;
+      player.extendedStats.corruptionToDefPct = Math.min(0.10, cur + (eff.corruptionToDefPct * level));
+    }
+    if (eff.lifestealPct) {
+      const cur = player.extendedStats.lifestealPct || 0;
+      player.extendedStats.lifestealPct = Math.min(0.08, cur + (eff.lifestealPct * level));
+    }
+    if (eff.corrosionDefShred) {
+      const cur = player.extendedStats.corrosionDefShred || 0;
+      player.extendedStats.corrosionDefShred = Math.min(0.15, cur + (eff.corrosionDefShred * level));
+    }
+    if (eff.abyssalCurseResist) {
+      const cur = player.extendedStats.abyssalCurseResist || 0;
+      player.extendedStats.abyssalCurseResist = Math.min(0.40, cur + (eff.abyssalCurseResist * level));
+      player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + Math.floor(eff.abyssalCurseResist * 10 * level);
+    }
+    if (eff.netherZoneAtkBonus) {
+      const cur = player.extendedStats.netherZoneAtkBonus || 0;
+      player.extendedStats.netherZoneAtkBonus = Math.min(0.20, cur + (eff.netherZoneAtkBonus * level));
+    }
+    if (eff.swordBleedChance) {
+      const cur = player.extendedStats.swordBleedChance || 0;
+      player.extendedStats.swordBleedChance = Math.min(0.25, cur + (eff.swordBleedChance * level));
+    }
   }
 }
 
@@ -4674,7 +4783,7 @@ function isOnOwnFormationHub(player, cachedHubTile = null) {
  * @param {Object} defender - Player document, mob, atau battle entity
  * @returns {Object} { damageMultiplier, isMeritBonus, isYangBonus, bonusDesc }
  */
-function getLawCombatModifiers(attacker, defender) {
+function getLawCombatModifiers(attacker, defender, options = {}) {
   const result = {
     damageMultiplier: 1.0,
     isMeritBonus: false,
@@ -4689,11 +4798,12 @@ function getLawCombatModifiers(attacker, defender) {
     || attacker.activeLawType
     || attacker.lawType
     || (attacker.laws && attacker.laws.find(l => l.isActive)?.lawType)
+    || attacker.laws?.[0]?.lawType
     || null;
 
   if (!lawType) return result;
 
-  const rank = Number(attacker.cultivationLaw?.rank ?? attacker.lawRank ?? 0);
+  const rank = Number(attacker.cultivationLaw?.rank ?? attacker.lawRank ?? attacker.laws?.[0]?.rank ?? 0);
 
   // Status Defender (Wanted, Demonic, Corrupt, Undead)
   const isWanted = !!(defender.isWantedByOrthodox || defender.wanted || (defender.infamy && defender.infamy > 50));
@@ -4716,7 +4826,8 @@ function getLawCombatModifiers(attacker, defender) {
     const bonus = baseBonus + skillBonus;
     result.damageMultiplier *= (1 + bonus);
     result.isMeritBonus = true;
-    result.bonusDesc = `⚡ [Jasa Langit: +${Math.round(bonus * 100)}% vs Iblis/Buronan]`;
+    const desc = `⚡ [Jasa Langit: +${Math.round(bonus * 100)}% vs Iblis/Buronan]`;
+    result.bonusDesc = result.bonusDesc ? `${result.bonusDesc} ${desc}` : desc;
   }
 
   // 2. Righteous Pure Yang: Bonus vs Corrupt / Demonic / Ghost / Yin
@@ -4726,7 +4837,43 @@ function getLawCombatModifiers(attacker, defender) {
     const bonus = baseBonus + skillBonus;
     result.damageMultiplier *= (1 + bonus);
     result.isYangBonus = true;
-    result.bonusDesc = `☀️ [Yang Murni: +${Math.round(bonus * 100)}% Penumpasan Kegelapan]`;
+    const desc = `☀️ [Yang Murni: +${Math.round(bonus * 100)}% Penumpasan Kegelapan]`;
+    result.bonusDesc = result.bonusDesc ? `${result.bonusDesc} ${desc}` : desc;
+  }
+
+  // 3. Roc Wind: First Strike Attack Pct (Damage bonus on first hit in encounter)
+  const firstStrikePct = Number(attacker.extendedStats?.firstStrikeAtkPct || 0);
+  if (firstStrikePct > 0) {
+    const isFirstHit = options.isFirstHit || (!defender._hasBeenHitByAttacker && options.hasHitDefender === false) || (!defender._hasBeenHitByAttacker && options.hasHitDefender === undefined && !options.skipFirstStrike);
+    if (isFirstHit) {
+      const fsBonus = Math.min(0.25, firstStrikePct);
+      result.damageMultiplier *= (1 + fsBonus);
+      const fsDesc = `🌪️ [Tebasan Sayap Roc: +${Math.round(fsBonus * 100)}% Serangan Pertama]`;
+      result.bonusDesc = result.bonusDesc ? `${result.bonusDesc} ${fsDesc}` : fsDesc;
+      if (options.markHit !== false) {
+        defender._hasBeenHitByAttacker = true;
+      }
+    }
+  }
+
+  // 4. God Thunder: Bonus Damage vs Stunned Targets
+  const stunAtkBonus = Number(attacker.extendedStats?.bonusAtkOnStun || 0);
+  if (stunAtkBonus > 0) {
+    const isStunned = Array.isArray(defender.debuffs) && defender.debuffs.some(d => d.type === 'stun' && d.duration > 0);
+    if (isStunned) {
+      const bBonus = Math.min(0.20, stunAtkBonus);
+      result.damageMultiplier *= (1 + bBonus);
+      const stDesc = `⚡ [Hukuman Petir: +${Math.round(bBonus * 100)}% vs Lawan Lumpuh]`;
+      result.bonusDesc = result.bonusDesc ? `${result.bonusDesc} ${stDesc}` : stDesc;
+    }
+  }
+
+  // 5. Nether Darkness: Nether Zone Ambush Bonus
+  if (lawType === 'demonic_nether_darkness' && attacker.extendedStats?.netherZoneAtkBonus) {
+    const nBonus = Math.min(0.20, Number(attacker.extendedStats.netherZoneAtkBonus));
+    result.damageMultiplier *= (1 + nBonus);
+    const nDesc = `🌑 [Kegelapan Nether: +${Math.round(nBonus * 100)}% Sergap Bayangan]`;
+    result.bonusDesc = result.bonusDesc ? `${result.bonusDesc} ${nDesc}` : nDesc;
   }
 
   return result;
@@ -4734,7 +4881,7 @@ function getLawCombatModifiers(attacker, defender) {
 
 /**
  * applyLawDamageModifiers(attacker, defender, baseDamage, options = {})
- * Menerapkan pengali damage situasional Law (Merit vs Wanted/Demonic, Pure Yang vs Corrupt)
+ * Menerapkan pengali damage situasional Law (Merit vs Wanted/Demonic, Pure Yang vs Corrupt, Roc First Strike, Thunder Stun)
  * dan menghitung damage pantulan (reflect) dari Defender kembali ke Attacker jika Defender memiliki reflectPct > 0.
  *
  * @param {Object} attacker - Player document atau battle entity penyerang
@@ -4749,8 +4896,8 @@ function applyLawDamageModifiers(attacker, defender, baseDamage, options = {}) {
   const logParts = [];
 
   try {
-    // 1) Outgoing multiplier (Merit / Pure Yang vs wanted-demonic)
-    const mod = getLawCombatModifiers(attacker, defender);
+    // 1) Outgoing multiplier (Merit / Pure Yang / Roc First Strike / Thunder Stun)
+    const mod = getLawCombatModifiers(attacker, defender, options);
     if (mod.damageMultiplier && mod.damageMultiplier !== 1.0) {
       dmg = Math.max(0, Math.floor(dmg * mod.damageMultiplier));
       if (mod.bonusDesc) logParts.push(mod.bonusDesc);
