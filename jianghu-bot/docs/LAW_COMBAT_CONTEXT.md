@@ -93,8 +93,37 @@ Kunci `lawType` di bawah ini adalah **satu-satunya kunci sah** yang terdaftar di
   - `combat_proc`: Memicu efek tempur situasional (misal: racun batin `venomPoisonProc`, tebasan pendarahan `bleed`, bonus vs buronan `atkWantedMult`, atau damage vs corrupt `dmgVsCorrupted`).
   - `system`: Efek utilitas duniawi (misal: pemurnian racun `yangCleanseChance`, mitigasi unarmed `unarmedPenaltyMitigation`, efisiensi penyerapan esensi `essenceGainPct` [maks +15%], atau bonus hub formasi `homeBonusAdd`).
 - **Penegakan API (`/law/skill/allocate` & `/law/skill-tree`)**:
-  - GET `/law/skill-tree` mengembalikan `activeBranch`, `spentEstimate`, dan `lockedReason` (`'max_level' | 'branch_locked' | 'need_rank' | 'need_parent' | 'need_sp'`).
+  - GET `/law/skill-tree` mengembalikan `activeBranch`, `spentEstimate`, `combatSignatures`, dan `lockedReason` (`'max_level' | 'branch_locked' | 'need_rank' | 'need_parent' | 'need_sp'`).
   - POST `/law/skill/allocate` menolak alokasi yang melanggar prasyarat dengan pesan Bahasa Indonesia yang ramah pengguna.
+- **Keunikan Capstone Fingerprint (Zero Duplicate Capstones)**:
+  - Seluruh 40 Capstone Tier 3 di 20 Law wajib memiliki skema JSON efek yang 100% unik.
+  - Azure Water Capstone (`water_bottomless_ocean`: `defMult 0.008, flatHp 20, hpMult 0.015`) vs Qingdi Wood Capstone (`qingdi_evergreen_dao`: `hpMult 0.014, flatHp 18, combatHpRegenPct 0.006, essenceGainPct 0.01`).
+  - Roc Wind Capstone (`roc_nine_heavens`: `firstStrikeAtkPct 0.02, flatSpd 4, spdMult 0.015`) vs Nether Darkness Capstone (`nether_void_walker`: `spdMult 0.014, flatSpd 3, netherZoneAtkBonus 0.02, reflectPct 0.01`).
+- **Abyss Signature (`abyssalCurseResist`) & Mitigasi Penalti Upeti Altar**:
+  - Node `abyss_umbral_mantle` (+0.06/lvl, spiritualRes 2, defMult 0.012) dan `abyss_fiend_embrace` (+0.06/lvl, defMult 0.014, flatHp 18) memuat atribut resistensi kutukan abyss (`abyssalCurseResist`), dibatasi hard-cap $\le 0.40$.
+  - Di `playerCombat.js`, keterlambatan upeti kurban darah altar abyss dikenakan penalti stat $0.80$ (Lv 1) atau $0.65$ (Lv 2). Nilai `abyssalCurseResist` melunakkan penalti ini secara deterministik:
+    $$\text{effectivePenalty} = \text{penaltyMult} + (1.0 - \text{penaltyMult}) \times \text{abyssalCurseResist}$$
+  - Terpapar langsung di `combatSignatures` (`status.skillTree` & `/law/skill-tree`) dan `panel.demonicData`.
+- **Daftar & Makna UI `combatSignatures`**:
+  - Array signature aktif diekstrak secara otomatis oleh engine via `getActiveCombatSignatures(player.extendedStats)`:
+    - `combatHpRegen`: Regenerasi HP pasif saat bertarung (maks 3% Max HP per ronde).
+    - `burnProc`: Tumpukan efek bakar api abadi (maks 15 stack).
+    - `chillProc`: Peluang hawa dingin pembeku gerakan musuh.
+    - `defenseUpProc`: Peluang memicu pertahanan kokoh penahan 50% damage ronde ini.
+    - `firstStrike`: Pengganda serangan pembuka pada ronde 1 pertempuran.
+    - `stunProc`: Peluang totokan meridian yang melumpuhkan target (maks 15%).
+    - `lifesteal`: Persentase hisap darah musuh (maks 8%).
+    - `injuryResist`: Toleransi fisik penahan akumulasi luka dalam (maks 40%).
+    - `venomPoisonProc`: Suntikan racun korosif otomatis saat mendaratkan serangan.
+    - `yangCleanse`: Peluang pemurnian racun/kutukan di awal giliran.
+    - `swordBleed`: Peluang tebasan pedang memicu pendarahan luka terbuka.
+    - `reflect`: Pantulan kerusakan karma (maks 25%).
+    - `abyssalCurseResist`: Resistensi terhadap kutukan kegelapan/keterlambatan upeti Abyss (maks 40%).
+    - `netherZone`: Pengganda serangan dan dominasi wilayah malam/Yin.
+    - `corruptionToDef`: Konversi indeks korupsi iblis menjadi pengali pertahanan.
+    - `guSignature`: Resonansi serangan tambahan dari cacing Gu tempur aktif.
+    - `artifactInfusion`: Infusi energi pusaka kelahiran ke serangan dasar.
+    - `beastHeal`: Pemulihan HP instan saat menumbangkan musuh berkat satwa roh.
 
 ---
 

@@ -31,6 +31,18 @@ Dokumen ini adalah checklist pengujian kualitas operasional (*Quality Assurance*
 
 ---
 
+## 1.2. MATRIKS SKILL TREE POLISH & SIGNATURE CONTRACT (ST-P1 s/d ST-P5)
+
+| ID | Skenario Uji | Prosedur & Ekspektasi | Status |
+|---|---|---|---|
+| **ST-P1** | **Qingdi Path Regen Signature** | Alokasi skill point ke cabang Wood Regen (Qingdi Evergreen Dao).<br>• *Hasil*: `combatHpRegen` muncul di `combatSignatures` (`status.skillTree` & API `/law/skill-tree`). Capstone fingerprint unik vs Azure Water (`hpMult: 0.014`, `flatHp: 18`, `combatHpRegenPct: 0.006`, `essenceGainPct: 0.01`). | [x] PASS |
+| **ST-P2** | **Nether Path Void Signature** | Alokasi skill point ke cabang Nether Void (Nine-Layer Void Walker).<br>• *Hasil*: `netherZone` muncul di `combatSignatures`. Capstone fingerprint unik vs Roc Wind (`spdMult: 0.014`, `flatSpd: 3`, `netherZoneAtkBonus: 0.02`, `reflectPct: 0.01`). | [x] PASS |
+| **ST-P3** | **Abyss Path Mantle Signature & Curse Mitigation** | Alokasi skill point ke cabang Mantle Abyssal (Umbral Mantle & Fiend Embrace).<br>• *Hasil*: `abyssalCurseResist` muncul di `combatSignatures` dan `panel.demonicData`. Mengurangi penalti stat keterlambatan upeti darah altar secara deterministik. | [x] PASS |
+| **ST-P4** | **Phoenix Fire Signature Proc in Battle** | Praktisi Phoenix Fire melancarkan serangan saat memiliki node Api Bakar.<br>• *Hasil*: Menghasilkan efek burn stacks pada musuh dengan catatan DoT terbakar di battle log tanpa double-tick DoT. | [x] PASS |
+| **ST-P5** | **Branch Lock Mutual Exclusion (400 Bad Request)** | Mencoba mengalokasikan poin ke Cabang B setelah Cabang A memiliki level > 0.<br>• *Hasil*: API mengembalikan status 400 Bad Request dengan `lockedReason: 'branch_locked'`. | [x] PASS |
+
+---
+
 ## 2. PANDUAN PENGUJIAN SMOKE TEST CEPAT
 
 Jalankan perintah pengujian konsistensi dan sintaks di terminal:
@@ -52,4 +64,7 @@ node jianghu-bot/scripts/testLawCombatBattleWire.js
 
 # 4. Jalankan test suite komprehensif 18 check 5 Law Righteous
 node jianghu-bot/scripts/testRighteousLawsComprehensive.js
+
+# 5. Jalankan test suite polish skill tree, deduplikasi capstone & abyss contract (ST-P1 s/d ST-P5)
+node jianghu-bot/scripts/testLawSkillTreePolish.js
 ```
