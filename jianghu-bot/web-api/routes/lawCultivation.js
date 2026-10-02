@@ -59,7 +59,8 @@ const {
   getMaxEssence,
   isPlayerWieldingSword,
   isOnOwnFormationHub,
-  applyLawSkillTreeEffects
+  applyLawSkillTreeEffects,
+  getActiveCombatSignatures
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -1521,6 +1522,9 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
       };
     });
 
+    applyLawSkillTreeEffects(player);
+    const combatSignatures = getActiveCombatSignatures(player.extendedStats);
+
     res.json({
       success: true,
       data: {
@@ -1529,6 +1533,7 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
         availablePoints: law.lawSkillPoints || 0,
         spentEstimate,
         activeBranch,
+        combatSignatures,
         totalUnlocked: (law.unlockedSkillIds || []).length,
         nodes,
         skills: nodes
@@ -1671,6 +1676,7 @@ router.post('/skill/allocate', authenticateToken, async (req, res) => {
     }
 
     player.markModified('cultivationLaw');
+    player._skillTreeExtendedStatsApplied = false;
     await player.save();
 
     res.json({

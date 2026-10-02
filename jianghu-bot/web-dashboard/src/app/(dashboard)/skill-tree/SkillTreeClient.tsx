@@ -46,6 +46,7 @@ export default function SkillTreeClient() {
   const treeData = skillsRes?.data;
   const skillsList = treeData?.skills || [];
   const availablePoints = treeData?.availablePoints || 0;
+  const combatSignatures = treeData?.combatSignatures || lawData?.skillTree?.combatSignatures || lawData?.uniquePanel?.combatSignatures || [];
   const combatLoadout = lawData?.combatLoadout || [];
 
   // Mutation: Allocate SP to Skill Node
@@ -196,6 +197,7 @@ export default function SkillTreeClient() {
       <LawConstellationTree
         skills={skillsList}
         availablePoints={availablePoints}
+        combatSignatures={combatSignatures}
         onAllocate={(skillId) => allocateMutation.mutate(skillId)}
         isAllocating={allocateMutation.isPending}
         combatLoadout={combatLoadout}

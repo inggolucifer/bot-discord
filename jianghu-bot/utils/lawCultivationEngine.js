@@ -2423,6 +2423,11 @@ function getLawStatus(player) {
     law.essenceBootstrapDone = true;
   }
 
+  // Terapkan efek pasif pohon skill law agar extendedStats terisi sebelum perakitan panel status & signatures
+  if (law?.activeLawType) {
+    applyLawSkillTreeEffects(player);
+  }
+
   const lawDef = law.activeLawType ? LAW_DEFINITIONS[law.activeLawType] : null;
   const rankNames = law.activeLawType ? LAW_RANK_NAMES[law.activeLawType] : null;
   const realmDisplay = formatLawRealmDisplay(player);
@@ -2671,11 +2676,14 @@ function getLawStatus(player) {
         };
       });
 
+      const activeSignatures = getActiveCombatSignatures(player.extendedStats);
+
       return {
         points: law.lawSkillPoints || law.skillPoints || 0,
         availablePoints: law.lawSkillPoints || law.skillPoints || 0,
         spentEstimate,
         activeBranch,
+        combatSignatures: activeSignatures,
         nodes
       };
     })(),
@@ -2746,26 +2754,7 @@ function getLawStatus(player) {
         };
       }
 
-      const activeSignatures = [];
-      const ext = player.extendedStats || {};
-      if (ext.burnProcStacks) activeSignatures.push('burnProc');
-      if (ext.chillProcChance) activeSignatures.push('chillProc');
-      if (ext.defenseUpProcChance) activeSignatures.push('defenseUpProc');
-      if (ext.combatHpRegenPct) activeSignatures.push('combatHpRegen');
-      if (ext.firstStrikeAtkPct) activeSignatures.push('firstStrike');
-      if (ext.stunProcChance) activeSignatures.push('stunProc');
-      if (ext.lifestealPct) activeSignatures.push('lifesteal');
-      if (ext.injuryResist) activeSignatures.push('injuryResist');
-      if (ext.venomPoisonProc) activeSignatures.push('venomPoisonProc');
-      if (ext.yangCleanseChance) activeSignatures.push('yangCleanse');
-      if (ext.swordBleedChance) activeSignatures.push('swordBleed');
-      if (ext.reflectPct) activeSignatures.push('reflect');
-      if (ext.abyssalCurseResist) activeSignatures.push('abyssalCurseResist');
-      if (ext.netherZoneAtkBonus || ext.nightAtkPct) activeSignatures.push('netherZone');
-      if (ext.corruptionToDefPct) activeSignatures.push('corruptionToDef');
-      if (ext.guSlotAtkBonus || ext.poisonProcFromGu) activeSignatures.push('guSignature');
-      if (ext.artifactInfusionAtk) activeSignatures.push('artifactInfusion');
-      if (ext.beastHealOnKillPct) activeSignatures.push('beastHeal');
+      const activeSignatures = getActiveCombatSignatures(player.extendedStats);
       if (activeSignatures.length > 0) panel.combatSignatures = activeSignatures;
 
       return panel;
@@ -4562,6 +4551,11 @@ function applyLawSkillTreeEffects(player, mult, flat) {
   // Fallback: jika skill ada di unlockedSkillIds tapi belum tercatat levelnya, anggap level 1
   const unlocked = new Set(law?.unlockedSkillIds || []);
 
+  const applyExtended = !player._skillTreeExtendedStatsApplied;
+  if (applyExtended && !player.extendedStats) {
+    player.extendedStats = {};
+  }
+
   for (const node of tree.nodes) {
     const nodeId = node.id || node.skillId;
     let level = Number(skillLevels[nodeId] || 0);
@@ -4591,113 +4585,147 @@ function applyLawSkillTreeEffects(player, mult, flat) {
     if (eff.flatDef) flat.def += eff.flatDef * level;
     if (eff.flatSpd) flat.spd += eff.flatSpd * level;
 
-    // Extended Stats
-    if (!player.extendedStats) player.extendedStats = {};
-    if (eff.crit) player.extendedStats.crit = (player.extendedStats.crit || 0) + (eff.crit * level);
-    if (eff.reflectPct) {
-      const curReflect = player.extendedStats.reflectPct || 0;
-      player.extendedStats.reflectPct = Math.min(0.25, curReflect + (eff.reflectPct * level));
-    }
-    if (eff.martialRes) player.extendedStats.martialRes = (player.extendedStats.martialRes || 0) + (eff.martialRes * level);
-    if (eff.spiritualRes) player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (eff.spiritualRes * level);
+    // Extended Stats (hanya terapkan sekali per siklus hidup player agar tidak double-accumulate)
+    if (applyExtended) {
+      if (eff.crit) player.extendedStats.crit = (player.extendedStats.crit || 0) + (eff.crit * level);
+      if (eff.reflectPct) {
+        const curReflect = player.extendedStats.reflectPct || 0;
+        player.extendedStats.reflectPct = Math.min(0.25, curReflect + (eff.reflectPct * level));
+      }
+      if (eff.martialRes) player.extendedStats.martialRes = (player.extendedStats.martialRes || 0) + (eff.martialRes * level);
+      if (eff.spiritualRes) player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + (eff.spiritualRes * level);
 
-    // Wired unique effects
-    if (eff.poisonResist) player.extendedStats.poisonResist = (player.extendedStats.poisonResist || 0) + (eff.poisonResist * level);
-    if (eff.corruptionResist) player.extendedStats.corruptionResist = (player.extendedStats.corruptionResist || 0) + (eff.corruptionResist * level);
-    if (eff.unarmedPenaltyMitigation) player.extendedStats.unarmedPenaltyMitigation = (player.extendedStats.unarmedPenaltyMitigation || 0) + (eff.unarmedPenaltyMitigation * level);
-    if (eff.homeBonusAdd) player.extendedStats.homeBonusAdd = (player.extendedStats.homeBonusAdd || 0) + (eff.homeBonusAdd * level);
-    if (eff.essenceGainPct) {
-      const curGain = player.extendedStats.essenceGainPct || 0;
-      player.extendedStats.essenceGainPct = Math.min(0.15, curGain + (eff.essenceGainPct * level));
-    }
-    if (eff.atkWantedMult) player.extendedStats.skillAtkWantedMult = (player.extendedStats.skillAtkWantedMult || 0) + (eff.atkWantedMult * level);
-    if (eff.dmgVsCorrupted) player.extendedStats.skillDmgVsCorrupted = (player.extendedStats.skillDmgVsCorrupted || 0) + (eff.dmgVsCorrupted * level);
-    if (eff.yangCleanseChance) player.extendedStats.yangCleanseChance = (player.extendedStats.yangCleanseChance || 0) + (eff.yangCleanseChance * level);
-    if (eff.venomPoisonProc) player.extendedStats.venomPoisonProc = (player.extendedStats.venomPoisonProc || 0) + (eff.venomPoisonProc * level);
+      // Wired unique effects
+      if (eff.poisonResist) player.extendedStats.poisonResist = (player.extendedStats.poisonResist || 0) + (eff.poisonResist * level);
+      if (eff.corruptionResist) player.extendedStats.corruptionResist = (player.extendedStats.corruptionResist || 0) + (eff.corruptionResist * level);
+      if (eff.unarmedPenaltyMitigation) player.extendedStats.unarmedPenaltyMitigation = (player.extendedStats.unarmedPenaltyMitigation || 0) + (eff.unarmedPenaltyMitigation * level);
+      if (eff.homeBonusAdd) player.extendedStats.homeBonusAdd = (player.extendedStats.homeBonusAdd || 0) + (eff.homeBonusAdd * level);
+      if (eff.essenceGainPct) {
+        const curGain = player.extendedStats.essenceGainPct || 0;
+        player.extendedStats.essenceGainPct = Math.min(0.15, curGain + (eff.essenceGainPct * level));
+      }
+      if (eff.atkWantedMult) player.extendedStats.skillAtkWantedMult = (player.extendedStats.skillAtkWantedMult || 0) + (eff.atkWantedMult * level);
+      if (eff.dmgVsCorrupted) player.extendedStats.skillDmgVsCorrupted = (player.extendedStats.skillDmgVsCorrupted || 0) + (eff.dmgVsCorrupted * level);
+      if (eff.yangCleanseChance) player.extendedStats.yangCleanseChance = (player.extendedStats.yangCleanseChance || 0) + (eff.yangCleanseChance * level);
+      if (eff.venomPoisonProc) player.extendedStats.venomPoisonProc = (player.extendedStats.venomPoisonProc || 0) + (eff.venomPoisonProc * level);
 
-    // Signature Combat Procs & Systems with Hard Global Safety Caps
-    if (eff.burnProcStacks) {
-      const cur = player.extendedStats.burnProcStacks || 0;
-      player.extendedStats.burnProcStacks = Math.min(15, cur + (eff.burnProcStacks * level));
-    }
-    if (eff.burnTickBonus) {
-      const cur = player.extendedStats.burnTickBonus || 0;
-      player.extendedStats.burnTickBonus = Math.min(0.015, cur + (eff.burnTickBonus * level));
-    }
-    if (eff.chillProcChance) {
-      const cur = player.extendedStats.chillProcChance || 0;
-      player.extendedStats.chillProcChance = Math.min(0.25, cur + (eff.chillProcChance * level));
-    }
-    if (eff.spdSlowOnHit) {
-      const cur = player.extendedStats.spdSlowOnHit || 0;
-      player.extendedStats.spdSlowOnHit = Math.min(0.20, cur + (eff.spdSlowOnHit * level));
-    }
-    if (eff.defenseUpProcChance) {
-      const cur = player.extendedStats.defenseUpProcChance || 0;
-      player.extendedStats.defenseUpProcChance = Math.min(0.20, cur + (eff.defenseUpProcChance * level));
-    }
-    if (eff.combatHpRegenPct) {
-      const cur = player.extendedStats.combatHpRegenPct || 0;
-      player.extendedStats.combatHpRegenPct = Math.min(0.03, cur + (eff.combatHpRegenPct * level));
-    }
-    if (eff.firstStrikeAtkPct) {
-      const cur = player.extendedStats.firstStrikeAtkPct || 0;
-      player.extendedStats.firstStrikeAtkPct = Math.min(0.25, cur + (eff.firstStrikeAtkPct * level));
-    }
-    if (eff.stunProcChance) {
-      const cur = player.extendedStats.stunProcChance || 0;
-      player.extendedStats.stunProcChance = Math.min(0.15, cur + (eff.stunProcChance * level));
-    }
-    if (eff.bonusAtkOnStun) {
-      const cur = player.extendedStats.bonusAtkOnStun || 0;
-      player.extendedStats.bonusAtkOnStun = Math.min(0.20, cur + (eff.bonusAtkOnStun * level));
-    }
-    if (eff.injuryResist) {
-      const cur = player.extendedStats.injuryResist || 0;
-      player.extendedStats.injuryResist = Math.min(0.40, cur + (eff.injuryResist * level));
-    }
-    if (eff.guSlotAtkBonus) {
-      const cur = player.extendedStats.guSlotAtkBonus || 0;
-      player.extendedStats.guSlotAtkBonus = Math.min(20, cur + (eff.guSlotAtkBonus * level));
-    }
-    if (eff.poisonProcFromGu) {
-      const cur = player.extendedStats.poisonProcFromGu || 0;
-      player.extendedStats.poisonProcFromGu = Math.min(0.30, cur + (eff.poisonProcFromGu * level));
-    }
-    if (eff.artifactInfusionAtk) {
-      const cur = player.extendedStats.artifactInfusionAtk || 0;
-      player.extendedStats.artifactInfusionAtk = Math.min(25, cur + (eff.artifactInfusionAtk * level));
-    }
-    if (eff.beastHealOnKillPct) {
-      const cur = player.extendedStats.beastHealOnKillPct || 0;
-      player.extendedStats.beastHealOnKillPct = Math.min(0.08, cur + (eff.beastHealOnKillPct * level));
-    }
-    if (eff.corruptionToDefPct) {
-      const cur = player.extendedStats.corruptionToDefPct || 0;
-      player.extendedStats.corruptionToDefPct = Math.min(0.10, cur + (eff.corruptionToDefPct * level));
-    }
-    if (eff.lifestealPct) {
-      const cur = player.extendedStats.lifestealPct || 0;
-      player.extendedStats.lifestealPct = Math.min(0.08, cur + (eff.lifestealPct * level));
-    }
-    if (eff.corrosionDefShred) {
-      const cur = player.extendedStats.corrosionDefShred || 0;
-      player.extendedStats.corrosionDefShred = Math.min(0.15, cur + (eff.corrosionDefShred * level));
-    }
-    if (eff.abyssalCurseResist) {
-      const cur = player.extendedStats.abyssalCurseResist || 0;
-      player.extendedStats.abyssalCurseResist = Math.min(0.40, cur + (eff.abyssalCurseResist * level));
-      player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + Math.floor(eff.abyssalCurseResist * 10 * level);
-    }
-    if (eff.netherZoneAtkBonus) {
-      const cur = player.extendedStats.netherZoneAtkBonus || 0;
-      player.extendedStats.netherZoneAtkBonus = Math.min(0.20, cur + (eff.netherZoneAtkBonus * level));
-    }
-    if (eff.swordBleedChance) {
-      const cur = player.extendedStats.swordBleedChance || 0;
-      player.extendedStats.swordBleedChance = Math.min(0.25, cur + (eff.swordBleedChance * level));
+      // Signature Combat Procs & Systems with Hard Global Safety Caps
+      if (eff.burnProcStacks) {
+        const cur = player.extendedStats.burnProcStacks || 0;
+        player.extendedStats.burnProcStacks = Math.min(15, cur + (eff.burnProcStacks * level));
+      }
+      if (eff.burnTickBonus) {
+        const cur = player.extendedStats.burnTickBonus || 0;
+        player.extendedStats.burnTickBonus = Math.min(0.015, cur + (eff.burnTickBonus * level));
+      }
+      if (eff.chillProcChance) {
+        const cur = player.extendedStats.chillProcChance || 0;
+        player.extendedStats.chillProcChance = Math.min(0.25, cur + (eff.chillProcChance * level));
+      }
+      if (eff.spdSlowOnHit) {
+        const cur = player.extendedStats.spdSlowOnHit || 0;
+        player.extendedStats.spdSlowOnHit = Math.min(0.20, cur + (eff.spdSlowOnHit * level));
+      }
+      if (eff.defenseUpProcChance) {
+        const cur = player.extendedStats.defenseUpProcChance || 0;
+        player.extendedStats.defenseUpProcChance = Math.min(0.20, cur + (eff.defenseUpProcChance * level));
+      }
+      if (eff.combatHpRegenPct) {
+        const cur = player.extendedStats.combatHpRegenPct || 0;
+        player.extendedStats.combatHpRegenPct = Math.min(0.03, cur + (eff.combatHpRegenPct * level));
+      }
+      if (eff.firstStrikeAtkPct) {
+        const cur = player.extendedStats.firstStrikeAtkPct || 0;
+        player.extendedStats.firstStrikeAtkPct = Math.min(0.25, cur + (eff.firstStrikeAtkPct * level));
+      }
+      if (eff.stunProcChance) {
+        const cur = player.extendedStats.stunProcChance || 0;
+        player.extendedStats.stunProcChance = Math.min(0.15, cur + (eff.stunProcChance * level));
+      }
+      if (eff.bonusAtkOnStun) {
+        const cur = player.extendedStats.bonusAtkOnStun || 0;
+        player.extendedStats.bonusAtkOnStun = Math.min(0.20, cur + (eff.bonusAtkOnStun * level));
+      }
+      if (eff.injuryResist) {
+        const cur = player.extendedStats.injuryResist || 0;
+        player.extendedStats.injuryResist = Math.min(0.40, cur + (eff.injuryResist * level));
+      }
+      if (eff.guSlotAtkBonus) {
+        const cur = player.extendedStats.guSlotAtkBonus || 0;
+        player.extendedStats.guSlotAtkBonus = Math.min(20, cur + (eff.guSlotAtkBonus * level));
+      }
+      if (eff.poisonProcFromGu) {
+        const cur = player.extendedStats.poisonProcFromGu || 0;
+        player.extendedStats.poisonProcFromGu = Math.min(0.30, cur + (eff.poisonProcFromGu * level));
+      }
+      if (eff.artifactInfusionAtk) {
+        const cur = player.extendedStats.artifactInfusionAtk || 0;
+        player.extendedStats.artifactInfusionAtk = Math.min(25, cur + (eff.artifactInfusionAtk * level));
+      }
+      if (eff.beastHealOnKillPct) {
+        const cur = player.extendedStats.beastHealOnKillPct || 0;
+        player.extendedStats.beastHealOnKillPct = Math.min(0.08, cur + (eff.beastHealOnKillPct * level));
+      }
+      if (eff.corruptionToDefPct) {
+        const cur = player.extendedStats.corruptionToDefPct || 0;
+        player.extendedStats.corruptionToDefPct = Math.min(0.10, cur + (eff.corruptionToDefPct * level));
+      }
+      if (eff.lifestealPct) {
+        const cur = player.extendedStats.lifestealPct || 0;
+        player.extendedStats.lifestealPct = Math.min(0.08, cur + (eff.lifestealPct * level));
+      }
+      if (eff.corrosionDefShred) {
+        const cur = player.extendedStats.corrosionDefShred || 0;
+        player.extendedStats.corrosionDefShred = Math.min(0.15, cur + (eff.corrosionDefShred * level));
+      }
+      if (eff.abyssalCurseResist) {
+        const cur = player.extendedStats.abyssalCurseResist || 0;
+        player.extendedStats.abyssalCurseResist = Math.min(0.40, cur + (eff.abyssalCurseResist * level));
+        player.extendedStats.spiritualRes = (player.extendedStats.spiritualRes || 0) + Math.floor(eff.abyssalCurseResist * 10 * level);
+      }
+      if (eff.netherZoneAtkBonus) {
+        const cur = player.extendedStats.netherZoneAtkBonus || 0;
+        player.extendedStats.netherZoneAtkBonus = Math.min(0.20, cur + (eff.netherZoneAtkBonus * level));
+      }
+      if (eff.swordBleedChance) {
+        const cur = player.extendedStats.swordBleedChance || 0;
+        player.extendedStats.swordBleedChance = Math.min(0.25, cur + (eff.swordBleedChance * level));
+      }
     }
   }
+
+  if (applyExtended) {
+    player._skillTreeExtendedStatsApplied = true;
+  }
+}
+
+/**
+ * Mengekstrak active combat signatures dari extendedStats pemain.
+ * @param {Object} extendedStats
+ * @returns {string[]} Array signature aktif
+ */
+function getActiveCombatSignatures(extendedStats = {}) {
+  const activeSignatures = [];
+  const ext = extendedStats || {};
+  if (ext.burnProcStacks) activeSignatures.push('burnProc');
+  if (ext.chillProcChance) activeSignatures.push('chillProc');
+  if (ext.defenseUpProcChance) activeSignatures.push('defenseUpProc');
+  if (ext.combatHpRegenPct) activeSignatures.push('combatHpRegen');
+  if (ext.firstStrikeAtkPct) activeSignatures.push('firstStrike');
+  if (ext.stunProcChance) activeSignatures.push('stunProc');
+  if (ext.lifestealPct) activeSignatures.push('lifesteal');
+  if (ext.injuryResist) activeSignatures.push('injuryResist');
+  if (ext.venomPoisonProc) activeSignatures.push('venomPoisonProc');
+  if (ext.yangCleanseChance) activeSignatures.push('yangCleanse');
+  if (ext.swordBleedChance) activeSignatures.push('swordBleed');
+  if (ext.reflectPct) activeSignatures.push('reflect');
+  if (ext.abyssalCurseResist) activeSignatures.push('abyssalCurseResist');
+  if (ext.netherZoneAtkBonus || ext.nightAtkPct) activeSignatures.push('netherZone');
+  if (ext.corruptionToDefPct) activeSignatures.push('corruptionToDef');
+  if (ext.guSlotAtkBonus || ext.poisonProcFromGu) activeSignatures.push('guSignature');
+  if (ext.artifactInfusionAtk) activeSignatures.push('artifactInfusion');
+  if (ext.beastHealOnKillPct) activeSignatures.push('beastHeal');
+  return activeSignatures;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5021,6 +5049,7 @@ module.exports = {
   // Status & Display
   getLawStatus,
   formatLawRealmDisplay,
+  getActiveCombatSignatures,
 
   // Nether Darkness Helpers
   NETHER_DARKNESS_ZONES,

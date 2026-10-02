@@ -462,5 +462,11 @@ export interface LawSkillItem {
   level?: number;
   exp?: number;
   reqExp?: number;
+  branchId?: string | null;
+  exclusiveGroup?: string | null;
+  effectType?: string;
+  canUpgrade?: boolean;
+  lockedReason?: 'need_sp' | 'need_rank' | 'need_parent' | 'branch_locked' | 'max_level' | string | null;
+  effects?: Record<string, number | string | boolean>;
 }
 

@@ -12,6 +12,7 @@ import {
 interface LawConstellationTreeProps {
   skills: LawSkillItem[];
   availablePoints: number;
+  combatSignatures?: string[];
   onAllocate: (skillId: string) => void;
   isAllocating?: boolean;
   combatLoadout?: string[];
@@ -26,6 +27,7 @@ interface NodePosition {
 export default function LawConstellationTree({
   skills,
   availablePoints,
+  combatSignatures = [],
   onAllocate,
   isAllocating = false,
   combatLoadout = [],
@@ -117,6 +119,47 @@ export default function LawConstellationTree({
           </div>
         </div>
       </div>
+
+      {/* Active Dao Combat Signatures Badges */}
+      {combatSignatures && combatSignatures.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 p-3 rounded-2xl bg-stone-950/80 border border-amber-500/20 shadow-md">
+          <span className="text-[10px] font-mono text-stone-400 uppercase tracking-wider mr-1 flex items-center gap-1">
+            <Zap size={12} className="text-amber-400" /> Resonansi Dao Tempur:
+          </span>
+          {combatSignatures.map((sig) => {
+            const labels: Record<string, { label: string; color: string; icon: string }> = {
+              combatHpRegen: { label: 'Regen Darah', color: 'text-emerald-300 border-emerald-500/40 bg-emerald-950/40', icon: '🌿' },
+              burnProc: { label: 'Api Bakar', color: 'text-orange-300 border-orange-500/40 bg-orange-950/40', icon: '🔥' },
+              chillProc: { label: 'Hawa Beku', color: 'text-cyan-300 border-cyan-500/40 bg-cyan-950/40', icon: '❄️' },
+              defenseUpProc: { label: 'Pertahanan', color: 'text-blue-300 border-blue-500/40 bg-blue-950/40', icon: '🛡️' },
+              firstStrike: { label: 'Serangan Kilat', color: 'text-sky-300 border-sky-500/40 bg-sky-950/40', icon: '⚡' },
+              stunProc: { label: 'Totokan Lumpuh', color: 'text-yellow-300 border-yellow-500/40 bg-yellow-950/40', icon: '⚡' },
+              lifesteal: { label: 'Hisap Darah', color: 'text-red-300 border-red-500/40 bg-red-950/40', icon: '🩸' },
+              injuryResist: { label: 'Tahan Cedera', color: 'text-amber-300 border-amber-500/40 bg-amber-950/40', icon: '🧘' },
+              venomPoisonProc: { label: 'Racun Korosif', color: 'text-lime-300 border-lime-500/40 bg-lime-950/40', icon: '🧪' },
+              yangCleanse: { label: 'Pembersih Yang', color: 'text-amber-200 border-amber-400/40 bg-amber-950/40', icon: '☀️' },
+              swordBleed: { label: 'Pendarahan Pedang', color: 'text-rose-300 border-rose-500/40 bg-rose-950/40', icon: '🗡️' },
+              reflect: { label: 'Pantulan Karma', color: 'text-purple-300 border-purple-500/40 bg-purple-950/40', icon: '🪞' },
+              abyssalCurseResist: { label: 'Kebal Kutukan Abyss', color: 'text-violet-300 border-violet-500/40 bg-violet-950/40', icon: '👁️' },
+              netherZone: { label: 'Kekuatan Nether', color: 'text-indigo-300 border-indigo-500/40 bg-indigo-950/40', icon: '🌌' },
+              corruptionToDef: { label: 'Pertahanan Keruh', color: 'text-stone-300 border-stone-500/40 bg-stone-900/60', icon: '🌑' },
+              guSignature: { label: 'Resonansi Gu', color: 'text-green-300 border-green-500/40 bg-green-950/40', icon: '🐛' },
+              artifactInfusion: { label: 'Infusi Artefak', color: 'text-cyan-300 border-cyan-500/40 bg-cyan-950/40', icon: '💎' },
+              beastHeal: { label: 'Pemulihan Roh', color: 'text-teal-300 border-teal-500/40 bg-teal-950/40', icon: '🐾' }
+            };
+            const info = labels[sig] || { label: sig, color: 'text-stone-300 border-stone-700 bg-stone-900', icon: '✨' };
+            return (
+              <span
+                key={sig}
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono border ${info.color} shadow-sm`}
+              >
+                <span>{info.icon}</span>
+                <span>{info.label}</span>
+              </span>
+            );
+          })}
+        </div>
+      )}
 
       {/* Specialization Warning Notice */}
       <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-amber-950/40 border border-amber-600/40 text-[11px] text-amber-300 font-sans">
@@ -324,16 +367,31 @@ export default function LawConstellationTree({
               </div>
             )}
 
+            {/* Locked Reason Notice */}
+            {!selectedSkill.isUnlocked && selectedSkill.lockedReason && (
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-950/50 border border-amber-600/40 text-amber-300 text-xs mb-3 font-sans">
+                <AlertTriangle size={15} className="text-amber-400 shrink-0" />
+                <span>
+                  {selectedSkill.lockedReason === 'need_sp' && 'Poin Skill (SP) tidak mencukupi.'}
+                  {selectedSkill.lockedReason === 'need_rank' && 'Tingkat kultivasi (Rank Law) belum mencukupi.'}
+                  {selectedSkill.lockedReason === 'need_parent' && 'Syarat node sebelumnya belum dipelajari.'}
+                  {selectedSkill.lockedReason === 'branch_locked' && 'Jalur cabang terkunci karena telah memilih cabang lain.'}
+                  {selectedSkill.lockedReason === 'max_level' && 'Tingkat penguasaan telah maksimal.'}
+                  {!['need_sp', 'need_rank', 'need_parent', 'branch_locked', 'max_level'].includes(selectedSkill.lockedReason) && selectedSkill.lockedReason}
+                </span>
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex items-center gap-2 pt-1">
               {!selectedSkill.isUnlocked ? (
                 <Button
                   size="sm"
                   onClick={() => onAllocate(selectedSkill.skillId)}
-                  disabled={!selectedSkill.canUnlock || isAllocating || availablePoints < (selectedSkill.skillPointCost || 1)}
-                  className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-bold font-serif text-xs py-2 h-auto shadow"
+                  disabled={!selectedSkill.canUnlock || !!selectedSkill.lockedReason || isAllocating || availablePoints < (selectedSkill.skillPointCost || 1)}
+                  className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-stone-950 font-bold font-serif text-xs py-2 h-auto shadow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isAllocating ? 'Mempelajari...' : `Pelajari (-${selectedSkill.skillPointCost || 1} SP)`}
+                  {isAllocating ? 'Mempelajari...' : selectedSkill.lockedReason === 'branch_locked' ? 'Cabang Terkunci' : selectedSkill.lockedReason === 'need_rank' ? 'Rank Belum Cukup' : selectedSkill.lockedReason === 'need_parent' ? 'Node Terkunci' : selectedSkill.lockedReason === 'need_sp' ? 'SP Kurang' : `Pelajari (-${selectedSkill.skillPointCost || 1} SP)`}
                 </Button>
               ) : (
                 <>
