@@ -13,7 +13,7 @@ export default async function ArenaPage() {
         await queryClient.prefetchQuery({
             queryKey: ['arenaOpponents'],
             queryFn: async () => {
-                const { data } = await api.get('/battle/opponents', {
+                const { data } = await api.get('/leaderboard', {
                     headers: {
                         Cookie: `accessToken=${token}`
                     }

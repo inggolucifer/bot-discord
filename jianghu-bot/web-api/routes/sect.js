@@ -13,6 +13,110 @@ const { splitSectProfit } = require('../../utils/sectProfitSplit');
 const { logTransaction } = require('../../utils/logger');
 const { getPlayerSect } = require('../../utils/sectUtils');
 
+// Endpoint GET /api/sect (Root sect handler returning both sect profile and assets)
+router.get('/', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId }).lean();
+        if (!player) {
+            return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
+        }
+
+        if (!player.sect || player.sect === 'Tanpa Sekte (Rogue Cultivator)') {
+            return res.json({
+                success: true,
+                sect: null,
+                assets: [],
+                data: { sect: null, assets: [] }
+            });
+        }
+
+        const sect = await Sect.findOne({ name: player.sect, guildId: player.guildId })
+            .populate({
+                path: 'assets.assetId',
+                populate: {
+                    path: 'workerInputMaterials.itemId',
+                    model: 'Item'
+                }
+            })
+            .lean();
+
+        if (!sect) {
+            return res.json({
+                success: true,
+                sect: null,
+                assets: [],
+                data: { sect: null, assets: [] }
+            });
+        }
+
+        let role = 'Anggota';
+        if (sect.leaderId === userId) role = 'Ketua';
+        else if (sect.viceLeaderId === userId) role = 'Wakil Ketua';
+        else if (sect.elderIds && sect.elderIds.includes(userId)) role = 'Tetua';
+
+        const sectData = {
+            id: sect._id,
+            name: sect.name,
+            description: sect.description,
+            imageUrl: sect.imageUrl,
+            hallSettlementName: sect.hallSettlementName,
+            role: role,
+            currency: sect.currency,
+            totalWealth: sect.totalWealth,
+            memberCount: 1 + (sect.viceLeaderId ? 1 : 0) + (sect.elderIds ? sect.elderIds.length : 0) + (sect.memberIds ? sect.memberIds.length : 0),
+        };
+
+        const assets = (sect.assets || []).map(asset => {
+            let statusLabel = 'Aktif';
+            let underConstruction = false;
+
+            if (isUnderConstruction(asset)) {
+                underConstruction = true;
+                statusLabel = 'Dalam Pembangunan';
+            } else if (asset.isHalted) {
+                statusLabel = 'Halted (Terhenti)';
+            }
+
+            let profitAvailable = false;
+            if (asset.assetId && !underConstruction && !asset.isHalted) {
+                if (!isClaimedToday(asset.lastClaimAt)) {
+                    profitAvailable = true;
+                }
+            }
+
+            return {
+                id: asset.assetId ? asset.assetId._id : null,
+                name: asset.assetId ? asset.assetId.name : 'Unknown Asset',
+                description: asset.assetId ? asset.assetId.description : '',
+                imageUrl: asset.assetId ? asset.assetId.imageUrl : null,
+                quantity: asset.quantity,
+                status: statusLabel,
+                underConstruction: underConstruction,
+                constructionCompleteAt: asset.constructionCompleteAt,
+                profitAvailable: profitAvailable,
+                lastClaimAt: asset.lastClaimAt,
+                isCraftingStation: asset.assetId ? asset.assetId.isCraftingStation : false,
+                facilityType: asset.assetId ? asset.assetId.facilityType : null,
+                outputDescription: asset.assetId ? asset.assetId.outputDescription : null
+            };
+        });
+
+        res.json({
+            success: true,
+            sect: sectData,
+            assets: assets,
+            data: {
+                sect: sectData,
+                assets: assets
+            }
+        });
+    } catch (error) {
+        console.error('[API-SECT] Error fetching root sect data:', error);
+        res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
+    }
+});
+
 // Endpoint to fetch sect info for the current user
 router.get('/profile', authenticateToken, async (req, res) => {
     try {
