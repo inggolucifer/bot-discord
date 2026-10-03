@@ -1833,8 +1833,12 @@ function consumeInventoryItem(player, itemId, qty = 1) {
  * @param {object} options - { purpose, lawType, playerTier }
  * @returns {Array<object>}
  */
-function listEligibleInventory(player, options = {}) {
+function listEligibleInventory(player, optionsOrPurpose = {}, optionalLawType = null) {
   if (!player || !Array.isArray(player.inventory)) return [];
+
+  const options = typeof optionsOrPurpose === 'string'
+    ? { purpose: optionsOrPurpose, lawType: (typeof optionalLawType === 'string' ? optionalLawType : (optionalLawType?.lawType || '')) }
+    : (optionsOrPurpose || {});
 
   const purpose = options.purpose || 'essence_absorb';
   const law = player.cultivationLaw || {};
@@ -1863,12 +1867,9 @@ function listEligibleInventory(player, options = {}) {
           tags.includes('gu_feed') ||
           tags.includes('gu_larva') ||
           tags.includes('gu_essence') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
-          tags.includes('herb') ||
-          cat === 'material' ||
-          cat === 'herb' ||
-          /(serangga|madu|daging|cacing|ulat|larva|pakan)/i.test(name)
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material' || cat === 'herb') &&
+            /(serangga|madu|daging|cacing|ulat|larva|pakan|empedu|getah)/i.test(name)) ||
+          /(serangga|madu|cacing|ulat|larva|pakan|getah)/i.test(name)
         );
         break;
 
@@ -1877,13 +1878,10 @@ function listEligibleInventory(player, options = {}) {
           tags.includes('beast_food') ||
           tags.includes('meat') ||
           tags.includes('beast_egg') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
-          tags.includes('food') ||
-          cat === 'material' ||
-          cat === 'food' ||
-          cat === 'herb' ||
-          /(daging|ikan|jantung|ransum|beast|satwa)/i.test(name)
+          tags.includes('beast_meat') ||
+          tags.includes('beast_essence') ||
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material' || cat === 'food' || cat === 'herb') &&
+            /(daging|ikan|jantung|ransum|beast|satwa)/i.test(name))
         );
         break;
 
@@ -1892,15 +1890,10 @@ function listEligibleInventory(player, options = {}) {
         isMatch = (
           tags.includes('ore') ||
           tags.includes('whetstone') ||
-          tags.includes('mineral') ||
-          tags.includes('material') ||
           tags.includes('common_artifact') ||
-          tags.includes('essence') ||
-          tags.includes('metal') ||
-          cat === 'material' ||
-          cat === 'mineral' ||
-          cat === 'artifact' ||
-          /(asah|besi|batu|mineral|bijih|ore|logam|pusaka)/i.test(name)
+          tags.includes('artifact_essence') ||
+          ((tags.includes('mineral') || tags.includes('material') || tags.includes('essence') || tags.includes('metal') || cat === 'material' || cat === 'mineral' || cat === 'artifact') &&
+            /(asah|besi|batu|mineral|bijih|ore|logam|pusaka)/i.test(name))
         );
         break;
 
@@ -1928,11 +1921,9 @@ function listEligibleInventory(player, options = {}) {
         isMatch = (
           tags.includes('beast_core') ||
           tags.includes('turbid_core') ||
-          tags.includes('core') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
-          (cat === 'material' && /(inti|core|siluman)/i.test(name)) ||
-          /(inti|core)/i.test(name)
+          tags.includes('turbid_essence') ||
+          ((tags.includes('core') || tags.includes('essence') || tags.includes('material') || cat === 'material') &&
+            /(inti|core|siluman)/i.test(name))
         );
         break;
 
@@ -1941,9 +1932,9 @@ function listEligibleInventory(player, options = {}) {
         isMatch = (
           tags.includes('blood_vial') ||
           tags.includes('blood') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
-          /(darah|blood)/i.test(name)
+          tags.includes('blood_essence') ||
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
+            /(darah|blood)/i.test(name))
         );
         break;
 
@@ -1952,10 +1943,10 @@ function listEligibleInventory(player, options = {}) {
         isMatch = (
           tags.includes('venom_sac') ||
           tags.includes('poison') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
           tags.includes('venom') ||
-          /(racun|venom|bisa)/i.test(name)
+          tags.includes('poison_essence') ||
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
+            /(racun|venom|bisa)/i.test(name))
         );
         break;
 
@@ -1965,10 +1956,10 @@ function listEligibleInventory(player, options = {}) {
           tags.includes('abyssal') ||
           tags.includes('blood_vial') ||
           tags.includes('obsidian') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
+          tags.includes('abyssal_essence') ||
           tags.includes('tribute') ||
-          /(abyss|kurban|upeti|obsidian)/i.test(name)
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
+            /(abyss|kurban|upeti|obsidian)/i.test(name))
         );
         break;
 
@@ -1978,9 +1969,9 @@ function listEligibleInventory(player, options = {}) {
           tags.includes('yin_stone') ||
           tags.includes('nether') ||
           tags.includes('dark') ||
-          tags.includes('essence') ||
-          tags.includes('material') ||
-          /(yin|nether|kegelapan)/i.test(name)
+          tags.includes('yin_essence') ||
+          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
+            /(yin|nether|kegelapan)/i.test(name))
         );
         break;
 
@@ -1991,9 +1982,6 @@ function listEligibleInventory(player, options = {}) {
           tags.includes('catalyst') ||
           tags.includes('herb') ||
           tags.includes('essence') ||
-          tags.includes('material') ||
-          cat === 'material' ||
-          cat === 'herb' ||
           cat === 'spirit_stone'
         );
         break;
@@ -2011,12 +1999,12 @@ function listEligibleInventory(player, options = {}) {
       default: {
         const profile = LAW_ESSENCE_PROFILE[activeLawType];
         if (profile) {
-          const tagMatch = profile.fillTags ? profile.fillTags.some(t => tags.includes(t)) : false;
-          const catMatch = profile.fillCategories ? profile.fillCategories.includes(cat) : false;
+          const specificTagMatch = profile.fillTags ? profile.fillTags.some(t => tags.includes(t) && t !== 'material' && t !== 'essence') : false;
           const genericMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
-          isMatch = tagMatch || catMatch || genericMatch;
+          const catMatch = profile.fillCategories ? profile.fillCategories.includes(cat) : (cat === 'material');
+          isMatch = (specificTagMatch && catMatch) || genericMatch;
         } else {
-          isMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone') || cat === 'material';
+          isMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
         }
         break;
       }
