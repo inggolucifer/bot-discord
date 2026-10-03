@@ -6,6 +6,7 @@ const Player = require('../../models/Player');
 const Item = require('../../models/Item');
 const DungeonInstance = require('../../models/DungeonInstance');
 const { generateDungeonMaze, DUNGEON_CONFIGS } = require('../../utils/dungeonMazeGenerator');
+const { normalizeCurrency } = require('../../utils/currencyNormalize');
 
 /**
  * Filter petak yang terlihat oleh pemain berdasarkan kabut kegelapan (Fog of War)
@@ -326,9 +327,10 @@ router.post('/interact', authenticateToken, async (req, res) => {
       const finalSilver = Math.floor(dungeon.accumulatedLoot.silver * lootMultiplier);
       const finalSpirit = Math.floor(dungeon.accumulatedLoot.spiritStones * lootMultiplier);
 
-      if (!player.currencies) player.currencies = {};
-      player.currencies.silver = (player.currencies.silver || 0) + finalSilver;
-      player.currencies.spirit = (player.currencies.spirit || 0) + finalSpirit;
+      if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+      player.currency.silver = (player.currency.silver || 0) + finalSilver;
+      player.currency.spirit = (player.currency.spirit || 0) + finalSpirit;
+      player.currency = normalizeCurrency(player.currency);
 
       // Pindahkan items ke inventori
       for (const it of dungeon.accumulatedLoot.items) {
@@ -343,7 +345,7 @@ router.post('/interact', authenticateToken, async (req, res) => {
         }
       }
       player.markModified('inventory');
-      player.markModified('currencies');
+      player.markModified('currency');
 
       dungeon.status = isAtExit ? 'completed' : 'escaped';
       await dungeon.save();
