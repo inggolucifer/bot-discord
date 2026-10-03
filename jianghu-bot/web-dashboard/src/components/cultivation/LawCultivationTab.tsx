@@ -703,7 +703,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       return data;
     },
     onSuccess: (res) => {
-      toast.show({ message: res.message || 'Aktivitas berhasil!', type: 'success' });
+      let msg = res.message || 'Aktivitas berhasil!';
+      if (res.data?.efficiency !== undefined && res.data.efficiency < 1.0 && !msg.includes('Efisiensi')) {
+        msg += ` (Efisiensi: ${Math.round(res.data.efficiency * 100)}%)`;
+      }
+      toast.show({ message: msg, type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     },
@@ -3573,7 +3577,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -3582,6 +3586,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'element/absorb',
@@ -3595,7 +3600,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-blue-600 hover:bg-blue-500 text-stone-950'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Serap'}
+                            {isLocked ? 'Di atas Ranah' : 'Serap'}
                           </Button>
                         </div>
                       );
@@ -3677,7 +3682,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -3686,6 +3691,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'artifact/infuse',
@@ -3699,7 +3705,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-amber-600 hover:bg-amber-500 text-stone-950'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Asah'}
+                            {isLocked ? 'Di atas Ranah' : 'Asah'}
                           </Button>
                         </div>
                       );
@@ -3781,7 +3787,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -3790,6 +3796,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'beast/feed',
@@ -3803,7 +3810,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-orange-600 hover:bg-orange-500 text-stone-950'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Pakan'}
+                            {isLocked ? 'Di atas Ranah' : 'Pakan'}
                           </Button>
                         </div>
                       );
@@ -3886,7 +3893,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -3895,6 +3902,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'demonic/turbid-absorb',
@@ -3908,7 +3916,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-red-700 hover:bg-red-600 text-white'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Lahap'}
+                            {isLocked ? 'Di atas Ranah' : 'Lahap'}
                           </Button>
                         </div>
                       );
@@ -3991,7 +3999,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4000,6 +4008,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'gu/feed',
@@ -4017,7 +4026,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Beri Makan'}
+                            {isLocked ? 'Di atas Ranah' : 'Beri Makan'}
                           </Button>
                         </div>
                       );
@@ -4100,7 +4109,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4109,6 +4118,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'demonic/blood-harvest',
@@ -4122,7 +4132,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-rose-800 hover:bg-rose-700 text-white'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Panen'}
+                            {isLocked ? 'Di atas Ranah' : 'Panen'}
                           </Button>
                         </div>
                       );
@@ -4205,7 +4215,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4214,6 +4224,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'demonic/venom-ingest',
@@ -4227,7 +4238,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-emerald-700 hover:bg-emerald-600 text-white'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Tenggak'}
+                            {isLocked ? 'Di atas Ranah' : 'Tenggak'}
                           </Button>
                         </div>
                       );
@@ -4310,7 +4321,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4319,6 +4330,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'demonic/pact-tribute',
@@ -4332,7 +4344,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-purple-800 hover:bg-purple-700 text-white'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Kurbankan'}
+                            {isLocked ? 'Di atas Ranah' : 'Kurbankan'}
                           </Button>
                         </div>
                       );
@@ -4415,7 +4427,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 </span>
                               ) : (
                                 <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
+                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4424,6 +4436,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                           <Button
                             size="sm"
                             disabled={isLocked || lawActionMutation.isPending}
+                            title={isLocked ? 'Di atas ranah' : undefined}
                             onClick={() => {
                               lawActionMutation.mutate({
                                 endpoint: 'demonic/nether-channel',
@@ -4437,7 +4450,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                                 : 'bg-indigo-900 hover:bg-indigo-800 text-white'
                             }`}
                           >
-                            {isLocked ? 'Terkunci' : 'Serap'}
+                            {isLocked ? 'Di atas Ranah' : 'Serap'}
                           </Button>
                         </div>
                       );
