@@ -16,6 +16,7 @@ import {
   Info, AlertTriangle, ArrowRight, RefreshCw, Award
 } from 'lucide-react';
 import Link from 'next/link';
+import { resolveLawRealmDisplay } from '@/lib/realmUtils';
 
 export default function SkillTreeClient() {
   const { token } = useAuthStore();
@@ -155,8 +156,8 @@ export default function SkillTreeClient() {
           <span className="text-xs font-serif font-bold text-amber-300 px-3 py-1 rounded-xl bg-amber-950/80 border border-amber-500/40">
             {lawData.lawName}
           </span>
-          <span className="text-xs font-mono text-stone-400 px-2 py-0.5 rounded bg-black/60 border border-stone-800">
-            Rank {lawData.rank} ({lawData.rankDisplayName})
+          <span className="text-xs font-mono text-amber-300 px-2.5 py-0.5 rounded bg-black/60 border border-stone-800">
+            {resolveLawRealmDisplay(lawData).display}
           </span>
         </div>
 
