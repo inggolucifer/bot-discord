@@ -15,7 +15,7 @@ const WorkerContract = require('../../models/WorkerContract');
 const LootPool = require('../../models/LootPool');
 const crypto = require('crypto');
 const { calculateRepairCost, calculateDailyGuardCost } = require('../../utils/assetCostCalculator');
-const { convertFromCopper, convertToCopper } = require('../../utils/currencyNormalize');
+const { convertFromCopper, convertToCopper, deductCopper, silverToCopper, canAffordCopper } = require('../../utils/currencyNormalize');
 const { getPlayerSect } = require('../../utils/sectUtils');
 const { getPlayerSectRank, can } = require('../../utils/sectAccess');
 const { clampStamina } = require('../../utils/stamina');
@@ -1882,11 +1882,15 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
 
             if (!sender || sender.status !== 'active') throw new CustomError('Pengirim tidak valid/tidak aktif.', 400);
             if (!receiver || receiver.status !== 'active') throw new CustomError('Penerima tidak aktif.', 400);
-            if (sender.currency.silver < tr.taxAmount) throw new CustomError('Pengirim tidak memiliki cukup Silver untuk pajak.', 400);
+            const taxCopper = silverToCopper(tr.taxAmount);
+            if (!canAffordCopper(sender.currency, taxCopper).ok) {
+              throw new CustomError('Pengirim tidak memiliki cukup saldo untuk pajak transfer.', 400);
+            }
             const senderOwned = sender.inventory.find(i => i.itemId.toString() === tr.itemId._id.toString());
 
             // Deduct from sender
-            sender.currency.silver -= tr.taxAmount;
+            deductCopper(sender.currency, taxCopper, 'Pajak Transfer');
+            sender.markModified('currency');
             senderOwned.quantity -= tr.quantity;
             if (senderOwned.quantity <= 0) {
                 sender.inventory = sender.inventory.filter(i => i.itemId.toString() !== tr.itemId._id.toString());

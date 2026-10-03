@@ -12,6 +12,7 @@ const { syncRealmRole } = require('../utils/realmRole');
 const { refreshWorkerChannel } = require('../services/workerChannelService');
 const { calculateProgress } = require('../utils/assetProgress');
 const GuildConfig = require('../models/GuildConfig');
+const { deductCopper, silverToCopper, formatCopper, canAffordCopper, getTotalCopper } = require('../utils/currencyNormalize');
 
 const VALID_RANKS = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythical'];
 const VALID_CURRENCIES = ['silver', 'gold', 'jade', 'spirit'];
@@ -79,9 +80,16 @@ async function handleModal(interaction) {
     if (hours > contract.maxDurationHours) return interaction.reply({ content: `❌ Worker ini hanya menawarkan maksimal ${contract.maxDurationHours} jam.`, flags: MessageFlags.Ephemeral });
 
     const totalCost = contract.pricePerHour * hours;
-    if (employer.currency.silver < totalCost) return interaction.reply({ content: `❌ Uangmu tidak cukup. Biaya sewa adalah ${totalCost} Silver, saldomu ${employer.currency.silver} Silver.`, flags: MessageFlags.Ephemeral });
+    const needCopper = silverToCopper(totalCost);
+    if (!canAffordCopper(employer.currency, needCopper).ok) {
+      return interaction.reply({
+        content: `❌ Uangmu tidak cukup. Biaya sewa adalah ${formatCopper(needCopper)} (${totalCost} Silver), saldomu ${formatCopper(getTotalCopper(employer.currency))}.`,
+        flags: MessageFlags.Ephemeral
+      });
+    }
 
-    employer.currency.silver -= totalCost;
+    deductCopper(employer.currency, needCopper, 'Sewa Pekerja');
+    employer.markModified('currency');
     await employer.save();
 
     contract.status = 'working';
