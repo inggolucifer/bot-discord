@@ -1744,6 +1744,324 @@ function consumeBreakthroughMaterials(player, law, isMajor = false) {
 }
 
 /**
+ * Mencari index slot inventori pemain berdasarkan itemId atau inventory subdoc _id
+ * @param {object} player - Mongoose Player document atau mock player object
+ * @param {string|object} itemId - ID item atau entry inventori yang dicari
+ * @returns {number} Index slot di player.inventory atau -1 jika tidak ditemukan
+ */
+function findInventoryIndex(player, itemId) {
+  if (!player || !Array.isArray(player.inventory) || !itemId) return -1;
+  const targetId = (itemId._id || itemId.id || itemId)?.toString();
+  if (!targetId) return -1;
+
+  return player.inventory.findIndex(inv => {
+    if (!inv || inv.quantity <= 0) return false;
+    const item = inv.itemId || inv;
+    const invItemId = (item._id || item.id || item)?.toString();
+    const subdocId = (inv._id || inv.id)?.toString();
+    return invItemId === targetId || subdocId === targetId;
+  });
+}
+
+/**
+ * Mengonsumsi item dari tas inventori secara authoritative.
+ * Memotong kuantitas, melakukan splice jika habis, dan memanggil player.markModified('inventory').
+ * @param {object} player - Mongoose Player document
+ * @param {string|object} itemId - ID item atau entry inventori
+ * @param {number} qty - Jumlah yang dikonsumsi (default 1)
+ * @returns {{ consumedItemId: string, consumedInventoryId: string, consumedName: string, consumedTier: number, quantityRemaining: number, inventoryDelta: boolean, itemDoc: object }}
+ */
+function consumeInventoryItem(player, itemId, qty = 1) {
+  if (!player || !Array.isArray(player.inventory)) {
+    const err = new Error('Data inventori pemain tidak valid.');
+    err.statusCode = 400;
+    throw err;
+  }
+  if (!itemId) {
+    const err = new Error('Wajib menyertakan itemId bahan yang ingin digunakan.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const idx = findInventoryIndex(player, itemId);
+  if (idx < 0) {
+    const err = new Error('Item tidak ditemukan di dalam tas inventori atau jumlahnya habis.');
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const invEntry = player.inventory[idx];
+  const itemDoc = invEntry.itemId || invEntry;
+
+  if (invEntry.quantity < qty) {
+    const err = new Error(`Jumlah item [${itemDoc.name || 'Item'}] di tas tidak mencukupi (Butuh ${qty}, tersedia ${invEntry.quantity}).`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const consumedName = itemDoc.name || 'Item';
+  const consumedTier = resolveItemTier(itemDoc);
+  const consumedItemId = (itemDoc._id || itemDoc.id || itemDoc)?.toString();
+  const consumedInventoryId = (invEntry._id || invEntry.id)?.toString();
+
+  invEntry.quantity -= qty;
+  const quantityRemaining = invEntry.quantity;
+
+  if (invEntry.quantity <= 0) {
+    player.inventory.splice(idx, 1);
+  }
+
+  if (typeof player.markModified === 'function') {
+    player.markModified('inventory');
+  }
+
+  return {
+    consumedItemId,
+    consumedInventoryId,
+    consumedName,
+    consumedTier,
+    quantityRemaining: Math.max(0, quantityRemaining),
+    inventoryDelta: true,
+    itemDoc
+  };
+}
+
+/**
+ * Menyaring dan mengembalikan daftar item di tas pemain yang memenuhi syarat untuk aktivitas tertentu (purpose).
+ * Menghitung efisiensi dan alasan terkunci (over-tier) secara terpusat.
+ * @param {object} player - Mongoose Player document
+ * @param {object} options - { purpose, lawType, playerTier }
+ * @returns {Array<object>}
+ */
+function listEligibleInventory(player, options = {}) {
+  if (!player || !Array.isArray(player.inventory)) return [];
+
+  const purpose = options.purpose || 'essence_absorb';
+  const law = player.cultivationLaw || {};
+  const activeLawType = options.lawType || law.activeLawType || '';
+  const currentRank = law.rank !== undefined ? law.rank : 0;
+  const pTier = options.playerTier !== undefined ? Number(options.playerTier) : (currentRank + 1);
+
+  const eligibleItems = [];
+
+  for (let i = 0; i < player.inventory.length; i++) {
+    const inv = player.inventory[i];
+    if (!inv || inv.quantity <= 0) continue;
+    const item = inv.itemId || inv;
+    if (!item) continue;
+
+    const tags = Array.isArray(item.tags) ? item.tags : [];
+    const cat = (item.category || '').toLowerCase();
+    const name = (item.name || '').toLowerCase();
+
+    let isMatch = false;
+
+    switch (purpose) {
+      case 'gu_feed':
+        isMatch = (
+          tags.includes('gu_food') ||
+          tags.includes('gu_feed') ||
+          tags.includes('gu_larva') ||
+          tags.includes('gu_essence') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          tags.includes('herb') ||
+          cat === 'material' ||
+          cat === 'herb' ||
+          /(serangga|madu|daging|cacing|ulat|larva|pakan)/i.test(name)
+        );
+        break;
+
+      case 'beast_feed':
+        isMatch = (
+          tags.includes('beast_food') ||
+          tags.includes('meat') ||
+          tags.includes('beast_egg') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          tags.includes('food') ||
+          cat === 'material' ||
+          cat === 'food' ||
+          cat === 'herb' ||
+          /(daging|ikan|jantung|ransum|beast|satwa)/i.test(name)
+        );
+        break;
+
+      case 'natal_infuse':
+      case 'artifact_infuse':
+        isMatch = (
+          tags.includes('ore') ||
+          tags.includes('whetstone') ||
+          tags.includes('mineral') ||
+          tags.includes('material') ||
+          tags.includes('common_artifact') ||
+          tags.includes('essence') ||
+          tags.includes('metal') ||
+          cat === 'material' ||
+          cat === 'mineral' ||
+          cat === 'artifact' ||
+          /(asah|besi|batu|mineral|bijih|ore|logam|pusaka)/i.test(name)
+        );
+        break;
+
+      case 'element_absorb': {
+        const elemMap = {
+          element_phoenix_fire:     ['fire_catalyst', 'fire_essence', 'flame', 'api', 'fire'],
+          element_azure_water:      ['water_catalyst', 'water_essence', 'water', 'air', 'es', 'ice'],
+          element_xuanwu_earth:     ['earth_catalyst', 'earth_essence', 'earth', 'tanah', 'batu'],
+          element_qingdi_wood:      ['wood_catalyst', 'wood_essence', 'wood', 'kayu', 'herba'],
+          element_roc_wind:         ['wind_catalyst', 'wind_essence', 'wind', 'angin', 'badai'],
+          element_godthunder_light: ['thunder_catalyst', 'thunder_essence', 'thunder', 'petir', 'kilat']
+        };
+        const specificTags = elemMap[activeLawType] || [];
+        const genericTags = ['catalyst', 'essence', 'elemental_essence', 'spirit_stone'];
+        isMatch = (
+          tags.some(t => specificTags.includes(t)) ||
+          tags.some(t => genericTags.includes(t)) ||
+          (cat === 'material' && tags.includes('essence'))
+        );
+        break;
+      }
+
+      case 'demonic_absorb':
+      case 'turbid_absorb':
+        isMatch = (
+          tags.includes('beast_core') ||
+          tags.includes('turbid_core') ||
+          tags.includes('core') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          (cat === 'material' && /(inti|core|siluman)/i.test(name)) ||
+          /(inti|core)/i.test(name)
+        );
+        break;
+
+      case 'blood_absorb':
+      case 'demonic_blood':
+        isMatch = (
+          tags.includes('blood_vial') ||
+          tags.includes('blood') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          /(darah|blood)/i.test(name)
+        );
+        break;
+
+      case 'venom_absorb':
+      case 'demonic_venom':
+        isMatch = (
+          tags.includes('venom_sac') ||
+          tags.includes('poison') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          tags.includes('venom') ||
+          /(racun|venom|bisa)/i.test(name)
+        );
+        break;
+
+      case 'tribute_absorb':
+      case 'abyssal_tribute':
+        isMatch = (
+          tags.includes('abyssal') ||
+          tags.includes('blood_vial') ||
+          tags.includes('obsidian') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          tags.includes('tribute') ||
+          /(abyss|kurban|upeti|obsidian)/i.test(name)
+        );
+        break;
+
+      case 'nether_absorb':
+      case 'demonic_nether':
+        isMatch = (
+          tags.includes('yin_stone') ||
+          tags.includes('nether') ||
+          tags.includes('dark') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          /(yin|nether|kegelapan)/i.test(name)
+        );
+        break;
+
+      case 'breakthrough_mini':
+        isMatch = (
+          tags.includes('breakthrough_material') ||
+          tags.includes('spirit_stone') ||
+          tags.includes('catalyst') ||
+          tags.includes('herb') ||
+          tags.includes('essence') ||
+          tags.includes('material') ||
+          cat === 'material' ||
+          cat === 'herb' ||
+          cat === 'spirit_stone'
+        );
+        break;
+
+      case 'bt_pill':
+        isMatch = (
+          cat === 'pill' ||
+          tags.includes('breakthrough_pill') ||
+          tags.includes('pill') ||
+          /pil/i.test(name)
+        );
+        break;
+
+      case 'essence_absorb':
+      default: {
+        const profile = LAW_ESSENCE_PROFILE[activeLawType];
+        if (profile) {
+          const tagMatch = profile.fillTags ? profile.fillTags.some(t => tags.includes(t)) : false;
+          const catMatch = profile.fillCategories ? profile.fillCategories.includes(cat) : false;
+          const genericMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
+          isMatch = tagMatch || catMatch || genericMatch;
+        } else {
+          isMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone') || cat === 'material';
+        }
+        break;
+      }
+    }
+
+    if (!isMatch) continue;
+
+    const itemTier = resolveItemTier(item);
+    const affinity = getTierAffinity(pTier, itemTier);
+    const allowed = affinity.allowed && itemTier <= pTier;
+    const efficiency = allowed ? affinity.efficiency : 0;
+    const effPercent = Math.round(affinity.efficiency * 100);
+    const isOptimal = allowed && itemTier === pTier && affinity.efficiency === 1.0;
+    const lockedReason = !allowed ? (itemTier > pTier ? 'Di atas ranah' : affinity.reason || 'Ditolak dantian') : null;
+
+    eligibleItems.push({
+      inventoryId: inv._id?.toString() || inv.id?.toString(),
+      itemId: (item._id || item.id || item)?.toString(),
+      name: item.name || 'Item',
+      description: item.description || '',
+      quantity: inv.quantity,
+      tier: itemTier,
+      tags,
+      category: item.category || 'material',
+      imageUrl: item.imageUrl || null,
+      emoji: item.emoji || (item.imageUrl ? null : '📦'),
+      efficiency,
+      effPercent,
+      isOptimal,
+      allowed,
+      lockedReason
+    });
+  }
+
+  eligibleItems.sort((a, b) => {
+    if (a.allowed !== b.allowed) return a.allowed ? -1 : 1;
+    if (a.tier !== b.tier) return b.tier - a.tier;
+    if (a.quantity !== b.quantity) return b.quantity - a.quantity;
+    return (a.name || '').localeCompare(b.name || '');
+  });
+
+  return eligibleItems;
+}
+
+/**
  * Success rate mini-breakthrough.
  * Formula: 90% - (stage × 1%)
  * Stage 0 = 90%, Stage 8 = 82%, Stage 9 (major) handled separately.
@@ -5232,5 +5550,10 @@ module.exports = {
   // Nether Darkness Helpers
   NETHER_DARKNESS_ZONES,
   isNetherTerritory,
-  getNetherSafeLimitSeconds
+  getNetherSafeLimitSeconds,
+
+  // Authoritative Inventory Helpers
+  findInventoryIndex,
+  consumeInventoryItem,
+  listEligibleInventory
 };
