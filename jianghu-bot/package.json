@@ -12,7 +12,7 @@
     "web:dev": "npm --prefix web-dashboard run dev",
     "web:build": "npm --prefix web-dashboard run build",
     "web:start": "npm --prefix web-dashboard run start",
-    "test": "find . -name '*.js' -not -path './node_modules/*' -not -path './web-dashboard/node_modules/*' | xargs -I {} node -c {}"
+    "test": "node scripts/syntaxCheckAll.js"
   },
   "dependencies": {
     "axios": "^1.19.0",
