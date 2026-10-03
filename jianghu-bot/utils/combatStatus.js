@@ -494,14 +494,16 @@ function getStatusBadges(entity) {
  *
  * @param {Object} entity - player atau enemy entity
  * @param {Object} ctx - { maxHp, isStandby, actionType }
- * @returns {Object} { logs: string[], hpDelta: number, skipTurn: boolean, isDead: boolean }
+ * @returns {Object} { logs: string[], hpDelta: number, skipTurn: boolean, isDead: boolean, dotDamages: Array, conditionsSnapshot: Object }
  */
 function tickStatuses(entity, ctx = {}) {
   const result = {
     logs: [],
     hpDelta: 0,
     skipTurn: false,
-    isDead: false
+    isDead: false,
+    dotDamages: [],
+    conditionsSnapshot: {}
   };
 
   if (!entity || entity.isDead) return result;
@@ -512,13 +514,25 @@ function tickStatuses(entity, ctx = {}) {
   const entityName = entity.name || entity.characterName || 'Pendekar';
   const isStandby = !!ctx.isStandby || ctx.actionType === 'defend';
 
+  // Deteksi giliran dilewati akibat Stun atau Pembekuan (Frozen >= 100)
+  const isStunned = Array.isArray(entity.debuffs) && entity.debuffs.some(d => d.type === 'stun' && d.duration > 0);
+  const isFrozen = (conds.frozen || 0) >= (COMBAT_STATUS.FROZEN?.threshold || 100);
+  if (isStunned || isFrozen) {
+    result.skipTurn = true;
+  }
+
+  const targetId = entity.entityId || entity.id || entity._id || entityName;
+
   // 1. POISON TICK
   if (conds.poison > 0) {
     if (isStandby) {
       result.logs.push(`🛡️ ${entityName} menjaga ketenangan dantian (Standby). Racun terhambat dan tidak mengalir melukai tubuh!`);
     } else {
-      let dmg = Math.max(2, Math.floor(maxHp * (conds.poison * 0.0015)));
-      const isPoisonLaw = entity.cultivationLaw?.activeLawType === 'demonic_myriad_venom' || entity.activeLawType === 'demonic_myriad_venom';
+      let dmg = Math.max(2, Math.floor(maxHp * (conds.poison * (COMBAT_STATUS.POISON.baseHpPctPerStack || 0.0015))));
+      const isPoisonLaw = entity.entityType !== 'monster' && (
+        entity.cultivationLaw?.activeLawType === 'demonic_myriad_venom' ||
+        entity.activeLawType === 'demonic_myriad_venom'
+      );
       const tolerancePct = entity.cultivationLaw?.demonicData?.venomTolerancePct || (isPoisonLaw ? 20 : 0);
       if (tolerancePct > 0) {
         dmg = Math.max(1, Math.floor(dmg * (1 - (tolerancePct / 100))));
@@ -528,11 +542,14 @@ function tickStatuses(entity, ctx = {}) {
         entity.hp = Math.max(1, entity.hp - dmg);
         conds.poison = Math.max(0, conds.poison - 5);
         result.hpDelta -= dmg;
+        result.dotDamages.push({ targetId, type: 'poison', amount: dmg, hpAfter: entity.hp });
         result.logs.push(`☠️ Hawa racun batin menggerogoti meridian ${entityName}, merenggut ${dmg} HP (Sisa: ${entity.hp} HP)! Racun mereda ke ${conds.poison}.`);
       } else {
         entity.hp = Math.max(0, entity.hp - dmg);
         result.hpDelta -= dmg;
+        result.dotDamages.push({ targetId, type: 'poison', amount: dmg, hpAfter: entity.hp });
         if (entity.hp <= 0) {
+          entity.hp = 0;
           entity.isDead = true;
           result.isDead = true;
         }
@@ -546,8 +563,10 @@ function tickStatuses(entity, ctx = {}) {
     const dmg = Math.max(2, Math.floor(maxHp * (conds.bleed * COMBAT_STATUS.BLEED.tickHpPctPerSeverity)));
     entity.hp = Math.max(0, entity.hp - dmg);
     result.hpDelta -= dmg;
+    result.dotDamages.push({ targetId, type: 'bleed', amount: dmg, hpAfter: entity.hp });
     conds.bleed = Math.max(0, Number((conds.bleed - COMBAT_STATUS.BLEED.decayPerTurn).toFixed(2)));
     if (entity.hp <= 0) {
+      entity.hp = 0;
       entity.isDead = true;
       result.isDead = true;
     }
@@ -560,8 +579,10 @@ function tickStatuses(entity, ctx = {}) {
     const dmg = Math.max(2, Math.floor(maxHp * (conds.burn * (COMBAT_STATUS.BURN.baseHpPctPerStack + burnBonus))));
     entity.hp = Math.max(0, entity.hp - dmg);
     result.hpDelta -= dmg;
+    result.dotDamages.push({ targetId, type: 'burn', amount: dmg, hpAfter: entity.hp });
     conds.burn = Math.max(0, conds.burn - 5);
     if (entity.hp <= 0) {
+      entity.hp = 0;
       entity.isDead = true;
       result.isDead = true;
     }
@@ -596,6 +617,15 @@ function tickStatuses(entity, ctx = {}) {
   if (conds.intox > 0) {
     conds.intox = Math.max(0, conds.intox - 5);
   }
+
+  if (entity.hp <= 0) {
+    entity.hp = 0;
+    entity.isDead = true;
+    result.isDead = true;
+  }
+
+  // Snapshot conditions setelah tick
+  result.conditionsSnapshot = { ...conds };
 
   // Sinkronkan badge terbaru setelah tick
   entity.statusBadges = getStatusBadges(entity);
