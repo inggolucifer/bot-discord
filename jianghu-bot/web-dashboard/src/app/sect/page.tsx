@@ -130,11 +130,12 @@ export default function SectPage() {
   const fetchSectData = async () => {
     try {
       const res = await api.get('/sect');
-      setSect(res.data.data.sect);
-      setAssets(res.data.data.assets);
+      const sectObj = res.data?.data?.sect ?? res.data?.sect ?? null;
+      const assetsArr = res.data?.data?.assets ?? res.data?.assets ?? [];
+      setSect(sectObj);
+      setAssets(assetsArr);
     } catch (err: any) {
-      alert(err);
-      setError(err.response?.data?.error || 'Gagal memuat data sekte.');
+      setError(err.response?.data?.error || err.message || 'Gagal memuat data sekte.');
     } finally {
       setLoading(false);
     }

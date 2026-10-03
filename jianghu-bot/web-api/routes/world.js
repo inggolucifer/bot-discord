@@ -1199,7 +1199,7 @@ router.get('/npcs', authenticateToken, async (req, res) => {
             });
         }
 
-        res.json({ npcs });
+        res.json({ success: true, npcs, data: { npcs } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Terjadi kesalahan internal.' });

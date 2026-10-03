@@ -29,7 +29,7 @@ export default function GridSectHallModal({
   const fetchSect = async () => {
     try {
       const res = await api.get('/sect');
-      setSectData(res.data?.sect || null);
+      setSectData(res.data?.sect || res.data?.data?.sect || null);
     } catch (err) {
       console.error('Failed to fetch sect:', err);
     } finally {

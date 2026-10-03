@@ -67,9 +67,9 @@ export default function NpcInteractionModal() {
 
   const fetchNearbyNpcs = async () => {
     try {
-      const res = await api.get('/world/people');
-      if (res.data?.success && res.data?.data) {
-        const npcs = res.data.data.npcs || [];
+      const res = await api.get('/world/npcs');
+      const npcs = res.data?.npcs || res.data?.data?.npcs || [];
+      if (Array.isArray(npcs)) {
         setNearbyNpcs(npcs);
       }
     } catch (err) {
