@@ -1509,7 +1509,8 @@ router.get(['/skill-tree', '/skills'], authenticateToken, async (req, res) => {
         canUpgrade,
         lockedReason,
         isEquipped: (law.combatLoadout || []).includes(nodeId),
-        effects: n.effects
+        effects: n.effects,
+        requires: n.requires || []
       };
     });
 
