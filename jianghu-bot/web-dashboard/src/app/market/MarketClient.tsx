@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
+import { toast } from '@/components/ui/Toast';
 import { useAuthStore } from '@/lib/store';
 import { getRarityColor, getRarityTextClass } from '@/lib/rarity';
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -127,12 +128,12 @@ export default function MarketClient() {
         listingId: buyModalItem.id,
         quantity: buyQuantity,
       });
-      alert(res.data.message || 'Pembelian berhasil!');
+      toast.show({ message: res.data.message || 'Pembelian berhasil!', type: 'success' });
       setBuyModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ['market_listings'] });
       queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal membeli item dari pemain.');
+      toast.show({ message: err.response?.data?.error || 'Gagal membeli item dari pemain.', type: 'error' });
     } finally {
       setActionLoading(false);
     }
@@ -180,12 +181,12 @@ export default function MarketClient() {
     setActionLoading(true);
     try {
       const res = await api.post('/market/player-shop/my-listings/cancel', { listingId });
-      alert(res.data.message || 'Listing berhasil dibatalkan.');
+      toast.show({ message: res.data.message || 'Listing berhasil dibatalkan.', type: 'success' });
       setConfirmCancelId(null);
       queryClient.invalidateQueries({ queryKey: ['market_listings'] });
       queryClient.invalidateQueries({ queryKey: ['market_my_listings'] });
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal membatalkan listing.');
+      toast.show({ message: err.response?.data?.error || 'Gagal membatalkan listing.', type: 'error' });
     } finally {
       setActionLoading(false);
     }

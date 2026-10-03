@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import api from '@/lib/api';
+import { toast } from '@/components/ui/Toast';
 import { sound } from '@/lib/soundSynthesizer';
 import {
   Map as MapIcon,
@@ -962,9 +963,12 @@ export default function ZoneGridView({
                   const remMs = err.response.data.remainingMs || 0;
                   const hours = Math.floor(remMs / 3600000);
                   const mins = Math.floor((remMs % 3600000) / 60000);
-                  alert(`💀 Dantian Terluka Parah!\nKamu sedang dalam masa pemulihan (Sisa: ${hours} jam ${mins} menit) setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.\nIstirahatkan dantianmu sebelum bertarung kembali!`);
+                  toast.show({
+                    message: `💀 Dantian Terluka Parah! Sisa pemulihan: ${hours}j ${mins}m setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.`,
+                    type: 'error'
+                  });
                 } else {
-                  alert(err.response?.data?.error || 'Gagal memulai pertempuran');
+                  toast.show({ message: err.response?.data?.error || 'Gagal memulai pertempuran', type: 'error' });
                 }
               }
             }}

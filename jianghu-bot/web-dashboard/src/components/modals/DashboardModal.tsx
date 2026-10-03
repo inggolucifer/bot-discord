@@ -13,6 +13,7 @@ import { Modal } from '@/components/ui/Modal';
 import { EmptyState } from '@/components/ui/EmptyState';
 import CreateCharacterCard from '@/components/character/CreateCharacterCard';
 import StartPrologue from '@/components/modals/StartPrologue';
+import { toast } from '@/components/ui/Toast';
 
 interface Currency {
   copper: number;
@@ -386,7 +387,7 @@ export default function DashboardModal() {
                         onClick={() => {
                           const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
                           if (!clientId || clientId === 'YOUR_APPLICATION_ID_HERE') {
-                            alert("Konfigurasi login Discord belum diatur di server. Silakan gunakan Masuk Langsung di atas.");
+                            toast.show({ message: "Konfigurasi login Discord belum diatur di server. Silakan gunakan Masuk Langsung di atas.", type: 'info' });
                             return;
                           }
                           const redirectUri = encodeURIComponent(

@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Modal } from '@/components/ui/Modal';
 import { ToastContainer } from '@/components/ui/ToastContainer';
+import { toast } from '@/components/ui/Toast';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface SectData {
@@ -93,14 +94,14 @@ export default function SectPage() {
     setDonateLoading(true);
     try {
       await api.post('/sect/donate', { type: donateType, amount: donateAmount });
-      alert(`Berhasil donasi ${donateAmount} ${donateType} ke sekte!`);
+      toast.show({ message: `Berhasil donasi ${donateAmount} ${donateType} ke sekte!`, type: 'success' });
       setIsDonateModalOpen(false);
       setDonateAmount(1);
       setDonateType('copper');
       fetchSectData();
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal melakukan donasi.');
+      toast.show({ message: err.response?.data?.error || 'Gagal melakukan donasi.', type: 'error' });
     } finally {
       setDonateLoading(false);
     }
@@ -110,20 +111,20 @@ export default function SectPage() {
   const handleEnterHall = async () => {
     try {
       await api.post('/sect/hall/enter');
-      alert('Berhasil memasuki Balai Sekte.');
+      toast.show({ message: 'Berhasil memasuki Balai Sekte.', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal memasuki balai sekte.');
+      toast.show({ message: err.response?.data?.error || 'Gagal memasuki balai sekte.', type: 'error' });
     }
   };
 
   const handleLeaveHall = async () => {
     try {
       await api.post('/sect/hall/leave');
-      alert('Berhasil keluar dari Balai Sekte.');
+      toast.show({ message: 'Berhasil keluar dari Balai Sekte.', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Gagal keluar dari balai sekte.');
+      toast.show({ message: err.response?.data?.error || 'Gagal keluar dari balai sekte.', type: 'error' });
     }
   };
 

@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { toast } from '@/components/ui/Toast';
 
 interface WorkerData {
   _id: string;
@@ -81,10 +82,11 @@ export default function WorkerPage() {
           }
           await setTimeout(() => fetchWorkersAndAssets(), 0);
           setSelectedWorker(null);
-          alert(`Berhasil menyewa ${selectedWorker.workerName}!`);
+          toast.show({ message: `Berhasil menyewa ${selectedWorker.workerName}!`, type: 'success' });
       } catch (err: unknown) {
           console.error(err);
-          alert((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menyewa pekerja.');
+          const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Gagal menyewa pekerja.';
+          toast.show({ message: errorMsg, type: 'error' });
       } finally {
           setHireLoading(false);
       }
