@@ -15,6 +15,7 @@ import { CultivationData } from '@/lib/schemas';
 import { LAW_RANK_NAMES_EN, LAW_RANK_STANDARD_NAMES, resolveLawRealmDisplay } from '@/lib/realmUtils';
 import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
 import MaxLevelCapBanner from './MaxLevelCapBanner';
+import LawInventoryPicker from './LawInventoryPicker';
 import {
   Flame,
   Shield,
@@ -385,6 +386,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const [fuseSlotA, setFuseSlotA] = useState<number>(0);
   const [fuseSlotB, setFuseSlotB] = useState<number>(1);
   const [isPillModalOpen, setIsPillModalOpen] = useState(false);
+  const [isEssenceAbsorbPickerOpen, setIsEssenceAbsorbPickerOpen] = useState(false);
   const [isElementAbsorbModalOpen, setIsElementAbsorbModalOpen] = useState(false);
   const [isArtifactPickerOpen, setIsArtifactPickerOpen] = useState(false);
   const [isBeastFoodPickerOpen, setIsBeastFoodPickerOpen] = useState(false);
@@ -495,7 +497,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       toast.show({ message: res.message || 'Berhasil menembus stage baru!', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
       queryClient.invalidateQueries({ queryKey: ['lawSkills'] });
+      queryClient.invalidateQueries({ queryKey: ['law-eligible'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['player'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melakukan terobosan stage.', type: 'error' });
@@ -520,7 +526,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       }
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
       queryClient.invalidateQueries({ queryKey: ['lawSkills'] });
+      queryClient.invalidateQueries({ queryKey: ['law-eligible'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['player'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melakukan terobosan rank.', type: 'error' });
@@ -535,6 +545,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     onSuccess: (res) => {
       toast.show({ message: res.message || 'Pil penerobosan berhasil dipasang!', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['law-eligible'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['player'] });
       setIsPillModalOpen(false);
     },
     onError: (err: any) => {
@@ -550,6 +565,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     onSuccess: (res) => {
       toast.show({ message: res.message || 'Pil penerobosan berhasil dilepas.', type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['law-eligible'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
+      queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['player'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Gagal melepas pil penerobosan.', type: 'error' });
@@ -704,12 +724,19 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
     },
     onSuccess: (res) => {
       let msg = res.message || 'Aktivitas berhasil!';
+      if (res.data?.consumedName && !msg.includes(res.data.consumedName)) {
+        msg = `✨ Mengonsumsi ${res.data.consumedName}. ` + msg;
+      }
       if (res.data?.efficiency !== undefined && res.data.efficiency < 1.0 && !msg.includes('Efisiensi')) {
         msg += ` (Efisiensi: ${Math.round(res.data.efficiency * 100)}%)`;
       }
       toast.show({ message: msg, type: 'success' });
       queryClient.invalidateQueries({ queryKey: ['lawStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['law-eligible'] });
+      queryClient.invalidateQueries({ queryKey: ['inventory'] });
+      queryClient.invalidateQueries({ queryKey: ['player-profile-private'] });
       queryClient.invalidateQueries({ queryKey: ['playerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['player'] });
     },
     onError: (err: any) => {
       toast.show({ message: err.response?.data?.error || 'Aktivitas gagal.', type: 'error' });
@@ -2189,11 +2216,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               <div className="flex items-center gap-2">
                 <Button
                   size="sm"
-                  onClick={() => lawActionMutation.mutate({ endpoint: 'essence/feed', payload: { feedType: 'item' } })}
+                  onClick={() => setIsEssenceAbsorbPickerOpen(true)}
                   disabled={lawActionMutation.isPending}
                   className="bg-cyan-600 hover:bg-cyan-500 text-stone-950 font-bold text-xs py-1.5 h-auto"
                 >
-                  ⚡ Serap Esensi dari Tas
+                  ⚡ Serap Esensi dari Tas (Pilih Item)
                 </Button>
                 <Button
                   variant="outline"
@@ -2714,11 +2741,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => lawActionMutation.mutate({ endpoint: 'artifact/infuse' })}
+                    onClick={() => setIsArtifactPickerOpen(true)}
                     disabled={lawActionMutation.isPending}
                     className="w-full border-stone-700 text-stone-300 hover:bg-stone-800 text-xs py-1.5 h-auto"
                   >
-                    🗡️ Salurkan Qi Dantian (+20 Intisari, +45 Qi)
+                    🗡️ Salurkan Qi Dantian (Pilih Bahan Asah)
                   </Button>
                 </div>
               </Card>
@@ -2808,11 +2835,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => lawActionMutation.mutate({ endpoint: 'beast/feed' })}
+                    onClick={() => setIsBeastFoodPickerOpen(true)}
                     disabled={lawActionMutation.isPending}
                     className="w-full border-stone-700 text-stone-300 hover:bg-stone-800 text-xs py-1.5 h-auto"
                   >
-                    🐾 Pakan Darurat Dantian (+25 Intisari, +40 Qi)
+                    🐾 Pakan Darurat Dantian (Pilih Pakan)
                   </Button>
                 </div>
               </Card>
@@ -2859,11 +2886,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/turbid-absorb' })}
+                        onClick={() => setIsTurbidCorePickerOpen(true)}
                         disabled={lawActionMutation.isPending}
                         className="w-full border-red-800/80 text-red-300 hover:bg-red-950/40 text-xs py-1.5 h-auto"
                       >
-                        🔥 Lahap Inti Cepat (+80 Qi, +3 Korupsi)
+                        🔥 Lahap Inti Cepat (Pilih Core)
                       </Button>
                     </div>
                   </div>
@@ -2897,11 +2924,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/blood-harvest' })}
+                          onClick={() => setIsBloodVialPickerOpen(true)}
                           disabled={lawActionMutation.isPending}
                           className="border-rose-800/80 text-rose-300 hover:bg-rose-950/40 text-xs py-1.5 h-auto"
                         >
-                          🩸 Panen Cepat (+65 Qi)
+                          🩸 Panen Cepat (Pilih Botol)
                         </Button>
                         <Button
                           size="sm"
@@ -2934,11 +2961,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/venom-ingest' })}
+                        onClick={() => setIsVenomPickerOpen(true)}
                         disabled={lawActionMutation.isPending}
                         className="w-full border-emerald-800/80 text-emerald-300 hover:bg-emerald-950/40 text-xs py-1.5 h-auto"
                       >
-                        🧪 Minum Cepat (+1 Toleransi Racun, +75 Qi)
+                        🧪 Minum Cepat (Pilih Racun)
                       </Button>
                     </div>
                   </div>
@@ -3020,11 +3047,11 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => lawActionMutation.mutate({ endpoint: 'demonic/nether-channel' })}
+                        onClick={() => setIsNetherYinPickerOpen(true)}
                         disabled={lawActionMutation.isPending}
                         className="w-full border-indigo-800/80 text-indigo-300 hover:bg-indigo-950/40 text-xs py-1.5 h-auto"
                       >
-                        🌑 Salurkan Hawa Dingin Kubur (+70 Qi)
+                        🌑 Salurkan Hawa Dingin Kubur (Pilih Batu)
                       </Button>
                     </div>
                   </div>
@@ -3418,1130 +3445,215 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
             newLevelCap={tribulationNewLevelCap}
           />
 
-          {/* Modal Pilih Pil Penerobosan */}
-          <Modal
-            isOpen={isPillModalOpen}
-            onClose={() => setIsPillModalOpen(false)}
-            title="Pilih Pil Pendukung Penerobosan (+20% Sukses & Anti-Deviasi)"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
-                Memasang pil penerobosan memberikan <strong>+20% bonus peluang keberhasilan</strong> dan <strong>mencegah dantian kehilangan Qi</strong> jika penerobosan mengalami kegagalan. Pil hanya akan dikonsumsi saat kamu menekan tombol eksekusi terobosan.
-              </div>
+          {/* Universal Law Inventory Pickers */}
+          {/* 1. Essence Absorb Picker */}
+          <LawInventoryPicker
+            isOpen={isEssenceAbsorbPickerOpen}
+            onClose={() => setIsEssenceAbsorbPickerOpen(false)}
+            purpose="essence_absorb"
+            lawType={lawData?.activeLawType}
+            title="Pilih Bahan Esensi Spiritual untuk Diserap"
+            description="Menyerap bahan esensi mengisi reservoir esensi dantian dan memberikan Qi kultivasi secara langsung. Item di atas ranah akan ditolak dantian."
+            actionLabel="Serap"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'essence/absorb',
+                payload: { itemId: item.itemId }
+              });
+              setIsEssenceAbsorbPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const pills = inventoryItems.filter(item => 
-                  item.category === 'pill' || 
-                  (item.tags && item.tags.includes('breakthrough_pill')) || 
-                  (item.name && item.name.toLowerCase().includes('pil'))
-                );
-
-                if (pills.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">💊</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Pil di Tas Inventori</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kamu dapat meracik Pil Penguat Qi / Pil Terobosan melalui profesi Alkimia, atau membelinya di Paviliun Harta Kota.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {pills.map((pill: any) => (
-                      <div
-                        key={pill.id || pill._id}
-                        className="p-3 rounded-lg border border-stone-800 bg-stone-900/60 hover:border-amber-500/50 transition-all flex items-center justify-between gap-3"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
-                            {pill.emoji || '💊'}
-                          </span>
-                          <div>
-                            <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
-                              <span>{pill.name}</span>
-                              <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                x{pill.quantity || 1}
-                              </span>
-                            </div>
-                            <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                              {pill.description || 'Pil spiritual penopang terobosan kultivasi.'}
-                            </p>
-                            <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                              +20% Peluang Sukses • Proteksi Anti-Deviasi
-                            </span>
-                          </div>
-                        </div>
-
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            lawActionMutation.mutate({
-                              endpoint: 'breakthrough/set-pill',
-                              payload: { itemId: pill.id || pill._id }
-                            });
-                            setIsPillModalOpen(false);
-                          }}
-                          disabled={lawActionMutation.isPending}
-                          className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs py-1 px-3 h-auto whitespace-nowrap"
-                        >
-                          Pasang
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 1: Serap Item Elemen dari Tas */}
-          <Modal
+          {/* 2. Elemental Essence Absorb Picker */}
+          <LawInventoryPicker
             isOpen={isElementAbsorbModalOpen}
             onClose={() => setIsElementAbsorbModalOpen(false)}
+            purpose="element_absorb"
+            lawType={lawData?.activeLawType}
             title="Serap Intisari Item Elemen ke Wadah Batin"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-blue-950/20 border border-blue-600/30 text-xs text-stone-300 leading-relaxed">
-                Menyerap item esensi yang selaras mengisi <strong>Wadah Esensi Elemen</strong>, menganugerahkan <strong>Spiritual Root XP</strong>, dan memberikan <strong>Qi Kultivasi Dantian</strong> secara langsung. Item ber-Tier di atas ranahmu akan ditolak dantian.
-              </div>
+            description="Menyerap item esensi yang selaras mengisi Wadah Esensi Elemen, menganugerahkan Spiritual Root XP, dan memberikan Qi Kultivasi Dantian secara langsung."
+            actionLabel="Serap"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'element/absorb',
+                payload: { itemId: item.itemId }
+              });
+              setIsElementAbsorbModalOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const resMeta = (lawData.activeLawType ? ELEMENT_RESERVOIR_NAMES[lawData.activeLawType] : null) || { tags: [] as string[] };
-                const playerTier = (lawData.rank || 0) + 1;
-
-                const matchingItems = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const desc = (item.description || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags.map((t: string) => t.toLowerCase()) : [];
-                  const elem = (item.element || '').toLowerCase();
-                  return (resMeta.tags || []).some((tag: string) => tags.includes(tag) || name.includes(tag) || desc.includes(tag))
-                    || elem.includes(resMeta.tags?.[0] || '')
-                    || item.category?.startsWith('element_')
-                    || item.category === 'herb'
-                    || item.category === 'material';
-                });
-
-                if (matchingItems.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🌌</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Item Elemen Selaras di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kamu dapat memanen herba elemental dari grid peta, menambang mineral spiritual, atau membelinya di pasar kota.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {matchingItems.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-blue-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-blue-950/30 border border-blue-500/30">
-                              {item.emoji || '💎'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-blue-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Intisari spiritual berelemen selaras.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% (+Root XP &amp; Qi)
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'element/absorb',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsElementAbsorbModalOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-blue-600 hover:bg-blue-500 text-stone-950'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Serap'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 2: Asah Pusaka Jiwa dari Tas (Mineral & Batu Asah) */}
-          <Modal
+          {/* 3. Artifact Infuse Picker */}
+          <LawInventoryPicker
             isOpen={isArtifactPickerOpen}
             onClose={() => setIsArtifactPickerOpen(false)}
+            purpose="artifact_infuse"
+            lawType={lawData?.activeLawType}
             title="Pilih Mineral & Batu Asah untuk Pusaka Jiwa"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
-                Melebur mineral, batu asah, dan bijih besi untuk memperkuat intisari pusaka jiwa kelahiranmu. Pusaka akan berevolusi dan meningkatkan bonus stat ATK &amp; DEF permanen!
-              </div>
+            description="Melebur mineral, batu asah, dan bijih besi untuk memperkuat intisari pusaka jiwa kelahiranmu. Pusaka akan berevolusi dan meningkatkan bonus stat ATK & DEF permanen!"
+            actionLabel="Asah"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'artifact/infuse',
+                payload: { itemId: item.itemId }
+              });
+              setIsArtifactPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const ores = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  return name.includes('asah') || name.includes('besi') || name.includes('batu') || name.includes('mineral') || name.includes('bijih') || item.category === 'material' || item.category === 'mineral';
-                });
-
-                if (ores.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">⛏️</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Mineral di Tas Inventori</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kamu dapat menambang bijih besi di tebing batu dan gua labirin, atau membelinya di Pandai Besi kota.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {ores.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-amber-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
-                              {item.emoji || '🪨'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Bahan mineral untuk mengasah pusaka jiwa.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +Intisari Pusaka &amp; Qi
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'artifact/infuse',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsArtifactPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-amber-600 hover:bg-amber-500 text-stone-950'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Asah'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 3: Beri Pakan Daging Satwa Roh dari Tas */}
-          <Modal
+          {/* 4. Beast Feed Picker */}
+          <LawInventoryPicker
             isOpen={isBeastFoodPickerOpen}
             onClose={() => setIsBeastFoodPickerOpen(false)}
+            purpose="beast_feed"
+            lawType={lawData?.activeLawType}
             title="Pilih Daging & Pakan Satwa Roh dari Tas"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-orange-950/20 border border-orange-600/30 text-xs text-stone-300 leading-relaxed">
-                Memberikan daging siluman, ikan roh, atau ransum bergizi memulihkan HP satwa secara penuh, menambah intisari evolusi, dan menghasilkan Qi simbiotik.
-              </div>
+            description="Memberikan daging siluman, ikan roh, atau ransum bergizi memulihkan HP satwa secara penuh, menambah intisari evolusi, dan menghasilkan Qi simbiotik."
+            actionLabel="Pakan"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'beast/feed',
+                payload: { itemId: item.itemId }
+              });
+              setIsBeastFoodPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const meats = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  return name.includes('daging') || name.includes('ikan') || name.includes('jantung') || item.category === 'food' || item.category === 'meat' || item.category === 'herb';
-                });
-
-                if (meats.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🍖</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Pakan Daging di Tas Inventori</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kamu dapat berburu monster di peta liar, memancing di danau/dermaga, atau membeli daging di kedai kota.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {meats.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-orange-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-orange-950/30 border border-orange-500/30">
-                              {item.emoji || '🍖'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-orange-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Pakan segar penutrisi satwa roh.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • Pulihkan HP Satwa Penuh &amp; Qi
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'beast/feed',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsBeastFoodPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-orange-600 hover:bg-orange-500 text-stone-950'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Pakan'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 4: Lahap Inti Siluman Kotor dari Tas */}
-          <Modal
+          {/* 5. Turbid Core Picker */}
+          <LawInventoryPicker
             isOpen={isTurbidCorePickerOpen}
             onClose={() => setIsTurbidCorePickerOpen(false)}
+            purpose="turbid_absorb"
+            lawType={lawData?.activeLawType}
             title="Pilih Inti Siluman Kotor untuk Dilahap"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-red-950/20 border border-red-600/30 text-xs text-stone-300 leading-relaxed">
-                Melahap inti monster siluman secara instan menyuntikkan Qi kultivasi yang masif ke dalam dantian iblis, namun meningkatkan <strong>Indeks Korupsi Batin</strong> (+3%).
-              </div>
+            description="Melahap inti monster siluman secara instan menyuntikkan Qi kultivasi yang masif ke dalam dantian iblis, namun meningkatkan Indeks Korupsi Batin (+3%)."
+            actionLabel="Lahap"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'demonic/turbid-absorb',
+                payload: { itemId: item.itemId }
+              });
+              setIsTurbidCorePickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const cores = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return name.includes('inti') || name.includes('core') || item.category === 'core' || tags.includes('beast_core');
-                });
-
-                if (cores.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">👹</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Inti Siluman di Tas Inventori</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kalahkan monster buas dan siluman di peta dunia atau labirin gua kuno untuk memanen intinya.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {cores.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-red-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-red-950/30 border border-red-500/30">
-                              {item.emoji || '🔮'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-red-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Inti monster padat dengan aura siluman liar.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +80 Qi • +3 Poin Korupsi
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'demonic/turbid-absorb',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsTurbidCorePickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-red-700 hover:bg-red-600 text-white'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Lahap'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 5: Pakan Cacing Gu dari Tas */}
-          <Modal
+          {/* 6. Gu Feed Picker */}
+          <LawInventoryPicker
             isOpen={isGuFeedPickerOpen}
             onClose={() => setIsGuFeedPickerOpen(false)}
+            purpose="gu_feed"
+            lawType={lawData?.activeLawType}
             title="Pilih Pakan untuk Cacing Gu"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-emerald-950/20 border border-emerald-600/30 text-xs text-stone-300 leading-relaxed">
-                Pilih intisari serangga, madu ratu roh, atau daging monster untuk memulihkan kekenyangan cacing Gu di rongga aperture.
-              </div>
-
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const feeds = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return tags.includes('gu_feed') || tags.includes('gu_essence') || name.includes('serangga') || name.includes('madu') || name.includes('daging');
-                });
-
-                if (feeds.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🐛</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Pakan Gu di Tas Inventori</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kumpulkan serangga tanah, madu ratu, atau daging monster di alam liar. Atau gunakan opsi Tetes Darah Sendiri.
-                      </p>
-                    </div>
-                  );
+            description="Pilih intisari serangga, larva, madu ratu roh, atau daging monster untuk memulihkan kekenyangan cacing Gu di rongga aperture."
+            actionLabel="Beri Makan"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'gu/feed',
+                payload: {
+                  slotIndex: selectedGuSlotForFeed,
+                  feedType: 'item',
+                  itemId: item.itemId
                 }
+              });
+              setIsGuFeedPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-                return (
-                  <div className="space-y-2">
-                    {feeds.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-emerald-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-emerald-950/30 border border-emerald-500/30">
-                              {item.emoji || '🐛'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-emerald-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Pakan berenergi tinggi kesukaan cacing Gu purba.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +60% Kekenyangan • +50 Qi
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'gu/feed',
-                                payload: {
-                                  slotIndex: selectedGuSlotForFeed,
-                                  feedType: 'item',
-                                  itemId: item.id || item._id
-                                }
-                              });
-                              setIsGuFeedPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-emerald-600 hover:bg-emerald-500 text-stone-950'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Beri Makan'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 6: Panen Botol Darah dari Tas */}
-          <Modal
+          {/* 7. Blood Harvest Picker */}
+          <LawInventoryPicker
             isOpen={isBloodVialPickerOpen}
             onClose={() => setIsBloodVialPickerOpen(false)}
+            purpose="blood_absorb"
+            lawType={lawData?.activeLawType}
             title="Pilih Botol Esensi Darah untuk Dipanen"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-rose-950/20 border border-rose-600/30 text-xs text-stone-300 leading-relaxed">
-                Meminum botol esensi darah meningkatkan cadangan darah kultivator (+1 Botol Tersimpan, +Qi, +5 Status Buronan).
-              </div>
+            description="Meminum botol esensi darah meningkatkan cadangan darah kultivator (+1 Botol Tersimpan, +Qi, +5 Status Buronan)."
+            actionLabel="Panen"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'demonic/blood-harvest',
+                payload: { itemId: item.itemId }
+              });
+              setIsBloodVialPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const vials = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return tags.includes('blood_vial') || name.includes('darah') || name.includes('blood');
-                });
-
-                if (vials.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🩸</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Botol Darah di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kalahkan musuh manusia atau monster berdarah untuk mengumpulkan botol esensi darah.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {vials.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-rose-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-rose-950/30 border border-rose-500/30">
-                              {item.emoji || '🩸'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-rose-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Esensi darah kental berdenyut hangat.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +1 Botol • +90 Qi • +5 Infamy
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'demonic/blood-harvest',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsBloodVialPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-rose-800 hover:bg-rose-700 text-white'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Panen'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 7: Minum Racun Maut dari Tas */}
-          <Modal
+          {/* 8. Venom Ingest Picker */}
+          <LawInventoryPicker
             isOpen={isVenomPickerOpen}
             onClose={() => setIsVenomPickerOpen(false)}
+            purpose="venom_absorb"
+            lawType={lawData?.activeLawType}
             title="Pilih Racun Mematikan untuk Diminum"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-emerald-950/20 border border-emerald-600/30 text-xs text-stone-300 leading-relaxed">
-                Meminum racun memicu rasa sakit dan mengurangi HP (-25%), namun <strong>mentok di 1 HP</strong> (Proteksi Non-Kematian) serta meningkatkan Toleransi Racun (+1) dan Qi.
-              </div>
+            description="Meminum racun memicu rasa sakit dan mengurangi HP (-25%), namun mentok di 1 HP (Proteksi Non-Kematian) serta meningkatkan Toleransi Racun (+1) dan Qi."
+            actionLabel="Tenggak"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'demonic/venom-ingest',
+                payload: { itemId: item.itemId }
+              });
+              setIsVenomPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const poisons = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return tags.includes('venom') || tags.includes('poison') || tags.includes('venom_sac') || name.includes('racun') || name.includes('bisa') || name.includes('empedu') || name.includes('jamur');
-                });
-
-                if (poisons.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🧪</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Racun di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Racik ramuan beracun di meja Alkimia atau buru monster rawa berbisa.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {poisons.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-emerald-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-emerald-950/30 border border-emerald-500/30">
-                              {item.emoji || '🧪'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-emerald-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Cairan pekat dengan bisa korosif menyengat.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +1 Toleransi • +75 Qi • -25% HP
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'demonic/venom-ingest',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsVenomPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-emerald-700 hover:bg-emerald-600 text-white'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Tenggak'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 8: Kurban Persembahan Altar Abyss */}
-          <Modal
+          {/* 9. Abyssal Tribute Offering Picker */}
+          <LawInventoryPicker
             isOpen={isAbyssalOfferingPickerOpen}
             onClose={() => setIsAbyssalOfferingPickerOpen(false)}
+            purpose="tribute_absorb"
+            lawType={lawData?.activeLawType}
             title="Pilih Kurban Persembahan Altar Abyss"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-purple-950/20 border border-purple-600/30 text-xs text-stone-300 leading-relaxed">
-                Persembahkan botol darah, inti siluman, atau batu obsidian di atas Altar Abyss milikmu untuk memperpanjang masa perjanjian iblis dan memanen Qi.
-              </div>
+            description="Persembahkan botol darah, inti siluman, atau batu obsidian di atas Altar Abyss milikmu untuk memperpanjang masa perjanjian iblis dan memanen Qi."
+            actionLabel="Kurbankan"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'demonic/pact-tribute',
+                payload: { itemId: item.itemId }
+              });
+              setIsAbyssalOfferingPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const offerings = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return tags.includes('blood_vial') || tags.includes('beast_core') || tags.includes('abyssal') || name.includes('darah') || name.includes('daging') || name.includes('inti') || name.includes('obsidian');
-                });
-
-                if (offerings.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🏛️</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Item Persembahan di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Kumpulkan botol darah, daging segar, inti siluman, atau batu obsidian untuk dipersembahkan.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {offerings.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-purple-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-purple-950/30 border border-purple-500/30">
-                              {item.emoji || '🏛️'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-purple-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Bahan persembahan berhawa kematian tebal.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-purple-300 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • Perpanjang Kontrak Iblis • +90 Qi
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'demonic/pact-tribute',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsAbyssalOfferingPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-purple-800 hover:bg-purple-700 text-white'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Kurbankan'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 9: Serap Batu Yin Nether dari Tas */}
-          <Modal
+          {/* 10. Nether Yin Stone Picker */}
+          <LawInventoryPicker
             isOpen={isNetherYinPickerOpen}
             onClose={() => setIsNetherYinPickerOpen(false)}
+            purpose="nether_absorb"
+            lawType={lawData?.activeLawType}
             title="Pilih Batu Yin Netherworld untuk Diserap"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-indigo-950/20 border border-indigo-600/30 text-xs text-stone-300 leading-relaxed">
-                Menyerap energi dingin dari batu kuburan kuno dan kristal Netherworld memperkuat akumulasi Qi Gelap Sembilan Yin (+100 Qi).
-              </div>
+            description="Menyerap energi dingin dari batu kuburan kuno dan kristal Netherworld memperkuat akumulasi Qi Gelap Sembilan Yin (+100 Qi)."
+            actionLabel="Serap"
+            onSelect={(item) => {
+              lawActionMutation.mutate({
+                endpoint: 'demonic/nether-channel',
+                payload: { itemId: item.itemId }
+              });
+              setIsNetherYinPickerOpen(false);
+            }}
+            isPending={lawActionMutation.isPending}
+          />
 
-              {(() => {
-                const playerTier = (lawData.rank || 0) + 1;
-                const stones = inventoryItems.filter(item => {
-                  const name = (item.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : [];
-                  return tags.includes('yin_stone') || name.includes('yin') || name.includes('kubur') || name.includes('karang') || name.includes('nether');
-                });
-
-                if (stones.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">🌑</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Batu Yin di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Eksplorasi wilayah makam kuno atau jurang kematian untuk menambang batu berhawa Yin.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {stones.map((item: any) => {
-                      const itemTier = item.tier || 1;
-                      const isLocked = itemTier > playerTier;
-                      const isOptimal = itemTier === playerTier;
-                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
-
-                      return (
-                        <div
-                          key={item.id || item._id}
-                          className={`p-3 rounded-lg border transition-all flex items-center justify-between gap-3 ${
-                            isLocked
-                              ? 'border-stone-800 bg-stone-950/40 opacity-60'
-                              : 'border-stone-800 bg-stone-900/60 hover:border-indigo-500/50'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-indigo-950/30 border border-indigo-500/30">
-                              {item.emoji || '🌑'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-indigo-200 flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{item.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {item.description || 'Batu dingin menusuk tulang bertuah Nether.'}
-                              </p>
-                              {isLocked ? (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
-                                </span>
-                              ) : isOptimal ? (
-                                <span className="text-[9px] font-mono text-indigo-300 font-bold block mt-0.5">
-                                  ⭐ Efisiensi Optimal 100% • +100 Qi Yin Gelap
-                                </span>
-                              ) : (
-                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
-                                  ⚠️ Efisiensi ~{effPercent}% (Tier di bawah Ranah {playerTier})
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={isLocked || lawActionMutation.isPending}
-                            title={isLocked ? 'Di atas ranah' : undefined}
-                            onClick={() => {
-                              lawActionMutation.mutate({
-                                endpoint: 'demonic/nether-channel',
-                                payload: { itemId: item.id || item._id }
-                              });
-                              setIsNetherYinPickerOpen(false);
-                            }}
-                            className={`text-xs py-1 px-3 h-auto whitespace-nowrap font-bold ${
-                              isLocked
-                                ? 'bg-stone-800 text-stone-500 cursor-not-allowed'
-                                : 'bg-indigo-900 hover:bg-indigo-800 text-white'
-                            }`}
-                          >
-                            {isLocked ? 'Di atas Ranah' : 'Serap'}
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
-
-          {/* Modal 10: Pasang Pil Penerobosan dari Inventori */}
-          <Modal
+          {/* 11. Breakthrough Pill Picker */}
+          <LawInventoryPicker
             isOpen={isPillModalOpen}
             onClose={() => setIsPillModalOpen(false)}
-            title="Pilih Pil Penerobosan untuk Dipasang"
-          >
-            <div className="space-y-3 p-1 text-stone-200 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="p-2.5 rounded bg-amber-950/20 border border-amber-600/30 text-xs text-stone-300 leading-relaxed">
-                Memasang pil penerobosan memberikan <strong>+20% Peluang Keberhasilan</strong> serta <strong>Proteksi Deviasi Qi</strong> (mencegah kehilangan Xiuwei jika terobosan gagal). Pil akan terkonsumsi saat ritual penerobosan dijalankan.
-              </div>
-
-              {(() => {
-                const pills = inventoryItems.filter((item: any) => {
-                  const cat = (item.category || item.itemId?.category || '').toLowerCase();
-                  const name = (item.name || item.itemId?.name || '').toLowerCase();
-                  const tags = Array.isArray(item.tags) ? item.tags : (item.itemId?.tags || []);
-                  return cat === 'pill' || cat === 'alchemy' || tags.includes('breakthrough_pill') || tags.includes('pill') || name.includes('pil');
-                });
-
-                if (pills.length === 0) {
-                  return (
-                    <div className="p-6 text-center text-xs text-stone-400 space-y-2 border border-dashed border-stone-800 rounded-lg">
-                      <span className="text-3xl block">💊</span>
-                      <p className="font-semibold text-stone-300">Tidak ada Pil Penerobosan di Tas</p>
-                      <p className="text-[11px] text-stone-500">
-                        Racik pil di Balai Alkimia atau peroleh dari hadiah gelanggang/bos dunia.
-                      </p>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="space-y-2">
-                    {pills.map((invItem: any) => {
-                      const itemDoc = invItem.itemId || invItem;
-                      const itemTier = itemDoc.tier || 1;
-                      const itemId = itemDoc._id || itemDoc.id || invItem._id;
-
-                      return (
-                        <div
-                          key={itemId}
-                          className="p-3 rounded-lg border transition-all flex items-center justify-between gap-3 border-stone-800 bg-stone-900/60 hover:border-amber-500/50"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl p-2 rounded bg-amber-950/30 border border-amber-500/30">
-                              {itemDoc.icon || itemDoc.emoji || '💊'}
-                            </span>
-                            <div>
-                              <div className="font-serif font-bold text-xs text-amber-200 flex items-center gap-1.5">
-                                <span>{itemDoc.name}</span>
-                                <span className="font-mono text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-400">
-                                  Tier {itemTier} • x{invItem.quantity || 1}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">
-                                {itemDoc.description || 'Pil penyempurna dantian untuk menembus batas ranah.'}
-                              </p>
-                              <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                ✨ +20% Peluang Sukses • Anti-Deviasi Qi
-                              </span>
-                            </div>
-                          </div>
-
-                          <Button
-                            size="sm"
-                            disabled={setPillMutation.isPending}
-                            onClick={() => {
-                              setPillMutation.mutate(itemId.toString());
-                            }}
-                            className="text-xs py-1 px-3 h-auto whitespace-nowrap font-bold bg-amber-600 hover:bg-amber-500 text-stone-950"
-                          >
-                            Pasang
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-            </div>
-          </Modal>
+            purpose="bt_pill"
+            lawType={lawData?.activeLawType}
+            title="Pilih Pil Pendukung Penerobosan (+20% Sukses & Anti-Deviasi)"
+            description="Memasang pil penerobosan memberikan +20% bonus peluang keberhasilan dan mencegah dantian kehilangan Qi jika penerobosan mengalami kegagalan."
+            actionLabel="Pasang"
+            onSelect={(item) => {
+              setPillMutation.mutate(item.itemId);
+            }}
+            isPending={setPillMutation.isPending}
+          />
 
           {/* Modal 11: Ubah Nama Pusaka/Satwa Jiwa */}
           <Modal
