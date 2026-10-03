@@ -3,8 +3,8 @@ const { COMBO_HIT_MULTIPLIER, BASE_CRIT_RATE, BASE_COMBO_RATE } = require('../co
 const COMBAT_COND = require('../config/combatConditions');
 const { resolveWeaponDiscipline, getKungfuLevel, getStealingSuccessBonus } = require('./kungfuMastery');
 const { getLawCombatModifiers, applyLawDamageModifiers } = require('./lawCultivationEngine');
-const { applyPillarCombatModifiers } = require('./combatBody');
-const { onSkillHitLawExtras, onTurnStartLawExtras, getStatusBadges, applyStatus, ensureCombatState } = require('./combatStatus');
+const { applyPillarCombatModifiers, getInjuryStatPenalties } = require('./combatBody');
+const { onSkillHitLawExtras, onTurnStartLawExtras, getStatusBadges, applyStatus, ensureCombatState, tickStatuses, getDefenseDamageMultiplier } = require('./combatStatus');
 
 function cloneConditions(conds) {
     if (!conds || !Array.isArray(conds)) return [];
@@ -45,12 +45,20 @@ function simulateBattle(challenger, opponent, options = {}) {
     const p1MaxHp = p1Stats.maxHp;
     const p2MaxHp = p2Stats.maxHp;
 
-    let p1Conditions = cloneConditions(challenger.combatConditions || []);
-    let p2Conditions = cloneConditions(opponent.combatConditions || []);
+    challenger.hp = p1Hp;
     challenger.maxHp = p1MaxHp;
+    opponent.hp = p2Hp;
     opponent.maxHp = p2MaxHp;
+    if (challenger.combatConditions && typeof challenger.combatConditions === 'object' && !Array.isArray(challenger.combatConditions)) {
+        challenger.conditions = { ...challenger.combatConditions };
+    }
+    if (opponent.combatConditions && typeof opponent.combatConditions === 'object' && !Array.isArray(opponent.combatConditions)) {
+        opponent.conditions = { ...opponent.combatConditions };
+    }
     ensureCombatState(challenger);
     ensureCombatState(opponent);
+    let p1Conditions = challenger.conditions;
+    let p2Conditions = opponent.conditions;
 
     let p1Shield = 0;
     let p2Shield = 0;
@@ -144,70 +152,49 @@ function simulateBattle(challenger, opponent, options = {}) {
         if (idx !== -1) conds.splice(idx, 1);
     }
 
-    function applyConditionEffects(actorIdx, pStats, pHp, pMaxHp, pConditions) {
-        let hpLoss = 0;
-        let skipTurn = false;
-        let missMultiplier = 0;
+    function applyConditionEffects(actorIdx, pStats, pHp, pMaxHp, actor) {
         let pName = actorIdx === 1 ? challenger.characterName : opponent.characterName;
+        ensureCombatState(actor);
+        actor.hp = pHp;
+        actor.maxHp = pMaxHp;
+
+        const tickRes = tickStatuses(actor, { maxHp: pMaxHp, actionType: 'attack' });
+        let hpLoss = Math.abs(tickRes.hpDelta || 0);
+        let skipTurn = tickRes.skipTurn;
+
+        if (tickRes.logs && tickRes.logs.length > 0) {
+            tickRes.logs.forEach(msg => {
+                pushLog(msg, 'condition_tick', { damage: hpLoss, target: actorIdx });
+            });
+        }
+
+        if (actor.conditions.knockback > 0) {
+            skipTurn = true;
+            actor.conditions.knockback = 0;
+            pushLog(`💨 **${pName}** terdorong mundur dan kehilangan giliran!`, 'condition_tick', { type: 'knockback', target: actorIdx });
+        }
+
+        let missMultiplier = 0;
+        if (actor.conditions.intox > 0) {
+            missMultiplier += actor.conditions.intox * (COMBAT_COND.INTOX_MISS_RATE_PER_SEVERITY || 0.003);
+        }
 
         let atkMod = 1;
         let defMod = 1;
-
-        for (let i = pConditions.length - 1; i >= 0; i--) {
-            let cond = pConditions[i];
-
-            if (cond.type === 'poison') {
-                let dmg = Math.floor(pMaxHp * 0.05 * (cond.severity || 1));
-                hpLoss += dmg;
-                pushLog(`☠️ **${pName}** terkena sengatan racun sebesar **${dmg}** damage saat menyerang!`, 'condition_tick', { damage: dmg, type: 'poison', target: actorIdx });
-
-            } else if (cond.type === 'bleed') {
-                let dmg = Math.floor(pMaxHp * (COMBAT_COND.BLEED_DOT_BASE * cond.severity));
-                hpLoss += dmg;
-                cond.severity = Math.max(0, cond.severity - COMBAT_COND.BLEED_REDUCTION_PER_TURN);
-                pushLog(`🩸 **${pName}** terkena pendarahan sebesar **${dmg}** damage!`, 'condition_tick', { damage: dmg, type: 'bleed', target: actorIdx });
-                if (cond.severity <= 0) pConditions.splice(i, 1);
-
-            } else if (cond.type === 'burn') {
-                let dmg = Math.floor(pMaxHp * (COMBAT_COND.BURN_DOT_BASE + (cond.severity * COMBAT_COND.BURN_RAMP_PER_TURN)));
-                hpLoss += dmg;
-                cond.severity++;
-                pushLog(`🔥 **${pName}** terbakar sebesar **${dmg}** damage!`, 'condition_tick', { damage: dmg, type: 'burn', target: actorIdx });
-
-            } else if (cond.type === 'frozen') {
-                skipTurn = true;
-                cond.remainingTurns--;
-                pushLog(`❄️ **${pName}** membeku dan tidak bisa bergerak!`, 'condition_tick', { type: 'frozen', target: actorIdx });
-                if (cond.remainingTurns <= 0) pConditions.splice(i, 1);
-
-            } else if (cond.type === 'knockback') {
-                skipTurn = true;
-                pushLog(`💨 **${pName}** terdorong mundur dan kehilangan giliran!`, 'condition_tick', { type: 'knockback', target: actorIdx });
-                pConditions.splice(i, 1);
-
-            } else if (cond.type === 'intox') {
-                missMultiplier += cond.severity * COMBAT_COND.INTOX_MISS_RATE_PER_SEVERITY;
-                cond.severity -= COMBAT_COND.INTOX_REDUCTION_PER_TURN;
-                if (cond.severity <= 0) pConditions.splice(i, 1);
-            } else if (cond.type === 'injury') {
-                atkMod *= (1 - (cond.severity * COMBAT_COND.INJURY_ATK_DEF_REDUCTION_PERCENT));
-                defMod *= (1 - (cond.severity * COMBAT_COND.INJURY_ATK_DEF_REDUCTION_PERCENT));
-                // Reduksi maxMp by injury severity (hanya di context battle)
-                if (pStats.currentMp !== undefined) {
-                    let mpReduction = Math.floor(pStats.maxMp * (cond.severity * COMBAT_COND.INJURY_MAX_MP_REDUCTION_PERCENT));
-                    pStats.maxMpEffective = Math.max(0, pStats.maxMp - mpReduction);
-                    pStats.currentMp = Math.min(pStats.currentMp, pStats.maxMpEffective);
-                }
-
-                cond.severity = Math.max(0, cond.severity - COMBAT_COND.INJURY_REDUCTION_PER_TURN);
-                if (cond.severity <= 0) pConditions.splice(i, 1);
-            } else if (cond.type === 'psychosis') {
-                cond.remainingTurns--;
-                if (cond.remainingTurns <= 0) pConditions.splice(i, 1);
+        if (actor.conditions.injury > 0) {
+            const injuryPen = getInjuryStatPenalties(actor.conditions);
+            if (injuryPen && injuryPen.atkDefMult) {
+                atkMod *= injuryPen.atkDefMult;
+                defMod *= injuryPen.atkDefMult;
+            }
+            if (pStats.currentMp !== undefined) {
+                let mpReduction = Math.floor(pStats.maxMp * (actor.conditions.injury * (COMBAT_COND.INJURY_MAX_MP_REDUCTION_PERCENT || 0.02)));
+                pStats.maxMpEffective = Math.max(0, pStats.maxMp - mpReduction);
+                pStats.currentMp = Math.min(pStats.currentMp, pStats.maxMpEffective);
             }
         }
 
-        return { hpLoss, skipTurn, missMultiplier, atkMod, defMod };
+        return { hpLoss, skipTurn, missMultiplier, atkMod, defMod, isDead: tickRes.isDead || actor.hp <= 0 };
     }
 
     while (p1Hp > 0 && p2Hp > 0 && round <= 20) {
@@ -261,10 +248,10 @@ function simulateBattle(challenger, opponent, options = {}) {
             p1ConsecutiveTurns = 0;
         }
 
-        let { hpLoss, skipTurn, missMultiplier, atkMod, defMod } = applyConditionEffects(currentAttacker, atkStats, currentAttacker === 1 ? p1Hp : p2Hp, atkMaxHp, atkConds);
+        let { hpLoss, skipTurn, missMultiplier, atkMod, defMod, isDead } = applyConditionEffects(currentAttacker, atkStats, currentAttacker === 1 ? p1Hp : p2Hp, atkMaxHp, attacker);
 
-        if (currentAttacker === 1) p1Hp -= hpLoss; else p2Hp -= hpLoss;
-        if (p1Hp <= 0 || p2Hp <= 0) break;
+        if (currentAttacker === 1) p1Hp = Math.max(0, attacker.hp); else p2Hp = Math.max(0, attacker.hp);
+        if (p1Hp <= 0 || p2Hp <= 0 || isDead) break;
 
         if (skipTurn) {
             round++;
@@ -273,8 +260,11 @@ function simulateBattle(challenger, opponent, options = {}) {
 
         let isCleansed = false;
         let cleanseSkill = atkSkills.find(s => s.type === 'cleanse');
-        if (cleanseSkill && Math.random() < cleanseSkill.triggerChance && atkConds.length > 0) {
-            ['poison', 'bleed', 'burn', 'intox'].forEach(t => removeCondition(atkConds, t));
+        if (cleanseSkill && Math.random() < cleanseSkill.triggerChance) {
+            attacker.conditions.poison = 0;
+            attacker.conditions.bleed = 0;
+            attacker.conditions.burn = 0;
+            attacker.conditions.intox = 0;
             isCleansed = true;
             pushLog(`✨ **${attacker.characterName}** memicu jurus **[${cleanseSkill.name}]**, membersihkan debuff!`, 'cleanse', { skill: cleanseSkill.name, target: currentAttacker });
         }
@@ -334,15 +324,13 @@ function simulateBattle(challenger, opponent, options = {}) {
         if (activeSkill && activeSkill.rootType) {
             const root = activeSkill.rootType.toLowerCase();
             if (root === 'air' || root === 'water') {
-                const bIdx = atkConds.findIndex(c => c.type === 'burn');
-                if (bIdx !== -1) {
-                    atkConds.splice(bIdx, 1);
+                if (attacker.conditions.burn > 0) {
+                    attacker.conditions.burn = 0;
                     pushLog(`💧 [Resonansi Air] Jurus **${activeSkill.name}** memadamkan kobaran api luka bakar pada tubuh ${attacker.characterName}!`, 'elemental_cleanse');
                 }
             } else if (root === 'api' || root === 'fire') {
-                const fIdx = atkConds.findIndex(c => c.type === 'frozen');
-                if (fIdx !== -1) {
-                    atkConds.splice(fIdx, 1);
+                if (attacker.conditions.frozen > 0) {
+                    attacker.conditions.frozen = 0;
                     pushLog(`🔥 [Resonansi Api] Hawa Yang jurus **${activeSkill.name}** mencairkan pembekuan es pada tubuh ${attacker.characterName}!`, 'elemental_cleanse');
                 }
             }
@@ -360,6 +348,10 @@ function simulateBattle(challenger, opponent, options = {}) {
 
         let effectiveDef = Math.max(0, (defStats.def * (hitSelf ? atkMod : 1)) - (atkStats.spd * 0.2));
         let dmg = Math.floor((atkStats.atk * atkMod) - (effectiveDef * 0.5));
+        const defMult = getDefenseDamageMultiplier(hitSelf ? attacker : defender);
+        if (defMult < 1.0) {
+            dmg = Math.max(1, Math.floor(dmg * defMult));
+        }
 
         let isCrit = false;
         let critChance = atkStats.critHitRate || BASE_CRIT_RATE;
@@ -377,8 +369,8 @@ function simulateBattle(challenger, opponent, options = {}) {
 
         if (activeSkill && activeSkill.type === 'damage') {
              let multiplier = activeSkill.value;
-             let intoxCond = atkConds.find(c => c.type === 'intox');
-             if (intoxCond && attacker.manuals?.find(m=>m.manualId?.name === activeSkill.name)?.manualId?.requiredSkillType === 'wineArt') {
+             let hasIntox = (attacker.conditions.intox || 0) > 0;
+             if (hasIntox && attacker.manuals?.find(m=>m.manualId?.name === activeSkill.name)?.manualId?.requiredSkillType === 'wineArt') {
                  multiplier *= COMBAT_COND.INTOX_WINE_ART_MULTIPLIER;
              }
              dmg = Math.floor(dmg * multiplier);
@@ -493,12 +485,13 @@ function simulateBattle(challenger, opponent, options = {}) {
                   pushLog(`🩸 **${attacker.characterName}** menyerap **${heal}** HP!`, 'heal', { target: currentAttacker, amount: heal });
              } else if (activeSkill.type === 'poison') {
                   applyStatus(defender, 'poison', { stacks: 20 });
-                  addCondition(defConds, 'poison', 1);
                   pushLog(`☠️ **${defender.characterName}** terkena racun!`, 'poison_apply', { target: currentAttacker === 1 ? 2 : 1 });
              } else if (activeSkill.type === 'stun') {
                   applyStatus(defender, 'stun', { duration: 1 });
-                  addCondition(defConds, 'frozen', 1, 1);
                   pushLog(`💫 **${defender.characterName}** terkena efek Stun!`, 'stun_apply', { target: currentAttacker === 1 ? 2 : 1 });
+             } else if (activeSkill.type === 'burn') {
+                  applyStatus(defender, 'burn', { stacks: 25 });
+                  pushLog(`🔥 **${defender.characterName}** terbakar!`, 'burn_apply', { target: currentAttacker === 1 ? 2 : 1 });
              }
         }
 
@@ -571,10 +564,10 @@ function simulateBattle(challenger, opponent, options = {}) {
         p2MaxHp,
         p1Stats,
         p2Stats,
-        p1Conditions,
-        p2Conditions,
-        p1StatusBadges: getStatusBadges({ conditions: p1Conditions }),
-        p2StatusBadges: getStatusBadges({ conditions: p2Conditions }),
+        p1Conditions: challenger.conditions,
+        p2Conditions: opponent.conditions,
+        p1StatusBadges: getStatusBadges(challenger),
+        p2StatusBadges: getStatusBadges(opponent),
         stealSuccess,
         stealAttempted,
         kungfuGains
