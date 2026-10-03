@@ -62,7 +62,10 @@ const {
   isPlayerWieldingSword,
   isOnOwnFormationHub,
   applyLawSkillTreeEffects,
-  getActiveCombatSignatures
+  getActiveCombatSignatures,
+  findInventoryIndex,
+  consumeInventoryItem,
+  listEligibleInventory
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -226,6 +229,41 @@ router.get('/binding/inventory', authenticateToken, async (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
+// GET /law/inventory/eligible — Daftar item tas yang memenuhi syarat untuk aktivitas Law
+// ═══════════════════════════════════════════════════════════════
+router.get('/inventory/eligible', authenticateToken, async (req, res) => {
+  try {
+    const player = await resolvePlayer(req);
+    await player.populate({ path: 'inventory.itemId' });
+
+    const law = player.cultivationLaw || {};
+    const purpose = String(req.query.purpose || 'essence_absorb').toLowerCase();
+    const lawType = req.query.lawType || law.activeLawType || '';
+    const playerTier = (law.rank || 0) + 1;
+
+    const items = listEligibleInventory(player, {
+      purpose,
+      lawType,
+      playerTier
+    });
+
+    res.json({
+      success: true,
+      data: {
+        purpose,
+        lawType,
+        playerTier,
+        totalEligible: items.length,
+        items
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    console.error('[LAW-API] Error fetching eligible inventory:', error);
+    res.status(500).json({ error: 'Gagal memuat daftar item inventori yang memenuhi syarat.' });
+  }
+});
+
 // POST /law/bind — Pengikatan Fondasi Law Mortal (PERMANEN, Real Inventory)
 // ═══════════════════════════════════════════════════════════════
 const bindSchema = z.object({
@@ -1838,6 +1876,9 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     }
 
     // Mode Item Esensi
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib menyertakan itemId bahan yang ingin diserap.' });
+    }
     await player.populate({ path: 'inventory.itemId' });
     const invIndex = player.inventory.findIndex(inv => {
       if (!inv.itemId || inv.quantity < 1) return false;
@@ -2175,6 +2216,9 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     }
 
     // Mode Item Esensi dari Tas
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih item pakan cacing Gu dari tas inventori (itemId).' });
+    }
     await player.populate({ path: 'inventory.itemId' });
     const invIndex = player.inventory.findIndex(inv => {
       if (!inv.itemId || inv.quantity < 1) return false;
@@ -2738,7 +2782,10 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Belum ada pusaka jiwa yang terikat.' });
     }
 
-    const { itemId } = req.body;
+    const { itemId } = req.body || {};
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih item mineral/batu asah dari tas inventori (itemId)!' });
+    }
     await player.populate({ path: 'inventory.itemId' });
 
     let oreIndex = -1;
@@ -2839,7 +2886,10 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Belum ada satwa roh yang terikat.' });
     }
 
-    const { itemId } = req.body;
+    const { itemId } = req.body || {};
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih pakan satwa dari tas inventori (itemId)!' });
+    }
     await player.populate({ path: 'inventory.itemId' });
 
     let meatIndex = -1;
@@ -2985,7 +3035,10 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
       throw new CustomError(`Dantianmu telah jenuh menyerap inti siluman kotor hari ini (Maksimal ${LAW_BALANCE.DAILY_TURBID_ABSORB_MAX}/hari). Istirahatkan dantianmu hingga pukul 00:00 WIB.`, 429);
     }
 
-    const { itemId } = req.body;
+    const { itemId } = req.body || {};
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih inti siluman dari tas inventori (itemId)!' });
+    }
     await player.populate({ path: 'inventory.itemId' });
 
     let coreIndex = -1;
@@ -3282,6 +3335,9 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
     const { itemId } = req.body || {};
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih racun dari tas inventori (itemId)!' });
+    }
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
       const invIndex = player.inventory.findIndex(inv =>
@@ -3512,6 +3568,9 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
     const { itemId } = req.body || {};
+    if (!itemId) {
+      return res.status(400).json({ error: 'Wajib memilih batu Yin / esensi kegelapan dari tas inventori (itemId)!' });
+    }
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
       const invIndex = player.inventory.findIndex(inv =>
