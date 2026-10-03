@@ -4,6 +4,7 @@ const router = express.Router();
 const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Location = require('../../models/Location');
+const { deductCopper, silverToCopper, formatCopper, getTotalCopper } = require('../../utils/currencyNormalize');
 
 const FERRY_ROUTES = [
   {
@@ -71,17 +72,18 @@ router.post('/cross', authenticateToken, async (req, res) => {
     const player = await Player.findOne({ discordId: userId });
     if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-    const cost = mode === 'fast_ship' ? route.fastShipCostSilver : route.raftCostSilver;
-    const playerSilver = player.currencies?.silver || 0;
+    const costSilver = mode === 'fast_ship' ? route.fastShipCostSilver : route.raftCostSilver;
+    const needCopper = silverToCopper(costSilver);
+    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
 
-    if (playerSilver < cost) {
+    try {
+      deductCopper(player.currency, needCopper, 'Biaya Ferry');
+    } catch (err) {
       return res.status(400).json({
-        error: `Koin Perak tidak mencukupi! Dibutuhkan ${cost} Perak, kamu hanya memiliki ${playerSilver} Perak.`
+        error: `Koin tidak mencukupi! Dibutuhkan setara ${costSilver} Perak (${formatCopper(needCopper)}), kamu hanya memiliki ${formatCopper(getTotalCopper(player.currency))}.`
       });
     }
-
-    // Potong koin perak
-    player.currencies.silver -= cost;
+    player.markModified('currency');
 
     if (mode === 'fast_ship') {
       // Penyeberangan Kilat / Pedang Terbang: Tiba seketika
@@ -202,8 +204,9 @@ router.post('/fish-on-deck', authenticateToken, async (req, res) => {
     player.ferryVoyage.hasFished = true;
 
     // Hadiah ikan sungai
-    if (!player.currencies) player.currencies = {};
-    player.currencies.silver = (player.currencies.silver || 0) + 10;
+    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+    player.currency.silver = (player.currency.silver || 0) + 10;
+    player.markModified('currency');
 
     await player.save();
 

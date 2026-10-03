@@ -10,6 +10,7 @@ const { getPlayerSect } = require('../../utils/sectUtils');
 const { getRealmIndex } = require('../../utils/cultivation');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
 const { simulateExamCombat } = require('../../utils/sectExamCombat');
+const { deductCopper, silverToCopper, formatCopper, getTotalCopper } = require('../../utils/currencyNormalize');
 
 // GET /api/sect/:sectId/examInfo
 router.get('/:sectId/examInfo', authenticateToken, async (req, res) => {
@@ -134,13 +135,16 @@ router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
     }
 
     if (!usedTicket) {
-      const playerSilver = player.currencies?.silver || 0;
-      if (playerSilver < REGISTRATION_FEE_SILVER) {
+      const needCopper = silverToCopper(REGISTRATION_FEE_SILVER);
+      if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+      try {
+        deductCopper(player.currency, needCopper, 'Biaya Pendaftaran Ujian Sekte');
+      } catch (err) {
         return res.status(400).json({
-          message: `Biaya pendaftaran ujian sekte adalah ${REGISTRATION_FEE_SILVER} Perak atau memiliki 'Plakat Ujian Sekte'. Koin perakmu: ${playerSilver}.`
+          message: `Biaya pendaftaran ujian sekte adalah ${REGISTRATION_FEE_SILVER} Perak (${formatCopper(needCopper)}) atau memiliki 'Plakat Ujian Sekte'. Kekayaanmu: ${formatCopper(getTotalCopper(player.currency))}.`
         });
       }
-      player.currencies.silver -= REGISTRATION_FEE_SILVER;
+      player.markModified('currency');
     }
 
     const exam = sect.entranceTest;
