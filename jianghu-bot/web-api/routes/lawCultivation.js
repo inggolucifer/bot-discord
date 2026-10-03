@@ -72,7 +72,9 @@ const {
   getActiveCombatSignatures,
   findInventoryIndex,
   consumeInventoryItem,
-  listEligibleInventory
+  listEligibleInventory,
+  FACILITY_CONFIG,
+  getFacilityUpgradeQuote
 } = require('../../utils/lawCultivationEngine');
 
 // ═══════════════════════════════════════════════════════════════
@@ -1958,85 +1960,25 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
 
     await player.populate({ path: 'inventory.itemId' });
 
-    let facilityName = '';
-    let currentTier = 0;
-    let nextTier = 0;
-    let requiredMaterials = []; // [{ name, qty }]
-    let costSilver = 0;
-    let isAltarOnMap = false;
+    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
 
-    if (facilityType === 'body_cauldron') {
-      facilityName = 'Kuali Bak Mandi Raga';
-      currentTier = law.facilities.bodyCauldronTier || 0;
-      nextTier = currentTier + 1;
-      if (nextTier > 4) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 4).` });
-
-      if (nextTier === 1) {
-        requiredMaterials = [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
-        costSilver = 30;
-      } else if (nextTier === 2) {
-        requiredMaterials = [{ name: 'Herba Tulang Besi', qty: 5 }, { name: 'Bijih Besi Tempa', qty: 5 }];
-        costSilver = 100;
-      } else if (nextTier === 3) {
-        requiredMaterials = [{ name: 'Darah Siluman Berenergi', qty: 3 }];
-        costSilver = 250;
-      } else {
-        costSilver = 500;
-      }
-    } else if (facilityType === 'gu_crucible') {
-      facilityName = 'Kendi Penyuling Gu Purba';
-      currentTier = law.facilities.guCrucibleTier || 1;
-      nextTier = currentTier + 1;
-      if (nextTier > 4) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 4).` });
-
-      if (nextTier === 2) {
-        requiredMaterials = [{ name: 'Intisari Serangga Gu', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
-        costSilver = 80;
-      } else {
-        requiredMaterials = [{ name: 'Madu Ratu Kalajengking Roh', qty: 3 }];
-        costSilver = 250;
-      }
-    } else if (facilityType === 'abyssal_altar') {
-      // KHUSUS DEMONIC ABYSSAL PATH: MEMERLUKAN ALTAR DI LAHAN PETA DUNIA!
-      isAltarOnMap = true;
-      facilityName = 'Altar Kurban Darah Abyss';
-      currentTier = law.facilities.abyssalAltarTier || 0;
-      nextTier = currentTier + 1;
-      if (nextTier > 3) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 3).` });
-
-      if (nextTier === 1) {
-        requiredMaterials = [{ name: 'Batu Obsidian Hitam Abyss', qty: 3 }, { name: 'Botol Esensi Darah Segar', qty: 2 }];
-        costSilver = 50;
-      } else if (nextTier === 2) {
-        requiredMaterials = [{ name: 'Batu Obsidian Hitam Abyss', qty: 5 }, { name: 'Inti Siluman Kotor', qty: 3 }];
-        costSilver = 200;
-      } else {
-        costSilver = 500;
-      }
-    } else if (facilityType === 'formation_hub') {
-      // KHUSUS RIGHTEOUS FORMATION ARRAY PATH: MEMERLUKAN HUB FORMASI DI LAHAN PETA DUNIA!
-      if (law.activeLawType !== 'righteous_formation_array') {
-        return res.status(400).json({ error: 'Hanya praktisi Formasi Bendera yang dapat membangun Hub Formasi.' });
-      }
-      isAltarOnMap = true;
-      facilityName = 'Hub Formasi Bendera';
-      currentTier = law.facilities.formationHubTier || 0;
-      nextTier = currentTier + 1;
-      if (nextTier > 3) return res.status(400).json({ error: `${facilityName} sudah mencapai tingkat maksimal (Tier 3).` });
-
-      if (nextTier === 1) {
-        requiredMaterials = [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
-        costSilver = 40;
-      } else if (nextTier === 2) {
-        requiredMaterials = [{ name: 'Bijih Besi Tempa', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }];
-        costSilver = 150;
-      } else {
-        requiredMaterials = [{ name: 'Bijih Besi Tempa', qty: 10 }];
-        costSilver = 350;
-      }
-    } else {
+    const quote = getFacilityUpgradeQuote(law, facilityType, player.inventory, player.currency);
+    if (!quote) {
       return res.status(400).json({ error: 'Jenis fasilitas tidak valid.' });
     }
+
+    if (quote.isMaxTier) {
+      return res.status(400).json({ error: `${quote.facilityName} sudah mencapai tingkat maksimal (Tier ${quote.maxTier}).` });
+    }
+
+    if (facilityType === 'formation_hub' && law.activeLawType !== 'righteous_formation_array') {
+      return res.status(400).json({ error: 'Hanya praktisi Formasi Bendera yang dapat membangun Hub Formasi.' });
+    }
+
+    const facilityName = quote.facilityName;
+    const currentTier = quote.currentTier;
+    const nextTier = quote.nextTier;
+    const isAltarOnMap = quote.requiresMapTile;
 
     // Validasi Khusus Fasilitas Peta: Wajib Memiliki Kavling Lahan di Peta Dunia
     let targetPlot = null;
@@ -2053,31 +1995,30 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
     }
 
     // Validasi Mata Uang & Bahan
-    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
-    const needCopper = silverToCopper(costSilver);
-    const affordCheck = canAffordCopper(player.currency, needCopper);
-    if (!affordCheck.ok) {
+    if (!quote.canAfford) {
       return res.status(400).json({
-        error: `Saldo tidak cukup untuk upgrade ${facilityName}. Butuh ${formatCopper(needCopper)} (${costSilver} Silver), kamu memiliki ${formatCopper(affordCheck.totalCopper)}.`
+        error: `Saldo tidak cukup untuk upgrade ${facilityName}. Butuh ${quote.costFormatted} (${quote.costSilver} Silver), kamu memiliki ${formatCopper(getTotalCopper(player.currency))}.`
       });
     }
 
     // Validasi Bahan di Inventory
-    for (const reqMat of requiredMaterials) {
-      const inv = player.inventory.find(i => i.itemId?.name === reqMat.name && i.quantity >= reqMat.qty);
-      if (!inv) {
-        return res.status(400).json({ error: `Bahan tidak mencukupi: Butuh ${reqMat.qty}x ${reqMat.name}.` });
+    for (const reqMat of quote.materials) {
+      if (!reqMat.hasEnough) {
+        return res.status(400).json({ error: `Bahan tidak mencukupi: Butuh ${reqMat.requiredQty}x ${reqMat.name} (punya: ${reqMat.availableQty}).` });
       }
     }
 
     // Potong Mata Uang via Total Copper (mutasi aman & otomatis normalisasi)
-    deductCopper(player.currency, needCopper, `Upgrade ${facilityName}`);
+    deductCopper(player.currency, quote.costCopper, `Upgrade ${facilityName}`);
 
     // Potong Bahan
-    for (const reqMat of requiredMaterials) {
-      const invIndex = player.inventory.findIndex(i => i.itemId?.name === reqMat.name);
+    for (const reqMat of quote.materials) {
+      const invIndex = player.inventory.findIndex(i => {
+        const item = i.itemId || i;
+        return item?.name === reqMat.name;
+      });
       if (invIndex !== -1) {
-        player.inventory[invIndex].quantity -= reqMat.qty;
+        player.inventory[invIndex].quantity -= reqMat.requiredQty;
         if (player.inventory[invIndex].quantity <= 0) {
           player.inventory.splice(invIndex, 1);
         }
@@ -2145,9 +2086,9 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
         facilities: law.facilities,
         plot: targetPlot ? { zoneId: targetPlot.zoneId, tileX: targetPlot.tileX, tileY: targetPlot.tileY } : null,
         cost: {
-          silverListed: costSilver,
-          paidCopper: needCopper,
-          materials: requiredMaterials
+          silverListed: quote.costSilver,
+          paidCopper: quote.costCopper,
+          materials: quote.materials.map(m => ({ name: m.name, qty: m.requiredQty }))
         },
         currencyAfter: {
           copper: player.currency.copper,
