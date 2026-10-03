@@ -50,6 +50,7 @@ const {
   claimBodyTemperingPart,
   getMaxEssenceStorage,
   getTierAffinity,
+  assertAbsorbTier,
   resolveItemTier,
   getGuMaxSlots,
   BREAKTHROUGH_PILL_CATALOG,
@@ -853,12 +854,8 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       }
 
       // Validasi Tier Affinity
-      const itemTier = resolveItemTier(itemDoc);
-      const playerTier = (law.rank || 0) + 1;
-      const affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        throw new CustomError(`${affinity.reason} Reservoir dantianmu belum mampu menampung intisari Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`, 400);
-      }
+      const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, itemDoc);
+      const affinity = { allowed: true, efficiency };
 
       // Validasi Batas Harian Demonic Laws
       checkAndResetDailyCap(player);
@@ -1035,12 +1032,17 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       player.markModified('cultivationLaw');
       await player.save({ session });
 
+      const effPercent = Math.round(efficiency * 100);
+      const effNote = efficiency < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
       const instantMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
       responseData = {
         success: true,
-        message: `✨ Berhasil menyerap [${itemDoc.name}] ke dalam ${profile.barName}! (+${essenceGain} Esensi${instantMsg})`,
+        message: `✨ Berhasil menyerap [${itemDoc.name}] ke dalam ${profile.barName}! (+${essenceGain} Esensi${effNote}${instantMsg})`,
         data: {
           essenceGain,
+          itemTier,
+          playerTier,
+          efficiency,
           currentEssence: Math.floor(law.currentEssence),
           maxEssence: maxEss,
           barName: profile.barName,
@@ -1841,16 +1843,11 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
 
     const inv = player.inventory[invIndex];
     const item = inv.itemId;
-    const itemTier = resolveItemTier(item);
-    const playerTier = (law.rank || 0) + 1;
+    const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, item);
 
-    const affinity = getTierAffinity(playerTier, itemTier);
-    if (!affinity.allowed) {
-      return res.status(400).json({ error: affinity.reason || 'Item di atas ranahmu. Dantian menolak menyerap.' });
-    }
-
-    const baseEssence = 30 * Math.pow(2.2, Math.max(0, itemTier - 1));
-    const essenceGain = Math.max(15, Math.floor(baseEssence * affinity.efficiency));
+    const baseEssence = 30 * Math.pow(1.8, Math.max(0, itemTier - 1));
+    const rawGain = Math.floor(baseEssence * efficiency);
+    const essenceGain = Math.max(1, rawGain);
 
     inv.quantity -= 1;
     if (inv.quantity <= 0) {
@@ -1869,10 +1866,20 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(efficiency * 100);
+    const effNote = efficiency < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     res.json({
       success: true,
-      message: `✨ Berhasil menyerap ${item.name}! Bar Esensi terisi +${essenceGain} (${Math.floor(law.currentEssence)}/${maxEss})!`,
-      data: { currentEssence: law.currentEssence, maxEssence: maxEss, qi: law.qi }
+      message: `✨ Berhasil menyerap [${item.name}]! Bar Esensi terisi +${essenceGain}${effNote} (${Math.floor(law.currentEssence)}/${maxEss})!`,
+      data: {
+        essenceGain,
+        itemTier,
+        playerTier,
+        efficiency,
+        currentEssence: law.currentEssence,
+        maxEssence: maxEss,
+        qi: law.qi
+      }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2174,18 +2181,10 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
 
     const inv = player.inventory[invIndex];
     const itemDoc = inv.itemId;
-    const itemTier = resolveItemTier(itemDoc);
-    const playerTier = (law.rank || 0) + 1;
+    const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, itemDoc);
 
-    const affinity = getTierAffinity(playerTier, itemTier);
-    if (!affinity.allowed) {
-      return res.status(400).json({
-        error: `${affinity.reason} Rongga cacing Gu milikmu belum sanggup mencerna nutrisi Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
-      });
-    }
-
-    const satietyGain = Math.round(60 * affinity.efficiency);
-    const rawGain = Math.floor(LAW_PROGRESSION.FILL_GU_FEED_BASE * itemTier * affinity.efficiency);
+    const satietyGain = Math.round(60 * efficiency);
+    const rawGain = Math.floor(LAW_PROGRESSION.FILL_GU_FEED_BASE * itemTier * efficiency);
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
 
     const maxEss = getMaxEssence(law.rank || 0);
@@ -2194,7 +2193,7 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     law.maxEssence = maxEss;
 
     const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
-      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * affinity.efficiency))
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * efficiency))
       : 0;
 
     inv.quantity -= 1;
@@ -2213,11 +2212,21 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(efficiency * 100);
+    const effNote = efficiency < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${itemDoc.name}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${qiMsg})!`,
-      data: { guSlots: law.guSlots, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
+      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${itemDoc.name}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${effNote}${qiMsg})!`,
+      data: {
+        guSlots: law.guSlots,
+        currentEssence: Math.floor(law.currentEssence),
+        maxEssence: maxEss,
+        qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency
+      }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2749,15 +2758,9 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     if (oreIndex !== -1) {
       const itemSlot = player.inventory[oreIndex];
       itemUsedName = itemSlot.itemId.name || 'Mineral';
-      itemTier = resolveItemTier(itemSlot.itemId);
-      const playerTier = (law.rank || 0) + 1;
-
-      affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Pusaka jiwa belum mampu menyerap ${itemUsedName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
-        });
-      }
+      const absorbed = assertAbsorbTier(law, itemSlot.itemId);
+      itemTier = absorbed.itemTier;
+      affinity = { allowed: true, efficiency: absorbed.efficiency };
       essenceGain = Math.round(35 * itemTier * affinity.efficiency);
 
       itemSlot.quantity -= 1;
@@ -2793,11 +2796,21 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effNote = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${itemUsedName} (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir${qiMsg})!`,
-      data: { boundEntity: law.boundEntity, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
+      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${itemUsedName}! (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir${effNote}${qiMsg})`,
+      data: {
+        boundEntity: law.boundEntity,
+        currentEssence: Math.floor(law.currentEssence),
+        maxEssence: maxEss,
+        qi: law.qi,
+        itemTier,
+        playerTier: (law.rank || 0) + 1,
+        efficiency: eff
+      }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2841,21 +2854,17 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     let essenceGain = 25;
     let foodName = 'Ransum Biasa';
     let itemTier = 1;
-    let affinity = { allowed: true, efficiency: 1.0 };
+    let playerTier = (law.rank || 0) + 1;
+    let eff = 1.0;
 
     if (meatIndex !== -1) {
       const itemSlot = player.inventory[meatIndex];
       foodName = itemSlot.itemId.name || 'Daging Roh';
-      itemTier = resolveItemTier(itemSlot.itemId);
-      const playerTier = (law.rank || 0) + 1;
-
-      affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Satwa roh belum mampu mencerna pakan ${foodName} Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
-        });
-      }
-      essenceGain = Math.round(40 * itemTier * affinity.efficiency);
+      const tierCheck = assertAbsorbTier(law, itemSlot.itemId);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
+      essenceGain = Math.round(40 * itemTier * eff);
 
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(meatIndex, 1);
@@ -2866,7 +2875,6 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     law.boundEntity.beastCurrentHp = law.boundEntity.beastMaxHp || 120;
     law.boundEntity.lastFeedAt = new Date();
 
-    const eff = affinity.efficiency || 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE * itemTier * eff);
     const cultivatorEssenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -2894,11 +2902,21 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${foodName} dengan lahap (+${essenceGain} Intisari Satwa, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh${qiMsg})!`,
-      data: { boundEntity: law.boundEntity, currentEssence: Math.floor(law.currentEssence), maxEssence: maxEss, qi: law.qi }
+      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${foodName} dengan lahap (+${essenceGain} Intisari Satwa${effMsg}, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh${qiMsg})!`,
+      data: {
+        boundEntity: law.boundEntity,
+        currentEssence: Math.floor(law.currentEssence),
+        maxEssence: maxEss,
+        qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency: eff
+      }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
@@ -2981,32 +2999,28 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
 
     let coreName = 'Inti Siluman Kotor';
     let itemTier = 1;
-    let affinity = { allowed: true, efficiency: 1.0 };
+    let playerTier = (law.rank || 0) + 1;
+    let eff = 1.0;
     if (coreIndex !== -1) {
       const itemSlot = player.inventory[coreIndex];
       coreName = itemSlot.itemId.name || 'Inti Siluman';
-      itemTier = resolveItemTier(itemSlot.itemId);
-      const playerTier = (law.rank || 0) + 1;
-
-      affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Dantian iblis menolak inti siluman Tier ${itemTier} (Ranahmu setara Tier ${playerTier})!`
-        });
-      }
+      const tierCheck = assertAbsorbTier(law, itemSlot.itemId);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
       itemSlot.quantity -= 1;
       if (itemSlot.quantity <= 0) player.inventory.splice(coreIndex, 1);
       player.markModified('inventory');
     }
 
-    const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * affinity.efficiency);
+    const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
     law.currentEssence = Math.min(maxEss, (law.currentEssence !== undefined ? law.currentEssence : 80) + essenceGain);
     law.maxEssence = maxEss;
 
     const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
-      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * affinity.efficiency))
+      ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * eff))
       : 0;
     if (instantQi > 0) {
       law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
@@ -3020,15 +3034,20 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `👹 Berhasil melahap ${coreName} (+${essenceGain} Esensi Reservoir${qiMsg}, +3 Poin Korupsi Batin)!`,
+      message: `👹 Berhasil melahap ${coreName} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg}, +3 Poin Korupsi Batin)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency: eff,
         dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_TURBID_ABSORB_MAX - law.dailyData.turbidAbsorbsToday)
       }
     });
@@ -3061,6 +3080,7 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
 
     let sourceName = 'esensi darah segar';
     let itemTier = 1;
+    let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
     const { itemId } = req.body || {};
     if (itemId) {
@@ -3074,17 +3094,10 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = resolveItemTier(itemDoc);
-      const playerTier = (law.rank || 0) + 1;
-
-      const affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Wadah dantianmu belum mampu menampung intisari darah Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
-        });
-      }
-
-      eff = affinity.efficiency;
+      const tierCheck = assertAbsorbTier(law, itemDoc);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
       sourceName = itemDoc.name;
 
       invEntry.quantity -= 1;
@@ -3119,15 +3132,20 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🩸 Berhasil memanen ${sourceName} (+${essenceGain} Esensi Reservoir, +1 Botol Darah${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      message: `🩸 Berhasil memanen ${sourceName} (+${essenceGain} Esensi Reservoir${effMsg}, +1 Botol Darah${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency: eff,
         isWantedByOrthodox: player.isWantedByOrthodox,
         dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_BLOOD_HARVEST_MAX - law.dailyData.bloodHarvestsToday)
       }
@@ -3161,6 +3179,7 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
 
     let soulSource = 'arwah penasaran liar';
     let itemTier = 1;
+    let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
     const { itemId } = req.body || {};
     if (itemId) {
@@ -3174,17 +3193,10 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = resolveItemTier(itemDoc);
-      const playerTier = (law.rank || 0) + 1;
-
-      const affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Panji Sembilan Ruh milikmu belum mampu membelenggu jiwa Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`
-        });
-      }
-
-      eff = affinity.efficiency;
+      const tierCheck = assertAbsorbTier(law, itemDoc);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
       soulSource = itemDoc.name;
 
       invEntry.quantity -= 1;
@@ -3218,15 +3230,20 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+${essenceGain} Esensi Reservoir, +1 Jiwa Tersegel${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
+      message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+${essenceGain} Esensi Reservoir${effMsg}, +1 Jiwa Tersegel${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency: eff,
         isWantedByOrthodox: player.isWantedByOrthodox,
         dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_SOUL_BANNER_MAX - law.dailyData.soulBannerToday)
       }
@@ -3253,7 +3270,8 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
 
     let poisonName = 'Racun Mematikan';
     let itemTier = 1;
-    let affinity = { allowed: true, efficiency: 1.0 };
+    let playerTier = (law.rank || 0) + 1;
+    let eff = 1.0;
     const { itemId } = req.body || {};
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
@@ -3266,17 +3284,12 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = resolveItemTier(itemDoc);
-      const playerTier = (law.rank || 0) + 1;
-
-      affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Tingkat keganasan racun ini terlalu tinggi (Tier ${itemTier}, Ranahmu setara Tier ${playerTier}).`
-        });
-      }
-
+      const tierCheck = assertAbsorbTier(law, itemDoc);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
       poisonName = itemDoc.name;
+
       invEntry.quantity -= 1;
       if (invEntry.quantity <= 0) {
         player.inventory.splice(invIndex, 1);
@@ -3305,7 +3318,6 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     player.markModified('isWantedByOrthodox');
     law.dailyData.venomDrinksToday = (law.dailyData.venomDrinksToday || 0) + 1;
 
-    const eff = affinity ? affinity.efficiency : 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -3322,16 +3334,21 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+${essenceGain} Esensi Reservoir, +1 Toleransi Racun${qiMsg}, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
+      message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+${essenceGain} Esensi Reservoir${effMsg}, +1 Toleransi Racun${qiMsg}, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
       data: {
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
         currentHp: player.currentHp,
+        itemTier,
+        playerTier,
+        efficiency: eff,
         isWantedByOrthodox: player.isWantedByOrthodox,
         dailyRemaining: Math.max(0, LAW_BALANCE.DAILY_VENOM_DRINK_MAX - law.dailyData.venomDrinksToday)
       }
@@ -3394,6 +3411,7 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       const { itemId } = req.body || {};
       let itemOfferingMsg = '';
       let itemTier = 1;
+      let playerTier = (law.rank || 0) + 1;
       let eff = 1.0;
 
       if (itemId) {
@@ -3407,15 +3425,11 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
 
         const invEntry = player.inventory[invIndex];
         const itemDoc = invEntry.itemId;
-        itemTier = resolveItemTier(itemDoc);
-        const playerTier = (law.rank || 0) + 1;
+        const tierCheck = assertAbsorbTier(law, itemDoc);
+        itemTier = tierCheck.itemTier;
+        playerTier = tierCheck.playerTier;
+        eff = tierCheck.efficiency;
 
-        const affinity = getTierAffinity(playerTier, itemTier);
-        if (!affinity.allowed) {
-          throw new CustomError(`${affinity.reason} Altar Abyss milikmu belum mampu menampung intisari Tier ${itemTier} (Ranahmu setara Tier ${playerTier}).`, 400);
-        }
-
-        eff = affinity.efficiency;
         invEntry.quantity -= 1;
         if (invEntry.quantity <= 0) {
           player.inventory.splice(invIndex, 1);
@@ -3452,14 +3466,19 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
         essenceGain,
         qi: law.qi,
         instantQi,
+        itemTier,
+        playerTier,
+        efficiency: eff,
         itemOfferingMsg
       };
     });
 
+    const effPercent = Math.round(resultData.efficiency * 100);
+    const effMsg = resultData.efficiency < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = resultData.instantQi > 0 ? `, +${resultData.instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${resultData.itemOfferingMsg} Tenggat kontrak diperpanjang 7 hari (+${resultData.essenceGain} Esensi Reservoir${qiMsg}, Kutukan Abyss dinetralkan)!`,
+      message: `📜 Berhasil menyetor upeti kurban di Altar Abyss!${resultData.itemOfferingMsg} Tenggat kontrak diperpanjang 7 hari (+${resultData.essenceGain} Esensi Reservoir${effMsg}${qiMsg}, Kutukan Abyss dinetralkan)!`,
       data: resultData
     });
   } catch (error) {
@@ -3481,6 +3500,7 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
 
     let absorbSource = 'hawa dingin Yin Sembilan Lapis Netherworld';
     let itemTier = 1;
+    let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
     const { itemId } = req.body || {};
     if (itemId) {
@@ -3494,17 +3514,10 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
 
       const invEntry = player.inventory[invIndex];
       const itemDoc = invEntry.itemId;
-      itemTier = resolveItemTier(itemDoc);
-      const playerTier = (law.rank || 0) + 1;
-
-      const affinity = getTierAffinity(playerTier, itemTier);
-      if (!affinity.allowed) {
-        return res.status(400).json({
-          error: `${affinity.reason} Hawa kematian item ini terlalu pekat (Tier ${itemTier}). Tubuhmu belum mampu menampung energi Yin melampaui ranahmu (Tier ${playerTier}).`
-        });
-      }
-
-      eff = affinity.efficiency;
+      const tierCheck = assertAbsorbTier(law, itemDoc);
+      itemTier = tierCheck.itemTier;
+      playerTier = tierCheck.playerTier;
+      eff = tierCheck.efficiency;
       absorbSource = itemDoc.name;
       invEntry.quantity -= 1;
       if (invEntry.quantity <= 0) {
@@ -3529,14 +3542,19 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     player.markModified('cultivationLaw');
     await player.save();
 
+    const effPercent = Math.round(eff * 100);
+    const effMsg = eff < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🌑 Berhasil menyerap ${absorbSource} (+${essenceGain} Esensi Reservoir${qiMsg})!`,
+      message: `🌑 Berhasil menyerap ${absorbSource} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg})!`,
       data: {
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
-        qi: law.qi
+        qi: law.qi,
+        itemTier,
+        playerTier,
+        efficiency: eff
       }
     });
   } catch (error) {
@@ -3613,17 +3631,11 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
 
     // Tier Rule Formula:
     // Item Tier vs Player Rank (Player Tier = rank + 1, e.g. Rank 0 = Tier 1)
-    const itemTier = resolveItemTier(item);
-    const playerTier = (law.rank || 0) + 1;
+    const tierCheck = assertAbsorbTier(law, item);
+    const itemTier = tierCheck.itemTier;
+    const playerTier = tierCheck.playerTier;
+    const efficiency = tierCheck.efficiency;
 
-    const affinity = getTierAffinity(playerTier, itemTier);
-    if (!affinity.allowed) {
-      return res.status(400).json({
-        error: `Dantian menolak intisari '${item.name}'! Tingkat energi item (Tier ${itemTier}) melampaui kapasitas ranahmu (setara Tier ${playerTier}). ${affinity.reason || 'Item tier tinggi baru dapat diserap setelah kamu menerobos ke ranah berikutnya!'}`
-      });
-    }
-
-    const efficiency = affinity.efficiency;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_ELEMENT_BASE * itemTier * efficiency);
     const finalEssenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -3666,7 +3678,9 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
         maxEssence: maxEss,
         qi: law.qi,
         rootXp: player.extendedStats.spiritualRoot[targetElem.key],
-        efficiency: effPercent
+        itemTier,
+        playerTier,
+        efficiency
       }
     });
   } catch (error) {

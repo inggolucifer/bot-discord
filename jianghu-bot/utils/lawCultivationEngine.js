@@ -1199,8 +1199,13 @@ function getEssenceDigestRate(rank = 0) {
  */
 function resolveItemTier(itemDoc) {
   if (!itemDoc) return 1;
-  if (itemDoc.tier != null && !Number.isNaN(Number(itemDoc.tier))) return Number(itemDoc.tier);
-  if (itemDoc.itemTier != null && !Number.isNaN(Number(itemDoc.itemTier))) return Number(itemDoc.itemTier);
+  const rawTier = itemDoc.tier ?? itemDoc.itemTier;
+  if (typeof rawTier === 'number' && !isNaN(rawTier) && rawTier > 0) {
+    return Math.floor(rawTier);
+  }
+  if (typeof rawTier === 'string' && !isNaN(Number(rawTier)) && Number(rawTier) > 0) {
+    return Math.floor(Number(rawTier));
+  }
   const rankMap = {
     common: 1,
     uncommon: 2,
@@ -1209,9 +1214,10 @@ function resolveItemTier(itemDoc) {
     legendary: 5,
     mythic: 6,
     mythical: 6,
+    immortal: 7,
+    divine: 8,
     mortal: 1,
-    spiritual: 2,
-    immortal: 3
+    spiritual: 2
   };
   const r = String(itemDoc.rank || itemDoc.rarity || '').toLowerCase();
   return rankMap[r] || 1;
@@ -1243,6 +1249,30 @@ function getTierAffinity(playerTier, itemTier) {
   // t < p
   const efficiency = Math.round(Math.max(0.15, 1 - (p - t) * 0.40) * 100) / 100;
   return { allowed: true, efficiency };
+}
+
+/**
+ * Helper authoritative untuk validasi Tier Affinity konsumsi / penyerapan item
+ * Menolak item dengan tier > playerTier (HTTP 400).
+ * Menghitung efisiensi secara akurat (tier < playerTier -> efficiency < 1.0).
+ * @param {object} law - cultivationLaw object atau player.cultivationLaw
+ * @param {object} itemDoc - dokumen Item dari inventori
+ * @returns {{ playerTier: number, itemTier: number, efficiency: number }}
+ */
+function assertAbsorbTier(law, itemDoc) {
+  const rank = (law && typeof law === 'object' && law.rank !== undefined) ? law.rank : 0;
+  const playerTier = rank + 1;
+  const itemTier = resolveItemTier(itemDoc);
+  const affinity = getTierAffinity(playerTier, itemTier);
+
+  if (!affinity.allowed) {
+    const itemName = itemDoc?.name ? `[${itemDoc.name}] ` : '';
+    const err = new Error(affinity.reason || `Dantian menolak intisari ${itemName}(Tier ${itemTier}). Reservoir dantianmu belum mampu menampung intisari melebihi ranahmu (Tier ${playerTier}).`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  return { playerTier, itemTier, efficiency: affinity.efficiency };
 }
 
 /**
@@ -5140,6 +5170,7 @@ module.exports = {
   getMaxEssence,
   getEssenceDigestRate,
   getTierAffinity,
+  assertAbsorbTier,
   resolveItemTier,
   getGuMaxSlots,
   getMaxCombatQi,

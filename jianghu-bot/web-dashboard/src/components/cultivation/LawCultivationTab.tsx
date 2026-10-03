@@ -3821,6 +3821,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {ores.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -3847,11 +3849,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +Intisari Pusaka &amp; Qi
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  ⚔️ Menambah Intisari Pusaka &amp; +45 Qi
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -3919,6 +3925,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {meats.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -3945,11 +3953,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • Pulihkan HP Satwa Penuh &amp; Qi
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  🐾 Pulihkan HP Satwa Penuh &amp; +40 Qi
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4018,6 +4030,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {cores.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4044,11 +4058,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +80 Qi • +3 Poin Korupsi
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  💀 +80 Qi • +3% Korupsi Batin
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4117,6 +4135,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {feeds.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4143,11 +4163,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +60% Kekenyangan • +50 Qi
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  🍖 +60% Kekenyangan Gu • +50 Qi
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4220,6 +4244,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {vials.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4246,11 +4272,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +1 Botol • +90 Qi • +5 Infamy
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🩸 +1 Koleksi Botol • +90 Qi • +5 Infamy
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4319,6 +4349,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {poisons.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4345,11 +4377,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +1 Toleransi • +75 Qi • -25% HP
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
-                                  🧪 +1 Toleransi Racun • +75 Qi • -25% HP (Aman)
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4418,6 +4454,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {offerings.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4444,11 +4482,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-purple-300 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • Perpanjang Kontrak Iblis • +90 Qi
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-purple-300 font-bold block mt-0.5">
-                                  📜 Perpanjang Kontrak Iblis • +90 Qi
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
@@ -4517,6 +4559,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     {stones.map((item: any) => {
                       const itemTier = item.tier || 1;
                       const isLocked = itemTier > playerTier;
+                      const isOptimal = itemTier === playerTier;
+                      const effPercent = isOptimal ? 100 : Math.round(Math.max(15, (1 - (playerTier - itemTier) * 0.40) * 100));
 
                       return (
                         <div
@@ -4543,11 +4587,15 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                               </p>
                               {isLocked ? (
                                 <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                                  🔒 Terkunci (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                  🔒 Ditolak Dantian (Item Tier {itemTier} &gt; Ranahmu Tier {playerTier})
+                                </span>
+                              ) : isOptimal ? (
+                                <span className="text-[9px] font-mono text-indigo-300 font-bold block mt-0.5">
+                                  ⭐ Efisiensi Optimal 100% • +100 Qi Yin Gelap
                                 </span>
                               ) : (
-                                <span className="text-[9px] font-mono text-indigo-300 font-bold block mt-0.5">
-                                  🌑 +100 Qi Yin Gelap
+                                <span className="text-[9px] font-mono text-amber-400 font-bold block mt-0.5">
+                                  ⚠️ Efisiensi {effPercent}% (Tier di bawah Ranah {playerTier})
                                 </span>
                               )}
                             </div>
