@@ -13,6 +13,13 @@
  */
 
 const { isClaimedToday, isClaimedYesterday } = require('./dailyClaim');
+const {
+  silverToCopper,
+  canAffordCopper,
+  formatCopper,
+  getTotalCopper,
+  deductCopper
+} = require('./currencyNormalize');
 
 // ═══════════════════════════════════════════════════════════════
 // KONSTANTA & KONFIGURASI
@@ -1292,6 +1299,144 @@ function getGuMaxSlots(rank = 0) {
   if (r === 2) return 3;
   if (r === 3) return 4;
   return 5;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FASILITAS KULTIVASI & BIAYA UPGRADE (FACILITY QUOTES)
+// ═══════════════════════════════════════════════════════════════
+
+const FACILITY_CONFIG = {
+  body_cauldron: {
+    name: 'Kuali Bak Mandi Raga',
+    icon: '🛁',
+    tierKey: 'bodyCauldronTier',
+    defaultTier: 0,
+    maxTier: 4,
+    tiers: {
+      1: { costSilver: 30, materials: [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }] },
+      2: { costSilver: 100, materials: [{ name: 'Herba Tulang Besi', qty: 5 }, { name: 'Bijih Besi Tempa', qty: 5 }] },
+      3: { costSilver: 250, materials: [{ name: 'Darah Siluman Berenergi', qty: 3 }] },
+      4: { costSilver: 500, materials: [] }
+    }
+  },
+  gu_crucible: {
+    name: 'Kendi Penyuling Gu Purba',
+    icon: '🏺',
+    tierKey: 'guCrucibleTier',
+    defaultTier: 1,
+    maxTier: 4,
+    tiers: {
+      2: { costSilver: 80, materials: [{ name: 'Intisari Serangga Gu', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }] },
+      3: { costSilver: 250, materials: [{ name: 'Madu Ratu Kalajengking Roh', qty: 3 }] },
+      4: { costSilver: 250, materials: [{ name: 'Madu Ratu Kalajengking Roh', qty: 3 }] }
+    }
+  },
+  abyssal_altar: {
+    name: 'Altar Kurban Darah Abyss',
+    icon: '🩸',
+    tierKey: 'abyssalAltarTier',
+    defaultTier: 0,
+    maxTier: 3,
+    requiresMapTile: true,
+    tiers: {
+      1: { costSilver: 50, materials: [{ name: 'Batu Obsidian Hitam Abyss', qty: 3 }, { name: 'Botol Esensi Darah Segar', qty: 2 }] },
+      2: { costSilver: 200, materials: [{ name: 'Batu Obsidian Hitam Abyss', qty: 5 }, { name: 'Inti Siluman Kotor', qty: 3 }] },
+      3: { costSilver: 500, materials: [] }
+    }
+  },
+  formation_hub: {
+    name: 'Hub Formasi Bendera',
+    icon: '🚩',
+    tierKey: 'formationHubTier',
+    defaultTier: 0,
+    maxTier: 3,
+    requiresMapTile: true,
+    tiers: {
+      1: { costSilver: 40, materials: [{ name: 'Kayu Bambu Keras', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }] },
+      2: { costSilver: 150, materials: [{ name: 'Bijih Besi Tempa', qty: 5 }, { name: 'Batu Kasar Gunung', qty: 5 }] },
+      3: { costSilver: 350, materials: [{ name: 'Bijih Besi Tempa', qty: 10 }] }
+    }
+  }
+};
+
+/**
+ * Menghitung rincian biaya upgrade fasilitas (perak, tembaga, bahan, dan status mampu bayar)
+ * @param {object} law - Player cultivationLaw object
+ * @param {string} facilityType - 'body_cauldron' | 'gu_crucible' | 'abyssal_altar' | 'formation_hub'
+ * @param {Array} playerInventory - player.inventory
+ * @param {object} playerCurrency - player.currency
+ * @returns {object|null}
+ */
+function getFacilityUpgradeQuote(law, facilityType, playerInventory = [], playerCurrency = {}) {
+  const config = FACILITY_CONFIG[facilityType];
+  if (!config) return null;
+
+  const facilities = (law && law.facilities) ? law.facilities : {};
+  const currentTier = facilities[config.tierKey] !== undefined ? facilities[config.tierKey] : config.defaultTier;
+  const isMaxTier = currentTier >= config.maxTier;
+  const nextTier = isMaxTier ? currentTier : currentTier + 1;
+
+  if (isMaxTier) {
+    return {
+      facilityType,
+      facilityName: config.name,
+      icon: config.icon,
+      currentTier,
+      nextTier,
+      maxTier: config.maxTier,
+      isMaxTier: true,
+      costSilver: 0,
+      costCopper: 0,
+      costFormatted: '0 Copper',
+      materials: [],
+      canAfford: true,
+      shortfallCopper: 0,
+      hasMaterials: true,
+      requiresMapTile: !!config.requiresMapTile
+    };
+  }
+
+  const tierData = config.tiers[nextTier] || { costSilver: 0, materials: [] };
+  const costSilver = tierData.costSilver || 0;
+  const costCopper = silverToCopper(costSilver);
+
+  const affordCheck = canAffordCopper(playerCurrency, costCopper);
+
+  const invArray = Array.isArray(playerInventory) ? playerInventory : [];
+  let hasMaterials = true;
+  const materialsWithStatus = (tierData.materials || []).map(mat => {
+    const found = invArray.find(i => {
+      const item = i.itemId || i;
+      return item?.name === mat.name;
+    });
+    const available = found?.quantity || 0;
+    const enough = available >= mat.qty;
+    if (!enough) hasMaterials = false;
+    return {
+      name: mat.name,
+      requiredQty: mat.qty,
+      availableQty: available,
+      hasEnough: enough
+    };
+  });
+
+  return {
+    facilityType,
+    facilityName: config.name,
+    icon: config.icon,
+    currentTier,
+    nextTier,
+    maxTier: config.maxTier,
+    isMaxTier: false,
+    costSilver,
+    costCopper,
+    costFormatted: formatCopper(costCopper),
+    materials: materialsWithStatus,
+    canAfford: affordCheck.ok,
+    shortfallCopper: affordCheck.shortfall,
+    hasMaterials,
+    requiresMapTile: !!config.requiresMapTile
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3326,11 +3471,18 @@ function getLawStatus(player) {
     // Soft Addiction Hooks & Progression Metrics (Master Plan §5.4 & C5)
     progressionFeel,
 
-    // Cultivation Facilities (Khusus Altar: Hanya Demonic Abyssal Altar di Lahan Peta)
-    facilities: law.facilities || {
-      abyssalAltarTier: 0,
-      bodyCauldronTier: 0,
-      guCrucibleTier: 1
+    // Cultivation Facilities & Upgrade Quotes
+    facilities: {
+      bodyCauldronTier: law.facilities?.bodyCauldronTier !== undefined ? law.facilities.bodyCauldronTier : 0,
+      guCrucibleTier: law.facilities?.guCrucibleTier !== undefined ? law.facilities.guCrucibleTier : 1,
+      abyssalAltarTier: law.facilities?.abyssalAltarTier !== undefined ? law.facilities.abyssalAltarTier : 0,
+      formationHubTier: law.facilities?.formationHubTier !== undefined ? law.facilities.formationHubTier : 0,
+      upgrades: {
+        body_cauldron: getFacilityUpgradeQuote(law, 'body_cauldron', player.inventory, player.currency),
+        gu_crucible: getFacilityUpgradeQuote(law, 'gu_crucible', player.inventory, player.currency),
+        abyssal_altar: getFacilityUpgradeQuote(law, 'abyssal_altar', player.inventory, player.currency),
+        formation_hub: getFacilityUpgradeQuote(law, 'formation_hub', player.inventory, player.currency)
+      }
     },
 
     canMiniBreakthrough: (currentQi >= targetStageQi) && (stage < 9),
@@ -5543,5 +5695,9 @@ module.exports = {
   // Authoritative Inventory Helpers
   findInventoryIndex,
   consumeInventoryItem,
-  listEligibleInventory
+  listEligibleInventory,
+
+  // Facility Helpers & Quotes
+  FACILITY_CONFIG,
+  getFacilityUpgradeQuote
 };
