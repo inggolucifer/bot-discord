@@ -30,6 +30,13 @@ const { withTransaction } = require('../utils/dbTransaction');
 const { z } = require('zod');
 const { isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
 const { getSkillPointCost, getMaxSkillLevel, getRequiredSkillCombatExp } = require('../../utils/kungfuMastery');
+const {
+  deductCopper,
+  silverToCopper,
+  formatCopper,
+  canAffordCopper,
+  getTotalCopper
+} = require('../../utils/currencyNormalize');
 
 const {
   LAW_DEFINITIONS,
@@ -2045,9 +2052,14 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
       targetPlot = ownedPlots.find(p => !p.buildingName || p.buildingName.includes(facilityName)) || ownedPlots[0];
     }
 
-    // Validasi Silver
-    if ((player.currency?.silver || 0) < costSilver) {
-      return res.status(400).json({ error: `Saldo Perak tidak cukup. Butuh ${costSilver} Silver untuk pembuatan/upgrade.` });
+    // Validasi Mata Uang & Bahan
+    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+    const needCopper = silverToCopper(costSilver);
+    const affordCheck = canAffordCopper(player.currency, needCopper);
+    if (!affordCheck.ok) {
+      return res.status(400).json({
+        error: `Saldo tidak cukup untuk upgrade ${facilityName}. Butuh ${formatCopper(needCopper)} (${costSilver} Silver), kamu memiliki ${formatCopper(affordCheck.totalCopper)}.`
+      });
     }
 
     // Validasi Bahan di Inventory
@@ -2057,6 +2069,9 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
         return res.status(400).json({ error: `Bahan tidak mencukupi: Butuh ${reqMat.qty}x ${reqMat.name}.` });
       }
     }
+
+    // Potong Mata Uang via Total Copper (mutasi aman & otomatis normalisasi)
+    deductCopper(player.currency, needCopper, `Upgrade ${facilityName}`);
 
     // Potong Bahan
     for (const reqMat of requiredMaterials) {
@@ -2068,8 +2083,6 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
         }
       }
     }
-
-    player.currency.silver -= costSilver;
 
     // Jika Altar Demonic: Pasang Fisik di Petak Peta & Daftarkan Aset
     if (isAltarOnMap && targetPlot) {
@@ -2130,11 +2143,25 @@ router.post('/facility/build-or-upgrade', authenticateToken, async (req, res) =>
       message: successMsg,
       data: {
         facilities: law.facilities,
-        plot: targetPlot ? { zoneId: targetPlot.zoneId, tileX: targetPlot.tileX, tileY: targetPlot.tileY } : null
+        plot: targetPlot ? { zoneId: targetPlot.zoneId, tileX: targetPlot.tileX, tileY: targetPlot.tileY } : null,
+        cost: {
+          silverListed: costSilver,
+          paidCopper: needCopper,
+          materials: requiredMaterials
+        },
+        currencyAfter: {
+          copper: player.currency.copper,
+          silver: player.currency.silver,
+          gold: player.currency.gold,
+          jade: player.currency.jade || 0,
+          spirit: player.currency.spirit || 0
+        },
+        nextTier
       }
     });
   } catch (error) {
     if (error instanceof CustomError) return res.status(error.statusCode).json({ error: error.message });
+    if (error.statusCode) return res.status(error.statusCode).json({ error: error.message });
     console.error('[LAW-API] Error building facility:', error);
     res.status(500).json({ error: 'Gagal membangun fasilitas altar.' });
   }
