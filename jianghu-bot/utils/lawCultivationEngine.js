@@ -1646,7 +1646,8 @@ function consumeBreakthroughMaterials(player, law, isMajor = false) {
         tags.includes('breakthrough_material') ||
         tags.includes('essence') ||
         cat === 'material' ||
-        cat === 'herb'
+        cat === 'herb' ||
+        cat === 'spirit_stone'
       );
 
       if (isEligible && tier >= targetTier) {
@@ -1698,7 +1699,8 @@ function consumeBreakthroughMaterials(player, law, isMajor = false) {
         tags.includes('essence') ||
         tags.includes('catalyst') ||
         cat === 'material' ||
-        cat === 'herb'
+        cat === 'herb' ||
+        cat === 'spirit_stone'
       );
 
       if (isEligible && tier <= playerTier) {

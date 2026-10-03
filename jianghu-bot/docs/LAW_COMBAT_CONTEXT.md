@@ -364,3 +364,13 @@ Setiap penyerapan material atau pemberian makan intisari ke dalam dantian divali
   8. Rank 7: *Great Ascension* (大乘)
   9. Rank 8: *Tribulation Transcendence* (渡劫)
   10. Rank 9: *Dao Lord* (道君)
+
+### 13.6. Cakupan Tab Kultivasi, Material Breakthrough, & Aturan Tier (Pure Law Cultivation Scope)
+- **Cakupan Tab Kultivasi (`hasLaw === true`)**: Tab Kultivasi berfokus mutlak pada pemantauan dan pengelolaan esensi murni: visualisasi ranah resmi (`realmLabel`), sirkulasi Qi & intisari, bar esensi dengan peringatan dantian kosong, 9 modal penyerapan esensi material dengan umpan balik efisiensi dinamis, dan eksekusi terobosan ranah (Breakthrough). Seluruh navigasi, tautan, pohon bintang konstelasi, maupun tombol menuju skill-tree dieliminasi secara total dari Tab Kultivasi; pohon jurus semesta dialokasikan secara eksklusif pada rute `/skill-tree`.
+- **Standar Material Breakthrough (Zero Currency Policy)**: Terobosan ranah (Stage maupun Rank) 100% bebas dari biaya tembaga/perak/emas (`player.currency` tidak pernah disentuh).
+  - *Mini Breakthrough (Stage 1..9)*: Membutuhkan `2 + rank + Math.floor(stage / 3)` material kultivasi valid (`breakthrough_material`, `spirit_stone`, `catalyst`, `herb`, `material`) dengan syarat tingkat `tier <= playerTier`.
+  - *Major Breakthrough (Rank Naik)*: Membutuhkan tepat 1 katalis terobosan besar atau batu roh tingkat tinggi dengan syarat tingkat `tier >= playerTier`.
+- **Aturan Afinitas Tier (Tier Rules)**: Ranah kultivator menentukan `playerTier = (law.rank || 0) + 1`.
+  - *Over-Tier*: Item dengan `itemTier > playerTier` ditolak mutlak (HTTP 400 Bad Request) untuk mencegah overload dantian, serta dinonaktifkan (`disabled` dengan keterangan "Di atas Ranah") pada picker antarmuka frontend.
+  - *Under-Tier*: Item dengan `itemTier < playerTier` dikenakan penalti resonansi efisiensi: selisih 1 tingkat menghasilkan efisiensi 50%, sedangkan selisih 2 tingkat atau lebih anjlok ke 20%. Frontend merender badge peringatan efisiensi (`⚠️ Efisiensi ~XX%`) secara real-time dan menyertakan persentase efisiensi aktual pada notifikasi toast keberhasilan penyerapan.
+
