@@ -368,178 +368,7 @@ export const LAW_RANK_NAMES_ID: Record<string, string[]> = {
   demonic_nether_darkness:  ['Bayangan Pudar', 'Kabut Yin Tipis', 'Kegelapan Merayap', 'Jubah Malam Abadi', 'Domain Bayangan', 'Penguasa Nether Yin', 'Kekosongan Sembilan Lapis', 'Raja Kegelapan Kuno', 'Iblis Nether Sempurna']
 };
 
-interface MasterRealmRoadmapAccordionProps {
-  currentRealmIdx: number;
-  activeLawType?: LawType | null;
-  activeLawName?: string | null;
-}
 
-export function MasterRealmRoadmapAccordion({
-  currentRealmIdx,
-  activeLawType,
-  activeLawName
-}: MasterRealmRoadmapAccordionProps) {
-  const lawRankNames = activeLawType ? LAW_RANK_NAMES_ID[activeLawType] : null;
-  const lawPathMod = activeLawType ? LAW_PATH_MODS[activeLawType] : null;
-
-  return (
-    <details className="group border border-stone-800/80 rounded-2xl bg-[#0c0f17]/90 p-5 transition-all shadow-xl backdrop-blur-md">
-      <summary className="cursor-pointer font-serif font-bold text-sm text-amber-200 hover:text-amber-300 flex items-center justify-between select-none">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm">
-            📜
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span>Tabel Master 9 Ranah Kultivasi & Batas Level Cap</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-950/80 border border-amber-600/50 text-amber-300 font-mono">
-                Heavenly Dao Roadmap
-              </span>
-              {activeLawName && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-900 border border-stone-700 text-stone-300 font-mono">
-                  Jalur: {activeLawName}
-                </span>
-              )}
-              {lawPathMod && lawPathMod.mod !== 1.0 && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-600/50 text-purple-300 font-mono">
-                  Tribulasi {lawPathMod.note}
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-stone-400 font-sans font-normal mt-0.5">
-              Syarat Max Level Karakter, Kapasitas Qi Dantian, Peluang Terobosan, dan Tingkat Tribulasi Petir Surgawi
-            </p>
-          </div>
-        </div>
-        <span className="text-xs text-amber-400 font-mono group-open:rotate-180 transition-transform">
-          ▼
-        </span>
-      </summary>
-
-      <div className="mt-5 pt-4 border-t border-stone-800 space-y-4">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="border-b border-stone-800 text-stone-400 font-serif">
-                <th className="py-2.5 px-3">Ranah Kultivasi</th>
-                <th className="py-2.5 px-3">Gelar Jalur Hukum</th>
-                <th className="py-2.5 px-3">English Realm</th>
-                <th className="py-2.5 px-3">Batas Max Level</th>
-                <th className="py-2.5 px-3">Kapasitas Qi</th>
-                <th className="py-2.5 px-3">Peluang Sukses</th>
-                <th className="py-2.5 px-3">Tribulasi Petir</th>
-                <th className="py-2.5 px-3">Penalti Gagal</th>
-                <th className="py-2.5 px-3 text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-900">
-              {MASTER_REALM_ROADMAP.map((realm) => {
-                const isCurrent = realm.idx === currentRealmIdx;
-                const isPassed = realm.idx < currentRealmIdx;
-                const specificLawTitle = lawRankNames?.[realm.idx] || null;
-
-                return (
-                  <tr
-                    key={realm.idx}
-                    className={`transition-colors ${
-                      isCurrent
-                        ? 'bg-amber-500/10 font-medium'
-                        : isPassed
-                        ? 'bg-emerald-950/10 text-stone-300'
-                        : 'hover:bg-stone-900/40 text-stone-400'
-                    }`}
-                  >
-                    <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base">{realm.icon}</span>
-                        <span className={`font-serif ${isCurrent ? 'text-amber-200 font-bold' : isPassed ? 'text-emerald-300' : 'text-stone-300'}`}>
-                          {realm.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 font-serif">
-                      {specificLawTitle ? (
-                        <span className={`font-semibold ${isCurrent ? 'text-amber-300' : isPassed ? 'text-emerald-300' : 'text-stone-400'}`}>
-                          {specificLawTitle}
-                        </span>
-                      ) : (
-                        <span className="text-stone-500 italic text-[11px]">— Mandiri —</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3 font-serif text-stone-300 italic">{realm.enName}</td>
-                    <td className="py-3 px-3 font-mono">
-                      <span className={`px-2 py-0.5 rounded ${isCurrent ? 'bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold' : 'text-stone-300'}`}>
-                        Lv. {realm.levelCap}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 font-mono text-stone-300">{realm.qiCap} Qi</td>
-                    <td className="py-3 px-3 font-mono">
-                      <span className={realm.successRate === '100%' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-semibold'}>
-                        {realm.successRate}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 text-stone-300">
-                      <div>
-                        <span className={`flex items-center gap-1 ${realm.tier > 0 ? 'text-purple-300' : 'text-emerald-400'}`}>
-                          {realm.tier > 0 ? '⚡' : '✨'} {realm.tribulation}
-                        </span>
-                        {realm.tier > 0 && lawPathMod && lawPathMod.mod !== 1.0 && (
-                          <span className="text-[10px] text-purple-400/90 font-mono block">
-                            (PathMod: ×{lawPathMod.mod})
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-3 text-stone-400 font-mono text-[11px]">{realm.penalty}</td>
-                    <td className="py-3 px-3 text-right">
-                      {isCurrent ? (
-                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 font-mono text-[10px] font-bold">
-                          ● Ranah Aktif
-                        </span>
-                      ) : isPassed ? (
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-mono text-[10px] font-bold">
-                          ✓ Tuntas
-                        </span>
-                      ) : (
-                        <span className="px-2 py-0.5 rounded-full bg-stone-800 text-stone-500 font-mono text-[10px]">
-                          🔒 Terkunci
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 border-t border-stone-800/80 text-[11px] text-stone-400">
-          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
-            <Lock size={14} className="text-amber-400 shrink-0 mt-0.5" />
-            <div>
-              <strong className="text-stone-300 block font-serif">Kunci Max Level Mutlak</strong>
-              Setiap terobosan ke ranah berikutnya mewajibkan karakter mencapai Max Level ranah tersebut. Dilarang menerobos sebelum batas tercapai.
-            </div>
-          </div>
-          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
-            <Zap size={14} className="text-purple-400 shrink-0 mt-0.5" />
-            <div>
-              <strong className="text-stone-300 block font-serif">Formula Ketahanan Raga</strong>
-              Survival HP dihitung dari: Max HP + (DEF × 3) + (Vitality × 2) + (Focus × 1.5). Kuatkan fondasi sebelum menghadapi petir langit!
-            </div>
-          </div>
-          <div className="flex items-start gap-2 bg-stone-950/60 p-2.5 rounded-lg border border-stone-800">
-            <Skull size={14} className="text-rose-400 shrink-0 mt-0.5" />
-            <div>
-              <strong className="text-stone-300 block font-serif">Risiko Kegagalan Ranah</strong>
-              Kegagalan terobosan mengakibatkan hilangnya 50% Qi dantian dan cooldown meditasi berjam-jam untuk memulihkan meridian yang retak.
-            </div>
-          </div>
-        </div>
-      </div>
-    </details>
-  );
-}
 
 interface LawCultivationTabProps {
   realmData?: CultivationData;
@@ -1417,8 +1246,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
         {/* Progresi Dinamis 10 Tahap Fondasi Fana */}
         <MortalStageRoadmap currentStage={stage || 1} />
 
-        {/* Master Realm Roadmap Accordion */}
-        <MasterRealmRoadmapAccordion currentRealmIdx={0} />
+
 
         {/* Heavenly Tribulation Modal */}
         <HeavenlyTribulationModal
@@ -2112,8 +1940,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
         {/* Progresi Dinamis 10 Tahap Fondasi Fana */}
         <MortalStageRoadmap currentStage={10} />
 
-        {/* Master Realm Roadmap Accordion */}
-        <MasterRealmRoadmapAccordion currentRealmIdx={0} />
+
 
         {/* Heavenly Tribulation Modal */}
         <HeavenlyTribulationModal
