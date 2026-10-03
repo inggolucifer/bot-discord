@@ -816,7 +816,11 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                 }
             }
 
-            return res.json({ success: true, session });
+            return res.json({
+                success: true,
+                session,
+                dotDamageThisRound: session.dotDamageThisRound || []
+            });
         }
 
         // Cek jika status menjadi won atau lost, bagikan reward
@@ -968,7 +972,11 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
               }
          }
 
-        res.json({ success: true, session });
+        res.json({
+            success: true,
+            session,
+            dotDamageThisRound: session.dotDamageThisRound || []
+        });
     } catch (err) {
         console.error('[API-BATTLE] Action Error:', err);
         res.status(400).json({ error: err.message });
