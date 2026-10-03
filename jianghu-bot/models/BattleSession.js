@@ -140,6 +140,13 @@ const battleSessionSchema = new mongoose.Schema({
   currentTick: { type: Number, default: 0 },
   turnQueue: [String], // Array of entityIds ready to act
   
+  dotDamageThisRound: [{
+    targetId: String,
+    type: { type: String },
+    amount: Number,
+    hpAfter: Number
+  }],
+
   // Combat Log
   logs: [{
     tick: Number,

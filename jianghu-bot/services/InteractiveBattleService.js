@@ -333,7 +333,7 @@ class InteractiveBattleService {
     // Hitung stat player & 5 Pilar Tempur (Focus, Vitality, Mood, Luck, Body Tempering Parts)
     const { getComputedStats } = require('../utils/statCalculator');
     const { applyPillarCombatModifiers, getInjuryStatPenalties } = require('../utils/combatBody');
-    const { getStatusBadges } = require('../utils/combatStatus');
+    const { getStatusBadges, ensureCombatState } = require('../utils/combatStatus');
     const rawComputedStats = getComputedStats(player, player.laws || [], player.manuals || []);
     const computedStats = applyPillarCombatModifiers(rawComputedStats, player);
 
@@ -402,6 +402,7 @@ class InteractiveBattleService {
         return basicAtk ? [basicAtk, ...activePool] : activePool;
       })()
     };
+    ensureCombatState(playerEntity);
 
     // Righteous Formation Array Home Hub Bonus (Defense Up buff saat bertarung di atas Hub milik sendiri)
     if (player.cultivationLaw?.activeLawType === 'righteous_formation_array' && isOnOwnFormationHub(player)) {
@@ -540,6 +541,9 @@ class InteractiveBattleService {
       }]
     }));
 
+    allies.forEach(a => ensureCombatState(a));
+    allEnemiesConverted.forEach(e => ensureCombatState(e));
+
     const activeEnemies = allEnemiesConverted.slice(0, maxActive);
     const enemyQueue = allEnemiesConverted.slice(maxActive);
 
@@ -604,9 +608,29 @@ class InteractiveBattleService {
       session.turnQueue = [actorId];
     }
 
-    session.player.conditions = normalizeConditions(session.player.conditions);
-    const { onTurnStartLawExtras, onSkillHitLawExtras, getDefenseDamageMultiplier, getStatusBadges, applyStatus } = require('../utils/combatStatus');
+    /**
+     * URUTAN RONDE COMBAT (AUTHORITATIVE FLOW):
+     * 1. Turn-start extras (cleanse, regen)
+     * 2. Skip jika stun / frozen (player / enemy)
+     * 3. Aksi hit -> damage HP -> onSkillHitLawExtras (applyStatus ke target)
+     * 4. Aksi sekutu (allies hit -> damage HP)
+     * 5. Promosi antrian musuh & cek kemenangan parsial
+     * 6. Balasan serangan AI musuh (skip jika musuh stun/frozen)
+     * 7. Cek kekalahan pemain dari serangan langsung
+     * 8. processStatusEffects (tickStatuses semua entity hidup: player, enemies, allies -> DoT kurangi HP)
+     * 9. Cek kekalahan pemain dari DoT
+     * 10. Promosi antrian musuh jika musuh gugur akibat DoT
+     * 11. Cek kemenangan akhir (checkAllEnemiesDefeated -> resolveVictory)
+     * 12. Akhir ronde: cooldown decrement, Qi & Stance regen
+     * 13. Persist BattleSession (player.hp, conditions, enemies[].hp, isDead, logs, status)
+     */
+    const { onTurnStartLawExtras, onSkillHitLawExtras, getDefenseDamageMultiplier, getStatusBadges, applyStatus, ensureCombatState } = require('../utils/combatStatus');
     const { getStaminaActionPenalty } = require('../utils/combatBody');
+
+    ensureCombatState(session.player);
+    (session.enemies || []).forEach(e => ensureCombatState(e));
+    (session.enemyQueue || []).forEach(e => ensureCombatState(e));
+    (session.allies || []).forEach(a => ensureCombatState(a));
 
     const STAMINA_COST = {
       basic: 2,
@@ -1104,6 +1128,11 @@ class InteractiveBattleService {
     if (this.checkAllEnemiesDefeated(session)) {
       this.resolveVictory(session);
       session.turnQueue = [];
+      session.markModified('player');
+      session.markModified('enemies');
+      session.markModified('allies');
+      session.markModified('logs');
+      session.markModified('dotDamageThisRound');
       await session.save();
       return session;
     }
@@ -1116,14 +1145,17 @@ class InteractiveBattleService {
     for (const enemy of aliveEnemies) {
       if (session.player.isDead) break;
 
-      // Cek apakah musuh terkena Stun
+      // Cek apakah musuh terkena Stun atau Pembekuan (Frozen >= 100)
       const isEnemyStunned = Array.isArray(enemy.debuffs) && enemy.debuffs.some(d => d.type === 'stun' && d.duration > 0);
-      if (isEnemyStunned) {
+      const isEnemyFrozen = (enemy.conditions?.frozen || 0) >= (COMBAT_COND.FROZEN_THRESHOLD || 100);
+      if (isEnemyStunned || isEnemyFrozen) {
         session.logs.push({
           tick: session.currentTick,
           actor: enemy.name,
           action: 'effect',
-          message: `⚡ ${enemy.name} kaku akibat totokan saraf dan tidak dapat menyerang ronde ini!`
+          message: isEnemyFrozen
+            ? `❄️ ${enemy.name} membeku dalam lapisan es tebal dan tidak dapat menyerang ronde ini!`
+            : `⚡ ${enemy.name} kaku akibat totokan saraf dan tidak dapat menyerang ronde ini!`
         });
         continue;
       }
@@ -1281,6 +1313,11 @@ class InteractiveBattleService {
         message: `💀 ${session.player.name} telah kehabisan darah dan dantian terluka parah... Pertempuran berakhir dengan kekalahan!`
       });
       session.turnQueue = [];
+      session.markModified('player');
+      session.markModified('enemies');
+      session.markModified('allies');
+      session.markModified('logs');
+      session.markModified('dotDamageThisRound');
       await session.save();
       return session;
     }
@@ -1298,6 +1335,11 @@ class InteractiveBattleService {
         message: `💀 ${session.player.name} telah kehabisan darah akibat luka dalam/kondisi fatal... Pertempuran berakhir dengan kekalahan!`
       });
       session.turnQueue = [];
+      session.markModified('player');
+      session.markModified('enemies');
+      session.markModified('allies');
+      session.markModified('logs');
+      session.markModified('dotDamageThisRound');
       await session.save();
       return session;
     }
@@ -1307,6 +1349,11 @@ class InteractiveBattleService {
     if (this.checkAllEnemiesDefeated(session)) {
       this.resolveVictory(session);
       session.turnQueue = [];
+      session.markModified('player');
+      session.markModified('enemies');
+      session.markModified('allies');
+      session.markModified('logs');
+      session.markModified('dotDamageThisRound');
       await session.save();
       return session;
     }
@@ -1336,6 +1383,11 @@ class InteractiveBattleService {
         message: `⏰ [Batas 15 Ronde] Hawa panas lahar Raja Siluman Purba menghempaskanmu ke luar kawah! Total Damage yang kamu berikan: ${(session.battleConfig.totalBossDamageDealt || 0).toLocaleString()} DMG!`
       });
       session.turnQueue = [];
+      session.markModified('player');
+      session.markModified('enemies');
+      session.markModified('allies');
+      session.markModified('logs');
+      session.markModified('dotDamageThisRound');
       await session.save();
       return session;
     }
@@ -1358,6 +1410,12 @@ class InteractiveBattleService {
 
     session.player.atb = 1000;
     session.turnQueue = [session.player.entityId]; // Siap untuk aksi selanjutnya
+
+    session.markModified('player');
+    session.markModified('enemies');
+    session.markModified('allies');
+    session.markModified('logs');
+    session.markModified('dotDamageThisRound');
 
     await session.save();
     return session;
@@ -1409,14 +1467,19 @@ class InteractiveBattleService {
    * Proses Status Effects & Conditions (Poison, Bleed, Burn, Frozen, dll.)
    */
   static processStatusEffects(session, actionContext = {}) {
-    const { tickStatuses, getStatusBadges } = require('../utils/combatStatus');
+    const { tickStatuses, getStatusBadges, ensureCombatState } = require('../utils/combatStatus');
+    session.dotDamageThisRound = [];
 
     // 1. Tick status terunifikasi untuk Pemain (Poison, Bleed, Burn, Injury decay, Stun decay, Buffs decay)
+    ensureCombatState(session.player);
     const playerTick = tickStatuses(session.player, {
       maxHp: session.player.maxHp,
       isStandby: !!actionContext.isStandby,
       actionType: actionContext.actionType
     });
+    if (playerTick.dotDamages && playerTick.dotDamages.length > 0) {
+      session.dotDamageThisRound.push(...playerTick.dotDamages);
+    }
     playerTick.logs.forEach(msg => {
       session.logs.push({
         tick: session.currentTick,
@@ -1435,10 +1498,14 @@ class InteractiveBattleService {
     // 2. Tick status terunifikasi untuk seluruh Musuh Aktif
     session.enemies.forEach(e => {
       if (e.isDead) return;
+      ensureCombatState(e);
       const enemyTick = tickStatuses(e, {
         maxHp: e.maxHp,
         actionType: 'attack'
       });
+      if (enemyTick.dotDamages && enemyTick.dotDamages.length > 0) {
+        session.dotDamageThisRound.push(...enemyTick.dotDamages);
+      }
       enemyTick.logs.forEach(msg => {
         session.logs.push({
           tick: session.currentTick,
@@ -1454,6 +1521,28 @@ class InteractiveBattleService {
       }
       e.statusBadges = getStatusBadges(e);
     });
+
+    // 3. Tick status terunifikasi untuk Sekutu (Allies)
+    if (Array.isArray(session.allies)) {
+      session.allies.forEach(a => {
+        if (a.isDead) return;
+        ensureCombatState(a);
+        const allyTick = tickStatuses(a, {
+          maxHp: a.maxHp,
+          actionType: 'attack'
+        });
+        if (allyTick.dotDamages && allyTick.dotDamages.length > 0) {
+          session.dotDamageThisRound.push(...allyTick.dotDamages);
+        }
+        if (a.hp <= 0) {
+          a.hp = 0;
+          a.isDead = true;
+        }
+        a.statusBadges = getStatusBadges(a);
+      });
+    }
+
+    return session.dotDamageThisRound;
   }
 
   /**
