@@ -312,3 +312,55 @@ Setiap Law **wajib memiliki minimal 1 node** dengan `effectType: 'combat_proc'` 
 - `artifactInfusionAtk` $\le 25$
 - `beastHealOnKillPct` $\le 0.08$
 
+---
+
+## 13. Standardisasi Tab Kultivasi, Modal Jurus, Biaya Material Terobosan, & Tier Affinity
+
+Dokumentasi pembaruan komprehensif sistem kultivasi 20 Law dan antarmuka web dashboard.
+
+### 13.1. Tab Kultivasi Murni (Zero Fake Chrome Policy)
+- **Eliminasi Navigasi Fiktif**: Seluruh tombol dan tab tiruan yang tidak fungsional atau membingungkan pemain telah dihapus dari antarmuka kultivasi:
+  - `Buka Pohon Dao` (tombol redundan).
+  - `Jejak Kultivasi` (tab dummy).
+  - `Tabel Master` (`MasterRealmRoadmapAccordion` yang memuat tabel mockup 9 ranah).
+  - `Buka Pohon Jurus` (tombol duplikat).
+- **Fokus Tunggal**: Tab Kultivasi kini menyajikan visualisasi murni: status ranah aktif, kapasitas dantian, sirkulasi Qi & intisari, 9 modal penyerapan esensi material alam, dan tombol navigasi langsung ke Rasi Bintang Law yang aktif (`/cultivation?lawTree=...`).
+
+### 13.2. Modal Detail Jurus Data-Driven (`LawConstellationTree.tsx`)
+- **Sumber Data Otoritatif**: Node rasi bintang hukum alam merender modal rincian jurus yang ditarik langsung dari konfigurasi engine `LAW_SKILL_TREES[lawType].nodes`.
+- **Formatting Dinamis**:
+  - Multiplier, persentase proc, dan resistensi diformat dalam notasi `+X%`.
+  - Peningkatan stat langsung diformat dalam notasi `+X`.
+  - Tipe jurus diklasifikasikan secara dinamis: `Combat Proc`, `Sistem Kultivasi`, `Pasif Tempur`, atau `Transformasi Dantian`.
+- **Progres SP Hakiki**: Mengeliminasi indikator XP palsu pada jurus; level node ditampilkan dengan format SP riil (misal `Lv. 2/5 (Total SP: 4)`), beserta perbandingan efek saat ini (*Current Level*) dan efek level berikutnya (*Next Level*).
+
+### 13.3. Terobosan Ranah Menggunakan Material Murni (Zero Currency Policy)
+- **Bebas Mata Uang**: Terobosan ranah hukum alam **DILARANG MENGURANGI MATA UANG** (Tembaga, Perak, Emas, maupun Spirit Stone kurensi).
+- **Formula Kebutuhan Material (Option A)**:
+  $$\text{Qty} = 2 + \text{Rank} + \lfloor \text{Stage} / 3 \rfloor$$
+- **Validasi Kategori**: Material yang sah meliputi kategori `breakthrough_material`, `spirit_stone` (item inventori fisik), `catalyst`, atau `herb`.
+- **Syarat Tier Material**: `itemTier <= playerTier` di mana `playerTier = rank + 1`. Material dengan tier lebih tinggi dari ranah dantian kultivator akan ditolak oleh backend.
+
+### 13.4. Matriks Efisiensi Penyerapan Intisari (Tier Affinity Penalty)
+Setiap penyerapan material atau pemberian makan intisari ke dalam dantian divalidasi melalui `assertAbsorbTier(playerRank, itemTier)`:
+- **Pemain Tier**: $\text{playerTier} = \text{playerRank} + 1$ (Rank 0 = Tier 1, Rank 1 = Tier 2, Rank 2 = Tier 3, dst.).
+- **Batas Atas Mutlak**: $\text{itemTier} > \text{playerTier} \implies$ **HTTP 400 Bad Request** ("Kapasitas dantian belum mampu menyerap intisari tingkat tinggi").
+- **Matriks Efisiensi ($\Delta = \text{playerTier} - \text{itemTier}$)**:
+  - $\Delta = 0$: **Efisiensi Optimal 100% (`1.0`)**. Dantian menyerap intisari secara utuh.
+  - $\Delta = 1$: **Efisiensi Berkurang 50% (`0.50`)**. Resonansi intisari melemah karena kultivator berada 1 tingkat di atas material.
+  - $\Delta \ge 2$: **Efisiensi Anjlok 20% (`0.20`)**. Penyerapan intisari tingkat rendah oleh kultivator tingkat tinggi menghasilkan residu yang nyaris sia-sia ($< 0.5$).
+- **Penerapan Penuh**: Diberlakukan pada seluruh 12 endpoint serap/feed di `web-api/routes/lawCultivation.js` (Elemental, Gu, Beast, Artifact, Nether, Turbid Core, Blood Soul, Venom, Abyssal, Array, Heavenly Merit, Karmic Mirror) dan divisualisasikan dengan badge status (`isOptimal`, persentase efisiensi, dan peringatan penurunan hasil) di seluruh 9 modal serap frontend.
+
+### 13.5. Penamaan Ranah Terpadu & Standar Fallback 10-Tier
+- **Sinkronisasi Otoritatif**: Komponen frontend (`LawCultivationTab.tsx`, `SkillTreeClient.tsx`, `LawConstellationTree.tsx`) mengutamakan `realmLabel` atau `realmDisplay.display` yang dikirim dari API.
+- **Standar Fallback 10-Tier (`LAW_RANK_STANDARD_NAMES`)**:
+  1. Rank 0: *Qi Condensation* (炼气)
+  2. Rank 1: *Foundation Establishment* (筑基)
+  3. Rank 2: *Core Formation* (结丹)
+  4. Rank 3: *Nascent Soul* (元婴)
+  5. Rank 4: *Soul Formation* (化神)
+  6. Rank 5: *Void Refinement* (炼虚)
+  7. Rank 6: *Body Integration* (合体)
+  8. Rank 7: *Great Ascension* (大乘)
+  9. Rank 8: *Tribulation Transcendence* (渡劫)
+  10. Rank 9: *Dao Lord* (道君)
