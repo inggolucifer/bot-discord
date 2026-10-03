@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import api from '@/lib/api';
+import { toast } from '@/components/ui/Toast';
 import { 
     Sword, Shield, Zap, Skull, Sparkles, MoveRight, 
     Flame, Heart, Trophy, AlertCircle, RefreshCw, X,
@@ -223,7 +224,7 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
             }
         } catch (err: any) {
             const msg = err.response?.data?.error || err.message || 'Aksi gagal dieksekusi';
-            alert(msg);
+            toast.show({ message: msg, type: 'error' });
         } finally {
             setIsActionLoading(false);
             setActiveSkillId(null);
