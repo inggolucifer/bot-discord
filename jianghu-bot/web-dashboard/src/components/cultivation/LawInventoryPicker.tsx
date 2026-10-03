@@ -20,6 +20,7 @@ export interface EligibleInventoryItem {
   category?: string;
   efficiency: number;
   allowed: boolean;
+  lockedReason?: string | null;
   reason?: string | null;
 }
 
@@ -167,7 +168,7 @@ export default function LawInventoryPicker({
                       )}
                       {isLocked ? (
                         <span className="text-[9px] font-mono text-rose-400 font-bold block mt-0.5">
-                          🔒 {item.reason || `Ditolak Dantian (Item Tier ${itemTier} > Ranahmu Tier ${playerTier})`}
+                          🔒 {item.lockedReason || item.reason || `Ditolak Dantian (Item Tier ${itemTier} > Ranahmu Tier ${playerTier})`}
                         </span>
                       ) : isOptimal ? (
                         <span className="text-[9px] font-mono text-emerald-400 font-bold block mt-0.5">
