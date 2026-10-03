@@ -10,13 +10,11 @@ import { toast } from '@/components/ui/Toast';
 import { Modal } from '@/components/ui/Modal';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
-import { LawStatusData, LawSkillItem, LawType } from '@/types/game';
+import { LawStatusData, LawType } from '@/types/game';
 import { CultivationData } from '@/lib/schemas';
 import { LAW_RANK_NAMES_EN, LAW_RANK_STANDARD_NAMES, resolveLawRealmDisplay } from '@/lib/realmUtils';
-import Link from 'next/link';
 import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
 import MaxLevelCapBanner from './MaxLevelCapBanner';
-import LawConstellationTree from './LawConstellationTree';
 import {
   Flame,
   Shield,
@@ -37,7 +35,6 @@ import {
   Mountain,
   Skull,
   ArrowUpCircle,
-  TreePine,
   Loader2,
   Activity
 } from 'lucide-react';
@@ -457,16 +454,6 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
       setTemperingCountdown(0);
     }
   }, [lawData?.temperingStatus?.isTempering, lawData?.temperingStatus?.finishAt]);
-
-  // Fetch Law Skills Tree
-  const { data: skillsRes, isLoading: isSkillsLoading } = useQuery<{ success: boolean; data: { skills: LawSkillItem[]; availablePoints: number } }>({
-    queryKey: ['lawSkills'],
-    queryFn: async () => {
-      const { data } = await api.get('/cultivation/law/skill-tree');
-      return data;
-    },
-    enabled: !!lawData?.hasLaw
-  });
 
   // Mutations
   const dailyClaimMutation = useMutation({
@@ -1960,8 +1947,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   // KASUS 2: PEMAIN SUDAH MEMILIKI LAW AKTIF → DASHBOARD TERPADU
   // ═══════════════════════════════════════════════════════════════════
   const energyLabel = lawData.qiType === 'true_qi' ? 'True Qi (真气)' : 'Qi Spiritual (灵气)';
-  const skillsList = skillsRes?.data?.skills || [];
-  const availablePoints = skillsRes?.data?.availablePoints ?? lawData.lawSkillPoints;
+  const availablePoints = lawData.lawSkillPoints ?? 0;
 
   // Authoritative Law Realm Display from API (FASE F)
   const { title: realmTitle, display: realmFullDisplay } = resolveLawRealmDisplay(lawData);
