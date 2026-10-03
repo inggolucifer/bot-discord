@@ -507,7 +507,7 @@ const LAW_ESSENCE_PROFILE = {
 
   gu_master: {
     barName: 'Gu Aperture Nutrition',
-    fillTags: ['gu_food', 'gu_larva', 'material', 'essence'],
+    fillTags: ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'material', 'essence'],
     fillCategories: ['material'],
     emptyHint: 'Beri pakan Gu / nutrisi aperture.'
   },
