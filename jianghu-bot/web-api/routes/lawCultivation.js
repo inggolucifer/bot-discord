@@ -867,9 +867,7 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       }
 
       await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString() || inv._id?.toString() === itemId.toString())
-      );
+      const invIndex = findInventoryIndex(player, itemId);
       if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
         throw new CustomError('Item bahan spiritual tidak ditemukan di inventori tasmu.', 400);
       }
@@ -1061,12 +1059,8 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
         law.dailyData[profile.dailyAbsorbField] = (law.dailyData[profile.dailyAbsorbField] || 0) + 1;
       }
 
-      // Deduct item
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
+      // Deduct item using authoritative helper
+      const consumeResult = consumeInventoryItem(player, itemId, 1);
       player.markModified('cultivationLaw');
       await player.save({ session });
 
@@ -1075,8 +1069,12 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       const instantMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
       responseData = {
         success: true,
-        message: `✨ Berhasil menyerap [${itemDoc.name}] ke dalam ${profile.barName}! (+${essenceGain} Esensi${effNote}${instantMsg})`,
+        message: `✨ Berhasil menyerap [${consumeResult.consumedName}] ke dalam ${profile.barName}! (+${essenceGain} Esensi${effNote}${instantMsg})`,
         data: {
+          consumedItemId: consumeResult.consumedItemId,
+          consumedName: consumeResult.consumedName,
+          quantityRemaining: consumeResult.quantityRemaining,
+          inventoryDelta: true,
           essenceGain,
           itemTier,
           playerTier,
@@ -1880,29 +1878,20 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Wajib menyertakan itemId bahan yang ingin diserap.' });
     }
     await player.populate({ path: 'inventory.itemId' });
-    const invIndex = player.inventory.findIndex(inv => {
-      if (!inv.itemId || inv.quantity < 1) return false;
-      if (itemId && (inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId)) return true;
-      const tags = inv.itemId.tags || [];
-      return tags.includes('essence') || tags.includes('catalyst') || tags.includes('gu_feed') || tags.includes('medicinal_herb') || tags.includes('beast_meat');
-    });
+    const invIndex = findInventoryIndex(player, itemId);
 
     if (invIndex === -1) {
       return res.status(400).json({ error: 'Tidak ada item bahan esensi yang cocok di dalam tas inventori.' });
     }
 
-    const inv = player.inventory[invIndex];
-    const item = inv.itemId;
+    const item = player.inventory[invIndex].itemId || player.inventory[invIndex];
     const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, item);
 
     const baseEssence = 30 * Math.pow(1.8, Math.max(0, itemTier - 1));
     const rawGain = Math.floor(baseEssence * efficiency);
     const essenceGain = Math.max(1, rawGain);
 
-    inv.quantity -= 1;
-    if (inv.quantity <= 0) {
-      player.inventory.splice(invIndex, 1);
-    }
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     law.currentEssence = Math.min(maxEss, (law.currentEssence || 0) + essenceGain);
     const instantQi = (LAW_PROGRESSION.INSTANT_QI_ON_ABSORB || 0) > 0
@@ -1912,7 +1901,6 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
       law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
     }
 
-    player.markModified('inventory');
     player.markModified('cultivationLaw');
     await player.save();
 
@@ -1920,8 +1908,12 @@ router.post('/essence/feed', authenticateToken, async (req, res) => {
     const effNote = efficiency < 1.0 ? ` (Efisiensi ${effPercent}%)` : '';
     res.json({
       success: true,
-      message: `✨ Berhasil menyerap [${item.name}]! Bar Esensi terisi +${essenceGain}${effNote} (${Math.floor(law.currentEssence)}/${maxEss})!`,
+      message: `✨ Berhasil menyerap [${consumeResult.consumedName}]! Bar Esensi terisi +${essenceGain}${effNote} (${Math.floor(law.currentEssence)}/${maxEss})!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         essenceGain,
         itemTier,
         playerTier,
@@ -2220,20 +2212,13 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Wajib memilih item pakan cacing Gu dari tas inventori (itemId).' });
     }
     await player.populate({ path: 'inventory.itemId' });
-    const invIndex = player.inventory.findIndex(inv => {
-      if (!inv.itemId || inv.quantity < 1) return false;
-      if (itemId && (inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId)) return true;
-      const tags = inv.itemId.tags || [];
-      const name = (inv.itemId.name || '').toLowerCase();
-      return tags.includes('gu_feed') || tags.includes('gu_essence') || name.includes('serangga') || name.includes('madu') || name.includes('daging');
-    });
+    const invIndex = findInventoryIndex(player, itemId);
 
     if (invIndex === -1) {
       return res.status(400).json({ error: 'Bahan pakan cacing Gu tidak ditemukan di tas inventori. Gunakan mode Tetes Darah Sendiri!' });
     }
 
-    const inv = player.inventory[invIndex];
-    const itemDoc = inv.itemId;
+    const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
     const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, itemDoc);
 
     const satietyGain = Math.round(60 * efficiency);
@@ -2249,10 +2234,7 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
       ? Math.min(LAW_PROGRESSION.MAX_INSTANT_QI_PER_ACTION || 0, Math.floor(10 * efficiency))
       : 0;
 
-    inv.quantity -= 1;
-    if (inv.quantity <= 0) {
-      player.inventory.splice(invIndex, 1);
-    }
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     targetGu.satiety = Math.min(100, currentEffectiveSatiety + satietyGain);
     targetGu.hunger = targetGu.satiety;
@@ -2261,7 +2243,6 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
       law.qi = Math.min(law.maxQi, (law.qi || 0) + instantQi);
     }
 
-    player.markModified('inventory');
     player.markModified('cultivationLaw');
     await player.save();
 
@@ -2270,12 +2251,17 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${itemDoc.name}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${effNote}${qiMsg})!`,
+      message: `🍖 Berhasil memberi makan ${targetGu.guName} dengan ${consumeResult.consumedName}! Kekenyangan ${targetGu.satiety}% (+${essenceGain} Esensi Aperture${effNote}${qiMsg})!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         guSlots: law.guSlots,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
+        vitality: player.extendedStats?.vitality ?? player.vitality ?? 100,
         itemTier,
         playerTier,
         efficiency
@@ -2788,45 +2774,22 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     }
     await player.populate({ path: 'inventory.itemId' });
 
-    let oreIndex = -1;
-    if (itemId) {
-      oreIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const id = (inv.itemId._id || inv.itemId).toString();
-        return id === itemId.toString();
-      });
-      if (oreIndex === -1) {
-        return res.status(400).json({ error: 'Item mineral/pengasah tidak ditemukan di dalam tas inventori!' });
-      }
-    } else {
-      oreIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const name = (inv.itemId.name || '').toLowerCase();
-        return name.includes('asah') || name.includes('besi') || name.includes('batu') || name.includes('mineral') || inv.itemId.category === 'material';
-      });
+    const oreIndex = findInventoryIndex(player, itemId);
+    if (oreIndex === -1) {
+      return res.status(400).json({ error: 'Item mineral/pengasah tidak ditemukan di dalam tas inventori!' });
     }
 
-    let essenceGain = 20;
-    let itemUsedName = 'Hawa Murni';
-    let itemTier = 1;
-    let affinity = { allowed: true, efficiency: 1.0 };
+    const itemDoc = player.inventory[oreIndex].itemId || player.inventory[oreIndex];
+    const absorbed = assertAbsorbTier(law, itemDoc);
+    const itemTier = absorbed.itemTier;
+    const playerTier = absorbed.playerTier;
+    const eff = absorbed.efficiency;
+    const essenceGain = Math.round(35 * itemTier * eff);
 
-    if (oreIndex !== -1) {
-      const itemSlot = player.inventory[oreIndex];
-      itemUsedName = itemSlot.itemId.name || 'Mineral';
-      const absorbed = assertAbsorbTier(law, itemSlot.itemId);
-      itemTier = absorbed.itemTier;
-      affinity = { allowed: true, efficiency: absorbed.efficiency };
-      essenceGain = Math.round(35 * itemTier * affinity.efficiency);
-
-      itemSlot.quantity -= 1;
-      if (itemSlot.quantity <= 0) player.inventory.splice(oreIndex, 1);
-      player.markModified('inventory');
-    }
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + essenceGain);
 
-    const eff = affinity.efficiency || 1.0;
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_NATAL_INFUSE_BASE * itemTier * eff);
     const cultivatorEssenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
     const maxEss = getMaxEssence(law.rank || 0);
@@ -2857,8 +2820,12 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${itemUsedName}! (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir${effNote}${qiMsg})`,
+      message: `🗡️ Berhasil mengasah pusaka jiwa ${law.boundEntity.customName || law.boundEntity.originalName} dengan ${consumeResult.consumedName}! (+${essenceGain} Intisari Pusaka, +${cultivatorEssenceGain} Esensi Reservoir${effNote}${qiMsg})`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         boundEntity: law.boundEntity,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -2892,43 +2859,19 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     }
     await player.populate({ path: 'inventory.itemId' });
 
-    let meatIndex = -1;
-    if (itemId) {
-      meatIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const id = (inv.itemId._id || inv.itemId).toString();
-        return id === itemId.toString();
-      });
-      if (meatIndex === -1) {
-        return res.status(400).json({ error: 'Pakan satwa tidak ditemukan di dalam tas inventori!' });
-      }
-    } else {
-      meatIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const name = (inv.itemId.name || '').toLowerCase();
-        return name.includes('daging') || name.includes('ikan') || name.includes('jantung') || inv.itemId.category === 'food' || inv.itemId.category === 'herb';
-      });
+    const meatIndex = findInventoryIndex(player, itemId);
+    if (meatIndex === -1) {
+      return res.status(400).json({ error: 'Pakan satwa tidak ditemukan di dalam tas inventori!' });
     }
 
-    let essenceGain = 25;
-    let foodName = 'Ransum Biasa';
-    let itemTier = 1;
-    let playerTier = (law.rank || 0) + 1;
-    let eff = 1.0;
+    const itemDoc = player.inventory[meatIndex].itemId || player.inventory[meatIndex];
+    const tierCheck = assertAbsorbTier(law, itemDoc);
+    const itemTier = tierCheck.itemTier;
+    const playerTier = tierCheck.playerTier;
+    const eff = tierCheck.efficiency;
+    const essenceGain = Math.round(40 * itemTier * eff);
 
-    if (meatIndex !== -1) {
-      const itemSlot = player.inventory[meatIndex];
-      foodName = itemSlot.itemId.name || 'Daging Roh';
-      const tierCheck = assertAbsorbTier(law, itemSlot.itemId);
-      itemTier = tierCheck.itemTier;
-      playerTier = tierCheck.playerTier;
-      eff = tierCheck.efficiency;
-      essenceGain = Math.round(40 * itemTier * eff);
-
-      itemSlot.quantity -= 1;
-      if (itemSlot.quantity <= 0) player.inventory.splice(meatIndex, 1);
-      player.markModified('inventory');
-    }
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     law.boundEntity.essence = Math.min(law.boundEntity.maxEssence || 100, (law.boundEntity.essence || 0) + essenceGain);
     law.boundEntity.beastCurrentHp = law.boundEntity.beastMaxHp || 120;
@@ -2966,8 +2909,12 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${foodName} dengan lahap (+${essenceGain} Intisari Satwa${effMsg}, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh${qiMsg})!`,
+      message: `🐾 ${law.boundEntity.customName || law.boundEntity.originalName} memakan ${consumeResult.consumedName} dengan lahap (+${essenceGain} Intisari Satwa${effMsg}, +${cultivatorEssenceGain} Esensi Reservoir, HP Penuh${qiMsg})!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         boundEntity: law.boundEntity,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3041,39 +2988,18 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     }
     await player.populate({ path: 'inventory.itemId' });
 
-    let coreIndex = -1;
-    if (itemId) {
-      coreIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const id = (inv.itemId._id || inv.itemId).toString();
-        return id === itemId.toString();
-      });
-      if (coreIndex === -1) {
-        return res.status(400).json({ error: 'Inti siluman tidak ditemukan di dalam tas inventori!' });
-      }
-    } else {
-      coreIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const name = (inv.itemId.name || '').toLowerCase();
-        return name.includes('inti') || name.includes('core');
-      });
+    const coreIndex = findInventoryIndex(player, itemId);
+    if (coreIndex === -1) {
+      return res.status(400).json({ error: 'Inti siluman tidak ditemukan di dalam tas inventori!' });
     }
 
-    let coreName = 'Inti Siluman Kotor';
-    let itemTier = 1;
-    let playerTier = (law.rank || 0) + 1;
-    let eff = 1.0;
-    if (coreIndex !== -1) {
-      const itemSlot = player.inventory[coreIndex];
-      coreName = itemSlot.itemId.name || 'Inti Siluman';
-      const tierCheck = assertAbsorbTier(law, itemSlot.itemId);
-      itemTier = tierCheck.itemTier;
-      playerTier = tierCheck.playerTier;
-      eff = tierCheck.efficiency;
-      itemSlot.quantity -= 1;
-      if (itemSlot.quantity <= 0) player.inventory.splice(coreIndex, 1);
-      player.markModified('inventory');
-    }
+    const itemDoc = player.inventory[coreIndex].itemId || player.inventory[coreIndex];
+    const tierCheck = assertAbsorbTier(law, itemDoc);
+    const itemTier = tierCheck.itemTier;
+    const playerTier = tierCheck.playerTier;
+    const eff = tierCheck.efficiency;
+
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
@@ -3101,8 +3027,12 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `👹 Berhasil melahap ${coreName} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg}, +3 Poin Korupsi Batin)!`,
+      message: `👹 Berhasil melahap ${consumeResult.consumedName} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg}, +3 Poin Korupsi Batin)!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3144,29 +3074,23 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
     let itemTier = 1;
     let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
+    let consumeResult = null;
     const { itemId } = req.body || {};
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString() || inv._id?.toString() === itemId.toString())
-      );
+      const invIndex = findInventoryIndex(player, itemId);
       if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
         return res.status(400).json({ error: 'Item botol darah tidak ditemukan di inventori tasmu.' });
       }
 
-      const invEntry = player.inventory[invIndex];
-      const itemDoc = invEntry.itemId;
+      const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
       const tierCheck = assertAbsorbTier(law, itemDoc);
       itemTier = tierCheck.itemTier;
       playerTier = tierCheck.playerTier;
       eff = tierCheck.efficiency;
       sourceName = itemDoc.name;
 
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
+      consumeResult = consumeInventoryItem(player, itemId, 1);
     }
 
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
@@ -3201,6 +3125,10 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
       success: true,
       message: `🩸 Berhasil memanen ${sourceName} (+${essenceGain} Esensi Reservoir${effMsg}, +1 Botol Darah${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
+        consumedItemId: consumeResult?.consumedItemId,
+        consumedName: consumeResult?.consumedName,
+        quantityRemaining: consumeResult?.quantityRemaining,
+        inventoryDelta: !!consumeResult,
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3243,29 +3171,23 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
     let itemTier = 1;
     let playerTier = (law.rank || 0) + 1;
     let eff = 1.0;
+    let consumeResult = null;
     const { itemId } = req.body || {};
     if (itemId) {
       await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString() || inv._id?.toString() === itemId.toString())
-      );
+      const invIndex = findInventoryIndex(player, itemId);
       if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
         return res.status(400).json({ error: 'Item arwah/jiwa tidak ditemukan di inventori tasmu.' });
       }
 
-      const invEntry = player.inventory[invIndex];
-      const itemDoc = invEntry.itemId;
+      const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
       const tierCheck = assertAbsorbTier(law, itemDoc);
       itemTier = tierCheck.itemTier;
       playerTier = tierCheck.playerTier;
       eff = tierCheck.efficiency;
       soulSource = itemDoc.name;
 
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
+      consumeResult = consumeInventoryItem(player, itemId, 1);
     }
 
     const rawGain = Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff);
@@ -3299,6 +3221,10 @@ router.post('/demonic/soul-banner', authenticateToken, async (req, res) => {
       success: true,
       message: `👻 Berhasil mengikat ${soulSource} ke dalam Panji Sembilan Ruh (+${essenceGain} Esensi Reservoir${effMsg}, +1 Jiwa Tersegel${qiMsg}, +${LAW_BALANCE.INFAMY_PER_BLOOD_ACTION} Status Buronan)!`,
       data: {
+        consumedItemId: consumeResult?.consumedItemId,
+        consumedName: consumeResult?.consumedName,
+        quantityRemaining: consumeResult?.quantityRemaining,
+        inventoryDelta: !!consumeResult,
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3338,29 +3264,20 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     if (!itemId) {
       return res.status(400).json({ error: 'Wajib memilih racun dari tas inventori (itemId)!' });
     }
-    if (itemId) {
-      await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString())
-      );
-      if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
-        return res.status(400).json({ error: 'Item racun tidak ditemukan di inventori tasmu.' });
-      }
-
-      const invEntry = player.inventory[invIndex];
-      const itemDoc = invEntry.itemId;
-      const tierCheck = assertAbsorbTier(law, itemDoc);
-      itemTier = tierCheck.itemTier;
-      playerTier = tierCheck.playerTier;
-      eff = tierCheck.efficiency;
-      poisonName = itemDoc.name;
-
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
+    await player.populate({ path: 'inventory.itemId' });
+    const invIndex = findInventoryIndex(player, itemId);
+    if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
+      return res.status(400).json({ error: 'Item racun tidak ditemukan di inventori tasmu.' });
     }
+
+    const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+    const tierCheck = assertAbsorbTier(law, itemDoc);
+    itemTier = tierCheck.itemTier;
+    playerTier = tierCheck.playerTier;
+    eff = tierCheck.efficiency;
+    poisonName = itemDoc.name;
+
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     // Pengurangan HP akibat racun menelan hanya mentok di 1 HP (non-lethal floor) sampai efek racun hilang
     const currentHp = player.currentHp || player.maxHp || 100;
@@ -3406,6 +3323,10 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
       success: true,
       message: `🧪 Berhasil menelan ${poisonName}! Rasa terbakar mengoyak kerongkongan (-${hpLoss} HP, sisa ${player.currentHp} HP), namun meridian menyerap bisanya (+${essenceGain} Esensi Reservoir${effMsg}, +1 Toleransi Racun${qiMsg}, +${LAW_BALANCE.INFAMY_PER_VENOM_ACTION} Status Buronan)!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3478,29 +3399,23 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       let itemTier = 1;
       let playerTier = (law.rank || 0) + 1;
       let eff = 1.0;
+      let consumeResult = null;
 
       if (itemId) {
         await player.populate({ path: 'inventory.itemId' });
-        const invIndex = player.inventory.findIndex(inv =>
-          inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString() || inv._id?.toString() === itemId.toString())
-        );
+        const invIndex = findInventoryIndex(player, itemId);
         if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
           throw new CustomError('Item persembahan kurban tidak ditemukan di inventori tasmu.', 400);
         }
 
-        const invEntry = player.inventory[invIndex];
-        const itemDoc = invEntry.itemId;
+        const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
         const tierCheck = assertAbsorbTier(law, itemDoc);
         itemTier = tierCheck.itemTier;
         playerTier = tierCheck.playerTier;
         eff = tierCheck.efficiency;
 
-        invEntry.quantity -= 1;
-        if (invEntry.quantity <= 0) {
-          player.inventory.splice(invIndex, 1);
-        }
-        player.markModified('inventory');
-        itemOfferingMsg = ` Mengorbankan 1x ${itemDoc.name}.`;
+        consumeResult = consumeInventoryItem(player, itemId, 1);
+        itemOfferingMsg = ` Mengorbankan 1x ${consumeResult.consumedName}.`;
       }
 
       const rawGain = itemId ? Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff) : 15;
@@ -3525,6 +3440,10 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
       await player.save({ session });
 
       resultData = {
+        consumedItemId: consumeResult?.consumedItemId,
+        consumedName: consumeResult?.consumedName,
+        quantityRemaining: consumeResult?.quantityRemaining,
+        inventoryDelta: !!consumeResult,
         demonicData: law.demonicData,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
@@ -3571,28 +3490,20 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     if (!itemId) {
       return res.status(400).json({ error: 'Wajib memilih batu Yin / esensi kegelapan dari tas inventori (itemId)!' });
     }
-    if (itemId) {
-      await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv =>
-        inv.itemId && (inv.itemId._id?.toString() === itemId.toString() || inv.itemId.id === itemId.toString())
-      );
-      if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
-        return res.status(400).json({ error: 'Item batu Yin tidak ditemukan di inventori tasmu.' });
-      }
-
-      const invEntry = player.inventory[invIndex];
-      const itemDoc = invEntry.itemId;
-      const tierCheck = assertAbsorbTier(law, itemDoc);
-      itemTier = tierCheck.itemTier;
-      playerTier = tierCheck.playerTier;
-      eff = tierCheck.efficiency;
-      absorbSource = itemDoc.name;
-      invEntry.quantity -= 1;
-      if (invEntry.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
-      player.markModified('inventory');
+    await player.populate({ path: 'inventory.itemId' });
+    const invIndex = findInventoryIndex(player, itemId);
+    if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
+      return res.status(400).json({ error: 'Item batu Yin tidak ditemukan di inventori tasmu.' });
     }
+
+    const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+    const tierCheck = assertAbsorbTier(law, itemDoc);
+    itemTier = tierCheck.itemTier;
+    playerTier = tierCheck.playerTier;
+    eff = tierCheck.efficiency;
+    absorbSource = itemDoc.name;
+
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
 
     const rawGain = itemId ? Math.floor(LAW_PROGRESSION.FILL_DEMONIC_BASE * itemTier * eff) : 15;
     const essenceGain = Math.min(LAW_PROGRESSION.MAX_ESSENCE_GAIN_PER_ACTION, Math.max(1, rawGain));
@@ -3615,8 +3526,12 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     const qiMsg = instantQi > 0 ? `, +${instantQi} Qi residu` : '';
     res.json({
       success: true,
-      message: `🌑 Berhasil menyerap ${absorbSource} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg})!`,
+      message: `🌑 Berhasil menyerap ${consumeResult.consumedName} (+${essenceGain} Esensi Reservoir${effMsg}${qiMsg})!`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
@@ -3653,18 +3568,13 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
     }
 
     await player.populate({ path: 'inventory.itemId' });
-    const invIndex = player.inventory.findIndex(inv => {
-      if (!inv.itemId || inv.quantity < 1) return false;
-      const id = (inv.itemId._id || inv.itemId).toString();
-      return id === itemId.toString();
-    });
-
-    if (invIndex === -1) {
+    const invIndex = findInventoryIndex(player, itemId);
+    if (invIndex === -1 || player.inventory[invIndex].quantity < 1) {
       return res.status(400).json({ error: 'Item elemen tidak ditemukan di dalam tas inventori!' });
     }
 
     const itemSlot = player.inventory[invIndex];
-    const item = itemSlot.itemId;
+    const item = itemSlot.itemId || itemSlot;
 
     // Pemetaan Elemen Hukum
     const ELEMENT_MAP = {
@@ -3724,12 +3634,8 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
       law.qi = Math.min(law.maxQi, (law.qi || 0) + directQi);
     }
 
-    // Kurangi item dari tas
-    itemSlot.quantity -= 1;
-    if (itemSlot.quantity <= 0) {
-      player.inventory.splice(invIndex, 1);
-    }
-    player.markModified('inventory');
+    // Kurangi item dari tas via authoritative helper
+    const consumeResult = consumeInventoryItem(player, itemId, 1);
     player.markModified('extendedStats');
     player.markModified('cultivationLaw');
     await player.save();
@@ -3740,8 +3646,12 @@ router.post('/element/absorb', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: `✨ Berhasil menyerap '${item.name}' ke dalam ${targetElem.reservoir}! +${finalEssenceGain} Esensi Elemen${effNote}, +${rootXpGain} Spiritual Root XP${qiMsg}.`,
+      message: `✨ Berhasil menyerap '${consumeResult.consumedName}' ke dalam ${targetElem.reservoir}! +${finalEssenceGain} Esensi Elemen${effNote}, +${rootXpGain} Spiritual Root XP${qiMsg}.`,
       data: {
+        consumedItemId: consumeResult.consumedItemId,
+        consumedName: consumeResult.consumedName,
+        quantityRemaining: consumeResult.quantityRemaining,
+        inventoryDelta: true,
         currentEssence: Math.floor(law.currentEssence),
         maxEssence: maxEss,
         qi: law.qi,
