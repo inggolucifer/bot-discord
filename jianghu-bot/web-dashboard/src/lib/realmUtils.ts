@@ -94,3 +94,49 @@ export function getEnglishRealmDisplay(player: any): RealmDisplayInfo {
     fullTitle: `${enRealm} (${stageText})`
   };
 }
+
+/**
+ * Pemetaan Standar Aman Ranah Law (FASE F Authoritative Fallback)
+ * Digunakan jika API belum menyertakan realmLabel / realmDisplay
+ */
+export const LAW_RANK_STANDARD_NAMES: Record<number, string> = {
+  0: 'Qi Refining',
+  1: 'Foundation Building',
+  2: 'Golden Core',
+  3: 'Nascent Soul',
+  4: 'Soul Formation',
+  5: 'Void Refining',
+  6: 'Body Integration',
+  7: 'Mahayana',
+  8: 'Tribulation',
+  9: 'True Immortal',
+};
+
+export interface LawRealmDisplay {
+  title: string;
+  display: string;
+}
+
+/**
+ * Menyelesaikan label ranah kultivasi law secara authoritative:
+ * 1. Prioritaskan API response: `realmLabel` atau `realmDisplay.display`
+ * 2. Fallback ke mapping aman LAW_RANK_STANDARD_NAMES
+ */
+export function resolveLawRealmDisplay(lawData: any): LawRealmDisplay {
+  if (!lawData) {
+    return { title: 'Qi Refining', display: 'Qi Refining · Rank 0 · Stage 0/9' };
+  }
+
+  const rank = typeof lawData.rank === 'number' ? lawData.rank : 0;
+  const stage = typeof lawData.stage === 'number' ? lawData.stage : 0;
+  const fallbackTitle = LAW_RANK_STANDARD_NAMES[rank] || `Rank ${rank}`;
+
+  // Prioritas title: realmDisplay?.title -> rankDisplayName -> fallback
+  const title = lawData.realmDisplay?.title || lawData.rankDisplayName || fallbackTitle;
+
+  // Prioritas display: realmLabel -> realmDisplay?.display -> fallback string
+  const display = lawData.realmLabel || lawData.realmDisplay?.display || `${title} · Rank ${rank} · Stage ${stage}/9`;
+
+  return { title, display };
+}
+

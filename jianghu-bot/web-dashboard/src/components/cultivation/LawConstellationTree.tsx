@@ -8,6 +8,7 @@ import {
   Sparkles, Lock, CheckCircle2, Zap, Shield, Sword, 
   Flame, Info, ChevronRight, X, AlertTriangle 
 } from 'lucide-react';
+import { LAW_RANK_STANDARD_NAMES } from '@/lib/realmUtils';
 
 interface LawConstellationTreeProps {
   skills: LawSkillItem[];
@@ -569,7 +570,11 @@ export default function LawConstellationTree({
                   <AlertTriangle size={15} className="text-amber-400 shrink-0" />
                   <span>
                     {selectedSkill.lockedReason === 'need_sp' && 'Poin Skill (SP) tidak mencukupi.'}
-                    {selectedSkill.lockedReason === 'need_rank' && 'Tingkat kultivasi (Rank Law) belum mencukupi.'}
+                    {selectedSkill.lockedReason === 'need_rank' && (
+                      selectedSkill.requiredRank !== undefined
+                        ? `Tingkat kultivasi belum mencukupi (Butuh ${LAW_RANK_STANDARD_NAMES[selectedSkill.requiredRank] || `Rank ${selectedSkill.requiredRank}`}).`
+                        : 'Tingkat kultivasi (Rank Law) belum mencukupi.'
+                    )}
                     {selectedSkill.lockedReason === 'need_parent' && 'Syarat node sebelumnya belum dipelajari.'}
                     {selectedSkill.lockedReason === 'branch_locked' && 'Jalur cabang terkunci karena telah memilih cabang lain.'}
                     {selectedSkill.lockedReason === 'max_level' && 'Tingkat penguasaan telah maksimal.'}

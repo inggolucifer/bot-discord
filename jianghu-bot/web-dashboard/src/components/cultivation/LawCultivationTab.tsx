@@ -12,7 +12,7 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { LawStatusData, LawSkillItem, LawType } from '@/types/game';
 import { CultivationData } from '@/lib/schemas';
-import { LAW_RANK_NAMES_EN } from '@/lib/realmUtils';
+import { LAW_RANK_NAMES_EN, LAW_RANK_STANDARD_NAMES, resolveLawRealmDisplay } from '@/lib/realmUtils';
 import Link from 'next/link';
 import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
 import MaxLevelCapBanner from './MaxLevelCapBanner';
@@ -2136,9 +2136,8 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   const skillsList = skillsRes?.data?.skills || [];
   const availablePoints = skillsRes?.data?.availablePoints ?? lawData.lawSkillPoints;
 
-  // Authoritative Law Realm Display from API
-  const realmTitle = lawData.realmDisplay?.title || lawData.rankDisplayName || `Rank ${lawData.rank}`;
-  const realmFullDisplay = lawData.realmLabel || lawData.realmDisplay?.display || `${realmTitle} · Rank ${lawData.rank} · Stage ${lawData.stage}/9`;
+  // Authoritative Law Realm Display from API (FASE F)
+  const { title: realmTitle, display: realmFullDisplay } = resolveLawRealmDisplay(lawData);
 
   return (
     <div className="space-y-6">
@@ -2393,7 +2392,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-mono">
-                <span className="text-stone-400">Kapasitas Penampungan Esensi (Ranah {lawData.rank}):</span>
+                <span className="text-stone-400">Kapasitas Penampungan Esensi ({realmTitle}):</span>
                 <span className="text-cyan-300 font-bold">
                   {Math.floor(lawData.currentEssence || 0)} / {lawData.maxEssence || 100} ({lawData.essencePercent || 0}%)
                 </span>
@@ -3263,7 +3262,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       />
                     </div>
                     <div className="flex justify-between items-center text-[10px] text-stone-400 pt-1">
-                      <span>Tingkat Ranah: Tier {lawData.rank + 1}</span>
+                      <span>Tingkat Ranah: {realmTitle} (Tier {lawData.rank + 1})</span>
                       <span className="font-mono text-emerald-400">Pencernaan Aktif (+{lawData.channelRatePerMinute} Qi/mnt)</span>
                     </div>
                   </div>
@@ -3310,7 +3309,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
               <div className="flex items-center justify-between border-b border-stone-800 pb-2">
                 <h3 className="font-serif font-bold text-base text-amber-300 flex items-center gap-2">
                   <Zap className="w-4 h-4 text-yellow-500" />
-                  {lawData.stage < 9 ? `Syarat Mini-Breakthrough Stage ${lawData.stage + 1}` : `Penerobosan Agung Rank ${lawData.rank + 1}`}
+                  {lawData.stage < 9 ? `Syarat Mini-Breakthrough Stage ${lawData.stage + 1}` : `Penerobosan Agung ${LAW_RANK_STANDARD_NAMES[lawData.rank + 1] || `Rank ${lawData.rank + 1}`}`}
                 </h3>
                 <span className="text-xs font-mono text-stone-500">
                   {lawData.stage < 9 ? 'Tahap Menengah' : 'Puncak Ranah'}
@@ -3463,7 +3462,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       <span>{lawData.tribulationDetails?.tribulationTitle || `Peringatan Tribulasi Petir Surgawi (Tier ${lawData.rank})`}</span>
                     </div>
                     <p className="text-[11px] text-purple-300/80 leading-relaxed">
-                      Menerobos ke Rank {lawData.rank + 1} memicu 3 gelombang Petir Surgawi. Kegagalan mengakibatkan deviasi Qi dan cedera dantian berat!
+                      Menerobos ke {LAW_RANK_STANDARD_NAMES[lawData.rank + 1] || `Rank ${lawData.rank + 1}`} (Rank {lawData.rank + 1}) memicu 3 gelombang Petir Surgawi. Kegagalan mengakibatkan deviasi Qi dan cedera dantian berat!
                     </p>
                   </div>
 
@@ -3568,7 +3567,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                     ) : (
                       <>
                         <Zap size={16} className="mr-1 text-yellow-300" />
-                        <span>🌩️ Hadapi Tribulasi Langit & Terobos ke Rank {lawData.rank + 1}!</span>
+                        <span>🌩️ Hadapi Tribulasi Langit & Terobos ke {LAW_RANK_STANDARD_NAMES[lawData.rank + 1] || `Rank ${lawData.rank + 1}`}!</span>
                       </>
                     )}
                   </Button>
