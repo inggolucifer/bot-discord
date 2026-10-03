@@ -2,6 +2,14 @@
 // Dipanggil dari pre-save hook Player & Sect, jadi berlaku OTOMATIS di semua transaksi tanpa
 // perlu ditulis manual di tiap command (daily, transfer, shop, admin-grant, donasi, dll -- semuanya lewat .save()).
 
+const RATE_TO_COPPER = {
+  copper: 1,
+  silver: 100,
+  gold: 10000,
+  jade: 1000000,
+  spirit: 100000000,
+};
+
 function normalizeCurrency(currency) {
   if (!currency) return currency;
 
@@ -49,19 +57,8 @@ function normalizeCurrency(currency) {
   return currency;
 }
 
-module.exports = { normalizeCurrency };
-
-
-const RATE_TO_COPPER = {
-  copper: 1,
-  silver: 100,
-  gold: 10000,
-  jade: 1000000,
-  spirit: 100000000,
-};
-
 function convertFromCopper(totalCopper) {
-    let rem = totalCopper;
+    let rem = Math.max(0, Math.round(Number(totalCopper) || 0));
     let spirit = Math.floor(rem / RATE_TO_COPPER.spirit);
     rem %= RATE_TO_COPPER.spirit;
     let jade = Math.floor(rem / RATE_TO_COPPER.jade);
@@ -83,10 +80,92 @@ function convertToCopper(currency) {
            (currency.spirit || 0) * RATE_TO_COPPER.spirit;
 }
 
+/** Total kekayaan dalam copper */
+function getTotalCopper(currency) {
+  return convertToCopper(currency || {});
+}
 
+/**
+ * Cek apakah cukup bayar needCopper.
+ * @param {object} currency
+ * @param {number} needCopper
+ * @returns {{ ok: boolean, totalCopper: number, needCopper: number, shortfall: number }}
+ */
+function canAffordCopper(currency, needCopper) {
+  const total = getTotalCopper(currency);
+  const need = Math.max(0, Math.ceil(Number(needCopper) || 0));
+  const ok = total >= need;
+  const shortfall = ok ? 0 : need - total;
+  return { ok, totalCopper: total, needCopper: need, shortfall };
+}
 
+/**
+ * Konversi nilai Silver ke Copper (1 Silver = 100 Copper)
+ * @param {number} silverAmount
+ * @returns {number}
+ */
+function silverToCopper(silverAmount) {
+  return Math.ceil(Number(silverAmount) || 0) * (RATE_TO_COPPER.silver || 100);
+}
 
+/**
+ * Format tampilan: "2 Gold 5 Silver 30 Copper" dari total copper
+ * @param {number} totalCopper
+ * @returns {string}
+ */
+function formatCopper(totalCopper) {
+  const amount = Math.max(0, Math.round(Number(totalCopper) || 0));
+  if (amount === 0) return '0 Copper';
+  const { copper, silver, gold, jade, spirit } = convertFromCopper(amount);
+  const parts = [];
+  if (spirit > 0) parts.push(`${spirit} Spirit`);
+  if (jade > 0) parts.push(`${jade} Jade`);
+  if (gold > 0) parts.push(`${gold} Gold`);
+  if (silver > 0) parts.push(`${silver} Silver`);
+  if (copper > 0) parts.push(`${copper} Copper`);
+  return parts.length > 0 ? parts.join(' ') : '0 Copper';
+}
 
-module.exports.convertFromCopper = convertFromCopper;
-module.exports.convertToCopper = convertToCopper;
-module.exports.RATE_TO_COPPER = RATE_TO_COPPER;
+/**
+ * Potong needCopper dari currency object (mutasi in-place).
+ * Alur: total = convertToCopper → total -= need → Object.assign(currency, convertFromCopper(total))
+ * Throw Error statusCode 400 jika tidak cukup, pesan human-readable.
+ * @param {object} currency - Objek mata uang { copper, silver, gold, jade, spirit }
+ * @param {number} needCopper - Jumlah copper yang harus dipotong
+ * @param {string} label - Label biaya untuk pesan error
+ * @returns {{ paidCopper: number, remaining: number }}
+ */
+function deductCopper(currency, needCopper, label = 'Biaya') {
+  if (!currency) {
+    const err = new Error(`${label}: data mata uang tidak valid.`);
+    err.statusCode = 400;
+    throw err;
+  }
+  const total = convertToCopper(currency);
+  const need = Math.ceil(Number(needCopper) || 0);
+  if (total < need) {
+    const err = new Error(`${label}: saldo tidak cukup. Butuh ${formatCopper(need)}, punya ${formatCopper(total)}.`);
+    err.statusCode = 400;
+    throw err;
+  }
+  const remaining = total - need;
+  const next = convertFromCopper(remaining);
+  currency.copper = next.copper;
+  currency.silver = next.silver;
+  currency.gold = next.gold;
+  currency.jade = next.jade || 0;
+  currency.spirit = next.spirit || 0;
+  return { paidCopper: need, remaining };
+}
+
+module.exports = {
+  normalizeCurrency,
+  convertFromCopper,
+  convertToCopper,
+  RATE_TO_COPPER,
+  getTotalCopper,
+  canAffordCopper,
+  deductCopper,
+  silverToCopper,
+  formatCopper
+};
