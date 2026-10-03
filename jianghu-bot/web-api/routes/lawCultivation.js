@@ -1359,11 +1359,16 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
       const { assertMood, applyMoodDelta } = require('../../utils/moodManager');
       assertMood(player, 25); // Mood ≥ 25 untuk major breakthrough
 
+      // Populate inventory untuk validasi item material & pil
+      await player.populate({ path: 'inventory.itemId' });
+
+      // Validasi dan konsumsi material terobosan besar (1x katalis/material tier >= playerTier)
+      const materialResult = consumeBreakthroughMaterials(player, law, true);
+
       // Cek dan konsumsi Pil Penerobosan jika terpasang di slot
       let pillOptions = {};
       if (law.breakthroughPillSlot) {
         const pillTargetId = (law.breakthroughPillSlot._id || law.breakthroughPillSlot)?.toString();
-        await player.populate({ path: 'inventory.itemId' });
         const pillIdx = player.inventory.findIndex(inv => {
           if (!inv.itemId) return false;
           const invId = (inv.itemId._id || inv.itemId)?.toString();
@@ -1383,6 +1388,9 @@ router.post('/breakthrough/rank', authenticateToken, async (req, res) => {
       }
 
       const result = attemptMajorBreakthrough(player, pillOptions);
+      if (materialResult?.consumedItemName) {
+        result.consumedMaterial = materialResult.consumedItemName;
+      }
 
       if (result.isSuccess) {
         applyMoodDelta(player, -15);

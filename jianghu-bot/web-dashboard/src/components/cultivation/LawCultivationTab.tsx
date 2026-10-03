@@ -3199,7 +3199,7 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   <div className="flex justify-between py-1.5 border-b border-stone-800/80 text-stone-300">
                     <span>Syarat Material:</span>
                     <span className="font-mono text-amber-400">
-                      {lawData.miniBreakthroughCost?.requiredQty || (2 + (lawData.rank || 0) + Math.floor((lawData.stage || 0) / 3))}x Material (Tier ≤ {(lawData.rank || 0) + 1})
+                      Butuh {lawData.miniBreakthroughCost?.requiredQty || (2 + (lawData.rank || 0) + Math.floor((lawData.stage || 0) / 3))} material kultivasi (Tier ≤ {(lawData.rank || 0) + 1})
                     </span>
                   </div>
                   <div className="pt-2">
@@ -3343,6 +3343,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                       </div>
                     </div>
                   )}
+
+                  {/* Syarat Material Katalis Major */}
+                  <div className="flex justify-between py-1.5 px-2.5 rounded bg-purple-950/30 border border-purple-800/40 text-xs">
+                    <span className="text-stone-300">Syarat Katalis:</span>
+                    <span className="font-mono text-purple-300 font-bold">
+                      Butuh 1 katalis Tier ≥ {(lawData.rank || 0) + 1}
+                    </span>
+                  </div>
 
                   {/* Peluang Keberhasilan & Penalti */}
                   <div className="space-y-1.5 bg-stone-950/50 p-2.5 rounded-lg border border-stone-800/80">

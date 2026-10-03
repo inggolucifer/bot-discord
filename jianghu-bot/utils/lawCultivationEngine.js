@@ -3047,6 +3047,13 @@ function getLawStatus(player) {
       maxTier: (law.rank || 0) + 1,
       materialName: `Batu Roh / Material Kultivasi (Tier ≤ ${(law.rank || 0) + 1})`
     },
+    majorBreakthroughCost: {
+      moodCost: 25,
+      vitalityCost: 25,
+      requiredQty: 1,
+      minTier: (law.rank || 0) + 1,
+      materialName: `Katalis Terobosan / Batu Roh (Tier ≥ ${(law.rank || 0) + 1})`
+    },
     miniBreakthroughSuccessRate: getMiniBreakthroughSuccessRate(law.rank || 0, law.stage || 0),
     majorBreakthroughSuccessRate: getMajorBreakthroughSuccessRate(law.rank || 0, !!law.breakthroughPillSlot),
 
