@@ -295,7 +295,7 @@ function simulateBattle(challenger, opponent, options = {}) {
             else p2Hp = Math.min(p2MaxHp, attacker.hp);
         }
 
-        let psychosisCond = atkConds.find(c => c.type === 'psychosis');
+        let psychosisCond = (attacker.conditions?.psychosis || 0) > 0;
         let hitSelf = false;
         if (psychosisCond && Math.random() < COMBAT_COND.PSYCHOSIS_MISS_OR_SELF_HIT_CHANCE) {
             hitSelf = true;
@@ -475,9 +475,9 @@ function simulateBattle(challenger, opponent, options = {}) {
         if (activeSkill && totalDmgDone > 0 && !hitSelf) {
              if (activeSkill.type === 'lifesteal') {
                   let heal = Math.floor(totalDmgDone * (activeSkill.value - 1));
-                  let burnCond = atkConds.find(c => c.type === 'burn');
-                  if (burnCond && burnCond.severity >= COMBAT_COND.BURN_INCINERATED_THRESHOLD) {
-                      heal = Math.floor(heal * (1 - COMBAT_COND.HEALING_REDUCTION_INCINERATED));
+                  let burnCond = attacker.conditions?.burn || 0;
+                  if (burnCond >= (COMBAT_COND.BURN_INCINERATED_THRESHOLD || 20)) {
+                      heal = Math.floor(heal * (1 - (COMBAT_COND.HEALING_REDUCTION_INCINERATED || 0.5)));
                       pushLog(`🔥 Efek Incinerated mengurangi healing **${attacker.characterName}**!`, 'burn_incinerated');
                   }
                   if (currentAttacker === 1) p1Hp = Math.min(p1Stats.maxHp, p1Hp + heal);
