@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const Item = require('../models/Item');
 const Player = require('../models/Player');
+const { resolveItemTier } = require('../utils/lawCultivationEngine');
 
 const ESSENCE_ITEMS = [
   // ═══════════════════════════════════════════════════════════════
@@ -248,11 +249,21 @@ const ESSENCE_ITEMS = [
   // 7. GU MASTER (gu_master)
   // ═══════════════════════════════════════════════════════════════
   {
+    name: 'Larva Serangga Rawa (Tier 1)',
+    category: 'material',
+    rank: 'Common',
+    tier: 1,
+    tags: ['essence', 'gu_essence', 'gu_feed', 'gu_food'],
+    description: 'Larva cacing rawa pemakan bangkai beracun, pakan dasar pemula Aperture Gu.',
+    basePrice: 20,
+    priceCurrency: 'copper'
+  },
+  {
     name: 'Intisari Serangga Gu',
     category: 'material',
     rank: 'Uncommon',
     tier: 2,
-    tags: ['essence', 'gu_essence', 'gu_feed'],
+    tags: ['essence', 'gu_essence', 'gu_feed', 'gu_food'],
     description: 'Sari sari herba beracun dan getah manis yang difermentasi khusus untuk makanan cacing Gu.',
     basePrice: 50,
     priceCurrency: 'silver'
@@ -262,7 +273,7 @@ const ESSENCE_ITEMS = [
     category: 'material',
     rank: 'Rare',
     tier: 3,
-    tags: ['essence', 'gu_essence', 'gu_feed'],
+    tags: ['essence', 'gu_essence', 'gu_feed', 'gu_food'],
     description: 'Madu kental beracun dari sarang ratu kalajengking, santapan mewah pemacu mutasi cacing Gu.',
     basePrice: 150,
     priceCurrency: 'silver'
@@ -272,7 +283,7 @@ const ESSENCE_ITEMS = [
     category: 'material',
     rank: 'Epic',
     tier: 4,
-    tags: ['essence', 'gu_essence', 'gu_feed'],
+    tags: ['essence', 'gu_essence', 'gu_feed', 'gu_food'],
     description: 'Empedu pekat raja serangga gua terlarang, memicu lonjakan Satiety dan evolusi tier Gu.',
     basePrice: 5,
     priceCurrency: 'gold'
@@ -425,6 +436,49 @@ const ESSENCE_ITEMS = [
   }
 ];
 
+function getRankFromTier(tier) {
+  if (tier <= 1) return 'Common';
+  if (tier === 2) return 'Uncommon';
+  if (tier === 3) return 'Rare';
+  if (tier === 4) return 'Epic';
+  if (tier === 5) return 'Legendary';
+  if (tier === 6) return 'Mythical';
+  if (tier === 7) return 'Immortal';
+  return 'Divine';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SPIRIT STONES TIER 1 S/D 8 (spirit_stone_t{N} & breakthrough_material)
+// ═══════════════════════════════════════════════════════════════
+for (let t = 1; t <= 8; t++) {
+  ESSENCE_ITEMS.push({
+    name: `Batu Roh Murni (Tier ${t})`,
+    category: 'material',
+    rank: getRankFromTier(t),
+    tier: t,
+    tags: ['spirit_stone', 'breakthrough_material', 'essence', `spirit_stone_t${t}`],
+    description: `Batu mineral yang menyimpan konsentrasi Qi murni padat tingkat ${t}, berguna untuk kultivasi dan terobosan ranah.`,
+    basePrice: Math.floor(20 * Math.pow(2.2, t - 1)),
+    priceCurrency: t <= 2 ? 'copper' : t <= 5 ? 'silver' : 'gold'
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BREAKTHROUGH CATALYSTS TIER 1 S/D 8 (breakthrough_catalyst_t{N})
+// ═══════════════════════════════════════════════════════════════
+for (let t = 1; t <= 8; t++) {
+  ESSENCE_ITEMS.push({
+    name: `Katalis Terobosan Langit (Tier ${t})`,
+    category: 'material',
+    rank: getRankFromTier(t),
+    tier: t,
+    tags: ['breakthrough_catalyst', 'catalyst', 'breakthrough_material', `breakthrough_catalyst_t${t}`],
+    description: `Katalis spiritual tingkat ${t} yang memicu resonansi dantian untuk merobek pembatas ranah besar (Major Breakthrough).`,
+    basePrice: Math.floor(50 * Math.pow(2.5, t - 1)),
+    priceCurrency: t <= 2 ? 'copper' : t <= 4 ? 'silver' : 'gold'
+  });
+}
+
 async function seed() {
   try {
     await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jianghu');
@@ -440,6 +494,25 @@ async function seed() {
       upsertedCount++;
     }
     console.log(`✅ Berhasil seeding/upsert ${upsertedCount} Item Esensi & Material Altar.`);
+
+    // Idempotent backfill: Pastikan item existing yang memiliki tag esensi/material memiliki tier numerik
+    const missingTierItems = await Item.find({
+      $or: [
+        { tier: { $exists: false } },
+        { tier: null },
+        { tier: { $type: 'string' } }
+      ]
+    });
+    let backfilledCount = 0;
+    for (const it of missingTierItems) {
+      const resolved = resolveItemTier(it);
+      it.tier = resolved;
+      await it.save();
+      backfilledCount++;
+    }
+    if (backfilledCount > 0) {
+      console.log(`✨ Berhasil melakukan backfill tier numerik pada ${backfilledCount} item existing.`);
+    }
 
     // Berikan starter pack item esensi ke karakter Inggo untuk pengujian langsung
     const inggo = await Player.findOne({ discordId: 'google_10398407018507304858_1790425324687' });
