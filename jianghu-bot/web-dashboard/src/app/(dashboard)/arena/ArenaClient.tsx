@@ -47,7 +47,7 @@ export default function ArenaClient() {
 
     useEffect(() => {
         if (!token) {
-            router.push('/auth/login');
+            router.push('/auth');
             return;
         }
     }, [token]);

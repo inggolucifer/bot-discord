@@ -17,7 +17,7 @@ export default function SkillsClient() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('jianghu_token') && !token) {
-      router.push('/auth/login');
+      router.push('/auth');
     }
   }, [token, router]);
 
