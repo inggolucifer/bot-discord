@@ -18,7 +18,7 @@ export default function OracleClient() {
 
     useEffect(() => {
         if (!token) {
-            router.push('/auth/login');
+            router.push('/auth');
         }
     }, [token]);
 

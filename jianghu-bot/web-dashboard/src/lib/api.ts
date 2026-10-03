@@ -42,8 +42,8 @@ api.interceptors.response.use(
         if (typeof window !== 'undefined') {
            localStorage.removeItem('jianghu_token');
            localStorage.removeItem('jianghu_user');
-           if (window.location.pathname !== '/auth/login' && window.location.pathname !== '/') {
-              window.location.href = '/auth/login';
+           if (window.location.pathname !== '/auth' && window.location.pathname !== '/') {
+              window.location.href = '/auth';
            }
         }
         return Promise.reject(refreshError);

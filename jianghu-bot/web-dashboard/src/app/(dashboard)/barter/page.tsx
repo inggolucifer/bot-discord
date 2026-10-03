@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import api from '@/lib/api';
 
 export default function BarterPage() {
     const router = useRouter();
@@ -31,12 +32,9 @@ export default function BarterPage() {
         // Fetch current user details quickly to know our own ID
         const fetchMe = async () => {
             try {
-                const res = await fetch('/api/player/profile'); // Using existing endpoint
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.success && data.data) {
-                        setMyUserId(data.data.discordId);
-                    }
+                const res = await api.get('/player/profile');
+                if (res.data?.success && res.data?.data) {
+                    setMyUserId(res.data.data.discordId);
                 }
             } catch (e) {
                 console.error("Failed fetching user ID");
@@ -50,22 +48,16 @@ export default function BarterPage() {
         setLoading(true);
         setError(null);
         try {
-            const nearbyRes = await fetch('/api/barter/nearby-players');
-            if (nearbyRes.ok) {
-                const nearbyData = await nearbyRes.json();
-                if (nearbyData.success) {
-                    setPlayers(nearbyData.data);
-                }
+            const nearbyRes = await api.get('/barter/nearby-players');
+            if (nearbyRes.data?.success) {
+                setPlayers(nearbyRes.data.data);
             }
-            const offersRes = await fetch('/api/barter/offers');
-            if (offersRes.ok) {
-                const offersData = await offersRes.json();
-                if (offersData.success) {
-                    setOffers(offersData.data);
-                }
+            const offersRes = await api.get('/barter/offers');
+            if (offersRes.data?.success) {
+                setOffers(offersRes.data.data);
             }
-        } catch (err) {
-            setError('Gagal mengambil data barter.');
+        } catch (err: any) {
+            setError(err.response?.data?.error || 'Gagal mengambil data barter.');
         }
         setLoading(false);
     };
@@ -79,17 +71,12 @@ export default function BarterPage() {
         }
 
         try {
-            const res = await fetch('/api/barter/offers', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    toUserId: targetPlayer,
-                    offer: { copper: Number(offerCopper), silver: Number(offerSilver), items: offerItems },
-                    request: { copper: Number(requestCopper), silver: Number(requestSilver), items: requestItems }
-                })
+            const res = await api.post('/barter/offers', {
+                toUserId: targetPlayer,
+                offer: { copper: Number(offerCopper), silver: Number(offerSilver), items: offerItems },
+                request: { copper: Number(requestCopper), silver: Number(requestSilver), items: requestItems }
             });
-            const data = await res.json();
-            if (res.ok && data.success) {
+            if (res.data?.success) {
                 setActionMessage({ type: 'success', text: 'Tawaran barter berhasil dibuat!' });
                 fetchData();
                 setOfferCopper(0);
@@ -100,26 +87,25 @@ export default function BarterPage() {
                 setRequestItems([]);
                 setTargetPlayer('');
             } else {
-                setActionMessage({ type: 'error', text: data.error || 'Gagal membuat tawaran barter.' });
+                setActionMessage({ type: 'error', text: res.data?.error || 'Gagal membuat tawaran barter.' });
             }
-        } catch (err) {
-            setActionMessage({ type: 'error', text: 'Terjadi kesalahan jaringan.' });
+        } catch (err: any) {
+            setActionMessage({ type: 'error', text: err.response?.data?.error || 'Terjadi kesalahan jaringan.' });
         }
     };
 
     const handleAction = async (offerId: string, action: string) => {
         setActionMessage(null);
         try {
-            const res = await fetch(`/api/barter/offers/${offerId}/${action}`, { method: 'POST' });
-            const data = await res.json();
-            if (res.ok && data.success) {
-                setActionMessage({ type: 'success', text: data.message });
+            const res = await api.post(`/barter/offers/${offerId}/${action}`);
+            if (res.data?.success) {
+                setActionMessage({ type: 'success', text: res.data.message || `Berhasil ${action} barter.` });
                 fetchData();
             } else {
-                setActionMessage({ type: 'error', text: data.error || `Gagal ${action} barter.` });
+                setActionMessage({ type: 'error', text: res.data?.error || `Gagal ${action} barter.` });
             }
-        } catch (err) {
-            setActionMessage({ type: 'error', text: 'Terjadi kesalahan jaringan.' });
+        } catch (err: any) {
+            setActionMessage({ type: 'error', text: err.response?.data?.error || 'Terjadi kesalahan jaringan.' });
         }
     };
 
