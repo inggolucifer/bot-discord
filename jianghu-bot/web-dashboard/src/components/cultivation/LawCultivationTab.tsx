@@ -16,6 +16,7 @@ import { LAW_RANK_NAMES_EN, LAW_RANK_STANDARD_NAMES, resolveLawRealmDisplay } fr
 import HeavenlyTribulationModal, { TribulationData } from './HeavenlyTribulationModal';
 import MaxLevelCapBanner from './MaxLevelCapBanner';
 import LawInventoryPicker from './LawInventoryPicker';
+import FacilityUpgradeCard from './FacilityUpgradeCard';
 import {
   Flame,
   Shield,
@@ -1983,6 +1984,13 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
   // Authoritative Law Realm Display from API (FASE F)
   const { title: realmTitle, display: realmFullDisplay } = resolveLawRealmDisplay(lawData);
 
+  // Player Currency Balance (FASE E)
+  const pGold = Math.floor(Number(livePlayer?.currency?.gold) || 0);
+  const pSilver = Math.floor(Number(livePlayer?.currency?.silver) || 0);
+  const pCopper = Math.floor(Number(livePlayer?.currency?.copper) || 0);
+  const pJade = Math.floor(Number(livePlayer?.currency?.jade) || 0);
+  const pSpirit = Math.floor(Number(livePlayer?.currency?.spirit) || 0);
+
   return (
     <div className="space-y-6">
       {/* 1. UNIFIED HERO CARD: LAW CULTIVATION & REALM MASTER BANNER */}
@@ -2025,6 +2033,36 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 <span className="flex items-center gap-1.5 font-mono text-stone-400">
                   <Flame className="w-3.5 h-3.5 text-orange-400" />
                   Laju Intisari: <strong className="text-stone-200">+{lawData.channelRatePerMinute} {lawData.qiType === 'true_qi' ? 'True Qi' : 'Qi'}/mnt</strong>
+                </span>
+              </div>
+
+              {/* Tampilan Saldo Multi-Pecahan & Hint Konversi (FASE E) */}
+              <div
+                className="flex items-center gap-2 text-xs px-2.5 py-1 rounded-lg bg-black/60 border border-amber-600/30 text-stone-300 font-mono w-fit mt-1 select-none"
+                title="Sistem Uang Otomatis Normalisasi: 100 Copper = 1 Silver, 100 Silver = 1 Gold, 100 Gold = 1 Jade, 100 Jade = 1 Spirit Stone. Pembayaran dikonversi ke total tembaga."
+              >
+                <span className="text-amber-400 font-serif font-bold flex items-center gap-1">
+                  <span>💰</span> Saldo:
+                </span>
+                <span className="text-yellow-400 font-bold">{pGold} G</span>
+                <span className="text-stone-500">·</span>
+                <span className="text-slate-200 font-bold">{pSilver} S</span>
+                <span className="text-stone-500">·</span>
+                <span className="text-amber-500 font-bold">{pCopper} C</span>
+                {(pJade > 0 || pSpirit > 0) && (
+                  <>
+                    <span className="text-stone-500">·</span>
+                    <span className="text-emerald-400 font-bold">{pJade} J</span>
+                    {pSpirit > 0 && (
+                      <>
+                        <span className="text-stone-500">·</span>
+                        <span className="text-cyan-400 font-bold">{pSpirit} SS</span>
+                      </>
+                    )}
+                  </>
+                )}
+                <span className="text-[10px] text-stone-400 cursor-help hidden sm:inline ml-1 font-sans">
+                  (ℹ️ 100C=1S, 100S=1G)
                 </span>
               </div>
             </div>
@@ -2270,31 +2308,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </div>
                 </div>
 
-                {/* Fasilitas Kuali Bak Mandi Rempah Raga */}
-                <div className="bg-amber-950/20 p-3 rounded-lg border border-amber-600/30 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-xs font-serif font-bold text-amber-300 flex items-center gap-1.5">
-                      <span>🛁</span> Kuali Bak Mandi Raga: <span className="font-mono text-stone-200">
-                        {(lawData.facilities?.bodyCauldronTier || 0) === 0 ? 'Belum Dibuat' : `Tier ${lawData.facilities?.bodyCauldronTier}`}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-stone-400">
-                      {(lawData.facilities?.bodyCauldronTier || 0) === 0
-                        ? 'Wajib membuat Kuali Bak Mandi rempah untuk meracik rendaman herbal penempaan.'
-                        : 'Wadah perendaman aktif untuk penempaan 9 bagian raga vajra.'}
-                    </p>
-                  </div>
-                  {(lawData.facilities?.bodyCauldronTier || 0) < 4 && (
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'body_cauldron' } })}
-                      disabled={lawActionMutation.isPending}
-                      className="bg-amber-700 hover:bg-amber-600 text-stone-950 font-bold text-xs py-1 h-auto"
-                    >
-                      {(lawData.facilities?.bodyCauldronTier || 0) === 0 ? '🔨 Buat Bak Mandi' : '⬆️ Upgrade Bak Mandi'}
-                    </Button>
-                  )}
-                </div>
+                {/* Fasilitas Kuali Bak Mandi Rempah Raga (FASE D) */}
+                <FacilityUpgradeCard
+                  facilityType="body_cauldron"
+                  lawData={lawData}
+                  playerCurrency={livePlayer?.currency}
+                  onUpgrade={(ft) => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: ft } })}
+                  isPending={lawActionMutation.isPending}
+                />
 
                 {/* 9 Bagian Tubuh Grid */}
                 <div>
@@ -2517,25 +2538,14 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                   </div>
                 </div>
 
-                {/* Fasilitas Kendi Penyuling Gu */}
-                <div className="bg-emerald-950/20 p-2.5 rounded-lg border border-emerald-600/30 flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-serif font-bold text-emerald-300 flex items-center gap-1.5">
-                      <span>🏺</span> Kendi Penyuling Gu: <strong className="font-mono text-stone-200">Tier {lawData.facilities?.guCrucibleTier || 1}</strong>
-                    </span>
-                    <span className="text-[10px] text-stone-400 block">Menentukan batas maksimal mutasi tier cacing Gu dan peluang sintesis fusi aperture batin.</span>
-                  </div>
-                  {(lawData.facilities?.guCrucibleTier || 1) < 4 && (
-                    <Button
-                      size="sm"
-                      onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'gu_crucible' } })}
-                      disabled={lawActionMutation.isPending}
-                      className="bg-emerald-700 hover:bg-emerald-600 text-stone-950 font-bold text-[10px] py-0.5 px-2 h-auto"
-                    >
-                      ⬆️ Upgrade Kendi
-                    </Button>
-                  )}
-                </div>
+                {/* Fasilitas Kendi Penyuling Gu (FASE D) */}
+                <FacilityUpgradeCard
+                  facilityType="gu_crucible"
+                  lawData={lawData}
+                  playerCurrency={livePlayer?.currency}
+                  onUpgrade={(ft) => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: ft } })}
+                  isPending={lawActionMutation.isPending}
+                />
 
                 {/* Daftar Slot Cacing Gu */}
                 <div className="space-y-2.5">
@@ -2973,40 +2983,17 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
 
                 {lawData.activeLawType === 'demonic_abyssal_pact' && (
                   <div className="space-y-3">
-                    {/* Altar Kurban Darah Abyss Status */}
-                    <div className="bg-purple-950/30 p-2.5 rounded-lg border border-purple-600/30 flex items-center justify-between text-xs">
-                      <div>
-                        <span className="font-serif font-bold text-purple-300 flex items-center gap-1.5">
-                          <span>🏛️</span> Altar Kurban Darah Abyss: <strong className="font-mono text-stone-200">
-                            {(lawData.facilities?.abyssalAltarTier || 0) === 0 ? 'Belum Didirikan' : `Tier ${lawData.facilities?.abyssalAltarTier}`}
-                          </strong>
-                          {(lawData.facilities?.abyssalAltarTier || 0) > 0 ? (
-                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">
-                              📍 Aset Lahan Aktif
-                            </span>
-                          ) : (
-                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-950/80 border border-amber-500/40 text-amber-400">
-                              ⚠️ Butuh Kavling Lahan
-                            </span>
-                          )}
-                        </span>
-                        <span className="text-[10px] text-stone-400 block">
-                          {(lawData.facilities?.abyssalAltarTier || 0) === 0 
-                            ? 'Wajib memiliki kavling tanah di Peta (/world) untuk mendirikan Altar fisik!' 
-                            : `Tenggat Upeti: ${lawData.demonicData?.abyssalTributeDueAt ? new Date(lawData.demonicData.abyssalTributeDueAt).toLocaleDateString() : 'Belum Ada Upeti'}`}
-                        </span>
-                      </div>
-                      {(lawData.facilities?.abyssalAltarTier || 0) < 3 && (
-                        <Button
-                          size="sm"
-                          onClick={() => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: 'abyssal_altar' } })}
-                          disabled={lawActionMutation.isPending}
-                          className="bg-purple-700 hover:bg-purple-600 text-stone-950 font-bold text-[10px] py-0.5 px-2 h-auto"
-                        >
-                          {(lawData.facilities?.abyssalAltarTier || 0) === 0 ? '🔨 Dirikan di Lahan' : '⬆️ Upgrade Altar'}
-                        </Button>
-                      )}
-                    </div>
+                    {/* Altar Kurban Darah Abyss Status (FASE D) */}
+                    <FacilityUpgradeCard
+                      facilityType="abyssal_altar"
+                      lawData={lawData}
+                      playerCurrency={livePlayer?.currency}
+                      onUpgrade={(ft) => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: ft } })}
+                      isPending={lawActionMutation.isPending}
+                      customDescription={(lawData.facilities?.abyssalAltarTier || 0) > 0
+                        ? `Altar aktif di lahan peta dunia. Tenggat Upeti: ${lawData.demonicData?.abyssalTributeDueAt ? new Date(lawData.demonicData.abyssalTributeDueAt).toLocaleDateString() : 'Belum Ada Upeti'}`
+                        : 'Wajib memiliki kavling tanah di Peta (/world) untuk mendirikan Altar fisik!'}
+                    />
 
                     <div className="space-y-2">
                       <Button
@@ -3147,6 +3134,33 @@ export default function LawCultivationTab({ realmData }: LawCultivationTabProps)
                 </Card>
               );
             })()}
+
+            {/* KASUS G: PRAKTISI FORMASI BENDERA (HUB FORMASI BENDERA DI PETA DUNIA - FASE D) */}
+            {lawData.activeLawType === 'righteous_formation_array' && (
+              <Card className="border border-sky-500/40 bg-stone-950/80 p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl p-2 rounded-lg bg-sky-950/40 border border-sky-500/30">🚩</span>
+                    <div>
+                      <h3 className="font-serif font-bold text-base text-sky-200">
+                        Matriks Hub Formasi Bendera (Array Nexus)
+                      </h3>
+                      <p className="text-xs text-stone-400">
+                        Mendirikan Hub Formasi di atas kavling peta dunia untuk menyegel energi spiritual leylines wilayah.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <FacilityUpgradeCard
+                  facilityType="formation_hub"
+                  lawData={lawData}
+                  playerCurrency={livePlayer?.currency}
+                  onUpgrade={(ft) => lawActionMutation.mutate({ endpoint: 'facility/build-or-upgrade', payload: { facilityType: ft } })}
+                  isPending={lawActionMutation.isPending}
+                />
+              </Card>
+            )}
 
             {/* 2. SISI KANAN: KARTU SYARAT BREAKTHROUGH & TRIBULASI */}
             <Card className="border border-stone-800 bg-stone-900/60 p-5 space-y-4">

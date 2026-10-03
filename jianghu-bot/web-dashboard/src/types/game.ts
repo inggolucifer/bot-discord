@@ -302,7 +302,12 @@ export type LawType =
   | 'demonic_blood_soul'
   | 'demonic_myriad_venom'
   | 'demonic_abyssal_pact'
-  | 'demonic_nether_darkness';
+  | 'demonic_nether_darkness'
+  | 'righteous_heavenly_merit'
+  | 'righteous_pure_yang'
+  | 'righteous_sword_heart'
+  | 'righteous_formation_array'
+  | 'righteous_karmic_mirror';
 
 export interface BoundEntityData {
   entityType: 'artifact' | 'beast' | null;
@@ -324,6 +329,31 @@ export interface BoundEntityData {
   artifactRes?: number;
   isEgg?: boolean;
   hatchedAt?: string | null;
+}
+
+export interface FacilityUpgradeMaterial {
+  name: string;
+  requiredQty: number;
+  availableQty: number;
+  hasEnough: boolean;
+}
+
+export interface FacilityUpgradeQuote {
+  facilityType: string;
+  facilityName: string;
+  icon: string;
+  currentTier: number;
+  nextTier: number;
+  maxTier: number;
+  isMaxTier: boolean;
+  costSilver: number;
+  costCopper: number;
+  costFormatted: string;
+  materials: FacilityUpgradeMaterial[];
+  canAfford: boolean;
+  shortfallCopper: number;
+  hasMaterials: boolean;
+  requiresMapTile: boolean;
 }
 
 export interface LawStatusData {
@@ -380,6 +410,14 @@ export interface LawStatusData {
     abyssalAltarTier?: number;
     bodyCauldronTier?: number;
     guCrucibleTier?: number;
+    formationHubTier?: number;
+    upgrades?: {
+      body_cauldron?: FacilityUpgradeQuote;
+      gu_crucible?: FacilityUpgradeQuote;
+      abyssal_altar?: FacilityUpgradeQuote;
+      formation_hub?: FacilityUpgradeQuote;
+      [key: string]: FacilityUpgradeQuote | undefined;
+    };
   };
   demonicData?: {
     turbidCoresConsumed?: number;
