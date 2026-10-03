@@ -696,107 +696,86 @@ router.post('/email-login', async (req, res) => {
 router.post('/web-login', async (req, res) => {
     try {
         const { characterName, gender } = req.body;
-        if (!characterName || typeof characterName !== 'string' || characterName.trim().length === 0) {
-            return res.status(400).json({ error: 'Nama pendekar wajib diisi.' });
+        const validation = validateCharacterName(characterName);
+        if (!validation.valid) {
+            return res.status(400).json({ error: validation.error });
         }
 
-        const trimmedName = characterName.trim();
+        const trimmedName = validation.name;
         const targetGuildId = process.env.GUILD_ID || '1169651733470126100';
 
-        // 1. Cari apakah karakter sudah ada
-        let player = await Player.findOne({ characterName: trimmedName });
+        // 1. Tolak login jika karakter sudah ada (Cegah Account Takeover / Impersonation)
+        const existingPlayer = await Player.findOne({
+            characterName: { $regex: new RegExp(`^${trimmedName}$`, 'i') }
+        });
 
-        if (!player) {
-            const webUserId = `web_${trimmedName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-            player = await Player.findOne({ discordId: webUserId });
-        }
-
-        if (!player) {
-            // Buat Karakter Pendekar Baru langsung di Web
-            const webUserId = `web_${trimmedName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-            const validGender = (gender === 'Perempuan') ? 'Perempuan' : 'Laki-laki';
-
-            player = await Player.create({
-                discordId: webUserId,
-                guildId: targetGuildId,
-                characterName: trimmedName,
-                gender: validGender,
-                age: 18,
-                currency: { copper: 500, silver: 10, gold: 0, jade: 0, spirit: 0 },
-                schemaVersion: 2,
-                avatarUrl: null,
-                currentLocation: {
-                    regionSlug: 'central_plains',
-                    settlementName: 'Desa Xingcun',
-                    buildingName: null
-                },
-                gridPosition: {
-                    zoneId: 'tianyuan_world_map',
-                    tileX: 2455,
-                    tileY: 2485
-                },
-                systemCultivation: {
-                    realm: 'Fondasi Fana (Mortal Foundation)',
-                    stage: 1,
-                    qi: 0,
-                    lastSyncAt: new Date(),
-                    isFlawedFoundation: false
-                },
-                currency: {
-                    copper: 1000,
-                    silver: 50,
-                    gold: 1,
-                    spirit: 0,
-                    jade: 0
-                }
+        if (existingPlayer) {
+            return res.status(403).json({
+                error: 'Karakter dengan nama ini sudah terdaftar. Untuk mengakses karakter yang sudah ada, silakan gunakan login Email & Password atau akun Discord.'
             });
         }
 
-        // Generate token JWT
-        const tokenPayload = {
-            userId: player.discordId,
-            username: player.characterName,
-            avatar: player.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png'
-        };
+        // 2. Buat Karakter Pendekar Baru langsung di Web jika nama belum pernah dipakai
+        const webUserId = `web_${trimmedName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}`;
+        const validGender = (gender === 'Perempuan') ? 'Perempuan' : 'Laki-laki';
 
-        const accessToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '30d' });
-
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            path: '/'
-        };
-
-        res.cookie('accessToken', accessToken, {
-            ...cookieOptions,
-            maxAge: 15 * 60 * 1000
+        const player = await Player.create({
+            discordId: webUserId,
+            guildId: targetGuildId,
+            characterName: trimmedName,
+            username: trimmedName,
+            gender: validGender,
+            appearanceCompleted: false,
+            body: {
+                face: 'face_01',
+                frontHair: 'front_hair_01',
+                backHair: 'back_hair_01',
+                outfit: 'outfit_vagrant_black',
+                hair: 'front_hair_01',
+                cloth: 'outfit_vagrant_black'
+            },
+            age: 18,
+            schemaVersion: 2,
+            avatarUrl: null,
+            currentLocation: {
+                regionSlug: 'central_plains',
+                settlementName: 'Desa Xingcun',
+                buildingName: null
+            },
+            gridPosition: {
+                zoneId: 'tianyuan_world_map',
+                tileX: 2455,
+                tileY: 2485
+            },
+            systemCultivation: {
+                realm: 'Fondasi Fana (Mortal Foundation)',
+                stage: 1,
+                qi: 0,
+                lastSyncAt: new Date(),
+                isFlawedFoundation: false
+            },
+            currency: {
+                copper: 1000,
+                silver: 50,
+                gold: 1,
+                spirit: 0,
+                jade: 0
+            }
         });
 
-        res.cookie('refreshToken', refreshToken, {
-            ...cookieOptions,
-            maxAge: 30 * 24 * 60 * 60 * 1000
-        });
+        // Terbitkan sesi login resmi
+        const session = issueAuthSession(res, player);
 
         res.json({
             success: true,
-            token: accessToken,
-            user: {
-                id: player.discordId,
-                username: player.characterName,
-                avatar: player.avatarUrl || 'https://cdn.discordapp.com/embed/avatars/0.png',
-                hasCharacter: true,
-                character: {
-                    characterName: player.characterName,
-                    realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',
-                    guildId: player.guildId
-                }
-            }
+            token: session.accessToken,
+            user: session.user,
+            requiresAppearance: true,
+            message: `Karakter berhasil dibuat! Selamat datang di Jianghu, Pendekar ${player.characterName}.`
         });
     } catch (err) {
         console.error('[API-AUTH] Web login error:', err);
-        res.status(500).json({ error: 'Gagal memproses login web: ' + err.message });
+        res.status(500).json({ error: 'Gagal memproses pendaftaran web: ' + err.message });
     }
 });
 
