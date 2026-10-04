@@ -11,6 +11,7 @@ const { getRealmIndex } = require('../../utils/cultivation');
 const { calculatePlayerStats } = require('../../utils/playerCombat');
 const { simulateExamCombat } = require('../../utils/sectExamCombat');
 const { deductCopper, silverToCopper, formatCopper, getTotalCopper } = require('../../utils/currencyNormalize');
+const LockManager = require('../utils/lockManager');
 
 // GET /api/sect/:sectId/examInfo
 router.get('/:sectId/examInfo', authenticateToken, async (req, res) => {
@@ -57,6 +58,11 @@ router.get('/:sectId/examInfo', authenticateToken, async (req, res) => {
 
 // POST /api/sect/:sectId/exam/start
 router.post('/:sectId/exam/start', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `pay_${userId}_sect_exam`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ message: 'Transaksi pendaftaran sedang diproses. Mohon tunggu.' });
+
   try {
     const sect = await Sect.findById(req.params.sectId);
     if (!sect || !sect.entranceTest || !sect.entranceTest.enabled) {
@@ -270,6 +276,8 @@ router.get('/exam/status', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
+  } finally {
+    if (typeof releaseLock === 'function') releaseLock();
   }
 });
 
