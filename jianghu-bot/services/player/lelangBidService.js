@@ -44,10 +44,9 @@ module.exports = {
       return interaction.editReply(`❌ Bid harus lebih besar dari tertinggi saat ini! Minimal bid: **${minBid} Silver**.`);
     }
 
-    // Cek uang player (kita asumsikan bid memakai Silver)
-    // Untuk ini, kita asumsikan Player.totalWealth >= bidAmount agar lebih simple, tapi idealnya memotong Silver aslinya
-    // Tapi karena ada normalisasi, kita harus memotong dari total wealth dengan aman.
-    if (player.totalWealth < bidAmount) {
+    // Cek uang player dengan 5-tier unified currency
+    const { hasEnoughCurrency, payCurrency, addCurrencyAmount } = require('../../utils/currency');
+    if (!hasEnoughCurrency(player.currency, bidAmount, 'silver')) {
       return interaction.editReply(`❌ Kekayaanmu tidak cukup. Kamu hanya memiliki total setara **${player.totalWealth} Silver**, sedangkan bid kamu adalah **${bidAmount} Silver**.`);
     }
 
@@ -55,7 +54,6 @@ module.exports = {
     if (auction.highestBidderId) {
       const prevBidder = await Player.findById(auction.highestBidderId);
       if (prevBidder) {
-        const { addCurrencyAmount } = require('../../utils/currency');
         addCurrencyAmount(prevBidder.currency, auction.highestBid, 'silver');
         prevBidder.markModified('currency');
         await prevBidder.save(); // normalisasi otomatis jalan
@@ -69,10 +67,10 @@ module.exports = {
     }
 
     // Potong uang bidder baru
-    const { payCurrency } = require('../../utils/currency');
     if (!payCurrency(player.currency, bidAmount, 'silver')) {
        return interaction.editReply(`❌ Terjadi kesalahan pada saat menghitung kurs uang.`);
     }
+    player.markModified('currency');
     await player.save();
 
     // Update lelang
