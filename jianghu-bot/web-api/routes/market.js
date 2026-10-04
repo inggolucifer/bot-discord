@@ -16,6 +16,7 @@ const { authenticateToken } = require('../middlewares/auth');
 const { withTransaction } = require('../utils/dbTransaction');
 const CustomError = require('../utils/CustomError');
 const { isToolItem, buildToolInventoryEntry } = require('../../utils/inventoryToolHelper');
+const { hasEnoughCurrency, payCurrency, addCopper, addCurrencyAmount, RATE_TO_COPPER, getTotalCopper } = require('../../utils/currency');
 
 // Helper to determine emoji based on item/asset type
 function getEmojiForShopItem(itemType, category) {
@@ -114,10 +115,16 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Jumlah penawaran tidak valid.' });
     }
 
-    // 🔒 MUTEX LOCK: Cegah race condition
-    const lockKey = `market_auction_bid_${auctionId}`;
+    // 🔒 MUTEX LOCK: Cegah race condition lelang & saldo bidder
+    const lockKey = `market_bid_${auctionId}`;
+    const userLockKey = `pay_${userId}_bid`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+    const releaseUserLock = await LockManager.acquire(userLockKey);
+    if (!releaseUserLock) {
+        releaseLock();
+        return res.status(429).json({ error: "Transaksi Anda sedang diproses. Mohon tunggu." });
+    }
 
     try {
         await withTransaction(async (session) => {
@@ -164,21 +171,18 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
                 throw new CustomError(`Bid harus lebih besar dari tertinggi saat ini! Minimal bid: ${minBid} Silver.`, 400);
             }
 
-            const { hasEnoughCurrency } = require('../../utils/currency');
             if (!hasEnoughCurrency(player.currency, bidAmount, 'silver')) {
                 throw new CustomError(`Kekayaanmu tidak cukup. Total kekayaanmu setara dengan ${player.totalWealth} Silver.`, 400);
             }
 
-            // Refund the previous highest bidder
+            // Refund the previous highest bidder with 5-tier multi-currency normalization
             if (auction.highestBidderId) {
-                // Using findOneAndUpdate to atomically increment the refunded player's silver
-                const prevBidder = await Player.findOneAndUpdate(
-                    { _id: auction.highestBidderId },
-                    { $inc: { 'currency.silver': auction.highestBid } },
-                    { new: true, session }
-                );
-
+                const prevBidder = await Player.findById(auction.highestBidderId).session(session);
                 if (prevBidder) {
+                    addCurrencyAmount(prevBidder.currency, auction.highestBid, 'silver');
+                    prevBidder.markModified('currency');
+                    await prevBidder.save({ session });
+
                     await TransactionLog.create([{
                         guildId: auction.guildId,
                         type: 'auction_refund',
@@ -187,9 +191,7 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
                 }
             }
 
-            // Cut money from current player. We will use the object approach here since we might have to convert wealth
-            const { payCurrency } = require('../../utils/currency');
-
+            // Deduct bid money from bidder
             if (!payCurrency(player.currency, bidAmount, 'silver')) {
                  throw new CustomError(`Saldo tidak cukup meskipun total kekayaan setara ${player.totalWealth} Silver.`, 400);
             }
@@ -218,9 +220,11 @@ router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Bid error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan pada server saat bid.' });
     } finally {
+        if (typeof releaseUserLock === 'function') releaseUserLock();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
+
 
 
 // POST /api/market/shop/sell-to-system
@@ -263,8 +267,8 @@ router.post('/shop/sell-to-system', authenticateToken, async (req, res) => {
                 player.inventory = player.inventory.filter(i => i.itemId.toString() !== itemId);
             }
 
-            // Add Currency
-            player.currency[currencyType] += totalHarga;
+            // Add Currency with 5-tier normalization
+            addCurrencyAmount(player.currency, totalHarga, currencyType);
             player.markModified('currency');
             player.markModified('inventory');
             await player.save({ session });
@@ -308,8 +312,14 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
     }
 
     const lockKey = `market_shop_buy_${shopId}_${userId}`;
+    const userLockKey = `pay_${userId}_shopbuy`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+    const releaseUserLock = await LockManager.acquire(userLockKey);
+    if (!releaseUserLock) {
+        releaseLock();
+        return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+    }
     try {
         await withTransaction(async (session) => {
             const shopItem = await Shop.findById(shopId).session(session);
@@ -419,6 +429,7 @@ router.post('/shop/buy', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
+        if (typeof releaseUserLock === 'function') releaseUserLock();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
@@ -466,8 +477,14 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
     }
 
     const lockKey = `market_playershop_${listingId}`;
+    const userLockKey = `pay_${userId}_listingbuy`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+    const releaseUserLock = await LockManager.acquire(userLockKey);
+    if (!releaseUserLock) {
+        releaseLock();
+        return res.status(429).json({ error: "Transaksi sedang diproses. Mohon tunggu." });
+    }
     try {
         await withTransaction(async (session) => {
             const PlayerListing = require('../../models/PlayerListing');
@@ -511,23 +528,18 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
                 }
             }
 
-            const { payCurrency } = require('../../utils/currency');
             if (!payCurrency(player.currency, totalPrice, currencyType)) {
                  throw new CustomError(`Uang tidak cukup. Butuh setara dengan ${totalPrice} ${currencyType}.`, 400);
             }
             player.markModified('currency');
             await player.save({ session });
 
-            // Add money to seller atomically
-            const addQuery = {};
-            addQuery[`currency.${currencyType}`] = totalPrice;
-            const seller = await Player.findOneAndUpdate(
-                { discordId: listing.sellerId },
-                { $inc: addQuery },
-                { new: true, session }
-            );
-
+            // Add money to seller with 5-tier multi-currency normalization
+            const seller = await Player.findOne({ discordId: listing.sellerId }).session(session);
             if (!seller) throw new CustomError('Penjual tidak ditemukan (mungkin sudah dihapus).', 404);
+            addCurrencyAmount(seller.currency, totalPrice, currencyType);
+            seller.markModified('currency');
+            await seller.save({ session });
 
             // Proses Pindah Barang
             if (listing.type === 'item') {
@@ -585,6 +597,7 @@ router.post('/player-shop/buy', authenticateToken, async (req, res) => {
         console.error('[API-MARKET] Player Shop Buy error:', error);
         res.status(500).json({ error: 'Terjadi kesalahan saat membeli.' });
     } finally {
+        if (typeof releaseUserLock === 'function') releaseUserLock();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
@@ -785,94 +798,5 @@ router.post('/player-shop/my-listings/sell', authenticateToken, async (req, res)
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
-
-
-
-router.post('/auctions/:id/bid', authenticateToken, async (req, res) => {
-    const auctionId = req.params.id;
-    const { bidAmount } = req.body;
-    const userId = req.user.userId;
-
-    if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
-        return res.status(400).json({ error: 'Jumlah tawaran tidak valid.' });
-    }
-
-    const lockKey = `auction_${auctionId}`;
-    const releaseLock = await LockManager.acquire(lockKey);
-    if (!releaseLock) return res.status(429).json({ error: 'Sistem sedang sibuk memproses lelang, coba lagi.' });
-
-    try {
-        let msg = '';
-        let bidResult = null;
-
-        await withTransaction(async (session) => {
-            const auction = await Auction.findById(auctionId).session(session);
-            if (!auction) throw new CustomError('Lelang tidak ditemukan.', 404);
-
-            if (auction.status !== 'active') throw new CustomError('Lelang sudah ditutup atau tidak aktif.', 400);
-            if (new Date(auction.endTime) < new Date()) throw new CustomError('Waktu lelang telah habis.', 400);
-            if (auction.sellerId === userId) throw new CustomError('Kamu tidak bisa menawar barangmu sendiri.', 400);
-            if (bidAmount <= auction.currentBid) throw new CustomError('Tawaran harus lebih tinggi dari penawaran saat ini.', 400);
-
-            const player = await Player.findOne({ discordId: userId }).session(session);
-            if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
-
-            if (auction) {
-                const Item = require('../../models/Item');
-                const itemDef = await Item.findById(auction.itemId);
-                if (itemDef) {
-                    const playerRealmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
-                    const minRealmIdx = itemDef.minRealmIndex || 0;
-                    if (playerRealmIdx < minRealmIdx - 1) {
-                        throw new CustomError(`Barang ini terlalu tinggi tingkatannya. Butuh minimal Realm Index ${minRealmIdx - 1} untuk menawar.`, 400);
-                    }
-                }
-            }
-            if (player.currency[auction.currencyType] < bidAmount) {
-                 throw new CustomError('Uang tidak cukup.', 400);
-            }
-
-            if (auction.highestBidderId) {
-                 const previousBidder = await Player.findOne({ discordId: auction.highestBidderId }).session(session);
-                 if (previousBidder) {
-                     previousBidder.currency[auction.currencyType] += auction.currentBid; // Refund
-                     previousBidder.markModified('currency');
-                     await previousBidder.save({ session });
-                 }
-            }
-
-            player.currency[auction.currencyType] -= bidAmount;
-
-            auction.currentBid = bidAmount;
-            auction.highestBidderId = userId;
-
-            player.markModified('currency');
-            await player.save({ session });
-            await auction.save({ session });
-
-            bidResult = {
-                auctionId: auction._id,
-                currentBid: bidAmount,
-                highestBidderId: userId
-            };
-
-            msg = 'Penawaran berhasil.';
-        });
-
-        const io = req.app.get('io');
-        if (io && bidResult) {
-            io.emit('auction_updated', bidResult);
-        }
-
-        return res.json({ success: true, message: msg });
-    } catch (err) {
-        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        console.error('Error bidding:', err);
-        return res.status(500).json({ error: 'Internal error' });
-    } finally {
-        if (typeof releaseLock === 'function') releaseLock();
-    }
-});
-
-
 module.exports = router;
+

@@ -56,7 +56,9 @@ module.exports = {
                 const seller = await Player.findById(auction.sellerId._id);
                 if (seller) {
                   const profit = Math.floor(auction.highestBid * (1 - auction.taxRate));
-                  seller.currency.silver += profit;
+                  const { addCurrencyAmount } = require('../utils/currency');
+                  addCurrencyAmount(seller.currency, profit, 'silver');
+                  seller.markModified('currency');
                   await seller.save();
 
                   await TransactionLog.create({
