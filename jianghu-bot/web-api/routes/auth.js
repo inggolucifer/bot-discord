@@ -7,9 +7,35 @@ const EmailVerification = require('../../models/EmailVerification');
 const { sendOtpEmail } = require('../utils/emailService');
 const { JWT_SECRET } = require('../utils/jwtSecret');
 const { authenticateToken } = require('../middlewares/auth');
+const rateLimit = require('express-rate-limit');
 
 const express = require('express');
 const router = express.Router();
+
+// Rate Limiters for sensitive authentication endpoints
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 menit
+    max: 30, // Maks 30 percobaan per 15 menit per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Terlalu banyak percobaan. Tunggu 15 menit.' }
+});
+
+const characterCreateLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 jam
+    max: 10, // Maks 10 pembuatan karakter per jam per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Terlalu banyak pembuatan karakter. Coba lagi dalam 1 jam.' }
+});
+
+const refreshLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100, // Relatif longgar untuk background token refresh
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Terlalu banyak percobaan refresh token. Harap tunggu.' }
+});
 
 // Helper validasi nama karakter: 5-7 huruf abjad alfabet murni, tanpa spasi, tanpa angka
 function validateCharacterName(name) {
@@ -160,7 +186,7 @@ router.get('/check-name', async (req, res) => {
 });
 
 // Endpoint: POST /api/auth/email-register (Registrasi Email + Password + Nama 5-7 Huruf)
-router.post('/email-register', async (req, res) => {
+router.post('/email-register', authLimiter, characterCreateLimiter, async (req, res) => {
     try {
         const { email, password, characterName, gender } = req.body;
         if (!email || !password || !characterName) {
@@ -259,7 +285,7 @@ router.post('/email-register', async (req, res) => {
 });
 
 // Endpoint: POST /api/auth/send-otp (Mengirimkan Kode Verifikasi 6-Digit ke Email Pendaftar)
-router.post('/send-otp', async (req, res) => {
+router.post('/send-otp', authLimiter, async (req, res) => {
     try {
         const { email, password, characterName, gender } = req.body;
         if (!email || !password || !characterName) {
@@ -327,7 +353,7 @@ router.post('/send-otp', async (req, res) => {
 });
 
 // Endpoint: POST /api/auth/verify-otp (Validasi Kode 6-Digit & Aktivasi Akun Pendekar)
-router.post('/verify-otp', async (req, res) => {
+router.post('/verify-otp', authLimiter, async (req, res) => {
     try {
         const { email, otp } = req.body;
         if (!email || !otp) {
@@ -626,7 +652,7 @@ router.post('/set-appearance', authenticateToken, async (req, res) => {
 });
 
 // Email & Password Login (Hybrid Login)
-router.post('/email-login', async (req, res) => {
+router.post('/email-login', authLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -693,7 +719,7 @@ router.post('/email-login', async (req, res) => {
 });
 
 // Standalone Web Direct Login & Character Registration (Discord-Independent)
-router.post('/web-login', async (req, res) => {
+router.post('/web-login', authLimiter, characterCreateLimiter, async (req, res) => {
     try {
         const { characterName, gender } = req.body;
         const validation = validateCharacterName(characterName);
@@ -884,7 +910,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Route to refresh token
-router.post('/refresh', (req, res) => {
+router.post('/refresh', refreshLimiter, (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
@@ -1003,7 +1029,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 });
 
 // Route to register a character directly from Web
-router.post('/register-character', authenticateToken, async (req, res) => {
+router.post('/register-character', authenticateToken, authLimiter, characterCreateLimiter, async (req, res) => {
     try {
         const userId = req.user.userId;
         const { characterName, gender, age, guildId } = req.body;
