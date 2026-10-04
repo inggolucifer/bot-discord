@@ -24,14 +24,16 @@ module.exports = {
     const sect = await getPlayerSect(interaction.guildId, interaction.user.id);
     if (!sect) return interaction.editReply({ content: '❌ Kamu tidak sedang bergabung dalam sekte manapun.' });
 
-    const { payCurrency } = require('../../../utils/currency');
+    const { payCurrency, addCurrencyAmount } = require('../../../utils/currency');
     if (!payCurrency(player.currency, jumlah, jenis)) {
       return interaction.editReply({ content: `❌ Uang kamu tidak cukup. Butuh setara dengan ${jumlah} ${CURRENCY_LABEL[jenis]}.` });
     }
 
+    player.markModified('currency');
     await player.save();
 
-    sect.currency[jenis] += jumlah;
+    addCurrencyAmount(sect.currency, jumlah, jenis);
+    sect.markModified('currency');
     await sect.save();
 
     await logTransaction(interaction.client, {
