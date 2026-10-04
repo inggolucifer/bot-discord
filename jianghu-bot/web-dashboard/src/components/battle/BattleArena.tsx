@@ -557,15 +557,28 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
 
                 {/* 2. COMBAT LOGS (COMPACT CENTER DISPLAY) */}
                 <div className="w-full max-w-2xl mx-auto h-24 sm:h-28 bg-black/60 border border-amber-900/30 rounded-xl p-2 sm:p-2.5 overflow-y-auto backdrop-blur-sm shadow-inner flex flex-col gap-1 text-xs scrollbar-thin">
+                    {/* Render active DoT damage indicator this round if present */}
+                    {session.dotDamageThisRound && session.dotDamageThisRound.length > 0 && (
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-purple-950/40 border border-purple-800/50 rounded text-[10px] text-purple-200 font-mono shrink-0">
+                            <span>☠️ DoT Ronde Ini:</span>
+                            {session.dotDamageThisRound.map((d: any, i: number) => (
+                                <span key={i} className="text-purple-300">
+                                    {d.targetName || d.targetId || 'Target'}: -{d.amount} HP
+                                </span>
+                            ))}
+                        </div>
+                    )}
                     {session.logs && session.logs.slice(-15).map((log: any, idx: number) => {
                         const isPlayer = log.actor === player?.name;
                         const isSystem = log.actor === 'System';
                         const isAlly = allies.some((a: any) => a.name === log.actor);
+                        const isConditionTick = log.action === 'condition_tick' || log.type === 'condition_tick' || log.message?.includes('racun') || log.message?.includes('pendarahan') || log.message?.includes('terbakar');
 
                         return (
                             <div 
                                 key={idx} 
                                 className={`text-[11px] leading-relaxed py-0.5 border-b border-gray-800/30 last:border-b-0 ${
+                                    isConditionTick ? 'text-purple-300 font-mono italic bg-purple-950/20 px-1 rounded border-l-2 border-purple-500' :
                                     isSystem ? 'text-amber-400 font-serif font-bold italic' :
                                     isPlayer ? 'text-cyan-200' :
                                     isAlly ? 'text-emerald-300' : 'text-red-300'
