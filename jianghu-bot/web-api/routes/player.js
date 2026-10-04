@@ -1777,7 +1777,10 @@ router.post('/transfer-item-request', authenticateToken, async (req, res) => {
             if (!owned || owned.quantity < quantity) throw new CustomError('Item tidak cukup di inventory.', 400);
 
             const pajak = quantity; // 1 silver per item
-                throw new CustomError(`Saldo Silver tidak cukup untuk bayar pajak (Butuh: ${pajak} Silver).`, 400);
+            const taxCopper = silverToCopper(pajak);
+            if (!canAffordCopper(sender.currency, taxCopper).ok) {
+                throw new CustomError(`Saldo tidak cukup untuk bayar pajak transfer (Butuh: ${pajak} Silver).`, 400);
+            }
 
             const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
@@ -1850,8 +1853,14 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
     if (!requestId || accept === undefined) return res.status(400).json({ error: 'Data tidak valid.' });
 
     const lockKey = `player_transfer_res_${requestId}`;
+    const userLockKey = `pay_${userId}_transfer`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses.' });
+    const releaseUserLock = await LockManager.acquire(userLockKey);
+    if (!releaseUserLock) {
+        releaseLock();
+        return res.status(429).json({ error: 'Transaksi sedang diproses.' });
+    }
 
     try {
 
@@ -1936,6 +1945,7 @@ router.post('/transfer-item-respond', authenticateToken, async (req, res) => {
          console.error('[API-PLAYER] Transfer item respond error:', error);
          res.status(500).json({ error: 'Terjadi kesalahan server.' });
     } finally {
+        if (typeof releaseUserLock === 'function') releaseUserLock();
         if (typeof releaseLock === 'function') releaseLock();
     }
 });

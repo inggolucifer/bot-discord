@@ -5,6 +5,7 @@ const { authenticateToken } = require('../middlewares/auth');
 const Player = require('../../models/Player');
 const Location = require('../../models/Location');
 const { deductCopper, silverToCopper, formatCopper, getTotalCopper } = require('../../utils/currencyNormalize');
+const LockManager = require('../utils/lockManager');
 
 const FERRY_ROUTES = [
   {
@@ -62,8 +63,12 @@ router.get('/routes', authenticateToken, async (req, res) => {
 
 // POST /api/ferry/cross
 router.post('/cross', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const lockKey = `pay_${userId}_ferry`;
+  const releaseLock = await LockManager.acquire(lockKey);
+  if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
+
   try {
-    const userId = req.user.userId;
     const { routeId, mode = 'raft' } = req.body; // mode: 'raft' | 'fast_ship'
 
     const route = FERRY_ROUTES.find(r => r.id === routeId);
@@ -134,6 +139,8 @@ router.post('/cross', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('[API-FERRY] Cross error:', error);
     res.status(500).json({ error: 'Gagal memulai penyeberangan air.' });
+  } finally {
+    if (typeof releaseLock === 'function') releaseLock();
   }
 });
 
