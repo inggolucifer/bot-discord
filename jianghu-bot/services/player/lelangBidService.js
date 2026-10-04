@@ -55,7 +55,9 @@ module.exports = {
     if (auction.highestBidderId) {
       const prevBidder = await Player.findById(auction.highestBidderId);
       if (prevBidder) {
-        prevBidder.currency.silver += auction.highestBid;
+        const { addCurrencyAmount } = require('../../utils/currency');
+        addCurrencyAmount(prevBidder.currency, auction.highestBid, 'silver');
+        prevBidder.markModified('currency');
         await prevBidder.save(); // normalisasi otomatis jalan
 
         await TransactionLog.create({
