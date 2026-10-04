@@ -158,6 +158,40 @@ function deductCopper(currency, needCopper, label = 'Biaya') {
   return { paidCopper: need, remaining };
 }
 
+/**
+ * Tambah sejumlah copper ke objek currency (mutasi in-place).
+ * Otomatis melarutkan dan menata kembali ke 5 pecahan (copper, silver, gold, jade, spirit).
+ * @param {object} currency
+ * @param {number} amountCopper
+ * @returns {object} currency
+ */
+function addCopper(currency, amountCopper) {
+  if (!currency) return currency;
+  const add = Math.max(0, Math.round(Number(amountCopper) || 0));
+  const total = convertToCopper(currency) + add;
+  const next = convertFromCopper(total);
+  currency.copper = next.copper;
+  currency.silver = next.silver;
+  currency.gold = next.gold;
+  currency.jade = next.jade || 0;
+  currency.spirit = next.spirit || 0;
+  return currency;
+}
+
+/**
+ * Tambah currency berdasarkan unit tipe tertentu (mutasi in-place).
+ * @param {object} currency
+ * @param {number} amount
+ * @param {string} currencyType
+ * @returns {object} currency
+ */
+function addCurrencyAmount(currency, amount, currencyType = 'copper') {
+  if (!currency) return currency;
+  const rate = RATE_TO_COPPER[currencyType] || 1;
+  const copper = Math.round((Number(amount) || 0) * rate);
+  return addCopper(currency, copper);
+}
+
 module.exports = {
   normalizeCurrency,
   convertFromCopper,
@@ -166,6 +200,9 @@ module.exports = {
   getTotalCopper,
   canAffordCopper,
   deductCopper,
+  addCopper,
+  addCurrencyAmount,
   silverToCopper,
   formatCopper
 };
+
