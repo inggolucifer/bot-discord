@@ -725,6 +725,7 @@ const playerSchema = new mongoose.Schema({
 
   // Schema version for migrations & integrity
   schemaVersion: { type: Number, default: 2, index: true },
+  isAdmin: { type: Boolean, default: false, index: true },
 }, { timestamps: true });
 
 playerSchema.index({ discordId: 1, guildId: 1 }, { unique: true, sparse: true });
