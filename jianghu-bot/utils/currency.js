@@ -1,4 +1,13 @@
 // Logika mata uang: Copper -> Silver -> Gold -> Jade -> Spirit (tetap 1:100)
+const {
+  RATE_TO_COPPER,
+  getTotalCopper,
+  convertToCopper,
+  deductCopper,
+  addCopper,
+  addCurrencyAmount
+} = require('./currencyNormalize');
+
 const CURRENCIES = ['copper', 'silver', 'gold', 'jade', 'spirit'];
 
 const CURRENCY_LABEL = {
@@ -37,59 +46,48 @@ function formatCurrencyLine(currencyObj) {
   ).join('\n');
 }
 
-const RATE_TO_COPPER = {
-  copper: 1,
-  silver: 100,
-  gold: 10000,
-  jade: 1000000,
-  spirit: 100000000,
-};
-
-function getTotalCopper(currencyObj) {
-  if (!currencyObj) return 0;
-  return Math.round(
-    (currencyObj.copper || 0) * RATE_TO_COPPER.copper +
-    (currencyObj.silver || 0) * RATE_TO_COPPER.silver +
-    (currencyObj.gold || 0) * RATE_TO_COPPER.gold +
-    (currencyObj.jade || 0) * RATE_TO_COPPER.jade +
-    (currencyObj.spirit || 0) * RATE_TO_COPPER.spirit
-  );
-}
-
 function hasEnoughCurrency(currencyObj, amount, currencyType) {
-  const priceCopper = Math.round(amount * (RATE_TO_COPPER[currencyType] || 0));
+  let needCopper = 0;
+  if (typeof amount === 'object' && amount !== null) {
+    needCopper = convertToCopper(amount);
+  } else {
+    const rate = RATE_TO_COPPER[currencyType] || 0;
+    needCopper = Math.round((Number(amount) || 0) * rate);
+  }
+  if (Number.isNaN(needCopper) || needCopper < 0) return false;
   const totalCopper = getTotalCopper(currencyObj);
-  return totalCopper >= priceCopper;
+  return totalCopper >= needCopper;
 }
 
-function payCurrency(currencyObj, amount, currencyType) {
-  const priceCopper = Math.round(amount * (RATE_TO_COPPER[currencyType] || 0));
-  const totalCopper = getTotalCopper(currencyObj);
-
-  if (Number.isNaN(priceCopper) || totalCopper < priceCopper) {
+function payCurrency(currencyObj, amount, currencyType = 'copper') {
+  try {
+    let needCopper = 0;
+    if (typeof amount === 'object' && amount !== null) {
+      needCopper = convertToCopper(amount);
+    } else {
+      const rate = RATE_TO_COPPER[currencyType] || 0;
+      needCopper = Math.round((Number(amount) || 0) * rate);
+    }
+    if (Number.isNaN(needCopper) || needCopper < 0) return false;
+    deductCopper(currencyObj, needCopper, 'Pembayaran');
+    return true;
+  } catch {
     return false;
   }
-
-  let rem = totalCopper - priceCopper;
-
-  currencyObj.spirit = Math.floor(rem / RATE_TO_COPPER.spirit);
-  rem %= RATE_TO_COPPER.spirit;
-
-  currencyObj.jade = Math.floor(rem / RATE_TO_COPPER.jade);
-  rem %= RATE_TO_COPPER.jade;
-
-  currencyObj.gold = Math.floor(rem / RATE_TO_COPPER.gold);
-  rem %= RATE_TO_COPPER.gold;
-
-  currencyObj.silver = Math.floor(rem / RATE_TO_COPPER.silver);
-  rem %= RATE_TO_COPPER.silver;
-
-  currencyObj.copper = Math.round(rem);
-
-  return true;
 }
 
 module.exports = {
-  CURRENCIES, CURRENCY_LABEL, CURRENCY_EMOJI, RATE_TO_SILVER, RATE_TO_COPPER,
-  isValidCurrency, formatCurrencyLine, getTotalCopper, hasEnoughCurrency, payCurrency,
+  CURRENCIES,
+  CURRENCY_LABEL,
+  CURRENCY_EMOJI,
+  RATE_TO_SILVER,
+  RATE_TO_COPPER,
+  isValidCurrency,
+  formatCurrencyLine,
+  getTotalCopper,
+  hasEnoughCurrency,
+  payCurrency,
+  addCopper,
+  addCurrencyAmount
 };
+
