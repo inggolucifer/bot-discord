@@ -22,10 +22,11 @@ const { authenticateToken } = require('../middlewares/auth');
 const CustomError = require('../utils/CustomError');
 const { getComputedStats } = require('../../utils/statCalculator');
 
-function isUserAdmin(req) {
+function isUserAdmin(req, player) {
   const ownerIds = (process.env.OWNER_IDS || '').split(',').map(id => id.trim()).filter(Boolean);
-  if (ownerIds.length === 0) return true; // dev fallback
-  return ownerIds.includes(req.user.userId);
+  if (req.user?.userId && ownerIds.includes(req.user.userId)) return true;
+  if (player?.isAdmin === true) return true;
+  return false;
 }
 
 async function resolvePlayer(req) {

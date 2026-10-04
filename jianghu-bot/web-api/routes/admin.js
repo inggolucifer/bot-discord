@@ -7,13 +7,24 @@ const { authenticateToken } = require('../middlewares/auth');
 const CustomError = require('../utils/CustomError');
 
 // Protected middleware to check if user is admin
-const requireAdmin = (req, res, next) => {
-    const ownerIds = (process.env.OWNER_IDS || '').split(',').map(id => id.trim());
-    if (!ownerIds.includes(req.user.userId)) {
-         return res.status(403).json({ error: 'Akses Ditolak: Fitur ini hanya untuk Developer (Admin).' });
+const requireAdmin = async (req, res, next) => {
+    try {
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({ error: 'Autentikasi diperlukan.' });
+        }
+        const owners = (process.env.OWNER_IDS || '').split(',').map(id => id.trim()).filter(Boolean);
+        if (owners.includes(req.user.userId)) return next();
+
+        const player = await Player.findOne({ discordId: req.user.userId }).select('isAdmin flags');
+        if (player?.isAdmin === true) return next();
+
+        return res.status(403).json({ error: 'Akses Ditolak: Fitur ini hanya untuk Developer (Admin).' });
+    } catch (err) {
+        console.error('[AUTH-ADMIN] requireAdmin check failed:', err);
+        return res.status(500).json({ error: 'Gagal memverifikasi hak akses admin.' });
     }
-    next();
 };
+
 
 // Endpoint: GET /api/admin/oracle
 router.get('/oracle', authenticateToken, requireAdmin, async (req, res) => {
