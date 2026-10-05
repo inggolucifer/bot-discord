@@ -76,6 +76,7 @@ module.exports = {
       return interaction.editReply(`❌ Uang tidak cukup. Butuh setara dengan **${HANCURKAN_COST_SILVER} Silver**.`);
     }
 
+    player.markModified('currency');
     await player.save();
 
     await logTransaction(interaction.client, {

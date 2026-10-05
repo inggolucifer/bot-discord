@@ -17,6 +17,7 @@ const Item = require('../../models/Item');
 const { authenticateToken } = require('../middlewares/auth');
 const CustomError = require('../utils/CustomError');
 const { getWibParts, isClaimedToday, isClaimedYesterday } = require('../../utils/dailyClaim');
+const { payCurrency } = require('../../utils/currency');
 
 async function resolvePlayer(req) {
   const userId = req.user.userId;
@@ -355,11 +356,9 @@ router.post('/maintain-law', authenticateToken, async (req, res) => {
     ensureDailyHubInitialized(player);
 
     const cost = 10;
-    if ((player.currency?.copper || 0) < cost) {
+    if (!payCurrency(player.currency, cost, 'copper')) {
       return res.status(400).json({ error: 'Koin Tembaga tidak cukup (Butuh 10 Copper untuk perawatan).' });
     }
-
-    player.currency.copper -= cost;
 
     if (player.cultivationLaw?.activeLawType) {
       player.cultivationLaw.qi = Math.min(

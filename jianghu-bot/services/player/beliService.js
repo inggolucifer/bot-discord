@@ -94,6 +94,7 @@ module.exports = {
       }
     }
 
+    player.markModified('currency');
     await player.save();
 
     if (listing.stock !== -1) {

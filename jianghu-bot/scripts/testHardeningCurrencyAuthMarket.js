@@ -32,7 +32,7 @@ async function runTestSuite() {
   console.log('=====================================================\n');
 
   let passedTests = 0;
-  let totalTests = 9;
+  let totalTests = 12;
 
   // ---------------------------------------------------------------------------
   // [CUR-U1] payCurrency 50 silver dari 1 gold -> sukses, 5 field valid
@@ -323,6 +323,91 @@ async function runTestSuite() {
     passedTests++;
   } catch (err) {
     console.error('❌ [FERRY-1] FAIL:', err.message);
+  }
+
+  // ---------------------------------------------------------------------------
+  // [CMD-1] Discord command charge 10 silver, wallet 1 gold -> sukses
+  // ---------------------------------------------------------------------------
+  try {
+    const discordWallet = { copper: 0, silver: 0, gold: 1, jade: 0, spirit: 0 };
+    assert.strictEqual(hasEnoughCurrency(discordWallet, 10, 'silver'), true, 'Harus cukup bayar 10 silver dari 1 gold');
+    const payResult = payCurrency(discordWallet, 10, 'silver');
+    assert.strictEqual(payResult, true, 'payCurrency harus true');
+    assert.strictEqual(getTotalCopper(discordWallet), 9000, 'Sisa harus 9,000 copper (90 silver)');
+    assert.strictEqual(discordWallet.gold, 0);
+    assert.strictEqual(discordWallet.silver, 90);
+    console.log('✅ [CMD-1] PASS: Discord command charge 10 silver, wallet 1 gold sukses (sisa 90 silver)');
+    passedTests++;
+  } catch (err) {
+    console.error('❌ [CMD-1] FAIL:', err.message);
+  }
+
+  // ---------------------------------------------------------------------------
+  // [CMD-2] Audit direct currency.x -= di commands & services -> 0
+  // ---------------------------------------------------------------------------
+  try {
+    function scanDirForDirectDeductions(dir) {
+      let hits = 0;
+      if (!fs.existsSync(dir)) return hits;
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          hits += scanDirForDirectDeductions(fullPath);
+        } else if (entry.isFile() && entry.name.endsWith('.js')) {
+          const content = fs.readFileSync(fullPath, 'utf8');
+          const matches = content.match(/currency\.(silver|gold|copper|jade|spirit)\s*[-]=/g);
+          if (matches) {
+            hits += matches.length;
+          }
+        }
+      }
+      return hits;
+    }
+
+    const commandHits = scanDirForDirectDeductions(path.join(__dirname, '../commands'));
+    const serviceHits = scanDirForDirectDeductions(path.join(__dirname, '../services'));
+    const totalHits = commandHits + serviceHits;
+
+    assert.strictEqual(totalHits, 0, `Ditemukan ${totalHits} direct deduction di commands/services`);
+    console.log('✅ [CMD-2] PASS: Zero direct currency.<coin> -= di commands & services');
+    passedTests++;
+  } catch (err) {
+    console.error('❌ [CMD-2] FAIL:', err.message);
+  }
+
+  // ---------------------------------------------------------------------------
+  // [SWP-2] Audit markModified('currencies') across runtime code -> 0
+  // ---------------------------------------------------------------------------
+  try {
+    function scanDirForCurrencies(dir) {
+      let hits = 0;
+      if (!fs.existsSync(dir)) return hits;
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.name === 'migrateCurrenciesField.js' || entry.name === 'testHardeningCurrencyAuthMarket.js' || entry.name === 'node_modules' || entry.name === '.git') {
+          continue;
+        }
+        if (entry.isDirectory()) {
+          hits += scanDirForCurrencies(fullPath);
+        } else if (entry.isFile() && (entry.name.endsWith('.js') || entry.name.endsWith('.ts') || entry.name.endsWith('.tsx'))) {
+          const content = fs.readFileSync(fullPath, 'utf8');
+          const matches = content.match(/markModified\(['"]currencies['"]\)|\.currencies\.(silver|gold|copper|jade|spirit)/g);
+          if (matches) {
+            hits += matches.length;
+          }
+        }
+      }
+      return hits;
+    }
+
+    const totalCurrenciesHits = scanDirForCurrencies(path.join(__dirname, '..'));
+    assert.strictEqual(totalCurrenciesHits, 0, `Ditemukan ${totalCurrenciesHits} runtime referensi currencies`);
+    console.log('✅ [SWP-2] PASS: Zero runtime markModified(\'currencies\') atau .currencies.<coin>');
+    passedTests++;
+  } catch (err) {
+    console.error('❌ [SWP-2] FAIL:', err.message);
   }
 
   console.log('\n=====================================================');

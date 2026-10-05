@@ -68,6 +68,7 @@ module.exports = {
 
     if (ownedAsset.status === 'pending') ownedAsset.status = 'building';
 
+    player.markModified('currency');
     await player.save();
 
     const embed = new EmbedBuilder()

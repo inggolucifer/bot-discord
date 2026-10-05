@@ -24,7 +24,13 @@ module.exports = {
     const player = await Player.findOne({ discordId: target.id, guildId: interaction.guildId });
     if (!player) return interaction.editReply({ content: `❌ ${target.username} belum terdaftar.` });
 
-    player.currency[jenis] = Math.max(0, player.currency[jenis] + jumlah);
+    const { addCurrencyAmount, payCurrency } = require('../../utils/currency');
+    if (jumlah >= 0) {
+      addCurrencyAmount(player.currency, jumlah, jenis);
+    } else {
+      payCurrency(player.currency, Math.abs(jumlah), jenis);
+    }
+    player.markModified('currency');
     await player.save();
 
     await logTransaction(interaction.client, {
