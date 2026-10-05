@@ -2274,30 +2274,25 @@ router.post('/gu/equip', authenticateToken, async (req, res) => {
       }
 
       await player.populate({ path: 'inventory.itemId' });
-      const invIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        return inv.itemId._id?.toString() === itemId || inv._id?.toString() === itemId;
-      });
+      const invIndex = findInventoryIndex(player, itemId);
 
       if (invIndex === -1) {
         throw new CustomError('Item Gu tidak ditemukan di tas inventori.', 404);
       }
 
       const inv = player.inventory[invIndex];
-      const itemDoc = inv.itemId;
-      const tags = itemDoc.tags || [];
+      const itemDoc = inv.itemId || inv;
+      const tags = Array.isArray(itemDoc.tags) ? itemDoc.tags.map(String) : [];
       const cat = (itemDoc.category || '').toLowerCase();
-      const isGuItem = tags.includes('gu') || tags.includes('gu_larva') || tags.includes('gu_master') || cat === 'gu' || (itemDoc.name || '').toLowerCase().includes('gu ');
+      const name = itemDoc.name || '';
+      const isGuItem = tags.includes('gu') || tags.includes('gu_larva') || tags.includes('gu_master') || tags.includes('gu_food') || cat === 'gu' || cat === 'pet' || /(^|\s)gu\b|serangga.*gu|ulat.*gu|larva.*gu/i.test(name);
 
       if (!isGuItem) {
-        throw new CustomError('Item ini bukan entitas Gu yang sah dan tidak dapat diserap ke dalam rongga aperture.', 400);
+        throw new CustomError('Item ini bukan entitas Gu yang sah (wajib bertag gu / category gu / pet) dan tidak dapat diserap ke dalam rongga aperture.', 400);
       }
 
-      // Potong 1 item dari tas inventori
-      inv.quantity -= 1;
-      if (inv.quantity <= 0) {
-        player.inventory.splice(invIndex, 1);
-      }
+      // Potong 1 item dari tas inventori menggunakan consumeInventoryItem
+      consumeInventoryItem(player, itemId, 1);
 
       const itemTier = Number(itemDoc.tier) || Number(itemDoc.rank) || 1;
       const newGu = {
@@ -2374,20 +2369,21 @@ router.post('/gu/unequip', authenticateToken, async (req, res) => {
 
       // Cek apakah pemain memiliki Pil Penenang Gu di tas
       await player.populate({ path: 'inventory.itemId' });
-      const sedativeIndex = player.inventory.findIndex(inv => {
-        if (!inv.itemId || inv.quantity < 1) return false;
-        const tags = inv.itemId.tags || [];
+      let sedativeItemId = null;
+      for (const inv of player.inventory) {
+        if (!inv || !inv.itemId || inv.quantity < 1) continue;
+        const tags = Array.isArray(inv.itemId.tags) ? inv.itemId.tags : [];
         const name = (inv.itemId.name || '').toLowerCase();
-        return tags.includes('sedative_pill') || tags.includes('gu_sedative') || name.includes('penenang gu') || name.includes('pil penenang');
-      });
+        if (tags.includes('sedative_pill') || tags.includes('gu_sedative') || name.includes('penenang gu') || name.includes('pil penenang')) {
+          sedativeItemId = (inv.itemId._id || inv.itemId).toString();
+          break;
+        }
+      }
 
-      if (sedativeIndex !== -1) {
+      if (sedativeItemId) {
         // Konsumsi 1 Pil Penenang Gu -> Unequip bersih tanpa luka/backlash
         hadSedative = true;
-        player.inventory[sedativeIndex].quantity -= 1;
-        if (player.inventory[sedativeIndex].quantity <= 0) {
-          player.inventory.splice(sedativeIndex, 1);
-        }
+        consumeInventoryItem(player, sedativeItemId, 1);
       } else {
         // Tanpa pil penenang -> Backlash keras! (HP -20%, Vitality -20%, debuff 2 jam)
         hadSedative = false;
@@ -2414,9 +2410,9 @@ router.post('/gu/unequip', authenticateToken, async (req, res) => {
 
       // Kembalikan Gu ke inventori jika targetGu memiliki guItemId
       if (targetGu.guItemId) {
-        const existingInv = player.inventory.find(inv => inv.itemId?._id?.toString() === targetGu.guItemId.toString());
-        if (existingInv) {
-          existingInv.quantity += 1;
+        const existingIdx = findInventoryIndex(player, targetGu.guItemId);
+        if (existingIdx !== -1) {
+          player.inventory[existingIdx].quantity += 1;
         } else {
           player.inventory.push({ itemId: targetGu.guItemId, quantity: 1 });
         }
