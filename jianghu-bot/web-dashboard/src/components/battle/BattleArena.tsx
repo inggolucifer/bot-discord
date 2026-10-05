@@ -218,7 +218,44 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
             });
 
             if (res.data.session) {
-                setSession(res.data.session);
+                const nextSession = res.data.session;
+                const dots = res.data.dotDamageThisRound || nextSession.dotDamageThisRound || [];
+                nextSession.dotDamageThisRound = dots;
+
+                // Update HP bar entity sesuai hpAfter dari respons DoT
+                if (dots.length > 0) {
+                    dots.forEach((dot: any) => {
+                        if (dot.hpAfter !== undefined) {
+                            if (nextSession.player && (nextSession.player.entityId === dot.targetId || nextSession.player.id === dot.targetId)) {
+                                nextSession.player.hp = dot.hpAfter;
+                            }
+                            if (nextSession.enemies) {
+                                const enemy = nextSession.enemies.find((e: any) => e.entityId === dot.targetId || e.id === dot.targetId);
+                                if (enemy) enemy.hp = dot.hpAfter;
+                            }
+                            if (nextSession.allies) {
+                                const ally = nextSession.allies.find((a: any) => a.entityId === dot.targetId || a.id === dot.targetId);
+                                if (ally) ally.hp = dot.hpAfter;
+                            }
+                        }
+
+                        // Pastikan feed log memuat baris eksplisit condition_tick
+                        const targetName = dot.targetName || (dot.targetId === nextSession.player?.entityId ? nextSession.player?.name : 'Target');
+                        const dotMsg = `☠️ DoT ${dot.type || 'Kondisi'}: ${targetName} -${dot.amount} HP${dot.hpAfter !== undefined ? ` (Sisa ${dot.hpAfter} HP)` : ''}`;
+                        if (!nextSession.logs) nextSession.logs = [];
+                        const alreadyLogged = nextSession.logs.some((l: any) => (l.action === 'condition_tick' || l.type === 'condition_tick') && l.message?.includes(`-${dot.amount} HP`));
+                        if (!alreadyLogged) {
+                            nextSession.logs.push({
+                                actor: 'Kondisi',
+                                action: 'condition_tick',
+                                message: dotMsg,
+                                timestamp: new Date()
+                            });
+                        }
+                    });
+                }
+
+                setSession(nextSession);
                 // Reset kembali ke COMMAND mode setelah aksi sukses
                 setActionMode('COMMAND');
             }
@@ -559,26 +596,29 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                 <div className="w-full max-w-2xl mx-auto h-24 sm:h-28 bg-black/60 border border-amber-900/30 rounded-xl p-2 sm:p-2.5 overflow-y-auto backdrop-blur-sm shadow-inner flex flex-col gap-1 text-xs scrollbar-thin">
                     {/* Render active DoT damage indicator this round if present */}
                     {session.dotDamageThisRound && session.dotDamageThisRound.length > 0 && (
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-purple-950/40 border border-purple-800/50 rounded text-[10px] text-purple-200 font-mono shrink-0">
-                            <span>☠️ DoT Ronde Ini:</span>
-                            {session.dotDamageThisRound.map((d: any, i: number) => (
-                                <span key={i} className="text-purple-300">
-                                    {d.targetName || d.targetId || 'Target'}: -{d.amount} HP
-                                </span>
-                            ))}
+                        <div className="flex flex-wrap items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-purple-950/80 via-purple-900/60 to-purple-950/80 border border-purple-500/60 rounded-md text-[11px] text-purple-200 font-mono shadow-sm shrink-0">
+                            <span className="font-bold text-amber-300">☠️ DoT Ronde Ini:</span>
+                            {session.dotDamageThisRound.map((d: any, i: number) => {
+                                const targetLabel = d.targetName || (d.targetId === player?.entityId ? player?.name : 'Target');
+                                return (
+                                    <span key={i} className="bg-purple-950/80 px-2 py-0.5 rounded border border-purple-600/50 text-purple-300">
+                                        {d.type ? `${d.type}: ` : ''}{targetLabel} <span className="text-red-400 font-bold">-{d.amount} HP</span>
+                                    </span>
+                                );
+                            })}
                         </div>
                     )}
-                    {session.logs && session.logs.slice(-15).map((log: any, idx: number) => {
+                    {session.logs && session.logs.slice(-25).map((log: any, idx: number) => {
                         const isPlayer = log.actor === player?.name;
                         const isSystem = log.actor === 'System';
                         const isAlly = allies.some((a: any) => a.name === log.actor);
-                        const isConditionTick = log.action === 'condition_tick' || log.type === 'condition_tick' || log.message?.includes('racun') || log.message?.includes('pendarahan') || log.message?.includes('terbakar');
+                        const isConditionTick = log.action === 'condition_tick' || log.type === 'condition_tick' || log.message?.includes('racun') || log.message?.includes('pendarahan') || log.message?.includes('terbakar') || log.message?.includes('DoT') || log.message?.includes('☠️');
 
                         return (
                             <div 
                                 key={idx} 
                                 className={`text-[11px] leading-relaxed py-0.5 border-b border-gray-800/30 last:border-b-0 ${
-                                    isConditionTick ? 'text-purple-300 font-mono italic bg-purple-950/20 px-1 rounded border-l-2 border-purple-500' :
+                                    isConditionTick ? 'text-purple-300 font-mono italic bg-purple-950/40 px-1.5 py-1 rounded border-l-2 border-purple-400 font-semibold' :
                                     isSystem ? 'text-amber-400 font-serif font-bold italic' :
                                     isPlayer ? 'text-cyan-200' :
                                     isAlly ? 'text-emerald-300' : 'text-red-300'
