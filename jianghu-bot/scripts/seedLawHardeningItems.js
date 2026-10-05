@@ -283,7 +283,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Common',
     tier: 1,
-    tags: ['gu_larva', 'gu'],
+    tags: ['gu_larva', 'gu', 'gu_food', 'gu_feed', 'essence', 'material'],
     basePrice: 25,
     priceCurrency: 'copper',
     description: 'Kepompong ulat sutra hutan belantara berkepala giok kecil, bibit pertama calon serangga Gu batin.'
@@ -751,7 +751,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Common',
     tier: 1,
-    tags: ['feed_material', 'material'],
+    tags: ['feed_material', 'material', 'gu_food', 'gu_feed', 'beast_food', 'essence'],
     basePrice: 10,
     priceCurrency: 'copper',
     description: 'Biji-bijian tanaman obat fana beraroma harum, santapan bernutrisi untuk satwa roh dan pembersih artefak fana.'
@@ -761,7 +761,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Uncommon',
     tier: 2,
-    tags: ['feed_material', 'material'],
+    tags: ['feed_material', 'material', 'gu_food', 'gu_feed', 'beast_food', 'water_essence', 'essence'],
     basePrice: 30,
     priceCurrency: 'copper',
     description: 'Kristal air beku sarat intisari Qi bening, mempercepat pengisian esensi satwa roh dan artefak Tier 2.'
@@ -771,7 +771,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Rare',
     tier: 3,
-    tags: ['feed_material', 'material'],
+    tags: ['feed_material', 'material', 'ore', 'mineral', 'essence'],
     basePrice: 90,
     priceCurrency: 'copper',
     description: 'Batu giok berkilau pendar bintang malam hari, bahan infuse bermutu tinggi untuk artefak jiwa Tier 3.'
@@ -781,7 +781,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Epic',
     tier: 4,
-    tags: ['feed_material', 'material'],
+    tags: ['feed_material', 'material', 'beast_food', 'meat', 'fire_essence', 'essence'],
     basePrice: 300,
     priceCurrency: 'copper',
     description: 'Gumpalan api roh yang tidak pernah padam di dalam guci porselen, pakan sakti satwa roh Tier 4.'
@@ -791,7 +791,7 @@ const HARDENING_ITEMS = [
     category: 'material',
     rank: 'Legendary',
     tier: 5,
-    tags: ['feed_material', 'material'],
+    tags: ['feed_material', 'material', 'ore', 'mineral', 'chaos_essence', 'essence'],
     basePrice: 1000,
     priceCurrency: 'copper',
     description: 'Batu kristal dari pusaran kehampaan ruang semesta, infuse sempurna bagi artefak dan satwa tingkat tinggi.'
