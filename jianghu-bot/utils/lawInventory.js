@@ -6,11 +6,13 @@
 const {
   findInventoryIndex,
   consumeInventoryItem,
-  listEligibleInventory
+  listEligibleInventory,
+  isItemEligibleForPurpose
 } = require('./lawCultivationEngine');
 
 module.exports = {
   findInventoryIndex,
   consumeInventoryItem,
-  listEligibleInventory
+  listEligibleInventory,
+  isItemEligibleForPurpose
 };
