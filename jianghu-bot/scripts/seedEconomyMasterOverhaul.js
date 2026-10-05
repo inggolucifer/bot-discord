@@ -38,9 +38,67 @@ const Shop = mongoose.model('Shop', ShopSchema);
 // ==================== HELPERS ====================
 const oid = (id) => new mongoose.Types.ObjectId(id);
 
+function deriveTagsAndTier(item) {
+  const name = String(item.name || '');
+  const cat = String(item.category || '').toLowerCase();
+  const isEquipment = ['weapon', 'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots', 'mount', 'tool'].includes(cat) ||
+    /(cangkul|beliung|pancingan|arit|palu|jarum|pisau|kapak|gergaji|wajan|kuali|perkakas|tombak|pedang|golok|busur|tameng|zirah|baju.*besi|sepatu)/i.test(name);
+
+  const tags = new Set(Array.isArray(item.tags) ? item.tags : []);
+
+  if (!isEquipment) {
+    if (/(serangga|larva|cacing|\bulat\b|pakan.*gu|insect|kalajengking|empedu.*serangga|bibit.*gu)/i.test(name)) {
+      ['gu_food', 'gu_feed', 'essence', 'material'].forEach(t => tags.add(t));
+    }
+    if (/(madu|nectar|jelly|getah.*manis)/i.test(name)) {
+      ['gu_food', 'gu_feed', 'essence', 'material'].forEach(t => tags.add(t));
+    }
+    if (/(daging|meat|\bikan\b|jantung|telur.*beast|ransum|buruan|satwa.*roh)/i.test(name)) {
+      ['beast_food', 'meat', 'essence', 'material'].forEach(t => tags.add(t));
+    }
+    if (/(bijih|\bore\b|besi|\bbatu.*asah\b|mineral|whetstone|tembaga|perak.*kasar|emas.*kasar|batu.*kasar)/i.test(name)) {
+      if (!/basah/i.test(name) || /batu.*asah/i.test(name)) {
+        ['ore', 'mineral', 'material', 'essence'].forEach(t => tags.add(t));
+      }
+    }
+    if (/(api|\bbara\b|phoenix|flame|pyro)/i.test(name) && !/barang/i.test(name)) {
+      ['fire_essence', 'fire_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(\bair\b|mata.*air|air.*bersih|es|azure|tide|aqua|embun|salju)/i.test(name) && !/cair/i.test(name)) {
+      ['water_essence', 'water_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(petir|kilat|thunder|lightning)/i.test(name)) {
+      ['lightning_essence', 'lightning_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(angin|badai|storm|gale|wind)/i.test(name)) {
+      ['wind_essence', 'wind_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(tanah|earth|stone|batu.*gunung|pasir)/i.test(name) && !/batu.*asah/i.test(name)) {
+      ['earth_essence', 'earth_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(kayu|hutan|daun|wood|bambu|akar|herba)/i.test(name)) {
+      ['wood_essence', 'wood_catalyst', 'essence'].forEach(t => tags.add(t));
+    }
+    if (/(batu roh|spirit stone|spirit_stone)/i.test(name)) {
+      ['spirit_stone', 'breakthrough_material', 'catalyst', 'essence', 'material'].forEach(t => tags.add(t));
+    }
+    if (/(katalis|terobosan|breakthrough)/i.test(name)) {
+      ['breakthrough_catalyst', 'catalyst', 'breakthrough_material', 'material'].forEach(t => tags.add(t));
+    }
+  }
+
+  const rankTierMap = { common: 1, uncommon: 2, rare: 3, epic: 4, legendary: 5, mythic: 6, immortal: 7, divine: 8, mortal: 1, spiritual: 2 };
+  const tier = item.tier || rankTierMap[String(item.rank).toLowerCase()] || 1;
+
+  return { tags: Array.from(tags), tier };
+}
+
 async function upsertItem(id, data) {
+  const derived = deriveTagsAndTier(data);
   const payload = {
     ...data,
+    tier: data.tier || derived.tier,
+    tags: Array.isArray(data.tags) && data.tags.length > 0 ? data.tags : derived.tags,
     guildId: GUILD_ID,
     updatedAt: new Date(),
   };
