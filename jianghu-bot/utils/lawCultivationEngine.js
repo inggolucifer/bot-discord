@@ -2217,12 +2217,30 @@ function listEligibleInventory(player, optionsOrPurpose = {}, optionalLawType = 
   const pTier = options.playerTier !== undefined ? Number(options.playerTier) : (currentRank + 1);
 
   const eligibleItems = [];
+  let totalScanned = 0;
+  let skippedUnpopulated = 0;
 
   for (let i = 0; i < player.inventory.length; i++) {
     const inv = player.inventory[i];
+    totalScanned++;
     if (!inv || inv.quantity <= 0) continue;
     const item = inv.itemId || inv;
-    if (!item) continue;
+    if (!item) {
+      skippedUnpopulated++;
+      continue;
+    }
+
+    // Skip unpopulated raw ObjectId
+    const isUnpopulated = !item.name && (
+      item._bsontype === 'ObjectID' ||
+      (item.constructor && item.constructor.name === 'ObjectId') ||
+      typeof item.equals === 'function' ||
+      /^[0-9a-fA-F]{24}$/.test(String(item))
+    );
+    if (isUnpopulated) {
+      skippedUnpopulated++;
+      continue;
+    }
 
     const { tags } = itemTagsAndMeta(item);
     const isMatch = isItemEligibleForPurpose(item, purpose, activeLawType);
@@ -2261,6 +2279,10 @@ function listEligibleInventory(player, optionsOrPurpose = {}, optionalLawType = 
     if (a.quantity !== b.quantity) return b.quantity - a.quantity;
     return (a.name || '').localeCompare(b.name || '');
   });
+
+  eligibleItems.totalScanned = totalScanned;
+  eligibleItems.skippedUnpopulated = skippedUnpopulated;
+  eligibleItems.totalEligible = eligibleItems.length;
 
   return eligibleItems;
 }

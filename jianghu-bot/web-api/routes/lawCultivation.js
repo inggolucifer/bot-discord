@@ -264,7 +264,9 @@ router.get('/inventory/eligible', authenticateToken, async (req, res) => {
         lawType,
         playerTier,
         totalInventorySlots: player.inventory.length,
+        totalScanned: items.totalScanned ?? player.inventory.length,
         totalEligible: items.length,
+        skippedUnpopulated: items.skippedUnpopulated ?? 0,
         items
       }
     });
