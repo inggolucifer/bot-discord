@@ -263,6 +263,7 @@ router.get('/inventory/eligible', authenticateToken, async (req, res) => {
         purpose,
         lawType,
         playerTier,
+        totalInventorySlots: player.inventory.length,
         totalEligible: items.length,
         items
       }
@@ -890,12 +891,8 @@ router.post('/essence/absorb', authenticateToken, async (req, res) => {
       }
 
       // Validasi kecocokan item dengan profil Law
-      const itemTags = Array.isArray(itemDoc.tags) ? itemDoc.tags : [];
-      const itemCat = itemDoc.category || '';
-      const tagMatch = profile.fillTags.some(t => itemTags.includes(t));
-      const catMatch = profile.fillCategories ? profile.fillCategories.includes(itemCat) : false;
-
-      if (!tagMatch && !catMatch) {
+      const isEligible = isItemEligibleForPurpose(itemDoc, 'essence_absorb', law.activeLawType);
+      if (!isEligible) {
         throw new CustomError(`Item [${itemDoc.name}] tidak memiliki intisari yang cocok dengan ${profile.barName}. ${profile.emptyHint}`, 400);
       }
 
@@ -2752,6 +2749,9 @@ router.post('/artifact/infuse', authenticateToken, async (req, res) => {
     }
 
     const itemDoc = player.inventory[oreIndex].itemId || player.inventory[oreIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'natal_infuse', 'natal_artifact')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok untuk infuse pusaka jiwa.' });
+    }
     const absorbed = assertAbsorbTier(law, itemDoc);
     const itemTier = absorbed.itemTier;
     const playerTier = absorbed.playerTier;
@@ -2837,6 +2837,9 @@ router.post('/beast/feed', authenticateToken, async (req, res) => {
     }
 
     const itemDoc = player.inventory[meatIndex].itemId || player.inventory[meatIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'beast_feed', 'natal_beast')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai pakan satwa roh.' });
+    }
     const tierCheck = assertAbsorbTier(law, itemDoc);
     const itemTier = tierCheck.itemTier;
     const playerTier = tierCheck.playerTier;
@@ -2966,6 +2969,9 @@ router.post('/demonic/turbid-absorb', authenticateToken, async (req, res) => {
     }
 
     const itemDoc = player.inventory[coreIndex].itemId || player.inventory[coreIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'turbid_absorb', 'demonic_turbid_core')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai inti siluman kotor.' });
+    }
     const tierCheck = assertAbsorbTier(law, itemDoc);
     const itemTier = tierCheck.itemTier;
     const playerTier = tierCheck.playerTier;
@@ -3056,6 +3062,9 @@ router.post('/demonic/blood-harvest', authenticateToken, async (req, res) => {
       }
 
       const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+      if (!isItemEligibleForPurpose(itemDoc, 'blood_absorb', 'demonic_blood_soul')) {
+        return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai botol esensi darah.' });
+      }
       const tierCheck = assertAbsorbTier(law, itemDoc);
       itemTier = tierCheck.itemTier;
       playerTier = tierCheck.playerTier;
@@ -3243,6 +3252,9 @@ router.post(['/demonic/venom-ingest', '/demonic/drink-venom'], authenticateToken
     }
 
     const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'venom_absorb', 'demonic_myriad_venom')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai racun/bisa siluman.' });
+    }
     const tierCheck = assertAbsorbTier(law, itemDoc);
     itemTier = tierCheck.itemTier;
     playerTier = tierCheck.playerTier;
@@ -3381,6 +3393,9 @@ router.post('/demonic/pact-tribute', authenticateToken, async (req, res) => {
         }
 
         const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+        if (!isItemEligibleForPurpose(itemDoc, 'tribute_absorb', 'demonic_abyssal_pact')) {
+          throw new CustomError('Item yang dipilih tidak cocok sebagai persembahan upeti Abyss.', 400);
+        }
         const tierCheck = assertAbsorbTier(law, itemDoc);
         itemTier = tierCheck.itemTier;
         playerTier = tierCheck.playerTier;
@@ -3469,6 +3484,9 @@ router.post('/demonic/nether-channel', authenticateToken, async (req, res) => {
     }
 
     const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'nether_absorb', 'demonic_nether_darkness')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai batu Yin / esensi kegelapan.' });
+    }
     const tierCheck = assertAbsorbTier(law, itemDoc);
     itemTier = tierCheck.itemTier;
     playerTier = tierCheck.playerTier;

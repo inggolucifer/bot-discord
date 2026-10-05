@@ -72,32 +72,32 @@ export default function LawInventoryPicker({
   const getEmptyAdvice = () => {
     switch (purpose) {
       case 'gu_feed':
-        return 'Kumpulkan larva serangga tanah, madu ratu, atau daging monster di alam liar. Atau gunakan opsi Tetes Darah Sendiri.';
+        return 'Kumpulkan larva serangga tanah, madu ratu, daging monster, atau bahan pakan di alam liar. Pastikan item bertag gu_food / material esensi, atau gunakan opsi Tetes Darah Sendiri.';
       case 'essence_absorb':
-        return 'Kumpulkan herba spiritual, kristal esensi, atau bahan alkimia di alam bebas.';
+        return 'Kumpulkan herba spiritual, kristal esensi, atau bahan alkimia di alam bebas. Pastikan item bertag esensi selaras.';
       case 'beast_feed':
-        return 'Kumpulkan daging monster segar, ikan roh dari danau, atau ransum bergizi.';
+        return 'Kumpulkan daging monster segar, ikan roh dari danau, atau ransum bergizi (tag: beast_food, meat).';
       case 'natal_infuse':
       case 'artifact_infuse':
-        return 'Tambang mineral spiritual, bijih besi di tebing batu, atau beli batu asah di pandai besi kota.';
+        return 'Tambang mineral spiritual, bijih besi di tebing batu, atau beli batu asah di pandai besi kota (tag: ore, whetstone, mineral).';
       case 'element_absorb':
-        return 'Kumpulkan herba berunsur elemen selaras atau intisari kristal spiritual di alam liar.';
+        return 'Kumpulkan herba berunsur elemen selaras atau intisari kristal spiritual di alam liar (tag: catalyst, essence elemen).';
       case 'turbid_absorb':
       case 'demonic_absorb':
-        return 'Buru siluman liar dan monster buas di peta dunia atau labirin gua kuno untuk memanen intinya.';
+        return 'Buru siluman liar dan monster buas di peta dunia atau labirin gua kuno untuk memanen intinya (tag: beast_core, turbid_core).';
       case 'blood_absorb':
-        return 'Kalahkan musuh bandit atau kultivator lawan untuk memanen botol darah esensi.';
+        return 'Kalahkan musuh bandit atau kultivator lawan untuk memanen botol darah esensi (tag: blood_vial, blood).';
       case 'nether_absorb':
-        return 'Eksplorasi wilayah makam kuno atau jurang kematian untuk menambang batu berhawa Yin.';
+        return 'Eksplorasi wilayah makam kuno atau jurang kematian untuk menambang batu berhawa Yin (tag: yin_stone, nether).';
       case 'tribute_absorb':
-        return 'Kumpulkan botol darah, inti siluman, atau batu obsidian berhawa kematian untuk dipersembahkan di altar.';
+        return 'Kumpulkan botol darah, inti siluman, atau batu obsidian berhawa kematian untuk dipersembahkan di altar (tag: abyssal, obsidian).';
       case 'venom_absorb':
-        return 'Racik ramuan beracun di meja Alkimia atau buru monster rawa berbisa untuk mengumpulkan bisanya.';
+        return 'Racik ramuan beracun di meja Alkimia atau buru monster rawa berbisa untuk mengumpulkan bisanya (tag: venom_sac, poison).';
       case 'bt_pill':
       case 'breakthrough_mini':
         return 'Racik pil penerobosan di Balai Alkimia atau peroleh dari hadiah gelanggang dan bos dunia.';
       default:
-        return 'Kumpulkan bahan yang selaras melalui eksplorasi alam, penambangan, atau perburuan monster.';
+        return `Aktivitas [${purpose}]: Pastikan item di tas memiliki tag yang selaras (seperti material esensi atau tag khusus ${purpose}).`;
     }
   };
 
