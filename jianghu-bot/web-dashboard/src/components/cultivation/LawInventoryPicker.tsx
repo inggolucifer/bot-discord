@@ -53,6 +53,10 @@ export default function LawInventoryPicker({
       purpose: string;
       playerTier: number;
       lawType: string;
+      totalInventorySlots?: number;
+      totalScanned?: number;
+      totalEligible?: number;
+      skippedUnpopulated?: number;
       items: EligibleInventoryItem[];
     };
   }>({
@@ -63,11 +67,16 @@ export default function LawInventoryPicker({
       });
       return data;
     },
-    enabled: isOpen
+    enabled: isOpen,
+    refetchOnMount: 'always',
+    staleTime: 0
   });
 
   const items = eligibleRes?.data?.items || [];
   const playerTier = eligibleRes?.data?.playerTier || 1;
+  const totalEligible = eligibleRes?.data?.totalEligible ?? items.length;
+  const totalSlots = eligibleRes?.data?.totalInventorySlots ?? eligibleRes?.data?.totalScanned ?? 0;
+  const skippedUnpopulated = eligibleRes?.data?.skippedUnpopulated || 0;
 
   const getEmptyAdvice = () => {
     switch (purpose) {
@@ -135,6 +144,16 @@ export default function LawInventoryPicker({
           </div>
         ) : (
           <div className="space-y-2">
+            <div className="flex items-center justify-between px-2.5 py-1.5 rounded bg-stone-900/80 border border-stone-800 text-[11px] text-stone-400 font-mono">
+              <span>
+                Ditemukan <strong className="text-amber-300 font-bold">{totalEligible}</strong> item yang memenuhi syarat{totalSlots > 0 ? ` (dari ${totalSlots} slot tas)` : ''}
+              </span>
+              {skippedUnpopulated > 0 && (
+                <span className="text-stone-500 text-[10px]">
+                  ({skippedUnpopulated} slot rusak diabaikan)
+                </span>
+              )}
+            </div>
             {items.map((item) => {
               const itemTier = item.tier || 1;
               const isLocked = !item.allowed;
