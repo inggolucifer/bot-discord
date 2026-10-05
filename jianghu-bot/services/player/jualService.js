@@ -82,7 +82,9 @@ module.exports = {
       else player.assets = player.assets.filter((x) => !x.assetId.equals(doc._id));
     }
 
-    player.currency[doc.priceCurrency] += totalHarga;
+    const { addCurrencyAmount } = require('../../utils/currency');
+    addCurrencyAmount(player.currency, totalHarga, doc.priceCurrency);
+    player.markModified('currency');
     await player.save();
 
     await logTransaction(interaction.client, {

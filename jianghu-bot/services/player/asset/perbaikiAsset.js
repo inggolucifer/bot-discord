@@ -83,6 +83,7 @@ module.exports = {
     ownedAsset.damageType = null;
     ownedAsset.lastProgressUpdate = new Date(); // reset so it doesn't backlog huge chunks of time
 
+    player.markModified('currency');
     await player.save();
 
     const embed = new EmbedBuilder()

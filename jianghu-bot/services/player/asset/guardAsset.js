@@ -64,6 +64,7 @@ module.exports = {
 
     ownedAsset.guardEndTime = new Date(currentEndTime + (hari * 24 * 3600 * 1000));
 
+    player.markModified('currency');
     await player.save();
 
     const { convertFromCopper } = require('../../../utils/currencyNormalize');

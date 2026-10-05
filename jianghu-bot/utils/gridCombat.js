@@ -1,4 +1,5 @@
 const { simulateBattle } = require('./simulateBattle');
+const { addCopper, payCurrency, getTotalCopper } = require('./currency');
 
 /**
  * Menghitung peluang encounter/ambush di grid berdasarkan ambientDangerTier dan tile hazard
@@ -72,13 +73,17 @@ function runGridBattle(player, opponent, ambientDangerTier = 1) {
   let rewardMessage = '';
   if (won) {
     const copperWon = Math.floor((Math.random() * 25 + 15) * ambientDangerTier);
-    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0 };
-    player.currency.copper = (player.currency.copper || 0) + copperWon;
+    if (!player.currency) player.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+    addCopper(player.currency, copperWon);
+    if (typeof player.markModified === 'function') player.markModified('currency');
     rewardMessage = `Kamu memenangkan pertarungan dan merampas ${copperWon} Copper!`;
   } else {
-    const copperLost = Math.min(player.currency?.copper || 0, 15 * ambientDangerTier);
-    if (player.currency && copperLost > 0) {
-      player.currency.copper -= copperLost;
+    const maxLost = 15 * ambientDangerTier;
+    const currentCopper = getTotalCopper(player.currency);
+    const copperLost = Math.min(currentCopper, maxLost);
+    if (copperLost > 0) {
+      payCurrency(player.currency, copperLost, 'copper');
+      if (typeof player.markModified === 'function') player.markModified('currency');
     }
     rewardMessage = `Kamu terdesak mundur dengan luka-luka dan kehilangan ${copperLost} Copper!`;
   }

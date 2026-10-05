@@ -49,6 +49,7 @@ module.exports = {
     }
 
     player.assetSlots = currentSlots + 1;
+    player.markModified('currency');
     await player.save();
 
     await logTransaction(interaction.client, {

@@ -214,6 +214,7 @@ module.exports = {
       }
 
       player.petSlots += 1;
+      player.markModified('currency');
       await player.save();
 
       return interaction.editReply({ content: `✅ Berhasil membuka pet slot ke-${player.petSlots}! (Biaya: ${(cost / 100).toFixed(2)} Gold)` });

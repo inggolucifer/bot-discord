@@ -2,6 +2,7 @@ const WorkerContract = require('../models/WorkerContract');
 const Player = require('../models/Player');
 const { refreshWorkerChannel } = require('../services/workerChannelService');
 const { logTransaction } = require('./logger');
+const { addCurrencyAmount } = require('./currency');
 
 // Fungsi ini akan dipanggil sebelum kalkulasi progress untuk memproses kontrak yang kadaluarsa
 async function syncWorkerContracts(client, guildId) {
@@ -21,7 +22,9 @@ async function syncWorkerContracts(client, guildId) {
 
     const workerPlayer = await Player.findOne({ discordId: workerId, guildId });
     if (workerPlayer) {
-      workerPlayer.currency.silver += salary;
+      if (!workerPlayer.currency) workerPlayer.currency = { copper: 0, silver: 0, gold: 0, jade: 0, spirit: 0 };
+      addCurrencyAmount(workerPlayer.currency, salary, 'silver');
+      workerPlayer.markModified('currency');
       workerPlayer.customStatus = null; // Hapus status kerja
       await workerPlayer.save();
     }
