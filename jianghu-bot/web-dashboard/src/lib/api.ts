@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Base API URL (Development fallback)
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+// Base API URL (Development fallback matches backend port 3001)
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -32,9 +32,10 @@ api.interceptors.response.use(
         const response = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true });
 
         if (response.data.token) {
-           // We might still want to update local storage for smooth transition if needed,
-           // but normally cookies handle it now.
            localStorage.setItem('jianghu_token', response.data.token);
+           if (originalRequest.headers) {
+             originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
+           }
            return api(originalRequest);
         }
       } catch (refreshError) {

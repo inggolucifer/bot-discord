@@ -42,9 +42,9 @@ function runTest(id, name, fn) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GU-1: Inventory 10 material essence tanpa nama "serangga"
+// GU-1: Inventory generic material/essence items without Gu/insect tags or name are excluded
 // ─────────────────────────────────────────────────────────────────────────────
-runTest('GU-1', 'Inventory 10 material/essence items without "serangga" in name appear in gu_feed', () => {
+runTest('GU-1', 'Generic material/essence items without Gu/insect tags are strictly excluded from gu_feed', () => {
   const genericMaterialItems = Array.from({ length: 10 }, (_, i) => ({
     _id: `inv_mat_${i + 1}`,
     quantity: 5,
@@ -66,10 +66,9 @@ runTest('GU-1', 'Inventory 10 material/essence items without "serangga" in name 
   };
 
   const eligible = listEligibleInventory(mockPlayer, 'gu_feed');
-  assert(eligible.length >= 10, `Expected at least 10 items in gu_feed, got ${eligible.length}`);
-  eligible.forEach(item => {
-    assert.strictEqual(item.allowed, true, `Item ${item.name} should be allowed`);
-    assert(isItemEligibleForPurpose(item, 'gu_feed', 'gu_master'), `Item ${item.name} must be eligible in matcher`);
+  assert.strictEqual(eligible.length, 0, `Generic material/essence must NOT appear in gu_feed, got ${eligible.length}`);
+  genericMaterialItems.forEach(item => {
+    assert.strictEqual(isItemEligibleForPurpose(item.itemId, 'gu_feed', 'gu_master'), false, `Item ${item.itemId.name} must be rejected`);
   });
 });
 

@@ -128,7 +128,7 @@ const setupServer = (client) => {
         return apiLimiter(req, res, next);
     });
 
-    // Apply transactionLimiter to mutating routes
+    // Apply transactionLimiter ONLY to mutating routes (POST, PUT, DELETE, PATCH)
     const transactionRoutes = [
         '/api/market/buy',
         '/api/market/sell',
@@ -158,7 +158,8 @@ const setupServer = (client) => {
         '/api/cultivation/law'
     ];
     app.use((req, res, next) => {
-        if (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/')) {
+        const isMutating = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method);
+        if (isMutating && (transactionRoutes.some(route => req.path.startsWith(route)) || req.path.startsWith('/api/transaction/'))) {
              return transactionLimiter(req, res, next);
         }
         next();
@@ -247,6 +248,22 @@ const setupServer = (client) => {
     // Root test endpoint
     app.get('/api/health', (req, res) => {
         res.json({ status: 'OK', message: 'Jianghu API Server is running', antiCheat: 'Active' });
+    });
+
+    // Global Express Error Handler
+    const CustomError = require('./utils/CustomError');
+    app.use((err, req, res, next) => {
+        if (err instanceof CustomError) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        if (err?.name === 'UnauthorizedError') {
+            return res.status(401).json({ error: 'Token otentikasi tidak valid atau telah kadaluarsa.' });
+        }
+        console.error('[API-UNHANDLED-ERROR]', err);
+        const status = err.status || err.statusCode || 500;
+        res.status(status).json({
+            error: err.message || 'Terjadi kesalahan internal pada server Jianghu.'
+        });
     });
 
     // Start server

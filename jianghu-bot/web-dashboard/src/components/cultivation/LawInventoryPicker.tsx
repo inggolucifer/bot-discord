@@ -81,7 +81,7 @@ export default function LawInventoryPicker({
   const getEmptyAdvice = () => {
     switch (purpose) {
       case 'gu_feed':
-        return 'Kumpulkan larva serangga tanah, madu ratu, daging monster, atau bahan pakan di alam liar. Pastikan item bertag gu_food / material esensi, atau gunakan opsi Tetes Darah Sendiri.';
+        return 'Kumpulkan larva, madu ratu, serangga, atau item bertag gu_food / gu_feed di alam bebas, atau gunakan opsi Tetes Darah Sendiri.';
       case 'essence_absorb':
         return 'Kumpulkan herba spiritual, kristal esensi, atau bahan alkimia di alam bebas. Pastikan item bertag esensi selaras.';
       case 'beast_feed':

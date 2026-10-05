@@ -14,7 +14,7 @@ import { useAuthStore, useUIStore } from '@/lib/store';
 import { Compass, User, Sparkles } from 'lucide-react';
 
 export default function RootApp() {
-  const { token, user, appearanceCompleted, initialize } = useAuthStore();
+  const { token, user, appearanceCompleted, isInitializing, initialize } = useAuthStore();
   const { setActiveModal, activeModal, isTileInspectorActive, showMobileMapNav, setIsLandingMenu } = useUIStore();
 
   const [mounted, setMounted] = useState(false);
@@ -25,12 +25,20 @@ export default function RootApp() {
   }, [showLanding, setIsLandingMenu]);
 
   useEffect(() => {
-    initialize();
-    setMounted(true);
+    let isCancelled = false;
+    (async () => {
+      await initialize();
+      if (!isCancelled) {
+        setMounted(true);
+      }
+    })();
+    return () => {
+      isCancelled = true;
+    };
   }, [initialize]);
 
   // Loading Screen saat hydrasi awal
-  if (!mounted) {
+  if (!mounted || isInitializing) {
     return (
       <div className="fixed inset-0 z-[100] w-screen h-screen bg-[#070a12] flex flex-col items-center justify-center font-serif text-amber-200 select-none">
         <div className="relative w-16 h-16 flex items-center justify-center mb-4">
