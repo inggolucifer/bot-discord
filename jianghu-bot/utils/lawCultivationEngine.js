@@ -1758,6 +1758,51 @@ function getMiniBreakthroughCost(rank, stage) {
  * @param {boolean} isMajor - true jika major breakthrough (rank)
  * @returns {{ consumedItemName: string, consumedQty: number, itemTier: number }}
  */
+/**
+ * Validasi apakah item memenuhi syarat sebagai material terobosan (breakthrough).
+ * Menggunakan evaluasi berbasis tag, category, dan tier daripada nama string exact.
+ * @param {object} item - Item document atau object
+ * @param {number} playerTier - Tier kultivator saat ini (rank + 1)
+ * @param {boolean} isMajor - Terobosan besar (tier >= playerTier) vs mini (tier <= playerTier)
+ * @returns {boolean}
+ */
+function isBreakthroughMaterial(item, playerTier, isMajor = false) {
+  if (!item) return false;
+  const tier = resolveItemTier(item);
+  const tags = Array.isArray(item.tags) ? item.tags.map(String) : [];
+  const cat = String(item.category || '').toLowerCase();
+
+  // Senjata dan zirah tidak pernah sah sebagai bahan terobosan kultivasi
+  const isEquipment = ['weapon', 'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots', 'mount'].includes(cat) ||
+    tags.some(t => ['weapon', 'armor', 'equipment', 'mount'].includes(t));
+  if (isEquipment) return false;
+
+  if (isMajor) {
+    if (tier < playerTier) return false;
+    return (
+      tags.includes('breakthrough_catalyst') ||
+      tags.includes('catalyst') ||
+      tags.includes('spirit_stone') ||
+      tags.includes('breakthrough_material') ||
+      tags.includes('essence') ||
+      cat === 'material' ||
+      cat === 'herb' ||
+      cat === 'spirit_stone'
+    );
+  } else {
+    if (tier > playerTier) return false;
+    return (
+      tags.includes('breakthrough_material') ||
+      tags.includes('spirit_stone') ||
+      tags.includes('essence') ||
+      tags.includes('catalyst') ||
+      cat === 'material' ||
+      cat === 'herb' ||
+      cat === 'spirit_stone'
+    );
+  }
+}
+
 function consumeBreakthroughMaterials(player, law, isMajor = false) {
   const rank = law?.rank || 0;
   const stage = law?.stage || 0;
@@ -1780,22 +1825,7 @@ function consumeBreakthroughMaterials(player, law, isMajor = false) {
       const invId = (item._id || item.id || item)?.toString();
       if (invId === slottedPillId) continue;
 
-      const tier = resolveItemTier(item);
-      const tags = Array.isArray(item.tags) ? item.tags : [];
-      const cat = item.category;
-
-      const isEligible = (
-        tags.includes('breakthrough_catalyst') ||
-        tags.includes('catalyst') ||
-        tags.includes('spirit_stone') ||
-        tags.includes('breakthrough_material') ||
-        tags.includes('essence') ||
-        cat === 'material' ||
-        cat === 'herb' ||
-        cat === 'spirit_stone'
-      );
-
-      if (isEligible && tier >= targetTier) {
+      if (isBreakthroughMaterial(item, targetTier, true)) {
         foundIdx = i;
         foundItemDoc = item;
         break;
@@ -1834,21 +1864,8 @@ function consumeBreakthroughMaterials(player, law, isMajor = false) {
       const invId = (item._id || item.id || item)?.toString();
       if (invId === slottedPillId) continue;
 
-      const tier = resolveItemTier(item);
-      const tags = Array.isArray(item.tags) ? item.tags : [];
-      const cat = item.category;
-
-      const isEligible = (
-        tags.includes('breakthrough_material') ||
-        tags.includes('spirit_stone') ||
-        tags.includes('essence') ||
-        tags.includes('catalyst') ||
-        cat === 'material' ||
-        cat === 'herb' ||
-        cat === 'spirit_stone'
-      );
-
-      if (isEligible && tier <= playerTier) {
+      if (isBreakthroughMaterial(item, playerTier, false)) {
+        const tier = resolveItemTier(item);
         eligibleSlots.push({ index: i, tier, qty: inv.quantity, item });
         totalAvailable += inv.quantity;
       }
@@ -5751,6 +5768,7 @@ module.exports = {
   consumeInventoryItem,
   listEligibleInventory,
   isItemEligibleForPurpose,
+  isBreakthroughMaterial,
 
   // Facility Helpers & Quotes
   FACILITY_CONFIG,
