@@ -1,3 +1,10 @@
+/**
+ * SCRIPT MIGRASI DATABASE: Purge legacy `currencies` field
+ * 
+ * Penggunaan:
+ * Jalankan sekali di staging/production maintenance saat migrasi field `currencies` ke `currency`.
+ * Command: node jianghu-bot/scripts/migrateCurrenciesField.js
+ */
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { normalizeCurrency, addCopper, convertToCopper } = require('../utils/currencyNormalize');
