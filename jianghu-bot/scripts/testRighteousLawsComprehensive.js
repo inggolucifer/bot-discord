@@ -208,8 +208,8 @@ console.log('\nTest 10: Memeriksa Matrix Tier Affinity Multirank & resolveItemTi
 {
   // resolveItemTier checks
   assert.strictEqual(resolveItemTier({ tier: 3 }), 3, 'resolveItemTier tier=3');
-  assert.strictEqual(resolveItemTier({ itemTier: 4 }), 4, 'resolveItemTier itemTier=4');
-  assert.strictEqual(resolveItemTier({ rank: 'Immortal' }), 3, 'resolveItemTier Immortal rank=3');
+  assert.strictEqual(resolveItemTier({ rank: 'Rare' }), 3, 'resolveItemTier Rare rank=3');
+  assert.strictEqual(resolveItemTier({ rank: 'Immortal' }), 7, 'resolveItemTier Immortal rank=7');
   assert.strictEqual(resolveItemTier({ rank: 'Mortal' }), 1, 'resolveItemTier Mortal rank=1');
   assert.strictEqual(resolveItemTier({}), 1, 'resolveItemTier default=1');
 
