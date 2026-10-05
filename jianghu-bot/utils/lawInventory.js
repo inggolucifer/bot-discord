@@ -7,12 +7,14 @@ const {
   findInventoryIndex,
   consumeInventoryItem,
   listEligibleInventory,
-  isItemEligibleForPurpose
+  isItemEligibleForPurpose,
+  isBreakthroughMaterial
 } = require('./lawCultivationEngine');
 
 module.exports = {
   findInventoryIndex,
   consumeInventoryItem,
   listEligibleInventory,
-  isItemEligibleForPurpose
+  isItemEligibleForPurpose,
+  isBreakthroughMaterial
 };
