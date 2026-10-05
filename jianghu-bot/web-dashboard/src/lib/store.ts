@@ -27,10 +27,11 @@ interface AuthState {
   user: User | null;
   hasCharacter: boolean;
   appearanceCompleted: boolean;
+  isInitializing: boolean;
   login: (token: string, user: User) => void;
   setAppearanceCompleted: (completed: boolean, updatedBody?: any) => void;
   logout: () => void;
-  initialize: () => void;
+  initialize: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -38,42 +39,50 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   hasCharacter: false,
   appearanceCompleted: false,
+  isInitializing: true,
 
   initialize: async () => {
     if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('jianghu_token');
-      const storedUser = localStorage.getItem('jianghu_user');
+      try {
+        const storedToken = localStorage.getItem('jianghu_token');
+        const storedUser = localStorage.getItem('jianghu_user');
 
-      if (storedToken && storedUser) {
-        try {
-          const userObj = JSON.parse(storedUser) as User;
-          
-          set({
-            token: storedToken,
-            user: userObj,
-            hasCharacter: userObj.hasCharacter || false,
-            appearanceCompleted: userObj.appearanceCompleted || false
-          });
-
-          // Verifikasi ke server lewat /api/auth/me untuk kepastian authoritative
+        if (storedToken && storedUser) {
           try {
-            const meRes = await api.get('/auth/me');
-            if (meRes.data?.success && meRes.data?.user) {
-              const freshUser = meRes.data.user;
-              localStorage.setItem('jianghu_user', JSON.stringify(freshUser));
-              set({
-                user: freshUser,
-                hasCharacter: !!freshUser.hasCharacter,
-                appearanceCompleted: !!freshUser.appearanceCompleted
-              });
-            }
-          } catch (meErr) {
-            console.warn('[AUTH] Sesi kadaluarsa atau tidak valid:', meErr);
+            const userObj = JSON.parse(storedUser) as User;
+            set({
+              token: storedToken,
+              user: userObj,
+              hasCharacter: userObj.hasCharacter || false,
+              appearanceCompleted: userObj.appearanceCompleted || false
+            });
+          } catch (e) {
+            console.error('Failed to parse stored user', e);
           }
-        } catch (e) {
-          console.error('Failed to parse stored user', e);
         }
+
+        // Verifikasi ke server lewat /api/auth/me untuk kepastian authoritative & cookie hydration
+        try {
+          const meRes = await api.get('/auth/me');
+          if (meRes.data?.success && meRes.data?.user) {
+            const freshUser = meRes.data.user;
+            localStorage.setItem('jianghu_user', JSON.stringify(freshUser));
+            set({
+              user: freshUser,
+              hasCharacter: !!freshUser.hasCharacter,
+              appearanceCompleted: !!freshUser.appearanceCompleted,
+              token: get().token || 'cookie_session'
+            });
+          }
+        } catch (meErr) {
+          // Token / cookie tidak valid atau expired
+          console.warn('[AUTH] Sesi kadaluarsa atau tidak valid');
+        }
+      } finally {
+        set({ isInitializing: false });
       }
+    } else {
+      set({ isInitializing: false });
     }
   },
 
@@ -84,7 +93,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       token,
       user,
       hasCharacter: user.hasCharacter || false,
-      appearanceCompleted: user.appearanceCompleted || false
+      appearanceCompleted: user.appearanceCompleted || false,
+      isInitializing: false
     });
   },
 

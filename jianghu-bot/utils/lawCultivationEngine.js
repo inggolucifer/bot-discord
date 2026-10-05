@@ -514,21 +514,21 @@ const LAW_ESSENCE_PROFILE = {
 
   gu_master: {
     barName: 'Gu Aperture Nutrition',
-    fillTags: ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'material', 'essence'],
-    fillCategories: ['material'],
+    fillTags: ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'pakan_gu', 'insect', 'bug'],
+    fillCategories: ['material', 'food', 'consumable'],
     emptyHint: 'Beri pakan Gu / nutrisi aperture.'
   },
 
   natal_artifact: {
     barName: 'Soul Resonance Reservoir',
-    fillTags: ['ore', 'whetstone', 'material', 'common_artifact', 'essence'],
-    fillCategories: ['material'],
+    fillTags: ['ore', 'whetstone', 'mineral', 'metal', 'common_artifact', 'artifact_essence', 'batu_asah', 'logam'],
+    fillCategories: ['material', 'mineral', 'artifact'],
     emptyHint: 'Infus mineral / asah pusaka jiwa.'
   },
   natal_beast: {
     barName: 'Blood Oath Reservoir',
-    fillTags: ['beast_food', 'meat', 'material', 'beast_egg', 'essence'],
-    fillCategories: ['material'],
+    fillTags: ['beast_food', 'beast_feed', 'meat', 'beast_egg', 'beast_meat', 'beast_essence', 'satwa_food', 'pakan_satwa'],
+    fillCategories: ['food', 'material', 'consumable'],
     emptyHint: 'Beri makan satwa roh.'
   },
 
@@ -2039,48 +2039,70 @@ function isItemEligibleForPurpose(item, purpose = 'essence_absorb', activeLawTyp
 
   switch (purpose) {
     case 'gu_feed': {
-      const profile = LAW_ESSENCE_PROFILE.gu_master || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
-      const tagHit = ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'insect', 'bug', 'pakan_gu']
-        .some(t => tags.includes(t));
-      if (isEquipment && !tagHit) return false;
+      const blockedCat = [
+        'weapon', 'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots',
+        'mount', 'vehicle', 'skill_book', 'recipe', 'quest', 'blueprint', 'currency'
+      ];
+      if (blockedCat.includes(cat) || tags.some(t => blockedCat.includes(t))) return false;
 
-      const profileHit = matchesProfile(profile, tags, cat);
-      const nameHit = /(serangga|madu|daging|cacing|ulat|larva|pakan|empedu|getah|insect|larva|jelly|nectar|gu\b)/i.test(name);
-      // Material/herb/food generik dengan essence ATAU nameHit — boleh
-      const softMaterial = (cat === 'material' || cat === 'herb' || cat === 'food' || tags.includes('material') || tags.includes('essence'))
-        && (tagHit || nameHit || tags.includes('essence'));
-      isMatch = tagHit || profileHit || softMaterial || nameHit;
-      break;
+      // Tier A — Tag eksplisit (selalu boleh)
+      const guTags = ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'pakan_gu', 'insect', 'bug'];
+      const tagHit = guTags.some(t => tags.includes(t));
+      if (tagHit) return true;
+
+      // Tier B — Nama jelas pakan serangga/nutrisi Gu (bukan kata generik longgar)
+      const nameHit = /(pakan\s*gu|\blarva\b|\bulat\b|\bcacing\b|serangga|kalajengking|\binsect\b|grub|maggot|nectar|madu\s*ratu|getah\s*gu|empedu\s*(serangga|gu)|gu\s*food)/i.test(name);
+
+      // Tier C — Category + tag kombinasikan
+      const catOk = ['material', 'herb', 'food', 'consumable'].includes(cat) || tags.includes('herb');
+      if (nameHit && catOk) return true;
+
+      // DILARANG: generic essence, generic material, generic food tanpa indikasi Gu/insect
+      return false;
     }
 
     case 'beast_feed': {
-      const profile = LAW_ESSENCE_PROFILE.natal_beast || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
-      const tagHit = ['beast_food', 'beast_feed', 'meat', 'beast_egg', 'beast_meat', 'beast_essence', 'satwa_food', 'pakan_satwa', 'food']
-        .some(t => tags.includes(t));
-      if (isEquipment && !tagHit) return false;
+      const blockedCat = [
+        'weapon', 'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots',
+        'mount', 'vehicle', 'skill_book', 'recipe', 'quest', 'blueprint', 'currency'
+      ];
+      if (blockedCat.includes(cat) || tags.some(t => blockedCat.includes(t))) return false;
 
-      const profileHit = matchesProfile(profile, tags, cat);
-      const nameHit = /(daging|ikan|jantung|ransum|beast|satwa|meat|egg|telur|organ)/i.test(name);
-      const softMaterial = (cat === 'material' || cat === 'food' || cat === 'herb' || tags.includes('material') || tags.includes('essence'))
-        && (tagHit || nameHit || tags.includes('essence') || cat === 'food');
-      isMatch = tagHit || profileHit || softMaterial || nameHit;
-      break;
+      // Tier A — Tag eksplisit pakan satwa
+      const beastTags = ['beast_food', 'beast_feed', 'meat', 'beast_egg', 'beast_meat', 'beast_essence', 'satwa_food', 'pakan_satwa'];
+      const tagHit = beastTags.some(t => tags.includes(t));
+      if (tagHit) return true;
+
+      // Tier B — Nama jelas daging/ikan/organ/telur satwa
+      const nameHit = /(pakan\s*satwa|\bdaging\b|\bikan\b|jantung\s*(monster|beast|satwa)|\bransum\b|beast\s*meat|\begg\b|\btelur\b)/i.test(name);
+      const catOk = ['food', 'material', 'consumable'].includes(cat) || tags.includes('food');
+      if (nameHit && catOk) return true;
+
+      return false;
     }
 
     case 'natal_infuse':
     case 'artifact_infuse': {
-      const profile = LAW_ESSENCE_PROFILE.natal_artifact || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
-      const tagHit = ['ore', 'whetstone', 'mineral', 'metal', 'common_artifact', 'artifact_essence', 'batu_asah', 'logam']
-        .some(t => tags.includes(t));
-      if (isEquipment && !['common_artifact', 'artifact_essence', 'whetstone'].some(t => tags.includes(t))) {
+      const blockedCat = [
+        'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots',
+        'mount', 'vehicle', 'skill_book', 'recipe', 'quest', 'blueprint', 'currency'
+      ];
+      if (cat === 'weapon' && !['common_artifact', 'artifact_essence'].some(t => tags.includes(t))) {
         return false;
       }
-      const profileHit = matchesProfile(profile, tags, cat);
-      const nameHit = /(asah|besi|batu|mineral|bijih|ore|logam|pusaka|whetstone)/i.test(name);
-      const softMaterial = (cat === 'material' || cat === 'mineral' || cat === 'artifact' || tags.includes('material') || tags.includes('essence') || tags.includes('mineral'))
-        && (tagHit || nameHit || tags.includes('essence'));
-      isMatch = tagHit || profileHit || softMaterial || nameHit;
-      break;
+      if (blockedCat.includes(cat) || tags.some(t => blockedCat.includes(t))) return false;
+
+      // Tier A — Tag eksplisit mineral/logam/whetstone
+      const artifactTags = ['ore', 'whetstone', 'mineral', 'metal', 'common_artifact', 'artifact_essence', 'batu_asah', 'logam'];
+      const tagHit = artifactTags.some(t => tags.includes(t));
+      if (tagHit) return true;
+
+      // Tier B — Nama jelas batu asah / bijih / mineral
+      const nameHit = /(batu\s*asah|\bbijih\b|\bore\b|\bmineral\b|logam\s*(murni|besi|baja)|\bwhetstone\b|pedang\s*patah)/i.test(name);
+      const catOk = ['material', 'mineral', 'artifact'].includes(cat) || tags.includes('mineral');
+      if (nameHit && catOk) return true;
+
+      return false;
     }
 
     case 'element_absorb': {

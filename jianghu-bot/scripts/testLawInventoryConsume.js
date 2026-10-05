@@ -123,7 +123,7 @@ runTest('1.2 listEligibleInventory Gu Master includes various valid tags (gu_foo
       {
         _id: 'inv_b',
         quantity: 2,
-        itemId: { _id: 'item_b', name: 'Getah Manis Rawa', category: 'herb', tags: ['herb', 'food'], tier: 2 }
+        itemId: { _id: 'item_b', name: 'Getah Gu Manis Rawa', category: 'herb', tags: ['herb', 'food', 'gu_food'], tier: 2 }
       },
       {
         _id: 'inv_c',
