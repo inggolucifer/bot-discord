@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import api from '@/lib/api';
+import { toast } from '@/components/ui/Toast';
 
 export default function MarriagePage() {
   const [marriageData, setMarriageData] = useState<any>(null);
@@ -14,18 +16,21 @@ export default function MarriagePage() {
 
   const fetchMarriageData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
       const [meRes, eligibleRes] = await Promise.all([
-        fetch('/api/marriage/me', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/marriage/eligible-nearby', { headers: { Authorization: `Bearer ${token}` } })
+        api.get('/marriage/me').catch(err => {
+          console.warn('[Marriage] /marriage/me fetch error:', err.message);
+          return { data: null };
+        }),
+        api.get('/marriage/eligible-nearby').catch(err => {
+          console.warn('[Marriage] /marriage/eligible-nearby fetch error:', err.message);
+          return { data: [] };
+        })
       ]);
 
-      if (meRes.ok) setMarriageData(await meRes.json());
-      if (eligibleRes.ok) setEligiblePlayers(await eligibleRes.json());
-    } catch (err) {
-      console.error(err);
+      if (meRes.data) setMarriageData(meRes.data);
+      if (eligibleRes.data) setEligiblePlayers(eligibleRes.data);
+    } catch (err: any) {
+      console.error('[Marriage] fetch error:', err);
     } finally {
       setLoading(false);
     }
@@ -39,29 +44,21 @@ export default function MarriagePage() {
     setIsSubmitting(true);
     setActionMessage(null);
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch(`/api/marriage/${endpoint}`, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: body ? JSON.stringify(body) : null
-      });
+      const url = `/marriage/${endpoint}`;
+      const res = method.toUpperCase() === 'POST' ? await api.post(url, body) : await api.get(url);
+      const data = res.data;
 
-      const data = await res.json();
-      if (res.ok) {
-        setActionMessage({ type: 'success', text: data.message });
-        fetchMarriageData(); // Refresh data
-        if (endpoint === 'propose') {
-          setProposeTarget('');
-          setDowry({ copper: 0, silver: 0, gold: 0 });
-        }
-      } else {
-        setActionMessage({ type: 'error', text: data.message || 'Terjadi kesalahan.' });
+      setActionMessage({ type: 'success', text: data.message || 'Aksi berhasil.' });
+      toast.show({ message: data.message || 'Aksi berhasil.', type: 'success' });
+      fetchMarriageData(); // Refresh data
+      if (endpoint === 'propose') {
+        setProposeTarget('');
+        setDowry({ copper: 0, silver: 0, gold: 0 });
       }
-    } catch (err) {
-      setActionMessage({ type: 'error', text: 'Koneksi ke server gagal.' });
+    } catch (err: any) {
+      const errMsg = err.response?.data?.message || err.response?.data?.error || err.message || 'Terjadi kesalahan.';
+      setActionMessage({ type: 'error', text: errMsg });
+      toast.show({ message: errMsg, type: 'error' });
     } finally {
       setIsSubmitting(false);
     }
