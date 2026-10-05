@@ -10,6 +10,10 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const setupServer = (client) => {
+    if (process.env.NODE_ENV === 'production' && !(process.env.OWNER_IDS || '').trim()) {
+        console.warn('[SECURITY] OWNER_IDS kosong: hanya player.isAdmin=true yang bisa akses /api/admin');
+    }
+
     const app = express();
     const server = http.createServer(app);
 
