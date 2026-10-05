@@ -1971,6 +1971,214 @@ function consumeInventoryItem(player, itemId, qty = 1) {
   };
 }
 
+function itemTagsAndMeta(item) {
+  if (!item) return { tags: [], cat: '', name: '' };
+  const tags = Array.isArray(item.tags) ? item.tags.map(String) : [];
+  const cat = String(item.category || '').toLowerCase();
+  const name = String(item.name || '');
+  return { tags, cat, name };
+}
+
+function matchesProfile(profile, tags, cat) {
+  if (!profile) return false;
+  const fillTags = profile.fillTags || [];
+  const tagOk = fillTags.some(t => tags.includes(t));
+  const catOk = !(profile.fillCategories && profile.fillCategories.length)
+    ? true
+    : profile.fillCategories.map(c => c.toLowerCase()).includes(cat);
+
+  // Jika tag spesifik (selain generic 'material' / 'essence') cocok:
+  if (fillTags.some(t => tags.includes(t) && t !== 'material' && t !== 'essence')) return true;
+  // Jika tag match (misal material/essence) dan category juga cocok:
+  if (tagOk && catOk) return true;
+  // Jika memiliki tag intisari generik:
+  if (tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone')) return true;
+  return false;
+}
+
+/**
+ * Validasi kelayakan item untuk aktivitas Law secara terpusat (authoritative matcher).
+ * Digunakan bersama oleh listEligibleInventory dan endpoint konsumsi (misal /gu/feed).
+ *
+ * @param {object} item - Objek item inventori (populated atau raw)
+ * @param {string} purpose - Jenis aktivitas ('gu_feed', 'beast_feed', dll.)
+ * @param {string} activeLawType - Slug hukum aktif
+ * @returns {boolean}
+ */
+function isItemEligibleForPurpose(item, purpose = 'essence_absorb', activeLawType = '') {
+  if (!item || typeof item !== 'object') return false;
+  if (!item.name && (typeof item.equals === 'function' || typeof item === 'string')) {
+    return false;
+  }
+
+  const { tags, cat, name } = itemTagsAndMeta(item);
+
+  // Senjata / armor / perlengkapan tidak boleh dikonsumsi sebagai pakan / esensi
+  // kecuali membawa tag khusus yang eksplisit
+  const isEquipment = ['weapon', 'armor', 'equipment', 'accessory', 'helm', 'pants', 'boots', 'mount'].includes(cat) ||
+    tags.some(t => ['weapon', 'armor', 'equipment', 'mount'].includes(t));
+
+  let isMatch = false;
+
+  switch (purpose) {
+    case 'gu_feed': {
+      const profile = LAW_ESSENCE_PROFILE.gu_master || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['gu_food', 'gu_feed', 'gu_larva', 'gu_essence', 'insect', 'bug', 'pakan_gu']
+        .some(t => tags.includes(t));
+      if (isEquipment && !tagHit) return false;
+
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(serangga|madu|daging|cacing|ulat|larva|pakan|empedu|getah|insect|larva|jelly|nectar|gu\b)/i.test(name);
+      // Material/herb/food generik dengan essence ATAU nameHit — boleh
+      const softMaterial = (cat === 'material' || cat === 'herb' || cat === 'food' || tags.includes('material') || tags.includes('essence'))
+        && (tagHit || nameHit || tags.includes('essence'));
+      isMatch = tagHit || profileHit || softMaterial || nameHit;
+      break;
+    }
+
+    case 'beast_feed': {
+      const profile = LAW_ESSENCE_PROFILE.natal_beast || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['beast_food', 'beast_feed', 'meat', 'beast_egg', 'beast_meat', 'beast_essence', 'satwa_food', 'pakan_satwa', 'food']
+        .some(t => tags.includes(t));
+      if (isEquipment && !tagHit) return false;
+
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(daging|ikan|jantung|ransum|beast|satwa|meat|egg|telur|organ)/i.test(name);
+      const softMaterial = (cat === 'material' || cat === 'food' || cat === 'herb' || tags.includes('material') || tags.includes('essence'))
+        && (tagHit || nameHit || tags.includes('essence') || cat === 'food');
+      isMatch = tagHit || profileHit || softMaterial || nameHit;
+      break;
+    }
+
+    case 'natal_infuse':
+    case 'artifact_infuse': {
+      const profile = LAW_ESSENCE_PROFILE.natal_artifact || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['ore', 'whetstone', 'mineral', 'metal', 'common_artifact', 'artifact_essence', 'batu_asah', 'logam']
+        .some(t => tags.includes(t));
+      if (isEquipment && !['common_artifact', 'artifact_essence', 'whetstone'].some(t => tags.includes(t))) {
+        return false;
+      }
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(asah|besi|batu|mineral|bijih|ore|logam|pusaka|whetstone)/i.test(name);
+      const softMaterial = (cat === 'material' || cat === 'mineral' || cat === 'artifact' || tags.includes('material') || tags.includes('essence') || tags.includes('mineral'))
+        && (tagHit || nameHit || tags.includes('essence'));
+      isMatch = tagHit || profileHit || softMaterial || nameHit;
+      break;
+    }
+
+    case 'element_absorb': {
+      if (isEquipment) return false;
+      const elemMap = {
+        element_phoenix_fire:     ['fire_catalyst', 'fire_essence', 'flame', 'api', 'fire'],
+        element_azure_water:      ['water_catalyst', 'water_essence', 'water', 'air', 'es', 'ice'],
+        element_xuanwu_earth:     ['earth_catalyst', 'earth_essence', 'earth', 'tanah', 'batu'],
+        element_qingdi_wood:      ['wood_catalyst', 'wood_essence', 'wood', 'kayu', 'herba', 'herb'],
+        element_roc_wind:         ['wind_catalyst', 'wind_essence', 'wind', 'angin', 'badai'],
+        element_godthunder_light: ['thunder_catalyst', 'thunder_essence', 'thunder', 'petir', 'kilat']
+      };
+      const specificTags = elemMap[activeLawType] || [];
+      const profile = activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null;
+      const tagHit = tags.some(t => specificTags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const genericTags = ['catalyst', 'essence', 'elemental_essence', 'spirit_stone'];
+      const genericHit = tags.some(t => genericTags.includes(t));
+      const softMaterial = (cat === 'material' || cat === 'herb') && (tags.includes('essence') || tagHit);
+      isMatch = tagHit || profileHit || genericHit || softMaterial;
+      break;
+    }
+
+    case 'demonic_absorb':
+    case 'turbid_absorb': {
+      if (isEquipment) return false;
+      const profile = LAW_ESSENCE_PROFILE.demonic_turbid_core || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['beast_core', 'turbid_core', 'turbid_essence', 'core'].some(t => tags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(inti|core|siluman|turbid)/i.test(name);
+      isMatch = tagHit || profileHit || ((cat === 'material' || tags.includes('essence')) && (tagHit || nameHit));
+      break;
+    }
+
+    case 'blood_absorb':
+    case 'demonic_blood': {
+      if (isEquipment) return false;
+      const profile = LAW_ESSENCE_PROFILE.demonic_blood_soul || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['blood_vial', 'blood', 'blood_essence'].some(t => tags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(darah|blood)/i.test(name);
+      isMatch = tagHit || profileHit || ((cat === 'material' || tags.includes('essence')) && (tagHit || nameHit));
+      break;
+    }
+
+    case 'venom_absorb':
+    case 'demonic_venom': {
+      if (isEquipment) return false;
+      const profile = LAW_ESSENCE_PROFILE.demonic_myriad_venom || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['venom_sac', 'poison', 'venom', 'poison_essence', 'bisa'].some(t => tags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(racun|venom|bisa|poison)/i.test(name);
+      isMatch = tagHit || profileHit || ((cat === 'material' || tags.includes('essence')) && (tagHit || nameHit));
+      break;
+    }
+
+    case 'tribute_absorb':
+    case 'abyssal_tribute': {
+      if (isEquipment) return false;
+      const profile = LAW_ESSENCE_PROFILE.demonic_abyssal_pact || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['abyssal', 'blood_vial', 'obsidian', 'abyssal_essence', 'tribute'].some(t => tags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(abyss|kurban|upeti|obsidian)/i.test(name);
+      isMatch = tagHit || profileHit || ((cat === 'material' || tags.includes('essence')) && (tagHit || nameHit));
+      break;
+    }
+
+    case 'nether_absorb':
+    case 'demonic_nether': {
+      if (isEquipment) return false;
+      const profile = LAW_ESSENCE_PROFILE.demonic_nether_darkness || (activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null);
+      const tagHit = ['yin_stone', 'nether', 'dark', 'yin_essence'].some(t => tags.includes(t));
+      const profileHit = matchesProfile(profile, tags, cat);
+      const nameHit = /(yin|nether|kegelapan|dark)/i.test(name);
+      isMatch = tagHit || profileHit || ((cat === 'material' || tags.includes('essence')) && (tagHit || nameHit));
+      break;
+    }
+
+    case 'breakthrough_mini':
+      if (isEquipment) return false;
+      isMatch = (
+        tags.includes('breakthrough_material') ||
+        tags.includes('spirit_stone') ||
+        tags.includes('catalyst') ||
+        tags.includes('herb') ||
+        tags.includes('essence') ||
+        cat === 'spirit_stone'
+      );
+      break;
+
+    case 'bt_pill':
+      isMatch = (
+        cat === 'pill' ||
+        tags.includes('breakthrough_pill') ||
+        tags.includes('pill') ||
+        /pil/i.test(name)
+      );
+      break;
+
+    case 'essence_absorb':
+    default: {
+      if (isEquipment) return false;
+      const profile = activeLawType ? LAW_ESSENCE_PROFILE[activeLawType] : null;
+      if (profile) {
+        isMatch = matchesProfile(profile, tags, cat);
+      } else {
+        isMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
+      }
+      break;
+    }
+  }
+
+  return isMatch;
+}
+
 /**
  * Menyaring dan mengembalikan daftar item di tas pemain yang memenuhi syarat untuk aktivitas tertentu (purpose).
  * Menghitung efisiensi dan alasan terkunci (over-tier) secara terpusat.
@@ -1999,162 +2207,8 @@ function listEligibleInventory(player, optionsOrPurpose = {}, optionalLawType = 
     const item = inv.itemId || inv;
     if (!item) continue;
 
-    const tags = Array.isArray(item.tags) ? item.tags : [];
-    const cat = (item.category || '').toLowerCase();
-    const name = (item.name || '').toLowerCase();
-
-    let isMatch = false;
-
-    switch (purpose) {
-      case 'gu_feed':
-        isMatch = (
-          tags.includes('gu_food') ||
-          tags.includes('gu_feed') ||
-          tags.includes('gu_larva') ||
-          tags.includes('gu_essence') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material' || cat === 'herb') &&
-            /(serangga|madu|daging|cacing|ulat|larva|pakan|empedu|getah)/i.test(name)) ||
-          /(serangga|madu|cacing|ulat|larva|pakan|getah)/i.test(name)
-        );
-        break;
-
-      case 'beast_feed':
-        isMatch = (
-          tags.includes('beast_food') ||
-          tags.includes('meat') ||
-          tags.includes('beast_egg') ||
-          tags.includes('beast_meat') ||
-          tags.includes('beast_essence') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material' || cat === 'food' || cat === 'herb') &&
-            /(daging|ikan|jantung|ransum|beast|satwa)/i.test(name))
-        );
-        break;
-
-      case 'natal_infuse':
-      case 'artifact_infuse':
-        isMatch = (
-          tags.includes('ore') ||
-          tags.includes('whetstone') ||
-          tags.includes('common_artifact') ||
-          tags.includes('artifact_essence') ||
-          ((tags.includes('mineral') || tags.includes('material') || tags.includes('essence') || tags.includes('metal') || cat === 'material' || cat === 'mineral' || cat === 'artifact') &&
-            /(asah|besi|batu|mineral|bijih|ore|logam|pusaka)/i.test(name))
-        );
-        break;
-
-      case 'element_absorb': {
-        const elemMap = {
-          element_phoenix_fire:     ['fire_catalyst', 'fire_essence', 'flame', 'api', 'fire'],
-          element_azure_water:      ['water_catalyst', 'water_essence', 'water', 'air', 'es', 'ice'],
-          element_xuanwu_earth:     ['earth_catalyst', 'earth_essence', 'earth', 'tanah', 'batu'],
-          element_qingdi_wood:      ['wood_catalyst', 'wood_essence', 'wood', 'kayu', 'herba'],
-          element_roc_wind:         ['wind_catalyst', 'wind_essence', 'wind', 'angin', 'badai'],
-          element_godthunder_light: ['thunder_catalyst', 'thunder_essence', 'thunder', 'petir', 'kilat']
-        };
-        const specificTags = elemMap[activeLawType] || [];
-        const genericTags = ['catalyst', 'essence', 'elemental_essence', 'spirit_stone'];
-        isMatch = (
-          tags.some(t => specificTags.includes(t)) ||
-          tags.some(t => genericTags.includes(t)) ||
-          (cat === 'material' && tags.includes('essence'))
-        );
-        break;
-      }
-
-      case 'demonic_absorb':
-      case 'turbid_absorb':
-        isMatch = (
-          tags.includes('beast_core') ||
-          tags.includes('turbid_core') ||
-          tags.includes('turbid_essence') ||
-          ((tags.includes('core') || tags.includes('essence') || tags.includes('material') || cat === 'material') &&
-            /(inti|core|siluman)/i.test(name))
-        );
-        break;
-
-      case 'blood_absorb':
-      case 'demonic_blood':
-        isMatch = (
-          tags.includes('blood_vial') ||
-          tags.includes('blood') ||
-          tags.includes('blood_essence') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
-            /(darah|blood)/i.test(name))
-        );
-        break;
-
-      case 'venom_absorb':
-      case 'demonic_venom':
-        isMatch = (
-          tags.includes('venom_sac') ||
-          tags.includes('poison') ||
-          tags.includes('venom') ||
-          tags.includes('poison_essence') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
-            /(racun|venom|bisa)/i.test(name))
-        );
-        break;
-
-      case 'tribute_absorb':
-      case 'abyssal_tribute':
-        isMatch = (
-          tags.includes('abyssal') ||
-          tags.includes('blood_vial') ||
-          tags.includes('obsidian') ||
-          tags.includes('abyssal_essence') ||
-          tags.includes('tribute') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
-            /(abyss|kurban|upeti|obsidian)/i.test(name))
-        );
-        break;
-
-      case 'nether_absorb':
-      case 'demonic_nether':
-        isMatch = (
-          tags.includes('yin_stone') ||
-          tags.includes('nether') ||
-          tags.includes('dark') ||
-          tags.includes('yin_essence') ||
-          ((tags.includes('essence') || tags.includes('material') || cat === 'material') &&
-            /(yin|nether|kegelapan)/i.test(name))
-        );
-        break;
-
-      case 'breakthrough_mini':
-        isMatch = (
-          tags.includes('breakthrough_material') ||
-          tags.includes('spirit_stone') ||
-          tags.includes('catalyst') ||
-          tags.includes('herb') ||
-          tags.includes('essence') ||
-          cat === 'spirit_stone'
-        );
-        break;
-
-      case 'bt_pill':
-        isMatch = (
-          cat === 'pill' ||
-          tags.includes('breakthrough_pill') ||
-          tags.includes('pill') ||
-          /pil/i.test(name)
-        );
-        break;
-
-      case 'essence_absorb':
-      default: {
-        const profile = LAW_ESSENCE_PROFILE[activeLawType];
-        if (profile) {
-          const specificTagMatch = profile.fillTags ? profile.fillTags.some(t => tags.includes(t) && t !== 'material' && t !== 'essence') : false;
-          const genericMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
-          const catMatch = profile.fillCategories ? profile.fillCategories.includes(cat) : (cat === 'material');
-          isMatch = (specificTagMatch && catMatch) || genericMatch;
-        } else {
-          isMatch = tags.includes('essence') || tags.includes('catalyst') || tags.includes('spirit_stone');
-        }
-        break;
-      }
-    }
-
+    const { tags } = itemTagsAndMeta(item);
+    const isMatch = isItemEligibleForPurpose(item, purpose, activeLawType);
     if (!isMatch) continue;
 
     const itemTier = resolveItemTier(item);
@@ -5696,6 +5750,7 @@ module.exports = {
   findInventoryIndex,
   consumeInventoryItem,
   listEligibleInventory,
+  isItemEligibleForPurpose,
 
   // Facility Helpers & Quotes
   FACILITY_CONFIG,

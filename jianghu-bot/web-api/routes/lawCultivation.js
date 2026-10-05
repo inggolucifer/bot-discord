@@ -73,6 +73,7 @@ const {
   findInventoryIndex,
   consumeInventoryItem,
   listEligibleInventory,
+  isItemEligibleForPurpose,
   FACILITY_CONFIG,
   getFacilityUpgradeQuote
 } = require('../../utils/lawCultivationEngine');
@@ -2187,6 +2188,9 @@ router.post('/gu/feed', authenticateToken, async (req, res) => {
     }
 
     const itemDoc = player.inventory[invIndex].itemId || player.inventory[invIndex];
+    if (!isItemEligibleForPurpose(itemDoc, 'gu_feed', 'gu_master')) {
+      return res.status(400).json({ error: 'Item yang dipilih tidak cocok sebagai pakan cacing Gu.' });
+    }
     const { playerTier, itemTier, efficiency } = assertAbsorbTier(law, itemDoc);
 
     const satietyGain = Math.round(60 * efficiency);
