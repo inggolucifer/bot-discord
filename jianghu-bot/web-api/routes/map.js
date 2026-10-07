@@ -20,12 +20,41 @@ router.get('/world', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
         }
 
-        const regions = await RegionMap.find({}).lean();
+        const { REGIONS } = require('../../utils/worldRegionEngine');
 
-        const regionsWithDiscovery = regions.map(region => ({
-            ...region,
-            discovered: (player.discoveredRegions || []).includes(region.regionSlug)
-        }));
+        const regionsWithDiscovery = REGIONS.map(reg => {
+            const centerX = Math.round((reg.bounds.minX + reg.bounds.maxX) / 2);
+            const centerY = Math.round((reg.bounds.minY + reg.bounds.maxY) / 2);
+            // Konversi spasial 5000x5000 ke koordinat layar CSS (Y=5000 di utara/atas, Y=0 di selatan/bawah)
+            const worldMapX = Math.max(5, Math.min(95, Math.round((centerX / 5000) * 100)));
+            const worldMapY = Math.max(5, Math.min(95, Math.round((1 - (centerY / 5000)) * 100)));
+
+            let terrainType = 'plains';
+            if (reg.id.includes('mountain') || reg.id.includes('peak') || reg.id.includes('cliff')) terrainType = 'mountain';
+            else if (reg.id.includes('glacial') || reg.id.includes('ice') || reg.id.includes('desolate')) terrainType = 'glacial';
+            else if (reg.id.includes('swamp') || reg.id.includes('demon') || reg.id.includes('plague') || reg.id.includes('mire')) terrainType = 'swamp';
+            else if (reg.id.includes('sea') || reg.id.includes('water') || reg.id.includes('river')) terrainType = 'water';
+            else if (reg.id.includes('desert') || reg.id.includes('dune')) terrainType = 'desert';
+            else if (reg.id.includes('volcanic') || reg.id.includes('magma') || reg.id.includes('scar')) terrainType = 'volcanic';
+
+            return {
+                regionSlug: reg.id,
+                displayName: reg.name,
+                worldMapX,
+                worldMapY,
+                centerX,
+                centerY,
+                bounds: reg.bounds,
+                dangerTier: reg.dangerTier,
+                qiDensityModifier: reg.qiDensityModifier,
+                walkDefault: reg.walkDefault,
+                tempRangeC: reg.tempRangeC,
+                terrainType,
+                lawAffinities: reg.lawAffinities || [],
+                resourceTags: reg.resourceTags || [],
+                discovered: true
+            };
+        });
 
         let activeTravel = null;
         const travel = await Travel.findOne({
