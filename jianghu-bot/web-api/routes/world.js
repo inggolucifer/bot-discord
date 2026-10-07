@@ -68,6 +68,40 @@ const { evaluateAmbush } = require('../../utils/explorationMath');
 const pEngine = require('../../utils/proceduralWorldEngine');
 const PropertyStructure = require('../../models/PropertyStructure');
 const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
+const { setPlayerAuthoritativePosition } = require('../../services/movementService');
+const { normalizeRegionSlug, getTerritoryInfo } = require('../../utils/worldRegionEngine');
+
+const SETTLEMENT_COORDINATES = {
+    'desa xingcun': { x: 2450, y: 2480, regionSlug: 'central_plains' },
+    'tianjing': { x: 2600, y: 2550, regionSlug: 'central_plains' },
+    'luoyang kecil': { x: 2620, y: 2500, regionSlug: 'central_plains' },
+    'fengyang': { x: 2680, y: 2520, regionSlug: 'central_plains' },
+    'kota fengyang': { x: 2680, y: 2520, regionSlug: 'central_plains' },
+    'desa tiedao': { x: 2530, y: 2460, regionSlug: 'central_plains' },
+    'ibukota central': { x: 2500, y: 2500, regionSlug: 'central_plains' },
+    'xitong city': { x: 2500, y: 2500, regionSlug: 'central_plains' },
+    'tri-sect mountain outpost': { x: 1800, y: 2300, regionSlug: 'azure_mountain_range' },
+    'tri-sect mountain': { x: 1800, y: 2300, regionSlug: 'azure_mountain_range' },
+    'azure sect approach': { x: 1850, y: 2350, regionSlug: 'azure_mountain_range' },
+    'pelabuhan timur': { x: 3900, y: 2500, regionSlug: 'eastern_sea' },
+    'eastern market port': { x: 3950, y: 2520, regionSlug: 'eastern_sea' },
+    'scar of heaven camp': { x: 2300, y: 1900, regionSlug: 'southern_demon_domain' },
+    'scar of heaven': { x: 2300, y: 1900, regionSlug: 'southern_demon_domain' },
+    'southern watch': { x: 2350, y: 1850, regionSlug: 'southern_demon_domain' },
+    'oasis barat': { x: 800, y: 2200, regionSlug: 'western_sacred_desert' },
+    'desert relay': { x: 850, y: 2250, regionSlug: 'western_sacred_desert' },
+    'pos tundra utara': { x: 2100, y: 4200, regionSlug: 'northern_desolate' },
+    'northern caravan post': { x: 2150, y: 4250, regionSlug: 'northern_desolate' }
+};
+
+function resolveSettlementCoords(settlementName) {
+    if (!settlementName) return { x: 2455, y: 2485, regionSlug: 'central_plains' };
+    const key = settlementName.trim().toLowerCase();
+    if (SETTLEMENT_COORDINATES[key]) return SETTLEMENT_COORDINATES[key];
+    const anch = proceduralWorldEngine.ANCHOR_SETTLEMENTS.find(a => a.name.toLowerCase() === key);
+    if (anch) return { x: anch.tileX, y: anch.tileY, regionSlug: 'central_plains' };
+    return { x: 2455, y: 2485, regionSlug: 'central_plains' };
+}
 
 
 function loadZoneConfig(zoneId) {
@@ -382,12 +416,18 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
 
                 let isAmbushed = false;
                 if (!travel.ambushResolved) {
-                    // Phase 6: Ambush logic modified to pending state
-                    let ambushChance = 0.15; // default base
-                    if (travel.usedEscortLetter) ambushChance *= 0.3;
-                    if (travel.exhausted) ambushChance += staminaConfig.EXHAUSTED_AMBUSH_CHANCE_BONUS;
+                    const toRegion = normalizeRegionSlug(travel.toLocation?.regionSlug);
+                    const isSafeDestination = toRegion === 'central_plains' || !!travel.toLocation?.settlementName;
 
-                    if (Math.random() < ambushChance) {
+                    // Zero-Ambush Policy: Wilayah aman (Tier 1 seperti central_plains) atau pemukiman = 0% ambush mutlak!
+                    let ambushChance = 0;
+                    if (!isSafeDestination) {
+                        ambushChance = 0.15;
+                        if (travel.usedEscortLetter) ambushChance *= 0.3;
+                        if (travel.exhausted) ambushChance += staminaConfig.EXHAUSTED_AMBUSH_CHANCE_BONUS;
+                    }
+
+                    if (ambushChance > 0 && Math.random() < ambushChance) {
                         isAmbushed = true;
                         travel.status = 'ambushed';
                         travel.ambushResult.happened = true;
@@ -400,15 +440,21 @@ router.get('/travel/status', authenticateToken, async (req, res) => {
 
                 if (!isAmbushed) {
                     travel.status = 'arrived';
-                    player.currentLocation = {
+                    const targetCoord = resolveSettlementCoords(travel.toLocation?.settlementName);
+
+                    await setPlayerAuthoritativePosition(player, {
+                        zoneId: 'tianyuan_world_map',
+                        tileX: targetCoord.x,
+                        tileY: targetCoord.y
+                    }, {
                         regionSlug: travel.toLocation.regionSlug,
                         settlementName: travel.toLocation.settlementName,
-                        buildingName: null
-                    };
+                        buildingName: null,
+                        clearTravelStatus: true,
+                        session
+                    });
 
-                    markArrived(player, travel.toLocation.regionSlug, travel.toLocation.settlementName);
-
-                    await player.save({ session });
+                    markArrived(player, player.currentLocation.regionSlug, travel.toLocation.settlementName);
                 }
 
                 await travel.save({ session });
@@ -739,13 +785,21 @@ router.post('/travel/resolve-ambush', authenticateToken, async (req, res) => {
 
             travel.ambushResolved = true;
             travel.status = 'arrived';
-            player.currentLocation = {
+            const targetCoord = resolveSettlementCoords(travel.toLocation?.settlementName);
+
+            await setPlayerAuthoritativePosition(player, {
+                zoneId: 'tianyuan_world_map',
+                tileX: targetCoord.x,
+                tileY: targetCoord.y
+            }, {
                 regionSlug: travel.toLocation.regionSlug,
                 settlementName: travel.toLocation.settlementName,
-                buildingName: null
-            };
+                buildingName: null,
+                clearTravelStatus: true,
+                session
+            });
 
-            markArrived(player, travel.toLocation.regionSlug, travel.toLocation.settlementName);
+            markArrived(player, player.currentLocation.regionSlug, travel.toLocation.settlementName);
 
             player.markModified('currency');
             await player.save({ session });
@@ -2016,16 +2070,27 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Dapatkan info medan tile
             const tileInfo = proceduralWorldEngine.getTileAt(targetX, targetY);
 
-            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal
+            // Obstruksi batas dunia / hazard mutlak (B5 fix)
+            if (tileInfo.tileType === 'hazard') {
+                stoppedEarly = true;
+                stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Batas Benua / Jurang Tak Berdasar'}!`;
+                break;
+            }
+
+            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal (B5 fix)
             if (tileInfo.isSolid) {
-                if (tileInfo.terrainType === 'ocean' && !isWaterMount && !isFlyingMount) {
-                    stoppedEarly = true;
-                    stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Lautan Dalam'}! Membutuhkan perahu atau kapal layar.`;
-                    break;
-                } else if (tileInfo.terrainType !== 'ocean' && !isFlyingMount) {
-                    stoppedEarly = true;
-                    stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
-                    break;
+                if (tileInfo.terrainType === 'ocean') {
+                    if (!isWaterMount && !isFlyingMount) {
+                        stoppedEarly = true;
+                        stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Lautan Dalam'}! Membutuhkan perahu, kapal, atau pedang terbang.`;
+                        break;
+                    }
+                } else {
+                    if (!isFlyingMount) {
+                        stoppedEarly = true;
+                        stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Tebing Batu Curam'}! Membutuhkan artefak pedang terbang.`;
+                        break;
+                    }
                 }
             }
 
@@ -2092,20 +2157,14 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             }
         }
 
-        // Simpan posisi akhir pemain
-        if (!player.gridPosition) player.gridPosition = {};
-        player.gridPosition.zoneId = activeZoneId;
-        player.gridPosition.tileX = currentX;
-        player.gridPosition.tileY = currentY;
-
-        // Reset gridMove
-        player.gridMove = {
-            targetX: null,
-            targetY: null,
-            targetZoneId: null,
-            moveStartedAt: null,
-            moveArrivesAt: null
-        };
+        // Simpan posisi akhir otoritatif pemain (B1 & B2 fix)
+        await setPlayerAuthoritativePosition(player, {
+            zoneId: activeZoneId,
+            tileX: currentX,
+            tileY: currentY
+        }, {
+            save: false
+        });
 
         try {
             await player.save();
@@ -2116,6 +2175,8 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
                 {
                     $set: {
                         gridPosition: player.gridPosition,
+                        currentLocation: player.currentLocation,
+                        discoveredLocations: player.discoveredLocations,
                         gridMove: player.gridMove,
                         exploredChunks: player.exploredChunks,
                         ...(player.currentStamina !== null && player.currentStamina !== undefined ? { currentStamina: player.currentStamina } : {}),
@@ -2132,6 +2193,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             currentStamina: Math.floor(player.currentStamina),
             maxStamina: Math.floor(player.maxStamina || getMaxStamina(player)),
             arrivedPosition: { tileX: currentX, tileY: currentY },
+            currentLocation: player.currentLocation,
             stoppedEarly,
             stopReason,
             encounter: encounterResult,
@@ -2730,77 +2792,29 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         }
 
 
-        let tile = await ZoneTile.findOne({
-            guildId: player.guildId,
-            zoneId: currentZoneId,
-            tileX: targetX,
-            tileY: targetY
-        });
+        // Konsolidasi dengan landService (B3 fix)
+        const buyResult = await landService.purchaseLandPlot(
+            player.discordId,
+            player.guildId,
+            targetX,
+            targetY,
+            currentZoneId
+        );
 
-        // Jika tile belum ada di MongoDB (pada Procedural World Map 5000x5000), periksa dari Procedural World Engine
-        if (!tile) {
-
-            const pTile = pEngine.getTileAt(targetX, targetY);
-            if (pTile && pTile.isClaimable && !pTile.isSolid) {
-                tile = new ZoneTile({
-                    guildId: player.guildId,
-                    zoneId: currentZoneId,
-                    tileX: targetX,
-                    tileY: targetY,
-                    tileType: 'buildable_plot',
-                    terrainType: pTile.terrainType || 'plains',
-                    isClaimable: true,
-                    isSolid: false,
-                    plotPriceSilver: 100
-                });
-            }
+        if (!buyResult.ok) {
+            return res.status(400).json({ error: buyResult.error });
         }
-
-        if (!tile || (!tile.isClaimable && tile.tileType !== 'buildable_plot')) {
-            return res.status(400).json({ error: 'Tile ini bukan plot tanah yang dapat dibeli (bukan kavling tanah).' });
-        }
-
-        if (tile.isOccupied || tile.ownerId) {
-            return res.status(400).json({ error: `Plot tanah ini sudah menjadi milik ${tile.ownerName || 'pemain lain'}!` });
-        }
-
-
-
 
         const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
-        const priceInfo = getLandPriceForPlayer(ownedPlotsCount);
+        const nextPrice = getLandPriceForPlayer(ownedPlotsCount);
 
-        const playerTotalCopper = convertToCopper(player.currency);
-        if (playerTotalCopper < priceInfo.priceInCopper) {
-            return res.status(400).json({
-                error: `Dana tidak mencukupi! Dibutuhkan ${priceInfo.label} untuk membeli tanah ke-${priceInfo.plotNumber}. Kekayaanmu belum mencukupi.`
-            });
-        }
-
-        // Potong biaya pembelian
-        const remainingCopper = playerTotalCopper - priceInfo.priceInCopper;
-        player.currency = convertFromCopper(remainingCopper);
-
-        tile.ownerType = 'player';
-        tile.ownerId = player.discordId;
-        tile.ownerName = player.characterName;
-        tile.plotPriceLabel = priceInfo.label;
-        tile.plotPriceSilver = Math.floor(priceInfo.priceInCopper / 100);
-        tile.isOccupied = true;
-        tile.label = `Lahan Milik ${player.characterName}`;
-        await tile.save();
-        player.markModified('currency');
-        await player.save();
-
-        const nextPrice = getLandPriceForPlayer(ownedPlotsCount + 1);
-
-        res.json({
+        return res.json({
             success: true,
-            message: `Selamat! Kamu telah resmi membeli kavling tanah ke-${priceInfo.plotNumber} di (${targetX}, ${targetY}) seharga ${priceInfo.label}.`,
-            priceLabel: priceInfo.label,
-            ownedPlotsCount: ownedPlotsCount + 1,
+            message: `Selamat! Kamu telah resmi membeli kavling tanah di (${targetX}, ${targetY}) seharga ${buyResult.priceLabel}.`,
+            priceLabel: buyResult.priceLabel,
+            ownedPlotsCount,
             nextPrice,
-            tile
+            tile: buyResult.plot
         });
     } catch (error) {
         console.error('[API-BUY-PLOT] Error:', error);

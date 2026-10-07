@@ -7,12 +7,14 @@ const Location = require('../../models/Location');
 const { deductCopper, silverToCopper, formatCopper, getTotalCopper } = require('../../utils/currencyNormalize');
 const LockManager = require('../utils/lockManager');
 
+const { setPlayerAuthoritativePosition } = require('../../services/movementService');
+
 const FERRY_ROUTES = [
   {
     id: 'xingcun_to_southern_rimba',
     name: 'Penyeberangan Sungai Sembilan Naga',
     from: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun' },
-    to: { regionSlug: 'southern_demon_domain', settlementName: 'Desa Rimba Lembah', dockName: 'Dermaga Rimba Selatan', tileX: 16, tileY: 16 },
+    to: { regionSlug: 'southern_demon_domain', settlementName: 'Scar of Heaven Camp', dockName: 'Dermaga Rimba Selatan', tileX: 2300, tileY: 1900 },
     raftCostSilver: 25,
     raftDurationSeconds: 30,
     fastShipCostSilver: 150
@@ -20,17 +22,26 @@ const FERRY_ROUTES = [
   {
     id: 'southern_rimba_to_xingcun',
     name: 'Penyeberangan Kembali ke Dataran Tengah',
-    from: { regionSlug: 'southern_demon_domain', settlementName: 'Desa Rimba Lembah', dockName: 'Dermaga Rimba Selatan' },
-    to: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun', tileX: 16, tileY: 16 },
+    from: { regionSlug: 'southern_demon_domain', settlementName: 'Scar of Heaven Camp', dockName: 'Dermaga Rimba Selatan' },
+    to: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun', tileX: 2450, tileY: 2480 },
     raftCostSilver: 25,
     raftDurationSeconds: 30,
     fastShipCostSilver: 150
   },
   {
-    id: 'eastern_port_to_jade_island',
-    name: 'Pelayaran Bahari Laut Timur ke Pulau Istana Giok',
-    from: { regionSlug: 'eastern_sea', settlementName: 'Pelabuhan Pesisir Timur', dockName: 'Dermaga Utama Timur' },
-    to: { regionSlug: 'eastern_sea', settlementName: 'Pulau Istana Giok', dockName: 'Dermaga Istana Giok', tileX: 20, tileY: 20 },
+    id: 'eastern_port_to_turtle_island',
+    name: 'Pelayaran Bahari Laut Timur ke Pulau Penyu Raksasa (Turtle Island)',
+    from: { regionSlug: 'eastern_sea', settlementName: 'Pelabuhan Timur', dockName: 'Dermaga Timur' },
+    to: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu', tileX: 4350, tileY: 2750 },
+    raftCostSilver: 40,
+    raftDurationSeconds: 45,
+    fastShipCostSilver: 250
+  },
+  {
+    id: 'turtle_island_to_eastern_port',
+    name: 'Pelayaran Kembali dari Pulau Penyu ke Pelabuhan Timur',
+    from: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu' },
+    to: { regionSlug: 'eastern_sea', settlementName: 'Pelabuhan Timur', dockName: 'Dermaga Timur', tileX: 3900, tileY: 2500 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
     fastShipCostSilver: 250
@@ -92,16 +103,16 @@ router.post('/cross', authenticateToken, async (req, res) => {
 
     if (mode === 'fast_ship') {
       // Penyeberangan Kilat / Pedang Terbang: Tiba seketika
-      player.currentLocation = {
+      await setPlayerAuthoritativePosition(player, {
+        zoneId: 'tianyuan_world_map',
+        tileX: route.to.tileX,
+        tileY: route.to.tileY
+      }, {
         regionSlug: route.to.regionSlug,
         settlementName: route.to.settlementName,
-        buildingName: route.to.dockName
-      };
-      if (!player.gridPosition) player.gridPosition = {};
-      player.gridPosition.tileX = route.to.tileX;
-      player.gridPosition.tileY = route.to.tileY;
-
-      await player.save();
+        buildingName: route.to.dockName,
+        clearTravelStatus: true
+      });
 
       return res.json({
         success: true,
@@ -165,17 +176,18 @@ router.post('/resolve', authenticateToken, async (req, res) => {
     }
 
     const voyage = player.ferryVoyage;
-    player.currentLocation = {
-      regionSlug: voyage.destinationRegionSlug,
-      settlementName: voyage.destinationSettlementName,
-      buildingName: voyage.destinationDockName
-    };
-    if (!player.gridPosition) player.gridPosition = {};
-    player.gridPosition.tileX = voyage.targetX || 16;
-    player.gridPosition.tileY = voyage.targetY || 16;
     player.ferryVoyage = null;
 
-    await player.save();
+    await setPlayerAuthoritativePosition(player, {
+      zoneId: 'tianyuan_world_map',
+      tileX: voyage.targetX || 2450,
+      tileY: voyage.targetY || 2480
+    }, {
+      regionSlug: voyage.destinationRegionSlug,
+      settlementName: voyage.destinationSettlementName,
+      buildingName: voyage.destinationDockName,
+      clearTravelStatus: true
+    });
 
     res.json({
       success: true,
