@@ -454,32 +454,60 @@ export default function TaleOfImmortalCanvas({
             }
           }
 
-          // 2.5 Territory Overlays
-          if (tile.territoryType === 'danger_zone') {
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.15)'; // Red tint for danger
+          // 2.5 Territory Overlays & Visualisasi Hunting/Farming Zones
+          if (tile.territoryType === 'death_zone') {
+            ctx.fillStyle = 'rgba(147, 51, 234, 0.18)'; // Purple tint for extreme death zone
+            ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+          } else if (tile.territoryType === 'danger_zone') {
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.12)'; // Red tint for danger wilderness
+            ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+          } else if (tile.territoryType === 'hunting_zone') {
+            // Zona Berburu & Panen Alam Liar (Hutan Bambu / Rimba)
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.08)'; // Amber tint
             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           } else if (tile.territoryType === 'sect_territory') {
             ctx.fillStyle = 'rgba(128, 0, 128, 0.1)'; // Purple tint for sect
             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
-          } else if (tile.territoryType === 'monster_zone') {
-             ctx.fillStyle = 'rgba(255, 165, 0, 0.05)'; 
-             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           }
 
-          // 2.5B Indikator Tanah Milik Pemain (Hanya jika sudah dibeli)
+          // 2.5B Titik Farming & Sumber Daya Alam Spasial (Herba, Rebung Bambu, Tambang, Kayu)
+          if (tile.resourceType && !tile.isSolid && !tile.buildingName) {
+            let resIcon = '🌿';
+            let resColor = '#86efac';
+            if (tile.resourceType === 'wood') {
+              resIcon = tile.terrainType === 'bamboo_forest' ? '🎋' : '🪵';
+              resColor = '#fde047';
+            } else if (tile.resourceType === 'ore') {
+              resIcon = '⛏️';
+              resColor = '#93c5fd';
+            } else if (tile.resourceType === 'fish') {
+              resIcon = '🐟';
+              resColor = '#38bdf8';
+            } else if (tile.resourceType === 'herb') {
+              resIcon = '🌿';
+              resColor = '#4ade80';
+            }
+
+            ctx.save();
+            ctx.font = `${Math.max(9, 11 * camera.zoom)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(resIcon, sx + currentTileSize * 0.8, sy + currentTileSize * 0.25);
+            ctx.restore();
+          }
+
+          // 2.5C Indikator Tanah Milik Pemain (Hanya jika sudah dibeli)
           if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction && tile.ownerId) {
             ctx.fillStyle = '#10b981';
             ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
             ctx.textAlign = 'center';
             ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
-          }
-
-          // 2.5C Spot Memancing (Hanya jika secara eksplisit terdapat sumber daya ikan)
-          if (tile.resourceType === 'fish' && !tile.isSolid) {
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.8)';
-            ctx.font = `${Math.max(8, 11 * camera.zoom)}px sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.fillText('🐟', sx + currentTileSize * 0.75, sy + currentTileSize * 0.35);
           }
 
           // 2.5D Tanaman Pertanian (Crop)

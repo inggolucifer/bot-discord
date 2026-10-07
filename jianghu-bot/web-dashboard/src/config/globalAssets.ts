@@ -30,15 +30,15 @@ export const GLOBAL_ASSETS = {
   // =========================================================================
   terrain: {
     // Wilayah Umum
-    plains: "",              // Dataran Central Plains (Padang rumput)
-    forest: "",              // Rimba hijau biasa
-    bamboo_forest: "",       // Hutan Bambu khusus
-    river: "",               // Aliran sungai / air tawar
-    settlement_floor: "",    // Lantai paving batu kota/desa
+    plains: "/assets/tiles/plains.jpg",              // Dataran Central Plains (Padang rumput lukisan perkamen)
+    forest: "/assets/tiles/bamboo_forest.jpg",       // Rimba hijau rimbun
+    bamboo_forest: "/assets/tiles/bamboo_forest.jpg",// Hutan Bambu khusus Tale of Immortal
+    river: "",                                       // Aliran sungai / air tawar
+    settlement_floor: "/assets/tiles/settlement_floor.jpg", // Lantai paving batu kota/desa
     
     // Wilayah Khusus & Pegunungan Solid
-    azure_mountain: "",      // Tebing batu terjal (Azure Mountain Range)
-    mountain: "",            // Tebing gunung cadas
+    azure_mountain: "/assets/tiles/azure_mountain.jpg", // Tebing batu terjal (Azure Mountain Range)
+    mountain: "/assets/tiles/mountain.jpg",            // Tebing gunung cadas
     mountain_pass: "",       // Celah gerbang lintasan gunung
     sword_gorge_pass: "",    // Ngarai tebing pedang (Sword Gorge Pass)
     

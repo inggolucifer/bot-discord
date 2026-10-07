@@ -359,8 +359,8 @@ function getRegionAt(x, y) {
  * Ambush HANYA aktif di wilayah Danger (Tier >= 3) atau saat ada world event aktif.
  */
 function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = false) {
-  // Pemukiman / Kota: 100% Bebas Ambush
-  if (isSettlement) {
+  // 1. Pemukiman & Kota di seluruh benua: 100% AMAN MUTLAK (Zero Ambush)
+  if (isSettlement || terrainType === 'settlement') {
     return {
       type: 'settlement',
       ambushRiskRate: 0,
@@ -368,10 +368,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  const region = getRegionAt(x, y);
-
-  // WILAYAH BIASA / AMAN (Tier 1: Central Plains): 0% Ambush Mutlak
-  if (region.dangerTier === 1 && !isWorldEventActive) {
+  // 2. Jalan Raya Kerajaan / Jalur Transit: 100% AMAN MUTLAK (Zero Ambush)
+  if (terrainType === 'road') {
     return {
       type: 'safe_zone',
       ambushRiskRate: 0,
@@ -379,52 +377,107 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // Wilayah Tenang Tier 2 (Mirror Lake): 0% di jalanan/air
-  if (region.dangerTier === 2 && !isWorldEventActive) {
+  const region = getRegionAt(x, y);
+
+  // 3. Dataran Terbuka Biasa (Plains): Selalu AMAN (Zero Ambush) kecuali ada World Event
+  if (terrainType === 'plains' && !isWorldEventActive) {
+    // Pada zona maut tier 5 (Crimson Battlefield/Abyssal Scar), ada sedikit risiko
+    if (region.dangerTier === 5) {
+      return { type: 'death_zone', ambushRiskRate: 0.25, dangerTierBase: 5 };
+    }
     return {
-      type: 'calm_zone',
-      ambushRiskRate: terrainType === 'mountain' ? 0.03 : 0,
-      dangerTierBase: 2
+      type: 'safe_zone',
+      ambushRiskRate: 0,
+      dangerTierBase: Math.min(region.dangerTier, 2)
     };
   }
 
-  // Wilayah Perairan Dalam / Lautan
-  if (terrainType === 'ocean') {
-    return { type: 'locked_zone', ambushRiskRate: 0.08, dangerTierBase: 3 };
+  // 4. ZONA BAHAYA ALAM LIAR (HUNTING, FARMING & AMBUSH SUB-ZONES)
+  // Terjadi ketika pemain melangkah KELUAR dari jalur aman menuju bioma liar:
+
+  // A. Hutan Bambu Liar (Tempat berburu serigala roh & panen rebung spiritual)
+  if (terrainType === 'bamboo_forest') {
+    return {
+      type: 'hunting_zone',
+      ambushRiskRate: 0.18,
+      dangerTierBase: Math.max(2, region.dangerTier)
+    };
   }
 
-  // WILAYAH BAHAYA EKSTREM (Tier 5: Lava Spine, Crimson Battlefield, Abyssal Scar)
-  if (region.dangerTier === 5) {
-    const isRoad = terrainType === 'road';
+  // B. Rimba Belantara Purba (Tempat berburu satwa & tebang kayu bertuah)
+  if (terrainType === 'forest') {
+    return {
+      type: 'hunting_zone',
+      ambushRiskRate: 0.22,
+      dangerTierBase: Math.max(2, region.dangerTier)
+    };
+  }
+
+  // C. Rawa Racun Miasma (Tempat berburu binatang berbisa & panen herba racun)
+  if (terrainType === 'swamp' || terrainType === 'demonic_swamp' || terrainType === 'venom_mire') {
+    return {
+      type: 'danger_zone',
+      ambushRiskRate: 0.32,
+      dangerTierBase: Math.max(4, region.dangerTier)
+    };
+  }
+
+  // D. Tebing Pegunungan Cadas (Tempat tambang urat bijih besi/emas & elang pemangsa)
+  if (terrainType === 'mountain' || terrainType === 'azure_mountain') {
+    return {
+      type: 'danger_zone',
+      ambushRiskRate: 0.28,
+      dangerTierBase: Math.max(3, region.dangerTier)
+    };
+  }
+
+  // E. Kawah Magma / Lembah Lava (Tempat tambang bara api & monster lahar)
+  if (terrainType === 'volcanic' || terrainType === 'lava_spine') {
     return {
       type: 'death_zone',
-      ambushRiskRate: isRoad ? 0.12 : 0.45,
+      ambushRiskRate: 0.40,
       dangerTierBase: 5
     };
   }
 
-  // WILAYAH BAHAYA TINGGI (Tier 4: Northern Tundra, Demon Domain, Venom Mire, Gu Valley)
-  if (region.dangerTier === 4) {
-    const isRoad = terrainType === 'road';
+  // F. Gurun Pasir Suci / Ngarai Batu (Tempat berburu kalajengking & kristal surya)
+  if (terrainType === 'western_desert' || terrainType === 'desert' || terrainType === 'canyon') {
     return {
-      type: 'danger_zone',
-      ambushRiskRate: isRoad ? 0.05 : 0.28,
-      dangerTierBase: 4
+      type: 'hunting_zone',
+      ambushRiskRate: 0.25,
+      dangerTierBase: Math.max(3, region.dangerTier)
     };
   }
 
-  // WILAYAH BAHAYA SEDANG (Tier 3: Azure Mountain, Western Desert, Ore Teeth)
-  if (region.dangerTier === 3) {
-    const isRoad = terrainType === 'road';
+  // G. Gletser Salju Beku (Tempat berburu binatang salju & herba teratai es)
+  if (terrainType === 'glacial' || terrainType === 'northern_glacial' || terrainType === 'snow') {
     return {
-      type: 'monster_zone',
-      ambushRiskRate: isRoad ? 0.02 : 0.15,
-      dangerTierBase: 3
+      type: 'danger_zone',
+      ambushRiskRate: 0.30,
+      dangerTierBase: Math.max(4, region.dangerTier)
+    };
+  }
+
+  // H. Perairan Ombak Bebas / Samudra (Tempat memancing ikan roh & monster laut)
+  if (terrainType === 'ocean' || terrainType === 'eastern_sea') {
+    return {
+      type: 'hunting_zone',
+      ambushRiskRate: 0.18,
+      dangerTierBase: Math.max(3, region.dangerTier)
+    };
+  }
+
+  // I. Jalur Celah Gerbang Lintasan Gunung (Pass)
+  if (terrainType === 'mountain_pass' || terrainType === 'sword_gorge_pass') {
+    return {
+      type: 'calm_zone',
+      ambushRiskRate: 0.05,
+      dangerTierBase: 2
     };
   }
 
   // Default Fallback
-  return { type: 'wilderness', ambushRiskRate: 0, dangerTierBase: 1 };
+  return { type: 'safe_zone', ambushRiskRate: 0, dangerTierBase: 1 };
 }
 
 /**

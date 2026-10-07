@@ -2141,9 +2141,9 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Ungkap kabut di sekitar langkah baru
             sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
 
-            // Peluang Ambush Encounter
-            const encounterRoll = Math.random();
-            if (encounterRoll < (tileInfo.ambushRiskRate || 0.05)) {
+            // Peluang Ambush Encounter (Hanya di Zona Bahaya Liar / Hunting Zone)
+            const ambushRate = typeof tileInfo.ambushRiskRate === 'number' ? tileInfo.ambushRiskRate : 0;
+            if (ambushRate > 0 && encounterRoll < ambushRate) {
                 try {
                     encounterResult = checkAndRunGridEncounter(player, zoneConfig, tileInfo.terrainType === 'swamp');
                     if (encounterResult && (encounterResult.encountered || encounterResult.triggered)) {

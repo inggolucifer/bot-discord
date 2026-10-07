@@ -822,6 +822,9 @@ export default function ZoneGridView({
   const defaultY = targetFocusTile?.y ?? (isMacro ? 2485 : 10);
   const px = playerGrid?.position?.tileX ?? defaultX;
   const py = playerGrid?.position?.tileY ?? defaultY;
+  const currentCharacterTile = useMemo(() => {
+    return tiles.find(t => t.tileX === px && t.tileY === py);
+  }, [tiles, px, py]);
   const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
 
   return (
@@ -874,6 +877,41 @@ export default function ZoneGridView({
             </button>
 
             <ThermalStatusBadge initialThermalData={thermalStatus} />
+
+            {/* Badge Status Keamanan & Zonasi Ambush Karakter (Aman vs Berburu/Farming) */}
+            {currentCharacterTile && (
+              <div
+                title={
+                  currentCharacterTile.ambushRiskRate && currentCharacterTile.ambushRiskRate > 0
+                    ? `Zona Berburu & Bahaya! Risiko Ambush: ${Math.round(currentCharacterTile.ambushRiskRate * 100)}%. Waspada sergapan monster!`
+                    : 'Zona Aman! Bebas dari sergapan monster liar.'
+                }
+                className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg backdrop-blur-md text-[11px] font-serif font-bold shadow-md border ${
+                  currentCharacterTile.territoryType === 'death_zone'
+                    ? 'bg-purple-950/85 border-purple-500/70 text-purple-300'
+                    : currentCharacterTile.territoryType === 'danger_zone'
+                    ? 'bg-red-950/85 border-red-500/70 text-red-300'
+                    : currentCharacterTile.territoryType === 'hunting_zone'
+                    ? 'bg-amber-950/85 border-amber-500/70 text-amber-300'
+                    : 'bg-emerald-950/85 border-emerald-500/70 text-emerald-300'
+                }`}
+              >
+                {currentCharacterTile.territoryType === 'death_zone' ? (
+                  <><span>☠️</span><span>Zona Maut</span></>
+                ) : currentCharacterTile.territoryType === 'danger_zone' ? (
+                  <><span>⚠️</span><span>Alam Liar</span></>
+                ) : currentCharacterTile.territoryType === 'hunting_zone' ? (
+                  <><span>⚔️</span><span>Zona Berburu ({Math.round((currentCharacterTile.ambushRiskRate || 0.18) * 100)}%)</span></>
+                ) : (
+                  <><span>🛡️</span><span>Zona Aman</span></>
+                )}
+                {currentCharacterTile.resourceType && (
+                  <span className="text-[10px] opacity-80 border-l border-white/20 pl-1 font-sans">
+                    {currentCharacterTile.resourceType === 'herb' ? '🌿 Herba' : currentCharacterTile.resourceType === 'wood' ? '🎋 Rebung' : currentCharacterTile.resourceType === 'ore' ? '⛏️ Tambang' : '🐟 Ikan'}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Sisi kanan dikosongkan agar Bar Stamina dari world/page.tsx tidak pernah tertimpa */}
