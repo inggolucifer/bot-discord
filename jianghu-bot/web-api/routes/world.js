@@ -3328,16 +3328,53 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
 
 router.get('/macro-map', authenticateToken, async (req, res) => {
     try {
+        const { REGIONS } = require('../../utils/worldRegionEngine');
+
         const landmarks = [
-            { x: 2500, y: 2500, name: 'XiTong City', type: 'city', region: 'central_plains' },
-            { x: 2600, y: 2550, name: 'Tianjing Capital', type: 'city', region: 'central_plains' },
-            { x: 2450, y: 2480, name: 'Desa Xingcun', type: 'village', region: 'central_plains' },
-            { x: 1200, y: 4200, name: 'Sekte Kunlun', type: 'sect', region: 'glacial' },
-            { x: 2100, y: 1100, name: 'Lembah Miasma', type: 'danger', region: 'swamp' },
-            { x: 3800, y: 1500, name: 'Kawah Vulkanik', type: 'danger', region: 'mountain' },
-            { x: 4200, y: 3500, name: 'Pulau Teratai Emas', type: 'sect', region: 'river' }
+            // Pemukiman & Kota
+            { x: 2455, y: 2485, name: 'Desa Xingcun', type: 'village', region: 'central_plains', label: 'Desa Pemula' },
+            { x: 2680, y: 2520, name: 'Kota Fengyang', type: 'city', region: 'central_plains', label: 'Kota Dagang Megah' },
+            { x: 2620, y: 2500, name: 'Kota Luoyang Kecil', type: 'city', region: 'central_plains', label: 'Kota Benteng Pertahanan' },
+            { x: 2420, y: 2470, name: 'Desa Qingshui', type: 'village', region: 'central_plains', label: 'Tepian Sungai Jernih' },
+            { x: 2530, y: 2460, name: 'Desa Tiedao', type: 'village', region: 'central_plains', label: 'Desa Pandai Besi' },
+
+            // 3 Celah Gunung Resmi (Passes Penghubung Benua)
+            { x: 2200, y: 3350, name: 'North Pass', type: 'pass', region: 'azure_mountain_range', label: 'Celah Gerbang Utara' },
+            { x: 2600, y: 3350, name: 'Mist Pass', type: 'pass', region: 'azure_mountain_range', label: 'Celah Lembah Kabut' },
+            { x: 3100, y: 3350, name: 'Sword Gorge Pass', type: 'pass', region: 'azure_mountain_range', label: 'Ngarai Tebasan Pedang' },
+
+            // Pelabuhan & Kepulauan
+            { x: 4200, y: 2700, name: 'Dermaga Donghai', type: 'port', region: 'eastern_sea', label: 'Dermaga Penyeberangan Feri' },
+            { x: 4350, y: 2750, name: 'Pulau Penyu Raksasa', type: 'island', region: 'eastern_sea', label: 'Pulau Kura-Kura Purba' },
+
+            // Wilayah Khusus
+            { x: 2120, y: 4180, name: 'Pos Tundra Salju', type: 'settlement', region: 'northern_desolate', label: 'Pos Salju Abadi' },
+            { x: 1100, y: 2650, name: 'Oase Pasir Suci', type: 'settlement', region: 'western_sacred_desert', label: 'Oase Suci Padang Pasir' },
+            { x: 2350, y: 2420, name: 'Lembah Kabut Merah', type: 'danger', region: 'mist_insect_valley', label: 'Sarang Racun Miasma' },
+            { x: 2500, y: 900, name: 'Benteng Gerbang Iblis', type: 'danger', region: 'southern_demon_domain', label: 'Perbatasan Suku Iblis' }
         ];
-        res.json({ success: true, landmarks, worldSize: 5000 });
+
+        // Rantai Pegunungan Azure Solid melintang sebagai struktur geografi benua
+        const barrierRange = {
+            name: 'Azure Mountain Range Barrier',
+            bounds: { minX: 1500, maxX: 3600, minY: 3100, maxY: 3600 },
+            isSolid: true
+        };
+
+        res.json({
+            success: true,
+            worldSize: 5000,
+            landmarks,
+            barrierRange,
+            regions: REGIONS.map(r => ({
+                id: r.id,
+                name: r.name,
+                dangerTier: r.dangerTier,
+                bounds: r.bounds,
+                qiDensityModifier: r.qiDensityModifier,
+                lawAffinities: r.lawAffinities
+            }))
+        });
     } catch (error) {
         console.error('[API-MACRO-MAP] Error:', error);
         res.status(500).json({ error: 'Gagal memuat peta makro' });

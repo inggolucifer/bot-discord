@@ -224,7 +224,15 @@ export default function ZoneGridView({
     };
   }, [activeZoneId]);
 
-  // Auto-fokus dan pilih tile jika targetFocusTile diberikan
+  // Auto-fokus dan muat data grid jika targetFocusTile diberikan dari Peta Makro atau URL
+  useEffect(() => {
+    if (targetFocusTile) {
+      setSearchFocusTile({ x: targetFocusTile.x, y: targetFocusTile.y });
+      fetchZoneData(targetFocusTile.x, targetFocusTile.y);
+    }
+  }, [targetFocusTile?.x, targetFocusTile?.y, fetchZoneData]);
+
+  // Auto-fokus dan pilih tile jika targetFocusTile ditemukan di dalam tiles
   useEffect(() => {
     if (targetFocusTile && tiles.length > 0) {
       const found = tiles.find(t => t.tileX === targetFocusTile.x && t.tileY === targetFocusTile.y);

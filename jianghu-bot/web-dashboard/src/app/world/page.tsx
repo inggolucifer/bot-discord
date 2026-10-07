@@ -21,9 +21,11 @@ export function WorldPageContent() {
   const queryZoneId = searchParams.get('zoneId');
   const queryTileX = searchParams.get('tileX');
   const queryTileY = searchParams.get('tileY');
-  const targetFocusTile = queryTileX !== null && queryTileY !== null
-    ? { x: Number(queryTileX), y: Number(queryTileY) }
-    : null;
+  const [targetFocusTile, setTargetFocusTile] = useState<{ x: number; y: number } | null>(
+    queryTileX !== null && queryTileY !== null
+      ? { x: Number(queryTileX), y: Number(queryTileY) }
+      : null
+  );
 
   const [locationData, setLocationData] = useState<any>(null);
   const [travelStatus, setTravelStatus] = useState<any>(null);
@@ -250,8 +252,11 @@ export function WorldPageContent() {
         {mapView === 'world' ? (
           <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out relative z-30">
             <WorldMapView
-              onSelectRegion={(regionSlug: string) => {
+              onSelectRegion={(regionSlug: string, centerX?: number, centerY?: number) => {
                 setSelectedRegionSlug(regionSlug);
+                if (centerX !== undefined && centerY !== undefined) {
+                  setTargetFocusTile({ x: centerX, y: centerY });
+                }
                 setMapView('grid');
               }}
               playerPos={locationData?.gridPosition ? { x: locationData.gridPosition.tileX, y: locationData.gridPosition.tileY } : undefined}
