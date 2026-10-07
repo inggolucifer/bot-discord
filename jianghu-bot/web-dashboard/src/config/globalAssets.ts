@@ -25,8 +25,8 @@ export const GLOBAL_ASSETS = {
   },
 
   // =========================================================================
-  // 2. BIOMA TERRAIN BERDASARKAN 6 WILAYAH LORE (1x1 GRID MAP)
-  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG)
+  // 2. BIOMA TERRAIN BERDASARKAN 22 WILAYAH LORE (1x1 GRID MAP)
+  // Rasio Wajib: 1:1. Ukuran Pas: 128x128 px (Format: PNG / WebP)
   // =========================================================================
   terrain: {
     // Wilayah Umum
@@ -36,12 +36,26 @@ export const GLOBAL_ASSETS = {
     river: "",               // Aliran sungai / air tawar
     settlement_floor: "",    // Lantai paving batu kota/desa
     
-    // Wilayah Khusus (Core Lore)
+    // Wilayah Khusus & Pegunungan Solid
     azure_mountain: "",      // Tebing batu terjal (Azure Mountain Range)
+    mountain: "",            // Tebing gunung cadas
+    mountain_pass: "",       // Celah gerbang lintasan gunung
+    sword_gorge_pass: "",    // Ngarai tebing pedang (Sword Gorge Pass)
+    
+    // Perairan & Kepulauan
+    eastern_sea: "",         // Lautan dalam tanpa batas (Eastern Sea)
+    ocean: "",               // Samudra dalam
+    island_reef: "",         // Terumbu karang pulau terpencil
+    
+    // Rawa & Bioma Khusus
     demonic_swamp: "",       // Rawa racun tanah ungu (Southern Demon Domain)
-    eastern_sea: "",         // Lautan dalam tanpa batas (Eastern Sea Region)
-    northern_glacial: "",    // Dataran es dan gletser (Northern Desolate Territory)
+    swamp: "",               // Rawa belantara
+    northern_glacial: "",    // Dataran es dan gletser (Northern Desolate)
+    glacial: "",             // Gletser beku
+    snow: "",                // Dataran salju putih
     western_desert: "",      // Padang pasir terik (Western Sacred Deserts)
+    desert: "",              // Gurun pasir tandus
+    void: "",                // Jurang dimensi tak berdasar (Abyss Void)
   },
 
   // =========================================================================
@@ -494,7 +508,7 @@ export const GLOBAL_ASSETS = {
   // Ukuran Pas: 1920x1080 px (Format: JPG / PNG / WebP)
   // =========================================================================
   ui: {
-    parchment_bg: "",        // Kanvas gulungan kertas tua (Latar belakang peta)
+    parchment_bg: "/assets/tiles/base/xuan_paper_parchment.webp",        // Kanvas gulungan kertas tua (Latar belakang peta)
     macro_map_bg: "",        // Gambar peta benua utuh (World Scroll 5000x5000)
     login_screen_bg: "",     // Latar belakang menu utama
     player_radar_marker: "", // Ikon pin radar kuning lokasi pemain

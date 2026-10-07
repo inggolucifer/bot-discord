@@ -32,7 +32,7 @@ export function useGlobalAssetLoader() {
         }
 
         const url = typeof urlVal === 'string' ? urlVal.trim() : '';
-        if (!url || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+        if (!url || (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('/'))) {
           targetMap[key] = null;
           return;
         }

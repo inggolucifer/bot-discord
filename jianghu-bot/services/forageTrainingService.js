@@ -76,6 +76,50 @@ class ForageTrainingService {
       player.inventory.push({ itemId: itemDoc._id, quantity: yieldQty });
     }
 
+    // Integrasi Drop Ber-Tag Law Semesta (B4 Fix - Master Plan §4.5)
+    let lawBonusGained = null;
+    const { getRegionResourceProfile } = require('../config/resourceProfiles');
+    const { awardActiveCultivationQi } = require('../utils/lawCultivationEngine');
+    const currentRegion = player.currentLocation?.regionSlug || 'central_plains';
+    const regionProfile = getRegionResourceProfile(currentRegion);
+
+    if (regionProfile?.lawDrop && Math.random() < regionProfile.lawDrop.chance) {
+      const lawDrop = regionProfile.lawDrop;
+      let lawDoc = await Item.findOne({ name: lawDrop.name });
+      if (!lawDoc) {
+        lawDoc = await Item.findOne({ guildId, name: lawDrop.name });
+      }
+      if (!lawDoc) {
+        lawDoc = await Item.create({
+          guildId,
+          name: lawDrop.name,
+          type: 'material',
+          rarity: 'rare',
+          lawTag: lawDrop.lawTag,
+          description: `Esensi alam langka yang selaras dengan Hukum Semesta ${lawDrop.lawTag}.`
+        });
+      }
+
+      const lawSlot = player.inventory.find(i => i.itemId && i.itemId.toString() === lawDoc._id.toString());
+      if (lawSlot) {
+        lawSlot.quantity += 1;
+      } else {
+        player.inventory.push({ itemId: lawDoc._id, quantity: 1 });
+      }
+
+      lawBonusGained = {
+        name: lawDrop.name,
+        lawTag: lawDrop.lawTag,
+        quantity: 1
+      };
+
+      // Jika pemain sedang mengolah Law yang selaras, berikan Qi Pencerahan Spontan
+      if (player.cultivationLaw?.activeLawType === lawDrop.lawTag) {
+        awardActiveCultivationQi(player, 'environmental_enlightenment', { qi: 25 });
+        lawBonusGained.qiAwarded = 25;
+      }
+    }
+
     // Biaya stamina 5
     player.currentStamina = Math.max(0, currentStamina - 5);
 
@@ -97,7 +141,15 @@ class ForageTrainingService {
       guildId,
       discordId,
       actionType: 'forage_gather',
-      details: { zoneId, tileX: node.tileX, tileY: node.tileY, resourceType: node.resourceType, itemName, quantity: yieldQty },
+      details: {
+        zoneId,
+        tileX: node.tileX,
+        tileY: node.tileY,
+        resourceType: node.resourceType,
+        itemName,
+        quantity: yieldQty,
+        lawBonusGained
+      },
       serverValidated: true,
       itemOriginLogged: true
     });
@@ -109,7 +161,8 @@ class ForageTrainingService {
       quantity: yieldQty,
       staminaCost: 5,
       remainingStamina: player.currentStamina,
-      cooldownSeconds: cooldownSec
+      cooldownSeconds: cooldownSec,
+      lawBonus: lawBonusGained
     };
   }
 

@@ -4,20 +4,81 @@ import React, { useState } from 'react';
 import { useAuthStore } from '@/lib/store';
 import api from '@/lib/api';
 import CharacterLayerRenderer from '@/components/character/CharacterLayerRenderer';
-import { Sparkles, Check, ArrowRight, Loader2, RefreshCw, Shirt, User as UserIcon } from 'lucide-react';
+import { Sparkles, Check, ArrowRight, Loader2, RefreshCw, Shirt, User as UserIcon, Compass } from 'lucide-react';
 
 interface CharacterCreationStudioProps {
   onComplete: () => void;
 }
 
-type CategoryTab = 'face' | 'backHair' | 'outfit' | 'frontHair';
+type CategoryTab = 'face' | 'backHair' | 'outfit' | 'frontHair' | 'origin';
 
 interface OptionItem {
   id: string;
   name: string;
   desc: string;
   tag?: string;
+  difficulty?: string;
+  starterKitSummary?: string;
 }
+
+const ORIGIN_OPTIONS: OptionItem[] = [
+  {
+    id: 'central_plains',
+    name: 'Dataran Tengah (Desa Xingcun)',
+    desc: 'Lahir di lembah bunga aprikot yang damai dan asri. Zona teraman untuk pemula tanpa ancaman binatang buas ganas.',
+    tag: 'Rekomendasi Pemula',
+    difficulty: 'Sangat Mudah',
+    starterKitSummary: '+100 Tembaga, 3 Herba Penyembuh, 2 Batu Besi'
+  },
+  {
+    id: 'azure_foothills',
+    name: 'Kaki Pegunungan Azure (Tri-Sect Outpost)',
+    desc: 'Lahir di lereng pegunungan pedang tempat bertapa para murid sekte. Udara sejuk dan sarat intisari Qi pedang.',
+    tag: 'Jalur Pendekar',
+    difficulty: 'Normal',
+    starterKitSummary: '+50 Tembaga, 1 Perak, 2 Teh Bambu Roh, +2 STR'
+  },
+  {
+    id: 'northern_ice',
+    name: 'Tundra Salju Abadi (Pos Salju Utara)',
+    desc: 'Lahir di pos karavan beku berselimutkan badai es kutub. Fisik ditempa ketahanan hawa dingin ekstrem sejak dini.',
+    tag: 'Penempaan Fisik',
+    difficulty: 'Menantang',
+    starterKitSummary: '+40 Tembaga, 3 Arak Penghangat, 1 Serpihan Es, +3 CON'
+  },
+  {
+    id: 'western_desert',
+    name: 'Gurun Suci Barat (Oasis Barat)',
+    desc: 'Lahir di tepi oasis jernih yang dikepung badai pasir emas dan kuil kuno pemuja matahari.',
+    tag: 'Kelincahan Pasir',
+    difficulty: 'Menantang',
+    starterKitSummary: '+60 Tembaga, 3 Kantung Air, 2 Pasir Kristal Emas, +2 AGI'
+  },
+  {
+    id: 'eastern_sea_port',
+    name: 'Pesisir Samudra Timur (Pelabuhan Timur)',
+    desc: 'Lahir di dermaga kayu megah beraroma garam laut dengan rakit bambu penyeberangan dan burung camar.',
+    tag: 'Pelaut Jianghu',
+    difficulty: 'Normal',
+    starterKitSummary: '+80 Tembaga, 1 Perak, 3 Ikan Asin, 1 Bubuk Mutiara, +2 INT'
+  },
+  {
+    id: 'southern_demon_border',
+    name: 'Batas Domain Iblis (Scar of Heaven Camp)',
+    desc: 'Lahir di benteng pengawas tepi luka langit tempat berkumpulnya pendekar liar dan murid sekte sesat.',
+    tag: 'Jalur Ekstrem',
+    difficulty: 'Bahaya Tinggi',
+    starterKitSummary: '+30 Tembaga, 2 Perak, 2 Penawar Miasma, +2 STR / +2 CON'
+  },
+  {
+    id: 'mist_insect_valley',
+    name: 'Lembah Kabut Racun (Lembah Kabut Merah)',
+    desc: 'Lahir di pondok tersembunyi berawa lembap tempat tumbuhnya herba eksotis dan serangga berbisa.',
+    tag: 'Master Alkimia',
+    difficulty: 'Menantang',
+    starterKitSummary: '+50 Tembaga, 3 Herba Beracun, 2 Pil Pembersih Bisa, +3 INT'
+  }
+];
 
 const FACE_OPTIONS: OptionItem[] = [
   {
@@ -128,6 +189,7 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
   const [selectedBackHair, setSelectedBackHair] = useState(user?.character?.body?.backHair || 'back_hair_01');
   const [selectedOutfit, setSelectedOutfit] = useState(user?.character?.body?.outfit || 'outfit_vagrant_black');
   const [selectedFrontHair, setSelectedFrontHair] = useState(user?.character?.body?.frontHair || 'front_hair_01');
+  const [selectedOrigin, setSelectedOrigin] = useState('central_plains');
 
   const [saving, setSaving] = useState(false);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
@@ -141,14 +203,16 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
     const randomBack = BACK_HAIR_OPTIONS[Math.floor(Math.random() * BACK_HAIR_OPTIONS.length)].id;
     const randomOutfit = STARTER_OUTFIT_OPTIONS[Math.floor(Math.random() * STARTER_OUTFIT_OPTIONS.length)].id;
     const randomFront = FRONT_HAIR_OPTIONS[Math.floor(Math.random() * FRONT_HAIR_OPTIONS.length)].id;
+    const randomOrigin = ORIGIN_OPTIONS[Math.floor(Math.random() * ORIGIN_OPTIONS.length)].id;
 
     setSelectedFace(randomFace);
     setSelectedBackHair(randomBack);
     setSelectedOutfit(randomOutfit);
     setSelectedFrontHair(randomFront);
+    setSelectedOrigin(randomOrigin);
   };
 
-  // Simpan Penampilan ke Server
+  // Simpan Penampilan & Titik Awal ke Server
   const handleSaveAppearance = async () => {
     setSaving(true);
     setErrorNotice(null);
@@ -158,7 +222,8 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
         face: selectedFace,
         frontHair: selectedFrontHair,
         backHair: selectedBackHair,
-        outfit: selectedOutfit
+        outfit: selectedOutfit,
+        spawnOriginId: selectedOrigin
       });
 
       if (res.data?.success) {
@@ -251,9 +316,8 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
 
         {/* RIGHT COLUMN: CATEGORY TABS & OPTION CARDS */}
         <div className="lg:col-span-7 flex flex-col h-full">
-
-          {/* 4 Category Nav Tabs */}
-          <div className="grid grid-cols-4 gap-2 p-1.5 rounded-xl bg-[#101420] border border-[#382f21] mb-5 font-sans">
+          {/* 5 Category Nav Tabs */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 p-1.5 rounded-xl bg-[#101420] border border-[#382f21] mb-5 font-sans">
             <button
               onClick={() => setActiveTab('face')}
               className={`py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all flex items-center justify-center gap-1.5 ${
@@ -300,6 +364,18 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
             >
               <span>👑</span>
               <span>Rambut Depan</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('origin')}
+              className={`py-2 px-3 rounded-lg text-xs font-semibold tracking-wide transition-all flex items-center justify-center gap-1.5 col-span-2 sm:col-span-1 ${
+                activeTab === 'origin'
+                  ? 'bg-amber-900/70 border border-amber-500/80 text-amber-200 shadow-md'
+                  : 'text-amber-400/80 hover:text-amber-200'
+              }`}
+            >
+              <Compass size={14} />
+              <span>Asal Kelahiran</span>
             </button>
           </div>
 
@@ -386,7 +462,7 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
                 );
               })}
 
-            {/* TAB: STARTER OUTFITS */}
+            {/* TAB: STARTER OUTFIT */}
             {activeTab === 'outfit' &&
               STARTER_OUTFIT_OPTIONS.map((item) => {
                 const isSelected = selectedOutfit === item.id;
@@ -457,6 +533,59 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
                     </div>
                     {item.tag && (
                       <div className="mt-3">
+                        <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-600/50 text-[10px] text-amber-300 font-sans">
+                          {item.tag}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+            {/* TAB: ORIGIN SPAWN & FACTION BACKGROUND (FASE 2) */}
+            {activeTab === 'origin' &&
+              ORIGIN_OPTIONS.map((item) => {
+                const isSelected = selectedOrigin === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedOrigin(item.id)}
+                    className={`relative p-4 rounded-xl border cursor-pointer transition-all duration-200 flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-gradient-to-br from-amber-950/70 to-[#1e1b15] border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.3)] ring-1 ring-amber-400/40'
+                        : 'bg-[#101420]/80 border-[#32291d] hover:border-amber-600/60 hover:bg-[#161a28]'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="font-serif font-bold text-sm text-[#f8edd9]">
+                            {item.name}
+                          </span>
+                          {item.difficulty && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] bg-stone-900 border border-stone-700 text-stone-300 font-sans">
+                              {item.difficulty}
+                            </span>
+                          )}
+                        </div>
+                        {isSelected && (
+                          <span className="w-5 h-5 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center text-xs font-bold shadow-sm">
+                            <Check size={12} strokeWidth={3} />
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-stone-400 font-sans leading-relaxed mb-2.5">
+                        {item.desc}
+                      </p>
+                      {item.starterKitSummary && (
+                        <div className="p-2 rounded-lg bg-stone-950/60 border border-[#3e3223] text-[11px] text-amber-300/90 font-sans flex items-center gap-1.5">
+                          <span>🎒</span>
+                          <span><strong>Starter Kit:</strong> {item.starterKitSummary}</span>
+                        </div>
+                      )}
+                    </div>
+                    {item.tag && (
+                      <div className="mt-3 flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-600/50 text-[10px] text-amber-300 font-sans">
                           {item.tag}
                         </span>

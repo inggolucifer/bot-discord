@@ -773,7 +773,11 @@ router.post('/channel/stop', authenticateToken, async (req, res) => {
 
     let gainedMsg = '';
     if (result.qiGained > 0) {
-      gainedMsg = `+${Math.floor(result.qiGained)} Qi terserap (${Math.floor(result.minutesSynced)} menit).`;
+      let bonusNote = '';
+      if (result.totalQiMultiplier && result.totalQiMultiplier > 1.0) {
+        bonusNote = ` (Bonus Qi Wilayah: ${result.totalQiMultiplier}x)`;
+      }
+      gainedMsg = `+${Math.floor(result.qiGained)} Qi terserap (${Math.floor(result.minutesSynced)} menit)${bonusNote}.`;
     } else if (result.isEssenceDepleted) {
       gainedMsg = `Dantianmu kosong dari esensi hukum (${Math.floor(result.minutesSynced)} menit meditasi). Serap bahan spiritual sesuai jalurnya agar meditasi menghasilkan Xiuwei.`;
     } else {

@@ -11,14 +11,14 @@ module.exports = {
     { regionSlug: 'central_plains', name: 'Ibukota Central', minRealmIndex: 0 },
     { regionSlug: 'azure_mountain_range', name: 'Tri-Sect Mountain Outpost', minRealmIndex: 1 },
     { regionSlug: 'azure_mountain_range', name: 'Azure Sect Approach', minRealmIndex: 1 },
-    { regionSlug: 'eastern_sea_region', name: 'Pelabuhan Timur', minRealmIndex: 2 },
-    { regionSlug: 'eastern_sea_region', name: 'Eastern Market Port', minRealmIndex: 2 },
+    { regionSlug: 'eastern_sea', name: 'Pelabuhan Timur', minRealmIndex: 2 },
+    { regionSlug: 'eastern_sea', name: 'Eastern Market Port', minRealmIndex: 2 },
     { regionSlug: 'southern_demon_domain', name: 'Scar of Heaven Camp', minRealmIndex: 3 },
     { regionSlug: 'southern_demon_domain', name: 'Southern Watch', minRealmIndex: 3 },
-    { regionSlug: 'western_sacred_deserts', name: 'Oasis Barat', minRealmIndex: 4 },
-    { regionSlug: 'western_sacred_deserts', name: 'Desert Relay', minRealmIndex: 4 },
-    { regionSlug: 'northern_desolate_territory', name: 'Pos Tundra Utara', minRealmIndex: 5 },
-    { regionSlug: 'northern_desolate_territory', name: 'Northern Caravan Post', minRealmIndex: 5 }
+    { regionSlug: 'western_sacred_desert', name: 'Oasis Barat', minRealmIndex: 4 },
+    { regionSlug: 'western_sacred_desert', name: 'Desert Relay', minRealmIndex: 4 },
+    { regionSlug: 'northern_desolate', name: 'Pos Tundra Utara', minRealmIndex: 5 },
+    { regionSlug: 'northern_desolate', name: 'Northern Caravan Post', minRealmIndex: 5 }
   ],
     distancesLi: {
     'Desa Xingcun': { 'Tianjing': 50 },

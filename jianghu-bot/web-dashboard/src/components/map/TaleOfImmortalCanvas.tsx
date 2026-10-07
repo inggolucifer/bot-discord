@@ -280,13 +280,16 @@ export default function TaleOfImmortalCanvas({
           ctx.save();
           
           let imgObj: HTMLImageElement | null | undefined = undefined;
-          if (terrain === 'river' || terrain === 'eastern_sea') imgObj = loadedImages.terrain?.river;
+          if (terrain === 'river') imgObj = loadedImages.terrain?.river;
+          else if (terrain === 'ocean' || terrain === 'eastern_sea') imgObj = loadedImages.terrain?.ocean || loadedImages.terrain?.eastern_sea || loadedImages.terrain?.river;
           else if (terrain === 'bamboo_forest') imgObj = loadedImages.terrain?.bamboo_forest;
           else if (terrain === 'forest') imgObj = loadedImages.terrain?.forest;
-          else if (terrain === 'mountain' || terrain === 'azure_mountain') imgObj = loadedImages.terrain?.azure_mountain;
-          else if (terrain === 'glacial' || terrain === 'northern_glacial') imgObj = loadedImages.terrain?.northern_glacial;
-          else if (terrain === 'swamp' || terrain === 'demonic_swamp') imgObj = loadedImages.terrain?.demonic_swamp;
-          else if (terrain === 'western_desert') imgObj = loadedImages.terrain?.western_desert;
+          else if (terrain === 'mountain' || terrain === 'azure_mountain') imgObj = loadedImages.terrain?.azure_mountain || loadedImages.terrain?.mountain;
+          else if (terrain === 'glacial' || terrain === 'northern_glacial' || terrain === 'snow') imgObj = loadedImages.terrain?.glacial || loadedImages.terrain?.snow || loadedImages.terrain?.northern_glacial;
+          else if (terrain === 'swamp' || terrain === 'demonic_swamp') imgObj = loadedImages.terrain?.swamp || loadedImages.terrain?.demonic_swamp;
+          else if (terrain === 'western_desert' || terrain === 'desert') imgObj = loadedImages.terrain?.desert || loadedImages.terrain?.western_desert;
+          else if (terrain === 'mountain_pass' || terrain === 'sword_gorge_pass') imgObj = loadedImages.terrain?.mountain_pass || loadedImages.terrain?.sword_gorge_pass || loadedImages.terrain?.settlement_floor;
+          else if (terrain === 'island_reef') imgObj = loadedImages.terrain?.island_reef || loadedImages.terrain?.plains;
           else if (terrain === 'settlement') imgObj = loadedImages.terrain?.settlement_floor;
           else imgObj = loadedImages.terrain?.plains;
 
@@ -415,6 +418,31 @@ export default function TaleOfImmortalCanvas({
                 ctx.closePath();
                 ctx.fill();
               }
+            }
+            else if (terrain === 'mountain_pass') {
+              // Jalan Setapak Batu di Antara Tebing Gunung
+              ctx.fillStyle = '#655e54';
+              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+              // Jalur kerikil tengah
+              ctx.fillStyle = '#8f8576';
+              ctx.fillRect(sx + currentTileSize * 0.25, sy, currentTileSize * 0.5, currentTileSize);
+            }
+            else if (terrain === 'sword_gorge_pass') {
+              // Celah Ngarai Terbelah Pedang (Aura Emas Berkilau)
+              ctx.fillStyle = '#2d2720';
+              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+              // Belahan garis pedang vertikal
+              ctx.fillStyle = 'rgba(245, 158, 11, 0.4)';
+              ctx.fillRect(sx + currentTileSize * 0.4, sy, currentTileSize * 0.2, currentTileSize);
+            }
+            else if (terrain === 'island_reef') {
+              // Air laut tenang dengan karang hijau giok
+              ctx.fillStyle = 'rgba(168, 205, 218, 0.4)';
+              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+              ctx.fillStyle = '#3a6351';
+              ctx.beginPath();
+              ctx.arc(sx + currentTileSize * 0.5, sy + currentTileSize * 0.5, currentTileSize * 0.3, 0, Math.PI * 2);
+              ctx.fill();
             }
             else if (terrain === 'settlement') {
               ctx.fillStyle = 'rgba(228, 220, 206, 0.65)';

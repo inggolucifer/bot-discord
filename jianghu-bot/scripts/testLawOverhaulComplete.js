@@ -36,8 +36,8 @@ async function test() {
   // 3. Test Gu Fusion (Combine Slot 1 & 2)
   console.log('\n--- 3. TEST GU FUSION ---');
   if (player.cultivationLaw.guSlots.length >= 2) {
-    const gu1 = player.cultivationLaw.guSlots[1];
-    const gu2 = player.cultivationLaw.guSlots[2];
+    const gu1 = player.cultivationLaw.guSlots[0];
+    const gu2 = player.cultivationLaw.guSlots[1];
     console.log(`Combining Gu [${gu1.guName} Tier ${gu1.tier}] and [${gu2.guName} Tier ${gu2.tier}]...`);
     const newTier = Math.min(5, Math.max(gu1.tier || 1, gu2.tier || 1) + 1);
     const mutated = {

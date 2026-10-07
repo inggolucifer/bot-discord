@@ -610,11 +610,25 @@ router.post('/google-finalize', async (req, res) => {
     }
 });
 
-// Endpoint: POST /api/auth/set-appearance (Menyimpan Kustomisasi Penampilan Karakter)
+// Endpoint: GET /api/auth/spawn-origins (Daftar 7 Titik Kelahiran & Starter Kit Pilihan)
+router.get('/spawn-origins', async (req, res) => {
+    try {
+        const { ORIGIN_SPAWNS } = require('../../config/starterKits');
+        return res.json({
+            success: true,
+            origins: Object.values(ORIGIN_SPAWNS)
+        });
+    } catch (err) {
+        console.error('[API-AUTH] Get Spawn Origins Error:', err);
+        return res.status(500).json({ error: 'Gagal memuat daftar titik kelahiran: ' + err.message });
+    }
+});
+
+// Endpoint: POST /api/auth/set-appearance (Menyimpan Kustomisasi Penampilan Karakter & Asal-usul Kelahiran)
 router.post('/set-appearance', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { face, frontHair, backHair, outfit } = req.body;
+        const { face, frontHair, backHair, outfit, spawnOriginId } = req.body;
 
         const player = await Player.findOne({ discordId: userId });
         if (!player) {
@@ -635,13 +649,89 @@ router.post('/set-appearance', authenticateToken, async (req, res) => {
         player.body.cloth = chosenOutfit; // backward compatibility
         player.body.hair = chosenFrontHair; // backward compatibility
 
+        // Proses Pemilihan Titik Kelahiran (Origin Spawn Biome & Starter Kit) (Fase 2)
+        if (spawnOriginId) {
+            const { getOriginSpawn } = require('../../config/starterKits');
+            const { setPlayerAuthoritativePosition } = require('../../services/movementService');
+            const origin = getOriginSpawn(spawnOriginId);
+
+            player.originSpawnId = origin.id;
+
+            // Atur posisi awal otoritatif
+            await setPlayerAuthoritativePosition(player, origin.spawnCoords, {
+                regionSlug: origin.regionSlug,
+                settlementName: origin.settlementName,
+                buildingName: null,
+                clearTravelStatus: true,
+                save: false
+            });
+
+            // Berikan bonus starter kit
+            if (origin.starterKit) {
+                if (origin.starterKit.copper) {
+                    player.currency.copper = (player.currency.copper || 0) + origin.starterKit.copper;
+                }
+                if (origin.starterKit.silver) {
+                    player.currency.silver = (player.currency.silver || 0) + origin.starterKit.silver;
+                }
+                if (origin.starterKit.stamina) {
+                    player.currentStamina = origin.starterKit.stamina;
+                }
+                if (origin.starterKit.hp) {
+                    player.currentHp = origin.starterKit.hp;
+                }
+                if (origin.starterKit.bonusStats && player.talents) {
+                    for (const [statKey, bonusVal] of Object.entries(origin.starterKit.bonusStats)) {
+                        if (player.talents[statKey] !== undefined) {
+                            player.talents[statKey] += bonusVal;
+                        }
+                    }
+                    player.markModified('talents');
+                }
+                // Masukkan bekal item starter kit ke inventori pemain secara nyata (Anti-UI Palsu)
+                if (Array.isArray(origin.starterKit.items) && origin.starterKit.items.length > 0) {
+                    const Item = require('../../models/Item');
+                    if (!Array.isArray(player.inventory)) player.inventory = [];
+                    for (const it of origin.starterKit.items) {
+                        try {
+                            let itemDoc = await Item.findOne({ key: it.key }) || await Item.findOne({ name: it.name });
+                            if (!itemDoc) {
+                                itemDoc = await Item.create({
+                                    key: it.key,
+                                    name: it.name,
+                                    category: 'material',
+                                    type: 'material',
+                                    rank: 'Common',
+                                    description: `Bahan starter bekal perjalanan dari bioma ${origin.name}.`
+                                });
+                            }
+                            if (itemDoc) {
+                                const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === itemDoc._id.toString());
+                                if (existing) {
+                                    existing.quantity = (existing.quantity || 1) + (it.quantity || 1);
+                                } else {
+                                    player.inventory.push({ itemId: itemDoc._id, quantity: it.quantity || 1 });
+                                }
+                            }
+                        } catch (itemErr) {
+                            console.warn('[API-AUTH] Gagal menambahkan starter item:', it.name, itemErr.message);
+                        }
+                    }
+                    player.markModified('inventory');
+                }
+            }
+        }
+
         player.appearanceCompleted = true;
         await player.save();
 
         res.json({
             success: true,
-            message: 'Penampilan pendekar berhasil dipahat di Jianghu!',
+            message: 'Penampilan dan takdir kelahiran pendekar berhasil dipahat di Jianghu!',
             body: player.body,
+            currentLocation: player.currentLocation,
+            gridPosition: player.gridPosition,
+            originSpawnId: player.originSpawnId,
             appearanceCompleted: true
         });
 

@@ -331,30 +331,74 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   let spiritualQiDensity = 10;
   let label = null;
 
-  // Force Lautan untuk Eastern Sea
-  if (region.id === 'eastern_sea' && elevation < 0.65) {
-    terrainType = 'ocean';
-    isSolid = true; // Default solid tanpa kapal
-    spiritualQiDensity = 20;
-    label = 'Lautan Timur';
-  }
-  // Pegunungan Es Salju Kunlun (Utara & Elevasi Tinggi)
-  else if (elevation > 0.68) {
-    if (latitude > 0.6 || region.id === 'northern_desolate') {
-      terrainType = 'northern_glacial';
-      isSolid = elevation > 0.78; // Puncak terjal batu es menjadi solid blocker
-      baseTemperature = Math.min(-10, baseTemperature - 15);
-      spiritualQiDensity = 30;
-      label = isSolid ? 'Puncak Es Abadi' : 'Lereng Salju';
-    } else {
-      terrainType = region.id === 'azure_mountain' ? 'azure_mountain' : 'mountain';
-      isSolid = elevation > 0.75;
-      baseTemperature = Math.max(5, baseTemperature - 10);
+  // 2. Evaluasi Bioma Berbasis 22 Wilayah Kanonikal & Noise Fractal (Fase 1 & Fase 3)
+  const isEasternWaters = region.id === 'eastern_sea' || region.id === 'floating_wind_isles';
+
+  // Force Lautan Dalam untuk Eastern Sea & Wilayah Laut
+  if (isEasternWaters) {
+    if (elevation > 0.68) {
+      terrainType = 'island_reef';
+      isSolid = false;
       spiritualQiDensity = 25;
-      label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Batu';
+      label = 'Gugusan Karang Roh Melayang';
+    } else {
+      terrainType = 'ocean';
+      isSolid = true; // Wajib kapal / perahu / pedang terbang
+      spiritualQiDensity = 20;
+      label = 'Lautan Timur';
     }
   }
-  // Air / Sungai (Wilayah darat)
+  // Rantai Pegunungan Azure Solid Barrier & 3 Pass Gerbang (Master Plan §4.3)
+  else if (region.id === 'azure_mountain_range' || region.id === 'azure_mountain') {
+    const isNorthPass = (tileX >= 2198 && tileX <= 2202 && tileY >= 3100 && tileY <= 3600);
+    const isMistPass = (tileX >= 2598 && tileX <= 2602 && tileY >= 3100 && tileY <= 3600);
+    const isSwordGorge = (tileX >= 3098 && tileX <= 3102 && tileY >= 3100 && tileY <= 3600);
+
+    if (isNorthPass) {
+      terrainType = 'mountain_pass';
+      isSolid = false;
+      spiritualQiDensity = 28;
+      label = 'Gerbang Pass Utara';
+    } else if (isMistPass) {
+      terrainType = 'mountain_pass';
+      isSolid = false;
+      spiritualQiDensity = 32;
+      label = 'Gerbang Pass Berkabut';
+    } else if (isSwordGorge) {
+      terrainType = 'sword_gorge_pass';
+      isSolid = false;
+      spiritualQiDensity = 45;
+      label = 'Celah Pedang Terbelah';
+    } else if (elevation > 0.35) {
+      terrainType = 'azure_mountain';
+      isSolid = true; // Dinding tebing pembatas solid! Membutuhkan pedang terbang
+      baseTemperature = Math.max(2, baseTemperature - 12);
+      spiritualQiDensity = 35;
+      label = 'Dinding Tebing Pegunungan Azure';
+    } else {
+      terrainType = 'forest';
+      isSolid = false;
+      spiritualQiDensity = 25;
+      label = 'Lereng Kaki Pegunungan Azure';
+    }
+  }
+  // Wilayah Tundra & Es Salju Utara
+  else if (region.id === 'northern_desolate' || latitude > 0.65) {
+    terrainType = 'northern_glacial';
+    isSolid = elevation > 0.78; // Puncak es ekstrim solid
+    baseTemperature = Math.min(-10, baseTemperature - 15);
+    spiritualQiDensity = 30;
+    label = isSolid ? 'Puncak Es Abadi' : 'Lereng Salju Tundra';
+  }
+  // Pegunungan Karang Tinggi di Luar Azure
+  else if (elevation > 0.72) {
+    terrainType = 'mountain';
+    isSolid = elevation > 0.80;
+    baseTemperature = Math.max(5, baseTemperature - 10);
+    spiritualQiDensity = 24;
+    label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Batu';
+  }
+  // Air / Sungai Daratan
   else if (elevation < 0.28) {
     if (elevation < 0.15) {
       terrainType = 'ocean';
@@ -368,19 +412,20 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       label = 'Aliran Air';
     }
   }
-  // Rawa Miasma Beracun / Gurun
-  else if (elevation < 0.42 && moisture > 0.65 && latitude < 0.45) {
-    terrainType = (region.id === 'southern_demon') ? 'demonic_swamp' : 'swamp';
+  // Wilayah Domain Iblis Selatan (Rawa Miasma Beracun)
+  else if (region.id === 'southern_demon_domain' || region.id === 'southern_demon' || (elevation < 0.42 && moisture > 0.65 && latitude < 0.45)) {
+    terrainType = (region.id === 'southern_demon_domain' || region.id === 'southern_demon') ? 'demonic_swamp' : 'swamp';
     isSolid = false;
     baseTemperature += 6;
-    spiritualQiDensity = 15;
+    spiritualQiDensity = 16;
     label = (terrainType === 'demonic_swamp') ? 'Rawa Iblis Beracun' : 'Rawa Berlumpur';
   }
-  else if (moisture < 0.3 && (region.id === 'western_desert' || latitude < 0.3)) {
+  // Wilayah Gurun Pasir Suci Barat
+  else if (region.id === 'western_sacred_desert' || region.id === 'western_desert' || (moisture < 0.3 && latitude < 0.3)) {
     terrainType = 'western_desert';
     isSolid = false;
     baseTemperature += 10;
-    spiritualQiDensity = 8;
+    spiritualQiDensity = 10;
     label = 'Gurun Pasir Panas';
   }
   // Hutan Bambu & Hutan Pinus

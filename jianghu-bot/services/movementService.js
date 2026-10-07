@@ -151,14 +151,19 @@ class MovementService {
       }
     }
 
-    if (!player.gridPosition) player.gridPosition = {};
-    player.gridPosition.zoneId = zoneId;
-    player.gridPosition.tileX = targetX;
-    player.gridPosition.tileY = targetY;
-    player.gridPosition.facing = dirInfo.facing;
+    // Sinkronisasi posisi otoritatif (B1 & B2 fix)
+    await setPlayerAuthoritativePosition(player, {
+      zoneId,
+      tileX: targetX,
+      tileY: targetY
+    }, {
+      facing: dirInfo.facing,
+      save: false
+    });
 
     // Jika masuk tile bukan interior, pastikan interiorInstanceId kosong
     if (!passCheck.isDoor) {
+      if (!player.gridPosition) player.gridPosition = {};
       player.gridPosition.interiorInstanceId = null;
     }
 
@@ -255,4 +260,131 @@ class MovementService {
   }
 }
 
-module.exports = new MovementService();
+/**
+ * Menetapkan posisi otoritatif pemain secara atomik dan menyinkronkan
+ * gridPosition, currentLocation, serta discoveredLocations.
+ * Menyelesaikan Bug B1 (Dual Position Sync Drift) & B2 (Region Slug Inconsistency).
+ *
+ * @param {Object} player - Dokumen Mongoose Player
+ * @param {Object} coords - { zoneId, tileX, tileY }
+ * @param {Object} options - { facing, buildingName, settlementName, regionSlug, clearTravelStatus, save, session }
+ * @returns {Promise<Object>} player
+ */
+async function setPlayerAuthoritativePosition(player, coords = {}, options = {}) {
+  if (!player) throw new Error('Player document is required.');
+
+  const zoneId = coords.zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
+  let targetX = Math.round(Number(coords.tileX ?? player.gridPosition?.tileX ?? 2455));
+  let targetY = Math.round(Number(coords.tileY ?? player.gridPosition?.tileY ?? 2485));
+
+  // Clamping jika tianyuan_world_map (5000x5000)
+  if (zoneId === 'tianyuan_world_map') {
+    targetX = Math.max(0, Math.min(4999, targetX));
+    targetY = Math.max(0, Math.min(4999, targetY));
+  }
+
+  // 1. Sinkronisasi gridPosition
+  if (!player.gridPosition) player.gridPosition = {};
+  player.gridPosition.zoneId = zoneId;
+  player.gridPosition.tileX = targetX;
+  player.gridPosition.tileY = targetY;
+  if (options.facing !== undefined) {
+    player.gridPosition.facing = options.facing;
+  }
+
+  // 2. Tentukan region & settlement otoritatif
+  const { normalizeRegionSlug } = require('../utils/worldRegionEngine');
+  const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
+
+  let resolvedRegionSlug = 'central_plains';
+  let resolvedSettlementName = null;
+
+  if (zoneId === 'tianyuan_world_map') {
+    const tileInfo = proceduralWorldEngine.getTileAt(targetX, targetY);
+    resolvedRegionSlug = normalizeRegionSlug(tileInfo.regionId || 'central_plains');
+    resolvedSettlementName = tileInfo.settlementName || null;
+  } else {
+    resolvedRegionSlug = normalizeRegionSlug(coords.regionSlug || player.currentLocation?.regionSlug || 'central_plains');
+    resolvedSettlementName = coords.settlementName || player.currentLocation?.settlementName || null;
+  }
+
+  if (options.settlementName) {
+    resolvedSettlementName = options.settlementName;
+  }
+  if (options.regionSlug) {
+    resolvedRegionSlug = normalizeRegionSlug(options.regionSlug);
+  }
+
+  // 3. Sinkronisasi currentLocation
+  if (!player.currentLocation) player.currentLocation = {};
+  player.currentLocation.regionSlug = resolvedRegionSlug;
+  player.currentLocation.settlementName = resolvedSettlementName;
+  if (options.buildingName !== undefined) {
+    player.currentLocation.buildingName = options.buildingName;
+  } else if (!resolvedSettlementName) {
+    player.currentLocation.buildingName = null;
+  }
+
+  // 4. Catat discoveredLocations
+  if (resolvedSettlementName) {
+    const discKey = `${resolvedRegionSlug}|${resolvedSettlementName}`;
+    if (!Array.isArray(player.discoveredLocations)) {
+      player.discoveredLocations = [discKey];
+    } else if (!player.discoveredLocations.includes(discKey)) {
+      player.discoveredLocations.push(discKey);
+    }
+  }
+
+  // 5. Bersihkan travel status jika diminta
+  if (options.clearTravelStatus && player.travel) {
+    player.travel.status = 'idle';
+  }
+
+  // 6. Reset gridMove
+  if (player.gridMove) {
+    player.gridMove.isMoving = false;
+    player.gridMove.targetX = null;
+    player.gridMove.targetY = null;
+    player.gridMove.targetZoneId = null;
+    player.gridMove.moveStartedAt = null;
+    player.gridMove.moveArrivesAt = null;
+  }
+
+  if (typeof player.markModified === 'function') {
+    player.markModified('gridPosition');
+    player.markModified('currentLocation');
+    player.markModified('discoveredLocations');
+  }
+
+  if (options.save !== false) {
+    if (options.session) {
+      await player.save({ session: options.session });
+    } else {
+      try {
+        await player.save();
+      } catch (err) {
+        const PlayerModel = require('../models/Player');
+        await PlayerModel.updateOne(
+          { _id: player._id },
+          {
+            $set: {
+              gridPosition: player.gridPosition,
+              currentLocation: player.currentLocation,
+              discoveredLocations: player.discoveredLocations,
+              gridMove: player.gridMove
+            }
+          }
+        );
+      }
+    }
+  }
+
+  return player;
+}
+
+const movementServiceInstance = new MovementService();
+movementServiceInstance.setPlayerAuthoritativePosition = setPlayerAuthoritativePosition;
+
+module.exports = movementServiceInstance;
+module.exports.setPlayerAuthoritativePosition = setPlayerAuthoritativePosition;
+

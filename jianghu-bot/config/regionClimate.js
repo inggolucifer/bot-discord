@@ -26,6 +26,23 @@ module.exports = {
       tempVariance: 6,
       label: 'Domain Iblis Selatan'
     },
+    // Canonical Slugs
+    eastern_sea: {
+      baseTemperature: 26,
+      tempVariance: 4,
+      label: 'Laut Timur'
+    },
+    northern_desolate: {
+      baseTemperature: -5,
+      tempVariance: 10,
+      label: 'Tundra Utara'
+    },
+    western_sacred_desert: {
+      baseTemperature: 38,
+      tempVariance: 8,
+      label: 'Gurun Suci Barat'
+    },
+    // Backward Compatibility Aliases
     eastern_sea_region: {
       baseTemperature: 26,
       tempVariance: 4,

@@ -1588,14 +1588,47 @@ function calculateChannelingProgress(player) {
   const essenceConsumed = Math.min(currentEss, Math.round(minutesFunded * digestRate * 10) / 10);
 
   const digestBonus = LAW_PROGRESSION.ESSENCE_DIGEST_BONUS !== undefined ? LAW_PROGRESSION.ESSENCE_DIGEST_BONUS : (LAW_PROGRESSION.ESSENCE_FULL_DIGEST_BONUS || 1.0);
-  const qiGained = Math.floor(minutesFunded * baseRate * digestBonus);
+
+  // Integrasi Spasial Kepadatan Spiritual Qi & Resonansi Afinitas Wilayah (§4.6 & §9 World Map Master Plan)
+  let locationQiMultiplier = 1.0;
+  let resonanceBonus = 1.0;
+  const tileX = player.gridPosition?.tileX;
+  const tileY = player.gridPosition?.tileY;
+  if (typeof tileX === 'number' && typeof tileY === 'number') {
+    try {
+      const { getTileAt } = require('./proceduralWorldEngine');
+      const { getRegionAt } = require('./worldRegionEngine');
+      const tile = getTileAt(tileX, tileY);
+      const region = getRegionAt(tileX, tileY);
+
+      if (tile && typeof tile.spiritualQiDensity === 'number') {
+        // Baseline 12 (padang rumput normal = 1.0x). Clamped 0.5x - 2.5x
+        locationQiMultiplier = Math.max(0.5, Math.min(2.5, tile.spiritualQiDensity / 12));
+      } else if (region && typeof region.qiDensityModifier === 'number') {
+        locationQiMultiplier = region.qiDensityModifier;
+      }
+
+      if (region && Array.isArray(region.lawAffinities) && law.activeLawType) {
+        if (region.lawAffinities.includes(law.activeLawType)) {
+          resonanceBonus = 1.25; // +25% bonus resonansi elemen Law selaras dengan wilayah
+        }
+      }
+    } catch (_err) {
+      // Abaikan jika modul world engine tidak tersedia dalam lingkungan unit test tertentu
+    }
+  }
+  const totalQiMultiplier = locationQiMultiplier * resonanceBonus;
+  const qiGained = Math.floor(minutesFunded * baseRate * digestBonus * totalQiMultiplier);
 
   return {
     qiGained,
     minutesElapsed: effectiveMinutes,
     isCapReached,
     essenceConsumed,
-    isEssenceDepleted: (currentEss - essenceConsumed) <= 0
+    isEssenceDepleted: (currentEss - essenceConsumed) <= 0,
+    locationQiMultiplier: Math.round(locationQiMultiplier * 100) / 100,
+    resonanceBonus: Math.round(resonanceBonus * 100) / 100,
+    totalQiMultiplier: Math.round(totalQiMultiplier * 100) / 100
   };
 }
 
