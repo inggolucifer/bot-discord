@@ -1,0 +1,186 @@
+[
+  {
+    "id": "central_plains",
+    "name": "Dataran Tengah (Desa Xingcun)",
+    "title": "Anak Petani Bunga Aprikot",
+    "description": "Terlahir di desa petani yang damai dan asri di tengah benua. Wilayah paling aman untuk pemula tanpa ancaman binatang buas.",
+    "difficulty": "Sangat Mudah (Pemula)",
+    "dangerTier": 1,
+    "anchorId": "desa_xingcun",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2455, "tileY": 2485 },
+    "regionSlug": "central_plains",
+    "settlementName": "Desa Xingcun",
+    "starterKit": {
+      "copper": 100,
+      "silver": 0,
+      "stamina": 100,
+      "hp": 100,
+      "bonusStats": { "sta": 2, "con": 1 },
+      "items": [
+        { "key": "herb_healing_minor", "name": "Herba Penyembuh", "quantity": 3 },
+        { "key": "iron_ore_coarse", "name": "Batu Besi Mentah", "quantity": 2 }
+      ]
+    }
+  },
+  {
+    "id": "nine_springs_delta",
+    "name": "Delta Sembilan Mata Air (Dusun Mata Air Jernih)",
+    "title": "Murid Peramu Obat Sungai",
+    "description": "Terlahir di dusun bantaran sungai dengan ladang herba subur dan pengrajin tungku alkimia desa.",
+    "difficulty": "Mudah",
+    "dangerTier": 1,
+    "anchorId": "dusun_mata_air_jernih",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2420, "tileY": 2470 },
+    "regionSlug": "nine_springs_delta",
+    "settlementName": "Dusun Mata Air Jernih",
+    "starterKit": {
+      "copper": 80,
+      "silver": 1,
+      "stamina": 105,
+      "hp": 100,
+      "bonusStats": { "int": 2, "sta": 1 },
+      "items": [
+        { "key": "medicinal_sprout", "name": "Tunas Herba Segar", "quantity": 4 },
+        { "key": "freshwater_pearl", "name": "Mutiara Air Tawar", "quantity": 1 }
+      ]
+    }
+  },
+  {
+    "id": "border_march",
+    "name": "Perbatasan Seribu Pos (Pos Qinghe)",
+    "title": "Prajurit Jaga Gerbang Rantai",
+    "description": "Terlahir di pos militer perbatasan yang kokoh, mengawasi pergerakan kafilah dan jembatan jurang raksasa.",
+    "difficulty": "Normal",
+    "dangerTier": 2,
+    "anchorId": "pos_perbatasan_qinghe",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2300, "tileY": 1950 },
+    "regionSlug": "border_march",
+    "settlementName": "Pos Perbatasan Qinghe",
+    "starterKit": {
+      "copper": 50,
+      "silver": 1,
+      "stamina": 105,
+      "hp": 105,
+      "bonusStats": { "str": 2, "def": 1 },
+      "items": [
+        { "key": "rations", "name": "Ransum Kering Prajurit", "quantity": 3 },
+        { "key": "arrowhead_iron", "name": "Mata Panah Baja", "quantity": 2 }
+      ]
+    }
+  },
+  {
+    "id": "western_desert",
+    "name": "Gurun Suci Barat (Oase Shadi)",
+    "title": "Penjelajah Lautan Pasir",
+    "description": "Terlahir di tepi oasis air jernih yang dikelilingi badai debu emas dan kuil pemujaan matahari.",
+    "difficulty": "Menantang",
+    "dangerTier": 2,
+    "anchorId": "oase_shadi",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 820, "tileY": 2220 },
+    "regionSlug": "western_sacred_desert",
+    "settlementName": "Oase Shadi",
+    "starterKit": {
+      "copper": 60,
+      "silver": 1,
+      "stamina": 115,
+      "hp": 95,
+      "bonusStats": { "agi": 2, "sta": 2 },
+      "items": [
+        { "key": "water_skin_fresh", "name": "Kantung Air Dingin", "quantity": 3 },
+        { "key": "sun_sand_ore", "name": "Pasir Kristal Emas", "quantity": 2 }
+      ]
+    }
+  },
+  {
+    "id": "eastern_sea_port",
+    "name": "Pesisir Samudra Timur (Dermaga Donghai)",
+    "title": "Pelaut Ombak Karang",
+    "description": "Terlahir di kota dermaga kayu yang ramai dengan aroma garam laut, suara burung camar, dan rakit bambu penyeberangan.",
+    "difficulty": "Normal",
+    "dangerTier": 2,
+    "anchorId": "dermaga_donghai",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 4200, "tileY": 2700 },
+    "regionSlug": "eastern_sea",
+    "settlementName": "Dermaga Donghai",
+    "starterKit": {
+      "copper": 80,
+      "silver": 1,
+      "stamina": 100,
+      "hp": 100,
+      "bonusStats": { "int": 2, "agi": 1 },
+      "items": [
+        { "key": "sea_fish_cured", "name": "Ikan Kering Asin", "quantity": 3 },
+        { "key": "pearl_powder_vial", "name": "Serbuk Mutiara Laut", "quantity": 1 }
+      ]
+    }
+  },
+  {
+    "id": "southern_heiyan",
+    "name": "Selatan (Desa Heiyan)",
+    "title": "Pewaris Batu Hitam",
+    "description": "Terlahir di desa batu hitam di perbatasan selatan, mengenal seluk-beluk energi gelap tanpa terjerumus ke jalan sesat.",
+    "difficulty": "Normal",
+    "dangerTier": 2,
+    "anchorId": "desa_heiyan",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2500, "tileY": 900 },
+    "regionSlug": "southern_demon_domain",
+    "settlementName": "Desa Heiyan",
+    "starterKit": {
+      "copper": 60,
+      "silver": 1,
+      "stamina": 100,
+      "hp": 110,
+      "bonusStats": { "con": 2, "str": 1 },
+      "items": [
+        { "key": "miasma_antidote", "name": "Pil Penangkal Miasma", "quantity": 2 },
+        { "key": "demon_bone_shard", "name": "Serpihan Tulang Iblis", "quantity": 1 }
+      ]
+    }
+  },
+  {
+    "id": "hermit_highlands",
+    "name": "Dataran Tinggi Petapa (Kemah Pertapaan)",
+    "title": "Pertapa Lembah Awan",
+    "description": "Terlahir di pondok lereng tinggi di barat laut yang tenang dengan mata air hangat alami dan ketenangan batin.",
+    "difficulty": "Normal",
+    "dangerTier": 2,
+    "anchorId": "kemah_dataran_tinggi_petapa",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 1200, "tileY": 4200 },
+    "regionSlug": "hermit_highlands",
+    "settlementName": "Kemah Dataran Tinggi Petapa",
+    "starterKit": {
+      "copper": 40,
+      "silver": 1,
+      "stamina": 110,
+      "hp": 105,
+      "bonusStats": { "int": 2, "sta": 2 },
+      "items": [
+        { "key": "cloud_mist_tea", "name": "Teh Kabut Awan", "quantity": 3 },
+        { "key": "geothermal_water", "name": "Air Mata Air Hangat", "quantity": 2 }
+      ]
+    }
+  },
+  {
+    "id": "azure_foothills",
+    "name": "Kaki Pegunungan Azure (Pos Celah)",
+    "title": "Murid Luar Pegunungan Pedang",
+    "description": "Terlahir di pondok lereng pegunungan batu tempat murid sekte pedang bertapa. Udara sejuk dan penuh energi pedang tajam.",
+    "difficulty": "Normal",
+    "dangerTier": 2,
+    "anchorId": "kaki_gunung_azure",
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 1820, "tileY": 2320 },
+    "regionSlug": "azure_mountain_range",
+    "settlementName": "Kaki Gunung Azure",
+    "starterKit": {
+      "copper": 50,
+      "silver": 1,
+      "stamina": 100,
+      "hp": 105,
+      "bonusStats": { "str": 2, "agi": 1 },
+      "items": [
+        { "key": "azure_iron_shard", "name": "Pecahan Besi Azure", "quantity": 2 },
+        { "key": "spirit_bamboo_tea", "name": "Teh Bambu Roh", "quantity": 2 }
+      ]
+    }
+  }
+]

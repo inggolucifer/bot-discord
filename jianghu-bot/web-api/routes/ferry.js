@@ -31,7 +31,7 @@ const FERRY_ROUTES = [
   {
     id: 'eastern_port_to_turtle_island',
     name: 'Pelayaran Bahari Laut Timur ke Pulau Penyu Raksasa (Turtle Island)',
-    from: { regionSlug: 'eastern_sea', settlementName: 'Pelabuhan Timur', dockName: 'Dermaga Timur' },
+    from: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai' },
     to: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu', tileX: 4350, tileY: 2750 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
@@ -39,9 +39,9 @@ const FERRY_ROUTES = [
   },
   {
     id: 'turtle_island_to_eastern_port',
-    name: 'Pelayaran Kembali dari Pulau Penyu ke Pelabuhan Timur',
+    name: 'Pelayaran Kembali dari Pulau Penyu ke Dermaga Donghai',
     from: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu' },
-    to: { regionSlug: 'eastern_sea', settlementName: 'Pelabuhan Timur', dockName: 'Dermaga Timur', tileX: 3900, tileY: 2500 },
+    to: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai', tileX: 4200, tileY: 2700 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
     fastShipCostSilver: 250
@@ -57,9 +57,16 @@ router.get('/routes', authenticateToken, async (req, res) => {
     const currentRegion = player.currentLocation?.regionSlug || 'central_plains';
     const currentSettlement = player.currentLocation?.settlementName || 'Desa Xingcun';
 
-    // Cari rute yang berawal dari lokasi saat ini atau berikan rute umum
+    // Cari rute yang berawal dari lokasi saat ini atau berikan rute umum (dengan backward compatibility Donghai/Pelabuhan Timur)
+    const matchesSettlement = (fromName, currentName) => {
+      if (fromName === currentName) return true;
+      if ((fromName === 'Dermaga Donghai' || fromName === 'Pelabuhan Timur') &&
+          (currentName === 'Dermaga Donghai' || currentName === 'Pelabuhan Timur')) return true;
+      return false;
+    };
+
     const availableRoutes = FERRY_ROUTES.filter(r => 
-      r.from.regionSlug === currentRegion || r.from.settlementName === currentSettlement
+      r.from.regionSlug === currentRegion || matchesSettlement(r.from.settlementName, currentSettlement)
     );
 
     res.json({

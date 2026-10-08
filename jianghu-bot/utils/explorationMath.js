@@ -103,15 +103,164 @@ const TERRAIN_PROPERTIES = {
         baseTemperature: 21,
         spiritualDensity: 20,
         travelSpeedMs: 1100
+    },
+    azure_mountain: {
+        id: 'azure_mountain',
+        name: 'Dinding Tebing Azure',
+        baseEnergyCost: 9999,
+        ambushRate: 0.0,
+        terrainMultiplier: 3.0,
+        isSolid: true,
+        baseTemperature: 5,
+        spiritualDensity: 35,
+        travelSpeedMs: 9999
+    },
+    ocean: {
+        id: 'ocean',
+        name: 'Samudra Lepas',
+        baseEnergyCost: 9999,
+        ambushRate: 0.15,
+        terrainMultiplier: 2.0,
+        isSolid: true,
+        baseTemperature: 20,
+        spiritualDensity: 20,
+        travelSpeedMs: 9999
+    },
+    river: {
+        id: 'river',
+        name: 'Aliran Sungai',
+        baseEnergyCost: 4,
+        ambushRate: 0.08,
+        terrainMultiplier: 1.2,
+        isSolid: false,
+        baseTemperature: 20,
+        spiritualDensity: 18,
+        travelSpeedMs: 1400
+    },
+    bamboo_forest: {
+        id: 'bamboo_forest',
+        name: 'Hutan Bambu Roh',
+        baseEnergyCost: 4,
+        ambushRate: 0.18,
+        terrainMultiplier: 1.2,
+        isSolid: false,
+        baseTemperature: 19,
+        spiritualDensity: 22,
+        travelSpeedMs: 1300
+    },
+    northern_glacial: {
+        id: 'northern_glacial',
+        name: 'Tundra Gletser Utara',
+        baseEnergyCost: 6,
+        ambushRate: 0.20,
+        terrainMultiplier: 1.3,
+        isSolid: false,
+        baseTemperature: -20,
+        spiritualDensity: 30,
+        travelSpeedMs: 1500
+    },
+    demonic_swamp: {
+        id: 'demonic_swamp',
+        name: 'Rawa Iblis',
+        baseEnergyCost: 7,
+        ambushRate: 0.32,
+        terrainMultiplier: 1.5,
+        isSolid: false,
+        baseTemperature: 28,
+        spiritualDensity: 25,
+        travelSpeedMs: 1700
+    },
+    venom_mire: {
+        id: 'venom_mire',
+        name: 'Rawa Racun Miasma',
+        baseEnergyCost: 8,
+        ambushRate: 0.35,
+        terrainMultiplier: 1.6,
+        isSolid: false,
+        baseTemperature: 30,
+        spiritualDensity: 24,
+        travelSpeedMs: 1800
+    },
+    western_desert: {
+        id: 'western_desert',
+        name: 'Gurun Pasir Suci',
+        baseEnergyCost: 5,
+        ambushRate: 0.22,
+        terrainMultiplier: 1.3,
+        isSolid: false,
+        baseTemperature: 42,
+        spiritualDensity: 14,
+        travelSpeedMs: 1500
+    },
+    mountain_pass: {
+        id: 'mountain_pass',
+        name: 'Celah Gerbang Gunung',
+        baseEnergyCost: 3,
+        ambushRate: 0.05,
+        terrainMultiplier: 1.0,
+        isSolid: false,
+        baseTemperature: 16,
+        spiritualDensity: 28,
+        travelSpeedMs: 1100
+    },
+    sword_gorge_pass: {
+        id: 'sword_gorge_pass',
+        name: 'Celah Pedang Terbelah',
+        baseEnergyCost: 3,
+        ambushRate: 0.08,
+        terrainMultiplier: 1.1,
+        isSolid: false,
+        baseTemperature: 14,
+        spiritualDensity: 40,
+        travelSpeedMs: 1100
+    },
+    island_reef: {
+        id: 'island_reef',
+        name: 'Gugusan Karang Roh',
+        baseEnergyCost: 4,
+        ambushRate: 0.12,
+        terrainMultiplier: 1.2,
+        isSolid: false,
+        baseTemperature: 22,
+        spiritualDensity: 26,
+        travelSpeedMs: 1300
+    },
+    road: {
+        id: 'road',
+        name: 'Jalan Raya Resmi',
+        baseEnergyCost: 1,
+        ambushRate: 0.0,
+        terrainMultiplier: 0.8,
+        isSolid: false,
+        baseTemperature: 22,
+        spiritualDensity: 12,
+        travelSpeedMs: 800
     }
 };
 
 const MOUNT_CONFIGS = {
+    wooden_boat: {
+        name: 'Perahu Kayu',
+        staminaReduction: 1,
+        travelSpeedMs: 850,
+        stealthBonus: 0.0,
+        canCrossWater: true,
+        canCrossSolid: false
+    },
+    ship: {
+        name: 'Kapal Layar Cepat',
+        staminaReduction: 2,
+        travelSpeedMs: 650,
+        stealthBonus: 0.05,
+        canCrossWater: true,
+        canCrossSolid: false
+    },
     ferghana_horse: {
         name: 'Kuda Ferghana',
         staminaReduction: 1,
         travelSpeedMs: 700,
         stealthBonus: 0.05,
+        canCrossWater: false,
         canCrossSolid: false
     },
     spirit_horned_horse: {
@@ -119,6 +268,7 @@ const MOUNT_CONFIGS = {
         staminaReduction: 2,
         travelSpeedMs: 550,
         stealthBonus: 0.10,
+        canCrossWater: false,
         canCrossSolid: false
     },
     shadow_tiger: {
@@ -126,6 +276,7 @@ const MOUNT_CONFIGS = {
         staminaReduction: 3,
         travelSpeedMs: 450,
         stealthBonus: 0.35,
+        canCrossWater: false,
         canCrossSolid: false
     },
     flying_sword: {
@@ -133,6 +284,7 @@ const MOUNT_CONFIGS = {
         staminaReduction: 4,
         travelSpeedMs: 400,
         stealthBonus: 0.20,
+        canCrossWater: true,
         canCrossSolid: true
     }
 };
@@ -189,12 +341,20 @@ function calculateTravelSpeed({
  */
 function isTileObstructed({
     terrainType = 'plains',
-    mountType = null
+    mountType = null,
+    isSolid = false
 }) {
     const terrain = TERRAIN_PROPERTIES[terrainType] || TERRAIN_PROPERTIES.plains;
     const mount = mountType && MOUNT_CONFIGS[mountType] ? MOUNT_CONFIGS[mountType] : null;
 
-    if (terrain.isSolid) {
+    if (terrainType === 'ocean' || terrainType === 'water') {
+        if (mount && (mount.canCrossWater || mount.canCrossSolid)) {
+            return false;
+        }
+        return true;
+    }
+
+    if (terrain.isSolid || isSolid) {
         // Artefak pedang terbang tingkat tinggi dapat melintasi tebing
         if (mount && mount.canCrossSolid) {
             return false;
