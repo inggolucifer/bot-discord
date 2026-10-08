@@ -33,9 +33,31 @@ function createGridOpponent(ambientDangerTier = 1, isHazardTile = false) {
   const totalDef = Math.floor(baseDef * tierMultiplier * (1 + 0.4 * (groupSize - 1)));
   const totalSpd = Math.floor(baseSpd * tierMultiplier * (1 + 0.2 * (groupSize - 1)));
 
-  const opponentName = isHazardTile
-    ? `Kelompok Monster Buas (${groupSize} ekor)`
-    : `Kawanan Bandit Penyamun (${groupSize} orang)`;
+  const TIER_MONSTERS = {
+    1: ['Ayam Hutan Liar', 'Kelinci Roh Jinak'],
+    2: ['Serigala Roh Azure', 'Babi Hutan Berbulu Besi', 'Ular Bambu Berbisa'],
+    3: ['Beruang Cakar Baja', 'Harimau Bayangan Hitam', 'Elang Badai Petir'],
+    4: ['Siluman Serigala Darah', 'Kalajengking Kristal Gurun', 'Roh Ilusi Es Abadi'],
+    5: ['Naga Api Purba', 'Raja Asura Neraka', 'Monster Jurang Kuno']
+  };
+
+  const TIER_BANDITS = {
+    1: ['Pencopet Jalanan', 'Pencuri Kambing'],
+    2: ['Bandit Penyamun Kaki Gunung', 'Perompak Sungai'],
+    3: ['Pendekar Sesat Buronan', 'Kafilah Begal Pedang'],
+    4: ['Murid Sekte Iblis Liar', 'Kultivator Sesat Tingkat Menengah'],
+    5: ['Tetua Pengkhianat Sekte Iblis', 'Kultivator Iblis Tingkat Tinggi']
+  };
+
+  const monsterPool = TIER_MONSTERS[tier] || TIER_MONSTERS[3];
+  const banditPool = TIER_BANDITS[tier] || TIER_BANDITS[3];
+  const chosenTemplate = isHazardTile
+    ? monsterPool[Math.floor(Math.random() * monsterPool.length)]
+    : banditPool[Math.floor(Math.random() * banditPool.length)];
+
+  const opponentName = groupSize > 1
+    ? `${chosenTemplate} (${groupSize} ${isHazardTile ? 'ekor' : 'orang'})`
+    : chosenTemplate;
 
   return {
     characterName: opponentName,

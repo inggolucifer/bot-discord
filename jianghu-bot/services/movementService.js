@@ -86,6 +86,20 @@ class MovementService {
     };
 
     // 3. Validasi Passability & Collision
+    // B-07 Fix: Larang diagonal memotong sudut (kedua ortogonal tidak boleh solid)
+    if (Math.abs(dirInfo.dx) === 1 && Math.abs(dirInfo.dy) === 1 && !playerTraits.canFly) {
+      const ortho1 = await gridZoneService.isTilePassable(guildId, zoneId, currentX, targetY, playerTraits);
+      const ortho2 = await gridZoneService.isTilePassable(guildId, zoneId, targetX, currentY, playerTraits);
+      if (!ortho1.passable || !ortho2.passable) {
+        return {
+          ok: false,
+          error: 'Jalur diagonal terhalang oleh sudut rintangan padat (Corner cutting disallowed).',
+          currentPosition: { zoneId, tileX: currentX, tileY: currentY },
+          targetPosition: { zoneId, tileX: targetX, tileY: targetY }
+        };
+      }
+    }
+
     const passCheck = await gridZoneService.isTilePassable(guildId, zoneId, targetX, targetY, playerTraits);
     if (!passCheck.passable) {
       return {

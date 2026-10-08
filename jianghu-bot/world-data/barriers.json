@@ -1,0 +1,72 @@
+[
+  {
+    "id": "azure_wall",
+    "name": "Tembok Pegunungan Azure",
+    "chineseName": "苍峦天壁",
+    "type": "mountain_ridge",
+    "isSolid": true,
+    "description": "Punggung gunung batu raksasa kontinu yang membentang dari barat ke timur, memisahkan peradaban tengah dari tundra dingin utara. Hanya dapat dilintasi melalui 3 celah resmi atau artefak pedang terbang.",
+    "bounds": { "minX": 1450, "maxX": 3800, "minY": 3100, "maxY": 3600 },
+    "traversalRequirement": "flying_sword"
+  },
+  {
+    "id": "great_rift",
+    "name": "Jurang Retakan Besar Tianyuan",
+    "chineseName": "天元天堑",
+    "type": "chasm",
+    "isSolid": true,
+    "description": "Jurang tanpa dasar yang memisahkan Dataran Tengah dari domain selatan, menghembuskan hawa miasma gelap.",
+    "bounds": { "minX": 1600, "maxX": 2800, "minY": 1800, "maxY": 2050 },
+    "traversalRequirement": "flying_sword"
+  },
+  {
+    "id": "west_cliff",
+    "name": "Tebing Terjal Padang Pasir Barat",
+    "chineseName": "西漠断崖",
+    "type": "cliff",
+    "isSolid": true,
+    "description": "Tebing batu pasir curam yang membatasi Gurun Suci Barat dari dataran tengah.",
+    "bounds": { "minX": 1450, "maxX": 1600, "minY": 1500, "maxY": 3500 },
+    "traversalRequirement": "flying_sword"
+  },
+  {
+    "id": "lava_lakes",
+    "name": "Danau Magma Membara",
+    "chineseName": "熔岩火海",
+    "type": "lava_hazard",
+    "isSolid": true,
+    "description": "Danau lahar pijar yang mendidih dengan panas ekstrem, hanya jembatan batu dan artefak api tinggi yang dapat bertahan.",
+    "bounds": { "minX": 700, "maxX": 1500, "minY": 300, "maxY": 1100 },
+    "traversalRequirement": "heat_resistance"
+  },
+  {
+    "id": "eastern_sea_coast",
+    "name": "Samudra Biru Tak Bertepi",
+    "chineseName": "浩瀚深洋",
+    "type": "ocean",
+    "isSolid": true,
+    "description": "Perairan dalam yang membutuhkan kapal, feri, atau pedang terbang.",
+    "bounds": { "minX": 3900, "maxX": 5000, "minY": 1000, "maxY": 5000 },
+    "traversalRequirement": "ship"
+  },
+  {
+    "id": "mirror_lake_water",
+    "name": "Permukaan Air Danau Cermin",
+    "chineseName": "镜湖深水",
+    "type": "water",
+    "isSolid": true,
+    "description": "Air danau spiritual yang jernih namun dalam dan diselimuti kabut karma.",
+    "bounds": { "minX": 3100, "maxX": 3700, "minY": 3500, "maxY": 4100 },
+    "traversalRequirement": "ship"
+  },
+  {
+    "id": "forbidden_peaks",
+    "name": "Puncak Petir Terlarang",
+    "chineseName": "禁空雷极",
+    "type": "lightning_hazard",
+    "isSolid": true,
+    "description": "Puncak tertinggi dengan sambaran petir surgawi berkekuatan penghancur dantian.",
+    "bounds": { "minX": 3300, "maxX": 4100, "minY": 4100, "maxY": 4900 },
+    "traversalRequirement": "lightning_resistance"
+  }
+]

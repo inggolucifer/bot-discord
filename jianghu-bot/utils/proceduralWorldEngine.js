@@ -2,195 +2,34 @@
  * proceduralWorldEngine.js
  * Engine Prosedural Deterministik O(1) untuk Dunia Jianghu 5000x5000 Tile
  * Menggunakan Pseudo-Random Seed Hash & Simplex-Style Noise Approximation
- * Terintegrasi dengan worldRegionEngine untuk Core Lore Regions.
+ * Terintegrasi penuh dengan Single Source of Truth (SSOT) worldData.
+ * Menghilangkan bug B-14 (latitude override) dan menjamin continuous barriers (B-15, B-16).
  */
 
+const worldData = require('./worldData');
 const { getRegionAt, getTerritoryInfo, getTerrainStaminaCost } = require('./worldRegionEngine');
 
-const WORLD_WIDTH = 5000;
-const WORLD_HEIGHT = 5000;
+const WORLD_WIDTH = worldData.WORLD_WIDTH || 5000;
+const WORLD_HEIGHT = worldData.WORLD_HEIGHT || 5000;
 const WORLD_SEED = 20260916;
 
-// Definisi Pemukiman & Landmark Permanen Dunia (Sparse Anchors)
-// Ditambahkan lokasi dari Core Lore
-const ANCHOR_SETTLEMENTS = [
-  {
-    name: 'Tianjing',
-    chineseName: '天京',
-    type: 'capital_city',
-    tileX: 2600,
-    tileY: 2550,
-    spanWidth: 4,
-    spanHeight: 3,
-    description: 'Ibukota kekaisaran Jianghu yang dikelilingi benteng batu granit kokoh dan paviliun kitab sekte luhur.',
-    activeEventCount: 28
-  },
-  {
-    name: 'XiTong City',
-    chineseName: '析桐城',
-    type: 'major_city',
-    tileX: 2500,
-    tileY: 2500,
-    spanWidth: 4,
-    spanHeight: 3,
-    description: 'Kota metropolitan utama di tengah benua dengan pasar terlengkap, bengkel tempa, dan penginapan megah.',
-    activeEventCount: 64
-  },
-  {
-    name: 'Desa Xingcun',
-    chineseName: '杏村',
-    type: 'village',
-    tileX: 2450,
-    tileY: 2480,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Desa bunga aprikot yang damai, tempat para pengembara muda memulai langkah kultivasi pertama.',
-    activeEventCount: 4
-  },
-  {
-    name: 'Desa Qingshui',
-    chineseName: '青水村',
-    type: 'village',
-    tileX: 2420,
-    tileY: 2470,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Desa kecil di tepi sungai dengan aliran air yang jernih.',
-    activeEventCount: 2
-  },
-  {
-    name: 'Desa Tiedao',
-    chineseName: '铁道村',
-    type: 'village',
-    tileX: 2530,
-    tileY: 2460,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Desa pandai besi dekat gunung bijih.',
-    activeEventCount: 3
-  },
-  {
-    name: 'Kota Fengyang',
-    chineseName: '鳳陽城',
-    type: 'major_city',
-    tileX: 2680,
-    tileY: 2520,
-    spanWidth: 3,
-    spanHeight: 3,
-    description: 'Kota dagang besar penghubung wilayah timur laut.',
-    activeEventCount: 15
-  },
-  {
-    name: 'Lembah Kabut Merah',
-    chineseName: '赤雾谷',
-    type: 'danger_zone',
-    tileX: 2350,
-    tileY: 2420,
-    spanWidth: 3,
-    spanHeight: 3,
-    description: 'Lembah lembab diselimuti kabut racun mematikan tempat bersembunyinya binatang buas.',
-    activeEventCount: 8
-  },
-  {
-    name: 'Kota Luoyang Kecil',
-    chineseName: '小洛阳',
-    type: 'major_city',
-    tileX: 2620,
-    tileY: 2500,
-    spanWidth: 3,
-    spanHeight: 3,
-    description: 'Pusat budaya dan kesenian di dataran tengah.',
-    activeEventCount: 10
-  },
-  {
-    name: 'Desa Heiyan',
-    chineseName: '黑岩村',
-    type: 'village',
-    tileX: 2200,
-    tileY: 1800,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Desa berbatu hitam keras di ujung batas Selatan.',
-    activeEventCount: 2
-  },
-  {
-    name: 'Kampung Xueyu',
-    chineseName: '雪域村',
-    type: 'village',
-    tileX: 2150,
-    tileY: 1750,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Kampung di wilayah yang selalu tertutup salju tipis.',
-    activeEventCount: 1
-  },
-  {
-    name: 'Desa Duchong',
-    chineseName: '毒虫村',
-    type: 'village',
-    tileX: 2300,
-    tileY: 1700,
-    spanWidth: 2,
-    spanHeight: 2,
-    description: 'Desa di pinggiran Rawa Iblis yang warganya kebal racun ringan.',
-    activeEventCount: 3
-  },
-  {
-    name: 'Kota Chishui',
-    chineseName: '赤水镇',
-    type: 'major_city',
-    tileX: 2500,
-    tileY: 1600,
-    spanWidth: 3,
-    spanHeight: 3,
-    description: 'Kota di tepi perairan kemerahan, batas masuk ke Domain Iblis Selatan.',
-    activeEventCount: 12
-  },
-  {
-    name: 'Scar of Heaven',
-    chineseName: '天痕',
-    type: 'danger_zone',
-    tileX: 2300,
-    tileY: 1900,
-    spanWidth: 4,
-    spanHeight: 4,
-    description: 'Luka robekan dimensi akibat perang dewa kuno.',
-    activeEventCount: 20
-  },
-  {
-    name: 'Tri-Sect Mountain',
-    chineseName: '三派山',
-    type: 'sect',
-    tileX: 1800,
-    tileY: 2300,
-    spanWidth: 4,
-    spanHeight: 4,
-    description: 'Gunung tempat berkumpulnya tiga sekte besar.',
-    activeEventCount: 15
-  },
-  {
-    name: 'Sekte Puncak Kunlun',
-    chineseName: '昆仑派',
-    type: 'sect',
-    tileX: 1200,
-    tileY: 4200,
-    spanWidth: 3,
-    spanHeight: 3,
-    description: 'Sekte pedang esoterik abadi yang bertengger di atas tebing salju tertinggi benua utara.',
-    activeEventCount: 12
-  },
-  {
-    name: 'Paviliun Gazebo Puncak Pinus',
-    chineseName: '松风亭',
-    type: 'scenic_courtyard',
-    tileX: 2490,
-    tileY: 2515,
-    spanWidth: 1,
-    spanHeight: 1,
-    description: 'Gazebo batu berukir kuno di bawah pohon ginkgo emas tempat pendekar mengasingkan diri untuk bermeditasi.',
-    activeEventCount: 1
-  }
-];
+const BARRIERS = worldData.getBarriers();
+const PASSES = worldData.getPasses();
+
+// Pemukiman & Landmark Permanen Dunia dimuat secara otoritatif dari world-data/anchors.json
+const ANCHOR_SETTLEMENTS = worldData.getAnchors().map(a => ({
+  id: a.id,
+  name: a.name,
+  chineseName: a.chineseName || a.name,
+  type: a.type,
+  tileX: a.x,
+  tileY: a.y,
+  spanWidth: a.spanWidth || 2,
+  spanHeight: a.spanHeight || 2,
+  description: a.description || a.label || '',
+  tier: a.tier || 1,
+  activeEventCount: a.activeEventCount || 0
+}));
 
 /**
  * Fungsi Hash Integer Deterministik berkinerja tinggi
@@ -250,10 +89,66 @@ function fbmNoise(x, y, baseScale = 0.02, octaves = 3, seed = WORLD_SEED) {
 }
 
 /**
+ * Mendeteksi apakah koordinat (tileX, tileY) berada di celah resmi (Pass)
+ */
+function getPassAt(tileX, tileY) {
+  for (const pass of PASSES) {
+    const halfWidth = Math.max(1, Math.floor((pass.width || 6) / 2));
+    const barrier = BARRIERS.find(b => b.id === pass.barrierId);
+
+    if (barrier) {
+      // Barrier horizontal (minX..maxX lebar, minY..maxY tebal)
+      if (barrier.bounds.maxX - barrier.bounds.minX >= barrier.bounds.maxY - barrier.bounds.minY) {
+        if (
+          tileX >= pass.x - halfWidth &&
+          tileX <= pass.x + halfWidth &&
+          tileY >= barrier.bounds.minY &&
+          tileY <= barrier.bounds.maxY
+        ) {
+          return pass;
+        }
+      } else {
+        // Barrier vertikal
+        if (
+          tileY >= pass.y - halfWidth &&
+          tileY <= pass.y + halfWidth &&
+          tileX >= barrier.bounds.minX &&
+          tileX <= barrier.bounds.maxX
+        ) {
+          return pass;
+        }
+      }
+    } else {
+      if (Math.abs(tileX - pass.x) <= halfWidth && Math.abs(tileY - pass.y) <= halfWidth) {
+        return pass;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Mendeteksi apakah koordinat (tileX, tileY) berada di dalam rintangan kontinu (Barrier)
+ */
+function getBarrierAt(tileX, tileY) {
+  for (const barrier of BARRIERS) {
+    if (
+      tileX >= barrier.bounds.minX &&
+      tileX <= barrier.bounds.maxX &&
+      tileY >= barrier.bounds.minY &&
+      tileY <= barrier.bounds.maxY
+    ) {
+      return barrier;
+    }
+  }
+  return null;
+}
+
+/**
  * Ambil data deterministik tile pada koordinat (tileX, tileY)
  */
 function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
-  // Batas Dunia 5000x5000
+  // 1. Batas Dunia 5000x5000
   if (tileX < 0 || tileX >= WORLD_WIDTH || tileY < 0 || tileY >= WORLD_HEIGHT) {
     return {
       tileX,
@@ -277,14 +172,16 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   let isSettlementTile = false;
   let settlementInfo = null;
 
-  // 1. Cek apakah masuk dalam zona Landmark / Pemukiman Permanen
+  // 2. Cek apakah masuk dalam zona Landmark / Pemukiman Permanen
   if (candidateSettlements && candidateSettlements.length > 0) {
     for (const settlement of candidateSettlements) {
+      const sX = settlement.tileX !== undefined ? settlement.tileX : settlement.x;
+      const sY = settlement.tileY !== undefined ? settlement.tileY : settlement.y;
       if (
-        tileX >= settlement.tileX &&
-        tileX < settlement.tileX + settlement.spanWidth &&
-        tileY >= settlement.tileY &&
-        tileY < settlement.tileY + settlement.spanHeight
+        tileX >= sX &&
+        tileX < sX + settlement.spanWidth &&
+        tileY >= sY &&
+        tileY < sY + settlement.spanHeight
       ) {
         isSettlementTile = true;
         settlementInfo = settlement;
@@ -294,11 +191,15 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   }
 
   if (isSettlementTile) {
-    const isOrigin = tileX === settlementInfo.tileX && tileY === settlementInfo.tileY;
+    const sX = settlementInfo.tileX !== undefined ? settlementInfo.tileX : settlementInfo.x;
+    const sY = settlementInfo.tileY !== undefined ? settlementInfo.tileY : settlementInfo.y;
+    const isOrigin = tileX === sX && tileY === sY;
+    const isDanger = settlementInfo.type === 'danger_zone';
+
     return {
       tileX,
       tileY,
-      terrainType: settlementInfo.type === 'danger_zone' ? 'swamp' : 'settlement',
+      terrainType: isDanger ? 'swamp' : 'settlement',
       tileType: settlementInfo.type === 'scenic_courtyard' ? 'poi' : 'settlement',
       isSolid: false,
       settlementName: settlementInfo.name,
@@ -307,149 +208,191 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       settlementData: isOrigin ? settlementInfo : null,
       label: isOrigin ? settlementInfo.name : null,
       baseTemperature: 22,
-      spiritualQiDensity: (settlementInfo.type === 'sect' ? 50 : 25) * region.qiDensityModifier,
-      ambientDangerTier: settlementInfo.type === 'danger_zone' ? 4 : 1,
+      spiritualQiDensity: (settlementInfo.type === 'sect' ? 50 : 25) * (region.qiDensityModifier || 1.0),
+      ambientDangerTier: isDanger ? 4 : (settlementInfo.tier || 1),
       regionId: region.id,
       regionName: region.name,
-      territoryType: settlementInfo.type === 'danger_zone' ? 'danger_zone' : (settlementInfo.type === 'sect' ? 'sect_territory' : 'settlement'),
-      dangerTier: settlementInfo.type === 'danger_zone' ? 4 : 1,
-      ambushRiskRate: settlementInfo.type === 'danger_zone' ? 0.3 : 0,
+      territoryType: isDanger ? 'danger_zone' : (settlementInfo.type === 'sect' ? 'sect_territory' : 'settlement'),
+      dangerTier: isDanger ? 4 : (settlementInfo.tier || 1),
+      ambushRiskRate: isDanger ? 0.3 : 0,
       factionName: settlementInfo.type === 'sect' ? settlementInfo.name : null,
       staminaCost: getTerrainStaminaCost('settlement')
     };
   }
 
-  // 2. Evaluasi Bioma Berbasis Noise Fractal
+  // 3. Evaluasi Pass & Barrier Kontinu (B-15 & B-16)
+  const activePass = getPassAt(tileX, tileY);
+  if (activePass) {
+    const isSword = activePass.id === 'sword_gorge';
+    const passTerrain = isSword ? 'sword_gorge_pass' : 'mountain_pass';
+    return {
+      tileX,
+      tileY,
+      terrainType: passTerrain,
+      tileType: 'walkable',
+      isSolid: false,
+      label: activePass.name,
+      resourceType: null,
+      isClaimable: false,
+      plotPriceSilver: 0,
+      baseTemperature: 16,
+      spiritualQiDensity: (isSword ? 40 : 28) * (region.qiDensityModifier || 1.0),
+      regionId: region.id,
+      regionName: region.name,
+      territoryType: 'calm_zone',
+      dangerTier: activePass.tier || 2,
+      ambushRiskRate: 0.05,
+      factionName: null,
+      staminaCost: getTerrainStaminaCost(passTerrain)
+    };
+  }
+
+  const activeBarrier = getBarrierAt(tileX, tileY);
+  if (activeBarrier) {
+    let barrierTerrain = 'azure_mountain';
+    if (activeBarrier.type === 'ocean') barrierTerrain = 'ocean';
+    else if (activeBarrier.type === 'lava_hazard') barrierTerrain = 'volcanic';
+    else if (activeBarrier.type === 'chasm') barrierTerrain = 'mountain';
+
+    return {
+      tileX,
+      tileY,
+      terrainType: barrierTerrain,
+      tileType: 'mountain',
+      isSolid: true,
+      label: activeBarrier.name,
+      resourceType: barrierTerrain === 'ocean' ? 'fish' : 'ore',
+      isClaimable: false,
+      plotPriceSilver: 0,
+      baseTemperature: activeBarrier.type === 'lava_hazard' ? 55 : (
+        region.tempRangeC ? Math.round((region.tempRangeC.min + region.tempRangeC.max) / 2) : 15
+      ),
+      spiritualQiDensity: 32 * (region.qiDensityModifier || 1.0),
+      regionId: region.id,
+      regionName: region.name,
+      territoryType: 'danger_zone',
+      dangerTier: Math.max(3, region.dangerTier),
+      ambushRiskRate: 0,
+      factionName: null,
+      staminaCost: getTerrainStaminaCost(barrierTerrain)
+    };
+  }
+
+  // 4. Evaluasi Bioma Berbasis Noise Fractal & Profil Regional (B-14 Fixed)
   const elevation = fbmNoise(tileX, tileY, 0.012, 3, WORLD_SEED);
   const moisture = fbmNoise(tileX, tileY, 0.008, 2, WORLD_SEED + 999);
-  const latitude = tileY / WORLD_HEIGHT; // 0 = Selatan (Hangat), 1 = Utara (Dingin Salju)
 
   let terrainType = 'plains';
   let isSolid = false;
   let tileType = 'walkable';
-  let baseTemperature = Math.round(35 - latitude * 50); // -15C di utara s/d 35C di selatan
-  let spiritualQiDensity = 10;
   let label = null;
 
-  // 2. Evaluasi Bioma Berbasis 22 Wilayah Kanonikal & Noise Fractal (Fase 1 & Fase 3)
-  const isEasternWaters = region.id === 'eastern_sea' || region.id === 'floating_wind_isles';
+  const isEasternWaters = region.id === 'eastern_sea' || region.id === 'frostmoon_sea' || region.id === 'floating_wind_isles';
+  const isVolcanicZone = region.id === 'volcanic_crag' || region.id === 'lava_spine';
+  const isSwampZone = region.id === 'venom_mire' || region.id === 'poison_insect_swamp' || region.id === 'southern_demon_domain' || region.id === 'abyssal_scar' || region.id === 'crimson_battlefield' || region.id === 'southern_plague_woods';
+  const isDesertZone = region.id === 'western_sacred_desert' || region.id === 'golden_sands_waste' || region.id === 'sun_chaser_dunes' || region.id === 'western_gorge_labyrinth' || region.id === 'ancient_dragon_gorge';
+  const isGlacialZone = region.id === 'northern_desolate' || region.id === 'kunlun_snow_peaks';
+  const isBambooZone = region.id === 'spirit_wood_sea' || region.id === 'spirit_bamboo_sea';
+  const isThunderZone = region.id === 'thundersteppe' || region.id === 'godthunder_peaks';
+  const isMirrorZone = region.id === 'mirror_lake';
+  const isDeltaZone = region.id === 'nine_springs_delta';
 
-  // Force Lautan Dalam untuk Eastern Sea & Wilayah Laut
   if (isEasternWaters) {
-    if (elevation > 0.68) {
+    if (elevation > 0.70) {
       terrainType = 'island_reef';
       isSolid = false;
-      spiritualQiDensity = 25;
       label = 'Gugusan Karang Roh Melayang';
     } else {
       terrainType = 'ocean';
-      isSolid = true; // Wajib kapal / perahu / pedang terbang
-      spiritualQiDensity = 20;
-      label = 'Lautan Timur';
+      isSolid = true;
+      label = 'Samudra Luas';
     }
-  }
-  // Rantai Pegunungan Azure Solid Barrier & 3 Pass Gerbang (Master Plan §4.3)
-  else if (region.id === 'azure_mountain_range' || region.id === 'azure_mountain') {
-    const isNorthPass = (tileX >= 2198 && tileX <= 2202 && tileY >= 3100 && tileY <= 3600);
-    const isMistPass = (tileX >= 2598 && tileX <= 2602 && tileY >= 3100 && tileY <= 3600);
-    const isSwordGorge = (tileX >= 3098 && tileX <= 3102 && tileY >= 3100 && tileY <= 3600);
-
-    if (isNorthPass) {
-      terrainType = 'mountain_pass';
-      isSolid = false;
-      spiritualQiDensity = 28;
-      label = 'Gerbang Pass Utara';
-    } else if (isMistPass) {
-      terrainType = 'mountain_pass';
-      isSolid = false;
-      spiritualQiDensity = 32;
-      label = 'Gerbang Pass Berkabut';
-    } else if (isSwordGorge) {
-      terrainType = 'sword_gorge_pass';
-      isSolid = false;
-      spiritualQiDensity = 45;
-      label = 'Celah Pedang Terbelah';
-    } else if (elevation > 0.35) {
-      terrainType = 'azure_mountain';
-      isSolid = true; // Dinding tebing pembatas solid! Membutuhkan pedang terbang
-      baseTemperature = Math.max(2, baseTemperature - 12);
-      spiritualQiDensity = 35;
-      label = 'Dinding Tebing Pegunungan Azure';
-    } else {
-      terrainType = 'forest';
-      isSolid = false;
-      spiritualQiDensity = 25;
-      label = 'Lereng Kaki Pegunungan Azure';
-    }
-  }
-  // Wilayah Tundra & Es Salju Utara
-  else if (region.id === 'northern_desolate' || latitude > 0.65) {
+  } else if (isGlacialZone) {
     terrainType = 'northern_glacial';
-    isSolid = elevation > 0.78; // Puncak es ekstrim solid
-    baseTemperature = Math.min(-10, baseTemperature - 15);
-    spiritualQiDensity = 30;
-    label = isSolid ? 'Puncak Es Abadi' : 'Lereng Salju Tundra';
-  }
-  // Pegunungan Karang Tinggi di Luar Azure
-  else if (elevation > 0.72) {
-    terrainType = 'mountain';
     isSolid = elevation > 0.80;
-    baseTemperature = Math.max(5, baseTemperature - 10);
-    spiritualQiDensity = 24;
-    label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Batu';
-  }
-  // Air / Sungai Daratan
-  else if (elevation < 0.28) {
-    if (elevation < 0.15) {
+    label = isSolid ? 'Puncak Es Abadi' : 'Lereng Salju Tundra';
+  } else if (isVolcanicZone) {
+    terrainType = 'volcanic';
+    isSolid = elevation > 0.82;
+    label = isSolid ? 'Kawah Lahar Membara' : 'Tanah Vulkanik Panas';
+  } else if (isSwampZone) {
+    terrainType = (region.id === 'venom_mire' || region.id === 'poison_insect_swamp') ? 'venom_mire' : 'demonic_swamp';
+    isSolid = elevation > 0.85;
+    label = terrainType === 'venom_mire' ? 'Rawa Racun Miasma' : 'Rawa Domain Iblis';
+  } else if (isDesertZone) {
+    terrainType = 'western_desert';
+    isSolid = elevation > 0.82;
+    label = isSolid ? 'Tebing Pasir Terjal' : 'Gurun Pasir Panas';
+  } else if (isBambooZone) {
+    terrainType = 'bamboo_forest';
+    isSolid = elevation > 0.85;
+    label = 'Lautan Bambu Roh';
+  } else if (isThunderZone) {
+    terrainType = elevation > 0.75 ? 'mountain' : 'plains';
+    isSolid = elevation > 0.82;
+    label = isSolid ? 'Puncak Halilintar' : 'Sabana Badai Petir';
+  } else if (isMirrorZone) {
+    if (elevation < 0.40) {
       terrainType = 'ocean';
       isSolid = true;
-      spiritualQiDensity = 20;
-      label = 'Danau Dalam';
-    } else {
+      label = 'Perairan Danau Cermin';
+    } else if (elevation < 0.55) {
       terrainType = 'river';
-      isSolid = false; 
-      spiritualQiDensity = 18;
-      label = 'Aliran Air';
-    }
-  }
-  // Wilayah Domain Iblis Selatan (Rawa Miasma Beracun)
-  else if (region.id === 'southern_demon_domain' || region.id === 'southern_demon' || (elevation < 0.42 && moisture > 0.65 && latitude < 0.45)) {
-    terrainType = (region.id === 'southern_demon_domain' || region.id === 'southern_demon') ? 'demonic_swamp' : 'swamp';
-    isSolid = false;
-    baseTemperature += 6;
-    spiritualQiDensity = 16;
-    label = (terrainType === 'demonic_swamp') ? 'Rawa Iblis Beracun' : 'Rawa Berlumpur';
-  }
-  // Wilayah Gurun Pasir Suci Barat
-  else if (region.id === 'western_sacred_desert' || region.id === 'western_desert' || (moisture < 0.3 && latitude < 0.3)) {
-    terrainType = 'western_desert';
-    isSolid = false;
-    baseTemperature += 10;
-    spiritualQiDensity = 10;
-    label = 'Gurun Pasir Panas';
-  }
-  // Hutan Bambu & Hutan Pinus
-  else if (moisture > 0.52) {
-    if (elevation > 0.45 && latitude > 0.3) {
-      terrainType = 'forest';
-      spiritualQiDensity = 22;
-      label = 'Hutan Pinus Kuno';
+      isSolid = false;
+      label = 'Tepian Danau Cermin';
     } else {
-      terrainType = 'bamboo_forest';
-      spiritualQiDensity = 16;
-      label = 'Hutan Bambu Hijau';
+      terrainType = 'plains';
+      isSolid = false;
+      label = 'Pesisir Bunga Cermin';
+    }
+  } else if (isDeltaZone) {
+    if (elevation < 0.35) {
+      terrainType = 'river';
+      isSolid = false;
+      label = 'Sungai Delta Sembilan Mata Air';
+    } else if (moisture > 0.50) {
+      terrainType = 'swamp';
+      isSolid = false;
+      label = 'Rawa Teratai Delta';
+    } else {
+      terrainType = 'plains';
+      isSolid = false;
+      label = 'Bantaran Rumput Hijau';
+    }
+  } else {
+    // Default Continental Mainland (Central Plains, Beast Prairies, Border March, dll.)
+    if (elevation > 0.75) {
+      terrainType = 'mountain';
+      isSolid = elevation > 0.82;
+      label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Batu';
+    } else if (elevation < 0.22) {
+      terrainType = 'river';
+      isSolid = false;
+      label = 'Aliran Sungai Jernih';
+    } else if (moisture > 0.58) {
+      terrainType = (elevation > 0.45) ? 'forest' : 'bamboo_forest';
+      isSolid = false;
+      label = terrainType === 'forest' ? 'Hutan Rimbun Kuno' : 'Hutan Bambu Hijau';
+    } else {
+      terrainType = 'plains';
+      isSolid = false;
+      label = 'Padang Rumput Asri';
     }
   }
-  // Dataran Rumput / Tanah Lapang
-  else {
-    terrainType = 'plains';
-    spiritualQiDensity = 12;
-    label = 'Padang Rumput';
+
+  // Suhu Otoritatif berdasarkan rentang suhu region
+  let baseTemperature = 20;
+  if (region.tempRangeC && typeof region.tempRangeC.min === 'number') {
+    baseTemperature = Math.round(region.tempRangeC.min + (region.tempRangeC.max - region.tempRangeC.min) * (1 - elevation));
+  } else {
+    baseTemperature = Math.round(35 - (tileY / WORLD_HEIGHT) * 50);
   }
+
+  // Kepadatan Spiritual Qi
+  let spiritualQiDensity = Math.round((14 + elevation * 18) * (region.qiDensityModifier || 1.0));
 
   // Integrasi dengan World Region Engine
   const territoryInfo = getTerritoryInfo(tileX, tileY, terrainType, false);
-  spiritualQiDensity = Math.round(spiritualQiDensity * region.qiDensityModifier);
 
   // Penentuan Resource Node Spasial
   let resourceType = null;
@@ -462,7 +405,6 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   }
 
   // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable)
-  // Dataran rumput (plains) terbuka di luar pemukiman yang tidak solid dapat dibeli dan dibangun oleh pemain
   const isClaimable = terrainType === 'plains' && !isSolid && !isSettlementTile;
   if (isClaimable) {
     tileType = 'buildable_plot';
@@ -486,14 +428,13 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     territoryType: territoryInfo.type,
     dangerTier: Math.max(region.dangerTier, territoryInfo.dangerTierBase),
     ambushRiskRate: territoryInfo.ambushRiskRate,
-    factionName: null, // Diimplementasikan nanti dengan sect territority logic dinamis
+    factionName: null,
     staminaCost: getTerrainStaminaCost(terrainType)
   };
 }
 
 /**
  * Mengambil matriks tile dalam jendela pandang (Viewport Window)
- * Ringan dan cepat (misal radius 15 = area 31x31 = ~961 tile)
  */
 function getViewportTiles(centerX, centerY, radius = 16) {
   const minX = Math.max(0, centerX - radius);
@@ -501,7 +442,7 @@ function getViewportTiles(centerX, centerY, radius = 16) {
   const minY = Math.max(0, centerY - radius);
   const maxY = Math.min(WORLD_HEIGHT - 1, centerY + radius);
 
-  // Pre-filter pemukiman yang beririsan dengan bounding box viewport saja (O(1) filter vs ribuan loop per tile)
+  // Pre-filter pemukiman yang beririsan dengan bounding box viewport saja
   const candidateSettlements = ANCHOR_SETTLEMENTS.filter(s =>
     s.tileX + s.spanWidth > minX && s.tileX <= maxX &&
     s.tileY + s.spanHeight > minY && s.tileY <= maxY

@@ -1,0 +1,988 @@
+[
+  {
+    "id": "central_plains",
+    "name": "Central Plains",
+    "chineseName": "中原神州",
+    "tier": 1,
+    "dangerTier": 1,
+    "qiDensityModifier": 1,
+    "tempRangeC": {
+      "min": 18,
+      "max": 26
+    },
+    "bounds": {
+      "minX": 1800,
+      "maxX": 3200,
+      "minY": 2000,
+      "maxY": 3100
+    },
+    "lawAffinities": [
+      "righteous_heavenly_merit",
+      "righteous_pure_yang"
+    ],
+    "resourceTags": [
+      "basic_wood",
+      "plain_herb",
+      "iron_ore",
+      "merit_crystal"
+    ],
+    "palette": {
+      "primary": "#3a5f38",
+      "accent": "#d4b16a",
+      "terrainColor": "#4d7348"
+    },
+    "priority": 1,
+    "walkDefault": "open"
+  },
+  {
+    "id": "nine_springs_delta",
+    "name": "Nine Springs Delta",
+    "chineseName": "九泉三角洲",
+    "tier": 1,
+    "dangerTier": 1,
+    "qiDensityModifier": 1.2,
+    "tempRangeC": {
+      "min": 19,
+      "max": 25
+    },
+    "bounds": {
+      "minX": 2200,
+      "maxX": 2600,
+      "minY": 2350,
+      "maxY": 2550
+    },
+    "lawAffinities": [
+      "element_qingdi_wood",
+      "element_azure_water"
+    ],
+    "resourceTags": [
+      "lotus_seed",
+      "river_clay",
+      "freshwater_pearl",
+      "medicinal_sprout"
+    ],
+    "palette": {
+      "primary": "#2d6a4f",
+      "accent": "#74c69d",
+      "terrainColor": "#40916c"
+    },
+    "priority": 5,
+    "walkDefault": "open"
+  },
+  {
+    "id": "azure_mountain_range",
+    "name": "Azure Mountain Range",
+    "chineseName": "苍峦山脉",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.5,
+    "tempRangeC": {
+      "min": 2,
+      "max": 14
+    },
+    "bounds": {
+      "minX": 1450,
+      "maxX": 3800,
+      "minY": 3100,
+      "maxY": 3600
+    },
+    "lawAffinities": [
+      "righteous_sword_heart",
+      "element_roc_wind"
+    ],
+    "resourceTags": [
+      "spirit_bamboo",
+      "azure_iron",
+      "sword_shard",
+      "frost_herb"
+    ],
+    "palette": {
+      "primary": "#264653",
+      "accent": "#2a9d8f",
+      "terrainColor": "#3d5a80"
+    },
+    "priority": 10,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "northern_desolate",
+    "name": "Northern Desolate",
+    "chineseName": "极北荒原",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 0.9,
+    "tempRangeC": {
+      "min": -25,
+      "max": -5
+    },
+    "bounds": {
+      "minX": 1000,
+      "maxX": 3200,
+      "minY": 3600,
+      "maxY": 5000
+    },
+    "lawAffinities": [
+      "element_azure_water",
+      "body_tempering"
+    ],
+    "resourceTags": [
+      "glacial_ice",
+      "frost_lotus",
+      "beast_fur",
+      "pure_water_essence"
+    ],
+    "palette": {
+      "primary": "#cad2c5",
+      "accent": "#84a59d",
+      "terrainColor": "#e0e1dd"
+    },
+    "priority": 4,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "thundersteppe",
+    "name": "Thundersteppe",
+    "chineseName": "雷暴草原",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.4,
+    "tempRangeC": {
+      "min": -5,
+      "max": 12
+    },
+    "bounds": {
+      "minX": 1800,
+      "maxX": 2800,
+      "minY": 3800,
+      "maxY": 4600
+    },
+    "lawAffinities": [
+      "element_godthunder_light"
+    ],
+    "resourceTags": [
+      "thunder_stone",
+      "storm_grass",
+      "lightning_core"
+    ],
+    "palette": {
+      "primary": "#5c677d",
+      "accent": "#ffd166",
+      "terrainColor": "#4f5d75"
+    },
+    "priority": 6,
+    "walkDefault": "open"
+  },
+  {
+    "id": "godthunder_peaks",
+    "name": "Godthunder Peaks",
+    "chineseName": "神霄雷峰",
+    "tier": 5,
+    "dangerTier": 5,
+    "qiDensityModifier": 1.8,
+    "tempRangeC": {
+      "min": -15,
+      "max": 5
+    },
+    "bounds": {
+      "minX": 3200,
+      "maxX": 4200,
+      "minY": 4000,
+      "maxY": 5000
+    },
+    "lawAffinities": [
+      "element_godthunder_light"
+    ],
+    "resourceTags": [
+      "divine_thunder_crystal",
+      "celestial_essence"
+    ],
+    "palette": {
+      "primary": "#3d348b",
+      "accent": "#f72585",
+      "terrainColor": "#4361ee"
+    },
+    "priority": 7,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "mirror_lake",
+    "name": "Mirror Lake",
+    "chineseName": "照月心湖",
+    "tier": 2,
+    "dangerTier": 2,
+    "qiDensityModifier": 1.6,
+    "tempRangeC": {
+      "min": 8,
+      "max": 16
+    },
+    "bounds": {
+      "minX": 3000,
+      "maxX": 3800,
+      "minY": 3400,
+      "maxY": 4200
+    },
+    "lawAffinities": [
+      "righteous_karmic_mirror",
+      "element_azure_water"
+    ],
+    "resourceTags": [
+      "mirror_water",
+      "lotus_seed",
+      "karma_sand"
+    ],
+    "palette": {
+      "primary": "#1f7a8c",
+      "accent": "#bfdbf7",
+      "terrainColor": "#022b3a"
+    },
+    "priority": 8,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "beast_prairies",
+    "name": "Beast Prairies",
+    "chineseName": "万兽荒原",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.1,
+    "tempRangeC": {
+      "min": 10,
+      "max": 22
+    },
+    "bounds": {
+      "minX": 1000,
+      "maxX": 1800,
+      "minY": 3400,
+      "maxY": 4200
+    },
+    "lawAffinities": [
+      "natal_beast"
+    ],
+    "resourceTags": [
+      "beast_tendon",
+      "spirit_horn",
+      "savage_fang"
+    ],
+    "palette": {
+      "primary": "#606c38",
+      "accent": "#dda15e",
+      "terrainColor": "#283618"
+    },
+    "priority": 5,
+    "walkDefault": "open"
+  },
+  {
+    "id": "western_sacred_desert",
+    "name": "Western Sacred Desert",
+    "chineseName": "西漠圣梵",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.1,
+    "tempRangeC": {
+      "min": 25,
+      "max": 42
+    },
+    "bounds": {
+      "minX": 0,
+      "maxX": 1500,
+      "minY": 1500,
+      "maxY": 3500
+    },
+    "lawAffinities": [
+      "righteous_heavenly_merit",
+      "body_tempering"
+    ],
+    "resourceTags": [
+      "golden_sand",
+      "solar_essence",
+      "cactus_resin",
+      "relic_scrap"
+    ],
+    "palette": {
+      "primary": "#bc6c25",
+      "accent": "#dda15e",
+      "terrainColor": "#d4a373"
+    },
+    "priority": 3,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "western_gorge_labyrinth",
+    "name": "Western Gorge Labyrinth",
+    "chineseName": "断魂绝峡",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.3,
+    "tempRangeC": {
+      "min": 22,
+      "max": 38
+    },
+    "bounds": {
+      "minX": 0,
+      "maxX": 1000,
+      "minY": 1000,
+      "maxY": 2000
+    },
+    "lawAffinities": [
+      "body_tempering"
+    ],
+    "resourceTags": [
+      "iron_bone_stone",
+      "echo_crystal",
+      "amber_fossil"
+    ],
+    "palette": {
+      "primary": "#7f4f24",
+      "accent": "#936639",
+      "terrainColor": "#a68a64"
+    },
+    "priority": 5,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "hermit_highlands",
+    "name": "Hermit Highlands",
+    "chineseName": "孤云隐岭",
+    "tier": 2,
+    "dangerTier": 2,
+    "qiDensityModifier": 1.5,
+    "tempRangeC": {
+      "min": 5,
+      "max": 18
+    },
+    "bounds": {
+      "minX": 800,
+      "maxX": 1600,
+      "minY": 4000,
+      "maxY": 4800
+    },
+    "lawAffinities": [
+      "righteous_karmic_mirror",
+      "element_roc_wind"
+    ],
+    "resourceTags": [
+      "cloud_mist_tea",
+      "geothermal_water",
+      "hermit_stone"
+    ],
+    "palette": {
+      "primary": "#6d6875",
+      "accent": "#b5838d",
+      "terrainColor": "#588157"
+    },
+    "priority": 6,
+    "walkDefault": "open"
+  },
+  {
+    "id": "border_march",
+    "name": "Border March",
+    "chineseName": "千戍边关",
+    "tier": 2,
+    "dangerTier": 2,
+    "qiDensityModifier": 1.1,
+    "tempRangeC": {
+      "min": 16,
+      "max": 24
+    },
+    "bounds": {
+      "minX": 1500,
+      "maxX": 3300,
+      "minY": 1800,
+      "maxY": 2050
+    },
+    "lawAffinities": [
+      "righteous_sword_heart",
+      "body_tempering"
+    ],
+    "resourceTags": [
+      "banner_cloth",
+      "rations",
+      "arrowhead_iron",
+      "war_horse_fur"
+    ],
+    "palette": {
+      "primary": "#582f0e",
+      "accent": "#7f4f24",
+      "terrainColor": "#6f1d1b"
+    },
+    "priority": 5,
+    "walkDefault": "open"
+  },
+  {
+    "id": "lava_spine",
+    "name": "Lava Spine",
+    "chineseName": "赤焰脊地",
+    "tier": 5,
+    "dangerTier": 5,
+    "qiDensityModifier": 1.7,
+    "tempRangeC": {
+      "min": 45,
+      "max": 75
+    },
+    "bounds": {
+      "minX": 600,
+      "maxX": 1600,
+      "minY": 200,
+      "maxY": 1200
+    },
+    "lawAffinities": [
+      "element_phoenix_fire"
+    ],
+    "resourceTags": [
+      "magma_core",
+      "obsidian_shard",
+      "flame_lotus",
+      "fire_jade"
+    ],
+    "palette": {
+      "primary": "#9d0208",
+      "accent": "#ffba08",
+      "terrainColor": "#370617"
+    },
+    "priority": 9,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "venom_mire",
+    "name": "Venom Mire",
+    "chineseName": "绝命万毒沼",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.3,
+    "tempRangeC": {
+      "min": 24,
+      "max": 34
+    },
+    "bounds": {
+      "minX": 2200,
+      "maxX": 3000,
+      "minY": 400,
+      "maxY": 1400
+    },
+    "lawAffinities": [
+      "demonic_myriad_venom",
+      "gu_master"
+    ],
+    "resourceTags": [
+      "purple_toxin_moss",
+      "viper_bile",
+      "venom_fungus",
+      "gu_sac"
+    ],
+    "palette": {
+      "primary": "#5a189a",
+      "accent": "#70e000",
+      "terrainColor": "#240046"
+    },
+    "priority": 6,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "southern_demon_domain",
+    "name": "Southern Demon Domain",
+    "chineseName": "南疆九煞窟",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.5,
+    "tempRangeC": {
+      "min": 26,
+      "max": 36
+    },
+    "bounds": {
+      "minX": 1500,
+      "maxX": 3000,
+      "minY": 600,
+      "maxY": 1800
+    },
+    "lawAffinities": [
+      "demonic_turbid_core",
+      "demonic_blood_soul"
+    ],
+    "resourceTags": [
+      "turbid_black_mud",
+      "demon_bone",
+      "miasma_pearl",
+      "spirit_gu_egg"
+    ],
+    "palette": {
+      "primary": "#3c096c",
+      "accent": "#e0aaff",
+      "terrainColor": "#10002b"
+    },
+    "priority": 4,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "crimson_battlefield",
+    "name": "Crimson Battlefield",
+    "chineseName": "血煞古战场",
+    "tier": 5,
+    "dangerTier": 5,
+    "qiDensityModifier": 1.8,
+    "tempRangeC": {
+      "min": 18,
+      "max": 30
+    },
+    "bounds": {
+      "minX": 2400,
+      "maxX": 3400,
+      "minY": 200,
+      "maxY": 1000
+    },
+    "lawAffinities": [
+      "demonic_blood_soul"
+    ],
+    "resourceTags": [
+      "blood_vial",
+      "soul_dust",
+      "rusted_weapon_shard"
+    ],
+    "palette": {
+      "primary": "#6a040f",
+      "accent": "#dc2f02",
+      "terrainColor": "#370617"
+    },
+    "priority": 7,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "abyssal_scar",
+    "name": "Abyssal Scar",
+    "chineseName": "裂渊冥痕",
+    "tier": 5,
+    "dangerTier": 5,
+    "qiDensityModifier": 2,
+    "tempRangeC": {
+      "min": 15,
+      "max": 25
+    },
+    "bounds": {
+      "minX": 1600,
+      "maxX": 2200,
+      "minY": 200,
+      "maxY": 1000
+    },
+    "lawAffinities": [
+      "demonic_abyssal_pact"
+    ],
+    "resourceTags": [
+      "abyssal_scroll",
+      "nether_shard",
+      "fiend_blood"
+    ],
+    "palette": {
+      "primary": "#03071e",
+      "accent": "#9d0208",
+      "terrainColor": "#000000"
+    },
+    "priority": 8,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "southern_plague_woods",
+    "name": "Southern Plague Woods",
+    "chineseName": "死疫腐林",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1,
+    "tempRangeC": {
+      "min": 24,
+      "max": 34
+    },
+    "bounds": {
+      "minX": 3000,
+      "maxX": 3800,
+      "minY": 200,
+      "maxY": 900
+    },
+    "lawAffinities": [
+      "gu_master",
+      "demonic_myriad_venom"
+    ],
+    "resourceTags": [
+      "plague_spore",
+      "festering_root",
+      "black_fungus"
+    ],
+    "palette": {
+      "primary": "#283618",
+      "accent": "#dda15e",
+      "terrainColor": "#132a13"
+    },
+    "priority": 5,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "bone_sea_coast",
+    "name": "Bone Sea Coast",
+    "chineseName": "白骨荒岸",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.2,
+    "tempRangeC": {
+      "min": 20,
+      "max": 30
+    },
+    "bounds": {
+      "minX": 0,
+      "maxX": 3500,
+      "minY": 0,
+      "maxY": 300
+    },
+    "lawAffinities": [
+      "demonic_blood_soul",
+      "natal_beast"
+    ],
+    "resourceTags": [
+      "whale_bone",
+      "black_pearl",
+      "drifting_wood",
+      "ghost_crab"
+    ],
+    "palette": {
+      "primary": "#343a40",
+      "accent": "#adb5bd",
+      "terrainColor": "#212529"
+    },
+    "priority": 4,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "spirit_wood_sea",
+    "name": "Spirit Wood Sea",
+    "chineseName": "青木灵海",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.4,
+    "tempRangeC": {
+      "min": 20,
+      "max": 28
+    },
+    "bounds": {
+      "minX": 3200,
+      "maxX": 4200,
+      "minY": 800,
+      "maxY": 1800
+    },
+    "lawAffinities": [
+      "element_qingdi_wood",
+      "natal_beast"
+    ],
+    "resourceTags": [
+      "thousand_year_wood",
+      "qingdi_sprout",
+      "vitality_sap"
+    ],
+    "palette": {
+      "primary": "#1b4332",
+      "accent": "#52b788",
+      "terrainColor": "#2d6a4f"
+    },
+    "priority": 4,
+    "walkDefault": "open"
+  },
+  {
+    "id": "mist_insect_valley",
+    "name": "Mist Insect Valley",
+    "chineseName": "瘴烟蛊谷",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.2,
+    "tempRangeC": {
+      "min": 25,
+      "max": 35
+    },
+    "bounds": {
+      "minX": 4000,
+      "maxX": 4800,
+      "minY": 600,
+      "maxY": 1600
+    },
+    "lawAffinities": [
+      "gu_master",
+      "demonic_myriad_venom"
+    ],
+    "resourceTags": [
+      "gu_larva",
+      "insect_shell",
+      "gu_food_herb",
+      "myriad_toxin"
+    ],
+    "palette": {
+      "primary": "#403d39",
+      "accent": "#eb5e28",
+      "terrainColor": "#252422"
+    },
+    "priority": 6,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "formation_barrens",
+    "name": "Formation Barrens",
+    "chineseName": "八卦荒墟",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.6,
+    "tempRangeC": {
+      "min": 15,
+      "max": 25
+    },
+    "bounds": {
+      "minX": 3200,
+      "maxX": 4000,
+      "minY": 1800,
+      "maxY": 2600
+    },
+    "lawAffinities": [
+      "righteous_formation_array"
+    ],
+    "resourceTags": [
+      "runic_stone",
+      "formation_plate",
+      "array_flag_silk"
+    ],
+    "palette": {
+      "primary": "#4a4e69",
+      "accent": "#9a8c98",
+      "terrainColor": "#22223b"
+    },
+    "priority": 5,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "sword_gorge",
+    "name": "Sword Gorge",
+    "chineseName": "万剑裂壑",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.7,
+    "tempRangeC": {
+      "min": 10,
+      "max": 20
+    },
+    "bounds": {
+      "minX": 3200,
+      "maxX": 3600,
+      "minY": 3000,
+      "maxY": 3500
+    },
+    "lawAffinities": [
+      "righteous_sword_heart"
+    ],
+    "resourceTags": [
+      "sword_intent_crystal",
+      "ancient_broken_blade",
+      "heavy_iron"
+    ],
+    "palette": {
+      "primary": "#2b2d42",
+      "accent": "#8d99ae",
+      "terrainColor": "#14213d"
+    },
+    "priority": 9,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "ore_teeth_range",
+    "name": "Ore Teeth Range",
+    "chineseName": "玄铁齿脉",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.2,
+    "tempRangeC": {
+      "min": 12,
+      "max": 24
+    },
+    "bounds": {
+      "minX": 3400,
+      "maxX": 4200,
+      "minY": 2400,
+      "maxY": 3200
+    },
+    "lawAffinities": [
+      "natal_artifact"
+    ],
+    "resourceTags": [
+      "mithril_ore",
+      "forge_fire_stone",
+      "star_iron"
+    ],
+    "palette": {
+      "primary": "#6c757d",
+      "accent": "#ced4da",
+      "terrainColor": "#495057"
+    },
+    "priority": 6,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "eastern_sea",
+    "name": "Eastern Sea",
+    "chineseName": "浩瀚东海",
+    "tier": 3,
+    "dangerTier": 3,
+    "qiDensityModifier": 1.3,
+    "tempRangeC": {
+      "min": 18,
+      "max": 28
+    },
+    "bounds": {
+      "minX": 3800,
+      "maxX": 5000,
+      "minY": 1200,
+      "maxY": 4000
+    },
+    "lawAffinities": [
+      "element_azure_water"
+    ],
+    "resourceTags": [
+      "ocean_pearl",
+      "deep_sea_coral",
+      "azure_essence",
+      "spirit_fish"
+    ],
+    "palette": {
+      "primary": "#0077b6",
+      "accent": "#90e0ef",
+      "terrainColor": "#03045e"
+    },
+    "priority": 4,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "frostmoon_sea",
+    "name": "Frostmoon Sea",
+    "chineseName": "霜月幽海",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.5,
+    "tempRangeC": {
+      "min": -10,
+      "max": 5
+    },
+    "bounds": {
+      "minX": 3800,
+      "maxX": 5000,
+      "minY": 4000,
+      "maxY": 5000
+    },
+    "lawAffinities": [
+      "element_azure_water",
+      "righteous_karmic_mirror"
+    ],
+    "resourceTags": [
+      "frost_whale_oil",
+      "moon_ice_crystal",
+      "polar_pearl"
+    ],
+    "palette": {
+      "primary": "#003049",
+      "accent": "#669bbc",
+      "terrainColor": "#001219"
+    },
+    "priority": 6,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "floating_wind_isles",
+    "name": "Floating Wind Isles",
+    "chineseName": "驭风浮灵岛",
+    "tier": 5,
+    "dangerTier": 5,
+    "qiDensityModifier": 1.9,
+    "tempRangeC": {
+      "min": 10,
+      "max": 20
+    },
+    "bounds": {
+      "minX": 4200,
+      "maxX": 5000,
+      "minY": 2200,
+      "maxY": 3200
+    },
+    "lawAffinities": [
+      "element_roc_wind"
+    ],
+    "resourceTags": [
+      "wind_feather",
+      "sky_jade",
+      "cyclone_core",
+      "flying_stone"
+    ],
+    "palette": {
+      "primary": "#48cae4",
+      "accent": "#ade8f4",
+      "terrainColor": "#0096c7"
+    },
+    "priority": 8,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "immortal_ruins_valley",
+    "name": "Immortal Ruins Valley",
+    "chineseName": "太虚陨仙谷",
+    "tier": 4,
+    "dangerTier": 4,
+    "qiDensityModifier": 1.7,
+    "tempRangeC": {
+      "min": 15,
+      "max": 25
+    },
+    "bounds": {
+      "minX": 200,
+      "maxX": 1000,
+      "minY": 500,
+      "maxY": 1500
+    },
+    "lawAffinities": [
+      "righteous_formation_array",
+      "natal_artifact"
+    ],
+    "resourceTags": [
+      "ancient_talisman",
+      "broken_immortal_mirror",
+      "dao_stone"
+    ],
+    "palette": {
+      "primary": "#582f0e",
+      "accent": "#e9c46a",
+      "terrainColor": "#264653"
+    },
+    "priority": 7,
+    "walkDefault": "restricted"
+  },
+  {
+    "id": "void_rift",
+    "name": "Void Rift",
+    "chineseName": "虚空裂隙",
+    "tier": 6,
+    "dangerTier": 6,
+    "qiDensityModifier": 2.5,
+    "tempRangeC": {
+      "min": -50,
+      "max": 100
+    },
+    "bounds": {
+      "minX": 0,
+      "maxX": 500,
+      "minY": 4500,
+      "maxY": 5000
+    },
+    "lawAffinities": [
+      "demonic_abyssal_pact",
+      "righteous_heavenly_merit"
+    ],
+    "resourceTags": [
+      "cosmic_shard",
+      "void_dust",
+      "primordial_essence"
+    ],
+    "palette": {
+      "primary": "#10002b",
+      "accent": "#ff007f",
+      "terrainColor": "#000000"
+    },
+    "priority": 9,
+    "walkDefault": "blocked"
+  }
+]

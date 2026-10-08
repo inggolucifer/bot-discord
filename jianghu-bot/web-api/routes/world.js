@@ -103,6 +103,35 @@ function resolveSettlementCoords(settlementName) {
     return { x: 2455, y: 2485, regionSlug: 'central_plains' };
 }
 
+// Idempotency cache untuk POST /zone/step-move (B-04 Fix)
+const movementResponseCache = new Map();
+const CACHE_TTL_MS = 60000;
+
+function getCachedMovementResponse(userId, requestId) {
+    if (!requestId) return null;
+    const key = `${userId}:${requestId}`;
+    const entry = movementResponseCache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+        movementResponseCache.delete(key);
+        return null;
+    }
+    return entry.data;
+}
+
+function cacheMovementResponse(userId, requestId, data) {
+    if (!requestId) return;
+    const key = `${userId}:${requestId}`;
+    movementResponseCache.set(key, { data, timestamp: Date.now() });
+    if (movementResponseCache.size > 2000) {
+        const now = Date.now();
+        for (const [k, v] of movementResponseCache.entries()) {
+            if (now - v.timestamp > CACHE_TTL_MS) {
+                movementResponseCache.delete(k);
+            }
+        }
+    }
+}
 
 function loadZoneConfig(zoneId) {
     if (!zoneId || typeof zoneId !== 'string' || !/^[a-z0-9_-]+$/i.test(zoneId)) {
@@ -1748,48 +1777,19 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             player.gridPosition.tileY = 2485;
         }
 
-        // Resolusi pergerakan lazy timestamp
+        // Resolusi status pergerakan (Read-Only preview, tanpa mutasi database pada GET - B-10 Fix)
         let moveStatus = { resolved: false, moving: false };
         let encounterResult = null;
         try {
-            moveStatus = resolvePlayerGridMove(player, zoneConfig);
-
-            if (isMacro) {
-                sparseFogManager.revealFogAtPosition(player, player.gridPosition.tileX, player.gridPosition.tileY, 5);
-            } else {
-                let exploredEntry = Array.isArray(player.exploredTiles)
-                    ? player.exploredTiles.find(e => e && e.zoneId === zoneId)
-                    : null;
-                if (!exploredEntry || !Array.isArray(exploredEntry.tileIndexes) || exploredEntry.tileIndexes.length === 0) {
-                    revealTilesForPlayer(
-                        player,
-                        zoneId,
-                        player.gridPosition.tileX || 0,
-                        player.gridPosition.tileY || 0,
-                        gridConfig.DEFAULT_REVEAL_RADIUS || 3,
-                        zoneConfig.gridWidth || 30,
-                        zoneConfig.gridHeight || 20
-                    );
-                }
-            }
-
-            if (typeof player.save === 'function') {
-                await player.save();
+            if (player.gridMove && player.gridMove.isMoving) {
+                moveStatus = { resolved: false, moving: true };
             }
         } catch (stateErr) {
-            console.warn('[API-ZONE] State update warning (non-fatal):', stateErr.message);
+            console.warn('[API-ZONE] State preview warning (non-fatal):', stateErr.message);
         }
 
         const px = player.gridPosition.tileX;
         const py = player.gridPosition.tileY;
-
-        // Auto-resolusi konstruksi bangunan yang sudah selesai saat peta dimuat
-        try {
-
-            await landService.resolveZoneConstruction(zoneId, player.guildId);
-        } catch (resolveErr) {
-            console.warn('[API-ZONE] Auto-resolve construction warning:', resolveErr.message);
-        }
 
         let visibleTiles = [];
         let viewport = null;
@@ -1808,7 +1808,6 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             }
 
             // Overlay dengan POI / plot custom yang ada di MongoDB
-
             const customDbTiles = await ZoneTile.find({
                 zoneId: zoneId,
                 tileX: { $gte: viewport.bounds.minX, $lte: viewport.bounds.maxX },
@@ -1827,7 +1826,6 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
             // Cek Petak Monster yang Dikalahkan (DefeatedMonsterTile)
             let defeatedKeys = new Set();
             try {
-
                 const defeatedTiles = await DefeatedMonsterTile.find({
                     guildId: player.guildId || 'global',
                     zoneId,
@@ -1838,36 +1836,7 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 console.warn('[WORLD-TILES] Error reading DefeatedMonsterTile:', dErr.message);
             }
 
-            // Injeksi & Reset Monster Uji Coba: Serigala Roh Darah di petak (2452, 2481)
-            const monsterTileKey = '2452,2481';
-            if (proceduralTileMap.has(monsterTileKey)) {
-                const currentTile = proceduralTileMap.get(monsterTileKey);
-                if (!defeatedKeys.has(monsterTileKey)) {
-                    proceduralTileMap.set(monsterTileKey, {
-                        ...currentTile,
-                        tileType: 'poi',
-                        label: 'Sarang Serigala Roh Darah',
-                        spawnedMonster: {
-                            key: 'wolf_azure',
-                            name: 'Serigala Roh Darah',
-                            tier: 1,
-                            hp: 150,
-                            maxHp: 150,
-                            atk: 20,
-                            def: 8,
-                            spd: 10,
-                            imageUrl: null
-                        }
-                    });
-                } else {
-                    const cleanedTile = { ...currentTile };
-                    delete cleanedTile.spawnedMonster;
-                    cleanedTile.label = 'Bekas Sarang Serigala (Kosong)';
-                    proceduralTileMap.set(monsterTileKey, cleanedTile);
-                }
-            }
-
-            // Bersihkan monster dari petak lain yang sedang dalam masa respawn
+            // Bersihkan monster dari petak yang sedang dalam masa respawn (B-10: Hapus hardcoded wolf)
             for (const dKey of defeatedKeys) {
                 if (proceduralTileMap.has(dKey)) {
                     const tile = proceduralTileMap.get(dKey);
@@ -1983,12 +1952,29 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
 // Mendukung pergerakan multi-tile kontinu, stamina drain, no teleportation
 // ==========================================
 router.post('/zone/step-move', authenticateToken, async (req, res) => {
+    let releaseLock = null;
     try {
         const userId = req.user.userId;
-        const { waypoints, zoneId } = req.body;
+        const { waypoints, zoneId, requestId } = req.body;
 
         if (!Array.isArray(waypoints) || waypoints.length === 0) {
             return res.status(400).json({ error: 'Rute langkah (waypoints) tidak valid.' });
+        }
+
+        // B-04 Fix: Idempotency check jika requestId / idempotencyKey disediakan
+        const effectiveReqId = requestId || req.headers['x-request-id'] || req.body.idempotencyKey;
+        if (effectiveReqId) {
+            const cached = getCachedMovementResponse(userId, effectiveReqId);
+            if (cached) {
+                return res.json(cached);
+            }
+        }
+
+        // B-04 Fix: Concurrency Lock per player mencegah double-spend / parallel request
+        const lockKey = `move:${userId}`;
+        releaseLock = await LockManager.acquire(lockKey, 5000);
+        if (!releaseLock) {
+            return res.status(429).json({ error: 'Pergerakan karakter sedang diproses, mohon tunggu sejenak.' });
         }
 
         const player = await Player.findOne({ discordId: userId })
@@ -1998,17 +1984,12 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
 
         const activeZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
 
-
         let zoneConfig;
         try {
             zoneConfig = loadZoneConfig(activeZoneId);
         } catch (e) {
             return res.status(e.statusCode || 500).json({ error: e.message || 'Gagal memuat zona' });
         }
-
-
-
-
 
         let currentX = player.gridPosition?.tileX ?? 2455;
         let currentY = player.gridPosition?.tileY ?? 2485;
@@ -2017,18 +1998,11 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             currentY = 2485;
         }
 
-        let totalStaminaCost = 0;
-        let stepsTaken = 0;
-        let stoppedEarly = false;
-        let stopReason = null;
-        let encounterResult = null;
-
         // Resolusi Mount & Efek Efisiensi Stamina
         let mountDoc = null;
         if (player.equipment && player.equipment.mount) {
             const mountInv = player.inventory?.id ? player.inventory.id(player.equipment.mount) : (Array.isArray(player.inventory) ? player.inventory.find(i => i._id && i._id.toString() === player.equipment.mount.toString()) : null);
             if (mountInv && mountInv.itemId) {
-
                 mountDoc = typeof mountInv.itemId === 'object' && mountInv.itemId.name ? mountInv.itemId : await Item.findById(mountInv.itemId);
             }
         }
@@ -2042,42 +2016,126 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: condCheck.reason });
         }
 
-        for (const wp of waypoints) {
+        // B-05 Fix: Normalisasi stamina null/undefined/NaN, tidak boleh pernah dilewati
+        const maxStaminaVal = Math.floor(player.maxStamina || getMaxStamina(player) || 100);
+        if (player.currentStamina === null || player.currentStamina === undefined || isNaN(player.currentStamina)) {
+            player.currentStamina = maxStaminaVal;
+        }
+
+        // B-02 & B-06 Fix: Validasi urutan waypoints ketat, hapus toleransi lompat <= 3
+        let cleanedWaypoints = [...waypoints];
+        // Jika titik pertama sama persis dengan posisi awal karakter, potong titik tersebut
+        if (cleanedWaypoints.length > 0) {
+            const firstX = parseInt(cleanedWaypoints[0].x);
+            const firstY = parseInt(cleanedWaypoints[0].y);
+            if (firstX === currentX && firstY === currentY) {
+                cleanedWaypoints.shift();
+            }
+        }
+
+        if (cleanedWaypoints.length === 0) {
+            return res.status(400).json({ error: 'Rute langkah (waypoints) tidak memuat perpindahan baru.' });
+        }
+
+        // Validasi kontinuitas dan adjacency: Setiap langkah wajib berjarak Chebyshev 1
+        let checkX = currentX;
+        let checkY = currentY;
+        for (let i = 0; i < cleanedWaypoints.length; i++) {
+            const wp = cleanedWaypoints[i];
             const targetX = parseInt(wp.x);
             const targetY = parseInt(wp.y);
 
-            if (isNaN(targetX) || isNaN(targetY)) continue;
+            if (isNaN(targetX) || isNaN(targetY)) {
+                return res.status(400).json({ error: `Waypoint [${i}] memiliki koordinat tidak valid.` });
+            }
+
+            const stepDist = Math.max(Math.abs(targetX - checkX), Math.abs(targetY - checkY));
+            if (stepDist !== 1) {
+                return res.status(409).json({
+                    error: 'Langkah tidak berurutan atau tidak sinkron dengan server!',
+                    code: 'POSITION_DESYNC',
+                    authoritativePosition: { tileX: currentX, tileY: currentY },
+                    waypointIndex: i,
+                    attempted: { x: targetX, y: targetY },
+                    expectedAdjacentTo: { x: checkX, y: checkY }
+                });
+            }
+            checkX = targetX;
+            checkY = targetY;
+        }
+
+        // B-03 Fix: Prefetch database ZoneTile untuk getEffectiveTile (prosedural + overlay DB)
+        const allWpXs = cleanedWaypoints.map(w => parseInt(w.x));
+        const allWpYs = cleanedWaypoints.map(w => parseInt(w.y));
+        const minWpX = Math.min(currentX, ...allWpXs) - 1;
+        const maxWpX = Math.max(currentX, ...allWpXs) + 1;
+        const minWpY = Math.min(currentY, ...allWpYs) - 1;
+        const maxWpY = Math.max(currentY, ...allWpYs) + 1;
+
+        const dbTiles = await ZoneTile.find({
+            zoneId: activeZoneId,
+            tileX: { $gte: minWpX, $lte: maxWpX },
+            tileY: { $gte: minWpY, $lte: maxWpY }
+        }).lean();
+
+        const dbTileMap = new Map();
+        for (const dt of dbTiles) {
+            dbTileMap.set(`${dt.tileX},${dt.tileY}`, dt);
+        }
+
+        function getEffectiveTile(x, y) {
+            const baseTile = proceduralWorldEngine.getTileAt(x, y);
+            const key = `${x},${y}`;
+            if (!dbTileMap.has(key)) return baseTile;
+            const custom = dbTileMap.get(key);
+            const merged = { ...baseTile, ...custom };
+            if (custom.isSolid !== undefined) merged.isSolid = !!custom.isSolid;
+            if (custom.tileType === 'wall' || custom.tileType === 'hazard') merged.isSolid = true;
+            return merged;
+        }
+
+        let totalStaminaCost = 0;
+        let stepsTaken = 0;
+        let stoppedEarly = false;
+        let stopReason = null;
+        let encounterResult = null;
+
+        // Loop eksekusi pergerakan langkah demi langkah
+        for (const wp of cleanedWaypoints) {
+            const targetX = parseInt(wp.x);
+            const targetY = parseInt(wp.y);
+
             if (targetX < 0 || targetX >= zoneConfig.gridWidth || targetY < 0 || targetY >= zoneConfig.gridHeight) {
                 stoppedEarly = true;
                 stopReason = 'Mencapai batas wilayah benua!';
                 break;
             }
 
-            // Validasi langkah bertetangga (jarak Chebyshev = 1)
             const dx = Math.abs(targetX - currentX);
             const dy = Math.abs(targetY - currentY);
-            if (Math.max(dx, dy) > 1) {
-                // Jika langkah pertama sedikit tidak sinkron dengan DB (toleransi <= 3 tile), sinkronkan
-                if (stepsTaken === 0 && Math.max(dx, dy) <= 3) {
-                    currentX = targetX;
-                    currentY = targetY;
-                    stepsTaken++;
-                    continue;
+
+            // B-07 Fix: Larang diagonal memotong sudut (kedua ortogonal tidak boleh solid)
+            if (dx === 1 && dy === 1 && !isFlyingMount) {
+                const ortho1 = getEffectiveTile(currentX, targetY);
+                const ortho2 = getEffectiveTile(targetX, currentY);
+                if (ortho1.isSolid || ortho2.isSolid) {
+                    stoppedEarly = true;
+                    stopReason = 'Jalur terhalang oleh sudut rintangan padat (Corner obstruction)!';
+                    break;
                 }
-                continue;
             }
 
-            // Dapatkan info medan tile
-            const tileInfo = proceduralWorldEngine.getTileAt(targetX, targetY);
+            // Dapatkan info medan tile efektif (B-03 Fix)
+            const tileInfo = getEffectiveTile(targetX, targetY);
 
-            // Obstruksi batas dunia / hazard mutlak (B5 fix)
+            // Obstruksi batas dunia / hazard mutlak
             if (tileInfo.tileType === 'hazard') {
                 stoppedEarly = true;
                 stopReason = `Jalur terhalang oleh ${tileInfo.label || 'Batas Benua / Jurang Tak Berdasar'}!`;
                 break;
             }
 
-            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal (B5 fix)
+            // Obstruksi lautan atau tebing batu tanpa pedang terbang / kapal
             if (tileInfo.isSolid) {
                 if (tileInfo.terrainType === 'ocean') {
                     if (!isWaterMount && !isFlyingMount) {
@@ -2094,10 +2152,8 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
                 }
             }
 
-            // Konsumsi Stamina berdasarkan Terrain dan region
+            // Konsumsi Stamina berdasarkan Terrain dan mount
             let stepCost = tileInfo.staminaCost || 1;
-            
-            // Efek meringankan jika memakai mount
             let mountDiscount = 0;
             if (mountDoc) {
                 if (typeof mountDoc.staminaReduction === 'number' && mountDoc.staminaReduction > 0) {
@@ -2117,16 +2173,16 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
                 stepCost = Math.max(0.2, Number((stepCost - mountDiscount).toFixed(2)));
             }
 
-            if (player.currentStamina !== null && player.currentStamina !== undefined && player.currentStamina < stepCost) {
+            // Validasi kecukupan stamina
+            if (player.currentStamina < stepCost) {
                 stoppedEarly = true;
                 stopReason = 'Tenaga fisikmu (Stamina) telah terkuras habis! Perlu beristirahat di penginapan.';
                 break;
             }
 
-            if (player.currentStamina !== null && player.currentStamina !== undefined) {
-                player.currentStamina = Math.max(0, player.currentStamina - stepCost);
-                totalStaminaCost += stepCost;
-            }
+            // Potong stamina
+            player.currentStamina = Math.max(0, Number((player.currentStamina - stepCost).toFixed(2)));
+            totalStaminaCost = Number((totalStaminaCost + stepCost).toFixed(2));
 
             // Kerusakan racun saat melangkah
             if (condCheck.stepDamage > 0) {
@@ -2141,11 +2197,14 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             // Ungkap kabut di sekitar langkah baru
             sparseFogManager.revealFogAtPosition(player, currentX, currentY, 4);
 
-            // Peluang Ambush Encounter (Hanya di Zona Bahaya Liar / Hunting Zone)
+            // B-01 & B-09 Fix: Single-roll encounter per langkah dengan tier otoritatif
+            const encounterRoll = Math.random();
             const ambushRate = typeof tileInfo.ambushRiskRate === 'number' ? tileInfo.ambushRiskRate : 0;
             if (ambushRate > 0 && encounterRoll < ambushRate) {
                 try {
-                    encounterResult = checkAndRunGridEncounter(player, zoneConfig, tileInfo.terrainType === 'swamp');
+                    const isHazard = tileInfo.terrainType === 'swamp' || tileInfo.terrainType === 'demonic_swamp' || tileInfo.tileType === 'hazard';
+                    const dangerTier = tileInfo.dangerTier || tileInfo.dangerTierBase || 2;
+                    encounterResult = checkAndRunGridEncounter(player, { ambientDangerTier: dangerTier }, isHazard, 0);
                     if (encounterResult && (encounterResult.encountered || encounterResult.triggered)) {
                         stoppedEarly = true;
                         stopReason = `Disergap oleh ${encounterResult.enemyName || 'Lawan Tangguh'} di tengah perjalanan!`;
@@ -2157,7 +2216,7 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
             }
         }
 
-        // Simpan posisi akhir otoritatif pemain (B1 & B2 fix)
+        // B-01 Fix: Simpan posisi terakhir yang valid walau stoppedEarly
         await setPlayerAuthoritativePosition(player, {
             zoneId: activeZoneId,
             tileX: currentX,
@@ -2179,29 +2238,40 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
                         discoveredLocations: player.discoveredLocations,
                         gridMove: player.gridMove,
                         exploredChunks: player.exploredChunks,
-                        ...(player.currentStamina !== null && player.currentStamina !== undefined ? { currentStamina: player.currentStamina } : {}),
+                        currentStamina: player.currentStamina,
                         ...(player.currentHp !== null && player.currentHp !== undefined ? { currentHp: player.currentHp } : {})
                     }
                 }
             );
         }
 
-        return res.json({
+        const responsePayload = {
             success: true,
             stepsTaken,
-            totalStaminaCost,
+            totalStaminaCost: Math.round(totalStaminaCost * 100) / 100,
             currentStamina: Math.floor(player.currentStamina),
             maxStamina: Math.floor(player.maxStamina || getMaxStamina(player)),
             arrivedPosition: { tileX: currentX, tileY: currentY },
+            authoritativePosition: { tileX: currentX, tileY: currentY },
             currentLocation: player.currentLocation,
             stoppedEarly,
             stopReason,
             encounter: encounterResult,
             exploredChunks: player.exploredChunks || []
-        });
+        };
+
+        if (effectiveReqId) {
+            cacheMovementResponse(userId, effectiveReqId, responsePayload);
+        }
+
+        return res.json(responsePayload);
     } catch (error) {
         console.error('[API-STEP-MOVE] Error:', error);
         return res.status(500).json({ error: 'Gagal melakukan perjalanan: ' + error.message });
+    } finally {
+        if (typeof releaseLock === 'function') {
+            releaseLock();
+        }
     }
 });
 
@@ -3328,53 +3398,8 @@ router.post('/zone/upgrade-property-facility', authenticateToken, async (req, re
 
 router.get('/macro-map', authenticateToken, async (req, res) => {
     try {
-        const { REGIONS } = require('../../utils/worldRegionEngine');
-
-        const landmarks = [
-            // Pemukiman & Kota
-            { x: 2455, y: 2485, name: 'Desa Xingcun', type: 'village', region: 'central_plains', label: 'Desa Pemula' },
-            { x: 2680, y: 2520, name: 'Kota Fengyang', type: 'city', region: 'central_plains', label: 'Kota Dagang Megah' },
-            { x: 2620, y: 2500, name: 'Kota Luoyang Kecil', type: 'city', region: 'central_plains', label: 'Kota Benteng Pertahanan' },
-            { x: 2420, y: 2470, name: 'Desa Qingshui', type: 'village', region: 'central_plains', label: 'Tepian Sungai Jernih' },
-            { x: 2530, y: 2460, name: 'Desa Tiedao', type: 'village', region: 'central_plains', label: 'Desa Pandai Besi' },
-
-            // 3 Celah Gunung Resmi (Passes Penghubung Benua)
-            { x: 2200, y: 3350, name: 'North Pass', type: 'pass', region: 'azure_mountain_range', label: 'Celah Gerbang Utara' },
-            { x: 2600, y: 3350, name: 'Mist Pass', type: 'pass', region: 'azure_mountain_range', label: 'Celah Lembah Kabut' },
-            { x: 3100, y: 3350, name: 'Sword Gorge Pass', type: 'pass', region: 'azure_mountain_range', label: 'Ngarai Tebasan Pedang' },
-
-            // Pelabuhan & Kepulauan
-            { x: 4200, y: 2700, name: 'Dermaga Donghai', type: 'port', region: 'eastern_sea', label: 'Dermaga Penyeberangan Feri' },
-            { x: 4350, y: 2750, name: 'Pulau Penyu Raksasa', type: 'island', region: 'eastern_sea', label: 'Pulau Kura-Kura Purba' },
-
-            // Wilayah Khusus
-            { x: 2120, y: 4180, name: 'Pos Tundra Salju', type: 'settlement', region: 'northern_desolate', label: 'Pos Salju Abadi' },
-            { x: 1100, y: 2650, name: 'Oase Pasir Suci', type: 'settlement', region: 'western_sacred_desert', label: 'Oase Suci Padang Pasir' },
-            { x: 2350, y: 2420, name: 'Lembah Kabut Merah', type: 'danger', region: 'mist_insect_valley', label: 'Sarang Racun Miasma' },
-            { x: 2500, y: 900, name: 'Benteng Gerbang Iblis', type: 'danger', region: 'southern_demon_domain', label: 'Perbatasan Suku Iblis' }
-        ];
-
-        // Rantai Pegunungan Azure Solid melintang sebagai struktur geografi benua
-        const barrierRange = {
-            name: 'Azure Mountain Range Barrier',
-            bounds: { minX: 1500, maxX: 3600, minY: 3100, maxY: 3600 },
-            isSolid: true
-        };
-
-        res.json({
-            success: true,
-            worldSize: 5000,
-            landmarks,
-            barrierRange,
-            regions: REGIONS.map(r => ({
-                id: r.id,
-                name: r.name,
-                dangerTier: r.dangerTier,
-                bounds: r.bounds,
-                qiDensityModifier: r.qiDensityModifier,
-                lawAffinities: r.lawAffinities
-            }))
-        });
+        const worldData = require('../../utils/worldData');
+        return res.json(worldData.getMacroMapPayload());
     } catch (error) {
         console.error('[API-MACRO-MAP] Error:', error);
         res.status(500).json({ error: 'Gagal memuat peta makro' });
