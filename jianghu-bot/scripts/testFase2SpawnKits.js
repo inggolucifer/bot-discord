@@ -11,9 +11,9 @@ const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
 async function testFase2() {
   console.log('--- [TEST FASE 2] Memulai Verifikasi 7 Origin Spawns & Starter Kits ---');
 
-  const originKeys = Object.keys(ORIGIN_SPAWNS);
-  assert.strictEqual(originKeys.length, 7, 'Harus ada tepat 7 titik asal kelahiran.');
-  console.log(`1. Jumlah Origin Spawns terdaftar: ${originKeys.length} titik.`);
+  const uniqueSpawns = [...new Set(Object.values(ORIGIN_SPAWNS))];
+  assert.strictEqual(uniqueSpawns.length, 8, 'Harus ada tepat 8 titik asal kelahiran kanonikal.');
+  console.log(`1. Jumlah Origin Spawns kanonikal terdaftar: ${uniqueSpawns.length} titik.`);
 
   for (const [key, origin] of Object.entries(ORIGIN_SPAWNS)) {
     assert.ok(origin.id, `Origin ${key} harus memiliki id`);

@@ -209,7 +209,7 @@ function getMacroMapPayload() {
 
   const primaryBarrier = BARRIERS_DATA.find(b => b.id === 'azure_wall') || {
     name: 'Azure Mountain Range Barrier',
-    bounds: { minX: 1450, maxX: 3800, minY: 3100, maxY: 3600 },
+    bounds: { minX: 0, maxX: 3900, minY: 3100, maxY: 3600 },
     isSolid: true
   };
 

@@ -27,7 +27,7 @@ import PropertyInteriorView from './PropertyInteriorView';
 import TaleOfImmortalCanvas, { TileData } from './TaleOfImmortalCanvas';
 import SettlementPanoramaView from './SettlementPanoramaView';
 import ScenicCourtyardView from './ScenicCourtyardView';
-import WorldScrollMapView from './WorldScrollMapView';
+import WorldCanvas from './WorldCanvas';
 import BattleArena from '../battle/BattleArena';
 import { findAStarPath, Point } from '@/hooks/useAStarGridPath';
 import { useAuthStore, useUIStore } from '@/lib/store';
@@ -43,6 +43,8 @@ import LandscapeOrientationPrompt from '../ui/LandscapeOrientationPrompt';
 import NpcPanel from '@/app/world/NpcPanel';
 import MapSearchModal from './modals/MapSearchModal';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
+import RegionCalligraphyBanner from './RegionCalligraphyBanner';
+import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 
 interface ZoneGridViewProps {
   zoneId: string;
@@ -140,6 +142,13 @@ export default function ZoneGridView({
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
   const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
+  const [activeRegionBanner, setActiveRegionBanner] = useState<{
+    regionName: string;
+    chineseName?: string;
+    dangerTier?: number;
+    description?: string;
+  } | null>(null);
+  const lastRegionRef = useRef<string | null>(null);
 
   useEffect(() => {
     onBattleActiveChange?.(Boolean(activeBattleId));
@@ -722,18 +731,31 @@ export default function ZoneGridView({
   // Meramu / Panen Alam (Biaya 5 Stamina)
   const handleForage = async () => {
     try {
-      const res = await api.post('/grid/profession/forage', { zoneId: activeZoneId });
-      if (res.data.ok) {
+      const targetX = selectedTile?.tileX ?? playerGrid?.position?.tileX;
+      const targetY = selectedTile?.tileY ?? playerGrid?.position?.tileY;
+      let res;
+      try {
+        res = await api.post('/world/zone/gather', { tileX: targetX, tileY: targetY });
+      } catch (errGather: any) {
+        if (errGather.response?.status === 404 || !errGather.response) {
+          res = await api.post('/grid/profession/forage', { zoneId: activeZoneId });
+        } else {
+          throw errGather;
+        }
+      }
+      if (res.data.ok || res.data.success) {
         sound.playDiscovery();
         const cost = res.data.staminaCost ?? 5;
-        showMessage(`🌿 Berhasil memanen ${res.data.quantity}x ${res.data.itemName}! (-${cost} Stamina)`);
-        addFloatingNotice(`🌿 +${res.data.quantity} ${res.data.itemName} (-${cost} Stamina)`, 'emerald');
+        const itemName = res.data.itemName || 'Herba Roh';
+        const qty = res.data.quantity ?? 1;
+        showMessage(`🌿 Berhasil memanen ${qty}x ${itemName}! (-${cost} Stamina)`);
+        addFloatingNotice(`🌿 +${qty} ${itemName} (-${cost} Stamina)`, 'emerald');
         fetchZoneData();
       } else {
         showMessage(`❌ ${res.data.error}`);
       }
     } catch (err: any) {
-      showMessage(err.response?.data?.error || 'Gagal meramu');
+      showMessage(err.response?.data?.error || 'Gagal memanen sumber daya');
     }
   };
 
@@ -826,6 +848,27 @@ export default function ZoneGridView({
     return tiles.find(t => t.tileX === px && t.tileY === py);
   }, [tiles, px, py]);
   const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
+
+  // Deteksi kedatangan ke wilayah baru (Region Transition Calligraphy Banner)
+  useEffect(() => {
+    if (!currentCharacterTile?.regionId || !isInitialLoadDone) return;
+    const regionId = currentCharacterTile.regionId;
+    if (!lastRegionRef.current || lastRegionRef.current !== regionId) {
+      const meta = CANONICAL_REGIONS.find(
+        r => r.regionSlug === regionId || r.displayName.toLowerCase() === regionId.toLowerCase()
+      );
+      if (meta) {
+        setActiveRegionBanner({
+          regionName: meta.displayName,
+          chineseName: meta.chineseName,
+          dangerTier: meta.dangerTier,
+          description: meta.description
+        });
+        sound.playGuzheng(440, 0.4);
+      }
+      lastRegionRef.current = regionId;
+    }
+  }, [currentCharacterTile?.regionId, isInitialLoadDone]);
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#080b11] select-none flex flex-col">
@@ -1041,10 +1084,30 @@ export default function ZoneGridView({
       </div>
 
       {showMacroMap && (
-        <WorldScrollMapView
-          playerPos={{ x: px, y: py }}
-          onClose={() => setShowMacroMap(false)}
-        />
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex flex-col p-2 sm:p-4 animate-in fade-in">
+          <div className="flex justify-between items-center mb-2 px-2">
+            <h3 className="font-serif font-bold text-amber-200 text-sm">Peta Makro Benua Tianyuan (5000×5000)</h3>
+            <button
+              onClick={() => setShowMacroMap(false)}
+              className="px-3 py-1 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-lg text-xs font-semibold"
+            >
+              ✕ Tutup
+            </button>
+          </div>
+          <div className="flex-1 w-full h-full rounded-xl overflow-hidden border border-amber-600/50">
+            <WorldCanvas
+              mode="macro"
+              tiles={tiles}
+              playerPos={{ x: px, y: py }}
+              onSelectRegion={(reg, cx, cy) => {
+                if (cx !== undefined && cy !== undefined) {
+                  setSearchFocusTile({ x: cx, y: cy });
+                }
+                setShowMacroMap(false);
+              }}
+            />
+          </div>
+        </div>
       )}
 
       {/* Bottom HUD: Action Bar, Navigasi & Inspektur (Disembunyikan jika sedang bertarung) */}
@@ -1328,6 +1391,18 @@ export default function ZoneGridView({
           selectedPos={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
           onSelectLocation={handleSelectSearchResult}
           onClose={() => setIsSearchModalOpen(false)}
+        />
+      )}
+
+      {/* Banner Kaligrafi Transisi Wilayah / Region Arrival */}
+      {activeRegionBanner && (
+        <RegionCalligraphyBanner
+          key={activeRegionBanner.regionName}
+          regionName={activeRegionBanner.regionName}
+          chineseName={activeRegionBanner.chineseName}
+          dangerTier={activeRegionBanner.dangerTier}
+          description={activeRegionBanner.description}
+          onDismiss={() => setActiveRegionBanner(null)}
         />
       )}
       </div>

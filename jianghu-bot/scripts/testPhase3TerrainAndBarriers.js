@@ -62,11 +62,11 @@ runTest('Kontinuitas Tembok Azure: Setiap petak melintang adalah Solid kecuali d
 });
 
 // -------------------------------------------------------------
-// Test 2: Seluruh 5 Pass Resmi Dapat Dilalui Jalan Kaki
+// Test 2: Seluruh 6 Pass Resmi Dapat Dilalui Jalan Kaki
 // -------------------------------------------------------------
-runTest('Seluruh 5 Pass Resmi Dapat Dilalui Jalan Kaki (isSolid === false & tileType walkable/settlement)', () => {
+runTest('Seluruh 6 Pass Resmi Dapat Dilalui Jalan Kaki (isSolid === false & tileType walkable/settlement)', () => {
   const passes = worldData.getPasses();
-  assert.strictEqual(passes.length, 5, `Expected 5 passes, got ${passes.length}`);
+  assert.strictEqual(passes.length, 6, `Expected 6 passes, got ${passes.length}`);
 
   for (const p of passes) {
     const tile = pwe.getTileAt(p.x, p.y);

@@ -63,5 +63,18 @@
     "isSolid": false,
     "label": "Jembatan Rantai Kuno",
     "description": "Jembatan rantai besi raksasa yang menggantung di atas jurang neraka, menghubungkan benteng perbatasan dengan tanah selatan."
+  },
+  {
+    "id": "caravan_gap",
+    "name": "Celah Kafilah Gurun Barat",
+    "chineseName": "西漠铁门关",
+    "barrierId": "azure_wall",
+    "x": 750,
+    "y": 3350,
+    "width": 7,
+    "tier": 3,
+    "isSolid": false,
+    "label": "Celah Kafilah Barat",
+    "description": "Celah sempit berpasir yang dijaga oleh pos karavan kekaisaran, satu-satunya lintasan jalan kaki menembus tebing pembatas barat menuju dataran tinggi utara."
   }
 ]

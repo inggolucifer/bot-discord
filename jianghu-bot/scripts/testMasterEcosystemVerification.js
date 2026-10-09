@@ -64,26 +64,27 @@ async function testMasterEcosystem() {
 
   await setPlayerAuthoritativePosition(mockPlayer, {
     zoneId: 'tianyuan_world_map',
-    tileX: 2500,
-    tileY: 2500
+    tileX: 2350,
+    tileY: 2900
   }, { save: false });
 
-  assert.strictEqual(mockPlayer.gridPosition.tileX, 2500);
-  assert.strictEqual(mockPlayer.gridPosition.tileY, 2500);
+  assert.strictEqual(mockPlayer.gridPosition.tileX, 2350);
+  assert.strictEqual(mockPlayer.gridPosition.tileY, 2900);
   assert.strictEqual(mockPlayer.currentLocation.settlementName, 'XiTong City');
   assert.strictEqual(mockPlayer.currentLocation.regionSlug, 'central_plains');
   console.log('  ✓ Sinkronisasi Atomik setPlayerAuthoritativePosition lulus.');
 
-  // --- 2. VERIFIKASI FASE 2: 7 Titik Kelahiran & Starter Kits ---
-  console.log('\n[FASE 2] Menguji 7 Titik Kelahiran & Starter Kits:');
+  // --- 2. VERIFIKASI FASE 2: 8 Titik Kelahiran & Starter Kits ---
+  console.log('\n[FASE 2] Menguji 8 Titik Kelahiran & Starter Kits:');
   const spawns = Object.values(ORIGIN_SPAWNS);
-  assert.strictEqual(spawns.length, 7);
-  for (const s of spawns) {
+  const uniqueSpawns = [...new Set(spawns)];
+  assert.strictEqual(uniqueSpawns.length, 8);
+  for (const s of uniqueSpawns) {
     const tile = proceduralWorldEngine.getTileAt(s.spawnCoords.tileX, s.spawnCoords.tileY);
     assert.strictEqual(tile.isSolid, false, `Spawn ${s.name} tidak boleh terhalang tebing`);
     assert.ok(s.starterKit.copper >= 0);
   }
-  console.log('  ✓ Semua 7 Titik Kelahiran valid, non-solid, dan memiliki starter kit lengkap.');
+  console.log('  ✓ Semua 8 Titik Kelahiran valid, non-solid, dan memiliki starter kit lengkap.');
 
   // --- 3. VERIFIKASI FASE 3 & 4: Resource Profiles & Law Drops ---
   console.log('\n[FASE 3 & 4] Menguji Profil Sumber Daya Alam & Tag 20 Law Semesta:');

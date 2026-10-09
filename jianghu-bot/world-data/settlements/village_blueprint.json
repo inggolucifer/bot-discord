@@ -1,0 +1,104 @@
+{
+  "blueprintType": "village",
+  "backdropId": "backdrop_misty_bamboo_village",
+  "palette": "ink_cyan",
+  "skyColor": "#0a131c",
+  "groundColor": "#141c22",
+  "description": "Desa pedesaan tradisional dengan pondok beratap jerami, rumpun bambu, dan jalan setapak batu berlumut.",
+  "layers": [
+    {
+      "layer": "far",
+      "speed": 0.2,
+      "elements": ["distant_karst_silhouette", "drifting_ink_clouds", "misty_hills"]
+    },
+    {
+      "layer": "mid",
+      "speed": 0.5,
+      "elements": ["bamboo_grove", "cascading_stream", "thatched_roof_silhouettes", "watermill"]
+    },
+    {
+      "layer": "ground",
+      "speed": 1.0,
+      "elements": ["cobblestone_path", "wooden_fences", "paper_lanterns", "foot_mist"]
+    }
+  ],
+  "buildings": [
+    {
+      "id": "village_inn",
+      "name": "Penginapan Bunga Aprikot",
+      "chineseName": "杏花客栈",
+      "bannerText": "客栈 · 杏花居",
+      "desc": "Pondok penginapan kayu sederhana tempat pengembara beristirahat dan memulihkan stamina.",
+      "type": "inn",
+      "icon": "BedDouble",
+      "scale": 0.95,
+      "xPercent": 15,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["rest", "gossip", "room_rental"]
+    },
+    {
+      "id": "tavern",
+      "name": "Kedai Teh & Arak Bambu",
+      "chineseName": "竹叶茶肆",
+      "bannerText": "茶肆 · 竹叶青",
+      "desc": "Meneguk teh pegunungan hangat atau arak daun bambu untuk menyegarkan pikiran dan mendengar kabar angin.",
+      "type": "tavern",
+      "icon": "Wine",
+      "scale": 0.9,
+      "xPercent": 32,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["drink", "npc_recruit", "info"]
+    },
+    {
+      "id": "market",
+      "name": "Pasar Barter Desa",
+      "chineseName": "乡村草市",
+      "bannerText": "草市 · 灵草集",
+      "desc": "Petani herba dan pemburu lokal berkumpul menukar hasil bumi, herba liar, dan perkakas fana.",
+      "type": "market",
+      "icon": "ShoppingBag",
+      "scale": 1.0,
+      "xPercent": 50,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["buy", "sell", "barter"]
+    },
+    {
+      "id": "workshop",
+      "name": "Tungku Pandai Besi Desa",
+      "chineseName": "村头铁匠铺",
+      "bannerText": "铁匠 · 淬锋堂",
+      "desc": "Tungku tempa tradisional untuk memperbaiki sabit, cangkul herba, dan pedang besi pemula.",
+      "type": "workshop",
+      "icon": "Hammer",
+      "scale": 0.9,
+      "xPercent": 68,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["forge", "repair", "salvage"]
+    },
+    {
+      "id": "bounty_board",
+      "name": "Papan Pengumuman Kepala Desa",
+      "chineseName": "村公所告示牌",
+      "bannerText": "告示 · 悬赏榜",
+      "desc": "Sayembara perburuan hama buas, pencarian herba hilang, dan pertolongan warga desa.",
+      "type": "bounty_board",
+      "icon": "FileText",
+      "scale": 0.85,
+      "xPercent": 85,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["bounties", "reputation", "village_quests"]
+    }
+  ],
+  "defaultExits": [
+    {
+      "type": "city_gate",
+      "label": "Gerbang Bambu (Keluar ke Alam Liar)",
+      "icon": "Gate"
+    }
+  ]
+}

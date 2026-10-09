@@ -32,7 +32,14 @@
       "terrainColor": "#4d7348"
     },
     "priority": 1,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "plains": 0.5,
+      "meadow": 0.2,
+      "forest": 0.15,
+      "river": 0.1,
+      "road_dirt": 0.05
+    }
   },
   {
     "id": "nine_springs_delta",
@@ -67,7 +74,13 @@
       "terrainColor": "#40916c"
     },
     "priority": 5,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "farmland": 0.35,
+      "herb_field": 0.3,
+      "river": 0.25,
+      "pond_lotus": 0.1
+    }
   },
   {
     "id": "azure_mountain_range",
@@ -102,7 +115,13 @@
       "terrainColor": "#3d5a80"
     },
     "priority": 10,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "mountain_rock": 0.5,
+      "mountain_peak": 0.25,
+      "bamboo_grove": 0.15,
+      "hill": 0.1
+    }
   },
   {
     "id": "northern_desolate",
@@ -137,7 +156,13 @@
       "terrainColor": "#e0e1dd"
     },
     "priority": 4,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "snow": 0.55,
+      "glacier": 0.25,
+      "ice_crack": 0.1,
+      "mountain_rock": 0.1
+    }
   },
   {
     "id": "thundersteppe",
@@ -170,7 +195,12 @@
       "terrainColor": "#4f5d75"
     },
     "priority": 6,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "meadow": 0.65,
+      "lightning_scar": 0.25,
+      "plains": 0.1
+    }
   },
   {
     "id": "godthunder_peaks",
@@ -185,7 +215,7 @@
     },
     "bounds": {
       "minX": 3200,
-      "maxX": 4200,
+      "maxX": 3880,
       "minY": 4000,
       "maxY": 5000
     },
@@ -202,7 +232,12 @@
       "terrainColor": "#4361ee"
     },
     "priority": 7,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "mountain_peak": 0.5,
+      "mountain_rock": 0.35,
+      "crater": 0.15
+    }
   },
   {
     "id": "mirror_lake",
@@ -218,8 +253,8 @@
     "bounds": {
       "minX": 3000,
       "maxX": 3800,
-      "minY": 3400,
-      "maxY": 4200
+      "minY": 3600,
+      "maxY": 4100
     },
     "lawAffinities": [
       "righteous_karmic_mirror",
@@ -236,7 +271,13 @@
       "terrainColor": "#022b3a"
     },
     "priority": 8,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "lake": 0.6,
+      "meadow": 0.25,
+      "river": 0.1,
+      "island_reef": 0.05
+    }
   },
   {
     "id": "beast_prairies",
@@ -269,7 +310,12 @@
       "terrainColor": "#283618"
     },
     "priority": 5,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "meadow": 0.5,
+      "plains": 0.3,
+      "forest": 0.2
+    }
   },
   {
     "id": "western_sacred_desert",
@@ -304,7 +350,13 @@
       "terrainColor": "#d4a373"
     },
     "priority": 3,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "desert_sand": 0.55,
+      "dune": 0.3,
+      "oasis": 0.05,
+      "canyon_floor": 0.1
+    }
   },
   {
     "id": "western_gorge_labyrinth",
@@ -337,7 +389,12 @@
       "terrainColor": "#a68a64"
     },
     "priority": 5,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "canyon_floor": 0.5,
+      "cliff": 0.35,
+      "dune": 0.15
+    }
   },
   {
     "id": "hermit_highlands",
@@ -371,7 +428,12 @@
       "terrainColor": "#588157"
     },
     "priority": 6,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "hill": 0.5,
+      "meadow": 0.35,
+      "bamboo_grove": 0.15
+    }
   },
   {
     "id": "border_march",
@@ -406,7 +468,12 @@
       "terrainColor": "#6f1d1b"
     },
     "priority": 5,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "plains": 0.55,
+      "road_stone": 0.3,
+      "hill": 0.15
+    }
   },
   {
     "id": "lava_spine",
@@ -440,7 +507,12 @@
       "terrainColor": "#370617"
     },
     "priority": 9,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "lava_flow": 0.5,
+      "basalt": 0.35,
+      "crater": 0.15
+    }
   },
   {
     "id": "venom_mire",
@@ -475,7 +547,12 @@
       "terrainColor": "#240046"
     },
     "priority": 6,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "swamp": 0.55,
+      "poison_pool": 0.25,
+      "dead_wood": 0.2
+    }
   },
   {
     "id": "southern_demon_domain",
@@ -510,7 +587,12 @@
       "terrainColor": "#10002b"
     },
     "priority": 4,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "demonic_swamp": 0.45,
+      "dead_wood": 0.3,
+      "hill": 0.25
+    }
   },
   {
     "id": "crimson_battlefield",
@@ -543,7 +625,12 @@
       "terrainColor": "#370617"
     },
     "priority": 7,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "battlefield_ash": 0.5,
+      "dead_wood": 0.25,
+      "miasma_waste": 0.25
+    }
   },
   {
     "id": "abyssal_scar",
@@ -576,7 +663,12 @@
       "terrainColor": "#000000"
     },
     "priority": 8,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "abyss_edge": 0.55,
+      "miasma_waste": 0.3,
+      "basalt": 0.15
+    }
   },
   {
     "id": "southern_plague_woods",
@@ -610,7 +702,12 @@
       "terrainColor": "#132a13"
     },
     "priority": 5,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "dead_wood": 0.5,
+      "swamp": 0.3,
+      "poison_pool": 0.2
+    }
   },
   {
     "id": "bone_sea_coast",
@@ -645,7 +742,13 @@
       "terrainColor": "#212529"
     },
     "priority": 4,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "sea": 0.4,
+      "sea_reef": 0.15,
+      "desert_sand": 0.25,
+      "meadow": 0.2
+    }
   },
   {
     "id": "spirit_wood_sea",
@@ -679,7 +782,12 @@
       "terrainColor": "#2d6a4f"
     },
     "priority": 4,
-    "walkDefault": "open"
+    "walkDefault": "open",
+    "terrainProfile": {
+      "forest": 0.5,
+      "spirit_wood": 0.35,
+      "meadow": 0.15
+    }
   },
   {
     "id": "mist_insect_valley",
@@ -714,7 +822,12 @@
       "terrainColor": "#252422"
     },
     "priority": 6,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "swamp": 0.45,
+      "mist_forest": 0.35,
+      "poison_pool": 0.2
+    }
   },
   {
     "id": "formation_barrens",
@@ -747,7 +860,12 @@
       "terrainColor": "#22223b"
     },
     "priority": 5,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "formation_tile": 0.45,
+      "plains": 0.35,
+      "ruin_floor": 0.2
+    }
   },
   {
     "id": "sword_gorge",
@@ -780,7 +898,12 @@
       "terrainColor": "#14213d"
     },
     "priority": 9,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "canyon_floor": 0.45,
+      "mountain_rock": 0.4,
+      "cliff": 0.15
+    }
   },
   {
     "id": "ore_teeth_range",
@@ -795,7 +918,7 @@
     },
     "bounds": {
       "minX": 3400,
-      "maxX": 4200,
+      "maxX": 3850,
       "minY": 2400,
       "maxY": 3200
     },
@@ -813,7 +936,12 @@
       "terrainColor": "#495057"
     },
     "priority": 6,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "hill": 0.45,
+      "mountain_rock": 0.4,
+      "plains": 0.15
+    }
   },
   {
     "id": "eastern_sea",
@@ -847,7 +975,12 @@
       "terrainColor": "#03045e"
     },
     "priority": 4,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "ocean": 0.85,
+      "island_reef": 0.1,
+      "meadow": 0.05
+    }
   },
   {
     "id": "frostmoon_sea",
@@ -881,7 +1014,12 @@
       "terrainColor": "#001219"
     },
     "priority": 6,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "ocean": 0.8,
+      "ice_sea": 0.15,
+      "island_reef": 0.05
+    }
   },
   {
     "id": "floating_wind_isles",
@@ -915,7 +1053,12 @@
       "terrainColor": "#0096c7"
     },
     "priority": 8,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "ocean": 0.7,
+      "island_reef": 0.2,
+      "floating_stone": 0.1
+    }
   },
   {
     "id": "immortal_ruins_valley",
@@ -949,7 +1092,12 @@
       "terrainColor": "#264653"
     },
     "priority": 7,
-    "walkDefault": "restricted"
+    "walkDefault": "restricted",
+    "terrainProfile": {
+      "ruin_floor": 0.45,
+      "formation_tile": 0.3,
+      "hill": 0.25
+    }
   },
   {
     "id": "void_rift",
@@ -983,6 +1131,10 @@
       "terrainColor": "#000000"
     },
     "priority": 9,
-    "walkDefault": "blocked"
+    "walkDefault": "blocked",
+    "terrainProfile": {
+      "miasma_waste": 0.65,
+      "abyss_edge": 0.35
+    }
   }
 ]

@@ -1,0 +1,104 @@
+{
+  "blueprintType": "sect",
+  "backdropId": "backdrop_ethereal_sect_peaks",
+  "palette": "ethereal_jade",
+  "skyColor": "#061017",
+  "groundColor": "#0f171d",
+  "description": "Puncak suci sekte kultivasi yang melayang di atas awan, dikelilingi pedang terbang, formasi pelindung bercahaya, dan pinus ribuan tahun.",
+  "layers": [
+    {
+      "layer": "far",
+      "speed": 0.2,
+      "elements": ["floating_islands", "flying_sword_trails", "celestial_aurora", "sacred_peaks"]
+    },
+    {
+      "layer": "mid",
+      "speed": 0.5,
+      "elements": ["ancestral_pavilion", "qi_formation_barrier", "thousand_year_pines", "spirit_waterfall"]
+    },
+    {
+      "layer": "ground",
+      "speed": 1.0,
+      "elements": ["jade_flagstones", "carved_dragon_pillars", "incense_burners", "sacred_stairs"]
+    }
+  ],
+  "buildings": [
+    {
+      "id": "sect_hall",
+      "name": "Balai Tetua & Aula Utama Sekte",
+      "chineseName": "太上主殿",
+      "bannerText": "仙宗 · 问道殿",
+      "desc": "Pusat kepemimpinan sekte tempat penerimaan murid baru, ujian kenaikan pangkat murid dalam, dan audiensi tetua.",
+      "type": "sect_hall",
+      "icon": "Swords",
+      "scale": 1.2,
+      "xPercent": 15,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["sect_exam", "promote_disciple", "sect_tasks"]
+    },
+    {
+      "id": "manual_pavilion",
+      "name": "Paviliun Kitab & Sutra Warisan Leluhur",
+      "chineseName": "祖师藏法阁",
+      "bannerText": "经卷 · 传承阁",
+      "desc": "Koleksi manual teknik esoterik warisan para leluhur sekte, hanya dapat dipelajari oleh murid yang berkontribusi tinggi.",
+      "type": "manual_pavilion",
+      "icon": "BookOpen",
+      "scale": 1.05,
+      "xPercent": 35,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["sect_manuals", "comprehend_dao", "contribution_exchange"]
+    },
+    {
+      "id": "alchemy_hall",
+      "name": "Paviliun Tungku Alkimia Sembilan Cahaya",
+      "chineseName": "九转炼丹房",
+      "bannerText": "丹房 · 九转堂",
+      "desc": "Tungku alkimia sakral sekte untuk meracik pil terobosan ranah, pil pembersih meridian, dan intisari Qi murni.",
+      "type": "workshop",
+      "icon": "Hammer",
+      "scale": 1.0,
+      "xPercent": 55,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["sect_alchemy", "pill_refining", "cauldron_borrow"]
+    },
+    {
+      "id": "meditation_grounds",
+      "name": "Gua Meditasi Mata Air Roh",
+      "chineseName": "清修灵泉洞",
+      "bannerText": "静修 · 灵虚洞",
+      "desc": "Gua kultivasi tertutup dengan konsentrasi Qi alam 3x lipat untuk mempercepat pengumpulan Qi dantian dan menembus batas ranah.",
+      "type": "inn",
+      "icon": "BedDouble",
+      "scale": 0.95,
+      "xPercent": 75,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["qi_meditation", "breakthrough_chamber", "deep_rest"]
+    },
+    {
+      "id": "sect_market",
+      "name": "Balai Penukaran Poin Kontribusi Sekte",
+      "chineseName": "宗门贡献堂",
+      "bannerText": "内务 · 奉禄堂",
+      "desc": "Tukarkan poin kontribusi sekte dengan batu roh, senjata pusaka, dan jimat perlindungan.",
+      "type": "market",
+      "icon": "ShoppingBag",
+      "scale": 0.95,
+      "xPercent": 90,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["contribution_shop", "claim_stipend"]
+    }
+  ],
+  "defaultExits": [
+    {
+      "type": "city_gate",
+      "label": "Gerbang Tangga Awan (Turun ke Dunia Fana)",
+      "icon": "Gate"
+    }
+  ]
+}

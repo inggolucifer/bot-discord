@@ -7,7 +7,7 @@
     "difficulty": "Sangat Mudah (Pemula)",
     "dangerTier": 1,
     "anchorId": "desa_xingcun",
-    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2455, "tileY": 2485 },
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2050, "tileY": 2650 },
     "regionSlug": "central_plains",
     "settlementName": "Desa Xingcun",
     "starterKit": {
@@ -30,7 +30,7 @@
     "difficulty": "Mudah",
     "dangerTier": 1,
     "anchorId": "dusun_mata_air_jernih",
-    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2420, "tileY": 2470 },
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2400, "tileY": 2450 },
     "regionSlug": "nine_springs_delta",
     "settlementName": "Dusun Mata Air Jernih",
     "starterKit": {
@@ -99,7 +99,7 @@
     "difficulty": "Normal",
     "dangerTier": 2,
     "anchorId": "dermaga_donghai",
-    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 4200, "tileY": 2700 },
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 3920, "tileY": 2700 },
     "regionSlug": "eastern_sea",
     "settlementName": "Dermaga Donghai",
     "starterKit": {
@@ -122,7 +122,7 @@
     "difficulty": "Normal",
     "dangerTier": 2,
     "anchorId": "desa_heiyan",
-    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2500, "tileY": 900 },
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 1900, "tileY": 1400 },
     "regionSlug": "southern_demon_domain",
     "settlementName": "Desa Heiyan",
     "starterKit": {
@@ -168,7 +168,7 @@
     "difficulty": "Normal",
     "dangerTier": 2,
     "anchorId": "kaki_gunung_azure",
-    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 1820, "tileY": 2320 },
+    "spawnCoords": { "zoneId": "tianyuan_world_map", "tileX": 2200, "tileY": 3340 },
     "regionSlug": "azure_mountain_range",
     "settlementName": "Kaki Gunung Azure",
     "starterKit": {

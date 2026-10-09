@@ -23,7 +23,7 @@ const FERRY_ROUTES = [
     id: 'southern_rimba_to_xingcun',
     name: 'Penyeberangan Kembali ke Dataran Tengah',
     from: { regionSlug: 'southern_demon_domain', settlementName: 'Scar of Heaven Camp', dockName: 'Dermaga Rimba Selatan' },
-    to: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun', tileX: 2450, tileY: 2480 },
+    to: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun', tileX: 2050, tileY: 2650 },
     raftCostSilver: 25,
     raftDurationSeconds: 30,
     fastShipCostSilver: 150
@@ -41,7 +41,7 @@ const FERRY_ROUTES = [
     id: 'turtle_island_to_eastern_port',
     name: 'Pelayaran Kembali dari Pulau Penyu ke Dermaga Donghai',
     from: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu' },
-    to: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai', tileX: 4200, tileY: 2700 },
+    to: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai', tileX: 3920, tileY: 2700 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
     fastShipCostSilver: 250

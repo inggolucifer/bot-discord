@@ -71,12 +71,12 @@ async function testFase1() {
 
   await setPlayerAuthoritativePosition(mockPlayer, {
     zoneId: 'tianyuan_world_map',
-    tileX: 2600,
-    tileY: 2550
+    tileX: 2700,
+    tileY: 2800
   }, { save: false });
 
-  assert.strictEqual(mockPlayer.gridPosition.tileX, 2600);
-  assert.strictEqual(mockPlayer.gridPosition.tileY, 2550);
+  assert.strictEqual(mockPlayer.gridPosition.tileX, 2700);
+  assert.strictEqual(mockPlayer.gridPosition.tileY, 2800);
   assert.strictEqual(mockPlayer.currentLocation.settlementName, 'Tianjing');
   assert.strictEqual(mockPlayer.currentLocation.regionSlug, 'central_plains');
   assert.ok(mockPlayer.discoveredLocations.includes('central_plains|Tianjing'));
