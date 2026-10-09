@@ -39,6 +39,19 @@
       "forest": 0.15,
       "river": 0.1,
       "road_dirt": 0.05
+    },
+    "buildPolicy": {
+      "mode": "open",
+      "maxTier": 1,
+      "allowedTerrains": [
+        "plains",
+        "meadow",
+        "farmland",
+        "herb_field",
+        "hill"
+      ],
+      "maxBuiltRatio": 0.18,
+      "priceFactor": 1
     }
   },
   {
@@ -80,6 +93,19 @@
       "herb_field": 0.3,
       "river": 0.25,
       "pond_lotus": 0.1
+    },
+    "buildPolicy": {
+      "mode": "open",
+      "maxTier": 1,
+      "allowedTerrains": [
+        "plains",
+        "meadow",
+        "farmland",
+        "herb_field",
+        "hill"
+      ],
+      "maxBuiltRatio": 0.18,
+      "priceFactor": 1
     }
   },
   {
@@ -121,6 +147,13 @@
       "mountain_peak": 0.25,
       "bamboo_grove": 0.15,
       "hill": 0.1
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -162,6 +195,13 @@
       "glacier": 0.25,
       "ice_crack": 0.1,
       "mountain_rock": 0.1
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -200,6 +240,13 @@
       "meadow": 0.65,
       "lightning_scar": 0.25,
       "plains": 0.1
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -237,6 +284,13 @@
       "mountain_peak": 0.5,
       "mountain_rock": 0.35,
       "crater": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -277,6 +331,19 @@
       "meadow": 0.25,
       "river": 0.1,
       "island_reef": 0.05
+    },
+    "buildPolicy": {
+      "mode": "frontier",
+      "maxTier": 2,
+      "allowedTerrains": [
+        "plains",
+        "meadow",
+        "farmland",
+        "herb_field",
+        "hill"
+      ],
+      "maxBuiltRatio": 0.06,
+      "priceFactor": 1.2
     }
   },
   {
@@ -315,6 +382,13 @@
       "meadow": 0.5,
       "plains": 0.3,
       "forest": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -356,6 +430,13 @@
       "dune": 0.3,
       "oasis": 0.05,
       "canyon_floor": 0.1
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -394,6 +475,13 @@
       "canyon_floor": 0.5,
       "cliff": 0.35,
       "dune": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -433,6 +521,19 @@
       "hill": 0.5,
       "meadow": 0.35,
       "bamboo_grove": 0.15
+    },
+    "buildPolicy": {
+      "mode": "frontier",
+      "maxTier": 2,
+      "allowedTerrains": [
+        "plains",
+        "meadow",
+        "farmland",
+        "herb_field",
+        "hill"
+      ],
+      "maxBuiltRatio": 0.06,
+      "priceFactor": 1.2
     }
   },
   {
@@ -473,6 +574,19 @@
       "plains": 0.55,
       "road_stone": 0.3,
       "hill": 0.15
+    },
+    "buildPolicy": {
+      "mode": "frontier",
+      "maxTier": 2,
+      "allowedTerrains": [
+        "plains",
+        "meadow",
+        "farmland",
+        "herb_field",
+        "hill"
+      ],
+      "maxBuiltRatio": 0.06,
+      "priceFactor": 1.2
     }
   },
   {
@@ -512,6 +626,13 @@
       "lava_flow": 0.5,
       "basalt": 0.35,
       "crater": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -552,6 +673,13 @@
       "swamp": 0.55,
       "poison_pool": 0.25,
       "dead_wood": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -592,6 +720,13 @@
       "demonic_swamp": 0.45,
       "dead_wood": 0.3,
       "hill": 0.25
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -630,6 +765,13 @@
       "battlefield_ash": 0.5,
       "dead_wood": 0.25,
       "miasma_waste": 0.25
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -668,6 +810,13 @@
       "abyss_edge": 0.55,
       "miasma_waste": 0.3,
       "basalt": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -707,6 +856,13 @@
       "dead_wood": 0.5,
       "swamp": 0.3,
       "poison_pool": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -748,6 +904,13 @@
       "sea_reef": 0.15,
       "desert_sand": 0.25,
       "meadow": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -787,6 +950,13 @@
       "forest": 0.5,
       "spirit_wood": 0.35,
       "meadow": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -827,6 +997,13 @@
       "swamp": 0.45,
       "mist_forest": 0.35,
       "poison_pool": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -865,6 +1042,13 @@
       "formation_tile": 0.45,
       "plains": 0.35,
       "ruin_floor": 0.2
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -903,6 +1087,13 @@
       "canyon_floor": 0.45,
       "mountain_rock": 0.4,
       "cliff": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -941,6 +1132,13 @@
       "hill": 0.45,
       "mountain_rock": 0.4,
       "plains": 0.15
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -980,6 +1178,13 @@
       "ocean": 0.85,
       "island_reef": 0.1,
       "meadow": 0.05
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -1019,6 +1224,13 @@
       "ocean": 0.8,
       "ice_sea": 0.15,
       "island_reef": 0.05
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -1058,6 +1270,13 @@
       "ocean": 0.7,
       "island_reef": 0.2,
       "floating_stone": 0.1
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -1097,6 +1316,13 @@
       "ruin_floor": 0.45,
       "formation_tile": 0.3,
       "hill": 0.25
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   },
   {
@@ -1135,6 +1361,13 @@
     "terrainProfile": {
       "miasma_waste": 0.65,
       "abyss_edge": 0.35
+    },
+    "buildPolicy": {
+      "mode": "forbidden",
+      "maxTier": 0,
+      "allowedTerrains": [],
+      "maxBuiltRatio": 0,
+      "priceFactor": 0
     }
   }
 ]

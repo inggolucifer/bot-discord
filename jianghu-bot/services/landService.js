@@ -2,9 +2,24 @@ const ZoneTile = require('../models/ZoneTile');
 const Player = require('../models/Player');
 const ActivityLog = require('../models/ActivityLog');
 
-const MAX_PLOTS_PER_PLAYER = 3;
+function getPlotCap(player) {
+  if (!player) return 3;
+  try {
+    const { getRealmIndex } = require('../utils/cultivation');
+    const realmIdx = getRealmIndex(player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)');
+    const repBonus = Math.floor(Math.max(0, (player.reputation || 0)) / 1000);
+    const cap = 3 + Math.floor(realmIdx / 2) + Math.min(3, repBonus);
+    return Math.min(10, Math.max(3, cap));
+  } catch (err) {
+    return 3;
+  }
+}
 
 class LandService {
+  getPlotCap(player) {
+    return getPlotCap(player);
+  }
+
   /**
    * Mengambil daftar seluruh kavling tanah yang dapat dibeli di suatu zona
    */
@@ -38,16 +53,37 @@ class LandService {
 
     const zoneId = targetZoneId || player.gridPosition?.zoneId || 'xingcun_village';
 
-    // 1. Validasi Batas Maksimal Kepemilikan Lahan (Anti-Monopoli)
+    // 1. Validasi Batas Maksimal Kepemilikan Lahan Dinamis (plotCap)
+    const maxPlots = getPlotCap(player);
     const ownedCount = await ZoneTile.countDocuments({ guildId, ownerId: discordId });
-    if (ownedCount >= MAX_PLOTS_PER_PLAYER) {
+    if (ownedCount >= maxPlots) {
       return {
         ok: false,
-        error: `Kamu telah mencapai batas maksimal kepemilikan tanah (${MAX_PLOTS_PER_PLAYER} petak). Kamu tidak dapat membeli petak tambahan.`
+        code: 'BZ_CAP',
+        error: `Kamu telah mencapai batas maksimal kepemilikan tanah (${maxPlots} petak untuk ranah kultivasimu). Tingkatkan ranah kultivasi atau reputasi untuk menambah kapasitas.`
       };
     }
 
-    // 2. Cari petak tanah target
+    // 2. Evaluasi Otoritatif Kelayakan Bangun SSOT (buildZoneEngine)
+    const { getBuildability } = require('../utils/buildZoneEngine');
+    const buildCheck = getBuildability({
+      zoneId,
+      x: targetX,
+      y: targetY,
+      footprint: { w: 1, h: 1 },
+      playerId: discordId,
+      guildId
+    });
+    if (!buildCheck.ok) {
+      return {
+        ok: false,
+        code: buildCheck.code,
+        error: buildCheck.message,
+        details: buildCheck.details
+      };
+    }
+
+    // 3. Cari petak tanah target di DB
     let tile = await ZoneTile.findOne({
       guildId,
       zoneId,
@@ -55,28 +91,33 @@ class LandService {
       tileY: targetY
     });
 
-    // Jika tile belum tersimpan di DB, cek dari procedural engine untuk zona master 5000x5000
+    const { getLandPriceForPlayer } = require('../utils/landPriceEngine');
+    const { convertToCopper, convertFromCopper } = require('../utils/currencyNormalize');
+    const worldData = require('../utils/worldData');
+
+    const ownedPlotsCount = await ZoneTile.countDocuments({ guildId, ownerId: discordId });
+    const basePriceInfo = getLandPriceForPlayer(ownedPlotsCount);
+
+    const region = worldData.getRegionAt(targetX, targetY);
+    const priceFactor = region?.buildPolicy?.priceFactor !== undefined ? region.buildPolicy.priceFactor : 1.0;
+    const finalPriceInCopper = Math.round(basePriceInfo.priceInCopper * priceFactor);
+
+    // Jika tile belum tersimpan di DB, inisialisasi ZoneTile baru yang sah
     if (!tile) {
       const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
       const pTile = proceduralWorldEngine.getTileAt(targetX, targetY);
-      if (pTile && pTile.isClaimable && !pTile.isSolid) {
-        tile = new ZoneTile({
-          guildId,
-          zoneId,
-          tileX: targetX,
-          tileY: targetY,
-          tileType: 'buildable_plot',
-          terrainType: pTile.terrainType || 'plains',
-          isClaimable: true,
-          isSolid: false,
-          plotPriceSilver: 100
-        });
-        await tile.save();
-      }
-    }
-
-    if (!tile) {
-      return { ok: false, error: `Petak tanah pada koordinat (${targetX}, ${targetY}) tidak ditemukan di ${zoneId}.` };
+      tile = new ZoneTile({
+        guildId,
+        zoneId,
+        tileX: targetX,
+        tileY: targetY,
+        tileType: 'buildable_plot',
+        terrainType: pTile.terrainType || 'plains',
+        isClaimable: true,
+        isSolid: false,
+        plotPriceSilver: Math.floor(finalPriceInCopper / 100)
+      });
+      await tile.save();
     }
 
     if (!tile.isClaimable && tile.tileType !== 'buildable_plot') {
@@ -88,21 +129,15 @@ class LandService {
       return { ok: false, error: `Petak tanah ini sudah dimiliki oleh ${ownerLabel}.` };
     }
 
-    const { getLandPriceForPlayer } = require('../utils/landPriceEngine');
-    const { convertToCopper, convertFromCopper } = require('../utils/currencyNormalize');
-
-    const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: discordId });
-    const priceInfo = getLandPriceForPlayer(ownedPlotsCount);
-
     const playerTotalCopper = convertToCopper(player.currency);
-    if (playerTotalCopper < priceInfo.priceInCopper) {
+    if (playerTotalCopper < finalPriceInCopper) {
       return {
         ok: false,
-        error: `Dana tidak mencukupi! Dibutuhkan ${priceInfo.label} untuk membeli tanah ke-${priceInfo.plotNumber}. Kekayaanmu belum mencukupi.`
+        error: `Dana tidak mencukupi! Dibutuhkan ${basePriceInfo.label}${priceFactor !== 1 ? ` (faktor wilayah x${priceFactor})` : ''} untuk membeli tanah ke-${basePriceInfo.plotNumber}. Kekayaanmu belum mencukupi.`
       };
     }
 
-    // 3. Operasi Atomik Database (Mencegah Race Condition / Dobel Klaim)
+    // 4. Operasi Atomik Database (Mencegah Race Condition / Dobel Klaim)
     const claimedPlot = await ZoneTile.findOneAndUpdate(
       {
         _id: tile._id,
@@ -115,8 +150,8 @@ class LandService {
           ownerType: 'player',
           ownerName: player.characterName,
           label: `Kavling Milik ${player.characterName}`,
-          plotPriceLabel: priceInfo.label,
-          plotPriceSilver: Math.floor(priceInfo.priceInCopper / 100),
+          plotPriceLabel: basePriceInfo.label,
+          plotPriceSilver: Math.floor(finalPriceInCopper / 100),
           isOpenToPublic: true
         }
       },
@@ -131,15 +166,15 @@ class LandService {
       };
     }
 
-    // 4. Potong Kekayaan Pemain secara presisi
-    const newCopperBalance = playerTotalCopper - priceInfo.priceInCopper;
+    // 5. Potong Kekayaan Pemain secara presisi
+    const newCopperBalance = playerTotalCopper - finalPriceInCopper;
     player.currency = convertFromCopper(newCopperBalance);
     await player.save();
 
-    const priceSilver = Math.floor(priceInfo.priceInCopper / 100);
+    const priceSilver = Math.floor(finalPriceInCopper / 100);
     const remainingSilverEq = Math.floor(newCopperBalance / 100);
 
-    // 5. Catat ke ActivityLog (Audit Trail Anti-Cheat)
+    // 6. Catat ke ActivityLog (Audit Trail Anti-Cheat)
     await ActivityLog.create({
       guildId,
       discordId,
@@ -158,7 +193,7 @@ class LandService {
       ok: true,
       plot: claimedPlot,
       pricePaid: priceSilver,
-      priceLabel: priceInfo.label,
+      priceLabel: basePriceInfo.label,
       remainingSilver: remainingSilverEq,
       totalOwnedPlots: ownedPlotsCount + 1
     };

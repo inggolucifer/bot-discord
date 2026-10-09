@@ -1,12 +1,13 @@
 {
   "meta": {
     "app": "Jianghu World Asset Pipeline",
-    "version": "2.0",
+    "version": "3.0",
     "size": {
       "w": 2048,
-      "h": 764
+      "h": 884
     },
-    "format": "RGBA8888"
+    "format": "RGBA8888",
+    "image": "objects_structures.webp"
   },
   "frames": {
     "building_pagoda_tower_v1": {
@@ -229,9 +230,64 @@
         ]
       }
     },
-    "building_sect_gate_v1": {
+    "pagoda_2x2": {
       "frame": {
         "x": 808,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 380
+      },
+      "metadata": {
+        "id": "pagoda_2x2",
+        "atlas": "objects_structures",
+        "frame": "pagoda_2x2",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 380
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "pagoda_2x2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "alias"
+        ]
+      }
+    },
+    "building_sect_gate_v1": {
+      "frame": {
+        "x": 1010,
         "y": 0,
         "w": 300,
         "h": 320
@@ -286,7 +342,7 @@
     },
     "building_sect_gate_v2": {
       "frame": {
-        "x": 1110,
+        "x": 1312,
         "y": 0,
         "w": 300,
         "h": 320
@@ -341,7 +397,7 @@
     },
     "building_sect_gate_v3": {
       "frame": {
-        "x": 1412,
+        "x": 1614,
         "y": 0,
         "w": 300,
         "h": 320
@@ -396,8 +452,8 @@
     },
     "building_sect_gate_v4": {
       "frame": {
-        "x": 1714,
-        "y": 0,
+        "x": 0,
+        "y": 382,
         "w": 300,
         "h": 320
       },
@@ -449,9 +505,64 @@
         ]
       }
     },
+    "sect_gate_3x2": {
+      "frame": {
+        "x": 302,
+        "y": 382,
+        "w": 300,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 320
+      },
+      "metadata": {
+        "id": "sect_gate_3x2",
+        "atlas": "objects_structures",
+        "frame": "sect_gate_3x2",
+        "category": "building",
+        "px": {
+          "w": 300,
+          "h": 320
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "sect_gate_3x2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "alias"
+        ]
+      }
+    },
     "building_road_inn_v1": {
       "frame": {
-        "x": 0,
+        "x": 604,
         "y": 382,
         "w": 200,
         "h": 240
@@ -506,7 +617,7 @@
     },
     "building_road_inn_v2": {
       "frame": {
-        "x": 202,
+        "x": 806,
         "y": 382,
         "w": 200,
         "h": 240
@@ -561,7 +672,7 @@
     },
     "building_road_inn_v3": {
       "frame": {
-        "x": 404,
+        "x": 1008,
         "y": 382,
         "w": 200,
         "h": 240
@@ -616,7 +727,7 @@
     },
     "building_road_inn_v4": {
       "frame": {
-        "x": 606,
+        "x": 1210,
         "y": 382,
         "w": 200,
         "h": 240
@@ -671,7 +782,7 @@
     },
     "building_farm_hut_v1": {
       "frame": {
-        "x": 808,
+        "x": 1412,
         "y": 382,
         "w": 200,
         "h": 180
@@ -726,7 +837,7 @@
     },
     "building_farm_hut_v2": {
       "frame": {
-        "x": 1010,
+        "x": 1614,
         "y": 382,
         "w": 200,
         "h": 180
@@ -781,7 +892,7 @@
     },
     "building_farm_hut_v3": {
       "frame": {
-        "x": 1212,
+        "x": 1816,
         "y": 382,
         "w": 200,
         "h": 180
@@ -836,8 +947,8 @@
     },
     "building_farm_hut_v4": {
       "frame": {
-        "x": 1414,
-        "y": 382,
+        "x": 0,
+        "y": 704,
         "w": 200,
         "h": 180
       },
@@ -889,10 +1000,65 @@
         ]
       }
     },
+    "village_house_2x1": {
+      "frame": {
+        "x": 202,
+        "y": 704,
+        "w": 200,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 180
+      },
+      "metadata": {
+        "id": "village_house_2x1",
+        "atlas": "objects_structures",
+        "frame": "village_house_2x1",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "village_house_2x1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "alias"
+        ]
+      }
+    },
     "building_stone_torii_v1": {
       "frame": {
-        "x": 1616,
-        "y": 382,
+        "x": 404,
+        "y": 704,
         "w": 100,
         "h": 150
       },
@@ -946,8 +1112,8 @@
     },
     "building_stone_torii_v2": {
       "frame": {
-        "x": 1718,
-        "y": 382,
+        "x": 506,
+        "y": 704,
         "w": 100,
         "h": 150
       },
@@ -1001,8 +1167,8 @@
     },
     "building_stone_torii_v3": {
       "frame": {
-        "x": 1820,
-        "y": 382,
+        "x": 608,
+        "y": 704,
         "w": 100,
         "h": 150
       },
@@ -1056,8 +1222,8 @@
     },
     "building_stone_torii_v4": {
       "frame": {
-        "x": 1922,
-        "y": 382,
+        "x": 710,
+        "y": 704,
         "w": 100,
         "h": 150
       },
@@ -1109,10 +1275,65 @@
         ]
       }
     },
+    "stone_torii_1x1": {
+      "frame": {
+        "x": 812,
+        "y": 704,
+        "w": 100,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 150
+      },
+      "metadata": {
+        "id": "stone_torii_1x1",
+        "atlas": "objects_structures",
+        "frame": "stone_torii_1x1",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "stone_torii_1x1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "alias"
+        ]
+      }
+    },
     "building_tea_pavilion_v1": {
       "frame": {
-        "x": 0,
-        "y": 624,
+        "x": 914,
+        "y": 704,
         "w": 100,
         "h": 140
       },
@@ -1166,8 +1387,8 @@
     },
     "building_tea_pavilion_v2": {
       "frame": {
-        "x": 102,
-        "y": 624,
+        "x": 1016,
+        "y": 704,
         "w": 100,
         "h": 140
       },
@@ -1221,8 +1442,8 @@
     },
     "building_tea_pavilion_v3": {
       "frame": {
-        "x": 204,
-        "y": 624,
+        "x": 1118,
+        "y": 704,
         "w": 100,
         "h": 140
       },
@@ -1276,8 +1497,8 @@
     },
     "building_tea_pavilion_v4": {
       "frame": {
-        "x": 306,
-        "y": 624,
+        "x": 1220,
+        "y": 704,
         "w": 100,
         "h": 140
       },
@@ -1326,6 +1547,61 @@
         "tags": [
           "building",
           "tea_pavilion"
+        ]
+      }
+    },
+    "pavilion_1x1": {
+      "frame": {
+        "x": 1322,
+        "y": 704,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "pavilion_1x1",
+        "atlas": "objects_structures",
+        "frame": "pavilion_1x1",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "pavilion_1x1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "alias"
         ]
       }
     }
