@@ -70,6 +70,7 @@ export interface TileData {
   settlementName?: string | null;
   chineseName?: string | null;
   isSettlementOrigin?: boolean;
+  isSettlementTile?: boolean;
   settlementData?: any;
   isOccupied?: boolean;
   buildingName?: string | null;
@@ -77,6 +78,7 @@ export interface TileData {
   isDoor?: boolean;
   propertyStructureId?: string | null;
   isClaimable?: boolean;
+  buildReasonCode?: string;
   plotPriceSilver?: number;
   ownerId?: string | null;
   ownerName?: string | null;

@@ -349,3 +349,20 @@ Sebagai standarisasi pertumbuhan karakter (kultivasi & beladiri), backend member
    - `frozen`: Target skips their turn. Persists for \`remainingTurns\` duration.
    - `knockback`: Target's action is interrupted, skips current turn, and immediately clears the condition.
    - `psychosis`: Target has a 20% chance to miss entirely or hit themselves.
+
+---
+
+### 3.12. Prinsip Integritas Pengujian, Gerbang Aset Biner & SSOT Zona Bangun (Zero-Fake-Testing Policy)
+1. **Larangan Duplikasi Logika di Tes (Anti-Self-Mocking)**:
+   - Skrip tes DILARANG KERAS menyalin atau mengimplementasikan ulang fungsi produksi di dalam file tes untuk diuji sendiri (seperti kasus temuan G-12).
+   - Seluruh tes WAJIB mengimpor langsung modul produksi (`utils/`, `services/`, `models/`, atau route HTTP).
+2. **Gerbang Verifikasi Aset Biner Riil (Real Binary Asset Gate)**:
+   - Skrip pipeline dan validator aset DILARANG hanya memeriksa metadata JSON.
+   - Validator wajib membaca file gambar riil (`.webp` / `.png`), memverifikasi ukuran file, dimensi piksel, ketiadaan halo putih, dan integrasi atlas.
+3. **Single Source of Truth Zona Bangun (`buildZoneEngine`)**:
+   - Seluruh logika pembelian tanah, penentuan kavling (`isClaimable`), dan konstruksi bangunan WAJIB melalui satu fungsi otoritatif: `getBuildability(zoneId, x, y, footprint)`.
+   - Dilarang keras menulis aturan kelayakan bangun secara ad-hoc di model atau service lain.
+4. **Buffer Pemukiman dari Tepi Footprint (Chebyshev Margin)**:
+   - Jarak zona aman pemukiman dihitung dari batas terluar persegi footprint (bounding box), bukan dari satu titik koordinat tengah anchor. Nilai minimum adalah 5 tile.
+5. **Art Style Lukisan Tinta Dinasti Song**:
+   - Seluruh aset lukisan alam (rumpun bambu, pohon pinus, bebatuan, kabut kaki, tanah kertas xuan, sungai pasir) wajib mengikuti gaya tinta *Shuimo/Xieyi* dengan kabut putih halus di dasar objek (`fogFoot`), palet slate-blue & jade, dan garis jalan setapak emas bersinar sesuai kanon visual referensi.

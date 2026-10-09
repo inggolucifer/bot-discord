@@ -7,6 +7,27 @@
  */
 
 import { WorldObjectDef, NpcAttitude } from '@/types/world';
+import { atlasLoader } from './atlasLoader';
+
+export function getAtlasNameForDefId(defId: string): string {
+  if (
+    defId.startsWith('building_') ||
+    defId.startsWith('pavilion') ||
+    defId.startsWith('village_house') ||
+    defId.startsWith('sect_gate') ||
+    defId.startsWith('stone_torii') ||
+    defId.startsWith('pagoda')
+  ) {
+    return 'objects_structures';
+  }
+  if (defId.startsWith('ring_') || defId.startsWith('marker_')) {
+    return 'markers_entities';
+  }
+  if (defId.startsWith('autotile_')) {
+    return 'autotiles';
+  }
+  return 'objects_nature';
+}
 
 // ============================================================================
 // 1. OBJECT DEFINITIONS REGISTRY (T0 PROCEDURAL & ATLAS COMPATIBLE)
@@ -201,6 +222,229 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
     sortBias: 0,
     fogFoot: false,
     tags: ['rock']
+  },
+
+  // --- SCATTER CATALOG SPECIFIC IDS ---
+  bamboo_jade_2x2_l_dense: {
+    id: 'bamboo_jade_2x2_l_dense',
+    name: 'Hutan Bambu Giok Padat',
+    px: { w: 200, h: 260 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 0.6,
+    collision: 'soft',
+    staminaMult: 1.3,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['bamboo']
+  },
+  bamboo_jade_2x1_m_dense: {
+    id: 'bamboo_jade_2x1_m_dense',
+    name: 'Rumpun Bambu Giok Rimbun',
+    px: { w: 200, h: 220 },
+    footprint: { cw: 2, ch: 1 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 1.2,
+    collision: 'soft',
+    staminaMult: 1.3,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['bamboo']
+  },
+  bamboo_jade_1x1_s_sparse: {
+    id: 'bamboo_jade_1x1_s_sparse',
+    name: 'Rumpun Bambu Giok Muda',
+    px: { w: 100, h: 180 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 0.8,
+    collision: 'soft',
+    staminaMult: 1.25,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['bamboo']
+  },
+  tree_spirit_peach_v1: {
+    id: 'tree_spirit_peach_v1',
+    name: 'Pohon Persik Roh Kuno',
+    px: { w: 200, h: 280 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 0.8,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['tree', 'spirit']
+  },
+  tree_willow_river_v1: {
+    id: 'tree_willow_river_v1',
+    name: 'Pohon Gandaria Sungai',
+    px: { w: 200, h: 200 },
+    footprint: { cw: 2, ch: 1 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 1.0,
+    collision: 'soft',
+    staminaMult: 1.15,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['tree', 'willow']
+  },
+  tree_pine_ancient_v1: {
+    id: 'tree_pine_ancient_v1',
+    name: 'Pinus Kuno Jianghu',
+    px: { w: 100, h: 160 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 0.6,
+    collision: 'soft',
+    staminaMult: 1.15,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['tree', 'pine']
+  },
+  rock_crag_cluster_v1: {
+    id: 'rock_crag_cluster_v1',
+    name: 'Gugusan Cadas Kuno',
+    px: { w: 200, h: 160 },
+    footprint: { cw: 2, ch: 1 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 0.6,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['rock']
+  },
+  rock_boulder_moss_v1: {
+    id: 'rock_boulder_moss_v1',
+    name: 'Batu Karang Berlumut',
+    px: { w: 100, h: 100 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 0.1,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['rock']
+  },
+  building_sect_gate_v1: {
+    id: 'building_sect_gate_v1',
+    name: 'Gerbang Suci Sekte',
+    px: { w: 300, h: 320 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'sect']
+  },
+  building_road_inn_v1: {
+    id: 'building_road_inn_v1',
+    name: 'Kedai Minum Tepi Jalan',
+    px: { w: 200, h: 240 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 0.4,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['building']
+  },
+  building_farm_hut_v1: {
+    id: 'building_farm_hut_v1',
+    name: 'Gubuk Ladang Petani',
+    px: { w: 200, h: 180 },
+    footprint: { cw: 2, ch: 1 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 0.8,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['building']
+  },
+  building_tea_pavilion_v1: {
+    id: 'building_tea_pavilion_v1',
+    name: 'Paviliun Teh Bambu',
+    px: { w: 100, h: 140 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 0.4,
+    collision: 'none',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['building']
+  },
+  mt_bastion_wall_v1: {
+    id: 'mt_bastion_wall_v1',
+    name: 'Dinding Tebing Raksasa',
+    px: { w: 400, h: 560 },
+    footprint: { cw: 4, ch: 3 },
+    anchor: { x: 0.5, y: 0.95 },
+    overhangCells: 2.6,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'barrier']
+  },
+  mt_twin_peaks_v1: {
+    id: 'mt_twin_peaks_v1',
+    name: 'Puncak Kembar Azure',
+    px: { w: 300, h: 440 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.95 },
+    overhangCells: 2.4,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'barrier']
+  },
+  mt_azure_crag_v1: {
+    id: 'mt_azure_crag_v1',
+    name: 'Cadas Karst Azure',
+    px: { w: 200, h: 360 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.95 },
+    overhangCells: 1.6,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'barrier']
+  },
+  mt_ridge_double_v1: {
+    id: 'mt_ridge_double_v1',
+    name: 'Punggung Bukit Karst Ganda',
+    px: { w: 200, h: 280 },
+    footprint: { cw: 2, ch: 1 },
+    anchor: { x: 0.5, y: 0.95 },
+    overhangCells: 1.8,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'cliff']
+  },
+  mt_karst_pillar_v1: {
+    id: 'mt_karst_pillar_v1',
+    name: 'Pilar Karst Menjulang',
+    px: { w: 100, h: 220 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.95 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'karst']
   }
 };
 
@@ -446,6 +690,17 @@ export function renderL4ProceduralObject(
   alpha: number = 1.0,
   flipX: boolean = false
 ) {
+  // 1. Try rendering from WebP texture atlas first (Song Dynasty Shuimo asset)
+  const atlasName = getAtlasNameForDefId(defId);
+  const def = OBJECT_DEFINITIONS[defId];
+  const dw = def ? def.footprint.cw * tileSize : tileSize;
+  const dh = def ? (def.footprint.ch + def.overhangCells) * tileSize : tileSize * 2;
+
+  if (atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX)) {
+    return;
+  }
+
+  // 2. Fallback to procedural vector rendering if atlas not yet loaded or missing
   ctx.save();
   ctx.globalAlpha = alpha;
 
@@ -653,6 +908,14 @@ export function renderL7MonsterInkRing(
   isBoss: boolean = false,
   time: number = 0
 ) {
+  // 1. Try rendering authentic dry-brush monster ring from WebP atlas
+  const ringFrameId = isBoss ? 'ring_monster_boss' : `ring_monster_tier${Math.min(5, Math.max(1, tier))}`;
+  const ringSize = radius * 2.2;
+  if (atlasLoader.drawAtlasFrame(ctx, 'markers_entities', ringFrameId, cx - ringSize / 2, cy - ringSize / 2, ringSize, ringSize, 0.9)) {
+    return;
+  }
+
+  // 2. Procedural fallback
   ctx.save();
 
   // Tier accent color

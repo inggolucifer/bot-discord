@@ -11,7 +11,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Desa Pemula Bunga Aprikot",
-    "description": "Desa bunga aprikot yang damai, tempat para pengembara muda memulai langkah kultivasi pertama."
+    "description": "Desa bunga aprikot yang damai, tempat para pengembara muda memulai langkah kultivasi pertama.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 5
   },
   {
     "id": "dusun_mata_air_jernih",
@@ -25,7 +28,10 @@
     "spanWidth": 2,
     "spanHeight": 2,
     "label": "Dusun Alkemis Sungai",
-    "description": "Dusun pertanian herba di tepi sungai jernih, terkenal dengan tanaman obat dan pemandangan tenang."
+    "description": "Dusun pertanian herba di tepi sungai jernih, terkenal dengan tanaman obat dan pemandangan tenang.",
+    "footprintWidth": 20,
+    "footprintHeight": 20,
+    "buildBuffer": 5
   },
   {
     "id": "pos_perbatasan_qinghe",
@@ -39,7 +45,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Benteng Jembatan Rantai",
-    "description": "Pos pertahanan militer strategis yang mengawasi Jembatan Rantai menuju wilayah selatan."
+    "description": "Pos pertahanan militer strategis yang mengawasi Jembatan Rantai menuju wilayah selatan.",
+    "footprintWidth": 30,
+    "footprintHeight": 30,
+    "buildBuffer": 6
   },
   {
     "id": "oase_shadi",
@@ -53,7 +62,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Oase Suci Padang Pasir",
-    "description": "Pemukiman sejuk di tengah hamparan pasir emas, persinggahan utama para kafilah dan peziarah."
+    "description": "Pemukiman sejuk di tengah hamparan pasir emas, persinggahan utama para kafilah dan peziarah.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 5
   },
   {
     "id": "dermaga_donghai",
@@ -67,7 +79,10 @@
     "spanWidth": 4,
     "spanHeight": 3,
     "label": "Dermaga Penyeberangan Feri Laut",
-    "description": "Pelabuhan dagang utama di pesisir samudra timur tempat bertambatnya kapal feri dan rakit nelayan."
+    "description": "Pelabuhan dagang utama di pesisir samudra timur tempat bertambatnya kapal feri dan rakit nelayan.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 8
   },
   {
     "id": "desa_heiyan",
@@ -81,7 +96,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Desa Batu Hitam Selatan",
-    "description": "Desa adat ramah di perbatasan wilayah iblis, tempat berlindungnya para praktisi kultivator bebas."
+    "description": "Desa adat ramah di perbatasan wilayah iblis, tempat berlindungnya para praktisi kultivator bebas.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 5
   },
   {
     "id": "kemah_dataran_tinggi_petapa",
@@ -95,7 +113,10 @@
     "spanWidth": 2,
     "spanHeight": 2,
     "label": "Pondok Pertapaan Awan",
-    "description": "Kemah pertapaan di dekat mata air panas alami, dikelilingi kabut tebal dan ketenangan Dao."
+    "description": "Kemah pertapaan di dekat mata air panas alami, dikelilingi kabut tebal dan ketenangan Dao.",
+    "footprintWidth": 20,
+    "footprintHeight": 20,
+    "buildBuffer": 5
   },
   {
     "id": "kaki_gunung_azure",
@@ -109,7 +130,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Pos Persinggahan Tri-Sect",
-    "description": "Pos lereng pegunungan tempat murid sekte pedang bertapa dan mempersiapkan perbekalan pendakian."
+    "description": "Pos lereng pegunungan tempat murid sekte pedang bertapa dan mempersiapkan perbekalan pendakian.",
+    "footprintWidth": 30,
+    "footprintHeight": 30,
+    "buildBuffer": 6
   },
   {
     "id": "tianjing",
@@ -123,7 +147,10 @@
     "spanWidth": 5,
     "spanHeight": 5,
     "label": "Ibukota Kekaisaran",
-    "description": "Ibukota megah Benua Tianyuan dengan istana agung, paviliun lelang, dan dinding pertahanan kokoh."
+    "description": "Ibukota megah Benua Tianyuan dengan istana agung, paviliun lelang, dan dinding pertahanan kokoh.",
+    "footprintWidth": 220,
+    "footprintHeight": 220,
+    "buildBuffer": 20
   },
   {
     "id": "xitong_city",
@@ -137,7 +164,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Kota Metropolitan Tengah",
-    "description": "Kota metropolitan dagang utama di tengah benua dengan pasar terlengkap dan akademi kultivasi."
+    "description": "Kota metropolitan dagang utama di tengah benua dengan pasar terlengkap dan akademi kultivasi.",
+    "footprintWidth": 140,
+    "footprintHeight": 140,
+    "buildBuffer": 12
   },
   {
     "id": "kota_fengyang",
@@ -151,7 +181,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Kota Dagang Megah",
-    "description": "Kota dagang besar penghubung jalur kafilah timur laut."
+    "description": "Kota dagang besar penghubung jalur kafilah timur laut.",
+    "footprintWidth": 140,
+    "footprintHeight": 140,
+    "buildBuffer": 12
   },
   {
     "id": "luoyang_kecil",
@@ -165,7 +198,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Kota Benteng Pertahanan",
-    "description": "Kota garnisun pertahanan dengan benteng batu granit tinggi."
+    "description": "Kota garnisun pertahanan dengan benteng batu granit tinggi.",
+    "footprintWidth": 140,
+    "footprintHeight": 140,
+    "buildBuffer": 12
   },
   {
     "id": "desa_tiedao",
@@ -179,7 +215,10 @@
     "spanWidth": 2,
     "spanHeight": 2,
     "label": "Desa Pandai Besi",
-    "description": "Desa pandai besi dekat gunung bijih dengan bengkel tempa tertua."
+    "description": "Desa pandai besi dekat gunung bijih dengan bengkel tempa tertua.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 5
   },
   {
     "id": "pos_tundra_utara",
@@ -193,7 +232,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Pos Salju Abadi",
-    "description": "Pos karavan beku berselimutkan badai es di tundra utara."
+    "description": "Pos karavan beku berselimutkan badai es di tundra utara.",
+    "footprintWidth": 30,
+    "footprintHeight": 30,
+    "buildBuffer": 6
   },
   {
     "id": "pulau_penyu_raksasa",
@@ -207,7 +249,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Pulau Kura-Kura Purba",
-    "description": "Pulau karang di laut timur yang terbentuk di atas tempurung penyu purba raksasa."
+    "description": "Pulau karang di laut timur yang terbentuk di atas tempurung penyu purba raksasa.",
+    "footprintWidth": 40,
+    "footprintHeight": 40,
+    "buildBuffer": 8
   },
   {
     "id": "benteng_gerbang_iblis",
@@ -221,7 +266,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Perbatasan Suku Iblis",
-    "description": "Benteng pengawas suku iblis yang dijaga oleh monster buas dan siluman."
+    "description": "Benteng pengawas suku iblis yang dijaga oleh monster buas dan siluman.",
+    "footprintWidth": 30,
+    "footprintHeight": 30,
+    "buildBuffer": 15
   },
   {
     "id": "lembah_kabut_merah",
@@ -235,7 +283,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Sarang Racun Miasma",
-    "description": "Lembah lembab diselimuti kabut racun tempat bertumbuhnya tanaman langka."
+    "description": "Lembah lembab diselimuti kabut racun tempat bertumbuhnya tanaman langka.",
+    "footprintWidth": 30,
+    "footprintHeight": 30,
+    "buildBuffer": 15
   },
   {
     "id": "sekte_awan_pedang",
@@ -249,7 +300,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Sekte Pedang Azure",
-    "description": "Sekte aliran pedang ternama di lereng Pegunungan Azure, tempat ditempanya hati pedang sejati."
+    "description": "Sekte aliran pedang ternama di lereng Pegunungan Azure, tempat ditempanya hati pedang sejati.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "sekte_pedang_langit",
@@ -263,7 +317,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Sekte Pedang Surgawi",
-    "description": "Sekte Daois ortodoks tertua di Dataran Tengah yang menguasai teknik formasi sembilan bilah pedang."
+    "description": "Sekte Daois ortodoks tertua di Dataran Tengah yang menguasai teknik formasi sembilan bilah pedang.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "kuil_lonceng_emas",
@@ -277,7 +334,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Kuil Lonceng Emas",
-    "description": "Kuil pertapaan di atas awan yang mengasah teknik perlindungan tubuh kebal vajra."
+    "description": "Kuil pertapaan di atas awan yang mengasah teknik perlindungan tubuh kebal vajra.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "lembah_racun_bayangan",
@@ -291,7 +351,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Lembah Bayangan Gelap",
-    "description": "Sekte esoterik penguasa rahasia racun, seni miasma, dan pemurnian gu mistis."
+    "description": "Sekte esoterik penguasa rahasia racun, seni miasma, dan pemurnian gu mistis.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "istana_giok_laut_timur",
@@ -305,7 +368,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Istana Giok Samudra",
-    "description": "Sekte kultivator air lentur yang bersemayam di atas karang giok pesisir timur."
+    "description": "Sekte kultivator air lentur yang bersemayam di atas karang giok pesisir timur.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "sekte_petir_ilahiah",
@@ -319,7 +385,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Sekte Petir Ilahiah",
-    "description": "Pusat kultivasi petir langit yang menyerap energi halilintar alam untuk meremukkan kejahatan."
+    "description": "Pusat kultivasi petir langit yang menyerap energi halilintar alam untuk meremukkan kejahatan.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "sekte_pasir_suci",
@@ -333,7 +402,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Gerbang Pasir Emas",
-    "description": "Sekte penjaga oase kuno yang mengendalikan badai pasir dan formasi ilusi gurun."
+    "description": "Sekte penjaga oase kuno yang mengendalikan badai pasir dan formasi ilusi gurun.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "istana_es_abadi",
@@ -347,7 +419,10 @@
     "spanWidth": 4,
     "spanHeight": 4,
     "label": "Istana Es Suci Utara",
-    "description": "Istana beku yang diukir dari gletser abadi ribuan tahun di ujung utara benua."
+    "description": "Istana beku yang diukir dari gletser abadi ribuan tahun di ujung utara benua.",
+    "footprintWidth": 60,
+    "footprintHeight": 60,
+    "buildBuffer": 15
   },
   {
     "id": "gua_purba_bunga_aprikot",
@@ -361,7 +436,10 @@
     "spanWidth": 2,
     "spanHeight": 2,
     "label": "Labirin Gua Fana (8x8)",
-    "description": "Mulut gua labirin purba tempat pengembara muda menguji ketangkasan dan memburu pusaka fana."
+    "description": "Mulut gua labirin purba tempat pengembara muda menguji ketangkasan dan memburu pusaka fana.",
+    "footprintWidth": 12,
+    "footprintHeight": 12,
+    "buildBuffer": 12
   },
   {
     "id": "makam_kaisar_pedang_purba",
@@ -375,7 +453,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Labirin Makam Pedang (20x20)",
-    "description": "Makam bawah tanah kaisar pedang purba dengan jebakan bilah pedang dan penjaga batu kuno."
+    "description": "Makam bawah tanah kaisar pedang purba dengan jebakan bilah pedang dan penjaga batu kuno.",
+    "footprintWidth": 12,
+    "footprintHeight": 12,
+    "buildBuffer": 12
   },
   {
     "id": "reruntuhan_abadi_tianyuan",
@@ -389,7 +470,10 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Labirin Immortal (40x40)",
-    "description": "Labirin raksasa peninggalan dewa purba yang tertutup kabut tebal dan gas racun mematikan."
+    "description": "Labirin raksasa peninggalan dewa purba yang tertutup kabut tebal dan gas racun mematikan.",
+    "footprintWidth": 12,
+    "footprintHeight": 12,
+    "buildBuffer": 12
   },
   {
     "id": "sarang_naga_karang_timur",
@@ -403,6 +487,9 @@
     "spanWidth": 3,
     "spanHeight": 3,
     "label": "Labirin Bawah Karang (20x20)",
-    "description": "Sarang gua karang di pesisir samudra timur tempat bersemayamnya ular naga purba."
+    "description": "Sarang gua karang di pesisir samudra timur tempat bersemayamnya ular naga purba.",
+    "footprintWidth": 12,
+    "footprintHeight": 12,
+    "buildBuffer": 12
   }
 ]

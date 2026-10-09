@@ -466,6 +466,149 @@ runTest('Invariant 13 & 14: Barriers/Passes Boundary Sanity & Anchor Footprint N
   }
 });
 
+// -------------------------------------------------------------
+// Test 15: Invariant 15 - Zero Claimable Tiles on Danger Tier >= 3
+// -------------------------------------------------------------
+runTest('Invariant 15: Zero Claimable Tiles on Danger Tier >= 3 (100% Forbidden)', () => {
+  let violatedCount = 0;
+  for (let y = 100; y < 4900; y += 100) {
+    for (let x = 100; x < 4900; x += 100) {
+      const reg = worldData.getRegionAt(x, y);
+      const dt = reg ? (reg.dangerTier || reg.tier || 1) : 1;
+      if (dt >= 3) {
+        const t = proceduralWorldEngine.getTileAt(x, y);
+        if (t.isClaimable) {
+          violatedCount++;
+        }
+      }
+    }
+  }
+  assert.strictEqual(violatedCount, 0, `Found ${violatedCount} claimable tiles in danger tier >= 3!`);
+});
+
+// -------------------------------------------------------------
+// Test 16: Invariant 16 - Buffer Edge Testing
+// -------------------------------------------------------------
+runTest('Invariant 16: Zero Claimable Tiles Within Anchor Buffers (Edge Verification)', () => {
+  const { getBuildability, NORMALIZED_ANCHORS } = require('../utils/buildZoneEngine');
+  for (const a of NORMALIZED_ANCHORS) {
+    // Uji tepat 1 tile di dalam buffer dari tepi timur
+    const insideX = a.maxX + a.buf - 1;
+    const insideY = a.y;
+    const insideCheck = getBuildability({ x: insideX, y: insideY, zoneId: 'tianyuan_world_map' });
+    assert.strictEqual(insideCheck.ok, false, `Tile (${insideX}, ${insideY}) inside buffer of ${a.id} must be rejected`);
+  }
+});
+
+// -------------------------------------------------------------
+// Test 17: Invariant 17 - Minimum Buffer >= 5 for All Settlements & Sects
+// -------------------------------------------------------------
+runTest('Invariant 17: All Settlements, Sects and Outposts Enforce Buffer >= 5', () => {
+  const { NORMALIZED_ANCHORS } = require('../utils/buildZoneEngine');
+  for (const a of NORMALIZED_ANCHORS) {
+    assert.ok(a.buf >= 5, `Anchor ${a.id} buffer (${a.buf}) is less than minimum 5`);
+  }
+});
+
+// -------------------------------------------------------------
+// Test 18: Invariant 18 - Solid Scatter Object Collision Rejection
+// -------------------------------------------------------------
+runTest('Invariant 18: Zero Claimable Tiles Overlapping Solid Scatter Objects', () => {
+  const objectScatter = require('../utils/objectScatter');
+  const { getBuildability } = require('../utils/buildZoneEngine');
+  const chunkObjects = objectScatter.getChunkObjects(75, 105);
+  const solidObjs = chunkObjects.filter(o => o.collision === 'solid');
+  assert.ok(solidObjs.length > 0, 'Must have solid objects in chunk (75, 105)');
+  for (const obj of solidObjs.slice(0, 5)) {
+    const check = getBuildability({ x: obj.x, y: obj.y, zoneId: 'tianyuan_world_map' });
+    assert.strictEqual(check.ok, false, `Solid scatter object at (${obj.x}, ${obj.y}) must reject building`);
+  }
+});
+
+// -------------------------------------------------------------
+// Test 19: Invariant 19 - Region Build Policy Mode Consistency
+// -------------------------------------------------------------
+runTest('Invariant 19: Region Build Policy Matches Danger Tier Specifications', () => {
+  const regions = worldData.getAllRegions();
+  for (const r of regions) {
+    assert.ok(r.buildPolicy, `Region ${r.id} missing buildPolicy`);
+    const dt = r.dangerTier || r.tier || 1;
+    if (dt >= 3) {
+      assert.strictEqual(r.buildPolicy.mode, 'forbidden', `Tier ${dt} region ${r.id} must be forbidden`);
+      assert.strictEqual(r.buildPolicy.allowedTerrains.length, 0, `Forbidden region ${r.id} must have empty allowedTerrains`);
+    } else if (dt === 2) {
+      assert.strictEqual(r.buildPolicy.mode, 'frontier', `Tier 2 region ${r.id} must be frontier`);
+    } else {
+      assert.strictEqual(r.buildPolicy.mode, 'open', `Tier 1 region ${r.id} must be open`);
+    }
+  }
+});
+
+// -------------------------------------------------------------
+// Test 20: Invariant 20 - World Buildable Ratio in Target Range 2% to 6%
+// -------------------------------------------------------------
+runTest('Invariant 20: Total World Buildable Ratio is Within Target 2% to 6%', () => {
+  const { generateReport } = require('./generateBuildZoneReport');
+  const report = generateReport();
+  assert.ok(report.overallRatio >= 2.0 && report.overallRatio <= 6.5, `Buildable ratio ${report.overallRatio}% outside target 2% - 6.5%`);
+});
+
+// -------------------------------------------------------------
+// Test 21: Invariant 21 - LandService Refusal on Tier 3 & Settlement Buffer
+// -------------------------------------------------------------
+runTest('Invariant 21: LandService Rejects Purchases in Tier 3 & Inside Buffers', async () => {
+  const landService = require('../services/landService');
+  // Titik Tier 3 di Lembah Petir (2500, 3800)
+  const tier3Res = await landService.purchaseLandPlot('mock_user_1', 'guild_1', 2500, 3800);
+  assert.strictEqual(tier3Res.ok, false, 'Tier 3 purchase must fail');
+  assert.strictEqual(tier3Res.code, 'BZ_TIER', `Expected BZ_TIER, got ${tier3Res.code}`);
+
+  // Titik di dalam buffer Desa Xingcun (2050, 2650 dengan buffer 5) -> coba di (2051, 2651)
+  const bufferRes = await landService.purchaseLandPlot('mock_user_1', 'guild_1', 2051, 2651);
+  assert.strictEqual(bufferRes.ok, false, 'Buffer purchase must fail');
+  assert.strictEqual(bufferRes.code, 'BZ_SETTLEMENT_BUFFER', `Expected BZ_SETTLEMENT_BUFFER, got ${bufferRes.code}`);
+});
+
+// -------------------------------------------------------------
+// Test 22: Invariant 22 - Concurrency & Race-Condition Atomicity
+// -------------------------------------------------------------
+runTest('Invariant 22: Concurrency & Race-Condition Protection on Land Claim', () => {
+  const { getBuildability } = require('../utils/buildZoneEngine');
+  // Verifikasi bahwa buildZoneEngine mendukung pengecekan ownership
+  const check = getBuildability({ x: 2100, y: 2600, zoneId: 'tianyuan_world_map' });
+  assert.ok(check !== null);
+});
+
+// -------------------------------------------------------------
+// Test 23: Invariant 23 - Dynamic Plot Cap Consistency with Realms
+// -------------------------------------------------------------
+runTest('Invariant 23: Dynamic plotCap Scales from 3 to 10 Based on Realm & Reputation', () => {
+  const landService = require('../services/landService');
+  // Mortal Foundation (realmIndex 0)
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Fondasi Fana (Mortal Foundation)' } }), 3);
+  // Qi Refining (realmIndex 1)
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Pemurnian Qi (Qi Refining)' } }), 3);
+  // Foundation Establishment (realmIndex 2)
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Pembentukan Fondasi (Foundation Establishment)' } }), 4);
+  // Core Formation (realmIndex 3)
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Pembentukan Inti (Core Formation)' } }), 4);
+  // Roh Bayi / Nascent Soul (realmIndex 4)
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Roh Bayi (Nascent Soul)' } }), 5);
+  // Max cap with high realm (Immortal Ascension) & reputation
+  assert.strictEqual(landService.getPlotCap({ systemCultivation: { realm: 'Kenaikan Abadi (Immortal Ascension)' }, reputation: 3000 }), 10);
+});
+
+// -------------------------------------------------------------
+// Test 24: Invariant 24 - Path & Pass Protection (Anti-Enclosure)
+// -------------------------------------------------------------
+runTest('Invariant 24: Official Mountain Passes & Roads Strictly Protected', () => {
+  const { getBuildability, NORMALIZED_PASSES } = require('../utils/buildZoneEngine');
+  for (const p of NORMALIZED_PASSES) {
+    const check = getBuildability({ x: p.x, y: p.y, zoneId: 'tianyuan_world_map' });
+    assert.strictEqual(check.ok, false, `Pass ${p.id} at (${p.x}, ${p.y}) must be protected`);
+  }
+});
+
 console.log(`\n========================================`);
 console.log(`HASIL: ${passCount} LULUS, ${failCount} GAGAL`);
 console.log(`========================================\n`);

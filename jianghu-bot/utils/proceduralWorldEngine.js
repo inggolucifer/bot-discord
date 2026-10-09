@@ -680,8 +680,9 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     if (elevation > 0.50) resourceType = 'ore';
   }
 
-  // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable)
-  const isClaimable = terrainType === 'plains' && !isSolid && !isSettlementTile;
+  // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable via SSOT buildZoneEngine)
+  const { isTileClaimableFast } = require('./buildZoneEngine');
+  const isClaimable = isTileClaimableFast(tileX, tileY, terrainType, isSolid, region);
   if (isClaimable) {
     tileType = 'buildable_plot';
     if (!label) label = 'Kavling Tanah Siap Bangun';

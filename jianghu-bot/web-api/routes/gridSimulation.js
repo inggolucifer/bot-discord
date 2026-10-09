@@ -112,7 +112,21 @@ router.post('/land/purchase', async (req, res) => {
     if (!discordId) return res.status(400).json({ ok: false, error: 'discordId diperlukan.' });
     if (x == null || y == null) return res.status(400).json({ ok: false, error: 'Koordinat x dan y diperlukan.' });
 
-    const result = await landService.purchaseLandPlot(discordId, guildId, x, y, zoneId);
+    // Validasi jarak fisik (pemain harus berdiri berdekatan dengan plot, radius <= 1 tile)
+    const Player = require('../../models/Player');
+    const player = await Player.findOne({ discordId, guildId });
+    if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan' });
+
+    const currentX = Number(player.gridPosition?.tileX ?? 0);
+    const currentY = Number(player.gridPosition?.tileY ?? 0);
+    const targetX = parseInt(x);
+    const targetY = parseInt(y);
+    const dist = Math.max(Math.abs(targetX - currentX), Math.abs(targetY - currentY));
+    if (dist > 1) {
+      return res.status(400).json({ ok: false, error: 'Kamu harus berdiri di dekat plot tanah tersebut (radius 1 petak) untuk membelinya!' });
+    }
+
+    const result = await landService.purchaseLandPlot(discordId, guildId, targetX, targetY, zoneId);
     if (!result.ok) return res.status(400).json(result);
 
     res.json(result);

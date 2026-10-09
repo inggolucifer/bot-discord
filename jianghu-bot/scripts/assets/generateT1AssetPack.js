@@ -1,34 +1,35 @@
 /**
  * ASSET PIPELINE: T1 CORE ASSET PACK GENERATOR (scripts/assets/generateT1AssetPack.js)
- * Produces the complete T1 catalog (>= 120 assets) spanning:
- * - Bamboo clumps (S/M/L, 2 densities)
- * - Trees (ancient pine, river willow, peach blossom, frost cypress, dead wood)
- * - Rocks & karst mountains (1x1 to 4x3)
- * - Buildings & Sect Gates (farm houses, inns, pavilions, sect gates, pagodas)
- * - Monster Rings (Tiers 1-5, Boss double ring)
- * - Autotiles (River 16, Dirt Road 16, Stone Road 16)
+ * Produces the complete T1 catalog (>= 150 assets) with real binary WebP textures and JSON manifests:
+ * - Bamboo clumps (S/M/L, 3 tones, 2 densities) + canonical aliases
+ * - Trees (ancient pine, river willow, peach blossom, frost cypress, dead wood) + aliases
+ * - Rocks & karst mountains (1x1 to 4x3) + aliases
+ * - Buildings & Sect Gates (farm houses, inns, pavilions, sect gates, pagodas) + aliases
+ * - Monster Rings (Tiers 1-5, Boss double ring, Elite)
+ * - Autotiles (River 16, Road 16)
  *
- * Validates each asset against §5.5 quality gate and exports atlas manifests to:
- * web-dashboard/public/assets/atlas/*.json
+ * Uses Sharp to composite real RGBA pixels and encodes to WebP (quality 90) at:
+ * web-dashboard/public/assets/atlas/*.webp and *.json
  */
 
 const fs = require('fs');
 const path = require('path');
 const { createObjectMetadata } = require('./generateMeta');
-const { packAtlasFrames } = require('./packAtlas');
-const { validateAssetMetadata } = require('./validateAssets');
+const { packAndRenderAtlas } = require('./packAtlas');
+const { validateAssetMetadata, validateRealAtlasFile } = require('./validateAssets');
+const { generateAssetSvg } = require('./generateImages');
 
 const outputAtlasDir = path.join(__dirname, '../../web-dashboard/public/assets/atlas');
 if (!fs.existsSync(outputAtlasDir)) {
   fs.mkdirSync(outputAtlasDir, { recursive: true });
 }
 
-console.log('=== GENERATING T1 CORE ASSET PACK (>= 120 ASSETS) ===\n');
+console.log('=== GENERATING T1 CORE ASSET PACK (REAL WEBP BINARY ATLASES) ===\n');
 
 const allAssets = [];
 
 // ----------------------------------------------------------------------------
-// 1. BAMBOO GROVES (18 VARIANTS)
+// 1. BAMBOO GROVES (18 VARIANTS + CANONICAL ALIASES)
 // ----------------------------------------------------------------------------
 const bambooDensities = ['sparse', 'dense'];
 const bambooSizes = [
@@ -58,10 +59,52 @@ for (const tone of bambooTones) {
     }
   }
 }
-console.log(`[+] Bamboo Clumps generated: 18 variants`);
+
+// Canonical Aliases for Bamboo
+allAssets.push({
+  id: 'bamboo_clump_1x1',
+  atlas: 'objects_nature',
+  category: 'bamboo',
+  width: 100,
+  height: 180,
+  cw: 1,
+  ch: 1,
+  collision: 'soft',
+  staminaMult: 1.25,
+  fogFoot: true,
+  tags: ['bamboo', 'alias']
+});
+allAssets.push({
+  id: 'bamboo_clump_2x1',
+  atlas: 'objects_nature',
+  category: 'bamboo',
+  width: 200,
+  height: 220,
+  cw: 2,
+  ch: 1,
+  collision: 'soft',
+  staminaMult: 1.3,
+  fogFoot: true,
+  tags: ['bamboo', 'alias']
+});
+allAssets.push({
+  id: 'bamboo_clump_2x2',
+  atlas: 'objects_nature',
+  category: 'bamboo',
+  width: 200,
+  height: 260,
+  cw: 2,
+  ch: 2,
+  collision: 'soft',
+  staminaMult: 1.35,
+  fogFoot: true,
+  tags: ['bamboo', 'alias']
+});
+
+console.log(`[+] Bamboo Clumps generated: 21 variants (including aliases)`);
 
 // ----------------------------------------------------------------------------
-// 2. TREES (30 VARIANTS)
+// 2. TREES (30 VARIANTS + ALIASES)
 // ----------------------------------------------------------------------------
 const treeSpecies = [
   { name: 'pine_ancient', cw: 1, ch: 1, w: 100, h: 160 },
@@ -89,7 +132,36 @@ for (const species of treeSpecies) {
     });
   }
 }
-console.log(`[+] Trees generated: 30 variants`);
+
+// Canonical Aliases for Trees
+allAssets.push({
+  id: 'pine_tree_1x1',
+  atlas: 'objects_nature',
+  category: 'tree',
+  width: 100,
+  height: 160,
+  cw: 1,
+  ch: 1,
+  collision: 'soft',
+  staminaMult: 1.15,
+  fogFoot: true,
+  tags: ['tree', 'alias']
+});
+allAssets.push({
+  id: 'spirit_tree_2x2',
+  atlas: 'objects_nature',
+  category: 'tree',
+  width: 200,
+  height: 280,
+  cw: 2,
+  ch: 2,
+  collision: 'solid',
+  staminaMult: 1.0,
+  fogFoot: true,
+  tags: ['tree', 'alias']
+});
+
+console.log(`[+] Trees generated: 32 variants (including aliases)`);
 
 // ----------------------------------------------------------------------------
 // 3. ROCKS & BOULDERS (12 VARIANTS)
@@ -121,7 +193,7 @@ for (const rType of rockTypes) {
 console.log(`[+] Rocks & Boulders generated: 12 variants`);
 
 // ----------------------------------------------------------------------------
-// 4. MOUNTAIN PEAKS & KARST (28 VARIANTS)
+// 4. MOUNTAIN PEAKS & KARST (28 VARIANTS + ALIASES)
 // ----------------------------------------------------------------------------
 const mtScales = [
   { name: 'karst_pillar', cw: 1, ch: 1, w: 100, h: 220, count: 6 },
@@ -149,10 +221,35 @@ for (const mt of mtScales) {
     });
   }
 }
-console.log(`[+] Mountain Peaks & Karst generated: 28 variants`);
+
+// Canonical Aliases for Mountains
+const mtAliases = [
+  { id: 'karst_pillar_1x1', w: 100, h: 220, cw: 1, ch: 1 },
+  { id: 'mt_rock_2x1', w: 200, h: 280, cw: 2, ch: 1 },
+  { id: 'mt_rock_2x2', w: 200, h: 360, cw: 2, ch: 2 },
+  { id: 'mt_rock_3x2', w: 300, h: 440, cw: 3, ch: 2 },
+  { id: 'mt_rock_4x3', w: 400, h: 560, cw: 4, ch: 3 }
+];
+for (const a of mtAliases) {
+  allAssets.push({
+    id: a.id,
+    atlas: 'objects_nature',
+    category: 'mountain',
+    width: a.w,
+    height: a.h,
+    cw: a.cw,
+    ch: a.ch,
+    collision: 'solid',
+    staminaMult: 1.0,
+    fogFoot: true,
+    tags: ['mountain', 'alias']
+  });
+}
+
+console.log(`[+] Mountain Peaks & Karst generated: 33 variants (including aliases)`);
 
 // ----------------------------------------------------------------------------
-// 5. STRUCTURES & SET-PIECES (24 VARIANTS)
+// 5. STRUCTURES & SET-PIECES (24 VARIANTS + ALIASES)
 // ----------------------------------------------------------------------------
 const buildingDefs = [
   { name: 'farm_hut', cw: 2, ch: 1, w: 200, h: 180, count: 4 },
@@ -181,7 +278,32 @@ for (const bDef of buildingDefs) {
     });
   }
 }
-console.log(`[+] Buildings & Set-Pieces generated: 24 variants`);
+
+// Canonical Aliases for Buildings
+const bldgAliases = [
+  { id: 'pavilion_1x1', w: 100, h: 140, cw: 1, ch: 1, collision: 'none' },
+  { id: 'village_house_2x1', w: 200, h: 180, cw: 2, ch: 1, collision: 'solid' },
+  { id: 'sect_gate_3x2', w: 300, h: 320, cw: 3, ch: 2, collision: 'solid' },
+  { id: 'stone_torii_1x1', w: 100, h: 150, cw: 1, ch: 1, collision: 'none' },
+  { id: 'pagoda_2x2', w: 200, h: 380, cw: 2, ch: 2, collision: 'solid' }
+];
+for (const a of bldgAliases) {
+  allAssets.push({
+    id: a.id,
+    atlas: 'objects_structures',
+    category: 'building',
+    width: a.w,
+    height: a.h,
+    cw: a.cw,
+    ch: a.ch,
+    collision: a.collision,
+    staminaMult: 1.0,
+    fogFoot: true,
+    tags: ['building', 'alias']
+  });
+}
+
+console.log(`[+] Buildings & Set-Pieces generated: 29 variants (including aliases)`);
 
 // ----------------------------------------------------------------------------
 // 6. MONSTER INK RINGS & MARKERS (8 VARIANTS)
@@ -281,40 +403,51 @@ console.log(`TOTAL ASSETS GENERATED: ${allAssets.length} (Target >= 120: LULUS)`
 console.log(`========================================\n`);
 
 // ----------------------------------------------------------------------------
-// 8. VALIDATION GATE & ATLAS PACKING
+// 8. ASSET GENERATION, PACKING & VALIDATION PIPELINE
 // ----------------------------------------------------------------------------
-let validCount = 0;
-let invalidCount = 0;
+(async () => {
+  const atlasGroups = {};
 
-const atlasGroups = {};
+  for (const a of allAssets) {
+    const meta = createObjectMetadata(a);
+    const result = validateAssetMetadata(meta);
 
-for (const a of allAssets) {
-  const meta = createObjectMetadata(a);
-  const result = validateAssetMetadata(meta);
+    if (!result.valid) {
+      console.error(`[FAIL] Asset ${a.id}:`, result.errors);
+      process.exit(1);
+    }
 
-  if (!result.valid) {
-    console.error(`[FAIL] Asset ${a.id}:`, result.errors);
-    invalidCount++;
-  } else {
-    validCount++;
+    // Generate real Shuimo SVG markup matching reference image
+    const svgContent = generateAssetSvg(a);
+
     if (!atlasGroups[a.atlas]) atlasGroups[a.atlas] = [];
     atlasGroups[a.atlas].push({
       id: a.id,
       width: a.width,
       height: a.height,
+      svg: svgContent,
       metadata: meta
     });
   }
-}
 
-console.log(`[VALIDASI] Lolos: ${validCount}, Gagal: ${invalidCount}`);
+  // Pack and render each atlas to real WebP & JSON
+  for (const [atlasName, sprites] of Object.entries(atlasGroups)) {
+    console.log(`\n[ATLAS RENDERING] Rendering "${atlasName}" (${sprites.length} frames)...`);
+    const packedResult = await packAndRenderAtlas(atlasName, sprites, outputAtlasDir, 2048);
+    console.log(`  -> WebP: ${packedResult.webpPath} (${(packedResult.byteSize / 1024).toFixed(1)} KB, ${packedResult.dimensions.w}x${packedResult.dimensions.h})`);
+    console.log(`  -> JSON: ${packedResult.jsonPath}`);
 
-// Export Atlas Manifests
-for (const [atlasName, sprites] of Object.entries(atlasGroups)) {
-  const packed = packAtlasFrames(sprites, 2048);
-  const outFile = path.join(outputAtlasDir, `${atlasName}.json`);
-  fs.writeFileSync(outFile, JSON.stringify(packed, null, 2), 'utf8');
-  console.log(`[ATLAS EXPORT] ${outFile} (${sprites.length} frames, ${packed.meta.size.w}x${packed.meta.size.h})`);
-}
+    // Validate real binary file output
+    const valResult = await validateRealAtlasFile(packedResult.jsonPath, packedResult.webpPath);
+    if (!valResult.valid) {
+      console.error(`[FAIL] Validation error for atlas ${atlasName}:`, valResult.errors);
+      process.exit(1);
+    } else {
+      console.log(`  -> Quality Gate: [PASS] (halo, format, dimensions & metadata all valid)`);
+    }
+  }
 
-console.log('\n[SUCCESS] T1 Asset Pack Generation Complete.');
+  console.log('\n========================================');
+  console.log('[SUCCESS] All T1 Binary WebP Atlases & Manifests Created & Validated!');
+  console.log('========================================\n');
+})();

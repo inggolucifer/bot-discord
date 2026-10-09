@@ -19,7 +19,8 @@
     "assets:meta": "node scripts/assets/generateMeta.js",
     "assets:atlas": "node scripts/assets/packAtlas.js",
     "assets:validate": "node scripts/assets/validateAssets.js",
-    "assets:generate-t1": "node scripts/assets/generateT1AssetPack.js"
+    "assets:generate-t1": "node scripts/assets/generateT1AssetPack.js",
+    "world:build-report": "node scripts/generateBuildZoneReport.js"
   },
   "dependencies": {
     "axios": "^1.19.0",
@@ -37,6 +38,7 @@
     "mongodb-memory-server": "^11.2.0",
     "mongoose": "^8.24.4",
     "nodemailer": "^10.0.10",
+    "sharp": "^0.35.5",
     "socket.io": "^4.8.3",
     "supertest": "^7.2.2",
     "uuid": "^10.0.0",

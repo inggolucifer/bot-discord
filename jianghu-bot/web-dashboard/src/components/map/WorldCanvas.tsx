@@ -26,6 +26,7 @@ import {
 } from '@/lib/proceduralObjects';
 import { CANONICAL_REGIONS, CANONICAL_LANDMARKS } from '@/config/canonicalRegions';
 import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation } from 'lucide-react';
+import { atlasLoader } from '@/lib/atlasLoader';
 
 // Re-export TileData for backward compatibility
 export type { TileData };
@@ -139,6 +140,26 @@ export default function WorldCanvas({
   const [cameraStart, setCameraStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveredTile, setHoveredTile] = useState<TileData | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<any | null>(null);
+
+  // Build Mode State (Fase 18)
+  const [isBuildMode, setIsBuildMode] = useState(false);
+
+  // Preload Core WebP Atlases on Mount (Fase 19)
+  useEffect(() => {
+    atlasLoader.preloadCoreAtlases();
+  }, []);
+
+  // Keyboard shortcut: 'B' toggles Mode Bangun
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'b' || e.key === 'B') {
+        setIsBuildMode(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Client-Side Tweening
   const animatedPlayerPos = useRef({ x: playerPos.x, y: playerPos.y });
@@ -453,6 +474,81 @@ export default function WorldCanvas({
         ctx.stroke();
       }
       ctx.restore();
+
+      // ----------------------------------------------------------------------
+      // L2.5: BUILD ZONE OVERLAY (When isBuildMode is active - Fase 18)
+      // ----------------------------------------------------------------------
+      if (isBuildMode) {
+        ctx.save();
+        for (let ty = minTileY; ty <= maxTileY; ty++) {
+          for (let tx = minTileX; tx <= maxTileX; tx++) {
+            const tile = tileMap.get(`${tx},${ty}`);
+            const sx = toScreenX(tx);
+            const sy = toScreenY(ty);
+
+            if (!tile) continue;
+
+            if (tile.ownerId) {
+              // Owned plot: Amber Gold
+              ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
+              ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+              ctx.strokeStyle = '#F59E0B';
+              ctx.lineWidth = 1.5;
+              ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+            } else if (tile.isClaimable) {
+              if (tile.dangerTier === 2) {
+                // Frontier (Tier 2): Ochre
+                ctx.fillStyle = 'rgba(217, 119, 6, 0.25)';
+                ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+                ctx.strokeStyle = '#D97706';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+              } else {
+                // Open (Tier 1): Jade Green
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.28)';
+                ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+                ctx.strokeStyle = '#10B981';
+                ctx.lineWidth = 1.2;
+                ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+              }
+            } else {
+              // Forbidden or buffer
+              const isBuffer = Boolean(tile.territoryType === 'settlement_buffer' || tile.isSettlementTile);
+              if (isBuffer) {
+                // Buffer: Slate Blue with dashed boundary
+                ctx.fillStyle = 'rgba(71, 85, 105, 0.28)';
+                ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+                ctx.strokeStyle = '#64748B';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+              } else {
+                // Forbidden: Cinnabar Cross-Hatch
+                ctx.fillStyle = 'rgba(220, 38, 38, 0.16)';
+                ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
+                ctx.strokeStyle = 'rgba(220, 38, 38, 0.35)';
+                ctx.lineWidth = 0.8;
+                ctx.beginPath();
+                ctx.moveTo(sx, sy + currentTileSize);
+                ctx.lineTo(sx + currentTileSize, sy);
+                ctx.stroke();
+              }
+            }
+          }
+        }
+
+        // Ghost footprint placement preview at hovered tile
+        if (hoveredTile) {
+          const hsx = toScreenX(hoveredTile.tileX);
+          const hsy = toScreenY(hoveredTile.tileY);
+          const isBuildable = hoveredTile.isClaimable && !hoveredTile.ownerId;
+          ctx.fillStyle = isBuildable ? 'rgba(16, 185, 129, 0.38)' : 'rgba(220, 38, 38, 0.38)';
+          ctx.fillRect(hsx, hsy, currentTileSize, currentTileSize);
+          ctx.strokeStyle = isBuildable ? '#10B981' : '#EF4444';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(hsx, hsy, currentTileSize, currentTileSize);
+        }
+        ctx.restore();
+      }
 
       // ----------------------------------------------------------------------
       // L3 & L4: Y-SORTED OBJECTS & ENTITIES (MAX 140 OBJECTS PER FRAME)
@@ -1148,6 +1244,26 @@ export default function WorldCanvas({
     }));
   };
 
+  const getBuildLoreReason = (tile: TileData | null) => {
+    if (!tile) return '';
+    if (tile.isClaimable) {
+      if (tile.dangerTier === 2) {
+        return 'Tanah perbatasan (Frontier Tier 2). Pajak pembangunan x1.2.';
+      }
+      return 'Tanah subur dan kokoh di dataran aman (Tier 1), siap untuk didirikan bangunan.';
+    }
+    if (tile.isSolid) {
+      return 'Tanah terhalang oleh formasi batu cadas/pegunungan solid yang mustahil ditembus.';
+    }
+    if (tile.dangerTier && tile.dangerTier >= 3) {
+      return 'Wilayah ini terlalu ganas (Tier 3+) dan dipenuhi energi iblis untuk pemukiman manusia.';
+    }
+    if (tile.terrainType?.includes('river') || tile.terrainType?.includes('road')) {
+      return 'Dilarang mendirikan bangunan di atas aliran air atau jalan umum Jianghu.';
+    }
+    return 'Berada di dalam zona penyangga (buffer) pemukiman/sekte/celah terlarang.';
+  };
+
   return (
     <div
       ref={containerRef}
@@ -1208,7 +1324,42 @@ export default function WorldCanvas({
         >
           <Layers className="w-3.5 h-3.5" />
         </button>
+        <button
+          onClick={() => setIsBuildMode(prev => !prev)}
+          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm ${
+            isBuildMode
+              ? 'bg-emerald-700 text-white border border-emerald-400 ring-2 ring-emerald-500/50'
+              : 'bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5]'
+          }`}
+          title={isBuildMode ? 'Matikan Mode Bangun (B)' : 'Aktifkan Mode Bangun (B)'}
+        >
+          🏗️
+        </button>
       </div>
+
+      {/* Mode Bangun Hover Info Card (Fase 18) */}
+      {isBuildMode && hoveredTile && currentMode === 'zone' && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 bg-[#0E121A]/95 border border-amber-600/70 p-3 rounded-xl shadow-2xl backdrop-blur-md flex flex-col gap-1 min-w-[320px] max-w-[420px] animate-in fade-in">
+          <div className="flex justify-between items-center">
+            <span className="font-serif font-bold text-amber-200 text-sm">
+              Kavling ({hoveredTile.tileX}, {hoveredTile.tileY}) • {hoveredTile.terrainType}
+            </span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+              hoveredTile.isClaimable
+                ? 'bg-emerald-950 text-emerald-300 border-emerald-500'
+                : 'bg-red-950 text-red-300 border-red-500'
+            }`}>
+              {hoveredTile.isClaimable ? '✅ DAPAT DIBANGUN' : '🚫 DILARANG BANGUN'}
+            </span>
+          </div>
+          <div className="text-xs text-gray-300 mt-1">
+            {getBuildLoreReason(hoveredTile)}
+          </div>
+          <div className="text-[10px] text-amber-400/80 mt-0.5">
+            Tekan B untuk keluar dari Mode Bangun.
+          </div>
+        </div>
+      )}
 
       {/* Macro Mode Region Tooltip */}
       {currentMode === 'macro' && hoveredRegion && (

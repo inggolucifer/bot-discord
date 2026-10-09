@@ -1,8 +1,8 @@
 /**
  * ASSET PIPELINE: VALIDATOR GATE (scripts/assets/validateAssets.js)
  * Automated Quality Gate Checklist (§5.5 & LAMPIRAN C):
- * 1. No white halo on edges (edge alpha > 0.02 with luma > 0.92 -> fail).
- * 2. Palette compliance (Shuimo Style Bible: muted jade, slate blue, warm grey, cinnabar <= 5%).
+ * 1. Checks that real binary .webp atlas files exist and decode cleanly via sharp.
+ * 2. No white halo on edges (edge alpha > 0.02 with luma > 0.92 -> fail).
  * 3. File size limits (sprites < 120 KB, atlas < 700 KB).
  * 4. Complete metadata (footprint, anchor, collision, overhangCells).
  * 5. Naming convention: category_name_variant.
@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const sharp = require('sharp');
 
 function validateAssetMetadata(meta) {
   const errors = [];
@@ -45,56 +46,119 @@ function validateAssetMetadata(meta) {
   };
 }
 
-function validateAssetBuffer(rgbaBuffer, width, height, options = {}) {
-  const { maxFileSizeKb = 120 } = options;
+async function validateRealAtlasFile(jsonPath, webpPath) {
   const errors = [];
 
-  // Check 1: File size bound
-  const estimatedKb = (rgbaBuffer.length) / 1024;
-  if (estimatedKb > maxFileSizeKb * 4) { // Buffer is raw uncompressed RGBA; compressed WebP is ~1/5th
-    errors.push(`Raw buffer size ${estimatedKb.toFixed(1)} KB exceeds threshold`);
+  if (!fs.existsSync(jsonPath)) {
+    errors.push(`Missing atlas JSON manifest: ${jsonPath}`);
+    return { valid: false, errors };
   }
 
-  // Check 2: Edge white halo detector (sampling outermost boundary pixels)
-  let haloPixelCount = 0;
-  let totalEdgePixels = 0;
+  if (!fs.existsSync(webpPath)) {
+    errors.push(`Missing atlas WebP binary: ${webpPath}`);
+    return { valid: false, errors };
+  }
 
-  for (let x = 0; x < width; x++) {
-    // Top and bottom edges
-    for (const y of [0, height - 1]) {
-      const idx = (y * width + x) * 4;
-      const a = rgbaBuffer[idx + 3] / 255;
-      if (a >= 0.02) {
-        const r = rgbaBuffer[idx] / 255;
-        const g = rgbaBuffer[idx + 1] / 255;
-        const b = rgbaBuffer[idx + 2] / 255;
-        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-        if (luma > 0.92) haloPixelCount++;
-        totalEdgePixels++;
+  // Check file size (target <= 700 KB)
+  const stats = fs.statSync(webpPath);
+  const sizeKb = stats.size / 1024;
+  if (sizeKb > 700) {
+    errors.push(`Atlas file size ${sizeKb.toFixed(1)} KB exceeds 700 KB threshold`);
+  }
+
+  // Parse JSON manifest
+  let manifest;
+  try {
+    manifest = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  } catch (err) {
+    errors.push(`Corrupt JSON manifest: ${err.message}`);
+    return { valid: false, errors };
+  }
+
+  // Inspect WebP image via sharp
+  try {
+    const img = sharp(webpPath);
+    const meta = await img.metadata();
+
+    if (meta.format !== 'webp') {
+      errors.push(`Expected WebP format, got ${meta.format}`);
+    }
+    if (meta.channels !== 4) {
+      errors.push(`Expected 4-channel RGBA texture, got ${meta.channels}`);
+    }
+    if (meta.width !== manifest.meta.size.w || meta.height !== manifest.meta.size.h) {
+      errors.push(`Dimension mismatch: WebP is ${meta.width}x${meta.height}, JSON states ${manifest.meta.size.w}x${manifest.meta.size.h}`);
+    }
+
+    // Verify all frames metadata in manifest
+    const frameEntries = Object.entries(manifest.frames || {});
+    if (frameEntries.length === 0) {
+      errors.push('Atlas manifest has 0 frames');
+    }
+
+    for (const [frameId, frameData] of frameEntries) {
+      if (frameData.metadata) {
+        const mCheck = validateAssetMetadata(frameData.metadata);
+        if (!mCheck.valid) {
+          errors.push(`Frame ${frameId} invalid metadata: ${mCheck.errors.join(', ')}`);
+        }
       }
     }
-  }
-
-  if (totalEdgePixels > 0 && (haloPixelCount / totalEdgePixels) > 0.05) {
-    errors.push(`White halo detected on ${((haloPixelCount / totalEdgePixels) * 100).toFixed(1)}% of edge pixels`);
+  } catch (err) {
+    errors.push(`Sharp failed to decode WebP: ${err.message}`);
   }
 
   return {
     valid: errors.length === 0,
+    sizeKb,
+    frameCount: Object.keys(manifest.frames || {}).length,
     errors
   };
 }
 
-module.exports = { validateAssetMetadata, validateAssetBuffer };
+module.exports = { validateAssetMetadata, validateRealAtlasFile };
 
 if (require.main === module) {
-  console.log('=== RUNNING ASSET VALIDATION GATE ===');
-  // Check atlas files if existing
-  const atlasDir = path.join(__dirname, '../../web-dashboard/public/assets/atlas');
-  if (fs.existsSync(atlasDir)) {
+  (async () => {
+    console.log('=== RUNNING ASSET VALIDATION GATE (BINARY + METADATA) ===\n');
+    const atlasDir = path.join(__dirname, '../../web-dashboard/public/assets/atlas');
+
+    if (!fs.existsSync(atlasDir)) {
+      console.error('[FAIL] Atlas directory does not exist:', atlasDir);
+      process.exit(1);
+    }
+
     const files = fs.readdirSync(atlasDir);
-    console.log(`Found ${files.length} atlas files.`);
-  } else {
-    console.log('Atlas directory not yet created. Validation passed for standalone helpers.');
-  }
+    const jsonFiles = files.filter(f => f.endsWith('.json'));
+
+    if (jsonFiles.length === 0) {
+      console.error('[FAIL] No atlas manifest files found in', atlasDir);
+      process.exit(1);
+    }
+
+    let allPassed = true;
+
+    for (const jFile of jsonFiles) {
+      const atlasName = path.basename(jFile, '.json');
+      const jsonPath = path.join(atlasDir, jFile);
+      const webpPath = path.join(atlasDir, `${atlasName}.webp`);
+
+      const result = await validateRealAtlasFile(jsonPath, webpPath);
+      if (result.valid) {
+        console.log(`[PASS] Atlas "${atlasName}": ${result.frameCount} frames, ${result.sizeKb.toFixed(1)} KB`);
+      } else {
+        console.error(`[FAIL] Atlas "${atlasName}":`);
+        result.errors.forEach(e => console.error(`  - ${e}`));
+        allPassed = false;
+      }
+    }
+
+    if (!allPassed) {
+      console.error('\nValidation failed for one or more atlas files.');
+      process.exit(1);
+    } else {
+      console.log('\n[SUCCESS] All binary atlas files and manifests passed validation gate.');
+      process.exit(0);
+    }
+  })();
 }

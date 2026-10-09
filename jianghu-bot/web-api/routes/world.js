@@ -2837,10 +2837,10 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
         );
 
         if (!buyResult.ok) {
-            return res.status(400).json({ error: buyResult.error });
+            return res.status(400).json({ error: buyResult.error, code: buyResult.code, details: buyResult.details });
         }
 
-        const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
+        const ownedPlotsCount = await ZoneTile.countDocuments({ guildId: player.guildId, ownerId: player.discordId });
         const nextPrice = getLandPriceForPlayer(ownedPlotsCount);
 
         return res.json({
@@ -2857,6 +2857,79 @@ router.post('/zone/buy-plot', authenticateToken, async (req, res) => {
     }
 });
 
+// Endpoint inspeksi pra-pembangunan (Pre-Flight Build Check)
+router.post('/zone/build-check', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { tileX, tileY, width = 1, height = 1, zoneId } = req.body;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const currentZoneId = zoneId || player.gridPosition?.zoneId || 'tianyuan_world_map';
+        const targetX = parseInt(tileX);
+        const targetY = parseInt(tileY);
+        const fw = Math.max(1, parseInt(width) || 1);
+        const fh = Math.max(1, parseInt(height) || 1);
+
+        const { getBuildability } = require('../../utils/buildZoneEngine');
+        const result = getBuildability({
+            zoneId: currentZoneId,
+            x: targetX,
+            y: targetY,
+            footprint: { w: fw, h: fh },
+            playerId: player.discordId,
+            guildId: player.guildId
+        });
+
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json({ ok: false, error: err.message });
+    }
+});
+
+// Endpoint topeng kelayakan bangun chunk 32x32 untuk overlay klien
+router.get('/build-zone/chunk/:cx/:cy', authenticateToken, async (req, res) => {
+    try {
+        const cx = parseInt(req.params.cx);
+        const cy = parseInt(req.params.cy);
+        if (isNaN(cx) || isNaN(cy)) {
+            return res.status(400).json({ error: 'Parameter cx dan cy tidak valid' });
+        }
+
+        const { getBuildability } = require('../../utils/buildZoneEngine');
+        const startX = cx * 32;
+        const startY = cy * 32;
+        const bitmask = [];
+        const reasonMap = {};
+
+        for (let dy = 0; dy < 32; dy++) {
+            let rowMask = 0;
+            for (let dx = 0; dx < 32; dx++) {
+                const tx = startX + dx;
+                const ty = startY + dy;
+                const check = getBuildability({ zoneId: 'tianyuan_world_map', x: tx, y: ty, footprint: { w: 1, h: 1 } });
+                if (check.ok) {
+                    rowMask |= (1 << (dx % 31));
+                } else if (!reasonMap[check.code]) {
+                    reasonMap[check.code] = check.message;
+                }
+            }
+            bitmask.push(rowMask);
+        }
+
+        res.set('Cache-Control', 'public, max-age=60');
+        return res.json({
+            success: true,
+            chunkX: cx,
+            chunkY: cy,
+            bitmask,
+            reasons: reasonMap
+        });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+});
+
 // Endpoint ringan untuk mengecek harga tanah pemain saat ini
 router.get('/zone/land-price', authenticateToken, async (req, res) => {
     try {
@@ -2864,9 +2937,7 @@ router.get('/zone/land-price', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-
-
-        const ownedPlotsCount = await ZoneTile.countDocuments({ ownerId: player.discordId });
+        const ownedPlotsCount = await ZoneTile.countDocuments({ guildId: player.guildId, ownerId: player.discordId });
         const nextPrice = getLandPriceForPlayer(ownedPlotsCount);
 
         return res.json({
@@ -2882,7 +2953,7 @@ router.get('/zone/land-price', authenticateToken, async (req, res) => {
 router.post('/zone/build', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { tileX, tileY, assetBlueprintId, assetName, isOpenToPublic } = req.body;
+        const { tileX, tileY, assetBlueprintId, assetName, isOpenToPublic, footprintWidth = 1, footprintHeight = 1 } = req.body;
 
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
@@ -2890,7 +2961,6 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         const currentZoneId = player.gridPosition?.zoneId || 'tianyuan_world_map';
         const targetX = parseInt(tileX);
         const targetY = parseInt(tileY);
-
 
         const tile = await ZoneTile.findOne({
             guildId: player.guildId,
@@ -2900,15 +2970,53 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         });
 
         if (!tile || (!tile.isClaimable && tile.tileType !== 'buildable_plot')) {
-            return res.status(400).json({ error: 'Tile bukan plot pembangunan yang valid.' });
+            return res.status(400).json({ error: 'Tile bukan plot pembangunan yang valid.', code: 'BZ_TERRAIN' });
         }
 
         if (tile.ownerId !== player.discordId) {
-            return res.status(403).json({ error: 'Kamu bukan pemilik sah dari plot tanah ini!' });
+            return res.status(403).json({ error: 'Kamu bukan pemilik sah dari plot tanah ini!', code: 'BZ_NOT_OWNER' });
         }
 
         if (tile.buildingName && !tile.isUnderConstruction) {
-            return res.status(400).json({ error: `Sudah berdiri bangunan ${tile.buildingName} di plot ini!` });
+            return res.status(400).json({ error: `Sudah berdiri bangunan ${tile.buildingName} di plot ini!`, code: 'BZ_OBJECT' });
+        }
+
+        const fw = Math.max(1, parseInt(footprintWidth) || 1);
+        const fh = Math.max(1, parseInt(footprintHeight) || 1);
+
+        // Validasi Otoritatif SSOT Kelayakan Bangun Footprint
+        const { getBuildability } = require('../../utils/buildZoneEngine');
+        const buildCheck = getBuildability({
+            zoneId: currentZoneId,
+            x: targetX,
+            y: targetY,
+            footprint: { w: fw, h: fh },
+            playerId: player.discordId,
+            guildId: player.guildId
+        });
+
+        if (!buildCheck.ok) {
+            return res.status(400).json({ error: buildCheck.message, code: buildCheck.code, details: buildCheck.details });
+        }
+
+        // Verifikasi kepemilikan seluruh petak footprint
+        for (let dy = 0; dy < fh; dy++) {
+            for (let dx = 0; dx < fw; dx++) {
+                const fx = targetX + dx;
+                const fy = targetY + dy;
+                const fTile = await ZoneTile.findOne({
+                    guildId: player.guildId,
+                    zoneId: currentZoneId,
+                    tileX: fx,
+                    tileY: fy
+                });
+                if (!fTile || fTile.ownerId !== player.discordId) {
+                    return res.status(403).json({
+                        error: `Petak (${fx}, ${fy}) pada footprint bangunan bukan milik sah karaktermu!`,
+                        code: 'BZ_NOT_OWNER'
+                    });
+                }
+            }
         }
 
 
