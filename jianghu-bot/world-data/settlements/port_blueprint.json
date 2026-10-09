@@ -1,0 +1,109 @@
+{
+  "blueprintType": "port",
+  "backdropId": "backdrop_misty_ocean_port",
+  "palette": "coastal_azure",
+  "skyColor": "#08131d",
+  "groundColor": "#101a24",
+  "description": "Pelabuhan pesisir samudera yang sibuk dengan tiang layar kapal kayu, dermaga papan terpanjang, dan aroma garam laut spiritual.",
+  "layers": [
+    {
+      "layer": "far",
+      "speed": 0.2,
+      "elements": ["distant_ocean_horizon", "rocky_sea_stacks", "coastal_mist", "giant_turtle_shadow"]
+    },
+    {
+      "layer": "mid",
+      "speed": 0.5,
+      "elements": ["ship_masts_and_rigging", "lighthouse_silhouette", "anchored_junks", "crashing_waves"]
+    },
+    {
+      "layer": "ground",
+      "speed": 1.0,
+      "elements": ["wooden_boardwalk_piers", "rope_bollards", "fish_nets_drying", "salt_mist"]
+    }
+  ],
+  "buildings": [
+    {
+      "id": "dock",
+      "name": "Dermaga Feri & Kapal Samudra",
+      "chineseName": "东海渡口",
+      "bannerText": "渡口 · 凌波舟",
+      "desc": "Pangkalan kapal feri berlayar sutra dan rakit penyeberang lautan untuk melintasi samudra timur dan kepulauan terapung.",
+      "type": "dock",
+      "icon": "Ship",
+      "scale": 1.2,
+      "xPercent": 15,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["ferry_crossing", "charter_boat", "fishing_permit"]
+    },
+    {
+      "id": "tavern",
+      "name": "Kedai Pelaut Ombak Biru",
+      "chineseName": "碧浪海客栈",
+      "bannerText": "海肆 · 观潮阁",
+      "desc": "Tempat minum para pelaut, pemburu monster laut, dan penyelam mutiara roh bertukar kisah gelombang.",
+      "type": "tavern",
+      "icon": "Wine",
+      "scale": 0.95,
+      "xPercent": 35,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["drink", "sea_rumors", "crew_hire"]
+    },
+    {
+      "id": "market",
+      "name": "Pasar Komoditas Hasil Laut & Mutiara",
+      "chineseName": "海市蜃楼坊",
+      "bannerText": "海市 · 灵珠阁",
+      "desc": "Pasar perdagangan mutiara naga, sisik monster laut, garam pemurni, dan herba ganggang spiritual.",
+      "type": "market",
+      "icon": "ShoppingBag",
+      "scale": 1.0,
+      "xPercent": 55,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["buy", "sell", "sea_goods", "pearl_trade"]
+    },
+    {
+      "id": "inn",
+      "name": "Pondok Singgah Pesisir Pantai",
+      "chineseName": "潮音客栈",
+      "bannerText": "客栈 · 听涛轩",
+      "desc": "Penginapan berangin sejuk di tepi dermaga dengan deburan ombak yang menenangkan dantian.",
+      "type": "inn",
+      "icon": "BedDouble",
+      "scale": 0.95,
+      "xPercent": 73,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["rest", "ocean_breeze_meditation"]
+    },
+    {
+      "id": "workshop",
+      "name": "Bengkel Galangan & Perkakas Pancing",
+      "chineseName": "海造工坊",
+      "bannerText": "工坊 · 破浪堂",
+      "desc": "Pembuatan dan perbaikan joran pancing bambu roh, harpun penombak monster laut, dan pelampung kayu tahan arus.",
+      "type": "workshop",
+      "icon": "Hammer",
+      "scale": 0.9,
+      "xPercent": 88,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["fishing_gear", "ship_repair", "water_talismans"]
+    }
+  ],
+  "defaultExits": [
+    {
+      "type": "city_gate",
+      "label": "Jalur Pesisir Daratan (Keluar ke Peta)",
+      "icon": "Gate"
+    },
+    {
+      "type": "dock",
+      "label": "Pelabuhan Feri Penyeberangan Air",
+      "icon": "Ship"
+    }
+  ]
+}

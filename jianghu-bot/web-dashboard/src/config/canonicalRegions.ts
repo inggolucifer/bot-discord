@@ -1,9 +1,17 @@
-[
+/**
+ * SSOT CANONICAL REGIONS & LANDMARKS
+ * Generated from world-data/regions.json & anchors.json
+ */
+
+import { RegionTopology, WorldLandmark } from '@/types/world';
+
+export const CANONICAL_REGIONS: (RegionTopology & { bounds: { minX: number; maxX: number; minY: number; maxY: number }; palette: any })[] = [
   {
-    "id": "central_plains",
-    "name": "Central Plains",
+    "regionSlug": "central_plains",
+    "displayName": "Central Plains",
     "chineseName": "中原神州",
-    "tier": 1,
+    "centerX": 2500,
+    "centerY": 2550,
     "dangerTier": 1,
     "qiDensityModifier": 1,
     "tempRangeC": {
@@ -31,21 +39,14 @@
       "accent": "#d4b16a",
       "terrainColor": "#4d7348"
     },
-    "priority": 1,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "plains": 0.5,
-      "meadow": 0.2,
-      "forest": 0.15,
-      "river": 0.1,
-      "road_dirt": 0.05
-    }
+    "description": ""
   },
   {
-    "id": "nine_springs_delta",
-    "name": "Nine Springs Delta",
+    "regionSlug": "nine_springs_delta",
+    "displayName": "Nine Springs Delta",
     "chineseName": "九泉三角洲",
-    "tier": 1,
+    "centerX": 2400,
+    "centerY": 2450,
     "dangerTier": 1,
     "qiDensityModifier": 1.2,
     "tempRangeC": {
@@ -73,20 +74,14 @@
       "accent": "#74c69d",
       "terrainColor": "#40916c"
     },
-    "priority": 5,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "farmland": 0.35,
-      "herb_field": 0.3,
-      "river": 0.25,
-      "pond_lotus": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "azure_mountain_range",
-    "name": "Azure Mountain Range",
+    "regionSlug": "azure_mountain_range",
+    "displayName": "Azure Mountain Range",
     "chineseName": "苍峦山脉",
-    "tier": 3,
+    "centerX": 2625,
+    "centerY": 3350,
     "dangerTier": 3,
     "qiDensityModifier": 1.5,
     "tempRangeC": {
@@ -114,20 +109,14 @@
       "accent": "#2a9d8f",
       "terrainColor": "#3d5a80"
     },
-    "priority": 10,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "mountain_rock": 0.5,
-      "mountain_peak": 0.25,
-      "bamboo_grove": 0.15,
-      "hill": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "northern_desolate",
-    "name": "Northern Desolate",
+    "regionSlug": "northern_desolate",
+    "displayName": "Northern Desolate",
     "chineseName": "极北荒原",
-    "tier": 4,
+    "centerX": 2100,
+    "centerY": 4300,
     "dangerTier": 4,
     "qiDensityModifier": 0.9,
     "tempRangeC": {
@@ -155,20 +144,14 @@
       "accent": "#84a59d",
       "terrainColor": "#e0e1dd"
     },
-    "priority": 4,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "snow": 0.55,
-      "glacier": 0.25,
-      "ice_crack": 0.1,
-      "mountain_rock": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "thundersteppe",
-    "name": "Thundersteppe",
+    "regionSlug": "thundersteppe",
+    "displayName": "Thundersteppe",
     "chineseName": "雷暴草原",
-    "tier": 4,
+    "centerX": 2300,
+    "centerY": 4200,
     "dangerTier": 4,
     "qiDensityModifier": 1.4,
     "tempRangeC": {
@@ -194,19 +177,14 @@
       "accent": "#ffd166",
       "terrainColor": "#4f5d75"
     },
-    "priority": 6,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "meadow": 0.65,
-      "lightning_scar": 0.25,
-      "plains": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "godthunder_peaks",
-    "name": "Godthunder Peaks",
+    "regionSlug": "godthunder_peaks",
+    "displayName": "Godthunder Peaks",
     "chineseName": "神霄雷峰",
-    "tier": 5,
+    "centerX": 3540,
+    "centerY": 4500,
     "dangerTier": 5,
     "qiDensityModifier": 1.8,
     "tempRangeC": {
@@ -231,19 +209,14 @@
       "accent": "#f72585",
       "terrainColor": "#4361ee"
     },
-    "priority": 7,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "mountain_peak": 0.5,
-      "mountain_rock": 0.35,
-      "crater": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "mirror_lake",
-    "name": "Mirror Lake",
+    "regionSlug": "mirror_lake",
+    "displayName": "Mirror Lake",
     "chineseName": "照月心湖",
-    "tier": 2,
+    "centerX": 3400,
+    "centerY": 3850,
     "dangerTier": 2,
     "qiDensityModifier": 1.6,
     "tempRangeC": {
@@ -270,20 +243,14 @@
       "accent": "#bfdbf7",
       "terrainColor": "#022b3a"
     },
-    "priority": 8,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "lake": 0.6,
-      "meadow": 0.25,
-      "river": 0.1,
-      "island_reef": 0.05
-    }
+    "description": ""
   },
   {
-    "id": "beast_prairies",
-    "name": "Beast Prairies",
+    "regionSlug": "beast_prairies",
+    "displayName": "Beast Prairies",
     "chineseName": "万兽荒原",
-    "tier": 3,
+    "centerX": 1400,
+    "centerY": 3800,
     "dangerTier": 3,
     "qiDensityModifier": 1.1,
     "tempRangeC": {
@@ -309,19 +276,14 @@
       "accent": "#dda15e",
       "terrainColor": "#283618"
     },
-    "priority": 5,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "meadow": 0.5,
-      "plains": 0.3,
-      "forest": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "western_sacred_desert",
-    "name": "Western Sacred Desert",
+    "regionSlug": "western_sacred_desert",
+    "displayName": "Western Sacred Desert",
     "chineseName": "西漠圣梵",
-    "tier": 3,
+    "centerX": 750,
+    "centerY": 2500,
     "dangerTier": 3,
     "qiDensityModifier": 1.1,
     "tempRangeC": {
@@ -349,20 +311,14 @@
       "accent": "#dda15e",
       "terrainColor": "#d4a373"
     },
-    "priority": 3,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "desert_sand": 0.55,
-      "dune": 0.3,
-      "oasis": 0.05,
-      "canyon_floor": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "western_gorge_labyrinth",
-    "name": "Western Gorge Labyrinth",
+    "regionSlug": "western_gorge_labyrinth",
+    "displayName": "Western Gorge Labyrinth",
     "chineseName": "断魂绝峡",
-    "tier": 4,
+    "centerX": 500,
+    "centerY": 1500,
     "dangerTier": 4,
     "qiDensityModifier": 1.3,
     "tempRangeC": {
@@ -388,19 +344,14 @@
       "accent": "#936639",
       "terrainColor": "#a68a64"
     },
-    "priority": 5,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "canyon_floor": 0.5,
-      "cliff": 0.35,
-      "dune": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "hermit_highlands",
-    "name": "Hermit Highlands",
+    "regionSlug": "hermit_highlands",
+    "displayName": "Hermit Highlands",
     "chineseName": "孤云隐岭",
-    "tier": 2,
+    "centerX": 1200,
+    "centerY": 4400,
     "dangerTier": 2,
     "qiDensityModifier": 1.5,
     "tempRangeC": {
@@ -427,19 +378,14 @@
       "accent": "#b5838d",
       "terrainColor": "#588157"
     },
-    "priority": 6,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "hill": 0.5,
-      "meadow": 0.35,
-      "bamboo_grove": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "border_march",
-    "name": "Border March",
+    "regionSlug": "border_march",
+    "displayName": "Border March",
     "chineseName": "千戍边关",
-    "tier": 2,
+    "centerX": 2400,
+    "centerY": 1925,
     "dangerTier": 2,
     "qiDensityModifier": 1.1,
     "tempRangeC": {
@@ -467,19 +413,14 @@
       "accent": "#7f4f24",
       "terrainColor": "#6f1d1b"
     },
-    "priority": 5,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "plains": 0.55,
-      "road_stone": 0.3,
-      "hill": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "lava_spine",
-    "name": "Lava Spine",
+    "regionSlug": "lava_spine",
+    "displayName": "Lava Spine",
     "chineseName": "赤焰脊地",
-    "tier": 5,
+    "centerX": 1100,
+    "centerY": 700,
     "dangerTier": 5,
     "qiDensityModifier": 1.7,
     "tempRangeC": {
@@ -506,19 +447,14 @@
       "accent": "#ffba08",
       "terrainColor": "#370617"
     },
-    "priority": 9,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "lava_flow": 0.5,
-      "basalt": 0.35,
-      "crater": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "venom_mire",
-    "name": "Venom Mire",
+    "regionSlug": "venom_mire",
+    "displayName": "Venom Mire",
     "chineseName": "绝命万毒沼",
-    "tier": 4,
+    "centerX": 2600,
+    "centerY": 900,
     "dangerTier": 4,
     "qiDensityModifier": 1.3,
     "tempRangeC": {
@@ -546,19 +482,14 @@
       "accent": "#70e000",
       "terrainColor": "#240046"
     },
-    "priority": 6,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "swamp": 0.55,
-      "poison_pool": 0.25,
-      "dead_wood": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "southern_demon_domain",
-    "name": "Southern Demon Domain",
+    "regionSlug": "southern_demon_domain",
+    "displayName": "Southern Demon Domain",
     "chineseName": "南疆九煞窟",
-    "tier": 4,
+    "centerX": 2250,
+    "centerY": 1200,
     "dangerTier": 4,
     "qiDensityModifier": 1.5,
     "tempRangeC": {
@@ -586,19 +517,14 @@
       "accent": "#e0aaff",
       "terrainColor": "#10002b"
     },
-    "priority": 4,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "demonic_swamp": 0.45,
-      "dead_wood": 0.3,
-      "hill": 0.25
-    }
+    "description": ""
   },
   {
-    "id": "crimson_battlefield",
-    "name": "Crimson Battlefield",
+    "regionSlug": "crimson_battlefield",
+    "displayName": "Crimson Battlefield",
     "chineseName": "血煞古战场",
-    "tier": 5,
+    "centerX": 2900,
+    "centerY": 600,
     "dangerTier": 5,
     "qiDensityModifier": 1.8,
     "tempRangeC": {
@@ -624,19 +550,14 @@
       "accent": "#dc2f02",
       "terrainColor": "#370617"
     },
-    "priority": 7,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "battlefield_ash": 0.5,
-      "dead_wood": 0.25,
-      "miasma_waste": 0.25
-    }
+    "description": ""
   },
   {
-    "id": "abyssal_scar",
-    "name": "Abyssal Scar",
+    "regionSlug": "abyssal_scar",
+    "displayName": "Abyssal Scar",
     "chineseName": "裂渊冥痕",
-    "tier": 5,
+    "centerX": 1900,
+    "centerY": 600,
     "dangerTier": 5,
     "qiDensityModifier": 2,
     "tempRangeC": {
@@ -662,19 +583,14 @@
       "accent": "#9d0208",
       "terrainColor": "#000000"
     },
-    "priority": 8,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "abyss_edge": 0.55,
-      "miasma_waste": 0.3,
-      "basalt": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "southern_plague_woods",
-    "name": "Southern Plague Woods",
+    "regionSlug": "southern_plague_woods",
+    "displayName": "Southern Plague Woods",
     "chineseName": "死疫腐林",
-    "tier": 4,
+    "centerX": 3400,
+    "centerY": 550,
     "dangerTier": 4,
     "qiDensityModifier": 1,
     "tempRangeC": {
@@ -701,19 +617,14 @@
       "accent": "#dda15e",
       "terrainColor": "#132a13"
     },
-    "priority": 5,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "dead_wood": 0.5,
-      "swamp": 0.3,
-      "poison_pool": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "bone_sea_coast",
-    "name": "Bone Sea Coast",
+    "regionSlug": "bone_sea_coast",
+    "displayName": "Bone Sea Coast",
     "chineseName": "白骨荒岸",
-    "tier": 3,
+    "centerX": 1750,
+    "centerY": 150,
     "dangerTier": 3,
     "qiDensityModifier": 1.2,
     "tempRangeC": {
@@ -741,20 +652,14 @@
       "accent": "#adb5bd",
       "terrainColor": "#212529"
     },
-    "priority": 4,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "sea": 0.4,
-      "sea_reef": 0.15,
-      "desert_sand": 0.25,
-      "meadow": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "spirit_wood_sea",
-    "name": "Spirit Wood Sea",
+    "regionSlug": "spirit_wood_sea",
+    "displayName": "Spirit Wood Sea",
     "chineseName": "青木灵海",
-    "tier": 3,
+    "centerX": 3700,
+    "centerY": 1300,
     "dangerTier": 3,
     "qiDensityModifier": 1.4,
     "tempRangeC": {
@@ -781,19 +686,14 @@
       "accent": "#52b788",
       "terrainColor": "#2d6a4f"
     },
-    "priority": 4,
-    "walkDefault": "open",
-    "terrainProfile": {
-      "forest": 0.5,
-      "spirit_wood": 0.35,
-      "meadow": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "mist_insect_valley",
-    "name": "Mist Insect Valley",
+    "regionSlug": "mist_insect_valley",
+    "displayName": "Mist Insect Valley",
     "chineseName": "瘴烟蛊谷",
-    "tier": 4,
+    "centerX": 4400,
+    "centerY": 1100,
     "dangerTier": 4,
     "qiDensityModifier": 1.2,
     "tempRangeC": {
@@ -821,19 +721,14 @@
       "accent": "#eb5e28",
       "terrainColor": "#252422"
     },
-    "priority": 6,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "swamp": 0.45,
-      "mist_forest": 0.35,
-      "poison_pool": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "formation_barrens",
-    "name": "Formation Barrens",
+    "regionSlug": "formation_barrens",
+    "displayName": "Formation Barrens",
     "chineseName": "八卦荒墟",
-    "tier": 3,
+    "centerX": 3600,
+    "centerY": 2200,
     "dangerTier": 3,
     "qiDensityModifier": 1.6,
     "tempRangeC": {
@@ -859,19 +754,14 @@
       "accent": "#9a8c98",
       "terrainColor": "#22223b"
     },
-    "priority": 5,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "formation_tile": 0.45,
-      "plains": 0.35,
-      "ruin_floor": 0.2
-    }
+    "description": ""
   },
   {
-    "id": "sword_gorge",
-    "name": "Sword Gorge",
+    "regionSlug": "sword_gorge",
+    "displayName": "Sword Gorge",
     "chineseName": "万剑裂壑",
-    "tier": 4,
+    "centerX": 3400,
+    "centerY": 3250,
     "dangerTier": 4,
     "qiDensityModifier": 1.7,
     "tempRangeC": {
@@ -897,19 +787,14 @@
       "accent": "#8d99ae",
       "terrainColor": "#14213d"
     },
-    "priority": 9,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "canyon_floor": 0.45,
-      "mountain_rock": 0.4,
-      "cliff": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "ore_teeth_range",
-    "name": "Ore Teeth Range",
+    "regionSlug": "ore_teeth_range",
+    "displayName": "Ore Teeth Range",
     "chineseName": "玄铁齿脉",
-    "tier": 3,
+    "centerX": 3625,
+    "centerY": 2800,
     "dangerTier": 3,
     "qiDensityModifier": 1.2,
     "tempRangeC": {
@@ -935,19 +820,14 @@
       "accent": "#ced4da",
       "terrainColor": "#495057"
     },
-    "priority": 6,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "hill": 0.45,
-      "mountain_rock": 0.4,
-      "plains": 0.15
-    }
+    "description": ""
   },
   {
-    "id": "eastern_sea",
-    "name": "Eastern Sea",
+    "regionSlug": "eastern_sea",
+    "displayName": "Eastern Sea",
     "chineseName": "浩瀚东海",
-    "tier": 3,
+    "centerX": 4400,
+    "centerY": 2600,
     "dangerTier": 3,
     "qiDensityModifier": 1.3,
     "tempRangeC": {
@@ -974,19 +854,14 @@
       "accent": "#90e0ef",
       "terrainColor": "#03045e"
     },
-    "priority": 4,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "ocean": 0.85,
-      "island_reef": 0.1,
-      "meadow": 0.05
-    }
+    "description": ""
   },
   {
-    "id": "frostmoon_sea",
-    "name": "Frostmoon Sea",
+    "regionSlug": "frostmoon_sea",
+    "displayName": "Frostmoon Sea",
     "chineseName": "霜月幽海",
-    "tier": 4,
+    "centerX": 4400,
+    "centerY": 4500,
     "dangerTier": 4,
     "qiDensityModifier": 1.5,
     "tempRangeC": {
@@ -1013,19 +888,14 @@
       "accent": "#669bbc",
       "terrainColor": "#001219"
     },
-    "priority": 6,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "ocean": 0.8,
-      "ice_sea": 0.15,
-      "island_reef": 0.05
-    }
+    "description": ""
   },
   {
-    "id": "floating_wind_isles",
-    "name": "Floating Wind Isles",
+    "regionSlug": "floating_wind_isles",
+    "displayName": "Floating Wind Isles",
     "chineseName": "驭风浮灵岛",
-    "tier": 5,
+    "centerX": 4600,
+    "centerY": 2700,
     "dangerTier": 5,
     "qiDensityModifier": 1.9,
     "tempRangeC": {
@@ -1052,19 +922,14 @@
       "accent": "#ade8f4",
       "terrainColor": "#0096c7"
     },
-    "priority": 8,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "ocean": 0.7,
-      "island_reef": 0.2,
-      "floating_stone": 0.1
-    }
+    "description": ""
   },
   {
-    "id": "immortal_ruins_valley",
-    "name": "Immortal Ruins Valley",
+    "regionSlug": "immortal_ruins_valley",
+    "displayName": "Immortal Ruins Valley",
     "chineseName": "太虚陨仙谷",
-    "tier": 4,
+    "centerX": 600,
+    "centerY": 1000,
     "dangerTier": 4,
     "qiDensityModifier": 1.7,
     "tempRangeC": {
@@ -1091,19 +956,14 @@
       "accent": "#e9c46a",
       "terrainColor": "#264653"
     },
-    "priority": 7,
-    "walkDefault": "restricted",
-    "terrainProfile": {
-      "ruin_floor": 0.45,
-      "formation_tile": 0.3,
-      "hill": 0.25
-    }
+    "description": ""
   },
   {
-    "id": "void_rift",
-    "name": "Void Rift",
+    "regionSlug": "void_rift",
+    "displayName": "Void Rift",
     "chineseName": "虚空裂隙",
-    "tier": 6,
+    "centerX": 250,
+    "centerY": 4750,
     "dangerTier": 6,
     "qiDensityModifier": 2.5,
     "tempRangeC": {
@@ -1130,11 +990,241 @@
       "accent": "#ff007f",
       "terrainColor": "#000000"
     },
-    "priority": 9,
-    "walkDefault": "blocked",
-    "terrainProfile": {
-      "miasma_waste": 0.65,
-      "abyss_edge": 0.35
-    }
+    "description": ""
   }
-]
+] as any;
+
+export const CANONICAL_LANDMARKS: WorldLandmark[] = [
+  {
+    "x": 2050,
+    "y": 2650,
+    "name": "Desa Xingcun",
+    "chineseName": "杏村",
+    "type": "village",
+    "dangerTier": 1
+  },
+  {
+    "x": 2400,
+    "y": 2450,
+    "name": "Dusun Mata Air Jernih",
+    "chineseName": "清泉庄",
+    "type": "hamlet",
+    "dangerTier": 1
+  },
+  {
+    "x": 2300,
+    "y": 1950,
+    "name": "Pos Perbatasan Qinghe",
+    "chineseName": "青河关",
+    "type": "outpost",
+    "dangerTier": 2
+  },
+  {
+    "x": 820,
+    "y": 2220,
+    "name": "Oase Shadi",
+    "chineseName": "沙地绿洲",
+    "type": "village",
+    "dangerTier": 2
+  },
+  {
+    "x": 3920,
+    "y": 2700,
+    "name": "Dermaga Donghai",
+    "chineseName": "东海码头",
+    "type": "port",
+    "dangerTier": 2
+  },
+  {
+    "x": 1900,
+    "y": 1400,
+    "name": "Desa Heiyan",
+    "chineseName": "黑岩村",
+    "type": "village",
+    "dangerTier": 2
+  },
+  {
+    "x": 1200,
+    "y": 4200,
+    "name": "Kemah Dataran Tinggi Petapa",
+    "chineseName": "隐者高地营",
+    "type": "hamlet",
+    "dangerTier": 2
+  },
+  {
+    "x": 2200,
+    "y": 3340,
+    "name": "Kaki Gunung Azure",
+    "chineseName": "青峦驿站",
+    "type": "outpost",
+    "dangerTier": 2
+  },
+  {
+    "x": 2700,
+    "y": 2800,
+    "name": "Tianjing",
+    "chineseName": "天京",
+    "type": "capital_city",
+    "dangerTier": 1
+  },
+  {
+    "x": 2350,
+    "y": 2900,
+    "name": "XiTong City",
+    "chineseName": "析桐城",
+    "type": "major_city",
+    "dangerTier": 1
+  },
+  {
+    "x": 2950,
+    "y": 2600,
+    "name": "Kota Fengyang",
+    "chineseName": "鳳陽城",
+    "type": "major_city",
+    "dangerTier": 1
+  },
+  {
+    "x": 2600,
+    "y": 2200,
+    "name": "Kota Luoyang Kecil",
+    "chineseName": "小洛阳",
+    "type": "major_city",
+    "dangerTier": 1
+  },
+  {
+    "x": 3100,
+    "y": 2850,
+    "name": "Desa Tiedao",
+    "chineseName": "铁道村",
+    "type": "village",
+    "dangerTier": 1
+  },
+  {
+    "x": 2120,
+    "y": 4180,
+    "name": "Pos Tundra Salju",
+    "chineseName": "雪域驿站",
+    "type": "outpost",
+    "dangerTier": 3
+  },
+  {
+    "x": 4350,
+    "y": 2750,
+    "name": "Pulau Penyu Raksasa",
+    "chineseName": "巨龟岛",
+    "type": "island",
+    "dangerTier": 3
+  },
+  {
+    "x": 2500,
+    "y": 800,
+    "name": "Benteng Gerbang Iblis",
+    "chineseName": "魔门关卡",
+    "type": "danger_zone",
+    "dangerTier": 4
+  },
+  {
+    "x": 2350,
+    "y": 2420,
+    "name": "Lembah Kabut Merah",
+    "chineseName": "赤雾谷",
+    "type": "danger_zone",
+    "dangerTier": 3
+  },
+  {
+    "x": 2200,
+    "y": 3350,
+    "name": "Sekte Awan Pedang",
+    "chineseName": "剑云宗",
+    "type": "sect",
+    "dangerTier": 2
+  },
+  {
+    "x": 2150,
+    "y": 2800,
+    "name": "Sekte Pedang Langit",
+    "chineseName": "天剑宗",
+    "type": "sect",
+    "dangerTier": 1
+  },
+  {
+    "x": 1400,
+    "y": 4400,
+    "name": "Kuil Lonceng Emas",
+    "chineseName": "金钟古刹",
+    "type": "sect",
+    "dangerTier": 2
+  },
+  {
+    "x": 1800,
+    "y": 1100,
+    "name": "Lembah Racun Bayangan",
+    "chineseName": "影毒谷",
+    "type": "sect",
+    "dangerTier": 3
+  },
+  {
+    "x": 3900,
+    "y": 2850,
+    "name": "Istana Giok Laut Timur",
+    "chineseName": "东海碧玉宫",
+    "type": "sect",
+    "dangerTier": 3
+  },
+  {
+    "x": 2400,
+    "y": 4000,
+    "name": "Sekte Petir Ilahiah",
+    "chineseName": "神霄雷宗",
+    "type": "sect",
+    "dangerTier": 4
+  },
+  {
+    "x": 650,
+    "y": 2400,
+    "name": "Sekte Pasir Suci",
+    "chineseName": "圣漠天沙门",
+    "type": "sect",
+    "dangerTier": 2
+  },
+  {
+    "x": 1950,
+    "y": 4700,
+    "name": "Istana Es Abadi",
+    "chineseName": "玄冥万载冰宫",
+    "type": "sect",
+    "dangerTier": 4
+  },
+  {
+    "x": 2100,
+    "y": 2600,
+    "name": "Gua Purba Bunga Aprikot",
+    "chineseName": "杏花古洞",
+    "type": "secret_realm",
+    "dangerTier": 1
+  },
+  {
+    "x": 2200,
+    "y": 3360,
+    "name": "Makam Kaisar Pedang Purba",
+    "chineseName": "太古剑帝陵",
+    "type": "secret_realm",
+    "dangerTier": 3
+  },
+  {
+    "x": 2400,
+    "y": 4100,
+    "name": "Reruntuhan Abadi Tianyuan",
+    "chineseName": "天元古仙遗迹",
+    "type": "secret_realm",
+    "dangerTier": 4
+  },
+  {
+    "x": 3880,
+    "y": 2750,
+    "name": "Sarang Naga Karang Timur",
+    "chineseName": "东溟盘龙窟",
+    "type": "secret_realm",
+    "dangerTier": 3
+  }
+];

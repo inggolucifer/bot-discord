@@ -1,0 +1,95 @@
+{
+  "blueprintType": "outpost",
+  "backdropId": "backdrop_rugged_mountain_pass",
+  "palette": "mountain_slate",
+  "skyColor": "#0d1319",
+  "groundColor": "#181d22",
+  "description": "Benteng garnisun berbatu kokoh dengan menara pengawas militer, panji-panji perang berkibar, dan bara api penghangat.",
+  "layers": [
+    {
+      "layer": "far",
+      "speed": 0.2,
+      "elements": ["sheer_granite_cliffs", "snow_capped_spires", "mountain_wind_mist"]
+    },
+    {
+      "layer": "mid",
+      "speed": 0.5,
+      "elements": ["stone_watchtower", "wooden_palisades", "iron_gatehouse", "beacon_fire"]
+    },
+    {
+      "layer": "ground",
+      "speed": 1.0,
+      "elements": ["crushed_gravel_trail", "weapon_racks", "braziers", "garrison_barracks"]
+    }
+  ],
+  "buildings": [
+    {
+      "id": "barracks",
+      "name": "Barak Pasukan Garnisun",
+      "chineseName": "关防营房",
+      "bannerText": "兵营 · 镇关楼",
+      "desc": "Pos peristirahatan prajurit perbatasan dan kultivator pengawal kafilah yang bertugas menjaga keamanan celah.",
+      "type": "inn",
+      "icon": "BedDouble",
+      "scale": 1.0,
+      "xPercent": 15,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["rest", "military_rations", "defensive_rest"]
+    },
+    {
+      "id": "armory",
+      "name": "Gudang Senjata & Tempa Perang",
+      "chineseName": "军器武备库",
+      "bannerText": "军备 · 砺剑堂",
+      "desc": "Perbaikan baju zirah besi, asah mata tombak, dan pengisian busur silang anti-siluman.",
+      "type": "workshop",
+      "icon": "Hammer",
+      "scale": 0.95,
+      "xPercent": 35,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["forge", "armor_reinforce", "sharpen"]
+    },
+    {
+      "id": "caravan_post",
+      "name": "Pos Kafilah Dagang Celah",
+      "chineseName": "关山商旅站",
+      "bannerText": "商站 · 互市所",
+      "desc": "Pertukaran perbekalan perjalanan melintasi rintangan alam, pembelian pakan kuda tahan dingin, dan perijinan jalan.",
+      "type": "courier_stables",
+      "icon": "Compass",
+      "scale": 1.05,
+      "xPercent": 55,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["caravan_travel", "climbing_gear", "cold_supplies"]
+    },
+    {
+      "id": "bounty_board",
+      "name": "Papan Peringatan Bandit & Monster",
+      "chineseName": "边塞缉凶榜",
+      "bannerText": "悬赏 · 破煞榜",
+      "desc": "Informasi aktivitas kawanan serigala buas dan bandit celah gunung di sepanjang koridor perjalanan.",
+      "type": "bounty_board",
+      "icon": "FileText",
+      "scale": 0.9,
+      "xPercent": 75,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["frontier_bounties", "patrol_missions"]
+    }
+  ],
+  "defaultExits": [
+    {
+      "type": "city_gate",
+      "label": "Gerbang Pertahanan Celah (Kembali ke Peta)",
+      "icon": "Gate"
+    },
+    {
+      "type": "caravan_station",
+      "label": "Layanan Pengawalan Kafilah",
+      "icon": "Caravan"
+    }
+  ]
+}

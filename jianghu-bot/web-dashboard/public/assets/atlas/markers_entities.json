@@ -1,0 +1,458 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline",
+    "version": "2.0",
+    "size": {
+      "w": 2048,
+      "h": 120
+    },
+    "format": "RGBA8888"
+  },
+  "frames": {
+    "ring_monster_boss": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 120,
+        "h": 120
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 120,
+        "h": 120
+      },
+      "sourceSize": {
+        "w": 120,
+        "h": 120
+      },
+      "metadata": {
+        "id": "ring_monster_boss",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_boss",
+        "category": "marker",
+        "px": {
+          "w": 120,
+          "h": 120
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.2,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_boss"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "boss"
+        ]
+      }
+    },
+    "ring_monster_elite": {
+      "frame": {
+        "x": 122,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "metadata": {
+        "id": "ring_monster_elite",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_elite",
+        "category": "marker",
+        "px": {
+          "w": 110,
+          "h": 110
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.1,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_elite"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "elite"
+        ]
+      }
+    },
+    "ring_monster_tier1": {
+      "frame": {
+        "x": 234,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "ring_monster_tier1",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier1",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier1"
+        ]
+      }
+    },
+    "ring_monster_tier2": {
+      "frame": {
+        "x": 336,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "ring_monster_tier2",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier2",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier2"
+        ]
+      }
+    },
+    "ring_monster_tier3": {
+      "frame": {
+        "x": 438,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "ring_monster_tier3",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier3",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier3"
+        ]
+      }
+    },
+    "ring_monster_tier4": {
+      "frame": {
+        "x": 540,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "ring_monster_tier4",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier4",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier4"
+        ]
+      }
+    },
+    "ring_monster_tier5": {
+      "frame": {
+        "x": 642,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "ring_monster_tier5",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier5",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier5"
+        ]
+      }
+    },
+    "marker_quest_beacon": {
+      "frame": {
+        "x": 744,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "marker_quest_beacon",
+        "atlas": "markers_entities",
+        "frame": "marker_quest_beacon",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "marker_quest_beacon"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "quest"
+        ]
+      }
+    }
+  }
+}

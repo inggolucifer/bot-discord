@@ -1,0 +1,1333 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline",
+    "version": "2.0",
+    "size": {
+      "w": 2048,
+      "h": 764
+    },
+    "format": "RGBA8888"
+  },
+  "frames": {
+    "building_pagoda_tower_v1": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 380
+      },
+      "metadata": {
+        "id": "building_pagoda_tower_v1",
+        "atlas": "objects_structures",
+        "frame": "building_pagoda_tower_v1",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 380
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_pagoda_tower_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "pagoda_tower"
+        ]
+      }
+    },
+    "building_pagoda_tower_v2": {
+      "frame": {
+        "x": 202,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 380
+      },
+      "metadata": {
+        "id": "building_pagoda_tower_v2",
+        "atlas": "objects_structures",
+        "frame": "building_pagoda_tower_v2",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 380
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_pagoda_tower_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "pagoda_tower"
+        ]
+      }
+    },
+    "building_pagoda_tower_v3": {
+      "frame": {
+        "x": 404,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 380
+      },
+      "metadata": {
+        "id": "building_pagoda_tower_v3",
+        "atlas": "objects_structures",
+        "frame": "building_pagoda_tower_v3",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 380
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_pagoda_tower_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "pagoda_tower"
+        ]
+      }
+    },
+    "building_pagoda_tower_v4": {
+      "frame": {
+        "x": 606,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 380
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 380
+      },
+      "metadata": {
+        "id": "building_pagoda_tower_v4",
+        "atlas": "objects_structures",
+        "frame": "building_pagoda_tower_v4",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 380
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_pagoda_tower_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "pagoda_tower"
+        ]
+      }
+    },
+    "building_sect_gate_v1": {
+      "frame": {
+        "x": 808,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 320
+      },
+      "metadata": {
+        "id": "building_sect_gate_v1",
+        "atlas": "objects_structures",
+        "frame": "building_sect_gate_v1",
+        "category": "building",
+        "px": {
+          "w": 300,
+          "h": 320
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_sect_gate_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "sect_gate"
+        ]
+      }
+    },
+    "building_sect_gate_v2": {
+      "frame": {
+        "x": 1110,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 320
+      },
+      "metadata": {
+        "id": "building_sect_gate_v2",
+        "atlas": "objects_structures",
+        "frame": "building_sect_gate_v2",
+        "category": "building",
+        "px": {
+          "w": 300,
+          "h": 320
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_sect_gate_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "sect_gate"
+        ]
+      }
+    },
+    "building_sect_gate_v3": {
+      "frame": {
+        "x": 1412,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 320
+      },
+      "metadata": {
+        "id": "building_sect_gate_v3",
+        "atlas": "objects_structures",
+        "frame": "building_sect_gate_v3",
+        "category": "building",
+        "px": {
+          "w": 300,
+          "h": 320
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_sect_gate_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "sect_gate"
+        ]
+      }
+    },
+    "building_sect_gate_v4": {
+      "frame": {
+        "x": 1714,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 320
+      },
+      "metadata": {
+        "id": "building_sect_gate_v4",
+        "atlas": "objects_structures",
+        "frame": "building_sect_gate_v4",
+        "category": "building",
+        "px": {
+          "w": 300,
+          "h": 320
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_sect_gate_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "building",
+          "sect_gate"
+        ]
+      }
+    },
+    "building_road_inn_v1": {
+      "frame": {
+        "x": 0,
+        "y": 382,
+        "w": 200,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 240
+      },
+      "metadata": {
+        "id": "building_road_inn_v1",
+        "atlas": "objects_structures",
+        "frame": "building_road_inn_v1",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 240
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_road_inn_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "road_inn"
+        ]
+      }
+    },
+    "building_road_inn_v2": {
+      "frame": {
+        "x": 202,
+        "y": 382,
+        "w": 200,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 240
+      },
+      "metadata": {
+        "id": "building_road_inn_v2",
+        "atlas": "objects_structures",
+        "frame": "building_road_inn_v2",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 240
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_road_inn_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "road_inn"
+        ]
+      }
+    },
+    "building_road_inn_v3": {
+      "frame": {
+        "x": 404,
+        "y": 382,
+        "w": 200,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 240
+      },
+      "metadata": {
+        "id": "building_road_inn_v3",
+        "atlas": "objects_structures",
+        "frame": "building_road_inn_v3",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 240
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_road_inn_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "road_inn"
+        ]
+      }
+    },
+    "building_road_inn_v4": {
+      "frame": {
+        "x": 606,
+        "y": 382,
+        "w": 200,
+        "h": 240
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 240
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 240
+      },
+      "metadata": {
+        "id": "building_road_inn_v4",
+        "atlas": "objects_structures",
+        "frame": "building_road_inn_v4",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 240
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_road_inn_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "road_inn"
+        ]
+      }
+    },
+    "building_farm_hut_v1": {
+      "frame": {
+        "x": 808,
+        "y": 382,
+        "w": 200,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 180
+      },
+      "metadata": {
+        "id": "building_farm_hut_v1",
+        "atlas": "objects_structures",
+        "frame": "building_farm_hut_v1",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_farm_hut_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "farm_hut"
+        ]
+      }
+    },
+    "building_farm_hut_v2": {
+      "frame": {
+        "x": 1010,
+        "y": 382,
+        "w": 200,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 180
+      },
+      "metadata": {
+        "id": "building_farm_hut_v2",
+        "atlas": "objects_structures",
+        "frame": "building_farm_hut_v2",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_farm_hut_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "farm_hut"
+        ]
+      }
+    },
+    "building_farm_hut_v3": {
+      "frame": {
+        "x": 1212,
+        "y": 382,
+        "w": 200,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 180
+      },
+      "metadata": {
+        "id": "building_farm_hut_v3",
+        "atlas": "objects_structures",
+        "frame": "building_farm_hut_v3",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_farm_hut_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "farm_hut"
+        ]
+      }
+    },
+    "building_farm_hut_v4": {
+      "frame": {
+        "x": 1414,
+        "y": 382,
+        "w": 200,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 180
+      },
+      "metadata": {
+        "id": "building_farm_hut_v4",
+        "atlas": "objects_structures",
+        "frame": "building_farm_hut_v4",
+        "category": "building",
+        "px": {
+          "w": 200,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_farm_hut_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "farm_hut"
+        ]
+      }
+    },
+    "building_stone_torii_v1": {
+      "frame": {
+        "x": 1616,
+        "y": 382,
+        "w": 100,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 150
+      },
+      "metadata": {
+        "id": "building_stone_torii_v1",
+        "atlas": "objects_structures",
+        "frame": "building_stone_torii_v1",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_stone_torii_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "stone_torii"
+        ]
+      }
+    },
+    "building_stone_torii_v2": {
+      "frame": {
+        "x": 1718,
+        "y": 382,
+        "w": 100,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 150
+      },
+      "metadata": {
+        "id": "building_stone_torii_v2",
+        "atlas": "objects_structures",
+        "frame": "building_stone_torii_v2",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_stone_torii_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "stone_torii"
+        ]
+      }
+    },
+    "building_stone_torii_v3": {
+      "frame": {
+        "x": 1820,
+        "y": 382,
+        "w": 100,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 150
+      },
+      "metadata": {
+        "id": "building_stone_torii_v3",
+        "atlas": "objects_structures",
+        "frame": "building_stone_torii_v3",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_stone_torii_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "stone_torii"
+        ]
+      }
+    },
+    "building_stone_torii_v4": {
+      "frame": {
+        "x": 1922,
+        "y": 382,
+        "w": 100,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 150
+      },
+      "metadata": {
+        "id": "building_stone_torii_v4",
+        "atlas": "objects_structures",
+        "frame": "building_stone_torii_v4",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_stone_torii_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "stone_torii"
+        ]
+      }
+    },
+    "building_tea_pavilion_v1": {
+      "frame": {
+        "x": 0,
+        "y": 624,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "building_tea_pavilion_v1",
+        "atlas": "objects_structures",
+        "frame": "building_tea_pavilion_v1",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_tea_pavilion_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "tea_pavilion"
+        ]
+      }
+    },
+    "building_tea_pavilion_v2": {
+      "frame": {
+        "x": 102,
+        "y": 624,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "building_tea_pavilion_v2",
+        "atlas": "objects_structures",
+        "frame": "building_tea_pavilion_v2",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_tea_pavilion_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "tea_pavilion"
+        ]
+      }
+    },
+    "building_tea_pavilion_v3": {
+      "frame": {
+        "x": 204,
+        "y": 624,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "building_tea_pavilion_v3",
+        "atlas": "objects_structures",
+        "frame": "building_tea_pavilion_v3",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_tea_pavilion_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "tea_pavilion"
+        ]
+      }
+    },
+    "building_tea_pavilion_v4": {
+      "frame": {
+        "x": 306,
+        "y": 624,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "building_tea_pavilion_v4",
+        "atlas": "objects_structures",
+        "frame": "building_tea_pavilion_v4",
+        "category": "building",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "building_tea_pavilion_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "building",
+          "tea_pavilion"
+        ]
+      }
+    }
+  }
+}

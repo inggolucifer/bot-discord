@@ -5,8 +5,8 @@
     "chineseName": "苍峦天壁",
     "type": "mountain_ridge",
     "isSolid": true,
-    "description": "Punggung gunung batu raksasa kontinu yang membentang dari barat ke timur, memisahkan peradaban tengah dari tundra dingin utara. Hanya dapat dilintasi melalui 3 celah resmi atau artefak pedang terbang.",
-    "bounds": { "minX": 1450, "maxX": 3800, "minY": 3100, "maxY": 3600 },
+    "description": "Punggung gunung batu raksasa kontinu yang membentang dari barat (x=0) ke timur (x=3950), memisahkan peradaban tengah dari tundra dingin utara. Hanya dapat dilintasi melalui 4 celah resmi atau artefak pedang terbang.",
+    "bounds": { "minX": 0, "maxX": 3950, "minY": 3100, "maxY": 3600 },
     "traversalRequirement": "flying_sword"
   },
   {
@@ -26,7 +26,7 @@
     "type": "cliff",
     "isSolid": true,
     "description": "Tebing batu pasir curam yang membatasi Gurun Suci Barat dari dataran tengah.",
-    "bounds": { "minX": 1450, "maxX": 1600, "minY": 1500, "maxY": 3500 },
+    "bounds": { "minX": 1450, "maxX": 1600, "minY": 1500, "maxY": 3100 },
     "traversalRequirement": "flying_sword"
   },
   {
@@ -46,7 +46,7 @@
     "type": "ocean",
     "isSolid": true,
     "description": "Perairan dalam yang membutuhkan kapal, feri, atau pedang terbang.",
-    "bounds": { "minX": 3900, "maxX": 5000, "minY": 1000, "maxY": 5000 },
+    "bounds": { "minX": 3950, "maxX": 5000, "minY": 1000, "maxY": 5000 },
     "traversalRequirement": "ship"
   },
   {
@@ -56,7 +56,7 @@
     "type": "water",
     "isSolid": true,
     "description": "Air danau spiritual yang jernih namun dalam dan diselimuti kabut karma.",
-    "bounds": { "minX": 3100, "maxX": 3700, "minY": 3500, "maxY": 4100 },
+    "bounds": { "minX": 3100, "maxX": 3700, "minY": 3600, "maxY": 4100 },
     "traversalRequirement": "ship"
   },
   {
@@ -66,7 +66,7 @@
     "type": "lightning_hazard",
     "isSolid": true,
     "description": "Puncak tertinggi dengan sambaran petir surgawi berkekuatan penghancur dantian.",
-    "bounds": { "minX": 3300, "maxX": 4100, "minY": 4100, "maxY": 4900 },
+    "bounds": { "minX": 3300, "maxX": 3950, "minY": 4100, "maxY": 4900 },
     "traversalRequirement": "lightning_resistance"
   }
 ]

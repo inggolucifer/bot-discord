@@ -12,7 +12,14 @@
     "web:dev": "npm --prefix web-dashboard run dev",
     "web:build": "npm --prefix web-dashboard run build",
     "web:start": "npm --prefix web-dashboard run start",
-    "test": "node scripts/syntaxCheckAll.js"
+    "test": "node scripts/syntaxCheckAll.js",
+    "assets:key": "node scripts/assets/luminanceKey.js",
+    "assets:trim": "node scripts/assets/trimPadding.js",
+    "assets:fit": "node scripts/assets/fitScale.js",
+    "assets:meta": "node scripts/assets/generateMeta.js",
+    "assets:atlas": "node scripts/assets/packAtlas.js",
+    "assets:validate": "node scripts/assets/validateAssets.js",
+    "assets:generate-t1": "node scripts/assets/generateT1AssetPack.js"
   },
   "dependencies": {
     "axios": "^1.19.0",

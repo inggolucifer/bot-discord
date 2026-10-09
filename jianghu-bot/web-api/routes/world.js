@@ -45,6 +45,9 @@ const Npc = require('../../models/Npc');
 const mongoose = require('mongoose');
 const gridConfig = require('../../config/gridConfig');
 const proceduralWorldEngine = require('../../utils/proceduralWorldEngine');
+const objectScatter = require('../../utils/objectScatter');
+const autotileEngine = require('../../utils/autotileEngine');
+const settlementEngine = require('../../utils/settlementEngine');
 const sparseFogManager = require('../../utils/sparseFogManager');
 const {
     getTileIndex,
@@ -1848,6 +1851,66 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 }
             }
 
+            // Fase 12: Object Scatter Engine & Autotiling Integration
+            const scatterObjects = objectScatter.getViewportObjects(
+                viewport.bounds.minX,
+                viewport.bounds.minY,
+                viewport.bounds.maxX,
+                viewport.bounds.maxY
+            );
+
+            for (const obj of scatterObjects) {
+                const key = `${obj.x},${obj.y}`;
+                if (proceduralTileMap.has(key)) {
+                    const tile = proceduralTileMap.get(key);
+                    if (!tile.objects) tile.objects = [];
+                    tile.objects.push(obj);
+                    if (obj.collision === 'solid') {
+                        tile.isSolid = true;
+                    }
+                }
+            }
+
+            // Autotiling bitmask for continuous terrains (rivers, lakes, roads)
+            for (const t of proceduralTileMap.values()) {
+                const tt = t.terrainType || '';
+                if (tt.includes('river') || tt.includes('road') || tt.includes('lake')) {
+                    const bitmask = autotileEngine.calculateAutotileBitmask(t.tileX, t.tileY, (nx, ny) => {
+                        const neighbor = proceduralTileMap.get(`${nx},${ny}`);
+                        return neighbor ? neighbor.terrainType : tt;
+                    });
+                    t.autotileBitmask = bitmask;
+                    t.autotileFrame = autotileEngine.getAutotileFrameId(tt, bitmask);
+                }
+            }
+
+            // Fase 14: Procedural Spiritual Resource Nodes (Sparkles)
+            for (const t of proceduralTileMap.values()) {
+                if (!t.resourceType && !t.isSolid) {
+                    const tt = t.terrainType || '';
+                    const hash = ((t.tileX * 73856093) ^ (t.tileY * 19349663)) >>> 0;
+                    if ((hash % 100) < 6) {
+                        if (tt.includes('herb') || tt.includes('farmland') || tt.includes('meadow') || tt.includes('delta')) {
+                            t.resourceType = 'herb';
+                            t.label = t.label || 'Herba Roh Liar';
+                            t.tileType = 'resource_node';
+                        } else if (tt.includes('hill') || tt.includes('ore') || tt.includes('rock')) {
+                            t.resourceType = 'ore';
+                            t.label = t.label || 'Urat Bijih Besi';
+                            t.tileType = 'resource_node';
+                        } else if (tt.includes('bamboo') || tt.includes('wood') || tt.includes('forest')) {
+                            t.resourceType = 'wood';
+                            t.label = t.label || 'Kayu Roh Berharga';
+                            t.tileType = 'resource_node';
+                        } else if (tt.includes('river_shallow') || tt.includes('waterfall') || tt.includes('pond')) {
+                            t.resourceType = 'fish';
+                            t.label = t.label || 'Lubuk Ikan Roh';
+                            t.tileType = 'resource_node';
+                        }
+                    }
+                }
+            }
+
             visibleTiles = Array.from(proceduralTileMap.values());
         } else {
             // Legacy zone small grid
@@ -2086,11 +2149,24 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
         function getEffectiveTile(x, y) {
             const baseTile = proceduralWorldEngine.getTileAt(x, y);
             const key = `${x},${y}`;
-            if (!dbTileMap.has(key)) return baseTile;
-            const custom = dbTileMap.get(key);
-            const merged = { ...baseTile, ...custom };
-            if (custom.isSolid !== undefined) merged.isSolid = !!custom.isSolid;
-            if (custom.tileType === 'wall' || custom.tileType === 'hazard') merged.isSolid = true;
+            let merged = baseTile;
+            if (dbTileMap.has(key)) {
+                const custom = dbTileMap.get(key);
+                merged = { ...baseTile, ...custom };
+                if (custom.isSolid !== undefined) merged.isSolid = !!custom.isSolid;
+                if (custom.tileType === 'wall' || custom.tileType === 'hazard') merged.isSolid = true;
+            }
+
+            // Cek collision objek scatter solid dalam chunk bersangkutan
+            if (!merged.isSolid) {
+                const chunkX = Math.floor(x / objectScatter.CHUNK_SIZE);
+                const chunkY = Math.floor(y / objectScatter.CHUNK_SIZE);
+                const chunkObjs = objectScatter.getChunkObjects(chunkX, chunkY);
+                if (chunkObjs.some(o => o.x === x && o.y === y && o.collision === 'solid')) {
+                    merged.isSolid = true;
+                }
+            }
+
             return merged;
         }
 
@@ -2286,142 +2362,31 @@ router.get('/settlement/:settlementName', authenticateToken, async (req, res) =>
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        // Cari settlement dari landmark anchor atau config
-        const settlement = proceduralWorldEngine.ANCHOR_SETTLEMENTS.find(
-            s => s.name.toLowerCase() === settlementName.toLowerCase()
-        ) || {
-            name: settlementName,
-            chineseName: '坊市',
-            type: 'settlement',
-            description: 'Pemukiman tempat bernaungnya para kultivator dan penduduk lokal.'
-        };
-
-        // Bangunan Fungsional Kota Sesuai Referensi Gambar 4
-        const buildings = [
-            {
-                id: 'inn',
-                name: 'Penginapan (Inn)',
-                chineseName: '客栈',
-                desc: 'Pulihkan stamina dan HP dengan beristirahat di kamar sewaan, serta dengarkan gosip hangat para pengelana.',
-                type: 'inn',
-                icon: 'BedDouble'
-            },
-            {
-                id: 'tavern',
-                name: 'Kedai Minuman (Tavern)',
-                chineseName: '酒馆',
-                desc: 'Meneguk arak spiritual penghangat meridian untuk mendapatkan berkah Qi dan merekrut rekan pengembara.',
-                type: 'tavern',
-                icon: 'Wine'
-            },
-            {
-                id: 'market',
-                name: 'Pasar Spiritual (Market)',
-                chineseName: '坊市',
-                desc: 'Beli & jual herba mentah, pil pemulih, bijih tambang, dan perlengkapan pengembara dengan harga wajar.',
-                type: 'market',
-                icon: 'ShoppingBag'
-            },
-            {
-                id: 'workshop',
-                name: 'Bengkel Tempa & Alkimia (Workshop)',
-                chineseName: '工坊',
-                desc: 'Fasilitas penempaan senjata spiritual dan tungku peracikan pil kultivasi.',
-                type: 'workshop',
-                icon: 'Hammer'
-            },
-            {
-                id: 'manual_pavilion',
-                name: 'Paviliun Kitab (Manual Pavilion)',
-                chineseName: '藏经阁',
-                desc: 'Pelajari kitab jurus pedang, tinju, langkah qinggong, dan metode batin esoterik.',
-                type: 'manual_pavilion',
-                icon: 'BookOpen'
-            },
-            {
-                id: 'bounty_board',
-                name: 'Papan Sayembara (Bounty Board)',
-                chineseName: '悬赏榜',
-                desc: 'Ambil misi perburuan siluman pembuat onar atau pengawalan kargo berhadiah batu spiritual.',
-                type: 'bounty_board',
-                icon: 'FileText'
-            },
-            {
-                id: 'courier_stables',
-                name: 'Pos Kereta & Paviliun Pengelana (Courier Stables)',
-                chineseName: '驿站',
-                desc: 'Beli pakan kuda spiritual, ransum perjalanan, dan peta wilayah sekitar (Bukan Teleportasi).',
-                type: 'courier_stables',
-                icon: 'Compass'
-            },
-            {
-                id: 'vault',
-                name: 'Gudang Harta (Tree Vault)',
-                chineseName: '储物阁',
-                desc: 'Titipkan barang berlebih agar beban ransel tidak memperlambat perjalananmu di alam liar.',
-                type: 'vault',
-                icon: 'Archive'
-            }
-        ];
-
-        // Ambil daftar NPC yang berada di pemukiman ini dari database
-
-        let npcs = await Npc.find({
+        // Ambil daftar NPC yang berada di pemukiman ini dari database jika ada
+        const dbNpcs = await Npc.find({
             settlementName: { $regex: new RegExp(`^${settlementName}$`, 'i') },
             isActive: true
         }).select('_id name title portraitUrl greeting dialogLines minRealmIndexToTalk questIds').lean();
 
-        // Fallback jika belum ada NPC di DB untuk pemukiman ini (Generated Xianxia NPCs ala Tale of Immortal)
-        if (!npcs || npcs.length === 0) {
-            npcs = [
-                {
-                    _id: 'npc_shuang_ke',
-                    name: 'Shuang Ke',
-                    title: 'Pendekar Pedang Bayangan',
-                    realm: 'Ranah Fondasi (Foundation)',
-                    sect: 'Sekte Awan Pedang',
-                    relationship: 'Stranger',
-                    relationshipPoints: 10,
-                    greeting: 'Salam, rekan kultivator. Apakah jalan pedangmu seimbang dengan hatimu?'
-                },
-                {
-                    _id: 'npc_wu_binglin',
-                    name: 'Wu Binglin',
-                    title: 'Saudagar Herba Gunung',
-                    realm: 'Ranah Kondensasi Qi',
-                    sect: 'Rogue Cultivator',
-                    relationship: 'Stranger',
-                    relationshipPoints: 25,
-                    greeting: 'Herba liar dari pegunungan utara sangat berkhasiat untuk memurnikan Qi!'
-                },
-                {
-                    _id: 'npc_yin_ci',
-                    name: 'Yin Ci',
-                    title: 'Penjaga Paviliun Kitab',
-                    realm: 'Ranah Inti Emas (Core)',
-                    sect: 'XiTong City Guard',
-                    relationship: 'Stranger',
-                    relationshipPoints: 15,
-                    greeting: 'Membaca sutra suci menuntut kejernihan akal budi.'
-                },
-                {
-                    _id: 'npc_li_keke',
-                    name: 'Li Keke',
-                    title: 'Murid Alkimia Bunga Persik',
-                    realm: 'Ranah Fondasi',
-                    sect: 'Lembah Tabib Suci',
-                    relationship: 'Friend',
-                    relationshipPoints: 65,
-                    greeting: 'Senang melihatmu kembali dalam keadaan sehat, kawan!'
-                }
-            ];
-        }
+        // Gunakan settlementEngine untuk data panorama komprehensif conforming §6.4
+        const panoramaData = settlementEngine.getSettlementPanoramaData(settlementName, player, dbNpcs);
 
         return res.json({
             success: true,
-            settlement,
-            buildings,
-            npcs
+            settlement: panoramaData.settlement,
+            backdropId: panoramaData.backdropId,
+            palette: panoramaData.palette,
+            skyColor: panoramaData.skyColor,
+            groundColor: panoramaData.groundColor,
+            timeOfDay: panoramaData.timeOfDay,
+            weather: panoramaData.weather,
+            layers: panoramaData.layers,
+            buildings: panoramaData.buildings,
+            npcStrip: panoramaData.npcStrip,
+            // Keep npcs alias for backwards compatibility
+            npcs: panoramaData.npcStrip,
+            exits: panoramaData.exits,
+            tracking: panoramaData.tracking
         });
     } catch (error) {
         console.error('[API-SETTLEMENT] Error:', error);
@@ -3180,7 +3145,129 @@ router.post('/zone/enter-building', authenticateToken, async (req, res) => {
     }
 });
 
-// Endpoint '/zone/gather' dihapus. Gathering menggunakan fitur Life Simulator via aset.
+// ==========================================
+// PENGAMBILAN SUMBER DAYA SPASIAL (RESOURCE NODE GATHERING - FASE 14)
+// ==========================================
+router.post('/zone/gather', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { tileX, tileY } = req.body;
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
+
+        const px = Number(player.gridPosition?.tileX ?? 2050);
+        const py = Number(player.gridPosition?.tileY ?? 2650);
+
+        const targetX = tileX !== undefined ? Number(tileX) : px;
+        const targetY = tileY !== undefined ? Number(tileY) : py;
+
+        const dist = Math.max(Math.abs(targetX - px), Math.abs(targetY - py));
+        if (dist > 1) {
+            return res.status(400).json({ error: 'Terlalu jauh dari sumber daya (Maksimal 1 petak)' });
+        }
+
+        // Periksa kondisi cooldown respawn pada ZoneTile jika ada
+        const zoneTile = await ZoneTile.findOne({
+            tileX: targetX,
+            tileY: targetY
+        });
+
+        if (zoneTile && zoneTile.nodeRespawnAt && zoneTile.nodeRespawnAt > new Date()) {
+            const sisaDetik = Math.ceil((zoneTile.nodeRespawnAt.getTime() - Date.now()) / 1000);
+            return res.status(400).json({ error: `Sumber daya di petak ini sedang habis. Pulih dalam ${sisaDetik} detik.` });
+        }
+
+        // Konsumsi Stamina (default 5 stamina)
+        const staminaCost = 5;
+        const curStamina = getCurrentStamina(player);
+        if (curStamina < staminaCost) {
+            return res.status(400).json({ error: `Stamina tidak cukup (Butuh ${staminaCost} stamina, tersisa ${curStamina})` });
+        }
+
+        applyTravelDrain(player, staminaCost);
+
+        // Tentukan resourceType berdasarkan ZoneTile atau medan regional
+        let resType = zoneTile?.resourceType;
+        if (!resType) {
+            const reg = proceduralWorldEngine.getRegionAt(targetX, targetY);
+            if (reg.id.includes('delta') || reg.id.includes('meadow') || reg.id.includes('plains')) resType = 'herb';
+            else if (reg.id.includes('teeth') || reg.id.includes('mountain') || reg.id.includes('peak')) resType = 'ore';
+            else if (reg.id.includes('lake') || reg.id.includes('river') || reg.id.includes('sea')) resType = 'fish';
+            else resType = 'wood';
+        }
+
+        let itemName = 'Herba Roh Bunga Melati';
+        let prof = 'farming';
+        if (resType === 'ore') {
+            itemName = 'Bijih Besi Roh Murni';
+            prof = 'smithing';
+        } else if (resType === 'wood') {
+            itemName = 'Kayu Cendana Spiritual';
+            prof = 'smithing';
+        } else if (resType === 'fish') {
+            itemName = 'Ikan Mas Sisik Emas';
+            prof = 'fishing';
+        }
+
+        // Berikan item ke inventory jika ada di database
+        let itemDoc = await Item.findOne({ name: itemName });
+        if (!itemDoc) {
+            itemDoc = await Item.findOne({ category: 'material' });
+        }
+        if (itemDoc) {
+            if (!player.inventory) player.inventory = [];
+            const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === itemDoc._id.toString());
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                player.inventory.push({ itemId: itemDoc._id, quantity: 1 });
+            }
+        }
+
+        // EXP Profesi (+15 EXP)
+        if (!player.professions) player.professions = {};
+        if (!player.professions[prof]) player.professions[prof] = { level: 1, exp: 0 };
+        player.professions[prof].exp = (player.professions[prof].exp || 0) + 15;
+
+        // Set cooldown respawn 60 detik
+        const nextRespawn = new Date(Date.now() + 60 * 1000);
+        if (zoneTile) {
+            zoneTile.nodeRespawnAt = nextRespawn;
+            await zoneTile.save();
+        } else {
+            await ZoneTile.create({
+                guildId: player.guildId || 'global',
+                zoneId: 'tianyuan_world_map',
+                tileX: targetX,
+                tileY: targetY,
+                tileType: 'resource_node',
+                resourceType: resType,
+                nodeRespawnAt: nextRespawn
+            });
+        }
+
+        player.markModified('inventory');
+        player.markModified('professions');
+        await player.save();
+
+        return res.json({
+            ok: true,
+            success: true,
+            message: `Berhasil memanen 1x ${itemName}!`,
+            itemName,
+            quantity: 1,
+            staminaCost,
+            profession: prof,
+            expGained: 15,
+            currentStamina: getCurrentStamina(player),
+            nodeRespawnAt: nextRespawn
+        });
+    } catch (error) {
+        console.error('[API-GATHER] Error:', error);
+        return res.status(500).json({ error: 'Gagal memanen sumber daya: ' + error.message });
+    }
+});
 
 // ==========================================
 // BLUEPRINT: SISTEM PROPERTI & INTERIOR 12x12

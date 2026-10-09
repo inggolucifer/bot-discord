@@ -1,0 +1,137 @@
+{
+  "blueprintType": "city",
+  "backdropId": "backdrop_imperial_palace_mountains",
+  "palette": "golden_ink",
+  "skyColor": "#0b101d",
+  "groundColor": "#151b26",
+  "description": "Kota metropolitan megah dengan benteng batu tinggi, istana paviliun berlapis emas, jalan batu granit luas, dan lentera merah menyala.",
+  "layers": [
+    {
+      "layer": "far",
+      "speed": 0.2,
+      "elements": ["towering_peaks", "grand_pagoda_silhouettes", "imperial_clouds"]
+    },
+    {
+      "layer": "mid",
+      "speed": 0.5,
+      "elements": ["city_walls", "fortress_battlements", "multi_tier_pavilions", "gilded_watchtowers"]
+    },
+    {
+      "layer": "ground",
+      "speed": 1.0,
+      "elements": ["granite_pavement", "carved_marble_balustrades", "vermilion_pillars", "gold_trimmed_banners"]
+    }
+  ],
+  "buildings": [
+    {
+      "id": "inn",
+      "name": "Paviliun Tamu Abadi",
+      "chineseName": "迎仙大酒楼",
+      "bannerText": "客栈 · 迎仙阁",
+      "desc": "Penginapan mewah bertingkat tiga dengan kamar meditasi berkonsentrasi Qi tinggi dan hidangan arak terbaik.",
+      "type": "inn",
+      "icon": "BedDouble",
+      "scale": 1.05,
+      "xPercent": 10,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["rest", "luxury_rooms", "gossip", "qi_gathering"]
+    },
+    {
+      "id": "tavern",
+      "name": "Kedai Mabuk Sembilan Awan",
+      "chineseName": "九霄醉月楼",
+      "bannerText": "酒楼 · 醉仙堂",
+      "desc": "Pusat pertemuan pendekar ternama dan tetua sekte. Tempat terbaik merekrut kawan seperjuangan.",
+      "type": "tavern",
+      "icon": "Wine",
+      "scale": 1.0,
+      "xPercent": 24,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["drink", "recruitment", "alliance_rumors"]
+    },
+    {
+      "id": "market",
+      "name": "Paviliun Harta Spiritual",
+      "chineseName": "天元万宝坊",
+      "bannerText": "坊市 · 万宝楼",
+      "desc": "Pasar spiritual terbesar dengan ribuan jenis artefak, pil pemurni dantian, dan jimat kuno dari seluruh penjuru sembilan benua.",
+      "type": "market",
+      "icon": "ShoppingBag",
+      "scale": 1.15,
+      "xPercent": 38,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["buy", "sell", "spiritual_stones", "auction"]
+    },
+    {
+      "id": "manual_pavilion",
+      "name": "Paviliun Kitab Suci & Sutra",
+      "chineseName": "文昌藏经阁",
+      "bannerText": "法卷 · 藏经阁",
+      "desc": "Pusat studi kitab beladiri, manual teknik esoterik, dan diagram meridian dari berbagai aliran besar Jianghu.",
+      "type": "manual_pavilion",
+      "icon": "BookOpen",
+      "scale": 1.1,
+      "xPercent": 52,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["learn_manuals", "comprehend", "technique_library"]
+    },
+    {
+      "id": "workshop",
+      "name": "Balai Tempa & Tungku Alkimia Kaisar",
+      "chineseName": "天工神炼坊",
+      "bannerText": "工坊 · 神炼堂",
+      "desc": "Bengkel tempa berstandar kaisar yang dilengkapi tungku api spiritual suhu tinggi untuk memadukan bijih langka dan pil bermutu tinggi.",
+      "type": "workshop",
+      "icon": "Hammer",
+      "scale": 1.0,
+      "xPercent": 66,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["high_tier_forge", "alchemy_refining", "equipment_upgrade"]
+    },
+    {
+      "id": "bounty_board",
+      "name": "Papan Sayembara Kekaisaran",
+      "chineseName": "九卿通缉榜",
+      "bannerText": "赏善 · 镇凶榜",
+      "desc": "Daftar buronan iblis Jianghu kelas tinggi dan sayembara ekspedisi jurang terlarang berhadiah batu roh berlimpah.",
+      "type": "bounty_board",
+      "icon": "FileText",
+      "scale": 0.95,
+      "xPercent": 78,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["imperial_bounties", "rank_promotion", "prestige"]
+    },
+    {
+      "id": "courier_stables",
+      "name": "Pos Kafilah & Kuda Spiritual",
+      "chineseName": "万里神行驿",
+      "bannerText": "驿站 · 神行司",
+      "desc": "Penyediaan tunggangan kuda roh, ransum perjalanan lintas benua, dan karavan pengawalan barang niaga.",
+      "type": "courier_stables",
+      "icon": "Compass",
+      "scale": 0.95,
+      "xPercent": 90,
+      "layer": "ground",
+      "openStatus": "open",
+      "services": ["mount_feed", "caravan_travel", "travel_supplies"]
+    }
+  ],
+  "defaultExits": [
+    {
+      "type": "city_gate",
+      "label": "Gerbang Selatan Kota (Keluar ke Alam Liar)",
+      "icon": "Gate"
+    },
+    {
+      "type": "caravan_station",
+      "label": "Stasiun Kafilah Lintas Wilayah",
+      "icon": "Caravan"
+    }
+  ]
+}

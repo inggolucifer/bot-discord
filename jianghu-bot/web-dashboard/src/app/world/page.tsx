@@ -10,7 +10,7 @@ import { Map, MapPin, Building, Activity, Navigation, Compass, ExternalLink, Ref
 import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
-import WorldMapView from "@/components/map/WorldMapView";
+import WorldCanvas from "@/components/map/WorldCanvas";
 import ZoneGridView from "@/components/map/ZoneGridView";
 import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
@@ -251,7 +251,10 @@ export function WorldPageContent() {
       <div className="absolute inset-0 flex flex-col">
         {mapView === 'world' ? (
           <div className="flex-1 w-full h-full animate-in fade-in zoom-in-95 duration-300 ease-out relative z-30">
-            <WorldMapView
+            <WorldCanvas
+              mode="macro"
+              tiles={[]}
+              playerPos={locationData?.gridPosition ? { x: locationData.gridPosition.tileX, y: locationData.gridPosition.tileY } : { x: 2050, y: 2650 }}
               onSelectRegion={(regionSlug: string, centerX?: number, centerY?: number) => {
                 setSelectedRegionSlug(regionSlug);
                 if (centerX !== undefined && centerY !== undefined) {
@@ -259,8 +262,9 @@ export function WorldPageContent() {
                 }
                 setMapView('grid');
               }}
-              playerPos={locationData?.gridPosition ? { x: locationData.gridPosition.tileX, y: locationData.gridPosition.tileY } : undefined}
-              currentLocation={locationData?.currentLocation}
+              onModeChange={(nextMode) => {
+                if (nextMode === 'zone') setMapView('grid');
+              }}
             />
           </div>
         ) : (

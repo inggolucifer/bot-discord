@@ -1,0 +1,4871 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline",
+    "version": "2.0",
+    "size": {
+      "w": 2048,
+      "h": 2454
+    },
+    "format": "RGBA8888"
+  },
+  "frames": {
+    "mt_bastion_wall_v1": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v1",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v2": {
+      "frame": {
+        "x": 402,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v2",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v3": {
+      "frame": {
+        "x": 804,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v3",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v4": {
+      "frame": {
+        "x": 1206,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v4",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_twin_peaks_v1": {
+      "frame": {
+        "x": 1608,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v1",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v2": {
+      "frame": {
+        "x": 0,
+        "y": 562,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v2",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v3": {
+      "frame": {
+        "x": 302,
+        "y": 562,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v3",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v4": {
+      "frame": {
+        "x": 604,
+        "y": 562,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v4",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v5": {
+      "frame": {
+        "x": 906,
+        "y": 562,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v5",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v5",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v6": {
+      "frame": {
+        "x": 1208,
+        "y": 562,
+        "w": 300,
+        "h": 440
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 300,
+        "h": 440
+      },
+      "sourceSize": {
+        "w": 300,
+        "h": 440
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v6",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v6",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_azure_crag_v1": {
+      "frame": {
+        "x": 1510,
+        "y": 562,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v1",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v2": {
+      "frame": {
+        "x": 1712,
+        "y": 562,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v2",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v3": {
+      "frame": {
+        "x": 0,
+        "y": 1004,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v3",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v4": {
+      "frame": {
+        "x": 202,
+        "y": 1004,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v4",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v5": {
+      "frame": {
+        "x": 404,
+        "y": 1004,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v5",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v5",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v6": {
+      "frame": {
+        "x": 606,
+        "y": 1004,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v6",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v6",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "tree_spirit_peach_v1": {
+      "frame": {
+        "x": 808,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v1",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v1",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "tree_spirit_peach_v2": {
+      "frame": {
+        "x": 1010,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v2",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v2",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "tree_spirit_peach_v3": {
+      "frame": {
+        "x": 1212,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v3",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v3",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "tree_spirit_peach_v4": {
+      "frame": {
+        "x": 1414,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v4",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v4",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "tree_spirit_peach_v5": {
+      "frame": {
+        "x": 1616,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v5",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v5",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "tree_spirit_peach_v6": {
+      "frame": {
+        "x": 1818,
+        "y": 1004,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "tree_spirit_peach_v6",
+        "atlas": "objects_nature",
+        "frame": "tree_spirit_peach_v6",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.8,
+        "collision": "solid",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_spirit_peach_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "spirit_peach"
+        ]
+      }
+    },
+    "mt_ridge_double_v1": {
+      "frame": {
+        "x": 0,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v1",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "mt_ridge_double_v2": {
+      "frame": {
+        "x": 202,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v2",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "mt_ridge_double_v3": {
+      "frame": {
+        "x": 404,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v3",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "mt_ridge_double_v4": {
+      "frame": {
+        "x": 606,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v4",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "mt_ridge_double_v5": {
+      "frame": {
+        "x": 808,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v5",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v5",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "mt_ridge_double_v6": {
+      "frame": {
+        "x": 1010,
+        "y": 1366,
+        "w": 200,
+        "h": 280
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 280
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 280
+      },
+      "metadata": {
+        "id": "mt_ridge_double_v6",
+        "atlas": "objects_nature",
+        "frame": "mt_ridge_double_v6",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 280
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.8,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_ridge_double_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "ridge_double"
+        ]
+      }
+    },
+    "bamboo_jade_2x2_l_sparse": {
+      "frame": {
+        "x": 1212,
+        "y": 1366,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_jade_2x2_l_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_2x2_l_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_2x2_l_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_jade_2x2_l_dense": {
+      "frame": {
+        "x": 1414,
+        "y": 1366,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_jade_2x2_l_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_2x2_l_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_2x2_l_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_mist_2x2_l_sparse": {
+      "frame": {
+        "x": 1616,
+        "y": 1366,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_mist_2x2_l_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_2x2_l_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_2x2_l_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_mist_2x2_l_dense": {
+      "frame": {
+        "x": 1818,
+        "y": 1366,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_mist_2x2_l_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_2x2_l_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_2x2_l_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_dark_2x2_l_sparse": {
+      "frame": {
+        "x": 0,
+        "y": 1648,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_dark_2x2_l_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_2x2_l_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_2x2_l_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "bamboo_dark_2x2_l_dense": {
+      "frame": {
+        "x": 202,
+        "y": 1648,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_dark_2x2_l_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_2x2_l_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_2x2_l_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "bamboo_jade_2x1_m_sparse": {
+      "frame": {
+        "x": 404,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_jade_2x1_m_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_2x1_m_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_2x1_m_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_jade_2x1_m_dense": {
+      "frame": {
+        "x": 606,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_jade_2x1_m_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_2x1_m_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_2x1_m_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_mist_2x1_m_sparse": {
+      "frame": {
+        "x": 808,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_mist_2x1_m_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_2x1_m_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_2x1_m_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_mist_2x1_m_dense": {
+      "frame": {
+        "x": 1010,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_mist_2x1_m_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_2x1_m_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_2x1_m_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_dark_2x1_m_sparse": {
+      "frame": {
+        "x": 1212,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_dark_2x1_m_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_2x1_m_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_2x1_m_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "bamboo_dark_2x1_m_dense": {
+      "frame": {
+        "x": 1414,
+        "y": 1648,
+        "w": 200,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 220
+      },
+      "metadata": {
+        "id": "bamboo_dark_2x1_m_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_2x1_m_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_2x1_m_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "mt_karst_pillar_v1": {
+      "frame": {
+        "x": 1616,
+        "y": 1648,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v1",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "mt_karst_pillar_v2": {
+      "frame": {
+        "x": 1718,
+        "y": 1648,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v2",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "mt_karst_pillar_v3": {
+      "frame": {
+        "x": 1820,
+        "y": 1648,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v3",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "mt_karst_pillar_v4": {
+      "frame": {
+        "x": 1922,
+        "y": 1648,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v4",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "mt_karst_pillar_v5": {
+      "frame": {
+        "x": 0,
+        "y": 1910,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v5",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v5",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "mt_karst_pillar_v6": {
+      "frame": {
+        "x": 102,
+        "y": 1910,
+        "w": 100,
+        "h": 220
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 220
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 220
+      },
+      "metadata": {
+        "id": "mt_karst_pillar_v6",
+        "atlas": "objects_nature",
+        "frame": "mt_karst_pillar_v6",
+        "category": "mountain",
+        "px": {
+          "w": 100,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_karst_pillar_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "karst_pillar"
+        ]
+      }
+    },
+    "tree_willow_river_v1": {
+      "frame": {
+        "x": 204,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v1",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v1",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "tree_willow_river_v2": {
+      "frame": {
+        "x": 406,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v2",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v2",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "tree_willow_river_v3": {
+      "frame": {
+        "x": 608,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v3",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v3",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "tree_willow_river_v4": {
+      "frame": {
+        "x": 810,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v4",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v4",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "tree_willow_river_v5": {
+      "frame": {
+        "x": 1012,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v5",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v5",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "tree_willow_river_v6": {
+      "frame": {
+        "x": 1214,
+        "y": 1910,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "metadata": {
+        "id": "tree_willow_river_v6",
+        "atlas": "objects_nature",
+        "frame": "tree_willow_river_v6",
+        "category": "tree",
+        "px": {
+          "w": 200,
+          "h": 200
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_willow_river_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "willow_river"
+        ]
+      }
+    },
+    "bamboo_jade_1x1_s_sparse": {
+      "frame": {
+        "x": 1416,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_jade_1x1_s_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_1x1_s_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_1x1_s_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_jade_1x1_s_dense": {
+      "frame": {
+        "x": 1518,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_jade_1x1_s_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_jade_1x1_s_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_jade_1x1_s_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "jade"
+        ]
+      }
+    },
+    "bamboo_mist_1x1_s_sparse": {
+      "frame": {
+        "x": 1620,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_mist_1x1_s_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_1x1_s_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_1x1_s_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_mist_1x1_s_dense": {
+      "frame": {
+        "x": 1722,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_mist_1x1_s_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_mist_1x1_s_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_mist_1x1_s_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "mist"
+        ]
+      }
+    },
+    "bamboo_dark_1x1_s_sparse": {
+      "frame": {
+        "x": 1824,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_dark_1x1_s_sparse",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_1x1_s_sparse",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_1x1_s_sparse"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "bamboo_dark_1x1_s_dense": {
+      "frame": {
+        "x": 1926,
+        "y": 1910,
+        "w": 100,
+        "h": 180
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 180
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 180
+      },
+      "metadata": {
+        "id": "bamboo_dark_1x1_s_dense",
+        "atlas": "objects_nature",
+        "frame": "bamboo_dark_1x1_s_dense",
+        "category": "bamboo",
+        "px": {
+          "w": 100,
+          "h": 180
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.8,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_dark_1x1_s_dense"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "vegetation",
+          "dark"
+        ]
+      }
+    },
+    "tree_cypress_frost_v1": {
+      "frame": {
+        "x": 0,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v1",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v1",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_cypress_frost_v2": {
+      "frame": {
+        "x": 102,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v2",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v2",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_cypress_frost_v3": {
+      "frame": {
+        "x": 204,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v3",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v3",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_cypress_frost_v4": {
+      "frame": {
+        "x": 306,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v4",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v4",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_cypress_frost_v5": {
+      "frame": {
+        "x": 408,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v5",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v5",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_cypress_frost_v6": {
+      "frame": {
+        "x": 510,
+        "y": 2132,
+        "w": 100,
+        "h": 170
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 170
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 170
+      },
+      "metadata": {
+        "id": "tree_cypress_frost_v6",
+        "atlas": "objects_nature",
+        "frame": "tree_cypress_frost_v6",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 170
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.7,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_cypress_frost_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "cypress_frost"
+        ]
+      }
+    },
+    "tree_pine_ancient_v1": {
+      "frame": {
+        "x": 612,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v1",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v1",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "tree_pine_ancient_v2": {
+      "frame": {
+        "x": 714,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v2",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v2",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "tree_pine_ancient_v3": {
+      "frame": {
+        "x": 816,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v3",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v3",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "tree_pine_ancient_v4": {
+      "frame": {
+        "x": 918,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v4",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v4",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "tree_pine_ancient_v5": {
+      "frame": {
+        "x": 1020,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v5",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v5",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "tree_pine_ancient_v6": {
+      "frame": {
+        "x": 1122,
+        "y": 2132,
+        "w": 100,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 160
+      },
+      "metadata": {
+        "id": "tree_pine_ancient_v6",
+        "atlas": "objects_nature",
+        "frame": "tree_pine_ancient_v6",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_pine_ancient_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "pine_ancient"
+        ]
+      }
+    },
+    "rock_crag_cluster_v1": {
+      "frame": {
+        "x": 1224,
+        "y": 2132,
+        "w": 200,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 160
+      },
+      "metadata": {
+        "id": "rock_crag_cluster_v1",
+        "atlas": "objects_nature",
+        "frame": "rock_crag_cluster_v1",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_crag_cluster_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "crag_cluster"
+        ]
+      }
+    },
+    "rock_crag_cluster_v2": {
+      "frame": {
+        "x": 1426,
+        "y": 2132,
+        "w": 200,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 160
+      },
+      "metadata": {
+        "id": "rock_crag_cluster_v2",
+        "atlas": "objects_nature",
+        "frame": "rock_crag_cluster_v2",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_crag_cluster_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "crag_cluster"
+        ]
+      }
+    },
+    "rock_crag_cluster_v3": {
+      "frame": {
+        "x": 1628,
+        "y": 2132,
+        "w": 200,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 160
+      },
+      "metadata": {
+        "id": "rock_crag_cluster_v3",
+        "atlas": "objects_nature",
+        "frame": "rock_crag_cluster_v3",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_crag_cluster_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "crag_cluster"
+        ]
+      }
+    },
+    "rock_crag_cluster_v4": {
+      "frame": {
+        "x": 1830,
+        "y": 2132,
+        "w": 200,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 160
+      },
+      "metadata": {
+        "id": "rock_crag_cluster_v4",
+        "atlas": "objects_nature",
+        "frame": "rock_crag_cluster_v4",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 160
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_crag_cluster_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "crag_cluster"
+        ]
+      }
+    },
+    "rock_cleft_stone_v1": {
+      "frame": {
+        "x": 0,
+        "y": 2304,
+        "w": 200,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 150
+      },
+      "metadata": {
+        "id": "rock_cleft_stone_v1",
+        "atlas": "objects_nature",
+        "frame": "rock_cleft_stone_v1",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_cleft_stone_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "cleft_stone"
+        ]
+      }
+    },
+    "rock_cleft_stone_v2": {
+      "frame": {
+        "x": 202,
+        "y": 2304,
+        "w": 200,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 150
+      },
+      "metadata": {
+        "id": "rock_cleft_stone_v2",
+        "atlas": "objects_nature",
+        "frame": "rock_cleft_stone_v2",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_cleft_stone_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "cleft_stone"
+        ]
+      }
+    },
+    "rock_cleft_stone_v3": {
+      "frame": {
+        "x": 404,
+        "y": 2304,
+        "w": 200,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 150
+      },
+      "metadata": {
+        "id": "rock_cleft_stone_v3",
+        "atlas": "objects_nature",
+        "frame": "rock_cleft_stone_v3",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_cleft_stone_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "cleft_stone"
+        ]
+      }
+    },
+    "rock_cleft_stone_v4": {
+      "frame": {
+        "x": 606,
+        "y": 2304,
+        "w": 200,
+        "h": 150
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 150
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 150
+      },
+      "metadata": {
+        "id": "rock_cleft_stone_v4",
+        "atlas": "objects_nature",
+        "frame": "rock_cleft_stone_v4",
+        "category": "rock",
+        "px": {
+          "w": 200,
+          "h": 150
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.5,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_cleft_stone_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "cleft_stone"
+        ]
+      }
+    },
+    "tree_dead_wood_v1": {
+      "frame": {
+        "x": 808,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v1",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v1",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "tree_dead_wood_v2": {
+      "frame": {
+        "x": 910,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v2",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v2",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "tree_dead_wood_v3": {
+      "frame": {
+        "x": 1012,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v3",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v3",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "tree_dead_wood_v4": {
+      "frame": {
+        "x": 1114,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v4",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v4",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "tree_dead_wood_v5": {
+      "frame": {
+        "x": 1216,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v5",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v5",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "tree_dead_wood_v6": {
+      "frame": {
+        "x": 1318,
+        "y": 2304,
+        "w": 100,
+        "h": 140
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 140
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 140
+      },
+      "metadata": {
+        "id": "tree_dead_wood_v6",
+        "atlas": "objects_nature",
+        "frame": "tree_dead_wood_v6",
+        "category": "tree",
+        "px": {
+          "w": 100,
+          "h": 140
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0.4,
+        "collision": "soft",
+        "staminaMult": 1.15,
+        "sortBias": 0,
+        "variants": [
+          "tree_dead_wood_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "tree",
+          "dead_wood"
+        ]
+      }
+    },
+    "rock_boulder_moss_v1": {
+      "frame": {
+        "x": 1420,
+        "y": 2304,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "rock_boulder_moss_v1",
+        "atlas": "objects_nature",
+        "frame": "rock_boulder_moss_v1",
+        "category": "rock",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_boulder_moss_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "boulder_moss"
+        ]
+      }
+    },
+    "rock_boulder_moss_v2": {
+      "frame": {
+        "x": 1522,
+        "y": 2304,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "rock_boulder_moss_v2",
+        "atlas": "objects_nature",
+        "frame": "rock_boulder_moss_v2",
+        "category": "rock",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_boulder_moss_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "boulder_moss"
+        ]
+      }
+    },
+    "rock_boulder_moss_v3": {
+      "frame": {
+        "x": 1624,
+        "y": 2304,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "rock_boulder_moss_v3",
+        "atlas": "objects_nature",
+        "frame": "rock_boulder_moss_v3",
+        "category": "rock",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_boulder_moss_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "boulder_moss"
+        ]
+      }
+    },
+    "rock_boulder_moss_v4": {
+      "frame": {
+        "x": 1726,
+        "y": 2304,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "rock_boulder_moss_v4",
+        "atlas": "objects_nature",
+        "frame": "rock_boulder_moss_v4",
+        "category": "rock",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "rock_boulder_moss_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "rock",
+          "boulder_moss"
+        ]
+      }
+    }
+  }
+}

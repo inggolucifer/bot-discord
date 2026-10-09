@@ -251,17 +251,22 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   if (activeBarrier) {
     let barrierTerrain = 'azure_mountain';
     if (activeBarrier.type === 'ocean') barrierTerrain = 'ocean';
+    else if (activeBarrier.type === 'water') barrierTerrain = 'lake_deep';
     else if (activeBarrier.type === 'lava_hazard') barrierTerrain = 'volcanic';
-    else if (activeBarrier.type === 'chasm') barrierTerrain = 'mountain';
+    else if (activeBarrier.type === 'chasm') barrierTerrain = 'abyss_edge';
+    else if (activeBarrier.type === 'cliff') barrierTerrain = 'cliff';
+    else if (activeBarrier.type === 'lightning_hazard') barrierTerrain = 'mountain_peak';
+
+    const isWaterBarrier = barrierTerrain === 'ocean' || barrierTerrain === 'lake_deep';
 
     return {
       tileX,
       tileY,
       terrainType: barrierTerrain,
-      tileType: 'mountain',
+      tileType: isWaterBarrier ? 'water' : 'mountain',
       isSolid: true,
       label: activeBarrier.name,
-      resourceType: barrierTerrain === 'ocean' ? 'fish' : 'ore',
+      resourceType: isWaterBarrier ? 'fish' : 'ore',
       isClaimable: false,
       plotPriceSilver: 0,
       baseTemperature: activeBarrier.type === 'lava_hazard' ? 55 : (
@@ -278,7 +283,7 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     };
   }
 
-  // 4. Evaluasi Bioma Berbasis Noise Fractal & Profil Regional (B-14 Fixed)
+  // 4. Evaluasi Bioma Berbasis Noise Fractal & Profil Regional (§2.3)
   const elevation = fbmNoise(tileX, tileY, 0.012, 3, WORLD_SEED);
   const moisture = fbmNoise(tileX, tileY, 0.008, 2, WORLD_SEED + 999);
 
@@ -287,96 +292,367 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   let tileType = 'walkable';
   let label = null;
 
-  const isEasternWaters = region.id === 'eastern_sea' || region.id === 'frostmoon_sea' || region.id === 'floating_wind_isles';
-  const isVolcanicZone = region.id === 'volcanic_crag' || region.id === 'lava_spine';
-  const isSwampZone = region.id === 'venom_mire' || region.id === 'poison_insect_swamp' || region.id === 'southern_demon_domain' || region.id === 'abyssal_scar' || region.id === 'crimson_battlefield' || region.id === 'southern_plague_woods';
-  const isDesertZone = region.id === 'western_sacred_desert' || region.id === 'golden_sands_waste' || region.id === 'sun_chaser_dunes' || region.id === 'western_gorge_labyrinth' || region.id === 'ancient_dragon_gorge';
-  const isGlacialZone = region.id === 'northern_desolate' || region.id === 'kunlun_snow_peaks';
-  const isBambooZone = region.id === 'spirit_wood_sea' || region.id === 'spirit_bamboo_sea';
-  const isThunderZone = region.id === 'thundersteppe' || region.id === 'godthunder_peaks';
-  const isMirrorZone = region.id === 'mirror_lake';
-  const isDeltaZone = region.id === 'nine_springs_delta';
-
-  if (isEasternWaters) {
-    if (elevation > 0.70) {
-      terrainType = 'island_reef';
-      isSolid = false;
-      label = 'Gugusan Karang Roh Melayang';
-    } else {
-      terrainType = 'ocean';
-      isSolid = true;
-      label = 'Samudra Luas';
+  switch (region.id) {
+    case 'mirror_lake': {
+      if (elevation < 0.60) {
+        terrainType = 'lake';
+        isSolid = true;
+        label = 'Perairan Danau Cermin';
+      } else if (elevation < 0.70) {
+        terrainType = 'river_shallow';
+        isSolid = false;
+        label = 'Tepian Dangkal Danau Cermin';
+      } else if (elevation < 0.90) {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Pesisir Bunga Cermin';
+      } else {
+        terrainType = 'island_reef';
+        isSolid = false;
+        label = 'Pulau Karang Danau Cermin';
+      }
+      break;
     }
-  } else if (isGlacialZone) {
-    terrainType = 'northern_glacial';
-    isSolid = elevation > 0.80;
-    label = isSolid ? 'Puncak Es Abadi' : 'Lereng Salju Tundra';
-  } else if (isVolcanicZone) {
-    terrainType = 'volcanic';
-    isSolid = elevation > 0.82;
-    label = isSolid ? 'Kawah Lahar Membara' : 'Tanah Vulkanik Panas';
-  } else if (isSwampZone) {
-    terrainType = (region.id === 'venom_mire' || region.id === 'poison_insect_swamp') ? 'venom_mire' : 'demonic_swamp';
-    isSolid = elevation > 0.85;
-    label = terrainType === 'venom_mire' ? 'Rawa Racun Miasma' : 'Rawa Domain Iblis';
-  } else if (isDesertZone) {
-    terrainType = 'western_desert';
-    isSolid = elevation > 0.82;
-    label = isSolid ? 'Tebing Pasir Terjal' : 'Gurun Pasir Panas';
-  } else if (isBambooZone) {
-    terrainType = 'bamboo_forest';
-    isSolid = elevation > 0.85;
-    label = 'Lautan Bambu Roh';
-  } else if (isThunderZone) {
-    terrainType = elevation > 0.75 ? 'mountain' : 'plains';
-    isSolid = elevation > 0.82;
-    label = isSolid ? 'Puncak Halilintar' : 'Sabana Badai Petir';
-  } else if (isMirrorZone) {
-    if (elevation < 0.40) {
-      terrainType = 'ocean';
-      isSolid = true;
-      label = 'Perairan Danau Cermin';
-    } else if (elevation < 0.55) {
-      terrainType = 'river';
-      isSolid = false;
-      label = 'Tepian Danau Cermin';
-    } else {
-      terrainType = 'plains';
-      isSolid = false;
-      label = 'Pesisir Bunga Cermin';
+    case 'bone_sea_coast': {
+      if (elevation < 0.40) {
+        terrainType = 'sea';
+        isSolid = true;
+        label = 'Perairan Pesisir Laut Tulang';
+      } else if (elevation < 0.55) {
+        terrainType = 'sea_reef';
+        isSolid = false;
+        label = 'Batu Karang Tepi Pantai';
+      } else if (elevation < 0.75) {
+        terrainType = 'desert_sand';
+        isSolid = false;
+        label = 'Pantai Pasir Abu';
+      } else {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Padang Rumput Pesisir';
+      }
+      break;
     }
-  } else if (isDeltaZone) {
-    if (elevation < 0.35) {
-      terrainType = 'river';
-      isSolid = false;
-      label = 'Sungai Delta Sembilan Mata Air';
-    } else if (moisture > 0.50) {
-      terrainType = 'swamp';
-      isSolid = false;
-      label = 'Rawa Teratai Delta';
-    } else {
-      terrainType = 'plains';
-      isSolid = false;
-      label = 'Bantaran Rumput Hijau';
+    case 'godthunder_peaks': {
+      if (elevation > 0.60) {
+        terrainType = 'mountain_peak';
+        isSolid = true;
+        label = 'Puncak Halilintar Abadi';
+      } else if (elevation > 0.35) {
+        terrainType = 'mountain_rock';
+        isSolid = true;
+        label = 'Tebing Cadas Bermuatan Petir';
+      } else {
+        terrainType = 'crater';
+        isSolid = false;
+        label = 'Kawah Sambaran Petir';
+      }
+      break;
     }
-  } else {
-    // Default Continental Mainland (Central Plains, Beast Prairies, Border March, dll.)
-    if (elevation > 0.75) {
-      terrainType = 'mountain';
-      isSolid = elevation > 0.82;
-      label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Batu';
-    } else if (elevation < 0.22) {
-      terrainType = 'river';
-      isSolid = false;
-      label = 'Aliran Sungai Jernih';
-    } else if (moisture > 0.58) {
-      terrainType = (elevation > 0.45) ? 'forest' : 'bamboo_forest';
-      isSolid = false;
-      label = terrainType === 'forest' ? 'Hutan Rimbun Kuno' : 'Hutan Bambu Hijau';
-    } else {
-      terrainType = 'plains';
-      isSolid = false;
-      label = 'Padang Rumput Asri';
+    case 'ore_teeth_range': {
+      if (elevation > 0.65) {
+        terrainType = 'mountain_rock';
+        isSolid = true;
+        label = 'Punggung Gigi Bijih Cadas';
+      } else if (elevation > 0.25) {
+        terrainType = 'hill';
+        isSolid = false;
+        label = 'Perbukitan Tambang Besi';
+      } else {
+        terrainType = 'plains';
+        isSolid = false;
+        label = 'Lembah Tempa Bijih';
+      }
+      break;
+    }
+    case 'thundersteppe': {
+      if (elevation > 0.68 && moisture < 0.40) {
+        terrainType = 'lightning_scar';
+        isSolid = false;
+        label = 'Tanah Retakan Petir';
+      } else {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Sabana Badai Petir';
+      }
+      break;
+    }
+    case 'hermit_highlands': {
+      if (elevation > 0.78) {
+        terrainType = 'mountain_rock';
+        isSolid = true;
+        label = 'Batu Puncak Awan';
+      } else if (elevation > 0.45) {
+        terrainType = 'hill';
+        isSolid = false;
+        label = 'Perbukitan Kabut Pertapaan';
+      } else if (moisture > 0.60) {
+        terrainType = 'bamboo_grove';
+        isSolid = false;
+        label = 'Rumpun Bambu Sejuk';
+      } else {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Padang Herba Pertapa';
+      }
+      break;
+    }
+    case 'immortal_ruins_valley': {
+      if (elevation > 0.60) {
+        terrainType = 'ruin_floor';
+        isSolid = false;
+        label = 'Lantai Reruntuhan Abadi';
+      } else if (moisture > 0.50) {
+        terrainType = 'formation_tile';
+        isSolid = false;
+        label = 'Petak Formasi Kuno';
+      } else {
+        terrainType = 'hill';
+        isSolid = false;
+        label = 'Puing Perbukitan Leluhur';
+      }
+      break;
+    }
+    case 'void_rift': {
+      if (elevation > 0.55) {
+        terrainType = 'miasma_waste';
+        isSolid = false;
+        label = 'Tanah Rusak Retakan Hampa';
+      } else {
+        terrainType = 'abyss_edge';
+        isSolid = true;
+        label = 'Tepian Jurang Hampa Mutlak';
+      }
+      break;
+    }
+    case 'border_march': {
+      if (elevation > 0.88) {
+        terrainType = 'mountain_rock';
+        isSolid = true;
+        label = 'Benteng Tebing Batu';
+      } else if (elevation < 0.28) {
+        terrainType = 'road_stone';
+        isSolid = false;
+        label = 'Jalan Garnisun Militer';
+      } else {
+        terrainType = 'plains';
+        isSolid = false;
+        label = 'Dataran Pos Perbatasan';
+      }
+      break;
+    }
+    case 'nine_springs_delta': {
+      if (elevation < 0.25) {
+        terrainType = 'river';
+        isSolid = false;
+        label = 'Sungai Delta Sembilan Mata Air';
+      } else if (elevation < 0.38) {
+        terrainType = 'pond_lotus';
+        isSolid = false;
+        label = 'Kolam Teratai Delta';
+      } else if (moisture > 0.55) {
+        terrainType = 'herb_field';
+        isSolid = false;
+        label = 'Ladang Herba Delta';
+      } else if (moisture > 0.35) {
+        terrainType = 'farmland';
+        isSolid = false;
+        label = 'Sawah Petani Tepi Sungai';
+      } else {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Bantaran Rumput Hijau';
+      }
+      break;
+    }
+    case 'eastern_sea':
+    case 'frostmoon_sea':
+    case 'floating_wind_isles': {
+      if (elevation > 0.70) {
+        terrainType = 'island_reef';
+        isSolid = false;
+        label = 'Gugusan Karang Roh Melayang';
+      } else {
+        terrainType = 'ocean';
+        isSolid = true;
+        label = 'Samudra Luas';
+      }
+      break;
+    }
+    case 'northern_desolate': {
+      if (elevation > 0.80) {
+        terrainType = 'glacier';
+        isSolid = true;
+        label = 'Gletser Es Abadi';
+      } else if (elevation > 0.70) {
+        terrainType = 'ice_crack';
+        isSolid = false;
+        label = 'Retakan Es Membeku';
+      } else {
+        terrainType = 'snow';
+        isSolid = false;
+        label = 'Padang Salju Tundra';
+      }
+      break;
+    }
+    case 'lava_spine': {
+      if (elevation > 0.75) {
+        terrainType = 'lava_flow';
+        isSolid = true;
+        label = 'Aliran Lahar Mendidih';
+      } else if (elevation > 0.50) {
+        terrainType = 'basalt';
+        isSolid = false;
+        label = 'Batuan Basal Pijar';
+      } else {
+        terrainType = 'crater';
+        isSolid = false;
+        label = 'Kawah Magma Padat';
+      }
+      break;
+    }
+    case 'venom_mire':
+    case 'southern_plague_woods': {
+      if (elevation > 0.75) {
+        terrainType = 'poison_pool';
+        isSolid = false;
+        label = 'Kubangan Racun Berbisa';
+      } else if (moisture > 0.55) {
+        terrainType = 'dead_wood';
+        isSolid = false;
+        label = 'Hutan Kayu Mati Beracun';
+      } else {
+        terrainType = 'swamp';
+        isSolid = false;
+        label = 'Rawa Miasma Mematikan';
+      }
+      break;
+    }
+    case 'southern_demon_domain': {
+      if (elevation > 0.80) {
+        terrainType = 'mountain_rock';
+        isSolid = true;
+        label = 'Puncak Karang Hitam Iblis';
+      } else if (elevation > 0.55) {
+        terrainType = 'hill';
+        isSolid = false;
+        label = 'Bukit Batu Hitam';
+      } else if (moisture > 0.50) {
+        terrainType = 'dead_wood';
+        isSolid = false;
+        label = 'Belukar Hitam Purba';
+      } else {
+        terrainType = 'demonic_swamp';
+        isSolid = false;
+        label = 'Tanah Lembab Domain Iblis';
+      }
+      break;
+    }
+    case 'crimson_battlefield': {
+      if (elevation > 0.60) {
+        terrainType = 'battlefield_ash';
+        isSolid = false;
+        label = 'Hamparan Abu Medan Perang';
+      } else if (moisture > 0.50) {
+        terrainType = 'miasma_waste';
+        isSolid = false;
+        label = 'Limbah Darah Kering';
+      } else {
+        terrainType = 'dead_wood';
+        isSolid = false;
+        label = 'Pilar Kayu Sisa Pembantaian';
+      }
+      break;
+    }
+    case 'abyssal_scar': {
+      if (elevation > 0.65) {
+        terrainType = 'abyss_edge';
+        isSolid = true;
+        label = 'Tebing Jurang Neraka Tianyuan';
+      } else {
+        terrainType = 'miasma_waste';
+        isSolid = false;
+        label = 'Tanah Hangus Retakan Neraka';
+      }
+      break;
+    }
+    case 'western_sacred_desert': {
+      if (elevation > 0.78) {
+        terrainType = 'dune';
+        isSolid = false;
+        label = 'Bukit Pasir Emas Tinggi';
+      } else if (elevation < 0.20 && moisture > 0.60) {
+        terrainType = 'oasis';
+        isSolid = false;
+        label = 'Mata Air Oase Gurun';
+      } else {
+        terrainType = 'desert_sand';
+        isSolid = false;
+        label = 'Hamparan Pasir Suci';
+      }
+      break;
+    }
+    case 'western_gorge_labyrinth':
+    case 'sword_gorge': {
+      if (elevation > 0.75) {
+        terrainType = 'cliff';
+        isSolid = true;
+        label = 'Dinding Tebing Ngarai Terjal';
+      } else {
+        terrainType = 'canyon_floor';
+        isSolid = false;
+        label = 'Dasar Ngarai Berbatu';
+      }
+      break;
+    }
+    case 'spirit_wood_sea': {
+      if (elevation > 0.55) {
+        terrainType = 'spirit_wood';
+        isSolid = false;
+        label = 'Pohon Roh Bertuah Rimbun';
+      } else {
+        terrainType = 'forest';
+        isSolid = false;
+        label = 'Lautan Rimba Roh';
+      }
+      break;
+    }
+    case 'formation_barrens': {
+      if (elevation > 0.60) {
+        terrainType = 'formation_tile';
+        isSolid = false;
+        label = 'Urat Formasi Simbol Kuno';
+      } else {
+        terrainType = 'plains';
+        isSolid = false;
+        label = 'Padang Tandus Formasi Terbengkalai';
+      }
+      break;
+    }
+    default: {
+      // central_plains & bioma daratan standar
+      if (elevation > 0.78) {
+        terrainType = 'mountain';
+        isSolid = elevation > 0.84;
+        label = isSolid ? 'Tebing Batu Curam' : 'Perbukitan Hijau';
+      } else if (elevation < 0.20) {
+        terrainType = 'river';
+        isSolid = false;
+        label = 'Aliran Sungai Jernih';
+      } else if (moisture > 0.60) {
+        terrainType = (elevation > 0.45) ? 'forest' : 'bamboo_forest';
+        isSolid = false;
+        label = terrainType === 'forest' ? 'Hutan Rimbun Kuno' : 'Hutan Bambu Hijau';
+      } else if (moisture > 0.40) {
+        terrainType = 'meadow';
+        isSolid = false;
+        label = 'Padang Bunga Aprikot';
+      } else {
+        terrainType = 'plains';
+        isSolid = false;
+        label = 'Padang Rumput Asri';
+      }
+      break;
     }
   }
 
@@ -396,12 +672,12 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
 
   // Penentuan Resource Node Spasial
   let resourceType = null;
-  if (terrainType === 'river' || terrainType === 'ocean') {
+  if (terrainType === 'river' || terrainType === 'ocean' || terrainType === 'lake' || terrainType === 'lake_deep' || terrainType === 'sea' || terrainType === 'river_shallow' || terrainType === 'pond_lotus') {
     resourceType = 'fish';
-  } else if (terrainType === 'forest' || terrainType === 'bamboo_forest') {
+  } else if (terrainType === 'forest' || terrainType === 'bamboo_forest' || terrainType === 'bamboo_grove' || terrainType === 'spirit_wood' || terrainType === 'herb_field' || terrainType === 'farmland') {
     resourceType = ((tileX * 31 + tileY * 17) % 2 === 0) ? 'herb' : 'wood';
-  } else if (terrainType === 'mountain' || terrainType === 'azure_mountain') {
-    if (elevation > 0.65) resourceType = 'ore';
+  } else if (terrainType === 'mountain' || terrainType === 'azure_mountain' || terrainType === 'mountain_rock' || terrainType === 'mountain_peak' || terrainType === 'hill') {
+    if (elevation > 0.50) resourceType = 'ore';
   }
 
   // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable)

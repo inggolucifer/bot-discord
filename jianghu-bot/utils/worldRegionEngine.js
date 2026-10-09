@@ -52,9 +52,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
 
   const region = getRegionAt(x, y);
 
-  // 3. Dataran Terbuka Biasa (Plains): Selalu AMAN (Zero Ambush) kecuali ada World Event
-  if (terrainType === 'plains' && !isWorldEventActive) {
-    // Pada zona maut tier 5 (Crimson Battlefield/Abyssal Scar), ada sedikit risiko
+  // 3. Dataran Terbuka Biasa (Plains/Meadow/Farmland): Selalu AMAN (Zero Ambush) kecuali ada World Event
+  if ((terrainType === 'plains' || terrainType === 'meadow' || terrainType === 'farmland' || terrainType === 'herb_field') && !isWorldEventActive) {
     if (region.dangerTier === 5) {
       return { type: 'death_zone', ambushRiskRate: 0.25, dangerTierBase: 5 };
     }
@@ -66,10 +65,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
   }
 
   // 4. ZONA BAHAYA ALAM LIAR (HUNTING, FARMING & AMBUSH SUB-ZONES)
-  // Terjadi ketika pemain melangkah KELUAR dari jalur aman menuju bioma liar:
-
-  // A. Hutan Bambu Liar (Tempat berburu serigala roh & panen rebung spiritual)
-  if (terrainType === 'bamboo_forest') {
+  // A. Hutan Bambu & Pohon Roh
+  if (terrainType === 'bamboo_forest' || terrainType === 'bamboo_grove' || terrainType === 'bamboo_dense') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.18,
@@ -77,8 +74,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // B. Rimba Belantara Purba (Tempat berburu satwa & tebang kayu bertuah)
-  if (terrainType === 'forest') {
+  // B. Rimba Belantara Purba
+  if (terrainType === 'forest' || terrainType === 'spirit_wood' || terrainType === 'dead_wood' || terrainType === 'mist_forest') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.22,
@@ -86,8 +83,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // C. Rawa Racun Miasma (Tempat berburu binatang berbisa & panen herba racun)
-  if (terrainType === 'swamp' || terrainType === 'demonic_swamp' || terrainType === 'venom_mire') {
+  // C. Rawa Racun Miasma & Lembah Terlarang
+  if (terrainType === 'swamp' || terrainType === 'demonic_swamp' || terrainType === 'venom_mire' || terrainType === 'miasma_waste' || terrainType === 'poison_pool') {
     return {
       type: 'danger_zone',
       ambushRiskRate: 0.32,
@@ -95,8 +92,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // D. Tebing Pegunungan Cadas (Tempat tambang urat bijih besi/emas & elang pemangsa)
-  if (terrainType === 'mountain' || terrainType === 'azure_mountain') {
+  // D. Tebing Pegunungan Cadas & Bukit
+  if (terrainType === 'mountain' || terrainType === 'azure_mountain' || terrainType === 'mountain_rock' || terrainType === 'mountain_peak' || terrainType === 'cliff' || terrainType === 'hill' || terrainType === 'ridge_low') {
     return {
       type: 'danger_zone',
       ambushRiskRate: 0.28,
@@ -104,8 +101,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // E. Kawah Magma / Lembah Lava (Tempat tambang bara api & monster lahar)
-  if (terrainType === 'volcanic' || terrainType === 'lava_spine') {
+  // E. Kawah Magma & Medan Abu Tempur
+  if (terrainType === 'volcanic' || terrainType === 'lava_spine' || terrainType === 'lava_flow' || terrainType === 'basalt' || terrainType === 'battlefield_ash' || terrainType === 'abyss_edge' || terrainType === 'crater') {
     return {
       type: 'death_zone',
       ambushRiskRate: 0.40,
@@ -113,8 +110,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // F. Gurun Pasir Suci / Ngarai Batu (Tempat berburu kalajengking & kristal surya)
-  if (terrainType === 'western_desert' || terrainType === 'desert' || terrainType === 'canyon') {
+  // F. Gurun Pasir Suci & Ngarai
+  if (terrainType === 'western_desert' || terrainType === 'desert' || terrainType === 'desert_sand' || terrainType === 'dune' || terrainType === 'canyon' || terrainType === 'canyon_floor') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.25,
@@ -122,8 +119,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // G. Gletser Salju Beku (Tempat berburu binatang salju & herba teratai es)
-  if (terrainType === 'glacial' || terrainType === 'northern_glacial' || terrainType === 'snow') {
+  // G. Gletser Salju Beku
+  if (terrainType === 'glacial' || terrainType === 'northern_glacial' || terrainType === 'snow' || terrainType === 'glacier' || terrainType === 'ice_crack') {
     return {
       type: 'danger_zone',
       ambushRiskRate: 0.30,
@@ -131,8 +128,8 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
     };
   }
 
-  // H. Perairan Ombak Bebas / Samudra (Tempat memancing ikan roh & monster laut)
-  if (terrainType === 'ocean' || terrainType === 'eastern_sea') {
+  // H. Perairan Ombak Bebas, Danau & Samudra
+  if (terrainType === 'ocean' || terrainType === 'sea' || terrainType === 'sea_reef' || terrainType === 'lake' || terrainType === 'lake_deep' || terrainType === 'ice_sea' || terrainType === 'eastern_sea') {
     return {
       type: 'hunting_zone',
       ambushRiskRate: 0.18,
@@ -159,21 +156,65 @@ function getTerritoryInfo(x, y, terrainType, isSettlement, isWorldEventActive = 
 function getTerrainStaminaCost(terrainType) {
   switch (terrainType) {
     case 'road':
+    case 'road_stone':
+    case 'road_dirt':
     case 'settlement': return 0.5; // Diskon jalan raya resmi
-    case 'plains': return 1.0;
+    case 'plains':
+    case 'meadow':
+    case 'farmland':
+    case 'herb_field':
+    case 'ruin_floor':
+    case 'formation_tile':
+    case 'floating_stone': return 1.0;
     case 'forest':
-    case 'bamboo_forest': return 1.5;
+    case 'bamboo_forest':
+    case 'bamboo_grove':
+    case 'bamboo_dense':
+    case 'spirit_wood':
+    case 'dead_wood':
+    case 'mist_forest': return 1.5;
+    case 'hill':
+    case 'ridge_low':
+    case 'canyon_floor':
+    case 'lightning_scar': return 1.8;
     case 'swamp':
     case 'demonic_swamp':
-    case 'western_desert': return 2.0;
+    case 'venom_mire':
+    case 'miasma_waste':
+    case 'poison_pool':
+    case 'western_desert':
+    case 'desert':
+    case 'desert_sand':
+    case 'dune': return 2.0;
     case 'mountain':
-    case 'azure_mountain': return 2.5;
+    case 'azure_mountain':
+    case 'mountain_rock':
+    case 'mountain_peak':
+    case 'cliff': return 2.5;
     case 'glacial':
     case 'northern_glacial':
+    case 'snow':
+    case 'glacier':
+    case 'ice_crack':
     case 'volcanic':
-    case 'lava_spine': return 3.0;
+    case 'lava_spine':
+    case 'lava_flow':
+    case 'basalt':
+    case 'battlefield_ash':
+    case 'abyss_edge':
+    case 'crater': return 3.0;
     case 'ocean':
-    case 'river': return 1.0; // Jika memakai kapal/perahu
+    case 'sea':
+    case 'sea_reef':
+    case 'lake':
+    case 'lake_deep':
+    case 'ice_sea':
+    case 'river':
+    case 'river_shallow':
+    case 'pond_lotus':
+    case 'waterfall_pool':
+    case 'mountain_pass':
+    case 'sword_gorge_pass': return 1.0;
     default: return 1.0;
   }
 }
