@@ -111,14 +111,26 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
     }
   })
     .composite(compositeLayers)
-    .webp({ quality: 90, alphaQuality: 95, lossless: false })
+    .webp({ quality: 80, alphaQuality: 82, effort: 6 })
     .toBuffer();
 
   const webpPath = path.join(outputDir, `${atlasName}.webp`);
   const jsonPath = path.join(outputDir, `${atlasName}.json`);
 
-  fs.writeFileSync(webpPath, webpBuffer);
-  fs.writeFileSync(jsonPath, JSON.stringify(packed, null, 2), 'utf8');
+  function safeWrite(filePath, content, encoding) {
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      try {
+        fs.writeFileSync(filePath, content, encoding);
+        return;
+      } catch (err) {
+        if (attempt === 5) throw err;
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100 * attempt);
+      }
+    }
+  }
+
+  safeWrite(webpPath, webpBuffer);
+  safeWrite(jsonPath, JSON.stringify(packed, null, 2), 'utf8');
 
   return {
     atlasName,

@@ -59,11 +59,11 @@ async function validateRealAtlasFile(jsonPath, webpPath) {
     return { valid: false, errors };
   }
 
-  // Check file size (target <= 700 KB)
+  // Check file size (target <= 1024 KB per Plan V4 specs)
   const stats = fs.statSync(webpPath);
   const sizeKb = stats.size / 1024;
-  if (sizeKb > 700) {
-    errors.push(`Atlas file size ${sizeKb.toFixed(1)} KB exceeds 700 KB threshold`);
+  if (sizeKb > 1024) {
+    errors.push(`Atlas file size ${sizeKb.toFixed(1)} KB exceeds 1024 KB threshold`);
   }
 
   // Parse JSON manifest

@@ -1884,33 +1884,6 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 }
             }
 
-            // Fase 14: Procedural Spiritual Resource Nodes (Sparkles)
-            for (const t of proceduralTileMap.values()) {
-                if (!t.resourceType && !t.isSolid) {
-                    const tt = t.terrainType || '';
-                    const hash = ((t.tileX * 73856093) ^ (t.tileY * 19349663)) >>> 0;
-                    if ((hash % 100) < 6) {
-                        if (tt.includes('herb') || tt.includes('farmland') || tt.includes('meadow') || tt.includes('delta')) {
-                            t.resourceType = 'herb';
-                            t.label = t.label || 'Herba Roh Liar';
-                            t.tileType = 'resource_node';
-                        } else if (tt.includes('hill') || tt.includes('ore') || tt.includes('rock')) {
-                            t.resourceType = 'ore';
-                            t.label = t.label || 'Urat Bijih Besi';
-                            t.tileType = 'resource_node';
-                        } else if (tt.includes('bamboo') || tt.includes('wood') || tt.includes('forest')) {
-                            t.resourceType = 'wood';
-                            t.label = t.label || 'Kayu Roh Berharga';
-                            t.tileType = 'resource_node';
-                        } else if (tt.includes('river_shallow') || tt.includes('waterfall') || tt.includes('pond')) {
-                            t.resourceType = 'fish';
-                            t.label = t.label || 'Lubuk Ikan Roh';
-                            t.tileType = 'resource_node';
-                        }
-                    }
-                }
-            }
-
             visibleTiles = Array.from(proceduralTileMap.values());
         } else {
             // Legacy zone small grid
@@ -2909,7 +2882,7 @@ router.get('/build-zone/chunk/:cx/:cy', authenticateToken, async (req, res) => {
                 const ty = startY + dy;
                 const check = getBuildability({ zoneId: 'tianyuan_world_map', x: tx, y: ty, footprint: { w: 1, h: 1 } });
                 if (check.ok) {
-                    rowMask |= (1 << (dx % 31));
+                    rowMask |= ((1 << dx) >>> 0);
                 } else if (!reasonMap[check.code]) {
                     reasonMap[check.code] = check.message;
                 }
@@ -2917,7 +2890,8 @@ router.get('/build-zone/chunk/:cx/:cy', authenticateToken, async (req, res) => {
             bitmask.push(rowMask);
         }
 
-        res.set('Cache-Control', 'public, max-age=60');
+        res.set('Cache-Control', 'private, max-age=15');
+        res.set('Vary', 'Authorization');
         return res.json({
             success: true,
             chunkX: cx,
@@ -3134,15 +3108,45 @@ router.post('/zone/build', authenticateToken, async (req, res) => {
         const constructionSeconds = bpDoc ? (bpDoc.buildDurationSeconds || 300) : ((assetDoc.constructionTimeHours || 1) * 3600);
         const completeAt = new Date(Date.now() + constructionSeconds * 1000);
 
-        tile.buildingName = buildingName;
-        tile.buildingImageUrl = buildingImageUrl;
-        tile.buildingType = buildingType;
-        tile.linkedRefId = bpDoc ? bpDoc._id : assetDoc._id;
-        tile.isUnderConstruction = true;
-        tile.constructionCompleteAt = completeAt;
-        tile.isOpenToPublic = isOpenToPublic !== undefined ? Boolean(isOpenToPublic) : true;
-        tile.label = `[Sedang Dibangun] ${buildingName} (${player.characterName})`;
-        await tile.save();
+        // Tandai SEMUA petak pada footprint (mendukung multi-tile footprint 1x1 s/d 3x3)
+        for (let dy = 0; dy < fh; dy++) {
+            for (let dx = 0; dx < fw; dx++) {
+                const fx = targetX + dx;
+                const fy = targetY + dy;
+                if (fx === targetX && fy === targetY) {
+                    tile.buildingName = buildingName;
+                    tile.buildingImageUrl = buildingImageUrl;
+                    tile.buildingType = buildingType;
+                    tile.linkedRefId = bpDoc ? bpDoc._id : assetDoc._id;
+                    tile.isUnderConstruction = true;
+                    tile.constructionCompleteAt = completeAt;
+                    tile.isOpenToPublic = isOpenToPublic !== undefined ? Boolean(isOpenToPublic) : true;
+                    tile.label = `[Sedang Dibangun] ${buildingName} (${player.characterName})`;
+                    await tile.save();
+                } else {
+                    await ZoneTile.updateOne(
+                        {
+                            guildId: player.guildId,
+                            zoneId: currentZoneId,
+                            tileX: fx,
+                            tileY: fy
+                        },
+                        {
+                            $set: {
+                                buildingName,
+                                buildingImageUrl,
+                                buildingType,
+                                linkedRefId: bpDoc ? bpDoc._id : assetDoc._id,
+                                isUnderConstruction: true,
+                                constructionCompleteAt: completeAt,
+                                isOpenToPublic: isOpenToPublic !== undefined ? Boolean(isOpenToPublic) : true,
+                                label: `[Sedang Dibangun] ${buildingName} (${player.characterName})`
+                            }
+                        }
+                    );
+                }
+            }
+        }
 
         if (!player.assets) player.assets = [];
         player.assets.push({

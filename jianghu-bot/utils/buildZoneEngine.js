@@ -213,7 +213,7 @@ function evaluateSingleTile(tx, ty, zoneId, playerId, options) {
       }
     }
   } catch (scatterErr) {
-    // Non-fatal scatter check fallback
+    console.warn('[BuildZoneEngine] Scatter check non-fatal warning:', scatterErr.message);
   }
 
   // Step 5: Bukan jalan atau perairan

@@ -1,0 +1,49 @@
+{
+  "regionId": "void_rift",
+  "regionName": "Void Rift",
+  "dangerTier": 5,
+  "requiresDangerOverlay": true,
+  "levelRange": {
+    "min": 90,
+    "max": 100
+  },
+  "spawnDensityPer100Tiles": 6,
+  "species": [
+    {
+      "id": "dragon_celestial",
+      "name": "Naga Langit Sembilan Hampa",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 95,
+      "isAggressive": true
+    },
+    {
+      "id": "abyss_behemoth",
+      "name": "Raksasa Jurang Hampa Kegelapan",
+      "icon": "👹",
+      "tier": 5,
+      "level": 100,
+      "isAggressive": true
+    }
+  ],
+  "boss": {
+    "id": "boss_celestial_wyrm",
+    "name": "Naga Purba Kehampaan Langit",
+    "icon": "🐉",
+    "tier": 5,
+    "level": 100,
+    "footprint": {
+      "w": 5,
+      "h": 5
+    },
+    "spawnHours": [
+      20
+    ]
+  },
+  "spawnHours": [
+    6,
+    12,
+    18,
+    24
+  ]
+}

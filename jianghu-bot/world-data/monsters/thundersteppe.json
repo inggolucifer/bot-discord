@@ -1,0 +1,58 @@
+{
+  "regionId": "thundersteppe",
+  "regionName": "Thundersteppe",
+  "dangerTier": 4,
+  "requiresDangerOverlay": true,
+  "levelRange": {
+    "min": 70,
+    "max": 88
+  },
+  "spawnDensityPer100Tiles": 6,
+  "species": [
+    {
+      "id": "demon_cave",
+      "name": "Siluman Iblis Gua Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 75,
+      "isAggressive": true
+    },
+    {
+      "id": "wyrm_flame",
+      "name": "Cacing Lahar Basalt",
+      "icon": "🐉",
+      "tier": 4,
+      "level": 80,
+      "isAggressive": true
+    },
+    {
+      "id": "asura_blood",
+      "name": "Pendekar Kafir Asura",
+      "icon": "👹",
+      "tier": 4,
+      "level": 88,
+      "isAggressive": true
+    }
+  ],
+  "boss": {
+    "id": "boss_demon_lord",
+    "name": "Pangeran Iblis Asura Miasma",
+    "icon": "👹",
+    "tier": 4,
+    "level": 90,
+    "footprint": {
+      "w": 4,
+      "h": 4
+    },
+    "spawnHours": [
+      0,
+      18
+    ]
+  },
+  "spawnHours": [
+    6,
+    12,
+    18,
+    24
+  ]
+}

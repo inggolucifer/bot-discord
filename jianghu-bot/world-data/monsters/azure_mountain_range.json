@@ -1,0 +1,66 @@
+{
+  "regionId": "azure_mountain_range",
+  "regionName": "Azure Mountain Range",
+  "dangerTier": 3,
+  "requiresDangerOverlay": true,
+  "levelRange": {
+    "min": 40,
+    "max": 65
+  },
+  "spawnDensityPer100Tiles": 4.5,
+  "species": [
+    {
+      "id": "tiger_elder",
+      "name": "Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 45,
+      "isAggressive": true
+    },
+    {
+      "id": "eagle_storm",
+      "name": "Rajawali Sayap Badai",
+      "icon": "🦅",
+      "tier": 3,
+      "level": 55,
+      "isAggressive": true
+    },
+    {
+      "id": "snake_jade",
+      "name": "Ular Sanca Giok Roh",
+      "icon": "🐍",
+      "tier": 3,
+      "level": 60,
+      "isAggressive": true
+    },
+    {
+      "id": "ghost_wailing",
+      "name": "Arwah Gentayangan Medan Perang",
+      "icon": "👻",
+      "tier": 3,
+      "level": 65,
+      "isAggressive": true
+    }
+  ],
+  "boss": {
+    "id": "boss_iron_tiger",
+    "name": "Raja Harimau Belang Kuno",
+    "icon": "🐯",
+    "tier": 3,
+    "level": 70,
+    "footprint": {
+      "w": 3,
+      "h": 3
+    },
+    "spawnHours": [
+      12,
+      20
+    ]
+  },
+  "spawnHours": [
+    6,
+    12,
+    18,
+    24
+  ]
+}

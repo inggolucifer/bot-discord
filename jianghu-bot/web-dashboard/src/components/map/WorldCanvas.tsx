@@ -424,21 +424,7 @@ export default function WorldCanvas({
             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           }
 
-          // Resource Gathering Node
-          if (tile.resourceType && !tile.isSolid && !tile.buildingName) {
-            let resIcon = '🌿';
-            if (tile.resourceType === 'wood') resIcon = tile.terrainType.includes('bamboo') ? '🎋' : '🪵';
-            else if (tile.resourceType === 'ore') resIcon = '⛏️';
-            else if (tile.resourceType === 'fish') resIcon = '🐟';
-            else if (tile.resourceType === 'herb') resIcon = '🌿';
-
-            ctx.save();
-            ctx.font = `${Math.max(9, 11 * camera.zoom)}px sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(resIcon, sx + currentTileSize * 0.8, sy + currentTileSize * 0.25);
-            ctx.restore();
-          }
+          // Resource Gathering Node is rendered in L7 layer via sprite atlas when camera.zoom >= 1.0
 
           // Claimed Land / Farmland
           if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction && tile.ownerId) {
@@ -767,27 +753,33 @@ export default function WorldCanvas({
       // L7: MARKER UI (NPC Badges, Monster Rings, Path Glow, Player Frame)
       // ----------------------------------------------------------------------
 
-      // 1. NPC Badges
-      for (let ty = minTileY; ty <= maxTileY; ty++) {
-        for (let tx = minTileX; tx <= maxTileX; tx++) {
-          const tile = tileMap.get(`${tx},${ty}`);
-          if (!tile || !Array.isArray(tile.npcs) || tile.npcs.length === 0 || !tile.npcCount || tile.npcCount <= 0) continue;
-          const chunkX = Math.floor(tx / 16);
-          const chunkY = Math.floor(ty / 16);
-          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+      // 1. NPC Badges (Black circle #1B1F1E, diameter 0.34 tile at top-right, white text, visible if count >= 1 and zoom >= 0.8)
+      if (camera.zoom >= 0.8) {
+        for (let ty = minTileY; ty <= maxTileY; ty++) {
+          for (let tx = minTileX; tx <= maxTileX; tx++) {
+            const tile = tileMap.get(`${tx},${ty}`);
+            const count = (tile?.npcCount || (Array.isArray(tile?.npcs) ? tile.npcs.length : 0)) || 0;
+            if (!tile || count < 1) continue;
+            const chunkX = Math.floor(tx / 16);
+            const chunkY = Math.floor(ty / 16);
+            if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
 
-          const sx = toScreenX(tx);
-          const sy = toScreenY(ty);
-          const badgeR = Math.max(6.5, 8.5 * camera.zoom);
-          const badgeX = sx + Math.max(9, 11 * camera.zoom);
-          const badgeY = sy + Math.max(9, 11 * camera.zoom);
+            const sx = toScreenX(tx);
+            const sy = toScreenY(ty);
+            // Diameter 0.34 tile -> radius 0.17 tile
+            const badgeR = Math.max(5, currentTileSize * 0.17);
+            const badgeX = sx + currentTileSize - badgeR - 2;
+            const badgeY = sy + badgeR + 2;
 
-          let attitude: 'friendly' | 'neutral' | 'hostile' | 'quest' = 'neutral';
-          if (tile.npcs.some((n: any) => n.hasQuest)) attitude = 'quest';
-          else if (tile.npcs.some((n: any) => n.relation === 'friend' || n.relation === 'confidant')) attitude = 'friendly';
-          else if (tile.npcs.some((n: any) => n.relation === 'enemy')) attitude = 'hostile';
+            let attitude: 'friendly' | 'neutral' | 'hostile' | 'quest' = 'neutral';
+            if (Array.isArray(tile.npcs)) {
+              if (tile.npcs.some((n: any) => n.hasQuest)) attitude = 'quest';
+              else if (tile.npcs.some((n: any) => n.relation === 'friend' || n.relation === 'confidant')) attitude = 'friendly';
+              else if (tile.npcs.some((n: any) => n.relation === 'enemy')) attitude = 'hostile';
+            }
 
-          renderL7NpcBadge(ctx, badgeX, badgeY, badgeR, tile.npcs.length, attitude);
+            renderL7NpcBadge(ctx, badgeX, badgeY, badgeR, count, attitude);
+          }
         }
       }
 
@@ -858,53 +850,68 @@ export default function WorldCanvas({
         }
       }
 
-      // 3. Spiritual Resource Gathering Nodes (Sparkling Particles)
-      for (let ty = minTileY; ty <= maxTileY; ty++) {
-        for (let tx = minTileX; tx <= maxTileX; tx++) {
-          const tile = tileMap.get(`${tx},${ty}`);
-          if (!tile || (!tile.resourceType && tile.tileType !== 'resource_node')) continue;
-          const chunkX = Math.floor(tx / 16);
-          const chunkY = Math.floor(ty / 16);
-          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+      // 3. Spiritual Resource Gathering Nodes (Atlas Sprite & Subtle Sparkle - Only when zoom >= 1.0)
+      if (camera.zoom >= 1.0) {
+        for (let ty = minTileY; ty <= maxTileY; ty++) {
+          for (let tx = minTileX; tx <= maxTileX; tx++) {
+            const tile = tileMap.get(`${tx},${ty}`);
+            if (!tile || (!tile.resourceType && tile.tileType !== 'resource_node')) continue;
+            const chunkX = Math.floor(tx / 16);
+            const chunkY = Math.floor(ty / 16);
+            if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
 
-          const sx = toScreenX(tx);
-          const sy = toScreenY(ty);
-          const isDormant = Boolean(
-            tile.nodeRespawnAt && new Date(tile.nodeRespawnAt).getTime() > Date.now()
-          );
-
-          renderL7ResourceSparkle(
-            ctx,
-            sx + currentTileSize * 0.5,
-            sy + currentTileSize * 0.5,
-            currentTileSize * 0.45,
-            tile.resourceType || 'herb',
-            time,
-            isDormant
-          );
-
-          // Resource Pill Label
-          if (!isDormant) {
-            const resLabel = tile.label || (
-              tile.resourceType === 'herb' ? 'Herba Roh' :
-              tile.resourceType === 'ore' ? 'Urat Bijih' :
-              tile.resourceType === 'wood' ? 'Kayu Roh' :
-              tile.resourceType === 'fish' ? 'Lubuk Ikan' : 'Sumber Daya'
+            const sx = toScreenX(tx);
+            const sy = toScreenY(ty);
+            const isDormant = Boolean(
+              tile.nodeRespawnAt && new Date(tile.nodeRespawnAt).getTime() > Date.now()
             );
-            ctx.font = `bold ${Math.max(6, 7.5 * camera.zoom)}px sans-serif`;
-            const textW = ctx.measureText(resLabel).width;
-            const pillW = textW + 6 * camera.zoom;
-            const pillH = 9 * camera.zoom;
-            const pillX = sx + (currentTileSize - pillW) / 2;
-            const pillY = sy + currentTileSize * 0.88 - pillH;
 
-            ctx.fillStyle = 'rgba(6, 20, 16, 0.85)';
-            ctx.fillRect(pillX, pillY, pillW, pillH);
-            ctx.strokeStyle = tile.resourceType === 'ore' ? '#F59E0B' : '#10B981';
-            ctx.lineWidth = 0.8;
-            ctx.strokeRect(pillX, pillY, pillW, pillH);
-            ctx.fillStyle = tile.resourceType === 'ore' ? '#FDE68A' : '#A7F3D0';
-            ctx.fillText(resLabel, sx + currentTileSize / 2, pillY + pillH - 2 * camera.zoom);
+            // Sprite atlas icon lookup for resource node
+            const resIconId = `icon_res_${tile.resourceType || 'herb'}`;
+            atlasLoader.drawAtlasFrame(
+              ctx,
+              'icons',
+              resIconId,
+              sx + currentTileSize * 0.25,
+              sy + currentTileSize * 0.25,
+              currentTileSize * 0.5,
+              currentTileSize * 0.5,
+              0.85
+            );
+
+            renderL7ResourceSparkle(
+              ctx,
+              sx + currentTileSize * 0.5,
+              sy + currentTileSize * 0.5,
+              currentTileSize * 0.38,
+              tile.resourceType || 'herb',
+              time,
+              isDormant
+            );
+
+            // Resource Pill Label
+            if (!isDormant) {
+              const resLabel = tile.label || (
+                tile.resourceType === 'herb' ? 'Herba Roh' :
+                tile.resourceType === 'ore' ? 'Urat Bijih' :
+                tile.resourceType === 'wood' ? 'Kayu Roh' :
+                tile.resourceType === 'fish' ? 'Lubuk Ikan' : 'Sumber Daya'
+              );
+              ctx.font = `bold ${Math.max(6, 7.5 * camera.zoom)}px sans-serif`;
+              const textW = ctx.measureText(resLabel).width;
+              const pillW = textW + 6 * camera.zoom;
+              const pillH = 9 * camera.zoom;
+              const pillX = sx + (currentTileSize - pillW) / 2;
+              const pillY = sy + currentTileSize * 0.88 - pillH;
+
+              ctx.fillStyle = 'rgba(6, 20, 16, 0.85)';
+              ctx.fillRect(pillX, pillY, pillW, pillH);
+              ctx.strokeStyle = tile.resourceType === 'ore' ? '#F59E0B' : '#10B981';
+              ctx.lineWidth = 0.8;
+              ctx.strokeRect(pillX, pillY, pillW, pillH);
+              ctx.fillStyle = tile.resourceType === 'ore' ? '#FDE68A' : '#A7F3D0';
+              ctx.fillText(resLabel, sx + currentTileSize / 2, pillY + pillH - 2 * camera.zoom);
+            }
           }
         }
       }

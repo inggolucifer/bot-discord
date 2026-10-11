@@ -1,0 +1,66 @@
+{
+  "regionId": "hermit_highlands",
+  "regionName": "Hermit Highlands",
+  "dangerTier": 2,
+  "requiresDangerOverlay": true,
+  "levelRange": {
+    "min": 15,
+    "max": 35
+  },
+  "spawnDensityPer100Tiles": 3,
+  "species": [
+    {
+      "id": "wolf_azure",
+      "name": "Serigala Roh Darah",
+      "icon": "🐺",
+      "tier": 2,
+      "level": 15,
+      "isAggressive": true
+    },
+    {
+      "id": "viper_shadow",
+      "name": "Ular Sanca Hitam",
+      "icon": "🐍",
+      "tier": 2,
+      "level": 20,
+      "isAggressive": true
+    },
+    {
+      "id": "bear_iron",
+      "name": "Beruang Besi Dingin",
+      "icon": "🐻",
+      "tier": 2,
+      "level": 25,
+      "isAggressive": true
+    },
+    {
+      "id": "spider_cave",
+      "name": "Laba-laba Gua Berbisa",
+      "icon": "🕷️",
+      "tier": 2,
+      "level": 30,
+      "isAggressive": true
+    }
+  ],
+  "boss": {
+    "id": "boss_alpha_wolf",
+    "name": "Raja Serigala Roh Darah",
+    "icon": "🐺",
+    "tier": 2,
+    "level": 35,
+    "footprint": {
+      "w": 2,
+      "h": 2
+    },
+    "spawnHours": [
+      6,
+      12,
+      18,
+      24
+    ]
+  },
+  "spawnHours": [
+    0,
+    24
+  ]
+}

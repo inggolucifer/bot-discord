@@ -16,12 +16,21 @@ export function getAtlasNameForDefId(defId: string): string {
     defId.startsWith('village_house') ||
     defId.startsWith('sect_gate') ||
     defId.startsWith('stone_torii') ||
-    defId.startsWith('pagoda')
+    defId.startsWith('pagoda') ||
+    defId.startsWith('xitong_') ||
+    defId.startsWith('dungeon_') ||
+    defId.includes('_city_')
   ) {
     return 'objects_structures';
   }
-  if (defId.startsWith('ring_') || defId.startsWith('marker_')) {
+  if (defId.startsWith('ring_') || defId.startsWith('marker_') || defId.startsWith('monster_')) {
     return 'markers_entities';
+  }
+  if (defId.startsWith('icon_')) {
+    return 'icons';
+  }
+  if (defId.startsWith('resource_')) {
+    return 'objects_nature';
   }
   if (defId.startsWith('autotile_')) {
     return 'autotiles';
@@ -209,6 +218,240 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
     sortBias: 0,
     fogFoot: true,
     tags: ['building', 'sect']
+  },
+  building_inn_roadside: {
+    id: 'building_inn_roadside',
+    name: 'Kedai Arak Tepi Jalan Jianghu',
+    px: { w: 300, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'tavern', 'inn']
+  },
+  building_forge_workshop: {
+    id: 'building_forge_workshop',
+    name: 'Bengkel Tempa Senjata Jianghu',
+    px: { w: 300, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'workshop', 'forge']
+  },
+  building_tea_house: {
+    id: 'building_tea_house',
+    name: 'Kedai Teh Danau Bambu',
+    px: { w: 300, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'tea', 'pavilion']
+  },
+  building_alchemist_hall: {
+    id: 'building_alchemist_hall',
+    name: 'Balai Alkimia Pil Sekte',
+    px: { w: 300, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'alchemy', 'sect']
+  },
+  building_granary_silo: {
+    id: 'building_granary_silo',
+    name: 'Lumbung Padi & Gandum Desa',
+    px: { w: 300, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'granary', 'village']
+  },
+  building_residential_manor: {
+    id: 'building_residential_manor',
+    name: 'Kediaman Pendekar Jianghu',
+    px: { w: 320, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'residence', 'manor']
+  },
+  building_auction_house: {
+    id: 'building_auction_house',
+    name: 'Istana Lelang Langit',
+    px: { w: 320, h: 280 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'auction', 'city']
+  },
+  building_sect_library: {
+    id: 'building_sect_library',
+    name: 'Paviliun Kitab Sutra Sekte',
+    px: { w: 320, h: 280 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'library', 'sect']
+  },
+  building_spirit_pagoda: {
+    id: 'building_spirit_pagoda',
+    name: 'Pagoda Menara Sembilan Tingkat',
+    px: { w: 320, h: 360 },
+    footprint: { cw: 3, ch: 3 },
+    anchor: { x: 0.5, y: 0.92 },
+    overhangCells: 2.0,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'pagoda', 'landmark']
+  },
+  building_blacksmith_foundry: {
+    id: 'building_blacksmith_foundry',
+    name: 'Bengkel Peleburan Senjata Suci',
+    px: { w: 320, h: 280 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'foundry', 'blacksmith']
+  },
+  building_apothecary_store: {
+    id: 'building_apothecary_store',
+    name: 'Balai Tabib & Apotek Miaoshou',
+    px: { w: 320, h: 280 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'apothecary', 'shop']
+  },
+  building_dock_warehouse: {
+    id: 'building_dock_warehouse',
+    name: 'Gudang Dermaga & Pelabuhan',
+    px: { w: 340, h: 260 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['building', 'dock', 'warehouse', 'water']
+  },
+  resource_spirit_spring: {
+    id: 'resource_spirit_spring',
+    name: 'Mata Air Roh Alami',
+    px: { w: 220, h: 220 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'spring', 'water']
+  },
+  resource_heavenly_iron_ore: {
+    id: 'resource_heavenly_iron_ore',
+    name: 'Bijih Besi Bintang Jatuh',
+    px: { w: 220, h: 220 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'mine', 'ore']
+  },
+  resource_spirit_koi_pool: {
+    id: 'resource_spirit_koi_pool',
+    name: 'Kolam Ikan Koi Spiritual',
+    px: { w: 240, h: 240 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'pool', 'fish']
+  },
+  resource_ancient_herb_garden: {
+    id: 'resource_ancient_herb_garden',
+    name: 'Petak Kebun Herbal Rohani',
+    px: { w: 240, h: 240 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'farm', 'herb']
+  },
+  resource_ancient_sword_tomb: {
+    id: 'resource_ancient_sword_tomb',
+    name: 'Makam Pedang Purba',
+    px: { w: 240, h: 240 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'tomb', 'sword']
+  },
+  resource_ancient_lightning_bamboo: {
+    id: 'resource_ancient_lightning_bamboo',
+    name: 'Rumpun Bambu Petir Kuno',
+    px: { w: 240, h: 240 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.8,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'bamboo', 'lightning']
   },
   boulder_1x1: {
     id: 'boulder_1x1',
@@ -445,6 +688,149 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
     sortBias: 0,
     fogFoot: true,
     tags: ['mountain', 'karst']
+  },
+  xitong_city_landmark: {
+    id: 'xitong_city_landmark',
+    name: 'Kota Pusat XiTong',
+    px: { w: 512, h: 384 },
+    footprint: { cw: 5, ch: 4 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 2.0,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 10,
+    fogFoot: true,
+    tags: ['city', 'settlement', 'landmark']
+  },
+  bamboo_forest_cluster: {
+    id: 'bamboo_forest_cluster',
+    name: 'Rumpun Hutan Bambu Hijau',
+    px: { w: 256, h: 256 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 1.0,
+    collision: 'soft',
+    staminaMult: 1.1,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['bamboo', 'forest', 'nature']
+  },
+  azure_peak_crag: {
+    id: 'azure_peak_crag',
+    name: 'Puncak Tebing Cadas Azure',
+    px: { w: 256, h: 256 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.9 },
+    overhangCells: 1.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['mountain', 'cliff', 'karst']
+  },
+  willow_river_curve: {
+    id: 'willow_river_curve',
+    name: 'Pohon Dedalu Tepi Sungai',
+    px: { w: 256, h: 256 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 1.0,
+    collision: 'soft',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['willow', 'tree', 'riverbank']
+  },
+  monster_swirl_den: {
+    id: 'monster_swirl_den',
+    name: 'Sarang Pusaran Siluman Iblis',
+    px: { w: 256, h: 256 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0,
+    collision: 'soft',
+    staminaMult: 1.2,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['monster', 'den', 'swirl']
+  },
+  building_ferry_dock: {
+    id: 'building_ferry_dock',
+    name: 'Dermaga Rakit Penyeberangan Sungai',
+    px: { w: 384, h: 288 },
+    footprint: { cw: 3, ch: 2 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.8,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 5,
+    fogFoot: true,
+    tags: ['building', 'dock', 'ferry']
+  },
+  resource_spirit_jade: {
+    id: 'resource_spirit_jade',
+    name: 'Endapan Giok Roh Hijau',
+    px: { w: 192, h: 192 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'jade', 'rock']
+  },
+  resource_iron_ore: {
+    id: 'resource_iron_ore',
+    name: 'Bongkahan Bijih Besi Hitam',
+    px: { w: 192, h: 192 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'iron', 'ore']
+  },
+  dungeon_cave_entrance: {
+    id: 'dungeon_cave_entrance',
+    name: 'Mulut Gua Kuno Labirin Bertuah',
+    px: { w: 256, h: 256 },
+    footprint: { cw: 2, ch: 2 },
+    anchor: { x: 0.5, y: 0.88 },
+    overhangCells: 0.5,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 5,
+    fogFoot: true,
+    tags: ['dungeon', 'cave', 'structure']
+  },
+  resource_golden_carp: {
+    id: 'resource_golden_carp',
+    name: 'Ikan Mas Roh Jianghu',
+    px: { w: 192, h: 192 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.2,
+    collision: 'none',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: false,
+    tags: ['resource', 'fish', 'water']
+  },
+  resource_spirit_wood: {
+    id: 'resource_spirit_wood',
+    name: 'Kayu Gelondongan Roh Purba',
+    px: { w: 192, h: 192 },
+    footprint: { cw: 1, ch: 1 },
+    anchor: { x: 0.5, y: 0.85 },
+    overhangCells: 0.2,
+    collision: 'solid',
+    staminaMult: 1.0,
+    sortBias: 0,
+    fogFoot: true,
+    tags: ['resource', 'wood', 'timber']
   }
 };
 
@@ -1099,25 +1485,21 @@ export function renderL7NpcBadge(
   else if (attitude === 'hostile') ringColor = '#EF4444';
   else if (attitude === 'quest') ringColor = '#F59E0B';
 
-  // Charcoal base
-  const grad = ctx.createLinearGradient(badgeX - radius, badgeY - radius, badgeX + radius, badgeY + radius);
-  grad.addColorStop(0, '#374151');
-  grad.addColorStop(0.5, '#1F2937');
-  grad.addColorStop(1, '#111827');
-  ctx.fillStyle = grad;
+  // Solid Ink Black #1B1F1E Base
+  ctx.fillStyle = '#1B1F1E';
   ctx.beginPath();
   ctx.arc(badgeX, badgeY, radius, 0, Math.PI * 2);
   ctx.fill();
 
-  // Attitude ring
+  // Attitude / subtle accent ring
   ctx.strokeStyle = ringColor;
-  ctx.lineWidth = Math.max(1, radius * 0.25);
+  ctx.lineWidth = Math.max(0.75, radius * 0.2);
   ctx.stroke();
 
-  // Text label ("9+" or count)
+  // Clean white counter text
   const text = npcCount > 9 ? '9+' : String(npcCount);
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = `bold ${Math.max(8, radius * 1.15)}px sans-serif`;
+  ctx.font = `bold ${Math.max(7, Math.floor(radius * 1.2))}px sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(text, badgeX, badgeY);

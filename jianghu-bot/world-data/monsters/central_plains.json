@@ -1,0 +1,58 @@
+{
+  "regionId": "central_plains",
+  "regionName": "Central Plains",
+  "dangerTier": 1,
+  "requiresDangerOverlay": false,
+  "levelRange": {
+    "min": 1,
+    "max": 10
+  },
+  "spawnDensityPer100Tiles": 1.5,
+  "species": [
+    {
+      "id": "deer_wild",
+      "name": "Rusa Bintik Fana",
+      "icon": "🦌",
+      "tier": 1,
+      "level": 3,
+      "isAggressive": false
+    },
+    {
+      "id": "boar_plain",
+      "name": "Babi Hutan Liar",
+      "icon": "🐗",
+      "tier": 1,
+      "level": 5,
+      "isAggressive": false
+    },
+    {
+      "id": "crane_white",
+      "name": "Bangau Bulu Salju",
+      "icon": "🦅",
+      "tier": 1,
+      "level": 6,
+      "isAggressive": false
+    },
+    {
+      "id": "fox_red",
+      "name": "Rubah Ekor Cokelat",
+      "icon": "🦊",
+      "tier": 1,
+      "level": 7,
+      "isAggressive": false
+    },
+    {
+      "id": "wolf_plain",
+      "name": "Serigala Liar Padang",
+      "icon": "🐺",
+      "tier": 1,
+      "level": 9,
+      "isAggressive": true
+    }
+  ],
+  "boss": null,
+  "spawnHours": [
+    0,
+    24
+  ]
+}

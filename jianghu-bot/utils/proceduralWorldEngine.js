@@ -266,7 +266,7 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       tileType: isWaterBarrier ? 'water' : 'mountain',
       isSolid: true,
       label: activeBarrier.name,
-      resourceType: isWaterBarrier ? 'fish' : 'ore',
+      resourceType: null,
       isClaimable: false,
       plotPriceSilver: 0,
       baseTemperature: activeBarrier.type === 'lava_hazard' ? 55 : (
@@ -670,22 +670,74 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   // Integrasi dengan World Region Engine
   const territoryInfo = getTerritoryInfo(tileX, tileY, terrainType, false);
 
-  // Penentuan Resource Node Spasial
+  // Penentuan Resource Node Spasial (V4: Kepadatan 2-8%, deterministik, SSOT)
   let resourceType = null;
-  if (terrainType === 'river' || terrainType === 'ocean' || terrainType === 'lake' || terrainType === 'lake_deep' || terrainType === 'sea' || terrainType === 'river_shallow' || terrainType === 'pond_lotus') {
-    resourceType = 'fish';
-  } else if (terrainType === 'forest' || terrainType === 'bamboo_forest' || terrainType === 'bamboo_grove' || terrainType === 'spirit_wood' || terrainType === 'herb_field' || terrainType === 'farmland') {
-    resourceType = ((tileX * 31 + tileY * 17) % 2 === 0) ? 'herb' : 'wood';
-  } else if (terrainType === 'mountain' || terrainType === 'azure_mountain' || terrainType === 'mountain_rock' || terrainType === 'mountain_peak' || terrainType === 'hill') {
-    if (elevation > 0.50) resourceType = 'ore';
+  if (!isSolid && !isSettlementTile) {
+    let candidateType = null;
+    let threshold = 0; // basis 1000: 4% = 40, 3% = 30, 2% = 20, 5% = 50
+
+    if (['herb_field', 'farmland', 'spirit_wood'].includes(terrainType) || terrainType === 'meadow') {
+      candidateType = 'herb';
+      threshold = 40; // 4%
+    } else if (['forest', 'bamboo_forest', 'bamboo_grove'].includes(terrainType)) {
+      candidateType = 'wood';
+      threshold = 30; // 3%
+    } else if (['mountain', 'azure_mountain', 'mountain_rock', 'mountain_peak', 'hill'].includes(terrainType)) {
+      if (elevation > 0.50) {
+        candidateType = 'ore';
+        threshold = 20; // 2%
+      }
+    } else if (['river', 'river_shallow', 'pond_lotus', 'lake'].includes(terrainType)) {
+      candidateType = 'fish';
+      threshold = 50; // 5%
+    }
+
+    if (candidateType) {
+      const h = ((tileX * 73856093) ^ (tileY * 19349663) ^ 0x85ebca6b) >>> 0;
+      if ((h % 1000) < threshold) {
+        // Cek jarak Chebyshev minimum 3: tile ini harus merupakan local minimum dalam radius 2
+        let isLocalMin = true;
+        for (let dy = -2; dy <= 2; dy++) {
+          for (let dx = -2; dx <= 2; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const nx = tileX + dx;
+            const ny = tileY + dy;
+            const nh = ((nx * 73856093) ^ (ny * 19349663) ^ 0x85ebca6b) >>> 0;
+            if ((nh % 1000) < threshold) {
+              if (nh < h || (nh === h && (nx < tileX || (nx === tileX && ny < tileY)))) {
+                isLocalMin = false;
+                break;
+              }
+            }
+          }
+          if (!isLocalMin) break;
+        }
+        if (isLocalMin) {
+          resourceType = candidateType;
+        }
+      }
+    }
   }
 
   // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable via SSOT buildZoneEngine)
-  const { isTileClaimableFast } = require('./buildZoneEngine');
-  const isClaimable = isTileClaimableFast(tileX, tileY, terrainType, isSolid, region);
-  if (isClaimable) {
-    tileType = 'buildable_plot';
-    if (!label) label = 'Kavling Tanah Siap Bangun';
+  // Aturan V4: Mutual exclusion mutlak
+  // Jika tile adalah resource node, maka tile otomatis non-claimable
+  let isClaimable = false;
+  if (!resourceType) {
+    const { isTileClaimableFast } = require('./buildZoneEngine');
+    isClaimable = isTileClaimableFast(tileX, tileY, terrainType, isSolid, region);
+    if (isClaimable) {
+      tileType = 'buildable_plot';
+      if (!label) label = 'Kavling Tanah Siap Bangun';
+    }
+  } else {
+    tileType = 'resource_node';
+    if (!label) {
+      if (resourceType === 'herb') label = 'Rumpun Herba Roh';
+      else if (resourceType === 'wood') label = 'Pohon Kayu Rohani';
+      else if (resourceType === 'ore') label = 'Urat Bijih Besi';
+      else if (resourceType === 'fish') label = 'Lubuk Ikan Roh';
+    }
   }
 
   return {
