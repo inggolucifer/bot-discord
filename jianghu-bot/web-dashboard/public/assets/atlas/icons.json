@@ -4,7 +4,7 @@
     "version": "3.0",
     "size": {
       "w": 2048,
-      "h": 1288
+      "h": 2578
     },
     "format": "RGBA8888",
     "image": "icons.webp"
@@ -1113,6 +1113,1302 @@
         "id": "icon_weapon_hidden_needles",
         "atlas": "icons",
         "frame": "icon_weapon_hidden_needles",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_alchemy": {
+      "frame": {
+        "x": 774,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_alchemy",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_alchemy",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_smithing": {
+      "frame": {
+        "x": 1032,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_smithing",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_smithing",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_herbology": {
+      "frame": {
+        "x": 1290,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_herbology",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_herbology",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_mining": {
+      "frame": {
+        "x": 1548,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_mining",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_mining",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_fishing": {
+      "frame": {
+        "x": 0,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_fishing",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_fishing",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_cooking": {
+      "frame": {
+        "x": 258,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_cooking",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_cooking",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_badge_mastery_talismans": {
+      "frame": {
+        "x": 516,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_badge_mastery_talismans",
+        "atlas": "icons",
+        "frame": "icon_badge_mastery_talismans",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_grain": {
+      "frame": {
+        "x": 774,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_grain",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_grain",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_ore_ingot": {
+      "frame": {
+        "x": 1032,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_ore_ingot",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_ore_ingot",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_herbal_bundle": {
+      "frame": {
+        "x": 1290,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_herbal_bundle",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_herbal_bundle",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_silk_bolt": {
+      "frame": {
+        "x": 1548,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_silk_bolt",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_silk_bolt",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_wine_jar": {
+      "frame": {
+        "x": 0,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_wine_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_wine_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_beast_pelt": {
+      "frame": {
+        "x": 258,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_beast_pelt",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_beast_pelt",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fish_carp": {
+      "frame": {
+        "x": 516,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fish_carp",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fish_carp",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_cotton_yarn": {
+      "frame": {
+        "x": 774,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_cotton_yarn",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_cotton_yarn",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_clay_lump": {
+      "frame": {
+        "x": 1032,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_clay_lump",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_clay_lump",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_charcoal_briquette": {
+      "frame": {
+        "x": 1290,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_charcoal_briquette",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_charcoal_briquette",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_wild_honey_jar": {
+      "frame": {
+        "x": 1548,
+        "y": 1548,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_wild_honey_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_wild_honey_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_bamboo_shoots_basket": {
+      "frame": {
+        "x": 0,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_bamboo_shoots_basket",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_bamboo_shoots_basket",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_silk_cocoon_basket": {
+      "frame": {
+        "x": 258,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_silk_cocoon_basket",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_silk_cocoon_basket",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_tea_leaves_brick": {
+      "frame": {
+        "x": 516,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_tea_leaves_brick",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_tea_leaves_brick",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_lingzhi_mushroom_cluster": {
+      "frame": {
+        "x": 774,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_lingzhi_mushroom_cluster",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_lingzhi_mushroom_cluster",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_dried_ginseng_slice": {
+      "frame": {
+        "x": 1032,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_dried_ginseng_slice",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_dried_ginseng_slice",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_tea_seed_oil_jar": {
+      "frame": {
+        "x": 1290,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_tea_seed_oil_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_tea_seed_oil_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_earthen_incense_burner": {
+      "frame": {
+        "x": 1548,
+        "y": 1806,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_earthen_incense_burner",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_earthen_incense_burner",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_cured_beast_meat_strip": {
+      "frame": {
+        "x": 0,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_cured_beast_meat_strip",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_cured_beast_meat_strip",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_glazed_wine_gourd": {
+      "frame": {
+        "x": 258,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_glazed_wine_gourd",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_glazed_wine_gourd",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_dried_red_dates_basket": {
+      "frame": {
+        "x": 516,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_dried_red_dates_basket",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_dried_red_dates_basket",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fermented_bean_paste_jar": {
+      "frame": {
+        "x": 774,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fermented_bean_paste_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fermented_bean_paste_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_salted_bamboo_shoots_jar": {
+      "frame": {
+        "x": 1032,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_salted_bamboo_shoots_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_salted_bamboo_shoots_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fermented_rice_wine_jug": {
+      "frame": {
+        "x": 1290,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fermented_rice_wine_jug",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fermented_rice_wine_jug",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fermented_tofu_jar": {
+      "frame": {
+        "x": 1548,
+        "y": 2064,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fermented_tofu_jar",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fermented_tofu_jar",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_steamed_lotus_seed_paste_tin": {
+      "frame": {
+        "x": 0,
+        "y": 2322,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_steamed_lotus_seed_paste_tin",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_steamed_lotus_seed_paste_tin",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fermented_black_soybean_crock": {
+      "frame": {
+        "x": 258,
+        "y": 2322,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fermented_black_soybean_crock",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fermented_black_soybean_crock",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_fermented_rice_koji_brick": {
+      "frame": {
+        "x": 516,
+        "y": 2322,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_fermented_rice_koji_brick",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_fermented_rice_koji_brick",
+        "category": "icon",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "icon_commodity_spirit_salted_duck_egg_clay_pot": {
+      "frame": {
+        "x": 774,
+        "y": 2322,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "icon_commodity_spirit_salted_duck_egg_clay_pot",
+        "atlas": "icons",
+        "frame": "icon_commodity_spirit_salted_duck_egg_clay_pot",
         "category": "icon",
         "footprint": {
           "cw": 1,

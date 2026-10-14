@@ -146,8 +146,23 @@ class AtlasLoader {
       return false;
     }
 
-    const frameInfo = manifest.frames[frameId];
+    let frameInfo = manifest.frames[frameId];
+    let activeTexture = texture;
+
     if (!frameInfo) {
+      for (const [name, altManifest] of this.manifests.entries()) {
+        if (name !== atlasName && altManifest.frames[frameId]) {
+          const altTexture = this.textures.get(name);
+          if (altTexture) {
+            frameInfo = altManifest.frames[frameId];
+            activeTexture = altTexture;
+            break;
+          }
+        }
+      }
+    }
+
+    if (!frameInfo || !activeTexture) {
       return false;
     }
 
@@ -159,9 +174,9 @@ class AtlasLoader {
     if (flipX) {
       ctx.translate(dx + dw, dy);
       ctx.scale(-1, 1);
-      ctx.drawImage(texture, x, y, w, h, 0, 0, dw, dh);
+      ctx.drawImage(activeTexture, x, y, w, h, 0, 0, dw, dh);
     } else {
-      ctx.drawImage(texture, x, y, w, h, dx, dy, dw, dh);
+      ctx.drawImage(activeTexture, x, y, w, h, dx, dy, dw, dh);
     }
 
     ctx.restore();

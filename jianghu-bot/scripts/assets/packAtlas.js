@@ -102,7 +102,10 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
   }
 
   // Create transparent RGBA base canvas
-  const webpBuffer = await sharp({
+  // For large atlases with many frames, start with realistic quality to avoid looping 10+ times
+  let q = compositeLayers.length > 150 ? 14 : (compositeLayers.length > 90 ? 22 : (compositeLayers.length > 50 ? 35 : 80));
+  let aq = compositeLayers.length > 150 ? 18 : (compositeLayers.length > 90 ? 26 : (compositeLayers.length > 50 ? 40 : 82));
+  let webpBuffer = await sharp({
     create: {
       width: atlasWidth,
       height: atlasHeight,
@@ -111,8 +114,38 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
     }
   })
     .composite(compositeLayers)
-    .webp({ quality: 80, alphaQuality: 82, effort: 6 })
+    .webp({ quality: q, alphaQuality: aq, effort: 4 })
     .toBuffer();
+
+  // Adaptive compression safeguard: strictly maintain file size <= 980 KB (well within 1024 KB limit)
+  while (webpBuffer.length > 980 * 1024 && q > 3) {
+    q -= 2;
+    aq = Math.max(5, aq - 2);
+    webpBuffer = await sharp({
+      create: {
+        width: atlasWidth,
+        height: atlasHeight,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      }
+    })
+      .composite(compositeLayers)
+      .webp({ quality: q, alphaQuality: aq, effort: 5 })
+      .toBuffer();
+  }
+
+  // Final safeguard: if still above 980 KB, re-compress the webp buffer directly
+  if (webpBuffer.length > 980 * 1024) {
+    let recompressQ = 6;
+    let recompressAq = 8;
+    while (webpBuffer.length > 980 * 1024 && recompressQ >= 2) {
+      webpBuffer = await sharp(webpBuffer)
+        .webp({ quality: recompressQ, alphaQuality: recompressAq, effort: 6, minSize: true })
+        .toBuffer();
+      recompressQ -= 1;
+      recompressAq = Math.max(4, recompressAq - 1);
+    }
+  }
 
   const webpPath = path.join(outputDir, `${atlasName}.webp`);
   const jsonPath = path.join(outputDir, `${atlasName}.json`);
