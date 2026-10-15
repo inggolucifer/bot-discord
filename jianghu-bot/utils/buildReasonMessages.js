@@ -18,6 +18,7 @@ const BUILD_REASON_MESSAGES = {
   BZ_REALM_BUFFER: 'Gerbang alam rahasia memancarkan pusaran Qi yang merusak struktur bangunan.',
   BZ_DENSITY: 'Kepadatan bangunan di kawasan perbatasan ini telah mencapai batas maksimal.',
   BZ_PATH_BLOCK: 'Pembangunan di petak ini akan memutus jalur transportasi utama antar-kota.',
+  BZ_RESOURCE_NODE: 'Petak ini berisi sumber daya alam dan tidak dapat dijadikan kavling.',
   BZ_NOT_OWNER: 'Petak tanah ini bukan milik sah karaktermu.',
   BZ_EVENT_LOCK: 'Wilayah ini sedang disegel oleh bencana alam atau perang faksi.',
   BZ_OK: 'Tanah subur dan kokoh, siap untuk dibangun.'

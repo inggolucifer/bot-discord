@@ -245,7 +245,7 @@ export default function CharacterCreationStudio({ onComplete }: CharacterCreatio
   };
 
   return (
-    <div className="fixed inset-0 z-[90] w-screen h-screen overflow-y-auto bg-[#07090f] text-[#f2e7d3] font-serif flex flex-col p-3 sm:p-6 md:p-10 select-none">
+    <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh overflow-y-auto bg-[#07090f] text-[#f2e7d3] font-serif flex flex-col p-3 sm:p-6 md:p-10 select-none">
       {/* Background Spiritual Vignette */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,rgba(24,32,48,0.4)_0%,rgba(7,9,15,0.98)_100%)] pointer-events-none" />
 

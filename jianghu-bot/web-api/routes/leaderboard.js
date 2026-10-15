@@ -14,7 +14,7 @@ router.get('/', authenticateToken, async (req, res) => {
         }
 
         const topPlayersRaw = await Player.find({ guildId, status: 'active' })
-            .select('discordId characterName currency totalWealth characterImage sect systemCultivation')
+            .select('discordId characterName currency totalWealth characterImage avatarUrl sect systemCultivation')
             .sort({ totalWealth: -1 })
             .limit(10)
             .lean();

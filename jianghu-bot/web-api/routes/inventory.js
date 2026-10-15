@@ -51,19 +51,37 @@ router.get('/', authenticateToken, async (req, res) => {
             if (category === 'pet') return '🐉';
 
             switch(itemType) {
-              case 'weapon': return '🗡️';
-              case 'cloth': return '👘';
-              case 'herb': return '🌿';
-              case 'pill': return '💊';
-              case 'material': return '🧱';
-              case 'artifact': return '🔮';
+              case 'weapon':      return '🗡️';
+              case 'armor':       return '🛡️';
+              case 'helmet':      return '🪖';
+              case 'pants':       return '👖';
+              case 'boots':       return '🥾';
+              case 'cloth':       return '👘';
               case 'accessories': return '💍';
-              default: return '📦';
+              case 'artifact':    return '🔮';
+              case 'talisman':    return '📜';
+              case 'mount':       return '🐎';
+              case 'herb':        return '🌿';
+              case 'pill':
+              case 'consume':     return '💊';
+              case 'material':    return '🧱';
+              case 'tool':        return '⛏️';
+              case 'law':
+              case 'manual':      return '📖';
+              default:            return '📦';
             }
         };
 
-        const formattedInventory = player.inventory.map(slot => ({
+        // Filter orphan slots (item sudah dihapus dari DB atau invalid ref)
+        const validSlots = (player.inventory || []).filter(slot => slot && slot.itemId != null);
+        const orphanCount = (player.inventory || []).length - validSlots.length;
+        if (orphanCount > 0) {
+            console.warn(`[API-INVENTORY] User ${userId}: ${orphanCount} orphan slot(s) detected (itemId null after populate)`);
+        }
+
+        const formattedInventory = validSlots.map(slot => ({
             id: slot.itemId._id,
+            slotId: String(slot._id),
             name: slot.itemId.name,
             description: slot.itemId.description,
             type: slot.itemId.category,
@@ -71,7 +89,7 @@ router.get('/', authenticateToken, async (req, res) => {
             rarity: slot.itemId.rank, // Changed to match DB schema 'rank'
             quantity: slot.quantity,
             price: slot.itemId.basePrice, // Changed to match DB schema
-            priceCurrency: slot.itemId.priceCurrency || 'copper',
+            priceCurrency: slot.itemId.priceCurrency || 'silver',
             imageUrl: resolveItemImage(slot.itemId), // Include image URL
             emoji: getEmojiForShopItem(slot.itemId.category, 'item'),
             effect: slot.itemId.effect,
@@ -88,7 +106,7 @@ router.get('/', authenticateToken, async (req, res) => {
             success: true,
             data: formattedInventory,
             meta: {
-                totalSlots: player.inventory.length,
+                totalSlots: validSlots.length,
                 maxSlots: 50 // Fixed capacity as mentioned in typical game rules, can be made dynamic from DB later
             }
         });
@@ -101,14 +119,14 @@ router.get('/', authenticateToken, async (req, res) => {
 // Example Anti-Cheat protected endpoint: Discarding an item
 router.post('/discard', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { itemId, quantity } = req.body;
+    const { itemId, quantity, slotId } = req.body;
 
-    if (!itemId || !quantity || quantity <= 0) {
+    if (!itemId || quantity == null || !Number.isInteger(quantity) || quantity <= 0) {
         return res.status(400).json({ error: 'Parameter tidak valid.' });
     }
 
     // 🔒 MUTEX LOCK: Prevent race conditions (Spamming discard to trigger bugs)
-    const lockKey = `inventory_discard_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
          return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
@@ -118,12 +136,21 @@ router.post('/discard', authenticateToken, async (req, res) => {
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan.' });
 
-        const inventoryIndex = player.inventory.findIndex(
-            (i) => i.itemId.toString() === itemId
-        );
+        const inventoryIndex = slotId
+            ? player.inventory.findIndex((i) => i && String(i._id) === String(slotId))
+            : player.inventory.findIndex((i) => i && i.itemId && i.itemId.toString() === String(itemId));
 
         if (inventoryIndex === -1) {
             return res.status(400).json({ error: 'Item tidak ditemukan di inventory.' });
+        }
+
+        // Cek apakah item sedang di-equip
+        if (player.equipment) {
+            const equipSlots = Object.values(player.equipment.toObject ? player.equipment.toObject() : player.equipment);
+            const targetItemId = player.inventory[inventoryIndex].itemId ? player.inventory[inventoryIndex].itemId.toString() : '';
+            if (equipSlots.some(v => v && v.toString() === targetItemId)) {
+                return res.status(400).json({ error: 'Lepas item terlebih dahulu sebelum membuangnya.' });
+            }
         }
 
         if (player.inventory[inventoryIndex].quantity < quantity) {
@@ -192,7 +219,7 @@ router.post('/craft', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Parameter tidak valid.' });
     }
 
-    const lockKey = `inventory_craft_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
          return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
@@ -266,13 +293,13 @@ router.post('/craft', authenticateToken, async (req, res) => {
 // Endpoint: POST /api/inventory/use-time-skip
 router.post('/use-time-skip', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { itemId, targetManualId } = req.body;
+    const { itemId, targetManualId, slotId } = req.body;
 
     if (!itemId || !targetManualId) {
         return res.status(400).json({ error: 'Parameter tidak valid.' });
     }
 
-    const lockKey = `inventory_use_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) {
          return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
@@ -291,7 +318,9 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            const inventoryIndex = slotId
+                ? player.inventory.findIndex(inv => inv && String(inv._id) === String(slotId))
+                : player.inventory.findIndex(inv => inv && inv.itemId && inv.itemId._id.toString() === String(itemId));
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
                 throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
             }
@@ -360,11 +389,11 @@ router.post('/use-time-skip', authenticateToken, async (req, res) => {
 // Endpoint: POST /api/inventory/use-consumable
 router.post('/use-consumable', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { itemId } = req.body;
+    const { itemId, slotId } = req.body;
 
     if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
 
-    const lockKey = `inventory_use_consumable_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
@@ -384,7 +413,9 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            const inventoryIndex = slotId
+                ? player.inventory.findIndex(inv => inv && String(inv._id) === String(slotId))
+                : player.inventory.findIndex(inv => inv && inv.itemId && inv.itemId._id.toString() === String(itemId));
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
                 throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
             }
@@ -539,16 +570,14 @@ router.post('/use-consumable', authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
-
 // Endpoint: POST /api/inventory/use-law
 router.post('/use-law', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { itemId } = req.body;
+    const { itemId, slotId } = req.body;
 
     if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
 
-    const lockKey = `inventory_use_law_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
@@ -575,7 +604,9 @@ router.post('/use-law', authenticateToken, async (req, res) => {
                 throw new CustomError('Terlambat! Tubuhmu telah dialiri Qi tingkat lanjut. Gulungan Hukum Alam pembentuk fondasi ini hanya dapat diserap saat masih berada di ranah Mortal (Fondasi Fana).', 400);
             }
 
-            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            const inventoryIndex = slotId
+                ? player.inventory.findIndex(inv => inv && String(inv._id) === String(slotId))
+                : player.inventory.findIndex(inv => inv && inv.itemId && inv.itemId._id.toString() === String(itemId));
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
                 throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
             }
@@ -647,11 +678,11 @@ router.post('/use-law', authenticateToken, async (req, res) => {
 // Endpoint: POST /api/inventory/use-manual
 router.post('/use-manual', authenticateToken, async (req, res) => {
     const userId = req.user.userId;
-    const { itemId } = req.body;
+    const { itemId, slotId } = req.body;
 
     if (!itemId) return res.status(400).json({ error: 'Parameter tidak valid.' });
 
-    const lockKey = `inventory_use_manual_${userId}`;
+    const lockKey = `inventory_${userId}`;
     const releaseLock = await LockManager.acquire(lockKey);
     if (!releaseLock) return res.status(429).json({ error: 'Transaksi sedang diproses. Mohon tunggu.' });
 
@@ -671,7 +702,9 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
             if (!player) throw new CustomError('Karakter tidak ditemukan.', 404);
             if (player.status !== 'active') throw new CustomError(`Karaktermu berstatus ${player.status}.`, 403);
 
-            const inventoryIndex = player.inventory.findIndex(inv => inv.itemId && inv.itemId._id.toString() === itemId);
+            const inventoryIndex = slotId
+                ? player.inventory.findIndex(inv => inv && String(inv._id) === String(slotId))
+                : player.inventory.findIndex(inv => inv && inv.itemId && inv.itemId._id.toString() === String(itemId));
             if (inventoryIndex === -1 || player.inventory[inventoryIndex].quantity <= 0) {
                 throw new CustomError('Kamu tidak memiliki item tersebut di inventory.', 400);
             }
@@ -821,3 +854,5 @@ router.post('/use-manual', authenticateToken, async (req, res) => {
         if (typeof releaseLock === 'function') releaseLock();
     }
 });
+
+module.exports = router;

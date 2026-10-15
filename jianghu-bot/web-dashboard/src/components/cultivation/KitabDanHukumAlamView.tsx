@@ -566,7 +566,7 @@ export default function KitabDanHukumAlamView({ onRefresh }: KitabDanHukumAlamVi
 
       {/* MODAL KONFIRMASI LUPAKAN MANUAL */}
       {manualToForget && (
-        <div className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[var(--z-modal)] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
           <div className="bg-[#12141f] border-2 border-rose-600/70 rounded-2xl p-5 max-w-md w-full shadow-2xl space-y-4">
             <div className="flex items-center gap-2.5 text-rose-400">
               <AlertTriangle className="w-5 h-5 shrink-0" />

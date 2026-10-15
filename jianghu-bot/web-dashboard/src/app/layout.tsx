@@ -17,6 +17,8 @@ import ProductTour from "@/components/ui/tour/ProductTour";
 
 import MainContentWrapper from "@/components/MainContentWrapper";
 
+import { ModalStackProvider } from "@/components/ui/ModalManager";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,21 +34,23 @@ export default function RootLayout({
       <body className="antialiased min-h-screen min-h-[100dvh] flex flex-col relative">
         <ReactQueryProvider>
           <SocketProvider>
-            <AuthInitializer />
-        <div className="wuxia-bg"></div>
-        <div className="bamboo-overlay-left hidden md:block"></div>
-        <div className="bamboo-overlay-right hidden md:block"></div>
+            <ModalStackProvider>
+              <AuthInitializer />
+              <div className="wuxia-bg"></div>
+              <div className="bamboo-overlay-left hidden md:block"></div>
+              <div className="bamboo-overlay-right hidden md:block"></div>
 
-        <Navbar />
+              <Navbar />
 
-        {/* Main Content Area with dynamic padding */}
-        <MainContentWrapper>
-          {children}
-        </MainContentWrapper>
+              {/* Main Content Area with dynamic padding */}
+              <MainContentWrapper>
+                {children}
+              </MainContentWrapper>
 
-        <GlobalChatWrapper />
-        <ToastContainer />
-        <ProductTour />
+              <GlobalChatWrapper />
+              <ToastContainer />
+              <ProductTour />
+            </ModalStackProvider>
           </SocketProvider>
         </ReactQueryProvider>
       </body>

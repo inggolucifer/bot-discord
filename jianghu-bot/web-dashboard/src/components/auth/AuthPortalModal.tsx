@@ -517,7 +517,7 @@ export default function AuthPortalModal({ onSuccess }: AuthPortalModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] w-screen h-screen overflow-y-auto bg-[#070a12] text-[#f2e7d3] font-serif flex items-center justify-center p-3 sm:p-6 select-none">
+    <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh overflow-y-auto bg-[#070a12] text-[#f2e7d3] font-serif flex items-center justify-center p-3 sm:p-6 select-none">
       {/* Background Classical Ink Wash & Spiritual Particles */}
       <div
         className="fixed inset-0 bg-cover bg-center transition-all duration-1000 scale-105 pointer-events-none opacity-40 mix-blend-screen"

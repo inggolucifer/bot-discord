@@ -9,6 +9,8 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { Button } from '@/components/ui/Button';
+import { resolvePlayerAvatar } from '@/lib/avatar';
+import CurrencyPills from '@/components/ui/CurrencyPills';
 
 interface PlayerRank {
   discordId: string;
@@ -17,6 +19,8 @@ interface PlayerRank {
   stage: string;
   realm: string;
   characterImage: string | null;
+  avatarUrl?: string | null;
+  discordAvatar?: string | null;
   currency: {
     copper: number;
     silver: number;
@@ -110,7 +114,7 @@ export default function LeaderboardPage() {
                     </div>
                     <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 flex-shrink-0 bg-[#222] ${index < 3 ? 'border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]' : 'border-[#555]'}`}>
                       <FallbackImage
-                        src={player.characterImage || ''}
+                        src={resolvePlayerAvatar(player) || ''}
                         alt={player.characterName}
                         fallbackNode={<div className="w-full h-full flex items-center justify-center text-xl">👤</div>}
                       />
@@ -139,11 +143,7 @@ export default function LeaderboardPage() {
                           <Coins size={10} /> Kekayaan
                       </div>
                       <div className="flex justify-center sm:justify-end gap-1.5 flex-wrap">
-                        {player.currency.silver > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-[#444] font-mono">{player.currency.silver} 🥈</span>}
-                        {player.currency.gold > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-yellow-900/50 font-mono">{player.currency.gold} 🥇</span>}
-                        {player.currency.jade > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-green-900/50 font-mono">{player.currency.jade} 💎</span>}
-                        {player.currency.spirit > 0 && <span className="bg-[#222] px-1.5 py-0.5 rounded text-[10px] border border-blue-900/50 font-mono">{player.currency.spirit} 🔮</span>}
-                        {player.totalWealth === 0 && <span className="text-gray-600 text-xs italic">Miskin</span>}
+                        <CurrencyPills currency={player.currency} size="xs" compact />
                       </div>
                     </div>
                   </div>

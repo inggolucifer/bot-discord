@@ -57,7 +57,7 @@ class ToastManager {
   private ensureContainer() {
     if (!this.container) {
       this.container = document.createElement("div");
-      this.container.className = "fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none";
+      this.container.className = "fixed top-4 right-4 z-[var(--z-toast)] flex flex-col gap-2 pointer-events-none";
       document.body.appendChild(this.container);
       this.root = createRoot(this.container);
     }

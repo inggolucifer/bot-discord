@@ -179,6 +179,11 @@ function evaluateSingleTile(tx, ty, zoneId, playerId, options) {
   const tileInfo = proceduralWorldEngine.getTileAt(tx, ty);
   const region = worldData.getRegionAt(tx, ty) || REGION_MAP.get(tileInfo.regionId) || {};
   const policy = region.buildPolicy || { mode: 'forbidden', maxTier: 0, allowedTerrains: [] };
+  // Step 1b: Resource node check — tile berisi sumber daya alam
+  if (tileInfo.resourceType) {
+    return reject('BZ_RESOURCE_NODE', { resourceType: tileInfo.resourceType });
+  }
+
   const tt = tileInfo.terrainType || 'plains';
 
   // Step 2: Terrain yang diizinkan untuk fondasi bangunan (§2.5)

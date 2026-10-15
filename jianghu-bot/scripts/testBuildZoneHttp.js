@@ -60,10 +60,18 @@ app.post('/zone/build-check', mockAuth, (req, res) => {
   res.json(result);
 });
 
+const bzTestCache = new Map();
 app.get('/build-zone/chunk/:cx/:cy', mockAuth, (req, res) => {
-  const cx = parseInt(req.params.cx);
-  const cy = parseInt(req.params.cy);
-  if (isNaN(cx) || isNaN(cy)) return res.status(400).json({ error: 'Invalid cx/cy' });
+  const cx = Number(req.params.cx);
+  const cy = Number(req.params.cy);
+  if (!Number.isInteger(cx) || !Number.isInteger(cy) || cx < 0 || cx > 156 || cy < 0 || cy > 156) {
+    return res.status(400).json({ error: 'Parameter cx dan cy tidak valid (harus integer 0-156)' });
+  }
+
+  const cacheKey = `${cx}_${cy}`;
+  if (bzTestCache.has(cacheKey)) {
+    return res.json({ ...bzTestCache.get(cacheKey), fromCache: true });
+  }
 
   const startX = cx * 32;
   const startY = cy * 32;
@@ -85,7 +93,9 @@ app.get('/build-zone/chunk/:cx/:cy', mockAuth, (req, res) => {
     bitmask.push(rowMask);
   }
 
-  res.json({ success: true, chunkX: cx, chunkY: cy, bitmask, reasons: reasonMap });
+  const result = { success: true, chunkX: cx, chunkY: cy, bitmask, reasons: reasonMap };
+  bzTestCache.set(cacheKey, result);
+  res.json(result);
 });
 
 app.post('/zone/buy-plot', mockAuth, (req, res) => {
@@ -176,6 +186,44 @@ async function runAllTests() {
     const failures = results.filter(r => !r.ok);
     assert.strictEqual(successes.length, 1, 'Exactly 1 purchase must succeed');
     assert.strictEqual(failures.length, 1, 'Exactly 1 purchase must fail');
+  });
+
+  // Test 7: POST /zone/buy-plot ditolak 400 BZ_RESOURCE_NODE pada petak bersumber daya alam
+  await itAsync('POST /zone/buy-plot returns 400 BZ_RESOURCE_NODE on resource node tile', async () => {
+    const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
+    let resTile = null;
+    for (let x = 2000; x < 2200; x++) {
+      for (let y = 2500; y < 2700; y++) {
+        const t = proceduralWorldEngine.getTileAt(x, y);
+        if (t.resourceType) {
+          resTile = { x, y, resourceType: t.resourceType };
+          break;
+        }
+      }
+      if (resTile) break;
+    }
+    assert.ok(resTile, 'Resource node tile should be found in map');
+    const res = await supertest(app)
+      .post('/zone/buy-plot')
+      .send({ tileX: resTile.x, tileY: resTile.y });
+    assert.strictEqual(res.status, 400);
+    assert.strictEqual(res.body.code, 'BZ_RESOURCE_NODE');
+  });
+
+  // Test 8: GET /build-zone/chunk validation and cache
+  await itAsync('GET /build-zone/chunk validates bounds and serves from cache', async () => {
+    const resNeg = await supertest(app).get('/build-zone/chunk/-1/50');
+    assert.strictEqual(resNeg.status, 400);
+
+    const resOverflow = await supertest(app).get('/build-zone/chunk/200/50');
+    assert.strictEqual(resOverflow.status, 400);
+
+    const resValid1 = await supertest(app).get('/build-zone/chunk/50/50');
+    assert.strictEqual(resValid1.status, 200);
+
+    const resValid2 = await supertest(app).get('/build-zone/chunk/50/50');
+    assert.strictEqual(resValid2.status, 200);
+    assert.strictEqual(resValid2.body.fromCache, true, 'Second request must hit cache');
   });
 
   console.log(`\n========================================`);

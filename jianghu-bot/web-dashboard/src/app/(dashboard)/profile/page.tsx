@@ -18,6 +18,7 @@ import { checkClientKungfuRequirement } from '@/lib/kungfu';
 import StatGrid from '@/components/character/StatGrid';
 import PlayerStatsModal from '@/components/modals/PlayerStatsModal';
 import { useUIStore } from '@/lib/store';
+import { resolvePlayerAvatar } from '@/lib/avatar';
 import { getEnglishRealmDisplay } from '@/lib/realmUtils';
 
 export default function ProfilePage() {
@@ -83,9 +84,9 @@ export default function ProfilePage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-[#c5a880] overflow-hidden bg-black flex-shrink-0 shadow-[0_0_25px_rgba(197,168,128,0.35)]">
-          {profile.avatarUrl ?? profile.characterImage ? (
+          {resolvePlayerAvatar(profile) ? (
             <FallbackImage 
-              src={profile.avatarUrl ?? profile.characterImage ?? ''}
+              src={resolvePlayerAvatar(profile) || ''}
               alt={profile.characterName} 
               fallbackNode={<div className="w-full h-full flex items-center justify-center text-5xl">{profile.imageEmoji ?? '👤'}</div>}
             />

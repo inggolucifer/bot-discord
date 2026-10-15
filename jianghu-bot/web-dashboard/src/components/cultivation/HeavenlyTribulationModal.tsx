@@ -88,10 +88,10 @@ export default function HeavenlyTribulationModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl overflow-y-auto">
+      <div className="fixed inset-0 z-[var(--z-critical)] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl overflow-y-auto">
         {/* Efek Kilatan Petir di Layar */}
         {flashing && (
-          <div className="fixed inset-0 bg-purple-500/30 z-[1000000] pointer-events-none transition-opacity duration-100" />
+          <div className="fixed inset-0 bg-purple-500/30 z-[calc(var(--z-critical)+1)] pointer-events-none transition-opacity duration-100" />
         )}
 
         <motion.div

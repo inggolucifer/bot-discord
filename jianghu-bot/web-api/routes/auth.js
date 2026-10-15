@@ -946,6 +946,11 @@ router.post('/login', async (req, res) => {
             ? `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png`
             : defaultAvatarUrl;
 
+        // Perbarui avatarUrl di database jika berubah (bukan default embed)
+        if (player && avatarHash && avatarUrl !== player.avatarUrl) {
+            await Player.updateOne({ discordId: userId }, { $set: { avatarUrl } });
+        }
+
         const tokenPayload = {
             userId: userId,
             username: discordUser.username,

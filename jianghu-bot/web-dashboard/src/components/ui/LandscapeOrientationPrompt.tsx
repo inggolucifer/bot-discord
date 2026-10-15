@@ -63,7 +63,7 @@ export default function LandscapeOrientationPrompt({ onDismiss }: LandscapeOrien
   }
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#070a10]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[var(--z-critical)] bg-[#070a10]/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none animate-in fade-in duration-300">
       {/* Container Kartu Kaligrafi Wuxia */}
       <div className="relative max-w-sm w-full bg-gradient-to-b from-[#181f2c] via-[#0f141e] to-[#090d14] border border-amber-600/70 rounded-2xl p-6 sm:p-7 shadow-[0_0_50px_rgba(0,0,0,0.9),inset_0_0_30px_rgba(197,168,128,0.08)] flex flex-col items-center">
         

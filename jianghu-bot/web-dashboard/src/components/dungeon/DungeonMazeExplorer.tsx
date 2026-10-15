@@ -203,7 +203,7 @@ export default function DungeonMazeExplorer({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4">
+      <div className="fixed inset-0 z-[var(--z-modal)] bg-black/90 flex flex-col items-center justify-center p-4">
         <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-amber-200 font-serif font-bold text-base">Memasuki lorong gua kuno...</p>
         <p className="text-gray-400 text-xs mt-1">Mengukir formasi labirin bawah tanah</p>
@@ -216,7 +216,7 @@ export default function DungeonMazeExplorer({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-between p-2 sm:p-4 select-none overflow-hidden">
+    <div className="fixed inset-0 z-[var(--z-modal)] bg-black/95 flex flex-col items-center justify-between p-2 sm:p-4 select-none overflow-hidden">
       {/* Top Header HUD */}
       <div className="w-full max-w-4xl bg-[#121620] border border-amber-900/40 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2 shadow-xl shrink-0">
         <div className="flex items-center gap-2">

@@ -103,7 +103,7 @@ export default function WorldMapLoadingScreen({
 
   return (
     <div
-      className={`fixed inset-0 z-[10000] w-screen h-screen flex flex-col items-center justify-between p-6 sm:p-10 select-none overflow-hidden bg-[#060913] transition-opacity duration-600 ease-out ${
+      className={`fixed inset-0 z-[var(--z-critical)] w-screen h-dvh flex flex-col items-center justify-between p-6 sm:p-10 select-none overflow-hidden bg-[#060913] transition-opacity duration-600 ease-out ${
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >

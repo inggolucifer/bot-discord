@@ -16,6 +16,8 @@ import KitabDanHukumAlamView from '@/components/cultivation/KitabDanHukumAlamVie
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
 import { PlayerProfile } from '@/types/game';
 import { getEnglishRealmDisplay } from '@/lib/realmUtils';
+import { resolvePlayerAvatar } from '@/lib/avatar';
+import CurrencyPills from '@/components/ui/CurrencyPills';
 
 type ActiveTab = 'stats' | 'condition' | 'skills' | 'artisan' | 'item' | 'experience' | 'relations';
 
@@ -110,7 +112,7 @@ export default function PlayerStatsModal() {
   const jade = Math.floor(Number(player?.currency?.jade) || 0);
   const spirit = Math.floor(Number(player?.currency?.spirit) || 0);
 
-  const avatar = player?.characterImage || player?.avatarUrl || player?.discordAvatar || '';
+  const avatar = resolvePlayerAvatar(player) || '';
   
   // Resolve Standing Full-Body Art
   const standingArtUrl = 
@@ -161,7 +163,7 @@ export default function PlayerStatsModal() {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden animate-in fade-in duration-200"
+      className="fixed inset-0 z-[var(--z-modal)] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden animate-in fade-in duration-200"
       onClick={closeModal}
     >
       {/* Ancient Parchment Scroll Frame */}
@@ -277,12 +279,12 @@ export default function PlayerStatsModal() {
                           />
 
                           {/* Daoist Realm Seal Bottom-Left */}
-                          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md z-50">
+                          <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-900 to-amber-700 border border-amber-400 text-amber-100 text-[10px] font-serif font-bold shadow-md z-10">
                             {realmDisplay.fullTitle}
                           </div>
 
                           {/* Wardrobe Indicator Tag (Foundation for outfits) */}
-                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-stone-700 text-stone-300 text-[9px] font-serif flex items-center gap-1 z-50">
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 border border-stone-700 text-stone-300 text-[9px] font-serif flex items-center gap-1 z-10">
                             <span>👘</span>
                             <span className="capitalize">{player?.body?.outfit?.replace('outfit_', '').replace(/_/g, ' ') || 'Jubah Pendekar'}</span>
                           </div>
@@ -406,21 +408,7 @@ export default function PlayerStatsModal() {
                         {/* 4. Currencies Bar (Integer numbers) */}
                         <div className="flex flex-wrap items-center gap-2 bg-[#0e121a] p-2 rounded-lg border border-[#262e3d]">
                           <span className="text-[11px] text-stone-400 mr-1">Kas Saldo:</span>
-                          <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-600/40 text-xs font-mono text-amber-200 flex items-center gap-1">
-                            <span>🥇</span> {gold} Emas
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-black/60 border border-stone-600/40 text-xs font-mono text-stone-300 flex items-center gap-1">
-                            <span>🥈</span> {silver} Perak
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-black/60 border border-amber-900/40 text-xs font-mono text-amber-600 flex items-center gap-1">
-                            <span>🟤</span> {copper} Tembaga
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-black/60 border border-emerald-600/40 text-xs font-mono text-emerald-300 flex items-center gap-1">
-                            <span>💠</span> {jade} Giok
-                          </span>
-                          <span className="px-2 py-0.5 rounded bg-black/60 border border-purple-600/40 text-xs font-mono text-purple-300 flex items-center gap-1">
-                            <span>🔮</span> {spirit} Batu Roh
-                          </span>
+                          <CurrencyPills currency={player?.currency} showZero size="xs" />
                         </div>
 
                         {/* 5. Qi Cultivation Progress Bar */}

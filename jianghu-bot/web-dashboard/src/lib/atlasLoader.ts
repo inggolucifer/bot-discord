@@ -101,7 +101,8 @@ class AtlasLoader {
       this.loadAtlas('objects_nature'),
       this.loadAtlas('objects_structures'),
       this.loadAtlas('markers_entities'),
-      this.loadAtlas('autotiles')
+      this.loadAtlas('autotiles'),
+      this.loadAtlas('icons')
     ]);
   }
 

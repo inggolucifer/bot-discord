@@ -709,6 +709,7 @@ const playerSchema = new mongoose.Schema({
   professions: { type: professionsSchema, default: () => ({}) },
 
   totalWealth: { type: Number, default: 0, index: true },
+  plotCount: { type: Number, default: 0 },
 
   activeBuffs: {
     type: [{
@@ -738,6 +739,7 @@ playerSchema.index({ guildId: 1, 'gridPosition.zoneId': 1, 'gridPosition.tileX':
 playerSchema.pre('save', function (next) {
   normalizeCurrency(this.currency);
   const c = this.currency || {};
+  // totalWealth dalam satuan SILVER (bukan copper). Rumus: copper/100 + silver + gold*100 + jade*10000 + spirit*1000000
   this.totalWealth = ((c.copper || 0) / 100) + (c.silver || 0) + (c.gold || 0) * 100 + (c.jade || 0) * 10000 + (c.spirit || 0) * 1000000;
   next();
 });

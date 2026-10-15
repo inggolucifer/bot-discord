@@ -112,7 +112,7 @@ export default function ForgeMinigame({ onClose, onCompleted, sessionId }: Forge
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[var(--z-modal)] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
       <div className="bg-[#11141c] border border-orange-900/50 rounded-xl shadow-2xl w-full max-w-sm flex flex-col overflow-hidden relative">
         {/* Header */}
         <div className="bg-gradient-to-r from-orange-950 to-red-950 p-3 flex justify-between items-center border-b border-orange-900/40">

@@ -14,6 +14,8 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import CreateCharacterCard from '@/components/character/CreateCharacterCard';
 import StartPrologue from '@/components/modals/StartPrologue';
 import { toast } from '@/components/ui/Toast';
+import { resolvePlayerAvatar } from '@/lib/avatar';
+import CurrencyPills from '@/components/ui/CurrencyPills';
 
 interface Currency {
   copper: number;
@@ -177,7 +179,7 @@ export default function DashboardModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex justify-end animate-in fade-in"
+      className="fixed inset-0 z-[var(--z-modal)] bg-black/75 backdrop-blur-sm flex justify-end animate-in fade-in"
       onClick={closeModal}
     >
       <div
@@ -225,7 +227,7 @@ export default function DashboardModal() {
                 <>
                   <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full border-2 border-[#c5a880] overflow-hidden flex-shrink-0 bg-[#1a1a1a] shadow-[0_0_20px_rgba(197,168,128,0.2)]">
                     <FallbackImage
-                      src={(profile.characterImage as string) || (profile.discordAvatar as string) || "https://cdn.discordapp.com/embed/avatars/0.png"}
+                      src={resolvePlayerAvatar(profile) || ''}
                       alt="Character Avatar"
                       className="w-full h-full object-cover"
                       fallbackNode={<div className="absolute inset-0 flex items-center justify-center text-4xl">🧑‍🎤</div>}
@@ -256,22 +258,7 @@ export default function DashboardModal() {
 
                       {/* Currency Pills */}
                       {profile.currency && (
-                        <div className="flex flex-wrap items-center justify-center gap-1.5 bg-black/50 p-2 rounded-lg border border-[#333]">
-                          <span className="text-xs font-mono text-amber-100 flex items-center gap-1">
-                            <span className="text-amber-500 font-bold">🥇</span> {profile.currency.gold || 0}
-                          </span>
-                          <span className="text-xs font-mono text-gray-300 flex items-center gap-1">
-                            <span className="text-gray-400 font-bold">🥈</span> {profile.currency.silver || 0}
-                          </span>
-                          <span className="text-xs font-mono text-amber-700 flex items-center gap-1">
-                            <span className="text-amber-700 font-bold">🟤</span> {profile.currency.copper || 0}
-                          </span>
-                          {(profile.currency.spirit > 0 || profile.currency.jade > 0) && (
-                            <span className="text-xs font-mono text-purple-300 flex items-center gap-1">
-                              <span>🔮</span> {profile.currency.spirit || 0}
-                            </span>
-                          )}
-                        </div>
+                        <CurrencyPills currency={profile.currency} size="xs" compact />
                       )}
                     </div>
 

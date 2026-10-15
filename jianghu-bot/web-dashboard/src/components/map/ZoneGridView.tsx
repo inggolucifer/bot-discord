@@ -1409,7 +1409,7 @@ export default function ZoneGridView({
 
       {/* Render Battle Arena Fullscreen Modal */}
       {activeBattleId && (
-        <div className="fixed inset-0 z-[99999] w-screen h-screen bg-[#070a14] flex flex-col items-center justify-center p-0 m-0 overflow-hidden">
+        <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh bg-[#070a14] flex flex-col items-center justify-center p-0 m-0 overflow-hidden">
            <div className="w-full h-full flex flex-col">
              <BattleArena 
                  battleId={activeBattleId} 

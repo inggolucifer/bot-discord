@@ -131,7 +131,7 @@ export default function KataQteMinigame({ discipline = 'sword', onClose, onCompl
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 select-none">
+        <div className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/85 backdrop-blur-md p-2 sm:p-4 select-none">
             <div className="bg-[#0e141f] border border-amber-900/60 rounded-2xl w-full max-w-md landscape:max-w-xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
                 {/* Header */}
                 <div className="bg-[#181a24] px-4 py-2.5 landscape:py-1.5 border-b border-[#282d3f] flex justify-between items-center shrink-0">

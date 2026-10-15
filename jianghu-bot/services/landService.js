@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const ZoneTile = require('../models/ZoneTile');
 const Player = require('../models/Player');
 const ActivityLog = require('../models/ActivityLog');
+const { normalizeCurrency } = require('../utils/currencyNormalize');
 
 function getPlotCap(player) {
   if (!player) return 3;
@@ -49,7 +51,13 @@ class LandService {
     let player = null;
     try {
       player = await Player.findOne({ discordId, guildId });
-    } catch (_) {}
+    } catch (err) {
+      if (mongoose.connection.readyState !== 1) {
+        // Non-fatal jika lingkungan unit testing tanpa DB
+      } else {
+        throw err;
+      }
+    }
 
     if (!player && discordId && discordId.startsWith('mock_')) {
       player = { discordId, guildId, characterName: 'Pendekar Mock', realmIndex: 1, currency: { copper: 10000000 } };
@@ -123,8 +131,12 @@ class LandService {
         };
       }
       atomicReserved = true;
-    } catch (_) {
-      // Non-fatal jika lingkungan unit testing tanpa DB
+    } catch (err) {
+      if (mongoose.connection.readyState !== 1) {
+        // Non-fatal jika lingkungan unit testing tanpa DB
+      } else {
+        throw err;
+      }
     }
 
     // 3. Cari petak tanah target di DB
@@ -150,18 +162,42 @@ class LandService {
     if (!tile) {
       const proceduralWorldEngine = require('../utils/proceduralWorldEngine');
       const pTile = proceduralWorldEngine.getTileAt(targetX, targetY);
-      tile = new ZoneTile({
-        guildId,
-        zoneId,
-        tileX: targetX,
-        tileY: targetY,
-        tileType: 'buildable_plot',
-        terrainType: pTile.terrainType || 'plains',
-        isClaimable: true,
-        isSolid: false,
-        plotPriceSilver: Math.floor(finalPriceInCopper / 100)
-      });
-      await tile.save();
+      if (pTile.resourceType) {
+        if (atomicReserved) {
+          try { await Player.updateOne({ discordId }, { $inc: { plotCount: -1 } }); } catch (_) {}
+        }
+        return { ok: false, code: 'BZ_RESOURCE_NODE', error: 'Petak ini berisi sumber daya alam dan tidak dapat dijadikan kavling.' };
+      }
+      try {
+        tile = new ZoneTile({
+          guildId,
+          zoneId,
+          tileX: targetX,
+          tileY: targetY,
+          tileType: 'buildable_plot',
+          terrainType: ['plains', 'forest', 'mountain', 'swamp', 'glacial', 'volcanic', 'settlement', 'sect', 'claimable', 'water', 'road'].includes(pTile.terrainType)
+            ? pTile.terrainType
+            : 'plains',
+          isClaimable: pTile.isClaimable !== false,
+          isSolid: false,
+          plotPriceSilver: Math.floor(finalPriceInCopper / 100)
+        });
+        await tile.save();
+      } catch (saveErr) {
+        if (saveErr.code === 11000) {
+          // Petak baru saja dibuat oleh transaksi paralel, muat petak yang ada
+          tile = await ZoneTile.findOne({ guildId, zoneId, tileX: targetX, tileY: targetY });
+        } else {
+          throw saveErr;
+        }
+      }
+    }
+
+    if (tile.resourceType || tile.tileType === 'resource_node') {
+      if (atomicReserved) {
+        try { await Player.updateOne({ discordId }, { $inc: { plotCount: -1 } }); } catch (_) {}
+      }
+      return { ok: false, code: 'BZ_RESOURCE_NODE', error: 'Petak ini berisi sumber daya alam dan tidak dapat dijadikan kavling.' };
     }
 
     if (!tile.isClaimable && tile.tileType !== 'buildable_plot') {
@@ -222,28 +258,80 @@ class LandService {
       };
     }
 
-    // 5. Potong Kekayaan Pemain secara presisi
+    // 5. Potong Kekayaan Pemain secara presisi (Atomic with Optimistic Concurrency & Rollback)
     const newCopperBalance = playerTotalCopper - finalPriceInCopper;
-    player.currency = convertFromCopper(newCopperBalance);
-    await player.save();
+    const newCurrency = convertFromCopper(newCopperBalance);
+    normalizeCurrency(newCurrency);
 
     const priceSilver = Math.floor(finalPriceInCopper / 100);
     const remainingSilverEq = Math.floor(newCopperBalance / 100);
 
+    // Hitung juga totalWealth baru agar konsisten dengan currency
+    const totalWealthSilver = ((newCurrency.copper || 0) / 100) + (newCurrency.silver || 0) + (newCurrency.gold || 0) * 100 + (newCurrency.jade || 0) * 10000 + (newCurrency.spirit || 0) * 1000000;
+
+    if (mongoose.connection.readyState === 1) {
+      const balanceUpdate = await Player.findOneAndUpdate(
+        {
+          discordId,
+          __v: player.__v // Optimistic concurrency check
+        },
+        {
+          $set: {
+            currency: newCurrency,
+            totalWealth: totalWealthSilver
+          },
+          $inc: { __v: 1 }
+        },
+        { new: true }
+      );
+
+      if (!balanceUpdate) {
+        // Rollback: klaim plot dibatalkan karena versi dokumen player berubah secara paralel
+        await ZoneTile.updateOne(
+          { _id: claimedPlot._id },
+          {
+            $set: {
+              ownerId: null,
+              ownerType: null,
+              ownerName: null,
+              label: null,
+              isClaimable: true
+            }
+          }
+        );
+        if (atomicReserved) {
+          try { await Player.updateOne({ discordId }, { $inc: { plotCount: -1 } }); } catch (_) {}
+        }
+        return {
+          ok: false,
+          error: 'Transaksi gagal karena saldo karakter berubah bersamaan. Silakan coba lagi.'
+        };
+      }
+    } else {
+      player.currency = newCurrency;
+      player.totalWealth = totalWealthSilver;
+    }
+
     // 6. Catat ke ActivityLog (Audit Trail Anti-Cheat)
-    await ActivityLog.create({
-      guildId,
-      discordId,
-      actionType: 'land_buy',
-      details: {
-        zoneId,
-        tileX: targetX,
-        tileY: targetY,
-        plotPriceSilver: priceSilver,
-        characterName: player.characterName
-      },
-      serverValidated: true
-    });
+    try {
+      if (mongoose.connection.readyState === 1) {
+        await ActivityLog.create({
+          guildId,
+          discordId,
+          actionType: 'land_buy',
+          details: {
+            zoneId,
+            tileX: targetX,
+            tileY: targetY,
+            plotPriceSilver: priceSilver,
+            characterName: player.characterName
+          },
+          serverValidated: true
+        });
+      }
+    } catch (logErr) {
+      console.error('[LAND-SERVICE] ActivityLog.create failed (non-fatal):', logErr.message);
+    }
 
     return {
       ok: true,

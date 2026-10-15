@@ -133,7 +133,7 @@ export default function HerbHarvestMinigame({ cropName = 'Herba Rohani', onClose
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[var(--z-modal)] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 select-none animate-in fade-in duration-200">
       <div className="bg-gradient-to-b from-[#0e1a12] via-[#09120d] to-[#050a07] border border-emerald-700/60 rounded-2xl max-w-md landscape:max-w-2xl w-full p-4 sm:p-6 landscape:p-3 shadow-2xl relative flex flex-col text-white max-h-[95vh] overflow-y-auto">
         
         {/* Header Bar */}

@@ -62,6 +62,13 @@ interface YSortEntry {
   data: any;
 }
 
+const RESOURCE_ICON_FRAMES: Record<string, string[]> = {
+  herb: ['icon_res_herb', 'resource_ancient_herb_garden'],
+  ore:  ['icon_res_ore', 'resource_iron_ore', 'resource_heavenly_iron_ore'],
+  wood: ['icon_res_wood', 'resource_spirit_wood', 'resource_ironwood_log'],
+  fish: ['icon_res_fish', 'resource_golden_carp', 'resource_spirit_koi_pool'],
+};
+
 export default function WorldCanvas({
   mode = 'zone',
   tiles,
@@ -867,17 +874,54 @@ export default function WorldCanvas({
             );
 
             // Sprite atlas icon lookup for resource node
-            const resIconId = `icon_res_${tile.resourceType || 'herb'}`;
-            atlasLoader.drawAtlasFrame(
-              ctx,
-              'icons',
-              resIconId,
-              sx + currentTileSize * 0.25,
-              sy + currentTileSize * 0.25,
-              currentTileSize * 0.5,
-              currentTileSize * 0.5,
-              0.85
-            );
+            const rt = tile.resourceType || 'herb';
+            const candidates = RESOURCE_ICON_FRAMES[rt] || ['icon_res_herb'];
+            let drawn = false;
+            for (const frameId of candidates) {
+              if (atlasLoader.drawAtlasFrame(
+                ctx,
+                'icons',
+                frameId,
+                sx + currentTileSize * 0.25,
+                sy + currentTileSize * 0.25,
+                currentTileSize * 0.5,
+                currentTileSize * 0.5,
+                0.85
+              )) {
+                drawn = true;
+                break;
+              }
+              if (atlasLoader.drawAtlasFrame(
+                ctx,
+                'objects_nature',
+                frameId,
+                sx + currentTileSize * 0.25,
+                sy + currentTileSize * 0.25,
+                currentTileSize * 0.5,
+                currentTileSize * 0.5,
+                0.85
+              )) {
+                drawn = true;
+                break;
+              }
+            }
+
+            // Fallback vektor jika sprite atlas frame tidak tersedia
+            if (!drawn) {
+              const resColors: Record<string, string> = { herb: '#10B981', ore: '#F59E0B', wood: '#8B5CF6', fish: '#3B82F6' };
+              const resLetters: Record<string, string> = { herb: 'H', ore: 'O', wood: 'W', fish: 'F' };
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(sx + currentTileSize * 0.5, sy + currentTileSize * 0.5, currentTileSize * 0.22, 0, Math.PI * 2);
+              ctx.fillStyle = resColors[rt] || '#888';
+              ctx.fill();
+              ctx.fillStyle = '#ffffff';
+              ctx.font = `bold ${Math.max(9, Math.floor(11 * camera.zoom))}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(resLetters[rt] || '?', sx + currentTileSize * 0.5, sy + currentTileSize * 0.5);
+              ctx.restore();
+            }
 
             renderL7ResourceSparkle(
               ctx,

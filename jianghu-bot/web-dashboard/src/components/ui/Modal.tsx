@@ -72,7 +72,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth = "md
   }[maxWidth]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-6 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-6 animate-in fade-in duration-200">
       <div
         className="fixed inset-0"
         onClick={onClose}

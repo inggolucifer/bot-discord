@@ -40,7 +40,7 @@ export default function RootApp() {
   // Loading Screen saat hydrasi awal
   if (!mounted || isInitializing) {
     return (
-      <div className="fixed inset-0 z-[100] w-screen h-screen bg-[#070a12] flex flex-col items-center justify-center font-serif text-amber-200 select-none">
+      <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh bg-[#070a12] flex flex-col items-center justify-center font-serif text-amber-200 select-none">
         <div className="relative w-16 h-16 flex items-center justify-center mb-4">
           <div className="absolute inset-0 rounded-full border-2 border-amber-500/20 border-t-amber-400 animate-spin" />
           <Sparkles size={20} className="text-amber-400 animate-pulse" />
@@ -61,7 +61,7 @@ export default function RootApp() {
   // =========================================================================
   if (!token || !user) {
     return (
-      <div className="fixed inset-0 z-[60] w-screen h-screen overflow-hidden">
+      <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh overflow-hidden">
         <AuthPortalModal />
       </div>
     );
@@ -73,7 +73,7 @@ export default function RootApp() {
   // =========================================================================
   if (!appearanceCompleted) {
     return (
-      <div className="fixed inset-0 z-[60] w-screen h-screen overflow-hidden">
+      <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh overflow-hidden">
         <CharacterCreationStudio onComplete={() => setShowLanding(true)} />
       </div>
     );
@@ -84,7 +84,7 @@ export default function RootApp() {
   // =========================================================================
   if (showLanding) {
     return (
-      <div className="fixed inset-0 z-[60] w-screen h-screen overflow-hidden">
+      <div className="fixed inset-0 z-[var(--z-critical)] w-screen h-dvh overflow-hidden">
         <LandingMenu onEnterWorld={() => { setShowLanding(false); setIsLandingMenu(false); }} />
         <AchievementsModal />
         <SettingsModal />

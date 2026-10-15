@@ -190,7 +190,7 @@ export default function NpcInteractionModal() {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-hidden animate-in fade-in duration-200"
+      className="fixed inset-0 z-[var(--z-modal)] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-hidden animate-in fade-in duration-200"
       onClick={closeModal}
     >
       {/* Ancient Dark Scroll Frame */}

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import FallbackImage from '@/components/FallbackImage';
+import { resolvePlayerAvatar } from '@/lib/avatar';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
@@ -168,7 +169,7 @@ export default function ArenaClient() {
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border border-[#444] overflow-hidden">
-                                                <FallbackImage src={p.characterImage || ''} alt={p.name} className="w-full h-full object-cover" fallbackNode={<div className="w-full h-full flex items-center justify-center bg-gray-700 text-sm">👤</div>} />
+                                                <FallbackImage src={resolvePlayerAvatar(p) || ''} alt={p.characterName || p.name} className="w-full h-full object-cover" fallbackNode={<div className="w-full h-full flex items-center justify-center bg-gray-700 text-sm">👤</div>} />
                                             </div>
                                             <div>
                                                 <div className="font-bold text-gray-200 text-sm">{p.characterName}</div>

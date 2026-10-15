@@ -68,11 +68,11 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const packed = packAtlasFrames(sprites, maxAtlasWidth);
+  let packed = packAtlasFrames(sprites, maxAtlasWidth);
   packed.meta.image = `${atlasName}.webp`;
 
-  const atlasWidth = packed.meta.size.w;
-  const atlasHeight = packed.meta.size.h;
+  let atlasWidth = packed.meta.size.w;
+  let atlasHeight = packed.meta.size.h;
 
   // Prepare sharp composite layers
   const compositeLayers = [];
@@ -101,10 +101,9 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
     });
   }
 
-  // Create transparent RGBA base canvas
   // For large atlases with many frames, start with realistic quality to avoid looping 10+ times
-  let q = compositeLayers.length > 150 ? 14 : (compositeLayers.length > 90 ? 22 : (compositeLayers.length > 50 ? 35 : 80));
-  let aq = compositeLayers.length > 150 ? 18 : (compositeLayers.length > 90 ? 26 : (compositeLayers.length > 50 ? 40 : 82));
+  let q = compositeLayers.length > 155 ? 5 : (compositeLayers.length > 140 ? 10 : (compositeLayers.length > 90 ? 20 : (compositeLayers.length > 50 ? 30 : 80)));
+  let aq = compositeLayers.length > 155 ? 6 : (compositeLayers.length > 140 ? 12 : (compositeLayers.length > 90 ? 22 : (compositeLayers.length > 50 ? 35 : 82)));
   let webpBuffer = await sharp({
     create: {
       width: atlasWidth,
@@ -114,13 +113,13 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
     }
   })
     .composite(compositeLayers)
-    .webp({ quality: q, alphaQuality: aq, effort: 4 })
+    .webp({ quality: q, alphaQuality: aq, effort: 5, minSize: true })
     .toBuffer();
 
   // Adaptive compression safeguard: strictly maintain file size <= 980 KB (well within 1024 KB limit)
-  while (webpBuffer.length > 980 * 1024 && q > 3) {
-    q -= 2;
-    aq = Math.max(5, aq - 2);
+  while (webpBuffer.length > 980 * 1024 && (q > 1 || aq > 0)) {
+    if (q > 1) q -= 1;
+    aq = Math.max(0, aq - 2);
     webpBuffer = await sharp({
       create: {
         width: atlasWidth,
@@ -130,21 +129,60 @@ async function packAndRenderAtlas(atlasName, sprites, outputDir, maxAtlasWidth =
       }
     })
       .composite(compositeLayers)
-      .webp({ quality: q, alphaQuality: aq, effort: 5 })
+      .webp({ quality: q, alphaQuality: aq, effort: 6, minSize: true })
       .toBuffer();
   }
 
-  // Final safeguard: if still above 980 KB, re-compress the webp buffer directly
+  // Smoothing pass
   if (webpBuffer.length > 980 * 1024) {
-    let recompressQ = 6;
-    let recompressAq = 8;
-    while (webpBuffer.length > 980 * 1024 && recompressQ >= 2) {
-      webpBuffer = await sharp(webpBuffer)
-        .webp({ quality: recompressQ, alphaQuality: recompressAq, effort: 6, minSize: true })
-        .toBuffer();
-      recompressQ -= 1;
-      recompressAq = Math.max(4, recompressAq - 1);
+    const candidate = await sharp(webpBuffer)
+      .webp({ quality: 1, alphaQuality: 0, effort: 6, minSize: true })
+      .toBuffer();
+    if (candidate.length < webpBuffer.length) {
+      webpBuffer = candidate;
     }
+  }
+
+  // If still above 980 KB, dynamically apply adaptive 0.85x downscale on sprites and re-pack
+  if (webpBuffer.length > 980 * 1024) {
+    console.log(`   [SAFEGUARD] Atlas ${atlasName} ${(webpBuffer.length / 1024).toFixed(1)} KB > 980 KB. Applying adaptive 0.82x downscale...`);
+    const scaledSprites = [];
+    for (const s of sprites) {
+      const sw = Math.round(s.width * 0.82);
+      const sh = Math.round(s.height * 0.82);
+      const sbuf = await sharp(s.buffer).resize(sw, sh).png().toBuffer();
+      scaledSprites.push({ ...s, width: sw, height: sh, buffer: sbuf });
+    }
+    const scaledPacked = packAtlasFrames(scaledSprites, maxAtlasWidth);
+    scaledPacked.meta.image = `${atlasName}.webp`;
+    const sLayers = scaledSprites.map(s => ({
+      input: s.buffer,
+      top: scaledPacked.frames[s.id].frame.y,
+      left: scaledPacked.frames[s.id].frame.x
+    }));
+    let sBuf = await sharp({
+      create: {
+        width: scaledPacked.meta.size.w,
+        height: scaledPacked.meta.size.h,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      }
+    })
+      .composite(sLayers)
+      .webp({ quality: 1, alphaQuality: 0, effort: 5, minSize: true })
+      .toBuffer();
+    
+    // Pass 2 smoothing
+    const sBufPass2 = await sharp(sBuf)
+      .webp({ quality: 1, alphaQuality: 0, effort: 6, minSize: true })
+      .toBuffer();
+    if (sBufPass2.length < sBuf.length) sBuf = sBufPass2;
+
+    webpBuffer = sBuf;
+    packed = scaledPacked;
+    atlasWidth = scaledPacked.meta.size.w;
+    atlasHeight = scaledPacked.meta.size.h;
+    console.log(`   -> Adaptive downscale complete: ${(webpBuffer.length / 1024).toFixed(1)} KB`);
   }
 
   const webpPath = path.join(outputDir, `${atlasName}.webp`);

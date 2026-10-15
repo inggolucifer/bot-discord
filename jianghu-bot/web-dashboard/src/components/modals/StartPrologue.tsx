@@ -66,7 +66,7 @@ export default function StartPrologue({ onComplete }: { onComplete: () => void }
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black select-none font-sans">
+    <div className="fixed inset-0 z-[var(--z-critical)] flex items-center justify-center bg-black select-none font-sans">
       {/* Background Visual Novel (blur) */}
       <div 
         className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity transition-all duration-1000"

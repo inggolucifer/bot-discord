@@ -2860,13 +2860,44 @@ router.post('/zone/build-check', authenticateToken, async (req, res) => {
     }
 });
 
+// Simple in-memory TTL cache for build-zone chunks (max 200 chunks, 15s TTL)
+const buildZoneChunkCache = new Map();
+const BZ_CACHE_MAX = 200;
+const BZ_CACHE_TTL = 15000;
+
+function getBzCache(key) {
+    const entry = buildZoneChunkCache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry._ts > BZ_CACHE_TTL) {
+        buildZoneChunkCache.delete(key);
+        return null;
+    }
+    return entry.data;
+}
+
+function setBzCache(key, data) {
+    if (buildZoneChunkCache.size >= BZ_CACHE_MAX) {
+        const oldestKey = buildZoneChunkCache.keys().next().value;
+        if (oldestKey) buildZoneChunkCache.delete(oldestKey);
+    }
+    buildZoneChunkCache.set(key, { data, _ts: Date.now() });
+}
+
 // Endpoint topeng kelayakan bangun chunk 32x32 untuk overlay klien
 router.get('/build-zone/chunk/:cx/:cy', authenticateToken, async (req, res) => {
     try {
-        const cx = parseInt(req.params.cx);
-        const cy = parseInt(req.params.cy);
-        if (isNaN(cx) || isNaN(cy)) {
-            return res.status(400).json({ error: 'Parameter cx dan cy tidak valid' });
+        const cx = Number(req.params.cx);
+        const cy = Number(req.params.cy);
+        if (!Number.isInteger(cx) || !Number.isInteger(cy) || cx < 0 || cx > 156 || cy < 0 || cy > 156) {
+            return res.status(400).json({ error: 'Parameter cx dan cy tidak valid (harus integer 0-156)' });
+        }
+
+        const cacheKey = `${cx}_${cy}`;
+        const cached = getBzCache(cacheKey);
+        if (cached) {
+            res.set('Cache-Control', 'private, max-age=15');
+            res.set('Vary', 'Authorization');
+            return res.json(cached);
         }
 
         const { getBuildability } = require('../../utils/buildZoneEngine');
@@ -2890,15 +2921,19 @@ router.get('/build-zone/chunk/:cx/:cy', authenticateToken, async (req, res) => {
             bitmask.push(rowMask);
         }
 
-        res.set('Cache-Control', 'private, max-age=15');
-        res.set('Vary', 'Authorization');
-        return res.json({
+        const responseData = {
             success: true,
             chunkX: cx,
             chunkY: cy,
             bitmask,
             reasons: reasonMap
-        });
+        };
+
+        setBzCache(cacheKey, responseData);
+
+        res.set('Cache-Control', 'private, max-age=15');
+        res.set('Vary', 'Authorization');
+        return res.json(responseData);
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
@@ -3265,50 +3300,117 @@ router.post('/zone/gather', authenticateToken, async (req, res) => {
         const userId = req.user.userId;
         const { tileX, tileY } = req.body;
 
+        // 1. Validasi input: integer dalam batas dunia 0-4999
+        const targetX = Number(tileX);
+        const targetY = Number(tileY);
+        if (!Number.isInteger(targetX) || !Number.isInteger(targetY) ||
+            targetX < 0 || targetX > 4999 || targetY < 0 || targetY > 4999) {
+            return res.status(400).json({ error: 'Koordinat tidak valid (harus integer 0-4999).' });
+        }
+
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
         const px = Number(player.gridPosition?.tileX ?? 2050);
         const py = Number(player.gridPosition?.tileY ?? 2650);
 
-        const targetX = tileX !== undefined ? Number(tileX) : px;
-        const targetY = tileY !== undefined ? Number(tileY) : py;
-
+        // 2. Validasi jarak (maks 1 petak)
         const dist = Math.max(Math.abs(targetX - px), Math.abs(targetY - py));
         if (dist > 1) {
             return res.status(400).json({ error: 'Terlalu jauh dari sumber daya (Maksimal 1 petak)' });
         }
 
-        // Periksa kondisi cooldown respawn pada ZoneTile jika ada
-        const zoneTile = await ZoneTile.findOne({
-            tileX: targetX,
-            tileY: targetY
-        });
-
-        if (zoneTile && zoneTile.nodeRespawnAt && zoneTile.nodeRespawnAt > new Date()) {
-            const sisaDetik = Math.ceil((zoneTile.nodeRespawnAt.getTime() - Date.now()) / 1000);
-            return res.status(400).json({ error: `Sumber daya di petak ini sedang habis. Pulih dalam ${sisaDetik} detik.` });
+        // 3. Sumber kebenaran mutlak: proceduralWorldEngine
+        const engineTile = proceduralWorldEngine.getTileAt(targetX, targetY);
+        const resType = engineTile.resourceType;
+        if (!resType) {
+            return res.status(400).json({ error: 'Tidak ada sumber daya alam di petak ini.' });
         }
 
-        // Konsumsi Stamina (default 5 stamina)
+        // 4. Periksa kecukupan stamina SEBELUM klaim atomik
         const staminaCost = 5;
         const curStamina = getCurrentStamina(player);
         if (curStamina < staminaCost) {
             return res.status(400).json({ error: `Stamina tidak cukup (Butuh ${staminaCost} stamina, tersisa ${curStamina})` });
         }
 
-        applyTravelDrain(player, staminaCost);
+        // 5. Klaim atomik cooldown respawn
+        const guildId = player.guildId || 'global';
+        const zoneId = 'tianyuan_world_map';
+        const now = new Date();
+        const nextRespawn = new Date(Date.now() + 60 * 1000);
 
-        // Tentukan resourceType berdasarkan ZoneTile atau medan regional
-        let resType = zoneTile?.resourceType;
-        if (!resType) {
-            const reg = proceduralWorldEngine.getRegionAt(targetX, targetY);
-            if (reg.id.includes('delta') || reg.id.includes('meadow') || reg.id.includes('plains')) resType = 'herb';
-            else if (reg.id.includes('teeth') || reg.id.includes('mountain') || reg.id.includes('peak')) resType = 'ore';
-            else if (reg.id.includes('lake') || reg.id.includes('river') || reg.id.includes('sea')) resType = 'fish';
-            else resType = 'wood';
+        const existingTile = await ZoneTile.findOne({ guildId, zoneId, tileX: targetX, tileY: targetY });
+        if (existingTile && existingTile.nodeRespawnAt && existingTile.nodeRespawnAt > now) {
+            const sisaDetik = Math.ceil((existingTile.nodeRespawnAt.getTime() - now.getTime()) / 1000);
+            return res.status(400).json({ error: `Sumber daya di petak ini sedang habis. Pulih dalam ${sisaDetik} detik.` });
         }
 
+        let claimed = null;
+        if (existingTile) {
+            claimed = await ZoneTile.findOneAndUpdate(
+                {
+                    _id: existingTile._id,
+                    $or: [
+                        { nodeRespawnAt: null },
+                        { nodeRespawnAt: { $exists: false } },
+                        { nodeRespawnAt: { $lte: now } }
+                    ]
+                },
+                {
+                    $set: {
+                        nodeRespawnAt: nextRespawn,
+                        resourceType: resType,
+                        tileType: 'resource_node'
+                    }
+                },
+                { new: true }
+            );
+        } else {
+            try {
+                claimed = await ZoneTile.create({
+                    guildId,
+                    zoneId,
+                    tileX: targetX,
+                    tileY: targetY,
+                    tileType: 'resource_node',
+                    resourceType: resType,
+                    nodeRespawnAt: nextRespawn
+                });
+            } catch (err) {
+                if (err.code === 11000) {
+                    claimed = await ZoneTile.findOneAndUpdate(
+                        {
+                            guildId,
+                            zoneId,
+                            tileX: targetX,
+                            tileY: targetY,
+                            $or: [
+                                { nodeRespawnAt: null },
+                                { nodeRespawnAt: { $exists: false } },
+                                { nodeRespawnAt: { $lte: now } }
+                            ]
+                        },
+                        {
+                            $set: {
+                                nodeRespawnAt: nextRespawn,
+                                resourceType: resType,
+                                tileType: 'resource_node'
+                            }
+                        },
+                        { new: true }
+                    );
+                } else {
+                    throw err;
+                }
+            }
+        }
+
+        if (!claimed) {
+            return res.status(400).json({ error: 'Sumber daya baru saja dipanen oleh pendekar lain atau sedang dalam masa pemulihan.' });
+        }
+
+        // 6. Tentukan item spesifik yang dipanen (tanpa fallback acak)
         let itemName = 'Herba Roh Bunga Melati';
         let prof = 'farming';
         if (resType === 'ore') {
@@ -3322,42 +3424,28 @@ router.post('/zone/gather', authenticateToken, async (req, res) => {
             prof = 'fishing';
         }
 
-        // Berikan item ke inventory jika ada di database
-        let itemDoc = await Item.findOne({ name: itemName });
+        const itemDoc = await Item.findOne({ name: itemName });
         if (!itemDoc) {
-            itemDoc = await Item.findOne({ category: 'material' });
+            // Rollback cooldown jika item belum di-seed
+            await ZoneTile.updateOne({ _id: claimed._id }, { $set: { nodeRespawnAt: null } });
+            return res.status(500).json({ error: `Item "${itemName}" tidak ditemukan di database. Hubungi admin.` });
         }
-        if (itemDoc) {
-            if (!player.inventory) player.inventory = [];
-            const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === itemDoc._id.toString());
-            if (existing) {
-                existing.quantity = (existing.quantity || 1) + 1;
-            } else {
-                player.inventory.push({ itemId: itemDoc._id, quantity: 1 });
-            }
+
+        // 7. Konsumsi stamina dan berikan hasil panen
+        applyTravelDrain(player, staminaCost);
+
+        if (!player.inventory) player.inventory = [];
+        const existing = player.inventory.find(i => i.itemId && i.itemId.toString() === itemDoc._id.toString());
+        if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+            player.inventory.push({ itemId: itemDoc._id, quantity: 1 });
         }
 
         // EXP Profesi (+15 EXP)
         if (!player.professions) player.professions = {};
         if (!player.professions[prof]) player.professions[prof] = { level: 1, exp: 0 };
         player.professions[prof].exp = (player.professions[prof].exp || 0) + 15;
-
-        // Set cooldown respawn 60 detik
-        const nextRespawn = new Date(Date.now() + 60 * 1000);
-        if (zoneTile) {
-            zoneTile.nodeRespawnAt = nextRespawn;
-            await zoneTile.save();
-        } else {
-            await ZoneTile.create({
-                guildId: player.guildId || 'global',
-                zoneId: 'tianyuan_world_map',
-                tileX: targetX,
-                tileY: targetY,
-                tileType: 'resource_node',
-                resourceType: resType,
-                nodeRespawnAt: nextRespawn
-            });
-        }
 
         player.markModified('inventory');
         player.markModified('professions');

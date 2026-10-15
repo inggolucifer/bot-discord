@@ -1,33 +1,104 @@
 {
   "meta": {
-    "app": "Jianghu World Asset Pipeline",
-    "version": "3.0",
+    "app": "Jianghu World",
     "size": {
-      "w": 2048,
-      "h": 14315
+      "w": 3584,
+      "h": 7157
     },
     "format": "RGBA8888",
     "image": "objects_structures.webp"
   },
   "frames": {
-    "landmark_western_sacred_desert_silk_caravan_oasis": {
+    "landmark_floating_wind_isles_floating_daoist_citadel": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "sourceSize": {
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
+      },
+      "metadata": {
+        "id": "landmark_floating_wind_isles_floating_daoist_citadel",
+        "atlas": "objects_structures",
+        "frame": "landmark_floating_wind_isles_floating_daoist_citadel",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_venom_mire_sunken_serpent_pagoda": {
+      "frame": {
+        "x": 561,
+        "y": 0,
+        "w": 525,
+        "h": 559
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 525,
+        "h": 559
+      },
+      "sourceSize": {
+        "w": 525,
+        "h": 559
+      },
+      "metadata": {
+        "id": "landmark_venom_mire_sunken_serpent_pagoda",
+        "atlas": "objects_structures",
+        "frame": "landmark_venom_mire_sunken_serpent_pagoda",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_western_sacred_desert_silk_caravan_oasis": {
+      "frame": {
+        "x": 1088,
+        "y": 0,
+        "w": 559,
+        "h": 559
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 559
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 559
       },
       "metadata": {
         "id": "landmark_western_sacred_desert_silk_caravan_oasis",
@@ -48,22 +119,22 @@
     },
     "landmark_nine_springs_delta_dragon_water_pavilion": {
       "frame": {
-        "x": 684,
+        "x": 1649,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "sourceSize": {
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "metadata": {
         "id": "landmark_nine_springs_delta_dragon_water_pavilion",
@@ -84,22 +155,22 @@
     },
     "landmark_mirror_lake_submerged_daoist_pavilion": {
       "frame": {
-        "x": 0,
-        "y": 684,
-        "w": 682,
-        "h": 682
+        "x": 2210,
+        "y": 0,
+        "w": 559,
+        "h": 559
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "sourceSize": {
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "metadata": {
         "id": "landmark_mirror_lake_submerged_daoist_pavilion",
@@ -120,22 +191,22 @@
     },
     "landmark_hermit_highlands_cloud_bamboo_observatory": {
       "frame": {
-        "x": 684,
-        "y": 684,
-        "w": 682,
-        "h": 682
+        "x": 2771,
+        "y": 0,
+        "w": 559,
+        "h": 559
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "sourceSize": {
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "metadata": {
         "id": "landmark_hermit_highlands_cloud_bamboo_observatory",
@@ -157,21 +228,21 @@
     "landmark_beast_prairies_tribal_totem_encampment": {
       "frame": {
         "x": 0,
-        "y": 1368,
-        "w": 682,
-        "h": 682
+        "y": 561,
+        "w": 559,
+        "h": 559
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "sourceSize": {
-        "w": 682,
-        "h": 682
+        "w": 559,
+        "h": 559
       },
       "metadata": {
         "id": "landmark_beast_prairies_tribal_totem_encampment",
@@ -190,24 +261,276 @@
         "overhangCells": 2
       }
     },
-    "building_wine_tavern_flagpole_sign": {
+    "landmark_immortal_ruins_valley_celestial_gateway_remnant": {
       "frame": {
-        "x": 684,
-        "y": 1368,
-        "w": 427,
-        "h": 600
+        "x": 561,
+        "y": 561,
+        "w": 525,
+        "h": 547
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 600
+        "w": 525,
+        "h": 547
       },
       "sourceSize": {
-        "w": 427,
-        "h": 600
+        "w": 525,
+        "h": 547
+      },
+      "metadata": {
+        "id": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+        "atlas": "objects_structures",
+        "frame": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum": {
+      "frame": {
+        "x": 1088,
+        "y": 561,
+        "w": 559,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 525
+      },
+      "metadata": {
+        "id": "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+        "atlas": "objects_structures",
+        "frame": "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_ore_teeth_range_abandoned_dwarf_minehead": {
+      "frame": {
+        "x": 1649,
+        "y": 561,
+        "w": 525,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 525,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 525,
+        "h": 525
+      },
+      "metadata": {
+        "id": "landmark_ore_teeth_range_abandoned_dwarf_minehead",
+        "atlas": "objects_structures",
+        "frame": "landmark_ore_teeth_range_abandoned_dwarf_minehead",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_eastern_sea_dragon_turtle_shell_shrine": {
+      "frame": {
+        "x": 2176,
+        "y": 561,
+        "w": 559,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 525
+      },
+      "metadata": {
+        "id": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+        "atlas": "objects_structures",
+        "frame": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_formation_barrens_broken_bagua_array": {
+      "frame": {
+        "x": 2737,
+        "y": 561,
+        "w": 525,
+        "h": 525
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 525,
+        "h": 525
+      },
+      "sourceSize": {
+        "w": 525,
+        "h": 525
+      },
+      "metadata": {
+        "id": "landmark_formation_barrens_broken_bagua_array",
+        "atlas": "objects_structures",
+        "frame": "landmark_formation_barrens_broken_bagua_array",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "structure_interior_sect_heraldry_banner_pole": {
+      "frame": {
+        "x": 3264,
+        "y": 561,
+        "w": 315,
+        "h": 517
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 517
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 517
+      },
+      "metadata": {
+        "id": "structure_interior_sect_heraldry_banner_pole",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_heraldry_banner_pole",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_dungeon_ancient_soul_lantern_pillar": {
+      "frame": {
+        "x": 0,
+        "y": 1122,
+        "w": 315,
+        "h": 492
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 492
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 492
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_soul_lantern_pillar",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_soul_lantern_pillar",
+        "category": "pillar",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.45,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "building_wine_tavern_flagpole_sign": {
+      "frame": {
+        "x": 317,
+        "y": 1122,
+        "w": 350,
+        "h": 492
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 492
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 492
       },
       "metadata": {
         "id": "building_wine_tavern_flagpole_sign",
@@ -226,24 +549,168 @@
         "overhangCells": 1.6
       }
     },
-    "pagoda_2x2": {
+    "landmark_sword_gorge_giant_fallen_blade_bridge": {
       "frame": {
-        "x": 1113,
-        "y": 1368,
-        "w": 384,
-        "h": 576
+        "x": 669,
+        "y": 1122,
+        "w": 559,
+        "h": 481
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 576
+        "w": 559,
+        "h": 481
       },
       "sourceSize": {
-        "w": 384,
-        "h": 576
+        "w": 559,
+        "h": 481
+      },
+      "metadata": {
+        "id": "landmark_sword_gorge_giant_fallen_blade_bridge",
+        "atlas": "objects_structures",
+        "frame": "landmark_sword_gorge_giant_fallen_blade_bridge",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_bone_sea_coast_leviathan_rib_pier": {
+      "frame": {
+        "x": 1230,
+        "y": 1122,
+        "w": 559,
+        "h": 481
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 481
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 481
+      },
+      "metadata": {
+        "id": "landmark_bone_sea_coast_leviathan_rib_pier",
+        "atlas": "objects_structures",
+        "frame": "landmark_bone_sea_coast_leviathan_rib_pier",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_southern_demon_domain_skull_gate": {
+      "frame": {
+        "x": 1791,
+        "y": 1122,
+        "w": 559,
+        "h": 481
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 481
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 481
+      },
+      "metadata": {
+        "id": "landmark_southern_demon_domain_skull_gate",
+        "atlas": "objects_structures",
+        "frame": "landmark_southern_demon_domain_skull_gate",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "ancient_relic_xuanyuan_sword": {
+      "frame": {
+        "x": 2352,
+        "y": 1122,
+        "w": 315,
+        "h": 472
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 472
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 472
+      },
+      "metadata": {
+        "id": "ancient_relic_xuanyuan_sword",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_xuanyuan_sword",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "pagoda_2x2": {
+      "frame": {
+        "x": 2669,
+        "y": 1122,
+        "w": 315,
+        "h": 472
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 472
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 472
       },
       "metadata": {
         "id": "pagoda_2x2",
@@ -264,22 +731,22 @@
     },
     "building_wooden_watchtower": {
       "frame": {
-        "x": 1499,
-        "y": 1368,
-        "w": 384,
-        "h": 576
+        "x": 2986,
+        "y": 1122,
+        "w": 315,
+        "h": 472
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 576
+        "w": 315,
+        "h": 472
       },
       "sourceSize": {
-        "w": 384,
-        "h": 576
+        "w": 315,
+        "h": 472
       },
       "metadata": {
         "id": "building_wooden_watchtower",
@@ -301,21 +768,21 @@
     "building_village_thatched_granary_round": {
       "frame": {
         "x": 0,
-        "y": 2052,
-        "w": 512,
-        "h": 560
+        "y": 1616,
+        "w": 420,
+        "h": 459
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 560
+        "w": 420,
+        "h": 459
       },
       "sourceSize": {
-        "w": 512,
-        "h": 560
+        "w": 420,
+        "h": 459
       },
       "metadata": {
         "id": "building_village_thatched_granary_round",
@@ -334,24 +801,96 @@
         "overhangCells": 1.6
       }
     },
-    "xitong_city_landmark": {
+    "structure_interior_sect_discipline_wooden_dummy": {
       "frame": {
-        "x": 514,
-        "y": 2052,
-        "w": 682,
-        "h": 512
+        "x": 422,
+        "y": 1616,
+        "w": 315,
+        "h": 443
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 512
+        "w": 315,
+        "h": 443
       },
       "sourceSize": {
-        "w": 682,
-        "h": 512
+        "w": 315,
+        "h": 443
+      },
+      "metadata": {
+        "id": "structure_interior_sect_discipline_wooden_dummy",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_discipline_wooden_dummy",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "ancient_relic_haotian_tower": {
+      "frame": {
+        "x": 739,
+        "y": 1616,
+        "w": 306,
+        "h": 420
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 306,
+        "h": 420
+      },
+      "metadata": {
+        "id": "ancient_relic_haotian_tower",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_haotian_tower",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "xitong_city_landmark": {
+      "frame": {
+        "x": 1047,
+        "y": 1616,
+        "w": 559,
+        "h": 420
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 420
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 420
       },
       "metadata": {
         "id": "xitong_city_landmark",
@@ -372,22 +911,22 @@
     },
     "building_spirit_pagoda": {
       "frame": {
-        "x": 1198,
-        "y": 2052,
-        "w": 512,
-        "h": 512
+        "x": 1608,
+        "y": 1616,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_spirit_pagoda",
@@ -408,22 +947,22 @@
     },
     "building_blacksmith_weapon_rack": {
       "frame": {
-        "x": 0,
-        "y": 2614,
-        "w": 512,
-        "h": 512
+        "x": 2030,
+        "y": 1616,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_blacksmith_weapon_rack",
@@ -444,22 +983,22 @@
     },
     "building_wayside_tea_resting_shed": {
       "frame": {
-        "x": 514,
-        "y": 2614,
-        "w": 512,
-        "h": 512
+        "x": 2452,
+        "y": 1616,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_tea_resting_shed",
@@ -480,22 +1019,22 @@
     },
     "building_rustic_apiary_beehives": {
       "frame": {
-        "x": 1028,
-        "y": 2614,
-        "w": 512,
-        "h": 512
+        "x": 2874,
+        "y": 1616,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_rustic_apiary_beehives",
@@ -517,21 +1056,21 @@
     "building_countryside_thatched_gazebo": {
       "frame": {
         "x": 0,
-        "y": 3128,
-        "w": 512,
-        "h": 512
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_countryside_thatched_gazebo",
@@ -552,22 +1091,22 @@
     },
     "building_wayside_wooden_notice_board": {
       "frame": {
-        "x": 514,
-        "y": 3128,
-        "w": 512,
-        "h": 512
+        "x": 422,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_wooden_notice_board",
@@ -588,22 +1127,22 @@
     },
     "building_riverside_watermill_paddle_wheel": {
       "frame": {
-        "x": 1028,
-        "y": 3128,
-        "w": 512,
-        "h": 512
+        "x": 844,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_riverside_watermill_paddle_wheel",
@@ -624,22 +1163,22 @@
     },
     "building_village_chicken_coop_bamboo": {
       "frame": {
-        "x": 0,
-        "y": 3642,
-        "w": 512,
-        "h": 512
+        "x": 1266,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_chicken_coop_bamboo",
@@ -660,22 +1199,22 @@
     },
     "building_wayside_earth_god_miniature_shrine": {
       "frame": {
-        "x": 514,
-        "y": 3642,
-        "w": 512,
-        "h": 512
+        "x": 1688,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_earth_god_miniature_shrine",
@@ -696,22 +1235,22 @@
     },
     "building_rustic_bamboo_fish_drying_rack": {
       "frame": {
-        "x": 1028,
-        "y": 3642,
-        "w": 512,
-        "h": 512
+        "x": 2110,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_rustic_bamboo_fish_drying_rack",
@@ -732,22 +1271,22 @@
     },
     "building_countryside_thatched_haystack_cluster": {
       "frame": {
-        "x": 0,
-        "y": 4156,
-        "w": 512,
-        "h": 512
+        "x": 2532,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_countryside_thatched_haystack_cluster",
@@ -768,22 +1307,22 @@
     },
     "building_mountain_pass_stone_archway": {
       "frame": {
-        "x": 514,
-        "y": 4156,
-        "w": 512,
-        "h": 512
+        "x": 2954,
+        "y": 2077,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_mountain_pass_stone_archway",
@@ -804,22 +1343,22 @@
     },
     "building_countryside_bamboo_vegetable_trellis": {
       "frame": {
-        "x": 1028,
-        "y": 4156,
-        "w": 512,
-        "h": 512
+        "x": 0,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_countryside_bamboo_vegetable_trellis",
@@ -840,22 +1379,22 @@
     },
     "building_rustic_pottery_kiln_earthen": {
       "frame": {
-        "x": 0,
-        "y": 4670,
-        "w": 512,
-        "h": 512
+        "x": 422,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_rustic_pottery_kiln_earthen",
@@ -876,22 +1415,22 @@
     },
     "building_village_stone_water_trough": {
       "frame": {
-        "x": 514,
-        "y": 4670,
-        "w": 512,
-        "h": 512
+        "x": 844,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_water_trough",
@@ -912,22 +1451,22 @@
     },
     "building_wayside_bamboo_raft_mooring_post": {
       "frame": {
-        "x": 1028,
-        "y": 4670,
-        "w": 512,
-        "h": 512
+        "x": 1266,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_bamboo_raft_mooring_post",
@@ -948,22 +1487,22 @@
     },
     "building_wayside_bamboo_tea_shed_bench": {
       "frame": {
-        "x": 0,
-        "y": 5184,
-        "w": 512,
-        "h": 512
+        "x": 1688,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_bamboo_tea_shed_bench",
@@ -984,22 +1523,22 @@
     },
     "building_rustic_bamboo_water_pipe_aqueduct": {
       "frame": {
-        "x": 514,
-        "y": 5184,
-        "w": 512,
-        "h": 512
+        "x": 2110,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_rustic_bamboo_water_pipe_aqueduct",
@@ -1020,22 +1559,22 @@
     },
     "building_wayside_stone_boundary_stele": {
       "frame": {
-        "x": 1028,
-        "y": 5184,
-        "w": 512,
-        "h": 512
+        "x": 2532,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_boundary_stele",
@@ -1056,22 +1595,22 @@
     },
     "building_village_bamboo_grain_drying_mat": {
       "frame": {
-        "x": 0,
-        "y": 5698,
-        "w": 512,
-        "h": 512
+        "x": 2954,
+        "y": 2499,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_bamboo_grain_drying_mat",
@@ -1092,22 +1631,22 @@
     },
     "building_wayside_fortune_teller_booth": {
       "frame": {
-        "x": 514,
-        "y": 5698,
-        "w": 512,
-        "h": 512
+        "x": 0,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_fortune_teller_booth",
@@ -1128,22 +1667,22 @@
     },
     "building_village_stone_pigpen_pen": {
       "frame": {
-        "x": 1028,
-        "y": 5698,
-        "w": 512,
-        "h": 512
+        "x": 422,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_pigpen_pen",
@@ -1164,22 +1703,22 @@
     },
     "building_village_earthen_dyeing_vats": {
       "frame": {
-        "x": 0,
-        "y": 6212,
-        "w": 512,
-        "h": 512
+        "x": 844,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_earthen_dyeing_vats",
@@ -1200,22 +1739,22 @@
     },
     "building_wayside_stone_well_windlass": {
       "frame": {
-        "x": 514,
-        "y": 6212,
-        "w": 512,
-        "h": 512
+        "x": 1266,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_well_windlass",
@@ -1236,22 +1775,22 @@
     },
     "building_wayside_straw_scarecrow_bamboo": {
       "frame": {
-        "x": 1028,
-        "y": 6212,
-        "w": 512,
-        "h": 512
+        "x": 1688,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_straw_scarecrow_bamboo",
@@ -1272,22 +1811,22 @@
     },
     "building_village_stone_grain_mortar_pestle": {
       "frame": {
-        "x": 0,
-        "y": 6726,
-        "w": 512,
-        "h": 512
+        "x": 2110,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_grain_mortar_pestle",
@@ -1308,22 +1847,22 @@
     },
     "building_village_stone_grain_roller_mill": {
       "frame": {
-        "x": 514,
-        "y": 6726,
-        "w": 512,
-        "h": 512
+        "x": 2532,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_grain_roller_mill",
@@ -1344,22 +1883,22 @@
     },
     "building_wayside_wooden_mile_marker_stele": {
       "frame": {
-        "x": 1028,
-        "y": 6726,
-        "w": 512,
-        "h": 512
+        "x": 2954,
+        "y": 2921,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_wooden_mile_marker_stele",
@@ -1381,21 +1920,21 @@
     "building_village_bamboo_weaving_shed": {
       "frame": {
         "x": 0,
-        "y": 7240,
-        "w": 512,
-        "h": 512
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_bamboo_weaving_shed",
@@ -1416,22 +1955,22 @@
     },
     "building_wayside_stone_stele_shrine_arbor": {
       "frame": {
-        "x": 514,
-        "y": 7240,
-        "w": 512,
-        "h": 512
+        "x": 422,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_stele_shrine_arbor",
@@ -1452,22 +1991,22 @@
     },
     "building_wayside_stone_arch_bridge": {
       "frame": {
-        "x": 1028,
-        "y": 7240,
-        "w": 512,
-        "h": 512
+        "x": 844,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_arch_bridge",
@@ -1488,22 +2027,22 @@
     },
     "building_village_wooden_paddy_waterwheel": {
       "frame": {
-        "x": 0,
-        "y": 7754,
-        "w": 512,
-        "h": 512
+        "x": 1266,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_wooden_paddy_waterwheel",
@@ -1524,22 +2063,22 @@
     },
     "building_village_stone_tofu_press_bench": {
       "frame": {
-        "x": 514,
-        "y": 7754,
-        "w": 512,
-        "h": 512
+        "x": 1688,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_tofu_press_bench",
@@ -1560,22 +2099,22 @@
     },
     "building_wayside_bamboo_courier_mailbox_stand": {
       "frame": {
-        "x": 1028,
-        "y": 7754,
-        "w": 512,
-        "h": 512
+        "x": 2110,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_bamboo_courier_mailbox_stand",
@@ -1596,22 +2135,22 @@
     },
     "building_village_bamboo_duck_coop_ramp": {
       "frame": {
-        "x": 0,
-        "y": 8268,
-        "w": 512,
-        "h": 512
+        "x": 2532,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_bamboo_duck_coop_ramp",
@@ -1632,22 +2171,22 @@
     },
     "building_wayside_stone_rain_shelter_arbor": {
       "frame": {
-        "x": 514,
-        "y": 8268,
-        "w": 512,
-        "h": 512
+        "x": 2954,
+        "y": 3343,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_rain_shelter_arbor",
@@ -1668,22 +2207,22 @@
     },
     "building_village_bamboo_fish_trap_weir": {
       "frame": {
-        "x": 1028,
-        "y": 8268,
-        "w": 512,
-        "h": 512
+        "x": 0,
+        "y": 3765,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_bamboo_fish_trap_weir",
@@ -1704,22 +2243,22 @@
     },
     "building_wayside_stone_stele_pavilion_ruin": {
       "frame": {
-        "x": 0,
-        "y": 8782,
-        "w": 512,
-        "h": 512
+        "x": 422,
+        "y": 3765,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_stone_stele_pavilion_ruin",
@@ -1740,22 +2279,22 @@
     },
     "building_wayside_bamboo_torch_beacon_brazier": {
       "frame": {
-        "x": 514,
-        "y": 8782,
-        "w": 512,
-        "h": 512
+        "x": 844,
+        "y": 3765,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_wayside_bamboo_torch_beacon_brazier",
@@ -1776,22 +2315,22 @@
     },
     "building_village_stone_grain_soaking_cistern": {
       "frame": {
-        "x": 1028,
-        "y": 8782,
-        "w": 512,
-        "h": 512
+        "x": 1266,
+        "y": 3765,
+        "w": 420,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "sourceSize": {
-        "w": 512,
-        "h": 512
+        "w": 420,
+        "h": 420
       },
       "metadata": {
         "id": "building_village_stone_grain_soaking_cistern",
@@ -1812,22 +2351,22 @@
     },
     "landmark_central_plains_tianjing_palace_gate": {
       "frame": {
-        "x": 0,
-        "y": 9296,
-        "w": 682,
-        "h": 512
+        "x": 1688,
+        "y": 3765,
+        "w": 559,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "sourceSize": {
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "metadata": {
         "id": "landmark_central_plains_tianjing_palace_gate",
@@ -1848,22 +2387,22 @@
     },
     "landmark_northern_desolate_frozen_mammoth_shrine": {
       "frame": {
-        "x": 684,
-        "y": 9296,
-        "w": 682,
-        "h": 512
+        "x": 2249,
+        "y": 3765,
+        "w": 559,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "sourceSize": {
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "metadata": {
         "id": "landmark_northern_desolate_frozen_mammoth_shrine",
@@ -1884,22 +2423,22 @@
     },
     "landmark_border_march_iron_garrison_gatehouse": {
       "frame": {
-        "x": 0,
-        "y": 9810,
-        "w": 682,
-        "h": 512
+        "x": 2810,
+        "y": 3765,
+        "w": 559,
+        "h": 420
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "sourceSize": {
-        "w": 682,
-        "h": 512
+        "w": 559,
+        "h": 420
       },
       "metadata": {
         "id": "landmark_border_march_iron_garrison_gatehouse",
@@ -1918,24 +2457,456 @@
         "overhangCells": 2
       }
     },
-    "building_wayside_mile_marker_stele": {
+    "structure_dungeon_ancient_brazier_altar": {
       "frame": {
-        "x": 684,
-        "y": 9810,
-        "w": 373,
-        "h": 453
+        "x": 0,
+        "y": 4187,
+        "w": 315,
+        "h": 418
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 373,
-        "h": 453
+        "w": 315,
+        "h": 418
       },
       "sourceSize": {
-        "w": 373,
-        "h": 453
+        "w": 315,
+        "h": 418
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_brazier_altar",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_brazier_altar",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_grand_patriarch_throne": {
+      "frame": {
+        "x": 317,
+        "y": 4187,
+        "w": 350,
+        "h": 416
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 416
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 416
+      },
+      "metadata": {
+        "id": "structure_interior_sect_grand_patriarch_throne",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_grand_patriarch_throne",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_dungeon_ancient_stone_door_dragon_gate": {
+      "frame": {
+        "x": 669,
+        "y": 4187,
+        "w": 394,
+        "h": 416
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 416
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 416
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_stone_door_dragon_gate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_stone_door_dragon_gate",
+        "category": "building",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_dungeon_ancient_chain_suspended_cage": {
+      "frame": {
+        "x": 1065,
+        "y": 4187,
+        "w": 328,
+        "h": 416
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 328,
+        "h": 416
+      },
+      "sourceSize": {
+        "w": 328,
+        "h": 416
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_chain_suspended_cage",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_chain_suspended_cage",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_esoteric_bookshelf": {
+      "frame": {
+        "x": 1395,
+        "y": 4187,
+        "w": 350,
+        "h": 394
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 394
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 394
+      },
+      "metadata": {
+        "id": "structure_interior_sect_esoteric_bookshelf",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_esoteric_bookshelf",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_sect_bronze_bell_chime_stand": {
+      "frame": {
+        "x": 1747,
+        "y": 4187,
+        "w": 394,
+        "h": 394
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 394
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 394
+      },
+      "metadata": {
+        "id": "structure_interior_sect_bronze_bell_chime_stand",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_bronze_bell_chime_stand",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_sect_spirit_pill_cauldron_hearth": {
+      "frame": {
+        "x": 2143,
+        "y": 4187,
+        "w": 371,
+        "h": 394
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 394
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 394
+      },
+      "metadata": {
+        "id": "structure_interior_sect_spirit_pill_cauldron_hearth",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_spirit_pill_cauldron_hearth",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_interior_sect_ancestral_tablet_shrine": {
+      "frame": {
+        "x": 2516,
+        "y": 4187,
+        "w": 371,
+        "h": 394
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 394
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 394
+      },
+      "metadata": {
+        "id": "structure_interior_sect_ancestral_tablet_shrine",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_ancestral_tablet_shrine",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_lianyao_flask": {
+      "frame": {
+        "x": 2889,
+        "y": 4187,
+        "w": 306,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 306,
+        "h": 371
+      },
+      "metadata": {
+        "id": "ancient_relic_lianyao_flask",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_lianyao_flask",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_sect_dragon_carved_folding_screen": {
+      "frame": {
+        "x": 0,
+        "y": 4607,
+        "w": 394,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 371
+      },
+      "metadata": {
+        "id": "structure_interior_sect_dragon_carved_folding_screen",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_dragon_carved_folding_screen",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_dungeon_celestial_spirit_crystal_cluster": {
+      "frame": {
+        "x": 396,
+        "y": 4607,
+        "w": 394,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 371
+      },
+      "metadata": {
+        "id": "structure_dungeon_celestial_spirit_crystal_cluster",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_celestial_spirit_crystal_cluster",
+        "category": "resource_cluster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_secret_treasure_urn": {
+      "frame": {
+        "x": 792,
+        "y": 4607,
+        "w": 350,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 371
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_secret_treasure_urn",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_secret_treasure_urn",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "building_wayside_mile_marker_stele": {
+      "frame": {
+        "x": 1144,
+        "y": 4607,
+        "w": 306,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 306,
+        "h": 371
       },
       "metadata": {
         "id": "building_wayside_mile_marker_stele",
@@ -1956,22 +2927,22 @@
     },
     "building_rustic_cart_straw_shed": {
       "frame": {
-        "x": 1059,
-        "y": 9810,
-        "w": 512,
-        "h": 453
+        "x": 1452,
+        "y": 4607,
+        "w": 420,
+        "h": 371
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 453
+        "w": 420,
+        "h": 371
       },
       "sourceSize": {
-        "w": 512,
-        "h": 453
+        "w": 420,
+        "h": 371
       },
       "metadata": {
         "id": "building_rustic_cart_straw_shed",
@@ -1992,22 +2963,22 @@
     },
     "building_stone_mill_grain_grinder": {
       "frame": {
-        "x": 1573,
-        "y": 9810,
-        "w": 453,
-        "h": 453
+        "x": 1874,
+        "y": 4607,
+        "w": 371,
+        "h": 371
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 453,
-        "h": 453
+        "w": 371,
+        "h": 371
       },
       "sourceSize": {
-        "w": 453,
-        "h": 453
+        "w": 371,
+        "h": 371
       },
       "metadata": {
         "id": "building_stone_mill_grain_grinder",
@@ -2028,22 +2999,22 @@
     },
     "building_blacksmith_bellows_furnace": {
       "frame": {
-        "x": 0,
-        "y": 10324,
-        "w": 512,
-        "h": 453
+        "x": 2247,
+        "y": 4607,
+        "w": 420,
+        "h": 371
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 453
+        "w": 420,
+        "h": 371
       },
       "sourceSize": {
-        "w": 512,
-        "h": 453
+        "w": 420,
+        "h": 371
       },
       "metadata": {
         "id": "building_blacksmith_bellows_furnace",
@@ -2062,24 +3033,348 @@
         "overhangCells": 1.2
       }
     },
-    "building_mountain_hermitage_shack": {
+    "ancient_relic_donghuang_bell": {
       "frame": {
-        "x": 514,
-        "y": 10324,
-        "w": 512,
-        "h": 427
+        "x": 2669,
+        "y": 4607,
+        "w": 350,
+        "h": 350
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 427
+        "w": 350,
+        "h": 350
       },
       "sourceSize": {
-        "w": 512,
-        "h": 427
+        "w": 350,
+        "h": 350
+      },
+      "metadata": {
+        "id": "ancient_relic_donghuang_bell",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_donghuang_bell",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_pan_gu_axe": {
+      "frame": {
+        "x": 3021,
+        "y": 4607,
+        "w": 350,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 350
+      },
+      "metadata": {
+        "id": "ancient_relic_pan_gu_axe",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_pan_gu_axe",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_nuwa_stone": {
+      "frame": {
+        "x": 0,
+        "y": 4980,
+        "w": 328,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 328,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 328,
+        "h": 350
+      },
+      "metadata": {
+        "id": "ancient_relic_nuwa_stone",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_nuwa_stone",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_ancient_weapon_rack": {
+      "frame": {
+        "x": 330,
+        "y": 4980,
+        "w": 371,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_interior_ancient_weapon_rack",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_ancient_weapon_rack",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_nine_palaces_formation_pedestal": {
+      "frame": {
+        "x": 703,
+        "y": 4980,
+        "w": 371,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_interior_nine_palaces_formation_pedestal",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_nine_palaces_formation_pedestal",
+        "category": "formation",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_celestial_herb_drying_table": {
+      "frame": {
+        "x": 1076,
+        "y": 4980,
+        "w": 394,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_dungeon_celestial_herb_drying_table",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_celestial_herb_drying_table",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_celestial_stalagmite_formation": {
+      "frame": {
+        "x": 1472,
+        "y": 4980,
+        "w": 371,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_dungeon_celestial_stalagmite_formation",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_celestial_stalagmite_formation",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_ancient_crumbled_dragon_statue": {
+      "frame": {
+        "x": 1845,
+        "y": 4980,
+        "w": 371,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_crumbled_dragon_statue",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_crumbled_dragon_statue",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_interior_sect_herb_grinding_mortar_bench": {
+      "frame": {
+        "x": 2218,
+        "y": 4980,
+        "w": 416,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 416,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 416,
+        "h": 350
+      },
+      "metadata": {
+        "id": "structure_interior_sect_herb_grinding_mortar_bench",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_herb_grinding_mortar_bench",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "building_mountain_hermitage_shack": {
+      "frame": {
+        "x": 2636,
+        "y": 4980,
+        "w": 420,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 420,
+        "h": 350
       },
       "metadata": {
         "id": "building_mountain_hermitage_shack",
@@ -2098,24 +3393,420 @@
         "overhangCells": 1.5
       }
     },
-    "sect_gate_3x2": {
+    "ancient_relic_shennong_herbal_cauldron": {
       "frame": {
-        "x": 1028,
-        "y": 10324,
-        "w": 512,
-        "h": 384
+        "x": 3058,
+        "y": 4980,
+        "w": 328,
+        "h": 328
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 328,
+        "h": 328
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 328,
+        "h": 328
+      },
+      "metadata": {
+        "id": "ancient_relic_shennong_herbal_cauldron",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_shennong_herbal_cauldron",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_kunlun_mirror": {
+      "frame": {
+        "x": 0,
+        "y": 5332,
+        "w": 328,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 328,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 328,
+        "h": 328
+      },
+      "metadata": {
+        "id": "ancient_relic_kunlun_mirror",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_kunlun_mirror",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_kongtong_seal": {
+      "frame": {
+        "x": 330,
+        "y": 5332,
+        "w": 328,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 328,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 328,
+        "h": 328
+      },
+      "metadata": {
+        "id": "ancient_relic_kongtong_seal",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_kongtong_seal",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_meditation_jade_cushion_dais": {
+      "frame": {
+        "x": 660,
+        "y": 5332,
+        "w": 328,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 328,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 328,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_interior_meditation_jade_cushion_dais",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_meditation_jade_cushion_dais",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_stone_sarcophagus": {
+      "frame": {
+        "x": 990,
+        "y": 5332,
+        "w": 371,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_stone_sarcophagus",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_stone_sarcophagus",
+        "category": "container",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_interior_meditation_rush_mat_partition": {
+      "frame": {
+        "x": 1363,
+        "y": 5332,
+        "w": 350,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_interior_meditation_rush_mat_partition",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_meditation_rush_mat_partition",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_ancient_trap_spike_floor": {
+      "frame": {
+        "x": 1715,
+        "y": 5332,
+        "w": 350,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_trap_spike_floor",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_trap_spike_floor",
+        "category": "hazard",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_scripture_reading_desk": {
+      "frame": {
+        "x": 2067,
+        "y": 5332,
+        "w": 394,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 394,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 394,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_interior_sect_scripture_reading_desk",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_scripture_reading_desk",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_poison_mist_vent_grate": {
+      "frame": {
+        "x": 2463,
+        "y": 5332,
+        "w": 350,
+        "h": 328
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 328
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 328
+      },
+      "metadata": {
+        "id": "structure_dungeon_poison_mist_vent_grate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_poison_mist_vent_grate",
+        "category": "hazard",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_ancient_sandalwood_incense_burner": {
+      "frame": {
+        "x": 2815,
+        "y": 5332,
+        "w": 315,
+        "h": 315
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 315
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 315
+      },
+      "metadata": {
+        "id": "structure_interior_ancient_sandalwood_incense_burner",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_ancient_sandalwood_incense_burner",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_ancient_dragon_chest": {
+      "frame": {
+        "x": 3132,
+        "y": 5332,
+        "w": 315,
+        "h": 315
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 315,
+        "h": 315
+      },
+      "sourceSize": {
+        "w": 315,
+        "h": 315
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_dragon_chest",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_dragon_chest",
+        "category": "container",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "sect_gate_3x2": {
+      "frame": {
+        "x": 0,
+        "y": 5662,
+        "w": 420,
+        "h": 315
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 420,
+        "h": 315
+      },
+      "sourceSize": {
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "sect_gate_3x2",
@@ -2136,22 +3827,22 @@
     },
     "building_ferry_dock": {
       "frame": {
-        "x": 0,
-        "y": 10779,
-        "w": 512,
-        "h": 384
+        "x": 422,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_ferry_dock",
@@ -2172,22 +3863,22 @@
     },
     "dungeon_cave_entrance": {
       "frame": {
-        "x": 514,
-        "y": 10779,
-        "w": 384,
-        "h": 384
+        "x": 844,
+        "y": 5662,
+        "w": 315,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "sourceSize": {
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "metadata": {
         "id": "dungeon_cave_entrance",
@@ -2208,22 +3899,22 @@
     },
     "building_inn_roadside": {
       "frame": {
-        "x": 900,
-        "y": 10779,
-        "w": 512,
-        "h": 384
+        "x": 1161,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_inn_roadside",
@@ -2244,22 +3935,22 @@
     },
     "building_forge_workshop": {
       "frame": {
-        "x": 1414,
-        "y": 10779,
-        "w": 512,
-        "h": 384
+        "x": 1583,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_forge_workshop",
@@ -2280,22 +3971,22 @@
     },
     "building_tea_house": {
       "frame": {
-        "x": 0,
-        "y": 11165,
-        "w": 512,
-        "h": 384
+        "x": 2005,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_tea_house",
@@ -2316,22 +4007,22 @@
     },
     "building_alchemist_hall": {
       "frame": {
-        "x": 514,
-        "y": 11165,
-        "w": 512,
-        "h": 384
+        "x": 2427,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_alchemist_hall",
@@ -2352,22 +4043,22 @@
     },
     "building_granary_silo": {
       "frame": {
-        "x": 1028,
-        "y": 11165,
-        "w": 512,
-        "h": 384
+        "x": 2849,
+        "y": 5662,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_granary_silo",
@@ -2389,21 +4080,21 @@
     "building_residential_manor": {
       "frame": {
         "x": 0,
-        "y": 11551,
-        "w": 512,
-        "h": 384
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_residential_manor",
@@ -2424,22 +4115,22 @@
     },
     "building_auction_house": {
       "frame": {
-        "x": 514,
-        "y": 11551,
-        "w": 512,
-        "h": 384
+        "x": 422,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_auction_house",
@@ -2460,22 +4151,22 @@
     },
     "building_sect_library": {
       "frame": {
-        "x": 1028,
-        "y": 11551,
-        "w": 512,
-        "h": 384
+        "x": 844,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_sect_library",
@@ -2496,22 +4187,22 @@
     },
     "building_blacksmith_foundry": {
       "frame": {
-        "x": 0,
-        "y": 11937,
-        "w": 512,
-        "h": 384
+        "x": 1266,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_blacksmith_foundry",
@@ -2532,22 +4223,22 @@
     },
     "building_apothecary_store": {
       "frame": {
-        "x": 514,
-        "y": 11937,
-        "w": 512,
-        "h": 384
+        "x": 1688,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_apothecary_store",
@@ -2568,22 +4259,22 @@
     },
     "building_dock_warehouse": {
       "frame": {
-        "x": 1028,
-        "y": 11937,
-        "w": 512,
-        "h": 384
+        "x": 2110,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_dock_warehouse",
@@ -2604,22 +4295,22 @@
     },
     "building_village_thatched_cottage": {
       "frame": {
-        "x": 0,
-        "y": 12323,
-        "w": 512,
-        "h": 384
+        "x": 2532,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_village_thatched_cottage",
@@ -2640,22 +4331,22 @@
     },
     "building_roadside_tea_stall": {
       "frame": {
-        "x": 514,
-        "y": 12323,
-        "w": 512,
-        "h": 384
+        "x": 2954,
+        "y": 5979,
+        "w": 420,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "sourceSize": {
-        "w": 512,
-        "h": 384
+        "w": 420,
+        "h": 315
       },
       "metadata": {
         "id": "building_roadside_tea_stall",
@@ -2676,22 +4367,22 @@
     },
     "building_village_well": {
       "frame": {
-        "x": 1028,
-        "y": 12323,
-        "w": 384,
-        "h": 384
+        "x": 0,
+        "y": 6296,
+        "w": 315,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "sourceSize": {
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "metadata": {
         "id": "building_village_well",
@@ -2712,22 +4403,22 @@
     },
     "building_wayside_stone_stele": {
       "frame": {
-        "x": 1414,
-        "y": 12323,
-        "w": 384,
-        "h": 384
+        "x": 317,
+        "y": 6296,
+        "w": 315,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "sourceSize": {
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "metadata": {
         "id": "building_wayside_stone_stele",
@@ -2748,22 +4439,22 @@
     },
     "building_rustic_drying_racks": {
       "frame": {
-        "x": 0,
-        "y": 12709,
-        "w": 384,
-        "h": 384
+        "x": 634,
+        "y": 6296,
+        "w": 315,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "sourceSize": {
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "metadata": {
         "id": "building_rustic_drying_racks",
@@ -2784,22 +4475,22 @@
     },
     "building_stone_lantern_shrine": {
       "frame": {
-        "x": 386,
-        "y": 12709,
-        "w": 384,
-        "h": 384
+        "x": 951,
+        "y": 6296,
+        "w": 315,
+        "h": 315
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "sourceSize": {
-        "w": 384,
-        "h": 384
+        "w": 315,
+        "h": 315
       },
       "metadata": {
         "id": "building_stone_lantern_shrine",
@@ -2820,22 +4511,22 @@
     },
     "building_pagoda_tower_v1": {
       "frame": {
-        "x": 772,
-        "y": 12709,
-        "w": 200,
-        "h": 380
+        "x": 1268,
+        "y": 6296,
+        "w": 164,
+        "h": 312
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "sourceSize": {
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "metadata": {
         "id": "building_pagoda_tower_v1",
@@ -2875,22 +4566,22 @@
     },
     "building_pagoda_tower_v2": {
       "frame": {
-        "x": 974,
-        "y": 12709,
-        "w": 200,
-        "h": 380
+        "x": 1434,
+        "y": 6296,
+        "w": 164,
+        "h": 312
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "sourceSize": {
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "metadata": {
         "id": "building_pagoda_tower_v2",
@@ -2930,22 +4621,22 @@
     },
     "building_pagoda_tower_v3": {
       "frame": {
-        "x": 1176,
-        "y": 12709,
-        "w": 200,
-        "h": 380
+        "x": 1600,
+        "y": 6296,
+        "w": 164,
+        "h": 312
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "sourceSize": {
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "metadata": {
         "id": "building_pagoda_tower_v3",
@@ -2985,22 +4676,22 @@
     },
     "building_pagoda_tower_v4": {
       "frame": {
-        "x": 1378,
-        "y": 12709,
-        "w": 200,
-        "h": 380
+        "x": 1766,
+        "y": 6296,
+        "w": 164,
+        "h": 312
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "sourceSize": {
-        "w": 200,
-        "h": 380
+        "w": 164,
+        "h": 312
       },
       "metadata": {
         "id": "building_pagoda_tower_v4",
@@ -3038,24 +4729,96 @@
         ]
       }
     },
-    "building_watermill_stream": {
+    "structure_dungeon_bone_pile_ancient_warrior_cairn": {
       "frame": {
-        "x": 1580,
-        "y": 12709,
-        "w": 427,
-        "h": 373
+        "x": 1932,
+        "y": 6296,
+        "w": 350,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "sourceSize": {
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
+      },
+      "metadata": {
+        "id": "structure_dungeon_bone_pile_ancient_warrior_cairn",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_bone_pile_ancient_warrior_cairn",
+        "category": "prop",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_tea_table_bamboo_tatami": {
+      "frame": {
+        "x": 2284,
+        "y": 6296,
+        "w": 371,
+        "h": 306
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 371,
+        "h": 306
+      },
+      "sourceSize": {
+        "w": 371,
+        "h": 306
+      },
+      "metadata": {
+        "id": "structure_interior_tea_table_bamboo_tatami",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_tea_table_bamboo_tatami",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "building_watermill_stream": {
+      "frame": {
+        "x": 2657,
+        "y": 6296,
+        "w": 350,
+        "h": 306
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 306
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 306
       },
       "metadata": {
         "id": "building_watermill_stream",
@@ -3076,22 +4839,22 @@
     },
     "building_ancestral_shrine_gate": {
       "frame": {
-        "x": 0,
-        "y": 13095,
-        "w": 427,
-        "h": 373
+        "x": 3009,
+        "y": 6296,
+        "w": 350,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "sourceSize": {
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "metadata": {
         "id": "building_ancestral_shrine_gate",
@@ -3112,22 +4875,22 @@
     },
     "building_ferry_dock_shed": {
       "frame": {
-        "x": 429,
-        "y": 13095,
-        "w": 427,
-        "h": 373
+        "x": 0,
+        "y": 6613,
+        "w": 350,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "sourceSize": {
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "metadata": {
         "id": "building_ferry_dock_shed",
@@ -3148,22 +4911,22 @@
     },
     "building_rustic_wooden_bridge": {
       "frame": {
-        "x": 858,
-        "y": 13095,
-        "w": 427,
-        "h": 373
+        "x": 352,
+        "y": 6613,
+        "w": 350,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "sourceSize": {
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "metadata": {
         "id": "building_rustic_wooden_bridge",
@@ -3184,22 +4947,22 @@
     },
     "building_spirit_gathering_gazebo": {
       "frame": {
-        "x": 1287,
-        "y": 13095,
-        "w": 427,
-        "h": 373
+        "x": 704,
+        "y": 6613,
+        "w": 350,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "sourceSize": {
-        "w": 427,
-        "h": 373
+        "w": 350,
+        "h": 306
       },
       "metadata": {
         "id": "building_spirit_gathering_gazebo",
@@ -3220,22 +4983,22 @@
     },
     "building_wayside_spirit_altar": {
       "frame": {
-        "x": 0,
-        "y": 13470,
-        "w": 373,
-        "h": 373
+        "x": 1056,
+        "y": 6613,
+        "w": 306,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 373,
-        "h": 373
+        "w": 306,
+        "h": 306
       },
       "sourceSize": {
-        "w": 373,
-        "h": 373
+        "w": 306,
+        "h": 306
       },
       "metadata": {
         "id": "building_wayside_spirit_altar",
@@ -3256,22 +5019,22 @@
     },
     "building_stone_water_basin": {
       "frame": {
-        "x": 375,
-        "y": 13470,
-        "w": 373,
-        "h": 373
+        "x": 1364,
+        "y": 6613,
+        "w": 306,
+        "h": 306
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 373,
-        "h": 373
+        "w": 306,
+        "h": 306
       },
       "sourceSize": {
-        "w": 373,
-        "h": 373
+        "w": 306,
+        "h": 306
       },
       "metadata": {
         "id": "building_stone_water_basin",
@@ -3290,24 +5053,96 @@
         "overhangCells": 0.8
       }
     },
-    "building_sect_gate_v1": {
+    "structure_interior_sect_pill_cooling_water_trough": {
       "frame": {
-        "x": 750,
-        "y": 13470,
-        "w": 300,
-        "h": 320
+        "x": 1672,
+        "y": 6613,
+        "w": 394,
+        "h": 285
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 300,
-        "h": 320
+        "w": 394,
+        "h": 285
       },
       "sourceSize": {
-        "w": 300,
-        "h": 320
+        "w": 394,
+        "h": 285
+      },
+      "metadata": {
+        "id": "structure_interior_sect_pill_cooling_water_trough",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_pill_cooling_water_trough",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "ancient_relic_fuxi_guqin": {
+      "frame": {
+        "x": 2068,
+        "y": 6613,
+        "w": 350,
+        "h": 262
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 350,
+        "h": 262
+      },
+      "sourceSize": {
+        "w": 350,
+        "h": 262
+      },
+      "metadata": {
+        "id": "ancient_relic_fuxi_guqin",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_fuxi_guqin",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "building_sect_gate_v1": {
+      "frame": {
+        "x": 2420,
+        "y": 6613,
+        "w": 246,
+        "h": 262
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 246,
+        "h": 262
+      },
+      "sourceSize": {
+        "w": 246,
+        "h": 262
       },
       "metadata": {
         "id": "building_sect_gate_v1",
@@ -3347,22 +5182,22 @@
     },
     "building_sect_gate_v2": {
       "frame": {
-        "x": 1052,
-        "y": 13470,
-        "w": 300,
-        "h": 320
+        "x": 2668,
+        "y": 6613,
+        "w": 246,
+        "h": 262
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "sourceSize": {
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "metadata": {
         "id": "building_sect_gate_v2",
@@ -3402,22 +5237,22 @@
     },
     "building_sect_gate_v3": {
       "frame": {
-        "x": 1354,
-        "y": 13470,
-        "w": 300,
-        "h": 320
+        "x": 2916,
+        "y": 6613,
+        "w": 246,
+        "h": 262
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "sourceSize": {
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "metadata": {
         "id": "building_sect_gate_v3",
@@ -3457,22 +5292,22 @@
     },
     "building_sect_gate_v4": {
       "frame": {
-        "x": 1656,
-        "y": 13470,
-        "w": 300,
-        "h": 320
+        "x": 3164,
+        "y": 6613,
+        "w": 246,
+        "h": 262
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "sourceSize": {
-        "w": 300,
-        "h": 320
+        "w": 246,
+        "h": 262
       },
       "metadata": {
         "id": "building_sect_gate_v4",
@@ -3513,21 +5348,21 @@
     "pavilion_1x1": {
       "frame": {
         "x": 0,
-        "y": 13845,
-        "w": 288,
-        "h": 288
+        "y": 6921,
+        "w": 236,
+        "h": 236
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 288,
-        "h": 288
+        "w": 236,
+        "h": 236
       },
       "sourceSize": {
-        "w": 288,
-        "h": 288
+        "w": 236,
+        "h": 236
       },
       "metadata": {
         "id": "pavilion_1x1",
@@ -3548,22 +5383,22 @@
     },
     "village_house_2x1": {
       "frame": {
-        "x": 290,
-        "y": 13845,
-        "w": 384,
-        "h": 288
+        "x": 238,
+        "y": 6921,
+        "w": 315,
+        "h": 236
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 384,
-        "h": 288
+        "w": 315,
+        "h": 236
       },
       "sourceSize": {
-        "w": 384,
-        "h": 288
+        "w": 315,
+        "h": 236
       },
       "metadata": {
         "id": "village_house_2x1",
@@ -3584,22 +5419,22 @@
     },
     "stone_torii_1x1": {
       "frame": {
-        "x": 676,
-        "y": 13845,
-        "w": 288,
-        "h": 288
+        "x": 555,
+        "y": 6921,
+        "w": 236,
+        "h": 236
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 288,
-        "h": 288
+        "w": 236,
+        "h": 236
       },
       "sourceSize": {
-        "w": 288,
-        "h": 288
+        "w": 236,
+        "h": 236
       },
       "metadata": {
         "id": "stone_torii_1x1",
@@ -3620,22 +5455,22 @@
     },
     "building_road_inn_v1": {
       "frame": {
-        "x": 966,
-        "y": 13845,
-        "w": 200,
-        "h": 240
+        "x": 793,
+        "y": 6921,
+        "w": 164,
+        "h": 197
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "sourceSize": {
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "metadata": {
         "id": "building_road_inn_v1",
@@ -3675,22 +5510,22 @@
     },
     "building_road_inn_v2": {
       "frame": {
-        "x": 1168,
-        "y": 13845,
-        "w": 200,
-        "h": 240
+        "x": 959,
+        "y": 6921,
+        "w": 164,
+        "h": 197
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "sourceSize": {
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "metadata": {
         "id": "building_road_inn_v2",
@@ -3730,22 +5565,22 @@
     },
     "building_road_inn_v3": {
       "frame": {
-        "x": 1370,
-        "y": 13845,
-        "w": 200,
-        "h": 240
+        "x": 1125,
+        "y": 6921,
+        "w": 164,
+        "h": 197
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "sourceSize": {
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "metadata": {
         "id": "building_road_inn_v3",
@@ -3785,22 +5620,22 @@
     },
     "building_road_inn_v4": {
       "frame": {
-        "x": 1572,
-        "y": 13845,
-        "w": 200,
-        "h": 240
+        "x": 1291,
+        "y": 6921,
+        "w": 164,
+        "h": 197
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "sourceSize": {
-        "w": 200,
-        "h": 240
+        "w": 164,
+        "h": 197
       },
       "metadata": {
         "id": "building_road_inn_v4",
@@ -3840,22 +5675,22 @@
     },
     "building_farm_hut_v1": {
       "frame": {
-        "x": 1774,
-        "y": 13845,
-        "w": 200,
-        "h": 180
+        "x": 1457,
+        "y": 6921,
+        "w": 164,
+        "h": 148
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "sourceSize": {
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "metadata": {
         "id": "building_farm_hut_v1",
@@ -3895,22 +5730,22 @@
     },
     "building_farm_hut_v2": {
       "frame": {
-        "x": 0,
-        "y": 14135,
-        "w": 200,
-        "h": 180
+        "x": 1623,
+        "y": 6921,
+        "w": 164,
+        "h": 148
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "sourceSize": {
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "metadata": {
         "id": "building_farm_hut_v2",
@@ -3950,22 +5785,22 @@
     },
     "building_farm_hut_v3": {
       "frame": {
-        "x": 202,
-        "y": 14135,
-        "w": 200,
-        "h": 180
+        "x": 1789,
+        "y": 6921,
+        "w": 164,
+        "h": 148
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "sourceSize": {
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "metadata": {
         "id": "building_farm_hut_v3",
@@ -4005,22 +5840,22 @@
     },
     "building_farm_hut_v4": {
       "frame": {
-        "x": 404,
-        "y": 14135,
-        "w": 200,
-        "h": 180
+        "x": 1955,
+        "y": 6921,
+        "w": 164,
+        "h": 148
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "sourceSize": {
-        "w": 200,
-        "h": 180
+        "w": 164,
+        "h": 148
       },
       "metadata": {
         "id": "building_farm_hut_v4",
@@ -4060,22 +5895,22 @@
     },
     "building_stone_torii_v1": {
       "frame": {
-        "x": 606,
-        "y": 14135,
-        "w": 100,
-        "h": 150
+        "x": 2121,
+        "y": 6921,
+        "w": 82,
+        "h": 123
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "sourceSize": {
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "metadata": {
         "id": "building_stone_torii_v1",
@@ -4115,22 +5950,22 @@
     },
     "building_stone_torii_v2": {
       "frame": {
-        "x": 708,
-        "y": 14135,
-        "w": 100,
-        "h": 150
+        "x": 2205,
+        "y": 6921,
+        "w": 82,
+        "h": 123
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "sourceSize": {
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "metadata": {
         "id": "building_stone_torii_v2",
@@ -4170,22 +6005,22 @@
     },
     "building_stone_torii_v3": {
       "frame": {
-        "x": 810,
-        "y": 14135,
-        "w": 100,
-        "h": 150
+        "x": 2289,
+        "y": 6921,
+        "w": 82,
+        "h": 123
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "sourceSize": {
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "metadata": {
         "id": "building_stone_torii_v3",
@@ -4225,22 +6060,22 @@
     },
     "building_stone_torii_v4": {
       "frame": {
-        "x": 912,
-        "y": 14135,
-        "w": 100,
-        "h": 150
+        "x": 2373,
+        "y": 6921,
+        "w": 82,
+        "h": 123
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "sourceSize": {
-        "w": 100,
-        "h": 150
+        "w": 82,
+        "h": 123
       },
       "metadata": {
         "id": "building_stone_torii_v4",
@@ -4280,22 +6115,22 @@
     },
     "building_tea_pavilion_v1": {
       "frame": {
-        "x": 1014,
-        "y": 14135,
-        "w": 100,
-        "h": 140
+        "x": 2457,
+        "y": 6921,
+        "w": 82,
+        "h": 115
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "sourceSize": {
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "metadata": {
         "id": "building_tea_pavilion_v1",
@@ -4335,22 +6170,22 @@
     },
     "building_tea_pavilion_v2": {
       "frame": {
-        "x": 1116,
-        "y": 14135,
-        "w": 100,
-        "h": 140
+        "x": 2541,
+        "y": 6921,
+        "w": 82,
+        "h": 115
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "sourceSize": {
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "metadata": {
         "id": "building_tea_pavilion_v2",
@@ -4390,22 +6225,22 @@
     },
     "building_tea_pavilion_v3": {
       "frame": {
-        "x": 1218,
-        "y": 14135,
-        "w": 100,
-        "h": 140
+        "x": 2625,
+        "y": 6921,
+        "w": 82,
+        "h": 115
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "sourceSize": {
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "metadata": {
         "id": "building_tea_pavilion_v3",
@@ -4445,22 +6280,22 @@
     },
     "building_tea_pavilion_v4": {
       "frame": {
-        "x": 1320,
-        "y": 14135,
-        "w": 100,
-        "h": 140
+        "x": 2709,
+        "y": 6921,
+        "w": 82,
+        "h": 115
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "sourceSize": {
-        "w": 100,
-        "h": 140
+        "w": 82,
+        "h": 115
       },
       "metadata": {
         "id": "building_tea_pavilion_v4",

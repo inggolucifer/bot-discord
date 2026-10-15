@@ -754,7 +754,7 @@ router.get('/public-profile/:discordId', async (req, res) => {
     try {
         const { discordId } = req.params;
         const player = await Player.findOne({ discordId })
-            .select('characterName characterImage sect status realm stage totalWealth assets pets customStatus systemCultivation')
+            .select('characterName characterImage avatarUrl currency sect status realm stage totalWealth assets pets customStatus systemCultivation')
             .lean();
 
         if (!player) {
@@ -769,6 +769,8 @@ router.get('/public-profile/:discordId', async (req, res) => {
             data: {
                 characterName: player.characterName,
                 characterImage: player.characterImage,
+                avatarUrl: player.avatarUrl,
+                currency: player.currency,
                 sect: player.sect,
                 status: player.status,
                 realm: player.systemCultivation?.realm || 'Fondasi Fana (Mortal Foundation)',

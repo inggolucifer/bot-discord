@@ -14,7 +14,7 @@ export default function SettingsModal() {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in"
+      className="fixed inset-0 z-[var(--z-modal)] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in"
       onClick={closeModal}
     >
       <div 

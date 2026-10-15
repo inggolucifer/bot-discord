@@ -5220,6 +5220,1778 @@ const GENERATED_ITEMS = [
       collision: 'solid',
       overhangCells: 2.2
     }
+  },
+  {
+    id: 'landmark_southern_plague_woods_blight_root_shrine',
+    pattern: 'landmark_southern_plague_woods_blight_root_shrine',
+    targetAtlas: 'objects_nature',
+    width: 480,
+    height: 500,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_southern_plague_woods_blight_root_shrine',
+      atlas: 'objects_nature',
+      frame: 'landmark_southern_plague_woods_blight_root_shrine',
+      category: 'tree',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.2
+    }
+  },
+  {
+    id: 'landmark_bone_sea_coast_leviathan_rib_pier',
+    pattern: 'landmark_bone_sea_coast_leviathan_rib_pier',
+    targetAtlas: 'objects_structures',
+    width: 512,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_bone_sea_coast_leviathan_rib_pier',
+      atlas: 'objects_structures',
+      frame: 'landmark_bone_sea_coast_leviathan_rib_pier',
+      category: 'building',
+      footprint: { cw: 4, ch: 3 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_spirit_wood_sea_celestial_banyan_hearth',
+    pattern: 'landmark_spirit_wood_sea_celestial_banyan_hearth',
+    targetAtlas: 'objects_nature',
+    width: 512,
+    height: 512,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_spirit_wood_sea_celestial_banyan_hearth',
+      atlas: 'objects_nature',
+      frame: 'landmark_spirit_wood_sea_celestial_banyan_hearth',
+      category: 'tree',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.5
+    }
+  },
+  {
+    id: 'landmark_mist_insect_valley_chitin_hive_monolith',
+    pattern: 'landmark_mist_insect_valley_chitin_hive_monolith',
+    targetAtlas: 'objects_nature',
+    width: 420,
+    height: 512,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_mist_insect_valley_chitin_hive_monolith',
+      atlas: 'objects_nature',
+      frame: 'landmark_mist_insect_valley_chitin_hive_monolith',
+      category: 'rock',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.5
+    }
+  },
+  {
+    id: 'landmark_formation_barrens_broken_bagua_array',
+    pattern: 'landmark_formation_barrens_broken_bagua_array',
+    targetAtlas: 'objects_structures',
+    width: 480,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_formation_barrens_broken_bagua_array',
+      atlas: 'objects_structures',
+      frame: 'landmark_formation_barrens_broken_bagua_array',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'landmark_godthunder_peaks_heavenly_tribulation_platform',
+    pattern: 'landmark_godthunder_peaks_heavenly_tribulation_platform',
+    targetAtlas: 'objects_nature',
+    width: 480,
+    height: 500,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_godthunder_peaks_heavenly_tribulation_platform',
+      atlas: 'objects_nature',
+      frame: 'landmark_godthunder_peaks_heavenly_tribulation_platform',
+      category: 'rock',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.2
+    }
+  },
+  {
+    id: 'landmark_western_gorge_labyrinth_sandstone_sunken_colosseum',
+    pattern: 'landmark_western_gorge_labyrinth_sandstone_sunken_colosseum',
+    targetAtlas: 'objects_structures',
+    width: 512,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_western_gorge_labyrinth_sandstone_sunken_colosseum',
+      atlas: 'objects_structures',
+      frame: 'landmark_western_gorge_labyrinth_sandstone_sunken_colosseum',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_sword_gorge_giant_fallen_blade_bridge',
+    pattern: 'landmark_sword_gorge_giant_fallen_blade_bridge',
+    targetAtlas: 'objects_structures',
+    width: 512,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_sword_gorge_giant_fallen_blade_bridge',
+      atlas: 'objects_structures',
+      frame: 'landmark_sword_gorge_giant_fallen_blade_bridge',
+      category: 'building',
+      footprint: { cw: 4, ch: 3 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_ore_teeth_range_abandoned_dwarf_minehead',
+    pattern: 'landmark_ore_teeth_range_abandoned_dwarf_minehead',
+    targetAtlas: 'objects_structures',
+    width: 480,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_ore_teeth_range_abandoned_dwarf_minehead',
+      atlas: 'objects_structures',
+      frame: 'landmark_ore_teeth_range_abandoned_dwarf_minehead',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_eastern_sea_dragon_turtle_shell_shrine',
+    pattern: 'landmark_eastern_sea_dragon_turtle_shell_shrine',
+    targetAtlas: 'objects_structures',
+    width: 512,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_eastern_sea_dragon_turtle_shell_shrine',
+      atlas: 'objects_structures',
+      frame: 'landmark_eastern_sea_dragon_turtle_shell_shrine',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_frostmoon_sea_frozen_dragon_skull_isle',
+    pattern: 'landmark_frostmoon_sea_frozen_dragon_skull_isle',
+    targetAtlas: 'objects_nature',
+    width: 512,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_frostmoon_sea_frozen_dragon_skull_isle',
+      atlas: 'objects_nature',
+      frame: 'landmark_frostmoon_sea_frozen_dragon_skull_isle',
+      category: 'rock',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'landmark_floating_wind_isles_floating_daoist_citadel',
+    pattern: 'landmark_floating_wind_isles_floating_daoist_citadel',
+    targetAtlas: 'objects_structures',
+    width: 512,
+    height: 512,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_floating_wind_isles_floating_daoist_citadel',
+      atlas: 'objects_structures',
+      frame: 'landmark_floating_wind_isles_floating_daoist_citadel',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.5
+    }
+  },
+  {
+    id: 'landmark_immortal_ruins_valley_celestial_gateway_remnant',
+    pattern: 'landmark_immortal_ruins_valley_celestial_gateway_remnant',
+    targetAtlas: 'objects_structures',
+    width: 480,
+    height: 500,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'landmark_immortal_ruins_valley_celestial_gateway_remnant',
+      atlas: 'objects_structures',
+      frame: 'landmark_immortal_ruins_valley_celestial_gateway_remnant',
+      category: 'building',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.2
+    }
+  },
+  {
+    id: 'landmark_void_rift_shattered_space_singularity',
+    pattern: 'landmark_void_rift_shattered_space_singularity',
+    targetAtlas: 'objects_nature',
+    width: 480,
+    height: 480,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'landmark_void_rift_shattered_space_singularity',
+      atlas: 'objects_nature',
+      frame: 'landmark_void_rift_shattered_space_singularity',
+      category: 'rock',
+      footprint: { cw: 4, ch: 4 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'monster_regional_primordial_azure_dragon',
+    pattern: 'monster_regional_primordial_azure_dragon',
+    targetAtlas: 'markers_entities',
+    width: 512,
+    height: 512,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_primordial_azure_dragon',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_primordial_azure_dragon',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'monster_regional_nine_tailed_fox',
+    pattern: 'monster_regional_nine_tailed_fox',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_nine_tailed_fox',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_nine_tailed_fox',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'monster_regional_crimson_nether_serpent',
+    pattern: 'monster_regional_crimson_nether_serpent',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_crimson_nether_serpent',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_crimson_nether_serpent',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_glacial_frost_mastodon',
+    pattern: 'monster_regional_glacial_frost_mastodon',
+    targetAtlas: 'markers_entities',
+    width: 480,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_glacial_frost_mastodon',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_glacial_frost_mastodon',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_magma_lava_tortoise',
+    pattern: 'monster_regional_magma_lava_tortoise',
+    targetAtlas: 'markers_entities',
+    width: 480,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_magma_lava_tortoise',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_magma_lava_tortoise',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_golden_feathered_garuda',
+    pattern: 'monster_regional_golden_feathered_garuda',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 440,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_golden_feathered_garuda',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_golden_feathered_garuda',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_abyssal_shadow_fiend',
+    pattern: 'monster_regional_abyssal_shadow_fiend',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_abyssal_shadow_fiend',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_abyssal_shadow_fiend',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_primordial_jade_qilin',
+    pattern: 'monster_regional_primordial_jade_qilin',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_primordial_jade_qilin',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_primordial_jade_qilin',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_bone_armored_leviathan',
+    pattern: 'monster_regional_bone_armored_leviathan',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_bone_armored_leviathan',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_bone_armored_leviathan',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_myriad_toxic_centipede',
+    pattern: 'monster_regional_myriad_toxic_centipede',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_myriad_toxic_centipede',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_myriad_toxic_centipede',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_ancient_blood_asura_general',
+    pattern: 'monster_regional_ancient_blood_asura_general',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_ancient_blood_asura_general',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_ancient_blood_asura_general',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_sword_gorge_ancient_blade_spirit',
+    pattern: 'monster_regional_sword_gorge_ancient_blade_spirit',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_sword_gorge_ancient_blade_spirit',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_sword_gorge_ancient_blade_spirit',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_thundersteppe_lightning_horned_bison',
+    pattern: 'monster_regional_thundersteppe_lightning_horned_bison',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_thundersteppe_lightning_horned_bison',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_thundersteppe_lightning_horned_bison',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_formation_barrens_bagua_rune_golem',
+    pattern: 'monster_regional_formation_barrens_bagua_rune_golem',
+    targetAtlas: 'markers_entities',
+    width: 384,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_formation_barrens_bagua_rune_golem',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_formation_barrens_bagua_rune_golem',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_void_rift_dimensional_wyrm',
+    pattern: 'monster_regional_void_rift_dimensional_wyrm',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_void_rift_dimensional_wyrm',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_void_rift_dimensional_wyrm',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_western_labyrinth_sandstone_scorpion',
+    pattern: 'monster_regional_western_labyrinth_sandstone_scorpion',
+    targetAtlas: 'markers_entities',
+    width: 440,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_western_labyrinth_sandstone_scorpion',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_western_labyrinth_sandstone_scorpion',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_frostmoon_sea_ice_dragon_turtle',
+    pattern: 'monster_regional_frostmoon_sea_ice_dragon_turtle',
+    targetAtlas: 'markers_entities',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_frostmoon_sea_ice_dragon_turtle',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_frostmoon_sea_ice_dragon_turtle',
+      category: 'monster',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_floating_wind_isles_celestial_wind_roc',
+    pattern: 'monster_regional_floating_wind_isles_celestial_wind_roc',
+    targetAtlas: 'markers_entities',
+    width: 340,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_floating_wind_isles_celestial_wind_roc',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_floating_wind_isles_celestial_wind_roc',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_immortal_ruins_celestial_war_puppet',
+    pattern: 'monster_regional_immortal_ruins_celestial_war_puppet',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_immortal_ruins_celestial_war_puppet',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_immortal_ruins_celestial_war_puppet',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_southern_plague_woods_thousand_year_corpse_king',
+    pattern: 'monster_regional_southern_plague_woods_thousand_year_corpse_king',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_southern_plague_woods_thousand_year_corpse_king',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_southern_plague_woods_thousand_year_corpse_king',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_ore_teeth_range_ironback_crystal_bear',
+    pattern: 'monster_regional_ore_teeth_range_ironback_crystal_bear',
+    targetAtlas: 'markers_entities',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    metadata: {
+      id: 'monster_regional_ore_teeth_range_ironback_crystal_bear',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_ore_teeth_range_ironback_crystal_bear',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_central_plains_sacred_white_tiger',
+    pattern: 'monster_regional_central_plains_sacred_white_tiger',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_central_plains_sacred_white_tiger',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_central_plains_sacred_white_tiger',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_beast_prairies_golden_sun_lion',
+    pattern: 'monster_regional_beast_prairies_golden_sun_lion',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_beast_prairies_golden_sun_lion',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_beast_prairies_golden_sun_lion',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_border_march_iron_plated_rhino',
+    pattern: 'monster_regional_border_march_iron_plated_rhino',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_border_march_iron_plated_rhino',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_border_march_iron_plated_rhino',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_nine_springs_delta_dragon_carp',
+    pattern: 'monster_regional_nine_springs_delta_dragon_carp',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_nine_springs_delta_dragon_carp',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_nine_springs_delta_dragon_carp',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_hermit_highlands_cloud_silver_crane',
+    pattern: 'monster_regional_hermit_highlands_cloud_silver_crane',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    metadata: {
+      id: 'monster_regional_hermit_highlands_cloud_silver_crane',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_hermit_highlands_cloud_silver_crane',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_mirror_lake_water_spirit_siren',
+    pattern: 'monster_regional_mirror_lake_water_spirit_siren',
+    targetAtlas: 'markers_entities',
+    width: 300,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_mirror_lake_water_spirit_siren',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_mirror_lake_water_spirit_siren',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_western_desert_dune_sand_wyrm',
+    pattern: 'monster_regional_western_desert_dune_sand_wyrm',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_western_desert_dune_sand_wyrm',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_western_desert_dune_sand_wyrm',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_azure_mountain_horned_ape',
+    pattern: 'monster_regional_azure_mountain_horned_ape',
+    targetAtlas: 'markers_entities',
+    width: 300,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_azure_mountain_horned_ape',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_azure_mountain_horned_ape',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_crimson_battlefield_nether_warsteed',
+    pattern: 'monster_regional_crimson_battlefield_nether_warsteed',
+    targetAtlas: 'markers_entities',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_crimson_battlefield_nether_warsteed',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_crimson_battlefield_nether_warsteed',
+      category: 'monster',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'monster_regional_abyssal_scar_chaos_eye_fiend',
+    pattern: 'monster_regional_abyssal_scar_chaos_eye_fiend',
+    targetAtlas: 'markers_entities',
+    width: 300,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'monster_regional_abyssal_scar_chaos_eye_fiend',
+      atlas: 'markers_entities',
+      frame: 'monster_regional_abyssal_scar_chaos_eye_fiend',
+      category: 'monster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 1.8
+    }
+  },
+  {
+    id: 'ancient_relic_haotian_tower',
+    pattern: 'ancient_relic_haotian_tower',
+    targetAtlas: 'objects_structures',
+    width: 280,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_haotian_tower',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_haotian_tower',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'ancient_relic_donghuang_bell',
+    pattern: 'ancient_relic_donghuang_bell',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    minCavitySize: 80,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_donghuang_bell',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_donghuang_bell',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_shennong_herbal_cauldron',
+    pattern: 'ancient_relic_shennong_herbal_cauldron',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: true,
+    minCavitySize: 80,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_shennong_herbal_cauldron',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_shennong_herbal_cauldron',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_kunlun_mirror',
+    pattern: 'ancient_relic_kunlun_mirror',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_kunlun_mirror',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_kunlun_mirror',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_fuxi_guqin',
+    pattern: 'ancient_relic_fuxi_guqin',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 240,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_fuxi_guqin',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_fuxi_guqin',
+      category: 'relic',
+      footprint: { cw: 2, ch: 1 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'ancient_relic_xuanyuan_sword',
+    pattern: 'ancient_relic_xuanyuan_sword',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 384,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_xuanyuan_sword',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_xuanyuan_sword',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_pan_gu_axe',
+    pattern: 'ancient_relic_pan_gu_axe',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_pan_gu_axe',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_pan_gu_axe',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_nuwa_stone',
+    pattern: 'ancient_relic_nuwa_stone',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_nuwa_stone',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_nuwa_stone',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_lianyao_flask',
+    pattern: 'ancient_relic_lianyao_flask',
+    targetAtlas: 'objects_structures',
+    width: 280,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_lianyao_flask',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_lianyao_flask',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'ancient_relic_kongtong_seal',
+    pattern: 'ancient_relic_kongtong_seal',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'ancient_relic_kongtong_seal',
+      atlas: 'objects_structures',
+      frame: 'ancient_relic_kongtong_seal',
+      category: 'relic',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'structure_interior_meditation_jade_cushion_dais',
+    pattern: 'structure_interior_meditation_jade_cushion_dais',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_meditation_jade_cushion_dais',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_meditation_jade_cushion_dais',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_interior_ancient_sandalwood_incense_burner',
+    pattern: 'structure_interior_ancient_sandalwood_incense_burner',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 256,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_ancient_sandalwood_incense_burner',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_ancient_sandalwood_incense_burner',
+      category: 'furniture',
+      footprint: { cw: 1, ch: 1 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_dragon_chest',
+    pattern: 'structure_dungeon_ancient_dragon_chest',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 256,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_dragon_chest',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_dragon_chest',
+      category: 'container',
+      footprint: { cw: 2, ch: 1 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_interior_sect_esoteric_bookshelf',
+    pattern: 'structure_interior_sect_esoteric_bookshelf',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 360,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_esoteric_bookshelf',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_esoteric_bookshelf',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'structure_interior_sect_grand_patriarch_throne',
+    pattern: 'structure_interior_sect_grand_patriarch_throne',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 380,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_grand_patriarch_throne',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_grand_patriarch_throne',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.6
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_soul_lantern_pillar',
+    pattern: 'structure_dungeon_ancient_soul_lantern_pillar',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 400,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_soul_lantern_pillar',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_soul_lantern_pillar',
+      category: 'pillar',
+      footprint: { cw: 1, ch: 1 },
+      anchor: { x: 0.45, y: 0.92 },
+      collision: 'solid',
+      overhangCells: 2.0
+    }
+  },
+  {
+    id: 'structure_interior_ancient_weapon_rack',
+    pattern: 'structure_interior_ancient_weapon_rack',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_ancient_weapon_rack',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_ancient_weapon_rack',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 1 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_interior_nine_palaces_formation_pedestal',
+    pattern: 'structure_interior_nine_palaces_formation_pedestal',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_nine_palaces_formation_pedestal',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_nine_palaces_formation_pedestal',
+      category: 'formation',
+      footprint: { cw: 3, ch: 3 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_dungeon_celestial_herb_drying_table',
+    pattern: 'structure_dungeon_celestial_herb_drying_table',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_celestial_herb_drying_table',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_celestial_herb_drying_table',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_interior_sect_bronze_bell_chime_stand',
+    pattern: 'structure_interior_sect_bronze_bell_chime_stand',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 360,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_bronze_bell_chime_stand',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_bronze_bell_chime_stand',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 1 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'structure_dungeon_bone_pile_ancient_warrior_cairn',
+    pattern: 'structure_dungeon_bone_pile_ancient_warrior_cairn',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 280,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_bone_pile_ancient_warrior_cairn',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_bone_pile_ancient_warrior_cairn',
+      category: 'prop',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_stone_sarcophagus',
+    pattern: 'structure_dungeon_ancient_stone_sarcophagus',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_stone_sarcophagus',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_stone_sarcophagus',
+      category: 'container',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_interior_tea_table_bamboo_tatami',
+    pattern: 'structure_interior_tea_table_bamboo_tatami',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 280,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_tea_table_bamboo_tatami',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_tea_table_bamboo_tatami',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_interior_sect_dragon_carved_folding_screen',
+    pattern: 'structure_interior_sect_dragon_carved_folding_screen',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_dragon_carved_folding_screen',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_dragon_carved_folding_screen',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 1 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'structure_interior_sect_spirit_pill_cauldron_hearth',
+    pattern: 'structure_interior_sect_spirit_pill_cauldron_hearth',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 360,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_spirit_pill_cauldron_hearth',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_spirit_pill_cauldron_hearth',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.4
+    }
+  },
+  {
+    id: 'structure_interior_sect_ancestral_tablet_shrine',
+    pattern: 'structure_interior_sect_ancestral_tablet_shrine',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 360,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_ancestral_tablet_shrine',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_ancestral_tablet_shrine',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.5
+    }
+  },
+  {
+    id: 'structure_interior_meditation_rush_mat_partition',
+    pattern: 'structure_interior_meditation_rush_mat_partition',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_meditation_rush_mat_partition',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_meditation_rush_mat_partition',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_trap_spike_floor',
+    pattern: 'structure_dungeon_ancient_trap_spike_floor',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_trap_spike_floor',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_trap_spike_floor',
+      category: 'hazard',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_dungeon_celestial_spirit_crystal_cluster',
+    pattern: 'structure_dungeon_celestial_spirit_crystal_cluster',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_celestial_spirit_crystal_cluster',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_celestial_spirit_crystal_cluster',
+      category: 'resource_cluster',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_dungeon_celestial_stalagmite_formation',
+    pattern: 'structure_dungeon_celestial_stalagmite_formation',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_celestial_stalagmite_formation',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_celestial_stalagmite_formation',
+      category: 'rock',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_interior_sect_scripture_reading_desk',
+    pattern: 'structure_interior_sect_scripture_reading_desk',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_scripture_reading_desk',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_scripture_reading_desk',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_brazier_altar',
+    pattern: 'structure_dungeon_ancient_brazier_altar',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_brazier_altar',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_brazier_altar',
+      category: 'furniture',
+      footprint: { cw: 1, ch: 1 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_stone_door_dragon_gate',
+    pattern: 'structure_dungeon_ancient_stone_door_dragon_gate',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 380,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_stone_door_dragon_gate',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_stone_door_dragon_gate',
+      category: 'building',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.9 },
+      collision: 'solid',
+      overhangCells: 1.6
+    }
+  },
+  {
+    id: 'structure_dungeon_poison_mist_vent_grate',
+    pattern: 'structure_dungeon_poison_mist_vent_grate',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 300,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_poison_mist_vent_grate',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_poison_mist_vent_grate',
+      category: 'hazard',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'soft',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_crumbled_dragon_statue',
+    pattern: 'structure_dungeon_ancient_crumbled_dragon_statue',
+    targetAtlas: 'objects_structures',
+    width: 340,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_crumbled_dragon_statue',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_crumbled_dragon_statue',
+      category: 'rock',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_interior_sect_discipline_wooden_dummy',
+    pattern: 'structure_interior_sect_discipline_wooden_dummy',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 360,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_discipline_wooden_dummy',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_discipline_wooden_dummy',
+      category: 'furniture',
+      footprint: { cw: 1, ch: 1 },
+      anchor: { x: 0.5, y: 0.92 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_interior_sect_heraldry_banner_pole',
+    pattern: 'structure_interior_sect_heraldry_banner_pole',
+    targetAtlas: 'objects_structures',
+    width: 256,
+    height: 420,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_heraldry_banner_pole',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_heraldry_banner_pole',
+      category: 'furniture',
+      footprint: { cw: 1, ch: 1 },
+      anchor: { x: 0.5, y: 0.92 },
+      collision: 'solid',
+      overhangCells: 1.6
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_chain_suspended_cage',
+    pattern: 'structure_dungeon_ancient_chain_suspended_cage',
+    targetAtlas: 'objects_structures',
+    width: 300,
+    height: 380,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_chain_suspended_cage',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_chain_suspended_cage',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
+  },
+  {
+    id: 'structure_dungeon_ancient_secret_treasure_urn',
+    pattern: 'structure_dungeon_ancient_secret_treasure_urn',
+    targetAtlas: 'objects_structures',
+    width: 320,
+    height: 340,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_dungeon_ancient_secret_treasure_urn',
+      atlas: 'objects_structures',
+      frame: 'structure_dungeon_ancient_secret_treasure_urn',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.0
+    }
+  },
+  {
+    id: 'structure_interior_sect_pill_cooling_water_trough',
+    pattern: 'structure_interior_sect_pill_cooling_water_trough',
+    targetAtlas: 'objects_structures',
+    width: 360,
+    height: 260,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_pill_cooling_water_trough',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_pill_cooling_water_trough',
+      category: 'furniture',
+      footprint: { cw: 2, ch: 2 },
+      anchor: { x: 0.5, y: 0.85 },
+      collision: 'solid',
+      overhangCells: 0.8
+    }
+  },
+  {
+    id: 'structure_interior_sect_herb_grinding_mortar_bench',
+    pattern: 'structure_interior_sect_herb_grinding_mortar_bench',
+    targetAtlas: 'objects_structures',
+    width: 380,
+    height: 320,
+    k: 1.45,
+    lumaThreshold: 0.95,
+    allowInternalCavities: false,
+    force: true,
+    metadata: {
+      id: 'structure_interior_sect_herb_grinding_mortar_bench',
+      atlas: 'objects_structures',
+      frame: 'structure_interior_sect_herb_grinding_mortar_bench',
+      category: 'furniture',
+      footprint: { cw: 3, ch: 2 },
+      anchor: { x: 0.5, y: 0.88 },
+      collision: 'solid',
+      overhangCells: 1.2
+    }
   }
 ];
 
@@ -5243,6 +7015,25 @@ async function run() {
     }
 
     const inputPath = path.join(brainDir, matchedFile);
+    const pickedPath = path.join(pickedDir, `${item.id}.png`);
+    const atlasManifestPath = path.join(atlasDir, `${item.targetAtlas}.json`);
+    let alreadyInAtlas = false;
+    if (fs.existsSync(atlasManifestPath)) {
+      try {
+        const man = JSON.parse(fs.readFileSync(atlasManifestPath, 'utf8'));
+        alreadyInAtlas = !!(man.frames && man.frames[item.id]);
+      } catch (e) {}
+    }
+
+    if (fs.existsSync(pickedPath) && alreadyInAtlas && !item.force) {
+      const srcStat = fs.statSync(inputPath);
+      const pickedStat = fs.statSync(pickedPath);
+      if (pickedStat.mtimeMs >= srcStat.mtimeMs) {
+        // Already processed and up-to-date
+        continue;
+      }
+    }
+
     console.log(`[PROCESS] ${item.id} <- ${matchedFile}`);
 
     // 1. Baca metadata & raw pixel buffer RGBA
@@ -5294,7 +7085,6 @@ async function run() {
       .toBuffer();
 
     // 4. Simpan hasil bersih ke assets_picked/
-    const pickedPath = path.join(pickedDir, `${item.id}.png`);
     fs.writeFileSync(pickedPath, processedPng);
     console.log(`   -> Disimpan ke assets_picked/${item.id}.png (${targetW}x${targetH}px HD, ${processedPng.length} bytes)`);
 
@@ -5329,6 +7119,19 @@ async function run() {
           // Jangan duplikasi jika sprite baru menimpa ID lama
           if (sprites.some(s => s.id === frameId)) continue;
 
+          const pickedFile = path.join(pickedDir, `${frameId}.png`);
+          if (fs.existsSync(pickedFile)) {
+            const buf = fs.readFileSync(pickedFile);
+            combinedSprites.push({
+              id: frameId,
+              width: frameData.frame.w,
+              height: frameData.frame.h,
+              buffer: buf,
+              metadata: frameData.metadata
+            });
+            continue;
+          }
+
           const f = frameData.frame;
           const extractedFrame = await sharp(existingImg)
             .extract({ left: f.x, top: f.y, width: f.w, height: f.h })
@@ -5348,7 +7151,8 @@ async function run() {
       }
     }
 
-    const packResult = await packAndRenderAtlas(atlasName, combinedSprites, atlasDir, 2048);
+    const maxW = atlasName === 'objects_structures' ? 4096 : (atlasName === 'objects_nature' ? 3072 : 2048);
+    const packResult = await packAndRenderAtlas(atlasName, combinedSprites, atlasDir, maxW);
     console.log(`   -> Atlas ${packResult.atlasName}.webp dihasilkan (${packResult.frameCount} frames, ${(packResult.byteSize / 1024).toFixed(1)} KB)`);
   }
 

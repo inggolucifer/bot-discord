@@ -11,6 +11,25 @@
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+:root {
+  --z-base: 0;
+  --z-map-overlay: 10;
+  --z-hud: 20;
+  --z-dropdown: 30;
+  --z-sticky: 40;
+  --z-modal-backdrop: 50;
+  --z-modal: 60;
+  --z-popover: 70;
+  --z-toast: 80;
+  --z-critical: 90;
+}
+
+@supports not (height: 100dvh) {
+  .h-dvh {
+    height: 100vh;
+  }
+}
+
 html, body {
   max-width: 100vw;
   overflow-x: hidden;

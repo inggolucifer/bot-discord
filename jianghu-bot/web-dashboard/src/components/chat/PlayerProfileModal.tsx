@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Loader2, Coins, Shield, Swords, Activity, MapPin, Zap } from 'lucide-react';
 import api from '@/lib/api';
 import FallbackImage from '@/components/FallbackImage';
+import { resolvePlayerAvatar } from '@/lib/avatar';
+import CurrencyPills from '@/components/ui/CurrencyPills';
 
 interface PlayerProfileModalProps {
   discordId: string;
@@ -30,7 +32,7 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
   }, [discordId]);
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div className="bg-[#1a1a1a] border border-[#c5a880]/50 rounded-lg shadow-[0_0_20px_rgba(197,168,128,0.2)] max-w-md w-full relative overflow-hidden flex flex-col max-h-[90vh]">
         <button
           onClick={onClose}
@@ -58,7 +60,7 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
                 <div className="absolute -bottom-10 left-6">
                     <div className="w-24 h-24 rounded-full border-4 border-[#1a1a1a] bg-black overflow-hidden shadow-lg">
                         <FallbackImage
-                            src={profile.characterImage || ''}
+                            src={resolvePlayerAvatar(profile) || ''}
                             alt={profile.characterName}
                             fallbackNode={<div className="w-full h-full flex items-center justify-center text-4xl">👤</div>}
                         />
@@ -103,7 +105,11 @@ export default function PlayerProfileModal({ discordId, onClose }: PlayerProfile
                 <div className="space-y-2 text-sm">
                     <div className="flex justify-between items-center bg-black/30 p-2 rounded">
                         <span className="text-gray-400 flex items-center gap-2"><Coins size={14}/> Total Kekayaan</span>
-                        <span className="font-bold text-yellow-500">{profile.totalWealth?.toLocaleString('id-ID') || 0} Copper</span>
+                        {profile.currency ? (
+                            <CurrencyPills currency={profile.currency} size="xs" compact />
+                        ) : (
+                            <span className="font-bold text-yellow-500">≈ {profile.totalWealth?.toLocaleString('id-ID') || 0} Perak</span>
+                        )}
                     </div>
                     <div className="flex justify-between items-center bg-black/30 p-2 rounded">
                         <span className="text-gray-400 flex items-center gap-2"><Shield size={14}/> Total Asset / Bangunan</span>

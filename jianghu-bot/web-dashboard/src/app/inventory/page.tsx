@@ -18,6 +18,7 @@ import Link from 'next/link';
 // Interface for API data
 interface InventoryItem {
   id: string;
+  slotId?: string;
   name: string;
   description: string;
   type: string;
@@ -112,7 +113,7 @@ export default function InventoryPage() {
     if (!itemToUse) return;
     setActionLoading(true);
     try {
-      const res = await api.post('/inventory/use-consumable', { itemId: itemToUse.id });
+      const res = await api.post('/inventory/use-consumable', { itemId: itemToUse.id, slotId: itemToUse.slotId });
       let extraMessage = '';
       if (res.data.effectsApplied && res.data.effectsApplied.length > 0) {
         const blueprintEffect = res.data.effectsApplied.find((e: string) => e.startsWith('blueprint_unlocked:'));
@@ -143,7 +144,7 @@ export default function InventoryPage() {
     if (!itemToDiscard) return;
     setActionLoading(true);
     try {
-      await api.post('/inventory/discard', { itemId: itemToDiscard.id, quantity: discardQuantity });
+      await api.post('/inventory/discard', { itemId: itemToDiscard.id, quantity: discardQuantity, slotId: itemToDiscard.slotId });
       toast.show({ message: `Berhasil membuang ${discardQuantity}x ${itemToDiscard.name}`, type: 'success' });
       setDiscardModalOpen(false);
       setItemToDiscard(null);
@@ -160,10 +161,10 @@ export default function InventoryPage() {
     setActionLoading(true);
     try {
       if (item.category === 'law') {
-        const res = await api.post('/inventory/use-law', { itemId: item.id });
+        const res = await api.post('/inventory/use-law', { itemId: item.id, slotId: item.slotId });
         toast.show({ message: res.data.message || 'Berhasil mempelajari Hukum Alam', type: 'success' });
       } else if (item.category === 'manual') {
-        const res = await api.post('/inventory/use-manual', { itemId: item.id });
+        const res = await api.post('/inventory/use-manual', { itemId: item.id, slotId: item.slotId });
         toast.show({ message: res.data.message || 'Berhasil mulai membaca Manual', type: 'success' });
       }
       fetchInventoryAndRecipes();
@@ -213,7 +214,7 @@ export default function InventoryPage() {
     const isPupuk = item.effectType === 'farm_grow_speed';
     const isLawOrManual = item.category === 'law' || item.category === 'manual';
     const isTool = item.category === 'tool' || item.toolType != null;
-    const isEquipment = ['weapon', 'cloth', 'armor', 'accessories', 'artifact', 'mount'].includes(item.category) || ['weapon', 'cloth', 'accessories', 'artifact'].includes(item.type);
+    const isEquipment = ['weapon', 'armor', 'helmet', 'pants', 'boots', 'cloth', 'artifact', 'accessories', 'talisman', 'mount'].includes(item.category);
     const isConsumable = !isPupuk && !isLawOrManual && !isBlueprint && (item.category === 'consume' || item.category === 'pill' || item.effectType != null);
 
     if (isBlueprint) return 'blueprint';
@@ -466,7 +467,7 @@ export default function InventoryPage() {
 
               return (
                 <div
-                  key={item.id}
+                  key={item.slotId ?? item.id}
                   onClick={() => {
                     setSelectedItemDetail(item);
                     setItemDetailModalOpen(true);

@@ -130,7 +130,7 @@ export default function Navbar() {
     <>
       {/* Floating Small Pill Button to Summon Navbars when on Map in Mobile */}
       {isMobileNavHidden && (
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[60] lg:hidden animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[40] lg:hidden animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-auto">
           <button
             onClick={() => setShowMobileMapNav(true)}
             className="bg-[#0b0e15]/95 hover:bg-[#141a26] border-b-2 border-x border-[#c5a880]/80 text-[#c5a880] px-3.5 py-1 rounded-b-xl shadow-[0_4px_20px_rgba(0,0,0,0.9)] backdrop-blur-md flex items-center gap-1.5 text-[11px] font-serif font-bold tracking-wider hover:text-amber-200 transition-all cursor-pointer group active:scale-95 select-none"
@@ -145,7 +145,7 @@ export default function Navbar() {
       {/* Top Header Navbar - Clean, Minimalist Wuxia */}
       <header
         className={cn(
-          'bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-50 backdrop-blur-md shadow-md transition-all duration-300 ease-in-out lg:overflow-visible',
+          'bg-[#090c13]/95 border-b border-[#2b3345] sticky top-0 z-[40] backdrop-blur-md shadow-md transition-all duration-300 ease-in-out lg:overflow-visible',
           isMobileNavHidden
             ? 'max-lg:-translate-y-full max-lg:opacity-0 max-lg:pointer-events-none max-lg:max-h-0 max-lg:border-b-0 max-lg:overflow-hidden'
             : 'translate-y-0 opacity-100 max-h-16'
@@ -192,7 +192,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'karakter' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[30] animate-in fade-in zoom-in-95 duration-100">
                   {karakterLinks.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -232,7 +232,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'dunia' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[30] animate-in fade-in zoom-in-95 duration-100">
                   {duniaLinks.map((item) => {
                     const Icon = item.icon;
                     return (
@@ -286,7 +286,7 @@ export default function Navbar() {
               </button>
 
               {openDropdown === 'sosial' && (
-                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[70] animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-[#0e121b] border border-[#2b3345] rounded-xl shadow-2xl p-1.5 z-[30] animate-in fade-in zoom-in-95 duration-100">
                   {sosialLinks.map((item) => {
                     const Icon = item.icon;
                     return (
