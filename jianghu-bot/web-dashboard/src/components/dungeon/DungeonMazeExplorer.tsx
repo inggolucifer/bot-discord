@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import api from '@/lib/api';
 import { GLOBAL_ASSETS } from '@/config/globalAssets';
+import AtlasSprite from '@/components/ui/AtlasSprite';
 
 interface DungeonTile {
   x: number;
@@ -278,10 +279,15 @@ export default function DungeonMazeExplorer({
                   return (
                     <div
                       key={`${tile.x}-${tile.y}`}
-                      className="w-8 h-8 sm:w-11 sm:h-11 bg-[#1a1c23] border border-[#2b2f3d] rounded flex items-center justify-center shadow-inner"
+                      className="w-8 h-8 sm:w-11 sm:h-11 bg-[#1a1c23] border border-[#2b2f3d] rounded flex items-center justify-center shadow-inner overflow-hidden p-0.5"
                       title="Dinding Gua Kokoh"
                     >
-                      <span className="text-xs sm:text-sm opacity-40">🪨</span>
+                      <AtlasSprite
+                        atlas="objects_nature"
+                        frame="mt_rock_1x1"
+                        className="w-full h-full object-cover opacity-60"
+                        fallback={<span className="text-xs sm:text-sm opacity-40">🪨</span>}
+                      />
                     </div>
                   );
                 }
@@ -290,7 +296,7 @@ export default function DungeonMazeExplorer({
                 return (
                   <div
                     key={`${tile.x}-${tile.y}`}
-                    className={`relative w-8 h-8 sm:w-11 sm:h-11 rounded border flex items-center justify-center transition-all duration-300 ${
+                    className={`relative w-8 h-8 sm:w-11 sm:h-11 rounded border flex items-center justify-center transition-all duration-300 p-0.5 overflow-hidden ${
                       isPlayerHere
                         ? 'bg-amber-950/70 border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)] z-10 scale-105'
                         : 'bg-[#121620] border-gray-800/80 hover:border-gray-700'
@@ -300,19 +306,55 @@ export default function DungeonMazeExplorer({
                     {isPlayerHere ? (
                       <span className="text-lg sm:text-2xl animate-bounce">🥋</span>
                     ) : tile.isExit ? (
-                      <span className="text-base sm:text-xl animate-pulse" title="Portal Keluar">🌀</span>
+                      <AtlasSprite
+                        atlas="objects_structures"
+                        frame="structure_dungeon_ghost_face_iron_portcullis"
+                        className="w-full h-full object-contain animate-pulse filter drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+                        title="Portal Keluar"
+                        fallback={<span className="text-base sm:text-xl animate-pulse">🌀</span>}
+                      />
                     ) : tile.isEntrance ? (
-                      <span className="text-base sm:text-xl opacity-70" title="Pintu Masuk">🚪</span>
+                      <AtlasSprite
+                        atlas="objects_structures"
+                        frame="dungeon_cave_entrance"
+                        className="w-full h-full object-contain opacity-80"
+                        title="Pintu Masuk"
+                        fallback={<span className="text-base sm:text-xl opacity-70">🚪</span>}
+                      />
                     ) : tile.chest?.isChest ? (
                       tile.chest.opened ? (
-                        <span className="text-xs sm:text-sm opacity-30">📦</span>
+                        <AtlasSprite
+                          atlas="objects_structures"
+                          frame="structure_dungeon_ancient_chained_iron_chest"
+                          className="w-full h-full object-contain opacity-35 grayscale"
+                          title="Peti Kosong"
+                          fallback={<span className="text-xs sm:text-sm opacity-30">📦</span>}
+                        />
                       ) : (
-                        <span className="text-base sm:text-xl animate-bounce" title="Peti Harta!">🎁</span>
+                        <AtlasSprite
+                          atlas="objects_structures"
+                          frame="structure_dungeon_ancient_chained_iron_chest"
+                          className="w-full h-full object-contain animate-bounce filter drop-shadow-[0_0_8px_rgba(245,158,11,0.7)]"
+                          title="Peti Harta!"
+                          fallback={<span className="text-base sm:text-xl animate-bounce">🎁</span>}
+                        />
                       )
                     ) : tile.monster ? (
-                      <span className="text-base sm:text-xl" title={tile.monster.name}>👹</span>
+                      <AtlasSprite
+                        atlas="markers_entities"
+                        frame={tile.monster.isBoss ? "monster_regional_primordial_azure_dragon" : "monster_demon_wolf"}
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_6px_rgba(239,68,68,0.7)]"
+                        title={tile.monster.name}
+                        fallback={<span className="text-base sm:text-xl">👹</span>}
+                      />
                     ) : tile.trapType && tile.isTrapTriggered ? (
-                      <span className="text-xs opacity-60">⚠️</span>
+                      <AtlasSprite
+                        atlas="objects_structures"
+                        frame="structure_dungeon_ancient_bone_spike_pit_trap"
+                        className="w-full h-full object-contain opacity-80 filter drop-shadow-[0_0_6px_rgba(245,158,11,0.5)]"
+                        title="Jebakan Terpicu!"
+                        fallback={<span className="text-xs opacity-60">⚠️</span>}
+                      />
                     ) : null}
                   </div>
                 );

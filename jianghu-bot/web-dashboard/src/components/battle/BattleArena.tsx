@@ -8,6 +8,42 @@ import {
     Flame, Heart, Trophy, AlertCircle, RefreshCw, X,
     ChevronLeft, Award, Package, Clock, Users, ArrowRight
 } from 'lucide-react';
+import AtlasSprite from '@/components/ui/AtlasSprite';
+
+function getMonsterFrameId(enemy: any): string {
+    if (enemy.spriteFrame) return enemy.spriteFrame;
+    const id = (enemy.id || enemy.entityId || '').toLowerCase();
+    const name = (enemy.name || '').toLowerCase();
+
+    if (id.includes('wolf') || name.includes('serigala')) return 'monster_demon_wolf';
+    if (id.includes('tiger') || name.includes('harimau') || name.includes('macan')) return 'monster_white_tiger';
+    if (id.includes('serpent') || name.includes('ular')) {
+        if (name.includes('laut') || name.includes('abyss')) return 'monster_abyssal_serpent';
+        return 'monster_blood_serpent';
+    }
+    if (id.includes('bear') || name.includes('beruang')) return 'monster_iron_bear';
+    if (id.includes('roc') || id.includes('eagle') || name.includes('elang') || name.includes('burung')) return 'monster_storm_roc';
+    if (id.includes('ape') || name.includes('kera') || name.includes('monyet')) return 'monster_flame_ape';
+    if (id.includes('golem') || name.includes('batu')) return 'monster_rock_golem';
+    if (id.includes('scorpion') || name.includes('kalajengking')) return 'monster_sand_scorpion';
+    if (id.includes('dragon') || name.includes('naga')) return 'monster_regional_primordial_azure_dragon';
+    if (name.includes('kura') || name.includes('penyu')) return 'monster_regional_frostmoon_sea_ice_dragon_turtle';
+    if (name.includes('badak') || id.includes('rhino')) return 'monster_regional_border_march_iron_plated_rhino';
+    if (name.includes('bison') || id.includes('bison')) return 'monster_regional_thundersteppe_lightning_horned_bison';
+    if (name.includes('singa') || id.includes('lion')) return 'monster_regional_beast_prairies_golden_sun_lion';
+    if (name.includes('rubah') || id.includes('fox')) return 'monster_regional_nine_tailed_fox';
+    if (name.includes('qilin') || id.includes('kirin')) return 'monster_regional_primordial_jade_qilin';
+    if (name.includes('bangau') || id.includes('crane')) return 'monster_regional_hermit_highlands_cloud_silver_crane';
+    if (name.includes('mayat') || name.includes('zombie') || name.includes('corpse')) return 'monster_regional_southern_plague_woods_thousand_year_corpse_king';
+    if (name.includes('asura') || name.includes('jenderal')) return 'monster_regional_ancient_blood_asura_general';
+    if (name.includes('fiend') || name.includes('bayangan')) return 'monster_regional_abyssal_shadow_fiend';
+    if (name.includes('kelabang') || id.includes('centipede')) return 'monster_regional_myriad_toxic_centipede';
+
+    if (enemy.tierSize === 'boss') return 'monster_regional_primordial_azure_dragon';
+    if (enemy.tierSize === 'large') return 'monster_white_tiger';
+    return 'monster_demon_wolf';
+}
+
 
 interface BattleArenaProps {
     battleId: string;
@@ -526,13 +562,26 @@ export default function BattleArena({ battleId, onBattleEnd }: BattleArenaProps)
                                     )}
 
                                     {/* Monster Avatar */}
-                                    <div className={`relative ${isBoss ? 'w-24 h-24 sm:w-28 sm:h-28' : 'w-20 h-20 sm:w-24 sm:h-24'} rounded-xl bg-gradient-to-b from-gray-900 to-black border ${isBoss ? 'border-amber-600' : 'border-red-800/80'} mb-1.5 overflow-hidden flex items-center justify-center shadow-inner`}>
+                                    <div className={`relative ${isBoss ? 'w-24 h-24 sm:w-28 sm:h-28' : 'w-20 h-20 sm:w-24 sm:h-24'} rounded-xl bg-gradient-to-b from-gray-900 to-black border ${isBoss ? 'border-amber-600 shadow-[0_0_15px_rgba(245,158,11,0.3)]' : 'border-red-800/80'} mb-1.5 overflow-hidden flex items-center justify-center shadow-inner p-1`}>
                                         {enemy.imageUrl ? (
-                                            <img src={enemy.imageUrl} alt={enemy.name} className="w-full h-full object-cover" />
+                                            <img src={enemy.imageUrl} alt={enemy.name} className="w-full h-full object-cover rounded-lg" />
                                         ) : (
-                                            <div className={`${isBoss ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'} filter drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]`}>
-                                                {isBoss ? '👹' : (enemy.tierSize === 'large' ? '🐉' : '🐺')}
-                                            </div>
+                                            <AtlasSprite
+                                                atlas="markers_entities"
+                                                frame={getMonsterFrameId(enemy)}
+                                                alt={enemy.name}
+                                                className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] transition-transform hover:scale-105"
+                                                fallback={
+                                                    <div className={`${isBoss ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'} filter drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]`}>
+                                                        {isBoss ? '👹' : (enemy.tierSize === 'large' ? '🐉' : '🐺')}
+                                                    </div>
+                                                }
+                                            />
+                                        )}
+
+                                        {/* Boss Aura Ring if Boss */}
+                                        {isBoss && (
+                                            <div className="absolute inset-0 pointer-events-none border-2 border-amber-500/40 rounded-xl animate-pulse" />
                                         )}
 
                                         {/* Level Badge */}

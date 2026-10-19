@@ -183,6 +183,55 @@ class AtlasLoader {
     ctx.restore();
     return true;
   }
+
+  private dataUrlCache: Map<string, string> = new Map();
+
+  /**
+   * Retrieves a standalone canvas containing the sliced frame.
+   */
+  public getFrameCanvas(atlasName: string, frameId: string): HTMLCanvasElement | null {
+    if (typeof document === 'undefined') return null;
+    const cacheKey = `${atlasName}:${frameId}`;
+    if (this.frameCanvasCache.has(cacheKey)) {
+      return this.frameCanvasCache.get(cacheKey)!;
+    }
+
+    const manifest = this.manifests.get(atlasName);
+    const texture = this.textures.get(atlasName);
+    if (!manifest || !texture) {
+      this.loadAtlas(atlasName);
+      return null;
+    }
+
+    const frameInfo = manifest.frames[frameId];
+    if (!frameInfo) return null;
+
+    const { x, y, w, h } = frameInfo.frame;
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.drawImage(texture, x, y, w, h, 0, 0, w, h);
+    this.frameCanvasCache.set(cacheKey, canvas);
+    return canvas;
+  }
+
+  /**
+   * Retrieves data URL for a frame, useful for <img src="..." />
+   */
+  public getFrameDataUrl(atlasName: string, frameId: string): string | null {
+    const cacheKey = `${atlasName}:${frameId}`;
+    if (this.dataUrlCache.has(cacheKey)) {
+      return this.dataUrlCache.get(cacheKey)!;
+    }
+    const canvas = this.getFrameCanvas(atlasName, frameId);
+    if (!canvas) return null;
+    const dataUrl = canvas.toDataURL('image/png');
+    this.dataUrlCache.set(cacheKey, dataUrl);
+    return dataUrl;
+  }
 }
 
 export const atlasLoader = AtlasLoader.getInstance();

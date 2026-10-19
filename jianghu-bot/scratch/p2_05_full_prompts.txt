@@ -1,0 +1,60 @@
+# 🌟 BATCH P2-04 SELESAI & PRA-REGISTRASI BATCH P2-05!
+
+Kelima aset **Batch P2-04 (Regional Biome Scatters II)** telah berhasil diproses melalui pipeline *luminance & smart cavity keying*, dioptimasi HD, dan terintegrasi mulus ke dalam atlas game:
+- `nature_scatter_autumn_scarlet_maple_cluster` (Rumpun Pohon Maple Merah Menyala)
+- `nature_scatter_coastal_glowing_coral_rock` (Batu Karang Pantai Beranemon Pirus)
+- `nature_scatter_celestial_lotus_pond_rockery` (Ceruk Kolam Teratai Roh Alami)
+- `nature_scatter_thunder_struck_spirit_wood_stump` (Tunggul Kayu Roh Tersambar Petir Ungu)
+- `nature_scatter_subterranean_luminescent_mushroom_patch` (Rumpun Jamur Payung Bercahaya Bawah Tanah)
+
+---
+
+### 📊 Laporan Validasi Sistem (Batch P2-04)
+1. **Total Sprite PNG Bersih di `assets_picked/`**: **520 File PNG**
+2. **Kesehatan Atlas Binary (Hard Gate $\le 1024$ KB)**:
+   - `autotiles.webp`: **13.2 KB** (32 frames) — `[PASS]`
+   - `icons.webp`: **690.3 KB** (67 frames) — `[PASS]`
+   - `markers_entities.webp`: **961.0 KB** (52 frames) — `[PASS]`
+   - `objects_nature.webp`: **975.4 KB** (198 frames) — `[PASS]`
+   - `objects_structures.webp`: **946.6 KB** (322 frames) — `[PASS]`
+   - **Total Frame Sprite Unik**: **671 frames**
+3. **5 Pintu Gerbang Sistem**:
+   - `validateAssets.js`: **5/5 Atlas Lulus**
+   - `auditAtlasCompleteness.js`: **100.0% Kelengkapan**
+   - `testMapV4Bugs.js`: **6/6 Lulus**
+   - `testWorldInvariants.js`: **24/24 Lulus**
+   - `npx tsc --noEmit`: **0 Error TypeScript**
+
+---
+
+## 🎨 Prompt Gambar untuk Batch P2-05 (Medan Perang, Gazebo Jalan & Tanaman Roh)
+
+Kelima aset berikut telah **dipra-daftarkan** di [`proceduralObjects.ts`](file:///d:/gitub/bot-discord/jianghu-bot/web-dashboard/src/lib/proceduralObjects.ts) dan [`ingestGeneratedAssets.js`](file:///d:/gitub/bot-discord/jianghu-bot/scripts/assets/ingestGeneratedAssets.js). Silakan generate dan unggah gambarnya:
+
+### 1. `structure_scatter_ruin_ancient_broken_halberd_sword_grave` (Gundukan Kuburan Pedang Medan Perang Kuno)
+```text
+An ancient battlefield sword grave mound, 2.5D isometric perspective, game asset sprite. A rocky raised burial mound of weathered earth and broken stone slabs, impaled with shattered ancient iron swords, cracked pole halberds, and a tattered battle-worn standard flag fluttering in the wind, overgrown with wild weeds. Tale of Immortal art style, battle-scarred dark metal, rust and stone textures, crisp ink lines, isolated on pure solid white background, no floor, no shadows cutoffs.
+```
+
+### 2. `structure_scatter_roadside_tea_and_rest_pavilion_gazebo` (Gazebo Teh Peristirahatan Tepi Jalan)
+```text
+A traditional Jianghu roadside traveller tea rest pavilion gazebo, 2.5D isometric perspective, game asset sprite. A rustic timber open-air pavilion with a weathered thatch roof, featuring bamboo bench seating, a rough cedar wood tea table with ceramic teacups and a clay teapot, a roadside wooden notice board, and a water trough. Tale of Immortal art style, rustic timber and thatch textures, crisp ink linework, isolated on pure solid white background, no floor, no shadows cutoffs.
+```
+
+### 3. `structure_scatter_mountain_daoist_stone_lantern_beacon` (Lentera Batu Pagoda Kuno Berlumut)
+```text
+An ancient mossy Daoist mountain stone pagoda lantern beacon, 2.5D isometric perspective, game asset sprite. A three-tiered carved granite stone pagoda lantern with moss growing on its curved eaves, emitting a warm golden spiritual candle glow from within its latticed chamber, veiled in gentle mountain mist. Tale of Immortal art style, ancient weathered stone, warm spiritual illumination, crisp ink contours, isolated on pure solid white background, no floor, no shadows cutoffs.
+```
+
+### 4. `structure_scatter_riverside_moored_wooden_sampan` (Perahu Sampan Kayu Tertambat di Tepi Sungai)
+```text
+A traditional Chinese wooden river sampan boat moored by the water edge, 2.5D isometric perspective, game asset sprite. A rustic handcrafted pine wood sampan boat tied securely to a wooden mooring post with thick hemp rope, featuring bamboo oars laid across the gunwales, a neatly folded fishing net, and a clay jar inside the hull. Tale of Immortal art style, weathered wood grain, rope cordage, crisp ink contours, isolated on pure solid white background, no floor, no shadows cutoffs.
+```
+
+### 5. `nature_scatter_wild_spirit_ginseng_flowering_patch` (Rumpun Ginseng Liar Seribu Tahun Berbunga)
+```text
+A wild thousand-year spiritual ginseng patch, 2.5D isometric perspective, game asset sprite. Ancient humanoid-shaped spiritual ginseng roots partially emerging from rich dark forest soil, glowing with a soft golden inner radiance, crowned by green serrated leaves and a bright cluster of scarlet red ginseng berries, surrounded by wild maidenhair ferns and forest moss. Tale of Immortal art style, mystical botanical watercolor wash, crisp ink lines, isolated on pure solid white background, no floor, no shadows cutoffs.
+```
+
+---
+*Silakan unggah kelima gambar hasil generate di atas untuk langsung diintegrasikan ke ekosistem!*
