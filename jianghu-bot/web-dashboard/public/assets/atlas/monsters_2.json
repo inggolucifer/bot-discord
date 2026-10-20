@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 384
+    },
+    "format": "RGBA8888",
+    "image": "monsters_2.webp"
+  },
+  "frames": {
+    "monster_rock_golem": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_rock_golem",
+        "atlas": "markers_entities",
+        "frame": "monster_rock_golem",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_white_tiger": {
+      "frame": {
+        "x": 386,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_white_tiger",
+        "atlas": "markers_entities",
+        "frame": "monster_white_tiger",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_sand_scorpion": {
+      "frame": {
+        "x": 772,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_sand_scorpion",
+        "atlas": "markers_entities",
+        "frame": "monster_sand_scorpion",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    }
+  }
+}

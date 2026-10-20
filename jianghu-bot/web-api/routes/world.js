@@ -73,6 +73,7 @@ const PropertyStructure = require('../../models/PropertyStructure');
 const { generateDefaultEstateLayout, decompressLayoutRLE, TILE_METADATA } = require('../../utils/propertyManager');
 const { setPlayerAuthoritativePosition } = require('../../services/movementService');
 const { normalizeRegionSlug, getTerritoryInfo } = require('../../utils/worldRegionEngine');
+const chunkStreamingEngine = require('../../utils/chunkStreamingEngine');
 
 const SETTLEMENT_COORDINATES = {
     'desa xingcun': { x: 2450, y: 2480, regionSlug: 'central_plains' },
@@ -1730,6 +1731,111 @@ router.get('/zone/buildable-options', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[API-BUILDABLE-OPTIONS] Error:', error);
         return res.status(500).json({ error: 'Gagal memuat opsi bangunan: ' + error.message });
+    }
+});
+
+// ==========================================
+// CHUNK STREAMING SYSTEM (Fase C1)
+// 32x32 tiles chunk architecture for Tale of Immortal 5000x5000 world
+// ==========================================
+
+router.get('/chunk/:v/:cx/:cy', async (req, res) => {
+    try {
+        const { v } = req.params;
+        const cx = parseInt(req.params.cx, 10);
+        const cy = parseInt(req.params.cy, 10);
+
+        if (isNaN(cx) || isNaN(cy)) {
+            return res.status(400).json({ error: 'Koordinat cx dan cy harus berupa integer.' });
+        }
+
+        if (v !== chunkStreamingEngine.WORLD_VERSION) {
+            return res.status(410).json({
+                error: 'World version mismatch',
+                expectedVersion: chunkStreamingEngine.WORLD_VERSION,
+                receivedVersion: v
+            });
+        }
+
+        if (!chunkStreamingEngine.isValidChunk(cx, cy)) {
+            return res.status(404).json({
+                error: `Chunk di luar batas dunia [0..${chunkStreamingEngine.MAX_CHUNK_X}, 0..${chunkStreamingEngine.MAX_CHUNK_Y}].`
+            });
+        }
+
+        const chunk = chunkStreamingEngine.getStaticChunk(cx, cy, v);
+
+        // HTTP Caching: Public, immutable, 1 year TTL + ETag
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        res.setHeader('ETag', `"${chunk.hash}"`);
+
+        const ifNoneMatch = req.headers['if-none-match'];
+        if (ifNoneMatch === `"${chunk.hash}"` || ifNoneMatch === chunk.hash) {
+            return res.status(304).end();
+        }
+
+        return res.json(chunk);
+    } catch (error) {
+        console.error('[API-CHUNK] Error getting chunk:', error);
+        return res.status(error.statusCode || 500).json({
+            error: error.message || 'Gagal memuat chunk'
+        });
+    }
+});
+
+router.post('/chunks', async (req, res) => {
+    try {
+        const { version, chunks } = req.body;
+
+        if (version && version !== chunkStreamingEngine.WORLD_VERSION) {
+            return res.status(410).json({
+                error: 'World version mismatch',
+                expectedVersion: chunkStreamingEngine.WORLD_VERSION
+            });
+        }
+
+        if (!Array.isArray(chunks)) {
+            return res.status(400).json({ error: 'Field chunks harus berupa array.' });
+        }
+
+        const batch = chunkStreamingEngine.getStaticChunksBatch(chunks, version);
+        return res.json(batch);
+    } catch (error) {
+        console.error('[API-CHUNKS-BATCH] Error in batch chunks:', error);
+        return res.status(error.statusCode || 500).json({
+            error: error.message || 'Gagal memuat batch chunks'
+        });
+    }
+});
+
+router.get('/chunk-live/:cx/:cy', authenticateToken, async (req, res) => {
+    try {
+        const cx = parseInt(req.params.cx, 10);
+        const cy = parseInt(req.params.cy, 10);
+
+        if (isNaN(cx) || isNaN(cy)) {
+            return res.status(400).json({ error: 'Koordinat cx dan cy harus berupa integer.' });
+        }
+
+        if (!chunkStreamingEngine.isValidChunk(cx, cy)) {
+            return res.status(404).json({
+                error: `Chunk di luar batas dunia [0..${chunkStreamingEngine.MAX_CHUNK_X}, 0..${chunkStreamingEngine.MAX_CHUNK_Y}].`
+            });
+        }
+
+        const guildId = req.user?.guildId || 'global';
+        const liveData = await chunkStreamingEngine.getChunkLive(cx, cy, guildId);
+
+        res.setHeader('Cache-Control', 'private, max-age=5');
+        return res.json({
+            success: true,
+            data: liveData
+        });
+    } catch (error) {
+        console.error('[API-CHUNK-LIVE] Error fetching live chunk:', error);
+        return res.status(500).json({
+            error: error.message || 'Gagal memuat live data chunk'
+        });
     }
 });
 

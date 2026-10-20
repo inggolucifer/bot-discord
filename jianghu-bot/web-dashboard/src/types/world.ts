@@ -67,6 +67,7 @@ export interface TileData {
   resourceType?: string | null;
   nodeRespawnAt?: string | Date | null;
   label?: string | null;
+  terrainLabel?: string | null;
   settlementName?: string | null;
   chineseName?: string | null;
   isSettlementOrigin?: boolean;

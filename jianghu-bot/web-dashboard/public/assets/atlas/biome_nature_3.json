@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1654
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_3.webp"
+  },
+  "frames": {
+    "landmark_sword_gorge_giant_fallen_blade_bridge": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 669,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_sword_gorge_giant_fallen_blade_bridge",
+        "atlas": "objects_structures",
+        "frame": "landmark_sword_gorge_giant_fallen_blade_bridge",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_bone_sea_coast_leviathan_rib_pier": {
+      "frame": {
+        "x": 671,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 669,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_bone_sea_coast_leviathan_rib_pier",
+        "atlas": "objects_structures",
+        "frame": "landmark_bone_sea_coast_leviathan_rib_pier",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_southern_demon_domain_skull_gate": {
+      "frame": {
+        "x": 1342,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 669,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 669,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_southern_demon_domain_skull_gate",
+        "atlas": "objects_structures",
+        "frame": "landmark_southern_demon_domain_skull_gate",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "mt_bastion_wall_v1": {
+      "frame": {
+        "x": 0,
+        "y": 578,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v1",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v2": {
+      "frame": {
+        "x": 402,
+        "y": 578,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v2",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v3": {
+      "frame": {
+        "x": 804,
+        "y": 578,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v3",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "mt_bastion_wall_v4": {
+      "frame": {
+        "x": 1206,
+        "y": 578,
+        "w": 400,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 400,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 560
+      },
+      "metadata": {
+        "id": "mt_bastion_wall_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_bastion_wall_v4",
+        "category": "mountain",
+        "px": {
+          "w": 400,
+          "h": 560
+        },
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.98
+        },
+        "overhangCells": 2.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_bastion_wall_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "bastion_wall"
+        ]
+      }
+    },
+    "nature_ancient_scholar_tree_pagoda": {
+      "frame": {
+        "x": 0,
+        "y": 1140,
+        "w": 512,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 512
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_tree_pagoda",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_tree_pagoda",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1.4
+      }
+    },
+    "landmark_central_plains_tianjing_palace_gate": {
+      "frame": {
+        "x": 514,
+        "y": 1140,
+        "w": 682,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 512
+      },
+      "metadata": {
+        "id": "landmark_central_plains_tianjing_palace_gate",
+        "atlas": "objects_structures",
+        "frame": "landmark_central_plains_tianjing_palace_gate",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_border_march_iron_garrison_gatehouse": {
+      "frame": {
+        "x": 1198,
+        "y": 1140,
+        "w": 682,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 512
+      },
+      "metadata": {
+        "id": "landmark_border_march_iron_garrison_gatehouse",
+        "atlas": "objects_structures",
+        "frame": "landmark_border_march_iron_garrison_gatehouse",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    }
+  }
+}

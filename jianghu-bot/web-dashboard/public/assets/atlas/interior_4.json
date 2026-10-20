@@ -1,0 +1,1094 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 2023
+    },
+    "format": "RGBA8888",
+    "image": "interior_4.webp"
+  },
+  "frames": {
+    "structure_interior_sect_medicinal_herb_fermentation_urn_bench": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 403,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 403,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 403,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_medicinal_herb_fermentation_urn_bench",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_medicinal_herb_fermentation_urn_bench",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_discipline_punishment_rack": {
+      "frame": {
+        "x": 405,
+        "y": 0,
+        "w": 288,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_discipline_punishment_rack",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_discipline_punishment_rack",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_interior_sect_celestial_sword_grinding_wheel": {
+      "frame": {
+        "x": 695,
+        "y": 0,
+        "w": 424,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 424,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 424,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_celestial_sword_grinding_wheel",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_celestial_sword_grinding_wheel",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_five_elements_spirit_stone_censer_array": {
+      "frame": {
+        "x": 1121,
+        "y": 0,
+        "w": 448,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_five_elements_spirit_stone_censer_array",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_five_elements_spirit_stone_censer_array",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_interior_sect_formation_carved_stone_pillar": {
+      "frame": {
+        "x": 1571,
+        "y": 0,
+        "w": 237,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 237,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 237,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_formation_carved_stone_pillar",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_formation_carved_stone_pillar",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "structure_interior_sect_astronomy_star_chart_globe": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 348,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 348,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 348,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_astronomy_star_chart_globe",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_astronomy_star_chart_globe",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_bronze_bell_clock_tower": {
+      "frame": {
+        "x": 350,
+        "y": 386,
+        "w": 304,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 304,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 304,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_bronze_bell_clock_tower",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_bronze_bell_clock_tower",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_interior_sect_bamboo_scroll_archive_rack": {
+      "frame": {
+        "x": 656,
+        "y": 386,
+        "w": 332,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 332,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 332,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_bamboo_scroll_archive_rack",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_bamboo_scroll_archive_rack",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_interior_sect_bronze_mirror_dressing_screen": {
+      "frame": {
+        "x": 990,
+        "y": 386,
+        "w": 348,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 348,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 348,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_bronze_mirror_dressing_screen",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_bronze_mirror_dressing_screen",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_interior_sect_sword_sharpening_whetstone_trough": {
+      "frame": {
+        "x": 1340,
+        "y": 386,
+        "w": 504,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 504,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 504,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_sword_sharpening_whetstone_trough",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_sword_sharpening_whetstone_trough",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_interior_sect_spiritual_pill_furnace_triad": {
+      "frame": {
+        "x": 0,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_spiritual_pill_furnace_triad",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_spiritual_pill_furnace_triad",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_meditation_stone_incense_cairn": {
+      "frame": {
+        "x": 386,
+        "y": 772,
+        "w": 364,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 364,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 364,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_interior_sect_meditation_stone_incense_cairn",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_meditation_stone_incense_cairn",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_talisman_cinnabar_inkstone_altar": {
+      "frame": {
+        "x": 752,
+        "y": 772,
+        "w": 384,
+        "h": 365
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 365
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 365
+      },
+      "metadata": {
+        "id": "structure_interior_sect_talisman_cinnabar_inkstone_altar",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_talisman_cinnabar_inkstone_altar",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_daoist_divination_yarrow_stalk_dais": {
+      "frame": {
+        "x": 1138,
+        "y": 772,
+        "w": 384,
+        "h": 365
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 365
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 365
+      },
+      "metadata": {
+        "id": "structure_interior_sect_daoist_divination_yarrow_stalk_dais",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_daoist_divination_yarrow_stalk_dais",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_meditation_rush_mat_partition": {
+      "frame": {
+        "x": 1524,
+        "y": 772,
+        "w": 384,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 360
+      },
+      "metadata": {
+        "id": "structure_interior_meditation_rush_mat_partition",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_meditation_rush_mat_partition",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_disciples_iron_palm_sand_basin": {
+      "frame": {
+        "x": 0,
+        "y": 1158,
+        "w": 384,
+        "h": 349
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 349
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 349
+      },
+      "metadata": {
+        "id": "structure_interior_sect_disciples_iron_palm_sand_basin",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_disciples_iron_palm_sand_basin",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_spirit_grain_storage_chest": {
+      "frame": {
+        "x": 386,
+        "y": 1158,
+        "w": 384,
+        "h": 348
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 348
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 348
+      },
+      "metadata": {
+        "id": "structure_interior_sect_spirit_grain_storage_chest",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_spirit_grain_storage_chest",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_interior_sect_lotus_pond_qi_fountain": {
+      "frame": {
+        "x": 772,
+        "y": 1158,
+        "w": 384,
+        "h": 339
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 339
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 339
+      },
+      "metadata": {
+        "id": "structure_interior_sect_lotus_pond_qi_fountain",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_lotus_pond_qi_fountain",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_meditation_rush_mat_incense_cushion": {
+      "frame": {
+        "x": 1158,
+        "y": 1158,
+        "w": 384,
+        "h": 329
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 329
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 329
+      },
+      "metadata": {
+        "id": "structure_interior_sect_meditation_rush_mat_incense_cushion",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_meditation_rush_mat_incense_cushion",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "none",
+        "overhangCells": 1
+      }
+    },
+    "structure_interior_sect_meditation_mat_incense_burner_set": {
+      "frame": {
+        "x": 1544,
+        "y": 1158,
+        "w": 384,
+        "h": 323
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 323
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 323
+      },
+      "metadata": {
+        "id": "structure_interior_sect_meditation_mat_incense_burner_set",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_meditation_mat_incense_burner_set",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_weiqi_go_game_table": {
+      "frame": {
+        "x": 0,
+        "y": 1509,
+        "w": 384,
+        "h": 320
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 320
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 320
+      },
+      "metadata": {
+        "id": "structure_interior_sect_weiqi_go_game_table",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_weiqi_go_game_table",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_interior_tea_table_bamboo_tatami": {
+      "frame": {
+        "x": 386,
+        "y": 1509,
+        "w": 384,
+        "h": 316
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 316
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 316
+      },
+      "metadata": {
+        "id": "structure_interior_tea_table_bamboo_tatami",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_tea_table_bamboo_tatami",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_pill_cooling_water_trough": {
+      "frame": {
+        "x": 772,
+        "y": 1509,
+        "w": 384,
+        "h": 278
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 278
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 278
+      },
+      "metadata": {
+        "id": "structure_interior_sect_pill_cooling_water_trough",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_pill_cooling_water_trough",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_interior_sect_heraldry_banner_pole": {
+      "frame": {
+        "x": 1158,
+        "y": 1509,
+        "w": 117,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 117,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 117,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_sect_heraldry_banner_pole",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_heraldry_banner_pole",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_interior_sect_coiled_dragon_incense_stand": {
+      "frame": {
+        "x": 1277,
+        "y": 1509,
+        "w": 117,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 117,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 117,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_sect_coiled_dragon_incense_stand",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_coiled_dragon_incense_stand",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "structure_interior_sect_discipline_wooden_dummy": {
+      "frame": {
+        "x": 1396,
+        "y": 1509,
+        "w": 137,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 137,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 137,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_sect_discipline_wooden_dummy",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_discipline_wooden_dummy",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_bronze_bell_chime_stand": {
+      "frame": {
+        "x": 1535,
+        "y": 1509,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_sect_bronze_bell_chime_stand",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_bronze_bell_chime_stand",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_sect_dragon_carved_folding_screen": {
+      "frame": {
+        "x": 1729,
+        "y": 1509,
+        "w": 203,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 203,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 203,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_sect_dragon_carved_folding_screen",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_dragon_carved_folding_screen",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "structure_interior_ancient_weapon_rack": {
+      "frame": {
+        "x": 0,
+        "y": 1831,
+        "w": 204,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 204,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 204,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_ancient_weapon_rack",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_ancient_weapon_rack",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_ancient_sandalwood_incense_burner": {
+      "frame": {
+        "x": 206,
+        "y": 1831,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_interior_ancient_sandalwood_incense_burner",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_ancient_sandalwood_incense_burner",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    }
+  }
+}

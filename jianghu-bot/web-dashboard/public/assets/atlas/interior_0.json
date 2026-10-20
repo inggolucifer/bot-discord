@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1782
+    },
+    "format": "RGBA8888",
+    "image": "interior_0.webp"
+  },
+  "frames": {
+    "structure_interior_sect_disciples_tea_and_chess_gazebo": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 640
+      },
+      "metadata": {
+        "id": "structure_interior_sect_disciples_tea_and_chess_gazebo",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_disciples_tea_and_chess_gazebo",
+        "category": "furniture",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_interior_sect_spirit_herb_pill_pestle_mill": {
+      "frame": {
+        "x": 642,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_interior_sect_spirit_herb_pill_pestle_mill",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_spirit_herb_pill_pestle_mill",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_five_phases_brewing_distillery": {
+      "frame": {
+        "x": 1220,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_interior_sect_five_phases_brewing_distillery",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_five_phases_brewing_distillery",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "structure_interior_sect_celestial_talisman_drying_rotunda": {
+      "frame": {
+        "x": 0,
+        "y": 642,
+        "w": 550,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 550,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 550,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_interior_sect_celestial_talisman_drying_rotunda",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_celestial_talisman_drying_rotunda",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "structure_interior_sect_dragon_carved_scroll_archive_chest": {
+      "frame": {
+        "x": 552,
+        "y": 642,
+        "w": 576,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_interior_sect_dragon_carved_scroll_archive_chest",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_dragon_carved_scroll_archive_chest",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_sword_casting_water_quench_pool": {
+      "frame": {
+        "x": 1130,
+        "y": 642,
+        "w": 560,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 560,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 560,
+        "h": 560
+      },
+      "metadata": {
+        "id": "structure_interior_sect_sword_casting_water_quench_pool",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_sword_casting_water_quench_pool",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_interior_sect_sword_flying_launch_platform": {
+      "frame": {
+        "x": 0,
+        "y": 1220,
+        "w": 693,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 693,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 693,
+        "h": 560
+      },
+      "metadata": {
+        "id": "structure_interior_sect_sword_flying_launch_platform",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_sword_flying_launch_platform",
+        "category": "furniture",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_alchemy_cauldron_cooling_vat": {
+      "frame": {
+        "x": 695,
+        "y": 1220,
+        "w": 576,
+        "h": 550
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 550
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 550
+      },
+      "metadata": {
+        "id": "structure_interior_sect_alchemy_cauldron_cooling_vat",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_alchemy_cauldron_cooling_vat",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_interior_sect_array_refining_sand_table": {
+      "frame": {
+        "x": 1273,
+        "y": 1220,
+        "w": 576,
+        "h": 526
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 526
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 526
+      },
+      "metadata": {
+        "id": "structure_interior_sect_array_refining_sand_table",
+        "atlas": "objects_structures",
+        "frame": "structure_interior_sect_array_refining_sand_table",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    }
+  }
+}

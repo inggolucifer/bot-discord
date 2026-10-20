@@ -1,0 +1,338 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1708
+    },
+    "format": "RGBA8888",
+    "image": "dungeon_0.webp"
+  },
+  "frames": {
+    "structure_dungeon_ancient_floating_soul_crystal_monolith": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 480,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 480,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 480,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_floating_soul_crystal_monolith",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_floating_soul_crystal_monolith",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_dungeon_ancient_beast_skeleton_passage_arch": {
+      "frame": {
+        "x": 482,
+        "y": 0,
+        "w": 552,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 552,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 552,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_beast_skeleton_passage_arch",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_beast_skeleton_passage_arch",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "structure_dungeon_ancient_chasm_broken_chain_bridge_anchor": {
+      "frame": {
+        "x": 1036,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_chasm_broken_chain_bridge_anchor",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_chasm_broken_chain_bridge_anchor",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_blood_pool_sacrifice_font": {
+      "frame": {
+        "x": 0,
+        "y": 578,
+        "w": 550,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 550,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 550,
+        "h": 576
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_blood_pool_sacrifice_font",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_blood_pool_sacrifice_font",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "structure_dungeon_ancient_soul_devouring_carnivorous_plant": {
+      "frame": {
+        "x": 552,
+        "y": 578,
+        "w": 560,
+        "h": 560
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 560,
+        "h": 560
+      },
+      "sourceSize": {
+        "w": 560,
+        "h": 560
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_soul_devouring_carnivorous_plant",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_soul_devouring_carnivorous_plant",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_miasma_leech_flesh_pit_hazard": {
+      "frame": {
+        "x": 1114,
+        "y": 578,
+        "w": 576,
+        "h": 550
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 550
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 550
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_miasma_leech_flesh_pit_hazard",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_miasma_leech_flesh_pit_hazard",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_flame_dragon_oil_basin_hazard": {
+      "frame": {
+        "x": 0,
+        "y": 1156,
+        "w": 576,
+        "h": 550
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 550
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 550
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_flame_dragon_oil_basin_hazard",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_flame_dragon_oil_basin_hazard",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_poison_miasma_fountain_basin": {
+      "frame": {
+        "x": 578,
+        "y": 1156,
+        "w": 576,
+        "h": 550
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 550
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 550
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_poison_miasma_fountain_basin",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_poison_miasma_fountain_basin",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_stone_coffin_pedestal": {
+      "frame": {
+        "x": 1156,
+        "y": 1156,
+        "w": 533,
+        "h": 533
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 533,
+        "h": 533
+      },
+      "sourceSize": {
+        "w": 533,
+        "h": 533
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_stone_coffin_pedestal",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_stone_coffin_pedestal",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    }
+  }
+}

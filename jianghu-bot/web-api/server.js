@@ -97,11 +97,7 @@ const setupServer = (client) => {
         allowEIO3: true
     });
 
-
-    // io moved up
-
-
-    // io moved up
+    app.set('io', io);
 
 
     // Basic Rate Limiting to prevent brute force/spam API calls
@@ -366,6 +362,34 @@ const setupServer = (client) => {
             }
         });
 
+        // ==========================================
+        // CHUNK STREAMING SOCKET ROOMS (Fase C1)
+        // ==========================================
+        socket.on('subscribe_chunks', (data) => {
+            try {
+                const chunks = Array.isArray(data?.chunks) ? data.chunks.slice(0, 25) : [];
+                for (const c of chunks) {
+                    if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
+                        socket.join(`chunk:${c.cx}:${c.cy}`);
+                    }
+                }
+            } catch (err) {
+                console.warn('[SOCKET] subscribe_chunks error:', err.message);
+            }
+        });
+
+        socket.on('unsubscribe_chunks', (data) => {
+            try {
+                const chunks = Array.isArray(data?.chunks) ? data.chunks.slice(0, 25) : [];
+                for (const c of chunks) {
+                    if (Number.isInteger(c.cx) && Number.isInteger(c.cy)) {
+                        socket.leave(`chunk:${c.cx}:${c.cy}`);
+                    }
+                }
+            } catch (err) {
+                console.warn('[SOCKET] unsubscribe_chunks error:', err.message);
+            }
+        });
 
     });
 

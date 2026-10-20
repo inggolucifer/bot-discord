@@ -1,0 +1,1062 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1930
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_6.webp"
+  },
+  "frames": {
+    "nature_reed_bed_marsh": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_reed_bed_marsh",
+        "atlas": "objects_nature",
+        "frame": "nature_reed_bed_marsh",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_lotus_pond_cluster": {
+      "frame": {
+        "x": 386,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_lotus_pond_cluster",
+        "atlas": "objects_nature",
+        "frame": "nature_lotus_pond_cluster",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.4
+      }
+    },
+    "nature_autumn_maple_grove": {
+      "frame": {
+        "x": 772,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_autumn_maple_grove",
+        "atlas": "objects_nature",
+        "frame": "nature_autumn_maple_grove",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_wisteria_ancient_arbor": {
+      "frame": {
+        "x": 1158,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wisteria_ancient_arbor",
+        "atlas": "objects_nature",
+        "frame": "nature_wisteria_ancient_arbor",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_mossy_stream_cascade": {
+      "frame": {
+        "x": 1544,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mossy_stream_cascade",
+        "atlas": "objects_nature",
+        "frame": "nature_mossy_stream_cascade",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_ginkgo_ancient_gold": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ginkgo_ancient_gold",
+        "atlas": "objects_nature",
+        "frame": "nature_ginkgo_ancient_gold",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_crystal_cluster_cave_rock": {
+      "frame": {
+        "x": 386,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_crystal_cluster_cave_rock",
+        "atlas": "objects_nature",
+        "frame": "nature_crystal_cluster_cave_rock",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_wild_medicinal_ginseng_flowering": {
+      "frame": {
+        "x": 772,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wild_medicinal_ginseng_flowering",
+        "atlas": "objects_nature",
+        "frame": "nature_wild_medicinal_ginseng_flowering",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_wild_mountain_medicinal_angelica": {
+      "frame": {
+        "x": 1158,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wild_mountain_medicinal_angelica",
+        "atlas": "objects_nature",
+        "frame": "nature_wild_mountain_medicinal_angelica",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_wild_mountain_medicinal_wolfberry_bush": {
+      "frame": {
+        "x": 1544,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wild_mountain_medicinal_wolfberry_bush",
+        "atlas": "objects_nature",
+        "frame": "nature_wild_mountain_medicinal_wolfberry_bush",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_polygonum": {
+      "frame": {
+        "x": 0,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_polygonum",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_polygonum",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_salvia_miltiorrhiza": {
+      "frame": {
+        "x": 386,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_salvia_miltiorrhiza",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_salvia_miltiorrhiza",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_astragalus": {
+      "frame": {
+        "x": 772,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_astragalus",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_astragalus",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_licorice_root": {
+      "frame": {
+        "x": 1158,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_licorice_root",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_licorice_root",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_aconite_monkshood": {
+      "frame": {
+        "x": 1544,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_aconite_monkshood",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_aconite_monkshood",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_coptis_rhizome": {
+      "frame": {
+        "x": 0,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_coptis_rhizome",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_coptis_rhizome",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_dendrobium_orchid": {
+      "frame": {
+        "x": 386,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_dendrobium_orchid",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_dendrobium_orchid",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_polygonatum_kingianum": {
+      "frame": {
+        "x": 772,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_polygonatum_kingianum",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_polygonatum_kingianum",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_codonopsis_dangshen": {
+      "frame": {
+        "x": 1158,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_codonopsis_dangshen",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_codonopsis_dangshen",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_rehmannia_dihuang": {
+      "frame": {
+        "x": 1544,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_rehmannia_dihuang",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_rehmannia_dihuang",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_mountain_wild_medicinal_baical_skullcap_huangqin": {
+      "frame": {
+        "x": 0,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_wild_medicinal_baical_skullcap_huangqin",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_wild_medicinal_baical_skullcap_huangqin",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_scatter_swamp_ancient_mangrove_root_hollow": {
+      "frame": {
+        "x": 386,
+        "y": 1544,
+        "w": 384,
+        "h": 366
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 366
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 366
+      },
+      "metadata": {
+        "id": "nature_scatter_swamp_ancient_mangrove_root_hollow",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_swamp_ancient_mangrove_root_hollow",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.86
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_scatter_misty_bamboo_sprout_cluster": {
+      "frame": {
+        "x": 772,
+        "y": 1544,
+        "w": 384,
+        "h": 364
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 364
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 364
+      },
+      "metadata": {
+        "id": "nature_scatter_misty_bamboo_sprout_cluster",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_misty_bamboo_sprout_cluster",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "mt_azure_crag_v1": {
+      "frame": {
+        "x": 1158,
+        "y": 1544,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v1",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v2": {
+      "frame": {
+        "x": 1360,
+        "y": 1544,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v2",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v3": {
+      "frame": {
+        "x": 1562,
+        "y": 1544,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v3",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    },
+    "mt_azure_crag_v4": {
+      "frame": {
+        "x": 1764,
+        "y": 1544,
+        "w": 200,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 360
+      },
+      "metadata": {
+        "id": "mt_azure_crag_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_azure_crag_v4",
+        "category": "mountain",
+        "px": {
+          "w": 200,
+          "h": 360
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 1.6,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_azure_crag_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "azure_crag"
+        ]
+      }
+    }
+  }
+}

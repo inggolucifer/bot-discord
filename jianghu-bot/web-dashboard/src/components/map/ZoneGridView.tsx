@@ -45,6 +45,7 @@ import MapSearchModal from './modals/MapSearchModal';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 import RegionCalligraphyBanner from './RegionCalligraphyBanner';
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
+import { chunkManager } from '@/lib/chunkManager';
 
 interface ZoneGridViewProps {
   zoneId: string;
@@ -204,6 +205,7 @@ export default function ZoneGridView({
       if (res.data.exploredChunks) setExploredChunks(res.data.exploredChunks);
       if (res.data.playerLandStats) setPlayerLandStats(res.data.playerLandStats);
 
+      setIsInitialLoadDone(true);
       setError(null);
       setLoading(false);
     } catch (err: any) {
@@ -232,6 +234,43 @@ export default function ZoneGridView({
       sound.stopBgm();
     };
   }, [activeZoneId]);
+
+  // Fase C2: Progressive Chunk Streaming Sync
+  useEffect(() => {
+    const px = playerGrid?.position?.tileX ?? 2455;
+    const py = playerGrid?.position?.tileY ?? 2485;
+    chunkManager.updateCamera(px, py, 1.0);
+  }, [playerGrid?.position?.tileX, playerGrid?.position?.tileY]);
+
+  useEffect(() => {
+    const unsub = chunkManager.subscribe(() => {
+      const loaded = chunkManager.getAllLoadedTiles();
+      if (loaded.length > 0) {
+        setTiles(prev => {
+          const map = new Map<string, TileData>();
+          for (const t of prev) {
+            map.set(`${t.tileX},${t.tileY}`, t);
+          }
+          for (const t of loaded) {
+            map.set(`${t.tileX},${t.tileY}`, t);
+          }
+          if (map.size > 5000) {
+            const px = playerGrid?.position?.tileX ?? 2455;
+            const py = playerGrid?.position?.tileY ?? 2485;
+            const sorted = Array.from(map.values()).sort((a, b) => {
+              const distA = Math.hypot(a.tileX - px, a.tileY - py);
+              const distB = Math.hypot(b.tileX - px, b.tileY - py);
+              return distA - distB;
+            });
+            return sorted.slice(0, 3500);
+          }
+          return Array.from(map.values());
+        });
+      }
+    });
+
+    return () => unsub();
+  }, [playerGrid?.position?.tileX, playerGrid?.position?.tileY]);
 
   // Auto-fokus dan muat data grid jika targetFocusTile diberikan dari Peta Makro atau URL
   useEffect(() => {
@@ -844,6 +883,12 @@ export default function ZoneGridView({
   const defaultY = targetFocusTile?.y ?? (isMacro ? 2485 : 10);
   const px = playerGrid?.position?.tileX ?? defaultX;
   const py = playerGrid?.position?.tileY ?? defaultY;
+  // Fase A (Bug 1): Kesiapan posisi riil pemain dari server
+  const isPlayerPositionReady = Boolean(
+    playerGrid?.position?.tileX !== undefined &&
+    playerGrid?.position?.tileY !== undefined &&
+    isInitialLoadDone
+  );
   const currentCharacterTile = useMemo(() => {
     return tiles.find(t => t.tileX === px && t.tileY === py);
   }, [tiles, px, py]);
@@ -986,6 +1031,7 @@ export default function ZoneGridView({
         <TaleOfImmortalCanvas
           tiles={tiles}
           playerPos={{ x: px, y: py }}
+          playerReady={isPlayerPositionReady}
           focusTile={searchFocusTile || (targetFocusTile ? { x: targetFocusTile.x, y: targetFocusTile.y } : null)}
           targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
           activePath={activePath}

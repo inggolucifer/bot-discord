@@ -1,0 +1,2899 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1132
+    },
+    "format": "RGBA8888",
+    "image": "core_1.webp"
+  },
+  "frames": {
+    "sect_gate_3x2": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 384
+      },
+      "metadata": {
+        "id": "sect_gate_3x2",
+        "atlas": "objects_structures",
+        "frame": "sect_gate_3x2",
+        "category": "building",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "bamboo_clump_2x2": {
+      "frame": {
+        "x": 514,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 260
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 260
+      },
+      "metadata": {
+        "id": "bamboo_clump_2x2",
+        "atlas": "objects_nature",
+        "frame": "bamboo_clump_2x2",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 260
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 0.6,
+        "collision": "soft",
+        "staminaMult": 1.35,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_clump_2x2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "alias"
+        ]
+      }
+    },
+    "ring_monster_boss": {
+      "frame": {
+        "x": 716,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_boss",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_boss",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "ring_monster_elite": {
+      "frame": {
+        "x": 974,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_elite",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_elite",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "ring_monster_tier1": {
+      "frame": {
+        "x": 1232,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_tier1",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier1",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "ring_monster_boss_crimson": {
+      "frame": {
+        "x": 1490,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_boss_crimson",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_boss_crimson",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "collision": "none",
+        "overhangCells": 0
+      }
+    },
+    "ring_monster_tier2": {
+      "frame": {
+        "x": 1748,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_tier2",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier2",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier2"
+        ]
+      }
+    },
+    "ring_monster_tier3": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_tier3",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier3",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier3"
+        ]
+      }
+    },
+    "ring_monster_tier4": {
+      "frame": {
+        "x": 258,
+        "y": 386,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_tier4",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier4",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier4"
+        ]
+      }
+    },
+    "ring_monster_tier5": {
+      "frame": {
+        "x": 516,
+        "y": 386,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "ring_monster_tier5",
+        "atlas": "markers_entities",
+        "frame": "ring_monster_tier5",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "ring_monster_tier5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "monster",
+          "tier5"
+        ]
+      }
+    },
+    "pine_tree_1x1": {
+      "frame": {
+        "x": 774,
+        "y": 386,
+        "w": 144,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 144,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 144,
+        "h": 192
+      },
+      "metadata": {
+        "id": "pine_tree_1x1",
+        "atlas": "objects_nature",
+        "frame": "pine_tree_1x1",
+        "category": "tree",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "bamboo_clump_1x1": {
+      "frame": {
+        "x": 920,
+        "y": 386,
+        "w": 144,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 144,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 144,
+        "h": 192
+      },
+      "metadata": {
+        "id": "bamboo_clump_1x1",
+        "atlas": "objects_nature",
+        "frame": "bamboo_clump_1x1",
+        "category": "bamboo",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "karst_pillar_1x1": {
+      "frame": {
+        "x": 1066,
+        "y": 386,
+        "w": 144,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 144,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 144,
+        "h": 192
+      },
+      "metadata": {
+        "id": "karst_pillar_1x1",
+        "atlas": "objects_nature",
+        "frame": "karst_pillar_1x1",
+        "category": "mountain",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "resource_spirit_jade": {
+      "frame": {
+        "x": 1212,
+        "y": 386,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_spirit_jade",
+        "atlas": "objects_nature",
+        "frame": "resource_spirit_jade",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "resource_iron_ore": {
+      "frame": {
+        "x": 1406,
+        "y": 386,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_iron_ore",
+        "atlas": "objects_nature",
+        "frame": "resource_iron_ore",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "mt_rock_2x1": {
+      "frame": {
+        "x": 1600,
+        "y": 386,
+        "w": 256,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 192
+      },
+      "metadata": {
+        "id": "mt_rock_2x1",
+        "atlas": "objects_nature",
+        "frame": "mt_rock_2x1",
+        "category": "mountain",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "resource_golden_carp": {
+      "frame": {
+        "x": 0,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_golden_carp",
+        "atlas": "objects_nature",
+        "frame": "resource_golden_carp",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "none",
+        "overhangCells": 0.2
+      }
+    },
+    "resource_spirit_wood": {
+      "frame": {
+        "x": 194,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_spirit_wood",
+        "atlas": "objects_nature",
+        "frame": "resource_spirit_wood",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "resource_snow_lotus": {
+      "frame": {
+        "x": 388,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_snow_lotus",
+        "atlas": "objects_nature",
+        "frame": "resource_snow_lotus",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "resource_dragon_blood_grass": {
+      "frame": {
+        "x": 582,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_dragon_blood_grass",
+        "atlas": "objects_nature",
+        "frame": "resource_dragon_blood_grass",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "resource_ironwood_log": {
+      "frame": {
+        "x": 776,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "resource_ironwood_log",
+        "atlas": "objects_nature",
+        "frame": "resource_ironwood_log",
+        "category": "rock",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.2
+      }
+    },
+    "bamboo_clump_2x1": {
+      "frame": {
+        "x": 970,
+        "y": 644,
+        "w": 175,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 175,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 175,
+        "h": 192
+      },
+      "metadata": {
+        "id": "bamboo_clump_2x1",
+        "atlas": "objects_nature",
+        "frame": "bamboo_clump_2x1",
+        "category": "bamboo",
+        "px": {
+          "w": 200,
+          "h": 220
+        },
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 1.2,
+        "collision": "soft",
+        "staminaMult": 1.3,
+        "sortBias": 0,
+        "variants": [
+          "bamboo_clump_2x1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "bamboo",
+          "alias"
+        ]
+      }
+    },
+    "ancient_relic_fuxi_guqin": {
+      "frame": {
+        "x": 1147,
+        "y": 644,
+        "w": 256,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 192
+      },
+      "metadata": {
+        "id": "ancient_relic_fuxi_guqin",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_fuxi_guqin",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "pavilion_1x1": {
+      "frame": {
+        "x": 1405,
+        "y": 644,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "pavilion_1x1",
+        "atlas": "objects_structures",
+        "frame": "pavilion_1x1",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "village_house_2x1": {
+      "frame": {
+        "x": 1599,
+        "y": 644,
+        "w": 256,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 192
+      },
+      "metadata": {
+        "id": "village_house_2x1",
+        "atlas": "objects_structures",
+        "frame": "village_house_2x1",
+        "category": "building",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "stone_torii_1x1": {
+      "frame": {
+        "x": 0,
+        "y": 838,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "stone_torii_1x1",
+        "atlas": "objects_structures",
+        "frame": "stone_torii_1x1",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "autotile_river_m00": {
+      "frame": {
+        "x": 194,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m00",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m00",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m00"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m00": {
+      "frame": {
+        "x": 296,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m00",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m00",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m00"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m01": {
+      "frame": {
+        "x": 398,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m01",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m01",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m01"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m01": {
+      "frame": {
+        "x": 500,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m01",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m01",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m01"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m02": {
+      "frame": {
+        "x": 602,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m02",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m02",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m02"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m02": {
+      "frame": {
+        "x": 704,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m02",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m02",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m02"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m03": {
+      "frame": {
+        "x": 806,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m03",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m03",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m03"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m03": {
+      "frame": {
+        "x": 908,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m03",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m03",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m03"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m04": {
+      "frame": {
+        "x": 1010,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m04",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m04",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m04"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m04": {
+      "frame": {
+        "x": 1112,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m04",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m04",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m04"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m05": {
+      "frame": {
+        "x": 1214,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m05",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m05",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m05"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m05": {
+      "frame": {
+        "x": 1316,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m05",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m05",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m05"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m06": {
+      "frame": {
+        "x": 1418,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m06",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m06",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m06"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m06": {
+      "frame": {
+        "x": 1520,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m06",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m06",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m06"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m07": {
+      "frame": {
+        "x": 1622,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m07",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m07",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m07"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m07": {
+      "frame": {
+        "x": 1724,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m07",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m07",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m07"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m08": {
+      "frame": {
+        "x": 1826,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m08",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m08",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m08"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m08": {
+      "frame": {
+        "x": 1928,
+        "y": 838,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m08",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m08",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m08"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m09": {
+      "frame": {
+        "x": 0,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m09",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m09",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m09"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m09": {
+      "frame": {
+        "x": 102,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m09",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m09",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m09"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0a": {
+      "frame": {
+        "x": 204,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0a",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0a",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0a"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0a": {
+      "frame": {
+        "x": 306,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0a",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0a",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0a"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0b": {
+      "frame": {
+        "x": 408,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0b",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0b",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0b"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0b": {
+      "frame": {
+        "x": 510,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0b",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0b",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0b"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0c": {
+      "frame": {
+        "x": 612,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0c",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0c",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0c"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0c": {
+      "frame": {
+        "x": 714,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0c",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0c",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0c"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0d": {
+      "frame": {
+        "x": 816,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0d",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0d",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0d"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0d": {
+      "frame": {
+        "x": 918,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0d",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0d",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0d"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0e": {
+      "frame": {
+        "x": 1020,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0e",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0e",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0e"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0e": {
+      "frame": {
+        "x": 1122,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0e",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0e",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0e"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "autotile_river_m0f": {
+      "frame": {
+        "x": 1224,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_river_m0f",
+        "atlas": "autotiles",
+        "frame": "autotile_river_m0f",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "solid",
+        "staminaMult": 1.5,
+        "sortBias": 0,
+        "variants": [
+          "autotile_river_m0f"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "water",
+          "river"
+        ]
+      }
+    },
+    "autotile_road_m0f": {
+      "frame": {
+        "x": 1326,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "autotile_road_m0f",
+        "atlas": "autotiles",
+        "frame": "autotile_road_m0f",
+        "category": "autotile",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 0.8,
+        "sortBias": 0,
+        "variants": [
+          "autotile_road_m0f"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "autotile",
+          "road"
+        ]
+      }
+    },
+    "marker_quest_beacon": {
+      "frame": {
+        "x": 1428,
+        "y": 1032,
+        "w": 100,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 100
+      },
+      "metadata": {
+        "id": "marker_quest_beacon",
+        "atlas": "markers_entities",
+        "frame": "marker_quest_beacon",
+        "category": "marker",
+        "px": {
+          "w": 100,
+          "h": 100
+        },
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "overhangCells": 0,
+        "collision": "none",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "marker_quest_beacon"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": false,
+        "tags": [
+          "marker",
+          "quest"
+        ]
+      }
+    }
+  }
+}

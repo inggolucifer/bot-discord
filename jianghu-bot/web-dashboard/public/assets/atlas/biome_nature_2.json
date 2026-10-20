@@ -1,0 +1,374 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1862
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_2.webp"
+  },
+  "frames": {
+    "landmark_void_rift_shattered_space_singularity": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_void_rift_shattered_space_singularity",
+        "atlas": "objects_nature",
+        "frame": "landmark_void_rift_shattered_space_singularity",
+        "category": "rock",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum": {
+      "frame": {
+        "x": 642,
+        "y": 0,
+        "w": 682,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+        "atlas": "objects_structures",
+        "frame": "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_ore_teeth_range_abandoned_dwarf_minehead": {
+      "frame": {
+        "x": 1326,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_ore_teeth_range_abandoned_dwarf_minehead",
+        "atlas": "objects_structures",
+        "frame": "landmark_ore_teeth_range_abandoned_dwarf_minehead",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_eastern_sea_dragon_turtle_shell_shrine": {
+      "frame": {
+        "x": 0,
+        "y": 642,
+        "w": 682,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+        "atlas": "objects_structures",
+        "frame": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_formation_barrens_broken_bagua_array": {
+      "frame": {
+        "x": 684,
+        "y": 642,
+        "w": 640,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_formation_barrens_broken_bagua_array",
+        "atlas": "objects_structures",
+        "frame": "landmark_formation_barrens_broken_bagua_array",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "landmark_mist_insect_valley_chitin_hive_monolith": {
+      "frame": {
+        "x": 1326,
+        "y": 642,
+        "w": 473,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 473,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 473,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_mist_insect_valley_chitin_hive_monolith",
+        "atlas": "objects_nature",
+        "frame": "landmark_mist_insect_valley_chitin_hive_monolith",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_abyssal_scar_void_chain_anchor": {
+      "frame": {
+        "x": 0,
+        "y": 1284,
+        "w": 473,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 473,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 473,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_abyssal_scar_void_chain_anchor",
+        "atlas": "objects_nature",
+        "frame": "landmark_abyssal_scar_void_chain_anchor",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_azure_mountain_sword_peak_monolith": {
+      "frame": {
+        "x": 475,
+        "y": 1284,
+        "w": 432,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 432,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 432,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_azure_mountain_sword_peak_monolith",
+        "atlas": "objects_nature",
+        "frame": "landmark_azure_mountain_sword_peak_monolith",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_thundersteppe_lightning_attractor_pillar": {
+      "frame": {
+        "x": 909,
+        "y": 1284,
+        "w": 432,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 432,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 432,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_thundersteppe_lightning_attractor_pillar",
+        "atlas": "objects_nature",
+        "frame": "landmark_thundersteppe_lightning_attractor_pillar",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_crimson_battlefield_broken_halberd_cairn": {
+      "frame": {
+        "x": 1343,
+        "y": 1284,
+        "w": 576,
+        "h": 576
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 576
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 576
+      },
+      "metadata": {
+        "id": "landmark_crimson_battlefield_broken_halberd_cairn",
+        "atlas": "objects_nature",
+        "frame": "landmark_crimson_battlefield_broken_halberd_cairn",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    }
+  }
+}

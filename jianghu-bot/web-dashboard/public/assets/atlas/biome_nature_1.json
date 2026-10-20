@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 2037
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_1.webp"
+  },
+  "frames": {
+    "landmark_nine_springs_delta_dragon_water_pavilion": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_nine_springs_delta_dragon_water_pavilion",
+        "atlas": "objects_structures",
+        "frame": "landmark_nine_springs_delta_dragon_water_pavilion",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_mirror_lake_submerged_daoist_pavilion": {
+      "frame": {
+        "x": 684,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_mirror_lake_submerged_daoist_pavilion",
+        "atlas": "objects_structures",
+        "frame": "landmark_mirror_lake_submerged_daoist_pavilion",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_hermit_highlands_cloud_bamboo_observatory": {
+      "frame": {
+        "x": 0,
+        "y": 684,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_hermit_highlands_cloud_bamboo_observatory",
+        "atlas": "objects_structures",
+        "frame": "landmark_hermit_highlands_cloud_bamboo_observatory",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_beast_prairies_tribal_totem_encampment": {
+      "frame": {
+        "x": 684,
+        "y": 684,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_beast_prairies_tribal_totem_encampment",
+        "atlas": "objects_structures",
+        "frame": "landmark_beast_prairies_tribal_totem_encampment",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_godthunder_peaks_heavenly_tribulation_platform": {
+      "frame": {
+        "x": 1368,
+        "y": 684,
+        "w": 640,
+        "h": 667
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 667
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 667
+      },
+      "metadata": {
+        "id": "landmark_godthunder_peaks_heavenly_tribulation_platform",
+        "atlas": "objects_nature",
+        "frame": "landmark_godthunder_peaks_heavenly_tribulation_platform",
+        "category": "rock",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_southern_plague_woods_blight_root_shrine": {
+      "frame": {
+        "x": 0,
+        "y": 1368,
+        "w": 640,
+        "h": 667
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 667
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 667
+      },
+      "metadata": {
+        "id": "landmark_southern_plague_woods_blight_root_shrine",
+        "atlas": "objects_nature",
+        "frame": "landmark_southern_plague_woods_blight_root_shrine",
+        "category": "tree",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_immortal_ruins_valley_celestial_gateway_remnant": {
+      "frame": {
+        "x": 642,
+        "y": 1368,
+        "w": 640,
+        "h": 667
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 667
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 667
+      },
+      "metadata": {
+        "id": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+        "atlas": "objects_structures",
+        "frame": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_frostmoon_sea_frozen_dragon_skull_isle": {
+      "frame": {
+        "x": 1284,
+        "y": 1368,
+        "w": 682,
+        "h": 640
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 640
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 640
+      },
+      "metadata": {
+        "id": "landmark_frostmoon_sea_frozen_dragon_skull_isle",
+        "atlas": "objects_nature",
+        "frame": "landmark_frostmoon_sea_frozen_dragon_skull_isle",
+        "category": "rock",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    }
+  }
+}

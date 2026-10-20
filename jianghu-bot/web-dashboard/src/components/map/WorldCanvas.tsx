@@ -27,6 +27,8 @@ import {
 import { CANONICAL_REGIONS, CANONICAL_LANDMARKS } from '@/config/canonicalRegions';
 import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation } from 'lucide-react';
 import { atlasLoader } from '@/lib/atlasLoader';
+import { chunkManager } from '@/lib/chunkManager';
+import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 
 // Re-export TileData for backward compatibility
 export type { TileData };
@@ -35,6 +37,7 @@ export interface WorldCanvasProps {
   mode?: CanvasViewMode;
   tiles: TileData[];
   playerPos: { x: number; y: number };
+  playerReady?: boolean;
   targetTile?: Point | null;
   activePath?: Point[];
   exploredChunks?: string[];
@@ -69,10 +72,39 @@ const RESOURCE_ICON_FRAMES: Record<string, string[]> = {
   fish: ['icon_res_fish', 'resource_golden_carp', 'resource_spirit_koi_pool'],
 };
 
+function resolveMonsterAtlasFrame(name?: string, key?: string): string | null {
+  if (!name && !key) return null;
+  const k = (key || '').toLowerCase();
+  const n = (name || '').toLowerCase();
+
+  if (key && atlasLoader.hasFrame(key)) return key;
+  if (key && atlasLoader.hasFrame(`monster_${key}`)) return `monster_${key}`;
+  if (key && atlasLoader.hasFrame(`monster_regional_${key}`)) return `monster_regional_${key}`;
+
+  if (k.includes('wolf') || n.includes('serigala')) return 'monster_demon_wolf';
+  if (k.includes('tiger') || n.includes('harimau')) return 'monster_white_tiger';
+  if (k.includes('serpent') || n.includes('ular')) return 'monster_blood_serpent';
+  if (k.includes('bear') || n.includes('beruang')) return 'monster_iron_bear';
+  if (k.includes('roc') || k.includes('eagle') || n.includes('rajawali')) return 'monster_storm_roc';
+  if (k.includes('scorpion') || n.includes('kalajengking')) return 'monster_sand_scorpion';
+  if (k.includes('golem') || n.includes('golem')) return 'monster_rock_golem';
+  if (k.includes('ape') || n.includes('kera')) return 'monster_flame_ape';
+  if (k.includes('dragon') || n.includes('naga')) return 'monster_regional_primordial_azure_dragon';
+  if (k.includes('fox') || n.includes('rubah')) return 'monster_regional_nine_tailed_fox';
+  if (k.includes('qilin')) return 'monster_regional_primordial_jade_qilin';
+  if (k.includes('mastodon') || n.includes('gajah')) return 'monster_regional_glacial_frost_mastodon';
+  if (k.includes('tortoise') || n.includes('kura')) return 'monster_regional_magma_lava_tortoise';
+  if (k.includes('centipede') || n.includes('kelabang')) return 'monster_regional_myriad_toxic_centipede';
+  if (k.includes('wyrm') || k.includes('void')) return 'monster_regional_void_rift_dimensional_wyrm';
+
+  return null;
+}
+
 export default function WorldCanvas({
   mode = 'zone',
   tiles,
   playerPos,
+  playerReady = true,
   targetTile = null,
   activePath = [],
   exploredChunks = [],
@@ -204,47 +236,137 @@ export default function WorldCanvas({
     return map;
   }, [tiles]);
 
-  // Recenter Camera Callback
+  // Camera Initial Snapped Ref & Animation State (Bug 1 Fix)
+  const hasInitialCentered = useRef(false);
+  const cameraAnimFrameRef = useRef<number | null>(null);
+  const prevPlayerPos = useRef({ x: playerPos.x, y: playerPos.y });
+
+  // Smooth camera pan animation helper (250ms easing cubic-out)
+  const animateCameraTo = useCallback((targetX: number, targetY: number, targetZoom?: number, durationMs = 250) => {
+    if (cameraAnimFrameRef.current) {
+      cancelAnimationFrame(cameraAnimFrameRef.current);
+    }
+    setCamera(currentCam => {
+      const startX = currentCam.x;
+      const startY = currentCam.y;
+      const startZoom = currentCam.zoom;
+      const endZoom = targetZoom !== undefined ? targetZoom : startZoom;
+      const startTime = performance.now();
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / durationMs);
+        const ease = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+        setCamera({
+          x: startX + (targetX - startX) * ease,
+          y: startY + (targetY - startY) * ease,
+          zoom: startZoom + (endZoom - startZoom) * ease
+        });
+        if (progress < 1) {
+          cameraAnimFrameRef.current = requestAnimationFrame(step);
+        } else {
+          cameraAnimFrameRef.current = null;
+        }
+      };
+
+      cameraAnimFrameRef.current = requestAnimationFrame(step);
+      return currentCam;
+    });
+  }, []);
+
+  // Cleanup camera animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (cameraAnimFrameRef.current) {
+        cancelAnimationFrame(cameraAnimFrameRef.current);
+      }
+    };
+  }, []);
+
+  // Snap camera once playerReady becomes true (Bug 1 Fix)
+  useEffect(() => {
+    if (playerReady && !hasInitialCentered.current) {
+      const targetX = focusTile ? focusTile.x : playerPos.x;
+      const targetY = focusTile ? focusTile.y : playerPos.y;
+      setCamera({
+        x: targetX,
+        y: targetY,
+        zoom: currentMode === 'macro' ? 0.18 : 1.0
+      });
+      animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
+      hasInitialCentered.current = true;
+    }
+  }, [playerReady, playerPos.x, playerPos.y, focusTile, currentMode]);
+
+  // Recenter Camera Callback with 250ms smooth transition
   const centerOnPlayer = useCallback(() => {
-    setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
+    const targetX = focusTile ? focusTile.x : playerPos.x;
+    const targetY = focusTile ? focusTile.y : playerPos.y;
+    animateCameraTo(targetX, targetY, currentMode === 'macro' ? 0.18 : 1.0, 250);
     animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
     onRecenterPlayer?.();
-  }, [playerPos.x, playerPos.y, onRecenterPlayer]);
+  }, [playerPos.x, playerPos.y, focusTile, currentMode, animateCameraTo, onRecenterPlayer]);
 
-  // Auto-sync Camera on Focus or Teleport
+  // Auto-sync Camera on Focus Tile Changes
   const prevFocusTile = useRef<Point | null>(focusTile);
   useEffect(() => {
     if (focusTile) {
-      setCamera(prev => ({ ...prev, x: focusTile.x, y: focusTile.y }));
+      animateCameraTo(focusTile.x, focusTile.y, undefined, 250);
     } else if (prevFocusTile.current && !focusTile) {
-      setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y }));
+      animateCameraTo(playerPos.x, playerPos.y, undefined, 250);
       animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
     }
     prevFocusTile.current = focusTile;
-  }, [focusTile?.x, focusTile?.y, playerPos.x, playerPos.y]);
+  }, [focusTile?.x, focusTile?.y, playerPos.x, playerPos.y, animateCameraTo]);
 
-  // Sync Camera when Walking
+  // Teleport detection: player position changed by > 1 tile while not walking
   useEffect(() => {
-    if (isWalking) {
+    const dx = Math.abs(playerPos.x - prevPlayerPos.current.x);
+    const dy = Math.abs(playerPos.y - prevPlayerPos.current.y);
+    if ((dx > 1 || dy > 1) && !isWalking && !isDragging && hasInitialCentered.current) {
+      animateCameraTo(playerPos.x, playerPos.y, undefined, 250);
+      animatedPlayerPos.current = { x: playerPos.x, y: playerPos.y };
+    }
+    prevPlayerPos.current = { x: playerPos.x, y: playerPos.y };
+  }, [playerPos.x, playerPos.y, isWalking, isDragging, animateCameraTo]);
+
+  // Sync Camera when Walking (anti-jerk: do not override if user is actively dragging)
+  useEffect(() => {
+    if (isWalking && !isDragging) {
       setCamera(prev => ({
         ...prev,
         x: prev.x + (playerPos.x - prev.x) * 0.25,
         y: prev.y + (playerPos.y - prev.y) * 0.25
       }));
     }
-  }, [playerPos.x, playerPos.y, isWalking]);
+  }, [playerPos.x, playerPos.y, isWalking, isDragging]);
 
-  // Toggle Mode Handler
+  // Toggle Mode Handler with smooth transition
   const handleToggleMode = () => {
     const nextMode = currentMode === 'zone' ? 'macro' : 'zone';
     setCurrentMode(nextMode);
     onModeChange?.(nextMode);
-    if (nextMode === 'macro') {
-      setCamera(prev => ({ ...prev, zoom: 0.18 }));
-    } else {
-      setCamera(prev => ({ ...prev, x: playerPos.x, y: playerPos.y, zoom: 1.0 }));
-    }
+    const targetX = focusTile ? focusTile.x : playerPos.x;
+    const targetY = focusTile ? focusTile.y : playerPos.y;
+    const targetZoom = nextMode === 'macro' ? 0.18 : 1.0;
+    animateCameraTo(targetX, targetY, targetZoom, 250);
   };
+
+  // Fase C2: Sinkronisasi kamera ke chunkManager untuk progressive chunk streaming
+  useEffect(() => {
+    if (camera.x !== undefined && camera.y !== undefined) {
+      chunkManager.updateCamera(camera.x, camera.y, camera.zoom);
+    }
+  }, [Math.floor(camera.x / 16), Math.floor(camera.y / 16), camera.zoom]);
+
+  // Fase C2: Repaint trigger saat chunk baru selesai dimuat
+  const [, setChunkTick] = useState(0);
+  useEffect(() => {
+    const unsub = chunkManager.subscribe(() => {
+      setChunkTick(t => (t + 1) % 1000);
+    });
+    return () => unsub();
+  }, []);
 
   // ==========================================================================
   // MAIN 10-LAYER RENDERING LOOP
@@ -278,6 +400,15 @@ export default function WorldCanvas({
 
       const toScreenX = (wx: number) => (wx - camera.x + viewTilesX / 2) * currentTileSize;
       const toScreenY = (wy: number) => (wy - camera.y + viewTilesY / 2) * currentTileSize;
+
+      // Fase A (Bug 2): Array penampung simpul sumber daya untuk lapisan label terpisah
+      const eligibleResourceLabels: Array<{
+        tile: TileData;
+        screenX: number;
+        screenY: number;
+        dist: number;
+        label: string;
+      }> = [];
 
       // ======================================================================
       // BRANCH: MACRO MODE (CONTINENT OVERVIEW 5000x5000)
@@ -394,7 +525,7 @@ export default function WorldCanvas({
       // ----------------------------------------------------------------------
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
-          const tile = tileMap.get(`${tx},${ty}`);
+          const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           const sx = toScreenX(tx);
           const sy = toScreenY(ty);
 
@@ -448,9 +579,10 @@ export default function WorldCanvas({
         }
       }
 
-      // Grid Lines (Ultra-crisp 1px with alpha 0.06 - 0.25)
+      // Grid Lines (Adaptive LOD: faint when zoomed out, clear when zoomed in)
       ctx.save();
-      ctx.strokeStyle = 'rgba(165, 155, 142, 0.25)';
+      const gridAlpha = camera.zoom < 0.7 ? 0.08 : (camera.zoom < 1.0 ? 0.16 : 0.25);
+      ctx.strokeStyle = `rgba(165, 155, 142, ${gridAlpha})`;
       ctx.lineWidth = 1;
       for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
         const sx = Math.floor(toScreenX(tx)) + 0.5;
@@ -475,7 +607,7 @@ export default function WorldCanvas({
         ctx.save();
         for (let ty = minTileY; ty <= maxTileY; ty++) {
           for (let tx = minTileX; tx <= maxTileX; tx++) {
-            const tile = tileMap.get(`${tx},${ty}`);
+            const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
             const sx = toScreenX(tx);
             const sy = toScreenY(ty);
 
@@ -553,13 +685,20 @@ export default function WorldCanvas({
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
           if (objCount >= 140) break;
-          const tile = tileMap.get(`${tx},${ty}`);
+          const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           if (!tile) continue;
 
           // Check if tile has explicit map objects
           if (tile.objects && tile.objects.length > 0) {
             for (const obj of tile.objects) {
               const def = OBJECT_DEFINITIONS[obj.defId] || OBJECT_DEFINITIONS.karst_pillar_1x1;
+
+              // LOD Tuning: at zoom < 0.65, skip small micro-clutter (tiny shrubs, 1x1 flora)
+              if (camera.zoom < 0.65 && def.footprint.cw <= 1 && def.footprint.ch <= 1) {
+                const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster');
+                if (!isImportant) continue;
+              }
+
               const bottomY = obj.y + def.footprint.ch;
               ySortQueue.push({
                 type: 'object',
@@ -592,6 +731,12 @@ export default function WorldCanvas({
 
             if (autoDefId && OBJECT_DEFINITIONS[autoDefId]) {
               const def = OBJECT_DEFINITIONS[autoDefId];
+
+              // LOD Tuning: at zoom < 0.65, skip small procedural auto-objects unless building
+              if (camera.zoom < 0.65 && def.footprint.cw <= 1 && def.footprint.ch <= 1 && !tile.buildingName && !tile.isSettlementOrigin) {
+                continue;
+              }
+
               const bottomY = ty + def.footprint.ch;
               ySortQueue.push({
                 type: 'object',
@@ -654,8 +799,8 @@ export default function WorldCanvas({
           renderL4ProceduralObject(ctx, def.id, ox, oy, currentTileSize, time, objAlpha, instance.flipX);
 
           // Building Label
-          const t = tileMap.get(`${instance.x},${instance.y}`);
-          if (t && t.buildingName) {
+          const t = tileMap.get(`${instance.x},${instance.y}`) || chunkManager.getTile(instance.x, instance.y);
+          if (t && t.buildingName && (camera.zoom >= 0.65 || t.isSettlementOrigin)) {
             const bLabel = t.buildingName;
             ctx.font = `bold ${Math.max(7, 8.5 * camera.zoom)}px sans-serif`;
             ctx.textAlign = 'center';
@@ -740,7 +885,8 @@ export default function WorldCanvas({
         for (let tx = minTileX; tx <= maxTileX; tx++) {
           const chunkX = Math.floor(tx / 16);
           const chunkY = Math.floor(ty / 16);
-          const isExplored = exploredChunkSet.has(`${chunkX},${chunkY}`);
+          const isFogActive = exploredChunkSet.size > 0;
+          const isExplored = !isFogActive || exploredChunkSet.has(`${chunkX},${chunkY}`);
           if (!isExplored) {
             const sx = toScreenX(tx);
             const sy = toScreenY(ty);
@@ -764,12 +910,12 @@ export default function WorldCanvas({
       if (camera.zoom >= 0.8) {
         for (let ty = minTileY; ty <= maxTileY; ty++) {
           for (let tx = minTileX; tx <= maxTileX; tx++) {
-            const tile = tileMap.get(`${tx},${ty}`);
+            const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
             const count = (tile?.npcCount || (Array.isArray(tile?.npcs) ? tile.npcs.length : 0)) || 0;
             if (!tile || count < 1) continue;
             const chunkX = Math.floor(tx / 16);
             const chunkY = Math.floor(ty / 16);
-            if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+            if (exploredChunkSet.size > 0 && !exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
 
             const sx = toScreenX(tx);
             const sy = toScreenY(ty);
@@ -793,11 +939,11 @@ export default function WorldCanvas({
       // 2. Active Monsters on Specific Tiles (Ink Ring, Dynamic Icon, Aggro Radius & Boss Banner)
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
-          const tile = tileMap.get(`${tx},${ty}`);
+          const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           if (!tile || !tile.spawnedMonster || !tile.spawnedMonster.name) continue;
           const chunkX = Math.floor(tx / 16);
           const chunkY = Math.floor(ty / 16);
-          if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+          if (exploredChunkSet.size > 0 && !exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
 
           const sx = toScreenX(tx);
           const sy = toScreenY(ty);
@@ -825,12 +971,26 @@ export default function WorldCanvas({
             time
           );
 
-          // Dynamic species icon
-          const speciesIcon = getMonsterIcon(m.name, m.key);
-          ctx.font = `${Math.max(12, 16 * camera.zoom)}px sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(speciesIcon, sx + currentTileSize / 2, sy + currentTileSize * 0.5);
+          // Render Illustrated Monster Sprite from Atlas (with graceful emoji fallback)
+          const monsterFrame = resolveMonsterAtlasFrame(m.name, m.key);
+          const drawn = monsterFrame && atlasLoader.hasFrame(monsterFrame)
+            ? atlasLoader.drawSprite(
+                ctx,
+                monsterFrame,
+                sx + currentTileSize * 0.12,
+                sy + currentTileSize * 0.12,
+                currentTileSize * 0.76,
+                currentTileSize * 0.76
+              )
+            : false;
+
+          if (!drawn) {
+            const speciesIcon = getMonsterIcon(m.name, m.key);
+            ctx.font = `${Math.max(12, 16 * camera.zoom)}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(speciesIcon, sx + currentTileSize / 2, sy + currentTileSize * 0.5);
+          }
 
           // Boss Warning Badge
           if (m.isBoss || (m.tier && m.tier >= 5)) {
@@ -861,11 +1021,11 @@ export default function WorldCanvas({
       if (camera.zoom >= 1.0) {
         for (let ty = minTileY; ty <= maxTileY; ty++) {
           for (let tx = minTileX; tx <= maxTileX; tx++) {
-            const tile = tileMap.get(`${tx},${ty}`);
+            const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
             if (!tile || (!tile.resourceType && tile.tileType !== 'resource_node')) continue;
             const chunkX = Math.floor(tx / 16);
             const chunkY = Math.floor(ty / 16);
-            if (!exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
+            if (exploredChunkSet.size > 0 && !exploredChunkSet.has(`${chunkX},${chunkY}`)) continue;
 
             const sx = toScreenX(tx);
             const sy = toScreenY(ty);
@@ -933,28 +1093,29 @@ export default function WorldCanvas({
               isDormant
             );
 
-            // Resource Pill Label
-            if (!isDormant) {
-              const resLabel = tile.label || (
-                tile.resourceType === 'herb' ? 'Herba Roh' :
-                tile.resourceType === 'ore' ? 'Urat Bijih' :
-                tile.resourceType === 'wood' ? 'Kayu Roh' :
-                tile.resourceType === 'fish' ? 'Lubuk Ikan' : 'Sumber Daya'
-              );
-              ctx.font = `bold ${Math.max(6, 7.5 * camera.zoom)}px sans-serif`;
-              const textW = ctx.measureText(resLabel).width;
-              const pillW = textW + 6 * camera.zoom;
-              const pillH = 9 * camera.zoom;
-              const pillX = sx + (currentTileSize - pillW) / 2;
-              const pillY = sy + currentTileSize * 0.88 - pillH;
+            // Fase A (Bug 2): Kumpulkan simpul untuk lapisan label Xuan Paper terpisah
+            // Syarat: tidak dormant, zoom >= 0.8, dan berada dalam radius <= 3 petak atau sedang di-hover/dipilih
+            if (!isDormant && camera.zoom >= 0.8) {
+              const dist = Math.max(Math.abs(tile.tileX - playerPos.x), Math.abs(tile.tileY - playerPos.y));
+              const isHovered = hoveredTile && hoveredTile.tileX === tile.tileX && hoveredTile.tileY === tile.tileY;
+              const isSelected = targetTile && targetTile.x === tile.tileX && targetTile.y === tile.tileY;
 
-              ctx.fillStyle = 'rgba(6, 20, 16, 0.85)';
-              ctx.fillRect(pillX, pillY, pillW, pillH);
-              ctx.strokeStyle = tile.resourceType === 'ore' ? '#F59E0B' : '#10B981';
-              ctx.lineWidth = 0.8;
-              ctx.strokeRect(pillX, pillY, pillW, pillH);
-              ctx.fillStyle = tile.resourceType === 'ore' ? '#FDE68A' : '#A7F3D0';
-              ctx.fillText(resLabel, sx + currentTileSize / 2, pillY + pillH - 2 * camera.zoom);
+              if (dist <= 3 || isHovered || isSelected) {
+                const resLabel = (
+                  tile.resourceType === 'herb' ? 'Herba Roh' :
+                  tile.resourceType === 'ore' ? 'Urat Bijih' :
+                  tile.resourceType === 'wood' ? 'Kayu Roh' :
+                  tile.resourceType === 'fish' ? 'Lubuk Ikan' :
+                  tile.label || 'Sumber Daya'
+                );
+                eligibleResourceLabels.push({
+                  tile,
+                  screenX: sx + currentTileSize * 0.5,
+                  screenY: sy + currentTileSize * 0.85,
+                  dist,
+                  label: resLabel
+                });
+              }
             }
           }
         }
@@ -1079,6 +1240,102 @@ export default function WorldCanvas({
       }
       ctx.restore();
 
+      // ======================================================================
+      // 11. DEDICATED XUAN PAPER RESOURCE LABEL PASS (Fase A - Bug 2)
+      // ======================================================================
+      if (currentMode === 'zone' && camera.zoom >= 0.8 && eligibleResourceLabels.length > 0) {
+        // Urutkan berdasarkan jarak terdekat ke pemain
+        eligibleResourceLabels.sort((a, b) => a.dist - b.dist);
+
+        const renderedBoxes: Array<{ x: number; y: number; w: number; h: number }> = [];
+        const maxLabels = 8;
+        const fontSize = Math.max(11, Math.min(13, Math.floor(12 * camera.zoom)));
+
+        ctx.font = `bold ${fontSize}px "Cinzel", "Noto Serif SC", serif, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for (const item of eligibleResourceLabels) {
+          if (renderedBoxes.length >= maxLabels) break;
+
+          const textWidth = ctx.measureText(item.label).width;
+          const paddingX = 8;
+          const paddingY = 4;
+          const boxWidth = textWidth + paddingX * 2;
+          const boxHeight = fontSize + paddingY * 2;
+          const boxX = item.screenX - boxWidth / 2;
+          const boxY = item.screenY - boxHeight - 8;
+
+          // Simple collision avoidance
+          let overlaps = false;
+          for (const box of renderedBoxes) {
+            if (
+              boxX < box.x + box.w &&
+              boxX + boxWidth > box.x &&
+              boxY < box.y + box.h &&
+              boxY + boxHeight > box.y
+            ) {
+              overlaps = true;
+              break;
+            }
+          }
+          if (overlaps) continue;
+
+          renderedBoxes.push({ x: boxX, y: boxY, w: boxWidth, h: boxHeight });
+
+          ctx.save();
+          // Drop shadow halus
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+          ctx.shadowBlur = 6;
+          ctx.shadowOffsetY = 2;
+
+          // Background Kertas Xuan
+          ctx.fillStyle = '#F4F1EA';
+          ctx.beginPath();
+          const r = 4;
+          if (typeof ctx.roundRect === 'function') {
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, r);
+          } else {
+            ctx.rect(boxX, boxY, boxWidth, boxHeight);
+          }
+          ctx.fill();
+
+          // Panah kecil mengarah ke simpul tile
+          ctx.beginPath();
+          ctx.moveTo(item.screenX - 4, boxY + boxHeight);
+          ctx.lineTo(item.screenX + 4, boxY + boxHeight);
+          ctx.lineTo(item.screenX, boxY + boxHeight + 4);
+          ctx.closePath();
+          ctx.fill();
+
+          // Border Tinta Gelap 1px
+          ctx.shadowColor = 'transparent';
+          ctx.strokeStyle = '#2E3A38';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          if (typeof ctx.roundRect === 'function') {
+            ctx.roundRect(boxX, boxY, boxWidth, boxHeight, r);
+          } else {
+            ctx.rect(boxX, boxY, boxWidth, boxHeight);
+          }
+          ctx.stroke();
+
+          // Garis aksen halus di bagian atas (emas untuk ore, giok/zamrud untuk lainnya)
+          ctx.strokeStyle = item.tile.resourceType === 'ore' ? '#D97706' : '#059669';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(boxX + r, boxY + 1.5);
+          ctx.lineTo(boxX + boxWidth - r, boxY + 1.5);
+          ctx.stroke();
+
+          // Teks Tinta Gelap
+          ctx.fillStyle = '#1A2421';
+          ctx.fillText(item.label, item.screenX, boxY + boxHeight / 2 + 1);
+
+          ctx.restore();
+        }
+      }
+
       animationFrameId = requestAnimationFrame(render);
     };
 
@@ -1133,7 +1390,7 @@ export default function WorldCanvas({
       );
       setHoveredRegion(reg || null);
     } else {
-      const tile = tileMap.get(`${hoverX},${hoverY}`);
+      const tile = tileMap.get(`${hoverX},${hoverY}`) || chunkManager.getTile(hoverX, hoverY);
       if (tile && onTileHover) {
         onTileHover(tile);
         setHoveredTile(tile);
@@ -1172,7 +1429,7 @@ export default function WorldCanvas({
             onSelectRegion(reg.regionSlug, reg.centerX, reg.centerY);
           }
         } else {
-          const selectedTile = tileMap.get(`${clickX},${clickY}`) || {
+          const selectedTile = tileMap.get(`${clickX},${clickY}`) || chunkManager.getTile(clickX, clickY) || {
             tileX: clickX,
             tileY: clickY,
             terrainType: 'plains',
@@ -1267,7 +1524,7 @@ export default function WorldCanvas({
             onSelectRegion(reg.regionSlug, reg.centerX, reg.centerY);
           }
         } else {
-          const selectedTile = tileMap.get(`${clickX},${clickY}`) || {
+          const selectedTile = tileMap.get(`${clickX},${clickY}`) || chunkManager.getTile(clickX, clickY) || {
             tileX: clickX,
             tileY: clickY,
             terrainType: 'plains',
@@ -1441,6 +1698,10 @@ export default function WorldCanvas({
             Klik untuk membuka grid region ini ({hoveredRegion.centerX}, {hoveredRegion.centerY})
           </div>
         </div>
+      )}
+      {/* Fase A (Bug 1): Tampilkan layar pemuatan jika koordinat pemain belum siap dari server */}
+      {playerReady === false && (
+        <WorldMapLoadingScreen isReady={false} />
       )}
     </div>
   );

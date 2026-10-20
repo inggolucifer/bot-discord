@@ -1,0 +1,56 @@
+[
+  {
+    "frameId": "bamboo_jade_2x2_l_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 3590,
+    "coveragePct": "6.9%",
+    "bbox": "162x224",
+    "frameSize": "200x260"
+  },
+  {
+    "frameId": "bamboo_mist_2x2_l_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 3590,
+    "coveragePct": "6.9%",
+    "bbox": "162x224",
+    "frameSize": "200x260"
+  },
+  {
+    "frameId": "bamboo_dark_2x2_l_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 3590,
+    "coveragePct": "6.9%",
+    "bbox": "162x224",
+    "frameSize": "200x260"
+  },
+  {
+    "frameId": "bamboo_jade_1x1_s_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 1416,
+    "coveragePct": "7.9%",
+    "bbox": "80x157",
+    "frameSize": "100x180"
+  },
+  {
+    "frameId": "bamboo_mist_1x1_s_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 1416,
+    "coveragePct": "7.9%",
+    "bbox": "80x157",
+    "frameSize": "100x180"
+  },
+  {
+    "frameId": "bamboo_dark_1x1_s_sparse",
+    "pageName": "biome_nature_7",
+    "type": "LOW_COVERAGE_NATURE",
+    "visiblePixels": 1416,
+    "coveragePct": "7.9%",
+    "bbox": "80x157",
+    "frameSize": "100x180"
+  }
+]

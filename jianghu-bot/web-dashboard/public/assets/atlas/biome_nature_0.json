@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1368
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_0.webp"
+  },
+  "frames": {
+    "landmark_spirit_wood_sea_celestial_banyan_hearth": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_spirit_wood_sea_celestial_banyan_hearth",
+        "atlas": "objects_nature",
+        "frame": "landmark_spirit_wood_sea_celestial_banyan_hearth",
+        "category": "tree",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_lava_spine_magma_forge_crater": {
+      "frame": {
+        "x": 684,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_lava_spine_magma_forge_crater",
+        "atlas": "objects_nature",
+        "frame": "landmark_lava_spine_magma_forge_crater",
+        "category": "rock",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "landmark_floating_wind_isles_floating_daoist_citadel": {
+      "frame": {
+        "x": 0,
+        "y": 684,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_floating_wind_isles_floating_daoist_citadel",
+        "atlas": "objects_structures",
+        "frame": "landmark_floating_wind_isles_floating_daoist_citadel",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.5
+      }
+    },
+    "landmark_venom_mire_sunken_serpent_pagoda": {
+      "frame": {
+        "x": 684,
+        "y": 684,
+        "w": 640,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 640,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 640,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_venom_mire_sunken_serpent_pagoda",
+        "atlas": "objects_structures",
+        "frame": "landmark_venom_mire_sunken_serpent_pagoda",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2.2
+      }
+    },
+    "landmark_western_sacred_desert_silk_caravan_oasis": {
+      "frame": {
+        "x": 1326,
+        "y": 684,
+        "w": 682,
+        "h": 682
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 682
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 682
+      },
+      "metadata": {
+        "id": "landmark_western_sacred_desert_silk_caravan_oasis",
+        "atlas": "objects_structures",
+        "frame": "landmark_western_sacred_desert_silk_caravan_oasis",
+        "category": "building",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    }
+  }
+}

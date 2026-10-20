@@ -1,0 +1,914 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1930
+    },
+    "format": "RGBA8888",
+    "image": "monsters_1.webp"
+  },
+  "frames": {
+    "monster_regional_primordial_jade_qilin": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_primordial_jade_qilin",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_primordial_jade_qilin",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_nine_tailed_fox": {
+      "frame": {
+        "x": 386,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_nine_tailed_fox",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_nine_tailed_fox",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.5
+      }
+    },
+    "monster_regional_floating_wind_isles_celestial_wind_roc": {
+      "frame": {
+        "x": 772,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_floating_wind_isles_celestial_wind_roc",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_floating_wind_isles_celestial_wind_roc",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_immortal_ruins_celestial_war_puppet": {
+      "frame": {
+        "x": 1158,
+        "y": 0,
+        "w": 362,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 362,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 362,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_immortal_ruins_celestial_war_puppet",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_immortal_ruins_celestial_war_puppet",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_southern_plague_woods_thousand_year_corpse_king": {
+      "frame": {
+        "x": 1522,
+        "y": 0,
+        "w": 362,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 362,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 362,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_southern_plague_woods_thousand_year_corpse_king",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_southern_plague_woods_thousand_year_corpse_king",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_nine_springs_delta_dragon_carp": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_nine_springs_delta_dragon_carp",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_nine_springs_delta_dragon_carp",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_mirror_lake_water_spirit_siren": {
+      "frame": {
+        "x": 386,
+        "y": 386,
+        "w": 360,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 360,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_mirror_lake_water_spirit_siren",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_mirror_lake_water_spirit_siren",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_azure_mountain_horned_ape": {
+      "frame": {
+        "x": 748,
+        "y": 386,
+        "w": 360,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 360,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_azure_mountain_horned_ape",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_azure_mountain_horned_ape",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_crimson_battlefield_nether_warsteed": {
+      "frame": {
+        "x": 1110,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_crimson_battlefield_nether_warsteed",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_crimson_battlefield_nether_warsteed",
+        "category": "monster",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_abyssal_scar_chaos_eye_fiend": {
+      "frame": {
+        "x": 1496,
+        "y": 386,
+        "w": 360,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 360,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_abyssal_scar_chaos_eye_fiend",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_abyssal_scar_chaos_eye_fiend",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_central_plains_sacred_white_tiger": {
+      "frame": {
+        "x": 0,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_central_plains_sacred_white_tiger",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_central_plains_sacred_white_tiger",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_beast_prairies_golden_sun_lion": {
+      "frame": {
+        "x": 386,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_beast_prairies_golden_sun_lion",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_beast_prairies_golden_sun_lion",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_border_march_iron_plated_rhino": {
+      "frame": {
+        "x": 772,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_border_march_iron_plated_rhino",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_border_march_iron_plated_rhino",
+        "category": "monster",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_hermit_highlands_cloud_silver_crane": {
+      "frame": {
+        "x": 1158,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_hermit_highlands_cloud_silver_crane",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_hermit_highlands_cloud_silver_crane",
+        "category": "monster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_ore_teeth_range_ironback_crystal_bear": {
+      "frame": {
+        "x": 1544,
+        "y": 772,
+        "w": 407,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 407,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 407,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_ore_teeth_range_ironback_crystal_bear",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_ore_teeth_range_ironback_crystal_bear",
+        "category": "monster",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_regional_western_desert_dune_sand_wyrm": {
+      "frame": {
+        "x": 0,
+        "y": 1158,
+        "w": 410,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 410,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 410,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_regional_western_desert_dune_sand_wyrm",
+        "atlas": "markers_entities",
+        "frame": "monster_regional_western_desert_dune_sand_wyrm",
+        "category": "monster",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1.8
+      }
+    },
+    "monster_swirl_den": {
+      "frame": {
+        "x": 412,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_swirl_den",
+        "atlas": "markers_entities",
+        "frame": "monster_swirl_den",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0
+      }
+    },
+    "monster_demon_wolf": {
+      "frame": {
+        "x": 798,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_demon_wolf",
+        "atlas": "markers_entities",
+        "frame": "monster_demon_wolf",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_blood_serpent": {
+      "frame": {
+        "x": 1184,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_blood_serpent",
+        "atlas": "markers_entities",
+        "frame": "monster_blood_serpent",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_iron_bear": {
+      "frame": {
+        "x": 1570,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_iron_bear",
+        "atlas": "markers_entities",
+        "frame": "monster_iron_bear",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "mount_shadow_tiger": {
+      "frame": {
+        "x": 0,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mount_shadow_tiger",
+        "atlas": "markers_entities",
+        "frame": "mount_shadow_tiger",
+        "category": "mount",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_storm_roc": {
+      "frame": {
+        "x": 386,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_storm_roc",
+        "atlas": "markers_entities",
+        "frame": "monster_storm_roc",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "mount_feather_crane": {
+      "frame": {
+        "x": 772,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mount_feather_crane",
+        "atlas": "markers_entities",
+        "frame": "mount_feather_crane",
+        "category": "mount",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_abyssal_serpent": {
+      "frame": {
+        "x": 1158,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_abyssal_serpent",
+        "atlas": "markers_entities",
+        "frame": "monster_abyssal_serpent",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    },
+    "monster_flame_ape": {
+      "frame": {
+        "x": 1544,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "monster_flame_ape",
+        "atlas": "markers_entities",
+        "frame": "monster_flame_ape",
+        "category": "marker",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.5
+      }
+    }
+  }
+}

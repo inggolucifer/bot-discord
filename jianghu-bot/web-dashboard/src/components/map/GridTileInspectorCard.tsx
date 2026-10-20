@@ -131,7 +131,7 @@ export default function GridTileInspectorCard({
   const hpPercent = Math.max(0, Math.min(100, Math.round((hp / maxHp) * 100)));
 
   // Title resolusi
-  let displayTitle = tile.label || tile.settlementName || 'Petak Terbuka';
+  let displayTitle = tile.label || tile.terrainLabel || tile.settlementName || 'Petak Terbuka';
   if (tile.buildingName) {
     displayTitle = tile.buildingName;
   } else if (tile.isClaimable && !tile.ownerId) {
@@ -153,7 +153,7 @@ export default function GridTileInspectorCard({
               {displayTitle}
             </h3>
             <div className="text-[10px] text-amber-400/80 font-mono truncate">
-              Koordinat ({tile.tileX}, {tile.tileY}) • {tile.regionName || 'Central Plains'}
+              Koordinat ({tile.tileX}, {tile.tileY}) • {tile.terrainLabel && tile.terrainLabel !== displayTitle ? `${tile.terrainLabel} • ` : ''}{tile.regionName || 'Central Plains'}
             </div>
           </div>
         </div>

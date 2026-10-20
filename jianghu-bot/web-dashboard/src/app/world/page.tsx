@@ -255,6 +255,7 @@ export function WorldPageContent() {
               mode="macro"
               tiles={[]}
               playerPos={locationData?.gridPosition ? { x: locationData.gridPosition.tileX, y: locationData.gridPosition.tileY } : { x: 2050, y: 2650 }}
+              playerReady={Boolean(locationData?.gridPosition && !loading)}
               onSelectRegion={(regionSlug: string, centerX?: number, centerY?: number) => {
                 setSelectedRegionSlug(regionSlug);
                 if (centerX !== undefined && centerY !== undefined) {

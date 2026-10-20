@@ -723,6 +723,8 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   // Aturan V4: Mutual exclusion mutlak
   // Jika tile adalah resource node, maka tile otomatis non-claimable
   let isClaimable = false;
+  const terrainLabel = label;
+
   if (!resourceType) {
     const { isTileClaimableFast } = require('./buildZoneEngine');
     isClaimable = isTileClaimableFast(tileX, tileY, terrainType, isSolid, region);
@@ -732,12 +734,11 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     }
   } else {
     tileType = 'resource_node';
-    if (!label) {
-      if (resourceType === 'herb') label = 'Rumpun Herba Roh';
-      else if (resourceType === 'wood') label = 'Pohon Kayu Rohani';
-      else if (resourceType === 'ore') label = 'Urat Bijih Besi';
-      else if (resourceType === 'fish') label = 'Lubuk Ikan Roh';
-    }
+    if (resourceType === 'herb') label = 'Herba Roh';
+    else if (resourceType === 'wood') label = 'Kayu Roh';
+    else if (resourceType === 'ore') label = 'Urat Bijih';
+    else if (resourceType === 'fish') label = 'Lubuk Ikan';
+    else label = 'Sumber Daya';
   }
 
   return {
@@ -746,6 +747,7 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     terrainType,
     tileType,
     isSolid,
+    terrainLabel,
     label,
     resourceType,
     isClaimable,

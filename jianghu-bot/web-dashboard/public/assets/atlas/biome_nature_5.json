@@ -1,0 +1,1064 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1930
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_5.webp"
+  },
+  "frames": {
+    "nature_ancient_scholar_red_maple_cliff": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_red_maple_cliff",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_red_maple_cliff",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_ginkgo_gold_canopy": {
+      "frame": {
+        "x": 386,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_ginkgo_gold_canopy",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_ginkgo_gold_canopy",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_weeping_peach_blossom": {
+      "frame": {
+        "x": 772,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_weeping_peach_blossom",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_weeping_peach_blossom",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_golden_larch_ridge": {
+      "frame": {
+        "x": 1158,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_golden_larch_ridge",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_golden_larch_ridge",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_twisted_locust_tree": {
+      "frame": {
+        "x": 1544,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_twisted_locust_tree",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_twisted_locust_tree",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_twisted_camphor_canopy": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_twisted_camphor_canopy",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_twisted_camphor_canopy",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_crag_layered_shale_shelf": {
+      "frame": {
+        "x": 386,
+        "y": 386,
+        "w": 434,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 434,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 434,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_crag_layered_shale_shelf",
+        "atlas": "objects_nature",
+        "frame": "nature_crag_layered_shale_shelf",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "mt_twin_peaks_v1": {
+      "frame": {
+        "x": 822,
+        "y": 386,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v1",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v1",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v1"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v2": {
+      "frame": {
+        "x": 1086,
+        "y": 386,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v2",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v2",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v2"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v3": {
+      "frame": {
+        "x": 1350,
+        "y": 386,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v3",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v3",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v3"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v4": {
+      "frame": {
+        "x": 1614,
+        "y": 386,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v4",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v4",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v4"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v5": {
+      "frame": {
+        "x": 0,
+        "y": 772,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v5",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v5",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v5"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "mt_twin_peaks_v6": {
+      "frame": {
+        "x": 264,
+        "y": 772,
+        "w": 262,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 262,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 262,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_twin_peaks_v6",
+        "atlas": "objects_nature",
+        "frame": "mt_twin_peaks_v6",
+        "category": "mountain",
+        "px": {
+          "w": 300,
+          "h": 440
+        },
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.97
+        },
+        "overhangCells": 2.4,
+        "collision": "solid",
+        "staminaMult": 1,
+        "sortBias": 0,
+        "variants": [
+          "mt_twin_peaks_v6"
+        ],
+        "tint": {
+          "hueJitter": 3,
+          "valueJitter": 0.05
+        },
+        "flipX": true,
+        "fogFoot": true,
+        "tags": [
+          "mountain",
+          "twin_peaks"
+        ]
+      }
+    },
+    "nature_cherry_blossom_twin": {
+      "frame": {
+        "x": 528,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_cherry_blossom_twin",
+        "atlas": "objects_nature",
+        "frame": "nature_cherry_blossom_twin",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1.4
+      }
+    },
+    "nature_granite_boulder_basking": {
+      "frame": {
+        "x": 914,
+        "y": 772,
+        "w": 460,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 460,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 460,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_granite_boulder_basking",
+        "atlas": "objects_nature",
+        "frame": "nature_granite_boulder_basking",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "bamboo_forest_cluster": {
+      "frame": {
+        "x": 1376,
+        "y": 772,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "bamboo_forest_cluster",
+        "atlas": "objects_nature",
+        "frame": "bamboo_forest_cluster",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "azure_peak_crag": {
+      "frame": {
+        "x": 0,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "azure_peak_crag",
+        "atlas": "objects_nature",
+        "frame": "azure_peak_crag",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "willow_river_curve": {
+      "frame": {
+        "x": 386,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "willow_river_curve",
+        "atlas": "objects_nature",
+        "frame": "willow_river_curve",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_pine_ancient_twisted": {
+      "frame": {
+        "x": 772,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_pine_ancient_twisted",
+        "atlas": "objects_nature",
+        "frame": "nature_pine_ancient_twisted",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_karst_twin_peaks": {
+      "frame": {
+        "x": 1158,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_karst_twin_peaks",
+        "atlas": "objects_nature",
+        "frame": "nature_karst_twin_peaks",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "nature_plum_blossom_lone": {
+      "frame": {
+        "x": 1544,
+        "y": 1158,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_plum_blossom_lone",
+        "atlas": "objects_nature",
+        "frame": "nature_plum_blossom_lone",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_boulder_cluster_river": {
+      "frame": {
+        "x": 0,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_boulder_cluster_river",
+        "atlas": "objects_nature",
+        "frame": "nature_boulder_cluster_river",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "nature_cypress_grove_mist": {
+      "frame": {
+        "x": 386,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_cypress_grove_mist",
+        "atlas": "objects_nature",
+        "frame": "nature_cypress_grove_mist",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_willow_lone_stream": {
+      "frame": {
+        "x": 772,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_willow_lone_stream",
+        "atlas": "objects_nature",
+        "frame": "nature_willow_lone_stream",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_rock_stepping_stones": {
+      "frame": {
+        "x": 1158,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_rock_stepping_stones",
+        "atlas": "objects_nature",
+        "frame": "nature_rock_stepping_stones",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.4
+      }
+    },
+    "nature_pine_windswept_cliff": {
+      "frame": {
+        "x": 1544,
+        "y": 1544,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_pine_windswept_cliff",
+        "atlas": "objects_nature",
+        "frame": "nature_pine_windswept_cliff",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    }
+  }
+}

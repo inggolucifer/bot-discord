@@ -1,0 +1,914 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1816
+    },
+    "format": "RGBA8888",
+    "image": "dungeon_3.webp"
+  },
+  "frames": {
+    "structure_dungeon_ancient_soul_urn_columbarium_wall": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 520,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 520,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 520,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_soul_urn_columbarium_wall",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_soul_urn_columbarium_wall",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_dungeon_ancient_bone_throne_boss_seat": {
+      "frame": {
+        "x": 522,
+        "y": 0,
+        "w": 365,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 365,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 365,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_bone_throne_boss_seat",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_bone_throne_boss_seat",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "structure_dungeon_ancient_gargoyle_poison_dart_trap": {
+      "frame": {
+        "x": 889,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_gargoyle_poison_dart_trap",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_gargoyle_poison_dart_trap",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_underground_bone_bridge_segment": {
+      "frame": {
+        "x": 1275,
+        "y": 0,
+        "w": 543,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 543,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 543,
+        "h": 384
+      },
+      "metadata": {
+        "id": "structure_dungeon_underground_bone_bridge_segment",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_underground_bone_bridge_segment",
+        "category": "furniture",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "dungeon_cave_entrance": {
+      "frame": {
+        "x": 0,
+        "y": 386,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "dungeon_cave_entrance",
+        "atlas": "objects_structures",
+        "frame": "dungeon_cave_entrance",
+        "category": "building",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "structure_dungeon_crystallized_blood_stalagmite": {
+      "frame": {
+        "x": 386,
+        "y": 386,
+        "w": 384,
+        "h": 364
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 364
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 364
+      },
+      "metadata": {
+        "id": "structure_dungeon_crystallized_blood_stalagmite",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_crystallized_blood_stalagmite",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_celestial_spirit_crystal_cluster": {
+      "frame": {
+        "x": 772,
+        "y": 386,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_celestial_spirit_crystal_cluster",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_celestial_spirit_crystal_cluster",
+        "category": "resource_cluster",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_beast_bone_offering_altar": {
+      "frame": {
+        "x": 1158,
+        "y": 386,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_beast_bone_offering_altar",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_beast_bone_offering_altar",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_submerged_lotus_sacred_spring": {
+      "frame": {
+        "x": 1544,
+        "y": 386,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_submerged_lotus_sacred_spring",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_submerged_lotus_sacred_spring",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_celestial_stalagmite_formation": {
+      "frame": {
+        "x": 0,
+        "y": 772,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_celestial_stalagmite_formation",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_celestial_stalagmite_formation",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_ancient_crumbled_dragon_statue": {
+      "frame": {
+        "x": 386,
+        "y": 772,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_crumbled_dragon_statue",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_crumbled_dragon_statue",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_ancient_chained_iron_chest": {
+      "frame": {
+        "x": 772,
+        "y": 772,
+        "w": 384,
+        "h": 362
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 362
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 362
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_chained_iron_chest",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_chained_iron_chest",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_ancient_trap_spike_floor": {
+      "frame": {
+        "x": 1158,
+        "y": 772,
+        "w": 384,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 360
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_trap_spike_floor",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_trap_spike_floor",
+        "category": "hazard",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_poison_mist_vent_grate": {
+      "frame": {
+        "x": 1544,
+        "y": 772,
+        "w": 384,
+        "h": 360
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 360
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 360
+      },
+      "metadata": {
+        "id": "structure_dungeon_poison_mist_vent_grate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_poison_mist_vent_grate",
+        "category": "hazard",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_hazard_subterranean_magma_vent": {
+      "frame": {
+        "x": 0,
+        "y": 1136,
+        "w": 384,
+        "h": 349
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 349
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 349
+      },
+      "metadata": {
+        "id": "structure_dungeon_hazard_subterranean_magma_vent",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_hazard_subterranean_magma_vent",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_dungeon_hazard_concealed_floor_spike_grate": {
+      "frame": {
+        "x": 386,
+        "y": 1136,
+        "w": 384,
+        "h": 346
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 346
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 346
+      },
+      "metadata": {
+        "id": "structure_dungeon_hazard_concealed_floor_spike_grate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_hazard_concealed_floor_spike_grate",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.82
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_ancient_flame_spouting_terracotta_gargoyle": {
+      "frame": {
+        "x": 772,
+        "y": 1136,
+        "w": 384,
+        "h": 346
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 346
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 346
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_flame_spouting_terracotta_gargoyle",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_flame_spouting_terracotta_gargoyle",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_dungeon_ancient_stone_sarcophagus": {
+      "frame": {
+        "x": 1158,
+        "y": 1136,
+        "w": 384,
+        "h": 339
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 339
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 339
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_stone_sarcophagus",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_stone_sarcophagus",
+        "category": "container",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1
+      }
+    },
+    "structure_dungeon_bone_pile_ancient_warrior_cairn": {
+      "frame": {
+        "x": 1544,
+        "y": 1136,
+        "w": 384,
+        "h": 335
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 335
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 335
+      },
+      "metadata": {
+        "id": "structure_dungeon_bone_pile_ancient_warrior_cairn",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_bone_pile_ancient_warrior_cairn",
+        "category": "prop",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_ancient_corpse_poison_gas_vent_grate": {
+      "frame": {
+        "x": 0,
+        "y": 1487,
+        "w": 384,
+        "h": 329
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 329
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 329
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_corpse_poison_gas_vent_grate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_corpse_poison_gas_vent_grate",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_dungeon_mechanism_ancient_stone_pressure_plate": {
+      "frame": {
+        "x": 386,
+        "y": 1487,
+        "w": 384,
+        "h": 323
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 323
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 323
+      },
+      "metadata": {
+        "id": "structure_dungeon_mechanism_ancient_stone_pressure_plate",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_mechanism_ancient_stone_pressure_plate",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.82
+        },
+        "collision": "none",
+        "overhangCells": 0.8
+      }
+    },
+    "structure_dungeon_ancient_crumbled_pillar_rubble_pile": {
+      "frame": {
+        "x": 772,
+        "y": 1487,
+        "w": 384,
+        "h": 314
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 314
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 314
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_crumbled_pillar_rubble_pile",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_crumbled_pillar_rubble_pile",
+        "category": "furniture",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "structure_dungeon_ancient_soul_lantern_pillar": {
+      "frame": {
+        "x": 1158,
+        "y": 1487,
+        "w": 123,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 123,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 123,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_soul_lantern_pillar",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_soul_lantern_pillar",
+        "category": "pillar",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.45,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "structure_dungeon_ancient_brazier_altar": {
+      "frame": {
+        "x": 1283,
+        "y": 1487,
+        "w": 145,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 145,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 145,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_brazier_altar",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_brazier_altar",
+        "category": "furniture",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "structure_dungeon_ancient_dragon_chest": {
+      "frame": {
+        "x": 1430,
+        "y": 1487,
+        "w": 192,
+        "h": 192
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 192
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 192
+      },
+      "metadata": {
+        "id": "structure_dungeon_ancient_dragon_chest",
+        "atlas": "objects_structures",
+        "frame": "structure_dungeon_ancient_dragon_chest",
+        "category": "container",
+        "footprint": {
+          "cw": 2,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    }
+  }
+}

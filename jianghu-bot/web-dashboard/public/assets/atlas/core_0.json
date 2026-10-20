@@ -1,0 +1,734 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1672
+    },
+    "format": "RGBA8888",
+    "image": "core_0.webp"
+  },
+  "frames": {
+    "mt_rock_4x3": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 682,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 682,
+        "h": 512
+      },
+      "metadata": {
+        "id": "mt_rock_4x3",
+        "atlas": "objects_nature",
+        "frame": "mt_rock_4x3",
+        "category": "mountain",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 2.6
+      }
+    },
+    "spirit_tree_2x2": {
+      "frame": {
+        "x": 684,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "spirit_tree_2x2",
+        "atlas": "objects_nature",
+        "frame": "spirit_tree_2x2",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "mt_rock_2x2": {
+      "frame": {
+        "x": 1070,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_rock_2x2",
+        "atlas": "objects_nature",
+        "frame": "mt_rock_2x2",
+        "category": "mountain",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 1.6
+      }
+    },
+    "mt_rock_3x2": {
+      "frame": {
+        "x": 1456,
+        "y": 0,
+        "w": 512,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 384
+      },
+      "metadata": {
+        "id": "mt_rock_3x2",
+        "atlas": "objects_nature",
+        "frame": "mt_rock_3x2",
+        "category": "mountain",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 2.4
+      }
+    },
+    "resource_spirit_spring": {
+      "frame": {
+        "x": 0,
+        "y": 514,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_spirit_spring",
+        "atlas": "objects_nature",
+        "frame": "resource_spirit_spring",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "resource_heavenly_iron_ore": {
+      "frame": {
+        "x": 386,
+        "y": 514,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_heavenly_iron_ore",
+        "atlas": "objects_nature",
+        "frame": "resource_heavenly_iron_ore",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "resource_spirit_koi_pool": {
+      "frame": {
+        "x": 772,
+        "y": 514,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_spirit_koi_pool",
+        "atlas": "objects_nature",
+        "frame": "resource_spirit_koi_pool",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "resource_ancient_herb_garden": {
+      "frame": {
+        "x": 1158,
+        "y": 514,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_ancient_herb_garden",
+        "atlas": "objects_nature",
+        "frame": "resource_ancient_herb_garden",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "resource_ancient_sword_tomb": {
+      "frame": {
+        "x": 1544,
+        "y": 514,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_ancient_sword_tomb",
+        "atlas": "objects_nature",
+        "frame": "resource_ancient_sword_tomb",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "resource_ancient_lightning_bamboo": {
+      "frame": {
+        "x": 0,
+        "y": 900,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "resource_ancient_lightning_bamboo",
+        "atlas": "objects_nature",
+        "frame": "resource_ancient_lightning_bamboo",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "ancient_relic_xuanyuan_sword": {
+      "frame": {
+        "x": 386,
+        "y": 900,
+        "w": 256,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_xuanyuan_sword",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_xuanyuan_sword",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_haotian_tower": {
+      "frame": {
+        "x": 644,
+        "y": 900,
+        "w": 280,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 280,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 280,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_haotian_tower",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_haotian_tower",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    },
+    "ancient_relic_lianyao_flask": {
+      "frame": {
+        "x": 926,
+        "y": 900,
+        "w": 316,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 316,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 316,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_lianyao_flask",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_lianyao_flask",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_donghuang_bell": {
+      "frame": {
+        "x": 1244,
+        "y": 900,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_donghuang_bell",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_donghuang_bell",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_pan_gu_axe": {
+      "frame": {
+        "x": 1630,
+        "y": 900,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_pan_gu_axe",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_pan_gu_axe",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_nuwa_stone": {
+      "frame": {
+        "x": 0,
+        "y": 1286,
+        "w": 360,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 360,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_nuwa_stone",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_nuwa_stone",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_shennong_herbal_cauldron": {
+      "frame": {
+        "x": 362,
+        "y": 1286,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_shennong_herbal_cauldron",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_shennong_herbal_cauldron",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_kunlun_mirror": {
+      "frame": {
+        "x": 748,
+        "y": 1286,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_kunlun_mirror",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_kunlun_mirror",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "ancient_relic_kongtong_seal": {
+      "frame": {
+        "x": 1134,
+        "y": 1286,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "ancient_relic_kongtong_seal",
+        "atlas": "objects_structures",
+        "frame": "ancient_relic_kongtong_seal",
+        "category": "relic",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "pagoda_2x2": {
+      "frame": {
+        "x": 1520,
+        "y": 1286,
+        "w": 256,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 384
+      },
+      "metadata": {
+        "id": "pagoda_2x2",
+        "atlas": "objects_structures",
+        "frame": "pagoda_2x2",
+        "category": "building",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 2
+      }
+    }
+  }
+}

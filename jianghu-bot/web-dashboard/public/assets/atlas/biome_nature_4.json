@@ -1,0 +1,914 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V6",
+    "version": "6.0",
+    "size": {
+      "w": 2048,
+      "h": 1978
+    },
+    "format": "RGBA8888",
+    "image": "biome_nature_4.webp"
+  },
+  "frames": {
+    "landmark_northern_desolate_frozen_mammoth_shrine": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 432
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 576,
+        "h": 432
+      },
+      "sourceSize": {
+        "w": 576,
+        "h": 432
+      },
+      "metadata": {
+        "id": "landmark_northern_desolate_frozen_mammoth_shrine",
+        "atlas": "objects_structures",
+        "frame": "landmark_northern_desolate_frozen_mammoth_shrine",
+        "category": "building",
+        "footprint": {
+          "cw": 3,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_scatter_volcanic_obsidian_basalt_pillar": {
+      "frame": {
+        "x": 578,
+        "y": 0,
+        "w": 320,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_scatter_volcanic_obsidian_basalt_pillar",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_volcanic_obsidian_basalt_pillar",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "nature_scatter_frost_crystal_pine_bonsai": {
+      "frame": {
+        "x": 900,
+        "y": 0,
+        "w": 351,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 351,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 351,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_scatter_frost_crystal_pine_bonsai",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_frost_crystal_pine_bonsai",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.3
+      }
+    },
+    "nature_scatter_autumn_scarlet_maple_cluster": {
+      "frame": {
+        "x": 1253,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_scatter_autumn_scarlet_maple_cluster",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_autumn_scarlet_maple_cluster",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_limestone_stalagmite_spire": {
+      "frame": {
+        "x": 1639,
+        "y": 0,
+        "w": 256,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_limestone_stalagmite_spire",
+        "atlas": "objects_nature",
+        "frame": "nature_limestone_stalagmite_spire",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 1.8
+      }
+    },
+    "nature_bamboo_culm_breeze_cluster": {
+      "frame": {
+        "x": 0,
+        "y": 434,
+        "w": 256,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_bamboo_culm_breeze_cluster",
+        "atlas": "objects_nature",
+        "frame": "nature_bamboo_culm_breeze_cluster",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_scatter_thunder_struck_spirit_wood_stump": {
+      "frame": {
+        "x": 258,
+        "y": 434,
+        "w": 365,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 365,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 365,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_scatter_thunder_struck_spirit_wood_stump",
+        "atlas": "objects_nature",
+        "frame": "nature_scatter_thunder_struck_spirit_wood_stump",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 1.1
+      }
+    },
+    "nature_bamboo_sunlit_grove": {
+      "frame": {
+        "x": 625,
+        "y": 434,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_bamboo_sunlit_grove",
+        "atlas": "objects_nature",
+        "frame": "nature_bamboo_sunlit_grove",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_wild_mountain_camellia_shrub": {
+      "frame": {
+        "x": 1011,
+        "y": 434,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wild_mountain_camellia_shrub",
+        "atlas": "objects_nature",
+        "frame": "nature_wild_mountain_camellia_shrub",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_bamboo_hanging_creeper": {
+      "frame": {
+        "x": 1397,
+        "y": 434,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_bamboo_hanging_creeper",
+        "atlas": "objects_nature",
+        "frame": "nature_bamboo_hanging_creeper",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "soft",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_limestone_karst_cave_opening": {
+      "frame": {
+        "x": 0,
+        "y": 820,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_limestone_karst_cave_opening",
+        "atlas": "objects_nature",
+        "frame": "nature_limestone_karst_cave_opening",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.4
+      }
+    },
+    "nature_pine_wind_twisted_bonsai": {
+      "frame": {
+        "x": 386,
+        "y": 820,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_pine_wind_twisted_bonsai",
+        "atlas": "objects_nature",
+        "frame": "nature_pine_wind_twisted_bonsai",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_crystal_quartz_vein_crag": {
+      "frame": {
+        "x": 772,
+        "y": 820,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_crystal_quartz_vein_crag",
+        "atlas": "objects_nature",
+        "frame": "nature_crystal_quartz_vein_crag",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_ancient_hollow_mulberry_tree": {
+      "frame": {
+        "x": 1158,
+        "y": 820,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_hollow_mulberry_tree",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_hollow_mulberry_tree",
+        "category": "tree",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_wild_mountain_peony_cluster": {
+      "frame": {
+        "x": 1544,
+        "y": 820,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_wild_mountain_peony_cluster",
+        "atlas": "objects_nature",
+        "frame": "nature_wild_mountain_peony_cluster",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_ancient_tea_bush_wild_terrace": {
+      "frame": {
+        "x": 0,
+        "y": 1206,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_tea_bush_wild_terrace",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_tea_bush_wild_terrace",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1
+      }
+    },
+    "nature_limestone_karst_arch_natural_bridge": {
+      "frame": {
+        "x": 386,
+        "y": 1206,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_limestone_karst_arch_natural_bridge",
+        "atlas": "objects_nature",
+        "frame": "nature_limestone_karst_arch_natural_bridge",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.9
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_mossy_tree_stump_fungi": {
+      "frame": {
+        "x": 772,
+        "y": 1206,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_mossy_tree_stump_fungi",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_mossy_tree_stump_fungi",
+        "category": "rock",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.85
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "nature_limestone_karst_sinkhole_pond": {
+      "frame": {
+        "x": 1158,
+        "y": 1206,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_limestone_karst_sinkhole_pond",
+        "atlas": "objects_nature",
+        "frame": "nature_limestone_karst_sinkhole_pond",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_ancient_scholar_cypress_stone_cairn": {
+      "frame": {
+        "x": 1544,
+        "y": 1206,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_cypress_stone_cairn",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_cypress_stone_cairn",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_mountain_waterfall_splash_basin": {
+      "frame": {
+        "x": 0,
+        "y": 1592,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_mountain_waterfall_splash_basin",
+        "atlas": "objects_nature",
+        "frame": "nature_mountain_waterfall_splash_basin",
+        "category": "rock",
+        "footprint": {
+          "cw": 3,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.2
+      }
+    },
+    "nature_ancient_scholar_twisted_juniper": {
+      "frame": {
+        "x": 386,
+        "y": 1592,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_twisted_juniper",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_twisted_juniper",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_weeping_willow_bank": {
+      "frame": {
+        "x": 772,
+        "y": 1592,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_weeping_willow_bank",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_weeping_willow_bank",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "soft",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_twisted_wisteria_canopy": {
+      "frame": {
+        "x": 1158,
+        "y": 1592,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_twisted_wisteria_canopy",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_twisted_wisteria_canopy",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    },
+    "nature_ancient_scholar_silver_birch_grove": {
+      "frame": {
+        "x": 1544,
+        "y": 1592,
+        "w": 384,
+        "h": 384
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 384
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 384
+      },
+      "metadata": {
+        "id": "nature_ancient_scholar_silver_birch_grove",
+        "atlas": "objects_nature",
+        "frame": "nature_ancient_scholar_silver_birch_grove",
+        "category": "tree",
+        "footprint": {
+          "cw": 2,
+          "ch": 2
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.88
+        },
+        "collision": "solid",
+        "overhangCells": 1.5
+      }
+    }
+  }
+}

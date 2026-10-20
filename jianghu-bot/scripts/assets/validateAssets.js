@@ -129,7 +129,7 @@ if (require.main === module) {
     }
 
     const files = fs.readdirSync(atlasDir);
-    const jsonFiles = files.filter(f => f.endsWith('.json'));
+    const jsonFiles = files.filter(f => f.endsWith('.json') && !f.includes('index'));
 
     if (jsonFiles.length === 0) {
       console.error('[FAIL] No atlas manifest files found in', atlasDir);
