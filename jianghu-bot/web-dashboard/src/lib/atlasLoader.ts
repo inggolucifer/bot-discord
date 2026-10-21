@@ -125,6 +125,22 @@ class AtlasLoader {
     }
   }
 
+  public isLoaded(): boolean {
+    return this.isIndexLoaded;
+  }
+
+  public isSpriteReady(frameId: string): boolean {
+    if (!this.isIndexLoaded) {
+      this.loadIndex();
+      return false;
+    }
+    const entry = this.spriteRegistry.get(frameId);
+    if (!entry) return true; // not in atlas, procedural vector fallback is immediate
+    if (this.pageTextures.has(entry.page)) return true;
+    this.loadPage(entry.page);
+    return false;
+  }
+
   /**
    * Loads a specific modular WebP texture page with LRU eviction and createImageBitmap.
    */

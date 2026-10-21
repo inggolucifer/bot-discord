@@ -21,11 +21,11 @@ import {
   renderL7NpcBadge,
   renderL7ResourceSparkle,
   renderL7AggroRadius,
-  getMonsterIcon,
+  resolveMonsterAtlasFrameWithFallback,
   renderWorldEdgeClouds
 } from '@/lib/proceduralObjects';
 import { CANONICAL_REGIONS, CANONICAL_LANDMARKS } from '@/config/canonicalRegions';
-import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation } from 'lucide-react';
+import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation, Hammer } from 'lucide-react';
 import { atlasLoader } from '@/lib/atlasLoader';
 import { chunkManager } from '@/lib/chunkManager';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
@@ -54,6 +54,7 @@ export interface WorldCanvasProps {
   onRecenterPlayer?: () => void;
   onModeChange?: (mode: CanvasViewMode) => void;
   onSelectRegion?: (regionSlug: string, centerX?: number, centerY?: number) => void;
+  debugCam?: { x: number; y: number; zoom: number };
 }
 
 interface YSortEntry {
@@ -72,32 +73,21 @@ const RESOURCE_ICON_FRAMES: Record<string, string[]> = {
   fish: ['icon_res_fish', 'resource_golden_carp', 'resource_spirit_koi_pool'],
 };
 
-function resolveMonsterAtlasFrame(name?: string, key?: string): string | null {
-  if (!name && !key) return null;
-  const k = (key || '').toLowerCase();
-  const n = (name || '').toLowerCase();
+function getRegionAt(wx: number, wy: number) {
+  for (const reg of CANONICAL_REGIONS) {
+    if (wx >= reg.bounds.minX && wx <= reg.bounds.maxX && wy >= reg.bounds.minY && wy <= reg.bounds.maxY) {
+      return reg;
+    }
+  }
+  return CANONICAL_REGIONS[0];
+}
 
-  if (key && atlasLoader.hasFrame(key)) return key;
-  if (key && atlasLoader.hasFrame(`monster_${key}`)) return `monster_${key}`;
-  if (key && atlasLoader.hasFrame(`monster_regional_${key}`)) return `monster_regional_${key}`;
-
-  if (k.includes('wolf') || n.includes('serigala')) return 'monster_demon_wolf';
-  if (k.includes('tiger') || n.includes('harimau')) return 'monster_white_tiger';
-  if (k.includes('serpent') || n.includes('ular')) return 'monster_blood_serpent';
-  if (k.includes('bear') || n.includes('beruang')) return 'monster_iron_bear';
-  if (k.includes('roc') || k.includes('eagle') || n.includes('rajawali')) return 'monster_storm_roc';
-  if (k.includes('scorpion') || n.includes('kalajengking')) return 'monster_sand_scorpion';
-  if (k.includes('golem') || n.includes('golem')) return 'monster_rock_golem';
-  if (k.includes('ape') || n.includes('kera')) return 'monster_flame_ape';
-  if (k.includes('dragon') || n.includes('naga')) return 'monster_regional_primordial_azure_dragon';
-  if (k.includes('fox') || n.includes('rubah')) return 'monster_regional_nine_tailed_fox';
-  if (k.includes('qilin')) return 'monster_regional_primordial_jade_qilin';
-  if (k.includes('mastodon') || n.includes('gajah')) return 'monster_regional_glacial_frost_mastodon';
-  if (k.includes('tortoise') || n.includes('kura')) return 'monster_regional_magma_lava_tortoise';
-  if (k.includes('centipede') || n.includes('kelabang')) return 'monster_regional_myriad_toxic_centipede';
-  if (k.includes('wyrm') || k.includes('void')) return 'monster_regional_void_rift_dimensional_wyrm';
-
-  return null;
+function getObjectPriority(def: WorldObjectDef): number {
+  if (def.tags?.includes('landmark') || def.tags?.includes('setpiece')) return 1;
+  if (def.tags?.includes('building') || def.tags?.includes('structure') || def.id.includes('house') || def.id.includes('gate') || def.id.includes('tower')) return 2;
+  if (def.tags?.includes('tree') || def.id.includes('tree') || def.id.includes('pine') || def.id.includes('bamboo')) return 3;
+  if (def.tags?.includes('rock') || def.id.includes('rock') || def.id.includes('pillar') || def.id.includes('cliff')) return 4;
+  return 5;
 }
 
 export default function WorldCanvas({
@@ -120,7 +110,8 @@ export default function WorldCanvas({
   onOpenSearch,
   onRecenterPlayer,
   onModeChange,
-  onSelectRegion
+  onSelectRegion,
+  debugCam
 }: WorldCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -169,10 +160,44 @@ export default function WorldCanvas({
 
   // Camera State
   const [camera, setCamera] = useState<{ x: number; y: number; zoom: number }>({
-    x: focusTile ? focusTile.x : playerPos.x,
-    y: focusTile ? focusTile.y : playerPos.y,
-    zoom: mode === 'macro' ? 0.18 : 1.0
+    x: debugCam ? debugCam.x : (focusTile ? focusTile.x : playerPos.x),
+    y: debugCam ? debugCam.y : (focusTile ? focusTile.y : playerPos.y),
+    zoom: debugCam ? debugCam.zoom : (mode === 'macro' ? 0.18 : 1.0)
   });
+
+  const hasFiredReadyRef = useRef(false);
+  const fpsRef = useRef(60);
+  const lastFrameTimeRef = useRef(typeof performance !== 'undefined' ? performance.now() : Date.now());
+  const ambientParticlesRef = useRef<Array<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    alpha: number;
+    color: string;
+    rot: number;
+    vRot: number;
+  }>>([]);
+
+  useEffect(() => {
+    if (debugCam) {
+      setCamera({
+        x: debugCam.x,
+        y: debugCam.y,
+        zoom: debugCam.zoom
+      });
+      animatedPlayerPos.current = { x: debugCam.x, y: debugCam.y };
+      hasFiredReadyRef.current = false;
+      if (typeof window !== 'undefined') {
+        (window as any).__chunksReady = false;
+        (window as any).__panCameraTo = (x: number, y: number) => {
+          setCamera(prev => ({ ...prev, x, y }));
+          animatedPlayerPos.current = { x, y };
+        };
+      }
+    }
+  }, [debugCam?.x, debugCam?.y, debugCam?.zoom]);
 
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -240,6 +265,8 @@ export default function WorldCanvas({
   const hasInitialCentered = useRef(false);
   const cameraAnimFrameRef = useRef<number | null>(null);
   const prevPlayerPos = useRef({ x: playerPos.x, y: playerPos.y });
+  const debugCamFrameCountRef = useRef(0);
+  const debugCamMountTimeRef = useRef(performance.now());
 
   // Smooth camera pan animation helper (250ms easing cubic-out)
   const animateCameraTo = useCallback((targetX: number, targetY: number, targetZoom?: number, durationMs = 250) => {
@@ -381,6 +408,7 @@ export default function WorldCanvas({
     let time = 0;
 
     const render = () => {
+      const frameStartTime = performance.now();
       time += 0.02;
       const width = canvas.width;
       const height = canvas.height;
@@ -466,28 +494,56 @@ export default function WorldCanvas({
           const ly = toScreenY(lm.y);
 
           ctx.save();
-          let icon = '🏛️';
-          if (lm.type === 'sect') icon = '⛩️';
-          else if (lm.type === 'secret_realm') icon = '🗝️';
-          else if (lm.type === 'port') icon = '⛵';
-          else if (lm.type === 'pass') icon = '🛡️';
-          else if (lm.type === 'village') icon = '🏡';
+          let char = '城';
+          let badgeBg = '#1E293B';
+          let badgeBorder = '#D4B16A';
+          if (lm.type === 'sect') {
+            char = '宗';
+            badgeBg = '#451A03';
+            badgeBorder = '#F59E0B';
+          } else if (lm.type === 'secret_realm') {
+            char = '秘';
+            badgeBg = '#3B0764';
+            badgeBorder = '#C084FC';
+          } else if (lm.type === 'port') {
+            char = '津';
+            badgeBg = '#0C4A6E';
+            badgeBorder = '#38BDF8';
+          } else if (lm.type === 'pass') {
+            char = '关';
+            badgeBg = '#7F1D1D';
+            badgeBorder = '#F87171';
+          } else if (lm.type === 'village') {
+            char = '村';
+            badgeBg = '#064E3B';
+            badgeBorder = '#34D399';
+          }
 
-          ctx.font = `${Math.max(12, 16 * camera.zoom * 2)}px sans-serif`;
+          const badgeR = Math.max(7, 10 * camera.zoom * 2);
+          ctx.beginPath();
+          ctx.arc(lx, ly, badgeR, 0, Math.PI * 2);
+          ctx.fillStyle = badgeBg;
+          ctx.fill();
+          ctx.strokeStyle = badgeBorder;
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#FEF08A';
+          ctx.font = `bold ${Math.max(8, 10 * camera.zoom * 2)}px serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(icon, lx, ly);
+          ctx.fillText(char, lx, ly + 0.5);
 
           // Landmark Label Tag
           ctx.font = `bold ${Math.max(8, 9 * camera.zoom * 2)}px sans-serif`;
           const textW = ctx.measureText(lm.name).width;
           ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-          ctx.fillRect(lx - textW / 2 - 4, ly + 10, textW + 8, 12);
-          ctx.strokeStyle = '#F59E0B';
+          ctx.fillRect(lx - textW / 2 - 4, ly + badgeR + 3, textW + 8, 12);
+          ctx.strokeStyle = badgeBorder;
           ctx.lineWidth = 0.5;
-          ctx.strokeRect(lx - textW / 2 - 4, ly + 10, textW + 8, 12);
+          ctx.strokeRect(lx - textW / 2 - 4, ly + badgeR + 3, textW + 8, 12);
           ctx.fillStyle = '#FEF08A';
-          ctx.fillText(lm.name, lx, ly + 18);
+          ctx.fillText(lm.name, lx, ly + badgeR + 11);
           ctx.restore();
         });
 
@@ -566,17 +622,40 @@ export default function WorldCanvas({
 
           // Claimed Land / Farmland
           if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction && tile.ownerId) {
-            ctx.fillStyle = '#10B981';
-            ctx.font = `bold ${Math.max(7, 9 * camera.zoom)}px sans-serif`;
+            ctx.fillStyle = 'rgba(6, 78, 59, 0.85)';
+            const pw = currentTileSize * 0.7;
+            const ph = Math.max(9, 11 * camera.zoom);
+            const px = sx + (currentTileSize - pw) / 2;
+            const py = sy + currentTileSize * 0.45;
+            ctx.fillRect(px, py, pw, ph);
+            ctx.strokeStyle = '#34D399';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(px, py, pw, ph);
+            ctx.fillStyle = '#A7F3D0';
+            ctx.font = `bold ${Math.max(7, 8 * camera.zoom)}px sans-serif`;
             ctx.textAlign = 'center';
-            ctx.fillText('🚩 Milik', sx + currentTileSize / 2, sy + currentTileSize * 0.55);
+            ctx.textBaseline = 'middle';
+            ctx.fillText('MILIK', sx + currentTileSize / 2, py + ph / 2);
           }
           if (tile.cropType) {
-            ctx.font = `${Math.max(8, 12 * camera.zoom)}px sans-serif`;
+            ctx.fillStyle = '#F59E0B';
+            ctx.font = `bold ${Math.max(8, 11 * camera.zoom)}px serif`;
             ctx.textAlign = 'center';
-            ctx.fillText('🌾', sx + currentTileSize * 0.5, sy + currentTileSize * 0.55);
+            ctx.textBaseline = 'middle';
+            ctx.fillText('田', sx + currentTileSize * 0.5, sy + currentTileSize * 0.55);
           }
         }
+      }
+
+      // Region Color Tint Multiply (4-6% multiply overlay with smooth region palette)
+      const curRegion = getRegionAt(camera.x, camera.y);
+      if (curRegion && curRegion.palette) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = curRegion.palette.primary || curRegion.palette.terrainColor || '#3a5f38';
+        ctx.globalAlpha = 0.05;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
       }
 
       // Grid Lines (Adaptive LOD: faint when zoomed out, clear when zoomed in)
@@ -676,15 +755,19 @@ export default function WorldCanvas({
       }
 
       // ----------------------------------------------------------------------
-      // L3 & L4: Y-SORTED OBJECTS & ENTITIES (MAX 140 OBJECTS PER FRAME)
+      // L3 & L4: Y-SORTED OBJECTS & ENTITIES (Frustum Culling & 1,500 Sprite Budget - Fase G)
       // ----------------------------------------------------------------------
       const ySortQueue: YSortEntry[] = [];
+      const MAX_SPRITE_BUDGET = 1500;
+      const candidateObjects: Array<{
+        def: WorldObjectDef;
+        instance: MapObjectInstance;
+        priority: number;
+        bottomY: number;
+      }> = [];
 
-      // 1. Collect Visible Tall Objects
-      let objCount = 0;
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
-          if (objCount >= 140) break;
           const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           if (!tile) continue;
 
@@ -693,22 +776,26 @@ export default function WorldCanvas({
             for (const obj of tile.objects) {
               const def = OBJECT_DEFINITIONS[obj.defId] || OBJECT_DEFINITIONS.karst_pillar_1x1;
 
-              // LOD Tuning: at zoom < 0.65, skip small micro-clutter (tiny shrubs, 1x1 flora)
-              if (camera.zoom < 0.65 && def.footprint.cw <= 1 && def.footprint.ch <= 1) {
-                const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster');
+              // LOD Tuning: at zoom < 0.50, skip small micro-clutter (tiny shrubs, 1x1 flora) unless landmark/structure
+              if (camera.zoom < 0.50 && def.footprint.cw <= 1 && def.footprint.ch <= 1) {
+                const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster') || def.tags?.includes('structure');
                 if (!isImportant) continue;
               }
 
-              const bottomY = obj.y + def.footprint.ch;
-              ySortQueue.push({
-                type: 'object',
-                sortKey: bottomY * 1000 + obj.x + (def.sortBias || 0),
-                tileX: obj.x,
-                tileY: obj.y,
-                footprintBottomY: bottomY,
-                data: { def, instance: obj }
+              // Anti-clumping: ensure no identical defId within 3 tiles (Chebyshev < 3)
+              const hasDuplicateNearby = candidateObjects.some(c =>
+                c.instance.defId === obj.defId &&
+                Math.max(Math.abs(c.instance.x - obj.x), Math.abs(c.instance.y - obj.y)) < 3
+              );
+              if (hasDuplicateNearby) continue;
+
+              const priority = getObjectPriority(def);
+              candidateObjects.push({
+                def,
+                instance: obj,
+                priority,
+                bottomY: obj.y + def.footprint.ch
               });
-              objCount++;
             }
           } else {
             // Procedural Tall Object Generation for natural landmarks
@@ -732,24 +819,47 @@ export default function WorldCanvas({
             if (autoDefId && OBJECT_DEFINITIONS[autoDefId]) {
               const def = OBJECT_DEFINITIONS[autoDefId];
 
-              // LOD Tuning: at zoom < 0.65, skip small procedural auto-objects unless building
-              if (camera.zoom < 0.65 && def.footprint.cw <= 1 && def.footprint.ch <= 1 && !tile.buildingName && !tile.isSettlementOrigin) {
+              // Anti-clumping: ensure no identical defId within 3 tiles (Chebyshev < 3)
+              const hasDuplicateNearby = candidateObjects.some(c =>
+                c.def.id === autoDefId &&
+                Math.max(Math.abs(c.instance.x - tx), Math.abs(c.instance.y - ty)) < 3
+              );
+              if (hasDuplicateNearby) {
                 continue;
               }
 
-              const bottomY = ty + def.footprint.ch;
-              ySortQueue.push({
-                type: 'object',
-                sortKey: bottomY * 1000 + tx + (def.sortBias || 0),
-                tileX: tx,
-                tileY: ty,
-                footprintBottomY: bottomY,
-                data: { def, instance: { id: `auto_${tx}_${ty}`, defId: autoDefId, x: tx, y: ty } }
+              // LOD Tuning: at zoom < 0.50, skip small procedural auto-objects unless building
+              if (camera.zoom < 0.50 && def.footprint.cw <= 1 && def.footprint.ch <= 1 && !tile.buildingName && !tile.isSettlementOrigin) {
+                continue;
+              }
+
+              const priority = getObjectPriority(def);
+              candidateObjects.push({
+                def,
+                instance: { id: `auto_${tx}_${ty}`, defId: autoDefId, x: tx, y: ty },
+                priority,
+                bottomY: ty + def.footprint.ch
               });
-              objCount++;
             }
           }
         }
+      }
+
+      // If budget exceeded, sort by priority (1=Landmark > 2=Building > 3=Tree > 4=Rock > 5=Decor) and trim
+      if (candidateObjects.length > MAX_SPRITE_BUDGET) {
+        candidateObjects.sort((a, b) => a.priority - b.priority);
+        candidateObjects.length = MAX_SPRITE_BUDGET;
+      }
+
+      for (const cand of candidateObjects) {
+        ySortQueue.push({
+          type: 'object',
+          sortKey: cand.bottomY * 1000 + cand.instance.x + (cand.def.sortBias || 0),
+          tileX: cand.instance.x,
+          tileY: cand.instance.y,
+          footprintBottomY: cand.bottomY,
+          data: { def: cand.def, instance: cand.instance }
+        });
       }
 
       // 2. Insert Player into Y-Sort Queue
@@ -971,9 +1081,9 @@ export default function WorldCanvas({
             time
           );
 
-          // Render Illustrated Monster Sprite from Atlas (with graceful emoji fallback)
-          const monsterFrame = resolveMonsterAtlasFrame(m.name, m.key);
-          const drawn = monsterFrame && atlasLoader.hasFrame(monsterFrame)
+          // Render Illustrated Monster Sprite from Atlas (Zero emoji fallback)
+          const monsterFrame = resolveMonsterAtlasFrameWithFallback(m.name, m.key, m.tier || 1);
+          let drawn = monsterFrame && atlasLoader.hasFrame(monsterFrame)
             ? atlasLoader.drawSprite(
                 ctx,
                 monsterFrame,
@@ -984,19 +1094,51 @@ export default function WorldCanvas({
               )
             : false;
 
+          if (!drawn && monsterFrame) {
+            drawn = atlasLoader.drawAtlasFrame(
+              ctx,
+              'markers_entities',
+              monsterFrame,
+              sx + currentTileSize * 0.12,
+              sy + currentTileSize * 0.12,
+              currentTileSize * 0.76,
+              currentTileSize * 0.76
+            );
+          }
+
           if (!drawn) {
-            const speciesIcon = getMonsterIcon(m.name, m.key);
-            ctx.font = `${Math.max(12, 16 * camera.zoom)}px sans-serif`;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(sx + currentTileSize * 0.5, sy + currentTileSize * 0.5, currentTileSize * 0.28, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.fill();
+            ctx.strokeStyle = '#EF4444';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.fillStyle = '#EF4444';
+            ctx.font = `bold ${Math.max(8, 10 * camera.zoom)}px serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(speciesIcon, sx + currentTileSize / 2, sy + currentTileSize * 0.5);
+            ctx.fillText('兽', sx + currentTileSize * 0.5, sy + currentTileSize * 0.5 + 0.5);
+            ctx.restore();
           }
 
           // Boss Warning Badge
           if (m.isBoss || (m.tier && m.tier >= 5)) {
+            const bWidth = currentTileSize * 0.65;
+            const bHeight = Math.max(9, 11 * camera.zoom);
+            const bx = sx + (currentTileSize - bWidth) / 2;
+            const by = sy + currentTileSize * 0.08;
+            ctx.fillStyle = '#7F1D1D';
+            ctx.fillRect(bx, by, bWidth, bHeight);
+            ctx.strokeStyle = '#EF4444';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(bx, by, bWidth, bHeight);
+            ctx.fillStyle = '#FEE2E2';
             ctx.font = `bold ${Math.max(6, 7.5 * camera.zoom)}px sans-serif`;
-            ctx.fillStyle = '#DC2626';
-            ctx.fillText('👑 BOSS', sx + currentTileSize / 2, sy + currentTileSize * 0.18);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('BOSS', sx + currentTileSize / 2, by + bHeight / 2);
           }
 
           const mLabel = m.name;
@@ -1336,6 +1478,187 @@ export default function WorldCanvas({
         }
       }
 
+      // ----------------------------------------------------------------------
+      // L8.5: PROCEDURAL AMBIENT PARTICLES PER BIOME (Fase G)
+      // ----------------------------------------------------------------------
+      const curFps = fpsRef.current;
+      if (currentMode === 'zone' && camera.zoom >= 0.4 && weather === 'none' && !isNight && curFps >= 40) {
+        const currentRegion = getRegionAt(camera.x, camera.y);
+        const biomeSlug = currentRegion.regionSlug || '';
+        const maxParticles = 120;
+        const particles = ambientParticlesRef.current;
+
+        // Populate particles if needed
+        while (particles.length < maxParticles) {
+          let color = '#FFAAA6'; // default peach petal
+          let vy = 0.6 + Math.random() * 0.8;
+          let vx = 0.4 + Math.random() * 0.6;
+          let size = 2 + Math.random() * 2.5;
+
+          if (biomeSlug === 'central_plains') {
+            color = '#FFAAA6'; // pink peach blossom
+            vx = 0.8 + Math.random() * 0.7;
+            vy = 0.5 + Math.random() * 0.6;
+          } else if (biomeSlug === 'nine_springs_delta') {
+            color = 'rgba(214, 230, 242, 0.45)'; // mist waft
+            vx = 0.2 + Math.random() * 0.3;
+            vy = 0.1 + Math.random() * 0.2;
+            size = 6 + Math.random() * 8;
+          } else if (biomeSlug.includes('north') || biomeSlug.includes('frost') || biomeSlug.includes('snow')) {
+            color = '#FFFFFF'; // snowflake
+            vx = (Math.random() - 0.5) * 0.4;
+            vy = 0.8 + Math.random() * 0.9;
+          } else if (biomeSlug.includes('lava') || biomeSlug.includes('demon')) {
+            color = Math.random() > 0.5 ? '#FF5722' : '#FF9800'; // volcanic ember
+            vx = (Math.random() - 0.5) * 0.5;
+            vy = -(0.7 + Math.random() * 1.0); // float upward
+          } else if (biomeSlug.includes('venom') || biomeSlug.includes('insect') || biomeSlug.includes('mire')) {
+            color = '#A8E6CF'; // teal toxic spore
+            vx = (Math.random() - 0.5) * 0.4;
+            vy = (Math.random() - 0.5) * 0.4;
+            size = 1.8 + Math.random() * 2.2;
+          } else if (biomeSlug.includes('desert') || biomeSlug.includes('ruins')) {
+            color = '#FFD700'; // golden sand mote
+            vx = 1.2 + Math.random() * 1.5;
+            vy = (Math.random() - 0.5) * 0.3;
+          } else if (biomeSlug.includes('wood') || biomeSlug.includes('forest')) {
+            color = '#A7F3D0'; // emerald Qi mote
+            vx = (Math.random() - 0.5) * 0.3;
+            vy = -(0.4 + Math.random() * 0.6); // float upward
+            size = 2.5 + Math.random() * 2.5;
+          }
+
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx,
+            vy,
+            size,
+            alpha: 0.2 + Math.random() * 0.6,
+            color,
+            rot: Math.random() * Math.PI * 2,
+            vRot: (Math.random() - 0.5) * 0.05
+          });
+        }
+
+        ctx.save();
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vRot;
+
+          // Wrap around canvas
+          if (p.x > width + 20) p.x = -10;
+          if (p.x < -20) p.x = width + 10;
+          if (p.y > height + 20) p.y = -10;
+          if (p.y < -20) p.y = height + 10;
+
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.beginPath();
+          if (p.size > 5) {
+            // Mist / cloud puff
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            // Petal or diamond particle
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.ellipse(0, 0, p.size * 1.5, p.size * 0.75, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+        ctx.restore();
+      }
+
+      // ----------------------------------------------------------------------
+      // DEBUG CAM SCREENSHOT HOOK & METRIC CALCULATION (Fase E)
+      // ----------------------------------------------------------------------
+      const renderEndTime = performance.now();
+      const frameRenderMs = Math.round(renderEndTime - frameStartTime);
+      const dt = renderEndTime - lastFrameTimeRef.current;
+      lastFrameTimeRef.current = renderEndTime;
+      if (dt > 0) {
+        fpsRef.current = fpsRef.current * 0.9 + (1000 / dt) * 0.1;
+      }
+
+      if (debugCam && !hasFiredReadyRef.current) {
+        debugCamFrameCountRef.current++;
+        const isHotReady = chunkManager.areHotChunksReady(camera.x, camera.y, camera.zoom);
+        if (isHotReady) {
+          // Gather visible objects in viewport
+          const visObjs: Array<{ defId: string; x: number; y: number }> = [];
+          for (const item of ySortQueue) {
+            if (item.type === 'object' && item.data?.instance) {
+              visObjs.push({
+                defId: item.data.instance.defId,
+                x: item.data.instance.x,
+                y: item.data.instance.y
+              });
+            }
+          }
+
+          // Verify that all visible sprite textures are resident in GPU memory
+          const areTexturesReady = visObjs.length > 0
+            ? visObjs.every(o => atlasLoader.isSpriteReady(o.defId))
+            : debugCamFrameCountRef.current >= 15;
+
+          const timeSinceMount = performance.now() - debugCamMountTimeRef.current;
+
+          if (areTexturesReady || timeSinceMount > 3500) {
+            // Duplicate within 3 tiles (Chebyshev < 3)
+            let dupCount = 0;
+            for (let i = 0; i < visObjs.length; i++) {
+              for (let j = i + 1; j < visObjs.length; j++) {
+                if (visObjs[i].defId === visObjs[j].defId) {
+                  const dist = Math.max(Math.abs(visObjs[i].x - visObjs[j].x), Math.abs(visObjs[i].y - visObjs[j].y));
+                  if (dist < 3) {
+                    dupCount++;
+                  }
+                }
+              }
+            }
+
+            // Road blockages: solid objects placed on road tiles
+            let roadBlockCount = 0;
+            for (const obj of visObjs) {
+              const t = tileMap.get(`${obj.x},${obj.y}`) || chunkManager.getTile(obj.x, obj.y);
+              if (t && (t.terrainType === 'road' || (t as any).isRoad)) {
+                const def = OBJECT_DEFINITIONS[obj.defId];
+                if (def && def.collision === 'solid') {
+                  roadBlockCount++;
+                }
+              }
+            }
+
+            // Focal point presence
+            const hasFocal = visObjs.some(o => {
+              const def = OBJECT_DEFINITIONS[o.defId];
+              return def && (def.tags?.includes('landmark') || def.tags?.includes('structure') || def.tags?.includes('setpiece'));
+            }) || tiles.some(t => t.buildingName || t.isSettlementOrigin);
+
+            const metrics = {
+              spriteCount: visObjs.length,
+              uniqueDefIds: new Set(visObjs.map(o => o.defId)).size,
+              duplicateWithin3Tiles: dupCount,
+              hasFocalPoint: hasFocal,
+              roadBlockages: roadBlockCount,
+              renderTimeMs: frameRenderMs
+            };
+
+            if (typeof window !== 'undefined') {
+              (window as any).__debugMetrics = metrics;
+              (window as any).__chunksReady = true;
+              window.dispatchEvent(new CustomEvent('chunks-ready', { detail: metrics }));
+            }
+            hasFiredReadyRef.current = true;
+          }
+        }
+      }
+
       animationFrameId = requestAnimationFrame(render);
     };
 
@@ -1590,63 +1913,65 @@ export default function WorldCanvas({
         className="w-full h-full cursor-crosshair active:cursor-grabbing border border-[#383329] shadow-2xl touch-none"
       />
 
-      {/* L9: HUD CONTROLS (Vertical Floating Wuxia Dock on Left) */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-3 z-20 flex flex-col items-center gap-1 pointer-events-auto bg-[#18140E]/90 p-1 rounded-xl border border-[#453826]/70 shadow-xl backdrop-blur-md">
-        <button
-          onClick={handleZoomIn}
-          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
-          title="Perbesar Peta (+)"
-        >
-          +
-        </button>
-        <button
-          onClick={() => setCamera(prev => ({ ...prev, zoom: currentMode === 'macro' ? 0.18 : 1.0 }))}
-          className="px-1 py-0.5 text-[10px] sm:text-xs font-mono text-[#A89578] hover:text-[#E0D3BC] transition-colors"
-          title="Reset Zoom"
-        >
-          {Math.round(camera.zoom * 100)}%
-        </button>
-        <button
-          onClick={handleZoomOut}
-          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
-          title="Perkecil Peta (-)"
-        >
-          -
-        </button>
-        <div className="w-5 h-px bg-[#453826]/70 my-0.5" />
-        <button
-          onClick={centerOnPlayer}
-          className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
-          title="Pusatkan Kamera ke Karakter"
-        >
-          🎯
-        </button>
-        <button
-          onClick={handleToggleMode}
-          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm ${
-            currentMode === 'macro'
-              ? 'bg-amber-700 text-white border border-amber-400'
-              : 'bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5]'
-          }`}
-          title={currentMode === 'macro' ? 'Kembali ke Eksplorasi Grid' : 'Buka Peta Makro 5000×5000'}
-        >
-          <Layers className="w-3.5 h-3.5" />
-        </button>
-        <button
-          onClick={() => setIsBuildMode(prev => !prev)}
-          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm ${
-            isBuildMode
-              ? 'bg-emerald-700 text-white border border-emerald-400 ring-2 ring-emerald-500/50'
-              : 'bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5]'
-          }`}
-          title={isBuildMode ? 'Matikan Mode Bangun (B)' : 'Aktifkan Mode Bangun (B)'}
-        >
-          🏗️
-        </button>
-      </div>
+      {/* L9: HUD CONTROLS (Vertical Floating Wuxia Dock on Left - Hidden in debugCam) */}
+      {!debugCam && (
+        <div className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-3 z-20 flex flex-col items-center gap-1 pointer-events-auto bg-[#18140E]/90 p-1 rounded-xl border border-[#453826]/70 shadow-xl backdrop-blur-md">
+          <button
+            onClick={handleZoomIn}
+            className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+            title="Perbesar Peta (+)"
+          >
+            +
+          </button>
+          <button
+            onClick={() => setCamera(prev => ({ ...prev, zoom: currentMode === 'macro' ? 0.18 : 1.0 }))}
+            className="px-1 py-0.5 text-[10px] sm:text-xs font-mono text-[#A89578] hover:text-[#E0D3BC] transition-colors"
+            title="Reset Zoom"
+          >
+            {Math.round(camera.zoom * 100)}%
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-sm sm:text-base font-bold flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+            title="Perkecil Peta (-)"
+          >
+            -
+          </button>
+          <div className="w-5 h-px bg-[#453826]/70 my-0.5" />
+          <button
+            onClick={centerOnPlayer}
+            className="w-7 h-7 sm:w-8 sm:h-8 bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5] rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm"
+            title="Pusatkan Kamera ke Karakter"
+          >
+            <Target className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={handleToggleMode}
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm ${
+              currentMode === 'macro'
+                ? 'bg-amber-700 text-white border border-amber-400'
+                : 'bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5]'
+            }`}
+            title={currentMode === 'macro' ? 'Kembali ke Eksplorasi Grid' : 'Buka Peta Makro 5000×5000'}
+          >
+            <Layers className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setIsBuildMode(prev => !prev)}
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-sm ${
+              isBuildMode
+                ? 'bg-emerald-700 text-white border border-emerald-400 ring-2 ring-emerald-500/50'
+                : 'bg-[#292218] hover:bg-[#3D3324] text-[#D8C3A5]'
+            }`}
+            title={isBuildMode ? 'Matikan Mode Bangun (B)' : 'Aktifkan Mode Bangun (B)'}
+          >
+            <Hammer className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Mode Bangun Hover Info Card (Fase 18) */}
-      {isBuildMode && hoveredTile && currentMode === 'zone' && (
+      {!debugCam && isBuildMode && hoveredTile && currentMode === 'zone' && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 bg-[#0E121A]/95 border border-amber-600/70 p-3 rounded-xl shadow-2xl backdrop-blur-md flex flex-col gap-1 min-w-[320px] max-w-[420px] animate-in fade-in">
           <div className="flex justify-between items-center">
             <span className="font-serif font-bold text-amber-200 text-sm">
@@ -1657,7 +1982,7 @@ export default function WorldCanvas({
                 ? 'bg-emerald-950 text-emerald-300 border-emerald-500'
                 : 'bg-red-950 text-red-300 border-red-500'
             }`}>
-              {hoveredTile.isClaimable ? '✅ DAPAT DIBANGUN' : '🚫 DILARANG BANGUN'}
+              {hoveredTile.isClaimable ? 'DAPAT DIBANGUN' : 'DILARANG BANGUN'}
             </span>
           </div>
           <div className="text-xs text-gray-300 mt-1">
@@ -1670,7 +1995,7 @@ export default function WorldCanvas({
       )}
 
       {/* Macro Mode Region Tooltip */}
-      {currentMode === 'macro' && hoveredRegion && (
+      {!debugCam && currentMode === 'macro' && hoveredRegion && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 bg-[#0E121A]/95 border border-amber-600/70 p-3 rounded-xl shadow-2xl backdrop-blur-md flex flex-col gap-1 min-w-[260px] animate-in fade-in">
           <div className="flex justify-between items-center">
             <span className="font-serif font-bold text-amber-200 text-sm">
@@ -1700,7 +2025,7 @@ export default function WorldCanvas({
         </div>
       )}
       {/* Fase A (Bug 1): Tampilkan layar pemuatan jika koordinat pemain belum siap dari server */}
-      {playerReady === false && (
+      {!debugCam && playerReady === false && (
         <WorldMapLoadingScreen isReady={false} />
       )}
     </div>

@@ -18,6 +18,37 @@ import { useUIStore } from "@/lib/store";
 
 export function WorldPageContent() {
   const searchParams = useSearchParams();
+  const debugCamParam = searchParams.get('debugCam');
+
+  // Fase E: Isolated Debug Camera Mode for Visual Review & Screenshots
+  useEffect(() => {
+    if (debugCamParam) {
+      document.body.classList.add('debug-cam-active');
+      return () => {
+        document.body.classList.remove('debug-cam-active');
+      };
+    }
+  }, [debugCamParam]);
+
+  if (debugCamParam) {
+    const parts = debugCamParam.split(',').map(Number);
+    const dbgX = !isNaN(parts[0]) ? parts[0] : 2500;
+    const dbgY = !isNaN(parts[1]) ? parts[1] : 2500;
+    const dbgZoom = !isNaN(parts[2]) ? parts[2] : 1.0;
+
+    return (
+      <div className="fixed inset-0 w-screen h-screen bg-[#070a14] z-[99999] overflow-hidden m-0 p-0">
+        <WorldCanvas
+          mode="zone"
+          tiles={[]}
+          playerPos={{ x: dbgX, y: dbgY }}
+          playerReady={true}
+          debugCam={{ x: dbgX, y: dbgY, zoom: dbgZoom }}
+        />
+      </div>
+    );
+  }
+
   const queryZoneId = searchParams.get('zoneId');
   const queryTileX = searchParams.get('tileX');
   const queryTileY = searchParams.get('tileY');
@@ -242,7 +273,13 @@ export function WorldPageContent() {
       }
   };
 
-  if (loading) return <WorldMapLoadingScreen isReady={false} />;
+  if (loading) return (
+    <WorldMapLoadingScreen
+      isReady={false}
+      errorMessage={error}
+      onRetry={() => fetchData()}
+    />
+  );
 
   return (
     <div className={`w-full flex-1 min-h-0 h-full relative overflow-hidden flex flex-col ${climateData?.weather === 'Hujan' ? 'bg-blue-900/10' : climateData?.weather === 'Badai Beracun' ? 'bg-green-900/20' : climateData?.weather === 'Mendung' ? 'bg-gray-900/20' : 'bg-transparent'}`}>

@@ -155,3 +155,20 @@ h1, h2, h3, h4, h5, h6 {
   0%, 100% { transform: translateY(-5%); }
   50% { transform: translateY(0); }
 }
+
+/* Fase E: Full Screen Isolated Debug Cam for Visual Review */
+body.debug-cam-active nav,
+body.debug-cam-active header,
+body.debug-cam-active .global-chat-wrapper,
+body.debug-cam-active .bamboo-overlay-left,
+body.debug-cam-active .bamboo-overlay-right,
+body.debug-cam-active [id*="toast"],
+body.debug-cam-active [class*="chat"],
+body.debug-cam-active [class*="tour"],
+body.debug-cam-active button[title*="Chat"],
+body.debug-cam-active nextjs-portal,
+body.debug-cam-active [data-nextjs-toast],
+body.debug-cam-active [data-nextjs-dev-indicator] {
+  display: none !important;
+}
+

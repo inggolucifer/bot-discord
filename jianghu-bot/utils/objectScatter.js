@@ -35,7 +35,18 @@ const chunkCache = new Map();
 /**
  * Checks if a multi-cell footprint (cw x ch) at (x, y) can be placed without collision.
  */
-function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false) {
+function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false, defId = null, objects = null) {
+  // 0. Anti-clumping dispersion: identical defId must not appear within 3 tiles (Chebyshev < 3)
+  if (!isAnchor && defId && objects && objects.length > 0) {
+    for (let i = objects.length - 1; i >= 0; i--) {
+      const o = objects[i];
+      if (o.defId === defId) {
+        const dist = Math.max(Math.abs(startX - o.x), Math.abs(startY - o.y));
+        if (dist < 3) return false;
+      }
+    }
+  }
+
   for (let dy = 0; dy < ch; dy++) {
     for (let dx = 0; dx < cw; dx++) {
       const tx = startX + dx;
@@ -167,7 +178,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
         if (ox >= startTileX && ox <= endTileX && oy >= startTileY && oy <= endTileY) {
           const itemDef = outskirts[Math.floor(rand() * outskirts.length)];
-          if (canPlaceFootprint(ox, oy, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false)) {
+          if (canPlaceFootprint(ox, oy, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
             const objId = `outskirt_${ox}_${oy}`;
             markFootprintOccupied(ox, oy, itemDef.cw, itemDef.ch, occupiedGrid, objId);
             objects.push({
@@ -199,7 +210,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       for (let attempt = 0; attempt < 10; attempt++) {
         const mx = startTileX + 4 + Math.floor(rand() * 24);
         const my = startTileY + 4 + Math.floor(rand() * 24);
-        if (canPlaceFootprint(mx, my, 1, 1, occupiedGrid, getTileAt)) {
+        if (canPlaceFootprint(mx, my, 1, 1, occupiedGrid, getTileAt, false, mDefId, objects)) {
           const objId = `monster_${mx}_${my}`;
           markFootprintOccupied(mx, my, 1, 1, occupiedGrid, objId);
           objects.push({
@@ -240,7 +251,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ? desertRocks[Math.floor(rand() * desertRocks.length)]
             : assetBindings.natureScatters.rocks[7];
 
-          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt)) {
+          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
             const objId = `desert_rock_${x}_${y}`;
             markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId);
             objects.push({
@@ -260,7 +271,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           ].filter(Boolean);
 
           const fDef = candidateFlora[Math.floor(rand() * candidateFlora.length)];
-          if (fDef && canPlaceFootprint(x, y, fDef.cw, fDef.ch, occupiedGrid, getTileAt)) {
+          if (fDef && canPlaceFootprint(x, y, fDef.cw, fDef.ch, occupiedGrid, getTileAt, false, fDef.defId, objects)) {
             const objId = `desert_flora_${x}_${y}`;
             markFootprintOccupied(x, y, fDef.cw, fDef.ch, occupiedGrid, objId);
             objects.push({
@@ -291,7 +302,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           const pool = [...volcanicPillars, ...deadTrees, ...stumps];
           const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[7];
 
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt)) {
+          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
             const objId = `volcanic_${x}_${y}`;
             markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId);
             objects.push({
@@ -317,7 +328,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ? candidateRocks[Math.floor(rand() * candidateRocks.length)]
             : assetBindings.natureScatters.rocks[0];
 
-          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt)) {
+          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
             const objId = `rock_${x}_${y}`;
             markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId);
             objects.push({
@@ -336,7 +347,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           if (ridgeTrees.length > 0) {
             const tDef = ridgeTrees[Math.floor(rand() * ridgeTrees.length)];
-            if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt)) {
+            if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
               const objId = `mountain_tree_${x}_${y}`;
               markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId);
               objects.push({
@@ -358,7 +369,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         if (roll < 0.45) {
           const bDefs = assetBindings.natureScatters.bamboo;
           const bDef = bDefs[Math.floor(rand() * bDefs.length)];
-          if (canPlaceFootprint(x, y, bDef.cw, bDef.ch, occupiedGrid, getTileAt)) {
+          if (canPlaceFootprint(x, y, bDef.cw, bDef.ch, occupiedGrid, getTileAt, false, bDef.defId, objects)) {
             const objId = `bamboo_${x}_${y}`;
             markFootprintOccupied(x, y, bDef.cw, bDef.ch, occupiedGrid, objId);
             objects.push({
@@ -384,7 +395,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ? candidateTrees[Math.floor(rand() * candidateTrees.length)]
             : assetBindings.natureScatters.trees[0];
 
-          if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt)) {
+          if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
             const objId = `tree_${x}_${y}`;
             markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId);
             objects.push({
@@ -405,7 +416,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         if (roll < 0.18) {
           const wDefs = assetBindings.natureScatters.waters;
           const wDef = wDefs[Math.floor(rand() * wDefs.length)];
-          if (canPlaceFootprint(x, y, wDef.cw, wDef.ch, occupiedGrid, getTileAt)) {
+          if (canPlaceFootprint(x, y, wDef.cw, wDef.ch, occupiedGrid, getTileAt, false, wDef.defId, objects)) {
             const objId = `water_veg_${x}_${y}`;
             markFootprintOccupied(x, y, wDef.cw, wDef.ch, occupiedGrid, objId);
             objects.push({
@@ -420,7 +431,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         } else if (roll < 0.24) {
           // Weeping willow along river/lake banks
           const willow = assetBindings.natureScatters.trees.find(t => t.defId.includes('willow'));
-          if (willow && canPlaceFootprint(x, y, willow.cw, willow.ch, occupiedGrid, getTileAt)) {
+          if (willow && canPlaceFootprint(x, y, willow.cw, willow.ch, occupiedGrid, getTileAt, false, willow.defId, objects)) {
             const objId = `willow_${x}_${y}`;
             markFootprintOccupied(x, y, willow.cw, willow.ch, occupiedGrid, objId);
             objects.push({
@@ -447,7 +458,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               t.biomes && (t.biomes.includes('northern_desolate') || t.biomes.includes('frostmoon_sea'))
             );
             const fTree = frostTrees.length > 0 ? frostTrees[Math.floor(rand() * frostTrees.length)] : assetBindings.natureScatters.trees[7];
-            if (canPlaceFootprint(x, y, fTree.cw, fTree.ch, occupiedGrid, getTileAt)) {
+            if (canPlaceFootprint(x, y, fTree.cw, fTree.ch, occupiedGrid, getTileAt, false, fTree.defId, objects)) {
               const objId = `frost_pine_${x}_${y}`;
               markFootprintOccupied(x, y, fTree.cw, fTree.ch, occupiedGrid, objId);
               objects.push({
@@ -470,7 +481,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               ? candidateTrees[Math.floor(rand() * candidateTrees.length)]
               : assetBindings.natureScatters.trees[0];
 
-            if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt)) {
+            if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
               const objId = `tree_${x}_${y}`;
               markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId);
               objects.push({
@@ -489,7 +500,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             );
             if (shrubs.length > 0) {
               const sDef = shrubs[Math.floor(rand() * shrubs.length)];
-              if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getTileAt)) {
+              if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getTileAt, false, sDef.defId, objects)) {
                 const objId = `shrub_${x}_${y}`;
                 markFootprintOccupied(x, y, sDef.cw, sDef.ch, occupiedGrid, objId);
                 objects.push({
@@ -511,7 +522,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               ? candidateRocks[Math.floor(rand() * candidateRocks.length)]
               : assetBindings.natureScatters.rocks[6];
 
-            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt)) {
+            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
               const objId = `rock_${x}_${y}`;
               markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId);
               objects.push({

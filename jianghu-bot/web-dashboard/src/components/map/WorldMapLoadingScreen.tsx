@@ -1,11 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Compass, Sparkles, Shield, Flame, Mountain, Wind, Feather } from 'lucide-react';
+import { Compass, Sparkles, Shield, Flame, Mountain, Wind, Feather, RefreshCw } from 'lucide-react';
 
 interface WorldMapLoadingScreenProps {
   isReady?: boolean;
   onFadeComplete?: () => void;
   customTip?: string;
+  errorMessage?: string | null;
+  onRetry?: () => void;
 }
 
 const CULTIVATION_TIPS = [
@@ -44,12 +46,27 @@ const CULTIVATION_TIPS = [
 export default function WorldMapLoadingScreen({
   isReady = false,
   onFadeComplete,
-  customTip
+  customTip,
+  errorMessage,
+  onRetry
 }: WorldMapLoadingScreenProps) {
   const [progress, setProgress] = useState(15);
   const [tipIndex, setTipIndex] = useState(0);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [isTimedOut, setIsTimedOut] = useState(false);
+
+  // Safety timeout: if loading exceeds 8 seconds without ready, show retry prompt
+  useEffect(() => {
+    if (isReady) {
+      setIsTimedOut(false);
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setIsTimedOut(true);
+    }, 8000);
+    return () => clearTimeout(timeout);
+  }, [isReady]);
 
   // Cycle tips every 4 seconds
   useEffect(() => {
@@ -179,6 +196,25 @@ export default function WorldMapLoadingScreen({
               style={{ width: `${progress}%` }}
             />
           </div>
+
+          {/* Error or Timeout Assistance Prompt */}
+          {(errorMessage || isTimedOut) && !isReady && (
+            <div className="mt-3 flex flex-col items-center gap-2 max-w-sm px-4 animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-800 text-red-300 text-xs font-serif text-center shadow-lg">
+                <span className="text-red-400 font-bold shrink-0">⚠️</span>
+                <span>
+                  {errorMessage || 'Proses pemuatan memakan waktu lebih lama. Backend API mungkin sedang menyinkronkan data.'}
+                </span>
+              </div>
+              <button
+                onClick={onRetry || (() => window.location.reload())}
+                className="px-4 py-1.5 bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-600 hover:to-amber-500 text-amber-100 text-xs font-serif font-bold rounded-lg border border-amber-400/80 shadow-[0_0_15px_rgba(245,158,11,0.3)] transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Muat Ulang Peta</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

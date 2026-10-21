@@ -290,6 +290,17 @@ export class ChunkManager {
   }
 
   /**
+   * Checks whether all chunks in the Hot ring for the given coordinates are loaded and unpacked
+   */
+  public areHotChunksReady(centerTileX: number, centerTileY: number, zoom = 1.0): boolean {
+    const { hotKeys } = this.computeRings(centerTileX, centerTileY, zoom);
+    for (const key of hotKeys) {
+      if (!this.unpackedChunks.has(key)) return false;
+    }
+    return true;
+  }
+
+  /**
    * Main camera update hook: updates active rings, evicts cold chunks, schedules fetches
    */
   public updateCamera(centerTileX: number, centerTileY: number, zoom = 1.0) {

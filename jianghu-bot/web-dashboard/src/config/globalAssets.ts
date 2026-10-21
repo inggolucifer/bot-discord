@@ -508,7 +508,7 @@ export const GLOBAL_ASSETS = {
   // Ukuran Pas: 1920x1080 px (Format: JPG / PNG / WebP)
   // =========================================================================
   ui: {
-    parchment_bg: "/assets/tiles/base/xuan_paper_parchment.webp",        // Kanvas gulungan kertas tua (Latar belakang peta)
+    parchment_bg: "",        // Kanvas gulungan kertas tua (Latar belakang peta - render procedural Xuan paper)
     macro_map_bg: "",        // Gambar peta benua utuh (World Scroll 5000x5000)
     login_screen_bg: "",     // Latar belakang menu utama
     player_radar_marker: "", // Ikon pin radar kuning lokasi pemain

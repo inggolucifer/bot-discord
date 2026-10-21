@@ -20,7 +20,13 @@ import {
   Home,
   Coins,
   Hammer,
-  Compass
+  Compass,
+  Skull,
+  AlertTriangle,
+  Swords,
+  Shield,
+  Target,
+  X
 } from 'lucide-react';
 import ThermalStatusBadge from '../ui/ThermalStatusBadge';
 import PropertyInteriorView from './PropertyInteriorView';
@@ -224,7 +230,7 @@ export default function ZoneGridView({
     const px = playerGrid?.position?.tileX ?? 2455;
     const py = playerGrid?.position?.tileY ?? 2485;
     fetchZoneData(px, py);
-    showMessage(`🎯 Kamera dipusatkan kembali ke posisi karakter (${px}, ${py})`);
+    showMessage(`Kamera dipusatkan kembali ke posisi karakter (${px}, ${py})`);
   }, [playerGrid?.position?.tileX, playerGrid?.position?.tileY, fetchZoneData]);
 
   useEffect(() => {
@@ -392,7 +398,7 @@ export default function ZoneGridView({
       });
       fetchZoneData(targetX, targetY);
     }
-    showMessage(`📍 Membidik ${label ? label + ' ' : ''}(${targetX}, ${targetY})`);
+    showMessage(`Membidik ${label ? label + ' ' : ''}(${targetX}, ${targetY})`);
     sound.playDiscovery();
   };
 
@@ -439,7 +445,7 @@ export default function ZoneGridView({
 
           if (res.data.stoppedEarly) {
             sound.playSwordSlash();
-            showMessage(`🛑 Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
+            showMessage(`Perjalanan terhenti: ${res.data.stopReason || 'Disergap!'}`);
             if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
               setAmbushModalData({
                 enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
@@ -453,7 +459,7 @@ export default function ZoneGridView({
             }
           } else if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
             sound.playSwordSlash();
-            showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
+            showMessage(`Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
             setAmbushModalData({
               enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
               encounterMessage: 'Disergap oleh musuh di zona bahaya!'
@@ -467,7 +473,7 @@ export default function ZoneGridView({
         } catch (err: any) {
           const errMsg = err?.response?.data?.error || err?.message || 'Gagal sinkronisasi pergerakan ke server.';
           console.error('[StepMove] Final sync error:', err?.response?.data || err);
-          showMessage(`⚠️ ${errMsg}`);
+          showMessage(`Peringatan: ${errMsg}`);
           const finalPoint = allWaypoints[allWaypoints.length - 1];
           fetchZoneData(finalPoint?.x, finalPoint?.y);
         }
@@ -537,7 +543,7 @@ export default function ZoneGridView({
 
       if (res.data.encounter?.encountered || res.data.encounter?.triggered) {
         sound.playSwordSlash();
-        showMessage(`⚔️ Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
+        showMessage(`Disergap oleh ${res.data.encounter.enemyName || 'Musuh'}!`);
         setAmbushModalData({
           enemyName: res.data.encounter.enemyName || 'Musuh Rimba Liar',
           encounterMessage: 'Disergap oleh musuh di zona bahaya!'
@@ -545,7 +551,7 @@ export default function ZoneGridView({
       }
     } catch (err: any) {
       const errMsg = err?.response?.data?.error || err?.message || 'Gagal sinkronisasi.';
-      showMessage(`⚠️ ${errMsg}`);
+      showMessage(`Peringatan: ${errMsg}`);
       fetchZoneData(px, py); // rollback
     }
   };
@@ -629,14 +635,14 @@ export default function ZoneGridView({
         isOpenToPublic: true
       });
       if (res.data?.success) {
-        showMessage(`🎉 Pembangunan ${assetName} dimulai! Pekerja mulai beraksi.`);
+        showMessage(`Pembangunan ${assetName} dimulai! Pekerja mulai beraksi.`);
         setBuildModalTile(null);
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data?.error || 'Gagal memulai pembangunan'}`);
+        showMessage(`${res.data?.error || 'Gagal memulai pembangunan'}`);
       }
     } catch (err: any) {
-      showMessage(`❌ ${err.response?.data?.error || 'Gagal memulai pembangunan'}`);
+      showMessage(`${err.response?.data?.error || 'Gagal memulai pembangunan'}`);
     }
   };
 
@@ -671,7 +677,7 @@ export default function ZoneGridView({
         y: tile.tileY
       });
       if (!res.data.ok) {
-        showMessage(`❌ ${res.data.error || 'Gagal masuk bangunan'}`);
+        showMessage(`${res.data.error || 'Gagal masuk bangunan'}`);
         return;
       }
       const layoutRes = await api.get(`/grid/interior/${res.data.structureId}`);
@@ -734,7 +740,7 @@ export default function ZoneGridView({
       }
       if (res.data.success || res.data.ok) {
         const priceLabel = res.data.priceLabel || res.data.message || 'sesuai tarif';
-        showMessage(`🎉 Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga ${priceLabel}!`);
+        showMessage(`Berhasil membeli kavling tanah (${tile.tileX}, ${tile.tileY}) seharga ${priceLabel}!`);
         if (res.data.ownedPlotsCount !== undefined) {
           setPlayerLandStats({
             ownedPlotsCount: res.data.ownedPlotsCount,
@@ -743,7 +749,7 @@ export default function ZoneGridView({
         }
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error || 'Gagal membeli tanah'}`);
+        showMessage(`${res.data.error || 'Gagal membeli tanah'}`);
       }
     } catch (err: any) {
       showMessage(err.response?.data?.error || err.message || 'Gagal membeli tanah');
@@ -756,11 +762,11 @@ export default function ZoneGridView({
       const res = await api.post('/grid/profession/fish', { zoneId: activeZoneId });
       if (res.data.ok) {
         sound.playDiscovery();
-        showMessage(`🎣 Strike! Mendapatkan 1x ${res.data.fishName} (Level Pancing: ${res.data.fishingLevel})`);
-        addFloatingNotice(`🎣 +1 ${res.data.fishName}`, 'cyan');
+        showMessage(`Strike! Mendapatkan 1x ${res.data.fishName} (Level Pancing: ${res.data.fishingLevel})`);
+        addFloatingNotice(`+1 ${res.data.fishName}`, 'cyan');
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error}`);
+        showMessage(`${res.data.error}`);
       }
     } catch (err: any) {
       showMessage(err.response?.data?.error || 'Gagal memancing');
@@ -787,11 +793,11 @@ export default function ZoneGridView({
         const cost = res.data.staminaCost ?? 5;
         const itemName = res.data.itemName || 'Herba Roh';
         const qty = res.data.quantity ?? 1;
-        showMessage(`🌿 Berhasil memanen ${qty}x ${itemName}! (-${cost} Stamina)`);
-        addFloatingNotice(`🌿 +${qty} ${itemName} (-${cost} Stamina)`, 'emerald');
+        showMessage(`Berhasil memanen ${qty}x ${itemName}! (-${cost} Stamina)`);
+        addFloatingNotice(`+${qty} ${itemName} (-${cost} Stamina)`, 'emerald');
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error}`);
+        showMessage(`${res.data.error}`);
       }
     } catch (err: any) {
       showMessage(err.response?.data?.error || 'Gagal memanen sumber daya');
@@ -808,11 +814,11 @@ export default function ZoneGridView({
       });
       if (res.data.ok) {
         sound.playGuzheng(440, 0.4);
-        showMessage(`🌱 Berhasil menanam Gandum Emas di petak (${tile.tileX}, ${tile.tileY})!`);
-        addFloatingNotice(`🌱 Gandum Emas Ditanam`, 'amber');
+        showMessage(`Berhasil menanam Gandum Emas di petak (${tile.tileX}, ${tile.tileY})!`);
+        addFloatingNotice(`Gandum Emas Ditanam`, 'amber');
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error}`);
+        showMessage(`${res.data.error}`);
       }
     } catch (err: any) {
       showMessage(err.response?.data?.error || 'Gagal menanam bibit');
@@ -827,11 +833,11 @@ export default function ZoneGridView({
       });
       if (res.data.ok) {
         sound.playDiscovery();
-        showMessage(`🌾 Berhasil memanen ${res.data.quantity}x ${res.data.cropName}!`);
-        addFloatingNotice(`🌾 +${res.data.quantity} ${res.data.cropName}`, 'amber');
+        showMessage(`Berhasil memanen ${res.data.quantity}x ${res.data.cropName}!`);
+        addFloatingNotice(`+${res.data.quantity} ${res.data.cropName}`, 'amber');
         fetchZoneData();
       } else {
-        showMessage(`❌ ${res.data.error}`);
+        showMessage(`${res.data.error}`);
       }
     } catch (err: any) {
       showMessage(err.response?.data?.error || 'Gagal memanen tanaman');
@@ -960,7 +966,7 @@ export default function ZoneGridView({
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
               <span className="text-[11px] text-amber-400/95 group-hover:text-amber-300 font-mono font-bold tracking-tight">({px}, {py})</span>
               {searchFocusTile && (
-                <span className="text-[10px] text-amber-300/90 font-serif ml-0.5">🎯</span>
+                <Target className="w-2.5 h-2.5 text-amber-300/90 ml-0.5 inline" />
               )}
             </button>
 
@@ -985,17 +991,17 @@ export default function ZoneGridView({
                 }`}
               >
                 {currentCharacterTile.territoryType === 'death_zone' ? (
-                  <><span>☠️</span><span>Zona Maut</span></>
+                  <><Skull className="w-3.5 h-3.5 text-purple-400" /><span>Zona Maut</span></>
                 ) : currentCharacterTile.territoryType === 'danger_zone' ? (
-                  <><span>⚠️</span><span>Alam Liar</span></>
+                  <><AlertTriangle className="w-3.5 h-3.5 text-red-400" /><span>Alam Liar</span></>
                 ) : currentCharacterTile.territoryType === 'hunting_zone' ? (
-                  <><span>⚔️</span><span>Zona Berburu ({Math.round((currentCharacterTile.ambushRiskRate || 0.18) * 100)}%)</span></>
+                  <><Swords className="w-3.5 h-3.5 text-amber-400" /><span>Zona Berburu ({Math.round((currentCharacterTile.ambushRiskRate || 0.18) * 100)}%)</span></>
                 ) : (
-                  <><span>🛡️</span><span>Zona Aman</span></>
+                  <><Shield className="w-3.5 h-3.5 text-emerald-400" /><span>Zona Aman</span></>
                 )}
                 {currentCharacterTile.resourceType && (
                   <span className="text-[10px] opacity-80 border-l border-white/20 pl-1 font-sans">
-                    {currentCharacterTile.resourceType === 'herb' ? '🌿 Herba' : currentCharacterTile.resourceType === 'wood' ? '🎋 Rebung' : currentCharacterTile.resourceType === 'ore' ? '⛏️ Tambang' : '🐟 Ikan'}
+                    {currentCharacterTile.resourceType === 'herb' ? 'Herba' : currentCharacterTile.resourceType === 'wood' ? 'Rebung' : currentCharacterTile.resourceType === 'ore' ? 'Tambang' : 'Ikan'}
                   </span>
                 )}
               </div>
@@ -1016,12 +1022,12 @@ export default function ZoneGridView({
         {/* Banner Indikator saat Membidik Tempat Jauh via Fitur Cari */}
         {searchFocusTile && (
           <div className="absolute top-14 sm:top-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/90 border border-amber-500/80 text-amber-200 px-3 py-1.5 rounded-full shadow-2xl font-serif text-xs backdrop-blur-md animate-in fade-in">
-            <span className="text-amber-400">📍 Membidik: ({searchFocusTile.x}, {searchFocusTile.y})</span>
+            <span className="text-amber-400 flex items-center gap-1"><Compass className="w-3.5 h-3.5 inline" /> Membidik: ({searchFocusTile.x}, {searchFocusTile.y})</span>
             <button
               onClick={handleRecenterToPlayer}
               className="px-2.5 py-0.5 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-full border border-amber-500 text-[11px] font-sans font-semibold transition-all active:scale-95 flex items-center gap-1"
             >
-              🎯 Kembali ke Karakter
+              <Target className="w-3 h-3 inline" /> Kembali ke Karakter
             </button>
           </div>
         )}
@@ -1099,7 +1105,7 @@ export default function ZoneGridView({
                   const hours = Math.floor(remMs / 3600000);
                   const mins = Math.floor((remMs % 3600000) / 60000);
                   toast.show({
-                    message: `💀 Dantian Terluka Parah! Sisa pemulihan: ${hours}j ${mins}m setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.`,
+                    message: `Dantian Terluka Parah! Sisa pemulihan: ${hours}j ${mins}m setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.`,
                     type: 'error'
                   });
                 } else {
@@ -1135,9 +1141,9 @@ export default function ZoneGridView({
             <h3 className="font-serif font-bold text-amber-200 text-sm">Peta Makro Benua Tianyuan (5000×5000)</h3>
             <button
               onClick={() => setShowMacroMap(false)}
-              className="px-3 py-1 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-lg text-xs font-semibold"
+              className="px-3 py-1 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-lg text-xs font-semibold flex items-center gap-1"
             >
-              ✕ Tutup
+              <X className="w-3.5 h-3.5" /> Tutup
             </button>
           </div>
           <div className="flex-1 w-full h-full rounded-xl overflow-hidden border border-amber-600/50">
@@ -1424,7 +1430,7 @@ export default function ZoneGridView({
               npcId={talkingNpc._id}
               onBack={() => setTalkingNpc(null)}
               onQuestAccepted={() => {
-                showMessage(`📜 Menerima quest dari ${talkingNpc.name}`);
+                showMessage(`Menerima quest dari ${talkingNpc.name}`);
               }}
             />
           </div>
@@ -1462,7 +1468,7 @@ export default function ZoneGridView({
                  onBattleEnd={(result, rewards) => {
                      setActiveBattleId(null);
                      if (result === 'won') {
-                         showMessage(`🏆 Menang! Mendapatkan +${rewards?.exp || 0} EXP dan +${rewards?.silver || 0} Perak`);
+                         showMessage(`Menang! Mendapatkan +${rewards?.exp || 0} EXP dan +${rewards?.silver || 0} Perak`);
                          if (selectedTile) {
                              setSelectedTile((prev: any) => prev ? { ...prev, spawnedMonster: undefined, label: 'Bekas Sarang (Kosong)' } : null);
                              setTiles((prev: any[]) => prev.map((t: any) => 
@@ -1472,9 +1478,9 @@ export default function ZoneGridView({
                              ));
                          }
                      } else if (result === 'fled') {
-                         showMessage(`🏃 Berhasil meloloskan diri dari pertempuran.`);
+                         showMessage(`Berhasil meloloskan diri dari pertempuran.`);
                      } else {
-                         showMessage(`💀 Pertarungan selesai dengan status: ${result}`);
+                         showMessage(`Pertarungan selesai dengan status: ${result}`);
                      }
                      fetchZoneData();
                  }} 
@@ -1501,6 +1507,8 @@ export default function ZoneGridView({
       {!isInitialLoadDone && (
         <WorldMapLoadingScreen
           isReady={!loading && tiles.length > 0 && Boolean(playerGrid)}
+          errorMessage={error}
+          onRetry={() => fetchZoneData()}
           onFadeComplete={() => setIsInitialLoadDone(true)}
         />
       )}

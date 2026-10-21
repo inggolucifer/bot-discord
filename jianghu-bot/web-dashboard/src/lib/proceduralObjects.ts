@@ -6535,21 +6535,43 @@ export function renderL7MonsterInkRing(
 }
 
 /**
- * Resolves species emoji / icon for monsters based on name, key, or category.
+ * Resolves species atlas frame or fallback frame for monsters based on name, key, or category.
+ * Returns valid atlas frameId (100% deterministic, 0% emoji).
+ */
+export function resolveMonsterAtlasFrameWithFallback(name?: string, key?: string, tier: number = 1): string {
+  const text = `${name || ''} ${key || ''}`.toLowerCase();
+  if (key && atlasLoader.hasFrame(key)) return key;
+  if (key && atlasLoader.hasFrame(`monster_${key}`)) return `monster_${key}`;
+  if (key && atlasLoader.hasFrame(`monster_regional_${key}`)) return `monster_regional_${key}`;
+
+  if (text.includes('naga') || text.includes('dragon') || text.includes('wyrm')) return 'monster_regional_primordial_azure_dragon';
+  if (text.includes('harimau') || text.includes('macan') || text.includes('tiger')) return 'monster_white_tiger';
+  if (text.includes('ular') || text.includes('snake') || text.includes('viper') || text.includes('piton') || text.includes('serpent')) return 'monster_blood_serpent';
+  if (text.includes('elang') || text.includes('rajawali') || text.includes('bird') || text.includes('roc')) return 'monster_storm_roc';
+  if (text.includes('beruang') || text.includes('bear')) return 'monster_iron_bear';
+  if (text.includes('kalajengking') || text.includes('scorpion')) return 'monster_sand_scorpion';
+  if (text.includes('golem') || text.includes('rock')) return 'monster_rock_golem';
+  if (text.includes('kera') || text.includes('ape')) return 'monster_flame_ape';
+  if (text.includes('rubah') || text.includes('fox')) return 'monster_regional_nine_tailed_fox';
+  if (text.includes('serigala') || text.includes('wolf')) return 'monster_demon_wolf';
+  if (text.includes('mastodon') || text.includes('gajah')) return 'monster_regional_glacial_frost_mastodon';
+  if (text.includes('kura') || text.includes('tortoise')) return 'monster_regional_magma_lava_tortoise';
+  if (text.includes('kelabang') || text.includes('centipede')) return 'monster_regional_myriad_toxic_centipede';
+  if (text.includes('qilin')) return 'monster_regional_primordial_jade_qilin';
+
+  // Fallback silhouette per tier (100% deterministic, 0% emoji)
+  if (tier <= 1) return 'monster_demon_wolf';
+  if (tier === 2) return 'monster_blood_serpent';
+  if (tier === 3) return 'monster_iron_bear';
+  if (tier === 4) return 'monster_flame_ape';
+  return 'monster_rock_golem';
+}
+
+/**
+ * Backward compatibility stub: returns empty string or frame id, NEVER an emoji.
  */
 export function getMonsterIcon(name?: string, key?: string): string {
-  const text = `${name || ''} ${key || ''}`.toLowerCase();
-  if (text.includes('naga') || text.includes('dragon') || text.includes('wyrm')) return '🐉';
-  if (text.includes('harimau') || text.includes('macan') || text.includes('tiger')) return '🐯';
-  if (text.includes('ular') || text.includes('snake') || text.includes('viper') || text.includes('piton')) return '🐍';
-  if (text.includes('elang') || text.includes('rajawali') || text.includes('bird') || text.includes('roc')) return '🦅';
-  if (text.includes('beruang') || text.includes('bear')) return '🐻';
-  if (text.includes('laba') || text.includes('spider')) return '🕷️';
-  if (text.includes('rubah') || text.includes('fox')) return '🦊';
-  if (text.includes('serigala') || text.includes('wolf')) return '🐺';
-  if (text.includes('iblis') || text.includes('demon') || text.includes('siluman') || text.includes('asura')) return '👹';
-  if (text.includes('hantu') || text.includes('ghost') || text.includes('arwah')) return '👻';
-  return '🐾';
+  return '';
 }
 
 /**
@@ -6578,19 +6600,19 @@ export function renderL7ResourceSparkle(
   // Sparkling colors per resource type
   let primaryColor = '#10B981';
   let sparkleColor = '#6EE7B7';
-  let icon = '🌱';
+  let hanziGlyph = '草';
   if (resourceType === 'ore') {
     primaryColor = '#F59E0B';
     sparkleColor = '#FDE68A';
-    icon = '⛏️';
+    hanziGlyph = '矿';
   } else if (resourceType === 'wood') {
     primaryColor = '#059669';
     sparkleColor = '#A7F3D0';
-    icon = '🪵';
+    hanziGlyph = '木';
   } else if (resourceType === 'fish') {
     primaryColor = '#0284C7';
     sparkleColor = '#7DD3FC';
-    icon = '🐟';
+    hanziGlyph = '鱼';
   }
 
   // Soft spiritual pulse aura
@@ -6620,11 +6642,12 @@ export function renderL7ResourceSparkle(
     ctx.fill();
   }
 
-  // Resource Icon in center
-  ctx.font = `${Math.max(10, radius * 0.6)}px sans-serif`;
+  // Spiritual Runemark in center (Hanzi Calligraphy Glyph - Zero Emoji)
+  ctx.fillStyle = primaryColor;
+  ctx.font = `bold ${Math.max(8, Math.floor(radius * 0.55))}px serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(icon, cx, cy);
+  ctx.fillText(hanziGlyph, cx, cy + 0.5);
 
   ctx.restore();
 }
