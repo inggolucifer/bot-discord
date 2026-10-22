@@ -1,0 +1,17 @@
+{
+  "summary": {
+    "totalFrames": 379,
+    "distortedFrames": 0,
+    "unclassifiedFrames": 0,
+    "excessiveFootprints": 0,
+    "totalLargeBuildingsChecked": 19,
+    "blockedEntryways": 0,
+    "passRatioDistortion": true,
+    "passClassCoverage": true,
+    "passFootprints": true,
+    "passEntryways": true,
+    "allPassed": true
+  },
+  "distortedList": [],
+  "blockedList": []
+}

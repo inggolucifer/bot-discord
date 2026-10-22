@@ -1,0 +1,8388 @@
+{
+  "mt_rock_4x3": {
+    "id": "mt_rock_4x3",
+    "page": "core_0",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 512,
+    "visualW": 9,
+    "visualH": 6.756,
+    "ratio": 0.7507,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 75.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "spirit_tree_2x2": {
+    "id": "spirit_tree_2x2",
+    "page": "core_0",
+    "category": "tree",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 153.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "mt_rock_2x2": {
+    "id": "mt_rock_2x2",
+    "page": "core_0",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_rock_3x2": {
+    "id": "mt_rock_3x2",
+    "page": "core_0",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 4.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_spirit_spring": {
+    "id": "resource_spirit_spring",
+    "page": "core_0",
+    "category": "resource",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "resource_heavenly_iron_ore": {
+    "id": "resource_heavenly_iron_ore",
+    "page": "core_0",
+    "category": "resource",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_spirit_koi_pool": {
+    "id": "resource_spirit_koi_pool",
+    "page": "core_0",
+    "category": "resource",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_ancient_herb_garden": {
+    "id": "resource_ancient_herb_garden",
+    "page": "core_0",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "resource_ancient_sword_tomb": {
+    "id": "resource_ancient_sword_tomb",
+    "page": "core_0",
+    "category": "resource",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_ancient_lightning_bamboo": {
+    "id": "resource_ancient_lightning_bamboo",
+    "page": "core_0",
+    "category": "resource",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_xuanyuan_sword": {
+    "id": "ancient_relic_xuanyuan_sword",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 2.25,
+    "ratio": 1.5,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 170.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 5,
+      "color": "#FFD700",
+      "flicker": 0.04
+    }
+  },
+  "ancient_relic_haotian_tower": {
+    "id": "ancient_relic_haotian_tower",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 280,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 2.057,
+    "ratio": 1.3714,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 186.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 5,
+      "color": "#FFD700",
+      "flicker": 0.04
+    }
+  },
+  "ancient_relic_lianyao_flask": {
+    "id": "ancient_relic_lianyao_flask",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 316,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.823,
+    "ratio": 1.2152,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 210.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_donghuang_bell": {
+    "id": "ancient_relic_donghuang_bell",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_pan_gu_axe": {
+    "id": "ancient_relic_pan_gu_axe",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_nuwa_stone": {
+    "id": "ancient_relic_nuwa_stone",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 360,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.6,
+    "ratio": 1.0667,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 240,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_shennong_herbal_cauldron": {
+    "id": "ancient_relic_shennong_herbal_cauldron",
+    "page": "core_0",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "ancient_relic_kunlun_mirror": {
+    "id": "ancient_relic_kunlun_mirror",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "ancient_relic_kongtong_seal": {
+    "id": "ancient_relic_kongtong_seal",
+    "page": "core_0",
+    "category": "relic",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.5,
+    "visualH": 1.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "pagoda_2x2": {
+    "id": "pagoda_2x2",
+    "page": "core_0",
+    "category": "building",
+    "class": "XL",
+    "srcW": 256,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 9,
+    "ratio": 1.5,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 42.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "sect_gate_3x2": {
+    "id": "sect_gate_3x2",
+    "page": "core_1",
+    "category": "building",
+    "class": "XL",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 4.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_clump_2x2": {
+    "id": "bamboo_clump_2x2",
+    "page": "core_1",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "ring_monster_boss": {
+    "id": "ring_monster_boss",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_elite": {
+    "id": "ring_monster_elite",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_tier1": {
+    "id": "ring_monster_tier1",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_boss_crimson": {
+    "id": "ring_monster_boss_crimson",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_tier2": {
+    "id": "ring_monster_tier2",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_tier3": {
+    "id": "ring_monster_tier3",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_tier4": {
+    "id": "ring_monster_tier4",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "ring_monster_tier5": {
+    "id": "ring_monster_tier5",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 204.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "pine_tree_1x1": {
+    "id": "pine_tree_1x1",
+    "page": "core_1",
+    "category": "tree",
+    "class": "M",
+    "srcW": 144,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 3.333,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_clump_1x1": {
+    "id": "bamboo_clump_1x1",
+    "page": "core_1",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 144,
+    "srcH": 192,
+    "visualW": 1.25,
+    "visualH": 1.667,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 115.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "karst_pillar_1x1": {
+    "id": "karst_pillar_1x1",
+    "page": "core_1",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 144,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 4.667,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 41.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_spirit_jade": {
+    "id": "resource_spirit_jade",
+    "page": "core_1",
+    "category": "resource",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_iron_ore": {
+    "id": "resource_iron_ore",
+    "page": "core_1",
+    "category": "resource",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_rock_2x1": {
+    "id": "mt_rock_2x1",
+    "page": "core_1",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 256,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 2.625,
+    "ratio": 0.75,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 73.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_golden_carp": {
+    "id": "resource_golden_carp",
+    "page": "core_1",
+    "category": "resource",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_spirit_wood": {
+    "id": "resource_spirit_wood",
+    "page": "core_1",
+    "category": "resource",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "resource_snow_lotus": {
+    "id": "resource_snow_lotus",
+    "page": "core_1",
+    "category": "nature",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "resource_dragon_blood_grass": {
+    "id": "resource_dragon_blood_grass",
+    "page": "core_1",
+    "category": "nature",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "resource_ironwood_log": {
+    "id": "resource_ironwood_log",
+    "page": "core_1",
+    "category": "resource",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_clump_2x1": {
+    "id": "bamboo_clump_2x1",
+    "page": "core_1",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "ancient_relic_fuxi_guqin": {
+    "id": "ancient_relic_fuxi_guqin",
+    "page": "core_1",
+    "category": "relic",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 192,
+    "visualW": 1.5,
+    "visualH": 1.125,
+    "ratio": 0.75,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.25
+    },
+    "pxPerTile": 170.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "pavilion_1x1": {
+    "id": "pavilion_1x1",
+    "page": "core_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "village_house_2x1": {
+    "id": "village_house_2x1",
+    "page": "core_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 256,
+    "srcH": 192,
+    "visualW": 3,
+    "visualH": 2.25,
+    "ratio": 0.75,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "stone_torii_1x1": {
+    "id": "stone_torii_1x1",
+    "page": "core_1",
+    "category": "rock",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 153.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "autotile_river_m00": {
+    "id": "autotile_river_m00",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m00": {
+    "id": "autotile_road_m00",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m01": {
+    "id": "autotile_river_m01",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m01": {
+    "id": "autotile_road_m01",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m02": {
+    "id": "autotile_river_m02",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m02": {
+    "id": "autotile_road_m02",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m03": {
+    "id": "autotile_river_m03",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m03": {
+    "id": "autotile_road_m03",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m04": {
+    "id": "autotile_river_m04",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m04": {
+    "id": "autotile_road_m04",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m05": {
+    "id": "autotile_river_m05",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m05": {
+    "id": "autotile_road_m05",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m06": {
+    "id": "autotile_river_m06",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m06": {
+    "id": "autotile_road_m06",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m07": {
+    "id": "autotile_river_m07",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m07": {
+    "id": "autotile_road_m07",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m08": {
+    "id": "autotile_river_m08",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m08": {
+    "id": "autotile_road_m08",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m09": {
+    "id": "autotile_river_m09",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m09": {
+    "id": "autotile_road_m09",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0a": {
+    "id": "autotile_river_m0a",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0a": {
+    "id": "autotile_road_m0a",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0b": {
+    "id": "autotile_river_m0b",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0b": {
+    "id": "autotile_road_m0b",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0c": {
+    "id": "autotile_river_m0c",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0c": {
+    "id": "autotile_road_m0c",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0d": {
+    "id": "autotile_river_m0d",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0d": {
+    "id": "autotile_road_m0d",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0e": {
+    "id": "autotile_river_m0e",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0e": {
+    "id": "autotile_road_m0e",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_river_m0f": {
+    "id": "autotile_river_m0f",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "autotile_road_m0f": {
+    "id": "autotile_road_m0f",
+    "page": "core_1",
+    "category": "autotile",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": null
+  },
+  "marker_quest_beacon": {
+    "id": "marker_quest_beacon",
+    "page": "core_1",
+    "category": "marker",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "light": {
+      "r": 5,
+      "color": "#FFD700",
+      "flicker": 0.04
+    }
+  },
+  "landmark_spirit_wood_sea_celestial_banyan_hearth": {
+    "id": "landmark_spirit_wood_sea_celestial_banyan_hearth",
+    "page": "biome_nature_0",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_lava_spine_magma_forge_crater": {
+    "id": "landmark_lava_spine_magma_forge_crater",
+    "page": "biome_nature_0",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_floating_wind_isles_floating_daoist_citadel": {
+    "id": "landmark_floating_wind_isles_floating_daoist_citadel",
+    "page": "biome_nature_0",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_venom_mire_sunken_serpent_pagoda": {
+    "id": "landmark_venom_mire_sunken_serpent_pagoda",
+    "page": "biome_nature_0",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10.656,
+    "ratio": 1.0656,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_western_sacred_desert_silk_caravan_oasis": {
+    "id": "landmark_western_sacred_desert_silk_caravan_oasis",
+    "page": "biome_nature_0",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_nine_springs_delta_dragon_water_pavilion": {
+    "id": "landmark_nine_springs_delta_dragon_water_pavilion",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "landmark_mirror_lake_submerged_daoist_pavilion": {
+    "id": "landmark_mirror_lake_submerged_daoist_pavilion",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_hermit_highlands_cloud_bamboo_observatory": {
+    "id": "landmark_hermit_highlands_cloud_bamboo_observatory",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_beast_prairies_tribal_totem_encampment": {
+    "id": "landmark_beast_prairies_tribal_totem_encampment",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 682,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_godthunder_peaks_heavenly_tribulation_platform": {
+    "id": "landmark_godthunder_peaks_heavenly_tribulation_platform",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 667,
+    "visualW": 10,
+    "visualH": 10.422,
+    "ratio": 1.0422,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_southern_plague_woods_blight_root_shrine": {
+    "id": "landmark_southern_plague_woods_blight_root_shrine",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 667,
+    "visualW": 10,
+    "visualH": 10.422,
+    "ratio": 1.0422,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_immortal_ruins_valley_celestial_gateway_remnant": {
+    "id": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 667,
+    "visualW": 10,
+    "visualH": 10.422,
+    "ratio": 1.0422,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_frostmoon_sea_frozen_dragon_skull_isle": {
+    "id": "landmark_frostmoon_sea_frozen_dragon_skull_isle",
+    "page": "biome_nature_1",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 9.384,
+    "ratio": 0.9384,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_void_rift_shattered_space_singularity": {
+    "id": "landmark_void_rift_shattered_space_singularity",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum": {
+    "id": "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 9.384,
+    "ratio": 0.9384,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_ore_teeth_range_abandoned_dwarf_minehead": {
+    "id": "landmark_ore_teeth_range_abandoned_dwarf_minehead",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_eastern_sea_dragon_turtle_shell_shrine": {
+    "id": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 9.384,
+    "ratio": 0.9384,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_formation_barrens_broken_bagua_array": {
+    "id": "landmark_formation_barrens_broken_bagua_array",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 640,
+    "srcH": 640,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_mist_insect_valley_chitin_hive_monolith": {
+    "id": "landmark_mist_insect_valley_chitin_hive_monolith",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 473,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 12.178,
+    "ratio": 1.2178,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 47.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_abyssal_scar_void_chain_anchor": {
+    "id": "landmark_abyssal_scar_void_chain_anchor",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 473,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 12.178,
+    "ratio": 1.2178,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 47.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_azure_mountain_sword_peak_monolith": {
+    "id": "landmark_azure_mountain_sword_peak_monolith",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 432,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 13.333,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 43.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_thundersteppe_lightning_attractor_pillar": {
+    "id": "landmark_thundersteppe_lightning_attractor_pillar",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 432,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 13.333,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 43.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_crimson_battlefield_broken_halberd_cairn": {
+    "id": "landmark_crimson_battlefield_broken_halberd_cairn",
+    "page": "biome_nature_2",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 576,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 10,
+    "ratio": 1,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 57.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_sword_gorge_giant_fallen_blade_bridge": {
+    "id": "landmark_sword_gorge_giant_fallen_blade_bridge",
+    "page": "biome_nature_3",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 669,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 8.61,
+    "ratio": 0.861,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 66.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_bone_sea_coast_leviathan_rib_pier": {
+    "id": "landmark_bone_sea_coast_leviathan_rib_pier",
+    "page": "biome_nature_3",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 669,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 8.61,
+    "ratio": 0.861,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 66.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_southern_demon_domain_skull_gate": {
+    "id": "landmark_southern_demon_domain_skull_gate",
+    "page": "biome_nature_3",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 669,
+    "srcH": 576,
+    "visualW": 10,
+    "visualH": 8.61,
+    "ratio": 0.861,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 66.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_bastion_wall_v1": {
+    "id": "mt_bastion_wall_v1",
+    "page": "biome_nature_3",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 400,
+    "srcH": 560,
+    "visualW": 9,
+    "visualH": 12.6,
+    "ratio": 1.4,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 44.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_bastion_wall_v2": {
+    "id": "mt_bastion_wall_v2",
+    "page": "biome_nature_3",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 400,
+    "srcH": 560,
+    "visualW": 9,
+    "visualH": 12.6,
+    "ratio": 1.4,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 44.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_bastion_wall_v3": {
+    "id": "mt_bastion_wall_v3",
+    "page": "biome_nature_3",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 400,
+    "srcH": 560,
+    "visualW": 9,
+    "visualH": 12.6,
+    "ratio": 1.4,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 44.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_bastion_wall_v4": {
+    "id": "mt_bastion_wall_v4",
+    "page": "biome_nature_3",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 400,
+    "srcH": 560,
+    "visualW": 9,
+    "visualH": 12.6,
+    "ratio": 1.4,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 44.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_tree_pagoda": {
+    "id": "nature_ancient_scholar_tree_pagoda",
+    "page": "biome_nature_3",
+    "category": "tree",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 512,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 1.25
+    },
+    "pxPerTile": 146.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_central_plains_tianjing_palace_gate": {
+    "id": "landmark_central_plains_tianjing_palace_gate",
+    "page": "biome_nature_3",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 512,
+    "visualW": 10,
+    "visualH": 7.507,
+    "ratio": 0.7507,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_border_march_iron_garrison_gatehouse": {
+    "id": "landmark_border_march_iron_garrison_gatehouse",
+    "page": "biome_nature_3",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 682,
+    "srcH": 512,
+    "visualW": 10,
+    "visualH": 7.507,
+    "ratio": 0.7507,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 68.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "landmark_northern_desolate_frozen_mammoth_shrine": {
+    "id": "landmark_northern_desolate_frozen_mammoth_shrine",
+    "page": "biome_nature_4",
+    "category": "landmark",
+    "class": "XXL",
+    "srcW": 576,
+    "srcH": 432,
+    "visualW": 10,
+    "visualH": 7.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 6,
+      "h": 4,
+      "offsetX": 2
+    },
+    "pxPerTile": 57.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_volcanic_obsidian_basalt_pillar": {
+    "id": "nature_scatter_volcanic_obsidian_basalt_pillar",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 320,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2.4,
+    "ratio": 1.2,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 160,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_frost_crystal_pine_bonsai": {
+    "id": "nature_scatter_frost_crystal_pine_bonsai",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 351,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2.188,
+    "ratio": 1.094,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 175.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "nature_scatter_autumn_scarlet_maple_cluster": {
+    "id": "nature_scatter_autumn_scarlet_maple_cluster",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_limestone_stalagmite_spire": {
+    "id": "nature_limestone_stalagmite_spire",
+    "page": "biome_nature_4",
+    "category": "rock",
+    "class": "M",
+    "srcW": 256,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 3,
+    "ratio": 1.5,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_bamboo_culm_breeze_cluster": {
+    "id": "nature_bamboo_culm_breeze_cluster",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 256,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 3,
+    "ratio": 1.5,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_thunder_struck_spirit_wood_stump": {
+    "id": "nature_scatter_thunder_struck_spirit_wood_stump",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 365,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2.104,
+    "ratio": 1.0521,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 182.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_bamboo_sunlit_grove": {
+    "id": "nature_bamboo_sunlit_grove",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_wild_mountain_camellia_shrub": {
+    "id": "nature_wild_mountain_camellia_shrub",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.1,
+    "visualH": 1.1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.55
+    },
+    "pxPerTile": 349.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_bamboo_hanging_creeper": {
+    "id": "nature_bamboo_hanging_creeper",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_limestone_karst_cave_opening": {
+    "id": "nature_limestone_karst_cave_opening",
+    "page": "biome_nature_4",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_pine_wind_twisted_bonsai": {
+    "id": "nature_pine_wind_twisted_bonsai",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_crystal_quartz_vein_crag": {
+    "id": "nature_crystal_quartz_vein_crag",
+    "page": "biome_nature_4",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "nature_ancient_hollow_mulberry_tree": {
+    "id": "nature_ancient_hollow_mulberry_tree",
+    "page": "biome_nature_4",
+    "category": "tree",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 1.25
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_wild_mountain_peony_cluster": {
+    "id": "nature_wild_mountain_peony_cluster",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.1,
+    "visualH": 1.1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.55
+    },
+    "pxPerTile": 349.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_ancient_tea_bush_wild_terrace": {
+    "id": "nature_ancient_tea_bush_wild_terrace",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.1,
+    "visualH": 1.1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.55
+    },
+    "pxPerTile": 349.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_limestone_karst_arch_natural_bridge": {
+    "id": "nature_limestone_karst_arch_natural_bridge",
+    "page": "biome_nature_4",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_mossy_tree_stump_fungi": {
+    "id": "nature_ancient_mossy_tree_stump_fungi",
+    "page": "biome_nature_4",
+    "category": "tree",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 153.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_limestone_karst_sinkhole_pond": {
+    "id": "nature_limestone_karst_sinkhole_pond",
+    "page": "biome_nature_4",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_cypress_stone_cairn": {
+    "id": "nature_ancient_scholar_cypress_stone_cairn",
+    "page": "biome_nature_4",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_mountain_waterfall_splash_basin": {
+    "id": "nature_mountain_waterfall_splash_basin",
+    "page": "biome_nature_4",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_twisted_juniper": {
+    "id": "nature_ancient_scholar_twisted_juniper",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_weeping_willow_bank": {
+    "id": "nature_ancient_scholar_weeping_willow_bank",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_twisted_wisteria_canopy": {
+    "id": "nature_ancient_scholar_twisted_wisteria_canopy",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_silver_birch_grove": {
+    "id": "nature_ancient_scholar_silver_birch_grove",
+    "page": "biome_nature_4",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_red_maple_cliff": {
+    "id": "nature_ancient_scholar_red_maple_cliff",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_ginkgo_gold_canopy": {
+    "id": "nature_ancient_scholar_ginkgo_gold_canopy",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_weeping_peach_blossom": {
+    "id": "nature_ancient_scholar_weeping_peach_blossom",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_golden_larch_ridge": {
+    "id": "nature_ancient_scholar_golden_larch_ridge",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_twisted_locust_tree": {
+    "id": "nature_ancient_scholar_twisted_locust_tree",
+    "page": "biome_nature_5",
+    "category": "tree",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 153.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ancient_scholar_twisted_camphor_canopy": {
+    "id": "nature_ancient_scholar_twisted_camphor_canopy",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_crag_layered_shale_shelf": {
+    "id": "nature_crag_layered_shale_shelf",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 434,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.097,
+    "ratio": 0.8848,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 124,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v1": {
+    "id": "mt_twin_peaks_v1",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v2": {
+    "id": "mt_twin_peaks_v2",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v3": {
+    "id": "mt_twin_peaks_v3",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v4": {
+    "id": "mt_twin_peaks_v4",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v5": {
+    "id": "mt_twin_peaks_v5",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_twin_peaks_v6": {
+    "id": "mt_twin_peaks_v6",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 262,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 8.794,
+    "ratio": 1.4656,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 43.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_cherry_blossom_twin": {
+    "id": "nature_cherry_blossom_twin",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_granite_boulder_basking": {
+    "id": "nature_granite_boulder_basking",
+    "page": "biome_nature_5",
+    "category": "rock",
+    "class": "L",
+    "srcW": 460,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 2.922,
+    "ratio": 0.8348,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 131.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_forest_cluster": {
+    "id": "bamboo_forest_cluster",
+    "page": "biome_nature_5",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2.25,
+    "visualH": 2.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 170.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "azure_peak_crag": {
+    "id": "azure_peak_crag",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "willow_river_curve": {
+    "id": "willow_river_curve",
+    "page": "biome_nature_5",
+    "category": "tree",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 153.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_pine_ancient_twisted": {
+    "id": "nature_pine_ancient_twisted",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_karst_twin_peaks": {
+    "id": "nature_karst_twin_peaks",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 64,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_plum_blossom_lone": {
+    "id": "nature_plum_blossom_lone",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_boulder_cluster_river": {
+    "id": "nature_boulder_cluster_river",
+    "page": "biome_nature_5",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_cypress_grove_mist": {
+    "id": "nature_cypress_grove_mist",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_willow_lone_stream": {
+    "id": "nature_willow_lone_stream",
+    "page": "biome_nature_5",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_rock_stepping_stones": {
+    "id": "nature_rock_stepping_stones",
+    "page": "biome_nature_5",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_pine_windswept_cliff": {
+    "id": "nature_pine_windswept_cliff",
+    "page": "biome_nature_5",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_reed_bed_marsh": {
+    "id": "nature_reed_bed_marsh",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_lotus_pond_cluster": {
+    "id": "nature_lotus_pond_cluster",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.1,
+    "visualH": 1.1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.55
+    },
+    "pxPerTile": 349.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_autumn_maple_grove": {
+    "id": "nature_autumn_maple_grove",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_wisteria_ancient_arbor": {
+    "id": "nature_wisteria_ancient_arbor",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_mossy_stream_cascade": {
+    "id": "nature_mossy_stream_cascade",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_ginkgo_ancient_gold": {
+    "id": "nature_ginkgo_ancient_gold",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_crystal_cluster_cave_rock": {
+    "id": "nature_crystal_cluster_cave_rock",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 2,
+    "visualH": 2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3,
+      "color": "#50E3C2",
+      "flicker": 0.03
+    }
+  },
+  "nature_wild_medicinal_ginseng_flowering": {
+    "id": "nature_wild_medicinal_ginseng_flowering",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_wild_mountain_medicinal_angelica": {
+    "id": "nature_wild_mountain_medicinal_angelica",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_wild_mountain_medicinal_wolfberry_bush": {
+    "id": "nature_wild_mountain_medicinal_wolfberry_bush",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_polygonum": {
+    "id": "nature_mountain_wild_medicinal_polygonum",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_salvia_miltiorrhiza": {
+    "id": "nature_mountain_wild_medicinal_salvia_miltiorrhiza",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_astragalus": {
+    "id": "nature_mountain_wild_medicinal_astragalus",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_licorice_root": {
+    "id": "nature_mountain_wild_medicinal_licorice_root",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_aconite_monkshood": {
+    "id": "nature_mountain_wild_medicinal_aconite_monkshood",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_coptis_rhizome": {
+    "id": "nature_mountain_wild_medicinal_coptis_rhizome",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_dendrobium_orchid": {
+    "id": "nature_mountain_wild_medicinal_dendrobium_orchid",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_polygonatum_kingianum": {
+    "id": "nature_mountain_wild_medicinal_polygonatum_kingianum",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_codonopsis_dangshen": {
+    "id": "nature_mountain_wild_medicinal_codonopsis_dangshen",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_rehmannia_dihuang": {
+    "id": "nature_mountain_wild_medicinal_rehmannia_dihuang",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_mountain_wild_medicinal_baical_skullcap_huangqin": {
+    "id": "nature_mountain_wild_medicinal_baical_skullcap_huangqin",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_scatter_swamp_ancient_mangrove_root_hollow": {
+    "id": "nature_scatter_swamp_ancient_mangrove_root_hollow",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 366,
+    "visualW": 2,
+    "visualH": 1.906,
+    "ratio": 0.9531,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_misty_bamboo_sprout_cluster": {
+    "id": "nature_scatter_misty_bamboo_sprout_cluster",
+    "page": "biome_nature_6",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 364,
+    "visualW": 2,
+    "visualH": 1.896,
+    "ratio": 0.9479,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v1": {
+    "id": "mt_azure_crag_v1",
+    "page": "biome_nature_6",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v2": {
+    "id": "mt_azure_crag_v2",
+    "page": "biome_nature_6",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v3": {
+    "id": "mt_azure_crag_v3",
+    "page": "biome_nature_6",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v4": {
+    "id": "mt_azure_crag_v4",
+    "page": "biome_nature_6",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v5": {
+    "id": "mt_azure_crag_v5",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_azure_crag_v6": {
+    "id": "mt_azure_crag_v6",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 360,
+    "visualW": 3.5,
+    "visualH": 6.3,
+    "ratio": 1.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_celestial_lotus_pond_rockery": {
+    "id": "nature_scatter_celestial_lotus_pond_rockery",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 349,
+    "visualW": 1,
+    "visualH": 0.909,
+    "ratio": 0.9089,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_scatter_coastal_glowing_coral_rock": {
+    "id": "nature_scatter_coastal_glowing_coral_rock",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 348,
+    "visualW": 2,
+    "visualH": 1.813,
+    "ratio": 0.9063,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_subterranean_luminescent_mushroom_patch": {
+    "id": "nature_scatter_subterranean_luminescent_mushroom_patch",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 348,
+    "visualW": 1,
+    "visualH": 0.906,
+    "ratio": 0.9063,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_river_pebble_shoal": {
+    "id": "nature_river_pebble_shoal",
+    "page": "biome_nature_7",
+    "category": "building",
+    "class": "S",
+    "srcW": 512,
+    "srcH": 341,
+    "visualW": 1,
+    "visualH": 0.666,
+    "ratio": 0.666,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 512,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_mossy_river_driftwood": {
+    "id": "nature_mossy_river_driftwood",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "M",
+    "srcW": 512,
+    "srcH": 341,
+    "visualW": 2,
+    "visualH": 1.332,
+    "ratio": 0.666,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_scatter_desert_weathered_beast_skull_cairn": {
+    "id": "nature_scatter_desert_weathered_beast_skull_cairn",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 332,
+    "visualW": 2,
+    "visualH": 1.729,
+    "ratio": 0.8646,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "nature_mossy_wild_stepping_boulders": {
+    "id": "nature_mossy_wild_stepping_boulders",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 320,
+    "visualW": 3.5,
+    "visualH": 2.917,
+    "ratio": 0.8333,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v1": {
+    "id": "tree_spirit_peach_v1",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v2": {
+    "id": "tree_spirit_peach_v2",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v3": {
+    "id": "tree_spirit_peach_v3",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v4": {
+    "id": "tree_spirit_peach_v4",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v5": {
+    "id": "tree_spirit_peach_v5",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_spirit_peach_v6": {
+    "id": "tree_spirit_peach_v6",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 280,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_jade_2x2_l_sparse": {
+    "id": "bamboo_jade_2x2_l_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_jade_2x2_l_dense": {
+    "id": "bamboo_jade_2x2_l_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_2x2_l_sparse": {
+    "id": "bamboo_mist_2x2_l_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_2x2_l_dense": {
+    "id": "bamboo_mist_2x2_l_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_2x2_l_sparse": {
+    "id": "bamboo_dark_2x2_l_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_2x2_l_dense": {
+    "id": "bamboo_dark_2x2_l_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 260,
+    "visualW": 2.25,
+    "visualH": 2.925,
+    "ratio": 1.3,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 88.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "nature_bamboo_sparse_single": {
+    "id": "nature_bamboo_sparse_single",
+    "page": "biome_nature_7",
+    "category": "nature",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v1": {
+    "id": "mt_ridge_double_v1",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v2": {
+    "id": "mt_ridge_double_v2",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v3": {
+    "id": "mt_ridge_double_v3",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v4": {
+    "id": "mt_ridge_double_v4",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v5": {
+    "id": "mt_ridge_double_v5",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_ridge_double_v6": {
+    "id": "mt_ridge_double_v6",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "XXL",
+    "srcW": 137,
+    "srcH": 192,
+    "visualW": 9,
+    "visualH": 12.614,
+    "ratio": 1.4015,
+    "collision": {
+      "w": 6,
+      "h": 3,
+      "offsetX": 1.5
+    },
+    "pxPerTile": 15.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_jade_2x1_m_sparse": {
+    "id": "bamboo_jade_2x1_m_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_jade_2x1_m_dense": {
+    "id": "bamboo_jade_2x1_m_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_2x1_m_sparse": {
+    "id": "bamboo_mist_2x1_m_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_2x1_m_dense": {
+    "id": "bamboo_mist_2x1_m_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_2x1_m_sparse": {
+    "id": "bamboo_dark_2x1_m_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_2x1_m_dense": {
+    "id": "bamboo_dark_2x1_m_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "M",
+    "srcW": 175,
+    "srcH": 192,
+    "visualW": 2.25,
+    "visualH": 2.468,
+    "ratio": 1.0971,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.625
+    },
+    "pxPerTile": 77.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v1": {
+    "id": "mt_karst_pillar_v1",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v2": {
+    "id": "mt_karst_pillar_v2",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v3": {
+    "id": "mt_karst_pillar_v3",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v4": {
+    "id": "mt_karst_pillar_v4",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v5": {
+    "id": "mt_karst_pillar_v5",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "mt_karst_pillar_v6": {
+    "id": "mt_karst_pillar_v6",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 87,
+    "srcH": 192,
+    "visualW": 3.5,
+    "visualH": 7.724,
+    "ratio": 2.2069,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 24.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v1": {
+    "id": "tree_willow_river_v1",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v2": {
+    "id": "tree_willow_river_v2",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v3": {
+    "id": "tree_willow_river_v3",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v4": {
+    "id": "tree_willow_river_v4",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v5": {
+    "id": "tree_willow_river_v5",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_willow_river_v6": {
+    "id": "tree_willow_river_v6",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 2.5,
+    "visualH": 2.5,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 76.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "bamboo_jade_1x1_s_sparse": {
+    "id": "bamboo_jade_1x1_s_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_jade_1x1_s_dense": {
+    "id": "bamboo_jade_1x1_s_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_1x1_s_sparse": {
+    "id": "bamboo_mist_1x1_s_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_mist_1x1_s_dense": {
+    "id": "bamboo_mist_1x1_s_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_1x1_s_sparse": {
+    "id": "bamboo_dark_1x1_s_sparse",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "bamboo_dark_1x1_s_dense": {
+    "id": "bamboo_dark_1x1_s_dense",
+    "page": "biome_nature_7",
+    "category": "bamboo",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 180,
+    "visualW": 1.25,
+    "visualH": 2.25,
+    "ratio": 1.8,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v1": {
+    "id": "tree_cypress_frost_v1",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v2": {
+    "id": "tree_cypress_frost_v2",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v3": {
+    "id": "tree_cypress_frost_v3",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v4": {
+    "id": "tree_cypress_frost_v4",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v5": {
+    "id": "tree_cypress_frost_v5",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_cypress_frost_v6": {
+    "id": "tree_cypress_frost_v6",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 170,
+    "visualW": 2.5,
+    "visualH": 4.25,
+    "ratio": 1.7,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v1": {
+    "id": "tree_pine_ancient_v1",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v2": {
+    "id": "tree_pine_ancient_v2",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v3": {
+    "id": "tree_pine_ancient_v3",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v4": {
+    "id": "tree_pine_ancient_v4",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v5": {
+    "id": "tree_pine_ancient_v5",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_pine_ancient_v6": {
+    "id": "tree_pine_ancient_v6",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 160,
+    "visualW": 2.5,
+    "visualH": 4,
+    "ratio": 1.6,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_crag_cluster_v1": {
+    "id": "rock_crag_cluster_v1",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 160,
+    "visualW": 3.5,
+    "visualH": 2.8,
+    "ratio": 0.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_crag_cluster_v2": {
+    "id": "rock_crag_cluster_v2",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 160,
+    "visualW": 3.5,
+    "visualH": 2.8,
+    "ratio": 0.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_crag_cluster_v3": {
+    "id": "rock_crag_cluster_v3",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 160,
+    "visualW": 3.5,
+    "visualH": 2.8,
+    "ratio": 0.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_crag_cluster_v4": {
+    "id": "rock_crag_cluster_v4",
+    "page": "biome_nature_7",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 200,
+    "srcH": 160,
+    "visualW": 3.5,
+    "visualH": 2.8,
+    "ratio": 0.8,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 57.1,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_cleft_stone_v1": {
+    "id": "rock_cleft_stone_v1",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 150,
+    "visualW": 2,
+    "visualH": 1.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_cleft_stone_v2": {
+    "id": "rock_cleft_stone_v2",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 150,
+    "visualW": 2,
+    "visualH": 1.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_cleft_stone_v3": {
+    "id": "rock_cleft_stone_v3",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 150,
+    "visualW": 2,
+    "visualH": 1.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_cleft_stone_v4": {
+    "id": "rock_cleft_stone_v4",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "M",
+    "srcW": 200,
+    "srcH": 150,
+    "visualW": 2,
+    "visualH": 1.5,
+    "ratio": 0.75,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 100,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v1": {
+    "id": "tree_dead_wood_v1",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v2": {
+    "id": "tree_dead_wood_v2",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v3": {
+    "id": "tree_dead_wood_v3",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v4": {
+    "id": "tree_dead_wood_v4",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v5": {
+    "id": "tree_dead_wood_v5",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "tree_dead_wood_v6": {
+    "id": "tree_dead_wood_v6",
+    "page": "biome_nature_7",
+    "category": "tree",
+    "class": "M",
+    "srcW": 100,
+    "srcH": 140,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "ratio": 1.4,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 40,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_boulder_moss_v1": {
+    "id": "rock_boulder_moss_v1",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_boulder_moss_v2": {
+    "id": "rock_boulder_moss_v2",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_boulder_moss_v3": {
+    "id": "rock_boulder_moss_v3",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "rock_boulder_moss_v4": {
+    "id": "rock_boulder_moss_v4",
+    "page": "biome_nature_7",
+    "category": "rock",
+    "class": "S",
+    "srcW": 100,
+    "srcH": 100,
+    "visualW": 1.25,
+    "visualH": 1.25,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.125
+    },
+    "pxPerTile": 80,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "xitong_city_landmark": {
+    "id": "xitong_city_landmark",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "XL",
+    "srcW": 682,
+    "srcH": 512,
+    "visualW": 6,
+    "visualH": 4.504,
+    "ratio": 0.7507,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 113.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_spirit_pagoda": {
+    "id": "building_spirit_pagoda",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "XL",
+    "srcW": 512,
+    "srcH": 512,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_mountain_hermitage_shack": {
+    "id": "building_mountain_hermitage_shack",
+    "page": "settlement_0",
+    "category": "mountain",
+    "class": "XL",
+    "srcW": 512,
+    "srcH": 427,
+    "visualW": 6,
+    "visualH": 5.004,
+    "ratio": 0.834,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_scatter_mountain_daoist_stone_lantern_beacon": {
+    "id": "structure_scatter_mountain_daoist_stone_lantern_beacon",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "S",
+    "srcW": 288,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1.333,
+    "ratio": 1.3333,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 288,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3.5,
+      "color": "#FFAA50",
+      "flicker": 0.05
+    }
+  },
+  "structure_prof_alchemy_eight_trigrams_bronze_furnace": {
+    "id": "structure_prof_alchemy_eight_trigrams_bronze_furnace",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "M",
+    "srcW": 340,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3.388,
+    "ratio": 1.1294,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 113.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_scatter_roadside_tea_and_rest_pavilion_gazebo": {
+    "id": "structure_scatter_roadside_tea_and_rest_pavilion_gazebo",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 420,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.657,
+    "ratio": 0.9143,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 105,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_prof_cooking_immortal_delicacy_hearth_oven": {
+    "id": "structure_prof_cooking_immortal_delicacy_hearth_oven",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 420,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.657,
+    "ratio": 0.9143,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 105,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_prof_mining_spirit_ore_crushing_stamp_mill": {
+    "id": "structure_prof_mining_spirit_ore_crushing_stamp_mill",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_prof_farming_spirit_herb_nursery_trellis": {
+    "id": "structure_prof_farming_spirit_herb_nursery_trellis",
+    "page": "settlement_0",
+    "category": "nature",
+    "class": "S",
+    "srcW": 419,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 0.916,
+    "ratio": 0.9165,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 419,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "structure_prof_smithing_celestial_bellows_anvil": {
+    "id": "structure_prof_smithing_celestial_bellows_anvil",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 439,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.499,
+    "ratio": 0.8747,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 109.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_prof_fishing_bamboo_raft_spirit_net_dock": {
+    "id": "structure_prof_fishing_bamboo_raft_spirit_net_dock",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 439,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.499,
+    "ratio": 0.8747,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 109.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wine_tavern_flagpole_sign": {
+    "id": "building_wine_tavern_flagpole_sign",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "S",
+    "srcW": 273,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1.407,
+    "ratio": 1.4066,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 273,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wooden_watchtower": {
+    "id": "building_wooden_watchtower",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "M",
+    "srcW": 256,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 4.5,
+    "ratio": 1.5,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 85.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_thatched_granary_round": {
+    "id": "building_village_thatched_granary_round",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "M",
+    "srcW": 351,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3.282,
+    "ratio": 1.094,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 117,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_blacksmith_weapon_rack": {
+    "id": "building_blacksmith_weapon_rack",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_tea_resting_shed": {
+    "id": "building_wayside_tea_resting_shed",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_apiary_beehives": {
+    "id": "building_rustic_apiary_beehives",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_countryside_thatched_gazebo": {
+    "id": "building_countryside_thatched_gazebo",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_riverside_watermill_paddle_wheel": {
+    "id": "building_riverside_watermill_paddle_wheel",
+    "page": "settlement_0",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_chicken_coop_bamboo": {
+    "id": "building_village_chicken_coop_bamboo",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_earth_god_miniature_shrine": {
+    "id": "building_wayside_earth_god_miniature_shrine",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_bamboo_fish_drying_rack": {
+    "id": "building_rustic_bamboo_fish_drying_rack",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_countryside_thatched_haystack_cluster": {
+    "id": "building_countryside_thatched_haystack_cluster",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_mountain_pass_stone_archway": {
+    "id": "building_mountain_pass_stone_archway",
+    "page": "settlement_1",
+    "category": "mountain",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3.5,
+    "visualH": 3.5,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.75
+    },
+    "pxPerTile": 109.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_countryside_bamboo_vegetable_trellis": {
+    "id": "building_countryside_bamboo_vegetable_trellis",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_pottery_kiln_earthen": {
+    "id": "building_rustic_pottery_kiln_earthen",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_stone_water_trough": {
+    "id": "building_village_stone_water_trough",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_bamboo_raft_mooring_post": {
+    "id": "building_wayside_bamboo_raft_mooring_post",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_bamboo_tea_shed_bench": {
+    "id": "building_wayside_bamboo_tea_shed_bench",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_rustic_bamboo_water_pipe_aqueduct": {
+    "id": "building_rustic_bamboo_water_pipe_aqueduct",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_stone_boundary_stele": {
+    "id": "building_wayside_stone_boundary_stele",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_bamboo_grain_drying_mat": {
+    "id": "building_village_bamboo_grain_drying_mat",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_fortune_teller_booth": {
+    "id": "building_wayside_fortune_teller_booth",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_stone_pigpen_pen": {
+    "id": "building_village_stone_pigpen_pen",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_earthen_dyeing_vats": {
+    "id": "building_village_earthen_dyeing_vats",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_stone_well_windlass": {
+    "id": "building_wayside_stone_well_windlass",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_straw_scarecrow_bamboo": {
+    "id": "building_wayside_straw_scarecrow_bamboo",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_stone_grain_mortar_pestle": {
+    "id": "building_village_stone_grain_mortar_pestle",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_stone_grain_roller_mill": {
+    "id": "building_village_stone_grain_roller_mill",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_wooden_mile_marker_stele": {
+    "id": "building_wayside_wooden_mile_marker_stele",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_bamboo_weaving_shed": {
+    "id": "building_village_bamboo_weaving_shed",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_stone_stele_shrine_arbor": {
+    "id": "building_wayside_stone_stele_shrine_arbor",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_stone_arch_bridge": {
+    "id": "building_wayside_stone_arch_bridge",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_wooden_paddy_waterwheel": {
+    "id": "building_village_wooden_paddy_waterwheel",
+    "page": "settlement_1",
+    "category": "building",
+    "class": "L",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 96,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_stone_tofu_press_bench": {
+    "id": "building_village_stone_tofu_press_bench",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_bamboo_courier_mailbox_stand": {
+    "id": "building_wayside_bamboo_courier_mailbox_stand",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_bamboo_duck_coop_ramp": {
+    "id": "building_village_bamboo_duck_coop_ramp",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_stone_rain_shelter_arbor": {
+    "id": "building_wayside_stone_rain_shelter_arbor",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_bamboo_fish_trap_weir": {
+    "id": "building_village_bamboo_fish_trap_weir",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_stone_stele_pavilion_ruin": {
+    "id": "building_wayside_stone_stele_pavilion_ruin",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_bamboo_torch_beacon_brazier": {
+    "id": "building_wayside_bamboo_torch_beacon_brazier",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 4,
+      "color": "#FF7720",
+      "flicker": 0.08
+    }
+  },
+  "building_village_stone_grain_soaking_cistern": {
+    "id": "building_village_stone_grain_soaking_cistern",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_mile_marker_stele": {
+    "id": "building_wayside_mile_marker_stele",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 316,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1.215,
+    "ratio": 1.2152,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 316,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_cart_straw_shed": {
+    "id": "building_rustic_cart_straw_shed",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 434,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.539,
+    "ratio": 0.8848,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 108.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_mill_grain_grinder": {
+    "id": "building_stone_mill_grain_grinder",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_blacksmith_bellows_furnace": {
+    "id": "building_blacksmith_bellows_furnace",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 434,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3.539,
+    "ratio": 0.8848,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 108.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_ferry_dock": {
+    "id": "building_ferry_dock",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_inn_roadside": {
+    "id": "building_inn_roadside",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_forge_workshop": {
+    "id": "building_forge_workshop",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_tea_house": {
+    "id": "building_tea_house",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_alchemist_hall": {
+    "id": "building_alchemist_hall",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_granary_silo": {
+    "id": "building_granary_silo",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_residential_manor": {
+    "id": "building_residential_manor",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_auction_house": {
+    "id": "building_auction_house",
+    "page": "settlement_2",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_sect_library": {
+    "id": "building_sect_library",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_blacksmith_foundry": {
+    "id": "building_blacksmith_foundry",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_apothecary_store": {
+    "id": "building_apothecary_store",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_dock_warehouse": {
+    "id": "building_dock_warehouse",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_thatched_cottage": {
+    "id": "building_village_thatched_cottage",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_roadside_tea_stall": {
+    "id": "building_roadside_tea_stall",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 512,
+    "srcH": 384,
+    "visualW": 4,
+    "visualH": 3,
+    "ratio": 0.75,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_village_well": {
+    "id": "building_village_well",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1.15,
+    "visualH": 1.15,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.075
+    },
+    "pxPerTile": 333.9,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "building_wayside_stone_stele": {
+    "id": "building_wayside_stone_stele",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_drying_racks": {
+    "id": "building_rustic_drying_racks",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_lantern_shrine": {
+    "id": "building_stone_lantern_shrine",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "S",
+    "srcW": 384,
+    "srcH": 384,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 384,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": {
+      "r": 3.5,
+      "color": "#FFAA50",
+      "flicker": 0.05
+    }
+  },
+  "building_watermill_stream": {
+    "id": "building_watermill_stream",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 427,
+    "srcH": 373,
+    "visualW": 4,
+    "visualH": 3.494,
+    "ratio": 0.8735,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 106.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_ancestral_shrine_gate": {
+    "id": "building_ancestral_shrine_gate",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 427,
+    "srcH": 373,
+    "visualW": 6,
+    "visualH": 5.241,
+    "ratio": 0.8735,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 71.2,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_ferry_dock_shed": {
+    "id": "building_ferry_dock_shed",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 427,
+    "srcH": 373,
+    "visualW": 4,
+    "visualH": 3.494,
+    "ratio": 0.8735,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 106.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_rustic_wooden_bridge": {
+    "id": "building_rustic_wooden_bridge",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 427,
+    "srcH": 373,
+    "visualW": 4,
+    "visualH": 3.494,
+    "ratio": 0.8735,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 106.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_spirit_gathering_gazebo": {
+    "id": "building_spirit_gathering_gazebo",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 427,
+    "srcH": 373,
+    "visualW": 4,
+    "visualH": 3.494,
+    "ratio": 0.8735,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 106.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_spirit_altar": {
+    "id": "building_wayside_spirit_altar",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 373,
+    "srcH": 373,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 124.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_water_basin": {
+    "id": "building_stone_water_basin",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "S",
+    "srcW": 373,
+    "srcH": 373,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 373,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "structure_scatter_ruin_ancient_broken_halberd_sword_grave": {
+    "id": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 384,
+    "srcH": 349,
+    "visualW": 3,
+    "visualH": 2.727,
+    "ratio": 0.9089,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 128,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_wayside_wooden_notice_board": {
+    "id": "building_wayside_wooden_notice_board",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "S",
+    "srcW": 192,
+    "srcH": 192,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 192,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_pagoda_tower_v1": {
+    "id": "building_pagoda_tower_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 35,
+    "visualW": 6,
+    "visualH": 6.563,
+    "ratio": 1.0938,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_pagoda_tower_v2": {
+    "id": "building_pagoda_tower_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 35,
+    "visualW": 6,
+    "visualH": 6.563,
+    "ratio": 1.0938,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_pagoda_tower_v3": {
+    "id": "building_pagoda_tower_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 35,
+    "visualW": 6,
+    "visualH": 6.563,
+    "ratio": 1.0938,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_pagoda_tower_v4": {
+    "id": "building_pagoda_tower_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 35,
+    "visualW": 6,
+    "visualH": 6.563,
+    "ratio": 1.0938,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_sect_gate_v1": {
+    "id": "building_sect_gate_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_sect_gate_v2": {
+    "id": "building_sect_gate_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_sect_gate_v3": {
+    "id": "building_sect_gate_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_sect_gate_v4": {
+    "id": "building_sect_gate_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "XL",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 6,
+    "visualH": 6,
+    "ratio": 1,
+    "collision": {
+      "w": 4,
+      "h": 2,
+      "offsetX": 1
+    },
+    "pxPerTile": 5.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_road_inn_v1": {
+    "id": "building_road_inn_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_road_inn_v2": {
+    "id": "building_road_inn_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_road_inn_v3": {
+    "id": "building_road_inn_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_road_inn_v4": {
+    "id": "building_road_inn_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "L",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 4,
+    "visualH": 4,
+    "ratio": 1,
+    "collision": {
+      "w": 3,
+      "h": 2,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_farm_hut_v1": {
+    "id": "building_farm_hut_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_farm_hut_v2": {
+    "id": "building_farm_hut_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_farm_hut_v3": {
+    "id": "building_farm_hut_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_farm_hut_v4": {
+    "id": "building_farm_hut_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_torii_v1": {
+    "id": "building_stone_torii_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_torii_v2": {
+    "id": "building_stone_torii_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_torii_v3": {
+    "id": "building_stone_torii_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_stone_torii_v4": {
+    "id": "building_stone_torii_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_tea_pavilion_v1": {
+    "id": "building_tea_pavilion_v1",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_tea_pavilion_v2": {
+    "id": "building_tea_pavilion_v2",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_tea_pavilion_v3": {
+    "id": "building_tea_pavilion_v3",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  },
+  "building_tea_pavilion_v4": {
+    "id": "building_tea_pavilion_v4",
+    "page": "settlement_3",
+    "category": "building",
+    "class": "M",
+    "srcW": 32,
+    "srcH": 32,
+    "visualW": 3,
+    "visualH": 3,
+    "ratio": 1,
+    "collision": {
+      "w": 2,
+      "h": 1,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 10.7,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "light": null
+  }
+}

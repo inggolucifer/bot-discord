@@ -22,13 +22,24 @@ import {
   renderL7ResourceSparkle,
   renderL7AggroRadius,
   resolveMonsterAtlasFrameWithFallback,
-  renderWorldEdgeClouds
+  renderWorldEdgeClouds,
+  scaleCanon
 } from '@/lib/proceduralObjects';
 import { CANONICAL_REGIONS, CANONICAL_LANDMARKS } from '@/config/canonicalRegions';
 import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation, Hammer } from 'lucide-react';
 import { atlasLoader } from '@/lib/atlasLoader';
-import { chunkManager } from '@/lib/chunkManager';
+import { isDefIdQuarantined } from '@/config/assetQuarantine';
+import { chunkManager, CHUNK_SIZE, MAX_CHUNK_X, MAX_CHUNK_Y } from '@/lib/chunkManager';
+import {
+  renderL1TerrainBase,
+  renderL2BiomeTransitions,
+  renderL3GroundDecal,
+  renderL4AutotileGround,
+  renderBiomeAmbientFog,
+  getRegionColorAt
+} from '@/lib/groundRenderer';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
+import { getWorldRasterImageSync, loadWorldRasterImage } from '@/lib/worldRasterLoader';
 
 // Re-export TileData for backward compatibility
 export type { TileData };
@@ -118,6 +129,9 @@ export default function WorldCanvas({
 
   const BASE_TILE_SIZE = 54;
   const { loadedImages } = useGlobalAssetLoader();
+  const nightCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const warnedMissingDefsRef = useRef<Set<string>>(new Set());
+  const fallbackSpritesCountRef = useRef<number>(0);
 
   // Active View Mode state (Macro vs Zone)
   const [currentMode, setCurrentMode] = useState<CanvasViewMode>(mode);
@@ -205,12 +219,21 @@ export default function WorldCanvas({
   const [hoveredTile, setHoveredTile] = useState<TileData | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<any | null>(null);
 
+  // Unified Effective Tile Size: Scales 5000x5000 continent in Macro mode, 54px in Zone mode
+  const getEffectiveTileSize = useCallback((w: number, h: number, z: number, m: CanvasViewMode) => {
+    if (m === 'macro') {
+      return (Math.min(w, h) * 0.92 / 5000) * (z / 0.18);
+    }
+    return BASE_TILE_SIZE * z;
+  }, []);
+
   // Build Mode State (Fase 18)
   const [isBuildMode, setIsBuildMode] = useState(false);
 
   // Preload Core WebP Atlases on Mount (Fase 19)
   useEffect(() => {
     atlasLoader.preloadCoreAtlases();
+    loadWorldRasterImage().catch(() => {});
   }, []);
 
   // Keyboard shortcut: 'B' toggles Mode Bangun
@@ -409,10 +432,11 @@ export default function WorldCanvas({
 
     const render = () => {
       const frameStartTime = performance.now();
+      fallbackSpritesCountRef.current = 0;
       time += 0.02;
       const width = canvas.width;
       const height = canvas.height;
-      const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+      const currentTileSize = getEffectiveTileSize(width, height, camera.zoom, currentMode);
 
       // ----------------------------------------------------------------------
       // L0: KERTAS DASAR (Xuan Paper Texture & Ultra-faint Grid)
@@ -438,38 +462,65 @@ export default function WorldCanvas({
         label: string;
       }> = [];
 
+      // Fase H4: Array penampung sumber cahaya multi-lamp (max 24)
+      const visibleLights: Array<{
+        sx: number;
+        sy: number;
+        radius: number;
+        color: string;
+        flicker: number;
+      }> = [];
+
       // ======================================================================
       // BRANCH: MACRO MODE (CONTINENT OVERVIEW 5000x5000)
       // ======================================================================
       if (currentMode === 'macro') {
-        // 1. Draw 29 Canonical Regions Bounds & Watercolor Washes
+        // 0. Base Macro Continent Organic Raster (Fase H5)
+        const rasterImg = getWorldRasterImageSync();
+        if (rasterImg && rasterImg.complete && rasterImg.naturalWidth > 0) {
+          const rx0 = toScreenX(0);
+          const ry0 = toScreenY(0);
+          const rx1 = toScreenX(5000);
+          const ry1 = toScreenY(5000);
+          ctx.drawImage(rasterImg, rx0, ry0, rx1 - rx0, ry1 - ry0);
+        } else {
+          renderL0XuanPaper(ctx, canvas.width, canvas.height, camera.zoom);
+        }
+
+        // 1. Draw 29 Canonical Regions Bounds & Calligraphy Labels
         CANONICAL_REGIONS.forEach((reg: any) => {
           const rx = toScreenX(reg.bounds.minX);
           const ry = toScreenY(reg.bounds.minY);
           const rw = (reg.bounds.maxX - reg.bounds.minX) * currentTileSize;
           const rh = (reg.bounds.maxY - reg.bounds.minY) * currentTileSize;
 
-          // Soft watercolor regional tint
-          ctx.save();
-          ctx.fillStyle = reg.palette?.terrainColor ? `${reg.palette.terrainColor}33` : 'rgba(77, 115, 72, 0.2)';
-          ctx.fillRect(rx, ry, rw, rh);
+          const isHovered = hoveredRegion?.regionSlug === reg.regionSlug;
 
-          // Boundary calligraphy stroke
-          ctx.strokeStyle = reg.palette?.accent || '#D4B16A';
-          ctx.lineWidth = 1.2;
-          ctx.strokeRect(rx, ry, rw, rh);
+          ctx.save();
+          if (isHovered) {
+            ctx.fillStyle = reg.palette?.accent ? `${reg.palette.accent}26` : 'rgba(212, 177, 106, 0.15)';
+            ctx.fillRect(rx, ry, rw, rh);
+            ctx.strokeStyle = '#F59E0B';
+            ctx.lineWidth = 1.8;
+            ctx.strokeRect(rx, ry, rw, rh);
+          } else {
+            // Subtle boundary calligraphy stroke
+            ctx.strokeStyle = reg.palette?.accent ? `${reg.palette.accent}44` : 'rgba(212, 177, 106, 0.25)';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(rx, ry, rw, rh);
+          }
 
           // Regional Calligraphy Label
           const cx = rx + rw / 2;
           const cy = ry + rh / 2;
-          ctx.fillStyle = '#2D3330';
+          ctx.fillStyle = isHovered ? '#FFFFFF' : '#F3E8D0';
           ctx.font = `bold ${Math.max(10, 14 * camera.zoom * 2.5)}px serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(reg.displayName, cx, cy - 8);
 
           if (reg.chineseName) {
-            ctx.fillStyle = '#8C3D2E';
+            ctx.fillStyle = isHovered ? '#F59E0B' : '#D4B16A';
             ctx.font = `bold ${Math.max(9, 12 * camera.zoom * 2.5)}px serif`;
             ctx.fillText(reg.chineseName, cx, cy + 10);
           }
@@ -577,25 +628,70 @@ export default function WorldCanvas({
       // ======================================================================
 
       // ----------------------------------------------------------------------
-      // L1 & L2: WASH TERRAIN & DETAIL TANAH DATAR (1-Cell Non-Overflow)
+      // L1: CHUNK GROUND BITMAPS (G0-G3 & Static G4 Autotiles)
       // ----------------------------------------------------------------------
+      const minChunkX = Math.max(0, Math.floor(minTileX / CHUNK_SIZE));
+      const maxChunkX = Math.min(MAX_CHUNK_X, Math.floor(maxTileX / CHUNK_SIZE));
+      const minChunkY = Math.max(0, Math.floor(minTileY / CHUNK_SIZE));
+      const maxChunkY = Math.min(MAX_CHUNK_Y, Math.floor(maxTileY / CHUNK_SIZE));
+
+      const renderedChunkKeys = new Set<string>();
+
+      for (let cy = minChunkY; cy <= maxChunkY; cy++) {
+        for (let cx = minChunkX; cx <= maxChunkX; cx++) {
+          const bitmap = chunkManager.getChunkBitmap(cx, cy, 54);
+          if (bitmap) {
+            const csx = toScreenX(cx * CHUNK_SIZE);
+            const csy = toScreenY(cy * CHUNK_SIZE);
+            const csw = CHUNK_SIZE * currentTileSize;
+            const csh = CHUNK_SIZE * currentTileSize;
+            ctx.drawImage(bitmap, csx, csy, csw, csh);
+            renderedChunkKeys.add(`${cx}:${cy}`);
+          }
+        }
+      }
+
+      // ----------------------------------------------------------------------
+      // L2: FALLBACK PER-TILE & DYNAMIC GROUND OVERLAYS (G4 Waves, Territory, Plots)
+      // ----------------------------------------------------------------------
+      const getNeighborTerrain = (wx: number, wy: number) => {
+        const t = tileMap.get(`${wx},${wy}`) || chunkManager.getTile(wx, wy);
+        return t?.terrainType;
+      };
+
       for (let ty = minTileY; ty <= maxTileY; ty++) {
         for (let tx = minTileX; tx <= maxTileX; tx++) {
+          const cx = Math.floor(tx / CHUNK_SIZE);
+          const cy = Math.floor(ty / CHUNK_SIZE);
+          const chunkHasBitmap = renderedChunkKeys.has(`${cx}:${cy}`);
+
           const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           const sx = toScreenX(tx);
           const sy = toScreenY(ty);
 
           if (!tile) {
-            if (tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
-              ctx.strokeStyle = 'rgba(180, 160, 130, 0.08)';
+            if (camera.zoom >= 1.6 && tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
+              ctx.strokeStyle = 'rgba(180, 160, 130, 0.04)';
               ctx.lineWidth = 0.5;
               ctx.strokeRect(sx, sy, currentTileSize, currentTileSize);
             }
             continue;
           }
 
-          // Render flat ground wash & micro texture
-          renderL1TerrainCell(ctx, sx, sy, currentTileSize, tile.terrainType, time, tx, ty);
+          // If chunk bitmap was not cached/drawn, render procedural ground layers
+          if (!chunkHasBitmap) {
+            renderL1TerrainBase(ctx, sx, sy, currentTileSize, tile.terrainType, tx, ty);
+            renderL2BiomeTransitions(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType, getNeighborTerrain);
+            renderL3GroundDecal(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType);
+          }
+
+          // Dynamic G4 River Wave Shimmer (animated ripple arcs)
+          const isWater = tile.terrainType.includes('river') || tile.terrainType.includes('water') || tile.terrainType.includes('lake') || tile.terrainType.includes('sea');
+          if (isWater) {
+            renderL4AutotileGround(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType, time, getNeighborTerrain);
+          } else if (!chunkHasBitmap && tile.terrainType.includes('road')) {
+            renderL4AutotileGround(ctx, sx, sy, currentTileSize, tx, ty, tile.terrainType, time, getNeighborTerrain);
+          }
 
           // Territory overlay tints
           if (tile.territoryType === 'death_zone') {
@@ -617,8 +713,6 @@ export default function WorldCanvas({
             ctx.fillStyle = 'rgba(128, 0, 128, 0.1)';
             ctx.fillRect(sx, sy, currentTileSize, currentTileSize);
           }
-
-          // Resource Gathering Node is rendered in L7 layer via sprite atlas when camera.zoom >= 1.0
 
           // Claimed Land / Farmland
           if (tile.isClaimable && !tile.buildingName && !tile.isUnderConstruction && tile.ownerId) {
@@ -647,37 +741,36 @@ export default function WorldCanvas({
         }
       }
 
-      // Region Color Tint Multiply (4-6% multiply overlay with smooth region palette)
-      const curRegion = getRegionAt(camera.x, camera.y);
-      if (curRegion && curRegion.palette) {
+      // Region Color Tint Multiply (4-6% multiply overlay with smooth 12-tile organic blend)
+      const blendedRegionColor = getRegionColorAt(camera.x, camera.y);
+      ctx.save();
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.fillStyle = blendedRegionColor;
+      ctx.globalAlpha = 0.05;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
+
+      // Grid Lines: STRICTLY gated to zoom >= 1.6 (faint 0.04 opacity). Completely hidden when zoom < 1.6!
+      if (camera.zoom >= 1.6) {
         ctx.save();
-        ctx.globalCompositeOperation = 'multiply';
-        ctx.fillStyle = curRegion.palette.primary || curRegion.palette.terrainColor || '#3a5f38';
-        ctx.globalAlpha = 0.05;
-        ctx.fillRect(0, 0, width, height);
+        ctx.strokeStyle = 'rgba(165, 155, 142, 0.04)';
+        ctx.lineWidth = 0.6;
+        for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
+          const sx = Math.floor(toScreenX(tx)) + 0.5;
+          ctx.beginPath();
+          ctx.moveTo(sx, Math.max(0, toScreenY(minTileY)));
+          ctx.lineTo(sx, Math.min(height, toScreenY(maxTileY + 1)));
+          ctx.stroke();
+        }
+        for (let ty = minTileY; ty <= maxTileY + 1; ty++) {
+          const sy = Math.floor(toScreenY(ty)) + 0.5;
+          ctx.beginPath();
+          ctx.moveTo(Math.max(0, toScreenX(minTileX)), sy);
+          ctx.lineTo(Math.min(width, toScreenX(maxTileX + 1)), sy);
+          ctx.stroke();
+        }
         ctx.restore();
       }
-
-      // Grid Lines (Adaptive LOD: faint when zoomed out, clear when zoomed in)
-      ctx.save();
-      const gridAlpha = camera.zoom < 0.7 ? 0.08 : (camera.zoom < 1.0 ? 0.16 : 0.25);
-      ctx.strokeStyle = `rgba(165, 155, 142, ${gridAlpha})`;
-      ctx.lineWidth = 1;
-      for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
-        const sx = Math.floor(toScreenX(tx)) + 0.5;
-        ctx.beginPath();
-        ctx.moveTo(sx, Math.max(0, toScreenY(minTileY)));
-        ctx.lineTo(sx, Math.min(height, toScreenY(maxTileY + 1)));
-        ctx.stroke();
-      }
-      for (let ty = minTileY; ty <= maxTileY + 1; ty++) {
-        const sy = Math.floor(toScreenY(ty)) + 0.5;
-        ctx.beginPath();
-        ctx.moveTo(Math.max(0, toScreenX(minTileX)), sy);
-        ctx.lineTo(Math.min(width, toScreenX(maxTileX + 1)), sy);
-        ctx.stroke();
-      }
-      ctx.restore();
 
       // ----------------------------------------------------------------------
       // L2.5: BUILD ZONE OVERLAY (When isBuildMode is active - Fase 18)
@@ -766,28 +859,37 @@ export default function WorldCanvas({
         bottomY: number;
       }> = [];
 
-      for (let ty = minTileY; ty <= maxTileY; ty++) {
-        for (let tx = minTileX; tx <= maxTileX; tx++) {
+      const objMinTileX = Math.max(0, minTileX - 6);
+      const objMaxTileX = Math.min(4999, maxTileX + 6);
+      const objMinTileY = Math.max(0, minTileY - 6);
+      const objMaxTileY = Math.min(4999, maxTileY + 6);
+
+      for (let ty = objMinTileY; ty <= objMaxTileY; ty++) {
+        for (let tx = objMinTileX; tx <= objMaxTileX; tx++) {
           const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
           if (!tile) continue;
 
-          // Check if tile has explicit map objects
+          // Check if tile has explicit map objects (H0: procedural fallback & O(n^2) anti-clumping removed)
           if (tile.objects && tile.objects.length > 0) {
             for (const obj of tile.objects) {
-              const def = OBJECT_DEFINITIONS[obj.defId] || OBJECT_DEFINITIONS.karst_pillar_1x1;
+              if (isDefIdQuarantined(obj.defId)) {
+                continue;
+              }
+
+              const def = OBJECT_DEFINITIONS[obj.defId];
+              if (!def) {
+                if (!warnedMissingDefsRef.current.has(obj.defId)) {
+                  warnedMissingDefsRef.current.add(obj.defId);
+                  console.warn(`[WorldCanvas] Unknown defId '${obj.defId}', skipping.`);
+                }
+                continue;
+              }
 
               // LOD Tuning: at zoom < 0.50, skip small micro-clutter (tiny shrubs, 1x1 flora) unless landmark/structure
               if (camera.zoom < 0.50 && def.footprint.cw <= 1 && def.footprint.ch <= 1) {
                 const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster') || def.tags?.includes('structure');
                 if (!isImportant) continue;
               }
-
-              // Anti-clumping: ensure no identical defId within 3 tiles (Chebyshev < 3)
-              const hasDuplicateNearby = candidateObjects.some(c =>
-                c.instance.defId === obj.defId &&
-                Math.max(Math.abs(c.instance.x - obj.x), Math.abs(c.instance.y - obj.y)) < 3
-              );
-              if (hasDuplicateNearby) continue;
 
               const priority = getObjectPriority(def);
               candidateObjects.push({
@@ -797,54 +899,10 @@ export default function WorldCanvas({
                 bottomY: obj.y + def.footprint.ch
               });
             }
-          } else {
-            // Procedural Tall Object Generation for natural landmarks
-            let autoDefId: string | null = null;
-            if (tile.terrainType === 'azure_mountain' || tile.terrainType === 'mountain' || tile.terrainType === 'mountain_rock') {
-              const hash = (tx * 73856093 ^ ty * 19349663) >>> 0;
-              if (hash % 3 === 0) autoDefId = 'karst_pillar_1x1';
-              else if (hash % 3 === 1) autoDefId = 'mt_rock_2x1';
-            } else if (tile.terrainType.includes('bamboo')) {
-              const hash = (tx * 31 + ty * 17) % 5;
-              if (hash === 0) autoDefId = 'bamboo_clump_1x1';
-              else if (hash === 1) autoDefId = 'bamboo_clump_2x1';
-            } else if (tile.terrainType.includes('forest') || tile.terrainType === 'spirit_wood') {
-              const hash = (tx * 19 + ty * 43) % 4;
-              if (hash === 0) autoDefId = 'pine_tree_1x1';
-            } else if (tile.buildingName || tile.isSettlementOrigin) {
-              if (tile.isSettlementOrigin) autoDefId = 'sect_gate_3x2';
-              else autoDefId = 'village_house_2x1';
-            }
-
-            if (autoDefId && OBJECT_DEFINITIONS[autoDefId]) {
-              const def = OBJECT_DEFINITIONS[autoDefId];
-
-              // Anti-clumping: ensure no identical defId within 3 tiles (Chebyshev < 3)
-              const hasDuplicateNearby = candidateObjects.some(c =>
-                c.def.id === autoDefId &&
-                Math.max(Math.abs(c.instance.x - tx), Math.abs(c.instance.y - ty)) < 3
-              );
-              if (hasDuplicateNearby) {
-                continue;
-              }
-
-              // LOD Tuning: at zoom < 0.50, skip small procedural auto-objects unless building
-              if (camera.zoom < 0.50 && def.footprint.cw <= 1 && def.footprint.ch <= 1 && !tile.buildingName && !tile.isSettlementOrigin) {
-                continue;
-              }
-
-              const priority = getObjectPriority(def);
-              candidateObjects.push({
-                def,
-                instance: { id: `auto_${tx}_${ty}`, defId: autoDefId, x: tx, y: ty },
-                priority,
-                bottomY: ty + def.footprint.ch
-              });
-            }
           }
         }
       }
-
+
       // If budget exceeded, sort by priority (1=Landmark > 2=Building > 3=Tree > 4=Rock > 5=Decor) and trim
       if (candidateObjects.length > MAX_SPRITE_BUDGET) {
         candidateObjects.sort((a, b) => a.priority - b.priority);
@@ -879,34 +937,95 @@ export default function WorldCanvas({
       // Sort by sortKey (Bottom-most objects drawn last)
       ySortQueue.sort((a, b) => a.sortKey - b.sortKey);
 
-      // 3. Render Y-Sorted Queue with Player Occlusion (Alpha 0.55 + Silhouette)
+      // 3. Render Y-Sorted Queue with Player Occlusion (Buildings strictly 100% Solid Opacity)
+      let isPlayerBehindBuilding = false;
+
       for (const item of ySortQueue) {
         if (item.type === 'object') {
           const { def, instance } = item.data as { def: WorldObjectDef; instance: MapObjectInstance };
-          const ox = toScreenX(instance.x);
-          const oy = toScreenY(instance.y - def.overhangCells);
+          const canon = scaleCanon[def.id];
 
-          // L3: Foot Mist
-          if (def.fogFoot) {
-            const footX = toScreenX(instance.x + def.footprint.cw * 0.5);
-            const footY = toScreenY(instance.y + def.footprint.ch);
-            renderL3FootMist(ctx, footX, footY, def.footprint.cw * currentTileSize, currentTileSize * 0.35);
+          // Contract Scale Canon: Visual width & height derived with EXACT original aspect ratio
+          const visualW = canon ? canon.visualW : def.footprint.cw;
+          const visualH = canon ? canon.visualH : (def.footprint.ch + def.overhangCells);
+          const colW = canon?.collision?.w ?? def.footprint.cw;
+          const colH = canon?.collision?.h ?? def.footprint.ch;
+          const colOffsetX = canon?.collision?.offsetX ?? (def.footprint.cw * 0.5);
+          const anchorX = canon?.anchor?.x ?? def.anchor.x;
+          const anchorY = canon?.anchor?.y ?? def.anchor.y;
+
+          // Object Base / Foot position on ground
+          const footX = toScreenX(instance.x + colOffsetX);
+          const footY = toScreenY(instance.y + colH);
+
+          const dw = visualW * currentTileSize;
+          const dh = visualH * currentTileSize;
+
+          // Top-left draw coordinates strictly anchored at the base
+          const drawX = footX - dw * anchorX;
+          const drawY = footY - dh * anchorY;
+
+          // L3: Soft Contact Shadow (H0 / HA / G5 - only draw when sprite is ready in atlas, XS objects skip shadow)
+          const isSpriteReady = atlasLoader.isSpriteReady(def.id);
+          if (def.fogFoot && isSpriteReady) {
+            const isXsObject = canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb')));
+            if (!isXsObject) {
+              const shadowW = Math.max(currentTileSize * 0.8, dw * 0.4);
+              renderL3FootMist(ctx, footX, footY, shadowW, currentTileSize * 0.35);
+            }
           }
+
+          // Fase H4: Multi-Lamp Light Source Collection (Cap at 24 visible lights)
+          if (canon?.light && visibleLights.length < 24) {
+            visibleLights.push({
+              sx: footX,
+              sy: footY - (colH * 0.4 * currentTileSize),
+              radius: Math.max(35, canon.light.r * currentTileSize),
+              color: canon.light.color || '#FFAA50',
+              flicker: canon.light.flicker || 0.05
+            });
+          }
+
+          // Building & Structure Identification
+          const isBuilding =
+            def.tags?.includes('building') ||
+            def.tags?.includes('structure') ||
+            def.tags?.includes('landmark') ||
+            canon?.category === 'building' ||
+            canon?.category === 'landmark' ||
+            def.id.startsWith('building_') ||
+            def.id.startsWith('structure_') ||
+            def.id.startsWith('landmark_') ||
+            def.id.includes('pagoda') ||
+            def.id.includes('pavilion') ||
+            def.id.includes('altar') ||
+            def.id.includes('citadel') ||
+            def.id.includes('city') ||
+            def.id.includes('gate');
 
           // Player Occlusion Check
           let objAlpha = 1.0;
           const isPlayerBehind =
-            pTileY >= instance.y - def.overhangCells &&
-            pTileY <= instance.y + def.footprint.ch &&
-            pTileX >= instance.x - 0.5 &&
-            pTileX <= instance.x + def.footprint.cw + 0.5;
+            pTileY >= instance.y - visualH * 0.8 &&
+            pTileY <= instance.y + colH &&
+            pTileX >= instance.x - visualW * 0.4 &&
+            pTileX <= instance.x + visualW * 0.6;
 
-          if (isPlayerBehind && item.sortKey > (pTileY + 1) * 1000 + pTileX) {
-            objAlpha = 0.55;
+          const isBlockingPlayer = isPlayerBehind && item.sortKey > (pTileY + 1) * 1000 + pTileX;
+
+          if (isBuilding) {
+            // BUILDINGS & LANDMARKS ARE NEVER FADED (Always 100% Solid Opacity)
+            objAlpha = 1.0;
+            if (isBlockingPlayer) {
+              isPlayerBehindBuilding = true;
+            }
+          } else if (isBlockingPlayer) {
+            // Only soft foliage for trees/bushes (gentle 0.80, never washed-out 0.55)
+            objAlpha = 0.80;
           }
 
-          // L4: Render Procedural Tall Object
-          renderL4ProceduralObject(ctx, def.id, ox, oy, currentTileSize, time, objAlpha, instance.flipX);
+          // L4: Render Procedural Tall Object (undistorted aspect ratio, 100% solid buildings)
+          renderL4ProceduralObject(ctx, def.id, drawX, drawY, dw, time, objAlpha, instance.flipX, dh);
 
           // Building Label
           const t = tileMap.get(`${instance.x},${instance.y}`) || chunkManager.getTile(instance.x, instance.y);
@@ -917,8 +1036,8 @@ export default function WorldCanvas({
             const textW = ctx.measureText(bLabel).width;
             const pillW = textW + 8 * camera.zoom;
             const pillH = 11 * camera.zoom;
-            const pillX = ox + (def.footprint.cw * currentTileSize - pillW) / 2;
-            const pillY = oy + (def.footprint.ch + def.overhangCells) * currentTileSize - pillH;
+            const pillX = footX - pillW / 2;
+            const pillY = footY + 4 * camera.zoom;
 
             ctx.fillStyle = 'rgba(10, 14, 23, 0.85)';
             ctx.fillRect(pillX, pillY, pillW, pillH);
@@ -976,13 +1095,37 @@ export default function WorldCanvas({
         }
       }
 
+      // If player is behind a building, render radiant Qi silhouette over the building
+      if (isPlayerBehindBuilding) {
+        const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize / 2;
+        const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize / 2;
+        ctx.save();
+        ctx.shadowColor = '#F59E0B';
+        ctx.shadowBlur = 8;
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.35)';
+        ctx.beginPath();
+        ctx.arc(px, py - 6 * camera.zoom, 11 * camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#FEF08A';
+        ctx.beginPath();
+        ctx.arc(px, py - 14 * camera.zoom, 3.5 * camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
       // ----------------------------------------------------------------------
-      // L5: KABUT ATMOSFER (Parallax Ink Cloud Wash)
+      // L5: KABUT ATMOSFER (Cinematic Edge Vignette - Crystal Clear Center)
       // ----------------------------------------------------------------------
       ctx.save();
-      const atmoGrad = ctx.createLinearGradient(0, 0, width, height);
-      atmoGrad.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
-      atmoGrad.addColorStop(0.5, 'rgba(240, 235, 225, 0.08)');
+      const atmoGrad = ctx.createRadialGradient(
+        width * 0.5, height * 0.5, Math.min(width, height) * 0.35,
+        width * 0.5, height * 0.5, Math.max(width, height) * 0.75
+      );
+      atmoGrad.addColorStop(0, 'rgba(245, 240, 230, 0)');
       atmoGrad.addColorStop(1, 'rgba(210, 200, 185, 0.04)');
       ctx.fillStyle = atmoGrad;
       ctx.fillRect(0, 0, width, height);
@@ -1363,22 +1506,101 @@ export default function WorldCanvas({
         ctx.fillRect(0, 0, width, height);
       }
 
-      // Night Filter
+      // ----------------------------------------------------------------------
+      // G6: BIOME AMBIENT ATMOSPHERE & DRIFTING MIST OVERLAY
+      // ----------------------------------------------------------------------
+      const curRegion = getRegionAt(camera.x, camera.y);
+      renderBiomeAmbientFog(ctx, width, height, curRegion, time, camera.zoom);
+
+      // Night Filter (H0 / H4: Offscreen Canvas + Multi-Lamp Additive Light, Never Erase Map Pixels)
       if (isNight) {
-        ctx.fillStyle = 'rgba(10, 15, 35, 0.65)';
-        ctx.fillRect(0, 0, width, height);
-        ctx.globalCompositeOperation = 'destination-out';
-        const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize / 2;
-        const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize / 2;
-        const lanternGlow = ctx.createRadialGradient(px, py, 10 * camera.zoom, px, py, 100 * camera.zoom);
-        lanternGlow.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        lanternGlow.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
-        lanternGlow.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = lanternGlow;
-        ctx.beginPath();
-        ctx.arc(px, py, 100 * camera.zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
+        if (!nightCanvasRef.current) {
+          nightCanvasRef.current = document.createElement('canvas');
+        }
+        const nightCanvas = nightCanvasRef.current;
+        if (nightCanvas.width !== width || nightCanvas.height !== height) {
+          nightCanvas.width = width;
+          nightCanvas.height = height;
+        }
+
+        const nightCtx = nightCanvas.getContext('2d');
+        if (nightCtx) {
+          nightCtx.clearRect(0, 0, width, height);
+          nightCtx.fillStyle = 'rgba(10, 15, 35, 0.68)';
+          nightCtx.fillRect(0, 0, width, height);
+
+          // All light sources: Player personal lantern + visible multi-lamp sources (up to 24)
+          const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize / 2;
+          const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize / 2;
+          const allLights = [
+            {
+              sx: px,
+              sy: py,
+              radius: Math.max(45, currentTileSize * 3.5),
+              color: '#FFAA50',
+              flicker: 0.04
+            },
+            ...visibleLights
+          ];
+
+          // 1. Punch hole ONLY on the offscreen night layer for all lights
+          nightCtx.globalCompositeOperation = 'destination-out';
+          for (let i = 0; i < allLights.length; i++) {
+            const lit = allLights[i];
+            const flicker = 1.0 + Math.sin(time * 6 + i * 2.3) * lit.flicker;
+            const r = lit.radius * flicker;
+            const glow = nightCtx.createRadialGradient(lit.sx, lit.sy, 8 * camera.zoom, lit.sx, lit.sy, r);
+            glow.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            glow.addColorStop(0.5, 'rgba(255, 255, 255, 0.6)');
+            glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            nightCtx.fillStyle = glow;
+            nightCtx.beginPath();
+            nightCtx.arc(lit.sx, lit.sy, r, 0, Math.PI * 2);
+            nightCtx.fill();
+          }
+          nightCtx.globalCompositeOperation = 'source-over';
+
+          // 2. Draw dark night layer onto main canvas without deleting underlying map pixels
+          ctx.drawImage(nightCanvas, 0, 0);
+
+          // 3. Add warm additive light tint around player and multi-lamp sources
+          ctx.save();
+          ctx.globalCompositeOperation = 'lighter';
+          for (let i = 0; i < allLights.length; i++) {
+            const lit = allLights[i];
+            const flicker = 1.0 + Math.sin(time * 6 + i * 2.3) * lit.flicker;
+            const warmRadius = lit.radius * 1.15 * flicker;
+            const warmGlow = ctx.createRadialGradient(lit.sx, lit.sy, 6 * camera.zoom, lit.sx, lit.sy, warmRadius);
+
+            if (lit.color === '#50E3C2') {
+              // Cyan spirit crystal
+              warmGlow.addColorStop(0, 'rgba(80, 227, 194, 0.30)');
+              warmGlow.addColorStop(0.5, 'rgba(80, 227, 194, 0.12)');
+              warmGlow.addColorStop(1, 'rgba(80, 227, 194, 0)');
+            } else if (lit.color === '#FFD700') {
+              // Golden relic
+              warmGlow.addColorStop(0, 'rgba(255, 215, 0, 0.32)');
+              warmGlow.addColorStop(0.5, 'rgba(255, 215, 0, 0.14)');
+              warmGlow.addColorStop(1, 'rgba(255, 215, 0, 0)');
+            } else if (lit.color === '#FF7720') {
+              // Fiery brazier
+              warmGlow.addColorStop(0, 'rgba(255, 119, 32, 0.32)');
+              warmGlow.addColorStop(0.5, 'rgba(255, 119, 32, 0.14)');
+              warmGlow.addColorStop(1, 'rgba(255, 119, 32, 0)');
+            } else {
+              // Warm amber lantern
+              warmGlow.addColorStop(0, 'rgba(255, 170, 80, 0.28)');
+              warmGlow.addColorStop(0.5, 'rgba(255, 160, 60, 0.12)');
+              warmGlow.addColorStop(1, 'rgba(255, 150, 40, 0)');
+            }
+
+            ctx.fillStyle = warmGlow;
+            ctx.beginPath();
+            ctx.arc(lit.sx, lit.sy, warmRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
       }
       ctx.restore();
 
@@ -1646,7 +1868,8 @@ export default function WorldCanvas({
               duplicateWithin3Tiles: dupCount,
               hasFocalPoint: hasFocal,
               roadBlockages: roadBlockCount,
-              renderTimeMs: frameRenderMs
+              renderTimeMs: frameRenderMs,
+              spritesFallback: fallbackSpritesCountRef.current
             };
 
             if (typeof window !== 'undefined') {
@@ -1682,7 +1905,7 @@ export default function WorldCanvas({
     if (!canvas) return;
 
     if (isDragging) {
-      const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+      const currentTileSize = getEffectiveTileSize(canvas.width, canvas.height, camera.zoom, currentMode);
       const dx = (e.clientX - dragStart.x) / currentTileSize;
       const dy = (e.clientY - dragStart.y) / currentTileSize;
       setCamera(prev => ({
@@ -1699,7 +1922,7 @@ export default function WorldCanvas({
     const screenX = (e.clientX - rect.left) * scaleX;
     const screenY = (e.clientY - rect.top) * scaleY;
 
-    const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+    const currentTileSize = getEffectiveTileSize(canvas.width, canvas.height, camera.zoom, currentMode);
     const viewTilesX = canvas.width / currentTileSize;
     const viewTilesY = canvas.height / currentTileSize;
 
@@ -1735,7 +1958,7 @@ export default function WorldCanvas({
       const scaleY = canvas.height / rect.height;
       const screenX = (e.clientX - rect.left) * scaleX;
       const screenY = (e.clientY - rect.top) * scaleY;
-      const currentTileSize = BASE_TILE_SIZE * camera.zoom;
+      const currentTileSize = getEffectiveTileSize(canvas.width, canvas.height, camera.zoom, currentMode);
       const viewTilesX = canvas.width / currentTileSize;
       const viewTilesY = canvas.height / currentTileSize;
 

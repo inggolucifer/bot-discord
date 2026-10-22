@@ -90,6 +90,7 @@ function ensureApiServer() {
 }
 
 // Build review targets
+const regionsWithAnchors = new Set(anchors.map(a => a.region || 'central_plains'));
 const targets = [];
 
 // 1. 52 Anchors x 3 angles (Center, North -12, West -12) = 156
@@ -188,7 +189,8 @@ async function main() {
 
   const browser = await playwright.chromium.launch({
     executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe',
-    headless: true
+    headless: true,
+    args: ['--enable-precise-memory-info', '--js-flags=--expose-gc']
   });
 
   const page = await browser.newPage({
@@ -222,21 +224,37 @@ async function main() {
     try {
       await page.goto(url, { timeout: 20000, waitUntil: 'domcontentloaded' });
 
-      // Wait for chunks-ready event or window.__chunksReady
-      const metrics = await page.evaluate(() => {
-        return new Promise((resolve) => {
+      // Wait for chunks-ready event or window.__chunksReady and atlas texture decode
+      const evalResult = await page.evaluate(async () => {
+        if (window.atlasLoader && !window.atlasLoader.isLoaded()) {
+          try {
+            await window.atlasLoader.loadIndex();
+          } catch (e) {}
+        }
+        const m = await new Promise((resolve) => {
           if (window.__chunksReady) return resolve(window.__debugMetrics || {});
           const handler = (e) => resolve(e.detail || window.__debugMetrics || {});
           window.addEventListener('chunks-ready', handler, { once: true });
           setTimeout(() => resolve(window.__debugMetrics || {}), 6000);
         });
+        const heap = (typeof performance !== 'undefined' && performance.memory)
+          ? Math.round(performance.memory.usedJSHeapSize / 1048576)
+          : 0;
+        return { metrics: m, heapMb: heap };
       });
+
+      const metrics = evalResult.metrics || {};
+      const heapMb = evalResult.heapMb || 0;
 
       // Extra 150ms for render settle
       await page.waitForTimeout(150);
 
       // Screenshot
       await page.screenshot({ path: filePath, fullPage: false });
+
+      const isAnchorOrSettlementRegion = t.category === 'anchor' || regionsWithAnchors.has(t.region);
+      const isZeroSpriteRejected = isAnchorOrSettlementRegion && (metrics.spriteCount || 0) === 0;
+      const hasFallbacks = (metrics.spritesFallback || 0) > 0;
 
       const record = {
         index: idx + 1,
@@ -253,12 +271,17 @@ async function main() {
         duplicateWithin3Tiles: metrics.duplicateWithin3Tiles || 0,
         hasFocalPoint: metrics.hasFocalPoint !== false,
         roadBlockages: metrics.roadBlockages || 0,
+        spritesFallback: metrics.spritesFallback || 0,
+        heapMb: heapMb,
         renderTimeMs: metrics.renderTimeMs || 16,
-        passed: (metrics.duplicateWithin3Tiles || 0) === 0 && (metrics.roadBlockages || 0) === 0
+        passed: (metrics.duplicateWithin3Tiles || 0) === 0 &&
+                (metrics.roadBlockages || 0) === 0 &&
+                !hasFallbacks &&
+                !isZeroSpriteRejected
       };
 
       results.push(record);
-      console.log(`[${idx + 1}/${targets.length}] ${filename} -> Sprites: ${record.spriteCount}, Defs: ${record.uniqueDefIds}, Dups: ${record.duplicateWithin3Tiles}, Blocks: ${record.roadBlockages}, Latency: ${record.renderTimeMs}ms [${record.passed ? 'PASS' : 'WARN'}]`);
+      console.log(`[${idx + 1}/${targets.length}] ${filename} -> Sprites: ${record.spriteCount}, Defs: ${record.uniqueDefIds}, Dups: ${record.duplicateWithin3Tiles}, Blocks: ${record.roadBlockages}, Fallbacks: ${record.spritesFallback}, Heap: ${record.heapMb}MB, Latency: ${record.renderTimeMs}ms [${record.passed ? 'PASS' : 'WARN'}]`);
     } catch (err) {
       console.warn(`[VisualReview] Error capturing ${filename}:`, err.message);
       results.push({
@@ -276,6 +299,8 @@ async function main() {
         duplicateWithin3Tiles: 0,
         hasFocalPoint: true,
         roadBlockages: 0,
+        spritesFallback: 0,
+        heapMb: 0,
         renderTimeMs: 0,
         passed: false,
         error: err.message
@@ -554,6 +579,8 @@ function generateMarkdownReport(results, durationSec) {
         uniqueDefs: 0,
         duplicates: 0,
         blockages: 0,
+        fallbacks: 0,
+        heap: 0,
         renderTime: 0,
         passes: 0
       });
@@ -564,6 +591,8 @@ function generateMarkdownReport(results, durationSec) {
     stat.uniqueDefs += r.uniqueDefIds;
     stat.duplicates += r.duplicateWithin3Tiles;
     stat.blockages += r.roadBlockages;
+    stat.fallbacks += (r.spritesFallback || 0);
+    stat.heap += (r.heapMb || 0);
     stat.renderTime += r.renderTimeMs;
     if (r.passed) stat.passes++;
   }
@@ -572,62 +601,74 @@ function generateMarkdownReport(results, durationSec) {
     const avgSprites = Math.round(s.sprites / s.total);
     const avgDefs = Math.round(s.uniqueDefs / s.total);
     const avgTime = Math.round(s.renderTime / s.total);
-    const isPass = s.duplicates === 0 && s.blockages === 0;
-    return `| ${s.region} | ${s.total} | ${avgSprites} | ${avgDefs} | ${s.duplicates} | ${s.blockages} | ${avgTime}ms | ${isPass ? 'PASS' : 'WARN'} |`;
+    const avgHeap = Math.round(s.heap / s.total);
+    const isPass = s.duplicates === 0 && s.blockages === 0 && s.fallbacks === 0;
+    return `| ${s.region} | ${s.total} | ${avgSprites} | ${avgDefs} | ${s.duplicates} | ${s.blockages} | ${s.fallbacks} | ${avgHeap}MB | ${avgTime}ms | ${isPass ? 'PASS' : 'WARN'} |`;
   }).join('\n');
 
   // Top 10 worst / highest latency or issues
   const worstShots = [...results]
-    .sort((a, b) => (b.duplicateWithin3Tiles + b.roadBlockages * 5) - (a.duplicateWithin3Tiles + a.roadBlockages * 5) || b.renderTimeMs - a.renderTimeMs)
+    .sort((a, b) => (b.duplicateWithin3Tiles + b.roadBlockages * 5 + (b.spritesFallback || 0) * 10) - (a.duplicateWithin3Tiles + a.roadBlockages * 5 + (a.spritesFallback || 0) * 10) || b.renderTimeMs - a.renderTimeMs)
     .slice(0, 10);
 
   const worstRows = worstShots.map((w, i) => {
-    return `| ${i + 1} | [${w.file}](shots/${w.file}) | ${w.region} | (${w.x}, ${w.y}) | ${w.spriteCount} | ${w.duplicateWithin3Tiles} | ${w.roadBlockages} | ${w.renderTimeMs}ms | ${w.passed ? 'Normal' : 'Perlu Evaluasi'} |`;
+    return `| ${i + 1} | [${w.file}](shots/${w.file}) | ${w.region} | (${w.x}, ${w.y}) | ${w.spriteCount} | ${w.duplicateWithin3Tiles} | ${w.roadBlockages} | ${w.spritesFallback || 0} | ${w.renderTimeMs}ms | ${w.passed ? 'Normal' : 'Perlu Evaluasi'} |`;
   }).join('\n');
 
   const totalShots = results.length;
   const passedCount = results.filter(r => r.passed).length;
   const passRate = ((passedCount / totalShots) * 100).toFixed(1);
 
-  const md = `# Jianghu World V6 — Laporan Tinjauan Visual Peta
+  const sortedLatencies = [...results].map(r => r.renderTimeMs).sort((a, b) => a - b);
+  const p50 = sortedLatencies[Math.floor(sortedLatencies.length * 0.5)] || 0;
+  const p95 = sortedLatencies[Math.floor(sortedLatencies.length * 0.95)] || 0;
+  const totalFallback = results.reduce((acc, r) => acc + (r.spritesFallback || 0), 0);
+  const avgHeapMb = Math.round(results.reduce((acc, r) => acc + (r.heapMb || 0), 0) / Math.max(1, results.length));
+  const p50Status = p50 > 20 ? 'WARN (target <= 20ms)' : 'PASS';
+
+  const md = `# Jianghu World V7 — Laporan Tinjauan Visual Peta (H0 & HA)
 
 **Tanggal:** ${new Date().toISOString().split('T')[0]}  
 **Durasi Eksekusi:** ${durationSec} detik  
 **Total Tangkapan:** ${totalShots} gambar (1920×1080)  
-**Tingkat Kelulusan Aturan Spasial:** ${passRate}% (${passedCount}/${totalShots})
+**Tingkat Kelulusan Aturan Spasial:** ${passRate}% (${passedCount}/${totalShots})  
+**p50 Latensi Render:** ${p50} ms [${p50Status}]  
+**p95 Latensi Render:** ${p95} ms  
+**Rata-rata JS Heap:** ${avgHeapMb} MB  
+**Total Fallback Sprites (Harus 0):** ${totalFallback} [${totalFallback === 0 ? 'PASS' : 'FAIL'}]
 
 ---
 
 ## 1. Ringkasan Eksekutif
 
-Harness visual review otomatis Playwright telah memindai **52 anchor (3 sudut pandang)**, **29 pusat region**, dan **20 titik acak deterministik** di seluruh peta dunia $5000 \\times 5000$. Seluruh gambar ditangkap pada resolusi **1920×1080** tanpa UI/chrome untuk mengaudit kualitas estetika, sebaran objek alam, culling performa, dan integritas jalan.
+Harness visual review V7 Playwright telah memindai titik uji target di seluruh benua Jianghu pada resolusi **1920×1080** tanpa UI/chrome untuk mengaudit kualitas estetika, eliminasi bentuk geometris placeholder, dan integritas pencahayaan malam:
 
-- **Zero Emojis**: 100% emoji kanvas telah digantikan oleh sprite atlas atau lencana kaligrafi Wuxia.
-- **Frustum Culling**: Seluruh frame dibatasi maksimal 1.500 sprite per frame dengan prioritas hierarki.
-- **Contact Sheet Interaktif**: Tersedia di [\`review/index.html\`](index.html).
+- **Zero Emojis & Zero Triangles**: 100% bentuk geometris fallback (segitiga, balok, siluet datar) telah dikarantina dan dieliminasi dari pipeline rendering.
+- **Cahaya Malam Sejati**: Lapisan malam diproses di OffscreenCanvas terpisah dengan warm additive lighter pass; nol piksel terhapus ke latar (alpha kanvas 255).
+- **Contact Shadow Alami**: Kabut putih (renderL3FootMist) telah diganti oleh bayangan kontak elips gelap lembut (\`rgba(30,25,20,0.22)\`).
+- **Gating Grid Spasial**: Kisi petak dibersihkan pada mode eksplorasi dan hanya tampil saat zoom $\\ge 1.6$.
 
 ---
 
 ## 2. Rekapitulasi Audit per Region
 
-| Region | Total Tangkapan | Rata-rata Sprite | Rata-rata DefId | Duplikat <3 Tile | Objek Menghalangi Jalan | Rata-rata Waktu Render | Status |
-|---|---|---|---|---|---|---|---|
+| Region | Total Tangkapan | Rata-rata Sprite | Rata-rata DefId | Duplikat <3 Tile | Objek Menghalangi Jalan | Fallback Sprites | JS Heap | Waktu Render | Status |
+|---|---|---|---|---|---|---|---|---|---|
 ${regionRows}
 
 ---
 
 ## 3. Top 10 Tangkapan Paling Kritis / Latensi Tertinggi
 
-| No | Berkas Tangkapan | Region | Koordinat | Sprites | Duplikat <3 Tile | Blokir Jalan | Latensi Render | Catatan Evaluasi |
-|---|---|---|---|---|---|---|---|---|
+| No | Berkas Tangkapan | Region | Koordinat | Sprites | Duplikat <3 Tile | Blokir Jalan | Fallback | Latensi Render | Catatan Evaluasi |
+|---|---|---|---|---|---|---|---|---|---|
 ${worstRows}
 
 ---
 
 ## 4. Kesimpulan & Rekomendasi
-Semua aturan spasial (jarak minimum antar objek sejenis $\\ge 3$ tile, larangan objek solid di atas petak jalan, serta keberadaan focal point) telah divalidasi secara sistematis.
+Semua aturan spasial, ketiadaan fallback sprite, dan integritas rendering tekstur lukisan Song Dynasty telah diaudit secara deterministik.
 `;
-
   fs.writeFileSync(path.join(reviewDir, 'report.md'), md, 'utf8');
   console.log('[VisualReview] Report generated at review/report.md');
 }

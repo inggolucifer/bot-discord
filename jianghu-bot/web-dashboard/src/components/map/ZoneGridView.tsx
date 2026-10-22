@@ -50,6 +50,7 @@ import NpcPanel from '@/app/world/NpcPanel';
 import MapSearchModal from './modals/MapSearchModal';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 import RegionCalligraphyBanner from './RegionCalligraphyBanner';
+import Minimap from './Minimap';
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { chunkManager } from '@/lib/chunkManager';
 
@@ -114,6 +115,11 @@ export default function ZoneGridView({
   }, [climateData?.weather]);
 
   const isNightMode: boolean = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('night') === 'true') return true;
+      if (params.get('night') === 'false') return false;
+    }
     if (climateData?.isNight !== undefined) return Boolean(climateData.isNight);
     const hour = new Date().getHours();
     return hour < 6 || hour >= 18;
@@ -250,7 +256,9 @@ export default function ZoneGridView({
 
   useEffect(() => {
     const unsub = chunkManager.subscribe(() => {
-      const loaded = chunkManager.getAllLoadedTiles();
+      const px = playerGrid?.position?.tileX ?? 2455;
+      const py = playerGrid?.position?.tileY ?? 2485;
+      const loaded = chunkManager.getTilesInBounds(px - 32, py - 32, px + 32, py + 32);
       if (loaded.length > 0) {
         setTiles(prev => {
           const map = new Map<string, TileData>();
@@ -259,16 +267,6 @@ export default function ZoneGridView({
           }
           for (const t of loaded) {
             map.set(`${t.tileX},${t.tileY}`, t);
-          }
-          if (map.size > 5000) {
-            const px = playerGrid?.position?.tileX ?? 2455;
-            const py = playerGrid?.position?.tileY ?? 2485;
-            const sorted = Array.from(map.values()).sort((a, b) => {
-              const distA = Math.hypot(a.tileX - px, a.tileY - py);
-              const distB = Math.hypot(b.tileX - px, b.tileY - py);
-              return distA - distB;
-            });
-            return sorted.slice(0, 3500);
           }
           return Array.from(map.values());
         });
@@ -1011,6 +1009,30 @@ export default function ZoneGridView({
           {/* Sisi kanan dikosongkan agar Bar Stamina dari world/page.tsx tidak pernah tertimpa */}
           <div />
         </div>
+
+        {/* Radar Minimap HUD Component (Fase H5b) */}
+        {!activeBattleId && (
+          <div className="absolute top-14 sm:top-16 right-2 sm:right-4 z-30 pointer-events-auto">
+            <Minimap
+              playerPos={{ x: px, y: py }}
+              cameraPos={searchFocusTile ? { x: searchFocusTile.x, y: searchFocusTile.y } : undefined}
+              targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
+              activePath={activePath}
+              regionName={currentCharacterTile?.regionName || 'Central Plains'}
+              dangerTier={currentCharacterTile?.dangerTier || 1}
+              exploredChunks={exploredChunks}
+              onOpenMacroMap={() => setShowMacroMap(true)}
+              onSelectCoordinate={(tx, ty) => {
+                const tile = tiles.find(t => t.tileX === tx && t.tileY === ty);
+                if (tile) {
+                  handleTileClick(tile);
+                } else {
+                  setSearchFocusTile({ x: tx, y: ty });
+                }
+              }}
+            />
+          </div>
+        )}
 
         {/* Floating Action Notice Alert */}
         {actionMessage && (

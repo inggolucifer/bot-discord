@@ -1,0 +1,1847 @@
+{
+  "central_plains": {
+    "regionId": "central_plains",
+    "regionName": "Central Plains",
+    "dangerTier": 1,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [
+      {
+        "id": "deer_wild",
+        "name": "Rusa Bintik Fana",
+        "icon": "🦌",
+        "tier": 1,
+        "level": 3,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "boar_plain",
+        "name": "Babi Hutan Liar",
+        "icon": "🐗",
+        "tier": 1,
+        "level": 5,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "crane_white",
+        "name": "Bangau Bulu Salju",
+        "icon": "🦅",
+        "tier": 1,
+        "level": 6,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "fox_red",
+        "name": "Rubah Ekor Cokelat",
+        "icon": "🦊",
+        "tier": 1,
+        "level": 7,
+        "isAggressive": false,
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "wolf_plain",
+        "name": "Serigala Liar Padang",
+        "icon": "🐺",
+        "tier": 1,
+        "level": 9,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_central_plains",
+      "name": "Penguasa Siluman Central Plains",
+      "title": "Raja Siluman Peringkat 1",
+      "icon": "🐉",
+      "tier": 2,
+      "level": 22,
+      "hp": 4500,
+      "atk": 180,
+      "def": 120,
+      "lair": {
+        "centerX": 2850,
+        "centerY": 2825,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Central Plains"
+      }
+    }
+  },
+  "nine_springs_delta": {
+    "regionId": "nine_springs_delta",
+    "regionName": "Nine Springs Delta",
+    "dangerTier": 1,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [
+      {
+        "id": "deer_wild",
+        "name": "Rusa Bintik Fana",
+        "icon": "🦌",
+        "tier": 1,
+        "level": 3,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "boar_plain",
+        "name": "Babi Hutan Liar",
+        "icon": "🐗",
+        "tier": 1,
+        "level": 5,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "crane_white",
+        "name": "Bangau Bulu Salju",
+        "icon": "🦅",
+        "tier": 1,
+        "level": 6,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "fox_red",
+        "name": "Rubah Ekor Cokelat",
+        "icon": "🦊",
+        "tier": 1,
+        "level": 7,
+        "isAggressive": false,
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "wolf_plain",
+        "name": "Serigala Liar Padang",
+        "icon": "🐺",
+        "tier": 1,
+        "level": 9,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_nine_springs_delta",
+      "name": "Penguasa Siluman Nine Springs Delta",
+      "title": "Raja Siluman Peringkat 1",
+      "icon": "🐉",
+      "tier": 2,
+      "level": 22,
+      "hp": 4500,
+      "atk": 180,
+      "def": 120,
+      "lair": {
+        "centerX": 2500,
+        "centerY": 2500,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Nine Springs Delta"
+      }
+    }
+  },
+  "azure_mountain_range": {
+    "regionId": "azure_mountain_range",
+    "regionName": "Azure Mountain Range",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 3212,
+        "centerY": 3475,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "northern_desolate": {
+    "regionId": "northern_desolate",
+    "regionName": "Northern Desolate",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 2650,
+        "centerY": 4650,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "thundersteppe": {
+    "regionId": "thundersteppe",
+    "regionName": "Thundersteppe",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 2550,
+        "centerY": 4400,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "godthunder_peaks": {
+    "regionId": "godthunder_peaks",
+    "regionName": "Godthunder Peaks",
+    "dangerTier": 5,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 3710,
+        "centerY": 4750,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  },
+  "mirror_lake": {
+    "regionId": "mirror_lake",
+    "regionName": "Mirror Lake",
+    "dangerTier": 2,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "viper_shadow",
+        "name": "Ular Sanca Hitam",
+        "icon": "🐍",
+        "tier": 2,
+        "level": 20,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "bear_iron",
+        "name": "Beruang Besi Dingin",
+        "icon": "🐻",
+        "tier": 2,
+        "level": 25,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "spider_cave",
+        "name": "Laba-laba Gua Berbisa",
+        "icon": "🕷️",
+        "tier": 2,
+        "level": 30,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_alpha_wolf",
+      "name": "Raja Serigala Roh Darah",
+      "icon": "🐺",
+      "tier": 2,
+      "level": 35,
+      "footprint": {
+        "w": 2,
+        "h": 2
+      },
+      "spawnHours": [
+        6,
+        12,
+        18,
+        24
+      ],
+      "lair": {
+        "centerX": 3600,
+        "centerY": 3975,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+      }
+    }
+  },
+  "beast_prairies": {
+    "regionId": "beast_prairies",
+    "regionName": "Beast Prairies",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 1600,
+        "centerY": 4000,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "western_sacred_desert": {
+    "regionId": "western_sacred_desert",
+    "regionName": "Western Sacred Desert",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 1125,
+        "centerY": 3000,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "western_gorge_labyrinth": {
+    "regionId": "western_gorge_labyrinth",
+    "regionName": "Western Gorge Labyrinth",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 750,
+        "centerY": 1750,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "hermit_highlands": {
+    "regionId": "hermit_highlands",
+    "regionName": "Hermit Highlands",
+    "dangerTier": 2,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "viper_shadow",
+        "name": "Ular Sanca Hitam",
+        "icon": "🐍",
+        "tier": 2,
+        "level": 20,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "bear_iron",
+        "name": "Beruang Besi Dingin",
+        "icon": "🐻",
+        "tier": 2,
+        "level": 25,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "spider_cave",
+        "name": "Laba-laba Gua Berbisa",
+        "icon": "🕷️",
+        "tier": 2,
+        "level": 30,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_alpha_wolf",
+      "name": "Raja Serigala Roh Darah",
+      "icon": "🐺",
+      "tier": 2,
+      "level": 35,
+      "footprint": {
+        "w": 2,
+        "h": 2
+      },
+      "spawnHours": [
+        6,
+        12,
+        18,
+        24
+      ],
+      "lair": {
+        "centerX": 1400,
+        "centerY": 4600,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+      }
+    }
+  },
+  "border_march": {
+    "regionId": "border_march",
+    "regionName": "Border March",
+    "dangerTier": 2,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "wolf_azure",
+        "name": "Serigala Roh Darah",
+        "icon": "🐺",
+        "tier": 2,
+        "level": 15,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "viper_shadow",
+        "name": "Ular Sanca Hitam",
+        "icon": "🐍",
+        "tier": 2,
+        "level": 20,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "bear_iron",
+        "name": "Beruang Besi Dingin",
+        "icon": "🐻",
+        "tier": 2,
+        "level": 25,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "spider_cave",
+        "name": "Laba-laba Gua Berbisa",
+        "icon": "🕷️",
+        "tier": 2,
+        "level": 30,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_alpha_wolf",
+      "name": "Raja Serigala Roh Darah",
+      "icon": "🐺",
+      "tier": 2,
+      "level": 35,
+      "footprint": {
+        "w": 2,
+        "h": 2
+      },
+      "spawnHours": [
+        6,
+        12,
+        18,
+        24
+      ],
+      "lair": {
+        "centerX": 2850,
+        "centerY": 1987,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+      }
+    }
+  },
+  "lava_spine": {
+    "regionId": "lava_spine",
+    "regionName": "Lava Spine",
+    "dangerTier": 5,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 1350,
+        "centerY": 950,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  },
+  "venom_mire": {
+    "regionId": "venom_mire",
+    "regionName": "Venom Mire",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 2800,
+        "centerY": 1150,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "southern_demon_domain": {
+    "regionId": "southern_demon_domain",
+    "regionName": "Southern Demon Domain",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 2625,
+        "centerY": 1500,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "crimson_battlefield": {
+    "regionId": "crimson_battlefield",
+    "regionName": "Crimson Battlefield",
+    "dangerTier": 5,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 3150,
+        "centerY": 800,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  },
+  "abyssal_scar": {
+    "regionId": "abyssal_scar",
+    "regionName": "Abyssal Scar",
+    "dangerTier": 5,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 2050,
+        "centerY": 800,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  },
+  "southern_plague_woods": {
+    "regionId": "southern_plague_woods",
+    "regionName": "Southern Plague Woods",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 3600,
+        "centerY": 725,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "bone_sea_coast": {
+    "regionId": "bone_sea_coast",
+    "regionName": "Bone Sea Coast",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 2625,
+        "centerY": 225,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "spirit_wood_sea": {
+    "regionId": "spirit_wood_sea",
+    "regionName": "Spirit Wood Sea",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 3950,
+        "centerY": 1550,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "mist_insect_valley": {
+    "regionId": "mist_insect_valley",
+    "regionName": "Mist Insect Valley",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 4600,
+        "centerY": 1350,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "formation_barrens": {
+    "regionId": "formation_barrens",
+    "regionName": "Formation Barrens",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 3800,
+        "centerY": 2400,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "sword_gorge": {
+    "regionId": "sword_gorge",
+    "regionName": "Sword Gorge",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 3500,
+        "centerY": 3375,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "ore_teeth_range": {
+    "regionId": "ore_teeth_range",
+    "regionName": "Ore Teeth Range",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 3737,
+        "centerY": 3000,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "eastern_sea": {
+    "regionId": "eastern_sea",
+    "regionName": "Eastern Sea",
+    "dangerTier": 3,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "tiger_elder",
+        "name": "Harimau Belang Kuno",
+        "icon": "🐯",
+        "tier": 3,
+        "level": 45,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "eagle_storm",
+        "name": "Rajawali Sayap Badai",
+        "icon": "🦅",
+        "tier": 3,
+        "level": 55,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "snake_jade",
+        "name": "Ular Sanca Giok Roh",
+        "icon": "🐍",
+        "tier": 3,
+        "level": 60,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "ghost_wailing",
+        "name": "Arwah Gentayangan Medan Perang",
+        "icon": "👻",
+        "tier": 3,
+        "level": 65,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_iron_tiger",
+      "name": "Raja Harimau Belang Kuno",
+      "icon": "🐯",
+      "tier": 3,
+      "level": 70,
+      "footprint": {
+        "w": 3,
+        "h": 3
+      },
+      "spawnHours": [
+        12,
+        20
+      ],
+      "lair": {
+        "centerX": 4700,
+        "centerY": 3300,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+      }
+    }
+  },
+  "frostmoon_sea": {
+    "regionId": "frostmoon_sea",
+    "regionName": "Frostmoon Sea",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 4700,
+        "centerY": 4750,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "floating_wind_isles": {
+    "regionId": "floating_wind_isles",
+    "regionName": "Floating Wind Isles",
+    "dangerTier": 5,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 4800,
+        "centerY": 2950,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  },
+  "immortal_ruins_valley": {
+    "regionId": "immortal_ruins_valley",
+    "regionName": "Immortal Ruins Valley",
+    "dangerTier": 4,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "demon_cave",
+        "name": "Siluman Iblis Gua Miasma",
+        "icon": "👹",
+        "tier": 4,
+        "level": 75,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "wyrm_flame",
+        "name": "Cacing Lahar Basalt",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 80,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "asura_blood",
+        "name": "Pendekar Kafir Asura",
+        "icon": "👹",
+        "tier": 4,
+        "level": 88,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_demon_lord",
+      "name": "Pangeran Iblis Asura Miasma",
+      "icon": "👹",
+      "tier": 4,
+      "level": 90,
+      "footprint": {
+        "w": 4,
+        "h": 4
+      },
+      "spawnHours": [
+        0,
+        18
+      ],
+      "lair": {
+        "centerX": 800,
+        "centerY": 1250,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+      }
+    }
+  },
+  "void_rift": {
+    "regionId": "void_rift",
+    "regionName": "Void Rift",
+    "dangerTier": 6,
+    "safeCorridorsEnforced": true,
+    "safeBufferRoads": 10,
+    "safeBufferSettlements": 20,
+    "common": [],
+    "elite": [
+      {
+        "id": "dragon_celestial",
+        "name": "Naga Langit Sembilan Hampa",
+        "icon": "🐉",
+        "tier": 5,
+        "level": 95,
+        "isAggressive": true,
+        "spawnWeight": 25
+      },
+      {
+        "id": "abyss_behemoth",
+        "name": "Raksasa Jurang Hampa Kegelapan",
+        "icon": "👹",
+        "tier": 5,
+        "level": 100,
+        "isAggressive": true,
+        "spawnWeight": 25
+      }
+    ],
+    "boss": {
+      "id": "boss_celestial_wyrm",
+      "name": "Naga Purba Kehampaan Langit",
+      "icon": "🐉",
+      "tier": 5,
+      "level": 100,
+      "footprint": {
+        "w": 5,
+        "h": 5
+      },
+      "spawnHours": [
+        20
+      ],
+      "lair": {
+        "centerX": 375,
+        "centerY": 4875,
+        "width": 12,
+        "height": 12,
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+      }
+    }
+  }
+}

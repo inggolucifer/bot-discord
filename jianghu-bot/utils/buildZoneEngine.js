@@ -200,25 +200,18 @@ function evaluateSingleTile(tx, ty, zoneId, playerId, options) {
     return reject('BZ_SOLID', { x: tx, y: ty });
   }
 
-  // Step 4: Tanpa objek scatter solid
+  // Step 4: Tanpa objek scatter solid (menggunakan scale-canon base collision footprint & occupancy bitmask)
   try {
-    const objectScatter = require('./objectScatter');
+    const chunkStreamingEngine = require('./chunkStreamingEngine');
     const chunkX = Math.floor(tx / 32);
     const chunkY = Math.floor(ty / 32);
-    const chunkObjects = objectScatter.getChunkObjects(chunkX, chunkY);
-    for (const obj of chunkObjects) {
-      if (obj.collision === 'solid' || (obj.collision === 'soft' && (obj.overhang || 0) >= 1.0)) {
-        const ox = obj.x;
-        const oy = obj.y;
-        const ow = obj.cw || 1;
-        const oh = obj.ch || 1;
-        if (tx >= ox && tx < ox + ow && ty >= oy && ty < oy + oh) {
-          return reject('BZ_OBJECT', { objectId: obj.defId || obj.id });
-        }
-      }
+    const lx = tx - chunkX * 32;
+    const ly = ty - chunkY * 32;
+    if (chunkStreamingEngine.isChunkTileOccupied(chunkX, chunkY, lx, ly)) {
+      return reject('BZ_OBJECT', { x: tx, y: ty, reason: 'Tile occupied by world object footprint' });
     }
   } catch (scatterErr) {
-    console.warn('[BuildZoneEngine] Scatter check non-fatal warning:', scatterErr.message);
+    console.warn('[BuildZoneEngine] Occupancy check non-fatal warning:', scatterErr.message);
   }
 
   // Step 5: Bukan jalan atau perairan

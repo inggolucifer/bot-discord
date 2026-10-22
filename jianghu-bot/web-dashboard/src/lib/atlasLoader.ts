@@ -53,7 +53,7 @@ export interface MasterAtlasIndex {
   frames: Record<string, SpriteIndexEntry>;
 }
 
-const MAX_RESIDENT_PAGES = 6;
+const MAX_RESIDENT_PAGES = 32;
 const MAX_LRU_CANVAS_ENTRIES = 64;
 
 class AtlasLoader {
@@ -236,14 +236,20 @@ class AtlasLoader {
   }
 
   /**
-   * Preloads master index and core texture pages.
+   * Preloads master index and core texture pages including all settlement structures.
    */
   public async preloadCoreAtlases(): Promise<void> {
     await this.loadIndex();
     await Promise.all([
       this.loadPage('core_0'),
       this.loadPage('core_1'),
-      this.loadPage('settlement_0')
+      this.loadPage('settlement_0'),
+      this.loadPage('settlement_1'),
+      this.loadPage('settlement_2'),
+      this.loadPage('settlement_3'),
+      this.loadPage('biome_nature_0'),
+      this.loadPage('biome_nature_1'),
+      this.loadPage('icons_ui')
     ]);
   }
 
@@ -420,3 +426,6 @@ class AtlasLoader {
 }
 
 export const atlasLoader = AtlasLoader.getInstance();
+if (typeof window !== 'undefined') {
+  (window as any).atlasLoader = atlasLoader;
+}

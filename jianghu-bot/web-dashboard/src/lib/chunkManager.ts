@@ -10,6 +10,7 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
+import { renderChunkGroundBitmap } from '@/lib/groundRenderer';
 
 export const CHUNK_SIZE = 32;
 export const WORLD_WIDTH = 5000;
@@ -53,6 +54,7 @@ export interface StaticChunkData {
     tags?: string[];
     customLabel?: string;
   }>;
+  occupancy?: string;
   hash: string;
 }
 
@@ -531,6 +533,22 @@ export class ChunkManager {
   }
 
   /**
+   * Fast O(1) Occupancy Bitmask Test (Fase H1)
+   */
+  public isTileOccupied(worldX: number, worldY: number): boolean {
+    if (worldX < 0 || worldX >= WORLD_WIDTH || worldY < 0 || worldY >= WORLD_HEIGHT) {
+      return true;
+    }
+    const { cx, cy, index } = worldToChunkCoord(worldX, worldY);
+    const chunk = this.chunks.get(`${cx}:${cy}`);
+    if (!chunk || !chunk.occupancy) return false;
+    const bytes = decodeBase64ToUint8(chunk.occupancy);
+    const byteIdx = Math.floor(index / 8);
+    const bitIdx = index % 8;
+    return (bytes[byteIdx] & (1 << bitIdx)) !== 0;
+  }
+
+  /**
    * Returns all loaded tiles within bounding box
    */
   public getTilesInBounds(minX: number, minY: number, maxX: number, maxY: number): TileData[] {
@@ -584,53 +602,17 @@ export class ChunkManager {
     const tiles = this.unpackedChunks.get(key);
     if (!chunk || !tiles) return null;
 
-    const canvasWidth = CHUNK_SIZE * tileSize;
-    const canvasHeight = CHUNK_SIZE * tileSize;
+    const canvas = renderChunkGroundBitmap(
+      cx,
+      cy,
+      tiles,
+      tileSize,
+      (x, y) => this.getTile(x, y)?.terrainType
+    );
 
-    const canvas = document.createElement('canvas');
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
-
-    // Draw 32x32 terrain cells
-    for (const t of tiles) {
-      const lx = t.tileX - cx * CHUNK_SIZE;
-      const ly = t.tileY - cy * CHUNK_SIZE;
-      const sx = lx * tileSize;
-      const sy = ly * tileSize;
-
-      // Fast flat terrain wash colors
-      let fillColor = '#4B5C43'; // Default meadow
-      const tt = t.terrainType;
-      if (tt.includes('water') || tt.includes('river') || tt.includes('lake') || tt === 'ocean') {
-        fillColor = '#2B4A5F';
-      } else if (tt.includes('mountain') || tt.includes('rock')) {
-        fillColor = '#3D4542';
-      } else if (tt.includes('bamboo')) {
-        fillColor = '#3E5E3B';
-      } else if (tt.includes('forest') || tt.includes('wood')) {
-        fillColor = '#334D35';
-      } else if (tt.includes('desert') || tt.includes('dune') || tt.includes('sand')) {
-        fillColor = '#8A7352';
-      } else if (tt.includes('snow') || tt.includes('ice') || tt.includes('tundra')) {
-        fillColor = '#7A8C99';
-      } else if (tt.includes('road')) {
-        fillColor = '#5C5447';
-      } else if (tt === 'settlement') {
-        fillColor = '#5A4E3E';
-      }
-
-      ctx.fillStyle = fillColor;
-      ctx.fillRect(sx, sy, tileSize, tileSize);
-
-      // Subtle cell grid divider
-      ctx.strokeStyle = 'rgba(180, 160, 130, 0.08)';
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(sx, sy, tileSize, tileSize);
+    if (canvas) {
+      this.chunkBitmaps.set(key, canvas);
     }
-
-    this.chunkBitmaps.set(key, canvas);
     return canvas;
   }
 

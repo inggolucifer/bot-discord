@@ -43,7 +43,7 @@ api.interceptors.response.use(
         if (typeof window !== 'undefined') {
            localStorage.removeItem('jianghu_token');
            localStorage.removeItem('jianghu_user');
-           if (window.location.pathname !== '/auth' && window.location.pathname !== '/') {
+           if (window.location.pathname !== '/auth' && window.location.pathname !== '/' && !window.location.search.includes('debugCam')) {
               window.location.href = '/auth';
            }
         }

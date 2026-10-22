@@ -181,24 +181,51 @@ function getStaticChunk(cx, cy, version = WORLD_VERSION) {
   // 2. Fetch deterministic scatter objects
   const scatter = objectScatter.getChunkObjects(cx, cy);
 
-  // Mark footprint collisions in specialTiles for solid scatter objects
+  // 3. Compute 32x32 Occupancy Bitmask (1024 bits = 128 bytes)
+  const occupancyBuffer = Buffer.alloc(128, 0);
+
+  // Mark footprint collisions in specialTiles and occupancy bitmask
   for (const obj of scatter) {
-    if (obj.collision === 'solid') {
-      const lx = obj.x - minX;
-      const ly = obj.y - minY;
-      if (lx >= 0 && lx < CHUNK_SIZE && ly >= 0 && ly < CHUNK_SIZE) {
-        const idx = ly * CHUNK_SIZE + lx;
-        if (!specialTiles[idx]) specialTiles[idx] = {};
-        specialTiles[idx].isSolid = true;
+    const col = objectScatter.getCanonCollision
+      ? objectScatter.getCanonCollision(obj.defId, obj.cw || 1, obj.ch || 1)
+      : { w: 1, h: 1, offsetX: 0 };
+
+    if (col.w > 0 && col.h > 0) {
+      const baseStartX = obj.x + Math.round(col.offsetX || 0);
+      const baseStartY = obj.y;
+      for (let dy = 0; dy < col.h; dy++) {
+        for (let dx = 0; dx < col.w; dx++) {
+          const lx = (baseStartX + dx) - minX;
+          const ly = (baseStartY + dy) - minY;
+          if (lx >= 0 && lx < CHUNK_SIZE && ly >= 0 && ly < CHUNK_SIZE) {
+            const idx = ly * CHUNK_SIZE + lx;
+            if (!specialTiles[idx]) specialTiles[idx] = {};
+            specialTiles[idx].isSolid = true;
+
+            const byteIdx = Math.floor(idx / 8);
+            const bitIdx = idx % 8;
+            occupancyBuffer[byteIdx] |= (1 << bitIdx);
+          }
+        }
       }
     }
   }
 
+  // Also mark terrain barriers/mountain solids in occupancy bitmask
+  for (let idx = 0; idx < 1024; idx++) {
+    if (specialTiles[idx] && specialTiles[idx].isSolid) {
+      const byteIdx = Math.floor(idx / 8);
+      const bitIdx = idx % 8;
+      occupancyBuffer[byteIdx] |= (1 << bitIdx);
+    }
+  }
+
+  const occupancy = occupancyBuffer.toString('base64');
   const terrainBase64 = terrainBytes.toString('base64');
 
-  // 3. Compute deterministic MD5 hash for ETag & cache verification
+  // 4. Compute deterministic MD5 hash for ETag & cache verification
   const hash = crypto.createHash('md5')
-    .update(`${WORLD_VERSION}:${cx}:${cy}:${terrainBase64}:${JSON.stringify(specialTiles)}:${JSON.stringify(scatter)}`)
+    .update(`${WORLD_VERSION}:${cx}:${cy}:${terrainBase64}:${occupancy}:${JSON.stringify(specialTiles)}:${JSON.stringify(scatter)}`)
     .digest('hex');
 
   const chunkData = {
@@ -210,6 +237,7 @@ function getStaticChunk(cx, cy, version = WORLD_VERSION) {
     terrain: terrainBase64,
     specialTiles,
     scatter,
+    occupancy,
     hash
   };
 
@@ -435,6 +463,15 @@ async function getChunkLive(cx, cy, guildId = 'global', models = {}) {
   return liveData;
 }
 
+function isChunkTileOccupied(cx, cy, lx, ly) {
+  if (lx < 0 || lx >= CHUNK_SIZE || ly < 0 || ly >= CHUNK_SIZE) return false;
+  const chunk = getStaticChunk(cx, cy);
+  if (!chunk || !chunk.occupancy) return false;
+  const buf = Buffer.from(chunk.occupancy, 'base64');
+  const idx = ly * CHUNK_SIZE + lx;
+  return (buf[Math.floor(idx / 8)] & (1 << (idx % 8))) !== 0;
+}
+
 module.exports = {
   CHUNK_SIZE,
   WORLD_WIDTH,
@@ -448,5 +485,6 @@ module.exports = {
   getStaticChunk,
   getStaticChunksBatch,
   unpackChunkTiles,
-  getChunkLive
+  getChunkLive,
+  isChunkTileOccupied
 };

@@ -1,0 +1,1122 @@
+{
+  "central_plains": {
+    "regionId": "central_plains",
+    "regionName": "Central Plains",
+    "dangerTier": 1,
+    "bounds": {
+      "minX": 1800,
+      "maxX": 3200,
+      "minY": 2000,
+      "maxY": 3100
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 11,
+    "anchorIds": [
+      "desa_xingcun",
+      "tianjing",
+      "xitong_city",
+      "kota_fengyang",
+      "luoyang_kecil",
+      "desa_tiedao",
+      "sekte_pedang_langit",
+      "gua_purba_bunga_aprikot",
+      "kota_yunxi",
+      "desa_bamboo_grove",
+      "dusun_kebun_persik"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo",
+      "building_village_stone_water_trough"
+    ],
+    "natureClusters": [
+      "nature_ancient_scholar_red_maple_cliff",
+      "tree_spirit_peach",
+      "tree_autumn_maple"
+    ],
+    "resourceTags": [
+      "wood",
+      "herb",
+      "fish"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "nine_springs_delta": {
+    "regionId": "nine_springs_delta",
+    "regionName": "Nine Springs Delta",
+    "dangerTier": 1,
+    "bounds": {
+      "minX": 2200,
+      "maxX": 2600,
+      "minY": 2350,
+      "maxY": 2550
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 6,
+    "anchorIds": [
+      "dusun_mata_air_jernih",
+      "lembah_kabut_merah",
+      "kota_jinling",
+      "desa_lingquan",
+      "dusun_padi_emas",
+      "dermaga_teluk_sembilan"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo",
+      "building_village_stone_water_trough"
+    ],
+    "natureClusters": [
+      "nature_ancient_scholar_red_maple_cliff",
+      "tree_spirit_peach",
+      "tree_autumn_maple"
+    ],
+    "resourceTags": [
+      "wood",
+      "herb",
+      "fish"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "azure_mountain_range": {
+    "regionId": "azure_mountain_range",
+    "regionName": "Azure Mountain Range",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 1450,
+      "maxX": 3800,
+      "minY": 3100,
+      "maxY": 3600
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 3,
+    "anchorIds": [
+      "kaki_gunung_azure",
+      "sekte_awan_pedang",
+      "makam_kaisar_pedang_purba"
+    ],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon",
+      "nature_mountain_waterfall_splash_basin"
+    ],
+    "natureClusters": [
+      "rock_crag_cluster_v1",
+      "tree_pine_ancient",
+      "tree_cypress_frost"
+    ],
+    "resourceTags": [
+      "mineral",
+      "iron_ore",
+      "sword_shard"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "northern_desolate": {
+    "regionId": "northern_desolate",
+    "regionName": "Northern Desolate",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 1000,
+      "maxX": 3200,
+      "minY": 3600,
+      "maxY": 5000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 5,
+    "anchorIds": [
+      "pos_tundra_utara",
+      "istana_es_abadi",
+      "kota_binghu",
+      "desa_xueshan",
+      "dusun_pondok_es"
+    ],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon"
+    ],
+    "natureClusters": [
+      "tree_cypress_frost",
+      "rock_crag_cluster_v1"
+    ],
+    "resourceTags": [
+      "glacial_ice",
+      "frost_lotus",
+      "iron_ore"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "thundersteppe": {
+    "regionId": "thundersteppe",
+    "regionName": "Thundersteppe",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 1800,
+      "maxX": 2800,
+      "minY": 3800,
+      "maxY": 4600
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 5,
+    "anchorIds": [
+      "sekte_petir_ilahiah",
+      "reruntuhan_abadi_tianyuan",
+      "kota_leiyin",
+      "desa_tianhe",
+      "dusun_gembala_petir"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "godthunder_peaks": {
+    "regionId": "godthunder_peaks",
+    "regionName": "Godthunder Peaks",
+    "dangerTier": 5,
+    "bounds": {
+      "minX": 3200,
+      "maxX": 3880,
+      "minY": 4000,
+      "maxY": 5000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon",
+      "nature_mountain_waterfall_splash_basin"
+    ],
+    "natureClusters": [
+      "rock_crag_cluster_v1",
+      "tree_pine_ancient",
+      "tree_cypress_frost"
+    ],
+    "resourceTags": [
+      "mineral",
+      "iron_ore",
+      "sword_shard"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "mirror_lake": {
+    "regionId": "mirror_lake",
+    "regionName": "Mirror Lake",
+    "dangerTier": 2,
+    "bounds": {
+      "minX": 3000,
+      "maxX": 3800,
+      "minY": 3600,
+      "maxY": 4100
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 2,
+    "anchorIds": [
+      "kota_shuijing",
+      "pos_menara_pantau_danau"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "beast_prairies": {
+    "regionId": "beast_prairies",
+    "regionName": "Beast Prairies",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 1000,
+      "maxX": 1800,
+      "minY": 3400,
+      "maxY": 4200
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "western_sacred_desert": {
+    "regionId": "western_sacred_desert",
+    "regionName": "Western Sacred Desert",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 0,
+      "maxX": 1500,
+      "minY": 1500,
+      "maxY": 3500
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 5,
+    "anchorIds": [
+      "oase_shadi",
+      "sekte_pasir_suci",
+      "kota_hanhai",
+      "desa_shaquan",
+      "dusun_oasis_tersembunyi"
+    ],
+    "landmarks": [
+      "landmark_western_gorge_labyrinth_sandstone_sunken_colosseum",
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "rock_crag_cluster_v1",
+      "bush_desert_thorn"
+    ],
+    "resourceTags": [
+      "mineral",
+      "sand_gold",
+      "desert_herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "western_gorge_labyrinth": {
+    "regionId": "western_gorge_labyrinth",
+    "regionName": "Western Gorge Labyrinth",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 0,
+      "maxX": 1000,
+      "minY": 1000,
+      "maxY": 2000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon",
+      "nature_mountain_waterfall_splash_basin"
+    ],
+    "natureClusters": [
+      "rock_crag_cluster_v1",
+      "tree_pine_ancient",
+      "tree_cypress_frost"
+    ],
+    "resourceTags": [
+      "mineral",
+      "iron_ore",
+      "sword_shard"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "hermit_highlands": {
+    "regionId": "hermit_highlands",
+    "regionName": "Hermit Highlands",
+    "dangerTier": 2,
+    "bounds": {
+      "minX": 800,
+      "maxX": 1600,
+      "minY": 4000,
+      "maxY": 4800
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 4,
+    "anchorIds": [
+      "kemah_dataran_tinggi_petapa",
+      "kuil_lonceng_emas",
+      "desa_yougu",
+      "dusun_pondok_teh_kuno"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "border_march": {
+    "regionId": "border_march",
+    "regionName": "Border March",
+    "dangerTier": 2,
+    "bounds": {
+      "minX": 1500,
+      "maxX": 3300,
+      "minY": 1800,
+      "maxY": 2050
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 1,
+    "anchorIds": [
+      "pos_perbatasan_qinghe"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "lava_spine": {
+    "regionId": "lava_spine",
+    "regionName": "Lava Spine",
+    "dangerTier": 5,
+    "bounds": {
+      "minX": 600,
+      "maxX": 1600,
+      "minY": 200,
+      "maxY": 1200
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "venom_mire": {
+    "regionId": "venom_mire",
+    "regionName": "Venom Mire",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 2200,
+      "maxX": 3000,
+      "minY": 400,
+      "maxY": 1400
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon"
+    ],
+    "natureClusters": [
+      "tree_dead_wood",
+      "rock_crag_cluster_v1"
+    ],
+    "resourceTags": [
+      "poison_herb",
+      "corpse_wood",
+      "dark_crystal"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "southern_demon_domain": {
+    "regionId": "southern_demon_domain",
+    "regionName": "Southern Demon Domain",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 1500,
+      "maxX": 3000,
+      "minY": 600,
+      "maxY": 1800
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 4,
+    "anchorIds": [
+      "desa_heiyan",
+      "benteng_gerbang_iblis",
+      "lembah_racun_bayangan",
+      "kota_moyun"
+    ],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon"
+    ],
+    "natureClusters": [
+      "tree_dead_wood",
+      "rock_crag_cluster_v1"
+    ],
+    "resourceTags": [
+      "poison_herb",
+      "corpse_wood",
+      "dark_crystal"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "crimson_battlefield": {
+    "regionId": "crimson_battlefield",
+    "regionName": "Crimson Battlefield",
+    "dangerTier": 5,
+    "bounds": {
+      "minX": 2400,
+      "maxX": 3400,
+      "minY": 200,
+      "maxY": 1000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "abyssal_scar": {
+    "regionId": "abyssal_scar",
+    "regionName": "Abyssal Scar",
+    "dangerTier": 5,
+    "bounds": {
+      "minX": 1600,
+      "maxX": 2200,
+      "minY": 200,
+      "maxY": 1000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "southern_plague_woods": {
+    "regionId": "southern_plague_woods",
+    "regionName": "Southern Plague Woods",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 3000,
+      "maxX": 3800,
+      "minY": 200,
+      "maxY": 900
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "bone_sea_coast": {
+    "regionId": "bone_sea_coast",
+    "regionName": "Bone Sea Coast",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 0,
+      "maxX": 3500,
+      "minY": 0,
+      "maxY": 300
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "spirit_wood_sea": {
+    "regionId": "spirit_wood_sea",
+    "regionName": "Spirit Wood Sea",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 3200,
+      "maxX": 4200,
+      "minY": 800,
+      "maxY": 1800
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "mist_insect_valley": {
+    "regionId": "mist_insect_valley",
+    "regionName": "Mist Insect Valley",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 4000,
+      "maxX": 4800,
+      "minY": 600,
+      "maxY": 1600
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "formation_barrens": {
+    "regionId": "formation_barrens",
+    "regionName": "Formation Barrens",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 3200,
+      "maxX": 4000,
+      "minY": 1800,
+      "maxY": 2600
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "sword_gorge": {
+    "regionId": "sword_gorge",
+    "regionName": "Sword Gorge",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 3200,
+      "maxX": 3600,
+      "minY": 3000,
+      "maxY": 3500
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_mountain_daoist_stone_lantern_beacon",
+      "nature_mountain_waterfall_splash_basin"
+    ],
+    "natureClusters": [
+      "rock_crag_cluster_v1",
+      "tree_pine_ancient",
+      "tree_cypress_frost"
+    ],
+    "resourceTags": [
+      "mineral",
+      "iron_ore",
+      "sword_shard"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "ore_teeth_range": {
+    "regionId": "ore_teeth_range",
+    "regionName": "Ore Teeth Range",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 3400,
+      "maxX": 3850,
+      "minY": 2400,
+      "maxY": 3200
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "eastern_sea": {
+    "regionId": "eastern_sea",
+    "regionName": "Eastern Sea",
+    "dangerTier": 3,
+    "bounds": {
+      "minX": 3800,
+      "maxX": 5000,
+      "minY": 1200,
+      "maxY": 4000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 6,
+    "anchorIds": [
+      "dermaga_donghai",
+      "pulau_penyu_raksasa",
+      "istana_giok_laut_timur",
+      "sarang_naga_karang_timur",
+      "kota_canghai",
+      "dusun_pondok_karang"
+    ],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "frostmoon_sea": {
+    "regionId": "frostmoon_sea",
+    "regionName": "Frostmoon Sea",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 3800,
+      "maxX": 5000,
+      "minY": 4000,
+      "maxY": 5000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "floating_wind_isles": {
+    "regionId": "floating_wind_isles",
+    "regionName": "Floating Wind Isles",
+    "dangerTier": 5,
+    "bounds": {
+      "minX": 4200,
+      "maxX": 5000,
+      "minY": 2200,
+      "maxY": 3200
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "immortal_ruins_valley": {
+    "regionId": "immortal_ruins_valley",
+    "regionName": "Immortal Ruins Valley",
+    "dangerTier": 4,
+    "bounds": {
+      "minX": 200,
+      "maxX": 1000,
+      "minY": 500,
+      "maxY": 1500
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  },
+  "void_rift": {
+    "regionId": "void_rift",
+    "regionName": "Void Rift",
+    "dangerTier": 6,
+    "bounds": {
+      "minX": 0,
+      "maxX": 500,
+      "minY": 4500,
+      "maxY": 5000
+    },
+    "poiPacingTiles": 40,
+    "anchorsCount": 0,
+    "anchorIds": [],
+    "landmarks": [
+      "structure_scatter_roadside_tea_and_rest_pavilion_gazebo"
+    ],
+    "natureClusters": [
+      "tree_spirit_peach",
+      "tree_pine_ancient"
+    ],
+    "resourceTags": [
+      "wood",
+      "mineral",
+      "herb"
+    ],
+    "safeBufferTiles": {
+      "settlement": 20,
+      "road": 10
+    },
+    "scatterDensityPer100Tiles": {
+      "trees": 8,
+      "rocks": 4.5,
+      "landmarks": 0.8,
+      "resources": 2.2
+    }
+  }
+}

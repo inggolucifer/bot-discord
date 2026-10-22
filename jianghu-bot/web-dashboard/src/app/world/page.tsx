@@ -11,44 +11,68 @@ import NpcPanel from './NpcPanel';
 import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 import WorldCanvas from "@/components/map/WorldCanvas";
+import Minimap from "@/components/map/Minimap";
 import ZoneGridView from "@/components/map/ZoneGridView";
 import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
 import { useUIStore } from "@/lib/store";
 
+function DebugCamMode({ debugCamParam }: { debugCamParam: string }) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    document.body.classList.add('debug-cam-active');
+    return () => {
+      document.body.classList.remove('debug-cam-active');
+    };
+  }, []);
+
+  const parts = debugCamParam.split(',').map(Number);
+  const dbgX = !isNaN(parts[0]) ? parts[0] : 2500;
+  const dbgY = !isNaN(parts[1]) ? parts[1] : 2500;
+  const dbgZoom = !isNaN(parts[2]) ? parts[2] : 1.0;
+
+  const isMacro = searchParams.get('mode') === 'macro';
+  const hideMinimap = searchParams.get('minimap') === 'false';
+
+  return (
+    <div className="fixed inset-0 w-screen h-screen bg-[#070a14] z-[99999] overflow-hidden m-0 p-0">
+      <WorldCanvas
+        mode={isMacro ? 'macro' : 'zone'}
+        tiles={[]}
+        playerPos={{ x: dbgX, y: dbgY }}
+        playerReady={true}
+        isNight={searchParams.get('night') === 'true'}
+        debugCam={{ x: dbgX, y: dbgY, zoom: dbgZoom }}
+      />
+
+      {!isMacro && !hideMinimap && (
+        <div className="absolute top-4 right-4 z-[100000] pointer-events-auto">
+          <Minimap
+            playerPos={{ x: dbgX, y: dbgY }}
+            cameraPos={{ x: dbgX, y: dbgY, zoom: dbgZoom }}
+            regionName="Central Plains"
+            dangerTier={1}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function WorldPageContent() {
   const searchParams = useSearchParams();
   const debugCamParam = searchParams.get('debugCam');
 
-  // Fase E: Isolated Debug Camera Mode for Visual Review & Screenshots
-  useEffect(() => {
-    if (debugCamParam) {
-      document.body.classList.add('debug-cam-active');
-      return () => {
-        document.body.classList.remove('debug-cam-active');
-      };
-    }
-  }, [debugCamParam]);
-
   if (debugCamParam) {
-    const parts = debugCamParam.split(',').map(Number);
-    const dbgX = !isNaN(parts[0]) ? parts[0] : 2500;
-    const dbgY = !isNaN(parts[1]) ? parts[1] : 2500;
-    const dbgZoom = !isNaN(parts[2]) ? parts[2] : 1.0;
-
-    return (
-      <div className="fixed inset-0 w-screen h-screen bg-[#070a14] z-[99999] overflow-hidden m-0 p-0">
-        <WorldCanvas
-          mode="zone"
-          tiles={[]}
-          playerPos={{ x: dbgX, y: dbgY }}
-          playerReady={true}
-          debugCam={{ x: dbgX, y: dbgY, zoom: dbgZoom }}
-        />
-      </div>
-    );
+    return <DebugCamMode debugCamParam={debugCamParam} />;
   }
 
+  return <NormalWorldContent />;
+}
+
+function NormalWorldContent() {
+  const searchParams = useSearchParams();
   const queryZoneId = searchParams.get('zoneId');
   const queryTileX = searchParams.get('tileX');
   const queryTileY = searchParams.get('tileY');

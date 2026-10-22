@@ -8,6 +8,12 @@
 
 import { WorldObjectDef, NpcAttitude } from '@/types/world';
 import { atlasLoader } from './atlasLoader';
+import { isDefIdQuarantined } from '@/config/assetQuarantine';
+import scaleCanonRaw from '@/config/scaleCanon.json';
+
+export const scaleCanon: Record<string, any> = scaleCanonRaw;
+
+const warnedMissingAtlasDefs = new Set<string>();
 
 export function getAtlasNameForDefId(defId: string): string {
   if (
@@ -472,10 +478,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_well: {
     id: 'building_village_well',
     name: 'Sumur Air Batu Berlumut Desa',
-    px: { w: 260, h: 280 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.0,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -524,10 +530,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_stone_lantern_shrine: {
     id: 'building_stone_lantern_shrine',
     name: 'Lentera Batu Taman Kuil Kuno',
-    px: { w: 260, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 0.8,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -576,10 +582,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_stone_water_basin: {
     id: 'building_stone_water_basin',
     name: 'Bak Air Batu Padas Berpancuran Bambu',
-    px: { w: 260, h: 260 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 0.8,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -589,10 +595,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_blacksmith_weapon_rack: {
     id: 'building_blacksmith_weapon_rack',
     name: 'Rak Senjata Kayu Terbuka',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.0,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -602,10 +608,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_mile_marker_stele: {
     id: 'building_wayside_mile_marker_stele',
     name: 'Tonggak Prasasti Penunjuk Jalan Kuno',
-    px: { w: 260, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 170 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 0.8,
+    overhangCells: 0.2,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -628,10 +634,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wine_tavern_flagpole_sign: {
     id: 'building_wine_tavern_flagpole_sign',
     name: 'Tiang Bendera Kain Kedai Arak',
-    px: { w: 260, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 197 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.92 },
-    overhangCells: 1.6,
+    overhangCells: 0.4,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -641,10 +647,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_stone_mill_grain_grinder: {
     id: 'building_stone_mill_grain_grinder',
     name: 'Penggilingan Gandum Batu Putar',
-    px: { w: 300, h: 300 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 0.8,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -680,10 +686,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_rustic_apiary_beehives: {
     id: 'building_rustic_apiary_beehives',
     name: 'Peternakan Lebah Madu Panggung Bambu',
-    px: { w: 360, h: 360 },
-    footprint: { cw: 3, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.3,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -758,10 +764,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_wooden_notice_board: {
     id: 'building_wayside_wooden_notice_board',
     name: 'Papan Maklumat Kayu Pinggir Jalan',
-    px: { w: 320, h: 320 },
-    footprint: { cw: 2, ch: 1 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.4,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -810,11 +816,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_wild_mountain_peony_cluster: {
     id: 'nature_wild_mountain_peony_cluster',
     name: 'Rumpun Bunga Peoni Gunung Mekar',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'soft',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -823,10 +829,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_chicken_coop_bamboo: {
     id: 'building_village_chicken_coop_bamboo',
     name: 'Kandang Unggas Bambu Pedesaan',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.4,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -836,10 +842,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_earth_god_miniature_shrine: {
     id: 'building_wayside_earth_god_miniature_shrine',
     name: 'Kuil Mini Dewa Bumi Pinggir Jalan',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -849,11 +855,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_ancient_tea_bush_wild_terrace: {
     id: 'nature_ancient_tea_bush_wild_terrace',
     name: 'Rumpun Teh Gunung Liar Berteras Lumut',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.0,
-    collision: 'soft',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -888,10 +894,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_countryside_thatched_haystack_cluster: {
     id: 'building_countryside_thatched_haystack_cluster',
     name: 'Gugusan Jerami Kering Pematang Sawah',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -966,11 +972,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_wild_medicinal_ginseng_flowering: {
     id: 'nature_wild_medicinal_ginseng_flowering',
     name: 'Ginseng Liar Berbunga Cadas Gunung',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -992,10 +998,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_stone_water_trough: {
     id: 'building_village_stone_water_trough',
     name: 'Palung Air Batu Granit Pedesaan',
-    px: { w: 320, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1018,11 +1024,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_wild_mountain_medicinal_angelica: {
     id: 'nature_wild_mountain_medicinal_angelica',
     name: 'Herba Liar Angelica Dang Gui',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1031,10 +1037,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_bamboo_raft_mooring_post: {
     id: 'building_wayside_bamboo_raft_mooring_post',
     name: 'Tiang Tambatan Rakit Tepi Sungai',
-    px: { w: 320, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1044,10 +1050,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_bamboo_tea_shed_bench: {
     id: 'building_wayside_bamboo_tea_shed_bench',
     name: 'Pondok Rehat Teh Bambu Tepi Jalan',
-    px: { w: 320, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1083,11 +1089,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_wild_mountain_medicinal_wolfberry_bush: {
     id: 'nature_wild_mountain_medicinal_wolfberry_bush',
     name: 'Rumpun Semak Buah Goji Liar',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'soft',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.15,
     sortBias: 0,
     fogFoot: true,
@@ -1096,10 +1102,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_stone_boundary_stele: {
     id: 'building_wayside_stone_boundary_stele',
     name: 'Prasasti Tugu Batas Wilayah Beratap Batu',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.0,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1109,11 +1115,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_polygonum: {
     id: 'nature_mountain_wild_medicinal_polygonum',
     name: 'Herba Liar He Shou Wu Merambat',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1122,10 +1128,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_bamboo_grain_drying_mat: {
     id: 'building_village_bamboo_grain_drying_mat',
     name: 'Anyaman Bambu Penjemur Gabah Padi',
-    px: { w: 320, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.6,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1148,10 +1154,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_fortune_teller_booth: {
     id: 'building_wayside_fortune_teller_booth',
     name: 'Kios Tenda Peramal Nasib Bagua',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1161,11 +1167,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_salvia_miltiorrhiza: {
     id: 'nature_mountain_wild_medicinal_salvia_miltiorrhiza',
     name: 'Herba Liar Dan Shen Akar Merah',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1213,10 +1219,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_stone_well_windlass: {
     id: 'building_wayside_stone_well_windlass',
     name: 'Sumur Batu Kerekan Kayu Pedesaan',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1226,11 +1232,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_astragalus: {
     id: 'nature_mountain_wild_medicinal_astragalus',
     name: 'Herba Liar Huang Qi Penguat Qi',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1252,10 +1258,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_straw_scarecrow_bamboo: {
     id: 'building_wayside_straw_scarecrow_bamboo',
     name: 'Orang-Orangan Sawah Topi Jerami',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1265,10 +1271,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_stone_grain_mortar_pestle: {
     id: 'building_village_stone_grain_mortar_pestle',
     name: 'Lesung Penumbuk Padi Kayu Pedesaan',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1278,11 +1284,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_licorice_root: {
     id: 'nature_mountain_wild_medicinal_licorice_root',
     name: 'Herba Liar Akar Manis Gan Cao',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1304,10 +1310,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_stone_grain_roller_mill: {
     id: 'building_village_stone_grain_roller_mill',
     name: 'Kilang Gilingan Gandum Batu Silinder',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1317,10 +1323,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_wooden_mile_marker_stele: {
     id: 'building_wayside_wooden_mile_marker_stele',
     name: 'Tugu Tiang Petunjuk Jalan & Pos Istirahat',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1330,11 +1336,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_aconite_monkshood: {
     id: 'nature_mountain_wild_medicinal_aconite_monkshood',
     name: 'Herba Beracun Fu Zi Bunga Helm Ungu',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1369,10 +1375,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_stone_stele_shrine_arbor: {
     id: 'building_wayside_stone_stele_shrine_arbor',
     name: 'Kuil Gazebo Prasasti Batu Kuno',
-    px: { w: 340, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1382,11 +1388,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_coptis_rhizome: {
     id: 'nature_mountain_wild_medicinal_coptis_rhizome',
     name: 'Herba Liar Kuning Emas Huang Lian',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1421,11 +1427,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_dendrobium_orchid: {
     id: 'nature_mountain_wild_medicinal_dendrobium_orchid',
     name: 'Anggrek Tebing Liar Shi Hu',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1447,10 +1453,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_stone_tofu_press_bench: {
     id: 'building_village_stone_tofu_press_bench',
     name: 'Bangku Penindih Cetakan Tahu Pedesaan',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1460,10 +1466,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_bamboo_courier_mailbox_stand: {
     id: 'building_wayside_bamboo_courier_mailbox_stand',
     name: 'Tiang Pos Kurir Pengantar Surat',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1473,11 +1479,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_polygonatum_kingianum: {
     id: 'nature_mountain_wild_medicinal_polygonatum_kingianum',
     name: 'Herba Purba Huang Jing Rimpang Emas',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1499,10 +1505,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_bamboo_duck_coop_ramp: {
     id: 'building_village_bamboo_duck_coop_ramp',
     name: 'Kandang Bebek Anyaman Bambu Tepi Air',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1525,11 +1531,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_codonopsis_dangshen: {
     id: 'nature_mountain_wild_medicinal_codonopsis_dangshen',
     name: 'Herba Dang Shen Liar Tebing Gunung',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1551,10 +1557,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_bamboo_fish_trap_weir: {
     id: 'building_village_bamboo_fish_trap_weir',
     name: 'Perangkap Ikan Anyaman Bambu Tepi Sungai',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1577,11 +1583,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_rehmannia_dihuang: {
     id: 'nature_mountain_wild_medicinal_rehmannia_dihuang',
     name: 'Herba Di Huang Liar Rimpang Segar',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -1603,10 +1609,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_wayside_bamboo_torch_beacon_brazier: {
     id: 'building_wayside_bamboo_torch_beacon_brazier',
     name: 'Tiang Obor Suar Bambu Tepi Jalan Gunung',
-    px: { w: 320, h: 360 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1616,10 +1622,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   building_village_stone_grain_soaking_cistern: {
     id: 'building_village_stone_grain_soaking_cistern',
     name: 'Bak Batu Perendaman Padi Desa',
-    px: { w: 340, h: 340 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -1629,11 +1635,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_mountain_wild_medicinal_baical_skullcap_huangqin: {
     id: 'nature_mountain_wild_medicinal_baical_skullcap_huangqin',
     name: 'Herba Huang Qin Liar Bunga Ungu Biru',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 0.8,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -2461,11 +2467,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   ancient_relic_shennong_herbal_cauldron: {
     id: 'ancient_relic_shennong_herbal_cauldron',
     name: 'Kuali Alkimia Purba Shennong (Shennong Divine Cauldron)',
-    px: { w: 300, h: 300 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.5,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 10,
     fogFoot: true,
@@ -3033,10 +3039,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_spirit_spring: {
     id: 'resource_spirit_spring',
     name: 'Mata Air Roh Alami',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.5,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3046,10 +3052,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_heavenly_iron_ore: {
     id: 'resource_heavenly_iron_ore',
     name: 'Bijih Besi Bintang Jatuh',
-    px: { w: 220, h: 220 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.5,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3059,10 +3065,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_spirit_koi_pool: {
     id: 'resource_spirit_koi_pool',
     name: 'Kolam Ikan Koi Spiritual',
-    px: { w: 240, h: 240 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.5,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3072,11 +3078,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_ancient_herb_garden: {
     id: 'resource_ancient_herb_garden',
     name: 'Petak Kebun Herbal Rohani',
-    px: { w: 240, h: 240 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.5,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -3085,10 +3091,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_ancient_sword_tomb: {
     id: 'resource_ancient_sword_tomb',
     name: 'Makam Pedang Purba',
-    px: { w: 240, h: 240 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.5,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3098,10 +3104,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   resource_ancient_lightning_bamboo: {
     id: 'resource_ancient_lightning_bamboo',
     name: 'Rumpun Bambu Petir Kuno',
-    px: { w: 240, h: 240 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.8,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3202,10 +3208,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_rock_stepping_stones: {
     id: 'nature_rock_stepping_stones',
     name: 'Batu Loncatan Penyeberangan Sungai',
-    px: { w: 260, h: 240 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.4,
+    overhangCells: 0.05,
     collision: 'soft',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3241,10 +3247,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_lotus_pond_cluster: {
     id: 'nature_lotus_pond_cluster',
     name: 'Rumpun Teratai Mekar Air Tenang',
-    px: { w: 260, h: 260 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.4,
+    overhangCells: 0.05,
     collision: 'soft',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3345,10 +3351,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_river_pebble_shoal: {
     id: 'nature_river_pebble_shoal',
     name: 'Hamparan Kerikil dan Pasir Tepi Sungai',
-    px: { w: 340, h: 220 },
-    footprint: { cw: 3, ch: 2 },
+    px: { w: 140, h: 93 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 0.4,
+    overhangCells: 0.05,
     collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
@@ -3410,11 +3416,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_wild_mountain_camellia_shrub: {
     id: 'nature_wild_mountain_camellia_shrub',
     name: 'Rumpun Semak Kamelia Liar Mekar',
-    px: { w: 320, h: 320 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.0,
-    collision: 'soft',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.1,
     sortBias: 0,
     fogFoot: true,
@@ -3423,10 +3429,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_bamboo_hanging_creeper: {
     id: 'nature_bamboo_hanging_creeper',
     name: 'Rumpun Bambu Rambat Menjuntai',
-    px: { w: 320, h: 340 },
-    footprint: { cw: 3, ch: 2 },
+    px: { w: 140, h: 140 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.9 },
-    overhangCells: 1.2,
+    overhangCells: 0.05,
     collision: 'soft',
     staminaMult: 1.2,
     sortBias: 0,
@@ -5726,11 +5732,11 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   structure_prof_farming_spirit_herb_nursery_trellis: {
     id: 'structure_prof_farming_spirit_herb_nursery_trellis',
     name: 'Petak Pembibitan Herba Roh & Teralis Bambu Giok',
-    px: { w: 480, h: 440 },
-    footprint: { cw: 3, ch: 2 },
+    px: { w: 140, h: 128 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 1.2,
-    collision: 'solid',
+    overhangCells: 0.05,
+    collision: 'none',
     staminaMult: 1.0,
     sortBias: 0,
     fogFoot: true,
@@ -5921,10 +5927,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_scatter_celestial_lotus_pond_rockery: {
     id: 'nature_scatter_celestial_lotus_pond_rockery',
     name: 'Ceruk Kolam Teratai Roh Alami',
-    px: { w: 440, h: 400 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 127 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 1.1,
+    overhangCells: 0.05,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -5947,10 +5953,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   nature_scatter_subterranean_luminescent_mushroom_patch: {
     id: 'nature_scatter_subterranean_luminescent_mushroom_patch',
     name: 'Rumpun Jamur Payung Bercahaya Bawah Tanah',
-    px: { w: 420, h: 380 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 127 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.85 },
-    overhangCells: 1.1,
+    overhangCells: 0.05,
     collision: 'soft',
     staminaMult: 1.0,
     sortBias: 0,
@@ -5986,10 +5992,10 @@ export const OBJECT_DEFINITIONS: Record<string, WorldObjectDef> = {
   structure_scatter_mountain_daoist_stone_lantern_beacon: {
     id: 'structure_scatter_mountain_daoist_stone_lantern_beacon',
     name: 'Lentera Batu Pagoda Kuno Berlumut',
-    px: { w: 360, h: 480 },
-    footprint: { cw: 2, ch: 2 },
+    px: { w: 140, h: 187 },
+    footprint: { cw: 1, ch: 1 },
     anchor: { x: 0.5, y: 0.88 },
-    overhangCells: 1.3,
+    overhangCells: 0.3,
     collision: 'solid',
     staminaMult: 1.0,
     sortBias: 0,
@@ -6190,11 +6196,6 @@ export function renderL1TerrainCell(
   ctx.fillStyle = p.baseColor;
   ctx.fillRect(sx, sy, tileSize, tileSize);
 
-  // Subtle ink bleeding border
-  ctx.strokeStyle = p.accentColor;
-  ctx.lineWidth = 0.5;
-  ctx.strokeRect(sx, sy, tileSize, tileSize);
-
   // L2: Flat ground details (strictly 1 cell, no overflow)
   if (p.isWater) {
     // Water ripple strokes
@@ -6233,7 +6234,8 @@ export function renderL1TerrainCell(
 }
 
 /**
- * L3: Soft foot mist (kabut di kaki objek menjulang).
+ * L3: Soft contact shadow at base of tall objects (H0 / HA / G5).
+ * Soft dark ellipse replacing the old white foot mist.
  */
 export function renderL3FootMist(
   ctx: CanvasRenderingContext2D,
@@ -6242,15 +6244,12 @@ export function renderL3FootMist(
   footprintWidth: number,
   mistHeight: number
 ) {
-  const mistGrad = ctx.createLinearGradient(0, baseY - mistHeight, 0, baseY + mistHeight * 0.5);
-  mistGrad.addColorStop(0, 'rgba(244, 241, 234, 0)');
-  mistGrad.addColorStop(0.6, 'rgba(244, 241, 234, 0.75)');
-  mistGrad.addColorStop(1, 'rgba(244, 241, 234, 0.95)');
-
-  ctx.fillStyle = mistGrad;
+  ctx.save();
+  ctx.fillStyle = 'rgba(30, 25, 20, 0.22)';
   ctx.beginPath();
-  ctx.ellipse(baseX, baseY, footprintWidth * 0.7, mistHeight, 0, 0, Math.PI * 2);
+  ctx.ellipse(baseX, baseY, footprintWidth * 0.4, Math.max(2, mistHeight), 0, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 }
 
 /**
@@ -6261,192 +6260,63 @@ export function renderL4ProceduralObject(
   defId: string,
   screenX: number,
   screenY: number,
-  tileSize: number,
+  tileSizeOrDw: number,
   time: number,
   alpha: number = 1.0,
-  flipX: boolean = false
+  flipX: boolean = false,
+  explicitDh?: number
 ) {
+  // Phase HA: Never render quarantined placeholder sprites
+  if (isDefIdQuarantined(defId)) {
+    return;
+  }
+
+  const canon = scaleCanon[defId];
+  let dw: number;
+  let dh: number;
+
+  if (explicitDh !== undefined) {
+    dw = tileSizeOrDw;
+    dh = explicitDh;
+  } else {
+    const tileSize = tileSizeOrDw;
+    const def = OBJECT_DEFINITIONS[defId];
+    if (canon) {
+      dw = canon.visualW * tileSize;
+      dh = canon.visualH * tileSize;
+    } else if (def) {
+      dw = def.footprint.cw * tileSize;
+      dh = (def.footprint.ch + def.overhangCells) * tileSize;
+    } else {
+      dw = tileSize;
+      dh = tileSize * 2;
+    }
+  }
+
   // 1. Try rendering from WebP texture atlas first (Song Dynasty Shuimo asset)
   const atlasName = getAtlasNameForDefId(defId);
-  const def = OBJECT_DEFINITIONS[defId];
-  const dw = def ? def.footprint.cw * tileSize : tileSize;
-  const dh = def ? (def.footprint.ch + def.overhangCells) * tileSize : tileSize * 2;
-
   if (atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX)) {
     return;
   }
 
-  // 2. Fallback to procedural vector rendering if atlas not yet loaded or missing
-  ctx.save();
-  ctx.globalAlpha = alpha;
-
-  if (flipX) {
-    ctx.translate(screenX + tileSize, screenY);
-    ctx.scale(-1, 1);
-  } else {
-    ctx.translate(screenX, screenY);
+  // 2. Phase HA: All vector fallback branches (karst_pillar, mt_rock, bamboo_clump, pine_tree, village_house, sect_gate, etc.)
+  // have been strictly removed to eliminate distorted geometries and placeholder silhouettes.
+  if (!warnedMissingAtlasDefs.has(defId)) {
+    warnedMissingAtlasDefs.add(defId);
+    console.warn(`[renderL4ProceduralObject] Missing or unloaded atlas frame for '${defId}', vector fallback disabled.`);
   }
 
-  if (defId.startsWith('karst_pillar') || defId.startsWith('mt_rock')) {
-    // KARST ROCK PILLAR / MOUNTAIN PEAK
-    const def = OBJECT_DEFINITIONS[defId] || OBJECT_DEFINITIONS.karst_pillar_1x1;
-    const w = def.footprint.cw * tileSize;
-    const h = (def.footprint.ch + def.overhangCells) * tileSize;
-    const topX = w * 0.5;
-    const baseY = h;
-
-    // Body of mountain / karst cliff (Layered Ink Wash)
-    const cliffGrad = ctx.createLinearGradient(0, 0, w, h);
-    cliffGrad.addColorStop(0, '#5C6B66'); // Slate-grey jade tint
-    cliffGrad.addColorStop(0.5, '#454C47'); // Charcoal ink
-    cliffGrad.addColorStop(1, '#2D3330'); // Deep ink base
-    ctx.fillStyle = cliffGrad;
-
-    ctx.beginPath();
-    ctx.moveTo(w * 0.15, baseY);
-    ctx.lineTo(w * 0.25, h * 0.4);
-    ctx.lineTo(topX - w * 0.1, h * 0.05);
-    ctx.lineTo(topX + w * 0.1, h * 0.05);
-    ctx.lineTo(w * 0.75, h * 0.35);
-    ctx.lineTo(w * 0.85, baseY);
-    ctx.closePath();
-    ctx.fill();
-
-    // Shading side (Dry-brush side cleft)
-    ctx.fillStyle = '#222724';
-    ctx.beginPath();
-    ctx.moveTo(topX, h * 0.05);
-    ctx.lineTo(w * 0.75, h * 0.35);
-    ctx.lineTo(w * 0.85, baseY);
-    ctx.lineTo(topX + w * 0.05, baseY);
-    ctx.closePath();
-    ctx.fill();
-
-    // Ochre / Cinnabar rock strata streak
-    ctx.strokeStyle = 'rgba(185, 162, 122, 0.45)';
-    ctx.lineWidth = Math.max(1, tileSize * 0.03);
-    ctx.beginPath();
-    ctx.moveTo(w * 0.3, h * 0.3);
-    ctx.lineTo(w * 0.65, h * 0.45);
-    ctx.moveTo(w * 0.25, h * 0.65);
-    ctx.lineTo(w * 0.75, h * 0.75);
-    ctx.stroke();
-
-    // Mountain peak mist wash
-    const peakMist = ctx.createLinearGradient(0, 0, 0, h * 0.2);
-    peakMist.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
-    peakMist.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = peakMist;
-    ctx.fillRect(w * 0.15, 0, w * 0.7, h * 0.2);
-
-  } else if (defId.startsWith('bamboo_clump')) {
-    // BAMBOO CLUMP (Slender vertical stalks with feathery leaves)
-    const def = OBJECT_DEFINITIONS[defId] || OBJECT_DEFINITIONS.bamboo_clump_1x1;
-    const w = def.footprint.cw * tileSize;
-    const h = (def.footprint.ch + def.overhangCells) * tileSize;
-    const stalks = def.footprint.cw * 3;
-    const sway = Math.sin(time * 1.5 + screenX * 0.05) * (tileSize * 0.04);
-
-    for (let s = 0; s < stalks; s++) {
-      const bx = w * (0.15 + (s / (stalks - 1 || 1)) * 0.7);
-      const by = h * 0.95;
-      const tx = bx + sway * (0.7 + s * 0.1);
-      const ty = h * (0.1 + (s % 2) * 0.15);
-
-      // Stalk
-      ctx.strokeStyle = s % 2 === 0 ? '#3B5742' : '#2A3F30';
-      ctx.lineWidth = Math.max(1.5, tileSize * 0.035);
-      ctx.beginPath();
-      ctx.moveTo(bx, by);
-      ctx.quadraticCurveTo((bx + tx) / 2 + sway, (by + ty) / 2, tx, ty);
-      ctx.stroke();
-
-      // Nodes
-      ctx.fillStyle = '#1D2A20';
-      for (let n = 1; n <= 3; n++) {
-        const ny = by - (by - ty) * (n * 0.25);
-        const nx = bx + (tx - bx) * (n * 0.25);
-        ctx.fillRect(nx - 2, ny - 1, 4, 2);
-      }
-
-      // Leaves (Feathery lanceolate strokes)
-      ctx.fillStyle = s % 2 === 0 ? '#4F7257' : '#395340';
-      for (let l = -2; l <= 2; l++) {
-        ctx.beginPath();
-        const lx = tx + l * tileSize * 0.08;
-        const ly = ty + Math.abs(l) * tileSize * 0.05;
-        ctx.ellipse(lx, ly, tileSize * 0.12, tileSize * 0.04, l * 0.35 + sway * 0.05, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-  } else if (defId.startsWith('pine_tree') || defId.startsWith('spirit_tree')) {
-    // PINE TREE / SPIRIT TREE (Twisted gnarled trunk + tiered cloud canopy)
-    const def = OBJECT_DEFINITIONS[defId] || OBJECT_DEFINITIONS.pine_tree_1x1;
-    const w = def.footprint.cw * tileSize;
-    const h = (def.footprint.ch + def.overhangCells) * tileSize;
-
-    // Gnarled trunk
-    ctx.strokeStyle = '#4A3B32';
-    ctx.lineWidth = Math.max(2, tileSize * 0.08);
-    ctx.beginPath();
-    ctx.moveTo(w * 0.5, h * 0.95);
-    ctx.quadraticCurveTo(w * 0.35, h * 0.6, w * 0.5, h * 0.35);
-    ctx.stroke();
-
-    // Pine needle tiers (Cloud cluster layers)
-    const isSpirit = defId.includes('spirit');
-    const leafColor1 = isSpirit ? '#5E8C7B' : '#334839';
-    const leafColor2 = isSpirit ? '#7C97A6' : '#223327';
-
-    for (let t = 0; t < 3; t++) {
-      const cy = h * (0.35 - t * 0.12);
-      const rx = w * (0.35 - t * 0.05);
-      const ry = tileSize * 0.15;
-
-      ctx.fillStyle = t % 2 === 0 ? leafColor1 : leafColor2;
-      ctx.beginPath();
-      ctx.ellipse(w * 0.5, cy, rx, ry, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-  } else if (defId.startsWith('pavilion') || defId.startsWith('sect_gate') || defId.startsWith('village_house')) {
-    // CHINESE PAVILION / HOUSE
-    const def = OBJECT_DEFINITIONS[defId] || OBJECT_DEFINITIONS.pavilion_1x1;
-    const w = def.footprint.cw * tileSize;
-    const h = (def.footprint.ch + def.overhangCells) * tileSize;
-
-    // Base stone platform
-    ctx.fillStyle = '#6E675F';
-    ctx.fillRect(w * 0.15, h * 0.75, w * 0.7, h * 0.2);
-
-    // Columns
-    ctx.fillStyle = '#7A2E26'; // Vermilion pillars
-    ctx.fillRect(w * 0.22, h * 0.45, w * 0.08, h * 0.32);
-    ctx.fillRect(w * 0.7, h * 0.45, w * 0.08, h * 0.32);
-
-    // Upturned roof eaves
-    ctx.fillStyle = '#9B3A2E'; // Cinnabar tile roof
-    ctx.beginPath();
-    ctx.moveTo(w * 0.05, h * 0.48);
-    ctx.quadraticCurveTo(w * 0.5, h * 0.22, w * 0.95, h * 0.48);
-    ctx.lineTo(w * 0.85, h * 0.48);
-    ctx.lineTo(w * 0.5, h * 0.32);
-    ctx.lineTo(w * 0.15, h * 0.48);
-    ctx.closePath();
-    ctx.fill();
-
-  } else {
-    // Generic Boulder / Rock
-    const w = tileSize;
-    const h = tileSize;
-    ctx.fillStyle = '#6A635B';
-    ctx.beginPath();
-    ctx.ellipse(w * 0.5, h * 0.7, w * 0.35, h * 0.22, 0, 0, Math.PI * 2);
-    ctx.fill();
+  // In dev mode only, draw a lightweight red outline and label to aid debugging without corrupting aesthetics
+  if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined' && (window as any).__DEV_MAP_DEBUG__) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(screenX, screenY, dw, dh);
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+    ctx.font = '9px monospace';
+    ctx.fillText(defId, screenX + 2, screenY + 10);
+    ctx.restore();
   }
-
-  ctx.restore();
 }
 
 /**
