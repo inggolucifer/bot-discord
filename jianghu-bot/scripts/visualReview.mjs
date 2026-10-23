@@ -306,10 +306,32 @@ async function main() {
           window.addEventListener('chunks-ready', handler, { once: true });
           setTimeout(() => resolve(window.__debugMetrics || {}), 6000);
         });
+
+        // Measure real render time across 30 frames using performance.now()
+        const frameTimes = [];
+        await new Promise((resolveFrames) => {
+          let count = 0;
+          let prevTime = performance.now();
+          function measureFrame(now) {
+            frameTimes.push(now - prevTime);
+            prevTime = now;
+            count++;
+            if (count < 30) {
+              requestAnimationFrame(measureFrame);
+            } else {
+              resolveFrames();
+            }
+          }
+          requestAnimationFrame(measureFrame);
+        });
+        const avgFrameTime = frameTimes.length > 0
+          ? Math.round((frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length) * 10) / 10
+          : 16;
+
         const heap = (typeof performance !== 'undefined' && performance.memory)
           ? Math.round(performance.memory.usedJSHeapSize / 1048576)
           : 0;
-        return { metrics: m, heapMb: heap };
+        return { metrics: m, heapMb: heap, renderTimeMs: avgFrameTime };
       });
 
       const metrics = evalResult.metrics || {};
@@ -342,7 +364,7 @@ async function main() {
         roadBlockages: metrics.roadBlockages || 0,
         spritesFallback: metrics.spritesFallback || 0,
         heapMb: heapMb,
-        renderTimeMs: metrics.renderTimeMs || 16,
+        renderTimeMs: evalResult.renderTimeMs || metrics.renderTimeMs || 16,
         passed: (metrics.duplicateWithin3Tiles || 0) === 0 &&
                 (metrics.roadBlockages || 0) === 0 &&
                 !hasFallbacks &&
@@ -384,6 +406,15 @@ async function main() {
 
   const durationSec = Math.round((Date.now() - startTime) / 1000);
   console.log(`[VisualReview] All ${targets.length} targets captured in ${durationSec}s!`);
+
+  const filesOnDisk = fs.readdirSync(shotsDir).filter(f => f.endsWith('.png'));
+  const actualFileCount = filesOnDisk.length;
+  console.log(`[VisualReview File Audit] Files on disk: ${actualFileCount}, Targets evaluated: ${results.length}`);
+  if (actualFileCount < results.length && !process.env.REVIEW_LIMIT) {
+    const errText = `[GAGAL] Strict file count mismatch in review/shots! Actual PNGs: ${actualFileCount}, Expected: ${results.length}`;
+    console.error(errText);
+    throw new Error(errText);
+  }
 
   // Generate Contact Sheet (review/index.html)
   generateContactSheet(results);

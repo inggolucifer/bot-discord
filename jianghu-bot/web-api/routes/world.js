@@ -63,6 +63,7 @@ const { convertToCopper, convertFromCopper } = require('../../utils/currencyNorm
 const { RATE_TO_COPPER } = require('../../utils/currencyNormalize');
 const landService = require('../../services/landService');
 const DefeatedMonsterTile = require('../../models/DefeatedMonsterTile');
+const FishCast = require('../../models/FishCast');
 const ZoneTileModel = require('../../models/ZoneTile');
 const { getLandPriceForPlayer } = require('../../utils/landPriceEngine');
 const { checkAndRunGridEncounter } = require('../../utils/gridCombat');
@@ -3858,18 +3859,8 @@ router.post('/building/exit', authenticateToken, async (req, res) => {
 
 // ==========================================
 // TWO-STEP SERVER-AUTHORITATIVE FISHING (FASE B)
+// Persisted in MongoDB via FishCast model with TTL auto-cleanup
 // ==========================================
-const castSessions = new Map();
-
-// Pembersihan berkala sesi yang expired setiap 60 detik
-setInterval(() => {
-    const now = Date.now();
-    for (const [castId, session] of castSessions.entries()) {
-        if (now > session.expiresAt) {
-            castSessions.delete(castId);
-        }
-    }
-}, 60000).unref();
 
 router.post('/fish/cast', authenticateToken, async (req, res) => {
     try {
@@ -3994,13 +3985,13 @@ router.post('/fish/cast', authenticateToken, async (req, res) => {
         const castId = 'cast_' + crypto.randomUUID();
         const now = Date.now();
 
-        castSessions.set(castId, {
+        await FishCast.create({
             castId,
             playerId: userId,
             fishName: fishEntry.name,
             difficulty,
-            startedAt: now,
-            expiresAt: now + 90000,
+            startedAt: new Date(now),
+            expiresAt: new Date(now + 90000),
             resolved: false
         });
 
@@ -4024,14 +4015,21 @@ router.post('/fish/reel', authenticateToken, async (req, res) => {
         const userId = req.user.userId;
         const { castId, caught } = req.body || {};
 
-        if (!castId || !castSessions.has(castId)) {
+        if (!castId) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Sesi lemparan pancing tidak valid atau tidak disertakan.'
+            });
+        }
+
+        const session = await FishCast.findOne({ castId });
+        if (!session) {
             return res.status(400).json({
                 ok: false,
                 error: 'Sesi lemparan pancing tidak valid atau sudah kedaluwarsa.'
             });
         }
 
-        const session = castSessions.get(castId);
         if (session.playerId !== userId) {
             return res.status(403).json({
                 ok: false,
@@ -4047,8 +4045,7 @@ router.post('/fish/reel', authenticateToken, async (req, res) => {
         }
 
         const now = Date.now();
-        if (now > session.expiresAt) {
-            castSessions.delete(castId);
+        if (now > new Date(session.expiresAt).getTime()) {
             return res.status(400).json({
                 ok: false,
                 error: 'Sesi pancing telah kedaluwarsa.'
@@ -4056,7 +4053,7 @@ router.post('/fish/reel', authenticateToken, async (req, res) => {
         }
 
         // Anti-instant-catch (minimal 4.0 detik)
-        const durationMs = now - session.startedAt;
+        const durationMs = now - new Date(session.startedAt).getTime();
         if (durationMs < 4000) {
             return res.status(400).json({
                 ok: false,
@@ -4064,9 +4061,19 @@ router.post('/fish/reel', authenticateToken, async (req, res) => {
             });
         }
 
-        // Tandai resolved dan hapus dari sesi aktif hanya setelah melewati durasi sah
-        session.resolved = true;
-        castSessions.delete(castId);
+        // Tandai resolved secara atomik untuk mencegah eksploitasi reel ganda (anti double-reel)
+        const updatedSession = await FishCast.findOneAndUpdate(
+            { castId, playerId: userId, resolved: false, expiresAt: { $gt: new Date() } },
+            { $set: { resolved: true } },
+            { new: true }
+        );
+
+        if (!updatedSession) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Sesi pancing sudah pernah diselesaikan atau telah kedaluwarsa.'
+            });
+        }
 
         if (!caught) {
             return res.json({

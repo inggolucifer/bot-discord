@@ -72,8 +72,23 @@ async function runReproduction() {
       { name: 'Pondok Kecil (Cottage 6x5)', x: 2049, y: 2650, buildingType: 'cottage' }
     ];
 
+    // Warmup cycle to initialize Mongoose internal models, buffers, and caches
+    console.log('[WARMUP] Melakukan 2 siklus pemanasan Mongoose & interiorService...');
+    for (let w = 0; w < 2; w++) {
+      const wEnter = await interiorService.enterBuilding(testDiscordId, testGuildId, {
+        targetX: 2050,
+        targetY: 2650,
+        zoneId: 'tianyuan_world_map'
+      });
+      if (wEnter.ok) {
+        await interiorService.exitBuilding(testDiscordId, testGuildId);
+      }
+    }
+    if (typeof global.gc === 'function') {
+      global.gc();
+    }
     const initialHeap = process.memoryUsage().heapUsed;
-    console.log(`[HEAP] Heap awal: ${(initialHeap / 1024 / 1024).toFixed(2)} MB`);
+    console.log(`[HEAP] Heap awal setelah pemanasan: ${(initialHeap / 1024 / 1024).toFixed(2)} MB`);
 
     for (const target of targetTypes) {
       console.log(`\n[SIKLUS] Menjalankan 20 siklus masuk-keluar untuk: ${target.name}...`);
@@ -132,10 +147,14 @@ async function runReproduction() {
       });
     }
 
+    if (typeof global.gc === 'function') {
+      global.gc();
+    }
     const finalHeap = process.memoryUsage().heapUsed;
     const heapDiff = finalHeap - initialHeap;
     report.heapGrowthPercent = Math.max(0, (heapDiff / initialHeap) * 100);
-    console.log(`\n[HEAP] Heap akhir: ${(finalHeap / 1024 / 1024).toFixed(2)} MB (Pertumbuhan: ${report.heapGrowthPercent.toFixed(2)}%)`);
+    const heapPassed = report.heapGrowthPercent <= 10;
+    console.log(`\n[HEAP] Heap akhir: ${(finalHeap / 1024 / 1024).toFixed(2)} MB (Pertumbuhan: ${report.heapGrowthPercent.toFixed(2)}% - ${heapPassed ? 'PASS' : 'GAGAL'})`);
 
     // --------------------------------------------------------------------------
     // Uji Concurrency Double Tap
@@ -203,20 +222,24 @@ async function runReproduction() {
 
   // Tulis laporan resmi ke review/enter_repro.md
   const reportPath = path.resolve(__dirname, '../review/enter_repro.md');
+  const heapPassed = report.heapGrowthPercent <= 10;
+  const isOverallPassed = report.failedCycles === 0 && report.doubleTapCreatedCount === 1 && heapPassed;
+
   let md = `# Laporan Resmi Gerbang Uji Masuk Bangunan (Fase A)\n\n`;
   md += `Tanggal Pengujian: ${new Date().toISOString()}\n`;
   md += `Total Siklus Dijalankan: **${report.totalCycles} Siklus** (4 Jenis Target × 20 Siklus)\n`;
-  md += `Siklus Berhasil: **${report.successfulCycles}/${report.totalCycles} (100% Lulus)**\n`;
+  md += `Siklus Berhasil: **${report.successfulCycles}/${report.totalCycles} (${report.failedCycles === 0 ? '100% Lulus' : 'Ada Kegagalan'})**\n`;
   md += `Siklus Gagal: **${report.failedCycles}**\n`;
-  md += `Uji Ketukan Ganda (Double Tap): **Tepat ${report.doubleTapCreatedCount} Dokumen Terbuat (Lulus Tanpa Duplikasi/Error)**\n`;
-  md += `Pertumbuhan JS Heap: **${report.heapGrowthPercent.toFixed(2)}% (< 10% Toleransi)**\n\n`;
+  md += `Uji Ketukan Ganda (Double Tap): **Tepat ${report.doubleTapCreatedCount} Dokumen Terbuat (${report.doubleTapCreatedCount === 1 ? 'Lulus Tanpa Duplikasi/Error' : 'GAGAL'})**\n`;
+  md += `Pertumbuhan JS Heap: **${report.heapGrowthPercent.toFixed(2)}% (${heapPassed ? 'LULUS < 10% Toleransi' : 'GAGAL: Melebihi 10% Toleransi'})**\n\n`;
+  md += `Status Keseluruhan: **${isOverallPassed ? 'LULUS' : 'GAGAL'}**\n\n`;
 
   md += `### Tabel Rincian 4 Jenis Target Bangunan\n\n`;
   md += `| # | Jenis Target Bangunan | Dimensi Grid | Door Spawn | Siklus Diuji | Hasil Lulus | Status |\n`;
   md += `|---|---|---|---|---|---|---|\n`;
 
   report.scenarios.forEach((s, idx) => {
-    md += `| ${idx + 1} | ${s.name} | ${s.width}×${s.height} | (${s.doorSpawn.x}, ${s.doorSpawn.y}) | ${s.cycles} | ${s.passed}/20 | **100% LULUS** |\n`;
+    md += `| ${idx + 1} | ${s.name} | ${s.width}×${s.height} | (${s.doorSpawn.x}, ${s.doorSpawn.y}) | ${s.cycles} | ${s.passed}/20 | **${s.passed === s.cycles ? '100% LULUS' : 'GAGAL'}** |\n`;
   });
 
   md += `\n### Kesimpulan Hasil Fase A:\n`;
@@ -226,15 +249,19 @@ async function runReproduction() {
   md += `4. **Validasi Batas Grid**: Titik spawn pemain terbukti berada di dalam batas yang sah pada seluruh varian ukuran (6x5 dan 12x12).\n`;
 
   fs.writeFileSync(reportPath, md, 'utf8');
-  console.log(`\n[SUKSES] Laporan gerbang resmi Fase A tersimpan di: ${reportPath}`);
+  console.log(`\n[HASIL] Laporan gerbang resmi Fase A tersimpan di: ${reportPath}`);
 
   await mongoose.disconnect();
+
+  if (!isOverallPassed) {
+    throw new Error(`Uji reproEnterBuilding GAGAL! heapGrowth=${report.heapGrowthPercent.toFixed(2)}% (limit 10%), failedCycles=${report.failedCycles}`);
+  }
 }
 
 runReproduction().then(() => {
   console.log('\n=== SEMUA GERBANG FASE A LULUS DENGAN SUKSES ===');
   process.exit(0);
 }).catch(err => {
-  console.error('\n[FATAL ERROR] Gagal menjalankan pengujian Fase A:', err);
+  console.error('\n[FATAL ERROR] Gagal menjalankan pengujian Fase A:', err.message);
   process.exit(1);
 });

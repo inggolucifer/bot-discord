@@ -20,6 +20,7 @@
     "assets:atlas": "node scripts/assets/packAtlas.js",
     "assets:validate": "node scripts/assets/validateAssets.js",
     "assets:generate-t1": "node scripts/assets/generateT1AssetPack.js",
+    "build:frames": "node scripts/buildKnownFrames.js",
     "world:build-report": "node scripts/generateBuildZoneReport.js"
   },
   "dependencies": {

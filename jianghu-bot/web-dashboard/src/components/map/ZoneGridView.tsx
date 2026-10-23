@@ -851,26 +851,51 @@ export default function ZoneGridView({
   }, [tiles, px, py]);
   const distToSelected = selectedTile ? Math.max(Math.abs(px - selectedTile.tileX), Math.abs(py - selectedTile.tileY)) : null;
 
+  // Camera center tile and authoritative region resolution
+  const cameraCenterTile = useMemo(() => {
+    return searchFocusTile || { x: px, y: py };
+  }, [searchFocusTile, px, py]);
+
+  const cameraRegion = useMemo(() => {
+    for (const reg of CANONICAL_REGIONS) {
+      if (
+        cameraCenterTile.x >= reg.bounds.minX &&
+        cameraCenterTile.x <= reg.bounds.maxX &&
+        cameraCenterTile.y >= reg.bounds.minY &&
+        cameraCenterTile.y <= reg.bounds.maxY
+      ) {
+        return reg;
+      }
+    }
+    let bestReg = CANONICAL_REGIONS[0];
+    let bestDistSq = Infinity;
+    for (const reg of CANONICAL_REGIONS) {
+      const dx = cameraCenterTile.x - reg.centerX;
+      const dy = cameraCenterTile.y - reg.centerY;
+      const dSq = dx * dx + dy * dy;
+      if (dSq < bestDistSq) {
+        bestDistSq = dSq;
+        bestReg = reg;
+      }
+    }
+    return bestReg;
+  }, [cameraCenterTile.x, cameraCenterTile.y]);
+
   // Deteksi kedatangan ke wilayah baru (Region Transition Calligraphy Banner)
   useEffect(() => {
-    if (!currentCharacterTile?.regionId || !isInitialLoadDone) return;
-    const regionId = currentCharacterTile.regionId;
+    if (!cameraRegion || !isInitialLoadDone) return;
+    const regionId = cameraRegion.regionSlug;
     if (!lastRegionRef.current || lastRegionRef.current !== regionId) {
-      const meta = CANONICAL_REGIONS.find(
-        r => r.regionSlug === regionId || r.displayName.toLowerCase() === regionId.toLowerCase()
-      );
-      if (meta) {
-        setActiveRegionBanner({
-          regionName: meta.displayName,
-          chineseName: meta.chineseName,
-          dangerTier: meta.dangerTier,
-          description: meta.description
-        });
-        sound.playGuzheng(440, 0.4);
-      }
+      setActiveRegionBanner({
+        regionName: cameraRegion.displayName,
+        chineseName: cameraRegion.chineseName,
+        dangerTier: cameraRegion.dangerTier,
+        description: cameraRegion.description
+      });
+      sound.playGuzheng(440, 0.4);
       lastRegionRef.current = regionId;
     }
-  }, [currentCharacterTile?.regionId, isInitialLoadDone]);
+  }, [cameraRegion, isInitialLoadDone]);
 
   if (error) {
     return (
@@ -1029,8 +1054,8 @@ export default function ZoneGridView({
               cameraPos={searchFocusTile ? { x: searchFocusTile.x, y: searchFocusTile.y } : undefined}
               targetTile={selectedTile ? { x: selectedTile.tileX, y: selectedTile.tileY } : null}
               activePath={activePath}
-              regionName={currentCharacterTile?.regionName || 'Central Plains'}
-              dangerTier={currentCharacterTile?.dangerTier || 1}
+              regionName={cameraRegion?.displayName || currentCharacterTile?.regionName || 'Central Plains'}
+              dangerTier={cameraRegion?.dangerTier ?? currentCharacterTile?.dangerTier ?? 1}
               exploredChunks={exploredChunks}
               onOpenMacroMap={() => setShowMacroMap(true)}
               onSelectCoordinate={(tx, ty) => {
@@ -1055,7 +1080,7 @@ export default function ZoneGridView({
         {/* Banner Indikator saat Membidik Tempat Jauh via Fitur Cari */}
         {searchFocusTile && (
           <div className="absolute top-14 sm:top-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/90 border border-amber-500/80 text-amber-200 px-3 py-1.5 rounded-full shadow-2xl font-serif text-xs backdrop-blur-md animate-in fade-in">
-            <span className="text-amber-400 flex items-center gap-1"><Compass className="w-3.5 h-3.5 inline" /> Membidik: ({searchFocusTile.x}, {searchFocusTile.y})</span>
+            <span className="text-amber-400 flex items-center gap-1"><Compass className="w-3.5 h-3.5 inline" /> Membidik: ({searchFocusTile.x}, {searchFocusTile.y}) - {cameraRegion?.displayName || 'Central Plains'}</span>
             <button
               onClick={handleRecenterToPlayer}
               className="px-2.5 py-0.5 bg-amber-900/80 hover:bg-amber-800 text-amber-100 rounded-full border border-amber-500 text-[11px] font-sans font-semibold transition-all active:scale-95 flex items-center gap-1"

@@ -19,6 +19,97 @@ const quarantineData = require('../world-data/asset-quarantine.json');
 const quarantinedFamilies = quarantineData.quarantinedFamilies || [];
 const scaleCanon = require('../world-data/scale-canon.json');
 
+// Known atlas frames SSOT (Prompt 1.1)
+const knownFramesData = require('../config/known-frames.json');
+const KNOWN_FRAMES = new Set(knownFramesData);
+
+function resolveDef(defId, fallbackDefId = null) {
+  if (defId && KNOWN_FRAMES.has(defId) && !isQuarantined(defId)) return defId;
+  if (fallbackDefId && KNOWN_FRAMES.has(fallbackDefId) && !isQuarantined(fallbackDefId)) return fallbackDefId;
+  return null;
+}
+
+const WATER_TERRAINS = new Set(['sea', 'ocean', 'sea_reef', 'island_reef', 'lake_deep', 'lake', 'river', 'river_shallow']);
+const WATER_EXEMPT_REGEX = /lotus|coral|reef|boat|drift|dock|island|reed|stream|water/;
+
+function matchesTerrain(allowedList, actualTerrain) {
+  if (!allowedList || !Array.isArray(allowedList)) return true;
+  if (allowedList.includes(actualTerrain)) return true;
+  // Substring & alias matching for procedural generator terrain varieties
+  if (actualTerrain.includes('desert') || actualTerrain.includes('sand') || actualTerrain.includes('dune')) {
+    if (allowedList.some(t => t.includes('desert') || t.includes('sand') || t.includes('dune') || t === 'arid_dirt')) return true;
+  }
+  if (actualTerrain.includes('bamboo')) {
+    if (allowedList.some(t => t.includes('bamboo'))) return true;
+  }
+  if (actualTerrain.includes('swamp') || actualTerrain === 'poison_pool') {
+    if (allowedList.some(t => t.includes('swamp') || t === 'miasma_waste' || t === 'poison_pool')) return true;
+  }
+  if (actualTerrain.includes('volcan') || actualTerrain === 'crater' || actualTerrain === 'basalt' || actualTerrain === 'lava_flow') {
+    if (allowedList.some(t => t === 'volcanic' || t === 'crater' || t === 'basalt' || t === 'lava_flow')) return true;
+  }
+  if (actualTerrain === 'forest' || actualTerrain === 'spirit_wood') {
+    if (allowedList.some(t => t === 'plains' || t === 'meadow' || t === 'peach_blossom' || t === 'forest' || t === 'spirit_wood')) return true;
+  }
+  if (actualTerrain === 'battlefield_ash' || actualTerrain === 'lightning_scar') {
+    if (allowedList.some(t => t === 'dirt' || t === 'plains' || t === 'dead_wood' || t === 'abyssal_scar')) return true;
+  }
+  if (actualTerrain === 'sword_gorge_pass') {
+    if (allowedList.some(t => t.includes('canyon') || t.includes('cliff') || t.includes('mountain'))) return true;
+  }
+  if (actualTerrain === 'ruin_floor' || actualTerrain === 'formation_tile') {
+    if (allowedList.some(t => t === 'ruin_floor' || t === 'formation_tile')) return true;
+  }
+  return false;
+}
+
+function isAllowedOnTerrain(defId, terrainType) {
+  if (!defId || !terrainType) return true;
+
+  // Water terrain restriction is absolute (Prompt 1.5)
+  if (WATER_TERRAINS.has(terrainType)) {
+    if (!WATER_EXEMPT_REGEX.test(defId)) return false;
+  }
+
+  // 1. Check in natureScatters
+  for (const cat of Object.values(assetBindings.natureScatters || {})) {
+    if (Array.isArray(cat)) {
+      const entry = cat.find(e => e.defId === defId);
+      if (entry) {
+        if (entry.terrains && Array.isArray(entry.terrains)) {
+          return matchesTerrain(entry.terrains, terrainType);
+        }
+        if (WATER_TERRAINS.has(terrainType)) {
+          return WATER_EXEMPT_REGEX.test(defId);
+        }
+        return true;
+      }
+    }
+  }
+
+  // 2. Check in landmarks
+  if (assetBindings.landmarks) {
+    for (const lm of Object.values(assetBindings.landmarks)) {
+      if (lm && lm.defId === defId) {
+        if (lm.terrains && Array.isArray(lm.terrains)) {
+          return matchesTerrain(lm.terrains, terrainType);
+        }
+        if (WATER_TERRAINS.has(terrainType)) {
+          return WATER_EXEMPT_REGEX.test(defId);
+        }
+        return true;
+      }
+    }
+  }
+
+  // 3. Fallback: if water terrain, only allow water objects
+  if (WATER_TERRAINS.has(terrainType)) {
+    return WATER_EXEMPT_REGEX.test(defId);
+  }
+
+  return true;
+}
+
 function getCanonCollision(defId, fallbackCw = 1, fallbackCh = 1) {
   const canon = scaleCanon[defId];
   if (canon && canon.collision) {
@@ -71,11 +162,10 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       }
     }
 
-    // 18% Dominance Limit rule (Fase D in Plan V8)
-    if (objects.length >= 24) {
-      const maxRatio = 0.35;
+    // 18% Dominance Limit rule (Prompt 1.3 & Fase D in Plan V8)
+    if (objects.length > 0) {
       const sameCount = objects.filter(o => o.defId === defId).length;
-      if (sameCount >= Math.ceil(objects.length * maxRatio)) {
+      if (sameCount >= 1 && (sameCount + 1) / (objects.length + 1) > 0.18) {
         return false;
       }
     }
@@ -92,13 +182,17 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
     }
   }
 
+  // Always verify root/origin tile (startX, startY)
+  const originTile = getTileFn(startX, startY);
+  if (!originTile) return false;
+  const ot = originTile.terrainType || '';
+  if (defId && !isAllowedOnTerrain(defId, ot)) return false;
+  if (ot.includes('road') || ot.includes('pass')) return false;
+  if (WATER_TERRAINS.has(ot) && !isAnchor && (!defId || !WATER_EXEMPT_REGEX.test(defId))) return false;
+
   // Use base collision footprint from scale-canon if available
   const col = getCanonCollision(defId, cw, ch);
   if (col.w === 0 && col.h === 0) {
-    const tile = getTileFn(startX, startY);
-    if (!tile) return false;
-    const t = tile.terrainType || '';
-    if (t.includes('road') || t.includes('pass') || t === 'ocean') return false;
     return true;
   }
 
@@ -119,14 +213,21 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       if (!tile) return false;
       const t = tile.terrainType || '';
 
+      // Check allowed terrain for defId (Prompt 1.5)
+      if (defId && !isAllowedOnTerrain(defId, t)) {
+        return false;
+      }
+
       // Do not block roads or passes
       if (t.includes('road') || t.includes('pass')) {
         return false;
       }
 
-      // Deep water restriction (unless anchor is a dock/port)
-      if (t === 'river' || t === 'river_shallow' || t === 'lake_deep' || t === 'ocean') {
-        if (!isAnchor) return false;
+      // Water restriction (unless anchor or water-exempt)
+      if (WATER_TERRAINS.has(t)) {
+        if (!isAnchor && (!defId || !WATER_EXEMPT_REGEX.test(defId))) {
+          return false;
+        }
       }
 
       // If NOT an anchor set-piece, do not overlap settlement cores
@@ -233,7 +334,11 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       structureDef = { defId: 'building_spirit_pagoda', cw: 3, ch: 3, collision: 'solid' };
     } else if (a.name.toLowerCase().includes('dermaga') || a.name.toLowerCase().includes('dock') || a.name.toLowerCase().includes('port') || a.type === 'port') {
       structureDef = { defId: 'building_dock_warehouse', cw: 3, ch: 2, collision: 'solid' };
-    } else if (landmarkBinding) {
+    } else if (a.type === 'village' || a.type === 'hamlet') {
+      structureDef = { defId: 'building_village_thatched_cottage', cw: 2, ch: 2, collision: 'solid' };
+    } else if (a.type === 'outpost') {
+      structureDef = { defId: 'building_stone_torii_v1', cw: 2, ch: 2, collision: 'solid' };
+    } else if (landmarkBinding && (a.type === 'landmark' || a.type === 'focal')) {
       structureDef = {
         defId: landmarkBinding.defId,
         cw: landmarkBinding.cw || 3,
@@ -329,46 +434,49 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   const hutSpawnProb = isPopulated ? 0.65 : (effectiveDanger >= 3 ? 0.20 : 0.35);
 
   if (rand() < hutSpawnProb && objects.length < maxObjectsBudget) {
-    for (let attempt = 0; attempt < 12; attempt++) {
+    for (let attempt = 0; attempt < 16; attempt++) {
       const hx = startTileX + 4 + Math.floor(rand() * 24);
       const hy = startTileY + 4 + Math.floor(rand() * 24);
       const tile = getTileAt(hx, hy);
       const t = tile.terrainType || '';
 
       // Skip invalid terrain
-      if (t.includes('road') || t.includes('river') || t.includes('lake') || t === 'ocean' || tile.isSolid) {
+      if (t.includes('road') || t.includes('river') || t.includes('lake') || t === 'ocean' || t === 'sea' || tile.isSolid) {
         continue;
       }
 
-      // Roll type: 55% decorative, 35% enterable, 10% abandoned
+      // Roll type: 55% decorative, 35% enterable, 10% abandoned (Prompt 1.1)
       const typeRoll = rand();
-      let hutDefId = 'building_village_thatched_cottage';
+      let hutDefId = null;
       let isEnterable = false;
       let isAbandoned = false;
       let hutName = 'Pondok Singgah Musafir';
 
-      if (effectiveDanger >= 4 || typeRoll < 0.10) {
-        // 10% Abandoned
-        hutDefId = 'hut_abandoned_thatched_ruin';
+      const isHighDanger = effectiveDanger >= 4;
+      const abandonedThreshold = isHighDanger ? 0.22 : 0.10;
+
+      if (typeRoll < abandonedThreshold) {
+        // Abandoned (10% normal, 35% in danger >= 4)
+        hutDefId = resolveDef('hut_abandoned_thatched_ruin', 'building_mountain_hermitage_shack');
         isEnterable = true;
         isAbandoned = true;
         hutName = 'Gubuk Terbengkalai';
-      } else if (typeRoll < 0.45) {
+      } else if (typeRoll < (abandonedThreshold + 0.35)) {
         // 35% Enterable
         isEnterable = true;
         if (chunkRegion.id === 'azure_mountain_range' || chunkRegion.id === 'hermit_highlands') {
-          hutDefId = 'building_mountain_hermitage_shack';
+          hutDefId = resolveDef('building_mountain_hermitage_shack', 'building_village_thatched_cottage');
           hutName = 'Pondok Pertapa Gunung';
         } else {
           const rHut = rand();
           if (rHut < 0.35) {
-            hutDefId = 'building_farm_hut_v1';
+            hutDefId = resolveDef('building_farm_hut_v1', 'building_village_thatched_cottage');
             hutName = 'Pondok Ladang Petani';
           } else if (rHut < 0.65) {
-            hutDefId = 'building_road_inn_v1';
+            hutDefId = resolveDef('building_road_inn_v1', 'building_village_thatched_cottage');
             hutName = 'Kedai Musafir';
           } else {
-            hutDefId = 'building_village_thatched_cottage';
+            hutDefId = resolveDef('building_village_thatched_cottage', 'building_mountain_hermitage_shack');
             hutName = 'Pondok Singgah Musafir';
           }
         }
@@ -377,20 +485,28 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         isEnterable = false;
         const rDeco = rand();
         if (rDeco < 0.35) {
-          hutDefId = 'building_tea_pavilion_v1';
+          hutDefId = resolveDef('building_tea_pavilion_v1', 'building_village_thatched_cottage');
           hutName = 'Paviliun Minum Teh';
         } else if (rDeco < 0.65) {
-          hutDefId = 'building_village_thatched_cottage';
+          hutDefId = resolveDef('building_village_thatched_cottage', 'building_mountain_hermitage_shack');
           hutName = 'Gubuk Jerami';
         } else {
-          hutDefId = 'building_wayside_tea_resting_shed';
+          hutDefId = resolveDef('building_wayside_tea_resting_shed', 'building_village_thatched_cottage');
           hutName = 'Shed Peristirahatan';
         }
       }
 
-      if (canPlaceFootprint(hx, hy, 1, 1, occupiedGrid, getTileAt, false, hutDefId, objects)) {
+      // If resolveDef returned null, skip placement
+      if (!hutDefId) continue;
+
+      // Use canon collision footprint (Prompt 1.2)
+      const col = getCanonCollision(hutDefId, 1, 1);
+      const hw = col.w || 1;
+      const hh = col.h || 1;
+
+      if (canPlaceFootprint(hx, hy, hw, hh, occupiedGrid, getTileAt, false, hutDefId, objects)) {
         const objId = `hut_${hx}_${hy}`;
-        markFootprintOccupied(hx, hy, 1, 1, occupiedGrid, objId, hutDefId);
+        markFootprintOccupied(hx, hy, hw, hh, occupiedGrid, objId, hutDefId);
         objects.push({
           id: objId,
           defId: hutDefId,
@@ -787,7 +903,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       }
 
       // --- WATER EDGES & DELTA FLORA ---
-      else if (terrain.includes('lake') || terrain.includes('pond') || terrain === 'pond_lotus' || terrain === 'river' || region.id === 'nine_springs_delta' || region.id === 'mirror_lake') {
+      else if (terrain.includes('lake') || terrain.includes('pond') || terrain === 'pond_lotus' || terrain === 'river') {
         const roll = rand();
         if (roll < 0.18) {
           const wDefs = assetBindings.natureScatters.waters;
@@ -822,7 +938,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       }
 
       // --- PLAINS, MEADOW & PRAIRIE SCATTER ---
-      else if (terrain === 'plains' || terrain === 'meadow' || terrain === 'farmland' || terrain === 'herb_field' || region.id === 'central_plains' || region.id === 'beast_prairies' || region.id === 'border_march') {
+      else if (terrain === 'plains' || terrain === 'meadow' || terrain === 'farmland' || terrain === 'herb_field' || region.id === 'central_plains' || region.id === 'beast_prairies' || region.id === 'border_march' || region.id === 'nine_springs_delta' || region.id === 'mirror_lake') {
         const roll = rand();
         if (roll < 0.06) {
           const candidateTrees = assetBindings.natureScatters.trees.filter(t =>
@@ -924,7 +1040,13 @@ function getViewportObjects(minTileX, minTileY, maxTileX, maxTileY, worldSeed = 
     }
   }
 
-  return result;
+  // Filter: landmarks must be strictly within requested bounds (Prompt 1.4)
+  return result.filter(obj => {
+    if (obj.tags && obj.tags.includes('landmark')) {
+      return obj.x >= minTileX && obj.x <= maxTileX && obj.y >= minTileY && obj.y <= maxTileY;
+    }
+    return true;
+  });
 }
 
 module.exports = {
@@ -932,5 +1054,8 @@ module.exports = {
   getChunkObjects,
   getViewportObjects,
   isQuarantined,
-  getCanonCollision
+  getCanonCollision,
+  resolveDef,
+  isAllowedOnTerrain,
+  KNOWN_FRAMES
 };

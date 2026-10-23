@@ -12,6 +12,7 @@ import QuestLog from './QuestLog';
 import SectExamModal from './SectExamModal';
 import WorldCanvas from "@/components/map/WorldCanvas";
 import Minimap from "@/components/map/Minimap";
+import { CANONICAL_REGIONS } from "@/config/canonicalRegions";
 import ZoneGridView from "@/components/map/ZoneGridView";
 import WorldMapLoadingScreen from "@/components/map/WorldMapLoadingScreen";
 import LandscapeOrientationPrompt from "@/components/ui/LandscapeOrientationPrompt";
@@ -35,6 +36,29 @@ function DebugCamMode({ debugCamParam }: { debugCamParam: string }) {
   const isMacro = searchParams.get('mode') === 'macro';
   const hideMinimap = searchParams.get('minimap') === 'false';
 
+  const currentRegion = (() => {
+    for (const reg of CANONICAL_REGIONS) {
+      if (dbgX >= reg.bounds.minX && dbgX <= reg.bounds.maxX && dbgY >= reg.bounds.minY && dbgY <= reg.bounds.maxY) {
+        return reg;
+      }
+    }
+    let bestReg = CANONICAL_REGIONS[0];
+    let bestDistSq = Infinity;
+    for (const reg of CANONICAL_REGIONS) {
+      const dx = dbgX - reg.centerX;
+      const dy = dbgY - reg.centerY;
+      const dSq = dx * dx + dy * dy;
+      if (dSq < bestDistSq) {
+        bestDistSq = dSq;
+        bestReg = reg;
+      }
+    }
+    return bestReg;
+  })();
+
+  const regionName = currentRegion.displayName || currentRegion.regionSlug;
+  const dangerTier = currentRegion.dangerTier || 1;
+
   return (
     <div className="fixed inset-0 w-screen h-screen bg-[#070a14] z-[99999] overflow-hidden m-0 p-0">
       <WorldCanvas
@@ -51,8 +75,8 @@ function DebugCamMode({ debugCamParam }: { debugCamParam: string }) {
           <Minimap
             playerPos={{ x: dbgX, y: dbgY }}
             cameraPos={{ x: dbgX, y: dbgY, zoom: dbgZoom }}
-            regionName="Central Plains"
-            dangerTier={1}
+            regionName={regionName}
+            dangerTier={dangerTier}
           />
         </div>
       )}
