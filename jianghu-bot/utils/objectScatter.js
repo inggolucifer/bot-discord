@@ -23,6 +23,23 @@ const scaleCanon = require('../world-data/scale-canon.json');
 const knownFramesData = require('../config/known-frames.json');
 const KNOWN_FRAMES = new Set(knownFramesData);
 
+const CHUNK_SIZE = 32;
+
+// Authored Props SSOT (Prompt 2.1 & 2.2)
+const authoredPropsData = require('../world-data/authored-props.json');
+const AUTHORED_BY_CHUNK = new Map();
+if (authoredPropsData && Array.isArray(authoredPropsData.props)) {
+  for (const p of authoredPropsData.props) {
+    const cx = Math.floor(p.x / CHUNK_SIZE);
+    const cy = Math.floor(p.y / CHUNK_SIZE);
+    const key = `${cx},${cy}`;
+    if (!AUTHORED_BY_CHUNK.has(key)) {
+      AUTHORED_BY_CHUNK.set(key, []);
+    }
+    AUTHORED_BY_CHUNK.get(key).push(p);
+  }
+}
+
 function resolveDef(defId, fallbackDefId = null) {
   if (defId && KNOWN_FRAMES.has(defId) && !isQuarantined(defId)) return defId;
   if (fallbackDefId && KNOWN_FRAMES.has(fallbackDefId) && !isQuarantined(fallbackDefId)) return fallbackDefId;
@@ -63,11 +80,12 @@ function matchesTerrain(allowedList, actualTerrain) {
   return false;
 }
 
-function isAllowedOnTerrain(defId, terrainType) {
+function isAllowedOnTerrain(defId, terrainType, isAnchor = false) {
   if (!defId || !terrainType) return true;
 
-  // Water terrain restriction is absolute (Prompt 1.5)
+  // Water terrain restriction is absolute for random scatter (Prompt 1.5)
   if (WATER_TERRAINS.has(terrainType)) {
+    if (isAnchor && terrainType === 'island_reef') return true;
     if (!WATER_EXEMPT_REGEX.test(defId)) return false;
   }
 
@@ -104,6 +122,7 @@ function isAllowedOnTerrain(defId, terrainType) {
 
   // 3. Fallback: if water terrain, only allow water objects
   if (WATER_TERRAINS.has(terrainType)) {
+    if (isAnchor && terrainType === 'island_reef') return true;
     return WATER_EXEMPT_REGEX.test(defId);
   }
 
@@ -127,8 +146,6 @@ function isQuarantined(defId) {
   return quarantinedFamilies.some(family => defId.startsWith(family) || defId.includes(family));
 }
 
-const CHUNK_SIZE = 32;
-
 // Pseudo-random number generator (Mulberry32)
 function createPRNG(seed) {
   let s = seed >>> 0;
@@ -146,7 +163,7 @@ const chunkCache = new Map();
 /**
  * Checks if a multi-cell footprint (cw x ch) at (x, y) can be placed without collision.
  */
-function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false, defId = null, objects = null) {
+function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false, defId = null, objects = null, collisionOverride = false) {
   // Phase HA: Asset Quarantine rejection (never place code-generated placeholder sprites)
   if (defId && isQuarantined(defId)) {
     return false;
@@ -186,12 +203,12 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
   const originTile = getTileFn(startX, startY);
   if (!originTile) return false;
   const ot = originTile.terrainType || '';
-  if (defId && !isAllowedOnTerrain(defId, ot)) return false;
-  if (ot.includes('road') || ot.includes('pass')) return false;
+  if (defId && !isAllowedOnTerrain(defId, ot, isAnchor)) return false;
+  if (ot.includes('road') || (!isAnchor && ot.includes('pass'))) return false;
   if (WATER_TERRAINS.has(ot) && !isAnchor && (!defId || !WATER_EXEMPT_REGEX.test(defId))) return false;
 
-  // Use base collision footprint from scale-canon if available
-  const col = getCanonCollision(defId, cw, ch);
+  // Use base collision footprint from scale-canon if available (or collisionOverride)
+  const col = collisionOverride ? { w: cw, h: ch, offsetX: 0 } : getCanonCollision(defId, cw, ch);
   if (col.w === 0 && col.h === 0) {
     return true;
   }
@@ -214,12 +231,12 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       const t = tile.terrainType || '';
 
       // Check allowed terrain for defId (Prompt 1.5)
-      if (defId && !isAllowedOnTerrain(defId, t)) {
+      if (defId && !isAllowedOnTerrain(defId, t, isAnchor)) {
         return false;
       }
 
       // Do not block roads or passes
-      if (t.includes('road') || t.includes('pass')) {
+      if (t.includes('road') || (!isAnchor && t.includes('pass'))) {
         return false;
       }
 
@@ -244,8 +261,8 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
 /**
  * Marks multi-cell footprint cells as occupied in grid.
  */
-function markFootprintOccupied(startX, startY, cw, ch, occupiedGrid, objId, defId = null) {
-  const col = getCanonCollision(defId, cw, ch);
+function markFootprintOccupied(startX, startY, cw, ch, occupiedGrid, objId, defId = null, collisionOverride = false) {
+  const col = collisionOverride ? { w: cw, h: ch, offsetX: 0 } : getCanonCollision(defId, cw, ch);
   if (col.w === 0 && col.h === 0) {
     return;
   }
@@ -386,6 +403,46 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     }
   }
 
+  // 1c. Authored props (Prompt 2.2)
+  let authoredCount = 0;
+  const authoredInChunk = AUTHORED_BY_CHUNK.get(`${chunkX},${chunkY}`) || [];
+  for (const p of authoredInChunk) {
+    const defId = resolveDef(p.defId, p.fallbackDefId);
+    if (!defId) continue;
+    const cw = p.cw || 1, ch = p.ch || 1;
+    // isAnchor=true: lewati anti-gerombol & batas dominasi; tabrakan tetap dicek
+    // collisionOverride=true: paksa tabrakan 1x1 agar canon 3x2 cottage tidak menolak penempatan
+    if (!canPlaceFootprint(p.x, p.y, cw, ch, occupiedGrid, getTileAt, true, defId, objects, true)) continue;
+    markFootprintOccupied(p.x, p.y, cw, ch, occupiedGrid, p.id, defId, true);
+    objects.push({
+      id: p.id,
+      defId,
+      x: p.x,
+      y: p.y,
+      collision: p.collision,
+      enterable: !!p.enterable,
+      structureTemplate: p.structureTemplate,
+      facing: p.facing,
+      tags: ['authored', p.kind, p.anchorId, p.region]
+    });
+    authoredCount++;
+  }
+
+  // 1-tile buffer zone around authored houses to protect yards from random scatter (Prompt 2.2.5)
+  for (const p of authoredInChunk) {
+    if (p.kind === 'house') {
+      const cw = p.cw || 1, ch = p.ch || 1;
+      for (let by = p.y - 1; by <= p.y + ch; by++) {
+        for (let bx = p.x - 1; bx <= p.x + cw; bx++) {
+          const bKey = `${bx},${by}`;
+          if (!occupiedGrid.has(bKey)) {
+            occupiedGrid.set(bKey, `${p.id}_buffer`);
+          }
+        }
+      }
+    }
+  }
+
   // 2. Settlement Density Rings: Outskirts structures around nearby anchors (radius <= 8 tiles)
   const nearbyAnchors = worldData.getAnchors().filter(a =>
     a.x >= (startTileX - 8) && a.x <= (endTileX + 8) &&
@@ -397,7 +454,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     for (const a of nearbyAnchors) {
       const ringCount = Math.floor(rand() * 3) + 2; // 2..4 outskirts objects per anchor
       for (let i = 0; i < ringCount; i++) {
-        if (objects.length >= maxObjectsBudget) break;
+        if (objects.length - authoredCount >= maxObjectsBudget) break;
         const angle = rand() * Math.PI * 2;
         const dist = 3 + rand() * 4; // dist 3..7 tiles from anchor center
         const ox = Math.round(a.x + Math.cos(angle) * dist);
@@ -433,7 +490,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
   const hutSpawnProb = isPopulated ? 0.65 : (effectiveDanger >= 3 ? 0.20 : 0.35);
 
-  if (rand() < hutSpawnProb && objects.length < maxObjectsBudget) {
+  if (rand() < hutSpawnProb && (objects.length - authoredCount) < maxObjectsBudget) {
     for (let attempt = 0; attempt < 16; attempt++) {
       const hx = startTileX + 4 + Math.floor(rand() * 24);
       const hy = startTileY + 4 + Math.floor(rand() * 24);
@@ -526,7 +583,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   // 4. Procedural Biome Scatter by Terrain & Region
   for (let y = startTileY; y <= endTileY; y++) {
     for (let x = startTileX; x <= endTileX; x++) {
-      if (objects.length >= maxObjectsBudget) break;
+      if (objects.length - authoredCount >= maxObjectsBudget) break;
 
       const tileKey = `${x},${y}`;
       if (occupiedGrid.has(tileKey)) continue;

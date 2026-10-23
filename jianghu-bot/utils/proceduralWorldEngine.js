@@ -31,6 +31,29 @@ const ANCHOR_SETTLEMENTS = worldData.getAnchors().map(a => ({
   activeEventCount: a.activeEventCount || 0
 }));
 
+// Index of Authored Roads (Prompt 2.3)
+const ROAD_TILES = new Set();
+try {
+  const authoredData = require('../world-data/authored-props.json');
+  if (authoredData && Array.isArray(authoredData.roads)) {
+    for (const r of authoredData.roads) {
+      if (r.direction === 'EW') {
+        const y = r.from.y;
+        const minX = Math.min(r.from.x, r.to.x);
+        const maxX = Math.max(r.from.x, r.to.x);
+        for (let x = minX; x <= maxX; x++) ROAD_TILES.add(`${x},${y}`);
+      } else if (r.direction === 'NS') {
+        const x = r.from.x;
+        const minY = Math.min(r.from.y, r.to.y);
+        const maxY = Math.max(r.from.y, r.to.y);
+        for (let y = minY; y <= maxY; y++) ROAD_TILES.add(`${x},${y}`);
+      }
+    }
+  }
+} catch (e) {
+  // authored-props.json not yet available
+}
+
 /**
  * Fungsi Hash Integer Deterministik berkinerja tinggi
  */
@@ -727,6 +750,18 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
           resourceType = candidateType;
         }
       }
+    }
+  }
+
+  // Jalan Desa (Authored Roads - Prompt 2.3)
+  if (ROAD_TILES.has(`${tileX},${tileY}`)) {
+    const isWater = ['sea', 'ocean', 'sea_reef', 'lake_deep', 'lake', 'river', 'river_shallow', 'pond_lotus'].includes(terrainType) || terrainType.includes('water');
+    if (!isSolid && !isWater) {
+      terrainType = 'road_stone';
+      isSolid = false;
+      label = 'Jalan Desa';
+      tileType = 'walkable';
+      resourceType = null;
     }
   }
 
