@@ -100,10 +100,10 @@ const setupServer = (client) => {
     app.set('io', io);
 
 
-    // Basic Rate Limiting to prevent brute force/spam API calls
+    // Basic Rate Limiting to prevent brute force/spam API calls (600 req/min for real-time MMORPG map streaming)
     const apiLimiter = rateLimit({
         windowMs: 1 * 60 * 1000, // 1 minute windows
-        max: 60, // Limit each IP to 60 requests per windowMs
+        max: 600, // Limit each IP to 600 requests per windowMs
         message: 'Terlalu banyak permintaan dari IP ini, silakan coba lagi setelah 1 menit.',
         standardHeaders: true,
         legacyHeaders: false,
@@ -116,9 +116,15 @@ const setupServer = (client) => {
         message: 'Aksi terlalu cepat, harap tunggu beberapa detik (Anti-Spam).'
     });
 
-    // Kecualikan /api/socket.io dari apiLimiter agar tidak memutus polling Socket.io
+    // Kecualikan /api/socket.io, streaming chunk dunia, dan polling status dari apiLimiter agar tidak memicu 429
     app.use('/api/', (req, res, next) => {
-        if (req.path.startsWith('/socket.io')) {
+        if (
+            req.path.startsWith('/socket.io') ||
+            req.path.startsWith('/world/chunk') ||
+            req.path.startsWith('/client-log') ||
+            req.path === '/world/rest/status' ||
+            req.path === '/world/travel/status'
+        ) {
             return next();
         }
         return apiLimiter(req, res, next);
@@ -241,6 +247,9 @@ const setupServer = (client) => {
     const gridSimulationRoutes = require('./routes/gridSimulation');
     app.use('/api/grid', gridSimulationRoutes);
 
+    const clientLogRoutes = require('./routes/clientLog');
+    app.use('/api/client-log', clientLogRoutes);
+
     // Root test endpoint
     app.get('/api/health', (req, res) => {
         res.json({ status: 'OK', message: 'Jianghu API Server is running', antiCheat: 'Active' });
@@ -267,6 +276,12 @@ const setupServer = (client) => {
     server.listen(PORT, () => {
         console.log(`[API] Web API Server running on port ${PORT}`);
         console.log(`[API] Anti-Cheat Locks & Rate Limiters Initialized.`);
+        try {
+            const { ensureCoreItems } = require('../services/coreItems');
+            ensureCoreItems().catch(err => console.error('[CORE-ITEMS-ERROR]', err));
+        } catch (e) {
+            console.error('[CORE-ITEMS-IMPORT-ERROR]', e);
+        }
     });
 
     // Setup Socket.io

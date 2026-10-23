@@ -249,6 +249,12 @@ class AtlasLoader {
       this.loadPage('settlement_3'),
       this.loadPage('biome_nature_0'),
       this.loadPage('biome_nature_1'),
+      this.loadPage('biome_nature_2'),
+      this.loadPage('biome_nature_3'),
+      this.loadPage('biome_nature_4'),
+      this.loadPage('biome_nature_5'),
+      this.loadPage('biome_nature_6'),
+      this.loadPage('biome_nature_7'),
       this.loadPage('icons_ui')
     ]);
   }

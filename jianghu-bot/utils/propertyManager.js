@@ -14,7 +14,9 @@ const INTERIOR_TILES = {
     HERB_PLOT: 6,
     DOOR_EXIT: 7,
     FISH_POND: 8,
-    KITCHEN_STOVE: 9
+    KITCHEN_STOVE: 9,
+    REST_BED: 10,
+    LOOT_CHEST: 11
 };
 
 const TILE_METADATA = {
@@ -27,7 +29,9 @@ const TILE_METADATA = {
     [INTERIOR_TILES.HERB_PLOT]: { name: 'Petak Herbal Rohani', isSolid: false, interactable: true, action: 'minigame_harvest' },
     [INTERIOR_TILES.DOOR_EXIT]: { name: 'Pintu Gerbang Keluar', isSolid: false, interactable: true, action: 'exit_property' },
     [INTERIOR_TILES.FISH_POND]: { name: 'Kolam Ikan Rohani', isSolid: true, interactable: true, action: 'minigame_fishing' },
-    [INTERIOR_TILES.KITCHEN_STOVE]: { name: 'Tungku Dapur Jianghu', isSolid: true, interactable: true, action: 'minigame_cooking' }
+    [INTERIOR_TILES.KITCHEN_STOVE]: { name: 'Tungku Dapur Jianghu', isSolid: true, interactable: true, action: 'minigame_cooking' },
+    [INTERIOR_TILES.REST_BED]: { name: 'Ranjang Istirahat Sederhana', isSolid: true, interactable: true, action: 'rest_bed' },
+    [INTERIOR_TILES.LOOT_CHEST]: { name: 'Peti Kayu Kuno', isSolid: true, interactable: true, action: 'open_chest' }
 };
 
 /**
@@ -119,10 +123,47 @@ function generateDefaultEstateLayout(width = 12, height = 12) {
     return compressLayoutRLE(grid);
 }
 
+/**
+ * Menghasilkan denah pondok kecil 6x5 (Cottage / Shack)
+ * 5 baris x 6 kolom = 30 tile
+ * Door spawn: { x: 2, y: 3 } (di depan pintu keluar di x=2, y=4)
+ */
+function generateCottageLayout(width = 6, height = 5) {
+    const grid = new Array(width * height).fill(INTERIOR_TILES.EMPTY_FLOOR);
+
+    // 1. Dinding pembatas terluar
+    for (let x = 0; x < width; x++) {
+        grid[0 * width + x] = INTERIOR_TILES.WALL; // Dinding Atas
+        grid[(height - 1) * width + x] = INTERIOR_TILES.WALL; // Dinding Bawah
+    }
+    for (let y = 0; y < height; y++) {
+        grid[y * width + 0] = INTERIOR_TILES.WALL; // Dinding Kiri
+        grid[y * width + (width - 1)] = INTERIOR_TILES.WALL; // Dinding Kanan
+    }
+
+    // 2. Pintu keluar di bawah tengah (x=2, y=height-1)
+    grid[(height - 1) * width + 2] = INTERIOR_TILES.DOOR_EXIT;
+
+    // 3. Perabot Pondok Sederhana (Fase E & Plan V8)
+    // Sudut kiri atas: Ranjang Kayu Sederhana (x=1, y=1)
+    grid[1 * width + 1] = INTERIOR_TILES.REST_BED;
+    // Samping ranjang: Peti Kayu Kuno Jarahan (x=2, y=1)
+    grid[1 * width + 2] = INTERIOR_TILES.LOOT_CHEST;
+    // Sudut kanan atas: Tungku Perapian Dapur (x=4, y=1)
+    grid[1 * width + 4] = INTERIOR_TILES.KITCHEN_STOVE;
+    // Tengah: Meja Teh Jamuan (x=3, y=2)
+    grid[2 * width + 3] = INTERIOR_TILES.RECEPTION_TABLE;
+    // Kiri tengah: Bantal Semadi Qi (x=1, y=2)
+    grid[2 * width + 1] = INTERIOR_TILES.CULTIVATION_MAT;
+
+    return compressLayoutRLE(grid);
+}
+
 module.exports = {
     INTERIOR_TILES,
     TILE_METADATA,
     compressLayoutRLE,
     decompressLayoutRLE,
-    generateDefaultEstateLayout
+    generateDefaultEstateLayout,
+    generateCottageLayout
 };

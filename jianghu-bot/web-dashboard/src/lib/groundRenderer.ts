@@ -114,15 +114,19 @@ export function getTerrainWashPalette(terrainType: string): TerrainWashPalette {
       return { baseColor: '#B29BBF', accentColor: '#583669', mistColor: '#E2D6E9', grainColor: '#412450', isHazard: true, staminaCost: 2.5 };
     case 'lava_flow':
     case 'crater':
+    case 'basalt':
       return { baseColor: '#D1A392', accentColor: '#8C3D2E', mistColor: '#EED9D2', grainColor: '#6F2B1E', isHazard: true, staminaCost: 3.0 };
     case 'battlefield_ash':
     case 'abyss_edge':
-      return { baseColor: '#A89E9D', accentColor: '#453B3A', mistColor: '#DCD4D4', grainColor: '#2F2625', isHazard: true, staminaCost: 2.2 };
+    case 'void_rift':
+      return { baseColor: '#534E60', accentColor: '#302D3B', mistColor: '#C4BFCE', grainColor: '#22202B', isHazard: true, staminaCost: 2.2 };
+    case 'island_reef':
+      return { baseColor: '#C5D6DF', accentColor: '#65869B', mistColor: '#EAF1F6', grainColor: '#4A6A7E', staminaCost: 1.2 };
 
-    // Cultural / Settlement / Roads
+    // Cultural / Settlement / Roads (Natural Loam & Gravel Song Dynasty Wash)
     case 'settlement':
     case 'sect_ground':
-      return { baseColor: '#DDD5C7', accentColor: '#8C775D', mistColor: '#F0ECE4', grainColor: '#705E47', staminaCost: 1.0 };
+      return { baseColor: '#C8BEAD', accentColor: '#8C775D', mistColor: '#DFD8CC', grainColor: '#6B5B46', staminaCost: 1.0 };
     case 'ruin_floor':
     case 'formation_tile':
       return { baseColor: '#C7C2BA', accentColor: '#6E6B66', mistColor: '#E8E5E0', grainColor: '#53504C', staminaCost: 1.1 };
@@ -242,6 +246,16 @@ export function renderL1TerrainBase(
   // Base wash fill
   ctx.fillStyle = p.baseColor;
   ctx.fillRect(sx, sy, tileSize, tileSize);
+
+  // Deterministic Micro-Noise (+-4% luminance variation to eliminate flat solid looks)
+  const microLuma = ((h % 80) - 40) / 1000;
+  if (microLuma !== 0) {
+    ctx.save();
+    ctx.fillStyle = microLuma > 0 ? '#FFFFFF' : '#000000';
+    ctx.globalAlpha = Math.abs(microLuma);
+    ctx.fillRect(sx, sy, tileSize, tileSize);
+    ctx.restore();
+  }
 
   // Subtle ink wash tonal modulation (Variant 0, 1, 2)
   ctx.save();

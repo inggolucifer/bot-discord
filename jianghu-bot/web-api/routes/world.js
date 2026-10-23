@@ -2430,6 +2430,10 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
     }
 });
 
+function escapeRegExp(string) {
+    return String(string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // ==========================================
 // SETTLEMENT & ENTERABLE BUILDINGS PANORAMA VIEW (TALE OF IMMORTAL)
 // ==========================================
@@ -2441,9 +2445,10 @@ router.get('/settlement/:settlementName', authenticateToken, async (req, res) =>
         const player = await Player.findOne({ discordId: userId });
         if (!player) return res.status(404).json({ error: 'Karakter tidak ditemukan' });
 
-        // Ambil daftar NPC yang berada di pemukiman ini dari database jika ada
+        // Ambil daftar NPC yang berada di pemukiman ini dari database jika ada (Sanitasi Regex)
+        const escapedName = escapeRegExp(settlementName);
         const dbNpcs = await Npc.find({
-            settlementName: { $regex: new RegExp(`^${settlementName}$`, 'i') },
+            settlementName: { $regex: new RegExp(`^${escapedName}$`, 'i') },
             isActive: true
         }).select('_id name title portraitUrl greeting dialogLines minRealmIndexToTalk questIds').lean();
 
@@ -3420,6 +3425,11 @@ router.post('/zone/gather', authenticateToken, async (req, res) => {
         const px = Number(player.gridPosition?.tileX ?? 2050);
         const py = Number(player.gridPosition?.tileY ?? 2650);
 
+        if (player.gridPosition?.interiorInstanceId) {
+            const bName = player.currentLocation?.buildingName || 'interior bangunan';
+            return res.status(400).json({ error: `Kamu sedang berada di dalam ${bName}. Keluar terlebih dahulu untuk memanen sumber daya.` });
+        }
+
         // 2. Validasi jarak (maks 1 petak)
         const dist = Math.max(Math.abs(targetX - px), Math.abs(targetY - py));
         if (dist > 1) {
@@ -3796,6 +3806,333 @@ router.get('/macro-map', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('[API-MACRO-MAP] Error:', error);
         res.status(500).json({ error: 'Gagal memuat peta makro' });
+    }
+});
+
+// ==========================================
+// PINTU MASUK & KELUAR BANGUNAN INTERIOR OTORITATIF (FASE A)
+// ==========================================
+const interiorService = require('../../services/interiorService');
+
+router.post('/building/enter', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan.' });
+
+        const { x, y, zoneId } = req.body || {};
+        const guildId = player.guildId || 'global';
+
+        const result = await interiorService.enterBuilding(userId, guildId, {
+            targetX: x,
+            targetY: y,
+            zoneId
+        });
+
+        if (!result.ok) {
+            return res.status(400).json(result);
+        }
+
+        return res.json(result);
+    } catch (error) {
+        console.error('[API-BUILDING-ENTER] Error:', error);
+        res.status(500).json({ ok: false, error: error.message || 'Gagal masuk bangunan.' });
+    }
+});
+
+router.post('/building/exit', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan.' });
+
+        const guildId = player.guildId || 'global';
+        const result = await interiorService.exitBuilding(userId, guildId);
+
+        return res.json(result);
+    } catch (error) {
+        console.error('[API-BUILDING-EXIT] Error:', error);
+        res.status(500).json({ ok: false, error: error.message || 'Gagal keluar bangunan.' });
+    }
+});
+
+// ==========================================
+// TWO-STEP SERVER-AUTHORITATIVE FISHING (FASE B)
+// ==========================================
+const castSessions = new Map();
+
+// Pembersihan berkala sesi yang expired setiap 60 detik
+setInterval(() => {
+    const now = Date.now();
+    for (const [castId, session] of castSessions.entries()) {
+        if (now > session.expiresAt) {
+            castSessions.delete(castId);
+        }
+    }
+}, 60000).unref();
+
+router.post('/fish/cast', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan.' });
+
+        const isInsideInterior = Boolean(player.gridPosition?.interiorInstanceId);
+        const { x, y, source } = req.body || {};
+
+        if (source !== 'interior' && isInsideInterior) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Kamu sedang berada di dalam ruangan. Harap keluar terlebih dahulu sebelum memancing di alam terbuka.'
+            });
+        }
+
+        const currentStamina = getCurrentStamina(player);
+        if (currentStamina < 5) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Stamina tidak mencukupi untuk memancing (Butuh 5 Stamina).'
+            });
+        }
+
+        let regionId = 'central_plains';
+        let isFishSpot = false;
+
+        const waterTerrains = [
+            'lake', 'water', 'river', 'river_shallow', 'sea', 'sea_reef',
+            'ocean', 'swamp', 'marsh', 'wetland', 'delta', 'lotus_pond', 'fish_pond'
+        ];
+
+        if (source === 'interior') {
+            if (!isInsideInterior) {
+                return res.status(400).json({
+                    ok: false,
+                    error: 'Kamu tidak sedang berada di dalam hunian.'
+                });
+            }
+            regionId = 'interior';
+            isFishSpot = true;
+        } else {
+            const px = Math.floor(player.gridPosition?.tileX ?? 0);
+            const py = Math.floor(player.gridPosition?.tileY ?? 0);
+            let targetX;
+            let targetY;
+
+            if (x === undefined || y === undefined) {
+                // Cari petak air di sekitar posisi pemain (jarak <= 1)
+                let foundWaterX = null;
+                let foundWaterY = null;
+                for (let dx = -1; dx <= 1 && foundWaterX === null; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        const checkX = px + dx;
+                        const checkY = py + dy;
+                        const t = proceduralWorldEngine.getTileAt(checkX, checkY);
+                        if (waterTerrains.includes(t.terrainType) || Boolean(t.isWater) || t.resourceType === 'fish') {
+                            foundWaterX = checkX;
+                            foundWaterY = checkY;
+                            break;
+                        }
+                    }
+                }
+                if (foundWaterX !== null) {
+                    targetX = foundWaterX;
+                    targetY = foundWaterY;
+                } else {
+                    return res.status(400).json({
+                        ok: false,
+                        error: 'Tidak ditemukan perairan di sekitar posisimu untuk melempar kail.'
+                    });
+                }
+            } else {
+                targetX = Math.floor(Number(x));
+                targetY = Math.floor(Number(y));
+            }
+
+            const dist = Math.max(Math.abs(targetX - px), Math.abs(targetY - py));
+            if (dist > 1) {
+                return res.status(400).json({
+                    ok: false,
+                    error: 'Posisi terlalu jauh dari tepi air untuk melempar kail (Maksimal 1 petak).'
+                });
+            }
+
+            const tile = proceduralWorldEngine.getTileAt(targetX, targetY);
+            const isWater = waterTerrains.includes(tile.terrainType) || Boolean(tile.isWater) || tile.resourceType === 'fish';
+            isFishSpot = tile.resourceType === 'fish';
+
+            if (!isWater) {
+                const dbTile = await ZoneTile.findOne({
+                    guildId: player.guildId || 'global',
+                    zoneId: player.gridPosition?.zoneId || 'tianyuan_world_map',
+                    tileX: targetX,
+                    tileY: targetY
+                });
+                if (dbTile && (dbTile.resourceType === 'fish' || dbTile.isWater)) {
+                    isFishSpot = true;
+                } else {
+                    return res.status(400).json({
+                        ok: false,
+                        error: 'Petak sasaran bukan merupakan perairan atau lubuk ikan.'
+                    });
+                }
+            }
+
+            regionId = tile.regionId || 'central_plains';
+        }
+
+        // Potong stamina 5 poin secara otoritatif
+        player.currentStamina = Math.max(0, Math.floor(currentStamina - 5));
+        await player.save();
+
+        const { pickFishForRegion } = require('../../services/coreItems');
+        const fishEntry = pickFishForRegion(regionId, isFishSpot);
+        const difficulty = Math.max(1, Math.min(5, fishEntry.difficulty || 1));
+        const targetZoneSize = Math.max(16, 32 - difficulty * 3);
+        const fishSpeed = 0.05 + difficulty * 0.02;
+
+        const crypto = require('crypto');
+        const castId = 'cast_' + crypto.randomUUID();
+        const now = Date.now();
+
+        castSessions.set(castId, {
+            castId,
+            playerId: userId,
+            fishName: fishEntry.name,
+            difficulty,
+            startedAt: now,
+            expiresAt: now + 90000,
+            resolved: false
+        });
+
+        return res.json({
+            ok: true,
+            castId,
+            fishName: fishEntry.name,
+            difficulty,
+            targetZoneSize,
+            fishSpeed,
+            staminaLeft: player.currentStamina
+        });
+    } catch (error) {
+        console.error('[API-FISH-CAST] Error:', error);
+        res.status(500).json({ ok: false, error: error.message || 'Gagal melempar kail pancing.' });
+    }
+});
+
+router.post('/fish/reel', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { castId, caught } = req.body || {};
+
+        if (!castId || !castSessions.has(castId)) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Sesi lemparan pancing tidak valid atau sudah kedaluwarsa.'
+            });
+        }
+
+        const session = castSessions.get(castId);
+        if (session.playerId !== userId) {
+            return res.status(403).json({
+                ok: false,
+                error: 'Sesi pancing ini bukan milik pendekar.'
+            });
+        }
+
+        if (session.resolved) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Sesi pancing sudah pernah diselesaikan.'
+            });
+        }
+
+        const now = Date.now();
+        if (now > session.expiresAt) {
+            castSessions.delete(castId);
+            return res.status(400).json({
+                ok: false,
+                error: 'Sesi pancing telah kedaluwarsa.'
+            });
+        }
+
+        // Anti-instant-catch (minimal 4.0 detik)
+        const durationMs = now - session.startedAt;
+        if (durationMs < 4000) {
+            return res.status(400).json({
+                ok: false,
+                error: 'Tarikan terlalu terburu-buru! Memancing butuh ketenangan dan waktu minimal 4 detik.'
+            });
+        }
+
+        // Tandai resolved dan hapus dari sesi aktif hanya setelah melewati durasi sah
+        session.resolved = true;
+        castSessions.delete(castId);
+
+        if (!caught) {
+            return res.json({
+                ok: true,
+                caught: false,
+                message: 'Ikan berhasil meloloskan diri ke kedalaman air.'
+            });
+        }
+
+        const player = await Player.findOne({ discordId: userId });
+        if (!player) return res.status(404).json({ ok: false, error: 'Karakter tidak ditemukan.' });
+
+        let fishItem = await Item.findOne({ name: session.fishName });
+        if (!fishItem) {
+            fishItem = await Item.create({
+                guildId: 'global',
+                name: session.fishName,
+                category: 'material',
+                type: 'material',
+                materialSubtype: 'fish',
+                rarity: session.difficulty >= 4 ? 'rare' : 'common',
+                tier: Math.max(1, Math.min(5, session.difficulty)),
+                description: 'Ikan segar kaya Qi yang berhasil dipancing dari perairan Jianghu.'
+            });
+        }
+
+        if (!player.inventory) player.inventory = [];
+        const existingSlot = player.inventory.find(i => i.itemId && i.itemId.toString() === fishItem._id.toString());
+        if (existingSlot) {
+            existingSlot.quantity = Math.floor(existingSlot.quantity + 1);
+        } else {
+            player.inventory.push({ itemId: fishItem._id, quantity: 1 });
+        }
+
+        const farmingFishingService = require('../../services/farmingFishingService');
+        if (!player.professions) player.professions = {};
+        const expRes = farmingFishingService.awardExp(player.professions, 'fishing', 20);
+
+        await player.save();
+
+        const ActivityLog = require('../../models/ActivityLog');
+        await ActivityLog.create({
+            guildId: player.guildId || 'global',
+            discordId: userId,
+            actionType: 'fish_catch',
+            details: { fishName: fishItem.name, expGain: 20 },
+            serverValidated: true,
+            itemOriginLogged: true
+        });
+
+        return res.json({
+            ok: true,
+            caught: true,
+            fishItem: {
+                name: fishItem.name,
+                rarity: fishItem.rarity,
+                tier: fishItem.tier
+            },
+            expGained: 20,
+            fishingLevel: expRes.prof.level,
+            leveledUp: expRes.leveledUp,
+            message: `Strike! Mendapatkan 1x ${fishItem.name}!`
+        });
+    } catch (error) {
+        console.error('[API-FISH-REEL] Error:', error);
+        res.status(500).json({ ok: false, error: error.message || 'Gagal menarik kail pancing.' });
     }
 });
 

@@ -66,6 +66,7 @@ export interface WorldCanvasProps {
   onModeChange?: (mode: CanvasViewMode) => void;
   onSelectRegion?: (regionSlug: string, centerX?: number, centerY?: number) => void;
   debugCam?: { x: number; y: number; zoom: number };
+  paused?: boolean;
 }
 
 interface YSortEntry {
@@ -122,7 +123,8 @@ export default function WorldCanvas({
   onRecenterPlayer,
   onModeChange,
   onSelectRegion,
-  debugCam
+  debugCam,
+  paused = false
 }: WorldCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -431,6 +433,7 @@ export default function WorldCanvas({
     let time = 0;
 
     const render = () => {
+      if (paused) return;
       const frameStartTime = performance.now();
       fallbackSpritesCountRef.current = 0;
       time += 0.02;
@@ -975,14 +978,17 @@ export default function WorldCanvas({
             }
           }
 
-          // Fase H4: Multi-Lamp Light Source Collection (Cap at 24 visible lights)
-          if (canon?.light && visibleLights.length < 24) {
+          // Fase H4 & Fase E: Multi-Lamp Light Source Collection (Cap at 24 visible lights)
+          const isHut = def.id.includes('cottage') || def.id.includes('hermitage') || def.id.includes('hut') || def.id.includes('shack') || (instance as any)?.hutType === 'living' || (instance as any)?.isEnterable;
+          const hutLight = (isHut && (instance as any)?.hutType !== 'abandoned') ? { r: 3.2, color: '#F59E0B', flicker: 0.06 } : null;
+          const lightSource = canon?.light || hutLight;
+          if (lightSource && visibleLights.length < 24) {
             visibleLights.push({
               sx: footX,
-              sy: footY - (colH * 0.4 * currentTileSize),
-              radius: Math.max(35, canon.light.r * currentTileSize),
-              color: canon.light.color || '#FFAA50',
-              flicker: canon.light.flicker || 0.05
+              sy: footY - (colH * 0.45 * currentTileSize),
+              radius: Math.max(35, lightSource.r * currentTileSize),
+              color: lightSource.color || '#F59E0B',
+              flicker: lightSource.flicker || 0.06
             });
           }
 
@@ -1587,6 +1593,11 @@ export default function WorldCanvas({
               warmGlow.addColorStop(0, 'rgba(255, 119, 32, 0.32)');
               warmGlow.addColorStop(0.5, 'rgba(255, 119, 32, 0.14)');
               warmGlow.addColorStop(1, 'rgba(255, 119, 32, 0)');
+            } else if (lit.color === '#F59E0B') {
+              // Warm amber window glow from living cottages / huts
+              warmGlow.addColorStop(0, 'rgba(245, 158, 11, 0.36)');
+              warmGlow.addColorStop(0.45, 'rgba(245, 158, 11, 0.16)');
+              warmGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
             } else {
               // Warm amber lantern
               warmGlow.addColorStop(0, 'rgba(255, 170, 80, 0.28)');
@@ -1830,7 +1841,7 @@ export default function WorldCanvas({
 
           const timeSinceMount = performance.now() - debugCamMountTimeRef.current;
 
-          if (areTexturesReady || timeSinceMount > 3500) {
+          if (areTexturesReady || timeSinceMount > 12000) {
             // Duplicate within 3 tiles (Chebyshev < 3)
             let dupCount = 0;
             for (let i = 0; i < visObjs.length; i++) {
@@ -1889,7 +1900,7 @@ export default function WorldCanvas({
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [camera, tiles, playerPos, targetTile, activePath, exploredChunkSet, isWalking, tileMap, loadedImages, weather, isNight, currentMode]);
+  }, [camera, tiles, playerPos, targetTile, activePath, exploredChunkSet, isWalking, tileMap, loadedImages, weather, isNight, currentMode, paused]);
 
   // Mouse & Touch Pan/Zoom Handlers
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {

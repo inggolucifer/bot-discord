@@ -46,7 +46,7 @@
     "type": "ocean",
     "isSolid": true,
     "description": "Perairan dalam yang membutuhkan kapal, feri, atau pedang terbang.",
-    "bounds": { "minX": 3950, "maxX": 5000, "minY": 1000, "maxY": 5000 },
+    "bounds": { "minX": 3950, "maxX": 4200, "minY": 1000, "maxY": 3500 },
     "traversalRequirement": "ship"
   },
   {

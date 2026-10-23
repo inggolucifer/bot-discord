@@ -29,6 +29,7 @@ import {
   X
 } from 'lucide-react';
 import ThermalStatusBadge from '../ui/ThermalStatusBadge';
+import SafeBoundary from '../SafeBoundary';
 import PropertyInteriorView from './PropertyInteriorView';
 import TaleOfImmortalCanvas, { TileData } from './TaleOfImmortalCanvas';
 import SettlementPanoramaView from './SettlementPanoramaView';
@@ -40,6 +41,7 @@ import { useAuthStore, useUIStore } from '@/lib/store';
 import GridAssetDetailCard from './modals/GridAssetDetailCard';
 import GridAssetBuildModal from './modals/GridAssetBuildModal';
 import GridProfessionWorkbench from './modals/GridProfessionWorkbench';
+import FishingReelMinigame from '@/components/minigames/FishingReelMinigame';
 import GridExpeditionModal from './modals/GridExpeditionModal';
 import { LandPriceInfo } from '@/lib/landPrice';
 import GridSectHallModal from './modals/GridSectHallModal';
@@ -152,6 +154,8 @@ export default function ZoneGridView({
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [isBgmOn, setIsBgmOn] = useState(false);
   const [interiorData, setInteriorData] = useState<any | null>(null);
+  const [isEnteringBuilding, setIsEnteringBuilding] = useState<boolean>(false);
+  const [fishingTarget, setFishingTarget] = useState<{ x: number; y: number } | null>(null);
   const [thermalStatus, setThermalStatus] = useState<any | null>(null);
   const [activeBattleId, setActiveBattleId] = useState<string | null>(null);
   const [showMacroMap, setShowMacroMap] = useState(false);
@@ -644,80 +648,88 @@ export default function ZoneGridView({
     }
   };
 
-  // Masuk Interior Bangunan (Toko / Rumah / Workbench Profesi)
+  // Masuk Interior Bangunan (Otoritas Server Tunggal - Fase A)
   const handleEnterBuilding = async (tile: TileData) => {
-    const bName = (tile.buildingName || tile.label || '').toLowerCase();
-    if (bName.includes('tempa') || bName.includes('smith')) {
-      setProfessionWorkbench({ type: 'smithing', name: tile.buildingName || 'Bengkel Tempa' });
-      return;
-    }
-    if (bName.includes('dapur') || bName.includes('masak') || bName.includes('cook')) {
-      setProfessionWorkbench({ type: 'cooking', name: tile.buildingName || 'Dapur Kedai' });
-      return;
-    }
-    if (bName.includes('alkimia') || bName.includes('alchemy')) {
-      setProfessionWorkbench({ type: 'alchemy', name: tile.buildingName || 'Paviliun Alkimia' });
-      return;
-    }
-    if (bName.includes('kolam') || bName.includes('tambak') || bName.includes('koi')) {
-      setProfessionWorkbench({ type: 'fishing', name: tile.buildingName || 'Kolam Ikan Rohani' });
-      return;
-    }
-    if (bName.includes('lahan') || bName.includes('tani') || bName.includes('padi') || bName.includes('herbal')) {
-      setProfessionWorkbench({ type: 'farming', name: tile.buildingName || 'Lahan Pertanian' });
-      return;
-    }
+    if (isEnteringBuilding) return;
+    setIsEnteringBuilding(true);
+
+    const safetyTimer = setTimeout(() => {
+      setIsEnteringBuilding(false);
+    }, 8000);
 
     try {
-      const res = await api.post('/grid/building/enter', {
+      const res = await api.post('/world/building/enter', {
         zoneId: activeZoneId,
         x: tile.tileX,
         y: tile.tileY
       });
+
+      clearTimeout(safetyTimer);
+      setIsEnteringBuilding(false);
+
       if (!res.data.ok) {
         showMessage(`${res.data.error || 'Gagal masuk bangunan'}`);
         return;
       }
-      const layoutRes = await api.get(`/grid/interior/${res.data.structureId}`);
-      if (layoutRes.data.ok) {
-        const layout1D: number[] = [];
-        for (const row of layoutRes.data.matrix) {
-          for (const cell of row) {
-            layout1D.push(cell.tileId);
-          }
-        }
-        setInteriorData({
-          id: res.data.structureId,
-          name: res.data.structureName,
-          ownerId: res.data.ownerName,
-          ownerName: res.data.ownerName,
-          isOwner: true,
-          subGridWidth: layoutRes.data.width,
-          subGridHeight: layoutRes.data.height,
-          facilities: {
-            qiGatheringArrayTier: 1,
-            alchemyCrucibleTier: 1,
-            forgeAnvilTier: 1,
-            herbPlotsUnlocked: 2
-          },
-          layout: layout1D,
-          tileMetadata: {
-            0: { name: 'Lantai Kayu', isSolid: false, interactable: false },
-            1: { name: 'Dinding Kayu', isSolid: true, interactable: false },
-            2: { name: 'Meja Teh', isSolid: true, interactable: true, action: 'reception_chat' },
-            3: { name: 'Bantal Semadi', isSolid: false, interactable: true, action: 'minigame_acupoint' },
-            4: { name: 'Kuali Alkimia', isSolid: true, interactable: true, action: 'minigame_crucible' },
-            5: { name: 'Landasan Tempa', isSolid: true, interactable: true, action: 'minigame_kata' },
-            6: { name: 'Petak Herbal', isSolid: false, interactable: true, action: 'minigame_harvest' },
-            7: { name: 'Pintu Keluar', isSolid: false, interactable: true, action: 'exit_property' },
-            8: { name: 'Kolam Ikan Rohani', isSolid: true, interactable: true, action: 'minigame_fishing' },
-            9: { name: 'Dapur Masak', isSolid: true, interactable: true, action: 'minigame_cooking' }
-          }
-        });
+
+      const {
+        structureId,
+        structureName,
+        structureType,
+        isOwner,
+        width,
+        height,
+        layout,
+        doorSpawn,
+        tileMetadata,
+        facilities
+      } = res.data;
+
+      // Jika struktur merupakan workbench profesi spesifik
+      if (structureType === 'smithing') {
+        setProfessionWorkbench({ type: 'smithing', name: structureName || 'Bengkel Tempa' });
+        return;
+      } else if (structureType === 'cooking') {
+        setProfessionWorkbench({ type: 'cooking', name: structureName || 'Dapur Kedai' });
+        return;
+      } else if (structureType === 'alchemy') {
+        setProfessionWorkbench({ type: 'alchemy', name: structureName || 'Paviliun Alkimia' });
+        return;
+      } else if (structureType === 'fishing_pond') {
+        setProfessionWorkbench({ type: 'fishing', name: structureName || 'Kolam Ikan Rohani' });
+        return;
       }
+
+      setInteriorData({
+        id: structureId,
+        name: structureName,
+        ownerId: res.data.ownerName || '',
+        ownerName: res.data.ownerName || '',
+        isOwner: Boolean(isOwner),
+        subGridWidth: width,
+        subGridHeight: height,
+        facilities: facilities || {
+          qiGatheringArrayTier: 1,
+          alchemyCrucibleTier: 1,
+          forgeAnvilTier: 1,
+          herbPlotsUnlocked: 2
+        },
+        layout: Array.isArray(layout) ? layout : [],
+        doorSpawn: doorSpawn || { x: width <= 6 ? 2 : 5, y: Math.max(0, height - 2) },
+        tileMetadata: tileMetadata || {}
+      });
     } catch (err: any) {
+      clearTimeout(safetyTimer);
+      setIsEnteringBuilding(false);
       showMessage(err.response?.data?.error || 'Gagal masuk bangunan');
     }
+  };
+
+  const handleExitBuilding = async () => {
+    try {
+      await api.post('/world/building/exit', {});
+    } catch (_) {}
+    setInteriorData(null);
   };
 
   // Beli Kavling Tanah
@@ -754,21 +766,11 @@ export default function ZoneGridView({
     }
   };
 
-  // Memancing
-  const handleFish = async () => {
-    try {
-      const res = await api.post('/grid/profession/fish', { zoneId: activeZoneId });
-      if (res.data.ok) {
-        sound.playDiscovery();
-        showMessage(`Strike! Mendapatkan 1x ${res.data.fishName} (Level Pancing: ${res.data.fishingLevel})`);
-        addFloatingNotice(`+1 ${res.data.fishName}`, 'cyan');
-        fetchZoneData();
-      } else {
-        showMessage(`${res.data.error}`);
-      }
-    } catch (err: any) {
-      showMessage(err.response?.data?.error || 'Gagal memancing');
-    }
+  // Memancing (Protokol Dua Langkah Server Authoritative)
+  const handleFish = () => {
+    const targetX = selectedTile?.tileX ?? playerGrid?.position?.tileX ?? 0;
+    const targetY = selectedTile?.tileY ?? playerGrid?.position?.tileY ?? 0;
+    setFishingTarget({ x: targetX, y: targetY });
   };
 
   // Meramu / Panen Alam (Biaya 5 Stamina)
@@ -776,16 +778,7 @@ export default function ZoneGridView({
     try {
       const targetX = selectedTile?.tileX ?? playerGrid?.position?.tileX;
       const targetY = selectedTile?.tileY ?? playerGrid?.position?.tileY;
-      let res;
-      try {
-        res = await api.post('/world/zone/gather', { tileX: targetX, tileY: targetY });
-      } catch (errGather: any) {
-        if (errGather.response?.status === 404 || !errGather.response) {
-          res = await api.post('/grid/profession/forage', { zoneId: activeZoneId });
-        } else {
-          throw errGather;
-        }
-      }
+      const res = await api.post('/world/zone/gather', { tileX: targetX, tileY: targetY });
       if (res.data.ok || res.data.success) {
         sound.playDiscovery();
         const cost = res.data.staminaCost ?? 5;
@@ -795,10 +788,10 @@ export default function ZoneGridView({
         addFloatingNotice(`+${qty} ${itemName} (-${cost} Stamina)`, 'emerald');
         fetchZoneData();
       } else {
-        showMessage(`${res.data.error}`);
+        showMessage(`${res.data.error || 'Gagal memanen'}`);
       }
     } catch (err: any) {
-      showMessage(err.response?.data?.error || 'Gagal memanen sumber daya');
+      showMessage(err.response?.data?.error || err.message || 'Gagal memanen sumber daya');
     }
   };
 
@@ -842,46 +835,6 @@ export default function ZoneGridView({
     }
   };
 
-  if (error) {
-    return (
-      <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
-        <span className="text-red-400 font-medium text-sm max-w-md">{error}</span>
-        <button
-          onClick={() => { setError(null); setLoading(true); fetchZoneData(); }}
-          className="px-4 py-1.5 bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-600/50 rounded-lg text-xs font-semibold shadow-md transition-colors"
-        >
-          Coba Muat Ulang
-        </button>
-      </div>
-    );
-  }
-
-  // Render Tampilan Panorama Kota (Gambar 4)
-  if (viewMode === 'settlement') {
-    return (
-      <SettlementPanoramaView
-        settlementName={activeSettlementName}
-        onExitCity={() => {
-          setViewMode('map');
-          onSubViewChange?.('map');
-        }}
-      />
-    );
-  }
-
-  // Render Halaman Meditasi Khusus (Gambar 5)
-  if (viewMode === 'courtyard') {
-    return (
-      <ScenicCourtyardView
-        locationName={activeCourtyardName}
-        onExit={() => {
-          setViewMode('map');
-          onSubViewChange?.('map');
-        }}
-      />
-    );
-  }
-
   const isMacro = activeZoneId === 'tianyuan_world_map';
   const defaultX = targetFocusTile?.x ?? (isMacro ? 2455 : 10);
   const defaultY = targetFocusTile?.y ?? (isMacro ? 2485 : 10);
@@ -918,6 +871,64 @@ export default function ZoneGridView({
       lastRegionRef.current = regionId;
     }
   }, [currentCharacterTile?.regionId, isInitialLoadDone]);
+
+  if (error) {
+    return (
+      <div className="w-full h-96 flex flex-col items-center justify-center gap-3 text-center bg-[#0b0e14] rounded-xl border border-red-900/40 p-6">
+        <span className="text-red-400 font-medium text-sm max-w-md">{error}</span>
+        <button
+          onClick={() => { setError(null); setLoading(true); fetchZoneData(); }}
+          className="px-4 py-1.5 bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-600/50 rounded-lg text-xs font-semibold shadow-md transition-colors"
+        >
+          Coba Muat Ulang
+        </button>
+      </div>
+    );
+  }
+
+  // Render Tampilan Panorama Kota (Gambar 4)
+  if (viewMode === 'settlement') {
+    return (
+      <SafeBoundary
+        componentName="SettlementPanoramaView"
+        fallbackTitle="Gagal Membuka Pemukiman"
+        onExit={() => {
+          setViewMode('map');
+          onSubViewChange?.('map');
+        }}
+      >
+        <SettlementPanoramaView
+          settlementName={activeSettlementName}
+          onExitCity={() => {
+            setViewMode('map');
+            onSubViewChange?.('map');
+          }}
+        />
+      </SafeBoundary>
+    );
+  }
+
+  // Render Halaman Meditasi Khusus (Gambar 5)
+  if (viewMode === 'courtyard') {
+    return (
+      <SafeBoundary
+        componentName="ScenicCourtyardView"
+        fallbackTitle="Gagal Membuka Paviliun Meditasi"
+        onExit={() => {
+          setViewMode('map');
+          onSubViewChange?.('map');
+        }}
+      >
+        <ScenicCourtyardView
+          locationName={activeCourtyardName}
+          onExit={() => {
+            setViewMode('map');
+            onSubViewChange?.('map');
+          }}
+        />
+      </SafeBoundary>
+    );
+  }
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#080b11] select-none flex flex-col">
@@ -1057,6 +1068,7 @@ export default function ZoneGridView({
         {/* TALE OF IMMORTAL SHAN SHUI CANVAS ENGINE */}
         <div className="flex-1 min-h-0 w-full h-full relative">
         <TaleOfImmortalCanvas
+          paused={Boolean(interiorData || viewMode !== 'map')}
           tiles={tiles}
           playerPos={{ x: px, y: py }}
           playerReady={isPlayerPositionReady}
@@ -1100,60 +1112,70 @@ export default function ZoneGridView({
 
         {/* Card Spasial Inspektur Petak Grid (Wuxia Tile Card - Muncul Setiap Petak Diklik) */}
         {selectedTile && (
-          <GridTileInspectorCard
-            tile={selectedTile}
-            playerPos={{ x: px, y: py }}
-            currentUserId={user?.id || (user as any)?.userId || (user as any)?.discordId}
-            pathSteps={pathSteps}
-            isWalking={isWalking}
-            onWalkToTile={handleStartWalking}
-            onTalkToNpc={(npc) => setTalkingNpc(npc)}
-            onChallengeMonster={async (monsterKey) => {
-              try {
-                const tileKey = selectedTile ? `${selectedTile.tileX}_${selectedTile.tileY}` : undefined;
-                const res = await api.post('/battle/start', {
-                  targetId: monsterKey,
-                  targetType: 'monster',
-                  zoneId: activeZoneId,
-                  tileKey,
-                  monsterData: selectedTile?.spawnedMonster
-                });
-                if (res.data?.success && res.data.battleId) {
-                  setActiveBattleId(res.data.battleId);
-                }
-              } catch (err: any) {
-                if (err.response?.data?.code === 'DEATH_RECOVERY') {
-                  const remMs = err.response.data.remainingMs || 0;
-                  const hours = Math.floor(remMs / 3600000);
-                  const mins = Math.floor((remMs % 3600000) / 60000);
-                  toast.show({
-                    message: `Dantian Terluka Parah! Sisa pemulihan: ${hours}j ${mins}m setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.`,
-                    type: 'error'
-                  });
-                } else {
-                  toast.show({ message: err.response?.data?.error || 'Gagal memulai pertempuran', type: 'error' });
-                }
-              }
-            }}
-            onPurchaseLand={handlePurchaseLand}
-            onOpenBuildModal={(t) => setBuildModalTile(t)}
-            onEnterBuilding={handleEnterBuilding}
-            onEnterSettlement={handleEnterSettlement}
-            onEnterSect={(t) => setSectModalTile(t)}
-            onEnterExpedition={(t) => setExpeditionModalTile(t)}
-            onFish={handleFish}
-            onForage={handleForage}
-            onPlantCrop={handlePlantCrop}
-            onHarvestCrop={handleHarvestCrop}
-            onSearchArea={handleSearch}
-            playerLandStats={playerLandStats || undefined}
-            onConstructionFinished={() => fetchZoneData()}
-            onClose={() => {
+          <SafeBoundary
+            componentName="GridTileInspectorCard"
+            fallbackTitle="Gagal Membuka Detail Petak"
+            onExit={() => {
               setSelectedTile(null);
               setActivePath([]);
               useUIStore.getState().setIsTileInspectorActive(false);
             }}
-          />
+          >
+            <GridTileInspectorCard
+              tile={selectedTile}
+              playerPos={{ x: px, y: py }}
+              currentUserId={user?.id || (user as any)?.userId || (user as any)?.discordId}
+              pathSteps={pathSteps}
+              isWalking={isWalking}
+              onWalkToTile={handleStartWalking}
+              onTalkToNpc={(npc) => setTalkingNpc(npc)}
+              onChallengeMonster={async (monsterKey) => {
+                try {
+                  const tileKey = selectedTile ? `${selectedTile.tileX}_${selectedTile.tileY}` : undefined;
+                  const res = await api.post('/battle/start', {
+                    targetId: monsterKey,
+                    targetType: 'monster',
+                    zoneId: activeZoneId,
+                    tileKey,
+                    monsterData: selectedTile?.spawnedMonster
+                  });
+                  if (res.data?.success && res.data.battleId) {
+                    setActiveBattleId(res.data.battleId);
+                  }
+                } catch (err: any) {
+                  if (err.response?.data?.code === 'DEATH_RECOVERY') {
+                    const remMs = err.response.data.remainingMs || 0;
+                    const hours = Math.floor(remMs / 3600000);
+                    const mins = Math.floor((remMs % 3600000) / 60000);
+                    toast.show({
+                      message: `Dantian Terluka Parah! Sisa pemulihan: ${hours}j ${mins}m setelah gugur melawan ${err.response.data.killedBy || 'Siluman Liar'}.`,
+                      type: 'error'
+                    });
+                  } else {
+                    toast.show({ message: err.response?.data?.error || 'Gagal memulai pertempuran', type: 'error' });
+                  }
+                }
+              }}
+              onPurchaseLand={handlePurchaseLand}
+              onOpenBuildModal={(t) => setBuildModalTile(t)}
+              onEnterBuilding={handleEnterBuilding}
+              onEnterSettlement={handleEnterSettlement}
+              onEnterSect={(t) => setSectModalTile(t)}
+              onEnterExpedition={(t) => setExpeditionModalTile(t)}
+              onFish={handleFish}
+              onForage={handleForage}
+              onPlantCrop={handlePlantCrop}
+              onHarvestCrop={handleHarvestCrop}
+              onSearchArea={handleSearch}
+              playerLandStats={playerLandStats || undefined}
+              onConstructionFinished={() => fetchZoneData()}
+              onClose={() => {
+                setSelectedTile(null);
+                setActivePath([]);
+                useUIStore.getState().setIsTileInspectorActive(false);
+              }}
+            />
+          </SafeBoundary>
         )}
       </div>
 
@@ -1513,11 +1535,36 @@ export default function ZoneGridView({
 
       {/* Render Interior Properti Rumah Pemain as a Modal Overlay */}
       {interiorData && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md animate-in zoom-in-95 fade-in duration-200">
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 animate-in zoom-in-95 fade-in duration-200">
            <div className="w-full max-w-3xl h-[88vh] max-h-[88vh] flex flex-col shadow-2xl ring-1 ring-amber-500/50 rounded-xl overflow-hidden bg-[#090c13]">
-             <PropertyInteriorView propertyData={interiorData} onExit={() => setInteriorData(null)} />
+             <SafeBoundary
+               componentName="PropertyInteriorView"
+               fallbackTitle="Gagal Membuka Interior Bangunan"
+               onExit={handleExitBuilding}
+             >
+               <PropertyInteriorView propertyData={interiorData} onExit={handleExitBuilding} />
+             </SafeBoundary>
            </div>
         </div>
+      )}
+
+      {/* Render Minigame Memancing Dua Langkah */}
+      {fishingTarget && (
+        <SafeBoundary componentName="FishingReelMinigame">
+          <FishingReelMinigame
+            targetX={fishingTarget.x}
+            targetY={fishingTarget.y}
+            zoneId={activeZoneId}
+            onClose={() => setFishingTarget(null)}
+            onCompleted={(res) => {
+              setFishingTarget(null);
+              const fishName = res.fishItem?.name || res.fishName || 'Ikan Spiritual';
+              showMessage(`Strike! Mendapatkan 1x ${fishName}!`);
+              addFloatingNotice(`+1 ${fishName}`, 'cyan');
+              fetchZoneData();
+            }}
+          />
+        </SafeBoundary>
       )}
 
       {/* Virtual D-Pad dihapus sesuai permintaan user agar layar mobile bersih & luas */}

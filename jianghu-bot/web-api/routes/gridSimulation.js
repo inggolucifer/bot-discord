@@ -66,7 +66,12 @@ router.post('/building/enter', async (req, res) => {
     const { discordId, guildId } = getContext(req);
     if (!discordId) return res.status(400).json({ ok: false, error: 'discordId diperlukan.' });
 
-    const result = await interiorService.enterBuilding(discordId, guildId);
+    const { x, y, zoneId } = req.body || {};
+    const result = await interiorService.enterBuilding(discordId, guildId, {
+      targetX: x,
+      targetY: y,
+      zoneId
+    });
     if (!result.ok) return res.status(400).json(result);
 
     res.json(result);

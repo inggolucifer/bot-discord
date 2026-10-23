@@ -54,6 +54,20 @@ class MovementService {
       return { ok: false, error: 'Kamu sedang beristirahat. Selesaikan atau batalkan istirahat sebelum melangkah.' };
     }
 
+    if (player.gridPosition?.interiorInstanceId) {
+      const enteredAt = player.gridPosition.interiorEnteredAt
+        ? new Date(player.gridPosition.interiorEnteredAt).getTime()
+        : 0;
+      if (Date.now() - enteredAt > 30 * 60 * 1000) {
+        player.gridPosition.interiorInstanceId = null;
+        player.gridPosition.interiorEnteredAt = null;
+        await player.save();
+      } else {
+        const bName = player.currentLocation?.buildingName || 'interior bangunan';
+        return { ok: false, error: `Kamu sedang berada di dalam ${bName}. Keluar terlebih dahulu untuk menjelajahi dunia.` };
+      }
+    }
+
     const condCheck = processGridStepConditions(player, 1);
     if (!condCheck.canMove) {
       return { ok: false, error: condCheck.reason };

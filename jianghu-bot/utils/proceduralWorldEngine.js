@@ -466,9 +466,8 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       break;
     }
     case 'eastern_sea':
-    case 'frostmoon_sea':
-    case 'floating_wind_isles': {
-      if (elevation > 0.70) {
+    case 'frostmoon_sea': {
+      if (elevation > 0.60) {
         terrainType = 'island_reef';
         isSolid = false;
         label = 'Gugusan Karang Roh Melayang';
@@ -476,6 +475,18 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
         terrainType = 'ocean';
         isSolid = true;
         label = 'Samudra Luas';
+      }
+      break;
+    }
+    case 'floating_wind_isles': {
+      if (elevation > 0.48) {
+        terrainType = 'island_reef';
+        isSolid = false;
+        label = 'Gugusan Pulau Angin Melayang';
+      } else {
+        terrainType = 'ocean';
+        isSolid = true;
+        label = 'Samudra Awan Luas';
       }
       break;
     }

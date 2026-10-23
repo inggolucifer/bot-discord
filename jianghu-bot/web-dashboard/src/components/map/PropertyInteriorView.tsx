@@ -4,7 +4,7 @@ import api from '@/lib/api';
 import { useGlobalAssetLoader } from '@/hooks/useGlobalAssetLoader';
 import {
   DoorOpen, Sparkles, Flame, Shield, Leaf, Home, User,
-  Fish, Utensils, Sprout, Hammer, Coffee, Footprints
+  Fish, Utensils, Sprout, Hammer, Coffee, Footprints, Bed, PackageOpen
 } from 'lucide-react';
 import AcupointPulseMinigame from '../minigames/AcupointPulseMinigame';
 import KataQteMinigame from '../minigames/KataQteMinigame';
@@ -29,23 +29,35 @@ interface PropertyInteriorViewProps {
       herbPlotsUnlocked: number;
     };
     layout: number[];
-    tileMetadata: Record<number, { name: string; isSolid: boolean; interactable: boolean; action?: string }>;
+    doorSpawn?: { x: number; y: number };
+    tileMetadata?: Record<number, { name: string; isSolid: boolean; interactable: boolean; action?: string }>;
   };
   onExit: () => void;
 }
 
 export default function PropertyInteriorView({ propertyData, onExit }: PropertyInteriorViewProps) {
   const { loadedImages } = useGlobalAssetLoader();
-  const [facilities, setFacilities] = useState(propertyData.facilities);
-  const [playerPos, setPlayerPos] = useState<{ x: number; y: number }>({ x: 5, y: 10 }); // Di depan pintu keluar
+  const [facilities, setFacilities] = useState(propertyData.facilities || {
+    qiGatheringArrayTier: 1,
+    alchemyCrucibleTier: 1,
+    forgeAnvilTier: 1,
+    herbPlotsUnlocked: 2
+  });
+
+  const width = propertyData.subGridWidth || 12;
+  const height = propertyData.subGridHeight || 12;
+
+  const defaultDoorX = propertyData.doorSpawn?.x ?? (width <= 6 ? 2 : 5);
+  const defaultDoorY = propertyData.doorSpawn?.y ?? Math.max(0, height - 2);
+  const [playerPos, setPlayerPos] = useState<{ x: number; y: number }>({
+    x: Math.min(Math.max(0, defaultDoorX), width - 1),
+    y: Math.min(Math.max(0, defaultDoorY), height - 1)
+  });
   const [activeMinigame, setActiveMinigame] = useState<
     'acupoint' | 'kata' | 'crucible' | 'fishing' | 'cooking' | 'harvest' | null
   >(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [isUpgrading, setIsUpgrading] = useState<boolean>(false);
-
-  const width = propertyData.subGridWidth || 12;
-  const height = propertyData.subGridHeight || 12;
 
   // Gabungkan tile metadata standar dengan workstation lengkap
   const metadata: Record<number, { name: string; isSolid: boolean; interactable: boolean; action?: string }> = {
@@ -59,7 +71,9 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
     7: { name: 'Pintu Keluar', isSolid: false, interactable: true, action: 'exit_property' },
     8: { name: 'Kolam Ikan Rohani', isSolid: true, interactable: true, action: 'minigame_fishing' },
     9: { name: 'Dapur Masak', isSolid: true, interactable: true, action: 'minigame_cooking' },
-    ...(propertyData.tileMetadata || {})
+    10: { name: 'Dipan Bambu', isSolid: true, interactable: true, action: 'rest_bed' },
+    11: { name: 'Peti Kayu Kuno', isSolid: true, interactable: true, action: 'loot_chest' },
+    ...(propertyData?.tileMetadata || {})
   };
 
   // Keyboard Navigation WASD / Panah di dalam Interior
@@ -89,7 +103,8 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
   }, [playerPos, activeMinigame, width, height]);
 
   const handleTileClick = (x: number, y: number) => {
-    const tileVal = propertyData.layout[y * width + x] ?? 0;
+    const layoutArr = Array.isArray(propertyData.layout) ? propertyData.layout : [];
+    const tileVal = layoutArr[y * width + x] ?? 0;
     const meta = metadata[tileVal] || { name: 'Lantai', isSolid: false, interactable: false };
 
     if (meta.isSolid) {
@@ -125,6 +140,12 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
       setActiveMinigame('harvest');
     } else if (action === 'reception_chat') {
       setNotice('Kamu duduk menikmati secangkir teh harum melati yang menenangkan batin.');
+      setTimeout(() => setNotice(null), 3500);
+    } else if (action === 'rest_bed') {
+      setNotice('Kamu beristirahat sejenak di dipan bambu yang sejuk, menyelaraskan dantian dan memulihkan stamina.');
+      setTimeout(() => setNotice(null), 3500);
+    } else if (action === 'loot_chest') {
+      setNotice('Kamu membuka peti kayu kuno dan menemukan perbekalan peninggalan petapa.');
       setTimeout(() => setNotice(null), 3500);
     }
   };
@@ -211,6 +232,16 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
       return <DoorOpen className="w-4 h-4 text-amber-300 animate-pulse" />;
     }
 
+    // 10: Dipan Bambu (Rest Bed)
+    if (tileVal === 10) {
+      return <Bed className="w-4 h-4 text-amber-200 drop-shadow" />;
+    }
+
+    // 11: Peti Kayu Kuno (Loot Chest)
+    if (tileVal === 11) {
+      return <PackageOpen className="w-4 h-4 text-yellow-400 animate-pulse drop-shadow" />;
+    }
+
     return null;
   };
 
@@ -251,7 +282,8 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
         >
           {Array.from({ length: height }).map((_, y) =>
             Array.from({ length: width }).map((_, x) => {
-              const tileVal = propertyData.layout[y * width + x] ?? 0;
+              const layoutArr = Array.isArray(propertyData.layout) ? propertyData.layout : [];
+              const tileVal = layoutArr[y * width + x] ?? 0;
               const isPlayerHere = playerPos.x === x && playerPos.y === y;
               const meta = metadata[tileVal] || { name: 'Lantai', isSolid: false, interactable: false };
 
@@ -384,10 +416,11 @@ export default function PropertyInteriorView({ propertyData, onExit }: PropertyI
       )}
       {activeMinigame === 'fishing' && (
         <FishingReelMinigame
+          source="interior"
           onClose={() => setActiveMinigame(null)}
           onCompleted={(res) => {
             setActiveMinigame(null);
-            setNotice(`🎣 Berhasil menangkap 1x ${res.fishName || 'Ikan Spiritual'}!`);
+            setNotice(`🎣 Berhasil menangkap 1x ${res.fishItem?.name || res.fishName || 'Ikan Spiritual'}!`);
             setTimeout(() => setNotice(null), 4000);
           }}
         />

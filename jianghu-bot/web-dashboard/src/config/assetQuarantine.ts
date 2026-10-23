@@ -4,34 +4,11 @@
  */
 
 export const QUARANTINED_FAMILIES = [
-  'mt_bastion_wall',
-  'mt_twin_peaks',
-  'mt_azure_crag',
-  'mt_ridge_double',
-  'mt_karst_pillar',
-  'tree_spirit_peach',
-  'tree_cypress_frost',
-  'tree_pine_ancient',
-  'tree_dead_wood',
-  'bamboo_jade',
-  'bamboo_mist',
-  'bamboo_dark',
-  'bamboo_clump_2x1',
-  'bamboo_clump_2x2',
-  'building_pagoda_tower',
-  'building_sect_gate',
-  'building_road_inn',
-  'building_farm_hut',
-  'building_stone_torii',
-  'building_tea_pavilion',
   'ring_monster_tier2',
   'ring_monster_tier3',
   'ring_monster_tier4',
   'ring_monster_tier5',
-  'marker_quest_beacon',
-  'rock_crag_cluster',
-  'rock_cleft_stone',
-  'rock_boulder_moss'
+  'marker_quest_beacon'
 ] as const;
 
 export const REVIEW_FAMILIES = [

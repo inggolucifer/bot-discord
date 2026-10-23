@@ -257,4 +257,6 @@ class FarmingFishingService {
   }
 }
 
-module.exports = new FarmingFishingService();
+const service = new FarmingFishingService();
+service.awardExp = awardExp;
+module.exports = service;

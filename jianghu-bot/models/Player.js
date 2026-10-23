@@ -427,7 +427,8 @@ const playerSchema = new mongoose.Schema({
     zoneId: { type: String, default: 'central_plains_bamboo_forest' },
     tileX: { type: Number, default: 0 },
     tileY: { type: Number, default: 0 },
-    interiorInstanceId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null }
+    interiorInstanceId: { type: mongoose.Schema.Types.ObjectId, ref: 'PropertyStructure', default: null },
+    interiorEnteredAt: { type: Date, default: null }
   },
 
   equippedMount: { type: String, default: null }, // ferghana_horse, spirit_horned_horse, shadow_tiger, flying_sword
