@@ -19,7 +19,7 @@ const atlasIndex = JSON.parse(fs.readFileSync(atlasIndexPath, 'utf8'));
 const MAP_PAGES = [
   'biome_nature_0', 'biome_nature_1', 'biome_nature_2', 'biome_nature_3',
   'biome_nature_4', 'biome_nature_5', 'biome_nature_6', 'biome_nature_7',
-  'settlement_0', 'settlement_1', 'settlement_2', 'settlement_3',
+  'settlement_0', 'settlement_1', 'settlement_2', 'settlement_3', 'settlement_4',
   'core_0', 'core_1'
 ];
 
@@ -37,6 +37,29 @@ function determineCategoryAndClass(id, f) {
       visualW: 10.0,
       collision: { w: 6, h: 4, offsetX: 2.0 },
       anchor: { x: 0.5, y: 0.95 }
+    };
+  }
+
+  // 1b. Regional Authored Huts (Prompt 3 - class S, 1x1 grid)
+  if (id.startsWith('hut_')) {
+    return {
+      category: 'building',
+      sizeClass: 'S',
+      visualW: 1.2,
+      collision: { w: 1, h: 1, offsetX: 0.1 },
+      anchor: { x: 0.5, y: 0.92 }
+    };
+  }
+
+  // 1c. Authored Village Props (Prompt 3 - class S, 1x1 grid)
+  if (id.startsWith('prop_')) {
+    const isPassable = id.includes('campfire') || id.includes('vegetable_patch');
+    return {
+      category: 'building',
+      sizeClass: 'S',
+      visualW: 1.0,
+      collision: isPassable ? { w: 0, h: 0, offsetX: 0.5 } : { w: 1, h: 1, offsetX: 0 },
+      anchor: { x: 0.5, y: 0.92 }
     };
   }
 

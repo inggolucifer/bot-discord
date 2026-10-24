@@ -8384,5 +8384,937 @@
       "y": 0.95
     },
     "light": null
+  },
+  "hut_hunter_thatched_day": {
+    "id": "hut_hunter_thatched_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_hunter_thatched_dusk": {
+    "id": "hut_hunter_thatched_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_bamboo_field_day": {
+    "id": "hut_bamboo_field_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_bamboo_field_dusk": {
+    "id": "hut_bamboo_field_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_stilt_fisher_day": {
+    "id": "hut_stilt_fisher_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_stilt_fisher_dusk": {
+    "id": "hut_stilt_fisher_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_mountain_hermit_day": {
+    "id": "hut_mountain_hermit_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_mountain_hermit_dusk": {
+    "id": "hut_mountain_hermit_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_charcoal_burner_day": {
+    "id": "hut_charcoal_burner_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_charcoal_burner_dusk": {
+    "id": "hut_charcoal_burner_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_steppe_shepherd_day": {
+    "id": "hut_steppe_shepherd_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_steppe_shepherd_dusk": {
+    "id": "hut_steppe_shepherd_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_snow_thatched_day": {
+    "id": "hut_snow_thatched_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_snow_thatched_dusk": {
+    "id": "hut_snow_thatched_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_desert_adobe_day": {
+    "id": "hut_desert_adobe_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_desert_adobe_dusk": {
+    "id": "hut_desert_adobe_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_obsidian_stone_day": {
+    "id": "hut_obsidian_stone_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_obsidian_stone_dusk": {
+    "id": "hut_obsidian_stone_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_tea_harvester_day": {
+    "id": "hut_tea_harvester_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_tea_harvester_dusk": {
+    "id": "hut_tea_harvester_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_pine_woodcutter_day": {
+    "id": "hut_pine_woodcutter_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_pine_woodcutter_dusk": {
+    "id": "hut_pine_woodcutter_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_daoist_shrine_day": {
+    "id": "hut_daoist_shrine_day",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_daoist_shrine_dusk": {
+    "id": "hut_daoist_shrine_dusk",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_thatched_ruin": {
+    "id": "hut_abandoned_thatched_ruin",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_mossy_shack": {
+    "id": "hut_abandoned_mossy_shack",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_bamboo_shelter": {
+    "id": "hut_abandoned_bamboo_shelter",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_charred_bandit": {
+    "id": "hut_abandoned_charred_bandit",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_hermit_ruin": {
+    "id": "hut_abandoned_hermit_ruin",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "hut_abandoned_stone_overgrown": {
+    "id": "hut_abandoned_stone_overgrown",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1.2,
+    "visualH": 1.2,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0.1
+    },
+    "pxPerTile": 213.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_extinguished_campfire": {
+    "id": "prop_extinguished_campfire",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": {
+      "r": 4,
+      "color": "#FF7720",
+      "flicker": 0.08
+    }
+  },
+  "prop_firewood_stack": {
+    "id": "prop_firewood_stack",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": {
+      "r": 4,
+      "color": "#FF7720",
+      "flicker": 0.08
+    }
+  },
+  "prop_small_stone_well": {
+    "id": "prop_small_stone_well",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_wooden_fence_corner": {
+    "id": "prop_wooden_fence_corner",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_stone_prayer_stela": {
+    "id": "prop_stone_prayer_stela",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_drying_fish_rack": {
+    "id": "prop_drying_fish_rack",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_drying_herb_rack": {
+    "id": "prop_drying_herb_rack",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_moored_rowboat": {
+    "id": "prop_moored_rowboat",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_vegetable_patch": {
+    "id": "prop_vegetable_patch",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 0,
+      "h": 0,
+      "offsetX": 0.5
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_tea_kettle_stove": {
+    "id": "prop_tea_kettle_stove",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_water_storage_urn": {
+    "id": "prop_water_storage_urn",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
+  },
+  "prop_bamboo_tool_rack": {
+    "id": "prop_bamboo_tool_rack",
+    "page": "settlement_4",
+    "category": "building",
+    "class": "S",
+    "srcW": 256,
+    "srcH": 256,
+    "visualW": 1,
+    "visualH": 1,
+    "ratio": 1,
+    "collision": {
+      "w": 1,
+      "h": 1,
+      "offsetX": 0
+    },
+    "pxPerTile": 256,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.92
+    },
+    "light": null
   }
 }

@@ -1,0 +1,1526 @@
+{
+  "meta": {
+    "app": "Jianghu World Asset Pipeline V8",
+    "version": "8.0",
+    "size": {
+      "w": 2048,
+      "h": 1546
+    },
+    "format": "RGBA8888",
+    "image": "settlement_4.webp"
+  },
+  "frames": {
+    "hut_hunter_thatched_day": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_hunter_thatched_day",
+        "atlas": "settlement_4",
+        "frame": "hut_hunter_thatched_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_hunter_thatched_dusk": {
+      "frame": {
+        "x": 258,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_hunter_thatched_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_hunter_thatched_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_bamboo_field_day": {
+      "frame": {
+        "x": 516,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_bamboo_field_day",
+        "atlas": "settlement_4",
+        "frame": "hut_bamboo_field_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_bamboo_field_dusk": {
+      "frame": {
+        "x": 774,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_bamboo_field_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_bamboo_field_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_stilt_fisher_day": {
+      "frame": {
+        "x": 1032,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_stilt_fisher_day",
+        "atlas": "settlement_4",
+        "frame": "hut_stilt_fisher_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_stilt_fisher_dusk": {
+      "frame": {
+        "x": 1290,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_stilt_fisher_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_stilt_fisher_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_mountain_hermit_day": {
+      "frame": {
+        "x": 1548,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_mountain_hermit_day",
+        "atlas": "settlement_4",
+        "frame": "hut_mountain_hermit_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_mountain_hermit_dusk": {
+      "frame": {
+        "x": 0,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_mountain_hermit_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_mountain_hermit_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_charcoal_burner_day": {
+      "frame": {
+        "x": 258,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_charcoal_burner_day",
+        "atlas": "settlement_4",
+        "frame": "hut_charcoal_burner_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_charcoal_burner_dusk": {
+      "frame": {
+        "x": 516,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_charcoal_burner_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_charcoal_burner_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_steppe_shepherd_day": {
+      "frame": {
+        "x": 774,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_steppe_shepherd_day",
+        "atlas": "settlement_4",
+        "frame": "hut_steppe_shepherd_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_steppe_shepherd_dusk": {
+      "frame": {
+        "x": 1032,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_steppe_shepherd_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_steppe_shepherd_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_snow_thatched_day": {
+      "frame": {
+        "x": 1290,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_snow_thatched_day",
+        "atlas": "settlement_4",
+        "frame": "hut_snow_thatched_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_snow_thatched_dusk": {
+      "frame": {
+        "x": 1548,
+        "y": 258,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_snow_thatched_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_snow_thatched_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_desert_adobe_day": {
+      "frame": {
+        "x": 0,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_desert_adobe_day",
+        "atlas": "settlement_4",
+        "frame": "hut_desert_adobe_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_desert_adobe_dusk": {
+      "frame": {
+        "x": 258,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_desert_adobe_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_desert_adobe_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_obsidian_stone_day": {
+      "frame": {
+        "x": 516,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_obsidian_stone_day",
+        "atlas": "settlement_4",
+        "frame": "hut_obsidian_stone_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_obsidian_stone_dusk": {
+      "frame": {
+        "x": 774,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_obsidian_stone_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_obsidian_stone_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_tea_harvester_day": {
+      "frame": {
+        "x": 1032,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_tea_harvester_day",
+        "atlas": "settlement_4",
+        "frame": "hut_tea_harvester_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_tea_harvester_dusk": {
+      "frame": {
+        "x": 1290,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_tea_harvester_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_tea_harvester_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_pine_woodcutter_day": {
+      "frame": {
+        "x": 1548,
+        "y": 516,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_pine_woodcutter_day",
+        "atlas": "settlement_4",
+        "frame": "hut_pine_woodcutter_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_pine_woodcutter_dusk": {
+      "frame": {
+        "x": 0,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_pine_woodcutter_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_pine_woodcutter_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_daoist_shrine_day": {
+      "frame": {
+        "x": 258,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_daoist_shrine_day",
+        "atlas": "settlement_4",
+        "frame": "hut_daoist_shrine_day",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_daoist_shrine_dusk": {
+      "frame": {
+        "x": 516,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_daoist_shrine_dusk",
+        "atlas": "settlement_4",
+        "frame": "hut_daoist_shrine_dusk",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_thatched_ruin": {
+      "frame": {
+        "x": 774,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_thatched_ruin",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_thatched_ruin",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_mossy_shack": {
+      "frame": {
+        "x": 1032,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_mossy_shack",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_mossy_shack",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_bamboo_shelter": {
+      "frame": {
+        "x": 1290,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_bamboo_shelter",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_bamboo_shelter",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_charred_bandit": {
+      "frame": {
+        "x": 1548,
+        "y": 774,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_charred_bandit",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_charred_bandit",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_hermit_ruin": {
+      "frame": {
+        "x": 0,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_hermit_ruin",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_hermit_ruin",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "hut_abandoned_stone_overgrown": {
+      "frame": {
+        "x": 258,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "hut_abandoned_stone_overgrown",
+        "atlas": "settlement_4",
+        "frame": "hut_abandoned_stone_overgrown",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_extinguished_campfire": {
+      "frame": {
+        "x": 516,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_extinguished_campfire",
+        "atlas": "settlement_4",
+        "frame": "prop_extinguished_campfire",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_firewood_stack": {
+      "frame": {
+        "x": 774,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_firewood_stack",
+        "atlas": "settlement_4",
+        "frame": "prop_firewood_stack",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_small_stone_well": {
+      "frame": {
+        "x": 1032,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_small_stone_well",
+        "atlas": "settlement_4",
+        "frame": "prop_small_stone_well",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_wooden_fence_corner": {
+      "frame": {
+        "x": 1290,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_wooden_fence_corner",
+        "atlas": "settlement_4",
+        "frame": "prop_wooden_fence_corner",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_stone_prayer_stela": {
+      "frame": {
+        "x": 1548,
+        "y": 1032,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_stone_prayer_stela",
+        "atlas": "settlement_4",
+        "frame": "prop_stone_prayer_stela",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_drying_fish_rack": {
+      "frame": {
+        "x": 0,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_drying_fish_rack",
+        "atlas": "settlement_4",
+        "frame": "prop_drying_fish_rack",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_drying_herb_rack": {
+      "frame": {
+        "x": 258,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_drying_herb_rack",
+        "atlas": "settlement_4",
+        "frame": "prop_drying_herb_rack",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_moored_rowboat": {
+      "frame": {
+        "x": 516,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_moored_rowboat",
+        "atlas": "settlement_4",
+        "frame": "prop_moored_rowboat",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_vegetable_patch": {
+      "frame": {
+        "x": 774,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_vegetable_patch",
+        "atlas": "settlement_4",
+        "frame": "prop_vegetable_patch",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_tea_kettle_stove": {
+      "frame": {
+        "x": 1032,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_tea_kettle_stove",
+        "atlas": "settlement_4",
+        "frame": "prop_tea_kettle_stove",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_water_storage_urn": {
+      "frame": {
+        "x": 1290,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_water_storage_urn",
+        "atlas": "settlement_4",
+        "frame": "prop_water_storage_urn",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    },
+    "prop_bamboo_tool_rack": {
+      "frame": {
+        "x": 1548,
+        "y": 1290,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "metadata": {
+        "id": "prop_bamboo_tool_rack",
+        "atlas": "settlement_4",
+        "frame": "prop_bamboo_tool_rack",
+        "category": "building",
+        "footprint": {
+          "cw": 1,
+          "ch": 1
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.92
+        },
+        "collision": "solid",
+        "overhangCells": 0.5
+      }
+    }
+  }
+}
