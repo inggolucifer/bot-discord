@@ -40,6 +40,201 @@ if (authoredPropsData && Array.isArray(authoredPropsData.props)) {
   }
 }
 
+// SSOT of authored road tiles for clearance checking
+const AUTHORED_ROAD_TILES = new Set();
+if (authoredPropsData && Array.isArray(authoredPropsData.roads)) {
+  for (const r of authoredPropsData.roads) {
+    if (r.direction === 'EW') {
+      const y = r.from.y;
+      for (let x = Math.min(r.from.x, r.to.x); x <= Math.max(r.from.x, r.to.x); x++) {
+        AUTHORED_ROAD_TILES.add(`${x},${y}`);
+      }
+    } else if (r.direction === 'NS') {
+      const x = r.from.x;
+      for (let y = Math.min(r.from.y, r.to.y); y <= Math.max(r.from.y, r.to.y); y++) {
+        AUTHORED_ROAD_TILES.add(`${x},${y}`);
+      }
+    }
+  }
+}
+
+// Spatial grid cell sizing for wilderness huts (Prompt 4 SSOT)
+const HUT_GRID_SPACING = {
+  // S = 40 (Populated regions & fertile plains)
+  central_plains: 40,
+  nine_springs_delta: 40,
+  mirror_lake: 40,
+  beast_prairies: 40,
+
+  // S = 60 (Mountain ranges, highlands, desert, steppe, frozen tundra, passes)
+  azure_mountain_range: 60,
+  western_sacred_desert: 60,
+  hermit_highlands: 60,
+  thundersteppe: 60,
+  northern_desolate: 60,
+  ore_teeth_range: 60,
+  western_gorge_labyrinth: 60,
+  spirit_wood_sea: 60,
+  mist_insect_valley: 60,
+  godthunder_peaks: 60,
+  border_march: 60,
+
+  // S = 90 (High danger, demonic domains, volcanic, abyssal, ruins)
+  crimson_battlefield: 90,
+  venom_mire: 90,
+  southern_demon_domain: 90,
+  abyssal_scar: 90,
+  southern_plague_woods: 90,
+  formation_barrens: 90,
+  sword_gorge: 90,
+  lava_spine: 90,
+  immortal_ruins_valley: 90,
+  void_rift: 90
+};
+
+const HUT_LABELS = {
+  hut_desert_adobe_day: 'Pondok Bata Lumpur Gurun',
+  hut_desert_adobe_dusk: 'Pondok Bata Lumpur Gurun',
+  hut_snow_thatched_day: 'Gubuk Jerami Salju',
+  hut_snow_thatched_dusk: 'Gubuk Jerami Salju',
+  hut_bamboo_field_day: 'Pondok Ladang Bambu',
+  hut_bamboo_field_dusk: 'Pondok Ladang Bambu',
+  hut_mountain_hermit_day: 'Pondok Pertapa Gunung',
+  hut_mountain_hermit_dusk: 'Pondok Pertapa Gunung',
+  hut_obsidian_stone_day: 'Pondok Batu Obsidian Lahar',
+  hut_obsidian_stone_dusk: 'Pondok Batu Obsidian Lahar',
+  hut_steppe_shepherd_day: 'Pondok Gembala Padang Rumput',
+  hut_steppe_shepherd_dusk: 'Pondok Gembala Padang Rumput',
+  hut_stilt_fisher_day: 'Pondok Panggung Nelayan',
+  hut_stilt_fisher_dusk: 'Pondok Panggung Nelayan',
+  hut_pine_woodcutter_day: 'Pondok Penebang Pinus',
+  hut_pine_woodcutter_dusk: 'Pondok Penebang Pinus',
+  hut_charcoal_burner_day: 'Pondok Pembakar Arang',
+  hut_charcoal_burner_dusk: 'Pondok Pembakar Arang',
+  hut_hunter_thatched_day: 'Pondok Pemburu Rimba',
+  hut_hunter_thatched_dusk: 'Pondok Pemburu Rimba',
+  hut_daoist_shrine_day: 'Kuil Pertapaan Daois',
+  hut_daoist_shrine_dusk: 'Kuil Pertapaan Daois',
+  hut_tea_harvester_day: 'Pondok Pemetik Teh',
+  hut_tea_harvester_dusk: 'Pondok Pemetik Teh',
+  hut_abandoned_thatched_ruin: 'Gubuk Jerami Terbengkalai',
+  hut_abandoned_bamboo_shelter: 'Pondok Bambu Runtuh',
+  hut_abandoned_charred_bandit: 'Bekas Sarang Bandit Hangus',
+  hut_abandoned_hermit_ruin: 'Reruntuhan Pertapaan Kuno',
+  hut_abandoned_mossy_shack: 'Gubuk Lumut Usang',
+  hut_abandoned_stone_overgrown: 'Pondok Batu Ditumbuhi Ilalang'
+};
+
+function selectWildernessHutDef(regionId, terrainType, isAbandoned, randVal) {
+  if (isAbandoned) {
+    if (regionId === 'mist_insect_valley' || terrainType.includes('bamboo')) {
+      return 'hut_abandoned_bamboo_shelter';
+    }
+    if (['lava_spine', 'crimson_battlefield', 'southern_demon_domain', 'void_rift'].includes(regionId)) {
+      return 'hut_abandoned_charred_bandit';
+    }
+    if (['azure_mountain_range', 'hermit_highlands', 'godthunder_peaks', 'sword_gorge'].includes(regionId) || terrainType.includes('mountain')) {
+      return 'hut_abandoned_hermit_ruin';
+    }
+    if (['venom_mire', 'southern_plague_woods', 'spirit_wood_sea'].includes(regionId) || terrainType.includes('swamp')) {
+      return 'hut_abandoned_mossy_shack';
+    }
+    if (['western_sacred_desert', 'western_gorge_labyrinth', 'formation_barrens'].includes(regionId) || terrainType.includes('desert') || terrainType.includes('sand')) {
+      return 'hut_abandoned_stone_overgrown';
+    }
+    return 'hut_abandoned_thatched_ruin';
+  }
+
+  const variant = randVal < 0.35 ? 'dusk' : 'day';
+
+  if (['western_sacred_desert', 'western_gorge_labyrinth'].includes(regionId) || terrainType.includes('desert') || terrainType.includes('sand')) {
+    return `hut_desert_adobe_${variant}`;
+  }
+  if (regionId === 'northern_desolate' || terrainType.includes('snow') || terrainType.includes('glacier')) {
+    return `hut_snow_thatched_${variant}`;
+  }
+  if (regionId === 'mist_insect_valley' || terrainType.includes('bamboo')) {
+    return `hut_bamboo_field_${variant}`;
+  }
+  if (['azure_mountain_range', 'hermit_highlands', 'godthunder_peaks'].includes(regionId) || terrainType.includes('mountain_peak')) {
+    return `hut_mountain_hermit_${variant}`;
+  }
+  if (['lava_spine', 'abyssal_scar', 'immortal_ruins_valley', 'void_rift'].includes(regionId)) {
+    return `hut_obsidian_stone_${variant}`;
+  }
+  if (['thundersteppe', 'beast_prairies'].includes(regionId)) {
+    return `hut_steppe_shepherd_${variant}`;
+  }
+  if (['nine_springs_delta', 'mirror_lake'].includes(regionId) || terrainType.includes('river')) {
+    return `hut_stilt_fisher_${variant}`;
+  }
+  if (regionId === 'spirit_wood_sea' || terrainType === 'forest' || terrainType === 'spirit_wood') {
+    return `hut_pine_woodcutter_${variant}`;
+  }
+  if (['ore_teeth_range', 'sword_gorge'].includes(regionId)) {
+    return `hut_charcoal_burner_${variant}`;
+  }
+  if (['southern_plague_woods', 'venom_mire', 'southern_demon_domain', 'crimson_battlefield'].includes(regionId)) {
+    return `hut_hunter_thatched_${variant}`;
+  }
+  if (regionId === 'formation_barrens' || randVal > 0.80) {
+    return `hut_daoist_shrine_${variant}`;
+  }
+  return `hut_tea_harvester_${variant}`;
+}
+
+function selectCompanionPropPool(hutDefId, isAbandoned) {
+  if (isAbandoned) {
+    return [
+      'prop_extinguished_campfire',
+      'prop_wooden_fence_corner',
+      'prop_stone_prayer_stela',
+      'prop_water_storage_urn'
+    ];
+  }
+  if (hutDefId.includes('fisher')) {
+    return [
+      'prop_drying_fish_rack',
+      'prop_water_storage_urn',
+      'prop_small_stone_well',
+      'prop_moored_rowboat'
+    ];
+  }
+  if (hutDefId.includes('tea') || hutDefId.includes('harvester') || hutDefId.includes('bamboo')) {
+    return [
+      'prop_bamboo_tool_rack',
+      'prop_tea_kettle_stove',
+      'prop_drying_herb_rack',
+      'prop_vegetable_patch',
+      'prop_water_storage_urn'
+    ];
+  }
+  if (hutDefId.includes('woodcutter') || hutDefId.includes('charcoal') || hutDefId.includes('hunter')) {
+    return [
+      'prop_firewood_stack',
+      'prop_wooden_fence_corner',
+      'prop_small_stone_well',
+      'prop_drying_herb_rack',
+      'prop_bamboo_tool_rack'
+    ];
+  }
+  if (hutDefId.includes('shrine') || hutDefId.includes('hermit')) {
+    return [
+      'prop_stone_prayer_stela',
+      'prop_tea_kettle_stove',
+      'prop_small_stone_well',
+      'prop_water_storage_urn'
+    ];
+  }
+  return [
+    'prop_vegetable_patch',
+    'prop_small_stone_well',
+    'prop_firewood_stack',
+    'prop_tea_kettle_stove',
+    'prop_wooden_fence_corner'
+  ];
+}
+
 function resolveDef(defId, fallbackDefId = null) {
   if (defId && KNOWN_FRAMES.has(defId) && !isQuarantined(defId)) return defId;
   if (fallbackDefId && KNOWN_FRAMES.has(fallbackDefId) && !isQuarantined(fallbackDefId)) return fallbackDefId;
@@ -53,6 +248,12 @@ function matchesTerrain(allowedList, actualTerrain) {
   if (!allowedList || !Array.isArray(allowedList)) return true;
   if (allowedList.includes(actualTerrain)) return true;
   // Substring & alias matching for procedural generator terrain varieties
+  if (actualTerrain.includes('lake') || actualTerrain.includes('river') || actualTerrain.includes('sea') || actualTerrain.includes('ocean')) {
+    if (allowedList.some(t => t.includes('lake') || t.includes('river') || t.includes('sea') || t.includes('ocean') || t.includes('pond') || t.includes('water') || t === 'island_reef' || t === 'sea_reef')) return true;
+  }
+  if (actualTerrain.includes('mountain') || actualTerrain.includes('crag') || actualTerrain.includes('peak') || actualTerrain === 'cliff') {
+    if (allowedList.some(t => t.includes('mountain') || t === 'cliff' || t === 'hill' || t === 'canyon_floor')) return true;
+  }
   if (actualTerrain.includes('desert') || actualTerrain.includes('sand') || actualTerrain.includes('dune')) {
     if (allowedList.some(t => t.includes('desert') || t.includes('sand') || t.includes('dune') || t === 'arid_dirt')) return true;
   }
@@ -179,11 +380,22 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       }
     }
 
-    // 18% Dominance Limit rule (Prompt 1.3 & Fase D in Plan V8)
+    // Intra-chunk dominance limit rule (Prompt 1.3 & Prompt 4 SSOT)
+    // Dynamic cap per chunk guarantees single-type dominance <= 18% across all merged viewports
     if (objects.length > 0) {
       const sameCount = objects.filter(o => o.defId === defId).length;
-      if (sameCount >= 1 && (sameCount + 1) / (objects.length + 1) > 0.18) {
-        return false;
+      if (sameCount >= 1) {
+        let maxAllowed = 2;
+        const len = objects.length;
+        if (len >= 24) maxAllowed = 3;
+        if (len >= 40) maxAllowed = 4;
+        if (len >= 56) maxAllowed = 5;
+        if (len >= 74) maxAllowed = 6;
+        if (len >= 92) maxAllowed = 7;
+        if (len >= 110) maxAllowed = 8;
+        if (sameCount + 1 > maxAllowed) {
+          return false;
+        }
       }
     }
 
@@ -427,7 +639,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       enterable: !!p.enterable,
       structureTemplate: p.structureTemplate,
       facing: p.facing,
-      tags: ['authored', p.kind, p.anchorId, p.region]
+      tags: ['authored', p.kind, p.anchorId, p.region, (p.defId && p.defId.startsWith('hut_')) ? 'hut' : null, p.kind === 'house' ? 'shelter' : null].filter(Boolean)
     });
     authoredCount++;
   }
@@ -483,101 +695,241 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     }
   }
 
-  // 3. One-Grid Huts & Ambient Shelters Placement (Fase E & Plan V8)
-  // Approved proportions: 55% Decorative, 35% Enterable, 10% Abandoned
-  const centerTile = getTileAt(startTileX + 16, startTileY + 16);
-  const effectiveDanger = Math.max(centerTile.dangerTier || 1, chunkRegion.dangerTier || 1);
+  // 3. Wilderness Huts Outside Villages & Companion Props (Prompt 4 SSOT)
+  const allAnchors = worldData.getAnchors();
+  const chunkSpacings = new Set();
+  const samplePoints = [
+    [startTileX + 16, startTileY + 16],
+    [startTileX, startTileY],
+    [endTileX, startTileY],
+    [startTileX, endTileY],
+    [endTileX, endTileY]
+  ];
+  for (const [sx, sy] of samplePoints) {
+    const r = getRegionAt(sx, sy);
+    const sp = HUT_GRID_SPACING[r.id];
+    if (sp) chunkSpacings.add(sp);
+  }
 
-  // Spawn probability based on regional density:
-  // Populated plains/delta: ~0.65; mountain/desert: ~0.35; danger zones: ~0.20
-  const hutSpawnProb = isPopulated ? 0.65 : (effectiveDanger >= 3 ? 0.20 : 0.35);
+  for (const S of chunkSpacings) {
+    const minCellX = Math.floor((startTileX - 3) / S);
+    const maxCellX = Math.floor((endTileX + 3) / S);
+    const minCellY = Math.floor((startTileY - 3) / S);
+    const maxCellY = Math.floor((endTileY + 3) / S);
 
-  if (rand() < hutSpawnProb && (objects.length - authoredCount) < maxObjectsBudget) {
-    for (let attempt = 0; attempt < 16; attempt++) {
-      const hx = startTileX + 4 + Math.floor(rand() * 24);
-      const hy = startTileY + 4 + Math.floor(rand() * 24);
-      const tile = getTileAt(hx, hy);
-      const t = tile.terrainType || '';
+    for (let cy = minCellY; cy <= maxCellY; cy++) {
+      for (let cx = minCellX; cx <= maxCellX; cx++) {
+        const cellMinX = cx * S;
+        const cellMinY = cy * S;
+        const cellCenterX = cellMinX + Math.floor(S / 2);
+        const cellCenterY = cellMinY + Math.floor(S / 2);
+        const cellRegion = getRegionAt(cellCenterX, cellCenterY);
 
-      // Skip invalid terrain
-      if (t.includes('road') || t.includes('river') || t.includes('lake') || t === 'ocean' || t === 'sea' || tile.isSolid) {
-        continue;
-      }
+        // Only process if this cell's primary region matches S
+        if (HUT_GRID_SPACING[cellRegion.id] !== S) continue;
 
-      // Roll type: 55% decorative, 35% enterable, 10% abandoned (Prompt 1.1)
-      const typeRoll = rand();
-      let hutDefId = null;
-      let isEnterable = false;
-      let isAbandoned = false;
-      let hutName = 'Pondok Singgah Musafir';
+        const cellSeed = (worldSeed ^ (cx * 73856093) ^ (cy * 19349663) ^ (S * 83492791)) >>> 0;
+        const cellRand = createPRNG(cellSeed);
 
-      const isHighDanger = effectiveDanger >= 4;
-      const abandonedThreshold = isHighDanger ? 0.22 : 0.10;
+        // Deterministic candidate search within cell (Prompt 4 SSOT: Up to 3 huts in fertile S=40, up to 2 in S=60/90)
+        const cellHuts = [];
+        const maxHutSlots = S === 40 ? 3 : 2;
+        const minHutDist = S === 40 ? 12 : 16;
+        for (let hutSlot = 0; hutSlot < maxHutSlots; hutSlot++) {
+          let winningHut = null;
+          for (const preferScenic of [true, false]) {
+            if (winningHut) break;
+            const searchRand = createPRNG((cellSeed + hutSlot * 31337 + (preferScenic ? 1013 : 2027)) >>> 0);
+            for (let attempt = 0; attempt < 32; attempt++) {
+              const candX = cellMinX + 2 + Math.floor(searchRand() * (S - 4));
+              const candY = cellMinY + 2 + Math.floor(searchRand() * (S - 4));
 
-      if (typeRoll < abandonedThreshold) {
-        // Abandoned (10% normal, 35% in danger >= 4)
-        hutDefId = resolveDef('hut_abandoned_thatched_ruin', 'building_mountain_hermitage_shack');
-        isEnterable = true;
-        isAbandoned = true;
-        hutName = 'Gubuk Terbengkalai';
-      } else if (typeRoll < (abandonedThreshold + 0.35)) {
-        // 35% Enterable
-        isEnterable = true;
-        if (chunkRegion.id === 'azure_mountain_range' || chunkRegion.id === 'hermit_highlands') {
-          hutDefId = resolveDef('building_mountain_hermitage_shack', 'building_village_thatched_cottage');
-          hutName = 'Pondok Pertapa Gunung';
-        } else {
-          const rHut = rand();
-          if (rHut < 0.35) {
-            hutDefId = resolveDef('building_farm_hut_v1', 'building_village_thatched_cottage');
-            hutName = 'Pondok Ladang Petani';
-          } else if (rHut < 0.65) {
-            hutDefId = resolveDef('building_road_inn_v1', 'building_village_thatched_cottage');
-            hutName = 'Kedai Musafir';
+              // If placing secondary/tertiary hut, ensure spacing Chebyshev >= minHutDist
+              if (cellHuts.length > 0) {
+                const tooClose = cellHuts.some(h => Math.max(Math.abs(candX - h.x), Math.abs(candY - h.y)) < minHutDist);
+                if (tooClose) continue;
+              }
+
+              const tile = getTileAt(candX, candY);
+              if (!tile) continue;
+              const t = tile.terrainType || '';
+              // Allow hermit huts & ruins on mountain/cliff/rock terrain
+              if (tile.isSolid && !t.includes('mountain') && !t.includes('cliff') && !t.includes('rock') && !t.includes('crag') && !t.includes('peak') && !t.includes('pass')) continue;
+              if (WATER_TERRAINS.has(t) || t.includes('road') || t.includes('pass') || t === 'settlement' || tile.isSettlementOrigin) continue;
+
+              // Anchor rejection (Chebyshev >= 8)
+              let nearAnchor = false;
+              for (const a of allAnchors) {
+                if (Math.max(Math.abs(candX - a.x), Math.abs(candY - a.y)) < 8) {
+                  nearAnchor = true;
+                  break;
+                }
+              }
+              if (nearAnchor) continue;
+
+              // Road rejection (Chebyshev >= 3)
+              let nearRoad = false;
+              for (let dy = -2; dy <= 2; dy++) {
+                for (let dx = -2; dx <= 2; dx++) {
+                  const checkX = candX + dx;
+                  const checkY = candY + dy;
+                  const nt = getTileAt(checkX, checkY);
+                  if (nt && (nt.terrainType.includes('road') || AUTHORED_ROAD_TILES.has(`${checkX},${checkY}`))) {
+                    nearRoad = true;
+                    break;
+                  }
+                }
+                if (nearRoad) break;
+              }
+              if (nearRoad) continue;
+
+              // Prefer scenic (4 cardinal checks at dist 3, fast O(1))
+              if (preferScenic) {
+                let isScenic = false;
+                const SCENIC_CHECKS = [{ dx: 3, dy: 0 }, { dx: -3, dy: 0 }, { dx: 0, dy: 3 }, { dx: 0, dy: -3 }];
+                for (const sc of SCENIC_CHECKS) {
+                  const nt = getTileAt(candX + sc.dx, candY + sc.dy);
+                  if (nt) {
+                    const ntt = nt.terrainType || '';
+                    if (WATER_TERRAINS.has(ntt) || ntt.includes('road') || ntt.includes('forest') || ntt === 'spirit_wood' || ntt.includes('mountain')) {
+                      isScenic = true;
+                      break;
+                    }
+                  }
+                }
+                if (!isScenic) continue;
+              }
+
+              winningHut = { x: candX, y: candY };
+              break;
+            }
+          }
+          if (winningHut) cellHuts.push(winningHut);
+          else if (hutSlot === 0) break;
+        }
+
+        for (let hi = 0; hi < cellHuts.length; hi++) {
+          const winningHut = cellHuts[hi];
+          const hutRand = createPRNG((cellSeed + hi * 47329) >>> 0);
+          const hx = winningHut.x;
+          const hy = winningHut.y;
+          const hutTile = getTileAt(hx, hy);
+          const effectiveDanger = Math.max(hutTile.dangerTier || 1, cellRegion.dangerTier || 1);
+          const isHighDanger = effectiveDanger >= 4;
+
+          // Proportions roll
+          const propRoll = hutRand();
+          let isAbandoned = false;
+          let enterable = false;
+          let structureTemplate = 'hut_6x5';
+
+          if (isHighDanger) {
+            if (propRoll < 0.35) {
+              isAbandoned = true;
+              enterable = true;
+              structureTemplate = 'hut_abandoned_6x5';
+            } else if (propRoll < 0.70) {
+              isAbandoned = false;
+              enterable = true;
+              structureTemplate = 'hut_6x5';
+            } else {
+              isAbandoned = false;
+              enterable = false;
+              structureTemplate = 'hut_6x5';
+            }
           } else {
-            hutDefId = resolveDef('building_village_thatched_cottage', 'building_mountain_hermitage_shack');
-            hutName = 'Pondok Singgah Musafir';
+            if (propRoll < 0.10) {
+              isAbandoned = true;
+              enterable = true;
+              structureTemplate = 'hut_abandoned_6x5';
+            } else if (propRoll < 0.45) {
+              isAbandoned = false;
+              enterable = true;
+              structureTemplate = 'hut_6x5';
+            } else {
+              isAbandoned = false;
+              enterable = false;
+              structureTemplate = 'hut_6x5';
+            }
+          }
+
+          const hutDefId = selectWildernessHutDef(cellRegion.id, hutTile.terrainType || '', isAbandoned, hutRand());
+          const hutName = HUT_LABELS[hutDefId] || (isAbandoned ? 'Gubuk Terbengkalai' : 'Pondok Singgah Musafir');
+          const hutCol = getCanonCollision(hutDefId, 1, 1);
+
+          // Place hut if inside this chunk
+          if (hx >= startTileX && hx <= endTileX && hy >= startTileY && hy <= endTileY) {
+            if (canPlaceFootprint(hx, hy, hutCol.w, hutCol.h, occupiedGrid, getTileAt, false, hutDefId, objects)) {
+              const objId = `wilderness_hut_${hx}_${hy}`;
+              markFootprintOccupied(hx, hy, hutCol.w, hutCol.h, occupiedGrid, objId, hutDefId);
+              objects.push({
+                id: objId,
+                defId: hutDefId,
+                x: hx,
+                y: hy,
+                collision: 'solid',
+                enterable,
+                isAbandoned,
+                structureTemplate,
+                customLabel: hutName,
+                tags: ['hut', 'wilderness_hut', 'shelter', isAbandoned ? 'abandoned' : (enterable ? 'enterable' : 'decorative'), cellRegion.id]
+              });
+            }
+          }
+
+          // Companion props (0..3)
+          const numProps = Math.floor(hutRand() * 4);
+          if (numProps > 0) {
+            const propPool = selectCompanionPropPool(hutDefId, isAbandoned);
+            const COMPANION_OFFSETS = [
+              { dx: -2, dy: -1 }, { dx: -2, dy: 0 }, { dx: -2, dy: 1 },
+              { dx: 2, dy: -1 }, { dx: 2, dy: 0 }, { dx: 2, dy: 1 },
+              { dx: -1, dy: 2 }, { dx: 0, dy: 2 }, { dx: 1, dy: 2 },
+              { dx: -1, dy: -2 }, { dx: 0, dy: -2 }, { dx: 1, dy: -2 }
+            ];
+
+            const shuffledOffsets = [...COMPANION_OFFSETS].sort((a, b) => {
+              const hA = ((a.dx * 37 + a.dy * 19) + cellSeed + hi * 17) % 100;
+              const hB = ((b.dx * 37 + b.dy * 19) + cellSeed + hi * 17) % 100;
+              return hA - hB;
+            });
+
+            let placedProps = 0;
+            for (const off of shuffledOffsets) {
+              if (placedProps >= numProps) break;
+              const px = hx + off.dx;
+              const py = hy + off.dy;
+
+              if (px < startTileX || px > endTileX || py < startTileY || py > endTileY) {
+                placedProps++;
+                continue;
+              }
+
+              const pTile = getTileAt(px, py);
+              if (!pTile || (pTile.isSolid && !pTile.terrainType.includes('mountain') && !pTile.terrainType.includes('cliff'))) continue;
+              const pt = pTile.terrainType || '';
+              const propDefId = propPool[(placedProps + Math.floor(hutRand() * propPool.length)) % propPool.length];
+
+              if (WATER_TERRAINS.has(pt) && propDefId !== 'prop_moored_rowboat') continue;
+              if (pt.includes('road') || pt.includes('pass') || pt === 'settlement' || pTile.isSettlementOrigin) continue;
+
+              const pCol = getCanonCollision(propDefId, 1, 1);
+              if (canPlaceFootprint(px, py, pCol.w, pCol.h, occupiedGrid, getTileAt, false, propDefId, objects)) {
+                const pObjId = `companion_prop_${px}_${py}`;
+                markFootprintOccupied(px, py, pCol.w, pCol.h, occupiedGrid, pObjId, propDefId);
+                objects.push({
+                  id: pObjId,
+                  defId: propDefId,
+                  x: px,
+                  y: py,
+                  collision: (propDefId === 'prop_extinguished_campfire' || propDefId === 'prop_vegetable_patch') ? 'none' : 'soft',
+                  tags: ['companion_prop', 'prop', cellRegion.id]
+                });
+                placedProps++;
+              }
+            }
           }
         }
-      } else {
-        // 55% Decorative
-        isEnterable = false;
-        const rDeco = rand();
-        if (rDeco < 0.35) {
-          hutDefId = resolveDef('building_tea_pavilion_v1', 'building_village_thatched_cottage');
-          hutName = 'Paviliun Minum Teh';
-        } else if (rDeco < 0.65) {
-          hutDefId = resolveDef('building_village_thatched_cottage', 'building_mountain_hermitage_shack');
-          hutName = 'Gubuk Jerami';
-        } else {
-          hutDefId = resolveDef('building_wayside_tea_resting_shed', 'building_village_thatched_cottage');
-          hutName = 'Shed Peristirahatan';
-        }
-      }
-
-      // If resolveDef returned null, skip placement
-      if (!hutDefId) continue;
-
-      // Use canon collision footprint (Prompt 1.2)
-      const col = getCanonCollision(hutDefId, 1, 1);
-      const hw = col.w || 1;
-      const hh = col.h || 1;
-
-      if (canPlaceFootprint(hx, hy, hw, hh, occupiedGrid, getTileAt, false, hutDefId, objects)) {
-        const objId = `hut_${hx}_${hy}`;
-        markFootprintOccupied(hx, hy, hw, hh, occupiedGrid, objId, hutDefId);
-        objects.push({
-          id: objId,
-          defId: hutDefId,
-          x: hx,
-          y: hy,
-          collision: 'solid',
-          enterable: isEnterable,
-          isAbandoned,
-          customLabel: hutName,
-          tags: ['hut', 'shelter', isEnterable ? 'enterable' : 'decorative', chunkRegion.id]
-        });
-        break;
       }
     }
   }
@@ -594,47 +946,184 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       const terrain = tile.terrainType || '';
       const region = getRegionAt(x, y);
 
-      // --- DESERT & ARID DUNES ---
-      if (terrain.includes('desert') || terrain.includes('sand') || terrain.includes('dune') || terrain === 'oasis' || region.id === 'western_sacred_desert' || region.id === 'western_gorge_labyrinth') {
+      // --- WATER TERRAINS (SEA, OCEAN, LAKES, RIVERS, REEFS) ---
+      if (WATER_TERRAINS.has(terrain)) {
         const roll = rand();
-        if (roll < 0.08) {
+        if (roll < 0.085) {
+          let waterPool = [];
+          if (region.id === 'frostmoon_sea') {
+            waterPool = [
+              'resource_snow_lotus',
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_mossy_river_driftwood',
+              'prop_moored_rowboat',
+              'nature_reed_bed_marsh',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_lotus_pond_cluster',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          } else if (region.id === 'eastern_sea') {
+            waterPool = [
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_lotus_pond_cluster',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_mossy_river_driftwood',
+              'nature_reed_bed_marsh',
+              'prop_moored_rowboat',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          } else if (region.id === 'floating_wind_isles') {
+            waterPool = [
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_lotus_pond_cluster',
+              'nature_mossy_river_driftwood',
+              'prop_moored_rowboat',
+              'nature_reed_bed_marsh',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          } else if (region.id === 'bone_sea_coast') {
+            waterPool = [
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_mossy_river_driftwood',
+              'prop_moored_rowboat',
+              'nature_reed_bed_marsh',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_lotus_pond_cluster',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          } else if (region.id === 'mirror_lake') {
+            waterPool = [
+              'nature_lotus_pond_cluster',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_reed_bed_marsh',
+              'nature_mossy_river_driftwood',
+              'prop_moored_rowboat',
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          } else {
+            // Interior lakes, ponds, deltas, and rivers
+            waterPool = [
+              'nature_lotus_pond_cluster',
+              'nature_scatter_celestial_lotus_pond_rockery',
+              'nature_reed_bed_marsh',
+              'nature_mossy_river_driftwood',
+              'prop_moored_rowboat',
+              'nature_scatter_coastal_glowing_coral_rock',
+              'nature_mossy_stream_cascade',
+              'structure_prof_fishing_bamboo_raft_spirit_net_dock',
+              'nature_willow_lone_stream',
+              'building_ferry_dock_shed',
+              'nature_mountain_waterfall_splash_basin'
+            ];
+          }
+
+          const startIdx = Math.floor(rand() * waterPool.length);
+          for (let wi = 0; wi < waterPool.length; wi++) {
+            const defId = waterPool[(startIdx + wi) % waterPool.length];
+            const col = getCanonCollision(defId, 1, 1);
+            if (canPlaceFootprint(x, y, col.w, col.h, occupiedGrid, getTileAt, false, defId, objects)) {
+              const objId = `water_obj_${x}_${y}`;
+              markFootprintOccupied(x, y, col.w, col.h, occupiedGrid, objId, defId);
+              objects.push({
+                id: objId,
+                defId,
+                x,
+                y,
+                collision: (defId === 'nature_lotus_pond_cluster' || defId === 'nature_scatter_celestial_lotus_pond_rockery' || defId === 'resource_snow_lotus' || defId === 'nature_mossy_stream_cascade') ? 'none' : 'soft',
+                tags: ['water_scatter', region.id]
+              });
+              break;
+            }
+          }
+        }
+      }
+
+      // --- MOUNTAIN, ROCK, PEAK, CRAG, HILL & CLIFF SCATTER ---
+      else if (terrain === 'azure_mountain' || terrain.includes('mountain') || terrain.includes('crag') || terrain.includes('peak') || terrain === 'cliff' || terrain === 'hill' || terrain.includes('canyon') || region.id === 'ore_teeth_range') {
+        const roll = rand();
+        if (roll < 0.35) {
+          const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
+            !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
+          );
+          const candidateFlora = [
+            assetBindings.natureScatters.trees.find(t => t.defId.includes('pine_ancient')) || assetBindings.natureScatters.trees[2],
+            assetBindings.natureScatters.trees.find(t => t.defId.includes('twisted_juniper')) || assetBindings.natureScatters.trees[1],
+            ...assetBindings.natureScatters.trees.filter(t => t.defId.startsWith('tree_dead_wood_')),
+            ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
+          ].filter(Boolean);
+          const pool = [...candidateRocks, ...candidateFlora];
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let ri = 0; ri < pool.length; ri++) {
+            const rDef = pool[(startIdx + ri) % pool.length];
+            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
+              const objId = `mountain_${x}_${y}`;
+              markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
+              objects.push({
+                id: objId,
+                defId: rDef.defId,
+                x,
+                y,
+                collision: rDef.collision,
+                tags: ['mountain', 'barrier', region.id]
+              });
+              break;
+            }
+          }
+        }
+      }
+
+      // --- DESERT & ARID DUNES ---
+      else if (terrain.includes('desert') || terrain.includes('sand') || terrain.includes('dune') || terrain === 'oasis' || region.id === 'western_sacred_desert' || region.id === 'western_gorge_labyrinth') {
+        const roll = rand();
+        if (roll < 0.26) {
           const desertRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes('western_sacred_desert') || r.biomes.includes('desert')
           );
-          const rDef = desertRocks.length > 0
-            ? desertRocks[Math.floor(rand() * desertRocks.length)]
-            : assetBindings.natureScatters.rocks[7];
-
-          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
-            const objId = `desert_rock_${x}_${y}`;
-            markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
-            objects.push({
-              id: objId,
-              defId: rDef.defId,
-              x,
-              y,
-              collision: rDef.collision,
-              tags: ['desert', 'rock', region.id]
-            });
-          }
-        } else if (roll < 0.12) {
+          const deadWoods = assetBindings.natureScatters.trees.filter(t => t.defId.startsWith('tree_dead_wood_'));
           const candidateFlora = [
             assetBindings.natureScatters.trees.find(t => t.defId.includes('locust')) || assetBindings.natureScatters.trees[12],
-            ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes.includes('western_sacred_desert') || s.biomes.includes('desert'))
+            ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes.includes('western_sacred_desert') || s.biomes.includes('desert')),
+            ...deadWoods
           ].filter(Boolean);
-
-          const fDef = candidateFlora[Math.floor(rand() * candidateFlora.length)];
-          if (fDef && canPlaceFootprint(x, y, fDef.cw, fDef.ch, occupiedGrid, getTileAt, false, fDef.defId, objects)) {
-            const objId = `desert_flora_${x}_${y}`;
-            markFootprintOccupied(x, y, fDef.cw, fDef.ch, occupiedGrid, objId, fDef.defId);
-            objects.push({
-              id: objId,
-              defId: fDef.defId,
-              x,
-              y,
-              collision: fDef.collision,
-              tags: ['desert', 'flora', region.id]
-            });
+          const pool = [...desertRocks, ...candidateFlora];
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `desert_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['desert', region.id]
+              });
+              break;
+            }
           }
         }
       }
@@ -642,7 +1131,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- DEAD WOOD, LAVA, VOLCANIC OBSIDIAN, BASALT & CRATER ---
       else if (terrain === 'dead_wood' || terrain.includes('lava') || terrain.includes('volcano') || terrain === 'basalt' || terrain === 'crater' || region.id === 'lava_spine') {
         const roll = rand();
-        if (roll < 0.24) {
+        if (roll < 0.26) {
           const volcanicPillars = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('lava_spine') || r.biomes.includes('abyssal_scar'))
           );
@@ -653,19 +1142,22 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             s.biomes && s.biomes.includes('lava_spine')
           );
           const pool = [...volcanicPillars, ...deadTrees, ...stumps];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[7];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `volcanic_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['volcanic', 'dead_wood', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `volcanic_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['volcanic', 'dead_wood', region.id]
+              });
+              break;
+            }
           }
         }
       }
@@ -673,12 +1165,12 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- SWAMP, DEMONIC SWAMP, POISON POOL & MIASMA WETLANDS ---
       else if (terrain === 'swamp' || terrain === 'demonic_swamp' || terrain === 'poison_pool' || region.id === 'venom_mire' || region.id === 'southern_plague_woods') {
         const roll = rand();
-        if (roll < 0.25) {
+        if (roll < 0.26) {
           const swampTrees = assetBindings.natureScatters.trees.filter(t =>
             t.biomes && (t.biomes.includes('swamp') || t.biomes.includes('venom_mire') || t.biomes.includes('southern_plague_woods') || t.biomes.includes('dead_wood'))
           );
           const swampRocks = assetBindings.natureScatters.rocks.filter(r =>
-            r.biomes && (r.biomes.includes('venom_mire') || r.biomes.includes('abyssal_scar') || r.biomes.includes('mountain'))
+            r.biomes && (r.biomes.includes('venom_mire') || r.biomes.includes('abyssal_scar') || r.biomes.includes('mountain') || r.biomes.includes('southern_plague_woods'))
           );
           const swampWaters = (assetBindings.natureScatters.waters || []).filter(w =>
             w.biomes && w.biomes.includes('venom_mire')
@@ -687,50 +1179,56 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             s.biomes && (s.biomes.includes('dead_wood') || s.biomes.includes('lava_spine'))
           );
           const pool = [...swampTrees, ...swampRocks, ...swampWaters, ...swampStumps];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.trees[8];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `swamp_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['swamp', 'miasma', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `swamp_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['swamp', 'miasma', region.id]
+              });
+              break;
+            }
           }
         }
       }
 
       // --- BATTLEFIELD ASH, MIASMA WASTE & ABYSS EDGE ---
-      else if (terrain === 'battlefield_ash' || terrain === 'miasma_waste' || terrain === 'abyss_edge' || region.id === 'crimson_battlefield' || region.id === 'abyssal_scar' || region.id === 'void_rift') {
+      else if (terrain === 'battlefield_ash' || terrain === 'miasma_waste' || terrain === 'abyss_edge' || region.id === 'crimson_battlefield' || region.id === 'abyssal_scar' || region.id === 'void_rift' || region.id === 'southern_demon_domain') {
         const roll = rand();
-        if (roll < 0.26) {
+        if (roll < 0.28) {
           const abyssRocks = assetBindings.natureScatters.rocks.filter(r =>
-            r.biomes && (r.biomes.includes('abyssal_scar') || r.biomes.includes('void_rift') || r.biomes.includes('crimson_battlefield') || r.biomes.includes('mountain'))
+            r.biomes && (r.biomes.includes('abyssal_scar') || r.biomes.includes('void_rift') || r.biomes.includes('crimson_battlefield') || r.biomes.includes('southern_demon_domain') || r.biomes.includes('mountain'))
           );
           const abyssTrees = assetBindings.natureScatters.trees.filter(t =>
-            t.biomes && (t.biomes.includes('abyssal_scar') || t.biomes.includes('crimson_battlefield') || t.biomes.includes('dead_wood') || t.biomes.includes('void_rift'))
+            t.biomes && (t.biomes.includes('abyssal_scar') || t.biomes.includes('crimson_battlefield') || t.biomes.includes('southern_demon_domain') || t.biomes.includes('dead_wood') || t.biomes.includes('void_rift'))
           );
           const abyssShrubs = (assetBindings.natureScatters.shrubs || []).filter(s =>
             s.biomes && (s.biomes.includes('crimson_battlefield') || s.biomes.includes('abyssal_scar'))
           );
           const pool = [...abyssRocks, ...abyssTrees, ...abyssShrubs];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[7];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `abyss_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['abyss', 'desolate', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `abyss_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['abyss', 'desolate', region.id]
+              });
+              break;
+            }
           }
         }
       }
@@ -746,47 +1244,53 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             t.biomes && (t.biomes.includes('sword_gorge') || t.biomes.includes('mountain'))
           );
           const pool = [...gorgeRocks, ...gorgeTrees];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[5];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `gorge_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['gorge', 'cliff', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `gorge_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['gorge', 'cliff', region.id]
+              });
+              break;
+            }
           }
         }
       }
 
       // --- SNOW, GLACIER, ICE CRACK & FROZEN TUNDRA ---
-      else if (terrain === 'snow' || terrain === 'glacier' || terrain === 'ice_crack' || region.id === 'northern_desolate' || region.id === 'frostmoon_sea') {
+      else if (terrain === 'snow' || terrain === 'glacier' || terrain === 'ice_crack' || region.id === 'northern_desolate') {
         const roll = rand();
-        if (roll < 0.22) {
+        if (roll < 0.25) {
           const frostTrees = assetBindings.natureScatters.trees.filter(t =>
-            t.biomes && (t.biomes.includes('northern_desolate') || t.biomes.includes('frostmoon_sea'))
+            t.biomes && (t.biomes.includes('northern_desolate') || t.biomes.includes('mountain'))
           );
           const frostRocks = assetBindings.natureScatters.rocks.filter(r =>
-            r.biomes && (r.biomes.includes('northern_desolate') || r.biomes.includes('frostmoon_sea') || r.biomes.includes('mountain'))
+            r.biomes && (r.biomes.includes('northern_desolate') || r.biomes.includes('mountain'))
           );
           const pool = [...frostTrees, ...frostRocks];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.trees[6];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `frost_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['frost', 'tundra', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `frost_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['frost', 'tundra', region.id]
+              });
+              break;
+            }
           }
         }
       }
@@ -805,19 +1309,22 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             t.biomes && (t.biomes.includes('eastern_sea') || t.biomes.includes('floating_wind_isles'))
           );
           const pool = [...islandWaters, ...islandRocks, ...islandTrees];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[4];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `island_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['island', 'reef', region.id]
-            });
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `island_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
+              objects.push({
+                id: objId,
+                defId: itemDef.defId,
+                x,
+                y,
+                collision: itemDef.collision,
+                tags: ['island', 'reef', region.id]
+              });
+              break;
+            }
           }
         }
       }
@@ -825,75 +1332,37 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- FORMATION BARRENS ---
       else if (terrain === 'formation_tile' || region.id === 'formation_barrens') {
         const roll = rand();
-        if (roll < 0.20) {
+        if (roll < 0.25) {
           const formRocks = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('formation_barrens') || r.biomes.includes('mountain'))
           );
           const formShrubs = (assetBindings.natureScatters.shrubs || []).filter(s =>
-            s.biomes && s.biomes.includes('thundersteppe')
+            s.biomes && (s.biomes.includes('thundersteppe') || s.biomes.includes('formation_barrens'))
           );
-          const pool = [...formRocks, ...formShrubs];
-          const itemDef = pool.length > 0 ? pool[Math.floor(rand() * pool.length)] : assetBindings.natureScatters.rocks[7];
-
-          if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
-            const objId = `formation_${x}_${y}`;
-            markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
-            objects.push({
-              id: objId,
-              defId: itemDef.defId,
-              x,
-              y,
-              collision: itemDef.collision,
-              tags: ['formation', region.id]
-            });
-          }
-        }
-      }
-
-      // --- MOUNTAIN, ROCK, PEAK & HILL SCATTER ---
-      else if (terrain === 'azure_mountain' || terrain === 'mountain' || terrain === 'mountain_rock' || terrain === 'mountain_peak' || terrain === 'hill') {
-        const roll = rand();
-        if (roll < 0.35) {
-          const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
-            !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain')
+          const formTrees = assetBindings.natureScatters.trees.filter(t =>
+            t.biomes && (t.biomes.includes('formation_barrens') || t.biomes.includes('dead_wood'))
           );
-          const rDef = candidateRocks.length > 0
-            ? candidateRocks[Math.floor(rand() * candidateRocks.length)]
-            : assetBindings.natureScatters.rocks[0];
-
-          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
-            const objId = `rock_${x}_${y}`;
-            markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
-            objects.push({
-              id: objId,
-              defId: rDef.defId,
-              x,
-              y,
-              collision: rDef.collision,
-              tags: ['mountain', 'barrier', region.id]
-            });
-          }
-        } else if (roll < 0.45) {
-          const ridgeTrees = assetBindings.natureScatters.trees.filter(t =>
-            t.biomes && (t.biomes.includes('mountain') || t.biomes.includes(region.id))
-          );
-          if (ridgeTrees.length > 0) {
-            const tDef = ridgeTrees[Math.floor(rand() * ridgeTrees.length)];
-            if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
-              const objId = `mountain_tree_${x}_${y}`;
-              markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId, tDef.defId);
+          const pool = [...formRocks, ...formShrubs, ...formTrees];
+          const startIdx = Math.floor(rand() * pool.length);
+          for (let pi = 0; pi < pool.length; pi++) {
+            const itemDef = pool[(startIdx + pi) % pool.length];
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+              const objId = `formation_${x}_${y}`;
+              markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
                 id: objId,
-                defId: tDef.defId,
+                defId: itemDef.defId,
                 x,
                 y,
-                collision: tDef.collision,
-                tags: ['mountain', 'tree', region.id]
+                collision: itemDef.collision,
+                tags: ['formation', region.id]
               });
+              break;
             }
           }
         }
       }
+
 
       // --- BAMBOO GROVE CLUSTER ---
       else if (terrain.includes('bamboo')) {
