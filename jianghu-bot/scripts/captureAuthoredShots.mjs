@@ -103,10 +103,40 @@ async function main() {
   for (const t of targets) {
     const url = `http://localhost:3000/world?debugCam=${t.x},${t.y},${t.zoom}`;
     console.log(`Navigating to ${t.title} at (${t.x}, ${t.y})...`);
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
-    // Wait for canvas to load and render chunks
-    await page.waitForTimeout(4000);
+    try {
+      await page.waitForFunction(() => (window).__chunksReady === true, { timeout: 15000 });
+    } catch (_) {
+      // Fallback in case of subtle timer mismatch
+    }
+
+    // Ensure all core and settlement atlas textures are resident
+    await page.evaluate(async () => {
+      const loader = (window).atlasLoader;
+      if (loader) {
+        await Promise.all([
+          loader.loadPage('settlement_0'),
+          loader.loadPage('settlement_1'),
+          loader.loadPage('settlement_2'),
+          loader.loadPage('settlement_3'),
+          loader.loadPage('core_0'),
+          loader.loadPage('core_1'),
+          loader.loadPage('biome_nature_0'),
+          loader.loadPage('biome_nature_1'),
+          loader.loadPage('biome_nature_2'),
+          loader.loadPage('biome_nature_3'),
+          loader.loadPage('biome_nature_4'),
+          loader.loadPage('biome_nature_5')
+        ]);
+      }
+    });
+
+    // Wait 1.2s for canvas to render newly resident textures
+    await page.waitForTimeout(1200);
+
+    const metrics = await page.evaluate(() => (window).__debugMetrics);
+    console.log(`- Metrics for ${t.title}: sprites=${metrics?.spriteCount}, uniqueDefs=${metrics?.uniqueDefIds}, blockages=${metrics?.roadBlockages}`);
 
     const outPath = path.join(outDir, `${t.name}.png`);
     await page.screenshot({ path: outPath, fullPage: false });
