@@ -327,9 +327,13 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
   const objects = [];
   const occupiedGrid = new Map();
-  // Density Noise Field (Fase D in Plan V8): modulated budget between 35 and 110 (ceiling 140)
+  const chunkRegion = getRegionAt(startTileX + 16, startTileY + 16);
+  const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
+
+  // Density Noise Field (Fase D in Plan V8): modulated budget between 35 and 110 (ceiling 140, boosted in populated)
   const densityNoise = Math.sin(chunkX * 0.37 + 1.3) * Math.cos(chunkY * 0.37 + 0.9) * 0.5 + 0.5;
-  const maxObjectsBudget = Math.floor(35 + densityNoise * 75);
+  const baseBudget = isPopulated ? 65 : 35;
+  const maxObjectsBudget = Math.floor(baseBudget + densityNoise * (isPopulated ? 55 : 75));
 
   // 1. Set-pieces from anchors & 29 Regional Landmarks
   const anchorsInChunk = worldData.getAnchors().filter(a =>
@@ -482,12 +486,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   // 3. One-Grid Huts & Ambient Shelters Placement (Fase E & Plan V8)
   // Approved proportions: 55% Decorative, 35% Enterable, 10% Abandoned
   const centerTile = getTileAt(startTileX + 16, startTileY + 16);
-  const chunkRegion = getRegionAt(startTileX + 16, startTileY + 16);
   const effectiveDanger = Math.max(centerTile.dangerTier || 1, chunkRegion.dangerTier || 1);
 
   // Spawn probability based on regional density:
   // Populated plains/delta: ~0.65; mountain/desert: ~0.35; danger zones: ~0.20
-  const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
   const hutSpawnProb = isPopulated ? 0.65 : (effectiveDanger >= 3 ? 0.20 : 0.35);
 
   if (rand() < hutSpawnProb && (objects.length - authoredCount) < maxObjectsBudget) {
@@ -997,64 +999,78 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- PLAINS, MEADOW & PRAIRIE SCATTER ---
       else if (terrain === 'plains' || terrain === 'meadow' || terrain === 'farmland' || terrain === 'herb_field' || region.id === 'central_plains' || region.id === 'beast_prairies' || region.id === 'border_march' || region.id === 'nine_springs_delta' || region.id === 'mirror_lake') {
         const roll = rand();
-        if (roll < 0.06) {
+        const treeThreshold = isPopulated ? 0.09 : 0.06;
+        const shrubThreshold = isPopulated ? 0.22 : 0.12;
+        const rockThreshold = isPopulated ? 0.30 : 0.16;
+
+        if (roll < treeThreshold) {
           const candidateTrees = assetBindings.natureScatters.trees.filter(t =>
             !t.biomes || t.biomes.includes(region.id) || t.biomes.includes('plains')
           );
-          const tDef = candidateTrees.length > 0
-            ? candidateTrees[Math.floor(rand() * candidateTrees.length)]
-            : assetBindings.natureScatters.trees[0];
-
-          if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
-            const objId = `tree_${x}_${y}`;
-            markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId, tDef.defId);
-            objects.push({
-              id: objId,
-              defId: tDef.defId,
-              x,
-              y,
-              collision: tDef.collision,
-              tags: ['tree', 'scholar', region.id]
-            });
+          if (candidateTrees.length > 0) {
+            const startIdx = Math.floor(rand() * candidateTrees.length);
+            for (let ti = 0; ti < candidateTrees.length; ti++) {
+              const tDef = candidateTrees[(startIdx + ti) % candidateTrees.length];
+              if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
+                const objId = `tree_${x}_${y}`;
+                markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId, tDef.defId);
+                objects.push({
+                  id: objId,
+                  defId: tDef.defId,
+                  x,
+                  y,
+                  collision: tDef.collision,
+                  tags: ['tree', 'scholar', region.id]
+                });
+                break;
+              }
+            }
           }
-        } else if (roll < 0.12) {
+        } else if (roll < shrubThreshold) {
           const shrubs = (assetBindings.natureScatters.shrubs || []).filter(s =>
             !s.biomes || s.biomes.includes(region.id) || s.biomes.includes('plains') || s.biomes.includes('meadow')
           );
           if (shrubs.length > 0) {
-            const sDef = shrubs[Math.floor(rand() * shrubs.length)];
-            if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getTileAt, false, sDef.defId, objects)) {
-              const objId = `shrub_${x}_${y}`;
-              markFootprintOccupied(x, y, sDef.cw, sDef.ch, occupiedGrid, objId, sDef.defId);
-              objects.push({
-                id: objId,
-                defId: sDef.defId,
-                x,
-                y,
-                collision: sDef.collision,
-                tags: ['shrub', region.id]
-              });
+            const startIdx = Math.floor(rand() * shrubs.length);
+            for (let si = 0; si < shrubs.length; si++) {
+              const sDef = shrubs[(startIdx + si) % shrubs.length];
+              if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getTileAt, false, sDef.defId, objects)) {
+                const objId = `shrub_${x}_${y}`;
+                markFootprintOccupied(x, y, sDef.cw, sDef.ch, occupiedGrid, objId, sDef.defId);
+                objects.push({
+                  id: objId,
+                  defId: sDef.defId,
+                  x,
+                  y,
+                  collision: sDef.collision,
+                  tags: ['shrub', region.id]
+                });
+                break;
+              }
             }
           }
-        } else if (roll < 0.16) {
+        } else if (roll < rockThreshold) {
           const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('plains')
           );
-          const rDef = candidateRocks.length > 0
-            ? candidateRocks[Math.floor(rand() * candidateRocks.length)]
-            : assetBindings.natureScatters.rocks[6];
-
-          if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
-            const objId = `rock_${x}_${y}`;
-            markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
-            objects.push({
-              id: objId,
-              defId: rDef.defId,
-              x,
-              y,
-              collision: rDef.collision,
-              tags: ['rock', region.id]
-            });
+          if (candidateRocks.length > 0) {
+            const startIdx = Math.floor(rand() * candidateRocks.length);
+            for (let ri = 0; ri < candidateRocks.length; ri++) {
+              const rDef = candidateRocks[(startIdx + ri) % candidateRocks.length];
+              if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
+                const objId = `rock_${x}_${y}`;
+                markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
+                objects.push({
+                  id: objId,
+                  defId: rDef.defId,
+                  x,
+                  y,
+                  collision: rDef.collision,
+                  tags: ['rock', region.id]
+                });
+                break;
+              }
+            }
           }
         }
       }
