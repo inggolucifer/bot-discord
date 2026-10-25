@@ -13,6 +13,7 @@
 
 import { CANONICAL_REGIONS } from '@/config/canonicalRegions';
 import { atlasLoader } from './atlasLoader';
+import { groundTextures } from './groundTextures';
 
 export interface TerrainWashPalette {
   baseColor: string;
@@ -682,6 +683,11 @@ export function renderChunkGroundBitmap(
 ): HTMLCanvasElement | null {
   if (typeof document === 'undefined') return null;
 
+  if (groundTextures.ready) {
+    const textured = renderChunkGroundBitmapTextured(cx, cy, tiles, tileSize, getNeighborTerrain);
+    if (textured) return textured;
+  }
+
   const canvasWidth = CHUNK_SIZE * tileSize;
   const canvasHeight = CHUNK_SIZE * tileSize;
 
@@ -748,6 +754,249 @@ export function renderChunkGroundBitmap(
     const sy = ly * tileSize;
 
     renderL3GroundDecal(ctx, sx, sy, tileSize, t.tileX, t.tileY, t.terrainType);
+  }
+
+  return canvas;
+}
+
+// Scratch canvas cache for texture layer rasterization to avoid GC pauses
+const scratchCanvasMap = new Map<string, { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D }>();
+
+function getScratch(id: string, w: number, h: number) {
+  if (typeof document === 'undefined') return null;
+  let item = scratchCanvasMap.get(id);
+  if (!item) {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    const ctx = c.getContext('2d');
+    if (!ctx) return null;
+    item = { canvas: c, ctx };
+    scratchCanvasMap.set(id, item);
+  } else {
+    if (item.canvas.width !== w || item.canvas.height !== h) {
+      item.canvas.width = w;
+      item.canvas.height = h;
+    }
+  }
+  return item;
+}
+
+const FAMILY_RENDER_ORDER = [
+  'ocean', 'swamp', 'demonic_swamp', 'poison_pool', 'ice_crack', 'snow',
+  'desert_sand', 'dune', 'island_reef', 'canyon_floor', 'hill', 'plains',
+  'meadow', 'farmland', 'herb_field', 'forest_floor', 'bamboo_floor',
+  'dead_wood', 'miasma_waste', 'battlefield_ash', 'crater', 'volcanic',
+  'lava_flow', 'lightning_scar', 'abyss_edge', 'rock_ground', 'mountain_pass',
+  'ruin_floor', 'formation_tile', 'settlement_floor', 'road_stone'
+];
+
+function getFamilyPriority(f: string): number {
+  const idx = FAMILY_RENDER_ORDER.indexOf(f);
+  return idx >= 0 ? idx : Math.floor(FAMILY_RENDER_ORDER.length / 2);
+}
+
+const perfRing: number[] = [];
+
+/**
+ * High-fidelity seamless ink-wash textured ground renderer (V9 Prompt B4 & B5).
+ * Renders layered multi-family seamless textures with soft edge masks and macro radial variation.
+ */
+export function renderChunkGroundBitmapTextured(
+  cx: number,
+  cy: number,
+  tiles: Array<{ tileX: number; tileY: number; terrainType: string }>,
+  tileSize: number = 54,
+  getNeighborTerrain?: NeighborTerrainFn
+): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+  const t0 = performance.now();
+
+  const canvasWidth = CHUNK_SIZE * tileSize;
+  const canvasHeight = CHUNK_SIZE * tileSize;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Build tile lookup dictionary for chunk-local fast neighbor queries
+  const tileLookup = new Map<string, string>();
+  for (const t of tiles) {
+    tileLookup.set(`${t.tileX},${t.tileY}`, t.terrainType);
+  }
+
+  const chunkNeighborTerrain: NeighborTerrainFn = (x, y) => {
+    return tileLookup.get(`${x},${y}`) || (getNeighborTerrain ? getNeighborTerrain(x, y) : undefined);
+  };
+
+  // Step 2: Determine family for each tile in chunk + border 2 tiles (36x36 grid)
+  const BORDER = 2;
+  const GRID_DIM = CHUNK_SIZE + BORDER * 2; // 36
+  const gridFamilies = new Array<string>(GRID_DIM * GRID_DIM);
+  const presentFamilies = new Set<string>();
+
+  for (let dy = -BORDER; dy < CHUNK_SIZE + BORDER; dy++) {
+    for (let dx = -BORDER; dx < CHUNK_SIZE + BORDER; dx++) {
+      const gx = cx * CHUNK_SIZE + dx;
+      const gy = cy * CHUNK_SIZE + dy;
+      const terrain = chunkNeighborTerrain(gx, gy) || 'plains';
+      const fInfo = groundTextures.familyOf(terrain);
+      const fam = fInfo ? fInfo.family : 'plains';
+      const idx = (dy + BORDER) * GRID_DIM + (dx + BORDER);
+      gridFamilies[idx] = fam;
+      presentFamilies.add(fam);
+    }
+  }
+
+  // Step 3: Sort families by bottom->top render priority
+  const sortedFamilies = Array.from(presentFamilies).sort((a, b) => getFamilyPriority(a) - getFamilyPriority(b));
+
+  // Prepare scratch canvases
+  const scratchT = getScratch('T', canvasWidth, canvasHeight);
+  const scratchM = getScratch('M', GRID_DIM, GRID_DIM);
+  const scratchMB = getScratch('MB', GRID_DIM * tileSize, GRID_DIM * tileSize);
+  const scratchMB2 = getScratch('MB2', GRID_DIM * tileSize, GRID_DIM * tileSize);
+
+  if (!scratchT || !scratchM || !scratchMB || !scratchMB2) return null;
+
+  const ctxT = scratchT.ctx;
+  const ctxM = scratchM.ctx;
+  const ctxMB = scratchMB.ctx;
+  const ctxMB2 = scratchMB2.ctx;
+
+  // Step 4: Render each family
+  for (const F of sortedFamilies) {
+    ctxT.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctxT.globalCompositeOperation = 'source-over';
+
+    // 4b: Small mask M (36x36)
+    const imgData = ctxM.createImageData(GRID_DIM, GRID_DIM);
+    const d32 = new Uint32Array(imgData.data.buffer);
+    for (let i = 0; i < gridFamilies.length; i++) {
+      d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+    }
+    ctxM.putImageData(imgData, 0, 0);
+
+    // 4c: Upscale M to MB with high quality smoothing
+    ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+    ctxMB.imageSmoothingEnabled = true;
+    ctxMB.imageSmoothingQuality = 'high';
+    ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+
+    // Copy MB to MB2 with organic blur
+    ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+    const blurPx = F === 'road_stone' ? tileSize * 0.12 : tileSize * 0.22;
+    ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
+    ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+    ctxMB2.filter = 'none';
+
+    // 4e: Fill T with 8x8 block variations aligned to world coordinates
+    const fInfo = groundTextures.familyOf(F);
+    const variants = fInfo && fInfo.variants && fInfo.variants.length > 0
+      ? fInfo.variants
+      : [`${F}_v1`, `${F}_v2`, `${F}_v3`];
+
+    const BLOCK_TILES = 8;
+    const blockPx = BLOCK_TILES * tileSize;
+    const textureSpanPx = 4 * tileSize; // 216px at tileSize 54
+    const scale = textureSpanPx / 256; // 0.84375
+
+    for (let by = 0; by < CHUNK_SIZE; by += BLOCK_TILES) {
+      for (let bx = 0; bx < CHUNK_SIZE; bx += BLOCK_TILES) {
+        const blockTileX = cx * CHUNK_SIZE + bx;
+        const blockTileY = cy * CHUNK_SIZE + by;
+        const variantIdx = Math.abs(hash2d(Math.floor(blockTileX / 8), Math.floor(blockTileY / 8))) % variants.length;
+        const variantId = variants[variantIdx];
+        const pattern = groundTextures.getPattern(ctxT, variantId);
+
+        if (pattern) {
+          const worldPx = blockTileX * tileSize;
+          const worldPy = blockTileY * tileSize;
+          const originX = -((worldPx % textureSpanPx + textureSpanPx) % textureSpanPx);
+          const originY = -((worldPy % textureSpanPx + textureSpanPx) % textureSpanPx);
+
+          if (typeof (pattern as any).setTransform === 'function') {
+            const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
+            pattern.setTransform(matrix);
+          }
+          ctxT.fillStyle = pattern;
+          ctxT.fillRect(bx * tileSize, by * tileSize, blockPx, blockPx);
+        }
+      }
+    }
+
+    // 4f: Mask T with blurred MB2
+    ctxT.globalCompositeOperation = 'destination-in';
+    ctxT.drawImage(
+      scratchMB2.canvas,
+      BORDER * tileSize,
+      BORDER * tileSize,
+      canvasWidth,
+      canvasHeight,
+      0,
+      0,
+      canvasWidth,
+      canvasHeight
+    );
+    ctxT.globalCompositeOperation = 'source-over';
+
+    // 4g: Draw T onto chunk canvas
+    ctx.drawImage(scratchT.canvas, 0, 0);
+  }
+
+  // Step 5: Macro radial overlay (anti-repetition)
+  const hashVal = (hash2d(cx * 7 + 3, cy * 13 + 5) >>> 0) / 0xffffffff;
+  const alpha = Math.min(0.1, 0.05 + 0.05 * hashVal);
+  const isDark = (hash2d(cx * 11 + 1, cy * 17 + 2) & 1) === 0;
+  const grad = ctx.createRadialGradient(
+    canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.1,
+    canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.7
+  );
+  grad.addColorStop(0, isDark ? `rgba(0, 0, 0, ${alpha.toFixed(3)})` : `rgba(255, 255, 255, ${alpha.toFixed(3)})`);
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  // Step 6a: Autotiles for Rivers & Roads (G4 Base)
+  for (const t of tiles) {
+    const lx = t.tileX - cx * CHUNK_SIZE;
+    const ly = t.tileY - cy * CHUNK_SIZE;
+    const sx = lx * tileSize;
+    const sy = ly * tileSize;
+
+    const isRiver = t.terrainType.includes('river') || t.terrainType.includes('lake') || t.terrainType.includes('water') || t.terrainType.includes('sea');
+    const isRoad = t.terrainType.includes('road');
+
+    if (isRiver || isRoad) {
+      const bitmask = calculateAutotileBitmask(t.tileX, t.tileY, t.terrainType, chunkNeighborTerrain);
+      const frameId = getAutotileFrameId(t.terrainType, bitmask);
+      if (atlasLoader.hasFrame(frameId)) {
+        atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.95);
+      }
+    }
+  }
+
+  // Step 6b: Procedural Ground Decals (G3)
+  for (const t of tiles) {
+    const lx = t.tileX - cx * CHUNK_SIZE;
+    const ly = t.tileY - cy * CHUNK_SIZE;
+    const sx = lx * tileSize;
+    const sy = ly * tileSize;
+
+    renderL3GroundDecal(ctx, sx, sy, tileSize, t.tileX, t.tileY, t.terrainType);
+  }
+
+  // Step 7: Performance profiling
+  const elapsed = performance.now() - t0;
+  perfRing.push(elapsed);
+  if (perfRing.length > 20) perfRing.shift();
+  if (perfRing.length === 20 && Math.random() < 0.05) {
+    const sorted = [...perfRing].sort((a, b) => a - b);
+    const median = sorted[10].toFixed(1);
+    const p95 = sorted[18].toFixed(1);
+    console.log(`[GROUND-PERF] Chunk render median: ${median}ms, p95: ${p95}ms (target <= 45ms)`);
   }
 
   return canvas;

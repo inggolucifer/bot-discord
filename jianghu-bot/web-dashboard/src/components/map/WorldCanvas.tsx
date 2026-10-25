@@ -28,6 +28,7 @@ import {
 import { CANONICAL_REGIONS, CANONICAL_LANDMARKS } from '@/config/canonicalRegions';
 import { Compass, ZoomIn, ZoomOut, Target, Map as MapIcon, Layers, Navigation, Hammer } from 'lucide-react';
 import { atlasLoader } from '@/lib/atlasLoader';
+import { groundTextures } from '@/lib/groundTextures';
 import { isDefIdQuarantined } from '@/config/assetQuarantine';
 import { chunkManager, CHUNK_SIZE, MAX_CHUNK_X, MAX_CHUNK_Y } from '@/lib/chunkManager';
 import {
@@ -232,9 +233,10 @@ export default function WorldCanvas({
   // Build Mode State (Fase 18)
   const [isBuildMode, setIsBuildMode] = useState(false);
 
-  // Preload Core WebP Atlases on Mount (Fase 19)
+  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9)
   useEffect(() => {
     atlasLoader.preloadCoreAtlases();
+    groundTextures.load().catch(() => {});
     loadWorldRasterImage().catch(() => {});
   }, []);
 
