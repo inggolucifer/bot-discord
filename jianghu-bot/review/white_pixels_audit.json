@@ -1,0 +1,868 @@
+{
+  "core_0": [
+    {
+      "fId": "mt_rock_4x3",
+      "whiteCount": 11484,
+      "pct": 5.64
+    },
+    {
+      "fId": "spirit_tree_2x2",
+      "whiteCount": 6455,
+      "pct": 10.92
+    },
+    {
+      "fId": "mt_rock_2x2",
+      "whiteCount": 3497,
+      "pct": 6.71
+    },
+    {
+      "fId": "mt_rock_3x2",
+      "whiteCount": 2945,
+      "pct": 4.24
+    },
+    {
+      "fId": "resource_heavenly_iron_ore",
+      "whiteCount": 3714,
+      "pct": 4.76
+    },
+    {
+      "fId": "resource_ancient_sword_tomb",
+      "whiteCount": 5010,
+      "pct": 6.58
+    },
+    {
+      "fId": "ancient_relic_haotian_tower",
+      "whiteCount": 5309,
+      "pct": 11.82
+    },
+    {
+      "fId": "ancient_relic_lianyao_flask",
+      "whiteCount": 1663,
+      "pct": 4.77
+    },
+    {
+      "fId": "ancient_relic_pan_gu_axe",
+      "whiteCount": 4207,
+      "pct": 5.24
+    },
+    {
+      "fId": "ancient_relic_nuwa_stone",
+      "whiteCount": 9744,
+      "pct": 14.41
+    }
+  ],
+  "core_1": [
+    {
+      "fId": "mt_rock_2x1",
+      "whiteCount": 1226,
+      "pct": 5.35
+    },
+    {
+      "fId": "resource_snow_lotus",
+      "whiteCount": 613,
+      "pct": 4.29
+    },
+    {
+      "fId": "resource_dragon_blood_grass",
+      "whiteCount": 777,
+      "pct": 4.29
+    },
+    {
+      "fId": "ancient_relic_fuxi_guqin",
+      "whiteCount": 1020,
+      "pct": 6.45
+    }
+  ],
+  "icons_ui": [
+    {
+      "fId": "icon_res_herb",
+      "whiteCount": 1133,
+      "pct": 9.03
+    },
+    {
+      "fId": "icon_mount_flying_sword",
+      "whiteCount": 9151,
+      "pct": 72.39
+    },
+    {
+      "fId": "icon_pill_cultivation",
+      "whiteCount": 314,
+      "pct": 4.98
+    },
+    {
+      "fId": "icon_alchemy_cauldron",
+      "whiteCount": 3799,
+      "pct": 29.58
+    },
+    {
+      "fId": "icon_fishing_rod",
+      "whiteCount": 567,
+      "pct": 19.06
+    },
+    {
+      "fId": "icon_storage_ring",
+      "whiteCount": 965,
+      "pct": 8.9
+    },
+    {
+      "fId": "icon_weather_rain",
+      "whiteCount": 705,
+      "pct": 9.5
+    },
+    {
+      "fId": "icon_weather_snow",
+      "whiteCount": 827,
+      "pct": 14.38
+    },
+    {
+      "fId": "icon_elixir_bottle",
+      "whiteCount": 357,
+      "pct": 7.61
+    },
+    {
+      "fId": "icon_spirit_stone",
+      "whiteCount": 385,
+      "pct": 5.42
+    },
+    {
+      "fId": "icon_sword_celestial",
+      "whiteCount": 444,
+      "pct": 10.53
+    },
+    {
+      "fId": "icon_shield_spirit",
+      "whiteCount": 1150,
+      "pct": 10.71
+    },
+    {
+      "fId": "icon_herb_thousand_ginseng",
+      "whiteCount": 616,
+      "pct": 12.43
+    },
+    {
+      "fId": "icon_weapon_spear_dragon",
+      "whiteCount": 1978,
+      "pct": 33.92
+    },
+    {
+      "fId": "icon_weapon_saber_dragon",
+      "whiteCount": 1226,
+      "pct": 17.93
+    },
+    {
+      "fId": "icon_armor_celestial_robe",
+      "whiteCount": 2167,
+      "pct": 23.68
+    },
+    {
+      "fId": "icon_formation_talisman_gold",
+      "whiteCount": 344,
+      "pct": 4.39
+    },
+    {
+      "fId": "icon_elixir_longevity_peach",
+      "whiteCount": 2058,
+      "pct": 20.58
+    },
+    {
+      "fId": "icon_badge_mastery_fishing",
+      "whiteCount": 1151,
+      "pct": 8.86
+    },
+    {
+      "fId": "icon_commodity_spirit_herbal_bundle",
+      "whiteCount": 968,
+      "pct": 12.36
+    },
+    {
+      "fId": "icon_commodity_spirit_silk_bolt",
+      "whiteCount": 407,
+      "pct": 4.83
+    },
+    {
+      "fId": "icon_commodity_spirit_beast_pelt",
+      "whiteCount": 477,
+      "pct": 5.62
+    },
+    {
+      "fId": "icon_commodity_spirit_fish_carp",
+      "whiteCount": 795,
+      "pct": 12.52
+    },
+    {
+      "fId": "icon_commodity_spirit_cotton_yarn",
+      "whiteCount": 1071,
+      "pct": 11.74
+    },
+    {
+      "fId": "icon_commodity_spirit_silk_cocoon_basket",
+      "whiteCount": 391,
+      "pct": 4.87
+    },
+    {
+      "fId": "icon_commodity_spirit_glazed_wine_gourd",
+      "whiteCount": 321,
+      "pct": 4.33
+    },
+    {
+      "fId": "icon_commodity_spirit_fermented_tofu_jar",
+      "whiteCount": 442,
+      "pct": 4.37
+    },
+    {
+      "fId": "icon_commodity_spirit_steamed_lotus_seed_paste_tin",
+      "whiteCount": 497,
+      "pct": 5.37
+    },
+    {
+      "fId": "icon_commodity_spirit_fermented_rice_koji_brick",
+      "whiteCount": 315,
+      "pct": 4.78
+    },
+    {
+      "fId": "icon_commodity_spirit_salted_duck_egg_clay_pot",
+      "whiteCount": 607,
+      "pct": 5.95
+    }
+  ],
+  "monsters_0": [
+    {
+      "fId": "monster_regional_primordial_azure_dragon",
+      "whiteCount": 21640,
+      "pct": 13.41
+    },
+    {
+      "fId": "monster_regional_glacial_frost_mastodon",
+      "whiteCount": 6551,
+      "pct": 4.13
+    },
+    {
+      "fId": "monster_regional_frostmoon_sea_ice_dragon_turtle",
+      "whiteCount": 8870,
+      "pct": 8.42
+    },
+    {
+      "fId": "monster_regional_sword_gorge_ancient_blade_spirit",
+      "whiteCount": 7348,
+      "pct": 14.75
+    }
+  ],
+  "monsters_1": [
+    {
+      "fId": "monster_regional_nine_tailed_fox",
+      "whiteCount": 12184,
+      "pct": 15.63
+    },
+    {
+      "fId": "monster_regional_floating_wind_isles_celestial_wind_roc",
+      "whiteCount": 5674,
+      "pct": 12.55
+    },
+    {
+      "fId": "monster_regional_nine_springs_delta_dragon_carp",
+      "whiteCount": 10680,
+      "pct": 14.88
+    },
+    {
+      "fId": "monster_regional_mirror_lake_water_spirit_siren",
+      "whiteCount": 5618,
+      "pct": 8.14
+    },
+    {
+      "fId": "monster_regional_central_plains_sacred_white_tiger",
+      "whiteCount": 13023,
+      "pct": 15.39
+    },
+    {
+      "fId": "monster_regional_hermit_highlands_cloud_silver_crane",
+      "whiteCount": 11810,
+      "pct": 26.39
+    },
+    {
+      "fId": "mount_shadow_tiger",
+      "whiteCount": 5011,
+      "pct": 6.31
+    },
+    {
+      "fId": "monster_storm_roc",
+      "whiteCount": 4443,
+      "pct": 5.65
+    },
+    {
+      "fId": "mount_feather_crane",
+      "whiteCount": 16807,
+      "pct": 24.31
+    },
+    {
+      "fId": "monster_abyssal_serpent",
+      "whiteCount": 6282,
+      "pct": 7.33
+    }
+  ],
+  "monsters_2": [
+    {
+      "fId": "monster_white_tiger",
+      "whiteCount": 11128,
+      "pct": 13.06
+    }
+  ],
+  "biome_nature_0": [
+    {
+      "fId": "landmark_floating_wind_isles_floating_daoist_citadel",
+      "whiteCount": 21743,
+      "pct": 9.15
+    }
+  ],
+  "biome_nature_1": [
+    {
+      "fId": "landmark_immortal_ruins_valley_celestial_gateway_remnant",
+      "whiteCount": 12985,
+      "pct": 6.64
+    },
+    {
+      "fId": "landmark_frostmoon_sea_frozen_dragon_skull_isle",
+      "whiteCount": 10510,
+      "pct": 5.56
+    }
+  ],
+  "biome_nature_2": [
+    {
+      "fId": "landmark_eastern_sea_dragon_turtle_shell_shrine",
+      "whiteCount": 15842,
+      "pct": 7.15
+    },
+    {
+      "fId": "landmark_formation_barrens_broken_bagua_array",
+      "whiteCount": 35824,
+      "pct": 15.08
+    }
+  ],
+  "biome_nature_3": [
+    {
+      "fId": "landmark_sword_gorge_giant_fallen_blade_bridge",
+      "whiteCount": 10753,
+      "pct": 4.73
+    }
+  ],
+  "biome_nature_4": [
+    {
+      "fId": "nature_scatter_frost_crystal_pine_bonsai",
+      "whiteCount": 6523,
+      "pct": 12.23
+    },
+    {
+      "fId": "nature_ancient_scholar_cypress_stone_cairn",
+      "whiteCount": 3868,
+      "pct": 5.76
+    },
+    {
+      "fId": "nature_ancient_scholar_twisted_juniper",
+      "whiteCount": 5435,
+      "pct": 6.85
+    },
+    {
+      "fId": "nature_ancient_scholar_weeping_willow_bank",
+      "whiteCount": 9231,
+      "pct": 9.84
+    },
+    {
+      "fId": "nature_ancient_scholar_twisted_wisteria_canopy",
+      "whiteCount": 6643,
+      "pct": 6.55
+    },
+    {
+      "fId": "nature_ancient_scholar_silver_birch_grove",
+      "whiteCount": 10497,
+      "pct": 10.8
+    }
+  ],
+  "biome_nature_5": [
+    {
+      "fId": "nature_ancient_scholar_weeping_peach_blossom",
+      "whiteCount": 7796,
+      "pct": 10.3
+    },
+    {
+      "fId": "nature_ancient_scholar_twisted_locust_tree",
+      "whiteCount": 9017,
+      "pct": 11.49
+    },
+    {
+      "fId": "nature_ancient_scholar_twisted_camphor_canopy",
+      "whiteCount": 6679,
+      "pct": 7.99
+    },
+    {
+      "fId": "nature_cherry_blossom_twin",
+      "whiteCount": 3682,
+      "pct": 4.83
+    },
+    {
+      "fId": "azure_peak_crag",
+      "whiteCount": 3544,
+      "pct": 6.81
+    },
+    {
+      "fId": "nature_pine_ancient_twisted",
+      "whiteCount": 5044,
+      "pct": 7.5
+    },
+    {
+      "fId": "nature_karst_twin_peaks",
+      "whiteCount": 3358,
+      "pct": 4.04
+    },
+    {
+      "fId": "nature_plum_blossom_lone",
+      "whiteCount": 8099,
+      "pct": 12.94
+    },
+    {
+      "fId": "nature_cypress_grove_mist",
+      "whiteCount": 4510,
+      "pct": 5.55
+    },
+    {
+      "fId": "nature_willow_lone_stream",
+      "whiteCount": 3401,
+      "pct": 4.63
+    },
+    {
+      "fId": "nature_rock_stepping_stones",
+      "whiteCount": 5090,
+      "pct": 5.51
+    },
+    {
+      "fId": "nature_pine_windswept_cliff",
+      "whiteCount": 3300,
+      "pct": 5.51
+    }
+  ],
+  "biome_nature_6": [
+    {
+      "fId": "nature_lotus_pond_cluster",
+      "whiteCount": 3128,
+      "pct": 5.89
+    },
+    {
+      "fId": "nature_wisteria_ancient_arbor",
+      "whiteCount": 2989,
+      "pct": 4.07
+    },
+    {
+      "fId": "nature_wild_mountain_medicinal_angelica",
+      "whiteCount": 3239,
+      "pct": 4.26
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_astragalus",
+      "whiteCount": 3971,
+      "pct": 4.58
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_licorice_root",
+      "whiteCount": 4454,
+      "pct": 5.03
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_dendrobium_orchid",
+      "whiteCount": 3605,
+      "pct": 5.36
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_polygonatum_kingianum",
+      "whiteCount": 4797,
+      "pct": 9.11
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_codonopsis_dangshen",
+      "whiteCount": 2221,
+      "pct": 4.09
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_rehmannia_dihuang",
+      "whiteCount": 2652,
+      "pct": 4.84
+    },
+    {
+      "fId": "nature_mountain_wild_medicinal_baical_skullcap_huangqin",
+      "whiteCount": 3236,
+      "pct": 5.45
+    },
+    {
+      "fId": "mt_azure_crag_v1",
+      "whiteCount": 1492,
+      "pct": 6.65
+    },
+    {
+      "fId": "mt_azure_crag_v2",
+      "whiteCount": 1380,
+      "pct": 6.84
+    },
+    {
+      "fId": "mt_azure_crag_v3",
+      "whiteCount": 1312,
+      "pct": 6.96
+    },
+    {
+      "fId": "mt_azure_crag_v4",
+      "whiteCount": 1518,
+      "pct": 6.77
+    }
+  ],
+  "biome_nature_7": [
+    {
+      "fId": "mt_azure_crag_v5",
+      "whiteCount": 1355,
+      "pct": 6.57
+    },
+    {
+      "fId": "mt_azure_crag_v6",
+      "whiteCount": 1248,
+      "pct": 6.46
+    },
+    {
+      "fId": "nature_river_pebble_shoal",
+      "whiteCount": 5418,
+      "pct": 6.31
+    },
+    {
+      "fId": "nature_mossy_river_driftwood",
+      "whiteCount": 3980,
+      "pct": 4.96
+    },
+    {
+      "fId": "tree_spirit_peach_v1",
+      "whiteCount": 1493,
+      "pct": 9.68
+    },
+    {
+      "fId": "tree_spirit_peach_v2",
+      "whiteCount": 1348,
+      "pct": 9.73
+    },
+    {
+      "fId": "tree_spirit_peach_v3",
+      "whiteCount": 1262,
+      "pct": 9.73
+    },
+    {
+      "fId": "tree_spirit_peach_v4",
+      "whiteCount": 1473,
+      "pct": 9.55
+    },
+    {
+      "fId": "tree_spirit_peach_v5",
+      "whiteCount": 1380,
+      "pct": 9.73
+    },
+    {
+      "fId": "tree_spirit_peach_v6",
+      "whiteCount": 1214,
+      "pct": 9.57
+    }
+  ],
+  "settlement_0": [
+    {
+      "fId": "xitong_city_landmark",
+      "whiteCount": 16591,
+      "pct": 6.95
+    },
+    {
+      "fId": "building_wooden_watchtower",
+      "whiteCount": 1687,
+      "pct": 5.11
+    }
+  ],
+  "settlement_1": [
+    {
+      "fId": "building_village_stone_water_trough",
+      "whiteCount": 3885,
+      "pct": 5.19
+    },
+    {
+      "fId": "building_wayside_bamboo_raft_mooring_post",
+      "whiteCount": 4142,
+      "pct": 5.34
+    },
+    {
+      "fId": "building_wayside_stone_boundary_stele",
+      "whiteCount": 3091,
+      "pct": 4.81
+    },
+    {
+      "fId": "building_wayside_straw_scarecrow_bamboo",
+      "whiteCount": 3793,
+      "pct": 5.45
+    },
+    {
+      "fId": "building_wayside_wooden_mile_marker_stele",
+      "whiteCount": 3502,
+      "pct": 4.61
+    }
+  ],
+  "settlement_2": [
+    {
+      "fId": "building_wayside_bamboo_courier_mailbox_stand",
+      "whiteCount": 2257,
+      "pct": 4.83
+    },
+    {
+      "fId": "building_wayside_mile_marker_stele",
+      "whiteCount": 2251,
+      "pct": 5
+    }
+  ],
+  "settlement_3": [
+    {
+      "fId": "building_roadside_tea_stall",
+      "whiteCount": 4225,
+      "pct": 4.38
+    },
+    {
+      "fId": "building_stone_lantern_shrine",
+      "whiteCount": 2909,
+      "pct": 4.29
+    },
+    {
+      "fId": "building_wayside_spirit_altar",
+      "whiteCount": 3595,
+      "pct": 5.07
+    }
+  ],
+  "interior_0": [
+    {
+      "fId": "structure_interior_sect_celestial_talisman_drying_rotunda",
+      "whiteCount": 6484,
+      "pct": 7.38
+    }
+  ],
+  "interior_1": [
+    {
+      "fId": "structure_interior_sect_spirit_pet_feeding_pen",
+      "whiteCount": 5407,
+      "pct": 5.07
+    },
+    {
+      "fId": "structure_interior_sect_patriarch_cloud_meditation_couch",
+      "whiteCount": 13220,
+      "pct": 8.15
+    },
+    {
+      "fId": "structure_interior_sect_spirit_array_core_compass",
+      "whiteCount": 7291,
+      "pct": 4.56
+    },
+    {
+      "fId": "structure_interior_sect_disciples_wooden_bunk_bed",
+      "whiteCount": 5785,
+      "pct": 7.46
+    },
+    {
+      "fId": "structure_interior_sect_herbal_medicine_drying_screen",
+      "whiteCount": 4144,
+      "pct": 5.59
+    },
+    {
+      "fId": "structure_interior_sect_disciples_wooden_washbasin_stand",
+      "whiteCount": 8842,
+      "pct": 21.69
+    },
+    {
+      "fId": "structure_interior_sect_spirit_orchid_potted_bonsai_pedestal",
+      "whiteCount": 8580,
+      "pct": 26.06
+    }
+  ],
+  "interior_2": [
+    {
+      "fId": "structure_interior_sect_weapon_rack_spears_halberds",
+      "whiteCount": 5861,
+      "pct": 8.76
+    },
+    {
+      "fId": "structure_interior_sect_astrological_armillary_sphere",
+      "whiteCount": 5370,
+      "pct": 6.29
+    },
+    {
+      "fId": "structure_interior_sect_calligraphy_talisman_desk",
+      "whiteCount": 3359,
+      "pct": 4.2
+    },
+    {
+      "fId": "structure_interior_sect_disciples_archery_target_straw_dummy",
+      "whiteCount": 2242,
+      "pct": 5.72
+    },
+    {
+      "fId": "structure_interior_sect_disciples_weapon_cleaning_oil_bench",
+      "whiteCount": 4710,
+      "pct": 5.11
+    },
+    {
+      "fId": "structure_interior_meditation_jade_cushion_dais",
+      "whiteCount": 6971,
+      "pct": 7.12
+    },
+    {
+      "fId": "structure_interior_sect_disciples_tea_drying_bamboo_trellis",
+      "whiteCount": 5745,
+      "pct": 6.65
+    }
+  ],
+  "interior_3": [
+    {
+      "fId": "structure_interior_sect_sword_washing_pool_fountain",
+      "whiteCount": 3182,
+      "pct": 4.84
+    },
+    {
+      "fId": "structure_interior_sect_ancestral_bell_stand_chime_set",
+      "whiteCount": 3517,
+      "pct": 6.54
+    },
+    {
+      "fId": "structure_interior_sect_talisman_calligraphy_scroll_drying_rack",
+      "whiteCount": 8981,
+      "pct": 18.73
+    },
+    {
+      "fId": "structure_interior_sect_dragon_carved_scripture_reading_throne",
+      "whiteCount": 5131,
+      "pct": 7.45
+    },
+    {
+      "fId": "structure_interior_sect_patriarch_ancestral_portrait_shrine",
+      "whiteCount": 2563,
+      "pct": 4.61
+    },
+    {
+      "fId": "structure_interior_sect_talisman_woodblock_printing_press",
+      "whiteCount": 3174,
+      "pct": 4.99
+    },
+    {
+      "fId": "structure_interior_sect_spiritual_beast_mount_saddle_rack",
+      "whiteCount": 9697,
+      "pct": 14.32
+    },
+    {
+      "fId": "structure_interior_sect_daoist_bell_resonance_tuning_frame",
+      "whiteCount": 6858,
+      "pct": 10.93
+    }
+  ],
+  "interior_4": [
+    {
+      "fId": "structure_interior_sect_medicinal_herb_fermentation_urn_bench",
+      "whiteCount": 5256,
+      "pct": 8.03
+    },
+    {
+      "fId": "structure_interior_sect_astronomy_star_chart_globe",
+      "whiteCount": 4065,
+      "pct": 4.6
+    },
+    {
+      "fId": "structure_interior_sect_bronze_bell_clock_tower",
+      "whiteCount": 4729,
+      "pct": 7.83
+    },
+    {
+      "fId": "structure_interior_sect_bronze_bell_chime_stand",
+      "whiteCount": 2038,
+      "pct": 13.19
+    },
+    {
+      "fId": "structure_interior_ancient_weapon_rack",
+      "whiteCount": 2395,
+      "pct": 13.24
+    }
+  ],
+  "dungeon_1": [
+    {
+      "fId": "structure_dungeon_ancient_soul_ward_runic_iron_gate",
+      "whiteCount": 3149,
+      "pct": 4.08
+    },
+    {
+      "fId": "structure_dungeon_ancient_chain_suspended_cage",
+      "whiteCount": 5815,
+      "pct": 13.18
+    }
+  ],
+  "dungeon_2": [
+    {
+      "fId": "structure_dungeon_ancient_bone_brazier_skull_tripod",
+      "whiteCount": 6175,
+      "pct": 10.42
+    },
+    {
+      "fId": "structure_dungeon_ancient_bone_coffin_chain_suspension",
+      "whiteCount": 2736,
+      "pct": 5.4
+    },
+    {
+      "fId": "structure_dungeon_ancient_soul_suppression_bronze_pillar",
+      "whiteCount": 1895,
+      "pct": 5.96
+    },
+    {
+      "fId": "structure_dungeon_ancient_spiked_wooden_barricade_gate",
+      "whiteCount": 4798,
+      "pct": 6.33
+    },
+    {
+      "fId": "structure_dungeon_ancient_torture_rack_stretching_bench",
+      "whiteCount": 3785,
+      "pct": 5.07
+    },
+    {
+      "fId": "structure_dungeon_ancient_soul_chain_suspended_cage_trap",
+      "whiteCount": 6320,
+      "pct": 12.53
+    },
+    {
+      "fId": "structure_dungeon_ancient_collapsing_stalactite_tripwire_trap",
+      "whiteCount": 2587,
+      "pct": 4.1
+    },
+    {
+      "fId": "structure_dungeon_ancient_flying_guillotine_blade_trap",
+      "whiteCount": 10281,
+      "pct": 11.75
+    },
+    {
+      "fId": "structure_dungeon_ancient_soul_reaping_scythe_pillar",
+      "whiteCount": 4087,
+      "pct": 7.95
+    }
+  ],
+  "dungeon_3": [
+    {
+      "fId": "structure_dungeon_underground_bone_bridge_segment",
+      "whiteCount": 4534,
+      "pct": 5.44
+    },
+    {
+      "fId": "structure_dungeon_ancient_soul_lantern_pillar",
+      "whiteCount": 541,
+      "pct": 4.11
+    }
+  ],
+  "settlement_4": [
+    {
+      "fId": "hut_snow_thatched_day",
+      "whiteCount": 1446,
+      "pct": 4.85
+    }
+  ],
+  "scenes_water_0": [
+    {
+      "fId": "glacial_iceberg_floating",
+      "whiteCount": 11360,
+      "pct": 5.71
+    }
+  ]
+}

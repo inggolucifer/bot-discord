@@ -8348,5 +8348,905 @@
       "y": 0.92
     },
     "light": null
+  },
+  "ancient_submerged_stone_bridge": {
+    "id": "ancient_submerged_stone_bridge",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 672,
+    "srcH": 459,
+    "visualW": 4,
+    "visualH": 3,
+    "pxPerTile": 168,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "celestial_floating_wind_pagoda_shrine": {
+    "id": "celestial_floating_wind_pagoda_shrine",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 465,
+    "srcH": 620,
+    "visualW": 4,
+    "visualH": 5,
+    "pxPerTile": 116.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "floating_cloud_rock_isle": {
+    "id": "floating_cloud_rock_isle",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 558,
+    "srcH": 600,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 139.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "ghost_ship_frozen_ice_wreck": {
+    "id": "ghost_ship_frozen_ice_wreck",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 608,
+    "srcH": 600,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 121.6,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "glacial_iceberg_floating": {
+    "id": "glacial_iceberg_floating",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 625,
+    "srcH": 600,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 156.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "leviathan_spine_arch_reef": {
+    "id": "leviathan_spine_arch_reef",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 672,
+    "srcH": 465,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 134.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "sea_dragon_skeleton_remnant": {
+    "id": "sea_dragon_skeleton_remnant",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 672,
+    "srcH": 568,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 134.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "sea_shipwreck_abandoned": {
+    "id": "sea_shipwreck_abandoned",
+    "page": "scenes_water_0",
+    "category": "water_scene",
+    "srcW": 672,
+    "srcH": 565,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 134.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_bastion_wall": {
+    "id": "mt_bastion_wall",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 469,
+    "visualW": 5,
+    "visualH": 4.5,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_bastion_wall_v1": {
+    "id": "mt_bastion_wall_v1",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 469,
+    "visualW": 5,
+    "visualH": 4.5,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_bastion_wall_v2": {
+    "id": "mt_bastion_wall_v2",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 469,
+    "visualW": 5,
+    "visualH": 4.5,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_bastion_wall_v3": {
+    "id": "mt_bastion_wall_v3",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 469,
+    "visualW": 5,
+    "visualH": 4.5,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_bastion_wall_v4": {
+    "id": "mt_bastion_wall_v4",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 469,
+    "visualW": 5,
+    "visualH": 4.5,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double": {
+    "id": "mt_ridge_double",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v1": {
+    "id": "mt_ridge_double_v1",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v2": {
+    "id": "mt_ridge_double_v2",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v3": {
+    "id": "mt_ridge_double_v3",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v4": {
+    "id": "mt_ridge_double_v4",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v5": {
+    "id": "mt_ridge_double_v5",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_ridge_double_v6": {
+    "id": "mt_ridge_double_v6",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 412,
+    "visualW": 5,
+    "visualH": 4,
+    "pxPerTile": 100.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks": {
+    "id": "mt_twin_peaks",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v1": {
+    "id": "mt_twin_peaks_v1",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v2": {
+    "id": "mt_twin_peaks_v2",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v3": {
+    "id": "mt_twin_peaks_v3",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v4": {
+    "id": "mt_twin_peaks_v4",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v5": {
+    "id": "mt_twin_peaks_v5",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_twin_peaks_v6": {
+    "id": "mt_twin_peaks_v6",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 502,
+    "srcH": 422,
+    "visualW": 4,
+    "visualH": 4,
+    "pxPerTile": 125.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "pagoda_2x2": {
+    "id": "pagoda_2x2",
+    "page": "biome_highres_0",
+    "category": "building",
+    "srcW": 318,
+    "srcH": 490,
+    "visualW": 4,
+    "visualH": 6,
+    "pxPerTile": 79.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "building_spirit_pagoda": {
+    "id": "building_spirit_pagoda",
+    "page": "biome_highres_0",
+    "category": "building",
+    "srcW": 318,
+    "srcH": 490,
+    "visualW": 4,
+    "visualH": 6,
+    "pxPerTile": 79.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "building_pagoda_tower": {
+    "id": "building_pagoda_tower",
+    "page": "biome_highres_0",
+    "category": "building",
+    "srcW": 318,
+    "srcH": 490,
+    "visualW": 4,
+    "visualH": 6,
+    "pxPerTile": 79.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "landmark_azure_mountain_sword_peak_monolith": {
+    "id": "landmark_azure_mountain_sword_peak_monolith",
+    "page": "biome_highres_0",
+    "category": "landmark",
+    "srcW": 265,
+    "srcH": 490,
+    "visualW": 3,
+    "visualH": 5.5,
+    "pxPerTile": 88.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "landmark_thundersteppe_lightning_attractor_pillar": {
+    "id": "landmark_thundersteppe_lightning_attractor_pillar",
+    "page": "biome_highres_0",
+    "category": "landmark",
+    "srcW": 197,
+    "srcH": 490,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 78.8,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar": {
+    "id": "mt_karst_pillar",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v1": {
+    "id": "mt_karst_pillar_v1",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v2": {
+    "id": "mt_karst_pillar_v2",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v3": {
+    "id": "mt_karst_pillar_v3",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v4": {
+    "id": "mt_karst_pillar_v4",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v5": {
+    "id": "mt_karst_pillar_v5",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "mt_karst_pillar_v6": {
+    "id": "mt_karst_pillar_v6",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 246,
+    "srcH": 480,
+    "visualW": 2.5,
+    "visualH": 5,
+    "pxPerTile": 98.4,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "karst_pillar_1x1": {
+    "id": "karst_pillar_1x1",
+    "page": "biome_highres_0",
+    "category": "mountain",
+    "srcW": 116,
+    "srcH": 480,
+    "visualW": 1.5,
+    "visualH": 4,
+    "pxPerTile": 77.3,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "solid"
+  },
+  "tree_pine_ancient": {
+    "id": "tree_pine_ancient",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v1": {
+    "id": "tree_pine_ancient_v1",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v2": {
+    "id": "tree_pine_ancient_v2",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v3": {
+    "id": "tree_pine_ancient_v3",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v4": {
+    "id": "tree_pine_ancient_v4",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v5": {
+    "id": "tree_pine_ancient_v5",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_pine_ancient_v6": {
+    "id": "tree_pine_ancient_v6",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 370,
+    "srcH": 440,
+    "visualW": 2.5,
+    "visualH": 3.5,
+    "pxPerTile": 148,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost": {
+    "id": "tree_cypress_frost",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost_v1": {
+    "id": "tree_cypress_frost_v1",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost_v2": {
+    "id": "tree_cypress_frost_v2",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost_v3": {
+    "id": "tree_cypress_frost_v3",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost_v4": {
+    "id": "tree_cypress_frost_v4",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_cypress_frost_v5": {
+    "id": "tree_cypress_frost_v5",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 341,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 170.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood": {
+    "id": "tree_dead_wood",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v1": {
+    "id": "tree_dead_wood_v1",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v2": {
+    "id": "tree_dead_wood_v2",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v3": {
+    "id": "tree_dead_wood_v3",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v4": {
+    "id": "tree_dead_wood_v4",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v5": {
+    "id": "tree_dead_wood_v5",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
+  },
+  "tree_dead_wood_v6": {
+    "id": "tree_dead_wood_v6",
+    "page": "biome_highres_0",
+    "category": "tree",
+    "srcW": 259,
+    "srcH": 440,
+    "visualW": 2,
+    "visualH": 3.5,
+    "pxPerTile": 129.5,
+    "anchor": {
+      "x": 0.5,
+      "y": 0.95
+    },
+    "collision": "soft"
   }
 }
