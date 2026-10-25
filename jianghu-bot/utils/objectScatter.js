@@ -18,6 +18,13 @@ const assetBindings = require('../config/asset-bindings.json');
 const quarantineData = require('../world-data/asset-quarantine.json');
 const quarantinedFamilies = quarantineData.quarantinedFamilies || [];
 const scaleCanon = require('../world-data/scale-canon.json');
+const frameSubstitutions = require('../world-data/frame-substitutions-v9.json');
+
+function hash2d(x, y) {
+  let h = ((x * 374761393 + y * 668265263) ^ 0x5bf03635) >>> 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0;
+  return (h ^ (h >>> 16)) >>> 0;
+}
 
 // Known atlas frames SSOT (Prompt 1.1)
 const knownFramesData = require('../config/known-frames.json');
@@ -236,8 +243,27 @@ function selectCompanionPropPool(hutDefId, isAbandoned) {
 }
 
 function resolveDef(defId, fallbackDefId = null) {
-  if (defId && KNOWN_FRAMES.has(defId) && !isQuarantined(defId)) return defId;
-  if (fallbackDefId && KNOWN_FRAMES.has(fallbackDefId) && !isQuarantined(fallbackDefId)) return fallbackDefId;
+  let target = defId;
+  if (target && frameSubstitutions[target]) {
+    target = frameSubstitutions[target];
+  } else if (target) {
+    const base = target.replace(/_v\d+$/, '');
+    if (frameSubstitutions[base]) {
+      target = frameSubstitutions[base];
+    }
+  }
+  if (target && KNOWN_FRAMES.has(target) && !isQuarantined(target)) return target;
+
+  let fallback = fallbackDefId;
+  if (fallback && frameSubstitutions[fallback]) {
+    fallback = frameSubstitutions[fallback];
+  } else if (fallback) {
+    const base = fallback.replace(/_v\d+$/, '');
+    if (frameSubstitutions[base]) {
+      fallback = frameSubstitutions[base];
+    }
+  }
+  if (fallback && KNOWN_FRAMES.has(fallback) && !isQuarantined(fallback)) return fallback;
   return null;
 }
 
@@ -331,7 +357,8 @@ function isAllowedOnTerrain(defId, terrainType, isAnchor = false) {
 }
 
 function getCanonCollision(defId, fallbackCw = 1, fallbackCh = 1) {
-  const canon = scaleCanon[defId];
+  const actualDef = resolveDef(defId) || defId;
+  const canon = scaleCanon[actualDef] || scaleCanon[defId];
   if (canon && canon.collision) {
     return {
       w: canon.collision.w,
@@ -365,9 +392,32 @@ const chunkCache = new Map();
  * Checks if a multi-cell footprint (cw x ch) at (x, y) can be placed without collision.
  */
 function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false, defId = null, objects = null, collisionOverride = false) {
+  const actualDefId = resolveDef(defId) || defId;
+
   // Phase HA: Asset Quarantine rejection (never place code-generated placeholder sprites)
-  if (defId && isQuarantined(defId)) {
+  if (actualDefId && isQuarantined(actualDefId)) {
     return false;
+  }
+
+  // Prompt C4: Limit tree_dead_wood dominance (40% weight + max 1 cluster per 16x16 in non-dead_wood biomes)
+  if (!isAnchor && actualDefId && actualDefId.startsWith('tree_dead_wood_')) {
+    const tile = getTileFn(startX, startY);
+    const regId = (tile && tile.regionId) || '';
+    const tt = (tile && tile.terrainType) || '';
+    const isDeadWoodNative = ['venom_mire', 'southern_plague_woods', 'southern_demon_domain', 'crimson_battlefield', 'abyssal_scar', 'lava_spine', 'void_rift'].includes(regId) || ['dead_wood', 'swamp', 'miasma_waste'].includes(tt);
+
+    const deadWoodGate = (hash2d(startX * 37 + 101, startY * 71 + 203) % 100) < 40;
+    if (!deadWoodGate) return false;
+
+    if (!isDeadWoodNative && objects && objects.length > 0) {
+      for (let i = objects.length - 1; i >= 0; i--) {
+        const o = objects[i];
+        if (o.defId && o.defId.startsWith('tree_dead_wood_')) {
+          const dist = Math.max(Math.abs(startX - o.x), Math.abs(startY - o.y));
+          if (dist < 16) return false;
+        }
+      }
+    }
   }
 
   // 0. Anti-clumping dispersion: identical defId must not appear within 3 tiles (Chebyshev < 3)
@@ -1546,6 +1596,15 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     }
   }
 
+
+  // Apply frame substitutions to all objects before caching and returning (Prompt C2)
+  for (let i = 0; i < objects.length; i++) {
+    const origId = objects[i].defId;
+    const resolved = resolveDef(origId);
+    if (resolved && resolved !== origId) {
+      objects[i].defId = resolved;
+    }
+  }
 
   // Cache up to 256 chunks in memory
   if (chunkCache.size > 256) {
