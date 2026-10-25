@@ -322,6 +322,30 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
     };
   }
 
+  // Pahat Arena Azure Mist Pass (Prompt A5)
+  if (tileX >= 2589 && tileX <= 2611 && tileY >= 3340 && tileY <= 3360) {
+    return {
+      tileX,
+      tileY,
+      terrainType: 'mountain_pass',
+      tileType: 'walkable',
+      isSolid: false,
+      label: 'Arena Celah Kabut Azure',
+      resourceType: null,
+      isClaimable: false,
+      plotPriceSilver: 0,
+      baseTemperature: 16,
+      spiritualQiDensity: 42 * (region.qiDensityModifier || 1.0),
+      regionId: region.id,
+      regionName: region.name,
+      territoryType: 'calm_zone',
+      dangerTier: 3,
+      ambushRiskRate: 0.05,
+      factionName: null,
+      staminaCost: getTerrainStaminaCost('mountain_pass')
+    };
+  }
+
   const activeBarrier = getBarrierAt(tileX, tileY);
   if (activeBarrier) {
     let barrierTerrain = 'azure_mountain';
@@ -831,14 +855,6 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
         break;
       }
     }
-  }
-
-  // Pahat Arena Azure Mist Pass (Prompt A5)
-  if (tileX >= 2589 && tileX <= 2611 && tileY >= 3340 && tileY <= 3360) {
-    terrainType = 'mountain_pass';
-    isSolid = false;
-    tileType = 'walkable';
-    label = 'Arena Celah Kabut Azure';
   }
 
   // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable via SSOT buildZoneEngine)

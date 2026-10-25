@@ -66,11 +66,15 @@
       "atk": 180,
       "def": 120,
       "lair": {
-        "centerX": 2850,
-        "centerY": 2825,
+        "centerX": 2504,
+        "centerY": 2608,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Central Plains"
+        "lairName": "Sarang Kuno Central Plains",
+        "oldCenter": [
+          2850,
+          2825
+        ]
       }
     }
   },
@@ -141,11 +145,15 @@
       "atk": 180,
       "def": 120,
       "lair": {
-        "centerX": 2500,
-        "centerY": 2500,
+        "centerX": 2412,
+        "centerY": 2406,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Nine Springs Delta"
+        "lairName": "Sarang Kuno Nine Springs Delta",
+        "oldCenter": [
+          2500,
+          2500
+        ]
       }
     }
   },
@@ -210,11 +218,15 @@
         20
       ],
       "lair": {
-        "centerX": 3212,
-        "centerY": 3475,
+        "centerX": 2600,
+        "centerY": 3350,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          3212,
+          3475
+        ]
       }
     }
   },
@@ -270,11 +282,15 @@
         18
       ],
       "lair": {
-        "centerX": 2650,
-        "centerY": 4650,
+        "centerX": 1800,
+        "centerY": 4232,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          2650,
+          4650
+        ]
       }
     }
   },
@@ -330,11 +346,15 @@
         18
       ],
       "lair": {
-        "centerX": 2550,
-        "centerY": 4400,
+        "centerX": 2300,
+        "centerY": 4204,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          2550,
+          4400
+        ]
       }
     }
   },
@@ -380,11 +400,15 @@
         20
       ],
       "lair": {
-        "centerX": 3710,
-        "centerY": 4750,
+        "centerX": 3256,
+        "centerY": 4416,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          3710,
+          4750
+        ]
       }
     }
   },
@@ -461,11 +485,15 @@
         24
       ],
       "lair": {
-        "centerX": 3600,
-        "centerY": 3975,
+        "centerX": 3092,
+        "centerY": 3680,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah",
+        "oldCenter": [
+          3600,
+          3975
+        ]
       }
     }
   },
@@ -530,11 +558,15 @@
         20
       ],
       "lair": {
-        "centerX": 1600,
-        "centerY": 4000,
+        "centerX": 1404,
+        "centerY": 3804,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          1600,
+          4000
+        ]
       }
     }
   },
@@ -599,11 +631,15 @@
         20
       ],
       "lair": {
-        "centerX": 1125,
-        "centerY": 3000,
+        "centerX": 752,
+        "centerY": 2504,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          1125,
+          3000
+        ]
       }
     }
   },
@@ -659,11 +695,15 @@
         18
       ],
       "lair": {
-        "centerX": 750,
-        "centerY": 1750,
+        "centerX": 500,
+        "centerY": 1500,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          750,
+          1750
+        ]
       }
     }
   },
@@ -740,11 +780,15 @@
         24
       ],
       "lair": {
-        "centerX": 1400,
-        "centerY": 4600,
+        "centerX": 1204,
+        "centerY": 4404,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah",
+        "oldCenter": [
+          1400,
+          4600
+        ]
       }
     }
   },
@@ -821,11 +865,15 @@
         24
       ],
       "lair": {
-        "centerX": 2850,
-        "centerY": 1987,
+        "centerX": 2816,
+        "centerY": 1928,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Serigala Roh Darah"
+        "lairName": "Sarang Kuno Raja Serigala Roh Darah",
+        "oldCenter": [
+          2850,
+          1987
+        ]
       }
     }
   },
@@ -871,11 +919,15 @@
         20
       ],
       "lair": {
-        "centerX": 1350,
-        "centerY": 950,
+        "centerX": 1100,
+        "centerY": 292,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          1350,
+          950
+        ]
       }
     }
   },
@@ -931,11 +983,15 @@
         18
       ],
       "lair": {
-        "centerX": 2800,
-        "centerY": 1150,
+        "centerX": 2604,
+        "centerY": 1008,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          2800,
+          1150
+        ]
       }
     }
   },
@@ -991,11 +1047,15 @@
         18
       ],
       "lair": {
-        "centerX": 2625,
-        "centerY": 1500,
+        "centerX": 2192,
+        "centerY": 1196,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          2625,
+          1500
+        ]
       }
     }
   },
@@ -1041,11 +1101,15 @@
         20
       ],
       "lair": {
-        "centerX": 3150,
-        "centerY": 800,
+        "centerX": 2900,
+        "centerY": 604,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          3150,
+          800
+        ]
       }
     }
   },
@@ -1091,11 +1155,15 @@
         20
       ],
       "lair": {
-        "centerX": 2050,
-        "centerY": 800,
+        "centerX": 1896,
+        "centerY": 604,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          2050,
+          800
+        ]
       }
     }
   },
@@ -1151,11 +1219,15 @@
         18
       ],
       "lair": {
-        "centerX": 3600,
-        "centerY": 725,
+        "centerX": 3416,
+        "centerY": 544,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          3600,
+          725
+        ]
       }
     }
   },
@@ -1220,11 +1292,15 @@
         20
       ],
       "lair": {
-        "centerX": 2625,
-        "centerY": 225,
+        "centerX": 1748,
+        "centerY": 152,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          2625,
+          225
+        ]
       }
     }
   },
@@ -1289,11 +1365,15 @@
         20
       ],
       "lair": {
-        "centerX": 3950,
-        "centerY": 1550,
+        "centerX": 3700,
+        "centerY": 1300,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          3950,
+          1550
+        ]
       }
     }
   },
@@ -1349,11 +1429,15 @@
         18
       ],
       "lair": {
-        "centerX": 4600,
-        "centerY": 1350,
+        "centerX": 4404,
+        "centerY": 1100,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          4600,
+          1350
+        ]
       }
     }
   },
@@ -1418,11 +1502,15 @@
         20
       ],
       "lair": {
-        "centerX": 3800,
-        "centerY": 2400,
+        "centerX": 3604,
+        "centerY": 2204,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          3800,
+          2400
+        ]
       }
     }
   },
@@ -1478,11 +1566,15 @@
         18
       ],
       "lair": {
-        "centerX": 3500,
-        "centerY": 3375,
+        "centerX": 3400,
+        "centerY": 3080,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          3500,
+          3375
+        ]
       }
     }
   },
@@ -1547,11 +1639,15 @@
         20
       ],
       "lair": {
-        "centerX": 3737,
-        "centerY": 3000,
+        "centerX": 3624,
+        "centerY": 2804,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          3737,
+          3000
+        ]
       }
     }
   },
@@ -1616,11 +1712,15 @@
         20
       ],
       "lair": {
-        "centerX": 4700,
-        "centerY": 3300,
+        "centerX": 3940,
+        "centerY": 2600,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Raja Harimau Belang Kuno"
+        "lairName": "Sarang Kuno Raja Harimau Belang Kuno",
+        "oldCenter": [
+          4700,
+          3300
+        ]
       }
     }
   },
@@ -1676,11 +1776,15 @@
         18
       ],
       "lair": {
-        "centerX": 4700,
-        "centerY": 4750,
+        "centerX": 4396,
+        "centerY": 4284,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          4700,
+          4750
+        ]
       }
     }
   },
@@ -1726,11 +1830,15 @@
         20
       ],
       "lair": {
-        "centerX": 4800,
-        "centerY": 2950,
+        "centerX": 4604,
+        "centerY": 2700,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          4800,
+          2950
+        ]
       }
     }
   },
@@ -1786,11 +1894,15 @@
         18
       ],
       "lair": {
-        "centerX": 800,
-        "centerY": 1250,
+        "centerX": 580,
+        "centerY": 1000,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma"
+        "lairName": "Sarang Kuno Pangeran Iblis Asura Miasma",
+        "oldCenter": [
+          800,
+          1250
+        ]
       }
     }
   },
@@ -1836,11 +1948,15 @@
         20
       ],
       "lair": {
-        "centerX": 375,
-        "centerY": 4875,
+        "centerX": 308,
+        "centerY": 4748,
         "width": 12,
         "height": 12,
-        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit"
+        "lairName": "Sarang Kuno Naga Purba Kehampaan Langit",
+        "oldCenter": [
+          375,
+          4875
+        ]
       }
     }
   }
