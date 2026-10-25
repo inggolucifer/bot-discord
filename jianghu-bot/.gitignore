@@ -4,3 +4,4 @@ backend_output.log
 .env.*
 *.log
 *.orig
+art_input/

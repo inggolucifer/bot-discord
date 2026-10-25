@@ -1,0 +1,390 @@
+{
+ "tileSizePx": 256,
+ "tilesPerTexture": 4,
+ "terrains": {
+  "plains": {
+   "family": "plains",
+   "variants": [
+    "plains_v1",
+    "plains_v2",
+    "plains_v3"
+   ]
+  },
+  "meadow": {
+   "family": "meadow",
+   "variants": [
+    "meadow_v1",
+    "meadow_v2",
+    "meadow_v3"
+   ]
+  },
+  "farmland": {
+   "family": "farmland",
+   "variants": [
+    "farmland_v1",
+    "farmland_v2",
+    "farmland_v3"
+   ]
+  },
+  "herb_field": {
+   "family": "herb_field",
+   "variants": [
+    "herb_field_v1",
+    "herb_field_v2",
+    "herb_field_v3"
+   ]
+  },
+  "forest": {
+   "family": "forest_floor",
+   "variants": [
+    "forest_floor_v1",
+    "forest_floor_v2",
+    "forest_floor_v3"
+   ]
+  },
+  "spirit_wood": {
+   "family": "forest_floor",
+   "variants": [
+    "forest_floor_v1",
+    "forest_floor_v2",
+    "forest_floor_v3"
+   ]
+  },
+  "bamboo_forest": {
+   "family": "bamboo_floor",
+   "variants": [
+    "bamboo_floor_v1",
+    "bamboo_floor_v2",
+    "bamboo_floor_v3"
+   ]
+  },
+  "bamboo_grove": {
+   "family": "bamboo_floor",
+   "variants": [
+    "bamboo_floor_v1",
+    "bamboo_floor_v2",
+    "bamboo_floor_v3"
+   ]
+  },
+  "dead_wood": {
+   "family": "dead_wood",
+   "variants": [
+    "dead_wood_v1",
+    "dead_wood_v2",
+    "dead_wood_v3"
+   ]
+  },
+  "hill": {
+   "family": "hill",
+   "variants": [
+    "hill_v1",
+    "hill_v2",
+    "hill_v3"
+   ]
+  },
+  "mountain_rock": {
+   "family": "rock_ground",
+   "variants": [
+    "rock_ground_v1",
+    "rock_ground_v2",
+    "rock_ground_v3"
+   ]
+  },
+  "mountain": {
+   "family": "rock_ground",
+   "variants": [
+    "rock_ground_v1",
+    "rock_ground_v2",
+    "rock_ground_v3"
+   ]
+  },
+  "cliff": {
+   "family": "rock_ground",
+   "variants": [
+    "rock_ground_v1",
+    "rock_ground_v2",
+    "rock_ground_v3"
+   ]
+  },
+  "azure_mountain": {
+   "family": "rock_ground",
+   "variants": [
+    "rock_ground_v1",
+    "rock_ground_v2",
+    "rock_ground_v3"
+   ]
+  },
+  "mountain_peak": {
+   "family": "rock_ground",
+   "variants": [
+    "rock_ground_v1",
+    "rock_ground_v2",
+    "rock_ground_v3"
+   ]
+  },
+  "mountain_pass": {
+   "family": "mountain_pass",
+   "variants": [
+    "mountain_pass_v1",
+    "mountain_pass_v2",
+    "mountain_pass_v3"
+   ]
+  },
+  "sword_gorge_pass": {
+   "family": "mountain_pass",
+   "variants": [
+    "mountain_pass_v1",
+    "mountain_pass_v2",
+    "mountain_pass_v3"
+   ]
+  },
+  "canyon_floor": {
+   "family": "canyon_floor",
+   "variants": [
+    "canyon_floor_v1",
+    "canyon_floor_v2",
+    "canyon_floor_v3"
+   ]
+  },
+  "desert_sand": {
+   "family": "desert_sand",
+   "variants": [
+    "desert_sand_v1",
+    "desert_sand_v2",
+    "desert_sand_v3"
+   ]
+  },
+  "dune": {
+   "family": "dune",
+   "variants": [
+    "dune_v1",
+    "dune_v2",
+    "dune_v3"
+   ]
+  },
+  "oasis": {
+   "family": "oasis",
+   "variants": [
+    "oasis_v1",
+    "oasis_v2",
+    "oasis_v3"
+   ]
+  },
+  "snow": {
+   "family": "snow",
+   "variants": [
+    "snow_v1",
+    "snow_v2",
+    "snow_v3"
+   ]
+  },
+  "ice_crack": {
+   "family": "ice_crack",
+   "variants": [
+    "ice_crack_v1",
+    "ice_crack_v2",
+    "ice_crack_v3"
+   ]
+  },
+  "glacier": {
+   "family": "ice_crack",
+   "variants": [
+    "ice_crack_v1",
+    "ice_crack_v2",
+    "ice_crack_v3"
+   ]
+  },
+  "swamp": {
+   "family": "swamp",
+   "variants": [
+    "swamp_v1",
+    "swamp_v2",
+    "swamp_v3"
+   ]
+  },
+  "pond_lotus": {
+   "family": "swamp",
+   "variants": [
+    "swamp_v1",
+    "swamp_v2",
+    "swamp_v3"
+   ]
+  },
+  "river_shallow": {
+   "family": "swamp",
+   "variants": [
+    "swamp_v1",
+    "swamp_v2",
+    "swamp_v3"
+   ]
+  },
+  "demonic_swamp": {
+   "family": "demonic_swamp",
+   "variants": [
+    "demonic_swamp_v1",
+    "demonic_swamp_v2",
+    "demonic_swamp_v3"
+   ]
+  },
+  "poison_pool": {
+   "family": "poison_pool",
+   "variants": [
+    "poison_pool_v1",
+    "poison_pool_v2",
+    "poison_pool_v3"
+   ]
+  },
+  "miasma_waste": {
+   "family": "miasma_waste",
+   "variants": [
+    "miasma_waste_v1",
+    "miasma_waste_v2",
+    "miasma_waste_v3"
+   ]
+  },
+  "battlefield_ash": {
+   "family": "battlefield_ash",
+   "variants": [
+    "battlefield_ash_v1",
+    "battlefield_ash_v2",
+    "battlefield_ash_v3"
+   ]
+  },
+  "volcanic": {
+   "family": "volcanic",
+   "variants": [
+    "volcanic_v1",
+    "volcanic_v2",
+    "volcanic_v3"
+   ]
+  },
+  "basalt": {
+   "family": "volcanic",
+   "variants": [
+    "volcanic_v1",
+    "volcanic_v2",
+    "volcanic_v3"
+   ]
+  },
+  "lava_flow": {
+   "family": "lava_flow",
+   "variants": [
+    "lava_flow_v1",
+    "lava_flow_v2",
+    "lava_flow_v3"
+   ]
+  },
+  "crater": {
+   "family": "crater",
+   "variants": [
+    "crater_v1",
+    "crater_v2",
+    "crater_v3"
+   ]
+  },
+  "lightning_scar": {
+   "family": "lightning_scar",
+   "variants": [
+    "lightning_scar_v1",
+    "lightning_scar_v2",
+    "lightning_scar_v3"
+   ]
+  },
+  "formation_tile": {
+   "family": "formation_tile",
+   "variants": [
+    "formation_tile_v1",
+    "formation_tile_v2",
+    "formation_tile_v3"
+   ]
+  },
+  "ruin_floor": {
+   "family": "ruin_floor",
+   "variants": [
+    "ruin_floor_v1",
+    "ruin_floor_v2",
+    "ruin_floor_v3"
+   ]
+  },
+  "island_reef": {
+   "family": "island_reef",
+   "variants": [
+    "island_reef_v1",
+    "island_reef_v2",
+    "island_reef_v3"
+   ]
+  },
+  "sea_reef": {
+   "family": "island_reef",
+   "variants": [
+    "island_reef_v1",
+    "island_reef_v2",
+    "island_reef_v3"
+   ]
+  },
+  "abyss_edge": {
+   "family": "abyss_edge",
+   "variants": [
+    "abyss_edge_v1",
+    "abyss_edge_v2",
+    "abyss_edge_v3"
+   ]
+  },
+  "settlement": {
+   "family": "settlement_floor",
+   "variants": [
+    "settlement_floor_v1",
+    "settlement_floor_v2",
+    "settlement_floor_v3"
+   ]
+  },
+  "road_stone": {
+   "family": "road_stone",
+   "variants": [
+    "road_stone_v1",
+    "road_stone_v2",
+    "road_stone_v3"
+   ]
+  },
+  "ocean": {
+   "family": "ocean",
+   "variants": [
+    "ocean_v1",
+    "ocean_v2",
+    "ocean_v3"
+   ]
+  },
+  "sea": {
+   "family": "ocean",
+   "variants": [
+    "ocean_v1",
+    "ocean_v2",
+    "ocean_v3"
+   ]
+  },
+  "lake": {
+   "family": "ocean",
+   "variants": [
+    "ocean_v1",
+    "ocean_v2",
+    "ocean_v3"
+   ]
+  },
+  "lake_deep": {
+   "family": "ocean",
+   "variants": [
+    "ocean_v1",
+    "ocean_v2",
+    "ocean_v3"
+   ]
+  },
+  "river": {
+   "family": "ocean",
+   "variants": [
+    "ocean_v1",
+    "ocean_v2",
+    "ocean_v3"
+   ]
+  }
+ }
+}
