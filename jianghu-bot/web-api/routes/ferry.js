@@ -12,9 +12,9 @@ const { setPlayerAuthoritativePosition } = require('../../services/movementServi
 const FERRY_ROUTES = [
   {
     id: 'xingcun_to_southern_rimba',
-    name: 'Penyeberangan Sungai Sembilan Naga',
+    name: 'Penyeberangan Sungai ke Pos Perbatasan Qinghe',
     from: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun' },
-    to: { regionSlug: 'southern_demon_domain', settlementName: 'Scar of Heaven Camp', dockName: 'Dermaga Rimba Selatan', tileX: 2300, tileY: 1900 },
+    to: { regionSlug: 'border_march', settlementName: 'Pos Perbatasan Qinghe', dockName: 'Dermaga Perbatasan Qinghe', tileX: 2300, tileY: 1950 },
     raftCostSilver: 25,
     raftDurationSeconds: 30,
     fastShipCostSilver: 150
@@ -22,7 +22,7 @@ const FERRY_ROUTES = [
   {
     id: 'southern_rimba_to_xingcun',
     name: 'Penyeberangan Kembali ke Dataran Tengah',
-    from: { regionSlug: 'southern_demon_domain', settlementName: 'Scar of Heaven Camp', dockName: 'Dermaga Rimba Selatan' },
+    from: { regionSlug: 'border_march', settlementName: 'Pos Perbatasan Qinghe', dockName: 'Dermaga Perbatasan Qinghe' },
     to: { regionSlug: 'central_plains', settlementName: 'Desa Xingcun', dockName: 'Dermaga Sungai Xingcun', tileX: 2050, tileY: 2650 },
     raftCostSilver: 25,
     raftDurationSeconds: 30,
@@ -32,7 +32,7 @@ const FERRY_ROUTES = [
     id: 'eastern_port_to_turtle_island',
     name: 'Pelayaran Bahari Laut Timur ke Pulau Penyu Raksasa (Turtle Island)',
     from: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai' },
-    to: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu', tileX: 4350, tileY: 2750 },
+    to: { regionSlug: 'floating_wind_isles', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu', tileX: 4350, tileY: 2750 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
     fastShipCostSilver: 250
@@ -40,11 +40,29 @@ const FERRY_ROUTES = [
   {
     id: 'turtle_island_to_eastern_port',
     name: 'Pelayaran Kembali dari Pulau Penyu ke Dermaga Donghai',
-    from: { regionSlug: 'eastern_sea', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu' },
+    from: { regionSlug: 'floating_wind_isles', settlementName: 'Pulau Penyu Raksasa', dockName: 'Dermaga Karang Penyu' },
     to: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai', tileX: 3920, tileY: 2700 },
     raftCostSilver: 40,
     raftDurationSeconds: 45,
     fastShipCostSilver: 250
+  },
+  {
+    id: 'donghai_to_frostmoon',
+    name: 'Pelayaran Samudra Dingin ke Pulau Tengkorak Naga Beku (Frostmoon Sea)',
+    from: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai' },
+    to: { regionSlug: 'frostmoon_sea', settlementName: 'Pulau Tengkorak Naga Beku', dockName: 'Dermaga Es Abadi', tileX: 4396, tileY: 4284 },
+    raftCostSilver: 50,
+    raftDurationSeconds: 90,
+    fastShipCostSilver: 500
+  },
+  {
+    id: 'frostmoon_to_donghai',
+    name: 'Pelayaran Kembali dari Frostmoon Sea ke Dermaga Donghai',
+    from: { regionSlug: 'frostmoon_sea', settlementName: 'Pulau Tengkorak Naga Beku', dockName: 'Dermaga Es Abadi' },
+    to: { regionSlug: 'eastern_sea', settlementName: 'Dermaga Donghai', dockName: 'Dermaga Donghai', tileX: 3920, tileY: 2700 },
+    raftCostSilver: 50,
+    raftDurationSeconds: 90,
+    fastShipCostSilver: 500
   }
 ];
 
@@ -247,4 +265,5 @@ router.post('/fish-on-deck', authenticateToken, async (req, res) => {
   }
 });
 
+router.FERRY_ROUTES = FERRY_ROUTES;
 module.exports = router;
