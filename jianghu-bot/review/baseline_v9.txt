@@ -1,0 +1,63 @@
+﻿
+======================================================
+       JIANGHU WORLD V8 ΓÇö MEASURE SCATTER REPORT      
+======================================================
+
+Titik uji: 232 layar (29 region ├ù 8 titik, benih 20261020)
+Total objek tertangkap: 24193
+
+--- 1. VALIDASI FRAME ATLAS ---
+Frame TIDAK ADA di atlas: {}
+Status Frame Atlas: PASS (Semua frame ada di atlas)
+
+--- 2. PROPORSI PONDOK ---
+Total pondok ditemukan: 192
+  - Bisa dimasuki (Enterable): 66 (34.4%)
+  - Dekoratif (Decorative): 94 (49.0%)
+  - Terbengkalai (Abandoned): 32 (16.7%)
+Status Proporsi Terbengkalai (Target 8ΓÇô20%): PASS
+
+--- 3. SEBARAN PONDOK PER LAYAR ---
+Layar memuat pondok: 114/232 (49.1%)
+  - Region berpenduduk (Populated): 17/24 (70.8%, target >= 70%)
+  - Region lainnya (Other): 97/208 (46.6%, target >= 35%)
+
+--- 4. DENSITAS, KERAGAMAN & DOMINASI ---
+Objek per layar: min 34, max 140, rata-rata 104.3
+Jenis unik per layar: min 11, max 48
+Dominasi satu jenis: min 5.0%, max 16.7% (Target max <= 18%)
+Status Dominasi: PASS
+
+--- 5. KEKOSONGAN SEL 12x12 ---
+Sel 12x12 kosong: 989/3480 (28.4%)
+
+--- 6. INTEGRITAS MEDAN AIR (OBJEK DI PETAK LAUT) ---
+Objek non-air di petak laut/air: 0 (0.00% dari total objek)
+Status Integritas Air: PASS (0 pelanggaran)
+
+======================================================
+HASIL KESELURUHAN PROMPT 1 GATES: SEMUA GERBANG LULUS
+======================================================
+
+
+=== AUDIT LAPISAN OBJEK TERTULIS (checkAuthored.js) ===
+
+Memeriksa 681 objek tertulis dan 60 segmen jalan...
+
+--- HASIL AUDIT ---
+Total Objek Tertulis Diperiksa : 681
+Objek Hilang dari getChunkObjects: 0
+Objek di Petak Solid / Air       : 0
+Objek di Petak Jalan             : 0
+Objek di Inti Anchor             : 0
+Pelanggaran Jarak Chebyshev      : 0
+
+[PASS] Gerbang Lapisan Objek Tertulis LULUS SEMPURNA (0 hilang, 0 pelanggaran).
+
+=== AUDIT OBJEK NON-AIR DI PETAK LAUT & AIR (checkObjectsOnWater.js) ===
+
+Titik uji: 174 titik (29 region ├ù 6 titik)
+Total objek diperiksa: 18782
+Pelanggaran ditemukan: 0
+
+[PASS] 0 objek non-air di petak laut. Semua objek di atas air sah.

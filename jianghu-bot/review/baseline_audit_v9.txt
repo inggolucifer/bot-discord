@@ -1,0 +1,337 @@
+﻿======================================================================
+       JIANGHU WORLD V9 ΓÇö AUDIT KOMPREHENSIF DUNIA (5 TABEL)          
+======================================================================
+
+--- TABEL 1: ANCHOR REGION (DECLARED VS RASTER) ---
+| ID | Koordinat | Declared | Raster | Status |
+|---|---|---|---|---|
+| desa_xingcun | (2050,2650) | central_plains | central_plains | MATCH |
+| dusun_mata_air_jernih | (2400,2450) | nine_springs_delta | nine_springs_delta | MATCH |
+| pos_perbatasan_qinghe | (2300,1950) | border_march | border_march | MATCH |
+| oase_shadi | (820,2220) | western_sacred_desert | western_sacred_desert | MATCH |
+| dermaga_donghai | (3920,2700) | eastern_sea | eastern_sea | MATCH |
+| desa_heiyan | (1900,1400) | southern_demon_domain | southern_demon_domain | MATCH |
+| kemah_dataran_tinggi_petapa | (1200,4200) | hermit_highlands | hermit_highlands | MATCH |
+| kaki_gunung_azure | (2200,3340) | azure_mountain_range | azure_mountain_range | MATCH |
+| tianjing | (2700,2800) | central_plains | central_plains | MATCH |
+| xitong_city | (2350,2900) | central_plains | central_plains | MATCH |
+| kota_fengyang | (2950,2600) | central_plains | central_plains | MATCH |
+| luoyang_kecil | (2600,2200) | central_plains | central_plains | MATCH |
+| desa_tiedao | (3100,2850) | central_plains | central_plains | MATCH |
+| pos_tundra_utara | (2120,4180) | northern_desolate | thundersteppe | FAIL |
+| pulau_penyu_raksasa | (4350,2750) | eastern_sea | floating_wind_isles | FAIL |
+| benteng_gerbang_iblis | (2500,800) | southern_demon_domain | crimson_battlefield | FAIL |
+| lembah_kabut_merah | (2350,2420) | nine_springs_delta | nine_springs_delta | MATCH |
+| sekte_awan_pedang | (2200,3350) | azure_mountain_range | azure_mountain_range | MATCH |
+| sekte_pedang_langit | (2150,2800) | central_plains | central_plains | MATCH |
+| kuil_lonceng_emas | (1400,4400) | hermit_highlands | hermit_highlands | MATCH |
+| lembah_racun_bayangan | (1800,1100) | southern_demon_domain | southern_demon_domain | MATCH |
+| istana_giok_laut_timur | (3900,2850) | eastern_sea | eastern_sea | MATCH |
+| sekte_petir_ilahiah | (2400,4000) | thundersteppe | thundersteppe | MATCH |
+| sekte_pasir_suci | (650,2400) | western_sacred_desert | western_sacred_desert | MATCH |
+| istana_es_abadi | (1950,4700) | northern_desolate | northern_desolate | MATCH |
+| gua_purba_bunga_aprikot | (2100,2600) | central_plains | central_plains | MATCH |
+| makam_kaisar_pedang_purba | (2200,3360) | azure_mountain_range | azure_mountain_range | MATCH |
+| reruntuhan_abadi_tianyuan | (2400,4100) | thundersteppe | thundersteppe | MATCH |
+| sarang_naga_karang_timur | (3880,2750) | eastern_sea | ore_teeth_range | FAIL |
+| kota_jinling | (2750,2350) | nine_springs_delta | central_plains | FAIL |
+| kota_yunxi | (2200,2500) | central_plains | nine_springs_delta | FAIL |
+| kota_hanhai | (1100,2400) | western_sacred_desert | western_sacred_desert | MATCH |
+| kota_leiyin | (2600,3800) | thundersteppe | northern_desolate | FAIL |
+| kota_canghai | (3700,2550) | eastern_sea | ore_teeth_range | FAIL |
+| kota_binghu | (1800,4350) | northern_desolate | thundersteppe | FAIL |
+| kota_moyun | (2150,1250) | southern_demon_domain | southern_demon_domain | MATCH |
+| kota_shuijing | (3100,3100) | mirror_lake | central_plains | FAIL |
+| desa_bamboo_grove | (1850,2800) | central_plains | central_plains | MATCH |
+| desa_lingquan | (2550,2550) | nine_springs_delta | nine_springs_delta | MATCH |
+| desa_shaquan | (600,2100) | western_sacred_desert | western_sacred_desert | MATCH |
+| desa_tianhe | (2200,3950) | thundersteppe | thundersteppe | MATCH |
+| desa_xueshan | (2350,4300) | northern_desolate | thundersteppe | FAIL |
+| desa_yougu | (1050,4000) | hermit_highlands | hermit_highlands | MATCH |
+| dusun_kebun_persik | (2150,2700) | central_plains | central_plains | MATCH |
+| dusun_padi_emas | (2300,2350) | nine_springs_delta | nine_springs_delta | MATCH |
+| dusun_oasis_tersembunyi | (750,2300) | western_sacred_desert | western_sacred_desert | MATCH |
+| dusun_gembala_petir | (2500,3900) | thundersteppe | thundersteppe | MATCH |
+| dusun_pondok_karang | (3800,2650) | eastern_sea | ore_teeth_range | FAIL |
+| dusun_pondok_es | (2000,4250) | northern_desolate | thundersteppe | FAIL |
+| dusun_pondok_teh_kuno | (1300,4100) | hermit_highlands | hermit_highlands | MATCH |
+| pos_menara_pantau_danau | (3250,3000) | mirror_lake | sword_gorge | FAIL |
+| dermaga_teluk_sembilan | (2500,2300) | nine_springs_delta | nine_springs_delta | MATCH |
+
+Ringkasan Tabel 1: Total Anchors = 52, Mismatch = 14
+
+--- TABEL 2: KONEKTIVITAS BFS DARI DESA XINGCUN (2050, 2650) ---
+Memulai BFS dari petak sel (512, 662) skala 4x4...
+BFS selesai: 984625 sel terjangkau (63.02% dunia).
+
+| Anchor ID | Koordinat | Region Raster | Terjangkau | Status |
+|---|---|---|---|---|
+| desa_xingcun | (2050,2650) | central_plains | YES | PASS |
+| dusun_mata_air_jernih | (2400,2450) | nine_springs_delta | YES | PASS |
+| pos_perbatasan_qinghe | (2300,1950) | border_march | YES | PASS |
+| oase_shadi | (820,2220) | western_sacred_desert | YES | PASS |
+| dermaga_donghai | (3920,2700) | eastern_sea | NO | FAIL |
+| desa_heiyan | (1900,1400) | southern_demon_domain | YES | PASS |
+| kemah_dataran_tinggi_petapa | (1200,4200) | hermit_highlands | YES | PASS |
+| kaki_gunung_azure | (2200,3340) | azure_mountain_range | YES | PASS |
+| tianjing | (2700,2800) | central_plains | YES | PASS |
+| xitong_city | (2350,2900) | central_plains | YES | PASS |
+| kota_fengyang | (2950,2600) | central_plains | YES | PASS |
+| luoyang_kecil | (2600,2200) | central_plains | YES | PASS |
+| desa_tiedao | (3100,2850) | central_plains | YES | PASS |
+| pos_tundra_utara | (2120,4180) | thundersteppe | YES | PASS |
+| pulau_penyu_raksasa | (4350,2750) | floating_wind_isles | NO (sealed) | OK (sealed) |
+| benteng_gerbang_iblis | (2500,800) | crimson_battlefield | YES | PASS |
+| lembah_kabut_merah | (2350,2420) | nine_springs_delta | YES | PASS |
+| sekte_awan_pedang | (2200,3350) | azure_mountain_range | YES | PASS |
+| sekte_pedang_langit | (2150,2800) | central_plains | YES | PASS |
+| kuil_lonceng_emas | (1400,4400) | hermit_highlands | YES | PASS |
+| lembah_racun_bayangan | (1800,1100) | southern_demon_domain | YES | PASS |
+| istana_giok_laut_timur | (3900,2850) | eastern_sea | YES | PASS |
+| sekte_petir_ilahiah | (2400,4000) | thundersteppe | YES | PASS |
+| sekte_pasir_suci | (650,2400) | western_sacred_desert | YES | PASS |
+| istana_es_abadi | (1950,4700) | northern_desolate | YES | PASS |
+| gua_purba_bunga_aprikot | (2100,2600) | central_plains | YES | PASS |
+| makam_kaisar_pedang_purba | (2200,3360) | azure_mountain_range | YES | PASS |
+| reruntuhan_abadi_tianyuan | (2400,4100) | thundersteppe | YES | PASS |
+| sarang_naga_karang_timur | (3880,2750) | ore_teeth_range | YES | PASS |
+| kota_jinling | (2750,2350) | central_plains | YES | PASS |
+| kota_yunxi | (2200,2500) | nine_springs_delta | YES | PASS |
+| kota_hanhai | (1100,2400) | western_sacred_desert | YES | PASS |
+| kota_leiyin | (2600,3800) | northern_desolate | YES | PASS |
+| kota_canghai | (3700,2550) | ore_teeth_range | YES | PASS |
+| kota_binghu | (1800,4350) | thundersteppe | YES | PASS |
+| kota_moyun | (2150,1250) | southern_demon_domain | YES | PASS |
+| kota_shuijing | (3100,3100) | central_plains | YES | PASS |
+| desa_bamboo_grove | (1850,2800) | central_plains | YES | PASS |
+| desa_lingquan | (2550,2550) | nine_springs_delta | YES | PASS |
+| desa_shaquan | (600,2100) | western_sacred_desert | YES | PASS |
+| desa_tianhe | (2200,3950) | thundersteppe | YES | PASS |
+| desa_xueshan | (2350,4300) | thundersteppe | YES | PASS |
+| desa_yougu | (1050,4000) | hermit_highlands | YES | PASS |
+| dusun_kebun_persik | (2150,2700) | central_plains | YES | PASS |
+| dusun_padi_emas | (2300,2350) | nine_springs_delta | YES | PASS |
+| dusun_oasis_tersembunyi | (750,2300) | western_sacred_desert | YES | PASS |
+| dusun_gembala_petir | (2500,3900) | thundersteppe | YES | PASS |
+| dusun_pondok_karang | (3800,2650) | ore_teeth_range | YES | PASS |
+| dusun_pondok_es | (2000,4250) | thundersteppe | YES | PASS |
+| dusun_pondok_teh_kuno | (1300,4100) | hermit_highlands | YES | PASS |
+| pos_menara_pantau_danau | (3250,3000) | sword_gorge | YES | PASS |
+| dermaga_teluk_sembilan | (2500,2300) | nine_springs_delta | YES | PASS |
+
+Ringkasan Tabel 2: Anchors Unreachable Violations = 1
+
+--- TABEL 3: 145 TITIK TANTANGAN (LAIR, ELIT, HAZARD) ---
+| Region | Kategori | Koordinat | Terrain | Solid | Region Cocok | Reachable | Status |
+|---|---|---|---|---|---|---|---|
+| central_plains | lair | (2504,2608) | plains | NO | YES | YES | PASS |
+| central_plains | elite_1 | (2084,2332) | plains | NO | YES | YES | PASS |
+| central_plains | elite_2 | (2924,2824) | plains | NO | YES | YES | PASS |
+| central_plains | elite_3 | (2504,2932) | forest | NO | YES | YES | PASS |
+| central_plains | hazard_zone | (2780,2224) | meadow | NO | YES | YES | PASS |
+| nine_springs_delta | lair | (2412,2406) | pond_lotus | NO | YES | YES | PASS |
+| nine_springs_delta | elite_1 | (2280,2406) | farmland | NO | YES | YES | PASS |
+| nine_springs_delta | elite_2 | (2520,2502) | farmland | NO | YES | YES | PASS |
+| nine_springs_delta | elite_3 | (2400,2514) | meadow | NO | YES | YES | PASS |
+| nine_springs_delta | hazard_zone | (2484,2394) | farmland | NO | YES | YES | PASS |
+| azure_mountain_range | lair | (2600,3350) | mountain_pass | NO | YES | YES | PASS |
+| azure_mountain_range | elite_1 | (2200,3250) | mountain_pass | NO | YES | YES | PASS |
+| azure_mountain_range | elite_2 | (2600,3200) | mountain_pass | NO | YES | YES | PASS |
+| azure_mountain_range | elite_3 | (3100,3200) | sword_gorge_pass | NO | YES | YES | PASS |
+| azure_mountain_range | hazard_zone | (2200,3300) | mountain_pass | NO | YES | YES | PASS |
+| northern_desolate | lair | (1800,4232) | snow | NO | YES | YES | PASS |
+| northern_desolate | elite_1 | (1620,4220) | ice_crack | NO | YES | YES | PASS |
+| northern_desolate | elite_2 | (2760,4652) | snow | NO | YES | YES | PASS |
+| northern_desolate | elite_3 | (2100,4784) | snow | NO | YES | YES | PASS |
+| northern_desolate | hazard_zone | (2544,3812) | snow | NO | YES | YES | PASS |
+| thundersteppe | lair | (2300,4204) | meadow | NO | YES | YES | PASS |
+| thundersteppe | elite_1 | (2000,4036) | meadow | NO | YES | YES | PASS |
+| thundersteppe | elite_2 | (2600,4396) | meadow | NO | YES | YES | PASS |
+| thundersteppe | elite_3 | (2300,4480) | meadow | NO | YES | YES | PASS |
+| thundersteppe | hazard_zone | (2504,3964) | meadow | NO | YES | YES | PASS |
+| godthunder_peaks | lair | (3256,4416) | crater | NO | YES | YES | PASS |
+| godthunder_peaks | elite_1 | (3256,4728) | crater | NO | YES | YES | PASS |
+| godthunder_peaks | elite_2 | (3292,4776) | crater | NO | YES | YES | PASS |
+| godthunder_peaks | elite_3 | (3292,4848) | crater | NO | YES | YES | PASS |
+| godthunder_peaks | hazard_zone | (3292,4848) | crater | NO | YES | YES | PASS |
+| mirror_lake | lair | (3092,3680) | meadow | NO | YES | YES | PASS |
+| mirror_lake | elite_1 | (3044,3716) | river_shallow | NO | YES | YES | PASS |
+| mirror_lake | elite_2 | (3080,4064) | river_shallow | NO | YES | YES | PASS |
+| mirror_lake | elite_3 | (3032,3656) | meadow | NO | YES | YES | PASS |
+| mirror_lake | hazard_zone | (3032,3656) | meadow | NO | YES | YES | PASS |
+| beast_prairies | lair | (1404,3804) | meadow | NO | YES | YES | PASS |
+| beast_prairies | elite_1 | (1164,3636) | plains | NO | YES | YES | PASS |
+| beast_prairies | elite_2 | (1644,3996) | meadow | NO | YES | YES | PASS |
+| beast_prairies | elite_3 | (1404,4008) | meadow | NO | YES | YES | PASS |
+| beast_prairies | hazard_zone | (1560,3612) | plains | NO | YES | YES | PASS |
+| western_sacred_desert | lair | (752,2504) | desert_sand | NO | YES | YES | PASS |
+| western_sacred_desert | elite_1 | (296,2096) | desert_sand | NO | YES | YES | PASS |
+| western_sacred_desert | elite_2 | (1196,2996) | desert_sand | NO | YES | YES | PASS |
+| western_sacred_desert | elite_3 | (752,3092) | desert_sand | NO | YES | YES | PASS |
+| western_sacred_desert | hazard_zone | (1052,1904) | desert_sand | NO | YES | YES | PASS |
+| western_gorge_labyrinth | lair | (500,1500) | canyon_floor | NO | YES | YES | PASS |
+| western_gorge_labyrinth | elite_1 | (188,1284) | canyon_floor | NO | YES | YES | PASS |
+| western_gorge_labyrinth | elite_2 | (800,1752) | canyon_floor | NO | YES | YES | PASS |
+| western_gorge_labyrinth | elite_3 | (500,1848) | canyon_floor | NO | YES | YES | PASS |
+| western_gorge_labyrinth | hazard_zone | (704,1500) | canyon_floor | NO | YES | YES | PASS |
+| hermit_highlands | lair | (1204,4404) | hill | NO | YES | YES | PASS |
+| hermit_highlands | elite_1 | (964,4236) | hill | NO | YES | YES | PASS |
+| hermit_highlands | elite_2 | (1444,4596) | hill | NO | YES | YES | PASS |
+| hermit_highlands | elite_3 | (1204,4680) | meadow | NO | YES | YES | PASS |
+| hermit_highlands | hazard_zone | (1360,4164) | hill | NO | YES | YES | PASS |
+| border_march | lair | (2816,1928) | plains | NO | YES | YES | PASS |
+| border_march | elite_1 | (2816,1868) | plains | NO | YES | YES | PASS |
+| border_march | elite_2 | (2936,1988) | plains | NO | YES | YES | PASS |
+| border_march | elite_3 | (2816,2012) | plains | NO | YES | YES | PASS |
+| border_march | hazard_zone | (2852,1820) | plains | NO | YES | YES | PASS |
+| lava_spine | lair | (1100,292) | crater | NO | YES | YES | PASS |
+| lava_spine | elite_1 | (692,496) | basalt | NO | YES | YES | PASS |
+| lava_spine | elite_2 | (1508,952) | basalt | NO | YES | YES | PASS |
+| lava_spine | elite_3 | (1100,1108) | crater | NO | YES | YES | PASS |
+| lava_spine | hazard_zone | (1304,280) | basalt | NO | YES | YES | PASS |
+| venom_mire | lair | (2604,1008) | dead_wood | NO | YES | YES | PASS |
+| venom_mire | elite_1 | (2364,696) | swamp | NO | YES | YES | PASS |
+| venom_mire | elite_2 | (2844,1152) | swamp | NO | YES | YES | PASS |
+| venom_mire | elite_3 | (2604,1248) | swamp | NO | YES | YES | PASS |
+| venom_mire | hazard_zone | (2412,576) | dead_wood | NO | YES | YES | PASS |
+| southern_demon_domain | lair | (2192,1196) | dead_wood | NO | YES | YES | PASS |
+| southern_demon_domain | elite_1 | (1796,1016) | dead_wood | NO | YES | YES | PASS |
+| southern_demon_domain | elite_2 | (2696,1496) | hill | NO | YES | YES | PASS |
+| southern_demon_domain | elite_3 | (2252,1616) | hill | NO | YES | YES | PASS |
+| southern_demon_domain | hazard_zone | (2192,1028) | hill | NO | YES | YES | PASS |
+| crimson_battlefield | lair | (2900,604) | battlefield_ash | NO | YES | YES | PASS |
+| crimson_battlefield | elite_1 | (2600,436) | battlefield_ash | NO | YES | YES | PASS |
+| crimson_battlefield | elite_2 | (3200,796) | miasma_waste | NO | YES | YES | PASS |
+| crimson_battlefield | elite_3 | (2900,880) | battlefield_ash | NO | YES | YES | PASS |
+| crimson_battlefield | hazard_zone | (3104,364) | battlefield_ash | NO | YES | YES | PASS |
+| abyssal_scar | lair | (1896,604) | miasma_waste | NO | YES | YES | PASS |
+| abyssal_scar | elite_1 | (1716,436) | miasma_waste | NO | YES | YES | PASS |
+| abyssal_scar | elite_2 | (2076,796) | miasma_waste | NO | YES | YES | PASS |
+| abyssal_scar | elite_3 | (1872,880) | miasma_waste | NO | YES | YES | PASS |
+| abyssal_scar | hazard_zone | (2016,364) | miasma_waste | NO | YES | YES | PASS |
+| southern_plague_woods | lair | (3416,544) | swamp | NO | YES | YES | PASS |
+| southern_plague_woods | elite_1 | (3416,412) | swamp | NO | YES | YES | PASS |
+| southern_plague_woods | elite_2 | (3644,724) | swamp | NO | YES | YES | PASS |
+| southern_plague_woods | elite_3 | (3404,796) | swamp | NO | YES | YES | PASS |
+| southern_plague_woods | hazard_zone | (3560,340) | dead_wood | NO | YES | YES | PASS |
+| bone_sea_coast | lair | (1748,152) | desert_sand | NO | YES | YES | PASS |
+| bone_sea_coast | elite_1 | (704,92) | desert_sand | NO | YES | YES | PASS |
+| bone_sea_coast | elite_2 | (2792,188) | sea_reef | NO | YES | YES | PASS |
+| bone_sea_coast | elite_3 | (1784,200) | desert_sand | NO | YES | YES | PASS |
+| bone_sea_coast | hazard_zone | (2444,56) | sea_reef | NO | YES | YES | PASS |
+| spirit_wood_sea | lair | (3700,1300) | forest | NO | YES | YES | PASS |
+| spirit_wood_sea | elite_1 | (3400,1096) | spirit_wood | NO | YES | YES | PASS |
+| spirit_wood_sea | elite_2 | (3940,1552) | spirit_wood | NO | YES | YES | PASS |
+| spirit_wood_sea | elite_3 | (3700,1648) | spirit_wood | NO | YES | YES | PASS |
+| spirit_wood_sea | hazard_zone | (3904,1000) | spirit_wood | NO | YES | YES | PASS |
+| mist_insect_valley | lair | (4404,1100) | meadow | NO | YES | YES | PASS |
+| mist_insect_valley | elite_1 | (4164,896) | meadow | NO | YES | YES | PASS |
+| mist_insect_valley | elite_2 | (4644,1352) | meadow | NO | YES | YES | PASS |
+| mist_insect_valley | elite_3 | (4404,1448) | meadow | NO | YES | YES | PASS |
+| mist_insect_valley | hazard_zone | (4560,800) | meadow | NO | YES | YES | PASS |
+| formation_barrens | lair | (3604,2204) | plains | NO | YES | YES | PASS |
+| formation_barrens | elite_1 | (3364,2036) | plains | NO | YES | YES | PASS |
+| formation_barrens | elite_2 | (3844,2384) | plains | NO | YES | YES | PASS |
+| formation_barrens | elite_3 | (3628,2396) | plains | NO | YES | YES | PASS |
+| formation_barrens | hazard_zone | (3760,1964) | plains | NO | YES | YES | PASS |
+| sword_gorge | lair | (3400,3080) | canyon_floor | NO | YES | YES | PASS |
+| sword_gorge | elite_1 | (3268,3092) | canyon_floor | NO | YES | YES | PASS |
+| sword_gorge | elite_2 | (3520,3080) | canyon_floor | NO | YES | YES | PASS |
+| sword_gorge | elite_3 | (3340,3080) | canyon_floor | NO | YES | YES | PASS |
+| sword_gorge | hazard_zone | (3460,3080) | canyon_floor | NO | YES | YES | PASS |
+| ore_teeth_range | lair | (3624,2804) | hill | NO | YES | YES | PASS |
+| ore_teeth_range | elite_1 | (3492,2636) | hill | NO | YES | YES | PASS |
+| ore_teeth_range | elite_2 | (3756,2996) | hill | NO | YES | YES | PASS |
+| ore_teeth_range | elite_3 | (3624,3080) | hill | NO | YES | YES | PASS |
+| ore_teeth_range | hazard_zone | (3732,2576) | hill | NO | YES | YES | PASS |
+| eastern_sea | lair | (3940,2600) | island_reef | NO | YES | YES | PASS |
+| eastern_sea | elite_1 | (4564,1832) | island_reef | NO | YES | YES | PASS |
+| eastern_sea | elite_2 | (3940,2828) | island_reef | NO | YES | YES | PASS |
+| eastern_sea | elite_3 | (3916,2756) | island_reef | NO | YES | YES | PASS |
+| eastern_sea | hazard_zone | (4624,1736) | island_reef | NO | YES | YES | PASS |
+| frostmoon_sea | lair | (4396,4284) | island_reef | NO | YES | SEALED | PASS |
+| frostmoon_sea | elite_1 | (4000,4128) | island_reef | NO | YES | SEALED | PASS |
+| frostmoon_sea | elite_2 | (4504,4260) | island_reef | NO | YES | SEALED | PASS |
+| frostmoon_sea | elite_3 | (4336,4272) | island_reef | NO | YES | SEALED | PASS |
+| frostmoon_sea | hazard_zone | (4540,4092) | island_reef | NO | YES | SEALED | PASS |
+| floating_wind_isles | lair | (4604,2700) | island_reef | NO | YES | SEALED | PASS |
+| floating_wind_isles | elite_1 | (4364,2496) | island_reef | NO | YES | SEALED | PASS |
+| floating_wind_isles | elite_2 | (4832,2952) | island_reef | NO | YES | SEALED | PASS |
+| floating_wind_isles | elite_3 | (4604,3036) | island_reef | NO | YES | SEALED | PASS |
+| floating_wind_isles | hazard_zone | (4772,2412) | island_reef | NO | YES | SEALED | PASS |
+| immortal_ruins_valley | lair | (580,1000) | formation_tile | NO | YES | YES | PASS |
+| immortal_ruins_valley | elite_1 | (364,796) | hill | NO | YES | YES | PASS |
+| immortal_ruins_valley | elite_2 | (844,1252) | hill | NO | YES | YES | PASS |
+| immortal_ruins_valley | elite_3 | (604,1348) | formation_tile | NO | YES | YES | PASS |
+| immortal_ruins_valley | hazard_zone | (592,664) | formation_tile | NO | YES | YES | PASS |
+| void_rift | lair | (308,4748) | miasma_waste | NO | YES | SEALED | PASS |
+| void_rift | elite_1 | (308,4688) | miasma_waste | NO | YES | SEALED | PASS |
+| void_rift | elite_2 | (380,4844) | miasma_waste | NO | YES | SEALED | PASS |
+| void_rift | elite_3 | (356,4784) | miasma_waste | NO | YES | SEALED | PASS |
+| void_rift | hazard_zone | (368,4616) | miasma_waste | NO | YES | SEALED | PASS |
+
+Ringkasan Tabel 3: Total Titik = 145, Pelanggaran = 0
+
+--- TABEL 4: COVERAGE & DIVERSITY SCATTER ---
+| Metrik | Nilai Terukur | Target V9 | Status |
+|---|---|---|---|
+| Rata-rata Objek per Layar | 106.6 | >= 15 | PASS |
+| Dominasi Tipe Tunggal Tertinggi | 16.7% | <= 18.0% | PASS |
+| Sel Kosong 12x12 | 24.8% | <= 35.0% | PASS |
+
+--- TABEL 5: HISTOGRAM TERRAIN (400x400 SAMPEL = 160.000 TITIK) ---
+| No | Terrain Type | Jumlah Sampel | Persentase |
+|---|---|---|---|
+| 1 | ocean | 17386 | 10.87% |
+| 2 | meadow | 15941 | 9.96% |
+| 3 | desert_sand | 13044 | 8.15% |
+| 4 | azure_mountain | 12833 | 8.02% |
+| 5 | plains | 9822 | 6.14% |
+| 6 | hill | 8825 | 5.52% |
+| 7 | snow | 7629 | 4.77% |
+| 8 | island_reef | 7333 | 4.58% |
+| 9 | abyss_edge | 6322 | 3.95% |
+| 10 | miasma_waste | 6150 | 3.84% |
+| 11 | forest | 5853 | 3.66% |
+| 12 | dead_wood | 5840 | 3.65% |
+| 13 | canyon_floor | 4411 | 2.76% |
+| 14 | volcanic | 4225 | 2.64% |
+| 15 | swamp | 4122 | 2.58% |
+| 16 | mountain_peak | 3514 | 2.20% |
+| 17 | formation_tile | 2381 | 1.49% |
+| 18 | spirit_wood | 2056 | 1.29% |
+| 19 | sea_reef | 2044 | 1.28% |
+| 20 | lake_deep | 1960 | 1.23% |
+| 21 | battlefield_ash | 1912 | 1.20% |
+| 22 | cliff | 1759 | 1.10% |
+| 23 | demonic_swamp | 1702 | 1.06% |
+| 24 | crater | 1663 | 1.04% |
+| 25 | bamboo_forest | 1557 | 0.97% |
+| 26 | basalt | 1324 | 0.83% |
+| 27 | sea | 1312 | 0.82% |
+| 28 | mountain_rock | 1019 | 0.64% |
+| 29 | ruin_floor | 938 | 0.59% |
+| 30 | farmland | 872 | 0.55% |
+| 31 | ice_crack | 615 | 0.38% |
+| 32 | bamboo_grove | 606 | 0.38% |
+| 33 | lake | 438 | 0.27% |
+| 34 | mountain | 436 | 0.27% |
+| 35 | poison_pool | 390 | 0.24% |
+| 36 | pond_lotus | 329 | 0.21% |
+| 37 | herb_field | 323 | 0.20% |
+| 38 | river | 233 | 0.15% |
+| 39 | dune | 177 | 0.11% |
+| 40 | mountain_pass | 154 | 0.10% |
+| 41 | lightning_scar | 118 | 0.07% |
+| 42 | river_shallow | 110 | 0.07% |
+| 43 | glacier | 100 | 0.06% |
+| 44 | lava_flow | 92 | 0.06% |
+| 45 | settlement | 45 | 0.03% |
+| 46 | sword_gorge_pass | 40 | 0.03% |
+| 47 | road_stone | 28 | 0.02% |
+| 48 | oasis | 17 | 0.01% |
+
+======================================================================
+TOTAL PELANGGARAN TERDETEKSI: 15
+======================================================================
+[BASELINE MODE] Output dicatat untuk perbandingan sebelum dan sesudah.
