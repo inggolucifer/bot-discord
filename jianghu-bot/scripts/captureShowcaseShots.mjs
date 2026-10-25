@@ -81,11 +81,11 @@ function ensureApiServer() {
 
 const showcases = [
   { name: 'showcase_xingcun_village', title: 'Desa Xingcun (Arketipe Desa & Jalan Lengkung)', x: 2050, y: 2650, zoom: 1.0 },
-  { name: 'showcase_donghai_port', title: 'Dermaga Donghai (Eastern Sea & Perairan)', x: 3920, y: 2700, zoom: 1.0 },
-  { name: 'showcase_floating_wind_isles', title: 'Pulau Penyu & Kuil Angin (Floating Wind Isles)', x: 4350, y: 2750, zoom: 1.0 },
-  { name: 'showcase_mirror_lake', title: 'Danau Cermin (Mirror Lake & Jembatan Kuno)', x: 3100, y: 3100, zoom: 1.0 },
-  { name: 'showcase_azure_pass', title: 'Pegunungan Azure (Azure Pass & Puncak Pedang)', x: 2600, y: 3340, zoom: 1.0 },
-  { name: 'showcase_frostmoon_sea', title: 'Pulau Naga Beku (Frostmoon Sea & Gunung Es)', x: 4396, y: 4284, zoom: 1.0 }
+  { name: 'showcase_donghai_port', title: 'Dermaga Donghai (Eastern Sea & Bangkai Kapal / Naga Laut)', x: 3920, y: 2697, zoom: 1.0 },
+  { name: 'showcase_floating_wind_isles', title: 'Pulau Penyu & Kuil Angin (Floating Wind Isles & Pagoda Melayang)', x: 4330, y: 2696, zoom: 1.0 },
+  { name: 'showcase_mirror_lake', title: 'Danau Cermin (Mirror Lake & Jembatan Kuno Terendam)', x: 3688, y: 3688, zoom: 1.0 },
+  { name: 'showcase_azure_pass', title: 'Pegunungan Azure (Azure Pass & Puncak Karst)', x: 2605, y: 3336, zoom: 0.9 },
+  { name: 'showcase_frostmoon_sea', title: 'Pulau Naga Beku (Frostmoon Sea & Kapal Hantu Es)', x: 4328, y: 4166, zoom: 1.0 }
 ];
 
 async function main() {
@@ -128,16 +128,19 @@ async function main() {
       await page.waitForFunction(() => window.__chunksReady === true, { timeout: 10000 });
     } catch (_) {}
 
-    await page.evaluate(async () => {
+    await page.evaluate(async (s) => {
+      if (window.chunkManager) {
+        window.chunkManager.updateCamera(s.x, s.y, s.zoom);
+      }
       if (window.atlasLoader) {
         await window.atlasLoader.preloadCoreAtlases();
       }
       if (window.groundTextures && !window.groundTextures.ready) {
         await window.groundTextures.load();
       }
-    });
+    }, s);
 
-    await page.waitForTimeout(2500);
+    await page.waitForTimeout(3000);
 
     const outPath = path.join(reviewDir, `${s.name}.png`);
     await page.screenshot({ path: outPath, fullPage: false });

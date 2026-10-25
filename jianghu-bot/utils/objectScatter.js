@@ -268,7 +268,7 @@ function resolveDef(defId, fallbackDefId = null) {
 }
 
 const WATER_TERRAINS = new Set(['sea', 'ocean', 'sea_reef', 'island_reef', 'lake_deep', 'lake', 'river', 'river_shallow']);
-const WATER_EXEMPT_REGEX = /lotus|coral|reef|boat|drift|dock|island|reed|stream|water/;
+const WATER_EXEMPT_REGEX = /lotus|coral|reef|boat|ship|drift|dock|island|reed|stream|water|bridge|pagoda|iceberg|skeleton|wreck|isle|shrine/;
 
 function matchesTerrain(allowedList, actualTerrain) {
   if (!allowedList || !Array.isArray(allowedList)) return true;
