@@ -1,7 +1,7 @@
 {
   "version": "6.0",
   "generatedAt": "2026-10-20T10:37:20.246Z",
-  "totalFrames": 716,
+  "totalFrames": 732,
   "pages": [
     {
       "name": "core_0",
@@ -226,6 +226,22 @@
       "file": "settlement_4.webp",
       "json": "settlement_4.json",
       "decodedMb": 12.1
+    },
+    {
+      "name": "scenes_water_0",
+      "width": 2048,
+      "height": 1820,
+      "file": "scenes_water_0.webp",
+      "json": "scenes_water_0.json",
+      "decodedMb": 14.2
+    },
+    {
+      "name": "biome_highres_0",
+      "width": 2048,
+      "height": 1004,
+      "file": "biome_highres_0.webp",
+      "json": "biome_highres_0.json",
+      "decodedMb": 7.8
     }
   ],
   "frames": {
@@ -591,23 +607,23 @@
       "overhangCells": 1.5
     },
     "pagoda_2x2": {
-      "page": "core_0",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1520,
-        "y": 1286,
-        "w": 256,
-        "h": 384
+        "x": 1538,
+        "y": 8,
+        "w": 318,
+        "h": 490
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2
+      "overhangCells": 0.8
     },
     "sect_gate_3x2": {
       "page": "core_1",
@@ -838,12 +854,12 @@
       "overhangCells": 0.8
     },
     "karst_pillar_1x1": {
-      "page": "core_1",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1066,
-        "y": 386,
-        "w": 144,
-        "h": 192
+        "x": 740,
+        "y": 506,
+        "w": 116,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
@@ -854,7 +870,7 @@
         "ch": 1
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "resource_spirit_jade": {
       "page": "core_1",
@@ -4201,42 +4217,42 @@
       "overhangCells": 2.2
     },
     "landmark_azure_mountain_sword_peak_monolith": {
-      "page": "biome_nature_2",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 475,
-        "y": 1284,
-        "w": 432,
-        "h": 576
+        "x": 8,
+        "y": 506,
+        "w": 265,
+        "h": 490
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.9
+        "y": 0.95
       },
       "footprint": {
         "cw": 3,
         "ch": 3
       },
       "collision": "solid",
-      "overhangCells": 2.5
+      "overhangCells": 0.8
     },
     "landmark_thundersteppe_lightning_attractor_pillar": {
-      "page": "biome_nature_2",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 909,
-        "y": 1284,
-        "w": 432,
-        "h": 576
+        "x": 281,
+        "y": 506,
+        "w": 197,
+        "h": 490
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.9
+        "y": 0.95
       },
       "footprint": {
         "cw": 3,
         "ch": 3
       },
       "collision": "solid",
-      "overhangCells": 2.5
+      "overhangCells": 0.8
     },
     "landmark_crimson_battlefield_broken_halberd_cairn": {
       "page": "biome_nature_2",
@@ -4315,80 +4331,80 @@
       "overhangCells": 2
     },
     "mt_bastion_wall_v1": {
-      "page": "biome_nature_3",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 0,
-        "y": 578,
-        "w": 400,
-        "h": 560
+        "x": 8,
+        "y": 8,
+        "w": 502,
+        "h": 469
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.98
+        "y": 0.95
       },
       "footprint": {
-        "cw": 4,
-        "ch": 3
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.6
+      "overhangCells": 0.8
     },
     "mt_bastion_wall_v2": {
-      "page": "biome_nature_3",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 402,
-        "y": 578,
-        "w": 400,
-        "h": 560
+        "x": 8,
+        "y": 8,
+        "w": 502,
+        "h": 469
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.98
+        "y": 0.95
       },
       "footprint": {
-        "cw": 4,
-        "ch": 3
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.6
+      "overhangCells": 0.8
     },
     "mt_bastion_wall_v3": {
-      "page": "biome_nature_3",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 804,
-        "y": 578,
-        "w": 400,
-        "h": 560
+        "x": 8,
+        "y": 8,
+        "w": 502,
+        "h": 469
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.98
+        "y": 0.95
       },
       "footprint": {
-        "cw": 4,
-        "ch": 3
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.6
+      "overhangCells": 0.8
     },
     "mt_bastion_wall_v4": {
-      "page": "biome_nature_3",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1206,
-        "y": 578,
-        "w": 400,
-        "h": 560
+        "x": 8,
+        "y": 8,
+        "w": 502,
+        "h": 469
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.98
+        "y": 0.95
       },
       "footprint": {
-        "cw": 4,
-        "ch": 3
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.6
+      "overhangCells": 0.8
     },
     "nature_ancient_scholar_tree_pagoda": {
       "page": "biome_nature_3",
@@ -5056,118 +5072,118 @@
       "overhangCells": 1
     },
     "mt_twin_peaks_v1": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 822,
-        "y": 386,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "mt_twin_peaks_v2": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1086,
-        "y": 386,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "mt_twin_peaks_v3": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1350,
-        "y": 386,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "mt_twin_peaks_v4": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1614,
-        "y": 386,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "mt_twin_peaks_v5": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 0,
-        "y": 772,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "mt_twin_peaks_v6": {
-      "page": "biome_nature_5",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 264,
-        "y": 772,
-        "w": 262,
-        "h": 384
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.97
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 2
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2.4
+      "overhangCells": 0.8
     },
     "nature_cherry_blossom_twin": {
       "page": "biome_nature_5",
@@ -6348,118 +6364,118 @@
       "overhangCells": 0.8
     },
     "mt_ridge_double_v1": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 396,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "mt_ridge_double_v2": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 535,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "mt_ridge_double_v3": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 674,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "mt_ridge_double_v4": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 813,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "mt_ridge_double_v5": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 952,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "mt_ridge_double_v6": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1091,
-        "y": 987,
-        "w": 137,
-        "h": 192
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 2,
-        "ch": 1
+        "cw": 5,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 1.8
+      "overhangCells": 0.8
     },
     "bamboo_jade_2x1_m_sparse": {
       "page": "biome_nature_7",
@@ -6576,118 +6592,118 @@
       "overhangCells": 1.2
     },
     "mt_karst_pillar_v1": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 354,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "mt_karst_pillar_v2": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 443,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "mt_karst_pillar_v3": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 532,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "mt_karst_pillar_v4": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 621,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "mt_karst_pillar_v5": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 710,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "mt_karst_pillar_v6": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 799,
-        "y": 1249,
-        "w": 87,
-        "h": 192
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "solid",
-      "overhangCells": 1.2
+      "overhangCells": 0.8
     },
     "tree_willow_river_v1": {
       "page": "biome_nature_7",
@@ -6918,99 +6934,99 @@
       "overhangCells": 0.8
     },
     "tree_cypress_frost_v1": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 806,
-        "y": 1443,
-        "w": 100,
-        "h": 170
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.7
+      "overhangCells": 0.8
     },
     "tree_cypress_frost_v2": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 908,
-        "y": 1443,
-        "w": 100,
-        "h": 170
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.7
+      "overhangCells": 0.8
     },
     "tree_cypress_frost_v3": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1010,
-        "y": 1443,
-        "w": 100,
-        "h": 170
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.7
+      "overhangCells": 0.8
     },
     "tree_cypress_frost_v4": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1112,
-        "y": 1443,
-        "w": 100,
-        "h": 170
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.7
+      "overhangCells": 0.8
     },
     "tree_cypress_frost_v5": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1214,
-        "y": 1443,
-        "w": 100,
-        "h": 170
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.7
+      "overhangCells": 0.8
     },
     "tree_cypress_frost_v6": {
       "page": "biome_nature_7",
@@ -7032,118 +7048,118 @@
       "overhangCells": 0.7
     },
     "tree_pine_ancient_v1": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1418,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "tree_pine_ancient_v2": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1520,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "tree_pine_ancient_v3": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1622,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "tree_pine_ancient_v4": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1724,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "tree_pine_ancient_v5": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1826,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "tree_pine_ancient_v6": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1928,
-        "y": 1443,
-        "w": 100,
-        "h": 160
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.6
+      "overhangCells": 0.8
     },
     "rock_crag_cluster_v1": {
       "page": "biome_nature_7",
@@ -7298,118 +7314,118 @@
       "overhangCells": 0.5
     },
     "tree_dead_wood_v1": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1616,
-        "y": 1637,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "tree_dead_wood_v2": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1718,
-        "y": 1637,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "tree_dead_wood_v3": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1820,
-        "y": 1637,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "tree_dead_wood_v4": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 1922,
-        "y": 1637,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "tree_dead_wood_v5": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 0,
-        "y": 1799,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "tree_dead_wood_v6": {
-      "page": "biome_nature_7",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 102,
-        "y": 1799,
-        "w": 100,
-        "h": 140
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
       },
       "anchor": {
         "x": 0.5,
         "y": 0.95
       },
       "footprint": {
-        "cw": 1,
-        "ch": 1
+        "cw": 2,
+        "ch": 2
       },
       "collision": "soft",
-      "overhangCells": 0.4
+      "overhangCells": 0.8
     },
     "rock_boulder_moss_v1": {
       "page": "biome_nature_7",
@@ -7507,23 +7523,23 @@
       "overhangCells": 2
     },
     "building_spirit_pagoda": {
-      "page": "settlement_0",
+      "page": "biome_highres_0",
       "frame": {
-        "x": 684,
-        "y": 0,
-        "w": 512,
-        "h": 512
+        "x": 1538,
+        "y": 8,
+        "w": 318,
+        "h": 490
       },
       "anchor": {
         "x": 0.5,
-        "y": 0.92
+        "y": 0.95
       },
       "footprint": {
-        "cw": 3,
-        "ch": 3
+        "cw": 4,
+        "ch": 4
       },
       "collision": "solid",
-      "overhangCells": 2
+      "overhangCells": 0.8
     },
     "building_mountain_hermitage_shack": {
       "page": "settlement_0",
@@ -13832,6 +13848,310 @@
       },
       "collision": "solid",
       "overhangCells": 0.5
+    },
+    "ancient_submerged_stone_bridge": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 672,
+        "h": 459
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 3
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "celestial_floating_wind_pagoda_shrine": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 688,
+        "y": 8,
+        "w": 465,
+        "h": 620
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "floating_cloud_rock_isle": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 1161,
+        "y": 8,
+        "w": 558,
+        "h": 600
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "ghost_ship_frozen_ice_wreck": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 8,
+        "y": 636,
+        "w": 608,
+        "h": 600
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 3
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "glacial_iceberg_floating": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 624,
+        "y": 636,
+        "w": 625,
+        "h": 600
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "leviathan_spine_arch_reef": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 1257,
+        "y": 636,
+        "w": 672,
+        "h": 465
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 3
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "sea_dragon_skeleton_remnant": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 8,
+        "y": 1244,
+        "w": 672,
+        "h": 568
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 3
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "sea_shipwreck_abandoned": {
+      "page": "scenes_water_0",
+      "frame": {
+        "x": 688,
+        "y": 1244,
+        "w": 672,
+        "h": 565
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 3
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "mt_bastion_wall": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 502,
+        "h": 469
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 5,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "mt_ridge_double": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 518,
+        "y": 8,
+        "w": 502,
+        "h": 412
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 5,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "mt_twin_peaks": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 1028,
+        "y": 8,
+        "w": 502,
+        "h": 422
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "building_pagoda_tower": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 1538,
+        "y": 8,
+        "w": 318,
+        "h": 490
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 4,
+        "ch": 4
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "mt_karst_pillar": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 486,
+        "y": 506,
+        "w": 246,
+        "h": 480
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 2,
+        "ch": 2
+      },
+      "collision": "solid",
+      "overhangCells": 0.8
+    },
+    "tree_pine_ancient": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 864,
+        "y": 506,
+        "w": 370,
+        "h": 440
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 2,
+        "ch": 2
+      },
+      "collision": "soft",
+      "overhangCells": 0.8
+    },
+    "tree_cypress_frost": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 1242,
+        "y": 506,
+        "w": 341,
+        "h": 440
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 2,
+        "ch": 2
+      },
+      "collision": "soft",
+      "overhangCells": 0.8
+    },
+    "tree_dead_wood": {
+      "page": "biome_highres_0",
+      "frame": {
+        "x": 1591,
+        "y": 506,
+        "w": 259,
+        "h": 440
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.95
+      },
+      "footprint": {
+        "cw": 2,
+        "ch": 2
+      },
+      "collision": "soft",
+      "overhangCells": 0.8
     }
   }
 }

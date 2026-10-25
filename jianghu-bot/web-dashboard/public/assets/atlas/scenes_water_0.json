@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "app": "Jianghu World V9 Master Asset Pipeline",
+    "version": "9.0",
+    "size": {
+      "w": 2048,
+      "h": 1820
+    },
+    "format": "RGBA8888",
+    "image": "scenes_water_0.webp"
+  },
+  "frames": {
+    "ancient_submerged_stone_bridge": {
+      "frame": {
+        "x": 8,
+        "y": 8,
+        "w": 672,
+        "h": 459
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 672,
+        "h": 459
+      },
+      "sourceSize": {
+        "w": 672,
+        "h": 459
+      },
+      "metadata": {
+        "id": "ancient_submerged_stone_bridge",
+        "atlas": "scenes_water_0",
+        "frame": "ancient_submerged_stone_bridge",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "celestial_floating_wind_pagoda_shrine": {
+      "frame": {
+        "x": 688,
+        "y": 8,
+        "w": 465,
+        "h": 620
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 465,
+        "h": 620
+      },
+      "sourceSize": {
+        "w": 465,
+        "h": 620
+      },
+      "metadata": {
+        "id": "celestial_floating_wind_pagoda_shrine",
+        "atlas": "scenes_water_0",
+        "frame": "celestial_floating_wind_pagoda_shrine",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "floating_cloud_rock_isle": {
+      "frame": {
+        "x": 1161,
+        "y": 8,
+        "w": 558,
+        "h": 600
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 558,
+        "h": 600
+      },
+      "sourceSize": {
+        "w": 558,
+        "h": 600
+      },
+      "metadata": {
+        "id": "floating_cloud_rock_isle",
+        "atlas": "scenes_water_0",
+        "frame": "floating_cloud_rock_isle",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "ghost_ship_frozen_ice_wreck": {
+      "frame": {
+        "x": 8,
+        "y": 636,
+        "w": 608,
+        "h": 600
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 608,
+        "h": 600
+      },
+      "sourceSize": {
+        "w": 608,
+        "h": 600
+      },
+      "metadata": {
+        "id": "ghost_ship_frozen_ice_wreck",
+        "atlas": "scenes_water_0",
+        "frame": "ghost_ship_frozen_ice_wreck",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "glacial_iceberg_floating": {
+      "frame": {
+        "x": 624,
+        "y": 636,
+        "w": 625,
+        "h": 600
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 625,
+        "h": 600
+      },
+      "sourceSize": {
+        "w": 625,
+        "h": 600
+      },
+      "metadata": {
+        "id": "glacial_iceberg_floating",
+        "atlas": "scenes_water_0",
+        "frame": "glacial_iceberg_floating",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 4
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "leviathan_spine_arch_reef": {
+      "frame": {
+        "x": 1257,
+        "y": 636,
+        "w": 672,
+        "h": 465
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 672,
+        "h": 465
+      },
+      "sourceSize": {
+        "w": 672,
+        "h": 465
+      },
+      "metadata": {
+        "id": "leviathan_spine_arch_reef",
+        "atlas": "scenes_water_0",
+        "frame": "leviathan_spine_arch_reef",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "sea_dragon_skeleton_remnant": {
+      "frame": {
+        "x": 8,
+        "y": 1244,
+        "w": 672,
+        "h": 568
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 672,
+        "h": 568
+      },
+      "sourceSize": {
+        "w": 672,
+        "h": 568
+      },
+      "metadata": {
+        "id": "sea_dragon_skeleton_remnant",
+        "atlas": "scenes_water_0",
+        "frame": "sea_dragon_skeleton_remnant",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    },
+    "sea_shipwreck_abandoned": {
+      "frame": {
+        "x": 688,
+        "y": 1244,
+        "w": 672,
+        "h": 565
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 672,
+        "h": 565
+      },
+      "sourceSize": {
+        "w": 672,
+        "h": 565
+      },
+      "metadata": {
+        "id": "sea_shipwreck_abandoned",
+        "atlas": "scenes_water_0",
+        "frame": "sea_shipwreck_abandoned",
+        "category": "water_scene",
+        "footprint": {
+          "cw": 4,
+          "ch": 3
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.95
+        },
+        "collision": "solid",
+        "overhangCells": 0.8
+      }
+    }
+  }
+}

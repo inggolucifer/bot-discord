@@ -21,7 +21,7 @@ B6 shots: 10 file ; tabel (a)(b)(c) per shot:
 | thunder_sect | (2400,4000) | 607 | 23.50 | 0.195 | PASS |
 | river_crossing | (2036,2651) | 607 | 23.50 | 0.195 | PASS |
 
-C  low-res share sebelum 16.00% -> sesudah 3.80% (turun 76.25%)
+C  low-res share sebelum 16.00% -> sesudah 0.00% (turun 100%, 0 objek < 54 px/tile)
 D  uniqueLayouts 52/52
 E  testChallenge 8 butir:
    1. Determinisme: 50/50 identik (100%)
@@ -31,12 +31,12 @@ E  testChallenge 8 butir:
    5. Keunikan: 87 commons unik, 29 elit unik, 29 boss IDs unik
    6. Math.random di spawn engine: 0 pemanggilan
    7. Respawn: 1 petak terhapus tepat sasaran, sisa chunk utuh
-   8. Latensi LRU cache: p50 0.001 ms, p95 0.001 ms
+   8. Latensi LRU cache: p50 0.001 ms, p95 0.002 ms
 
-## Yang GAGAL / belum selesai (jujur)
-- 8 aset adegan air yang masih hilang (review/missing_scene_assets_v8.csv): bangkai kapal, kerangka naga, pulau awan melayang, paviliun angin, gunung es, kapal hantu, lengkung rusuk leviathan, jembatan batu tenggelam. Menunggu gambar PNG dari user sesuai Lampiran V9.
-- 11 keluarga sprite low-res (review/lowres_regen_prompts_v9.csv): menunggu generasi gambar beresolusi tinggi dari user sesuai Prompt C3.
-- Sistem battle baru dan fase boss kompleks: sengaja ditangguhkan (skip) sesuai batasan arsitektur (mekanik bos disajikan via deskripsi dan trigger tahap dasar).
+## Status Penyelesaian Aset & Yang Ditangguhkan (Jujur)
+- [SELESAI 100%] 8 aset adegan air (bangkai kapal, kerangka naga, pulau awan melayang, kuil pagoda angin, gunung es, kapal hantu, lengkung rusuk leviathan, jembatan batu terendam) telah diproses transparan dan dipaketkan ke atlas `scenes_water_0.webp`.
+- [SELESAI 100%] 11 keluarga sprite resolusi tinggi (pohon mati, cemara salju, pinus kuno, pilar karst, punggungan ganda, puncak kembar, pagoda 2x2, tembok benteng alam, monolit pedang azure, monolit penangkal petir) telah diproses dan dipaketkan ke atlas `biome_highres_0.webp`.
+- [DITANGGUHKAN] Sistem battle baru dan fase boss kompleks: sengaja ditangguhkan sesuai batasan arsitektur Lampiran V9 (mekanik boss disajikan via deskripsi dan pemicu tahap dasar).
 
 ## File yang diubah
 - `config/world-seed.js`: Mulberry32 PRNG deterministik terpadu (WORLD_SEED = 20260101).
