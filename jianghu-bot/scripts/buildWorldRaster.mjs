@@ -29,8 +29,12 @@ const TILE_SCALE = WORLD_SIZE / RASTER_SIZE; // 4.0
 const regionsPath = path.resolve(__dirname, '../world-data/regions.json');
 const anchorsPath = path.resolve(__dirname, '../world-data/anchors.json');
 const barriersPath = path.resolve(__dirname, '../world-data/barriers.json');
-const regionMapPath = path.resolve(__dirname, '../world-data/organic-region-map.json');
-const roadNetPath = path.resolve(__dirname, '../world-data/road-network.json');
+const regionMapPath = fs.existsSync(path.resolve(__dirname, '../world-data/organic-region-map.json'))
+  ? path.resolve(__dirname, '../world-data/organic-region-map.json')
+  : path.resolve(__dirname, '../world-data/_unused/organic-region-map.json');
+const roadNetPath = fs.existsSync(path.resolve(__dirname, '../world-data/road-network.json'))
+  ? path.resolve(__dirname, '../world-data/road-network.json')
+  : path.resolve(__dirname, '../world-data/_unused/road-network.json');
 
 const regions = JSON.parse(fs.readFileSync(regionsPath, 'utf8'));
 const anchors = JSON.parse(fs.readFileSync(anchorsPath, 'utf8'));

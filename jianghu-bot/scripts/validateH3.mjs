@@ -21,7 +21,9 @@ console.log('================================================================\n'
 
 // 1. Organic Region Map
 console.log('[TEST 1] Organic Region Map Verification...');
-const regionMapPath = path.resolve(__dirname, '../world-data/organic-region-map.json');
+const regionMapPath = fs.existsSync(path.resolve(__dirname, '../world-data/organic-region-map.json'))
+  ? path.resolve(__dirname, '../world-data/organic-region-map.json')
+  : path.resolve(__dirname, '../world-data/_unused/organic-region-map.json');
 assert(fs.existsSync(regionMapPath), 'organic-region-map.json must exist');
 const regMap = JSON.parse(fs.readFileSync(regionMapPath, 'utf8'));
 assert(regMap.gridSize === 625, 'Grid size must be 625');
@@ -40,7 +42,9 @@ console.log('  -> PASS: 390,625 cells assigned organically across all 29 regions
 
 // 2. Road Network
 console.log('[TEST 2] Road Network Connectivity & Barrier Clearance...');
-const roadPath = path.resolve(__dirname, '../world-data/road-network.json');
+const roadPath = fs.existsSync(path.resolve(__dirname, '../world-data/road-network.json'))
+  ? path.resolve(__dirname, '../world-data/road-network.json')
+  : path.resolve(__dirname, '../world-data/_unused/road-network.json');
 assert(fs.existsSync(roadPath), 'road-network.json must exist');
 const roadNet = JSON.parse(fs.readFileSync(roadPath, 'utf8'));
 assert(roadNet.totalSegments >= 80, `Must have >= 80 road segments, found ${roadNet.totalSegments}`);
@@ -56,7 +60,9 @@ console.log(`  -> PASS: ${roadNet.totalSegments} road segments connecting ${conn
 
 // 3. Layout Recipes
 console.log('[TEST 3] Layout Recipes Pacing & Safe Buffers...');
-const recipesPath = path.resolve(__dirname, '../world-data/layout-recipes.json');
+const recipesPath = fs.existsSync(path.resolve(__dirname, '../world-data/layout-recipes.json'))
+  ? path.resolve(__dirname, '../world-data/layout-recipes.json')
+  : path.resolve(__dirname, '../world-data/_unused/layout-recipes.json');
 assert(fs.existsSync(recipesPath), 'layout-recipes.json must exist');
 const recipes = JSON.parse(fs.readFileSync(recipesPath, 'utf8'));
 const recipeKeys = Object.keys(recipes);
