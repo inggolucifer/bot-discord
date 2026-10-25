@@ -1,0 +1,140 @@
+[
+  {
+    "itemKey": "item_antidote_pill",
+    "name": "Pil Penawar Racun",
+    "rank": "Uncommon",
+    "category": "pill",
+    "tier": 2,
+    "basePrice": 40,
+    "priceCurrency": "silver",
+    "usableInBattle": true,
+    "tags": ["item_antidote_pill", "counter_item", "poison_ward"],
+    "description": "Pil herbal penawar racun untuk menetralkan racun mematikan dan miasma rawa."
+  },
+  {
+    "itemKey": "item_cold_pill",
+    "name": "Pil Penghangat Dingin",
+    "rank": "Uncommon",
+    "category": "pill",
+    "tier": 2,
+    "basePrice": 45,
+    "priceCurrency": "silver",
+    "usableInBattle": true,
+    "tags": ["item_cold_pill", "counter_item", "cold_ward", "heat_ward"],
+    "description": "Pil berhawa Yang murni untuk melindungi tubuh dari hawa beku atau panas magma ekstrem."
+  },
+  {
+    "itemKey": "item_flying_sword",
+    "name": "Pedang Terbang Spiritual",
+    "rank": "Mythical",
+    "category": "mount",
+    "mountType": "flying_sword",
+    "tier": 5,
+    "basePrice": 100,
+    "priceCurrency": "spirit",
+    "staminaReduction": 2.5,
+    "travelSpeedBonus": 0.75,
+    "tags": ["item_flying_sword", "counter_item", "mount", "flight"],
+    "description": "Artefak pedang terbang tingkat tinggi. Memungkinkan melintasi pulau awan, tebing curam, dan pegunungan batu."
+  },
+  {
+    "itemKey": "item_frost_ward_cloak",
+    "name": "Jubah Penangkal Embun Beku",
+    "rank": "Rare",
+    "category": "armor",
+    "tier": 3,
+    "basePrice": 150,
+    "priceCurrency": "silver",
+    "coldResistance": 30,
+    "tags": ["item_frost_ward_cloak", "counter_item", "cold_ward"],
+    "description": "Jubah tebal berbulu binatang buas kutub untuk menahan hawa dingin salju beku."
+  },
+  {
+    "itemKey": "item_holy_talisman",
+    "name": "Jimat Suci Penangkal Hantu",
+    "rank": "Rare",
+    "category": "talisman",
+    "tier": 3,
+    "basePrice": 120,
+    "priceCurrency": "silver",
+    "tags": ["item_holy_talisman", "counter_item", "demon_ward", "ghost_ward"],
+    "description": "Jimat mantra beraura cahaya kebajikan untuk menangkis kutukan iblis dan hantu medan perang."
+  },
+  {
+    "itemKey": "item_incense_repel",
+    "name": "Dupa Penangkal Siluman",
+    "rank": "Uncommon",
+    "category": "consume",
+    "tier": 2,
+    "basePrice": 50,
+    "priceCurrency": "silver",
+    "tags": ["item_incense_repel", "counter_item", "insect_ward"],
+    "description": "Dupa wangi khusus untuk mengusir serangga berbisa dan siluman lembah berkabut."
+  },
+  {
+    "itemKey": "item_lightning_rod_talisman",
+    "name": "Jimat Penarik Petir",
+    "rank": "Rare",
+    "category": "talisman",
+    "tier": 3,
+    "basePrice": 160,
+    "priceCurrency": "silver",
+    "tags": ["item_lightning_rod_talisman", "counter_item", "lightning_ward"],
+    "description": "Jimat logam spiritual yang menyerap dan membumikan sambaran petir di padang guntur."
+  },
+  {
+    "itemKey": "item_void_key",
+    "name": "Kunci Hampa Abyssal",
+    "rank": "Epic",
+    "category": "material",
+    "tier": 5,
+    "basePrice": 500,
+    "priceCurrency": "silver",
+    "tags": ["item_void_key", "counter_item", "sealed_access", "boss_drop"],
+    "description": "Kunci kuno yang jatuh dari penguasa Abyssal Scar, memancarkan resonansi untuk membuka gerbang Void Rift."
+  },
+  {
+    "itemKey": "item_void_ward_stone",
+    "name": "Batu Pelindung Hampa",
+    "rank": "Epic",
+    "category": "artifact",
+    "tier": 5,
+    "basePrice": 400,
+    "priceCurrency": "silver",
+    "tags": ["item_void_ward_stone", "counter_item", "void_ward"],
+    "description": "Batu pusaka penstabil fluktuasi dimensi ruang dan pelindung jiwa dari kehampaan kosmis."
+  },
+  {
+    "itemKey": "item_water_gourd",
+    "name": "Labu Air Penyegar",
+    "rank": "Common",
+    "category": "consume",
+    "tier": 1,
+    "basePrice": 20,
+    "priceCurrency": "silver",
+    "tags": ["item_water_gourd", "counter_item", "heat_ward"],
+    "description": "Labu air pegunungan dingin segar untuk mencegah dehidrasi dan sengatan panas gurun."
+  },
+  {
+    "itemKey": "item_water_walk_charm",
+    "name": "Jimat Berjalan di Atas Air",
+    "rank": "Uncommon",
+    "category": "talisman",
+    "tier": 2,
+    "basePrice": 80,
+    "priceCurrency": "silver",
+    "tags": ["item_water_walk_charm", "counter_item", "water_walk"],
+    "description": "Jimat spiritual ringan yang memungkinkan tubuh berpijak di atas permukaan air dan rawa tanpa tenggelam."
+  },
+  {
+    "itemKey": "item_wind_ward_cloak",
+    "name": "Jubah Penahan Badai Angin",
+    "rank": "Rare",
+    "category": "armor",
+    "tier": 3,
+    "basePrice": 140,
+    "priceCurrency": "silver",
+    "tags": ["item_wind_ward_cloak", "counter_item", "wind_ward"],
+    "description": "Jubah pelindung tenunan sutra angin untuk menahan badai taufan dan hembusan pedang ngarai."
+  }
+]

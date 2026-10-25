@@ -6,6 +6,7 @@ const CURRENCY_ENUM = ['copper', 'silver', 'gold', 'jade', 'spirit'];
 
 const itemSchema = new mongoose.Schema({
   guildId: { type: String, required: true, index: true },
+  itemKey: { type: String, default: null, index: true },
   name: { type: String, required: true },
   rank: { type: String, enum: RANKS, default: 'Common' },
   category: { type: String, enum: ['weapon', 'armor', 'helmet', 'pants', 'boots', 'herb', 'pill', 'consume', 'material', 'artifact', 'talisman', 'accessories', 'law', 'manual', 'tool', 'mount', 'none'], default: 'none' },

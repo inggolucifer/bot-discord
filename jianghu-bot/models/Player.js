@@ -438,6 +438,7 @@ const playerSchema = new mongoose.Schema({
     hasMeridianDamage: { type: Boolean, default: false },
     lastEvaluatedAt: { type: Date, default: null }
   },
+  hazardStepCounter: { type: Number, default: 0 },
 
   exploredTiles: [{
     zoneId: { type: String, required: true },

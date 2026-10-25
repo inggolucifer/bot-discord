@@ -8,51 +8,63 @@
     "safeBufferSettlements": 20,
     "common": [
       {
-        "id": "deer_wild",
+        "id": "central_plains__rusa_bintik_fana",
         "name": "Rusa Bintik Fana",
         "icon": "🦌",
         "tier": 1,
         "level": 3,
+        "hp": 94,
+        "maxHp": 94,
+        "atk": 17,
+        "def": 8,
+        "spd": 9,
         "isAggressive": false,
         "spawnWeight": 70
       },
       {
-        "id": "boar_plain",
-        "name": "Babi Hutan Liar",
-        "icon": "🐗",
-        "tier": 1,
-        "level": 5,
-        "isAggressive": false,
-        "spawnWeight": 70
-      },
-      {
-        "id": "crane_white",
+        "id": "central_plains__bangau_bulu_salju",
         "name": "Bangau Bulu Salju",
         "icon": "🦅",
         "tier": 1,
-        "level": 6,
+        "level": 4,
+        "hp": 112,
+        "maxHp": 112,
+        "atk": 20,
+        "def": 10,
+        "spd": 10,
         "isAggressive": false,
         "spawnWeight": 70
       },
       {
-        "id": "fox_red",
+        "id": "central_plains__rubah_ekor_cokelat",
         "name": "Rubah Ekor Cokelat",
         "icon": "🦊",
         "tier": 1,
-        "level": 7,
+        "level": 5,
+        "hp": 130,
+        "maxHp": 130,
+        "atk": 23,
+        "def": 11,
+        "spd": 11,
         "isAggressive": false,
         "spawnWeight": 70
       }
     ],
     "elite": [
       {
-        "id": "wolf_plain",
-        "name": "Serigala Liar Padang",
+        "id": "central_plains__serigala_padang_berbulu_besi",
+        "name": "Serigala Padang Berbulu Besi",
         "icon": "🐺",
         "tier": 1,
-        "level": 9,
+        "level": 8,
+        "hp": 404,
+        "maxHp": 404,
+        "atk": 48,
+        "def": 16,
+        "spd": 12,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
@@ -61,10 +73,10 @@
       "title": "Raja Siluman Peringkat 1",
       "icon": "🐉",
       "tier": 2,
-      "level": 22,
-      "hp": 4500,
-      "atk": 180,
-      "def": 120,
+      "level": 14,
+      "hp": 2336,
+      "atk": 100,
+      "def": 50,
       "lair": {
         "centerX": 2504,
         "centerY": 2608,
@@ -75,7 +87,11 @@
           2850,
           2825
         ]
-      }
+      },
+      "maxHp": 2336,
+      "spd": 16,
+      "isBoss": true,
+      "mechanic": "Boss melempar umpan: 2 anak buah tiap 25% HP"
     }
   },
   "nine_springs_delta": {
@@ -87,51 +103,63 @@
     "safeBufferSettlements": 20,
     "common": [
       {
-        "id": "deer_wild",
-        "name": "Rusa Bintik Fana",
-        "icon": "🦌",
+        "id": "nine_springs_delta__katak_lotus_giok",
+        "name": "Katak Lotus Giok",
+        "icon": "🐸",
         "tier": 1,
         "level": 3,
+        "hp": 94,
+        "maxHp": 94,
+        "atk": 17,
+        "def": 8,
+        "spd": 9,
         "isAggressive": false,
         "spawnWeight": 70
       },
       {
-        "id": "boar_plain",
-        "name": "Babi Hutan Liar",
-        "icon": "🐗",
+        "id": "nine_springs_delta__lintah_sungai_raksasa",
+        "name": "Lintah Sungai Raksasa",
+        "icon": "🪱",
         "tier": 1,
-        "level": 5,
+        "level": 4,
+        "hp": 112,
+        "maxHp": 112,
+        "atk": 20,
+        "def": 10,
+        "spd": 10,
         "isAggressive": false,
         "spawnWeight": 70
       },
       {
-        "id": "crane_white",
-        "name": "Bangau Bulu Salju",
+        "id": "nine_springs_delta__bangau_pemancing_hitam",
+        "name": "Bangau Pemancing Hitam",
         "icon": "🦅",
         "tier": 1,
-        "level": 6,
-        "isAggressive": false,
-        "spawnWeight": 70
-      },
-      {
-        "id": "fox_red",
-        "name": "Rubah Ekor Cokelat",
-        "icon": "🦊",
-        "tier": 1,
-        "level": 7,
+        "level": 5,
+        "hp": 130,
+        "maxHp": 130,
+        "atk": 23,
+        "def": 11,
+        "spd": 11,
         "isAggressive": false,
         "spawnWeight": 70
       }
     ],
     "elite": [
       {
-        "id": "wolf_plain",
-        "name": "Serigala Liar Padang",
-        "icon": "🐺",
+        "id": "nine_springs_delta__naga_sungai_muda",
+        "name": "Naga Sungai Muda",
+        "icon": "🐉",
         "tier": 1,
-        "level": 9,
+        "level": 8,
+        "hp": 404,
+        "maxHp": 404,
+        "atk": 48,
+        "def": 16,
+        "spd": 12,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
@@ -140,10 +168,10 @@
       "title": "Raja Siluman Peringkat 1",
       "icon": "🐉",
       "tier": 2,
-      "level": 22,
-      "hp": 4500,
-      "atk": 180,
-      "def": 120,
+      "level": 14,
+      "hp": 2336,
+      "atk": 100,
+      "def": 50,
       "lair": {
         "centerX": 2412,
         "centerY": 2406,
@@ -154,7 +182,11 @@
           2500,
           2500
         ]
-      }
+      },
+      "maxHp": 2336,
+      "spd": 16,
+      "isBoss": true,
+      "mechanic": "Boss memanggil gelombang air (knockback 3 petak)"
     }
   },
   "azure_mountain_range": {
@@ -164,51 +196,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "azure_mountain_range__kambing_gunung_awan",
+        "name": "Kambing Gunung Awan",
+        "icon": "🐐",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
+        "id": "azure_mountain_range__elang_tebing_biru",
+        "name": "Elang Tebing Biru",
         "icon": "🦅",
         "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
-        "icon": "🐍",
+        "id": "azure_mountain_range__beruang_batu_azure",
+        "name": "Beruang Batu Azure",
+        "icon": "🐻",
         "tier": 3,
-        "level": 60,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
       {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
+        "id": "azure_mountain_range__harimau_salju_pedang",
+        "name": "Harimau Salju Pedang",
+        "icon": "🐅",
         "tier": 3,
-        "level": 65,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_azure_mountain_range",
+      "name": "Pendekar Pedang Mist Pass",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -227,7 +281,14 @@
           3212,
           3475
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss di celah Mist Pass: arena 21x21, ada pilar pedang jatuh"
     }
   },
   "northern_desolate": {
@@ -237,42 +298,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "northern_desolate__rusa_es_bertanduk_kristal",
+        "name": "Rusa Es Bertanduk Kristal",
+        "icon": "🦌",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "northern_desolate__serigala_salju_putih",
+        "name": "Serigala Salju Putih",
+        "icon": "🐺",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "northern_desolate__beruang_kutub_tulang",
+        "name": "Beruang Kutub Tulang",
+        "icon": "🐻",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "northern_desolate__mammoth_es_berbulu_hitam",
+        "name": "Mammoth Es Berbulu Hitam",
+        "icon": "🐻",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_northern_desolate",
+      "name": "Raja Es Kutub Abadi",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -291,7 +383,14 @@
           2650,
           4650
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss membekukan petak sekitar (immobilize 1 giliran)"
     }
   },
   "thundersteppe": {
@@ -301,42 +400,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "thundersteppe__kuda_petir_liar",
+        "name": "Kuda Petir Liar",
+        "icon": "🦌",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "thundersteppe__ular_statis",
+        "name": "Ular Statis",
+        "icon": "🐍",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "thundersteppe__elang_guntur",
+        "name": "Elang Guntur",
+        "icon": "🦅",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "thundersteppe__banteng_guntur_bertanduk_besi",
+        "name": "Banteng Guntur Bertanduk Besi",
+        "icon": "🐾",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_thundersteppe",
+      "name": "Raja Badai Kilat Padang",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -355,7 +485,14 @@
           2550,
           4400
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: serangan beruntun bila HP lawan pakai logam"
     }
   },
   "godthunder_peaks": {
@@ -365,33 +502,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
+        "id": "godthunder_peaks__naga_kecil_awan",
+        "name": "Naga Kecil Awan",
         "icon": "🐉",
         "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 59,
+        "hp": 1102,
+        "maxHp": 1102,
+        "atk": 185,
+        "def": 92,
+        "spd": 43,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
+        "id": "godthunder_peaks__rajawali_petir_putih",
+        "name": "Rajawali Petir Putih",
+        "icon": "🦅",
         "tier": 5,
-        "level": 100,
+        "level": 60,
+        "hp": 1120,
+        "maxHp": 1120,
+        "atk": 188,
+        "def": 94,
+        "spd": 44,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "godthunder_peaks__golem_kilat",
+        "name": "Golem Kilat",
+        "icon": "🗿",
+        "tier": 5,
+        "level": 61,
+        "hp": 1138,
+        "maxHp": 1138,
+        "atk": 191,
+        "def": 95,
+        "spd": 44,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "godthunder_peaks__hakim_petir_tingkat_7",
+        "name": "Hakim Petir Tingkat 7",
+        "icon": "👤",
+        "tier": 5,
+        "level": 64,
+        "hp": 2622,
+        "maxHp": 2622,
+        "atk": 300,
+        "def": 100,
+        "spd": 46,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_godthunder_peaks",
+      "name": "Hakim Petir Langit Kesembilan",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 70,
       "footprint": {
         "w": 5,
         "h": 5
@@ -409,7 +586,14 @@
           3710,
           4750
         ]
-      }
+      },
+      "hp": 10400,
+      "maxHp": 10400,
+      "atk": 436,
+      "def": 218,
+      "spd": 50,
+      "isBoss": true,
+      "mechanic": "Boss: ujian tribulasi 3 gelombang"
     }
   },
   "mirror_lake": {
@@ -421,59 +605,71 @@
     "safeBufferSettlements": 20,
     "common": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "mirror_lake__siluman_bayangan_cermin",
+        "name": "Siluman Bayangan Cermin",
+        "icon": "🐾",
         "tier": 2,
-        "level": 15,
+        "level": 11,
+        "hp": 238,
+        "maxHp": 238,
+        "atk": 41,
+        "def": 20,
+        "spd": 14,
         "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "mirror_lake__ikan_pedang_perak",
+        "name": "Ikan Pedang Perak",
+        "icon": "🐉",
+        "tier": 2,
+        "level": 12,
+        "hp": 256,
+        "maxHp": 256,
+        "atk": 44,
+        "def": 22,
+        "spd": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "mirror_lake__kura_kura_cermin",
+        "name": "Kura-kura Cermin",
+        "icon": "🐢",
+        "tier": 2,
+        "level": 13,
+        "hp": 274,
+        "maxHp": 274,
+        "atk": 47,
+        "def": 23,
+        "spd": 15,
+        "isAggressive": true,
         "spawnWeight": 70
       }
     ],
     "elite": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "mirror_lake__pendekar_bayangan_danau",
+        "name": "Pendekar Bayangan Danau",
+        "icon": "👤",
         "tier": 2,
-        "level": 15,
+        "level": 16,
+        "hp": 721,
+        "maxHp": 721,
+        "atk": 84,
+        "def": 28,
+        "spd": 17,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "viper_shadow",
-        "name": "Ular Sanca Hitam",
-        "icon": "🐍",
-        "tier": 2,
-        "level": 20,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "bear_iron",
-        "name": "Beruang Besi Dingin",
-        "icon": "🐻",
-        "tier": 2,
-        "level": 25,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "spider_cave",
-        "name": "Laba-laba Gua Berbisa",
-        "icon": "🕷️",
-        "tier": 2,
-        "level": 30,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_alpha_wolf",
-      "name": "Raja Serigala Roh Darah",
+      "id": "boss_mirror_lake",
+      "name": "Raja Cermin Ilusi Air",
       "icon": "🐺",
       "tier": 2,
-      "level": 35,
+      "level": 22,
       "footprint": {
         "w": 2,
         "h": 2
@@ -494,7 +690,14 @@
           3600,
           3975
         ]
-      }
+      },
+      "hp": 3488,
+      "maxHp": 3488,
+      "atk": 148,
+      "def": 74,
+      "spd": 21,
+      "isBoss": true,
+      "mechanic": "Boss meniru stat pemain (mirror) 50%"
     }
   },
   "beast_prairies": {
@@ -504,51 +707,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "beast_prairies__bison_taring_emas",
+        "name": "Bison Taring Emas",
+        "icon": "🦌",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
+        "id": "beast_prairies__hyena_padang_merah",
+        "name": "Hyena Padang Merah",
+        "icon": "🐺",
+        "tier": 3,
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "beast_prairies__elang_pemburu",
+        "name": "Elang Pemburu",
         "icon": "🦅",
         "tier": 3,
-        "level": 55,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
       {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
-        "icon": "🐍",
+        "id": "beast_prairies__raja_kawanan_singa_padang",
+        "name": "Raja Kawanan Singa Padang",
+        "icon": "🐅",
         "tier": 3,
-        "level": 60,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
-        "tier": 3,
-        "level": 65,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_beast_prairies",
+      "name": "Raja Rimba Padang Savana",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -567,7 +792,14 @@
           1600,
           4000
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss memanggil kawanan 3 elit"
     }
   },
   "western_sacred_desert": {
@@ -577,51 +809,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "western_sacred_desert__kalajengking_pasir_emas",
+        "name": "Kalajengking Pasir Emas",
+        "icon": "🦂",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
-        "icon": "🦅",
-        "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
+        "id": "western_sacred_desert__ular_derik_putih",
+        "name": "Ular Derik Putih",
         "icon": "🐍",
         "tier": 3,
-        "level": 60,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
+        "id": "western_sacred_desert__unta_liar",
+        "name": "Unta Liar",
+        "icon": "🦌",
         "tier": 3,
-        "level": 65,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "western_sacred_desert__cacing_pasir_raksasa",
+        "name": "Cacing Pasir Raksasa",
+        "icon": "🪱",
+        "tier": 3,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_western_sacred_desert",
+      "name": "Penguasa Cacing Pasir Purba",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -640,7 +894,14 @@
           1125,
           3000
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss menyergap dari bawah pasir (hanya muncul 1 kali/menit)"
     }
   },
   "western_gorge_labyrinth": {
@@ -650,42 +911,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "western_gorge_labyrinth__kelelawar_ngarai",
+        "name": "Kelelawar Ngarai",
+        "icon": "🦇",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "western_gorge_labyrinth__ular_batu_merah",
+        "name": "Ular Batu Merah",
+        "icon": "🐍",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "western_gorge_labyrinth__laba_laba_kapur",
+        "name": "Laba-laba Kapur",
+        "icon": "🕷️",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "western_gorge_labyrinth__minotaur_batu_pasir",
+        "name": "Minotaur Batu Pasir",
+        "icon": "🗿",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_western_gorge_labyrinth",
+      "name": "Raja Minotaur Labirin Karst",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -704,7 +996,14 @@
           750,
           1750
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss labirin: pintu berubah tiap 60 detik"
     }
   },
   "hermit_highlands": {
@@ -716,59 +1015,71 @@
     "safeBufferSettlements": 20,
     "common": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "hermit_highlands__kera_bijak_kabut",
+        "name": "Kera Bijak Kabut",
+        "icon": "🐾",
         "tier": 2,
-        "level": 15,
+        "level": 11,
+        "hp": 238,
+        "maxHp": 238,
+        "atk": 41,
+        "def": 20,
+        "spd": 14,
         "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "hermit_highlands__rusa_giok_tua",
+        "name": "Rusa Giok Tua",
+        "icon": "🦌",
+        "tier": 2,
+        "level": 12,
+        "hp": 256,
+        "maxHp": 256,
+        "atk": 44,
+        "def": 22,
+        "spd": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "hermit_highlands__ular_awan",
+        "name": "Ular Awan",
+        "icon": "🐍",
+        "tier": 2,
+        "level": 13,
+        "hp": 274,
+        "maxHp": 274,
+        "atk": 47,
+        "def": 23,
+        "spd": 15,
+        "isAggressive": true,
         "spawnWeight": 70
       }
     ],
     "elite": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "hermit_highlands__pertapa_gila_berjubah_kabut",
+        "name": "Pertapa Gila Berjubah Kabut",
+        "icon": "👤",
         "tier": 2,
-        "level": 15,
+        "level": 16,
+        "hp": 721,
+        "maxHp": 721,
+        "atk": 84,
+        "def": 28,
+        "spd": 17,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "viper_shadow",
-        "name": "Ular Sanca Hitam",
-        "icon": "🐍",
-        "tier": 2,
-        "level": 20,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "bear_iron",
-        "name": "Beruang Besi Dingin",
-        "icon": "🐻",
-        "tier": 2,
-        "level": 25,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "spider_cave",
-        "name": "Laba-laba Gua Berbisa",
-        "icon": "🕷️",
-        "tier": 2,
-        "level": 30,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_alpha_wolf",
-      "name": "Raja Serigala Roh Darah",
+      "id": "boss_hermit_highlands",
+      "name": "Pertapa Gila Puncak Kabut",
       "icon": "🐺",
       "tier": 2,
-      "level": 35,
+      "level": 22,
       "footprint": {
         "w": 2,
         "h": 2
@@ -789,7 +1100,14 @@
           1400,
           4600
         ]
-      }
+      },
+      "hp": 3488,
+      "maxHp": 3488,
+      "atk": 148,
+      "def": 74,
+      "spd": 21,
+      "isBoss": true,
+      "mechanic": "Boss mengajukan teka-teki bela diri (3 pilihan)"
     }
   },
   "border_march": {
@@ -801,59 +1119,71 @@
     "safeBufferSettlements": 20,
     "common": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "border_march__prajurit_bayangan_tombak",
+        "name": "Prajurit Bayangan Tombak",
+        "icon": "👤",
         "tier": 2,
-        "level": 15,
+        "level": 11,
+        "hp": 238,
+        "maxHp": 238,
+        "atk": 41,
+        "def": 20,
+        "spd": 14,
         "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "border_march__kuda_perang_tak_bertuan",
+        "name": "Kuda Perang Tak Bertuan",
+        "icon": "🦌",
+        "tier": 2,
+        "level": 12,
+        "hp": 256,
+        "maxHp": 256,
+        "atk": 44,
+        "def": 22,
+        "spd": 15,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "border_march__pemanah_gurun",
+        "name": "Pemanah Gurun",
+        "icon": "🐾",
+        "tier": 2,
+        "level": 13,
+        "hp": 274,
+        "maxHp": 274,
+        "atk": 47,
+        "def": 23,
+        "spd": 15,
+        "isAggressive": true,
         "spawnWeight": 70
       }
     ],
     "elite": [
       {
-        "id": "wolf_azure",
-        "name": "Serigala Roh Darah",
-        "icon": "🐺",
+        "id": "border_march__kapten_pasukan_besi",
+        "name": "Kapten Pasukan Besi",
+        "icon": "👤",
         "tier": 2,
-        "level": 15,
+        "level": 16,
+        "hp": 721,
+        "maxHp": 721,
+        "atk": 84,
+        "def": 28,
+        "spd": 17,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "viper_shadow",
-        "name": "Ular Sanca Hitam",
-        "icon": "🐍",
-        "tier": 2,
-        "level": 20,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "bear_iron",
-        "name": "Beruang Besi Dingin",
-        "icon": "🐻",
-        "tier": 2,
-        "level": 25,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "spider_cave",
-        "name": "Laba-laba Gua Berbisa",
-        "icon": "🕷️",
-        "tier": 2,
-        "level": 30,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_alpha_wolf",
-      "name": "Raja Serigala Roh Darah",
+      "id": "boss_border_march",
+      "name": "Jenderal Pasukan Besi Gurun",
       "icon": "🐺",
       "tier": 2,
-      "level": 35,
+      "level": 22,
       "footprint": {
         "w": 2,
         "h": 2
@@ -874,7 +1204,14 @@
           2850,
           1987
         ]
-      }
+      },
+      "hp": 3488,
+      "maxHp": 3488,
+      "atk": 148,
+      "def": 74,
+      "spd": 21,
+      "isBoss": true,
+      "mechanic": "Boss: komandan dengan 2 pemanah"
     }
   },
   "lava_spine": {
@@ -884,33 +1221,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
-        "icon": "🐉",
+        "id": "lava_spine__kadal_magma",
+        "name": "Kadal Magma",
+        "icon": "🐾",
         "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 59,
+        "hp": 1102,
+        "maxHp": 1102,
+        "atk": 185,
+        "def": 92,
+        "spd": 43,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
+        "id": "lava_spine__burung_api_abu",
+        "name": "Burung Api Abu",
+        "icon": "🦅",
         "tier": 5,
-        "level": 100,
+        "level": 60,
+        "hp": 1120,
+        "maxHp": 1120,
+        "atk": 188,
+        "def": 94,
+        "spd": 44,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "lava_spine__golem_basal",
+        "name": "Golem Basal",
+        "icon": "🗿",
+        "tier": 5,
+        "level": 61,
+        "hp": 1138,
+        "maxHp": 1138,
+        "atk": 191,
+        "def": 95,
+        "spd": 44,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "lava_spine__salamander_lava_raksasa",
+        "name": "Salamander Lava Raksasa",
+        "icon": "🐾",
+        "tier": 5,
+        "level": 64,
+        "hp": 2622,
+        "maxHp": 2622,
+        "atk": 300,
+        "def": 100,
+        "spd": 46,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_lava_spine",
+      "name": "Raja Naga Magma Vulkanik",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 70,
       "footprint": {
         "w": 5,
         "h": 5
@@ -928,7 +1305,14 @@
           1350,
           950
         ]
-      }
+      },
+      "hp": 10400,
+      "maxHp": 10400,
+      "atk": 436,
+      "def": 218,
+      "spd": 50,
+      "isBoss": true,
+      "mechanic": "Boss mengubah lantai menjadi lava (petak bergilir)"
     }
   },
   "venom_mire": {
@@ -938,42 +1322,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "venom_mire__katak_beracun_neon",
+        "name": "Katak Beracun Neon",
+        "icon": "🐸",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "venom_mire__ular_rawa_hijau",
+        "name": "Ular Rawa Hijau",
+        "icon": "🐍",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "venom_mire__lintah_berbisa",
+        "name": "Lintah Berbisa",
+        "icon": "🪱",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "venom_mire__hydra_rawa_tiga_kepala",
+        "name": "Hydra Rawa Tiga Kepala",
+        "icon": "🐾",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_venom_mire",
+      "name": "Hydra Rawa Sembilan Racun",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -992,7 +1407,14 @@
           2800,
           1150
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: kepala regenerasi, bunuh urut"
     }
   },
   "southern_demon_domain": {
@@ -1002,42 +1424,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "southern_demon_domain__iblis_kecil_berbulu_gelap",
+        "name": "Iblis Kecil Berbulu Gelap",
+        "icon": "👹",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "southern_demon_domain__anjing_neraka",
+        "name": "Anjing Neraka",
+        "icon": "🐺",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "southern_demon_domain__kelelawar_darah",
+        "name": "Kelelawar Darah",
+        "icon": "🦇",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
+        "id": "southern_demon_domain__panglima_iblis_berkepala_tanduk",
+        "name": "Panglima Iblis Berkepala Tanduk",
         "icon": "👹",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_southern_demon_domain",
+      "name": "Panglima Iblis Tanduk Neraka",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1056,7 +1509,14 @@
           2625,
           1500
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: fase iblis kedua di 40% HP"
     }
   },
   "crimson_battlefield": {
@@ -1066,33 +1526,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
-        "icon": "🐉",
+        "id": "crimson_battlefield__prajurit_mayat_hidup",
+        "name": "Prajurit Mayat Hidup",
+        "icon": "💀",
         "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 59,
+        "hp": 1102,
+        "maxHp": 1102,
+        "atk": 185,
+        "def": 92,
+        "spd": 43,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
+        "id": "crimson_battlefield__gagak_perang",
+        "name": "Gagak Perang",
+        "icon": "🐾",
         "tier": 5,
-        "level": 100,
+        "level": 60,
+        "hp": 1120,
+        "maxHp": 1120,
+        "atk": 188,
+        "def": 94,
+        "spd": 44,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "crimson_battlefield__hantu_perwira",
+        "name": "Hantu Perwira",
+        "icon": "💀",
+        "tier": 5,
+        "level": 61,
+        "hp": 1138,
+        "maxHp": 1138,
+        "atk": 191,
+        "def": 95,
+        "spd": 44,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "crimson_battlefield__jenderal_tanpa_kepala",
+        "name": "Jenderal Tanpa Kepala",
+        "icon": "👤",
+        "tier": 5,
+        "level": 64,
+        "hp": 2622,
+        "maxHp": 2622,
+        "atk": 300,
+        "def": 100,
+        "spd": 46,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_crimson_battlefield",
+      "name": "Jenderal Hantu Medan Perang",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 70,
       "footprint": {
         "w": 5,
         "h": 5
@@ -1110,7 +1610,14 @@
           3150,
           800
         ]
-      }
+      },
+      "hp": 10400,
+      "maxHp": 10400,
+      "atk": 436,
+      "def": 218,
+      "spd": 50,
+      "isBoss": true,
+      "mechanic": "Boss memanggil pasukan hantu tiap 20% HP"
     }
   },
   "abyssal_scar": {
@@ -1120,33 +1627,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
-        "icon": "🐉",
+        "id": "abyssal_scar__cacing_jurang",
+        "name": "Cacing Jurang",
+        "icon": "🪱",
         "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 59,
+        "hp": 1102,
+        "maxHp": 1102,
+        "atk": 185,
+        "def": 92,
+        "spd": 43,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
+        "id": "abyssal_scar__bayangan_rantai",
+        "name": "Bayangan Rantai",
+        "icon": "🐾",
         "tier": 5,
-        "level": 100,
+        "level": 60,
+        "hp": 1120,
+        "maxHp": 1120,
+        "atk": 188,
+        "def": 94,
+        "spd": 44,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "abyssal_scar__mata_terbang_kosong",
+        "name": "Mata Terbang Kosong",
+        "icon": "🦇",
+        "tier": 5,
+        "level": 61,
+        "hp": 1138,
+        "maxHp": 1138,
+        "atk": 191,
+        "def": 95,
+        "spd": 44,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "abyssal_scar__penjaga_rantai_hampa",
+        "name": "Penjaga Rantai Hampa",
+        "icon": "👤",
+        "tier": 5,
+        "level": 64,
+        "hp": 2622,
+        "maxHp": 2622,
+        "atk": 300,
+        "def": 100,
+        "spd": 46,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_abyssal_scar",
+      "name": "Penjaga Rantai Hampa Purba",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 70,
       "footprint": {
         "w": 5,
         "h": 5
@@ -1164,7 +1711,17 @@
           2050,
           800
         ]
-      }
+      },
+      "hp": 10400,
+      "maxHp": 10400,
+      "atk": 436,
+      "def": 218,
+      "spd": 50,
+      "isBoss": true,
+      "mechanic": "Boss mengisap pemain ke tengah arena",
+      "drops": [
+        "item_void_key"
+      ]
     }
   },
   "southern_plague_woods": {
@@ -1174,42 +1731,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "southern_plague_woods__tikus_wabah",
+        "name": "Tikus Wabah",
+        "icon": "🐀",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "southern_plague_woods__rusa_busuk",
+        "name": "Rusa Busuk",
+        "icon": "🦌",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "southern_plague_woods__jamur_hidup",
+        "name": "Jamur Hidup",
+        "icon": "🍄",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "southern_plague_woods__raja_lalat_pembusuk",
+        "name": "Raja Lalat Pembusuk",
+        "icon": "🕷️",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_southern_plague_woods",
+      "name": "Raja Lalat Pembusuk Abadi",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1228,7 +1816,14 @@
           3600,
           725
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: debuff stacking racun"
     }
   },
   "bone_sea_coast": {
@@ -1238,51 +1833,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "bone_sea_coast__kepiting_tulang",
+        "name": "Kepiting Tulang",
+        "icon": "🐢",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
+        "id": "bone_sea_coast__burung_camar_mayat",
+        "name": "Burung Camar Mayat",
         "icon": "🦅",
         "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
+        "id": "bone_sea_coast__ular_laut_tulang",
+        "name": "Ular Laut Tulang",
         "icon": "🐍",
         "tier": 3,
-        "level": 60,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
       {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
+        "id": "bone_sea_coast__kerangka_leviathan_muda",
+        "name": "Kerangka Leviathan Muda",
+        "icon": "💀",
         "tier": 3,
-        "level": 65,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_bone_sea_coast",
+      "name": "Kerangka Leviathan Laut Tulang",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -1301,7 +1918,14 @@
           2625,
           225
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss memanggil rusuk-rusuk dari pasir"
     }
   },
   "spirit_wood_sea": {
@@ -1311,51 +1935,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "spirit_wood_sea__rusa_roh_hutan",
+        "name": "Rusa Roh Hutan",
+        "icon": "🦌",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
-        "icon": "🦅",
+        "id": "spirit_wood_sea__kupu_kupu_spora",
+        "name": "Kupu-kupu Spora",
+        "icon": "🍄",
         "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
+        "id": "spirit_wood_sea__ular_akar",
+        "name": "Ular Akar",
         "icon": "🐍",
         "tier": 3,
-        "level": 60,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
       {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
+        "id": "spirit_wood_sea__banyan_roh_penjaga",
+        "name": "Banyan Roh Penjaga",
+        "icon": "🌳",
         "tier": 3,
-        "level": 65,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_spirit_wood_sea",
+      "name": "Banyan Kuno Penjaga Roh",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -1374,7 +2020,14 @@
           3950,
           1550
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss meregenerasi dari akar kecuali dibakar"
     }
   },
   "mist_insect_valley": {
@@ -1384,42 +2037,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "mist_insect_valley__semut_raksasa_kitin",
+        "name": "Semut Raksasa Kitin",
+        "icon": "🕷️",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "mist_insect_valley__kumbang_kabut",
+        "name": "Kumbang Kabut",
+        "icon": "🕷️",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "mist_insect_valley__laba_laba_sutra",
+        "name": "Laba-laba Sutra",
+        "icon": "🕷️",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "mist_insect_valley__ratu_lebah_kitin",
+        "name": "Ratu Lebah Kitin",
+        "icon": "🕷️",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_mist_insect_valley",
+      "name": "Ratu Lebah Sarang Kitin",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1438,7 +2122,14 @@
           4600,
           1350
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: sarang spawn larva tiap 30 detik"
     }
   },
   "formation_barrens": {
@@ -1448,51 +2139,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "formation_barrens__golem_formasi",
+        "name": "Golem Formasi",
+        "icon": "🗿",
         "tier": 3,
-        "level": 45,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
-        "icon": "🦅",
+        "id": "formation_barrens__roh_batu_bagua",
+        "name": "Roh Batu Bagua",
+        "icon": "🗿",
         "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
+        "id": "formation_barrens__ular_giok_penjaga",
+        "name": "Ular Giok Penjaga",
         "icon": "🐍",
         "tier": 3,
-        "level": 60,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
       {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
+        "id": "formation_barrens__penjaga_array_retak",
+        "name": "Penjaga Array Retak",
+        "icon": "👤",
         "tier": 3,
-        "level": 65,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_formation_barrens",
+      "name": "Penjaga Formasi Delapan Trigram",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -1511,7 +2224,14 @@
           3800,
           2400
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss: perubahan formasi (4 arah penyerangan)"
     }
   },
   "sword_gorge": {
@@ -1521,42 +2241,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "sword_gorge__kelelawar_pedang",
+        "name": "Kelelawar Pedang",
+        "icon": "🦇",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "sword_gorge__elang_ngarai",
+        "name": "Elang Ngarai",
+        "icon": "🦅",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "sword_gorge__roh_pedang_karat",
+        "name": "Roh Pedang Karat",
+        "icon": "🐾",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "sword_gorge__hantu_pendekar_pedang",
+        "name": "Hantu Pendekar Pedang",
+        "icon": "💀",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_sword_gorge",
+      "name": "Hantu Pendekar Pedang Surgawi",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1575,7 +2326,14 @@
           3500,
           3375
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: tebasan area horizontal tiap 5 detik"
     }
   },
   "ore_teeth_range": {
@@ -1585,51 +2343,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "ore_teeth_range__kumbang_bijih",
+        "name": "Kumbang Bijih",
+        "icon": "🕷️",
+        "tier": 3,
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "ore_teeth_range__kerdil_tambang_hantu",
+        "name": "Kerdil Tambang Hantu",
+        "icon": "💀",
+        "tier": 3,
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "ore_teeth_range__golem_bijih",
+        "name": "Golem Bijih",
+        "icon": "🗿",
+        "tier": 3,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "ore_teeth_range__raja_kerdil_tambang",
+        "name": "Raja Kerdil Tambang",
+        "icon": "🐾",
         "tier": 3,
-        "level": 45,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
-        "icon": "🦅",
-        "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
-        "icon": "🐍",
-        "tier": 3,
-        "level": 60,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
-        "tier": 3,
-        "level": 65,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_ore_teeth_range",
+      "name": "Raja Kerdil Tambang Gunung",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -1648,7 +2428,14 @@
           3737,
           3000
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss: runtuhan memblokir jalan sementara"
     }
   },
   "eastern_sea": {
@@ -1658,51 +2445,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "eastern_sea__kepiting_karang",
+        "name": "Kepiting Karang",
+        "icon": "🐢",
+        "tier": 3,
+        "level": 23,
+        "hp": 454,
+        "maxHp": 454,
+        "atk": 77,
+        "def": 38,
+        "spd": 21,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "eastern_sea__penyu_giok",
+        "name": "Penyu Giok",
+        "icon": "🐢",
+        "tier": 3,
+        "level": 24,
+        "hp": 472,
+        "maxHp": 472,
+        "atk": 80,
+        "def": 40,
+        "spd": 22,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "eastern_sea__ikan_terbang_hiu",
+        "name": "Ikan Terbang Hiu",
+        "icon": "🐉",
+        "tier": 3,
+        "level": 25,
+        "hp": 490,
+        "maxHp": 490,
+        "atk": 83,
+        "def": 41,
+        "spd": 23,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "tiger_elder",
-        "name": "Harimau Belang Kuno",
-        "icon": "🐯",
+        "id": "eastern_sea__hiu_naga_laut",
+        "name": "Hiu Naga Laut",
+        "icon": "🐉",
         "tier": 3,
-        "level": 45,
+        "level": 28,
+        "hp": 1196,
+        "maxHp": 1196,
+        "atk": 138,
+        "def": 46,
+        "spd": 24,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "eagle_storm",
-        "name": "Rajawali Sayap Badai",
-        "icon": "🦅",
-        "tier": 3,
-        "level": 55,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "snake_jade",
-        "name": "Ular Sanca Giok Roh",
-        "icon": "🐍",
-        "tier": 3,
-        "level": 60,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "ghost_wailing",
-        "name": "Arwah Gentayangan Medan Perang",
-        "icon": "👻",
-        "tier": 3,
-        "level": 65,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_iron_tiger",
-      "name": "Raja Harimau Belang Kuno",
+      "id": "boss_eastern_sea",
+      "name": "Hiu Naga Pusaran Samudra",
       "icon": "🐯",
       "tier": 3,
-      "level": 70,
+      "level": 34,
       "footprint": {
         "w": 3,
         "h": 3
@@ -1721,7 +2530,14 @@
           4700,
           3300
         ]
-      }
+      },
+      "hp": 5216,
+      "maxHp": 5216,
+      "atk": 220,
+      "def": 110,
+      "spd": 28,
+      "isBoss": true,
+      "mechanic": "Boss: pusaran air di arena pulau karang"
     }
   },
   "frostmoon_sea": {
@@ -1731,42 +2547,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "frostmoon_sea__anjing_laut_es",
+        "name": "Anjing Laut Es",
+        "icon": "🐺",
         "tier": 4,
-        "level": 75,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
+        "id": "frostmoon_sea__paus_kecil_beku",
+        "name": "Paus Kecil Beku",
         "icon": "🐉",
         "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
+        "id": "frostmoon_sea__burung_es",
+        "name": "Burung Es",
+        "icon": "🦅",
         "tier": 4,
-        "level": 88,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "frostmoon_sea__naga_beku_muda",
+        "name": "Naga Beku Muda",
+        "icon": "🐉",
+        "tier": 4,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_frostmoon_sea",
+      "name": "Naga Beku Bulan Es",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1785,7 +2632,14 @@
           4700,
           4750
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: tengkorak naga beku bangkit"
     }
   },
   "floating_wind_isles": {
@@ -1795,33 +2649,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
-        "icon": "🐉",
+        "id": "floating_wind_isles__burung_layang_awan",
+        "name": "Burung Layang Awan",
+        "icon": "🦅",
         "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "level": 59,
+        "hp": 1102,
+        "maxHp": 1102,
+        "atk": 185,
+        "def": 92,
+        "spd": 43,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
+        "id": "floating_wind_isles__roh_angin",
+        "name": "Roh Angin",
+        "icon": "🐾",
         "tier": 5,
-        "level": 100,
+        "level": 60,
+        "hp": 1120,
+        "maxHp": 1120,
+        "atk": 188,
+        "def": 94,
+        "spd": 44,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "floating_wind_isles__golem_awan",
+        "name": "Golem Awan",
+        "icon": "🗿",
+        "tier": 5,
+        "level": 61,
+        "hp": 1138,
+        "maxHp": 1138,
+        "atk": 191,
+        "def": 95,
+        "spd": 44,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "floating_wind_isles__penjaga_citadel_daois",
+        "name": "Penjaga Citadel Daois",
+        "icon": "👤",
+        "tier": 5,
+        "level": 64,
+        "hp": 2622,
+        "maxHp": 2622,
+        "atk": 300,
+        "def": 100,
+        "spd": 46,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_floating_wind_isles",
+      "name": "Penjaga Citadel Daois Awan",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 70,
       "footprint": {
         "w": 5,
         "h": 5
@@ -1839,7 +2733,14 @@
           4800,
           2950
         ]
-      }
+      },
+      "hp": 10400,
+      "maxHp": 10400,
+      "atk": 436,
+      "def": 218,
+      "spd": 50,
+      "isBoss": true,
+      "mechanic": "Boss: platform jatuh bertahap"
     }
   },
   "immortal_ruins_valley": {
@@ -1849,42 +2750,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
+    "common": [
+      {
+        "id": "immortal_ruins_valley__roh_pelayan_kuno",
+        "name": "Roh Pelayan Kuno",
+        "icon": "🐾",
+        "tier": 4,
+        "level": 39,
+        "hp": 742,
+        "maxHp": 742,
+        "atk": 125,
+        "def": 62,
+        "spd": 31,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "immortal_ruins_valley__patung_hidup",
+        "name": "Patung Hidup",
+        "icon": "🗿",
+        "tier": 4,
+        "level": 40,
+        "hp": 760,
+        "maxHp": 760,
+        "atk": 128,
+        "def": 64,
+        "spd": 32,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "immortal_ruins_valley__burung_giok",
+        "name": "Burung Giok",
+        "icon": "🦅",
+        "tier": 4,
+        "level": 41,
+        "hp": 778,
+        "maxHp": 778,
+        "atk": 131,
+        "def": 65,
+        "spd": 32,
+        "isAggressive": true,
+        "spawnWeight": 70
+      }
+    ],
     "elite": [
       {
-        "id": "demon_cave",
-        "name": "Siluman Iblis Gua Miasma",
-        "icon": "👹",
+        "id": "immortal_ruins_valley__penjaga_gerbang_surgawi",
+        "name": "Penjaga Gerbang Surgawi",
+        "icon": "👤",
         "tier": 4,
-        "level": 75,
+        "level": 44,
+        "hp": 1830,
+        "maxHp": 1830,
+        "atk": 210,
+        "def": 70,
+        "spd": 34,
         "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "wyrm_flame",
-        "name": "Cacing Lahar Basalt",
-        "icon": "🐉",
-        "tier": 4,
-        "level": 80,
-        "isAggressive": true,
-        "spawnWeight": 25
-      },
-      {
-        "id": "asura_blood",
-        "name": "Pendekar Kafir Asura",
-        "icon": "👹",
-        "tier": 4,
-        "level": 88,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_demon_lord",
-      "name": "Pangeran Iblis Asura Miasma",
+      "id": "boss_immortal_ruins_valley",
+      "name": "Penjaga Gerbang Surgawi Kuno",
       "icon": "👹",
       "tier": 4,
-      "level": 90,
+      "level": 50,
       "footprint": {
         "w": 4,
         "h": 4
@@ -1903,7 +2835,14 @@
           800,
           1250
         ]
-      }
+      },
+      "hp": 7520,
+      "maxHp": 7520,
+      "atk": 316,
+      "def": 158,
+      "spd": 38,
+      "isBoss": true,
+      "mechanic": "Boss: ujian kebajikan 3 pintu"
     }
   },
   "void_rift": {
@@ -1913,33 +2852,73 @@
     "safeCorridorsEnforced": true,
     "safeBufferRoads": 10,
     "safeBufferSettlements": 20,
-    "common": [],
-    "elite": [
+    "common": [
       {
-        "id": "dragon_celestial",
-        "name": "Naga Langit Sembilan Hampa",
-        "icon": "🐉",
-        "tier": 5,
-        "level": 95,
-        "isAggressive": true,
-        "spawnWeight": 25
+        "id": "void_rift__cacing_ruang",
+        "name": "Cacing Ruang",
+        "icon": "🪱",
+        "tier": 6,
+        "level": 79,
+        "hp": 1462,
+        "maxHp": 1462,
+        "atk": 245,
+        "def": 122,
+        "spd": 55,
+        "isAggressive": false,
+        "spawnWeight": 70
       },
       {
-        "id": "abyss_behemoth",
-        "name": "Raksasa Jurang Hampa Kegelapan",
-        "icon": "👹",
-        "tier": 5,
-        "level": 100,
+        "id": "void_rift__bayangan_terdistorsi",
+        "name": "Bayangan Terdistorsi",
+        "icon": "🐾",
+        "tier": 6,
+        "level": 80,
+        "hp": 1480,
+        "maxHp": 1480,
+        "atk": 248,
+        "def": 124,
+        "spd": 56,
+        "isAggressive": false,
+        "spawnWeight": 70
+      },
+      {
+        "id": "void_rift__mata_hampa",
+        "name": "Mata Hampa",
+        "icon": "🦇",
+        "tier": 6,
+        "level": 81,
+        "hp": 1498,
+        "maxHp": 1498,
+        "atk": 251,
+        "def": 125,
+        "spd": 56,
         "isAggressive": true,
-        "spawnWeight": 25
+        "spawnWeight": 70
+      }
+    ],
+    "elite": [
+      {
+        "id": "void_rift__pemakan_dimensi",
+        "name": "Pemakan Dimensi",
+        "icon": "🐾",
+        "tier": 6,
+        "level": 84,
+        "hp": 3414,
+        "maxHp": 3414,
+        "atk": 390,
+        "def": 130,
+        "spd": 58,
+        "isAggressive": true,
+        "spawnWeight": 25,
+        "isElite": true
       }
     ],
     "boss": {
-      "id": "boss_celestial_wyrm",
-      "name": "Naga Purba Kehampaan Langit",
+      "id": "boss_void_rift",
+      "name": "Pemakan Dimensi Kosmis",
       "icon": "🐉",
       "tier": 5,
-      "level": 100,
+      "level": 90,
       "footprint": {
         "w": 5,
         "h": 5
@@ -1957,7 +2936,14 @@
           375,
           4875
         ]
-      }
+      },
+      "hp": 13280,
+      "maxHp": 13280,
+      "atk": 556,
+      "def": 278,
+      "spd": 62,
+      "isBoss": true,
+      "mechanic": "Boss: serangan dari semua sisi, singularitas"
     }
   }
 }

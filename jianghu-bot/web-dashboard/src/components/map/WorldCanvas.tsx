@@ -1274,8 +1274,26 @@ export default function WorldCanvas({
             ctx.restore();
           }
 
-          // Boss Warning Badge
+          // Garis tipis merah di sekeliling kamp elit (Prompt E4)
+          if (m.isElite) {
+            ctx.save();
+            ctx.strokeStyle = '#DC2626';
+            ctx.lineWidth = 1.2;
+            ctx.strokeRect(sx + 1, sy + 1, currentTileSize - 2, currentTileSize - 2);
+            ctx.restore();
+          }
+
+          // Boss Warning Badge & Skull Icon (Prompt E4)
           if (m.isBoss || (m.tier && m.tier >= 5)) {
+            if (m.isBoss) {
+              ctx.save();
+              ctx.font = `${Math.max(10, 14 * camera.zoom)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              ctx.fillText('💀', sx + currentTileSize * 0.5, sy + currentTileSize * 0.08);
+              ctx.restore();
+            }
+
             const bWidth = currentTileSize * 0.65;
             const bHeight = Math.max(9, 11 * camera.zoom);
             const bx = sx + (currentTileSize - bWidth) / 2;

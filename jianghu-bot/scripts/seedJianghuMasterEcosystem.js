@@ -18,6 +18,7 @@ const Monster = require('../models/Monster');
 const Sect = require('../models/Sect');
 const Location = require('../models/Location');
 const { seedHardeningItems } = require('./seedLawHardeningItems');
+const { seedChallengeItems } = require('./seedChallengeItemsV9');
 
 const DEFAULT_GUILD_ID = process.env.DEFAULT_GUILD_ID || 'default_guild';
 
@@ -425,6 +426,8 @@ async function seedMasterEcosystem(options = { reset: false, guildId: DEFAULT_GU
   console.log(`[PASS] ${items.length} Item & Perlengkapan berhasil di-seed.`);
   const hardeningRes = await seedHardeningItems(guildId);
   console.log(`[PASS] ${hardeningRes.totalItems} Item 15 Hukum Semesta (Catalysts, Pills, Gu, Beast Eggs) berhasil di-seed.`);
+  const challengeRes = await seedChallengeItems(guildId);
+  console.log(`[PASS] ${challengeRes.count} Item Tantangan V9 berhasil di-seed.`);
 
   // =========================================================================
   // 2. SEED MONSTERS (BESTIARY REGION & GUA KUNO)

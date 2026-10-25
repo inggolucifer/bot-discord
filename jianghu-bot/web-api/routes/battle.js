@@ -894,7 +894,7 @@ router.post('/action/:battleId', authenticateToken, async (req, res) => {
                                  tileKey,
                                  monsterKey: session.enemies[0]?.entityId || 'monster',
                                  defeatedAt: new Date(),
-                                 respawnAt: new Date(Date.now() + 60 * 60 * 1000) // 1 Jam respawn
+                                 respawnAt: new Date(Date.now() + (session.enemies?.[0]?.isBoss ? 360 : (session.enemies?.[0]?.isElite ? 30 : 10)) * 60 * 1000)
                              },
                              { upsert: true, new: true }
                          );

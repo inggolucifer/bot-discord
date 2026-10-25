@@ -13,6 +13,7 @@ const proceduralWorldEngine = require('./proceduralWorldEngine');
 const objectScatter = require('./objectScatter');
 const autotileEngine = require('./autotileEngine');
 const { getRegionAt, getTerritoryInfo, getTerrainStaminaCost } = require('./worldRegionEngine');
+const monsterSpawnEngine = require('./monsterSpawnEngine');
 
 const CHUNK_SIZE = 32;
 const WORLD_WIDTH = proceduralWorldEngine.WORLD_WIDTH || 5000;
@@ -430,6 +431,26 @@ async function getChunkLive(cx, cy, guildId = 'global', models = {}) {
     console.warn(`[CHUNK-LIVE] Custom tile query non-fatal error: ${err.message}`);
   }
 
+  // Inject overworld monsters from monsterSpawnEngine (Prompt E4)
+  try {
+    const spawnedMonsters = monsterSpawnEngine.getMonstersInChunk(cx, cy);
+    for (const [key, monster] of spawnedMonsters.entries()) {
+      const [mx, my] = key.split(',').map(Number);
+      const existing = customTiles.find(t => t.tileX === mx && t.tileY === my);
+      if (existing) {
+        if (!existing.spawnedMonster) existing.spawnedMonster = monster;
+      } else {
+        customTiles.push({
+          tileX: mx,
+          tileY: my,
+          spawnedMonster: monster
+        });
+      }
+    }
+  } catch (err) {
+    console.warn(`[CHUNK-LIVE] Monster spawn injection error: ${err.message}`);
+  }
+
   // 4. Defeated monster tile filters
   let defeatedMonsterKeys = [];
   try {
@@ -439,6 +460,16 @@ async function getChunkLive(cx, cy, guildId = 'global', models = {}) {
     defeatedMonsterKeys = (defeated || []).map(d => d.tileKey);
   } catch (err) {
     console.warn(`[CHUNK-LIVE] Defeated monster query non-fatal error: ${err.message}`);
+  }
+
+  // Bersihkan monster dari petak yang sedang dalam masa respawn
+  if (defeatedMonsterKeys.length > 0) {
+    const defeatedSet = new Set(defeatedMonsterKeys);
+    for (const ct of customTiles) {
+      if (defeatedSet.has(`${ct.tileX},${ct.tileY}`)) {
+        delete ct.spawnedMonster;
+      }
+    }
   }
 
   const liveData = {

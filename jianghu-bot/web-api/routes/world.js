@@ -57,6 +57,9 @@ const {
     resolvePlayerGridMove
 } = require('../../utils/gridManager');
 const { calculateGridTemperature, evaluateThermalBreach, resolveRealmTolerance } = require('../../utils/thermodynamicsEngine');
+const worldData = require('../../utils/worldData');
+const monsterSpawnEngine = require('../../utils/monsterSpawnEngine');
+const { applyHazard, checkSealedRegionAccess } = require('../../utils/regionHazardEngine');
 const Asset = require('../../models/Asset');
 const Blueprint = require('../../models/Blueprint');
 const { convertToCopper, convertFromCopper } = require('../../utils/currencyNormalize');
@@ -1933,6 +1936,24 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                 }
             }
 
+            // Injeksi monster overworld dari monsterSpawnEngine bila belum ada (Prompt E4)
+            if (viewport && viewport.bounds) {
+                const spawnedMonstersMap = monsterSpawnEngine.getMonstersInBounds(
+                    viewport.bounds.minX,
+                    viewport.bounds.minY,
+                    viewport.bounds.maxX,
+                    viewport.bounds.maxY
+                );
+                for (const [sKey, sMonster] of spawnedMonstersMap.entries()) {
+                    if (proceduralTileMap.has(sKey)) {
+                        const tile = proceduralTileMap.get(sKey);
+                        if (!tile.spawnedMonster) {
+                            tile.spawnedMonster = sMonster;
+                        }
+                    }
+                }
+            }
+
             // Cek Petak Monster yang Dikalahkan (DefeatedMonsterTile)
             let defeatedKeys = new Set();
             try {
@@ -2556,6 +2577,19 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             });
         }
 
+        // Validasi Akses Region Tersegel (Prompt E7)
+        const currentRegion = worldData.getRegionAt(currentX, currentY);
+        const targetRegion = worldData.getRegionAt(targetX, targetY);
+        const currentRegionId = currentRegion ? currentRegion.id : 'central_plains';
+        const targetRegionId = targetRegion ? targetRegion.id : 'central_plains';
+
+        const accessCheck = checkSealedRegionAccess(player, currentRegionId, targetRegionId);
+        if (!accessCheck.allowed) {
+            return res.status(403).json({
+                error: `Wilayah ini tersegel. ${accessCheck.note}`
+            });
+        }
+
         // Blueprint: Validasi Obstruksi Medan & Konsumsi Stamina
 
 
@@ -2618,6 +2652,9 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             moveArrivesAt: arrivesAt
         };
 
+        // Evaluasi hazard lingkungan regional (Prompt E5)
+        const hazardResult = applyHazard(player, targetRegionId, distance, { x: targetX, y: targetY });
+
         await player.save();
 
         res.json({
@@ -2625,6 +2662,7 @@ router.post('/zone/move', authenticateToken, async (req, res) => {
             message: `Mulai melangkah ke (${targetX}, ${targetY})...`,
             gridMove: player.gridMove,
             durationSeconds,
+            hazard: hazardResult,
             isTravelGate: Boolean(travelGate),
             travelGateInfo: travelGate || null,
             playerGrid: {
