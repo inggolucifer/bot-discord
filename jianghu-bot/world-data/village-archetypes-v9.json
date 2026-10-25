@@ -1,0 +1,58 @@
+{
+  "river_village": {
+    "name": "Desa Tepi Sungai",
+    "description": "Jalan EW sejajar sungai, dermaga kecil, 2 jemuran ikan, jembatan batu",
+    "anchors": ["desa_xingcun", "desa_bamboo_grove", "desa_lingquan"],
+    "centerpiece": "building_village_well",
+    "props": ["prop_drying_fish_rack", "prop_water_storage_urn", "prop_small_stone_well", "prop_firewood_stack"]
+  },
+  "hill_terrace": {
+    "name": "Dusun Teras Perbukitan",
+    "description": "Rumah bertingkat 3 teras mengikuti kontur, tangga batu, kebun teh",
+    "anchors": ["desa_yougu", "dusun_pondok_teh_kuno", "dusun_kebun_persik"],
+    "centerpiece": "structure_scatter_mountain_daoist_stone_lantern_beacon",
+    "props": ["prop_tea_kettle_stove", "prop_drying_herb_rack", "prop_stone_prayer_stela", "prop_vegetable_patch"]
+  },
+  "desert_caravan": {
+    "name": "Kafilah & Oase Gurun",
+    "description": "Rumah atap datar mengelilingi sumur pusat + tenda dagang",
+    "anchors": ["oase_shadi", "desa_shaquan", "dusun_oasis_tersembunyi", "kota_hanhai"],
+    "centerpiece": "prop_small_stone_well",
+    "props": ["prop_water_storage_urn", "prop_firewood_stack", "prop_wooden_fence_corner", "prop_small_stone_well"]
+  },
+  "frost_hamlet": {
+    "name": "Pemukiman Salju & Tundra",
+    "description": "Rumah rapat berbentuk lingkaran, tungku pusat, pagar kayu",
+    "anchors": ["desa_xueshan", "dusun_pondok_es", "kota_binghu", "pos_tundra_utara"],
+    "centerpiece": "prop_extinguished_campfire",
+    "props": ["prop_firewood_stack", "prop_wooden_fence_corner", "prop_stone_prayer_stela"]
+  },
+  "steppe_camp": {
+    "name": "Perkemahan Pengembara Steppe",
+    "description": "Tenda/yurt melingkar + kandang + tiang totem",
+    "anchors": ["desa_tianhe", "dusun_gembala_petir", "kota_leiyin"],
+    "centerpiece": "structure_scatter_mountain_daoist_stone_lantern_beacon",
+    "props": ["prop_wooden_fence_corner", "prop_extinguished_campfire", "prop_water_storage_urn"]
+  },
+  "coastal_fishing": {
+    "name": "Dermaga & Desa Pesisir Laut",
+    "description": "Rumah panggung di tepi pantai, dermaga, jaring",
+    "anchors": ["dusun_pondok_karang", "kota_canghai", "dermaga_donghai", "dermaga_teluk_sembilan"],
+    "centerpiece": "building_wayside_earth_god_miniature_shrine",
+    "props": ["prop_drying_fish_rack", "prop_small_stone_well", "prop_water_storage_urn"]
+  },
+  "demon_fort": {
+    "name": "Benteng & Pos Domain Iblis",
+    "description": "Rumah gelap berpagar kayu runcing, gerbang tengkorak, obor",
+    "anchors": ["desa_heiyan", "kota_moyun", "benteng_gerbang_iblis"],
+    "centerpiece": "structure_scatter_mountain_daoist_stone_lantern_beacon",
+    "props": ["prop_firewood_stack", "prop_stone_prayer_stela", "prop_wooden_fence_corner"]
+  },
+  "garrison_town": {
+    "name": "Kota Garnisun & Pos Perbatasan",
+    "description": "Jalan salib NS/EW, pos penjaga di 4 sudut, tembok rendah",
+    "anchors": ["pos_perbatasan_qinghe", "desa_tiedao", "pos_menara_pantau_danau"],
+    "centerpiece": "building_ancestral_shrine_gate",
+    "props": ["prop_stone_prayer_stela", "prop_small_stone_well", "prop_firewood_stack"]
+  }
+}

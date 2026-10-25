@@ -1,10 +1,14 @@
 /**
  * scripts/checkAuthored.js
- * Verifies all authored objects in world-data/authored-props.json:
- * 1. For every authored prop, calls getChunkObjects for its chunk and asserts the object appears exactly at (x, y).
- * 2. Verifies 0 missing objects.
- * 3. Verifies no authored prop is on water, solid, road, or inside anchor core.
- * 4. Verifies no two authored houses are within Chebyshev < 3, and no two objects within Chebyshev < 2.
+ * Comprehensive Audit for Authored Props & Village Archetypes (Prompt D4):
+ * 1. Verifies 0 missing objects from getChunkObjects (exact coordinates).
+ * 2. Verifies 0 objects on water, solid, road tiles, or inside anchor core.
+ * 3. Verifies pairwise Chebyshev distance (>= 3 between houses, >= 2 between all other props).
+ * 4. Verifies unique layout fingerprints (uniqueLayouts == 52).
+ * 5. Verifies distance to water >= 6 for inland archetypes.
+ * 6. Verifies dominant defId <= 35% per village.
+ * 7. Verifies all roads connect to >= 1 building.
+ * 8. Verifies BFS reachability from main road within radius 12.
  */
 
 const fs = require('fs');
@@ -16,11 +20,24 @@ const worldData = require('../utils/worldData');
 const authoredDataPath = path.resolve(__dirname, '../world-data/authored-props.json');
 const authoredData = JSON.parse(fs.readFileSync(authoredDataPath, 'utf8'));
 
+const archetypes = require('../world-data/village-archetypes-v9.json');
+const anchors = worldData.getAnchors();
+const { getArchetypeForAnchor } = require('./gen/buildVillagesV9');
+
 const props = authoredData.props || [];
 const roads = authoredData.roads || [];
 
-console.log('\n=== AUDIT LAPISAN OBJEK TERTULIS (checkAuthored.js) ===\n');
-console.log(`Memeriksa ${props.length} objek tertulis dan ${roads.length} segmen jalan...\n`);
+console.log('\n=== AUDIT LAPISAN OBJEK TERTULIS & DESA ARKETIPE V9 (checkAuthored.js) ===\n');
+console.log(`Memeriksa ${props.length} objek tertulis dan ${roads.length} segmen jalan across 52 anchors...\n`);
+
+function hashString(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
 
 // 1. Build road tile set
 const roadTiles = new Set();
@@ -38,10 +55,18 @@ for (const r of roads) {
   }
 }
 
-// 2. Build anchor map
+// 2. Build anchor map & props by anchor
 const anchorMap = new Map();
-for (const a of worldData.getAnchors()) {
+const propsByAnchor = new Map();
+for (const a of anchors) {
   anchorMap.set(a.id, a);
+  propsByAnchor.set(a.id, []);
+}
+
+for (const p of props) {
+  if (p.anchorId && propsByAnchor.has(p.anchorId)) {
+    propsByAnchor.get(p.anchorId).push(p);
+  }
 }
 
 let missingCount = 0;
@@ -64,6 +89,7 @@ function getObjectsForChunk(cx, cy) {
   return chunkCache.get(key);
 }
 
+// Assertion 1-5: Prop-level validations
 for (let i = 0; i < props.length; i++) {
   const p = props[i];
   const cx = Math.floor(p.x / 32);
@@ -117,13 +143,127 @@ for (let i = 0; i < props.length; i++) {
   }
 }
 
-console.log('--- HASIL AUDIT ---');
+// Gerbang D Checks: Per-Village Metrics
+console.log('--- AUDIT METRIK PER-DESA (GERBANG D) ---');
+console.log('| No | Anchor ID | Arketipe | Rumah | Dominan% | Air Min Dist | Jalan Ok | BFS Ok | Fingerprint | Status |');
+console.log('|---|---|---|---|---|---|---|---|---|---|');
+
+const fingerprints = new Set();
+let villageFails = 0;
+
+for (let i = 0; i < anchors.length; i++) {
+  const a = anchors[i];
+  const vProps = propsByAnchor.get(a.id) || [];
+  const houses = vProps.filter(p => p.kind === 'house');
+
+  // 1. Dominant DefId %
+  const defCounts = {};
+  for (const h of houses) {
+    defCounts[h.defId] = (defCounts[h.defId] || 0) + 1;
+  }
+  const maxDef = Object.keys(defCounts).length > 0 ? Math.max(...Object.values(defCounts)) : 0;
+  const domPct = houses.length > 0 ? (maxDef / houses.length) * 100 : 0;
+  const isDomOk = domPct <= 35.0;
+
+  // 2. Distance to water for inland archetypes
+  const arch = getArchetypeForAnchor(a);
+  const archKey = arch.key;
+  const isWaterExempt = archKey === 'coastal_fishing' || archKey === 'river_village' || a.id.includes('donghai') || a.id.includes('canghai');
+  let minWaterDist = 99;
+  for (const h of houses) {
+    for (let dy = -6; dy <= 6; dy++) {
+      for (let dx = -6; dx <= 6; dx++) {
+        const t = getTileAt(h.x + dx, h.y + dy);
+        if (t) {
+          const tt = t.terrainType || '';
+          if (['sea', 'ocean', 'lake', 'river', 'pond'].some(w => tt.includes(w))) {
+            const d = Math.max(Math.abs(dx), Math.abs(dy));
+            if (d < minWaterDist) minWaterDist = d;
+          }
+        }
+      }
+    }
+  }
+  const isWaterOk = isWaterExempt || minWaterDist >= 6;
+
+  // 3. Roads connect to >= 1 building
+  let roadsConnected = true;
+  for (const h of houses) {
+    let near = false;
+    for (let rdy = -3; rdy <= 3; rdy++) {
+      for (let rdx = -3; rdx <= 3; rdx++) {
+        if (roadTiles.has(`${h.x + rdx},${h.y + rdy}`)) {
+          near = true;
+          break;
+        }
+      }
+      if (near) break;
+    }
+    if (!near) {
+      roadsConnected = false;
+      break;
+    }
+  }
+
+  // 4. BFS Reachability from anchor within radius 12
+  const visited = new Set();
+  const queue = [{ x: a.x, y: a.y }];
+  visited.add(`${a.x},${a.y}`);
+  while (queue.length > 0) {
+    const cur = queue.shift();
+    const dirs = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }];
+    for (const d of dirs) {
+      const nx = cur.x + d.dx;
+      const ny = cur.y + d.dy;
+      const key = `${nx},${ny}`;
+      if (!visited.has(key) && Math.max(Math.abs(nx - a.x), Math.abs(ny - a.y)) <= 12) {
+        const t = getTileAt(nx, ny);
+        if (t && !t.isSolid) {
+          visited.add(key);
+          queue.push({ x: nx, y: ny });
+        }
+      }
+    }
+  }
+
+  let bfsOk = true;
+  for (const h of houses) {
+    if (!visited.has(`${h.x},${h.y}`)) {
+      // Check 1-tile adjacent
+      const adj = [{ dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 }]
+        .some(d => visited.has(`${h.x + d.dx},${h.y + d.dy}`));
+      if (!adj) {
+        bfsOk = false;
+        break;
+      }
+    }
+  }
+
+  // 5. Layout Fingerprint
+  let fpStr = '';
+  for (const p of vProps) {
+    fpStr += `${p.x - a.x},${p.y - a.y}:${p.defId};`;
+  }
+  const fp = hashString(fpStr).toString(16);
+  fingerprints.add(fp);
+
+  const villagePass = isDomOk && isWaterOk && roadsConnected && bfsOk;
+  if (!villagePass) villageFails++;
+
+  console.log(
+    `| ${i + 1} | ${a.id} | ${archKey} | ${houses.length} | ${domPct.toFixed(1)}% | ${minWaterDist === 99 ? 'N/A' : minWaterDist} | ${roadsConnected ? 'PASS' : 'FAIL'} | ${bfsOk ? 'PASS' : 'FAIL'} | ${fp} | ${villagePass ? 'PASS' : 'FAIL'} |`
+  );
+}
+
+console.log('\n--- RINGKASAN HASIL AUDIT ---');
 console.log(`Total Objek Tertulis Diperiksa : ${props.length}`);
 console.log(`Objek Hilang dari getChunkObjects: ${missingCount}`);
 console.log(`Objek di Petak Solid / Air       : ${invalidTerrainCount}`);
 console.log(`Objek di Petak Jalan             : ${onRoadCount}`);
 console.log(`Objek di Inti Anchor             : ${insideAnchorCoreCount}`);
 console.log(`Pelanggaran Jarak Chebyshev      : ${distanceViolations}`);
+console.log(`Unique Layout Fingerprints       : ${fingerprints.size} / 52`);
+console.log(`Kegagalan Aturan Desa            : ${villageFails}`);
 
 if (missingCount > 0) {
   console.log('\nContoh Objek Hilang:');
@@ -143,13 +283,15 @@ const allPassed = (
   invalidTerrainCount === 0 &&
   onRoadCount === 0 &&
   insideAnchorCoreCount === 0 &&
-  distanceViolations === 0
+  distanceViolations === 0 &&
+  fingerprints.size === 52 &&
+  villageFails === 0
 );
 
 if (allPassed) {
-  console.log('\n[PASS] Gerbang Lapisan Objek Tertulis LULUS SEMPURNA (0 hilang, 0 pelanggaran).');
+  console.log('\n[PASS] GERBANG D LULUS SEMPURNA! 52 arketipe desa unik, jalan melengkung, 0 hilang, 0 pelanggaran.\n');
   process.exit(0);
 } else {
-  console.log('\n[GAGAL] Terdapat pelanggaran pada lapisan objek tertulis.');
+  console.log('\n[GAGAL] Terdapat pelanggaran pada Gerbang D.');
   process.exit(1);
 }

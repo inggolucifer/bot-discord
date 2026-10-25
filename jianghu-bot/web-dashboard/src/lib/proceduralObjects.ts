@@ -6384,9 +6384,34 @@ export function renderL4ProceduralObject(
     }
   }
 
+  // Prompt D3: Hut diorama base clipping and drop shadow (rgba(0,0,0,0.22), radius = 0.45*dw, height = 0.18*dw)
+  const isHut = defId.startsWith('hut_');
+  if (isHut) {
+    ctx.save();
+    ctx.beginPath();
+    const shadowCx = screenX + dw * 0.5;
+    const shadowCy = screenY + dh - dw * 0.08;
+    const radiusX = dw * 0.45;
+    const radiusY = dw * 0.18;
+    ctx.ellipse(shadowCx, shadowCy, radiusX, radiusY, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+    ctx.fill();
+    ctx.restore();
+  }
+
   // 1. Try rendering from WebP texture atlas first (Song Dynasty Shuimo asset)
   const atlasName = getAtlasNameForDefId(defId);
-  if (atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX)) {
+  if (isHut) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(screenX + dw * 0.5, screenY + dh * 0.5, dw * 0.49, dh * 0.49, 0, 0, Math.PI * 2);
+    ctx.clip();
+  }
+  const drawn = atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX);
+  if (isHut) {
+    ctx.restore();
+  }
+  if (drawn) {
     return;
   }
 
