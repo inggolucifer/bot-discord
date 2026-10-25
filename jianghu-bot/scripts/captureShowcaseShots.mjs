@@ -129,12 +129,15 @@ async function main() {
     } catch (_) {}
 
     await page.evaluate(async () => {
+      if (window.atlasLoader) {
+        await window.atlasLoader.preloadCoreAtlases();
+      }
       if (window.groundTextures && !window.groundTextures.ready) {
         await window.groundTextures.load();
       }
     });
 
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(2500);
 
     const outPath = path.join(reviewDir, `${s.name}.png`);
     await page.screenshot({ path: outPath, fullPage: false });

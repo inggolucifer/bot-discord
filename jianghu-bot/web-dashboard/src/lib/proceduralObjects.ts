@@ -16,6 +16,9 @@ export const scaleCanon: Record<string, any> = scaleCanonRaw;
 const warnedMissingAtlasDefs = new Set<string>();
 
 export function getAtlasNameForDefId(defId: string): string {
+  if (scaleCanon[defId]?.page) {
+    return scaleCanon[defId].page;
+  }
   if (
     defId.startsWith('building_') ||
     defId.startsWith('structure_') ||

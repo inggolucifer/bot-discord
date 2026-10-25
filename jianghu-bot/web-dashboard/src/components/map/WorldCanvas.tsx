@@ -881,7 +881,23 @@ export default function WorldCanvas({
                 continue;
               }
 
-              const def = OBJECT_DEFINITIONS[obj.defId];
+              let def = OBJECT_DEFINITIONS[obj.defId];
+              if (!def && scaleCanon[obj.defId]) {
+                const sc = scaleCanon[obj.defId];
+                def = {
+                  id: obj.defId,
+                  name: obj.defId,
+                  px: { w: sc.srcW || 256, h: sc.srcH || 256 },
+                  footprint: { cw: Math.max(1, Math.round(sc.visualW || 2)), ch: Math.max(1, Math.round(sc.visualH || 2)) },
+                  anchor: sc.anchor || { x: 0.5, y: 0.95 },
+                  overhangCells: 0.5,
+                  collision: sc.collision || 'solid',
+                  staminaMult: 1.0,
+                  sortBias: 0,
+                  fogFoot: true,
+                  tags: [sc.category || 'nature']
+                };
+              }
               if (!def) {
                 if (!warnedMissingDefsRef.current.has(obj.defId)) {
                   warnedMissingDefsRef.current.add(obj.defId);
