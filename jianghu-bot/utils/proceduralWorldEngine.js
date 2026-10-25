@@ -54,6 +54,58 @@ try {
   // authored-props.json not yet available
 }
 
+// Index of Road Overrides V9 (Prompt A2: Canghai - Donghai Causeway)
+const ROAD_OVERRIDE_GRID = new Map();
+const ROAD_OVERRIDE_CELL_SIZE = 64;
+
+function distSqToSegment(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) return (px - x1) ** 2 + (py - y1) ** 2;
+  let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+  t = Math.max(0, Math.min(1, t));
+  const projX = x1 + t * dx;
+  const projY = y1 + t * dy;
+  return (px - projX) ** 2 + (py - projY) ** 2;
+}
+
+try {
+  const roadOverridesData = require('../world-data/road-overrides-v9.json');
+  if (roadOverridesData && Array.isArray(roadOverridesData.roads)) {
+    for (const road of roadOverridesData.roads) {
+      const w = road.width || 3;
+      const radius = w / 2;
+      const radiusSq = radius * radius;
+      const polyline = road.polyline || [];
+      for (let i = 0; i < polyline.length - 1; i++) {
+        const [x1, y1] = polyline[i];
+        const [x2, y2] = polyline[i + 1];
+        const minX = Math.min(x1, x2) - Math.ceil(radius);
+        const maxX = Math.max(x1, x2) + Math.ceil(radius);
+        const minY = Math.min(y1, y2) - Math.ceil(radius);
+        const maxY = Math.max(y1, y2) + Math.ceil(radius);
+
+        const cMinX = Math.floor(minX / ROAD_OVERRIDE_CELL_SIZE);
+        const cMaxX = Math.floor(maxX / ROAD_OVERRIDE_CELL_SIZE);
+        const cMinY = Math.floor(minY / ROAD_OVERRIDE_CELL_SIZE);
+        const cMaxY = Math.floor(maxY / ROAD_OVERRIDE_CELL_SIZE);
+
+        const seg = { x1, y1, x2, y2, radiusSq, terrain: road.terrain || 'road_stone' };
+        for (let cy = cMinY; cy <= cMaxY; cy++) {
+          for (let cx = cMinX; cx <= cMaxX; cx++) {
+            const key = `${cx},${cy}`;
+            if (!ROAD_OVERRIDE_GRID.has(key)) ROAD_OVERRIDE_GRID.set(key, []);
+            ROAD_OVERRIDE_GRID.get(key).push(seg);
+          }
+        }
+      }
+    }
+  }
+} catch (e) {
+  // road-overrides-v9.json not yet available
+}
+
 /**
  * Fungsi Hash Integer Deterministik berkinerja tinggi
  */
@@ -763,6 +815,30 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       tileType = 'walkable';
       resourceType = null;
     }
+  }
+
+  // Road Overrides V9 (Prompt A2: Canghai-Donghai Causeway)
+  const roCellKey = `${Math.floor(tileX / ROAD_OVERRIDE_CELL_SIZE)},${Math.floor(tileY / ROAD_OVERRIDE_CELL_SIZE)}`;
+  const roSegments = ROAD_OVERRIDE_GRID.get(roCellKey);
+  if (roSegments) {
+    for (const seg of roSegments) {
+      if (distSqToSegment(tileX, tileY, seg.x1, seg.y1, seg.x2, seg.y2) <= seg.radiusSq) {
+        terrainType = seg.terrain;
+        isSolid = false;
+        tileType = 'walkable';
+        label = 'Jalan Provinsi';
+        resourceType = null;
+        break;
+      }
+    }
+  }
+
+  // Pahat Arena Azure Mist Pass (Prompt A5)
+  if (tileX >= 2589 && tileX <= 2611 && tileY >= 3340 && tileY <= 3360) {
+    terrainType = 'mountain_pass';
+    isSolid = false;
+    tileType = 'walkable';
+    label = 'Arena Celah Kabut Azure';
   }
 
   // Penentuan Kavling Tanah Siap Bangun (Buildable Plot / Claimable via SSOT buildZoneEngine)

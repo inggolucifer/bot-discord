@@ -10898,6 +10898,38 @@
    "collision": "none",
    "enterable": false,
    "structureTemplate": null
+  },
+  {
+   "id": "auth_bridge_donghai_01",
+   "anchorId": "dermaga_donghai",
+   "region": "eastern_sea",
+   "x": 3910,
+   "y": 2702,
+   "kind": "bridge",
+   "facing": "east",
+   "defId": "building_wayside_stone_arch_bridge",
+   "fallbackDefId": "building_rustic_wooden_bridge",
+   "cw": 2,
+   "ch": 2,
+   "collision": "walkable",
+   "layer": "authored",
+   "tag": "bridge_v9"
+  },
+  {
+   "id": "auth_bridge_donghai_02",
+   "anchorId": "dermaga_donghai",
+   "region": "eastern_sea",
+   "x": 3914,
+   "y": 2702,
+   "kind": "bridge",
+   "facing": "east",
+   "defId": "building_wayside_stone_arch_bridge",
+   "fallbackDefId": "building_rustic_wooden_bridge",
+   "cw": 2,
+   "ch": 2,
+   "collision": "walkable",
+   "layer": "authored",
+   "tag": "bridge_v9"
   }
  ],
  "roads": [

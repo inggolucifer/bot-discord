@@ -415,9 +415,9 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
   const originTile = getTileFn(startX, startY);
   if (!originTile) return false;
   const ot = originTile.terrainType || '';
-  if (defId && !isAllowedOnTerrain(defId, ot, isAnchor)) return false;
-  if (ot.includes('road') || (!isAnchor && ot.includes('pass'))) return false;
-  if (WATER_TERRAINS.has(ot) && !isAnchor && (!defId || !WATER_EXEMPT_REGEX.test(defId))) return false;
+  const isBridge = defId && (defId.includes('bridge') || defId.includes('pontoon'));
+  if (!isBridge && (ot.includes('road') || (!isAnchor && ot.includes('pass')))) return false;
+  if (WATER_TERRAINS.has(ot) && !isAnchor && !isBridge && (!defId || !WATER_EXEMPT_REGEX.test(defId))) return false;
 
   // Use base collision footprint from scale-canon if available (or collisionOverride)
   const col = collisionOverride ? { w: cw, h: ch, offsetX: 0 } : getCanonCollision(defId, cw, ch);
@@ -447,8 +447,8 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
         return false;
       }
 
-      // Do not block roads or passes
-      if (t.includes('road') || (!isAnchor && t.includes('pass'))) {
+      // Do not block roads or passes (bridges exempt)
+      if (!isBridge && (t.includes('road') || (!isAnchor && t.includes('pass')))) {
         return false;
       }
 
