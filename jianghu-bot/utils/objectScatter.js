@@ -1003,6 +1003,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           let waterPool = [];
           if (region.id === 'frostmoon_sea') {
             waterPool = [
+              'glacial_iceberg_floating',
+              'ghost_ship_frozen_ice_wreck',
               'resource_snow_lotus',
               'nature_scatter_coastal_glowing_coral_rock',
               'nature_mossy_river_driftwood',
@@ -1018,6 +1020,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ];
           } else if (region.id === 'eastern_sea') {
             waterPool = [
+              'sea_shipwreck_abandoned',
+              'sea_dragon_skeleton_remnant',
               'nature_scatter_coastal_glowing_coral_rock',
               'nature_lotus_pond_cluster',
               'nature_scatter_celestial_lotus_pond_rockery',
@@ -1032,6 +1036,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ];
           } else if (region.id === 'floating_wind_isles') {
             waterPool = [
+              'floating_cloud_rock_isle',
+              'celestial_floating_wind_pagoda_shrine',
               'nature_scatter_coastal_glowing_coral_rock',
               'nature_scatter_celestial_lotus_pond_rockery',
               'nature_lotus_pond_cluster',
@@ -1046,6 +1052,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ];
           } else if (region.id === 'bone_sea_coast') {
             waterPool = [
+              'leviathan_spine_arch_reef',
               'nature_scatter_coastal_glowing_coral_rock',
               'nature_mossy_river_driftwood',
               'prop_moored_rowboat',
@@ -1060,6 +1067,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             ];
           } else if (region.id === 'mirror_lake') {
             waterPool = [
+              'ancient_submerged_stone_bridge',
               'nature_lotus_pond_cluster',
               'nature_scatter_celestial_lotus_pond_rockery',
               'nature_reed_bed_marsh',

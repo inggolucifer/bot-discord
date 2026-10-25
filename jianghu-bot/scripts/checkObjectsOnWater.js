@@ -20,7 +20,7 @@ function lcgRandom() {
 }
 
 const SEA_TERRAINS = new Set(['sea', 'ocean', 'sea_reef', 'island_reef', 'lake_deep', 'lake', 'river', 'river_shallow']);
-const WATER_OBJECT_REGEX = /lotus|coral|reef|boat|drift|dock|island|reed|stream|water/;
+const WATER_OBJECT_REGEX = /lotus|coral|reef|boat|drift|dock|island|isle|reed|stream|water|ship|dragon|iceberg|bridge|pagoda/;
 
 let totalPoints = 0;
 let totalObjects = 0;
