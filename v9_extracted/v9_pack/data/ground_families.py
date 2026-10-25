@@ -1,0 +1,38 @@
+# id, terrain types covered, base hex, accent hex, kind(noise style), prompt body
+STYLE = ("seamless tileable top-down ground texture, orthographic bird's-eye view, hand-painted Chinese ink-wash "
+ "and gongbi style on aged xuan paper, soft painterly brush grain, uniform flat lighting, no shadows, no perspective, "
+ "no objects, no characters, no text, no border, no vignette, low contrast so game sprites stay readable, 512x512")
+F = [
+("plains","plains","#6f8f55","#8aa86a","grass","short fresh green grass, tiny clover, faint wind-combed strokes"),
+("meadow","meadow","#7fa05f","#c9b86a","grass","lush meadow grass with tiny pale yellow wildflower dots"),
+("farmland","farmland","#8a7a45","#6d8c3f","furrow","ploughed paddy-field soil with faint green rice rows and wet mud sheen"),
+("herb_field","herb_field","#5f8f58","#a0c870","grass","dense medicinal herb ground cover, dark green leaves, tiny spirit-glow motes"),
+("forest_floor","forest,spirit_wood","#44663d","#6b8a4a","leaf","dark forest floor with fallen leaves, moss, roots barely visible"),
+("bamboo_floor","bamboo_forest,bamboo_grove","#5d8250","#9ab36a","leaf","bamboo forest floor, scattered thin dry bamboo leaves on dark green moss"),
+("dead_wood","dead_wood","#5b5444","#7a6a50","crack","grey-brown dead earth, withered grass tufts, cracked dry mud"),
+("hill","hill","#7c7a55","#9a8d62","grass","rolling hill ground, sparse dry grass over tan earth, small pebbles"),
+("rock_ground","mountain_rock,mountain,cliff,azure_mountain,mountain_peak","#6f7377","#8c9096","rock","grey-blue weathered mountain rock surface with fine strata cracks"),
+("mountain_pass","mountain_pass,sword_gorge_pass","#85806f","#a39b84","rock","packed gravel and flat flagstone path in a mountain gap, worn centre"),
+("canyon_floor","canyon_floor","#a2704a","#c48a58","crack","red-orange sandstone canyon floor, layered sediment, dry cracks"),
+("desert_sand","desert_sand","#d2b277","#e6cc92","dune","golden desert sand, wind ripple lines"),
+("dune","dune","#dcbd7f","#efd9a0","dune","fine pale sand with sharp wind-ripple crests"),
+("oasis","oasis","#6d9a5a","#d6c486","grass","damp green grass mixed with pale sand, oasis edge"),
+("snow","snow","#e8eef2","#c9d8e2","snow","clean snow field, soft blue-grey drift shadows, sparkle dots"),
+("ice_crack","ice_crack,glacier","#b9d6e6","#e4f2fa","ice","pale blue ice sheet with white fracture lines and frozen bubbles"),
+("swamp","swamp,pond_lotus,river_shallow","#4f6b4a","#6f8a58","water","murky swamp mud and shallow green water, duckweed specks"),
+("demonic_swamp","demonic_swamp","#4a3f55","#7a4f7a","water","violet-black cursed swamp mud with faint crimson veins"),
+("poison_pool","poison_pool","#4f7a3a","#a5d63f","water","toxic green-yellow sludge, slow bubbles"),
+("miasma_waste","miasma_waste","#4d4655","#6e5f72","crack","purple-grey dead ground drifting with thin dark miasma wisps"),
+("battlefield_ash","battlefield_ash","#4f4540","#7d5a4a","crack","scorched blood-brown earth, ash, tiny bone and iron shards"),
+("volcanic","volcanic,basalt","#3d3836","#8a3a22","crack","black basalt with thin glowing orange cracks"),
+("lava_flow","lava_flow","#7a2c14","#ff8a2a","lava","molten lava crust, bright orange veins in dark red rock"),
+("crater","crater","#5a4d45","#8a6a50","crack","scorched crater floor, glassy fused soil, radial cracks"),
+("lightning_scar","lightning_scar","#5d6070","#b8d4ff","crack","dark storm-fused rock with white-blue branching lightning scorch marks"),
+("formation_tile","formation_tile","#6a6f78","#8fd0d8","tile","ancient square stone floor with faint glowing cyan array engravings"),
+("ruin_floor","ruin_floor","#7d7566","#a69d88","tile","broken ancient flagstones with moss in the seams"),
+("island_reef","island_reef,sea_reef","#b9a57a","#7fb0a8","dune","wet coral sand and shell fragments, shallow teal water seeping in"),
+("abyss_edge","abyss_edge","#2c2a38","#5a4a7a","crack","dark void-rock with thin violet fracture glow"),
+("settlement_floor","settlement","#9a8d70","#b8a98a","tile","packed earth with irregular flagstone patches, village courtyard"),
+("road_stone","road_stone","#8f8a7c","#a9a393","tile","worn grey-brown cobblestone road surface, slight centre wear"),
+("ocean","ocean,sea,lake,lake_deep,river","#2f6f8f","#4f93b0","wave","deep blue-green ink-wash water with soft calligraphic wave lines"),
+]

@@ -1,0 +1,1471 @@
+{
+ "central_plains": {
+  "region": "central_plains",
+  "sealed": false,
+  "lair": {
+   "x": 2504,
+   "y": 2608,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 74
+  },
+  "eliteCamps": [
+   {
+    "x": 2084,
+    "y": 2332,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 204
+   },
+   {
+    "x": 2924,
+    "y": 2824,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 178
+   },
+   {
+    "x": 2504,
+    "y": 2932,
+    "terrain": "forest",
+    "fromNearestAnchorTiles": 157
+   }
+  ],
+  "hazardZone": {
+   "x": 2780,
+   "y": 2224,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 130
+  },
+  "hazard": {
+   "kind": "none",
+   "label": "Aman — wilayah pemula",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Rusa Bintik Fana",
+   "Bangau Bulu Salju",
+   "Rubah Ekor Cokelat"
+  ],
+  "uniqueElite": "Serigala Padang Berbulu Besi",
+  "bossMechanic": "Boss melempar umpan: 2 anak buah tiap 25% HP",
+  "signature": "Jalan raya ramai, banyak kamp bandit kecil"
+ },
+ "nine_springs_delta": {
+  "region": "nine_springs_delta",
+  "sealed": false,
+  "lair": {
+   "x": 2412,
+   "y": 2406,
+   "terrain": "pond_lotus",
+   "fromNearestAnchorTiles": 46
+  },
+  "eliteCamps": [
+   {
+    "x": 2280,
+    "y": 2406,
+    "terrain": "farmland",
+    "fromNearestAnchorTiles": 59
+   },
+   {
+    "x": 2520,
+    "y": 2502,
+    "terrain": "farmland",
+    "fromNearestAnchorTiles": 57
+   },
+   {
+    "x": 2400,
+    "y": 2514,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 64
+   }
+  ],
+  "hazardZone": {
+   "x": 2484,
+   "y": 2394,
+   "terrain": "farmland",
+   "fromNearestAnchorTiles": 95
+  },
+  "hazard": {
+   "kind": "flood",
+   "label": "Banjir pasang: petak pond/farmland tergenang tiap 40 detik",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_water_walk_charm"
+  },
+  "uniqueCommons": [
+   "Katak Lotus Giok",
+   "Lintah Sungai Raksasa",
+   "Bangau Pemancing Hitam"
+  ],
+  "uniqueElite": "Naga Sungai Muda",
+  "bossMechanic": "Boss memanggil gelombang air (knockback 3 petak)",
+  "signature": "Banyak jembatan, dermaga"
+ },
+ "azure_mountain_range": {
+  "region": "azure_mountain_range",
+  "sealed": false,
+  "lair": {
+   "x": 2600,
+   "y": 3350,
+   "terrain": "mountain_pass",
+   "fromNearestAnchorTiles": 0,
+   "carveArena": {
+    "minX": 2589,
+    "maxX": 2611,
+    "minY": 3340,
+    "maxY": 3360,
+    "terrain": "mountain_pass"
+   }
+  },
+  "eliteCamps": [
+   {
+    "x": 2200,
+    "y": 3250,
+    "terrain": "mountain_pass"
+   },
+   {
+    "x": 2600,
+    "y": 3200,
+    "terrain": "mountain_pass"
+   },
+   {
+    "x": 3100,
+    "y": 3200,
+    "terrain": "sword_gorge_pass"
+   }
+  ],
+  "hazardZone": {
+   "x": 2200,
+   "y": 3300,
+   "terrain": "mountain_pass"
+  },
+  "hazard": {
+   "kind": "cold_wind",
+   "label": "Angin tebing: -1 stamina/10 langkah di luar pass",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kambing Gunung Awan",
+   "Elang Tebing Biru",
+   "Beruang Batu Azure"
+  ],
+  "uniqueElite": "Harimau Salju Pedang",
+  "bossMechanic": "Boss di celah Mist Pass: arena 21x21, ada pilar pedang jatuh",
+  "signature": "Hanya 3 celah — chokepoint"
+ },
+ "northern_desolate": {
+  "region": "northern_desolate",
+  "sealed": false,
+  "lair": {
+   "x": 1800,
+   "y": 4232,
+   "terrain": "snow",
+   "fromNearestAnchorTiles": 118
+  },
+  "eliteCamps": [
+   {
+    "x": 1620,
+    "y": 4220,
+    "terrain": "ice_crack",
+    "fromNearestAnchorTiles": 222
+   },
+   {
+    "x": 2760,
+    "y": 4652,
+    "terrain": "snow",
+    "fromNearestAnchorTiles": 540
+   },
+   {
+    "x": 2100,
+    "y": 4784,
+    "terrain": "snow",
+    "fromNearestAnchorTiles": 172
+   }
+  ],
+  "hazardZone": {
+   "x": 2544,
+   "y": 3812,
+   "terrain": "snow",
+   "fromNearestAnchorTiles": 57
+  },
+  "hazard": {
+   "kind": "cold",
+   "label": "Dingin beku: 1% HP/10 langkah tanpa jubah/pil panas",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_frost_ward_cloak"
+  },
+  "uniqueCommons": [
+   "Rusa Es Bertanduk Kristal",
+   "Serigala Salju Putih",
+   "Beruang Kutub Tulang"
+  ],
+  "uniqueElite": "Mammoth Es Berbulu Hitam",
+  "bossMechanic": "Boss membekukan petak sekitar (immobilize 1 giliran)",
+  "signature": "Badai salju memotong jarak pandang"
+ },
+ "thundersteppe": {
+  "region": "thundersteppe",
+  "sealed": false,
+  "lair": {
+   "x": 2300,
+   "y": 4204,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 108
+  },
+  "eliteCamps": [
+   {
+    "x": 2000,
+    "y": 4036,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 187
+   },
+   {
+    "x": 2600,
+    "y": 4396,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 268
+   },
+   {
+    "x": 2300,
+    "y": 4480,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 187
+   }
+  ],
+  "hazardZone": {
+   "x": 2504,
+   "y": 3964,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 64
+  },
+  "hazard": {
+   "kind": "lightning",
+   "label": "Sambaran petir acak 1 petak/30 detik di area terbuka",
+   "pctMaxHpPer10Steps": 3,
+   "counterItem": "item_lightning_rod_talisman"
+  },
+  "uniqueCommons": [
+   "Kuda Petir Liar",
+   "Ular Statis",
+   "Elang Guntur"
+  ],
+  "uniqueElite": "Banteng Guntur Bertanduk Besi",
+  "bossMechanic": "Boss: serangan beruntun bila HP lawan pakai logam",
+  "signature": "Menara penangkal petir sebagai safe-spot"
+ },
+ "godthunder_peaks": {
+  "region": "godthunder_peaks",
+  "sealed": false,
+  "lair": {
+   "x": 3256,
+   "y": 4416,
+   "terrain": "crater",
+   "fromNearestAnchorTiles": 900
+  },
+  "eliteCamps": [
+   {
+    "x": 3256,
+    "y": 4728,
+    "terrain": "crater",
+    "fromNearestAnchorTiles": 1002
+   },
+   {
+    "x": 3292,
+    "y": 4776,
+    "terrain": "crater",
+    "fromNearestAnchorTiles": 1055
+   },
+   {
+    "x": 3292,
+    "y": 4848,
+    "terrain": "crater",
+    "fromNearestAnchorTiles": 1090
+   }
+  ],
+  "hazardZone": {
+   "x": 3292,
+   "y": 4848,
+   "terrain": "crater",
+   "fromNearestAnchorTiles": 1090
+  },
+  "hazard": {
+   "kind": "lightning",
+   "label": "Petir ilahi: 3% HP/10 langkah di puncak",
+   "pctMaxHpPer10Steps": 3,
+   "counterItem": "item_lightning_rod_talisman"
+  },
+  "uniqueCommons": [
+   "Naga Kecil Awan",
+   "Rajawali Petir Putih",
+   "Golem Kilat"
+  ],
+  "uniqueElite": "Hakim Petir Tingkat 7",
+  "bossMechanic": "Boss: ujian tribulasi 3 gelombang",
+  "signature": "Platform tribulasi di tengah"
+ },
+ "mirror_lake": {
+  "region": "mirror_lake",
+  "sealed": false,
+  "lair": {
+   "x": 3092,
+   "y": 3680,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 506
+  },
+  "eliteCamps": [
+   {
+    "x": 3044,
+    "y": 3716,
+    "terrain": "river_shallow",
+    "fromNearestAnchorTiles": 452
+   },
+   {
+    "x": 3080,
+    "y": 4064,
+    "terrain": "river_shallow",
+    "fromNearestAnchorTiles": 548
+   },
+   {
+    "x": 3032,
+    "y": 3656,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 455
+   }
+  ],
+  "hazardZone": {
+   "x": 3032,
+   "y": 3656,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 455
+  },
+  "hazard": {
+   "kind": "none",
+   "label": "Tenang tapi menipu: bayangan musuh",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Siluman Bayangan Cermin",
+   "Ikan Pedang Perak",
+   "Kura-kura Cermin"
+  ],
+  "uniqueElite": "Pendekar Bayangan Danau",
+  "bossMechanic": "Boss meniru stat pemain (mirror) 50%",
+  "signature": "Danau tengah memerlukan perahu"
+ },
+ "beast_prairies": {
+  "region": "beast_prairies",
+  "sealed": false,
+  "lair": {
+   "x": 1404,
+   "y": 3804,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 314
+  },
+  "eliteCamps": [
+   {
+    "x": 1164,
+    "y": 3636,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 381
+   },
+   {
+    "x": 1644,
+    "y": 3996,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 359
+   },
+   {
+    "x": 1404,
+    "y": 4008,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 139
+   }
+  ],
+  "hazardZone": {
+   "x": 1560,
+   "y": 3612,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 553
+  },
+  "hazard": {
+   "kind": "stampede",
+   "label": "Kawanan berlari: 8% peluang tabrakan di padang",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Bison Taring Emas",
+   "Hyena Padang Merah",
+   "Elang Pemburu"
+  ],
+  "uniqueElite": "Raja Kawanan Singa Padang",
+  "bossMechanic": "Boss memanggil kawanan 3 elit",
+  "signature": "Totem suku sebagai pos aman"
+ },
+ "western_sacred_desert": {
+  "region": "western_sacred_desert",
+  "sealed": false,
+  "lair": {
+   "x": 752,
+   "y": 2504,
+   "terrain": "desert_sand",
+   "fromNearestAnchorTiles": 146
+  },
+  "eliteCamps": [
+   {
+    "x": 296,
+    "y": 2096,
+    "terrain": "desert_sand",
+    "fromNearestAnchorTiles": 304
+   },
+   {
+    "x": 1196,
+    "y": 2996,
+    "terrain": "desert_sand",
+    "fromNearestAnchorTiles": 604
+   },
+   {
+    "x": 752,
+    "y": 3092,
+    "terrain": "desert_sand",
+    "fromNearestAnchorTiles": 699
+   }
+  ],
+  "hazardZone": {
+   "x": 1052,
+   "y": 1904,
+   "terrain": "desert_sand",
+   "fromNearestAnchorTiles": 392
+  },
+  "hazard": {
+   "kind": "heat",
+   "label": "Panas gurun: -2% stamina/10 langkah siang hari tanpa air",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_water_gourd"
+  },
+  "uniqueCommons": [
+   "Kalajengking Pasir Emas",
+   "Ular Derik Putih",
+   "Unta Liar"
+  ],
+  "uniqueElite": "Cacing Pasir Raksasa",
+  "bossMechanic": "Boss menyergap dari bawah pasir (hanya muncul 1 kali/menit)",
+  "signature": "Oase = satu-satunya air"
+ },
+ "western_gorge_labyrinth": {
+  "region": "western_gorge_labyrinth",
+  "sealed": false,
+  "lair": {
+   "x": 500,
+   "y": 1500,
+   "terrain": "canyon_floor",
+   "fromNearestAnchorTiles": 608
+  },
+  "eliteCamps": [
+   {
+    "x": 188,
+    "y": 1284,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 914
+   },
+   {
+    "x": 800,
+    "y": 1752,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 401
+   },
+   {
+    "x": 500,
+    "y": 1848,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 271
+   }
+  ],
+  "hazardZone": {
+   "x": 704,
+   "y": 1500,
+   "terrain": "canyon_floor",
+   "fromNearestAnchorTiles": 609
+  },
+  "hazard": {
+   "kind": "maze",
+   "label": "Lorong buntu & suara menyesatkan",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kelelawar Ngarai",
+   "Ular Batu Merah",
+   "Laba-laba Kapur"
+  ],
+  "uniqueElite": "Minotaur Batu Pasir",
+  "bossMechanic": "Boss labirin: pintu berubah tiap 60 detik",
+  "signature": "Labirin ngarai menantang navigasi"
+ },
+ "hermit_highlands": {
+  "region": "hermit_highlands",
+  "sealed": false,
+  "lair": {
+   "x": 1204,
+   "y": 4404,
+   "terrain": "hill",
+   "fromNearestAnchorTiles": 196
+  },
+  "eliteCamps": [
+   {
+    "x": 964,
+    "y": 4236,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 239
+   },
+   {
+    "x": 1444,
+    "y": 4596,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 201
+   },
+   {
+    "x": 1204,
+    "y": 4680,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 342
+   }
+  ],
+  "hazardZone": {
+   "x": 1360,
+   "y": 4164,
+   "terrain": "hill",
+   "fromNearestAnchorTiles": 88
+  },
+  "hazard": {
+   "kind": "mist",
+   "label": "Kabut tebal: jarak pandang -50%",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kera Bijak Kabut",
+   "Rusa Giok Tua",
+   "Ular Awan"
+  ],
+  "uniqueElite": "Pertapa Gila Berjubah Kabut",
+  "bossMechanic": "Boss mengajukan teka-teki bela diri (3 pilihan)",
+  "signature": "Sunyi, kuil pertapa"
+ },
+ "border_march": {
+  "region": "border_march",
+  "sealed": false,
+  "lair": {
+   "x": 2816,
+   "y": 1928,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 347
+  },
+  "eliteCamps": [
+   {
+    "x": 2816,
+    "y": 1868,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 396
+   },
+   {
+    "x": 2936,
+    "y": 1988,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 397
+   },
+   {
+    "x": 2816,
+    "y": 2012,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 286
+   }
+  ],
+  "hazardZone": {
+   "x": 2852,
+   "y": 1820,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 456
+  },
+  "hazard": {
+   "kind": "war",
+   "label": "Patroli perang: 10% peluang bertemu pasukan perbatasan",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Prajurit Bayangan Tombak",
+   "Kuda Perang Tak Bertuan",
+   "Pemanah Gurun"
+  ],
+  "uniqueElite": "Kapten Pasukan Besi",
+  "bossMechanic": "Boss: komandan dengan 2 pemanah",
+  "signature": "Benteng, garnisun, jalan militer"
+ },
+ "lava_spine": {
+  "region": "lava_spine",
+  "sealed": false,
+  "lair": {
+   "x": 1100,
+   "y": 292,
+   "terrain": "crater",
+   "fromNearestAnchorTiles": 1069
+  },
+  "eliteCamps": [
+   {
+    "x": 692,
+    "y": 496,
+    "terrain": "basalt",
+    "fromNearestAnchorTiles": 1262
+   },
+   {
+    "x": 1508,
+    "y": 952,
+    "terrain": "basalt",
+    "fromNearestAnchorTiles": 327
+   },
+   {
+    "x": 1100,
+    "y": 1108,
+    "terrain": "crater",
+    "fromNearestAnchorTiles": 700
+   }
+  ],
+  "hazardZone": {
+   "x": 1304,
+   "y": 280,
+   "terrain": "basalt",
+   "fromNearestAnchorTiles": 958
+  },
+  "hazard": {
+   "kind": "heat",
+   "label": "Lava panas: 2% HP/10 langkah tanpa pil dingin",
+   "pctMaxHpPer10Steps": 2,
+   "counterItem": "item_cold_pill"
+  },
+  "uniqueCommons": [
+   "Kadal Magma",
+   "Burung Api Abu",
+   "Golem Basal"
+  ],
+  "uniqueElite": "Salamander Lava Raksasa",
+  "bossMechanic": "Boss mengubah lantai menjadi lava (petak bergilir)",
+  "signature": "Tempa magma, bahan langka"
+ },
+ "venom_mire": {
+  "region": "venom_mire",
+  "sealed": false,
+  "lair": {
+   "x": 2604,
+   "y": 1008,
+   "terrain": "dead_wood",
+   "fromNearestAnchorTiles": 233
+  },
+  "eliteCamps": [
+   {
+    "x": 2364,
+    "y": 696,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 171
+   },
+   {
+    "x": 2844,
+    "y": 1152,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 492
+   },
+   {
+    "x": 2604,
+    "y": 1248,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 454
+   }
+  ],
+  "hazardZone": {
+   "x": 2412,
+   "y": 576,
+   "terrain": "dead_wood",
+   "fromNearestAnchorTiles": 241
+  },
+  "hazard": {
+   "kind": "poison",
+   "label": "Racun rawa: 2% HP/10 langkah di petak rawa tanpa penawar",
+   "pctMaxHpPer10Steps": 2,
+   "counterItem": "item_antidote_pill"
+  },
+  "uniqueCommons": [
+   "Katak Beracun Neon",
+   "Ular Rawa Hijau",
+   "Lintah Berbisa"
+  ],
+  "uniqueElite": "Hydra Rawa Tiga Kepala",
+  "bossMechanic": "Boss: kepala regenerasi, bunuh urut",
+  "signature": "Pagoda ular tenggelam"
+ },
+ "southern_demon_domain": {
+  "region": "southern_demon_domain",
+  "sealed": false,
+  "lair": {
+   "x": 2192,
+   "y": 1196,
+   "terrain": "dead_wood",
+   "fromNearestAnchorTiles": 68
+  },
+  "eliteCamps": [
+   {
+    "x": 1796,
+    "y": 1016,
+    "terrain": "dead_wood",
+    "fromNearestAnchorTiles": 84
+   },
+   {
+    "x": 2696,
+    "y": 1496,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 599
+   },
+   {
+    "x": 2252,
+    "y": 1616,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 337
+   }
+  ],
+  "hazardZone": {
+   "x": 2192,
+   "y": 1028,
+   "terrain": "hill",
+   "fromNearestAnchorTiles": 226
+  },
+  "hazard": {
+   "kind": "demonic",
+   "label": "Aura iblis: serangan -10% tanpa jimat suci",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": "item_holy_talisman"
+  },
+  "uniqueCommons": [
+   "Iblis Kecil Berbulu Gelap",
+   "Anjing Neraka",
+   "Kelelawar Darah"
+  ],
+  "uniqueElite": "Panglima Iblis Berkepala Tanduk",
+  "bossMechanic": "Boss: fase iblis kedua di 40% HP",
+  "signature": "Gerbang tengkorak"
+ },
+ "crimson_battlefield": {
+  "region": "crimson_battlefield",
+  "sealed": false,
+  "lair": {
+   "x": 2900,
+   "y": 604,
+   "terrain": "battlefield_ash",
+   "fromNearestAnchorTiles": 445
+  },
+  "eliteCamps": [
+   {
+    "x": 2600,
+    "y": 436,
+    "terrain": "battlefield_ash",
+    "fromNearestAnchorTiles": 377
+   },
+   {
+    "x": 3200,
+    "y": 796,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 700
+   },
+   {
+    "x": 2900,
+    "y": 880,
+    "terrain": "battlefield_ash",
+    "fromNearestAnchorTiles": 408
+   }
+  ],
+  "hazardZone": {
+   "x": 3104,
+   "y": 364,
+   "terrain": "battlefield_ash",
+   "fromNearestAnchorTiles": 745
+  },
+  "hazard": {
+   "kind": "wraith",
+   "label": "Arwah perang: 5% peluang diserang hantu prajurit",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Prajurit Mayat Hidup",
+   "Gagak Perang",
+   "Hantu Perwira"
+  ],
+  "uniqueElite": "Jenderal Tanpa Kepala",
+  "bossMechanic": "Boss memanggil pasukan hantu tiap 20% HP",
+  "signature": "Cairn halberd patah"
+ },
+ "abyssal_scar": {
+  "region": "abyssal_scar",
+  "sealed": false,
+  "lair": {
+   "x": 1896,
+   "y": 604,
+   "terrain": "miasma_waste",
+   "fromNearestAnchorTiles": 505
+  },
+  "eliteCamps": [
+   {
+    "x": 1716,
+    "y": 436,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 669
+   },
+   {
+    "x": 2076,
+    "y": 796,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 411
+   },
+   {
+    "x": 1872,
+    "y": 880,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 231
+   }
+  ],
+  "hazardZone": {
+   "x": 2016,
+   "y": 364,
+   "terrain": "miasma_waste",
+   "fromNearestAnchorTiles": 651
+  },
+  "hazard": {
+   "kind": "void",
+   "label": "Retakan jurang: 1% HP/10 langkah dekat tepi",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_void_ward_stone"
+  },
+  "uniqueCommons": [
+   "Cacing Jurang",
+   "Bayangan Rantai",
+   "Mata Terbang Kosong"
+  ],
+  "uniqueElite": "Penjaga Rantai Hampa",
+  "bossMechanic": "Boss mengisap pemain ke tengah arena",
+  "signature": "Rantai jangkar kekosongan"
+ },
+ "southern_plague_woods": {
+  "region": "southern_plague_woods",
+  "sealed": false,
+  "lair": {
+   "x": 3416,
+   "y": 544,
+   "terrain": "swamp",
+   "fromNearestAnchorTiles": 951
+  },
+  "eliteCamps": [
+   {
+    "x": 3416,
+    "y": 412,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 995
+   },
+   {
+    "x": 3644,
+    "y": 724,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 1147
+   },
+   {
+    "x": 3404,
+    "y": 796,
+    "terrain": "swamp",
+    "fromNearestAnchorTiles": 904
+   }
+  ],
+  "hazardZone": {
+   "x": 3560,
+   "y": 340,
+   "terrain": "dead_wood",
+   "fromNearestAnchorTiles": 1156
+  },
+  "hazard": {
+   "kind": "plague",
+   "label": "Wabah: stat turun 5% tiap 10 menit tanpa pil",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_antidote_pill"
+  },
+  "uniqueCommons": [
+   "Tikus Wabah",
+   "Rusa Busuk",
+   "Jamur Hidup"
+  ],
+  "uniqueElite": "Raja Lalat Pembusuk",
+  "bossMechanic": "Boss: debuff stacking racun",
+  "signature": "Kuil akar pembusuk"
+ },
+ "bone_sea_coast": {
+  "region": "bone_sea_coast",
+  "sealed": false,
+  "lair": {
+   "x": 1748,
+   "y": 152,
+   "terrain": "desert_sand",
+   "fromNearestAnchorTiles": 949
+  },
+  "eliteCamps": [
+   {
+    "x": 704,
+    "y": 92,
+    "terrain": "desert_sand",
+    "fromNearestAnchorTiles": 1489
+   },
+   {
+    "x": 2792,
+    "y": 188,
+    "terrain": "sea_reef",
+    "fromNearestAnchorTiles": 678
+   },
+   {
+    "x": 1784,
+    "y": 200,
+    "terrain": "desert_sand",
+    "fromNearestAnchorTiles": 900
+   }
+  ],
+  "hazardZone": {
+   "x": 2444,
+   "y": 56,
+   "terrain": "sea_reef",
+   "fromNearestAnchorTiles": 746
+  },
+  "hazard": {
+   "kind": "bone",
+   "label": "Pasir tulang: 4% peluang perangkap duri",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kepiting Tulang",
+   "Burung Camar Mayat",
+   "Ular Laut Tulang"
+  ],
+  "uniqueElite": "Kerangka Leviathan Muda",
+  "bossMechanic": "Boss memanggil rusuk-rusuk dari pasir",
+  "signature": "Dermaga rusuk leviathan"
+ },
+ "spirit_wood_sea": {
+  "region": "spirit_wood_sea",
+  "sealed": false,
+  "lair": {
+   "x": 3700,
+   "y": 1300,
+   "terrain": "forest",
+   "fromNearestAnchorTiles": 1250
+  },
+  "eliteCamps": [
+   {
+    "x": 3400,
+    "y": 1096,
+    "terrain": "spirit_wood",
+    "fromNearestAnchorTiles": 947
+   },
+   {
+    "x": 3940,
+    "y": 1552,
+    "terrain": "spirit_wood",
+    "fromNearestAnchorTiles": 1026
+   },
+   {
+    "x": 3700,
+    "y": 1648,
+    "terrain": "spirit_wood",
+    "fromNearestAnchorTiles": 902
+   }
+  ],
+  "hazardZone": {
+   "x": 3904,
+   "y": 1000,
+   "terrain": "spirit_wood",
+   "fromNearestAnchorTiles": 1418
+  },
+  "hazard": {
+   "kind": "spore",
+   "label": "Spora roh: ilusi acak tiap 60 detik",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Rusa Roh Hutan",
+   "Kupu-kupu Spora",
+   "Ular Akar"
+  ],
+  "uniqueElite": "Banyan Roh Penjaga",
+  "bossMechanic": "Boss meregenerasi dari akar kecuali dibakar",
+  "signature": "Pohon beringin surgawi"
+ },
+ "mist_insect_valley": {
+  "region": "mist_insect_valley",
+  "sealed": false,
+  "lair": {
+   "x": 4404,
+   "y": 1100,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 1612
+  },
+  "eliteCamps": [
+   {
+    "x": 4164,
+    "y": 896,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 1667
+   },
+   {
+    "x": 4644,
+    "y": 1352,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 1429
+   },
+   {
+    "x": 4404,
+    "y": 1448,
+    "terrain": "meadow",
+    "fromNearestAnchorTiles": 1303
+   }
+  ],
+  "hazardZone": {
+   "x": 4560,
+   "y": 800,
+   "terrain": "meadow",
+   "fromNearestAnchorTiles": 1950
+  },
+  "hazard": {
+   "kind": "insect",
+   "label": "Kawanan serangga: 3% HP/10 langkah tanpa dupa",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_incense_repel"
+  },
+  "uniqueCommons": [
+   "Semut Raksasa Kitin",
+   "Kumbang Kabut",
+   "Laba-laba Sutra"
+  ],
+  "uniqueElite": "Ratu Lebah Kitin",
+  "bossMechanic": "Boss: sarang spawn larva tiap 30 detik",
+  "signature": "Monolit sarang kitin"
+ },
+ "formation_barrens": {
+  "region": "formation_barrens",
+  "sealed": false,
+  "lair": {
+   "x": 3604,
+   "y": 2204,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 359
+  },
+  "eliteCamps": [
+   {
+    "x": 3364,
+    "y": 2036,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 614
+   },
+   {
+    "x": 3844,
+    "y": 2384,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 220
+   },
+   {
+    "x": 3628,
+    "y": 2396,
+    "terrain": "plains",
+    "fromNearestAnchorTiles": 170
+   }
+  ],
+  "hazardZone": {
+   "x": 3760,
+   "y": 1964,
+   "terrain": "plains",
+   "fromNearestAnchorTiles": 589
+  },
+  "hazard": {
+   "kind": "array",
+   "label": "Formasi rusak: teleport acak 10% saat melangkah di petak array",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Golem Formasi",
+   "Roh Batu Bagua",
+   "Ular Giok Penjaga"
+  ],
+  "uniqueElite": "Penjaga Array Retak",
+  "bossMechanic": "Boss: perubahan formasi (4 arah penyerangan)",
+  "signature": "Bagua rusak"
+ },
+ "sword_gorge": {
+  "region": "sword_gorge",
+  "sealed": false,
+  "lair": {
+   "x": 3400,
+   "y": 3080,
+   "terrain": "canyon_floor",
+   "fromNearestAnchorTiles": 170
+  },
+  "eliteCamps": [
+   {
+    "x": 3268,
+    "y": 3092,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 94
+   },
+   {
+    "x": 3520,
+    "y": 3080,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 282
+   },
+   {
+    "x": 3340,
+    "y": 3080,
+    "terrain": "canyon_floor",
+    "fromNearestAnchorTiles": 120
+   }
+  ],
+  "hazardZone": {
+   "x": 3460,
+   "y": 3080,
+   "terrain": "canyon_floor",
+   "fromNearestAnchorTiles": 225
+  },
+  "hazard": {
+   "kind": "wind",
+   "label": "Angin pedang: 1% HP/10 langkah di ngarai terbuka",
+   "pctMaxHpPer10Steps": 1,
+   "counterItem": "item_wind_ward_cloak"
+  },
+  "uniqueCommons": [
+   "Kelelawar Pedang",
+   "Elang Ngarai",
+   "Roh Pedang Karat"
+  ],
+  "uniqueElite": "Hantu Pendekar Pedang",
+  "bossMechanic": "Boss: tebasan area horizontal tiap 5 detik",
+  "signature": "Jembatan pedang raksasa"
+ },
+ "ore_teeth_range": {
+  "region": "ore_teeth_range",
+  "sealed": false,
+  "lair": {
+   "x": 3624,
+   "y": 2804,
+   "terrain": "hill",
+   "fromNearestAnchorTiles": 234
+  },
+  "eliteCamps": [
+   {
+    "x": 3492,
+    "y": 2636,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 225
+   },
+   {
+    "x": 3756,
+    "y": 2996,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 205
+   },
+   {
+    "x": 3624,
+    "y": 3080,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 359
+   }
+  ],
+  "hazardZone": {
+   "x": 3732,
+   "y": 2576,
+   "terrain": "hill",
+   "fromNearestAnchorTiles": 41
+  },
+  "hazard": {
+   "kind": "collapse",
+   "label": "Longsor tambang: 6% peluang runtuh di lorong",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kumbang Bijih",
+   "Kerdil Tambang Hantu",
+   "Golem Bijih"
+  ],
+  "uniqueElite": "Raja Kerdil Tambang",
+  "bossMechanic": "Boss: runtuhan memblokir jalan sementara",
+  "signature": "Mulut tambang kerdil"
+ },
+ "eastern_sea": {
+  "region": "eastern_sea",
+  "sealed": false,
+  "lair": {
+   "x": 3940,
+   "y": 2600,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 102
+  },
+  "eliteCamps": [
+   {
+    "x": 4564,
+    "y": 1832,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 943
+   },
+   {
+    "x": 3940,
+    "y": 2828,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 46
+   },
+   {
+    "x": 3916,
+    "y": 2756,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 36
+   }
+  ],
+  "hazardZone": {
+   "x": 4624,
+   "y": 1736,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 1050
+  },
+  "hazard": {
+   "kind": "storm",
+   "label": "Badai laut: perahu terseret 10% tanpa kemudi",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Kepiting Karang",
+   "Penyu Giok",
+   "Ikan Terbang Hiu"
+  ],
+  "uniqueElite": "Hiu Naga Laut",
+  "bossMechanic": "Boss: pusaran air di arena pulau karang",
+  "signature": "Kerang naga penyu"
+ },
+ "frostmoon_sea": {
+  "region": "frostmoon_sea",
+  "sealed": true,
+  "lair": {
+   "x": 4396,
+   "y": 4284,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 1517
+  },
+  "eliteCamps": [
+   {
+    "x": 4000,
+    "y": 4128,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 1282
+   },
+   {
+    "x": 4504,
+    "y": 4260,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 1518
+   },
+   {
+    "x": 4336,
+    "y": 4272,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 1487
+   }
+  ],
+  "hazardZone": {
+   "x": 4540,
+   "y": 4092,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 1355
+  },
+  "hazard": {
+   "kind": "cold",
+   "label": "Dingin laut: 2% HP/10 langkah",
+   "pctMaxHpPer10Steps": 2,
+   "counterItem": "item_frost_ward_cloak"
+  },
+  "uniqueCommons": [
+   "Anjing Laut Es",
+   "Paus Kecil Beku",
+   "Burung Es"
+  ],
+  "uniqueElite": "Naga Beku Muda",
+  "bossMechanic": "Boss: tengkorak naga beku bangkit",
+  "signature": "Pulau tengkorak naga beku",
+  "access": {
+   "mode": "ferry",
+   "item": null,
+   "from": "dermaga_donghai",
+   "note": "Kapal es khusus tiap hari; atau pedang terbang tier>=3"
+  }
+ },
+ "floating_wind_isles": {
+  "region": "floating_wind_isles",
+  "sealed": true,
+  "lair": {
+   "x": 4604,
+   "y": 2700,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 259
+  },
+  "eliteCamps": [
+   {
+    "x": 4364,
+    "y": 2496,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 254
+   },
+   {
+    "x": 4832,
+    "y": 2952,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 523
+   },
+   {
+    "x": 4604,
+    "y": 3036,
+    "terrain": "island_reef",
+    "fromNearestAnchorTiles": 383
+   }
+  ],
+  "hazardZone": {
+   "x": 4772,
+   "y": 2412,
+   "terrain": "island_reef",
+   "fromNearestAnchorTiles": 541
+  },
+  "hazard": {
+   "kind": "fall",
+   "label": "Pulau melayang: angin kencang dorong 2 petak",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": "item_wind_ward_cloak"
+  },
+  "uniqueCommons": [
+   "Burung Layang Awan",
+   "Roh Angin",
+   "Golem Awan"
+  ],
+  "uniqueElite": "Penjaga Citadel Daois",
+  "bossMechanic": "Boss: platform jatuh bertahap",
+  "signature": "Citadel daois melayang",
+  "access": {
+   "mode": "flying_sword",
+   "item": "item_flying_sword",
+   "note": "Butuh pedang terbang (barrier floating) atau kapal udara dari Pulau Penyu"
+  }
+ },
+ "immortal_ruins_valley": {
+  "region": "immortal_ruins_valley",
+  "sealed": false,
+  "lair": {
+   "x": 580,
+   "y": 1000,
+   "terrain": "formation_tile",
+   "fromNearestAnchorTiles": 1100
+  },
+  "eliteCamps": [
+   {
+    "x": 364,
+    "y": 796,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 1325
+   },
+   {
+    "x": 844,
+    "y": 1252,
+    "terrain": "hill",
+    "fromNearestAnchorTiles": 882
+   },
+   {
+    "x": 604,
+    "y": 1348,
+    "terrain": "formation_tile",
+    "fromNearestAnchorTiles": 752
+   }
+  ],
+  "hazardZone": {
+   "x": 592,
+   "y": 664,
+   "terrain": "formation_tile",
+   "fromNearestAnchorTiles": 1284
+  },
+  "hazard": {
+   "kind": "spirit",
+   "label": "Roh lawas: ilusi memori 5% peluang",
+   "pctMaxHpPer10Steps": 0,
+   "counterItem": null
+  },
+  "uniqueCommons": [
+   "Roh Pelayan Kuno",
+   "Patung Hidup",
+   "Burung Giok"
+  ],
+  "uniqueElite": "Penjaga Gerbang Surgawi",
+  "bossMechanic": "Boss: ujian kebajikan 3 pintu",
+  "signature": "Sisa gerbang surgawi"
+ },
+ "void_rift": {
+  "region": "void_rift",
+  "sealed": true,
+  "lair": {
+   "x": 308,
+   "y": 4748,
+   "terrain": "miasma_waste",
+   "fromNearestAnchorTiles": 1047
+  },
+  "eliteCamps": [
+   {
+    "x": 308,
+    "y": 4688,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 1012
+   },
+   {
+    "x": 380,
+    "y": 4844,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 1043
+   },
+   {
+    "x": 356,
+    "y": 4784,
+    "terrain": "miasma_waste",
+    "fromNearestAnchorTiles": 1026
+   }
+  ],
+  "hazardZone": {
+   "x": 368,
+   "y": 4616,
+   "terrain": "miasma_waste",
+   "fromNearestAnchorTiles": 919
+  },
+  "hazard": {
+   "kind": "void",
+   "label": "Retak ruang: 4% HP/10 langkah, teleport acak 5%",
+   "pctMaxHpPer10Steps": 4,
+   "counterItem": "item_void_ward_stone"
+  },
+  "uniqueCommons": [
+   "Cacing Ruang",
+   "Bayangan Terdistorsi",
+   "Mata Hampa"
+  ],
+  "uniqueElite": "Pemakan Dimensi",
+  "bossMechanic": "Boss: serangan dari semua sisi, singularitas",
+  "signature": "Singularitas ruang pecah",
+  "access": {
+   "mode": "portal",
+   "item": "item_void_key",
+   "note": "Butuh Kunci Hampa (drop boss Abyssal Scar)"
+  }
+ }
+}
