@@ -1,0 +1,121 @@
+{
+ "note": "boss sprite per region (+ optional elite sprite). Verify each id exists in atlas before use.",
+ "map": {
+  "central_plains": {
+   "boss": "monster_regional_central_plains_sacred_white_tiger",
+   "elite": null
+  },
+  "nine_springs_delta": {
+   "boss": "monster_regional_nine_springs_delta_dragon_carp",
+   "elite": null
+  },
+  "azure_mountain_range": {
+   "boss": "monster_regional_azure_mountain_horned_ape",
+   "elite": null
+  },
+  "northern_desolate": {
+   "boss": "monster_regional_glacial_frost_mastodon",
+   "elite": null
+  },
+  "thundersteppe": {
+   "boss": "monster_regional_thundersteppe_lightning_horned_bison",
+   "elite": null
+  },
+  "godthunder_peaks": {
+   "boss": "monster_regional_golden_feathered_garuda",
+   "elite": null
+  },
+  "mirror_lake": {
+   "boss": "monster_regional_mirror_lake_water_spirit_siren",
+   "elite": null
+  },
+  "beast_prairies": {
+   "boss": "monster_regional_beast_prairies_golden_sun_lion",
+   "elite": null
+  },
+  "western_sacred_desert": {
+   "boss": "monster_regional_western_desert_dune_sand_wyrm",
+   "elite": null
+  },
+  "western_gorge_labyrinth": {
+   "boss": "monster_regional_western_labyrinth_sandstone_scorpion",
+   "elite": null
+  },
+  "hermit_highlands": {
+   "boss": "monster_regional_hermit_highlands_cloud_silver_crane",
+   "elite": null
+  },
+  "border_march": {
+   "boss": "monster_regional_border_march_iron_plated_rhino",
+   "elite": null
+  },
+  "lava_spine": {
+   "boss": "monster_regional_magma_lava_tortoise",
+   "elite": null
+  },
+  "venom_mire": {
+   "boss": "monster_regional_myriad_toxic_centipede",
+   "elite": null
+  },
+  "southern_demon_domain": {
+   "boss": "monster_regional_crimson_nether_serpent",
+   "elite": null
+  },
+  "crimson_battlefield": {
+   "boss": "monster_regional_ancient_blood_asura_general",
+   "elite": "monster_regional_crimson_battlefield_nether_warsteed"
+  },
+  "abyssal_scar": {
+   "boss": "monster_regional_abyssal_scar_chaos_eye_fiend",
+   "elite": "monster_regional_abyssal_shadow_fiend"
+  },
+  "southern_plague_woods": {
+   "boss": "monster_regional_southern_plague_woods_thousand_year_corpse_king",
+   "elite": null
+  },
+  "bone_sea_coast": {
+   "boss": "monster_regional_bone_armored_leviathan",
+   "elite": null
+  },
+  "spirit_wood_sea": {
+   "boss": "monster_regional_primordial_jade_qilin",
+   "elite": null
+  },
+  "mist_insect_valley": {
+   "boss": "monster_regional_nine_tailed_fox",
+   "elite": null
+  },
+  "formation_barrens": {
+   "boss": "monster_regional_formation_barrens_bagua_rune_golem",
+   "elite": null
+  },
+  "sword_gorge": {
+   "boss": "monster_regional_sword_gorge_ancient_blade_spirit",
+   "elite": null
+  },
+  "ore_teeth_range": {
+   "boss": "monster_regional_ore_teeth_range_ironback_crystal_bear",
+   "elite": null
+  },
+  "eastern_sea": {
+   "boss": "monster_regional_primordial_azure_dragon",
+   "elite": null
+  },
+  "frostmoon_sea": {
+   "boss": "monster_regional_frostmoon_sea_ice_dragon_turtle",
+   "elite": null
+  },
+  "floating_wind_isles": {
+   "boss": "monster_regional_floating_wind_isles_celestial_wind_roc",
+   "elite": null
+  },
+  "immortal_ruins_valley": {
+   "boss": "monster_regional_immortal_ruins_celestial_war_puppet",
+   "elite": null
+  },
+  "void_rift": {
+   "boss": "monster_regional_void_rift_dimensional_wyrm",
+   "elite": null
+  }
+ }
+}

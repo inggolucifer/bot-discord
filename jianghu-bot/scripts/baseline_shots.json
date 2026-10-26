@@ -1,0 +1,14 @@
+[
+  {"name":"xingcun","x":2050,"y":2650,"zoom":1},
+  {"name":"yunxi","x":2200,"y":2500,"zoom":1},
+  {"name":"bamboo","x":1850,"y":2800,"zoom":1},
+  {"name":"azure","x":2600,"y":3330,"zoom":1},
+  {"name":"oase","x":820,"y":2220,"zoom":1},
+  {"name":"thunder","x":2400,"y":4000,"zoom":1},
+  {"name":"frost","x":2350,"y":4300,"zoom":1},
+  {"name":"lava","x":1350,"y":950,"zoom":1},
+  {"name":"demon","x":2500,"y":800,"zoom":1},
+  {"name":"canghai","x":3700,"y":2550,"zoom":1},
+  {"name":"donghai","x":3920,"y":2700,"zoom":1},
+  {"name":"wild","x":2300,"y":3000,"zoom":1}
+]

@@ -1,0 +1,36 @@
+=== BASELINE V10 — 2026-10-26 (Commit: 2c70e3f) ===
+
+1. TANGKAPAN LAYAR BASELINE (12 Titik Playwright Chromium di http://localhost:3000):
+Folder: review/shots/v10_baseline/
+- xingcun: (2050, 2650) | SHA-1: f72b573d94647dfa8c50a98d2e21b4496a2c7676 | StdDev: 42.56 | Sprites: 93  | ChunksReady: true | GroundReady: true
+- yunxi:   (2200, 2500) | SHA-1: afe1baf2ebd521c348710206ff49fa07ae198a5d | StdDev: 34.96 | Sprites: 120 | ChunksReady: true | GroundReady: true
+- bamboo:  (1850, 2800) | SHA-1: ea419491307fee3f1ad9bc065eb9496bb737d0a9 | StdDev: 32.29 | Sprites: 89  | ChunksReady: true | GroundReady: true
+- azure:   (2600, 3330) | SHA-1: 9e7c4a1b293d2505e43d790b9fd70bc96ec38e00 | StdDev: 49.21 | Sprites: 90  | ChunksReady: true | GroundReady: true
+- oase:    (820, 2220)  | SHA-1: a8b25bc348d913aa8233f8a433c4a42687d1fd3f | StdDev: 52.55 | Sprites: 89  | ChunksReady: true | GroundReady: true
+- thunder: (2400, 4000) | SHA-1: 54aa14c6b6a03f2aae220df14c40a89ee0211375 | StdDev: 48.46 | Sprites: 103 | ChunksReady: true | GroundReady: true
+- frost:   (2350, 4300) | SHA-1: 0fab901d4633db6e117ea709b57e3cbc797fd93d | StdDev: 49.05 | Sprites: 107 | ChunksReady: true | GroundReady: true
+- lava:    (1350, 950)  | SHA-1: ffbdc3699596e63c11755123766fea6c03cb2d7b | StdDev: 39.30 | Sprites: 44  | ChunksReady: true | GroundReady: true
+- demon:   (2500, 800)  | SHA-1: 63f7cc2abecd3b501d3f134770b1c0a118a993a8 | StdDev: 35.72 | Sprites: 132 | ChunksReady: true | GroundReady: true
+- canghai: (3700, 2550) | SHA-1: bd0dafb96a9d6be6f53ad3cf44006a5761402eb9 | StdDev: 39.40 | Sprites: 63  | ChunksReady: true | GroundReady: true
+- donghai: (3920, 2700) | SHA-1: 218c941a04d4f2a832e6bb8f30248a2f1a6209a7 | StdDev: 45.31 | Sprites: 83  | ChunksReady: true | GroundReady: true
+- wild:    (2300, 3000) | SHA-1: 668bda546f809ce1fb1ea99570d4c704b1d1fdbe | StdDev: 37.61 | Sprites: 72  | ChunksReady: true | GroundReady: true
+Status Gerbang 0: 12/12 shot berhasil diambil, 12 SHA-1 unik, stdL range 32.29 - 52.55 (>= 8.0), DarkSamplePoints 0/9 pada seluruh shot. PASS.
+
+2. METRIK AUDIT KONTRAK GRID V10 (auditGridV10.js baseline, 833 chunk, 58.584 objek, 2.245.237 pasangan):
+- V1: Entri Grid Canon Hilang: 0 (PASS)
+- V2: Koordinat Non-Integer: 0 (PASS)
+- V3: Tumpang Tindih Footprint: 11.369 (FAIL - belum terikat gridContract di scatter)
+- V4: Tumpang Tindih Canopy/Tajuk: 57.480 (FAIL - belum mereservasi kanopi)
+- V5: Footprint di Medan Terlarang: 0 (PASS)
+- V6: Solid Tak Diblokir Server: 0 (PASS)
+- V7: Lewati Batas Chunk (Non-Setpiece): 7.300 (FAIL - belum dibatasi insideChunk)
+- V8: Rasio Pasangan Visual Overlap: 1.972% (FAIL - target <= 0.050%)
+- V9: Rumah Fana Non-1x1 Petak: 0 (PASS)
+
+3. METRIK SEBARAN OBJEK DUNIA (measure_scatter.js, 232 layar, 27.175 objek):
+- Atlas Frame: 0 missing (PASS)
+- Total Pondok: 194 (71 enterable, 92 decorative, 31 abandoned / 16.0%) (PASS)
+- Kepadatan per layar: min 42, max 140, rata-rata 117.1
+- Dominansi jenis tertinggi: 56.3% (FAIL - target <= 18%)
+- Kekosongan sel 12x12: 33.9%
+- Objek di air: 364 (1.34% total objek) (FAIL)

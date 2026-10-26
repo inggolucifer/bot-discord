@@ -1,0 +1,82 @@
+{
+ "rules": [
+  {
+   "id": "village_yard",
+   "regex": "^building_village_",
+   "where": "Desa/dusun: 1 per 3 rumah, di sel halaman (yard) menempel rumah; maks 2 per family per desa",
+   "count": 13
+  },
+  {
+   "id": "wayside",
+   "regex": "^building_wayside_",
+   "where": "Pinggir jalan: tiap 40-60 sel jalan antar-permukiman, di luar buffer 6 sel dari anchor; persimpangan = tiang penunjuk/stele",
+   "count": 17
+  },
+  {
+   "id": "rustic_country",
+   "regex": "^building_(rustic|countryside)_",
+   "where": "Tepi desa pada terrain plains/meadow/farmland/herb_field, radius 8-24 sel dari desa; kelompok 1-3",
+   "count": 9
+  },
+  {
+   "id": "prof_structure",
+   "regex": "^structure_prof_",
+   "where": "Kota/sekte/dusun profesi: 1 per tipe di tiap major_city/capital/sect; dusun lain acak 25%",
+   "count": 5
+  },
+  {
+   "id": "town_facility",
+   "regex": "^building_(blacksmith|forge|alchemist|auction|apothecary|tea_house|inn|granary|wine|dock|residential|sect_library|stone_mill|wooden_watchtower|spirit_pagoda|mountain_pass|mountain_hermitage)",
+   "where": "Kota besar/sekte/dermaga sesuai jenis; pos perbatasan: watchtower",
+   "count": 16
+  },
+  {
+   "id": "landmark_big",
+   "regex": "^xitong_city_landmark$",
+   "where": "Hanya anchor xitong_city",
+   "count": 1
+  },
+  {
+   "id": "boss_monster",
+   "regex": "^monster_regional_",
+   "where": "Sarang boss/elit region (lihat boss-sprites-v10.json)",
+   "count": 31
+  },
+  {
+   "id": "monster_marker",
+   "regex": "^monster_(swirl_den|demon_wolf|blood_serpent|iron_bear|storm_roc|abyssal_serpent|flame_ape|rock_golem|white_tiger|sand_scorpion)$",
+   "where": "Penanda monster biasa/elit tier menurut region",
+   "count": 10
+  },
+  {
+   "id": "legacy_lowres",
+   "regex": "^building_(pagoda_tower|sect_gate|road_inn|farm_hut|stone_torii|tea_pavilion)$",
+   "where": "JANGAN ditempatkan: frame 32px lama, sudah disubstitusi (V9 C2). Tandai 'excluded' di laporan.",
+   "count": 6
+  },
+  {
+   "id": "water_edge",
+   "regex": "^building_(ferry_dock|watermill_stream|riverside_watermill_paddle_wheel)$",
+   "where": "Tepi sungai/danau/dermaga: sel darat bersebelahan dengan river/lake/sea, dalam radius 30 sel dari permukiman",
+   "count": 3
+  },
+  {
+   "id": "poi_misc",
+   "regex": "^(building_(stone_lantern_shrine|spirit_gathering_gazebo|stone_water_basin)|structure_scatter_ruin_ancient_broken_halberd_sword_grave)$",
+   "where": "lantern/gazebo/basin: halaman sekte & kota (1x1/2x2); ruin halberd: crimson_battlefield & border_march sebagai POI",
+   "count": 4
+  },
+  {
+   "id": "mount",
+   "regex": "^mount_",
+   "where": "Kandang/kuda tunggang di dermaga/kota (dekoratif 1x1) atau hadiah; boleh dikecualikan jika belum ada sistemnya (catat)",
+   "count": 2
+  },
+  {
+   "id": "interior",
+   "regex": "^structure_interior_",
+   "where": "JANGAN ditaruh di peta luar - khusus tampilan interior bangunan",
+   "count": 105
+  }
+ ]
+}
