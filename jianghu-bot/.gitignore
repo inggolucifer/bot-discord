@@ -5,3 +5,5 @@ backend_output.log
 *.log
 *.orig
 art_input/
+__pycache__/
+*.pyc
