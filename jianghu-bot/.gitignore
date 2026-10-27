@@ -7,3 +7,5 @@ backend_output.log
 art_input/
 __pycache__/
 *.pyc
+*.bak
+scratch/

@@ -1035,13 +1035,28 @@ export default function WorldCanvas({
             drawY = footY - dh * anchorY;
           }
 
-          // L3: Soft Contact Shadow (H0 / HA / G5 - only draw when sprite is ready in atlas, XS objects skip shadow)
+          // L3: Authoritative Tile-Footprint Shadow (Prompt V11 P6 - B10)
+          // Width = 0.8 * fw cells, Height = 0.28 cells, Center = (x + fw/2, y + fh - 0.18)
           const isSpriteReady = atlasLoader.isSpriteReady(def.id);
-          if (def.fogFoot && isSpriteReady) {
-            const isXsObject = g ? (g.class === 'XS' || (g.fw <= 1 && g.fh <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb')))) : (canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb'))));
+          if (isSpriteReady) {
+            const isXsObject = g
+              ? (g.class === 'XS' || (g.fw <= 1 && g.fh <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb') || def.tags?.includes('crop'))))
+              : (canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb') || def.tags?.includes('crop'))));
             if (!isXsObject) {
-              const shadowW = Math.max(currentTileSize * 0.8, dw * 0.4);
-              renderL3FootMist(ctx, footX, footY, shadowW, currentTileSize * 0.35);
+              const fw = g ? g.fw : (def.footprint?.cw || 1);
+              const shadowCenterX = footX;
+              const shadowCenterY = footY - 0.18 * currentTileSize;
+              const shadowW = 0.8 * fw * currentTileSize;
+              const shadowH = 0.28 * currentTileSize;
+              const isSolid = (g?.mode === 'solid' || def.collision === 'solid' || canon?.collision === 'solid');
+              const shadowAlpha = isSolid ? 0.22 : 0.12;
+
+              ctx.save();
+              ctx.fillStyle = `rgba(10, 14, 20, ${shadowAlpha})`;
+              ctx.beginPath();
+              ctx.ellipse(shadowCenterX, shadowCenterY, shadowW / 2, shadowH / 2, 0, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
             }
           }
 
@@ -1132,47 +1147,52 @@ export default function WorldCanvas({
             ctx.fillText(bLabel, pillX + pillW / 2, pillY + pillH - 2.5 * camera.zoom);
           }
         } else if (item.type === 'player') {
-          // Render Player Character
-          const px = toScreenX(animatedPlayerPos.current.x) + currentTileSize / 2;
-          const py = toScreenY(animatedPlayerPos.current.y) + currentTileSize / 2;
+          // Render Player Character (Standardized to human height 0.9 cell, width 0.55 cell)
+          const footX = toScreenX(animatedPlayerPos.current.x + 0.5);
+          const footY = toScreenY(animatedPlayerPos.current.y + 1.0);
+          const pw = currentTileSize * 0.55;
+          const ph = currentTileSize * 0.90;
 
           ctx.save();
+          // Player Footprint Shadow
+          ctx.fillStyle = 'rgba(10, 14, 20, 0.25)';
+          ctx.beginPath();
+          ctx.ellipse(footX, footY - currentTileSize * 0.08, pw * 0.45, currentTileSize * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+
           if (loadedImages.sprites?.player_default) {
-            const pw = currentTileSize * 1.5;
-            const ph = pw * 1.5;
-            ctx.drawImage(loadedImages.sprites.player_default, px - pw / 2, py - ph / 2 - 10 * camera.zoom, pw, ph);
+            ctx.drawImage(loadedImages.sprites.player_default, footX - pw / 2, footY - ph, pw, ph);
             if (loadedImages.sprites?.flying_sword_aura) {
-              ctx.drawImage(loadedImages.sprites.flying_sword_aura, px - pw / 2, py + 5 * camera.zoom, pw, pw / 2);
+              ctx.drawImage(loadedImages.sprites.flying_sword_aura, footX - pw / 2, footY - currentTileSize * 0.1, pw, currentTileSize * 0.25);
             }
           } else {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
-            ctx.beginPath();
-            ctx.ellipse(px, py + 11 * camera.zoom, 12 * camera.zoom, 4.5 * camera.zoom, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            const auraPulse = 13 + Math.sin(time * 4) * 2.5;
+            // Radiant Qi Silhouette / Fallback
+            const auraPulse = (pw * 0.7) + Math.sin(time * 4) * (currentTileSize * 0.05);
             ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
             ctx.beginPath();
-            ctx.arc(px, py - 5 * camera.zoom, auraPulse * camera.zoom, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.5, auraPulse, 0, Math.PI * 2);
             ctx.fill();
 
+            // Robe Body
             ctx.fillStyle = '#1E293B';
             ctx.beginPath();
-            ctx.moveTo(px, py - 16 * camera.zoom);
-            ctx.lineTo(px + 7 * camera.zoom, py + 9 * camera.zoom);
-            ctx.lineTo(px - 7 * camera.zoom, py + 9 * camera.zoom);
+            ctx.moveTo(footX, footY - ph * 0.75);
+            ctx.lineTo(footX + pw * 0.45, footY - currentTileSize * 0.05);
+            ctx.lineTo(footX - pw * 0.45, footY - currentTileSize * 0.05);
             ctx.closePath();
             ctx.fill();
 
+            // Inner sash / belt
             ctx.fillStyle = '#F1F5F9';
-            ctx.fillRect(px - 2 * camera.zoom, py - 12 * camera.zoom, 4 * camera.zoom, 18 * camera.zoom);
+            ctx.fillRect(footX - pw * 0.12, footY - ph * 0.6, pw * 0.24, ph * 0.5);
 
+            // Head and Hair Bun
             ctx.fillStyle = '#0F172A';
             ctx.beginPath();
-            ctx.arc(px, py - 17 * camera.zoom, 4.5 * camera.zoom, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.8, pw * 0.25, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(px, py - 22 * camera.zoom, 2.2 * camera.zoom, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.95, pw * 0.12, 0, Math.PI * 2);
             ctx.fill();
           }
           ctx.restore();
