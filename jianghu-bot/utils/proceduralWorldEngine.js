@@ -466,7 +466,25 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
       break;
     }
     case 'thundersteppe': {
-      if (elevation > 0.68 && moisture < 0.40) {
+      if (tileY >= 4150 || elevation > 0.75) {
+        if (elevation > 0.82) {
+          terrainType = 'glacier';
+          isSolid = true;
+          label = 'Gletser Es Abadi';
+        } else if (elevation > 0.68) {
+          terrainType = 'ice_crack';
+          isSolid = false;
+          label = 'Retakan Es Membeku';
+        } else if (elevation > 0.58 && moisture < 0.35) {
+          terrainType = 'lightning_scar';
+          isSolid = false;
+          label = 'Tanah Retakan Petir Beku';
+        } else {
+          terrainType = 'snow';
+          isSolid = false;
+          label = 'Padang Salju Tundra';
+        }
+      } else if (elevation > 0.68 && moisture < 0.40) {
         terrainType = 'lightning_scar';
         isSolid = false;
         label = 'Tanah Retakan Petir';

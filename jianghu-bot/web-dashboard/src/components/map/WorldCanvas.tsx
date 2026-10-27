@@ -241,19 +241,32 @@ export default function WorldCanvas({
   // Build Mode State (Fase 18)
   const [isBuildMode, setIsBuildMode] = useState(false);
 
-  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9)
+  // V11: Grid Overlay State (Default OFF, toggle via 'G' hotkey)
+  const [showGrid, setShowGrid] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__setShowGrid = setShowGrid;
+      (window as any).__getShowGrid = () => showGrid;
+    }
+  }, [showGrid]);
+
+  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9 / V11)
   useEffect(() => {
     atlasLoader.preloadCoreAtlases();
-    groundTextures.load().catch(() => {});
+    groundTextures.load().then(() => {
+      chunkManager.clearCache();
+    }).catch(() => {});
     loadWorldRasterImage().catch(() => {});
   }, []);
 
-  // Keyboard shortcut: 'B' toggles Mode Bangun
+  // Keyboard shortcut: 'B' toggles Mode Bangun, 'G' toggles Grid Overlay
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 'b' || e.key === 'B') {
         setIsBuildMode(prev => !prev);
+      } else if (e.key === 'g' || e.key === 'G') {
+        setShowGrid(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -768,11 +781,11 @@ export default function WorldCanvas({
       ctx.restore();
 
       // ----------------------------------------------------------------------
-      // L2.8: SHAN SHUI GRID LINES (Classic Wuxia Parchment Grid)
+      // L2.8: SHAN SHUI GRID LINES (Toggled via 'G', Default OFF, subtle alpha <= 0.08)
       // ----------------------------------------------------------------------
-      if (camera.zoom >= 0.35) {
+      if (showGrid && camera.zoom >= 0.35) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(165, 155, 142, 0.35)'; // Abu-abu perkamen tipis & elegan seperti semula
+        ctx.strokeStyle = 'rgba(165, 155, 142, 0.08)'; // Subdued wuxia parchment grid
         ctx.lineWidth = 1;
         for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
           const sx = Math.floor(toScreenX(tx)) + 0.5;

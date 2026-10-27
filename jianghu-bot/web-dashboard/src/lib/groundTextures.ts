@@ -4,15 +4,19 @@
  */
 
 export interface GroundManifest {
+  version?: number;
   tileSizePx: number;
-  tilesPerTexture: number;
+  macroSizePx?: number;
+  macroCells?: number;
+  detailOpacity?: number;
   terrains: Record<string, { family: string; variants: string[] }>;
 }
 
 class GroundTextures {
   manifest: GroundManifest | null = null;
   images = new Map<string, HTMLImageElement | ImageBitmap>();
-  patterns = new Map<string, CanvasPattern>(); // key: variantId
+  patterns = new Map<string, CanvasPattern>(); // key: variantId or detailId
+  transitionMasks = new Map<string, HTMLImageElement | ImageBitmap>();
   ready = false;
   private loadPromise: Promise<void> | null = null;
 
@@ -37,9 +41,12 @@ class GroundTextures {
           return;
         }
 
-        // Collect all unique variant IDs
+        // Collect all unique variant IDs and unique family names
         const uniqueVariants = new Set<string>();
+        const uniqueFamilies = new Set<string>();
+
         for (const tInfo of Object.values(this.manifest.terrains)) {
+          if (tInfo.family) uniqueFamilies.add(tInfo.family);
           if (Array.isArray(tInfo.variants)) {
             for (const v of tInfo.variants) {
               uniqueVariants.add(v);
@@ -47,38 +54,52 @@ class GroundTextures {
           }
         }
 
-        // Load all unique variants
-        const loadPromises = Array.from(uniqueVariants).map(async (variantId) => {
-          const url = `/assets/ground/${variantId}.webp`;
+        const fetchImage = async (url: string): Promise<HTMLImageElement | ImageBitmap | null> => {
           try {
             const imgRes = await fetch(url);
-            if (!imgRes.ok) throw new Error(`HTTP ${imgRes.status}`);
+            if (!imgRes.ok) return null;
             const blob = await imgRes.blob();
-
             if (typeof createImageBitmap === 'function') {
-              const bmp = await createImageBitmap(blob);
-              this.images.set(variantId, bmp);
-            } else {
-              await new Promise<void>((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                  this.images.set(variantId, img);
-                  resolve();
-                };
-                img.onerror = reject;
-                img.src = URL.createObjectURL(blob);
-              });
+              return await createImageBitmap(blob);
             }
-          } catch (err) {
-            console.warn(`[GroundTextures] Error loading ${variantId}:`, err);
+            return await new Promise<HTMLImageElement>((resolve, reject) => {
+              const img = new Image();
+              img.onload = () => resolve(img);
+              img.onerror = reject;
+              img.src = URL.createObjectURL(blob);
+            });
+          } catch {
+            return null;
           }
+        };
+
+        // 1. Load macro variants
+        const variantPromises = Array.from(uniqueVariants).map(async (variantId) => {
+          const url = `/assets/ground/${variantId}.webp`;
+          const bmp = await fetchImage(url);
+          if (bmp) this.images.set(variantId, bmp);
         });
 
-        await Promise.all(loadPromises);
+        // 2. Load detail overlays
+        const detailPromises = Array.from(uniqueFamilies).map(async (fam) => {
+          const url = `/assets/ground/v11/${fam}_detail.png`;
+          const bmp = await fetchImage(url);
+          if (bmp) this.images.set(`v11/${fam}_detail`, bmp);
+        });
+
+        // 3. Load transition masks (a, b, c, d)
+        const maskKeys = ['a', 'b', 'c', 'd'];
+        const maskPromises = maskKeys.map(async (k) => {
+          const url = `/assets/ground/v11/transition_mask_${k}.png`;
+          const bmp = await fetchImage(url);
+          if (bmp) this.transitionMasks.set(k, bmp);
+        });
+
+        await Promise.all([...variantPromises, ...detailPromises, ...maskPromises]);
 
         if (this.images.size > 0) {
           this.ready = true;
-          console.log(`[GroundTextures] Successfully loaded ${this.images.size} ground textures.`);
+          console.log(`[GroundTextures] Successfully loaded ${this.images.size} textures & ${this.transitionMasks.size} masks.`);
         } else {
           this.ready = false;
         }
@@ -96,6 +117,16 @@ class GroundTextures {
     return this.manifest.terrains[terrain] || null;
   }
 
+  getImage(id: string): HTMLImageElement | ImageBitmap | null {
+    return this.images.get(id) || null;
+  }
+
+  getTransitionMask(keyOrIdx: string | number): HTMLImageElement | ImageBitmap | null {
+    const keys = ['a', 'b', 'c', 'd'];
+    const k = typeof keyOrIdx === 'number' ? keys[Math.abs(keyOrIdx) % keys.length] : keyOrIdx;
+    return this.transitionMasks.get(k) || null;
+  }
+
   getPattern(ctx: CanvasRenderingContext2D, variantId: string): CanvasPattern | null {
     if (this.patterns.has(variantId)) {
       return this.patterns.get(variantId)!;
@@ -110,6 +141,25 @@ class GroundTextures {
       }
     } catch (err) {
       console.warn(`[GroundTextures] Failed to create pattern for ${variantId}:`, err);
+    }
+    return null;
+  }
+
+  getDetailPattern(ctx: CanvasRenderingContext2D, family: string): CanvasPattern | null {
+    const detailKey = `v11/${family}_detail`;
+    if (this.patterns.has(detailKey)) {
+      return this.patterns.get(detailKey)!;
+    }
+    const img = this.images.get(detailKey);
+    if (!img) return null;
+    try {
+      const pattern = ctx.createPattern(img, 'repeat');
+      if (pattern) {
+        this.patterns.set(detailKey, pattern);
+        return pattern;
+      }
+    } catch (err) {
+      console.warn(`[GroundTextures] Failed to create detail pattern for ${detailKey}:`, err);
     }
     return null;
   }
