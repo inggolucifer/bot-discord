@@ -26,6 +26,24 @@ const assetPlacementV10 = require('./assetPlacementV10');
 
 // Regional Palettes & Themes SSOT (Prompt J1)
 const regionPalettes = require('../world-data/region-palettes-v10.json');
+
+// Strict Cross-Theme Exclusion Matrix (Prompt V11 P4)
+let themeForbiddenV11 = null;
+try {
+  themeForbiddenV11 = require('../world-data/theme-forbidden-v11.json');
+} catch (e) {
+  themeForbiddenV11 = null;
+}
+
+const THEME_FORBIDDEN_V11_REGEXES = new Map();
+if (themeForbiddenV11 && themeForbiddenV11.themes) {
+  for (const [themeId, data] of Object.entries(themeForbiddenV11.themes)) {
+    if (Array.isArray(data.forbiddenPatterns)) {
+      THEME_FORBIDDEN_V11_REGEXES.set(themeId, data.forbiddenPatterns.map(p => new RegExp(p, 'i')));
+    }
+  }
+}
+
 const THEME_RULES = {};
 for (const [themeId, themeData] of Object.entries(regionPalettes.themes || {})) {
   const boostRegexes = (themeData.boost || []).map(p => new RegExp(p));
@@ -47,6 +65,15 @@ function isDefForbiddenInRegion(defId, regionId) {
   const theme = getRegionTheme(regionId);
   for (const re of theme.forbidRegexes) {
     if (re.test(defId)) return true;
+  }
+  // V11: Strict Cross-Theme Exclusion checks
+  const themeId = (themeForbiddenV11?.regions && themeForbiddenV11.regions[regionId]) ||
+                  (regionPalettes.regions && regionPalettes.regions[regionId]);
+  if (themeId && THEME_FORBIDDEN_V11_REGEXES.has(themeId)) {
+    const list = THEME_FORBIDDEN_V11_REGEXES.get(themeId);
+    for (const re of list) {
+      if (re.test(defId)) return true;
+    }
   }
   return false;
 }

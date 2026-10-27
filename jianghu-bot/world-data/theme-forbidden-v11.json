@@ -1,0 +1,152 @@
+{
+  "version": 11,
+  "description": "Strict Cross-Theme Asset Placement Exclusion Matrix (V11 P4)",
+  "themes": {
+    "cold": {
+      "name": "Arktik & Tundra Salju (T4)",
+      "forbiddenPatterns": [
+        "cherry",
+        "blossom",
+        "bamboo",
+        "palm",
+        "lotus",
+        "peach",
+        "willow",
+        "wisteria",
+        "tropical"
+      ],
+      "reason": "Arktik bersuhu sub-zero dilarang memiliki bunga sakura, bambu, kelapa tropis, atau teratai air hangat."
+    },
+    "desert": {
+      "name": "Gurun & Tandus (T3)",
+      "forbiddenPatterns": [
+        "tree_cypress_frost",
+        "frost_crystal",
+        "willow",
+        "lotus",
+        "water_lil",
+        "mangrove"
+      ],
+      "reason": "Gurun pasir kering dilarang memiliki pohon cemara salju, pohon dedalu rimbun, atau teratai air."
+    },
+    "temperate": {
+      "name": "Dataran Tengah (T1)",
+      "forbiddenPatterns": [
+        "lava",
+        "volcanic",
+        "demonic_altar",
+        "void_crystal",
+        "abyss_edge",
+        "glacier"
+      ],
+      "reason": "Dataran Tengah damai dilarang memiliki menara lahar api, altar iblis, atau kristal hampa."
+    },
+    "mountain": {
+      "name": "Pegunungan Azure & Cadas (T3)",
+      "forbiddenPatterns": [
+        "cactus",
+        "cacti",
+        "desert_weathered",
+        "mangrove",
+        "swamp"
+      ],
+      "reason": "Pegunungan tinggi cadas dilarang memiliki kaktus gurun pasir atau bakau rawa beracun."
+    },
+    "swamp": {
+      "name": "Rawa Miasma & Hutan Racun (T4)",
+      "forbiddenPatterns": [
+        "apricot",
+        "cherry",
+        "blossom",
+        "tree_cypress_frost",
+        "frost_crystal",
+        "glacier"
+      ],
+      "reason": "Rawa miasma beracun dilarang memiliki aprikot mekar atau konifer cemara bersalju."
+    },
+    "volcanic": {
+      "name": "Tulang Magma & Kawah Api (T5)",
+      "forbiddenPatterns": [
+        "tree_cypress_frost",
+        "frost_crystal",
+        "glacier",
+        "lotus",
+        "cherry",
+        "blossom",
+        "peach"
+      ],
+      "reason": "Zona magma mendidih dilarang memiliki flora es atau bunga musim semi."
+    },
+    "sea": {
+      "name": "Samudra & Kepulauan Awan (T3/T5)",
+      "forbiddenPatterns": [
+        "desert_weathered",
+        "lava",
+        "volcanic",
+        "crater"
+      ],
+      "reason": "Perairan samudra dilarang memiliki formasi gurun atau kawah magma."
+    },
+    "ruin": {
+      "name": "Reruntuhan Kuno & Lembah Retakan (T4/T5)",
+      "forbiddenPatterns": [
+        "cherry",
+        "blossom",
+        "peach",
+        "tropical"
+      ],
+      "reason": "Reruntuhan kuno medan perang dilarang memiliki vegetasi taman bunga subur."
+    },
+    "grass": {
+      "name": "Sabana Petir & Padang Rumput Liar (T3/T4)",
+      "forbiddenPatterns": [
+        "volcanic",
+        "lava",
+        "tropical",
+        "glacier"
+      ],
+      "reason": "Sabana terbuka dilarang memiliki formasi vulkanik aktif atau es gletser."
+    },
+    "forest": {
+      "name": "Lautan Rimba Roh (T2)",
+      "forbiddenPatterns": [
+        "dead_wood",
+        "volcanic",
+        "desert_weathered",
+        "lava"
+      ],
+      "reason": "Hutan roh hijau lebat dilarang memiliki pohon mati arang atau pasir gurun."
+    }
+  },
+  "regions": {
+    "northern_desolate": "cold",
+    "frostmoon_sea": "cold",
+    "western_sacred_desert": "desert",
+    "bone_sea_coast": "desert",
+    "central_plains": "temperate",
+    "nine_springs_delta": "temperate",
+    "mirror_lake": "temperate",
+    "border_march": "temperate",
+    "mist_insect_valley": "temperate",
+    "hermit_highlands": "temperate",
+    "azure_mountain_range": "mountain",
+    "sword_gorge": "mountain",
+    "ore_teeth_range": "mountain",
+    "godthunder_peaks": "mountain",
+    "western_gorge_labyrinth": "mountain",
+    "venom_mire": "swamp",
+    "southern_plague_woods": "swamp",
+    "southern_demon_domain": "swamp",
+    "lava_spine": "volcanic",
+    "eastern_sea": "sea",
+    "floating_wind_isles": "sea",
+    "immortal_ruins_valley": "ruin",
+    "void_rift": "ruin",
+    "abyssal_scar": "ruin",
+    "formation_barrens": "ruin",
+    "crimson_battlefield": "ruin",
+    "beast_prairies": "grass",
+    "thundersteppe": "grass",
+    "spirit_wood_sea": "forest"
+  }
+}

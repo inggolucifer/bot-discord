@@ -21,11 +21,18 @@
     "props": ["prop_water_storage_urn", "prop_firewood_stack", "prop_wooden_fence_corner", "prop_small_stone_well"]
   },
   "frost_hamlet": {
-    "name": "Pemukiman Salju & Tundra",
-    "description": "Rumah rapat berbentuk lingkaran, tungku pusat, pagar kayu",
-    "anchors": ["desa_xueshan", "dusun_pondok_es", "kota_binghu", "pos_tundra_utara"],
-    "centerpiece": "prop_extinguished_campfire",
-    "props": ["prop_firewood_stack", "prop_wooden_fence_corner", "prop_stone_prayer_stela"]
+    "name": "Pemukiman Salju & Tundra (Desa Xueshan)",
+    "description": "Rumah beratap salju berbentuk lingkaran, tungku perapian kayu pusat, pagar kayu bersalju",
+    "anchors": ["desa_xueshan", "dusun_pondok_es", "kota_binghu", "pos_tundra_utara", "pos_tundra_salju"],
+    "centerpiece": "structure_prof_cooking_immortal_delicacy_hearth_oven",
+    "props": [
+      "hut_snow_thatched_day",
+      "prop_firewood_stack",
+      "prop_wooden_fence_corner",
+      "structure_scatter_mountain_daoist_stone_lantern_beacon",
+      "nature_scatter_frost_crystal_pine_bonsai",
+      "prop_stone_prayer_stela"
+    ]
   },
   "steppe_camp": {
     "name": "Perkemahan Pengembara Steppe",
