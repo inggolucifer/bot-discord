@@ -927,7 +927,7 @@ export function renderChunkGroundBitmapTextured(
     const chunkWorldPx = (cx * CHUNK_SIZE) * tileSize;
     const chunkWorldPy = (cy * CHUNK_SIZE) * tileSize;
     const originX = -((chunkWorldPx % textureSpanPx + textureSpanPx) % textureSpanPx);
-    const originY = -((chunkWorldPy % textureSpanPx + textureSpanPy) % textureSpanPx);
+    const originY = -((chunkWorldPy % textureSpanPx + textureSpanPx) % textureSpanPx);
 
     // 1. Draw base variant across entire chunk (m1)
     const basePattern = groundTextures.getPattern(ctxT, variants[0]);

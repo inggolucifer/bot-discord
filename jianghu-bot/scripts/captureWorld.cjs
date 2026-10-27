@@ -108,9 +108,12 @@ server.listen(3001, async () => {
     }
 
     const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
+    page.on('pageerror', (err) => {
+      console.error('  [pageerror]', err.message);
+    });
     page.on('console', (m) => {
       const t = m.text();
-      if (/GROUND|error|Error|WARN|warn/.test(t)) {
+      if (/GROUND|error|Error|WARN|warn|Ready|ready|chunks/i.test(t)) {
         console.log('  [page]', t.slice(0, 160));
       }
     });
@@ -124,11 +127,17 @@ server.listen(3001, async () => {
     try {
       await page.waitForFunction(
         () => window.__chunksReady === true && window.groundTextures && window.groundTextures.ready === true,
-        { timeout: 30000 }
+        { timeout: 90000 }
       );
       chunksReady = true;
     } catch (e) {
-      console.error(`[ERROR] Timeout 30s menunggu __chunksReady & groundTextures.ready untuk ${s.name}!`);
+      const diag = await page.evaluate(() => ({
+        chunksReady: window.__chunksReady,
+        hasGroundTextures: Boolean(window.groundTextures),
+        groundReady: window.groundTextures ? window.groundTextures.ready : false,
+        debugMetrics: window.__debugMetrics
+      })).catch(() => null);
+      console.error(`[ERROR] Timeout 30s menunggu __chunksReady & groundTextures.ready untuk ${s.name}! Diag:`, diag);
       await page.close();
       await br.close();
       server.close();
@@ -156,10 +165,20 @@ server.listen(3001, async () => {
       console.log(`  debugMetrics: sprites=${debugMetrics.spriteCount}, uniqueDefs=${debugMetrics.uniqueDefIds}, renderMs=${debugMetrics.renderTimeMs?.toFixed(2)}`);
     }
 
-    const pngBuffer = await page.screenshot({ path: filePath });
+    let finalBuffer = await page.screenshot();
+    if (finalBuffer.length > 390 * 1024) {
+      finalBuffer = await sharp(finalBuffer)
+        .png({ compressionLevel: 9, palette: true, quality: 90 })
+        .toBuffer();
+    } else {
+      finalBuffer = await sharp(finalBuffer)
+        .png({ compressionLevel: 9 })
+        .toBuffer();
+    }
+    fs.writeFileSync(filePath, finalBuffer);
 
     // c. SHA-1 verification
-    const sha1 = crypto.createHash('sha1').update(pngBuffer).digest('hex');
+    const sha1 = crypto.createHash('sha1').update(finalBuffer).digest('hex');
     console.log(`  SHA-1: ${sha1}`);
     if (seenSha1.has(sha1)) {
       console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
@@ -170,7 +189,7 @@ server.listen(3001, async () => {
     seenSha1.set(sha1, s.name);
 
     // b. Pixel analysis (center + 8 grid points, and luminance standard deviation)
-    const { data, info } = await sharp(pngBuffer).raw().toBuffer({ resolveWithObject: true });
+    const { data, info } = await sharp(finalBuffer).raw().toBuffer({ resolveWithObject: true });
     const { width, height, channels } = info;
 
     const sampleCoords = [

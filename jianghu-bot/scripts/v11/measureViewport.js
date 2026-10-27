@@ -36,8 +36,33 @@ function percentile(sorted, p) {
   return sorted[lower] * (1 - weight) + sorted[upper] * weight;
 }
 
+const chunkCache = new Map();
+function getCachedViewportObjects(minTileX, minTileY, maxTileX, maxTileY) {
+  const minChunkX = Math.floor(minTileX / 32);
+  const maxChunkX = Math.floor(maxTileX / 32);
+  const minChunkY = Math.floor(minTileY / 32);
+  const maxChunkY = Math.floor(maxTileY / 32);
+  const result = [];
+  for (let cy = minChunkY; cy <= maxChunkY; cy++) {
+    for (let cx = minChunkX; cx <= maxChunkX; cx++) {
+      const k = `${cx},${cy}`;
+      let chunkObjs = chunkCache.get(k);
+      if (!chunkObjs) {
+        chunkObjs = objectScatter.getChunkObjects(cx, cy);
+        chunkCache.set(k, chunkObjs);
+      }
+      for (const obj of chunkObjs) {
+        if (obj.x >= minTileX && obj.x <= maxTileX && obj.y >= minTileY && obj.y <= maxTileY) {
+          result.push(obj);
+        }
+      }
+    }
+  }
+  return result;
+}
+
 function analyzeViewport(vx, vy) {
-  const objs = objectScatter.getViewportObjects(vx, vy, vx + VP_WIDTH - 1, vy + VP_HEIGHT - 1);
+  const objs = getCachedViewportObjects(vx, vy, vx + VP_WIDTH - 1, vy + VP_HEIGHT - 1);
   const sprites = objs.filter(o => {
     if (!o || !o.defId) return false;
     const id = o.defId.toLowerCase();
@@ -178,6 +203,7 @@ for (const reg of REGIONS) {
       p90: Math.round(percentile(emptyRunList, 0.90) * 10) / 10
     }
   };
+  console.log(`[Progress] Region ${regId} selesai (${Object.keys(results).length}/${REGIONS.length})`);
 }
 
 fs.writeFileSync(outPath, JSON.stringify(results, null, 2), 'utf8');
