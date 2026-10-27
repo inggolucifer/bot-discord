@@ -11,6 +11,8 @@
  * - Enforces <= 140 objects budget per chunk.
  */
 
+const fs = require('fs');
+const path = require('path');
 const worldData = require('./worldData');
 const { getTileAt, WORLD_SEED } = require('./proceduralWorldEngine');
 const { getRegionAt } = require('./worldRegionEngine');
@@ -19,6 +21,88 @@ const quarantineData = require('../world-data/asset-quarantine.json');
 const quarantinedFamilies = quarantineData.quarantinedFamilies || [];
 const scaleCanon = require('../world-data/scale-canon.json');
 const frameSubstitutions = require('../world-data/frame-substitutions-v9.json');
+const GC = require('./gridContract');
+const assetPlacementV10 = require('./assetPlacementV10');
+
+// Regional Palettes & Themes SSOT (Prompt J1)
+const regionPalettes = require('../world-data/region-palettes-v10.json');
+const THEME_RULES = {};
+for (const [themeId, themeData] of Object.entries(regionPalettes.themes || {})) {
+  const boostRegexes = (themeData.boost || []).map(p => new RegExp(p));
+  const forbidRegexes = (themeData.forbid || []).map(p => new RegExp(p));
+  THEME_RULES[themeId] = {
+    boostRegexes,
+    forbidRegexes,
+    deadwoodMax: themeData.deadwoodMax != null ? themeData.deadwoodMax : 0.2
+  };
+}
+
+function getRegionTheme(regionId) {
+  const themeId = (regionPalettes.regions && regionPalettes.regions[regionId]) || 'temperate';
+  return THEME_RULES[themeId] || THEME_RULES.temperate;
+}
+
+function isDefForbiddenInRegion(defId, regionId) {
+  if (!defId || !regionId) return false;
+  const theme = getRegionTheme(regionId);
+  for (const re of theme.forbidRegexes) {
+    if (re.test(defId)) return true;
+  }
+  return false;
+}
+
+function isDefBoostedInRegion(defId, regionId) {
+  if (!defId || !regionId) return false;
+  const theme = getRegionTheme(regionId);
+  for (const re of theme.boostRegexes) {
+    if (re.test(defId)) return true;
+  }
+  return false;
+}
+
+const FAM_CACHE = new Map();
+function getAssetFamily(defId) {
+  if (!defId) return '';
+  let fam = FAM_CACHE.get(defId);
+  if (!fam) {
+    fam = defId.replace(/_v\d+$/, '').replace(/_\d+$/, '');
+    FAM_CACHE.set(defId, fam);
+  }
+  return fam;
+}
+
+function pickWeightedCandidate(pool, regionId, randFn) {
+  if (!pool || pool.length === 0) return null;
+  const valid = pool.filter(item => !isDefForbiddenInRegion(item.defId || item, regionId));
+  if (valid.length === 0) return null;
+
+  const weighted = [];
+  for (const item of valid) {
+    const id = item.defId || item;
+    const isBoosted = isDefBoostedInRegion(id, regionId);
+    const weight = isBoosted ? 3 : 1;
+    for (let w = 0; w < weight; w++) {
+      weighted.push(item);
+    }
+  }
+  return weighted[Math.floor(randFn() * weighted.length)];
+}
+
+// Regional POIs & Challenge Dressing SSOT (Prompt J2 & J5)
+const regionPoiPath = path.resolve(__dirname, '../world-data/region-poi-v10.json');
+const regionPoiData = fs.existsSync(regionPoiPath) ? JSON.parse(fs.readFileSync(regionPoiPath, 'utf8')) : null;
+const REGION_POI_BY_CHUNK = new Map();
+if (regionPoiData && Array.isArray(regionPoiData.pois)) {
+  for (const p of regionPoiData.pois) {
+    const cx = Math.floor(p.x / 32);
+    const cy = Math.floor(p.y / 32);
+    const key = `${cx},${cy}`;
+    if (!REGION_POI_BY_CHUNK.has(key)) {
+      REGION_POI_BY_CHUNK.set(key, []);
+    }
+    REGION_POI_BY_CHUNK.get(key).push(p);
+  }
+}
 
 function hash2d(x, y) {
   let h = ((x * 374761393 + y * 668265263) ^ 0x5bf03635) >>> 0;
@@ -358,15 +442,11 @@ function isAllowedOnTerrain(defId, terrainType, isAnchor = false) {
 
 function getCanonCollision(defId, fallbackCw = 1, fallbackCh = 1) {
   const actualDef = resolveDef(defId) || defId;
-  const canon = scaleCanon[actualDef] || scaleCanon[defId];
-  if (canon && canon.collision) {
-    return {
-      w: canon.collision.w,
-      h: canon.collision.h,
-      offsetX: canon.collision.offsetX || 0
-    };
+  const g = GC.getGrid(actualDef) || GC.getGrid(defId);
+  if (g) {
+    return { w: g.fw, h: g.fh, offsetX: 0, mode: g.mode };
   }
-  return { w: fallbackCw, h: fallbackCh, offsetX: 0 };
+  return { w: fallbackCw, h: fallbackCh, offsetX: 0, mode: 'solid' };
 }
 
 function isQuarantined(defId) {
@@ -420,6 +500,28 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
     }
   }
 
+  // Prompt J1: Region theme forbid filter (0 tolerance for forbidden families)
+  if (!isAnchor && actualDefId) {
+    const tile = getTileFn(startX, startY);
+    const regId = (tile && tile.regionId) || '';
+    if (regId && isDefForbiddenInRegion(actualDefId, regId)) {
+      return false;
+    }
+  }
+
+  // Prompt J1: Intra-chunk family dominance limit (max 20% per family in any chunk)
+  if (!isAnchor && actualDefId && objects) {
+    const fam = getAssetFamily(actualDefId);
+    let famCount = 0;
+    const maxAllowed = objects.length < 10 ? 2 : Math.floor((objects.length + 1) * 0.20);
+    for (let i = 0; i < objects.length; i++) {
+      if (getAssetFamily(objects[i].defId) === fam) {
+        famCount++;
+        if (famCount >= maxAllowed) return false;
+      }
+    }
+  }
+
   // 0. Anti-clumping dispersion: identical defId must not appear within 3 tiles (Chebyshev < 3)
   if (!isAnchor && defId && objects && objects.length > 0) {
     for (let i = objects.length - 1; i >= 0; i--) {
@@ -465,29 +567,36 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
   const originTile = getTileFn(startX, startY);
   if (!originTile) return false;
   const ot = originTile.terrainType || '';
-  const isBridge = defId && (defId.includes('bridge') || defId.includes('pontoon'));
-  if (!isBridge && (ot.includes('road') || (!isAnchor && ot.includes('pass')))) return false;
+  const isBridge = defId && !defId.startsWith('nature_') && (defId.includes('bridge') || defId.includes('pontoon'));
+  if (!isBridge && !collisionOverride && (ot.includes('road') || AUTHORED_ROAD_TILES.has(`${startX},${startY}`) || (!isAnchor && ot.includes('pass')))) return false;
   if (WATER_TERRAINS.has(ot) && !isAnchor && !isBridge && (!defId || !WATER_EXEMPT_REGEX.test(defId))) return false;
 
-  // Use base collision footprint from scale-canon if available (or collisionOverride)
-  const col = collisionOverride ? { w: cw, h: ch, offsetX: 0 } : getCanonCollision(defId, cw, ch);
-  if (col.w === 0 && col.h === 0) {
-    return true;
+  // Grid Contract V10 validation
+  const g = GC.getGrid(actualDefId) || GC.getGrid(defId);
+  const fw = g ? g.fw : (collisionOverride ? cw : getCanonCollision(defId, cw, ch).w);
+  const fh = g ? g.fh : (collisionOverride ? ch : getCanonCollision(defId, cw, ch).h);
+
+  if (g) {
+    // V7: Chunk-containment for non-setpiece objects
+    if (!isAnchor && !g.isSetPiece && g.class !== 'landmark' && !collisionOverride) {
+      if (!GC.insideChunk(startX, startY, g)) return false;
+    }
+
+    // V3 & V4: Check footprint & canopy overlap against occupied grid
+    if (!GC.isFree(startX, startY, g, occupiedGrid)) {
+      return false;
+    }
   }
 
-  const baseStartX = startX + Math.round(col.offsetX);
-  const baseStartY = startY;
-
-  for (let dy = 0; dy < col.h; dy++) {
-    for (let dx = 0; dx < col.w; dx++) {
-      const tx = baseStartX + dx;
-      const ty = baseStartY + dy;
+  // Validate terrain for ALL footprint cells (V5)
+  for (let dy = 0; dy < fh; dy++) {
+    for (let dx = 0; dx < fw; dx++) {
+      const tx = startX + dx;
+      const ty = startY + dy;
       const key = `${tx},${ty}`;
 
-      // 1. Grid already occupied by another object
-      if (occupiedGrid.has(key)) return false;
+      if (!g && occupiedGrid.has(key)) return false;
 
-      // 2. Tile underlying check (roads, water, settlement)
       const tile = getTileFn(tx, ty);
       if (!tile) return false;
       const t = tile.terrainType || '';
@@ -498,7 +607,7 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       }
 
       // Do not block roads or passes (bridges exempt)
-      if (!isBridge && (t.includes('road') || (!isAnchor && t.includes('pass')))) {
+      if (!isBridge && !collisionOverride && (t.includes('road') || AUTHORED_ROAD_TILES.has(key) || (!isAnchor && t.includes('pass')))) {
         return false;
       }
 
@@ -509,8 +618,8 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
         }
       }
 
-      // If NOT an anchor set-piece, do not overlap settlement cores
-      if (!isAnchor) {
+      // If NOT an anchor set-piece, do not overlap settlement cores (unless building/structure)
+      if (!isAnchor && (!defId || (!defId.startsWith('building_') && !defId.startsWith('structure_')))) {
         if (t === 'settlement' || tile.isSettlementOrigin) {
           return false;
         }
@@ -524,6 +633,12 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
  * Marks multi-cell footprint cells as occupied in grid.
  */
 function markFootprintOccupied(startX, startY, cw, ch, occupiedGrid, objId, defId = null, collisionOverride = false) {
+  const actualDef = resolveDef(defId) || defId;
+  const g = GC.getGrid(actualDef) || GC.getGrid(defId);
+  if (g) {
+    GC.mark(startX, startY, g, occupiedGrid, objId);
+    return;
+  }
   const col = collisionOverride ? { w: cw, h: ch, offsetX: 0 } : getCanonCollision(defId, cw, ch);
   if (col.w === 0 && col.h === 0) {
     return;
@@ -592,10 +707,54 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   const chunkRegion = getRegionAt(startTileX + 16, startTileY + 16);
   const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
 
-  // Density Noise Field (Fase D in Plan V8): modulated budget between 35 and 110 (ceiling 140, boosted in populated)
+  // Titik 4: Reserve set-pieces in current and ±1 neighboring chunks to prevent overlap across chunk boundaries
+  const nearbySetPieces = [];
+  const minNeighborX = (chunkX - 1) * CHUNK_SIZE;
+  const maxNeighborX = (chunkX + 2) * CHUNK_SIZE - 1;
+  const minNeighborY = (chunkY - 1) * CHUNK_SIZE;
+  const maxNeighborY = (chunkY + 2) * CHUNK_SIZE - 1;
+
+  for (const a of worldData.getAnchors()) {
+    if (a.x >= minNeighborX && a.x <= maxNeighborX && a.y >= minNeighborY && a.y <= maxNeighborY) {
+      let sDefId = 'building_village_thatched_cottage';
+      if (a.id === 'xitong_city' || a.name.toLowerCase().includes('xitong')) sDefId = 'xitong_city_landmark';
+      else if (a.type === 'sect') sDefId = 'building_sect_library';
+      else if (a.type === 'capital_city' || a.type === 'major_city' || a.type === 'city') sDefId = 'building_spirit_pagoda';
+      else if (a.name.toLowerCase().includes('dermaga') || a.name.toLowerCase().includes('dock') || a.type === 'port') sDefId = 'building_dock_warehouse';
+      else if (a.type === 'outpost') sDefId = 'building_stone_torii_v1';
+      else {
+        const r = getRegionAt(a.x, a.y);
+        const lm = assetBindings.landmarks[r.id];
+        if (lm && (a.type === 'landmark' || a.type === 'focal')) sDefId = lm.defId;
+      }
+      const g = GC.getGrid(sDefId);
+      const fw = g ? g.fw : 2;
+      const fh = g ? g.fh : 2;
+      nearbySetPieces.push({ x: a.x - Math.floor(fw / 2), y: a.y - fh, defId: sDefId, id: `anchor_${a.id}` });
+    }
+  }
+  for (const [rId, focal] of Object.entries(REGION_LANDMARK_CENTERS)) {
+    if (focal.x >= minNeighborX && focal.x <= maxNeighborX && focal.y >= minNeighborY && focal.y <= maxNeighborY) {
+      const lm = assetBindings.landmarks[rId];
+      if (lm) {
+        nearbySetPieces.push({ x: focal.x, y: focal.y, defId: lm.defId, id: `landmark_${rId}` });
+      }
+    }
+  }
+  GC.reserveSetPieces(occupiedGrid, nearbySetPieces);
+
+  // Density Noise Field (Prompt J3: tier 1: 60-80, tier 4-6: 45-70, tier 2-3: 50-75)
   const densityNoise = Math.sin(chunkX * 0.37 + 1.3) * Math.cos(chunkY * 0.37 + 0.9) * 0.5 + 0.5;
-  const baseBudget = isPopulated ? 65 : 35;
-  const maxObjectsBudget = Math.floor(baseBudget + densityNoise * (isPopulated ? 55 : 75));
+  const dangerTier = chunkRegion.dangerTier || (chunkRegion.tier || 1);
+  let baseMin = 50, baseVar = 25;
+  if (dangerTier === 1) {
+    baseMin = 60;
+    baseVar = 20; // 60..80
+  } else if (dangerTier >= 4) {
+    baseMin = 45;
+    baseVar = 25; // 45..70
+  }
+  const maxObjectsBudget = Math.floor(baseMin + densityNoise * baseVar);
 
   // 1. Set-pieces from anchors & 29 Regional Landmarks
   const anchorsInChunk = worldData.getAnchors().filter(a =>
@@ -630,14 +789,20 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       };
     }
 
-    if (canPlaceFootprint(a.x, a.y, structureDef.cw, structureDef.ch, occupiedGrid, getTileAt, true)) {
+    const g = GC.getGrid(structureDef.defId);
+    const fw = g ? g.fw : (structureDef.cw || 2);
+    const fh = g ? g.fh : (structureDef.ch || 2);
+    const x0 = a.x - Math.floor(fw / 2);
+    const y0 = a.y - fh;
+
+    if (canPlaceFootprint(x0, y0, fw, fh, occupiedGrid, getTileAt, true, structureDef.defId, objects, true)) {
       const objId = `anchor_${a.id}`;
-      markFootprintOccupied(a.x, a.y, structureDef.cw, structureDef.ch, occupiedGrid, objId, structureDef.defId);
+      markFootprintOccupied(x0, y0, fw, fh, occupiedGrid, objId, structureDef.defId, true);
       objects.push({
         id: objId,
         defId: structureDef.defId,
-        x: a.x,
-        y: a.y,
+        x: x0,
+        y: y0,
         customLabel: a.name,
         collision: structureDef.collision,
         tags: ['setpiece', a.type, region.id]
@@ -677,9 +842,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     if (!defId) continue;
     const cw = p.cw || 1, ch = p.ch || 1;
     // isAnchor=true: lewati anti-gerombol & batas dominasi; tabrakan tetap dicek
-    // collisionOverride=true: paksa tabrakan 1x1 agar canon 3x2 cottage tidak menolak penempatan
-    if (!canPlaceFootprint(p.x, p.y, cw, ch, occupiedGrid, getTileAt, true, defId, objects, true)) continue;
-    markFootprintOccupied(p.x, p.y, cw, ch, occupiedGrid, p.id, defId, true);
+    if (!canPlaceFootprint(p.x, p.y, cw, ch, occupiedGrid, getTileAt, true, defId, objects, false)) continue;
+    markFootprintOccupied(p.x, p.y, cw, ch, occupiedGrid, p.id, defId, false);
     objects.push({
       id: p.id,
       defId,
@@ -693,6 +857,48 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     });
     authoredCount++;
   }
+
+  // 1c2. Regional POIs & Challenge Dressing (Prompt J2 & J5)
+  const poisInChunk = REGION_POI_BY_CHUNK.get(`${chunkX},${chunkY}`) || [];
+  for (const poi of poisInChunk) {
+    const defId = resolveDef(poi.defId);
+    if (!defId || isQuarantined(defId)) continue;
+    const g = GC.getGrid(defId);
+    const fw = g ? g.fw : 1;
+    const fh = g ? g.fh : 1;
+    if (AUTHORED_ROAD_TILES.has(`${poi.x},${poi.y}`)) continue;
+    if (!canPlaceFootprint(poi.x, poi.y, fw, fh, occupiedGrid, getTileAt, true, defId, objects)) continue;
+    markFootprintOccupied(poi.x, poi.y, fw, fh, occupiedGrid, poi.id, defId);
+    objects.push({
+      id: poi.id,
+      defId,
+      x: poi.x,
+      y: poi.y,
+      customLabel: poi.customLabel,
+      collision: (g && g.mode === 'open') ? 'none' : 'solid',
+      tags: ['region_poi', poi.kind, poi.regionId]
+    });
+    authoredCount++;
+  }
+
+  // 1d. Contextual Asset Placement V10 (Prompt I1 & I2)
+  assetPlacementV10.placeContextualAssets(
+    chunkX,
+    chunkY,
+    worldSeed,
+    occupiedGrid,
+    objects,
+    {
+      canPlaceFootprint,
+      markFootprintOccupied,
+      getTileAt,
+      getRegionAt,
+      resolveDef,
+      isQuarantined,
+      allAnchors: worldData.getAnchors(),
+      AUTHORED_ROAD_TILES
+    }
+  );
 
   // 1-tile buffer zone around authored houses to protect yards from random scatter (Prompt 2.2.5)
   for (const p of authoredInChunk) {
@@ -985,9 +1191,14 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   }
 
   // 4. Procedural Biome Scatter by Terrain & Region
-  for (let y = startTileY; y <= endTileY; y++) {
-    for (let x = startTileX; x <= endTileX; x++) {
-      if (objects.length - authoredCount >= maxObjectsBudget) break;
+  // Uniform spatial permutation across all 1024 cells (avoids top-heavy raster scan truncation)
+  const cellOffset = (Math.abs(chunkX * 17 + chunkY * 31)) & 1023;
+  for (let cellIdx = 0; cellIdx < 1024; cellIdx++) {
+    if (objects.length - authoredCount >= maxObjectsBudget) break;
+
+    const perm = (cellIdx * 383 + cellOffset) & 1023;
+    const x = startTileX + (perm % 32);
+    const y = startTileY + Math.floor(perm / 32);
 
       const tileKey = `${x},${y}`;
       if (occupiedGrid.has(tileKey)) continue;
@@ -1078,7 +1289,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               'structure_prof_fishing_bamboo_raft_spirit_net_dock',
               'nature_willow_lone_stream',
               'building_ferry_dock_shed',
-              'nature_mountain_waterfall_splash_basin'
+              'nature_mountain_waterfall_splash_basin',
+              'resource_snow_lotus',
+              'sea_shipwreck_abandoned',
+              'sea_dragon_skeleton_remnant'
             ];
           } else {
             // Interior lakes, ponds, deltas, and rivers
@@ -1130,7 +1344,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             assetBindings.natureScatters.trees.find(t => t.defId.includes('twisted_juniper')) || assetBindings.natureScatters.trees[1],
             ...assetBindings.natureScatters.trees.filter(t => t.defId.startsWith('tree_dead_wood_')),
             ...(assetBindings.natureScatters.shrubs || []).filter(s => s.biomes && (s.biomes.includes('mountain') || s.biomes.includes('ore_teeth_range')))
-          ].filter(Boolean);
+          ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
           const pool = [...candidateRocks, ...candidateFlora];
           const startIdx = Math.floor(rand() * pool.length);
           for (let ri = 0; ri < pool.length; ri++) {
@@ -1189,15 +1403,16 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       // --- DEAD WOOD, LAVA, VOLCANIC OBSIDIAN, BASALT & CRATER ---
       else if (terrain === 'dead_wood' || terrain.includes('lava') || terrain.includes('volcano') || terrain === 'basalt' || terrain === 'crater' || region.id === 'lava_spine') {
         const roll = rand();
-        if (roll < 0.26) {
+        const volcanicThreshold = (region.id === 'lava_spine') ? 0.45 : 0.26;
+        if (roll < volcanicThreshold) {
           const volcanicPillars = assetBindings.natureScatters.rocks.filter(r =>
-            r.biomes && (r.biomes.includes('lava_spine') || r.biomes.includes('abyssal_scar'))
+            !r.biomes || r.biomes.includes('lava_spine') || r.biomes.includes('abyssal_scar') || r.defId.includes('cleft') || r.defId.includes('crag') || r.defId.includes('volcanic')
           );
           const deadTrees = assetBindings.natureScatters.trees.filter(t =>
             t.biomes && (t.biomes.includes('lava_spine') || t.biomes.includes('dead_wood'))
           );
           const stumps = (assetBindings.natureScatters.shrubs || []).filter(s =>
-            s.biomes && s.biomes.includes('lava_spine')
+            !s.biomes || s.biomes.includes('lava_spine') || s.defId.includes('thunder_struck')
           );
           const pool = [...volcanicPillars, ...deadTrees, ...stumps];
           const startIdx = Math.floor(rand() * pool.length);
@@ -1332,7 +1547,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           const frostRocks = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('northern_desolate') || r.biomes.includes('mountain'))
           );
-          const pool = [...frostTrees, ...frostRocks];
+          const frostShrubs = (assetBindings.natureScatters.shrubs || []).filter(s =>
+            !s.biomes || s.biomes.includes('northern_desolate') || s.defId.includes('frost')
+          );
+          const pool = [...frostTrees, ...frostRocks, ...frostShrubs];
           const startIdx = Math.floor(rand() * pool.length);
           for (let pi = 0; pi < pool.length; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
@@ -1602,7 +1820,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         }
       }
     }
-  }
 
 
   // Apply frame substitutions to all objects before caching and returning (Prompt C2)
@@ -1666,5 +1883,8 @@ module.exports = {
   getCanonCollision,
   resolveDef,
   isAllowedOnTerrain,
-  KNOWN_FRAMES
+  KNOWN_FRAMES,
+  isCellBlocked: (x, y) => GC.isCellBlocked(x, y, getChunkObjects, resolveDef),
+  getObjectCoveringCell: (x, y) => GC.getObjectCoveringCell(x, y, getChunkObjects, resolveDef),
+  isCellUnderCanopy: (x, y) => GC.isCellUnderCanopy ? GC.isCellUnderCanopy(x, y, getChunkObjects, resolveDef) : null
 };

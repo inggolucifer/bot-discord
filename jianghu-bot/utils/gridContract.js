@@ -68,11 +68,33 @@ function getObjectCoveringCell(x, y, getChunkObjectsFn, resolveFn) {
   return null;
 }
 function isCellBlocked(x, y, getChunkObjectsFn, resolveFn) {
-  const r = getObjectCoveringCell(x, y, getChunkObjectsFn, resolveFn); return !!(r && r.g.mode === 'solid');
+  const cx = Math.floor(x / 32), cy = Math.floor(y / 32);
+  for (const dx of [0, -1]) for (const dy of [0, -1]) {
+    for (const o of getChunkObjectsFn(cx + dx, cy + dy)) {
+      if (o.collision === 'none' || o.collision === 'open') continue;
+      const g = getGrid(resolveFn ? (resolveFn(o.defId) || o.defId) : o.defId);
+      if (!g) continue;
+      const isSolid = o.collision === 'solid' || g.mode === 'solid';
+      if (isSolid && x >= o.x && x < o.x + g.fw && y >= o.y && y < o.y + g.fh) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+function isCellUnderCanopy(x, y, getChunkObjectsFn, resolveFn) {
+  const cx = Math.floor(x / 32), cy = Math.floor(y / 32);
+  for (const dx of [0, -1]) for (const dy of [0, 1]) {
+    for (const o of getChunkObjectsFn(cx + dx, cy + dy)) {
+      const g = getGrid(resolveFn ? (resolveFn(o.defId) || o.defId) : o.defId); if (!g || !g.rowsAbove) continue;
+      if (x >= o.x && x < o.x + g.fw && y >= o.y - g.rowsAbove && y < o.y) return { o, g };
+    }
+  }
+  return null;
 }
 /** setPieces = [{x,y,defId,id}] yang rect-nya menyentuh chunk ini */
 function reserveSetPieces(occupied, setPieces) {
   for (const sp of setPieces) { const g = getGrid(sp.defId); if (g) mark(sp.x, sp.y, g, occupied, sp.id); }
 }
 
-module.exports = { getObjectCoveringCell, isCellBlocked, reserveSetPieces, GRID, getGrid, footprintRect, canopyRect, visualRect, cellsOf, isFree, mark, insideChunk, CANOPY_OVERLAP_ALLOWED };
+module.exports = { getObjectCoveringCell, isCellBlocked, isCellUnderCanopy, reserveSetPieces, GRID, CANON_GRID: GRID, getGrid, footprintRect, canopyRect, visualRect, cellsOf, isFree, mark, insideChunk, CANOPY_OVERLAP_ALLOWED };

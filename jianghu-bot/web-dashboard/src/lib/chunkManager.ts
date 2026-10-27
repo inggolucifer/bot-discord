@@ -11,6 +11,7 @@
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
 import { renderChunkGroundBitmap } from '@/lib/groundRenderer';
+import { groundTextures } from '@/lib/groundTextures';
 
 export const CHUNK_SIZE = 32;
 export const WORLD_WIDTH = 5000;
@@ -601,6 +602,23 @@ export class ChunkManager {
     const chunk = this.chunks.get(key);
     const tiles = this.unpackedChunks.get(key);
     if (!chunk || !tiles) return null;
+
+    // Prompt K1: If textures are not yet ready, return provisional ground bitmap without permanent caching
+    if (!groundTextures.ready) {
+      groundTextures.load().then(() => {
+        // Rebuild: clear provisional bitmaps and notify subscribers to render rich textures
+        this.chunkBitmaps.clear();
+        this.notifySubscribers();
+      }).catch(() => {});
+
+      return renderChunkGroundBitmap(
+        cx,
+        cy,
+        tiles,
+        tileSize,
+        (x, y) => this.getTile(x, y)?.terrainType
+      );
+    }
 
     const canvas = renderChunkGroundBitmap(
       cx,

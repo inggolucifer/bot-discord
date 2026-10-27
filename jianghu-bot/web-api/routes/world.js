@@ -46,6 +46,7 @@ const mongoose = require('mongoose');
 const gridConfig = require('../../config/gridConfig');
 const proceduralWorldEngine = require('../../utils/proceduralWorldEngine');
 const objectScatter = require('../../utils/objectScatter');
+const GC = require('../../utils/gridContract');
 const autotileEngine = require('../../utils/autotileEngine');
 const settlementEngine = require('../../utils/settlementEngine');
 const sparseFogManager = require('../../utils/sparseFogManager');
@@ -1993,8 +1994,23 @@ router.get('/zone/:zoneId', authenticateToken, async (req, res) => {
                     const tile = proceduralTileMap.get(key);
                     if (!tile.objects) tile.objects = [];
                     tile.objects.push(obj);
-                    if (obj.collision === 'solid') {
-                        tile.isSolid = true;
+                }
+
+                // G5: Tandai seluruh sel footprint [x, x+fw) x [y, y+fh) sebagai solid
+                const g = GC.getGrid(objectScatter.resolveDef ? objectScatter.resolveDef(obj.defId) : obj.defId);
+                const isSolid = (g && g.mode === 'solid') || obj.collision === 'solid';
+                if (isSolid) {
+                    const fw = g ? g.fw : (obj.cw || 1);
+                    const fh = g ? g.fh : (obj.ch || 1);
+                    for (let dy = 0; dy < fh; dy++) {
+                        for (let dx = 0; dx < fw; dx++) {
+                            const fKey = `${obj.x + dx},${obj.y + dy}`;
+                            const fTile = proceduralTileMap.get(fKey);
+                            if (fTile) {
+                                fTile.isSolid = true;
+                                fTile.blockedBy = obj.id || obj.defId;
+                            }
+                        }
                     }
                 }
             }
@@ -2258,12 +2274,9 @@ router.post('/zone/step-move', authenticateToken, async (req, res) => {
                 if (custom.tileType === 'wall' || custom.tileType === 'hazard') merged.isSolid = true;
             }
 
-            // Cek collision objek scatter solid dalam chunk bersangkutan
+            // G5: Cek collision multi-petak objek scatter solid via objectScatter.isCellBlocked
             if (!merged.isSolid) {
-                const chunkX = Math.floor(x / objectScatter.CHUNK_SIZE);
-                const chunkY = Math.floor(y / objectScatter.CHUNK_SIZE);
-                const chunkObjs = objectScatter.getChunkObjects(chunkX, chunkY);
-                if (chunkObjs.some(o => o.x === x && o.y === y && o.collision === 'solid')) {
+                if (objectScatter.isCellBlocked(x, y)) {
                     merged.isSolid = true;
                 }
             }

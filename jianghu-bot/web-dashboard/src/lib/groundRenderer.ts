@@ -879,55 +879,136 @@ export function renderChunkGroundBitmapTextured(
     }
     ctxM.putImageData(imgData, 0, 0);
 
-    // 4c: Upscale M to MB with high quality smoothing
+    // 4c: Upscale M to MB (nearest-neighbor for road_stone, smooth for organic terrain)
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-    ctxMB.imageSmoothingEnabled = true;
-    ctxMB.imageSmoothingQuality = 'high';
-    ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+    if (F === 'road_stone') {
+      ctxMB.imageSmoothingEnabled = false;
+      ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
-    // Copy MB to MB2 with organic blur
-    ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-    const blurPx = F === 'road_stone' ? tileSize * 0.12 : tileSize * 0.22;
-    ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
-    ctxMB2.drawImage(scratchMB.canvas, 0, 0);
-    ctxMB2.filter = 'none';
+      ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+      ctxMB2.filter = 'none';
+      ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+    } else {
+      ctxMB.imageSmoothingEnabled = true;
+      ctxMB.imageSmoothingQuality = 'high';
+      ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
-    // 4e: Fill T with 8x8 block variations aligned to world coordinates
+      ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+      const blurPx = tileSize * 0.22;
+      ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
+      ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+      ctxMB2.filter = 'none';
+    }
+
+    // 4e: Fill T with seamless base pattern + smooth noise-blended secondary variants (Prompt K2)
     const fInfo = groundTextures.familyOf(F);
     const variants = fInfo && fInfo.variants && fInfo.variants.length > 0
       ? fInfo.variants
       : [`${F}_v1`, `${F}_v2`, `${F}_v3`];
 
-    const BLOCK_TILES = 8;
-    const blockPx = BLOCK_TILES * tileSize;
     const textureSpanPx = 4 * tileSize; // 216px at tileSize 54
     const scale = textureSpanPx / 256; // 0.84375
 
-    for (let by = 0; by < CHUNK_SIZE; by += BLOCK_TILES) {
-      for (let bx = 0; bx < CHUNK_SIZE; bx += BLOCK_TILES) {
-        const blockTileX = cx * CHUNK_SIZE + bx;
-        const blockTileY = cy * CHUNK_SIZE + by;
-        const variantIdx = Math.abs(hash2d(Math.floor(blockTileX / 8), Math.floor(blockTileY / 8))) % variants.length;
-        const variantId = variants[variantIdx];
-        const pattern = groundTextures.getPattern(ctxT, variantId);
+    // World-coordinate origin offset for continuous texture alignment across chunks
+    const chunkWorldPx = (cx * CHUNK_SIZE) * tileSize;
+    const chunkWorldPy = (cy * CHUNK_SIZE) * tileSize;
+    const originX = -((chunkWorldPx % textureSpanPx + textureSpanPx) % textureSpanPx);
+    const originY = -((chunkWorldPy % textureSpanPx + textureSpanPx) % textureSpanPx);
 
-        if (pattern) {
-          const worldPx = blockTileX * tileSize;
-          const worldPy = blockTileY * tileSize;
-          const originX = -((worldPx % textureSpanPx + textureSpanPx) % textureSpanPx);
-          const originY = -((worldPy % textureSpanPx + textureSpanPx) % textureSpanPx);
+    // 1. Draw base variant across entire chunk (v1)
+    const basePattern = groundTextures.getPattern(ctxT, variants[0]);
+    if (basePattern) {
+      if (typeof (basePattern as any).setTransform === 'function') {
+        const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
+        basePattern.setTransform(matrix);
+      }
+      ctxT.fillStyle = basePattern;
+      ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
 
-          if (typeof (pattern as any).setTransform === 'function') {
-            const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
-            pattern.setTransform(matrix);
+    // 2. If multiple variants, blend secondary variants smoothly using continuous blurred variant mask
+    if (variants.length > 1 && F !== 'road_stone') {
+      const BLOCK_TILES = 8;
+      const BLOCKS_PER_CHUNK = CHUNK_SIZE / BLOCK_TILES; // 4
+      const V_BORDER = 1;
+      const V_GRID_DIM = BLOCKS_PER_CHUNK + V_BORDER * 2; // 6x6 blocks
+
+      const scratchVM = getScratch('VM', V_GRID_DIM, V_GRID_DIM);
+      const scratchVMB = getScratch('VMB', canvasWidth, canvasHeight);
+      const scratchVT = getScratch('VT', canvasWidth, canvasHeight);
+
+      if (scratchVM && scratchVMB && scratchVT) {
+        const ctxVM = scratchVM.ctx;
+        const ctxVMB = scratchVMB.ctx;
+        const ctxVT = scratchVT.ctx;
+
+        for (let vIdx = 1; vIdx < variants.length; vIdx++) {
+          const varId = variants[vIdx];
+          const varPattern = groundTextures.getPattern(ctxVT, varId);
+          if (!varPattern) continue;
+
+          // 2a. Fill small 6x6 variant mask
+          const vmImgData = ctxVM.createImageData(V_GRID_DIM, V_GRID_DIM);
+          const vmD32 = new Uint32Array(vmImgData.data.buffer);
+
+          let hasAny = false;
+          for (let by = -V_BORDER; by < BLOCKS_PER_CHUNK + V_BORDER; by++) {
+            for (let bx = -V_BORDER; bx < BLOCKS_PER_CHUNK + V_BORDER; bx++) {
+              const bGlobalX = cx * BLOCKS_PER_CHUNK + bx;
+              const bGlobalY = cy * BLOCKS_PER_CHUNK + by;
+              const selIdx = Math.abs(hash2d(bGlobalX, bGlobalY)) % variants.length;
+              const idx = (by + V_BORDER) * V_GRID_DIM + (bx + V_BORDER);
+              if (selIdx === vIdx) {
+                vmD32[idx] = 0xff000000;
+                hasAny = true;
+              } else {
+                vmD32[idx] = 0x00000000;
+              }
+            }
           }
-          ctxT.fillStyle = pattern;
-          ctxT.fillRect(bx * tileSize, by * tileSize, blockPx, blockPx);
+
+          if (!hasAny) continue;
+          ctxVM.putImageData(vmImgData, 0, 0);
+
+          // 2b. Upscale & blur variant mask to eliminate 8x8 block boundary seams
+          ctxVMB.clearRect(0, 0, canvasWidth, canvasHeight);
+          ctxVMB.imageSmoothingEnabled = true;
+          ctxVMB.imageSmoothingQuality = 'high';
+          ctxVMB.filter = `blur(${(tileSize * 1.2).toFixed(1)}px)`; // ~65px organic soft blend
+          ctxVMB.drawImage(
+            scratchVM.canvas,
+            V_BORDER,
+            V_BORDER,
+            BLOCKS_PER_CHUNK,
+            BLOCKS_PER_CHUNK,
+            0,
+            0,
+            canvasWidth,
+            canvasHeight
+          );
+          ctxVMB.filter = 'none';
+
+          // 2c. Render secondary variant pattern masked by blurred mask
+          ctxVT.clearRect(0, 0, canvasWidth, canvasHeight);
+          ctxVT.globalCompositeOperation = 'source-over';
+          if (typeof (varPattern as any).setTransform === 'function') {
+            const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
+            varPattern.setTransform(matrix);
+          }
+          ctxVT.fillStyle = varPattern;
+          ctxVT.fillRect(0, 0, canvasWidth, canvasHeight);
+
+          ctxVT.globalCompositeOperation = 'destination-in';
+          ctxVT.drawImage(scratchVMB.canvas, 0, 0);
+
+          // 2d. Composite secondary variant softly on top of T
+          ctxT.globalCompositeOperation = 'source-over';
+          ctxT.drawImage(scratchVT.canvas, 0, 0);
         }
       }
     }
 
-    // 4f: Mask T with blurred MB2
+    // 4f: Mask T with blurred MB2 (crisp mask for road_stone)
     ctxT.globalCompositeOperation = 'destination-in';
     ctxT.drawImage(
       scratchMB2.canvas,
@@ -942,8 +1023,57 @@ export function renderChunkGroundBitmapTextured(
     );
     ctxT.globalCompositeOperation = 'source-over';
 
+    // 4f.2: For road_stone, add crisp 2px semi-transparent dark borders along non-road edges (Prompt H2)
+    if (F === 'road_stone') {
+      ctxT.fillStyle = 'rgba(40, 30, 20, 0.35)';
+      for (let ly = BORDER; ly < BORDER + CHUNK_SIZE; ly++) {
+        for (let lx = BORDER; lx < BORDER + CHUNK_SIZE; lx++) {
+          if (gridFamilies[ly * GRID_DIM + lx] === 'road_stone') {
+            const px = (lx - BORDER) * tileSize;
+            const py = (ly - BORDER) * tileSize;
+            if (gridFamilies[(ly - 1) * GRID_DIM + lx] !== 'road_stone') {
+              ctxT.fillRect(px, py, tileSize, 2);
+            }
+            if (gridFamilies[(ly + 1) * GRID_DIM + lx] !== 'road_stone') {
+              ctxT.fillRect(px, py + tileSize - 2, tileSize, 2);
+            }
+            if (gridFamilies[ly * GRID_DIM + lx - 1] !== 'road_stone') {
+              ctxT.fillRect(px, py, 2, tileSize);
+            }
+            if (gridFamilies[ly * GRID_DIM + lx + 1] !== 'road_stone') {
+              ctxT.fillRect(px + tileSize - 2, py, 2, tileSize);
+            }
+          }
+        }
+      }
+    }
+
     // 4g: Draw T onto chunk canvas
     ctx.drawImage(scratchT.canvas, 0, 0);
+
+    // 4h: Road edge grass decals on neighboring non-road cells (Prompt H2)
+    if (F === 'road_stone') {
+      for (let ly = BORDER; ly < BORDER + CHUNK_SIZE; ly++) {
+        for (let lx = BORDER; lx < BORDER + CHUNK_SIZE; lx++) {
+          const here = gridFamilies[ly * GRID_DIM + lx];
+          if (here !== 'road_stone') {
+            const hasRoadNeighbor = (
+              gridFamilies[(ly - 1) * GRID_DIM + lx] === 'road_stone' ||
+              gridFamilies[(ly + 1) * GRID_DIM + lx] === 'road_stone' ||
+              gridFamilies[ly * GRID_DIM + lx - 1] === 'road_stone' ||
+              gridFamilies[ly * GRID_DIM + lx + 1] === 'road_stone'
+            );
+            if (hasRoadNeighbor) {
+              const wx = cx * CHUNK_SIZE + (lx - BORDER);
+              const wy = cy * CHUNK_SIZE + (ly - BORDER);
+              const px = (lx - BORDER) * tileSize;
+              const py = (ly - BORDER) * tileSize;
+              renderL3GroundDecal(ctx, px, py, tileSize, wx, wy, here);
+            }
+          }
+        }
+      }
+    }
   }
 
   // Step 5: Macro radial overlay (anti-repetition)

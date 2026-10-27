@@ -312,7 +312,7 @@ function unpackChunkTiles(chunk) {
       const special = specialTiles[idx] || {};
 
       const objectsOnTile = scatterByTile.get(`${x},${y}`) || [];
-      const hasSolidObj = objectsOnTile.some(o => o.collision === 'solid');
+      const hasSolidObj = objectsOnTile.some(o => o.collision === 'solid') || objectScatter.isCellBlocked(x, y);
 
       const fullTile = {
         ...baseTile,

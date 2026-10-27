@@ -13,6 +13,8 @@
     "web:build": "npm --prefix web-dashboard run build",
     "web:start": "npm --prefix web-dashboard run start",
     "test": "node scripts/syntaxCheckAll.js",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
     "assets:key": "node scripts/assets/luminanceKey.js",
     "assets:trim": "node scripts/assets/trimPadding.js",
     "assets:fit": "node scripts/assets/fitScale.js",
@@ -47,5 +49,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
   }
 }

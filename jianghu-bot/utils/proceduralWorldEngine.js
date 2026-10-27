@@ -8,6 +8,7 @@
 
 const worldData = require('./worldData');
 const { getRegionAt, getTerritoryInfo, getTerrainStaminaCost } = require('./worldRegionEngine');
+const { isTileClaimableFast } = require('./buildZoneRules');
 
 const WORLD_WIDTH = worldData.WORLD_WIDTH || 5000;
 const WORLD_HEIGHT = worldData.WORLD_HEIGHT || 5000;
@@ -864,7 +865,6 @@ function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   const terrainLabel = label;
 
   if (!resourceType) {
-    const { isTileClaimableFast } = require('./buildZoneEngine');
     isClaimable = isTileClaimableFast(tileX, tileY, terrainType, isSolid, region);
     if (isClaimable) {
       tileType = 'buildable_plot';

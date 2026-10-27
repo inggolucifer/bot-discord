@@ -16,7 +16,7 @@ function classify(id,e,bb){
   else if(cat==='mountain'){vw=clamp(Math.round(ov*0.6),2,6);fw=vw;fh=Math.max(1,Math.ceil(vw/2));cls='mountain_'+vw;mode='solid'}
   else if(cat==='landmark'){vw=clamp(Math.round(ov*0.8),6,9);fw=vw;fh=Math.ceil(vw/2);cls='landmark';mode='solid'}
   else if(cat==='water_scene'){vw=clamp(Math.round(ov*0.8),3,6);fw=vw;fh=Math.ceil(vw/2);cls='water_scene';mode='solid'}
-  else if(cat==='building'){vw=ov<=2.5?1:(ov<=4.5?2:(ov<=6.5?3:4));if(/manor|library|hall|auction|foundry|city|gate|sect|pagoda|castle|palace|warehouse|silo|tavern|inn|tower/.test(id))vw=Math.max(vw,3);fw=vw;fh=Math.max(1,Math.round(vw*0.6));cls='building_'+vw;mode='solid'}
+  else if(cat==='building'){vw=ov<=2.5?1:(ov<=4.5?2:(ov<=6.5?3:4));if(/manor|library|hall|auction|foundry|city|gate|sect|pagoda|castle|palace|warehouse|silo|tavern|inn|tower/.test(id))vw=Math.max(vw,3);fw=vw;fh=Math.max(1,Math.round(vw*0.6));cls='building_'+vw;mode=/bridge|pontoon/.test(id)?'soft':(mode==='none'?'none':'solid')}
   else{cls='misc';vw=clamp(Math.round(ov),1,3);fw=vw;fh=1}
   const vh=+(vw*aspect).toFixed(3);
   return{class:cls,fw,fh,vw,vh,rowsAbove:Math.max(0,Math.ceil(vh-fh-0.05)),mode,
@@ -25,5 +25,45 @@ const out={version:10,rule:'left=x+(fw-vw)/2 ; contentBottom=y+fh ; contentWidth
 for(const[id,e]of Object.entries(canon)){if(e.category==='autotile')continue;const bb=bbox[id];if(!bb){miss++;continue}out.frames[id]=classify(id,e,bb)}
 // frames in atlas but not in canon (e.g. new highres): classify from bbox only
 for(const[id,bb]of Object.entries(bbox)){if(out.frames[id]||canon[id])continue;const cat=/^tree_/.test(id)?'tree':/^mt_|^nature_karst/.test(id)?'mountain':/^bamboo/.test(id)?'bamboo':/^rock_/.test(id)?'rock':null;if(!cat)continue;out.frames[id]=classify(id,{category:cat,visualW:bb.contentW/128},bb)}
+
+// regional bosses and monster markers
+if (fs.existsSync('world-data/boss-sprites-v10.json')) {
+  const bossData = JSON.parse(fs.readFileSync('world-data/boss-sprites-v10.json', 'utf8'));
+  const bMap = bossData.map || {};
+  for (const [regId, reg] of Object.entries(bMap)) {
+    const bossId = reg.boss;
+    if (bossId && bbox[bossId]) {
+      const bb = bbox[bossId];
+      const aspect = bb.contentH / bb.contentW;
+      const vh = +(2 * aspect).toFixed(3);
+      out.frames[bossId] = {
+        class: 'regional_boss',
+        fw: 2, fh: 2, vw: 2, vh,
+        rowsAbove: Math.max(0, Math.ceil(vh - 2 - 0.05)),
+        mode: 'solid',
+        bbox: { x0: bb.x0, y0: bb.y0, x1: bb.x1, y1: bb.y1 },
+        srcW: bb.srcW, srcH: bb.srcH,
+        category: 'boss'
+      };
+    }
+  }
+}
+const monsterMarkers = ['monster_demon_wolf','monster_blood_serpent','monster_iron_bear','monster_storm_roc','monster_abyssal_serpent','monster_flame_ape','monster_rock_golem','monster_white_tiger','monster_sand_scorpion','monster_swirl_den'];
+for (const mId of monsterMarkers) {
+  if (bbox[mId]) {
+    const bb = bbox[mId];
+    const aspect = bb.contentH / bb.contentW;
+    const vh = +(1 * aspect).toFixed(3);
+    out.frames[mId] = {
+      class: 'regional_monster_marker',
+      fw: 1, fh: 1, vw: 1, vh,
+      rowsAbove: Math.max(0, Math.ceil(vh - 1 - 0.05)),
+      mode: 'none',
+      bbox: { x0: bb.x0, y0: bb.y0, x1: bb.x1, y1: bb.y1 },
+      srcW: bb.srcW, srcH: bb.srcH,
+      category: 'marker'
+    };
+  }
+}
 fs.writeFileSync('world-data/grid-canon-v10.json',JSON.stringify(out,null,1));
 const h={};for(const f of Object.values(out.frames))h[f.class]=(h[f.class]||0)+1;console.log('frames',Object.keys(out.frames).length,'noBBox',miss);console.log(JSON.stringify(h));

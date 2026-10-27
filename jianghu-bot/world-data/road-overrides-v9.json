@@ -2,7 +2,7 @@
   "roads": [
     {
       "id": "canghai_donghai",
-      "width": 3,
+      "width": 2,
       "terrain": "road_stone",
       "forceWalkable": true,
       "polyline": [

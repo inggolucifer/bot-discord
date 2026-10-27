@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "mongodb": {
+      "command": "cmd.exe",
+      "args": ["/c", "npx", "-y", "mongodb-mcp-server@latest"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb+srv://inggotheboy_db_user:UoIGJ9TWu8qsRG4J@jianghucore.fx6vsos.mongodb.net/jianghu?retryWrites=true&w=majority"
+      }
+    },
+    "graphify": {
+      "command": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "args": ["-m", "graphify.serve", "d:\\gitub\\bot-discord\\graphify-out\\graph.json"]
+    }
+  }
+}

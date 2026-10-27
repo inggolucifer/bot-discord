@@ -141,7 +141,8 @@ for (const key of chunkSet) {
     }
 
     // V6: Objek solid yang selnya tidak diblokir server
-    if (g.mode === 'solid' && typeof isCellBlocked === 'function') {
+    const isSolid = o.collision === 'solid' || (g.mode === 'solid' && o.collision !== 'none' && o.collision !== 'open');
+    if (isSolid && typeof isCellBlocked === 'function') {
       for (let dy = 0; dy < g.fh; dy++) {
         for (let dx = 0; dx < g.fw; dx++) {
           const tx = o.x + dx;

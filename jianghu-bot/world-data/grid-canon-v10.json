@@ -4293,7 +4293,7 @@
    "vw": 2,
    "vh": 1.219,
    "rowsAbove": 1,
-   "mode": "solid",
+   "mode": "soft",
    "bbox": {
     "x0": 0,
     "y0": 0.1953,
@@ -4923,7 +4923,7 @@
    "vw": 2,
    "vh": 1.564,
    "rowsAbove": 1,
-   "mode": "solid",
+   "mode": "soft",
    "bbox": {
     "x0": 0,
     "y0": 0.0509,
@@ -6003,7 +6003,7 @@
    "vw": 1,
    "vh": 0.701,
    "rowsAbove": 0,
-   "mode": "solid",
+   "mode": "none",
    "bbox": {
     "x0": 0.0039,
     "y0": 0.1523,
@@ -6147,7 +6147,7 @@
    "vw": 1,
    "vh": 0.504,
    "rowsAbove": 0,
-   "mode": "solid",
+   "mode": "none",
    "bbox": {
     "x0": 0,
     "y0": 0.2461,
@@ -7291,6 +7291,708 @@
    "srcW": 100,
    "srcH": 140,
    "category": "tree"
+  },
+  "monster_regional_central_plains_sacred_white_tiger": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.016,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0026,
+    "y0": 0,
+    "x1": 0.9948,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_nine_springs_delta_dragon_carp": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.182,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0417,
+    "y0": 0,
+    "x1": 0.9583,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_azure_mountain_horned_ape": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.028,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0234,
+    "x1": 1,
+    "y1": 0.974
+   },
+   "srcW": 360,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_glacial_frost_mastodon": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.635,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.053,
+    "x1": 1,
+    "y1": 0.9451
+   },
+   "srcW": 576,
+   "srcH": 528,
+   "category": "boss"
+  },
+  "monster_regional_thundersteppe_lightning_horned_bison": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.846,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0273,
+    "y0": 0,
+    "x1": 0.9727,
+    "y1": 1
+   },
+   "srcW": 440,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_golden_feathered_garuda": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.224,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.1927,
+    "x1": 1,
+    "y1": 0.8047
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_mirror_lake_water_spirit_siren": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.246,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.025,
+    "y0": 0,
+    "x1": 0.975,
+    "y1": 1
+   },
+   "srcW": 360,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_beast_prairies_golden_sun_lion": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.048,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0104,
+    "y0": 0,
+    "x1": 0.987,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_western_desert_dune_sand_wyrm": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.984,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0268,
+    "y0": 0,
+    "x1": 0.9707,
+    "y1": 1
+   },
+   "srcW": 410,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_western_labyrinth_sandstone_scorpion": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.92,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.026,
+    "y0": 0,
+    "x1": 0.9716,
+    "y1": 1
+   },
+   "srcW": 423,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_hermit_highlands_cloud_silver_crane": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.265,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0573,
+    "y0": 0,
+    "x1": 0.9401,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_border_march_iron_plated_rhino": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.646,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0885,
+    "x1": 1,
+    "y1": 0.9115
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_magma_lava_tortoise": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.837,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 0.9983,
+    "y1": 1
+   },
+   "srcW": 576,
+   "srcH": 528,
+   "category": "boss"
+  },
+  "monster_regional_myriad_toxic_centipede": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.992,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0434,
+    "y0": 0,
+    "x1": 0.9549,
+    "y1": 1
+   },
+   "srcW": 576,
+   "srcH": 523,
+   "category": "boss"
+  },
+  "monster_regional_crimson_nether_serpent": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.01,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0017,
+    "y0": 0,
+    "x1": 0.9965,
+    "y1": 1
+   },
+   "srcW": 576,
+   "srcH": 576,
+   "category": "boss"
+  },
+  "monster_regional_ancient_blood_asura_general": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.293,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0461,
+    "y0": 0,
+    "x1": 0.9539,
+    "y1": 1
+   },
+   "srcW": 369,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_abyssal_scar_chaos_eye_fiend": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.028,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0234,
+    "x1": 1,
+    "y1": 0.974
+   },
+   "srcW": 360,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_southern_plague_woods_thousand_year_corpse_king": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.43,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0635,
+    "y0": 0,
+    "x1": 0.9365,
+    "y1": 1
+   },
+   "srcW": 362,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_bone_armored_leviathan": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.451,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0994,
+    "x1": 1,
+    "y1": 0.8987
+   },
+   "srcW": 576,
+   "srcH": 523,
+   "category": "boss"
+  },
+  "monster_regional_primordial_jade_qilin": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.43,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0885,
+    "y0": 0,
+    "x1": 0.9115,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_nine_tailed_fox": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.048,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0104,
+    "y0": 0,
+    "x1": 0.987,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_formation_barrens_bagua_rune_golem": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.201,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0271,
+    "y0": 0,
+    "x1": 0.9729,
+    "y1": 1
+   },
+   "srcW": 369,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_sword_gorge_ancient_blade_spirit": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.157,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0163,
+    "y0": 0,
+    "x1": 0.981,
+    "y1": 1
+   },
+   "srcW": 369,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_ore_teeth_range_ironback_crystal_bear": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.925,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0098,
+    "y0": 0,
+    "x1": 0.9902,
+    "y1": 1
+   },
+   "srcW": 407,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_primordial_azure_dragon": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.133,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0312,
+    "y0": 0,
+    "x1": 0.9688,
+    "y1": 1
+   },
+   "srcW": 576,
+   "srcH": 576,
+   "category": "boss"
+  },
+  "monster_regional_frostmoon_sea_ice_dragon_turtle": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.766,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0304,
+    "x1": 1,
+    "y1": 0.9672
+   },
+   "srcW": 453,
+   "srcH": 427,
+   "category": "boss"
+  },
+  "monster_regional_floating_wind_isles_celestial_wind_roc": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 1.964,
+   "rowsAbove": 0,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0078,
+    "x1": 1,
+    "y1": 0.9896
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_immortal_ruins_celestial_war_puppet": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.22,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.0221,
+    "y0": 0,
+    "x1": 0.9779,
+    "y1": 1
+   },
+   "srcW": 362,
+   "srcH": 384,
+   "category": "boss"
+  },
+  "monster_regional_void_rift_dimensional_wyrm": {
+   "class": "regional_boss",
+   "fw": 2,
+   "fh": 2,
+   "vw": 2,
+   "vh": 2.063,
+   "rowsAbove": 1,
+   "mode": "solid",
+   "bbox": {
+    "x0": 0.059,
+    "y0": 0,
+    "x1": 0.9392,
+    "y1": 1
+   },
+   "srcW": 576,
+   "srcH": 523,
+   "category": "boss"
+  },
+  "monster_demon_wolf": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.841,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0781,
+    "x1": 1,
+    "y1": 0.9193
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_blood_serpent": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 1.011,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0.0052,
+    "y0": 0,
+    "x1": 0.9948,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_iron_bear": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.901,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0495,
+    "x1": 1,
+    "y1": 0.9505
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_storm_roc": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 1.107,
+   "rowsAbove": 1,
+   "mode": "none",
+   "bbox": {
+    "x0": 0.0469,
+    "y0": 0,
+    "x1": 0.9505,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_abyssal_serpent": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.961,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0182,
+    "x1": 1,
+    "y1": 0.9792
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_flame_ape": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.971,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.013,
+    "x1": 1,
+    "y1": 0.9844
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_rock_golem": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.943,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0286,
+    "x1": 1,
+    "y1": 0.9714
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_white_tiger": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.982,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0078,
+    "x1": 1,
+    "y1": 0.9896
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_sand_scorpion": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 0.919,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0,
+    "y0": 0.0391,
+    "x1": 1,
+    "y1": 0.9583
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
+  },
+  "monster_swirl_den": {
+   "class": "regional_monster_marker",
+   "fw": 1,
+   "fh": 1,
+   "vw": 1,
+   "vh": 1.011,
+   "rowsAbove": 0,
+   "mode": "none",
+   "bbox": {
+    "x0": 0.0052,
+    "y0": 0,
+    "x1": 0.9948,
+    "y1": 1
+   },
+   "srcW": 384,
+   "srcH": 384,
+   "category": "marker"
   }
  }
 }

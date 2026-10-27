@@ -41,6 +41,11 @@ import {
 } from '@/lib/groundRenderer';
 import WorldMapLoadingScreen from './WorldMapLoadingScreen';
 import { getWorldRasterImageSync, loadWorldRasterImage } from '@/lib/worldRasterLoader';
+import { computeSpriteRect, GridEntry } from '@/lib/gridRect';
+import gridCanonData from '@/config/gridCanon.json';
+
+const gridCanon = (gridCanonData.frames || {}) as Record<string, GridEntry>;
+export const ZONE_DEFAULT_ZOOM = 1.4;
 
 // Re-export TileData for backward compatibility
 export type { TileData };
@@ -143,7 +148,7 @@ export default function WorldCanvas({
     if (mode === 'macro') {
       setCamera(prev => ({ ...prev, zoom: 0.18 }));
     } else {
-      setCamera(prev => ({ ...prev, zoom: 1.0 }));
+      setCamera(prev => ({ ...prev, zoom: ZONE_DEFAULT_ZOOM }));
     }
   }, [mode]);
 
@@ -179,7 +184,7 @@ export default function WorldCanvas({
   const [camera, setCamera] = useState<{ x: number; y: number; zoom: number }>({
     x: debugCam ? debugCam.x : (focusTile ? focusTile.x : playerPos.x),
     y: debugCam ? debugCam.y : (focusTile ? focusTile.y : playerPos.y),
-    zoom: debugCam ? debugCam.zoom : (mode === 'macro' ? 0.18 : 1.0)
+    zoom: debugCam ? debugCam.zoom : (mode === 'macro' ? 0.18 : ZONE_DEFAULT_ZOOM)
   });
 
   const hasFiredReadyRef = useRef(false);
@@ -211,6 +216,9 @@ export default function WorldCanvas({
         (window as any).__panCameraTo = (x: number, y: number) => {
           setCamera(prev => ({ ...prev, x, y }));
           animatedPlayerPos.current = { x, y };
+        };
+        (window as any).__dbg = {
+          getChunkBitmap: (cx: number, cy: number) => chunkManager.getChunkBitmap(cx, cy, 54)
         };
       }
     }
@@ -442,6 +450,10 @@ export default function WorldCanvas({
       const width = canvas.width;
       const height = canvas.height;
       const currentTileSize = getEffectiveTileSize(width, height, camera.zoom, currentMode);
+
+      // Ensure crisp high quality bicubic interpolation across all canvas layers
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
 
       // ----------------------------------------------------------------------
       // L0: KERTAS DASAR (Xuan Paper Texture & Ultra-faint Grid)
@@ -675,8 +687,8 @@ export default function WorldCanvas({
           const sy = toScreenY(ty);
 
           if (!tile) {
-            if (camera.zoom >= 1.6 && tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
-              ctx.strokeStyle = 'rgba(180, 160, 130, 0.04)';
+            if (camera.zoom >= 0.35 && tx >= 0 && tx < 5000 && ty >= 0 && ty < 5000) {
+              ctx.strokeStyle = 'rgba(180, 160, 130, 0.12)';
               ctx.lineWidth = 0.5;
               ctx.strokeRect(sx, sy, currentTileSize, currentTileSize);
             }
@@ -755,23 +767,29 @@ export default function WorldCanvas({
       ctx.fillRect(0, 0, width, height);
       ctx.restore();
 
-      // Grid Lines: STRICTLY gated to zoom >= 1.6 (faint 0.04 opacity). Completely hidden when zoom < 1.6!
-      if (camera.zoom >= 1.6) {
+      // ----------------------------------------------------------------------
+      // L2.8: SHAN SHUI GRID LINES (Classic Wuxia Parchment Grid)
+      // ----------------------------------------------------------------------
+      if (camera.zoom >= 0.35) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(165, 155, 142, 0.04)';
-        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = 'rgba(165, 155, 142, 0.35)'; // Abu-abu perkamen tipis & elegan seperti semula
+        ctx.lineWidth = 1;
         for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
           const sx = Math.floor(toScreenX(tx)) + 0.5;
+          const startY = Math.max(0, Math.floor(toScreenY(minTileY)));
+          const endY = Math.min(height, Math.floor(toScreenY(maxTileY + 1)));
           ctx.beginPath();
-          ctx.moveTo(sx, Math.max(0, toScreenY(minTileY)));
-          ctx.lineTo(sx, Math.min(height, toScreenY(maxTileY + 1)));
+          ctx.moveTo(sx, startY);
+          ctx.lineTo(sx, endY);
           ctx.stroke();
         }
         for (let ty = minTileY; ty <= maxTileY + 1; ty++) {
           const sy = Math.floor(toScreenY(ty)) + 0.5;
+          const startX = Math.max(0, Math.floor(toScreenX(minTileX)));
+          const endX = Math.min(width, Math.floor(toScreenX(maxTileX + 1)));
           ctx.beginPath();
-          ctx.moveTo(Math.max(0, toScreenX(minTileX)), sy);
-          ctx.lineTo(Math.min(width, toScreenX(maxTileX + 1)), sy);
+          ctx.moveTo(startX, sy);
+          ctx.lineTo(endX, sy);
           ctx.stroke();
         }
         ctx.restore();
@@ -906,18 +924,20 @@ export default function WorldCanvas({
                 continue;
               }
 
-              // LOD Tuning: at zoom < 0.50, skip small micro-clutter (tiny shrubs, 1x1 flora) unless landmark/structure
+              // LOD Tuning: at zoom < 0.50, skip small micro-clutter (tiny shrubs, 1x1 flora) unless landmark/structure/tree
               if (camera.zoom < 0.50 && def.footprint.cw <= 1 && def.footprint.ch <= 1) {
-                const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster') || def.tags?.includes('structure');
+                const isImportant = def.tags?.includes('landmark') || def.tags?.includes('setpiece') || def.tags?.includes('monster') || def.tags?.includes('structure') || def.tags?.includes('tree') || def.tags?.includes('bamboo') || obj.defId.startsWith('tree_') || obj.defId.startsWith('bamboo_');
                 if (!isImportant) continue;
               }
 
               const priority = getObjectPriority(def);
+              const g = gridCanon[obj.defId];
+              const fh = g ? g.fh : def.footprint.ch;
               candidateObjects.push({
                 def,
                 instance: obj,
                 priority,
-                bottomY: obj.y + def.footprint.ch
+                bottomY: obj.y + fh
               });
             }
           }
@@ -964,32 +984,48 @@ export default function WorldCanvas({
       for (const item of ySortQueue) {
         if (item.type === 'object') {
           const { def, instance } = item.data as { def: WorldObjectDef; instance: MapObjectInstance };
+          const g = gridCanon[def.id];
           const canon = scaleCanon[def.id];
 
-          // Contract Scale Canon: Visual width & height derived with EXACT original aspect ratio
-          const visualW = canon ? canon.visualW : def.footprint.cw;
-          const visualH = canon ? canon.visualH : (def.footprint.ch + def.overhangCells);
-          const colW = canon?.collision?.w ?? def.footprint.cw;
-          const colH = canon?.collision?.h ?? def.footprint.ch;
-          const colOffsetX = canon?.collision?.offsetX ?? (def.footprint.cw * 0.5);
-          const anchorX = canon?.anchor?.x ?? def.anchor.x;
-          const anchorY = canon?.anchor?.y ?? def.anchor.y;
+          let drawX: number;
+          let drawY: number;
+          let dw: number;
+          let dh: number;
+          let footX: number;
+          let footY: number;
+          let colH: number;
 
-          // Object Base / Foot position on ground
-          const footX = toScreenX(instance.x + colOffsetX);
-          const footY = toScreenY(instance.y + colH);
+          if (g) {
+            const rect = computeSpriteRect(g, instance.x, instance.y, currentTileSize, toScreenX, toScreenY);
+            drawX = rect.drawX;
+            drawY = rect.drawY;
+            dw = rect.dw;
+            dh = rect.dh;
+            footX = rect.footX;
+            footY = rect.footY;
+            colH = g.fh;
+          } else {
+            // Contract Scale Canon: Visual width & height derived with EXACT original aspect ratio
+            const visualW = canon ? canon.visualW : def.footprint.cw;
+            const visualH = canon ? canon.visualH : (def.footprint.ch + def.overhangCells);
+            const colW = canon?.collision?.w ?? def.footprint.cw;
+            colH = canon?.collision?.h ?? def.footprint.ch;
+            const colOffsetX = canon?.collision?.offsetX ?? (def.footprint.cw * 0.5);
+            const anchorX = canon?.anchor?.x ?? def.anchor.x;
+            const anchorY = canon?.anchor?.y ?? def.anchor.y;
 
-          const dw = visualW * currentTileSize;
-          const dh = visualH * currentTileSize;
-
-          // Top-left draw coordinates strictly anchored at the base
-          const drawX = footX - dw * anchorX;
-          const drawY = footY - dh * anchorY;
+            footX = toScreenX(instance.x + colOffsetX);
+            footY = toScreenY(instance.y + colH);
+            dw = visualW * currentTileSize;
+            dh = visualH * currentTileSize;
+            drawX = footX - dw * anchorX;
+            drawY = footY - dh * anchorY;
+          }
 
           // L3: Soft Contact Shadow (H0 / HA / G5 - only draw when sprite is ready in atlas, XS objects skip shadow)
           const isSpriteReady = atlasLoader.isSpriteReady(def.id);
           if (def.fogFoot && isSpriteReady) {
-            const isXsObject = canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb')));
+            const isXsObject = g ? (g.class === 'XS' || (g.fw <= 1 && g.fh <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb')))) : (canon?.class === 'XS' || (def.footprint.cw <= 1 && def.footprint.ch <= 1 && (def.tags?.includes('flora') || def.tags?.includes('herb'))));
             if (!isXsObject) {
               const shadowW = Math.max(currentTileSize * 0.8, dw * 0.4);
               renderL3FootMist(ctx, footX, footY, shadowW, currentTileSize * 0.35);
@@ -1029,11 +1065,22 @@ export default function WorldCanvas({
 
           // Player Occlusion Check
           let objAlpha = 1.0;
-          const isPlayerBehind =
-            pTileY >= instance.y - visualH * 0.8 &&
-            pTileY <= instance.y + colH &&
-            pTileX >= instance.x - visualW * 0.4 &&
-            pTileX <= instance.x + visualW * 0.6;
+          let isPlayerBehind = false;
+          if (g) {
+            isPlayerBehind =
+              pTileY >= instance.y - g.vh * 0.8 &&
+              pTileY <= instance.y + g.fh &&
+              pTileX >= instance.x - g.vw * 0.4 &&
+              pTileX <= instance.x + g.vw * 0.6;
+          } else {
+            const visualW = canon ? canon.visualW : def.footprint.cw;
+            const visualH = canon ? canon.visualH : (def.footprint.ch + def.overhangCells);
+            isPlayerBehind =
+              pTileY >= instance.y - visualH * 0.8 &&
+              pTileY <= instance.y + colH &&
+              pTileX >= instance.x - visualW * 0.4 &&
+              pTileX <= instance.x + visualW * 0.6;
+          }
 
           const isBlockingPlayer = isPlayerBehind && item.sortKey > (pTileY + 1) * 1000 + pTileX;
 
@@ -1870,10 +1917,11 @@ export default function WorldCanvas({
             }
           }
 
-          // Verify that all visible sprite textures are resident in GPU memory
-          const areTexturesReady = visObjs.length > 0
+          // Verify that all visible sprite textures and ground textures are resident in GPU memory (Prompt K1)
+          const areGroundTexturesReady = camera.zoom < 0.35 || groundTextures.ready;
+          const areTexturesReady = (visObjs.length > 0
             ? visObjs.every(o => atlasLoader.isSpriteReady(o.defId))
-            : debugCamFrameCountRef.current >= 15;
+            : debugCamFrameCountRef.current >= 15) && areGroundTexturesReady;
 
           const timeSinceMount = performance.now() - debugCamMountTimeRef.current;
 

@@ -8,7 +8,7 @@ const {
   decompressLayoutRLE,
   TILE_METADATA
 } = require('../utils/propertyManager');
-const { getChunkObjects } = require('../utils/objectScatter');
+const { getChunkObjects, getObjectCoveringCell } = require('../utils/objectScatter');
 const { getTileAt } = require('../utils/proceduralWorldEngine');
 const worldData = require('../utils/worldData');
 
@@ -112,16 +112,19 @@ class InteriorService {
       let candidateType = currentTile?.buildingType || null;
       let isCottage = false;
 
-      // Cek scatter objects di chunk target
-      const chunkX = Math.floor(targetX / 32);
-      const chunkY = Math.floor(targetY / 32);
-      const chunkObjs = getChunkObjects(chunkX, chunkY);
-      const scatterObj = chunkObjs.find(o => {
-        // Cek apakah koordinat target persis atau berada dalam radius tapak objek
-        const cw = o.cw || 1;
-        const ch = o.ch || 1;
-        return (targetX >= o.x && targetX < o.x + cw && targetY >= o.y && targetY < o.y + ch);
-      });
+      // Cek scatter objects di chunk target menggunakan getObjectCoveringCell (G5)
+      const cov = getObjectCoveringCell ? getObjectCoveringCell(targetX, targetY) : null;
+      let scatterObj = cov ? cov.o : null;
+      if (!scatterObj) {
+        const chunkX = Math.floor(targetX / 32);
+        const chunkY = Math.floor(targetY / 32);
+        const chunkObjs = getChunkObjects(chunkX, chunkY);
+        scatterObj = chunkObjs.find(o => {
+          const cw = o.cw || 1;
+          const ch = o.ch || 1;
+          return (targetX >= o.x && targetX < o.x + cw && targetY >= o.y && targetY < o.y + ch);
+        });
+      }
 
       if (scatterObj) {
         const def = (scatterObj.defId || '').toLowerCase();

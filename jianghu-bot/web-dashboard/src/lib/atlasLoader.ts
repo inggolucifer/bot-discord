@@ -300,12 +300,22 @@ class AtlasLoader {
     ctx.save();
     if (alpha < 1.0) ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
 
+    // Ensure maximum interpolation quality for downscaled sprites (eliminates burik/jaggies)
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Snap to integer pixels to prevent sub-pixel blurriness and shimmering on small 1x1 objects
+    const targetX = Math.round(dx);
+    const targetY = Math.round(dy);
+    const targetW = Math.round(dw);
+    const targetH = Math.round(dh);
+
     if (flipX) {
-      ctx.translate(dx + dw, dy);
+      ctx.translate(targetX + targetW, targetY);
       ctx.scale(-1, 1);
-      ctx.drawImage(texture as any, x, y, w, h, 0, 0, dw, dh);
+      ctx.drawImage(texture as any, x, y, w, h, 0, 0, targetW, targetH);
     } else {
-      ctx.drawImage(texture as any, x, y, w, h, dx, dy, dw, dh);
+      ctx.drawImage(texture as any, x, y, w, h, targetX, targetY, targetW, targetH);
     }
 
     ctx.restore();
@@ -401,6 +411,8 @@ class AtlasLoader {
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(texture as any, x, y, w, h, 0, 0, w, h);
 
     // LRU eviction for canvas cache

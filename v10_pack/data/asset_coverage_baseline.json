@@ -1,0 +1,1115 @@
+{
+ "note": "families never emitted by objectScatter (1/9 chunk sample + 52 anchor neighbourhoods)",
+ "unused": [
+  {
+   "family": "building_spirit_pagoda",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_primordial_azure_dragon",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_crimson_nether_serpent",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_glacial_frost_mastodon",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_magma_lava_tortoise",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_void_rift_dimensional_wyrm",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_bone_armored_leviathan",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_myriad_toxic_centipede",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_frostmoon_sea_ice_dragon_turtle",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_golden_feathered_garuda",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_sword_gorge_ancient_blade_spirit",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_formation_barrens_bagua_rune_golem",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_western_labyrinth_sandstone_scorpion",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_ancient_blood_asura_general",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_thundersteppe_lightning_horned_bison",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_abyssal_shadow_fiend",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_primordial_jade_qilin",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_nine_tailed_fox",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_floating_wind_isles_celestial_wind_roc",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_immortal_ruins_celestial_war_puppet",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_southern_plague_woods_thousand_year_corpse_king",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_nine_springs_delta_dragon_carp",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_mirror_lake_water_spirit_siren",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_azure_mountain_horned_ape",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_crimson_battlefield_nether_warsteed",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_abyssal_scar_chaos_eye_fiend",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_central_plains_sacred_white_tiger",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_beast_prairies_golden_sun_lion",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_border_march_iron_plated_rhino",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_hermit_highlands_cloud_silver_crane",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_ore_teeth_range_ironback_crystal_bear",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_regional_western_desert_dune_sand_wyrm",
+   "category": "monster",
+   "frames": 1
+  },
+  {
+   "family": "monster_swirl_den",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_demon_wolf",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_blood_serpent",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_iron_bear",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "mount_shadow_tiger",
+   "category": "mount",
+   "frames": 1
+  },
+  {
+   "family": "monster_storm_roc",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "mount_feather_crane",
+   "category": "mount",
+   "frames": 1
+  },
+  {
+   "family": "monster_abyssal_serpent",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_flame_ape",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_rock_golem",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_white_tiger",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "monster_sand_scorpion",
+   "category": "marker",
+   "frames": 1
+  },
+  {
+   "family": "xitong_city_landmark",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_prof_alchemy_eight_trigrams_bronze_furnace",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_prof_cooking_immortal_delicacy_hearth_oven",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_prof_mining_spirit_ore_crushing_stamp_mill",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_prof_farming_spirit_herb_nursery_trellis",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_prof_smithing_celestial_bellows_anvil",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wine_tavern_flagpole_sign",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wooden_watchtower",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_thatched_granary_round",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_blacksmith_weapon_rack",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_tea_resting_shed",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_apiary_beehives",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_countryside_thatched_gazebo",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_riverside_watermill_paddle_wheel",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_chicken_coop_bamboo",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_bamboo_fish_drying_rack",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_countryside_thatched_haystack_cluster",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_mountain_pass_stone_archway",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_pottery_kiln_earthen",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_stone_water_trough",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_bamboo_raft_mooring_post",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_bamboo_tea_shed_bench",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_bamboo_water_pipe_aqueduct",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_boundary_stele",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_bamboo_grain_drying_mat",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_fortune_teller_booth",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_stone_pigpen_pen",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_earthen_dyeing_vats",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_well_windlass",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_straw_scarecrow_bamboo",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_stone_grain_mortar_pestle",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_stone_grain_roller_mill",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_wooden_mile_marker_stele",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_bamboo_weaving_shed",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_stele_shrine_arbor",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_wooden_paddy_waterwheel",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_bamboo_courier_mailbox_stand",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_bamboo_duck_coop_ramp",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_rain_shelter_arbor",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_bamboo_fish_trap_weir",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_stele_pavilion_ruin",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_bamboo_torch_beacon_brazier",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_village_stone_grain_soaking_cistern",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_mile_marker_stele",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_cart_straw_shed",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_stone_mill_grain_grinder",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_blacksmith_bellows_furnace",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_ferry_dock",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_inn_roadside",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_forge_workshop",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_tea_house",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_alchemist_hall",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_granary_silo",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_residential_manor",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_auction_house",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_blacksmith_foundry",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_apothecary_store",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_stone_stele",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_drying_racks",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_stone_lantern_shrine",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_watermill_stream",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_rustic_wooden_bridge",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_spirit_gathering_gazebo",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_spirit_altar",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_stone_water_basin",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_scatter_ruin_ancient_broken_halberd_sword_grave",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_wayside_wooden_notice_board",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "building_pagoda_tower",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "building_sect_gate",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "building_road_inn",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "building_farm_hut",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "building_stone_torii",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "building_tea_pavilion",
+   "category": "building",
+   "frames": 4
+  },
+  {
+   "family": "structure_interior_sect_disciples_tea_and_chess_gazebo",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_herb_pill_pestle_mill",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_five_phases_brewing_distillery",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_celestial_talisman_drying_rotunda",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_dragon_carved_scroll_archive_chest",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_casting_water_quench_pool",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_flying_launch_platform",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_alchemy_cauldron_cooling_vat",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_array_refining_sand_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_astronomy_star_compass_plinth",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_eight_trigrams_mirror_array",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_divine_weapon_smelting_forge",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_pet_feeding_pen",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_patriarch_cloud_meditation_couch",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_nine_palaces_formation_pedestal",
+   "category": "formation",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_array_core_compass",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_carved_stone_stele_tablet",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_acupuncture_copper_man",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_wooden_bunk_bed",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_copying_lectern",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_herbal_medicine_drying_screen",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_gravity_stone_weight_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_wooden_washbasin_stand",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_orchid_potted_bonsai_pedestal",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_grand_patriarch_throne",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_alarm_bell_pavilion_stand",
+   "category": "building",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_ancestral_sword_pedestal",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_weapon_rack_spears_halberds",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_pill_storage_apothecary_drawers",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_grand_patriarch_cushioned_dais",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_esoteric_bookshelf",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_pill_cauldron_hearth",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_ancestral_tablet_shrine",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_astrological_armillary_sphere",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_secret_scroll_vault_cabinet",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_calligraphy_talisman_desk",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_tea_ceremony_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_qin_zither_music_alcove",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_uniform_wardrobe_cabinet",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_archery_target_straw_dummy",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_herb_grinding_mortar_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_weapon_cleaning_oil_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_bamboo_scroll_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_meditation_jade_cushion_dais",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_reading_desk",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_daoist_wind_chime_bell_stand",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_celestial_map_bronze_compass_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_carp_basin_rockery",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_medicine_dispensing_granite_counter",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_ancestral_incense_cauldron_tripod",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_tea_drying_bamboo_trellis",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_meridian_cleansing_aromatic_steam_vat",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_dining_long_trestle_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_puppet_mechanic_assembly_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_washing_pool_fountain",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_formation_carving_worktable",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_printing_movable_type_cabinet",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_martial_training_stake_cluster",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_ancestral_bell_stand_chime_set",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_scripture_reading_stone_table_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_medicine_tincture_fermentation_crock",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_talisman_calligraphy_scroll_drying_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_beast_taming_spirit_whistle_pedestal",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_refining_water_bath_basin",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_alchemy_herb_cabinet_apothecary_tower",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_discipline_elder_tribunal_desk",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_refining_dragon_bellows",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_dragon_carved_scripture_reading_throne",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_patriarch_ancestral_portrait_shrine",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_talisman_woodblock_printing_press",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spiritual_beast_mount_saddle_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_daoist_bell_resonance_tuning_frame",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_celestial_music_guqin_carved_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_dragon_carved_water_clock_clepsydra",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_divine_divination_turtle_shell_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_medicinal_herb_fermentation_urn_bench",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_discipline_punishment_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_celestial_sword_grinding_wheel",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_five_elements_spirit_stone_censer_array",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_formation_carved_stone_pillar",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_astronomy_star_chart_globe",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_bronze_bell_clock_tower",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_bamboo_scroll_archive_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_bronze_mirror_dressing_screen",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_sword_sharpening_whetstone_trough",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spiritual_pill_furnace_triad",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_meditation_stone_incense_cairn",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_talisman_cinnabar_inkstone_altar",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_daoist_divination_yarrow_stalk_dais",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_meditation_rush_mat_partition",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_disciples_iron_palm_sand_basin",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_spirit_grain_storage_chest",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_lotus_pond_qi_fountain",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_meditation_rush_mat_incense_cushion",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_meditation_mat_incense_burner_set",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_weiqi_go_game_table",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_tea_table_bamboo_tatami",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_pill_cooling_water_trough",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_heraldry_banner_pole",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_coiled_dragon_incense_stand",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_discipline_wooden_dummy",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_bronze_bell_chime_stand",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_sect_dragon_carved_folding_screen",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_ancient_weapon_rack",
+   "category": "furniture",
+   "frames": 1
+  },
+  {
+   "family": "structure_interior_ancient_sandalwood_incense_burner",
+   "category": "furniture",
+   "frames": 1
+  }
+ ]
+}

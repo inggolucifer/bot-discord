@@ -103,6 +103,18 @@ class GridZoneService {
       };
     }
 
+    // 5b. Obstruksi Objek Prop Grid Contract V10
+    try {
+      const { isCellBlocked } = require('../utils/objectScatter');
+      if (typeof isCellBlocked === 'function' && isCellBlocked(tileX, tileY)) {
+        return {
+          passable: false,
+          reason: 'Jalur terhalang oleh objek rintangan padat.',
+          tile
+        };
+      }
+    } catch (_) {}
+
     return {
       passable: true,
       tile,

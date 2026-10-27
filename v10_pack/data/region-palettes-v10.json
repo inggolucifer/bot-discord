@@ -1,0 +1,215 @@
+{
+ "familyDominanceMax": 0.2,
+ "minDistinctFamilies": 16,
+ "themes": {
+  "temperate": {
+   "boost": [
+    "tree_spirit_peach",
+    "tree_willow_river",
+    "nature_ancient_scholar_ginkgo",
+    "nature_wild_mountain_(camellia|peony)",
+    "nature_cherry_blossom",
+    "nature_plum_blossom",
+    "nature_wisteria",
+    "bamboo_(jade|clump)",
+    "nature_ancient_tea_bush",
+    "nature_wild_mountain_medicinal"
+   ],
+   "forbid": [
+    "tree_dead_wood",
+    "nature_scatter_(volcanic|desert|frost)",
+    "nature_scatter_subterranean"
+   ]
+  },
+  "cold": {
+   "boost": [
+    "tree_cypress_frost",
+    "tree_pine_ancient",
+    "nature_scatter_frost_crystal",
+    "nature_pine_(wind|ancient)",
+    "nature_cypress_grove",
+    "glacial_iceberg"
+   ],
+   "forbid": [
+    "tree_spirit_peach",
+    "tree_willow_river",
+    "nature_lotus",
+    "nature_reed",
+    "bamboo_",
+    "nature_scatter_(volcanic|desert)",
+    "nature_cherry",
+    "nature_wisteria"
+   ]
+  },
+  "desert": {
+   "boost": [
+    "nature_scatter_desert_weathered",
+    "nature_crystal_quartz",
+    "nature_limestone",
+    "nature_ancient_scholar_twisted_locust",
+    "nature_wild_mountain_medicinal_wolfberry",
+    "rock_crag_cluster",
+    "rock_cleft_stone"
+   ],
+   "forbid": [
+    "tree_spirit_peach",
+    "tree_willow_river",
+    "nature_lotus",
+    "nature_reed",
+    "bamboo_",
+    "nature_cherry",
+    "nature_wisteria",
+    "tree_cypress_frost"
+   ],
+   "deadwoodMax": 0.12
+  },
+  "volcanic": {
+   "boost": [
+    "nature_scatter_volcanic",
+    "nature_scatter_thunder_struck",
+    "rock_cleft_stone",
+    "rock_crag_cluster"
+   ],
+   "forbid": [
+    "tree_spirit_peach",
+    "tree_willow_river",
+    "nature_lotus",
+    "nature_reed",
+    "bamboo_",
+    "nature_cherry",
+    "tree_cypress_frost"
+   ],
+   "deadwoodMax": 0.2
+  },
+  "swamp": {
+   "boost": [
+    "nature_scatter_swamp_ancient_mangrove",
+    "nature_reed_bed",
+    "nature_scatter_subterranean_luminescent",
+    "nature_mossy_river_driftwood",
+    "tree_dead_wood",
+    "nature_lotus_pond"
+   ],
+   "forbid": [
+    "tree_cypress_frost",
+    "nature_cherry",
+    "nature_scatter_(frost|desert)"
+   ],
+   "deadwoodMax": 0.3
+  },
+  "mountain": {
+   "boost": [
+    "mt_",
+    "nature_pine_windswept",
+    "nature_mountain_waterfall",
+    "nature_ancient_scholar_red_maple",
+    "tree_pine_ancient",
+    "azure_peak",
+    "nature_crag"
+   ],
+   "forbid": [
+    "nature_lotus",
+    "nature_reed",
+    "nature_scatter_coastal"
+   ],
+   "deadwoodMax": 0.1
+  },
+  "sea": {
+   "boost": [
+    "nature_scatter_coastal_glowing_coral",
+    "nature_mossy_river_driftwood",
+    "nature_reed_bed",
+    "nature_willow_lone",
+    "nature_lotus_pond"
+   ],
+   "forbid": [
+    "tree_dead_wood",
+    "tree_spirit_peach",
+    "mt_",
+    "rock_cleft"
+   ],
+   "deadwoodMax": 0.0
+  },
+  "ruin": {
+   "boost": [
+    "ancient_relic_",
+    "nature_ancient_hollow",
+    "nature_ancient_mossy_tree_stump",
+    "rock_cleft_stone",
+    "mt_karst",
+    "nature_limestone",
+    "structure_scatter_ruin"
+   ],
+   "forbid": [
+    "nature_lotus",
+    "nature_cherry",
+    "tree_spirit_peach",
+    "bamboo_"
+   ],
+   "deadwoodMax": 0.2
+  },
+  "grass": {
+   "boost": [
+    "tree_spirit_peach",
+    "nature_wild_mountain_medicinal",
+    "nature_ancient_scholar_ginkgo",
+    "nature_scatter_thunder_struck",
+    "rock_boulder_moss",
+    "nature_ancient_tea_bush"
+   ],
+   "forbid": [
+    "nature_lotus",
+    "nature_scatter_(volcanic|frost)",
+    "tree_dead_wood"
+   ],
+   "deadwoodMax": 0.05
+  },
+  "forest": {
+   "boost": [
+    "nature_bamboo",
+    "bamboo_",
+    "nature_ancient_scholar",
+    "nature_ginkgo",
+    "nature_wisteria",
+    "tree_pine_ancient",
+    "nature_autumn_maple"
+   ],
+   "forbid": [
+    "tree_dead_wood",
+    "nature_scatter_(volcanic|desert|frost)"
+   ],
+   "deadwoodMax": 0.05
+  }
+ },
+ "regions": {
+  "central_plains": "temperate",
+  "nine_springs_delta": "temperate",
+  "mirror_lake": "temperate",
+  "border_march": "temperate",
+  "mist_insect_valley": "temperate",
+  "hermit_highlands": "temperate",
+  "beast_prairies": "grass",
+  "thundersteppe": "grass",
+  "northern_desolate": "cold",
+  "western_sacred_desert": "desert",
+  "bone_sea_coast": "desert",
+  "lava_spine": "volcanic",
+  "venom_mire": "swamp",
+  "southern_plague_woods": "swamp",
+  "southern_demon_domain": "swamp",
+  "azure_mountain_range": "mountain",
+  "sword_gorge": "mountain",
+  "ore_teeth_range": "mountain",
+  "godthunder_peaks": "mountain",
+  "western_gorge_labyrinth": "mountain",
+  "eastern_sea": "sea",
+  "frostmoon_sea": "cold",
+  "floating_wind_isles": "sea",
+  "immortal_ruins_valley": "ruin",
+  "void_rift": "ruin",
+  "abyssal_scar": "ruin",
+  "formation_barrens": "ruin",
+  "crimson_battlefield": "ruin",
+  "spirit_wood_sea": "forest"
+ }
+}

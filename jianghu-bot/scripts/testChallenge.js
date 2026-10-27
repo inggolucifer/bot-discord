@@ -90,9 +90,9 @@ for (let i = 0; i < 300; i++) {
         roadViolations++;
       }
     }
-    // Check solid/water
+    // Check solid/water (procedural monsters must never spawn on water/solid; bosses must never be solid, and only aquatic boss lairs may be on pond/water)
     const t = getTileAt(m.x, m.y);
-    if (!t || t.isSolid || /river|lake|sea|ocean|pond|lava|poison_pool/i.test(t.terrainType)) {
+    if (!t || t.isSolid || (!m.isBoss && /river|lake|sea|ocean|pond|lava|poison_pool/i.test(t.terrainType))) {
       solidViolations++;
     }
   }

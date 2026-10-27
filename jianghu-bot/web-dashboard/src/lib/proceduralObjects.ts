@@ -6404,16 +6404,7 @@ export function renderL4ProceduralObject(
 
   // 1. Try rendering from WebP texture atlas first (Song Dynasty Shuimo asset)
   const atlasName = getAtlasNameForDefId(defId);
-  if (isHut) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.ellipse(screenX + dw * 0.5, screenY + dh * 0.5, dw * 0.49, dh * 0.49, 0, 0, Math.PI * 2);
-    ctx.clip();
-  }
   const drawn = atlasLoader.drawAtlasFrame(ctx, atlasName, defId, screenX, screenY, dw, dh, alpha, flipX);
-  if (isHut) {
-    ctx.restore();
-  }
   if (drawn) {
     return;
   }

@@ -393,8 +393,9 @@ function getMonstersInChunk(cx, cy) {
       }
       if (tooCloseToOther) continue;
 
-      // Solid scatter collision
+      // Solid scatter collision & canopy check (G5)
       if (solidScatterPositions.has(tKey)) continue;
+      if (objectScatter.isCellBlocked(tx, ty) || (objectScatter.isCellUnderCanopy && objectScatter.isCellUnderCanopy(tx, ty))) continue;
 
       // Procedural terrain check
       const tile = getTileAt(tx, ty);
