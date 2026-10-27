@@ -144,7 +144,7 @@ if (require.main === module) {
 
     let targetHex = targetArg;
     if (!targetHex.startsWith('#')) {
-      const reg = worldData.getRegionById(targetArg);
+      const reg = worldData.getRegionDef(targetArg);
       targetHex = (reg && reg.palette && reg.palette.terrainColor) || '#7f9a5a';
     }
 

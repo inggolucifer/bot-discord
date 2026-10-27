@@ -483,7 +483,7 @@ export default function WorldCanvas({
       const toScreenX = (wx: number) => (wx - camera.x + viewTilesX / 2) * currentTileSize;
       const toScreenY = (wy: number) => (wy - camera.y + viewTilesY / 2) * currentTileSize;
 
-      // Fase A (Bug 2): Array penampung simpul sumber daya untuk lapisan label terpisah
+      // Fase A (Bug 2 / B7): Array penampung simpul sumber daya untuk lapisan label terpisah
       const eligibleResourceLabels: Array<{
         tile: TileData;
         screenX: number;
@@ -491,6 +491,7 @@ export default function WorldCanvas({
         dist: number;
         label: string;
       }> = [];
+      const seenLabelCells = new Set<string>();
 
       // Fase H4: Array penampung sumber cahaya multi-lamp (max 24)
       const visibleLights: Array<{
@@ -1440,88 +1441,88 @@ export default function WorldCanvas({
               tile.nodeRespawnAt && new Date(tile.nodeRespawnAt).getTime() > Date.now()
             );
 
-            // Sprite atlas icon lookup for resource node
-            const rt = tile.resourceType || 'herb';
-            const candidates = RESOURCE_ICON_FRAMES[rt] || ['icon_res_herb'];
-            let drawn = false;
-            for (const frameId of candidates) {
-              if (atlasLoader.drawAtlasFrame(
-                ctx,
-                'icons',
-                frameId,
-                sx + currentTileSize * 0.25,
-                sy + currentTileSize * 0.25,
-                currentTileSize * 0.5,
-                currentTileSize * 0.5,
-                0.85
-              )) {
-                drawn = true;
-                break;
+            // Resource Node Rendering (Prompt V11 P7 - B7)
+            // Hidden when zoom < 1.0; 0.5 cell world sprite with 6% glow
+            if (camera.zoom >= 1.0) {
+              const rt = tile.resourceType || 'herb';
+              const candidates = RESOURCE_ICON_FRAMES[rt] || ['icon_res_herb'];
+              let drawn = false;
+              for (const frameId of candidates) {
+                if (atlasLoader.drawAtlasFrame(
+                  ctx,
+                  'icons',
+                  frameId,
+                  sx + currentTileSize * 0.25,
+                  sy + currentTileSize * 0.25,
+                  currentTileSize * 0.5,
+                  currentTileSize * 0.5,
+                  0.85
+                ) || atlasLoader.drawAtlasFrame(
+                  ctx,
+                  'objects_nature',
+                  frameId,
+                  sx + currentTileSize * 0.25,
+                  sy + currentTileSize * 0.25,
+                  currentTileSize * 0.5,
+                  currentTileSize * 0.5,
+                  0.85
+                )) {
+                  drawn = true;
+                  break;
+                }
               }
-              if (atlasLoader.drawAtlasFrame(
-                ctx,
-                'objects_nature',
-                frameId,
-                sx + currentTileSize * 0.25,
-                sy + currentTileSize * 0.25,
-                currentTileSize * 0.5,
-                currentTileSize * 0.5,
-                0.85
-              )) {
-                drawn = true;
-                break;
-              }
-            }
 
-            // Fallback vektor jika sprite atlas frame tidak tersedia
-            if (!drawn) {
-              const resColors: Record<string, string> = { herb: '#10B981', ore: '#F59E0B', wood: '#8B5CF6', fish: '#3B82F6' };
-              const resLetters: Record<string, string> = { herb: 'H', ore: 'O', wood: 'W', fish: 'F' };
+              // Subtle 6% aura glow around resource sprite
               ctx.save();
               ctx.beginPath();
-              ctx.arc(sx + currentTileSize * 0.5, sy + currentTileSize * 0.5, currentTileSize * 0.22, 0, Math.PI * 2);
-              ctx.fillStyle = resColors[rt] || '#888';
+              ctx.arc(sx + currentTileSize * 0.5, sy + currentTileSize * 0.5, currentTileSize * 0.35, 0, Math.PI * 2);
+              const glowColor = rt === 'herb' ? 'rgba(52, 211, 153, 0.06)' :
+                                rt === 'ore' ? 'rgba(245, 158, 11, 0.06)' :
+                                rt === 'wood' ? 'rgba(168, 85, 247, 0.06)' : 'rgba(56, 189, 248, 0.06)';
+              ctx.fillStyle = glowColor;
               ctx.fill();
-              ctx.fillStyle = '#ffffff';
-              ctx.font = `bold ${Math.max(9, Math.floor(11 * camera.zoom))}px sans-serif`;
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(resLetters[rt] || '?', sx + currentTileSize * 0.5, sy + currentTileSize * 0.5);
               ctx.restore();
-            }
 
-            renderL7ResourceSparkle(
-              ctx,
-              sx + currentTileSize * 0.5,
-              sy + currentTileSize * 0.5,
-              currentTileSize * 0.38,
-              tile.resourceType || 'herb',
-              time,
-              isDormant
-            );
+              renderL7ResourceSparkle(
+                ctx,
+                sx + currentTileSize * 0.5,
+                sy + currentTileSize * 0.5,
+                currentTileSize * 0.38,
+                tile.resourceType || 'herb',
+                time,
+                isDormant
+              );
 
-            // Fase A (Bug 2): Kumpulkan simpul untuk lapisan label Xuan Paper terpisah
-            // Syarat: tidak dormant, zoom >= 0.8, dan berada dalam radius <= 3 petak atau sedang di-hover/dipilih
-            if (!isDormant && camera.zoom >= 0.8) {
-              const dist = Math.max(Math.abs(tile.tileX - playerPos.x), Math.abs(tile.tileY - playerPos.y));
-              const isHovered = hoveredTile && hoveredTile.tileX === tile.tileX && hoveredTile.tileY === tile.tileY;
-              const isSelected = targetTile && targetTile.x === tile.tileX && targetTile.y === tile.tileY;
+              // Single-Label Rule & Strict Proximity Filter (Prompt V11 P7 - B7)
+              // Only shown on hover, selection, or close radius <= 1.5 tiles from player
+              // Never draw label on player position unless resource is explicitly on that tile
+              if (!isDormant) {
+                const dist = Math.max(Math.abs(tile.tileX - playerPos.x), Math.abs(tile.tileY - playerPos.y));
+                const isHovered = hoveredTile && hoveredTile.tileX === tile.tileX && hoveredTile.tileY === tile.tileY;
+                const isSelected = targetTile && targetTile.x === tile.tileX && targetTile.y === tile.tileY;
+                const isPlayerOnCell = Math.floor(playerPos.x) === tile.tileX && Math.floor(playerPos.y) === tile.tileY;
 
-              if (dist <= 3 || isHovered || isSelected) {
-                const resLabel = (
-                  tile.resourceType === 'herb' ? 'Herba Roh' :
-                  tile.resourceType === 'ore' ? 'Urat Bijih' :
-                  tile.resourceType === 'wood' ? 'Kayu Roh' :
-                  tile.resourceType === 'fish' ? 'Lubuk Ikan' :
-                  tile.label || 'Sumber Daya'
-                );
-                eligibleResourceLabels.push({
-                  tile,
-                  screenX: sx + currentTileSize * 0.5,
-                  screenY: sy + currentTileSize * 0.85,
-                  dist,
-                  label: resLabel
-                });
+                // Max 1 label per cell; never draw on player cell unless resource node is there
+                const cellKey = `${tile.tileX},${tile.tileY}`;
+                if (!seenLabelCells.has(cellKey)) {
+                  if (isHovered || isSelected || (dist <= 1.5 && (!isPlayerOnCell || tile.resourceType))) {
+                    seenLabelCells.add(cellKey);
+                    const resLabel = (
+                      tile.resourceType === 'herb' ? 'Herba Roh' :
+                      tile.resourceType === 'ore' ? 'Urat Bijih' :
+                      tile.resourceType === 'wood' ? 'Kayu Roh' :
+                      tile.resourceType === 'fish' ? 'Lubuk Ikan' :
+                      tile.label || 'Sumber Daya'
+                    );
+                    eligibleResourceLabels.push({
+                      tile,
+                      screenX: sx + currentTileSize * 0.5,
+                      screenY: sy + currentTileSize * 0.85,
+                      dist,
+                      label: resLabel
+                    });
+                  }
+                }
               }
             }
           }
@@ -1732,9 +1733,9 @@ export default function WorldCanvas({
       ctx.restore();
 
       // ======================================================================
-      // 11. DEDICATED XUAN PAPER RESOURCE LABEL PASS (Fase A - Bug 2)
+      // 11. DEDICATED XUAN PAPER RESOURCE LABEL PASS (Prompt V11 P7 - B7)
       // ======================================================================
-      if (currentMode === 'zone' && camera.zoom >= 0.8 && eligibleResourceLabels.length > 0) {
+      if (currentMode === 'zone' && camera.zoom >= 1.0 && eligibleResourceLabels.length > 0) {
         // Urutkan berdasarkan jarak terdekat ke pemain
         eligibleResourceLabels.sort((a, b) => a.dist - b.dist);
 
