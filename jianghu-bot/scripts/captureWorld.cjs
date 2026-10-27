@@ -74,8 +74,8 @@ const server = http.createServer((req, res) => {
   res.end('{"ok":true}');
 });
 
-server.listen(3001, '127.0.0.1', async () => {
-  console.log('[captureWorld] Stub API running on http://127.0.0.1:3001');
+server.listen(3001, async () => {
+  console.log('[captureWorld] Stub API running on port 3001');
 
   let br;
   try {
@@ -88,46 +88,74 @@ server.listen(3001, '127.0.0.1', async () => {
     });
   }
 
-  const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
-  page.on('console', (m) => {
-    const t = m.text();
-    if (/GROUND|error|Error|WARN|warn/.test(t)) {
-      console.log('  [page]', t.slice(0, 160));
-    }
-  });
-
   const seenSha1 = new Map();
   const results = [];
 
   for (const s of shots) {
+    const filePath = path.join(outDir, `${s.name}.png`);
+    if (fs.existsSync(filePath) && fs.statSync(filePath).size > 50000) {
+      const pngBuffer = fs.readFileSync(filePath);
+      const sha1 = crypto.createHash('sha1').update(pngBuffer).digest('hex');
+      console.log(`\n[SKIP] Sudah ada di disk: ${s.name} (SHA-1: ${sha1})`);
+      if (seenSha1.has(sha1)) {
+        console.error(`[ERROR] Duplicate screenshot detected! ${s.name} has identical SHA-1 to ${seenSha1.get(sha1)}`);
+        await br.close();
+        server.close();
+        process.exit(1);
+      }
+      seenSha1.set(sha1, s.name);
+      continue;
+    }
+
+    const page = await br.newPage({ viewport: { width: 1280, height: 720 } });
+    page.on('console', (m) => {
+      const t = m.text();
+      if (/GROUND|error|Error|WARN|warn/.test(t)) {
+        console.log('  [page]', t.slice(0, 160));
+      }
+    });
+
     const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}`;
     console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}...`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
-    // a. window.__chunksReady === true in 25s, window.groundTextures.ready === true
+    // a. window.__chunksReady === true DAN window.groundTextures.ready === true (timeout 30s)
     let chunksReady = false;
     try {
-      await page.waitForFunction(() => window.__chunksReady === true, { timeout: 25000 });
+      await page.waitForFunction(
+        () => window.__chunksReady === true && window.groundTextures && window.groundTextures.ready === true,
+        { timeout: 30000 }
+      );
       chunksReady = true;
     } catch (e) {
-      console.warn(`  [WARN] __chunksReady timeout for ${s.name}`);
+      console.error(`[ERROR] Timeout 30s menunggu __chunksReady & groundTextures.ready untuk ${s.name}!`);
+      await page.close();
+      await br.close();
+      server.close();
+      process.exit(1);
     }
 
-    await page.evaluate(async () => {
+    // Tunggu loading screen memudar sempurna
+    await page.waitForFunction(() => {
+      const loader = document.querySelector('div[class*="transition-opacity"]');
+      return !loader || loader.classList.contains('opacity-0') || loader.classList.contains('pointer-events-none');
+    }, { timeout: 30000 }).catch(() => {});
+
+    await page.evaluate(async (s) => {
       if (window.atlasLoader) await window.atlasLoader.preloadCoreAtlases();
       if (window.groundTextures && !window.groundTextures.ready) await window.groundTextures.load();
-    }).catch(() => {});
+      if (window.chunkManager) window.chunkManager.updateCamera(s.x, s.y, s.zoom || 1);
+    }, s).catch(() => {});
 
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(2500);
 
     const isGroundReady = await page.evaluate(() => Boolean(window.groundTextures && window.groundTextures.ready));
     const debugMetrics = await page.evaluate(() => (window.__debugMetrics ? window.__debugMetrics : null));
-    console.log(`  chunksReady=${chunksReady}, groundTextures.ready=${isGroundReady}`);
+    console.log(`  chunksReady=true, groundTextures.ready=${isGroundReady}`);
     if (debugMetrics) {
       console.log(`  debugMetrics: sprites=${debugMetrics.spriteCount}, uniqueDefs=${debugMetrics.uniqueDefIds}, renderMs=${debugMetrics.renderTimeMs?.toFixed(2)}`);
     }
 
-    const filePath = path.join(outDir, `${s.name}.png`);
     const pngBuffer = await page.screenshot({ path: filePath });
 
     // c. SHA-1 verification
@@ -194,6 +222,8 @@ server.listen(3001, '127.0.0.1', async () => {
       groundReady: isGroundReady,
       sprites: debugMetrics ? debugMetrics.spriteCount : 0
     });
+
+    await page.close();
   }
 
   await br.close();

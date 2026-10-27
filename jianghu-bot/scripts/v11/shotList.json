@@ -1,0 +1,434 @@
+[
+  {
+    "name": "shot_01_desa_xingcun_z10",
+    "pointId": "01_desa_xingcun",
+    "title": "Desa Xingcun (Central Plains) (Zoom 1.0x)",
+    "group": "desa_t1",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1
+  },
+  {
+    "name": "shot_01_desa_xingcun_z14",
+    "pointId": "01_desa_xingcun",
+    "title": "Desa Xingcun (Central Plains) (Zoom 1.4x)",
+    "group": "desa_t1",
+    "x": 2050,
+    "y": 2650,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_02_dusun_kebun_persik_z10",
+    "pointId": "02_dusun_kebun_persik",
+    "title": "Dusun Kebun Persik (Zoom 1.0x)",
+    "group": "desa_t1",
+    "x": 2150,
+    "y": 2700,
+    "zoom": 1
+  },
+  {
+    "name": "shot_02_dusun_kebun_persik_z14",
+    "pointId": "02_dusun_kebun_persik",
+    "title": "Dusun Kebun Persik (Zoom 1.4x)",
+    "group": "desa_t1",
+    "x": 2150,
+    "y": 2700,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_03_desa_bambu_z10",
+    "pointId": "03_desa_bambu",
+    "title": "Desa Rimbun Bambu (Zoom 1.0x)",
+    "group": "desa_t1",
+    "x": 1850,
+    "y": 2800,
+    "zoom": 1
+  },
+  {
+    "name": "shot_03_desa_bambu_z14",
+    "pointId": "03_desa_bambu",
+    "title": "Desa Rimbun Bambu (Zoom 1.4x)",
+    "group": "desa_t1",
+    "x": 1850,
+    "y": 2800,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_04_kota_jinling_z10",
+    "pointId": "04_kota_jinling",
+    "title": "Kota Jinling (Zoom 1.0x)",
+    "group": "desa_t1",
+    "x": 2750,
+    "y": 2350,
+    "zoom": 1
+  },
+  {
+    "name": "shot_04_kota_jinling_z14",
+    "pointId": "04_kota_jinling",
+    "title": "Kota Jinling (Zoom 1.4x)",
+    "group": "desa_t1",
+    "x": 2750,
+    "y": 2350,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_05_wild_dataran_tengah_z10",
+    "pointId": "05_wild_dataran_tengah",
+    "title": "Wilderness Dataran Tengah (Zoom 1.0x)",
+    "group": "wilderness_t1_t2",
+    "x": 2450,
+    "y": 2450,
+    "zoom": 1
+  },
+  {
+    "name": "shot_05_wild_dataran_tengah_z14",
+    "pointId": "05_wild_dataran_tengah",
+    "title": "Wilderness Dataran Tengah (Zoom 1.4x)",
+    "group": "wilderness_t1_t2",
+    "x": 2450,
+    "y": 2450,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_06_wild_nine_springs_z10",
+    "pointId": "06_wild_nine_springs",
+    "title": "Wilderness Nine Springs Delta (Zoom 1.0x)",
+    "group": "wilderness_t1_t2",
+    "x": 2800,
+    "y": 2200,
+    "zoom": 1
+  },
+  {
+    "name": "shot_06_wild_nine_springs_z14",
+    "pointId": "06_wild_nine_springs",
+    "title": "Wilderness Nine Springs Delta (Zoom 1.4x)",
+    "group": "wilderness_t1_t2",
+    "x": 2800,
+    "y": 2200,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_07_wild_beast_prairies_z10",
+    "pointId": "07_wild_beast_prairies",
+    "title": "Padang Rumput Liar Beast Prairies (Zoom 1.0x)",
+    "group": "wilderness_t1_t2",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1
+  },
+  {
+    "name": "shot_07_wild_beast_prairies_z14",
+    "pointId": "07_wild_beast_prairies",
+    "title": "Padang Rumput Liar Beast Prairies (Zoom 1.4x)",
+    "group": "wilderness_t1_t2",
+    "x": 2300,
+    "y": 3000,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_08_wild_persimpangan_jalan_z10",
+    "pointId": "08_wild_persimpangan_jalan",
+    "title": "Persimpangan Jalan Utama (Zoom 1.0x)",
+    "group": "wilderness_t1_t2",
+    "x": 2250,
+    "y": 2600,
+    "zoom": 1
+  },
+  {
+    "name": "shot_08_wild_persimpangan_jalan_z14",
+    "pointId": "08_wild_persimpangan_jalan",
+    "title": "Persimpangan Jalan Utama (Zoom 1.4x)",
+    "group": "wilderness_t1_t2",
+    "x": 2250,
+    "y": 2600,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_09_gurun_pasir_sutra_z10",
+    "pointId": "09_gurun_pasir_sutra",
+    "title": "Gurun Pasir Sutra (Zoom 1.0x)",
+    "group": "gurun_barat",
+    "x": 1200,
+    "y": 2500,
+    "zoom": 1
+  },
+  {
+    "name": "shot_09_gurun_pasir_sutra_z14",
+    "pointId": "09_gurun_pasir_sutra",
+    "title": "Gurun Pasir Sutra (Zoom 1.4x)",
+    "group": "gurun_barat",
+    "x": 1200,
+    "y": 2500,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_10_gurun_oase_shadi_z10",
+    "pointId": "10_gurun_oase_shadi",
+    "title": "Oase Shadi Gurun Barat (Zoom 1.0x)",
+    "group": "gurun_barat",
+    "x": 820,
+    "y": 2220,
+    "zoom": 1
+  },
+  {
+    "name": "shot_10_gurun_oase_shadi_z14",
+    "pointId": "10_gurun_oase_shadi",
+    "title": "Oase Shadi Gurun Barat (Zoom 1.4x)",
+    "group": "gurun_barat",
+    "x": 820,
+    "y": 2220,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_11_gurun_kota_hanhai_z10",
+    "pointId": "11_gurun_kota_hanhai",
+    "title": "Kota Kecil Hanhai Gurun (Zoom 1.0x)",
+    "group": "gurun_barat",
+    "x": 1100,
+    "y": 2400,
+    "zoom": 1
+  },
+  {
+    "name": "shot_11_gurun_kota_hanhai_z14",
+    "pointId": "11_gurun_kota_hanhai",
+    "title": "Kota Kecil Hanhai Gurun (Zoom 1.4x)",
+    "group": "gurun_barat",
+    "x": 1100,
+    "y": 2400,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_12_gurun_tandus_barat_z10",
+    "pointId": "12_gurun_tandus_barat",
+    "title": "Gurun Tandus Barat Bebatuan (Zoom 1.0x)",
+    "group": "gurun_barat",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1
+  },
+  {
+    "name": "shot_12_gurun_tandus_barat_z14",
+    "pointId": "12_gurun_tandus_barat",
+    "title": "Gurun Tandus Barat Bebatuan (Zoom 1.4x)",
+    "group": "gurun_barat",
+    "x": 900,
+    "y": 2600,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_13_azure_pass_karst_z10",
+    "pointId": "13_azure_pass_karst",
+    "title": "Puncak Karst Azure Pass (Zoom 1.0x)",
+    "group": "pegunungan_azure",
+    "x": 2605,
+    "y": 3336,
+    "zoom": 1
+  },
+  {
+    "name": "shot_13_azure_pass_karst_z14",
+    "pointId": "13_azure_pass_karst",
+    "title": "Puncak Karst Azure Pass (Zoom 1.4x)",
+    "group": "pegunungan_azure",
+    "x": 2605,
+    "y": 3336,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_14_kaki_gunung_azure_z10",
+    "pointId": "14_kaki_gunung_azure",
+    "title": "Kaki Gunung Azure (Zoom 1.0x)",
+    "group": "pegunungan_azure",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1
+  },
+  {
+    "name": "shot_14_kaki_gunung_azure_z14",
+    "pointId": "14_kaki_gunung_azure",
+    "title": "Kaki Gunung Azure (Zoom 1.4x)",
+    "group": "pegunungan_azure",
+    "x": 2200,
+    "y": 3340,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_15_sword_gorge_pass_z10",
+    "pointId": "15_sword_gorge_pass",
+    "title": "Celah Jurang Sword Gorge (Zoom 1.0x)",
+    "group": "pegunungan_azure",
+    "x": 3250,
+    "y": 3000,
+    "zoom": 1
+  },
+  {
+    "name": "shot_15_sword_gorge_pass_z14",
+    "pointId": "15_sword_gorge_pass",
+    "title": "Celah Jurang Sword Gorge (Zoom 1.4x)",
+    "group": "pegunungan_azure",
+    "x": 3250,
+    "y": 3000,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_16_makam_pedang_purba_z10",
+    "pointId": "16_makam_pedang_purba",
+    "title": "Makam Kaisar Pedang Purba (Zoom 1.0x)",
+    "group": "pegunungan_azure",
+    "x": 2200,
+    "y": 3360,
+    "zoom": 1
+  },
+  {
+    "name": "shot_16_makam_pedang_purba_z14",
+    "pointId": "16_makam_pedang_purba",
+    "title": "Makam Kaisar Pedang Purba (Zoom 1.4x)",
+    "group": "pegunungan_azure",
+    "x": 2200,
+    "y": 3360,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_17_desa_xueshan_z10",
+    "pointId": "17_desa_xueshan",
+    "title": "Desa Xueshan Salju Utara (Zoom 1.0x)",
+    "group": "utara_beku_t4",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1
+  },
+  {
+    "name": "shot_17_desa_xueshan_z14",
+    "pointId": "17_desa_xueshan",
+    "title": "Desa Xueshan Salju Utara (Zoom 1.4x)",
+    "group": "utara_beku_t4",
+    "x": 2350,
+    "y": 4300,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_18_dusun_pondok_es_z10",
+    "pointId": "18_dusun_pondok_es",
+    "title": "Dusun Pondok Es Tundra (Zoom 1.0x)",
+    "group": "utara_beku_t4",
+    "x": 2000,
+    "y": 4250,
+    "zoom": 1
+  },
+  {
+    "name": "shot_18_dusun_pondok_es_z14",
+    "pointId": "18_dusun_pondok_es",
+    "title": "Dusun Pondok Es Tundra (Zoom 1.4x)",
+    "group": "utara_beku_t4",
+    "x": 2000,
+    "y": 4250,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_19_pos_tundra_salju_z10",
+    "pointId": "19_pos_tundra_salju",
+    "title": "Pos Tundra Salju Perbatasan (Zoom 1.0x)",
+    "group": "utara_beku_t4",
+    "x": 2120,
+    "y": 4180,
+    "zoom": 1
+  },
+  {
+    "name": "shot_19_pos_tundra_salju_z14",
+    "pointId": "19_pos_tundra_salju",
+    "title": "Pos Tundra Salju Perbatasan (Zoom 1.4x)",
+    "group": "utara_beku_t4",
+    "x": 2120,
+    "y": 4180,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_20_istana_es_abadi_z10",
+    "pointId": "20_istana_es_abadi",
+    "title": "Lembah Istana Es Abadi (Zoom 1.0x)",
+    "group": "utara_beku_t4",
+    "x": 1950,
+    "y": 4700,
+    "zoom": 1
+  },
+  {
+    "name": "shot_20_istana_es_abadi_z14",
+    "pointId": "20_istana_es_abadi",
+    "title": "Lembah Istana Es Abadi (Zoom 1.4x)",
+    "group": "utara_beku_t4",
+    "x": 1950,
+    "y": 4700,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_21_dermaga_donghai_z10",
+    "pointId": "21_dermaga_donghai",
+    "title": "Dermaga Donghai Pesisir Timur (Zoom 1.0x)",
+    "group": "rawa_volkanik_laut",
+    "x": 3920,
+    "y": 2700,
+    "zoom": 1
+  },
+  {
+    "name": "shot_21_dermaga_donghai_z14",
+    "pointId": "21_dermaga_donghai",
+    "title": "Dermaga Donghai Pesisir Timur (Zoom 1.4x)",
+    "group": "rawa_volkanik_laut",
+    "x": 3920,
+    "y": 2700,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_22_danau_cermin_z10",
+    "pointId": "22_danau_cermin",
+    "title": "Perairan Danau Cermin Mistis (Zoom 1.0x)",
+    "group": "rawa_volkanik_laut",
+    "x": 3688,
+    "y": 3688,
+    "zoom": 1
+  },
+  {
+    "name": "shot_22_danau_cermin_z14",
+    "pointId": "22_danau_cermin",
+    "title": "Perairan Danau Cermin Mistis (Zoom 1.4x)",
+    "group": "rawa_volkanik_laut",
+    "x": 3688,
+    "y": 3688,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_23_volkanik_gerbang_iblis_z10",
+    "pointId": "23_volkanik_gerbang_iblis",
+    "title": "Kawasan Api Gerbang Iblis (Zoom 1.0x)",
+    "group": "rawa_volkanik_laut",
+    "x": 2500,
+    "y": 800,
+    "zoom": 1
+  },
+  {
+    "name": "shot_23_volkanik_gerbang_iblis_z14",
+    "pointId": "23_volkanik_gerbang_iblis",
+    "title": "Kawasan Api Gerbang Iblis (Zoom 1.4x)",
+    "group": "rawa_volkanik_laut",
+    "x": 2500,
+    "y": 800,
+    "zoom": 1.4
+  },
+  {
+    "name": "shot_24_batas_perbatasan_qinghe_z10",
+    "pointId": "24_batas_perbatasan_qinghe",
+    "title": "Pos Batas Wilayah Qinghe (Zoom 1.0x)",
+    "group": "rawa_volkanik_laut",
+    "x": 2300,
+    "y": 1950,
+    "zoom": 1
+  },
+  {
+    "name": "shot_24_batas_perbatasan_qinghe_z14",
+    "pointId": "24_batas_perbatasan_qinghe",
+    "title": "Pos Batas Wilayah Qinghe (Zoom 1.4x)",
+    "group": "rawa_volkanik_laut",
+    "x": 2300,
+    "y": 1950,
+    "zoom": 1.4
+  }
+]

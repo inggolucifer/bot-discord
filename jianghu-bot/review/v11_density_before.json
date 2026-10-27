@@ -1,0 +1,698 @@
+{
+  "central_plains": {
+    "displayName": "Central Plains",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 11,
+      "median": 16,
+      "p90": 22
+    },
+    "cellsCoveredPct": {
+      "p10": 5,
+      "median": 7.5,
+      "p90": 10.4
+    },
+    "emptyRatio": {
+      "p10": 0.86,
+      "median": 0.91,
+      "p90": 0.94
+    },
+    "maxEmptyRun": {
+      "p10": 3.2,
+      "median": 5,
+      "p90": 6.4
+    }
+  },
+  "nine_springs_delta": {
+    "displayName": "Nine Springs Delta",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 3,
+      "median": 7,
+      "p90": 19
+    },
+    "cellsCoveredPct": {
+      "p10": 1.3,
+      "median": 3.3,
+      "p90": 8.3
+    },
+    "emptyRatio": {
+      "p10": 0.91,
+      "median": 0.97,
+      "p90": 0.99
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5.8,
+      "p90": 11.7
+    }
+  },
+  "azure_mountain_range": {
+    "displayName": "Azure Mountain Range",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 11,
+      "median": 14,
+      "p90": 18
+    },
+    "cellsCoveredPct": {
+      "p10": 11.3,
+      "median": 15.4,
+      "p90": 20.5
+    },
+    "emptyRatio": {
+      "p10": 0.62,
+      "median": 0.7,
+      "p90": 0.78
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 6.1
+    }
+  },
+  "northern_desolate": {
+    "displayName": "Northern Desolate",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 3,
+      "p90": 6
+    },
+    "cellsCoveredPct": {
+      "p10": 0.4,
+      "median": 1.7,
+      "p90": 4.2
+    },
+    "emptyRatio": {
+      "p10": 0.91,
+      "median": 0.97,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 8.2,
+      "p90": 23.3
+    }
+  },
+  "thundersteppe": {
+    "displayName": "Thundersteppe",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 2,
+      "median": 5,
+      "p90": 9
+    },
+    "cellsCoveredPct": {
+      "p10": 0.8,
+      "median": 2.1,
+      "p90": 3.8
+    },
+    "emptyRatio": {
+      "p10": 0.95,
+      "median": 0.98,
+      "p90": 0.99
+    },
+    "maxEmptyRun": {
+      "p10": 4.5,
+      "median": 7.3,
+      "p90": 12.7
+    }
+  },
+  "godthunder_peaks": {
+    "displayName": "Godthunder Peaks",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 9.9,
+      "median": 13,
+      "p90": 17
+    },
+    "cellsCoveredPct": {
+      "p10": 9.2,
+      "median": 14.2,
+      "p90": 19.2
+    },
+    "emptyRatio": {
+      "p10": 0.65,
+      "median": 0.73,
+      "p90": 0.8
+    },
+    "maxEmptyRun": {
+      "p10": 4,
+      "median": 5,
+      "p90": 6.4
+    }
+  },
+  "mirror_lake": {
+    "displayName": "Mirror Lake",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 9,
+      "median": 13,
+      "p90": 18
+    },
+    "cellsCoveredPct": {
+      "p10": 6.6,
+      "median": 11.3,
+      "p90": 15.8
+    },
+    "emptyRatio": {
+      "p10": 0.76,
+      "median": 0.84,
+      "p90": 0.91
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 7
+    }
+  },
+  "beast_prairies": {
+    "displayName": "Beast Prairies",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 7,
+      "median": 13,
+      "p90": 19
+    },
+    "cellsCoveredPct": {
+      "p10": 3.3,
+      "median": 6.3,
+      "p90": 14.6
+    },
+    "emptyRatio": {
+      "p10": 0.73,
+      "median": 0.92,
+      "p90": 0.96
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 7.2
+    }
+  },
+  "western_sacred_desert": {
+    "displayName": "Western Sacred Desert",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 2,
+      "median": 5,
+      "p90": 16
+    },
+    "cellsCoveredPct": {
+      "p10": 1.7,
+      "median": 3.8,
+      "p90": 15.9
+    },
+    "emptyRatio": {
+      "p10": 0.69,
+      "median": 0.92,
+      "p90": 0.96
+    },
+    "maxEmptyRun": {
+      "p10": 4.2,
+      "median": 6.4,
+      "p90": 11.7
+    }
+  },
+  "western_gorge_labyrinth": {
+    "displayName": "Western Gorge Labyrinth",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 2,
+      "median": 4,
+      "p90": 10
+    },
+    "cellsCoveredPct": {
+      "p10": 1.3,
+      "median": 2.9,
+      "p90": 7.5
+    },
+    "emptyRatio": {
+      "p10": 0.83,
+      "median": 0.93,
+      "p90": 0.98
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 7.4,
+      "p90": 14.9
+    }
+  },
+  "hermit_highlands": {
+    "displayName": "Hermit Highlands",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 6,
+      "median": 14,
+      "p90": 18
+    },
+    "cellsCoveredPct": {
+      "p10": 2.9,
+      "median": 10.8,
+      "p90": 17.1
+    },
+    "emptyRatio": {
+      "p10": 0.65,
+      "median": 0.76,
+      "p90": 0.97
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 6.7
+    }
+  },
+  "border_march": {
+    "displayName": "Border March",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 2,
+      "p90": 9
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 1.3,
+      "p90": 5
+    },
+    "emptyRatio": {
+      "p10": 0.92,
+      "median": 0.98,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 10.1,
+      "p90": 23.3
+    }
+  },
+  "lava_spine": {
+    "displayName": "Lava Spine",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 2,
+      "p90": 4
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 1.3,
+      "p90": 2.5
+    },
+    "emptyRatio": {
+      "p10": 0.94,
+      "median": 0.98,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 6.4,
+      "median": 10,
+      "p90": 23.3
+    }
+  },
+  "venom_mire": {
+    "displayName": "Venom Mire",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 3,
+      "p90": 5
+    },
+    "cellsCoveredPct": {
+      "p10": 0.4,
+      "median": 1.7,
+      "p90": 2.9
+    },
+    "emptyRatio": {
+      "p10": 0.93,
+      "median": 0.97,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 9,
+      "p90": 23.3
+    }
+  },
+  "southern_demon_domain": {
+    "displayName": "Southern Demon Domain",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 7,
+      "p90": 16
+    },
+    "cellsCoveredPct": {
+      "p10": 0.8,
+      "median": 5.4,
+      "p90": 15.5
+    },
+    "emptyRatio": {
+      "p10": 0.68,
+      "median": 0.88,
+      "p90": 0.99
+    },
+    "maxEmptyRun": {
+      "p10": 4,
+      "median": 5.8,
+      "p90": 23.3
+    }
+  },
+  "crimson_battlefield": {
+    "displayName": "Crimson Battlefield",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 3,
+      "p90": 5
+    },
+    "cellsCoveredPct": {
+      "p10": 0.4,
+      "median": 1.7,
+      "p90": 3.3
+    },
+    "emptyRatio": {
+      "p10": 0.93,
+      "median": 0.97,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 9.1,
+      "p90": 23.3
+    }
+  },
+  "abyssal_scar": {
+    "displayName": "Abyssal Scar",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 2,
+      "p90": 4
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 1.3,
+      "p90": 2.5
+    },
+    "emptyRatio": {
+      "p10": 0.94,
+      "median": 0.98,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 6.3,
+      "median": 14.9,
+      "p90": 23.3
+    }
+  },
+  "southern_plague_woods": {
+    "displayName": "Southern Plague Woods",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 3,
+      "p90": 6
+    },
+    "cellsCoveredPct": {
+      "p10": 0.4,
+      "median": 1.7,
+      "p90": 3.8
+    },
+    "emptyRatio": {
+      "p10": 0.92,
+      "median": 0.97,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 8.2,
+      "p90": 23.3
+    }
+  },
+  "bone_sea_coast": {
+    "displayName": "Bone Sea Coast",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 3,
+      "median": 8,
+      "p90": 17
+    },
+    "cellsCoveredPct": {
+      "p10": 1.7,
+      "median": 5.8,
+      "p90": 11.7
+    },
+    "emptyRatio": {
+      "p10": 0.75,
+      "median": 0.91,
+      "p90": 0.98
+    },
+    "maxEmptyRun": {
+      "p10": 4,
+      "median": 6.1,
+      "p90": 10.5
+    }
+  },
+  "spirit_wood_sea": {
+    "displayName": "Spirit Wood Sea",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 2,
+      "p90": 6
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 1.3,
+      "p90": 3
+    },
+    "emptyRatio": {
+      "p10": 0.95,
+      "median": 0.99,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 4.1,
+      "median": 9.4,
+      "p90": 23.3
+    }
+  },
+  "mist_insect_valley": {
+    "displayName": "Mist Insect Valley",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 3,
+      "median": 9,
+      "p90": 16.1
+    },
+    "cellsCoveredPct": {
+      "p10": 1.7,
+      "median": 4.2,
+      "p90": 7.5
+    },
+    "emptyRatio": {
+      "p10": 0.88,
+      "median": 0.95,
+      "p90": 0.98
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5.8,
+      "p90": 10.3
+    }
+  },
+  "formation_barrens": {
+    "displayName": "Formation Barrens",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 1,
+      "median": 3,
+      "p90": 15
+    },
+    "cellsCoveredPct": {
+      "p10": 0.4,
+      "median": 2.1,
+      "p90": 11.3
+    },
+    "emptyRatio": {
+      "p10": 0.74,
+      "median": 0.95,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 4.1,
+      "median": 8,
+      "p90": 23.3
+    }
+  },
+  "sword_gorge": {
+    "displayName": "Sword Gorge",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 2,
+      "median": 11,
+      "p90": 17
+    },
+    "cellsCoveredPct": {
+      "p10": 1.7,
+      "median": 9,
+      "p90": 17.9
+    },
+    "emptyRatio": {
+      "p10": 0.66,
+      "median": 0.8,
+      "p90": 0.97
+    },
+    "maxEmptyRun": {
+      "p10": 4,
+      "median": 5.4,
+      "p90": 11.7
+    }
+  },
+  "ore_teeth_range": {
+    "displayName": "Ore Teeth Range",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 11,
+      "median": 15,
+      "p90": 19
+    },
+    "cellsCoveredPct": {
+      "p10": 10,
+      "median": 14.2,
+      "p90": 18.8
+    },
+    "emptyRatio": {
+      "p10": 0.62,
+      "median": 0.7,
+      "p90": 0.78
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 6.1
+    }
+  },
+  "eastern_sea": {
+    "displayName": "Eastern Sea",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 6,
+      "median": 9,
+      "p90": 13
+    },
+    "cellsCoveredPct": {
+      "p10": 4.2,
+      "median": 8.3,
+      "p90": 12.9
+    },
+    "emptyRatio": {
+      "p10": 0.78,
+      "median": 0.86,
+      "p90": 0.94
+    },
+    "maxEmptyRun": {
+      "p10": 4.1,
+      "median": 5.8,
+      "p90": 8.1
+    }
+  },
+  "frostmoon_sea": {
+    "displayName": "Frostmoon Sea",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 2,
+      "median": 5,
+      "p90": 8
+    },
+    "cellsCoveredPct": {
+      "p10": 1.3,
+      "median": 4.4,
+      "p90": 8.3
+    },
+    "emptyRatio": {
+      "p10": 0.86,
+      "median": 0.93,
+      "p90": 0.98
+    },
+    "maxEmptyRun": {
+      "p10": 5,
+      "median": 7.3,
+      "p90": 12
+    }
+  },
+  "floating_wind_isles": {
+    "displayName": "Floating Wind Isles",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 6,
+      "median": 9,
+      "p90": 13
+    },
+    "cellsCoveredPct": {
+      "p10": 4.2,
+      "median": 7.5,
+      "p90": 11.3
+    },
+    "emptyRatio": {
+      "p10": 0.81,
+      "median": 0.88,
+      "p90": 0.94
+    },
+    "maxEmptyRun": {
+      "p10": 4.2,
+      "median": 5.7,
+      "p90": 8.3
+    }
+  },
+  "immortal_ruins_valley": {
+    "displayName": "Immortal Ruins Valley",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 12,
+      "p90": 18
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 9.6,
+      "p90": 16.7
+    },
+    "emptyRatio": {
+      "p10": 0.65,
+      "median": 0.77,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 3.6,
+      "median": 5,
+      "p90": 23.3
+    }
+  },
+  "void_rift": {
+    "displayName": "Void Rift",
+    "sampleCount": 300,
+    "sprites": {
+      "p10": 0,
+      "median": 2,
+      "p90": 4
+    },
+    "cellsCoveredPct": {
+      "p10": 0,
+      "median": 1.3,
+      "p90": 2.1
+    },
+    "emptyRatio": {
+      "p10": 0.95,
+      "median": 0.98,
+      "p90": 1
+    },
+    "maxEmptyRun": {
+      "p10": 5.1,
+      "median": 11.6,
+      "p90": 23.3
+    }
+  }
+}
