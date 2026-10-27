@@ -1,390 +1,1199 @@
 {
- "tileSizePx": 256,
- "tilesPerTexture": 4,
- "terrains": {
-  "plains": {
-   "family": "plains",
-   "variants": [
-    "plains_v1",
-    "plains_v2",
-    "plains_v3"
-   ]
+  "version": 2,
+  "tileSizePx": 128,
+  "macroSizePx": 1024,
+  "macroCells": 8,
+  "detailOpacity": 0.2,
+  "terrains": {
+    "abyss_edge": {
+      "family": "abyss_edge",
+      "variants": [
+        "v11/abyss_edge_m1",
+        "v11/abyss_edge_m2",
+        "v11/abyss_edge_m3",
+        "v11/abyss_edge_m4"
+      ]
+    },
+    "azure_mountain": {
+      "family": "rock_ground",
+      "variants": [
+        "v11/rock_ground_m1",
+        "v11/rock_ground_m2",
+        "v11/rock_ground_m3",
+        "v11/rock_ground_m4"
+      ]
+    },
+    "bamboo_forest": {
+      "family": "bamboo_floor",
+      "variants": [
+        "v11/bamboo_floor_m1",
+        "v11/bamboo_floor_m2",
+        "v11/bamboo_floor_m3",
+        "v11/bamboo_floor_m4"
+      ]
+    },
+    "bamboo_grove": {
+      "family": "bamboo_floor",
+      "variants": [
+        "v11/bamboo_floor_m1",
+        "v11/bamboo_floor_m2",
+        "v11/bamboo_floor_m3",
+        "v11/bamboo_floor_m4"
+      ]
+    },
+    "basalt": {
+      "family": "volcanic",
+      "variants": [
+        "v11/volcanic_m1",
+        "v11/volcanic_m2",
+        "v11/volcanic_m3",
+        "v11/volcanic_m4"
+      ]
+    },
+    "battlefield_ash": {
+      "family": "battlefield_ash",
+      "variants": [
+        "v11/battlefield_ash_m1",
+        "v11/battlefield_ash_m2",
+        "v11/battlefield_ash_m3",
+        "v11/battlefield_ash_m4"
+      ]
+    },
+    "canyon_floor": {
+      "family": "canyon_floor",
+      "variants": [
+        "v11/canyon_floor_m1",
+        "v11/canyon_floor_m2",
+        "v11/canyon_floor_m3",
+        "v11/canyon_floor_m4"
+      ]
+    },
+    "cliff": {
+      "family": "cliff",
+      "variants": [
+        "v11/cliff_m1",
+        "v11/cliff_m2",
+        "v11/cliff_m3",
+        "v11/cliff_m4"
+      ]
+    },
+    "crater": {
+      "family": "crater",
+      "variants": [
+        "v11/crater_m1",
+        "v11/crater_m2",
+        "v11/crater_m3",
+        "v11/crater_m4"
+      ]
+    },
+    "dead_wood": {
+      "family": "dead_wood",
+      "variants": [
+        "v11/dead_wood_m1",
+        "v11/dead_wood_m2",
+        "v11/dead_wood_m3",
+        "v11/dead_wood_m4"
+      ]
+    },
+    "demonic_swamp": {
+      "family": "demonic_swamp",
+      "variants": [
+        "v11/demonic_swamp_m1",
+        "v11/demonic_swamp_m2",
+        "v11/demonic_swamp_m3",
+        "v11/demonic_swamp_m4"
+      ]
+    },
+    "desert_sand": {
+      "family": "desert_sand",
+      "variants": [
+        "v11/desert_sand_m1",
+        "v11/desert_sand_m2",
+        "v11/desert_sand_m3",
+        "v11/desert_sand_m4"
+      ]
+    },
+    "dune": {
+      "family": "dune",
+      "variants": [
+        "v11/dune_m1",
+        "v11/dune_m2",
+        "v11/dune_m3",
+        "v11/dune_m4"
+      ]
+    },
+    "farmland": {
+      "family": "farmland",
+      "variants": [
+        "v11/farmland_m1",
+        "v11/farmland_m2",
+        "v11/farmland_m3",
+        "v11/farmland_m4"
+      ]
+    },
+    "forest": {
+      "family": "forest_floor",
+      "variants": [
+        "v11/forest_floor_m1",
+        "v11/forest_floor_m2",
+        "v11/forest_floor_m3",
+        "v11/forest_floor_m4"
+      ]
+    },
+    "formation_tile": {
+      "family": "formation_tile",
+      "variants": [
+        "v11/formation_tile_m1",
+        "v11/formation_tile_m2",
+        "v11/formation_tile_m3",
+        "v11/formation_tile_m4"
+      ]
+    },
+    "glacier": {
+      "family": "glacier",
+      "variants": [
+        "v11/glacier_m1",
+        "v11/glacier_m2",
+        "v11/glacier_m3",
+        "v11/glacier_m4"
+      ]
+    },
+    "herb_field": {
+      "family": "herb_field",
+      "variants": [
+        "v11/herb_field_m1",
+        "v11/herb_field_m2",
+        "v11/herb_field_m3",
+        "v11/herb_field_m4"
+      ]
+    },
+    "hill": {
+      "family": "hill",
+      "variants": [
+        "v11/hill_m1",
+        "v11/hill_m2",
+        "v11/hill_m3",
+        "v11/hill_m4"
+      ]
+    },
+    "ice_crack": {
+      "family": "ice_crack",
+      "variants": [
+        "v11/ice_crack_m1",
+        "v11/ice_crack_m2",
+        "v11/ice_crack_m3",
+        "v11/ice_crack_m4"
+      ]
+    },
+    "island_reef": {
+      "family": "island_reef",
+      "variants": [
+        "v11/island_reef_m1",
+        "v11/island_reef_m2",
+        "v11/island_reef_m3",
+        "v11/island_reef_m4"
+      ]
+    },
+    "lake": {
+      "family": "lake",
+      "variants": [
+        "v11/lake_m1",
+        "v11/lake_m2",
+        "v11/lake_m3",
+        "v11/lake_m4"
+      ]
+    },
+    "lake_deep": {
+      "family": "lake",
+      "variants": [
+        "v11/lake_m1",
+        "v11/lake_m2",
+        "v11/lake_m3",
+        "v11/lake_m4"
+      ]
+    },
+    "lava_flow": {
+      "family": "lava_flow",
+      "variants": [
+        "v11/lava_flow_m1",
+        "v11/lava_flow_m2",
+        "v11/lava_flow_m3",
+        "v11/lava_flow_m4"
+      ]
+    },
+    "lightning_scar": {
+      "family": "lightning_scar",
+      "variants": [
+        "v11/lightning_scar_m1",
+        "v11/lightning_scar_m2",
+        "v11/lightning_scar_m3",
+        "v11/lightning_scar_m4"
+      ]
+    },
+    "meadow": {
+      "family": "meadow",
+      "variants": [
+        "v11/meadow_m1",
+        "v11/meadow_m2",
+        "v11/meadow_m3",
+        "v11/meadow_m4"
+      ]
+    },
+    "miasma_waste": {
+      "family": "miasma_waste",
+      "variants": [
+        "v11/miasma_waste_m1",
+        "v11/miasma_waste_m2",
+        "v11/miasma_waste_m3",
+        "v11/miasma_waste_m4"
+      ]
+    },
+    "mountain": {
+      "family": "rock_ground",
+      "variants": [
+        "v11/rock_ground_m1",
+        "v11/rock_ground_m2",
+        "v11/rock_ground_m3",
+        "v11/rock_ground_m4"
+      ]
+    },
+    "mountain_pass": {
+      "family": "mountain_pass",
+      "variants": [
+        "v11/mountain_pass_m1",
+        "v11/mountain_pass_m2",
+        "v11/mountain_pass_m3",
+        "v11/mountain_pass_m4"
+      ]
+    },
+    "mountain_peak": {
+      "family": "rock_ground",
+      "variants": [
+        "v11/rock_ground_m1",
+        "v11/rock_ground_m2",
+        "v11/rock_ground_m3",
+        "v11/rock_ground_m4"
+      ]
+    },
+    "mountain_rock": {
+      "family": "rock_ground",
+      "variants": [
+        "v11/rock_ground_m1",
+        "v11/rock_ground_m2",
+        "v11/rock_ground_m3",
+        "v11/rock_ground_m4"
+      ]
+    },
+    "oasis": {
+      "family": "oasis",
+      "variants": [
+        "v11/oasis_m1",
+        "v11/oasis_m2",
+        "v11/oasis_m3",
+        "v11/oasis_m4"
+      ]
+    },
+    "ocean": {
+      "family": "ocean",
+      "variants": [
+        "v11/ocean_m1",
+        "v11/ocean_m2",
+        "v11/ocean_m3",
+        "v11/ocean_m4"
+      ]
+    },
+    "plains": {
+      "family": "plains",
+      "variants": [
+        "v11/plains_m1",
+        "v11/plains_m2",
+        "v11/plains_m3",
+        "v11/plains_m4"
+      ]
+    },
+    "poison_pool": {
+      "family": "poison_pool",
+      "variants": [
+        "v11/poison_pool_m1",
+        "v11/poison_pool_m2",
+        "v11/poison_pool_m3",
+        "v11/poison_pool_m4"
+      ]
+    },
+    "pond_lotus": {
+      "family": "swamp",
+      "variants": [
+        "v11/swamp_m1",
+        "v11/swamp_m2",
+        "v11/swamp_m3",
+        "v11/swamp_m4"
+      ]
+    },
+    "river": {
+      "family": "river",
+      "variants": [
+        "v11/river_m1",
+        "v11/river_m2",
+        "v11/river_m3",
+        "v11/river_m4"
+      ]
+    },
+    "river_shallow": {
+      "family": "river",
+      "variants": [
+        "v11/river_m1",
+        "v11/river_m2",
+        "v11/river_m3",
+        "v11/river_m4"
+      ]
+    },
+    "road_stone": {
+      "family": "road_stone",
+      "variants": [
+        "v11/road_stone_m1",
+        "v11/road_stone_m2",
+        "v11/road_stone_m3",
+        "v11/road_stone_m4"
+      ]
+    },
+    "ruin_floor": {
+      "family": "ruin_floor",
+      "variants": [
+        "v11/ruin_floor_m1",
+        "v11/ruin_floor_m2",
+        "v11/ruin_floor_m3",
+        "v11/ruin_floor_m4"
+      ]
+    },
+    "sea": {
+      "family": "ocean",
+      "variants": [
+        "v11/ocean_m1",
+        "v11/ocean_m2",
+        "v11/ocean_m3",
+        "v11/ocean_m4"
+      ]
+    },
+    "sea_reef": {
+      "family": "island_reef",
+      "variants": [
+        "v11/island_reef_m1",
+        "v11/island_reef_m2",
+        "v11/island_reef_m3",
+        "v11/island_reef_m4"
+      ]
+    },
+    "settlement": {
+      "family": "settlement_floor",
+      "variants": [
+        "v11/settlement_floor_m1",
+        "v11/settlement_floor_m2",
+        "v11/settlement_floor_m3",
+        "v11/settlement_floor_m4"
+      ]
+    },
+    "snow": {
+      "family": "snow",
+      "variants": [
+        "v11/snow_m1",
+        "v11/snow_m2",
+        "v11/snow_m3",
+        "v11/snow_m4"
+      ]
+    },
+    "spirit_wood": {
+      "family": "forest_floor",
+      "variants": [
+        "v11/forest_floor_m1",
+        "v11/forest_floor_m2",
+        "v11/forest_floor_m3",
+        "v11/forest_floor_m4"
+      ]
+    },
+    "swamp": {
+      "family": "swamp",
+      "variants": [
+        "v11/swamp_m1",
+        "v11/swamp_m2",
+        "v11/swamp_m3",
+        "v11/swamp_m4"
+      ]
+    },
+    "sword_gorge_pass": {
+      "family": "mountain_pass",
+      "variants": [
+        "v11/mountain_pass_m1",
+        "v11/mountain_pass_m2",
+        "v11/mountain_pass_m3",
+        "v11/mountain_pass_m4"
+      ]
+    },
+    "volcanic": {
+      "family": "volcanic",
+      "variants": [
+        "v11/volcanic_m1",
+        "v11/volcanic_m2",
+        "v11/volcanic_m3",
+        "v11/volcanic_m4"
+      ]
+    }
   },
-  "meadow": {
-   "family": "meadow",
-   "variants": [
-    "meadow_v1",
-    "meadow_v2",
-    "meadow_v3"
-   ]
-  },
-  "farmland": {
-   "family": "farmland",
-   "variants": [
-    "farmland_v1",
-    "farmland_v2",
-    "farmland_v3"
-   ]
-  },
-  "herb_field": {
-   "family": "herb_field",
-   "variants": [
-    "herb_field_v1",
-    "herb_field_v2",
-    "herb_field_v3"
-   ]
-  },
-  "forest": {
-   "family": "forest_floor",
-   "variants": [
-    "forest_floor_v1",
-    "forest_floor_v2",
-    "forest_floor_v3"
-   ]
-  },
-  "spirit_wood": {
-   "family": "forest_floor",
-   "variants": [
-    "forest_floor_v1",
-    "forest_floor_v2",
-    "forest_floor_v3"
-   ]
-  },
-  "bamboo_forest": {
-   "family": "bamboo_floor",
-   "variants": [
-    "bamboo_floor_v1",
-    "bamboo_floor_v2",
-    "bamboo_floor_v3"
-   ]
-  },
-  "bamboo_grove": {
-   "family": "bamboo_floor",
-   "variants": [
-    "bamboo_floor_v1",
-    "bamboo_floor_v2",
-    "bamboo_floor_v3"
-   ]
-  },
-  "dead_wood": {
-   "family": "dead_wood",
-   "variants": [
-    "dead_wood_v1",
-    "dead_wood_v2",
-    "dead_wood_v3"
-   ]
-  },
-  "hill": {
-   "family": "hill",
-   "variants": [
-    "hill_v1",
-    "hill_v2",
-    "hill_v3"
-   ]
-  },
-  "mountain_rock": {
-   "family": "rock_ground",
-   "variants": [
-    "rock_ground_v1",
-    "rock_ground_v2",
-    "rock_ground_v3"
-   ]
-  },
-  "mountain": {
-   "family": "rock_ground",
-   "variants": [
-    "rock_ground_v1",
-    "rock_ground_v2",
-    "rock_ground_v3"
-   ]
-  },
-  "cliff": {
-   "family": "rock_ground",
-   "variants": [
-    "rock_ground_v1",
-    "rock_ground_v2",
-    "rock_ground_v3"
-   ]
-  },
-  "azure_mountain": {
-   "family": "rock_ground",
-   "variants": [
-    "rock_ground_v1",
-    "rock_ground_v2",
-    "rock_ground_v3"
-   ]
-  },
-  "mountain_peak": {
-   "family": "rock_ground",
-   "variants": [
-    "rock_ground_v1",
-    "rock_ground_v2",
-    "rock_ground_v3"
-   ]
-  },
-  "mountain_pass": {
-   "family": "mountain_pass",
-   "variants": [
-    "mountain_pass_v1",
-    "mountain_pass_v2",
-    "mountain_pass_v3"
-   ]
-  },
-  "sword_gorge_pass": {
-   "family": "mountain_pass",
-   "variants": [
-    "mountain_pass_v1",
-    "mountain_pass_v2",
-    "mountain_pass_v3"
-   ]
-  },
-  "canyon_floor": {
-   "family": "canyon_floor",
-   "variants": [
-    "canyon_floor_v1",
-    "canyon_floor_v2",
-    "canyon_floor_v3"
-   ]
-  },
-  "desert_sand": {
-   "family": "desert_sand",
-   "variants": [
-    "desert_sand_v1",
-    "desert_sand_v2",
-    "desert_sand_v3"
-   ]
-  },
-  "dune": {
-   "family": "dune",
-   "variants": [
-    "dune_v1",
-    "dune_v2",
-    "dune_v3"
-   ]
-  },
-  "oasis": {
-   "family": "oasis",
-   "variants": [
-    "oasis_v1",
-    "oasis_v2",
-    "oasis_v3"
-   ]
-  },
-  "snow": {
-   "family": "snow",
-   "variants": [
-    "snow_v1",
-    "snow_v2",
-    "snow_v3"
-   ]
-  },
-  "ice_crack": {
-   "family": "ice_crack",
-   "variants": [
-    "ice_crack_v1",
-    "ice_crack_v2",
-    "ice_crack_v3"
-   ]
-  },
-  "glacier": {
-   "family": "ice_crack",
-   "variants": [
-    "ice_crack_v1",
-    "ice_crack_v2",
-    "ice_crack_v3"
-   ]
-  },
-  "swamp": {
-   "family": "swamp",
-   "variants": [
-    "swamp_v1",
-    "swamp_v2",
-    "swamp_v3"
-   ]
-  },
-  "pond_lotus": {
-   "family": "swamp",
-   "variants": [
-    "swamp_v1",
-    "swamp_v2",
-    "swamp_v3"
-   ]
-  },
-  "river_shallow": {
-   "family": "swamp",
-   "variants": [
-    "swamp_v1",
-    "swamp_v2",
-    "swamp_v3"
-   ]
-  },
-  "demonic_swamp": {
-   "family": "demonic_swamp",
-   "variants": [
-    "demonic_swamp_v1",
-    "demonic_swamp_v2",
-    "demonic_swamp_v3"
-   ]
-  },
-  "poison_pool": {
-   "family": "poison_pool",
-   "variants": [
-    "poison_pool_v1",
-    "poison_pool_v2",
-    "poison_pool_v3"
-   ]
-  },
-  "miasma_waste": {
-   "family": "miasma_waste",
-   "variants": [
-    "miasma_waste_v1",
-    "miasma_waste_v2",
-    "miasma_waste_v3"
-   ]
-  },
-  "battlefield_ash": {
-   "family": "battlefield_ash",
-   "variants": [
-    "battlefield_ash_v1",
-    "battlefield_ash_v2",
-    "battlefield_ash_v3"
-   ]
-  },
-  "volcanic": {
-   "family": "volcanic",
-   "variants": [
-    "volcanic_v1",
-    "volcanic_v2",
-    "volcanic_v3"
-   ]
-  },
-  "basalt": {
-   "family": "volcanic",
-   "variants": [
-    "volcanic_v1",
-    "volcanic_v2",
-    "volcanic_v3"
-   ]
-  },
-  "lava_flow": {
-   "family": "lava_flow",
-   "variants": [
-    "lava_flow_v1",
-    "lava_flow_v2",
-    "lava_flow_v3"
-   ]
-  },
-  "crater": {
-   "family": "crater",
-   "variants": [
-    "crater_v1",
-    "crater_v2",
-    "crater_v3"
-   ]
-  },
-  "lightning_scar": {
-   "family": "lightning_scar",
-   "variants": [
-    "lightning_scar_v1",
-    "lightning_scar_v2",
-    "lightning_scar_v3"
-   ]
-  },
-  "formation_tile": {
-   "family": "formation_tile",
-   "variants": [
-    "formation_tile_v1",
-    "formation_tile_v2",
-    "formation_tile_v3"
-   ]
-  },
-  "ruin_floor": {
-   "family": "ruin_floor",
-   "variants": [
-    "ruin_floor_v1",
-    "ruin_floor_v2",
-    "ruin_floor_v3"
-   ]
-  },
-  "island_reef": {
-   "family": "island_reef",
-   "variants": [
-    "island_reef_v1",
-    "island_reef_v2",
-    "island_reef_v3"
-   ]
-  },
-  "sea_reef": {
-   "family": "island_reef",
-   "variants": [
-    "island_reef_v1",
-    "island_reef_v2",
-    "island_reef_v3"
-   ]
-  },
-  "abyss_edge": {
-   "family": "abyss_edge",
-   "variants": [
-    "abyss_edge_v1",
-    "abyss_edge_v2",
-    "abyss_edge_v3"
-   ]
-  },
-  "settlement": {
-   "family": "settlement_floor",
-   "variants": [
-    "settlement_floor_v1",
-    "settlement_floor_v2",
-    "settlement_floor_v3"
-   ]
-  },
-  "road_stone": {
-   "family": "road_stone",
-   "variants": [
-    "road_stone_v1",
-    "road_stone_v2",
-    "road_stone_v3"
-   ]
-  },
-  "ocean": {
-   "family": "ocean",
-   "variants": [
-    "ocean_v1",
-    "ocean_v2",
-    "ocean_v3"
-   ]
-  },
-  "sea": {
-   "family": "ocean",
-   "variants": [
-    "ocean_v1",
-    "ocean_v2",
-    "ocean_v3"
-   ]
-  },
-  "lake": {
-   "family": "ocean",
-   "variants": [
-    "ocean_v1",
-    "ocean_v2",
-    "ocean_v3"
-   ]
-  },
-  "lake_deep": {
-   "family": "ocean",
-   "variants": [
-    "ocean_v1",
-    "ocean_v2",
-    "ocean_v3"
-   ]
-  },
-  "river": {
-   "family": "ocean",
-   "variants": [
-    "ocean_v1",
-    "ocean_v2",
-    "ocean_v3"
-   ]
+  "families": {
+    "abyss_edge": {
+      "macros": [
+        "v11/abyss_edge_m1.webp",
+        "v11/abyss_edge_m2.webp",
+        "v11/abyss_edge_m3.webp",
+        "v11/abyss_edge_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/abyss_edge_m1_lq.webp",
+        "v11/abyss_edge_m2_lq.webp",
+        "v11/abyss_edge_m3_lq.webp",
+        "v11/abyss_edge_m4_lq.webp"
+      ],
+      "detail": "v11/abyss_edge_detail.png",
+      "palette": {
+        "base": "#2a2530",
+        "accent": "#5a3a6a"
+      },
+      "targetLuminance": 55,
+      "maxRmsContrast": 0.12
+    },
+    "bamboo_floor": {
+      "macros": [
+        "v11/bamboo_floor_m1.webp",
+        "v11/bamboo_floor_m2.webp",
+        "v11/bamboo_floor_m3.webp",
+        "v11/bamboo_floor_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/bamboo_floor_m1_lq.webp",
+        "v11/bamboo_floor_m2_lq.webp",
+        "v11/bamboo_floor_m3_lq.webp",
+        "v11/bamboo_floor_m4_lq.webp"
+      ],
+      "detail": "v11/bamboo_floor_detail.png",
+      "palette": {
+        "base": "#6f7d4a",
+        "accent": "#a39a6a"
+      },
+      "targetLuminance": 125,
+      "maxRmsContrast": 0.12
+    },
+    "battlefield_ash": {
+      "macros": [
+        "v11/battlefield_ash_m1.webp",
+        "v11/battlefield_ash_m2.webp",
+        "v11/battlefield_ash_m3.webp",
+        "v11/battlefield_ash_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/battlefield_ash_m1_lq.webp",
+        "v11/battlefield_ash_m2_lq.webp",
+        "v11/battlefield_ash_m3_lq.webp",
+        "v11/battlefield_ash_m4_lq.webp"
+      ],
+      "detail": "v11/battlefield_ash_detail.png",
+      "palette": {
+        "base": "#4a4540",
+        "accent": "#6d655b"
+      },
+      "targetLuminance": 85,
+      "maxRmsContrast": 0.11
+    },
+    "canyon_floor": {
+      "macros": [
+        "v11/canyon_floor_m1.webp",
+        "v11/canyon_floor_m2.webp",
+        "v11/canyon_floor_m3.webp",
+        "v11/canyon_floor_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/canyon_floor_m1_lq.webp",
+        "v11/canyon_floor_m2_lq.webp",
+        "v11/canyon_floor_m3_lq.webp",
+        "v11/canyon_floor_m4_lq.webp"
+      ],
+      "detail": "v11/canyon_floor_detail.png",
+      "palette": {
+        "base": "#a2603f",
+        "accent": "#c08f62"
+      },
+      "targetLuminance": 115,
+      "maxRmsContrast": 0.12
+    },
+    "cliff": {
+      "macros": [
+        "v11/cliff_m1.webp",
+        "v11/cliff_m2.webp",
+        "v11/cliff_m3.webp",
+        "v11/cliff_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/cliff_m1_lq.webp",
+        "v11/cliff_m2_lq.webp",
+        "v11/cliff_m3_lq.webp",
+        "v11/cliff_m4_lq.webp"
+      ],
+      "detail": "v11/cliff_detail.png",
+      "palette": {
+        "base": "#5d6064",
+        "accent": "#7a756b"
+      },
+      "targetLuminance": 105,
+      "maxRmsContrast": 0.12
+    },
+    "crater": {
+      "macros": [
+        "v11/crater_m1.webp",
+        "v11/crater_m2.webp",
+        "v11/crater_m3.webp",
+        "v11/crater_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/crater_m1_lq.webp",
+        "v11/crater_m2_lq.webp",
+        "v11/crater_m3_lq.webp",
+        "v11/crater_m4_lq.webp"
+      ],
+      "detail": "v11/crater_detail.png",
+      "palette": {
+        "base": "#4a3a32",
+        "accent": "#7c5a44"
+      },
+      "targetLuminance": 82,
+      "maxRmsContrast": 0.11
+    },
+    "dead_wood": {
+      "macros": [
+        "v11/dead_wood_m1.webp",
+        "v11/dead_wood_m2.webp",
+        "v11/dead_wood_m3.webp",
+        "v11/dead_wood_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/dead_wood_m1_lq.webp",
+        "v11/dead_wood_m2_lq.webp",
+        "v11/dead_wood_m3_lq.webp",
+        "v11/dead_wood_m4_lq.webp"
+      ],
+      "detail": "v11/dead_wood_detail.png",
+      "palette": {
+        "base": "#6e6a62",
+        "accent": "#8d877c"
+      },
+      "targetLuminance": 110,
+      "maxRmsContrast": 0.11
+    },
+    "demonic_swamp": {
+      "macros": [
+        "v11/demonic_swamp_m1.webp",
+        "v11/demonic_swamp_m2.webp",
+        "v11/demonic_swamp_m3.webp",
+        "v11/demonic_swamp_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/demonic_swamp_m1_lq.webp",
+        "v11/demonic_swamp_m2_lq.webp",
+        "v11/demonic_swamp_m3_lq.webp",
+        "v11/demonic_swamp_m4_lq.webp"
+      ],
+      "detail": "v11/demonic_swamp_detail.png",
+      "palette": {
+        "base": "#3b2a48",
+        "accent": "#5b3f6a"
+      },
+      "targetLuminance": 75,
+      "maxRmsContrast": 0.11
+    },
+    "desert_sand": {
+      "macros": [
+        "v11/desert_sand_m1.webp",
+        "v11/desert_sand_m2.webp",
+        "v11/desert_sand_m3.webp",
+        "v11/desert_sand_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/desert_sand_m1_lq.webp",
+        "v11/desert_sand_m2_lq.webp",
+        "v11/desert_sand_m3_lq.webp",
+        "v11/desert_sand_m4_lq.webp"
+      ],
+      "detail": "v11/desert_sand_detail.png",
+      "palette": {
+        "base": "#d2b57e",
+        "accent": "#c9a566"
+      },
+      "targetLuminance": 175,
+      "maxRmsContrast": 0.1
+    },
+    "dune": {
+      "macros": [
+        "v11/dune_m1.webp",
+        "v11/dune_m2.webp",
+        "v11/dune_m3.webp",
+        "v11/dune_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/dune_m1_lq.webp",
+        "v11/dune_m2_lq.webp",
+        "v11/dune_m3_lq.webp",
+        "v11/dune_m4_lq.webp"
+      ],
+      "detail": "v11/dune_detail.png",
+      "palette": {
+        "base": "#cfa968",
+        "accent": "#b58b50"
+      },
+      "targetLuminance": 170,
+      "maxRmsContrast": 0.1
+    },
+    "farmland": {
+      "macros": [
+        "v11/farmland_m1.webp",
+        "v11/farmland_m2.webp",
+        "v11/farmland_m3.webp",
+        "v11/farmland_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/farmland_m1_lq.webp",
+        "v11/farmland_m2_lq.webp",
+        "v11/farmland_m3_lq.webp",
+        "v11/farmland_m4_lq.webp"
+      ],
+      "detail": "v11/farmland_detail.png",
+      "palette": {
+        "base": "#7a6444",
+        "accent": "#88a05a"
+      },
+      "targetLuminance": 115,
+      "maxRmsContrast": 0.11
+    },
+    "forest_floor": {
+      "macros": [
+        "v11/forest_floor_m1.webp",
+        "v11/forest_floor_m2.webp",
+        "v11/forest_floor_m3.webp",
+        "v11/forest_floor_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/forest_floor_m1_lq.webp",
+        "v11/forest_floor_m2_lq.webp",
+        "v11/forest_floor_m3_lq.webp",
+        "v11/forest_floor_m4_lq.webp"
+      ],
+      "detail": "v11/forest_floor_detail.png",
+      "palette": {
+        "base": "#3f5b3a",
+        "accent": "#5a4a33"
+      },
+      "targetLuminance": 92,
+      "maxRmsContrast": 0.11
+    },
+    "formation_tile": {
+      "macros": [
+        "v11/formation_tile_m1.webp",
+        "v11/formation_tile_m2.webp",
+        "v11/formation_tile_m3.webp",
+        "v11/formation_tile_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/formation_tile_m1_lq.webp",
+        "v11/formation_tile_m2_lq.webp",
+        "v11/formation_tile_m3_lq.webp",
+        "v11/formation_tile_m4_lq.webp"
+      ],
+      "detail": "v11/formation_tile_detail.png",
+      "palette": {
+        "base": "#6f7770",
+        "accent": "#6fd0c4"
+      },
+      "targetLuminance": 120,
+      "maxRmsContrast": 0.12
+    },
+    "glacier": {
+      "macros": [
+        "v11/glacier_m1.webp",
+        "v11/glacier_m2.webp",
+        "v11/glacier_m3.webp",
+        "v11/glacier_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/glacier_m1_lq.webp",
+        "v11/glacier_m2_lq.webp",
+        "v11/glacier_m3_lq.webp",
+        "v11/glacier_m4_lq.webp"
+      ],
+      "detail": "v11/glacier_detail.png",
+      "palette": {
+        "base": "#9cc4da",
+        "accent": "#d6e9f3"
+      },
+      "targetLuminance": 195,
+      "maxRmsContrast": 0.1
+    },
+    "herb_field": {
+      "macros": [
+        "v11/herb_field_m1.webp",
+        "v11/herb_field_m2.webp",
+        "v11/herb_field_m3.webp",
+        "v11/herb_field_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/herb_field_m1_lq.webp",
+        "v11/herb_field_m2_lq.webp",
+        "v11/herb_field_m3_lq.webp",
+        "v11/herb_field_m4_lq.webp"
+      ],
+      "detail": "v11/herb_field_detail.png",
+      "palette": {
+        "base": "#4f7d5c",
+        "accent": "#5fb3a0"
+      },
+      "targetLuminance": 120,
+      "maxRmsContrast": 0.12
+    },
+    "hill": {
+      "macros": [
+        "v11/hill_m1.webp",
+        "v11/hill_m2.webp",
+        "v11/hill_m3.webp",
+        "v11/hill_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/hill_m1_lq.webp",
+        "v11/hill_m2_lq.webp",
+        "v11/hill_m3_lq.webp",
+        "v11/hill_m4_lq.webp"
+      ],
+      "detail": "v11/hill_detail.png",
+      "palette": {
+        "base": "#78875f",
+        "accent": "#8c8a80"
+      },
+      "targetLuminance": 132,
+      "maxRmsContrast": 0.12
+    },
+    "ice_crack": {
+      "macros": [
+        "v11/ice_crack_m1.webp",
+        "v11/ice_crack_m2.webp",
+        "v11/ice_crack_m3.webp",
+        "v11/ice_crack_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/ice_crack_m1_lq.webp",
+        "v11/ice_crack_m2_lq.webp",
+        "v11/ice_crack_m3_lq.webp",
+        "v11/ice_crack_m4_lq.webp"
+      ],
+      "detail": "v11/ice_crack_detail.png",
+      "palette": {
+        "base": "#b9d8e8",
+        "accent": "#e8f3f9"
+      },
+      "targetLuminance": 205,
+      "maxRmsContrast": 0.1
+    },
+    "island_reef": {
+      "macros": [
+        "v11/island_reef_m1.webp",
+        "v11/island_reef_m2.webp",
+        "v11/island_reef_m3.webp",
+        "v11/island_reef_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/island_reef_m1_lq.webp",
+        "v11/island_reef_m2_lq.webp",
+        "v11/island_reef_m3_lq.webp",
+        "v11/island_reef_m4_lq.webp"
+      ],
+      "detail": "v11/island_reef_detail.png",
+      "palette": {
+        "base": "#4fb3b0",
+        "accent": "#e5d9a8"
+      },
+      "targetLuminance": 165,
+      "maxRmsContrast": 0.12
+    },
+    "lake": {
+      "macros": [
+        "v11/lake_m1.webp",
+        "v11/lake_m2.webp",
+        "v11/lake_m3.webp",
+        "v11/lake_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/lake_m1_lq.webp",
+        "v11/lake_m2_lq.webp",
+        "v11/lake_m3_lq.webp",
+        "v11/lake_m4_lq.webp"
+      ],
+      "detail": "v11/lake_detail.png",
+      "palette": {
+        "base": "#3f7f8f",
+        "accent": "#6aa3a6"
+      },
+      "targetLuminance": 112,
+      "maxRmsContrast": 0.1
+    },
+    "lava_flow": {
+      "macros": [
+        "v11/lava_flow_m1.webp",
+        "v11/lava_flow_m2.webp",
+        "v11/lava_flow_m3.webp",
+        "v11/lava_flow_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/lava_flow_m1_lq.webp",
+        "v11/lava_flow_m2_lq.webp",
+        "v11/lava_flow_m3_lq.webp",
+        "v11/lava_flow_m4_lq.webp"
+      ],
+      "detail": "v11/lava_flow_detail.png",
+      "palette": {
+        "base": "#3b2018",
+        "accent": "#ff7a1a"
+      },
+      "targetLuminance": 80,
+      "maxRmsContrast": 0.15
+    },
+    "lightning_scar": {
+      "macros": [
+        "v11/lightning_scar_m1.webp",
+        "v11/lightning_scar_m2.webp",
+        "v11/lightning_scar_m3.webp",
+        "v11/lightning_scar_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/lightning_scar_m1_lq.webp",
+        "v11/lightning_scar_m2_lq.webp",
+        "v11/lightning_scar_m3_lq.webp",
+        "v11/lightning_scar_m4_lq.webp"
+      ],
+      "detail": "v11/lightning_scar_detail.png",
+      "palette": {
+        "base": "#2f3440",
+        "accent": "#9ec9ff"
+      },
+      "targetLuminance": 85,
+      "maxRmsContrast": 0.14
+    },
+    "meadow": {
+      "macros": [
+        "v11/meadow_m1.webp",
+        "v11/meadow_m2.webp",
+        "v11/meadow_m3.webp",
+        "v11/meadow_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/meadow_m1_lq.webp",
+        "v11/meadow_m2_lq.webp",
+        "v11/meadow_m3_lq.webp",
+        "v11/meadow_m4_lq.webp"
+      ],
+      "detail": "v11/meadow_detail.png",
+      "palette": {
+        "base": "#6fa05a",
+        "accent": "#c9b86a"
+      },
+      "targetLuminance": 150,
+      "maxRmsContrast": 0.12
+    },
+    "miasma_waste": {
+      "macros": [
+        "v11/miasma_waste_m1.webp",
+        "v11/miasma_waste_m2.webp",
+        "v11/miasma_waste_m3.webp",
+        "v11/miasma_waste_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/miasma_waste_m1_lq.webp",
+        "v11/miasma_waste_m2_lq.webp",
+        "v11/miasma_waste_m3_lq.webp",
+        "v11/miasma_waste_m4_lq.webp"
+      ],
+      "detail": "v11/miasma_waste_detail.png",
+      "palette": {
+        "base": "#5e5666",
+        "accent": "#7e7482"
+      },
+      "targetLuminance": 100,
+      "maxRmsContrast": 0.11
+    },
+    "mountain_pass": {
+      "macros": [
+        "v11/mountain_pass_m1.webp",
+        "v11/mountain_pass_m2.webp",
+        "v11/mountain_pass_m3.webp",
+        "v11/mountain_pass_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/mountain_pass_m1_lq.webp",
+        "v11/mountain_pass_m2_lq.webp",
+        "v11/mountain_pass_m3_lq.webp",
+        "v11/mountain_pass_m4_lq.webp"
+      ],
+      "detail": "v11/mountain_pass_detail.png",
+      "palette": {
+        "base": "#7b776d",
+        "accent": "#6c5f4d"
+      },
+      "targetLuminance": 122,
+      "maxRmsContrast": 0.12
+    },
+    "oasis": {
+      "macros": [
+        "v11/oasis_m1.webp",
+        "v11/oasis_m2.webp",
+        "v11/oasis_m3.webp",
+        "v11/oasis_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/oasis_m1_lq.webp",
+        "v11/oasis_m2_lq.webp",
+        "v11/oasis_m3_lq.webp",
+        "v11/oasis_m4_lq.webp"
+      ],
+      "detail": "v11/oasis_detail.png",
+      "palette": {
+        "base": "#bda978",
+        "accent": "#6c8f50"
+      },
+      "targetLuminance": 148,
+      "maxRmsContrast": 0.11
+    },
+    "ocean": {
+      "macros": [
+        "v11/ocean_m1.webp",
+        "v11/ocean_m2.webp",
+        "v11/ocean_m3.webp",
+        "v11/ocean_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/ocean_m1_lq.webp",
+        "v11/ocean_m2_lq.webp",
+        "v11/ocean_m3_lq.webp",
+        "v11/ocean_m4_lq.webp"
+      ],
+      "detail": "v11/ocean_detail.png",
+      "palette": {
+        "base": "#2f5e84",
+        "accent": "#4f86ab"
+      },
+      "targetLuminance": 95,
+      "maxRmsContrast": 0.1
+    },
+    "plains": {
+      "macros": [
+        "v11/plains_m1.webp",
+        "v11/plains_m2.webp",
+        "v11/plains_m3.webp",
+        "v11/plains_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/plains_m1_lq.webp",
+        "v11/plains_m2_lq.webp",
+        "v11/plains_m3_lq.webp",
+        "v11/plains_m4_lq.webp"
+      ],
+      "detail": "v11/plains_detail.png",
+      "palette": {
+        "base": "#7f9a5a",
+        "accent": "#8a8f55"
+      },
+      "targetLuminance": 145,
+      "maxRmsContrast": 0.12
+    },
+    "poison_pool": {
+      "macros": [
+        "v11/poison_pool_m1.webp",
+        "v11/poison_pool_m2.webp",
+        "v11/poison_pool_m3.webp",
+        "v11/poison_pool_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/poison_pool_m1_lq.webp",
+        "v11/poison_pool_m2_lq.webp",
+        "v11/poison_pool_m3_lq.webp",
+        "v11/poison_pool_m4_lq.webp"
+      ],
+      "detail": "v11/poison_pool_detail.png",
+      "palette": {
+        "base": "#5f8b35",
+        "accent": "#9acb4a"
+      },
+      "targetLuminance": 110,
+      "maxRmsContrast": 0.12
+    },
+    "river": {
+      "macros": [
+        "v11/river_m1.webp",
+        "v11/river_m2.webp",
+        "v11/river_m3.webp",
+        "v11/river_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/river_m1_lq.webp",
+        "v11/river_m2_lq.webp",
+        "v11/river_m3_lq.webp",
+        "v11/river_m4_lq.webp"
+      ],
+      "detail": "v11/river_detail.png",
+      "palette": {
+        "base": "#4a86a6",
+        "accent": "#6fa8c0"
+      },
+      "targetLuminance": 118,
+      "maxRmsContrast": 0.1
+    },
+    "road_stone": {
+      "macros": [
+        "v11/road_stone_m1.webp",
+        "v11/road_stone_m2.webp",
+        "v11/road_stone_m3.webp",
+        "v11/road_stone_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/road_stone_m1_lq.webp",
+        "v11/road_stone_m2_lq.webp",
+        "v11/road_stone_m3_lq.webp",
+        "v11/road_stone_m4_lq.webp"
+      ],
+      "detail": "v11/road_stone_detail.png",
+      "palette": {
+        "base": "#7a756b",
+        "accent": "#8c877a"
+      },
+      "targetLuminance": 120,
+      "maxRmsContrast": 0.12
+    },
+    "rock_ground": {
+      "macros": [
+        "v11/rock_ground_m1.webp",
+        "v11/rock_ground_m2.webp",
+        "v11/rock_ground_m3.webp",
+        "v11/rock_ground_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/rock_ground_m1_lq.webp",
+        "v11/rock_ground_m2_lq.webp",
+        "v11/rock_ground_m3_lq.webp",
+        "v11/rock_ground_m4_lq.webp"
+      ],
+      "detail": "v11/rock_ground_detail.png",
+      "palette": {
+        "base": "#6d7378",
+        "accent": "#8b857b"
+      },
+      "targetLuminance": 118,
+      "maxRmsContrast": 0.12
+    },
+    "ruin_floor": {
+      "macros": [
+        "v11/ruin_floor_m1.webp",
+        "v11/ruin_floor_m2.webp",
+        "v11/ruin_floor_m3.webp",
+        "v11/ruin_floor_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/ruin_floor_m1_lq.webp",
+        "v11/ruin_floor_m2_lq.webp",
+        "v11/ruin_floor_m3_lq.webp",
+        "v11/ruin_floor_m4_lq.webp"
+      ],
+      "detail": "v11/ruin_floor_detail.png",
+      "palette": {
+        "base": "#78756b",
+        "accent": "#5d7a4c"
+      },
+      "targetLuminance": 118,
+      "maxRmsContrast": 0.12
+    },
+    "settlement_floor": {
+      "macros": [
+        "v11/settlement_floor_m1.webp",
+        "v11/settlement_floor_m2.webp",
+        "v11/settlement_floor_m3.webp",
+        "v11/settlement_floor_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/settlement_floor_m1_lq.webp",
+        "v11/settlement_floor_m2_lq.webp",
+        "v11/settlement_floor_m3_lq.webp",
+        "v11/settlement_floor_m4_lq.webp"
+      ],
+      "detail": "v11/settlement_floor_detail.png",
+      "palette": {
+        "base": "#b6a57a",
+        "accent": "#a49468"
+      },
+      "targetLuminance": 155,
+      "maxRmsContrast": 0.1
+    },
+    "snow": {
+      "macros": [
+        "v11/snow_m1.webp",
+        "v11/snow_m2.webp",
+        "v11/snow_m3.webp",
+        "v11/snow_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/snow_m1_lq.webp",
+        "v11/snow_m2_lq.webp",
+        "v11/snow_m3_lq.webp",
+        "v11/snow_m4_lq.webp"
+      ],
+      "detail": "v11/snow_detail.png",
+      "palette": {
+        "base": "#eef3f7",
+        "accent": "#cfe0ec"
+      },
+      "targetLuminance": 235,
+      "maxRmsContrast": 0.08
+    },
+    "swamp": {
+      "macros": [
+        "v11/swamp_m1.webp",
+        "v11/swamp_m2.webp",
+        "v11/swamp_m3.webp",
+        "v11/swamp_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/swamp_m1_lq.webp",
+        "v11/swamp_m2_lq.webp",
+        "v11/swamp_m3_lq.webp",
+        "v11/swamp_m4_lq.webp"
+      ],
+      "detail": "v11/swamp_detail.png",
+      "palette": {
+        "base": "#55663f",
+        "accent": "#3e4a33"
+      },
+      "targetLuminance": 95,
+      "maxRmsContrast": 0.11
+    },
+    "volcanic": {
+      "macros": [
+        "v11/volcanic_m1.webp",
+        "v11/volcanic_m2.webp",
+        "v11/volcanic_m3.webp",
+        "v11/volcanic_m4.webp"
+      ],
+      "macros_lq": [
+        "v11/volcanic_m1_lq.webp",
+        "v11/volcanic_m2_lq.webp",
+        "v11/volcanic_m3_lq.webp",
+        "v11/volcanic_m4_lq.webp"
+      ],
+      "detail": "v11/volcanic_detail.png",
+      "palette": {
+        "base": "#2e2a2a",
+        "accent": "#d2561f"
+      },
+      "targetLuminance": 60,
+      "maxRmsContrast": 0.14
+    }
   }
- }
 }
