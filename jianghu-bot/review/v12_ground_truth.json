@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 45,
-  "procedural_count": 99,
+  "ai_count": 50,
+  "procedural_count": 94,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -2207,33 +2207,36 @@
     "road_stone_m1.webp": {
       "family": "road_stone",
       "variant": "m1",
-      "kb": 226.88,
+      "kb": 191.75,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.93,
-      "lum_std": 9.56,
-      "sobel_mean": 25.64,
-      "unique_colors_sample": 854,
+      "lum_mean": 120.35,
+      "lum_std": 11.47,
+      "sobel_mean": 25.75,
+      "unique_colors_sample": 1017,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "road_stone_m1.png",
+      "src_sha256": "e95a4f6a62cb5caf74a248deaaaf009de0aeaed93778fee74b34a45bab4313a1",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "road_stone_m2.webp": {
       "family": "road_stone",
       "variant": "m2",
-      "kb": 222.11,
+      "kb": 191.67,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.89,
-      "lum_std": 12.03,
-      "sobel_mean": 25.5,
-      "unique_colors_sample": 1195,
+      "lum_mean": 120.35,
+      "lum_std": 11.46,
+      "sobel_mean": 25.72,
+      "unique_colors_sample": 1007,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2243,15 +2246,15 @@
     "road_stone_m3.webp": {
       "family": "road_stone",
       "variant": "m3",
-      "kb": 225.83,
+      "kb": 192.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.43,
-      "lum_std": 9.56,
-      "sobel_mean": 25.13,
-      "unique_colors_sample": 823,
+      "lum_mean": 120.34,
+      "lum_std": 11.47,
+      "sobel_mean": 25.76,
+      "unique_colors_sample": 1033,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2261,15 +2264,15 @@
     "road_stone_m4.webp": {
       "family": "road_stone",
       "variant": "m4",
-      "kb": 228.79,
+      "kb": 191.16,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.48,
-      "lum_std": 9.56,
-      "sobel_mean": 25.69,
-      "unique_colors_sample": 818,
+      "lum_mean": 120.34,
+      "lum_std": 11.44,
+      "sobel_mean": 25.7,
+      "unique_colors_sample": 1021,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2357,51 +2360,57 @@
     "ruin_floor_m1.webp": {
       "family": "ruin_floor",
       "variant": "m1",
-      "kb": 250.36,
+      "kb": 230.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 116.39,
-      "lum_std": 10.38,
-      "sobel_mean": 28.35,
-      "unique_colors_sample": 3197,
+      "lum_mean": 113.04,
+      "lum_std": 15.54,
+      "sobel_mean": 34.66,
+      "unique_colors_sample": 4870,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ruin_floor_m1.png",
+      "src_sha256": "cf99b25da40a83993c3745dff61cc9afa55c7cc8f8cd0cedea68cfdf4eb49673",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ruin_floor_m2.webp": {
       "family": "ruin_floor",
       "variant": "m2",
-      "kb": 249.89,
+      "kb": 239.83,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.93,
-      "lum_std": 10.75,
-      "sobel_mean": 28.21,
-      "unique_colors_sample": 3263,
+      "lum_mean": 118.63,
+      "lum_std": 16.24,
+      "sobel_mean": 37.97,
+      "unique_colors_sample": 2637,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ruin_floor_m2.png",
+      "src_sha256": "d78f7b5a47b582424ba7f910fc4b21d66f9c5f1836ba4bd567743ccbd451414d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ruin_floor_m3.webp": {
       "family": "ruin_floor",
       "variant": "m3",
-      "kb": 254.07,
+      "kb": 233.2,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 116.34,
-      "lum_std": 9.55,
-      "sobel_mean": 29.39,
-      "unique_colors_sample": 2762,
+      "lum_mean": 113.05,
+      "lum_std": 15.55,
+      "sobel_mean": 34.79,
+      "unique_colors_sample": 4724,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2411,15 +2420,15 @@
     "ruin_floor_m4.webp": {
       "family": "ruin_floor",
       "variant": "m4",
-      "kb": 245.89,
+      "kb": 249.8,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.92,
-      "lum_std": 10.57,
-      "sobel_mean": 28.52,
-      "unique_colors_sample": 3232,
+      "lum_mean": 115.45,
+      "lum_std": 15.18,
+      "sobel_mean": 39.28,
+      "unique_colors_sample": 4132,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2429,51 +2438,57 @@
     "settlement_floor_m1.webp": {
       "family": "settlement_floor",
       "variant": "m1",
-      "kb": 230.7,
+      "kb": 212.29,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 152.9,
-      "lum_std": 10.55,
-      "sobel_mean": 26.44,
-      "unique_colors_sample": 1395,
+      "lum_mean": 155.02,
+      "lum_std": 10.51,
+      "sobel_mean": 25.19,
+      "unique_colors_sample": 2416,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "settlement_floor_m1.png",
+      "src_sha256": "f9a64766f853640bc794278f757bfa9b9880bd9ce519dde43ab2e24c92cfb6ea",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "settlement_floor_m2.webp": {
       "family": "settlement_floor",
       "variant": "m2",
-      "kb": 236.73,
+      "kb": 227.75,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 153.18,
-      "lum_std": 9.57,
-      "sobel_mean": 27.17,
-      "unique_colors_sample": 1137,
+      "lum_mean": 154.94,
+      "lum_std": 13.28,
+      "sobel_mean": 30.93,
+      "unique_colors_sample": 6208,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "settlement_floor_m2.png",
+      "src_sha256": "569f3594996a1cc94e3a39a538ec0896b06a31526661e65686ed53592fbc9e70",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "settlement_floor_m3.webp": {
       "family": "settlement_floor",
       "variant": "m3",
-      "kb": 240.36,
+      "kb": 211.34,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 153.24,
-      "lum_std": 10.64,
-      "sobel_mean": 26.93,
-      "unique_colors_sample": 1369,
+      "lum_mean": 155.02,
+      "lum_std": 10.5,
+      "sobel_mean": 25.16,
+      "unique_colors_sample": 2365,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2483,15 +2498,15 @@
     "settlement_floor_m4.webp": {
       "family": "settlement_floor",
       "variant": "m4",
-      "kb": 239.04,
+      "kb": 201.52,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 153.13,
-      "lum_std": 10.75,
-      "sobel_mean": 27.05,
-      "unique_colors_sample": 1385,
+      "lum_mean": 154.98,
+      "lum_std": 9.45,
+      "sobel_mean": 23.52,
+      "unique_colors_sample": 1443,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
