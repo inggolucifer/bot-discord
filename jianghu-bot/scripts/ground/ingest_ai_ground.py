@@ -87,7 +87,7 @@ def balance_quadrants(a):
     h, w, c = a.shape
     hh, hw = h // 2, w // 2
     res = a.copy()
-    for _ in range(2):
+    for _ in range(3):
         gray = 0.299 * res[:, :, 0] + 0.587 * res[:, :, 1] + 0.114 * res[:, :, 2]
         gm = float(gray.mean())
         q = [float(gray[:hh, :hw].mean()), float(gray[:hh, hw:].mean()), float(gray[hh:, :hw].mean()), float(gray[hh:, hw:].mean())]
@@ -95,8 +95,9 @@ def balance_quadrants(a):
         rx = (np.cos(np.linspace(0, np.pi, w, dtype=np.float32)) * 0.5 + 0.5)[None, :, None]
         d = [gm - x for x in q]
         s = ry * rx * d[0] + ry * (1.0 - rx) * d[1] + (1.0 - ry) * rx * d[2] + (1.0 - ry) * (1.0 - rx) * d[3]
-        res = res + s * 0.85
+        res = res + s * 0.92
     return res
+
 
 def make_seamless_offset(arr, blend_width=128):
     """Guarantees perfect edge matching diff <= 0.5 between opposing boundaries."""
@@ -331,6 +332,8 @@ def main():
             
             # 4. Anti-banding variance balance check
             arr = balance_variance(arr)
+            arr = balance_quadrants(arr)
+            arr = make_seamless_offset(arr, blend_width=128)
             
             # 5. Seamless high-frequency micro-decorrelation grain (guarantees lag-1 < 0.88 & sobel >= 3.5)
             rng_seed = ((hash(family) * 10007) + (m_idx + 1) * 31337) & 0x7FFFFFFF
