@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -57,15 +57,21 @@
     "farmland": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "11eda79a12b8dbdbb6389f0a29a0e7938850cfe1271bd56c9ccdeb658028173d",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "d3c52823156bf048c4790525387b6a46adc80fdca3be4ba9aaddfc9b1941d883",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -83,15 +89,21 @@
     "herb_field": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "b64bb7b114cb71871f8f761635c0300676352d1eaf412dc7203bc325dafa7a67",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "9623e5f387fcec30b29901543abf93c2a81cdf6689195204e89ca81530207e7a",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -263,9 +275,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "5b4d3868875cda099ec77448bfe1e3c22624f03c0cd0376d9ac4cad6fcbf4064",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",

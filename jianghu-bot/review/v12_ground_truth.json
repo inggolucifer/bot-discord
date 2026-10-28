@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 10,
-  "procedural_count": 134,
+  "ai_count": 15,
+  "procedural_count": 129,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -740,51 +740,57 @@
     "farmland_m1.webp": {
       "family": "farmland",
       "variant": "m1",
-      "kb": 229.85,
+      "kb": 240.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 113.75,
-      "lum_std": 14.19,
-      "sobel_mean": 25.9,
-      "unique_colors_sample": 3344,
+      "lum_mean": 114.98,
+      "lum_std": 11.5,
+      "sobel_mean": 31.01,
+      "unique_colors_sample": 8910,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "farmland_m1.png",
+      "src_sha256": "11eda79a12b8dbdbb6389f0a29a0e7938850cfe1271bd56c9ccdeb658028173d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "farmland_m2.webp": {
       "family": "farmland",
       "variant": "m2",
-      "kb": 231.24,
+      "kb": 215.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 114.38,
-      "lum_std": 13.74,
-      "sobel_mean": 25.87,
-      "unique_colors_sample": 3233,
+      "lum_mean": 116.49,
+      "lum_std": 12.04,
+      "sobel_mean": 27.82,
+      "unique_colors_sample": 2615,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "farmland_m2.png",
+      "src_sha256": "d3c52823156bf048c4790525387b6a46adc80fdca3be4ba9aaddfc9b1941d883",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "farmland_m3.webp": {
       "family": "farmland",
       "variant": "m3",
-      "kb": 223.07,
+      "kb": 240.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 113.99,
-      "lum_std": 12.69,
-      "sobel_mean": 25.35,
-      "unique_colors_sample": 2965,
+      "lum_mean": 114.97,
+      "lum_std": 11.51,
+      "sobel_mean": 31.0,
+      "unique_colors_sample": 8891,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -794,15 +800,15 @@
     "farmland_m4.webp": {
       "family": "farmland",
       "variant": "m4",
-      "kb": 211.87,
+      "kb": 217.54,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 113.66,
-      "lum_std": 9.56,
-      "sobel_mean": 23.53,
-      "unique_colors_sample": 1948,
+      "lum_mean": 116.11,
+      "lum_std": 10.67,
+      "sobel_mean": 27.52,
+      "unique_colors_sample": 3378,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1031,51 +1037,57 @@
     "herb_field_m1.webp": {
       "family": "herb_field",
       "variant": "m1",
-      "kb": 203.75,
+      "kb": 207.32,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.72,
-      "lum_std": 9.55,
-      "sobel_mean": 22.16,
-      "unique_colors_sample": 2081,
+      "lum_mean": 119.97,
+      "lum_std": 12.21,
+      "sobel_mean": 25.03,
+      "unique_colors_sample": 5943,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "herb_field_m1.png",
+      "src_sha256": "b64bb7b114cb71871f8f761635c0300676352d1eaf412dc7203bc325dafa7a67",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "herb_field_m2.webp": {
       "family": "herb_field",
       "variant": "m2",
-      "kb": 228.88,
+      "kb": 231.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.28,
-      "lum_std": 15.1,
-      "sobel_mean": 25.87,
-      "unique_colors_sample": 3378,
+      "lum_mean": 119.92,
+      "lum_std": 15.82,
+      "sobel_mean": 31.74,
+      "unique_colors_sample": 20608,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "herb_field_m2.png",
+      "src_sha256": "9623e5f387fcec30b29901543abf93c2a81cdf6689195204e89ca81530207e7a",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "herb_field_m3.webp": {
       "family": "herb_field",
       "variant": "m3",
-      "kb": 206.68,
+      "kb": 206.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.66,
-      "lum_std": 10.92,
-      "sobel_mean": 22.21,
-      "unique_colors_sample": 1978,
+      "lum_mean": 119.97,
+      "lum_std": 12.21,
+      "sobel_mean": 25.01,
+      "unique_colors_sample": 5872,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1085,15 +1097,15 @@
     "herb_field_m4.webp": {
       "family": "herb_field",
       "variant": "m4",
-      "kb": 224.48,
+      "kb": 214.75,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.82,
-      "lum_std": 12.88,
-      "sobel_mean": 25.31,
-      "unique_colors_sample": 3212,
+      "lum_mean": 120.02,
+      "lum_std": 10.24,
+      "sobel_mean": 26.57,
+      "unique_colors_sample": 6213,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1679,15 +1691,15 @@
     "mountain_pass_m1.webp": {
       "family": "mountain_pass",
       "variant": "m1",
-      "kb": 219.04,
+      "kb": 219.67,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 121.95,
-      "lum_std": 13.15,
-      "sobel_mean": 28.54,
-      "unique_colors_sample": 1648,
+      "lum_mean": 121.97,
+      "lum_std": 13.21,
+      "sobel_mean": 28.6,
+      "unique_colors_sample": 1618,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "mountain_pass_m1.png",
@@ -1700,33 +1712,36 @@
     "mountain_pass_m2.webp": {
       "family": "mountain_pass",
       "variant": "m2",
-      "kb": 218.33,
+      "kb": 210.22,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 121.94,
-      "lum_std": 13.15,
-      "sobel_mean": 28.52,
-      "unique_colors_sample": 1606,
+      "lum_mean": 121.57,
+      "lum_std": 13.93,
+      "sobel_mean": 26.2,
+      "unique_colors_sample": 1306,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "mountain_pass_m2.png",
+      "src_sha256": "5b4d3868875cda099ec77448bfe1e3c22624f03c0cd0376d9ac4cad6fcbf4064",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "mountain_pass_m3.webp": {
       "family": "mountain_pass",
       "variant": "m3",
-      "kb": 219.11,
+      "kb": 218.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 121.94,
-      "lum_std": 13.15,
-      "sobel_mean": 28.57,
-      "unique_colors_sample": 1644,
+      "lum_mean": 121.97,
+      "lum_std": 13.19,
+      "sobel_mean": 28.51,
+      "unique_colors_sample": 1652,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1736,15 +1751,15 @@
     "mountain_pass_m4.webp": {
       "family": "mountain_pass",
       "variant": "m4",
-      "kb": 219.26,
+      "kb": 211.85,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 121.95,
-      "lum_std": 13.15,
-      "sobel_mean": 28.52,
-      "unique_colors_sample": 1586,
+      "lum_mean": 121.74,
+      "lum_std": 14.36,
+      "sobel_mean": 26.66,
+      "unique_colors_sample": 1359,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
