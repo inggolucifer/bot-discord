@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 55,
-  "procedural_count": 89,
+  "ai_count": 60,
+  "procedural_count": 84,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -320,51 +320,57 @@
     "cliff_m1.webp": {
       "family": "cliff",
       "variant": "m1",
-      "kb": 238.34,
+      "kb": 225.88,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 104.86,
-      "lum_std": 10.62,
-      "sobel_mean": 26.86,
-      "unique_colors_sample": 1531,
+      "lum_mean": 104.6,
+      "lum_std": 10.49,
+      "sobel_mean": 30.55,
+      "unique_colors_sample": 1324,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "cliff_m1.png",
+      "src_sha256": "1dc155f1fb3147daa1ac0154832f87afd425352f09408c734dda3d8237cbb71e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "cliff_m2.webp": {
       "family": "cliff",
       "variant": "m2",
-      "kb": 227.65,
+      "kb": 199.84,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 105.17,
-      "lum_std": 11.5,
-      "sobel_mean": 25.88,
-      "unique_colors_sample": 1617,
+      "lum_mean": 105.22,
+      "lum_std": 10.95,
+      "sobel_mean": 25.75,
+      "unique_colors_sample": 1051,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "cliff_m2.png",
+      "src_sha256": "91ca0023bdc633590c3a297b2eb063202702a55a267de960e68acbbce49e970d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "cliff_m3.webp": {
       "family": "cliff",
       "variant": "m3",
-      "kb": 227.8,
+      "kb": 225.12,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 104.89,
-      "lum_std": 11.21,
-      "sobel_mean": 25.88,
-      "unique_colors_sample": 1435,
+      "lum_mean": 104.59,
+      "lum_std": 10.49,
+      "sobel_mean": 30.57,
+      "unique_colors_sample": 1312,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -374,15 +380,15 @@
     "cliff_m4.webp": {
       "family": "cliff",
       "variant": "m4",
-      "kb": 237.2,
+      "kb": 216.54,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 104.78,
-      "lum_std": 9.57,
-      "sobel_mean": 26.82,
-      "unique_colors_sample": 1190,
+      "lum_mean": 105.13,
+      "lum_std": 10.19,
+      "sobel_mean": 27.62,
+      "unique_colors_sample": 1043,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -860,33 +866,36 @@
     "forest_floor_m1.webp": {
       "family": "forest_floor",
       "variant": "m1",
-      "kb": 205.99,
+      "kb": 274.89,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.68,
-      "lum_std": 10.95,
-      "sobel_mean": 25.4,
-      "unique_colors_sample": 4618,
+      "lum_mean": 93.05,
+      "lum_std": 14.43,
+      "sobel_mean": 43.4,
+      "unique_colors_sample": 15374,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "forest_floor_m1.png",
+      "src_sha256": "c82f647b7dce57754f82227603211a45f014da63831e928af108b96b4e9e610e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "forest_floor_m2.webp": {
       "family": "forest_floor",
       "variant": "m2",
-      "kb": 204.06,
+      "kb": 213.56,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.68,
-      "lum_std": 10.96,
-      "sobel_mean": 25.38,
-      "unique_colors_sample": 4587,
+      "lum_mean": 91.6,
+      "lum_std": 13.08,
+      "sobel_mean": 27.44,
+      "unique_colors_sample": 6651,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "forest_floor_m2.png",
@@ -899,15 +908,15 @@
     "forest_floor_m3.webp": {
       "family": "forest_floor",
       "variant": "m3",
-      "kb": 206.91,
+      "kb": 274.72,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.67,
-      "lum_std": 10.95,
-      "sobel_mean": 25.36,
-      "unique_colors_sample": 4619,
+      "lum_mean": 93.05,
+      "lum_std": 14.43,
+      "sobel_mean": 43.43,
+      "unique_colors_sample": 15355,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -917,15 +926,15 @@
     "forest_floor_m4.webp": {
       "family": "forest_floor",
       "variant": "m4",
-      "kb": 209.07,
+      "kb": 272.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 91.67,
-      "lum_std": 10.98,
-      "sobel_mean": 25.58,
-      "unique_colors_sample": 4526,
+      "lum_mean": 92.84,
+      "lum_std": 12.34,
+      "sobel_mean": 37.64,
+      "unique_colors_sample": 11490,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1013,51 +1022,57 @@
     "glacier_m1.webp": {
       "family": "glacier",
       "variant": "m1",
-      "kb": 225.74,
+      "kb": 279.28,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.55,
-      "lum_std": 15.22,
-      "sobel_mean": 25.47,
-      "unique_colors_sample": 3442,
+      "lum_mean": 194.04,
+      "lum_std": 21.11,
+      "sobel_mean": 44.16,
+      "unique_colors_sample": 27076,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "glacier_m1.png",
+      "src_sha256": "129015450111ee1f990739a02b99d1b96cf408682e8af904b13243aa86528ba5",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "glacier_m2.webp": {
       "family": "glacier",
       "variant": "m2",
-      "kb": 211.83,
+      "kb": 269.35,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 195.77,
-      "lum_std": 11.95,
-      "sobel_mean": 22.79,
-      "unique_colors_sample": 2625,
+      "lum_mean": 194.35,
+      "lum_std": 21.6,
+      "sobel_mean": 39.9,
+      "unique_colors_sample": 12655,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "glacier_m2.png",
+      "src_sha256": "6b707b55462b3a56a2fabf1d0147d94ad6240f02caf884c0b1810509c0058068",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "glacier_m3.webp": {
       "family": "glacier",
       "variant": "m3",
-      "kb": 210.98,
+      "kb": 278.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.86,
-      "lum_std": 10.25,
-      "sobel_mean": 22.69,
-      "unique_colors_sample": 2033,
+      "lum_mean": 194.04,
+      "lum_std": 21.11,
+      "sobel_mean": 44.15,
+      "unique_colors_sample": 27040,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1067,15 +1082,15 @@
     "glacier_m4.webp": {
       "family": "glacier",
       "variant": "m4",
-      "kb": 210.29,
+      "kb": 276.84,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 194.52,
-      "lum_std": 9.66,
-      "sobel_mean": 22.64,
-      "unique_colors_sample": 1915,
+      "lum_mean": 194.13,
+      "lum_std": 19.86,
+      "sobel_mean": 41.71,
+      "unique_colors_sample": 18416,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,

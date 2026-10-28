@@ -121,9 +121,12 @@
     "forest_floor": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "c82f647b7dce57754f82227603211a45f014da63831e928af108b96b4e9e610e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
@@ -1054,15 +1057,21 @@
     "cliff": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "1dc155f1fb3147daa1ac0154832f87afd425352f09408c734dda3d8237cbb71e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "91ca0023bdc633590c3a297b2eb063202702a55a267de960e68acbbce49e970d",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -1080,15 +1089,21 @@
     "glacier": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "129015450111ee1f990739a02b99d1b96cf408682e8af904b13243aa86528ba5",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "6b707b55462b3a56a2fabf1d0147d94ad6240f02caf884c0b1810509c0058068",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
