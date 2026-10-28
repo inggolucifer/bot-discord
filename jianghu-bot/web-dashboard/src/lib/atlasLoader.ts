@@ -129,12 +129,23 @@ class AtlasLoader {
     return this.isIndexLoaded;
   }
 
+  public resolveFrameAlias(frameId: string): string {
+    if (this.spriteRegistry.has(frameId)) return frameId;
+    if (frameId === 'mountain_range') return 'mt_ridge_double';
+    if (frameId === 'mountain_XXL') return 'mt_bastion_wall';
+    if (frameId === 'mountain_XL') return 'mt_twin_peaks';
+    if (frameId === 'mountain_L') return 'mt_rock_4x3';
+    if (frameId === 'cliff_wall_seg') return 'mt_karst_pillar';
+    return frameId;
+  }
+
   public isSpriteReady(frameId: string): boolean {
     if (!this.isIndexLoaded) {
       this.loadIndex();
       return false;
     }
-    const entry = this.spriteRegistry.get(frameId);
+    const resolved = this.resolveFrameAlias(frameId);
+    const entry = this.spriteRegistry.get(resolved);
     if (!entry) return true; // not in atlas, procedural vector fallback is immediate
     if (this.pageTextures.has(entry.page)) return true;
     this.loadPage(entry.page);
@@ -143,7 +154,8 @@ class AtlasLoader {
 
   public isFrameLoading(frameId: string): boolean {
     if (!this.isIndexLoaded) return true;
-    const entry = this.spriteRegistry.get(frameId);
+    const resolved = this.resolveFrameAlias(frameId);
+    const entry = this.spriteRegistry.get(resolved);
     if (!entry) return false;
     return this.pageLoadingPromises.has(entry.page);
   }
@@ -286,16 +298,17 @@ class AtlasLoader {
     alpha: number = 1.0,
     flipX: boolean = false
   ): boolean {
-    if (this.failedSprites.has(frameId)) {
+    const resolvedId = this.resolveFrameAlias(frameId);
+    if (this.failedSprites.has(resolvedId)) {
       return false;
     }
 
-    const entry = this.spriteRegistry.get(frameId);
+    const entry = this.spriteRegistry.get(resolvedId);
     if (!entry) {
       if (!this.isIndexLoaded) {
         this.loadIndex();
       } else {
-        this.failedSprites.add(frameId);
+        this.failedSprites.add(resolvedId);
       }
       return false;
     }
@@ -357,7 +370,8 @@ class AtlasLoader {
    */
   public hasFrame(atlasOrFrameId: string, maybeFrameId?: string): boolean {
     const frameId = maybeFrameId !== undefined ? maybeFrameId : atlasOrFrameId;
-    return this.spriteRegistry.has(frameId);
+    const resolvedId = this.resolveFrameAlias(frameId);
+    return this.spriteRegistry.has(resolvedId);
   }
 
   /**
@@ -366,7 +380,8 @@ class AtlasLoader {
    */
   public getFrameData(atlasOrFrameId: string, maybeFrameId?: string): AtlasFrameData | null {
     const frameId = maybeFrameId !== undefined ? maybeFrameId : atlasOrFrameId;
-    const entry = this.spriteRegistry.get(frameId);
+    const resolvedId = this.resolveFrameAlias(frameId);
+    const entry = this.spriteRegistry.get(resolvedId);
     if (!entry) return null;
     return {
       frame: entry.frame,

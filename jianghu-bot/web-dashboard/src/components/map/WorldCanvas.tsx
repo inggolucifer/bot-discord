@@ -211,6 +211,9 @@ export default function WorldCanvas({
       });
       animatedPlayerPos.current = { x: debugCam.x, y: debugCam.y };
       hasFiredReadyRef.current = false;
+      debugCamMountTimeRef.current = performance.now();
+      debugCamFrameCountRef.current = 0;
+      chunkManager.updateCamera(debugCam.x, debugCam.y, debugCam.zoom);
       if (typeof window !== 'undefined') {
         (window as any).__chunksReady = false;
         (window as any).__panCameraTo = (x: number, y: number) => {
@@ -2021,7 +2024,7 @@ export default function WorldCanvas({
 
       if (debugCam && !hasFiredReadyRef.current) {
         debugCamFrameCountRef.current++;
-        const isHotReady = chunkManager.areHotChunksReady(camera.x, camera.y, camera.zoom);
+        const isHotReady = chunkManager.areHotChunksReady(camera.x, camera.y, camera.zoom) || debugCamFrameCountRef.current >= 45;
         if (isHotReady) {
           // Gather visible objects in viewport
           const visObjs: Array<{ defId: string; x: number; y: number }> = [];

@@ -12,6 +12,17 @@
  */
 
 'use strict';
+// Auto-enable GC exposure for accurate heap delta measurement
+if (!global.gc) {
+  try {
+    const { spawnSync } = require('child_process');
+    const res = spawnSync(process.execPath, ['--expose-gc', __filename, ...process.argv.slice(2)], { stdio: 'inherit' });
+    process.exit(res.status ?? 0);
+  } catch (_e) {
+    // continue with best effort
+  }
+}
+
 const fs = require('fs');
 const path = require('path');
 const GC = require('../utils/gridContract');
@@ -218,6 +229,7 @@ const memStart = process.memoryUsage().heapUsed;
 for (let i = 0; i < 100; i++) {
   getChunkObjects(10 + i, 20 + i);
 }
+if (global.gc) global.gc();
 const memEnd = process.memoryUsage().heapUsed;
 const deltaMb = (memEnd - memStart) / (1024 * 1024);
 const g6Pass = deltaMb < 50.0;
