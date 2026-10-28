@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -191,9 +191,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "b293b1cd359c0fafd05176b30baacd32587ac6259b8fca4e56850ce5df5ccbed",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -365,15 +368,21 @@
     "dune": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "c342f4c5de6cd6185f54b5a485952ac03d0098a22b23db16a0d679315bc77b42",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "81cc0fa3fb338ac58848c8763624fa6e76b350c1105a9ef9347429bcf22884c1",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -391,15 +400,21 @@
     "oasis": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "6c73a7d8a31ffc35645c6f374679a373773e329d097ff5754b27061cbb878396",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "f5069c1e6b9d92dad473d1c49c0203a05f02ba82f076e5afd147926dfce25927",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",

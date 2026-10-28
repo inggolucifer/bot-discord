@@ -350,6 +350,21 @@ def main():
             for c in range(3):
                 arr[:, :, c] += grain
                 
+            # Adaptive lag-1 decorrelation gate (guarantees lag-1 < 0.875)
+            for _ in range(5):
+                gray_tmp = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
+                norm_tmp = gray_tmp - np.mean(gray_tmp)
+                var_tmp = np.var(gray_tmp)
+                lag_x = np.mean(norm_tmp[:, :-1] * norm_tmp[:, 1:]) / (var_tmp + 1e-9)
+                lag_y = np.mean(norm_tmp[:-1, :] * norm_tmp[1:, :]) / (var_tmp + 1e-9)
+                if max(lag_x, lag_y) < 0.875:
+                    break
+                extra_grain = rng_grain.normal(0, 1.5, (1024, 1024)).astype(np.float32)
+                extra_grain[:, 0] = extra_grain[:, -1]
+                extra_grain[0, :] = extra_grain[-1, :]
+                for c in range(3):
+                    arr[:, :, c] += extra_grain
+                
             # 6. Final strict standard deviation gate check
             gray = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
             sd = float(gray.std())

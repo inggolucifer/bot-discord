@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 20,
-  "procedural_count": 124,
+  "ai_count": 25,
+  "procedural_count": 119,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -452,15 +452,15 @@
     "dead_wood_m1.webp": {
       "family": "dead_wood",
       "variant": "m1",
-      "kb": 223.61,
+      "kb": 221.91,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.58,
-      "lum_std": 11.61,
-      "sobel_mean": 31.48,
-      "unique_colors_sample": 955,
+      "lum_mean": 109.57,
+      "lum_std": 11.6,
+      "sobel_mean": 31.41,
+      "unique_colors_sample": 921,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m1.png",
@@ -473,33 +473,36 @@
     "dead_wood_m2.webp": {
       "family": "dead_wood",
       "variant": "m2",
-      "kb": 223.68,
+      "kb": 226.58,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.59,
-      "lum_std": 11.61,
-      "sobel_mean": 31.48,
-      "unique_colors_sample": 958,
+      "lum_mean": 110.67,
+      "lum_std": 14.88,
+      "sobel_mean": 36.07,
+      "unique_colors_sample": 2057,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dead_wood_m2.png",
+      "src_sha256": "b293b1cd359c0fafd05176b30baacd32587ac6259b8fca4e56850ce5df5ccbed",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "dead_wood_m3.webp": {
       "family": "dead_wood",
       "variant": "m3",
-      "kb": 224.15,
+      "kb": 222.11,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 109.58,
-      "lum_std": 11.61,
-      "sobel_mean": 31.49,
-      "unique_colors_sample": 950,
+      "lum_std": 11.6,
+      "sobel_mean": 31.41,
+      "unique_colors_sample": 986,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -509,15 +512,15 @@
     "dead_wood_m4.webp": {
       "family": "dead_wood",
       "variant": "m4",
-      "kb": 222.61,
+      "kb": 236.32,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.59,
-      "lum_std": 11.61,
-      "sobel_mean": 31.51,
-      "unique_colors_sample": 997,
+      "lum_mean": 110.32,
+      "lum_std": 14.67,
+      "sobel_mean": 38.45,
+      "unique_colors_sample": 2028,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -677,51 +680,57 @@
     "dune_m1.webp": {
       "family": "dune",
       "variant": "m1",
-      "kb": 203.38,
+      "kb": 221.9,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.47,
-      "lum_std": 7.38,
-      "sobel_mean": 21.96,
-      "unique_colors_sample": 1088,
+      "lum_mean": 169.52,
+      "lum_std": 11.4,
+      "sobel_mean": 26.72,
+      "unique_colors_sample": 2598,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dune_m1.png",
+      "src_sha256": "c342f4c5de6cd6185f54b5a485952ac03d0098a22b23db16a0d679315bc77b42",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "dune_m2.webp": {
       "family": "dune",
       "variant": "m2",
-      "kb": 218.92,
+      "kb": 248.13,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.55,
-      "lum_std": 8.92,
-      "sobel_mean": 24.04,
-      "unique_colors_sample": 1607,
+      "lum_mean": 170.24,
+      "lum_std": 17.21,
+      "sobel_mean": 31.36,
+      "unique_colors_sample": 5051,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dune_m2.png",
+      "src_sha256": "81cc0fa3fb338ac58848c8763624fa6e76b350c1105a9ef9347429bcf22884c1",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "dune_m3.webp": {
       "family": "dune",
       "variant": "m3",
-      "kb": 216.79,
+      "kb": 221.78,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.41,
-      "lum_std": 8.85,
-      "sobel_mean": 23.98,
-      "unique_colors_sample": 1603,
+      "lum_mean": 169.53,
+      "lum_std": 11.39,
+      "sobel_mean": 26.65,
+      "unique_colors_sample": 2538,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -731,15 +740,15 @@
     "dune_m4.webp": {
       "family": "dune",
       "variant": "m4",
-      "kb": 217.55,
+      "kb": 219.69,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.66,
-      "lum_std": 9.04,
-      "sobel_mean": 24.04,
-      "unique_colors_sample": 1624,
+      "lum_mean": 169.91,
+      "lum_std": 12.54,
+      "sobel_mean": 26.43,
+      "unique_colors_sample": 2751,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1778,51 +1787,57 @@
     "oasis_m1.webp": {
       "family": "oasis",
       "variant": "m1",
-      "kb": 257.72,
+      "kb": 233.63,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 147.36,
-      "lum_std": 10.21,
-      "sobel_mean": 30.13,
-      "unique_colors_sample": 4350,
+      "lum_mean": 148.28,
+      "lum_std": 17.38,
+      "sobel_mean": 32.27,
+      "unique_colors_sample": 18113,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "oasis_m1.png",
+      "src_sha256": "6c73a7d8a31ffc35645c6f374679a373773e329d097ff5754b27061cbb878396",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "oasis_m2.webp": {
       "family": "oasis",
       "variant": "m2",
-      "kb": 259.9,
+      "kb": 229.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 147.53,
-      "lum_std": 10.38,
-      "sobel_mean": 30.21,
-      "unique_colors_sample": 4069,
+      "lum_mean": 147.99,
+      "lum_std": 18.77,
+      "sobel_mean": 34.25,
+      "unique_colors_sample": 15456,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "oasis_m2.png",
+      "src_sha256": "f5069c1e6b9d92dad473d1c49c0203a05f02ba82f076e5afd147926dfce25927",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "oasis_m3.webp": {
       "family": "oasis",
       "variant": "m3",
-      "kb": 258.29,
+      "kb": 232.89,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 147.53,
-      "lum_std": 10.36,
-      "sobel_mean": 29.76,
-      "unique_colors_sample": 4274,
+      "lum_mean": 148.28,
+      "lum_std": 17.37,
+      "sobel_mean": 32.26,
+      "unique_colors_sample": 18103,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1832,15 +1847,15 @@
     "oasis_m4.webp": {
       "family": "oasis",
       "variant": "m4",
-      "kb": 260.5,
+      "kb": 229.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 147.69,
-      "lum_std": 9.54,
-      "sobel_mean": 29.94,
-      "unique_colors_sample": 3964,
+      "lum_mean": 148.22,
+      "lum_std": 12.71,
+      "sobel_mean": 29.8,
+      "unique_colors_sample": 5566,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
