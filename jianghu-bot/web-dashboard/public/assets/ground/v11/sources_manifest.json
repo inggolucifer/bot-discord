@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -14,9 +14,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "acb44149bde924671c3fa3b5e22556324dcfc1af6dc010b926e26b821d07cdec",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -994,15 +997,21 @@
     "ocean": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "1ff2d692550ea28e832559d6528b08e4a486af65968687b912db6eb3b89a78d9",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "7e0932b2ce33c0fce5b94082920eff02f5b5bbc3f4edee9250664312af72331b",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -1020,15 +1029,21 @@
     "river": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "349767eb56e292e895f4cd159a79d69b585a3e8b790c0d323ad57175a2be80c4",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "dd99e8d843dac62a75f4c859dd263cf7794de35891e728c6a5ae680c39a8c2f2",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
