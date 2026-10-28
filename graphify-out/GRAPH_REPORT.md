@@ -1,17 +1,17 @@
-# Graph Report - bot-discord  (2026-10-27)
+# Graph Report - bot-discord  (2026-10-28)
 
 ## Corpus Check
-- 916 files · ~1,435,456 words
+- 937 files · ~1,462,475 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 30 file(s) not represented in the graph (top: .csv 12, .bak 9, (none) 3)
 
 ## Summary
-- 4244 nodes · 10011 edges · 202 communities (170 shown, 32 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 423 edges (avg confidence: 0.85)
+- 4369 nodes · 10240 edges · 202 communities (171 shown, 31 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 434 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1ff3cbd4`
+- Built from commit: `9cf35fd2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,39 +29,39 @@
 - Sect System & Entrance Exam (C10)
 - player.js
 - Cultivation & Law Engine (C12)
-- DashboardModal.tsx
+- CharacterCreationStudio.tsx
 - visualReview.mjs
 - Cultivation & Law Engine (C15)
 - currency.js
 - Inventory & Equipment Management (C17)
 - web-dashboard/package.json
-- express
+- testPhase1MovementEngine.js
 - Battle Arena & Combat System (C20)
-- Cultivation & Law Engine (C21)
-- Frontend UI Components (C22)
+- calculateChannelingProgress
+- os
 - World Map & Spatial Grid (C23)
 - Basis repo: commit `2c70e3f` (HEAD saat prompt ini ditulis). Folder kerja `ROOT` = `jianghu-bot`.
 - Battle Arena & Combat System (C25)
 - getCurrentStamina
-- buildVillagesV10.js
+- app/layout.tsx
 - Cultivation & Law Engine (C28)
-- explore/layout.tsx
-- Player.js
+- next
+- mongoose
 - kungfuMastery.js
-- dependencies
+- numpy
 - World Map & Spatial Grid (C33)
 - Cultivation & Law Engine (C34)
 - testRighteousLawsComprehensive.js
 - World Map & Spatial Grid (C36)
-- beliService.js
+- professions.js
 - World Map & Spatial Grid (C38)
-- proceduralWorldEngine.js
+- getTileAt
 - Cultivation & Law Engine (C40)
 - World Map & Spatial Grid (C41)
 - World Map & Spatial Grid (C42)
 - character/page.tsx
 - Cultivation & Law Engine (C44)
-- testCultivationTabTierBtPolish.js
+- lawCultivationEngine.js
 - Asset.js
 - Cultivation & Law Engine (C47)
 - Cultivation & Law Engine (C48)
@@ -92,12 +92,12 @@
 - Cultivation & Law Engine (C73)
 - LAPORAN KOMPREHENSIF PROMPT MASTER V10: KONTRAK GRID, COLLISION, ASET, REGION & TANAH
 - World Map & Spatial Grid (C75)
-- ref_module
+- captureGroundShots.mjs
 - Cultivation & Law Engine (C77)
 - prompt_v10_extracted.md
 - Inventory & Equipment Management (C79)
 - Discord Bot Slash Commands (C80)
-- auditSpriteRes.js
+- sys
 - world.ts
 - Cultivation & Law Engine (C83)
 - Cultivation & Law Engine (C84)
@@ -109,8 +109,8 @@
 - Cultivation & Law Engine (C90)
 - SoundSynthesizer Subsystem (C91)
 - Validation & Test Scripts (C92)
-- World Map & Spatial Grid (C93)
-- adminSekteWar.js
+- adminInspectService.js
+- Player.js
 - Battle Arena & Combat System (C95)
 - ZoneGridView.tsx
 - NPC Interaction & Social Engine (C97)
@@ -119,7 +119,7 @@
 - Frontend UI Components (C100)
 - Inventory & Equipment Management (C101)
 - Frontend UI Components (C102)
-- captureUserZones.mjs
+- ZoneTile.js
 - World Map & Spatial Grid (C104)
 - checkMissingSprites.js
 - world.ts
@@ -132,33 +132,33 @@
 - validateScaleCanon.mjs
 - World Map & Spatial Grid (C114)
 - World Map & Spatial Grid (C115)
-- World Map & Spatial Grid (C116)
-- generateP2AssetGapAudit.js
+- checkReachability.js
+- LAPORAN AKHIR VERIFIKASI & AUDIT IMPLEMENTASI V12 (report_v12.md)
 - statCalculator.js
 - measureViewport.js
 - validateH3.mjs
 - checkGroundV11.mjs
 - patchBatch3AndFixTrees.js
-- testFarmingHuntingZones.js
+- interiorService.js
 - Validation & Test Scripts (C124)
 - Inventory & Equipment Management (C125)
 - Discord Bot Slash Commands (C126)
 - testRenderRect.mjs
-- captureGroundShots.mjs
-- packMasterV9Assets.js
-- patchVisualReview.mjs
+- runVerification
+- checkRoadsV10.js
+- 1. Autotile Road Blob Sets (P2)
 - World Map & Spatial Grid (C131)
 - Discord Bot Slash Commands (C132)
-- testLoadStress10Min.mjs
+- imageMetrics.py
 - code/gridContract.js
-- lawCultivation.js
+- express
 - SPESIFIKASI TEKNIS GROUND AI V11 (KONTRAK GAMBAR & RENDERING)
 - Inventory & Equipment Management (C137)
 - jianghu-bot/scripts/snapCanonV10.js
 - Discord Bot Slash Commands (C139)
 - Discord Bot Slash Commands (C140)
 - Battle Arena & Combat System (C141)
-- REST API & Routes (C142)
+- getQiRequired
 - World Map & Spatial Grid (C143)
 - v10_pack/scripts/snapCanonV10.js
 - chunkManager.ts
@@ -167,14 +167,14 @@
 - auditAtlasCompleteness.js
 - Discord Bot Slash Commands (C149)
 - Battle Arena & Combat System (C150)
-- captureAuthoredShots.mjs
+- json
 - services/petService.js
-- Player Identity & RPG Stats (C153)
+- updateBestiaryV9.js
 - sparseFogManager.js
 - Frontend UI Components (C155)
 - Frontend UI Components (C156)
 - Player Identity & RPG Stats (C157)
-- captureShowcaseShots.mjs
+- measureBaseline.js
 - World Map & Spatial Grid (C159)
 - Discord Bot Slash Commands (C160)
 - Frontend UI Components (C161)
@@ -189,22 +189,20 @@
 - jianghu-bot/package.json
 - Discord Bot Slash Commands (C181)
 - World Map & Spatial Grid (C182)
-- compareScaleObjects.mjs
-- InteractiveBattleService
+- truthCheck.py
+- deriveScaleCanon.js
 - SPESIFIKASI AUTOTILE 47-BLOB V11 (JALAN & TEPIAN AIR)
 - zod@^4.5.4
 - driver.js
 - tailwind-merge
-- recaptureDonghai.mjs
+- ground/gen_ground_placeholder.py
 - colorProbe.js
-- GridZoneService
-- exportCanonicalRegionsToDashboard.js
-- scanOneGridObjects.mjs
-- testSectsAndSecretRealms.js
+- scripts/gen_ground_placeholder.py
+- checkBestiaryUnique.js
+- V12 GATE CHANGES & BASELINE RECONCILIATION SPECIFICATION (v12_gate_changes.md)
+- testCurrencyPills.js
 - Q: Why does mongoose connect Player.js across 26 different communities?
 - REVIEW V11 — MATRIKS TEMA REGION & LARANGAN SILANG
-- backfillLawItemTagsAndTier.js
-- buildKnownFrames.js
 - REVIEW V11 — DAFTAR KEBUTUHAN ASET SENI (MISSING ART & ASSET WISHLIST)
 - BASELINE REPOSITORY V11
 
@@ -216,7 +214,7 @@
 5. `mongoose` - 99 edges
 6. `lucide-react` - 85 edges
 7. `api` - 72 edges
-8. `getTileAt()` - 62 edges
+8. `getTileAt()` - 63 edges
 9. `MASTER ENGINEERING PLAN: TIANYUAN WORLD MAP 5000×5000` - 55 edges
 10. `Button` - 54 edges
 
@@ -235,99 +233,99 @@
 ## Import Cycles
 - None detected.
 
-## Communities (202 total, 32 thin omitted)
+## Communities (202 total, 31 thin omitted)
 
 ### Community 0 - "Cultivation & Law Engine (C0)"
 Cohesion: 0.05
-Nodes (54): CreateCharacterCardProps, DestinyTraitsProps, PersonalityBadgesProps, KitabDanHukumAlamViewProps, LawSkillTechnique, ManualTechnique, TechniquesData, DungeonData (+46 more)
+Nodes (53): AuthCallback(), AuthCallbackContent(), CreateCharacterCardProps, DestinyTraitsProps, PersonalityBadgesProps, EligibleInventoryItem, LawInventoryPickerProps, DungeonData (+45 more)
 
 ### Community 1 - "Cultivation & Law Engine (C1)"
-Cohesion: 0.06
-Nodes (85): AlmanackPage(), Asset, AssetsPage(), Countdown(), FILTER_CATEGORIES, getAssetCategory(), Worker, DailyHubPage() (+77 more)
+Cohesion: 0.07
+Nodes (76): AlmanackPage(), Asset, AssetsPage(), Countdown(), FILTER_CATEGORIES, getAssetCategory(), Worker, DailyHubPage() (+68 more)
 
 ### Community 2 - "Inventory & Equipment Management (C2)"
-Cohesion: 0.07
-Nodes (34): CHANNEL_CHECK_EXEMPT, execute(), handleButton(), handleSelectMenu(), guildConfigSchema, realmRoleSchema, execute(), execute() (+26 more)
+Cohesion: 0.06
+Nodes (35): CHANNEL_CHECK_EXEMPT, execute(), handleSelectMenu(), auctionSchema, guildConfigSchema, realmRoleSchema, execute(), execute() (+27 more)
 
 ### Community 3 - "ref_fs"
 Cohesion: 0.02
-Nodes (58): rl, code, p205Index, rl, rl, rl, lines, mappings (+50 more)
+Nodes (60): rl, code, p205Index, rl, rl, rl, lines, mappings (+52 more)
 
 ### Community 4 - "Inventory & Equipment Management (C4)"
 Cohesion: 0.05
-Nodes (54): autocomplete(), execute(), autocomplete(), execute(), autocomplete(), execute(), autocomplete(), execute() (+46 more)
+Nodes (56): autocomplete(), execute(), autocomplete(), execute(), autocomplete(), execute(), autocomplete(), execute() (+48 more)
 
 ### Community 5 - "store.ts"
-Cohesion: 0.05
-Nodes (48): AuthCallback(), AuthCallbackContent(), AuthPage(), metadata, RootLayout(), RootApp(), AuthMode, AuthPortalModal() (+40 more)
+Cohesion: 0.08
+Nodes (42): AuthPage(), RootApp(), AuthMode, AuthPortalModal(), AuthPortalModalProps, AlignmentBar(), AlignmentBarProps, CreateCharacterCard() (+34 more)
 
 ### Community 6 - "logAdminAction"
-Cohesion: 0.08
-Nodes (23): CURRENCY_ENUM, ELEMENTS, PetModel, petSchema, autocomplete(), execute(), execute(), autocomplete() (+15 more)
+Cohesion: 0.07
+Nodes (25): CURRENCY_ENUM, ELEMENTS, PetModel, petSchema, shopSchema, autocomplete(), execute(), execute() (+17 more)
 
 ### Community 7 - "Inventory & Equipment Management (C7)"
-Cohesion: 0.05
-Nodes (65): processLuminanceKey(), files, testAll(), calculateTrimBounds(), BATCH_ITEMS, countHaloPixels(), defringeWhiteHalos(), pickedDir (+57 more)
+Cohesion: 0.04
+Nodes (74): processLuminanceKey(), files, testAll(), calculateTrimBounds(), atlasDir, INDEX_JSON, indexManifest, main() (+66 more)
 
 ### Community 8 - "Item.js"
-Cohesion: 0.09
-Nodes (26): assetSchema, CURRENCY_ENUM, recipeMaterialSchema, recipeSchema, RANKS, autocomplete(), execute(), execute() (+18 more)
+Cohesion: 0.08
+Nodes (33): assetSchema, CURRENCY_ENUM, recipeMaterialSchema, recipeSchema, CURRENCY_ENUM, ItemModel, itemSchema, RANKS (+25 more)
 
 ### Community 9 - "Cultivation & Law Engine (C9)"
 Cohesion: 0.04
-Nodes (56): ConditionMeta, CONDITIONS_CONFIG, ConditionTabProps, StatGridProps, FACILITY_FALLBACKS, FacilityUpgradeCardProps, HeavenlyTribulationModalProps, TribulationData (+48 more)
+Nodes (60): ConditionMeta, CONDITIONS_CONFIG, ConditionTabProps, getKungfuLevelFromExp(), StatGridProps, FACILITY_FALLBACKS, FacilityUpgradeCardProps, HeavenlyTribulationModalProps (+52 more)
 
 ### Community 10 - "Sect System & Entrance Exam (C10)"
 Cohesion: 0.11
 Nodes (25): handleModal(), normalizeRank(), parseAmountCurrency(), parseAmountCurrencyRank(), parseRankTier(), parseRealm(), VALID_CURRENCIES, VALID_RANKS (+17 more)
 
 ### Community 11 - "player.js"
-Cohesion: 0.06
-Nodes (26): auctionSchema, transactionLogSchema, travelSchema, getRealmName(), buildInventoryItemMap(), canAddToInventory(), getCarryCapacity(), getInventoryWeight() (+18 more)
+Cohesion: 0.11
+Nodes (15): transactionLogSchema, getRealmName(), can(), getPlayerSectRank(), addCurrency(), getOfferCopperValue(), router, router (+7 more)
 
 ### Community 12 - "Cultivation & Law Engine (C12)"
 Cohesion: 0.04
 Nodes (56): 10.1 Filosofi Visual: Dari Icon Abstrak Menuju Lukisan Tinta Dinasti Song, 10.2 Katalog Sprite Gambar Seni Tinta per Grid (Tile-Art Atlas), 10.3 Sistem Penanda Interaksi Badge Angka Minimalis (`❶`, `❷`), 10.4 Token Karakter Pendekar & Bingkai Emas Menyala, 10.5 Jalur Trajektori Pergerakan Emas (Golden Dao Movement Ribbon), 10.6 Kabut Perang Bertangga Petak (Stepped Discrete Fog of War), 10.7 Arsitektur Pipeline 8-Layer Canvas Engine, 10. RENCANA ANTARMUKA & SISTEM GAMBAR PER GRID (GUOFENG SHAN SHUI TILE-ART SYSTEM) (+48 more)
 
-### Community 13 - "DashboardModal.tsx"
-Cohesion: 0.09
-Nodes (36): LeaderboardPage(), MEDAL, PlayerRank, BackHairSVG(), BaseFaceBodySVG(), CharacterLayerRenderer(), CharacterLayersProps, FrontHairSVG() (+28 more)
+### Community 13 - "CharacterCreationStudio.tsx"
+Cohesion: 0.16
+Nodes (16): BACK_HAIR_OPTIONS, CategoryTab, CharacterCreationStudio(), CharacterCreationStudioProps, FACE_OPTIONS, FRONT_HAIR_OPTIONS, OptionItem, ORIGIN_OPTIONS (+8 more)
 
 ### Community 14 - "visualReview.mjs"
 Cohesion: 0.14
-Nodes (15): anchors, anchorsPath, __dirname, ensureApiServer(), __filename, generateContactSheet(), generateMarkdownReport(), main() (+7 more)
+Nodes (14): anchors, anchorsPath, __dirname, __filename, generateContactSheet(), generateMarkdownReport(), main(), regions (+6 more)
 
 ### Community 15 - "Cultivation & Law Engine (C15)"
-Cohesion: 0.05
-Nodes (31): files, files, assignGroup(), ATLAS_DIR, BACKUP_DIR, CORE_CANONICAL_IDS, getTargetDimensions(), main() (+23 more)
+Cohesion: 0.04
+Nodes (29): files, files, assignGroup(), ATLAS_DIR, BACKUP_DIR, CORE_CANONICAL_IDS, getTargetDimensions(), main() (+21 more)
 
 ### Community 16 - "currency.js"
-Cohesion: 0.09
-Nodes (38): migrateCurrenciesField(), initialCopper1, initialCopper2, payRes1, payRes2, wallet1, wallet2, wallet3 (+30 more)
+Cohesion: 0.10
+Nodes (37): execute(), migrateCurrenciesField(), initialCopper1, initialCopper2, payRes1, payRes2, wallet1, wallet2 (+29 more)
 
 ### Community 17 - "Inventory & Equipment Management (C17)"
 Cohesion: 0.05
-Nodes (52): G4. Patch `utils/objectScatter.js` (jangan tulis ulang file; ubah 4 tempat), getRegionTheme(), isForbidden(), THEME_RULES, anchors, authoredData, authoredDataPath, g5Missing (+44 more)
+Nodes (58): G4. Patch `utils/objectScatter.js` (jangan tulis ulang file; ubah 4 tempat), csvRows, familyMap, frameCounts, isBaselineMode, outCsvPath, rng, sampledChunks (+50 more)
 
 ### Community 18 - "web-dashboard/package.json"
 Cohesion: 0.13
 Nodes (20): devDependencies, eslint@^8.57.1, eslint-config-next@16.3.2, tailwindcss@^4, @tailwindcss/postcss@^4, @types/node@^20.19.43, @types/react@^19.3.0, @types/react-dom@^19.3.0 (+12 more)
 
-### Community 19 - "express"
-Cohesion: 0.05
-Nodes (37): chatMessageSchema, defeatedMonsterTileSchema, locationSchema, petBattleSchema, regionMapSchema, checkCoreItems(), runFishingGate(), run() (+29 more)
+### Community 19 - "testPhase1MovementEngine.js"
+Cohesion: 0.10
+Nodes (18): checkCoreItems(), CORE_FISH_ITEMS, CORE_GATHER_ITEMS, runFishingGate(), run(), app, createAuthToken(), inMemoryPlayers (+10 more)
 
 ### Community 20 - "Battle Arena & Combat System (C20)"
-Cohesion: 0.07
-Nodes (24): fishCastSchema, require, calculateEnergyCost(), calculateTravelSpeed(), evaluateAmbush(), isTileObstructed(), MOUNT_CONFIGS, TERRAIN_PROPERTIES (+16 more)
+Cohesion: 0.06
+Nodes (26): getLevelCap(), getRequiredExpForLevel(), blueprintMaterialSchema, blueprintSchema, calculateEnergy(), calculateGridEncounterChance(), checkAndRunGridEncounter(), createGridOpponent() (+18 more)
 
-### Community 21 - "Cultivation & Law Engine (C21)"
-Cohesion: 0.09
-Nodes (47): runProgressionEstimation(), test(), runVerification(), runTest(), attemptMajorBreakthrough(), attemptMiniBreakthrough(), BREAKTHROUGH_PILL_CATALOG, calculateChannelingProgress() (+39 more)
+### Community 21 - "calculateChannelingProgress"
+Cohesion: 0.20
+Nodes (12): test(), runTest(), playerAzure, playerPlains, resultAzure, resultPlains, calculateChannelingProgress(), checkAndResetDailyCap() (+4 more)
 
-### Community 22 - "Frontend UI Components (C22)"
-Cohesion: 0.05
-Nodes (32): clean_asset(), main(), build_manifest(), fbm(), hx(), make(), balance_variance(), create_detail_overlay() (+24 more)
+### Community 22 - "os"
+Cohesion: 0.13
+Nodes (10): clean_asset(), main(), main(), seamless(), remove_white_background_floodfill(), remove_white_background_floodfill(), remove_white_background_floodfill(), remove_white_background_floodfill() (+2 more)
 
 ### Community 23 - "World Map & Spatial Grid (C23)"
 Cohesion: 0.04
@@ -342,28 +340,32 @@ Cohesion: 0.05
 Nodes (43): 0. ATURAN KERJA (WAJIB, BACA SEKALI, PATUHI SELAMANYA), 1. LANGKAH 0 — BASELINE (sebelum mengubah apa pun), A1. Anchor dengan `region` salah (14 anchor), A2. Dermaga Donghai & Pulau Penyu tidak terjangkau dari daratan, A3. Ferry: tujuan rusak / tidak jelas, A4. Sarang boss tidak valid (terukur), A5. Arena Azure (celah pegunungan, tembok solid), A6. Region tersegel & titik tak terjangkau (+35 more)
 
 ### Community 26 - "getCurrentStamina"
-Cohesion: 0.09
-Nodes (17): expeditionSessionSchema, awardExp(), CRAFT_RECIPES, CraftingService, EXPEDITION_CATALOG, ExpeditionService, getPlayerRealmIndex(), awardExp() (+9 more)
+Cohesion: 0.08
+Nodes (21): activityLogSchema, propertyStructureSchema, awardExp(), CRAFT_RECIPES, CraftingService, EXPEDITION_CATALOG, ExpeditionService, getPlayerRealmIndex() (+13 more)
 
-### Community 27 - "buildVillagesV10.js"
-Cohesion: 0.22
-Nodes (15): anchors, catmullRom(), distToWater(), generateVillage(), addRoadTile(), buildSegment(), getArchetypeForAnchor(), hashString() (+7 more)
+### Community 27 - "app/layout.tsx"
+Cohesion: 0.11
+Nodes (16): metadata, RootLayout(), AuthInitializer(), GlobalChatWrapper(), MainContentWrapper(), Navbar(), ReactQueryProvider(), SocketProvider() (+8 more)
 
 ### Community 28 - "Cultivation & Law Engine (C28)"
-Cohesion: 0.17
-Nodes (20): applyPillarCombatModifiers(), checkAndApplyHeavyHitInjury(), getBodyPartCombatMultipliers(), getInjuryStatPenalties(), getStaminaActionPenalty(), getVitalityCombatPenalty(), applyStatus(), COMBAT_STATUS (+12 more)
+Cohesion: 0.14
+Nodes (22): InteractiveBattleService, applyPillarCombatModifiers(), checkAndApplyHeavyHitInjury(), getBodyPartCombatMultipliers(), getInjuryStatPenalties(), getStaminaActionPenalty(), getVitalityCombatPenalty(), applyStatus() (+14 more)
 
-### Community 30 - "Player.js"
-Cohesion: 0.03
-Nodes (56): activityLogSchema, adminLogSchema, barterOfferSchema, blueprintMaterialSchema, blueprintSchema, gridZoneSchema, hutVisitSchema, CURRENCY_ENUM (+48 more)
+### Community 29 - "next"
+Cohesion: 0.11
+Nodes (17): AdminOraclePage(), ArenaPage(), CultivationPage(), SkillTreePage(), SkillsPage(), SkillsClient(), metadata, MarketPage() (+9 more)
+
+### Community 30 - "mongoose"
+Cohesion: 0.04
+Nodes (25): barterOfferSchema, chatMessageSchema, dungeonInstanceSchema, dungeonTileSchema, expeditionSessionSchema, explorationSchema, fishCastSchema, hutVisitSchema (+17 more)
 
 ### Community 31 - "kungfuMastery.js"
-Cohesion: 0.07
-Nodes (36): lawSkillDefinitionSchema, statusEffectSchema, lootPoolSchema, transferRequestSchema, patchLawSkillsTierSpCost(), ALL_LAW_CONFIGS, COMMON_COMPANION_ITEMS, createLawSkills() (+28 more)
+Cohesion: 0.08
+Nodes (34): lawSkillDefinitionSchema, statusEffectSchema, patchLawSkillsTierSpCost(), ALL_LAW_CONFIGS, COMMON_COMPANION_ITEMS, createLawSkills(), LAW_MANUAL_ITEMS, seedLawMasterEcosystem() (+26 more)
 
-### Community 32 - "dependencies"
-Cohesion: 0.12
-Nodes (17): dependencies, cookie@^0.6.0, cookie-parser@^1.4.7, discord.js@^14.27.0, dotenv@^16.6.1, express@^5.2.1, jsonwebtoken@^9.0.3, mongodb-memory-server@^11.2.0 (+9 more)
+### Community 32 - "numpy"
+Cohesion: 0.20
+Nodes (11): balance_quadrants(), balance_variance(), create_detail_overlay(), create_organic_transition_masks(), hex_to_rgb(), main(), make_seamless_offset(), normalize_texture() (+3 more)
 
 ### Community 33 - "World Map & Spatial Grid (C33)"
 Cohesion: 0.09
@@ -374,32 +376,32 @@ Cohesion: 0.06
 Nodes (32): 1.1. Mengapa Pemilihan Law Hanya di Fondasi Fana Tahap 10?, 1.2. Jalur Alternatif: Kultivator Biasa (Normal Cultivator), 1.3. Dual-Core Progression: Ranah Karakter vs Hukum Alam, 1. FILOSOFI INTI & DUAL-SYSTEM KULTIVASI, 2.1. Kelompok A: 6 Elemen Kosmik Semesta, 2.2. Kelompok B: 2 Jalur Raga Jasmani & Biologis, 2.3. Kelompok C: 2 Jalur Ikatan Seumur Hidup (Bond), 2.4. Kelompok D: 5 Jalur Iblis (Demonic Dao) (+24 more)
 
 ### Community 35 - "testRighteousLawsComprehensive.js"
-Cohesion: 0.16
-Nodes (17): allLawKeys, results, righteousExceedingMod, ALL_20_LAWS, OLD_15_LAWS, RIGHTEOUS_LAWS, applyLawDamageModifiers(), applyLawSkillTreeEffects() (+9 more)
+Cohesion: 0.15
+Nodes (20): allLawKeys, results, righteousExceedingMod, ALL_20_LAWS, OLD_15_LAWS, RIGHTEOUS_LAWS, applyLawSkillTreeEffects(), awardActiveCultivationQi() (+12 more)
 
 ### Community 36 - "World Map & Spatial Grid (C36)"
 Cohesion: 0.14
 Nodes (3): chunkManager, decodeBase64ToUint8(), worldToChunkCoord()
 
-### Community 37 - "beliService.js"
-Cohesion: 0.29
-Nodes (6): execute(), MODEL_MAP, buildToolInventoryEntry(), canUseTool(), ensureToolDurability(), isToolItem()
+### Community 37 - "professions.js"
+Cohesion: 0.13
+Nodes (12): weatherConfigSchema, canUseTool(), ensureToolDurability(), isToolItem(), applyConsumableEffects(), awardKungfuExp(), getToolDurabilityPreserveChance(), applyMoodDelta() (+4 more)
 
 ### Community 38 - "World Map & Spatial Grid (C38)"
 Cohesion: 0.09
-Nodes (19): runAudit(), generateReport(), app, bzTestCache, itAsync(), runAllTests(), isSolidAt(), runBfsToNorth() (+11 more)
+Nodes (20): runAudit(), generateReport(), app, bzTestCache, itAsync(), runAllTests(), isSolidAt(), runBfsToNorth() (+12 more)
 
-### Community 39 - "proceduralWorldEngine.js"
-Cohesion: 0.07
-Nodes (25): anchors, bestiary, bestiaryPath, it(), run(), candidates, POINTS, createPRNG() (+17 more)
+### Community 39 - "getTileAt"
+Cohesion: 0.06
+Nodes (30): anchors, catmullRom(), distToWater(), generateVillage(), addRoadTile(), buildSegment(), getArchetypeForAnchor(), hashString() (+22 more)
 
 ### Community 40 - "Cultivation & Law Engine (C40)"
 Cohesion: 0.07
 Nodes (30): 10. Protokol Memodifikasi Sistem Tempur, 11. Verifikasi Anti-Drift, 12.1. Signature Combat Procs & Systems, 12.2. Batas Keamanan Global (Safety Caps), 12. Skill Tree Signatures & Uniqueness (Target 9+/10), 13.1. Tab Kultivasi Murni (Zero Fake Chrome Policy), 13.2. Modal Detail Jurus Data-Driven (`LawConstellationTree.tsx`), 13.3. Terobosan Ranah Menggunakan Material Murni (Zero Currency Policy) (+22 more)
 
 ### Community 41 - "World Map & Spatial Grid (C41)"
-Cohesion: 0.05
-Nodes (34): edgeSamples, regionHits, voidPercentage, allPass, authored, authoredPath, blockedSamples, isolatedSamples (+26 more)
+Cohesion: 0.04
+Nodes (33): bestiary, bestiaryPath, chunkSet, hasFails, isBaseline, tableData, WATER_TERRAINS, edgeSamples (+25 more)
 
 ### Community 42 - "World Map & Spatial Grid (C42)"
 Cohesion: 0.09
@@ -413,17 +415,17 @@ Nodes (17): CharacterPage(), CharacterPageContent(), StatRow(), SwordsIcon(), Co
 Cohesion: 0.07
 Nodes (29): 1.1. Tiga Pilar Filosofi Baru, 1.2. DIKOTOMI MUTLAK: QI BERTARUNG (COMBAT QI) VS QI KULTIVASI (CULTIVATION QI), 1.3. Jembatan Sinergi: Pengaruh Ranah terhadap Kapasitas Tempur, 1. PENDAHULUAN & FILOSOFI DESAIN UTAMA, 2.1. Natal Artifact (`natal_artifact`): Common Object Soul Binding, 2.2. Natal Beast (`natal_beast`): Beast Egg Binding, Inkubasi & Penetasan, 2.3. Penempaan Raga (`body_tempering`): Slot 2 Tersembunyi, 2. ARSITEKTUR BINDING AWAL & REAL INVENTORY PICKER (SLOT 2) (+21 more)
 
-### Community 45 - "testCultivationTabTierBtPolish.js"
-Cohesion: 0.06
-Nodes (17): ESSENCE_ITEMS, seed(), CURRENCY_TIERS, BLUEPRINTS_DIR, REQUIRED_BLUEPRINTS, assertAbsorbTier(), consumeBreakthroughMaterials(), consumeInventoryItem() (+9 more)
+### Community 45 - "lawCultivationEngine.js"
+Cohesion: 0.07
+Nodes (44): ESSENCE_ITEMS, seed(), getWibParts(), isClaimedToday(), isClaimedYesterday(), assertAbsorbTier(), attemptMajorBreakthrough(), attemptMiniBreakthrough() (+36 more)
 
 ### Community 46 - "Asset.js"
-Cohesion: 0.10
-Nodes (32): execute(), playerListingSchema, execute(), execute(), execute(), execute(), execute(), execute() (+24 more)
+Cohesion: 0.09
+Nodes (31): playerListingSchema, execute(), execute(), execute(), execute(), MODEL_MAP, execute(), execute() (+23 more)
 
 ### Community 47 - "Cultivation & Law Engine (C47)"
-Cohesion: 0.08
-Nodes (30): weatherConfigSchema, main(), getPlotCap(), getClimatePenalties(), getCurrentTemperature(), getEffectiveTemperature(), getPlayerClimateResistance(), attemptBreakthrough() (+22 more)
+Cohesion: 0.16
+Nodes (20): getPlotCap(), getClimatePenalties(), getCurrentTemperature(), getEffectiveTemperature(), getPlayerClimateResistance(), attemptBreakthrough(), calculateCurrentQi(), calculateRealmWaveDamage() (+12 more)
 
 ### Community 48 - "Cultivation & Law Engine (C48)"
 Cohesion: 0.07
@@ -438,24 +440,24 @@ Cohesion: 0.10
 Nodes (20): createObjectMetadata(), allAssets, bambooDensities, bambooSizes, bambooTones, bldgAliases, buildingDefs, mtAliases (+12 more)
 
 ### Community 51 - "pve.js"
-Cohesion: 0.12
-Nodes (19): EXPLORATION_LOCATIONS, getExplorationEntryCost(), getLevelCap(), getRequiredExpForLevel(), explorationSchema, questSchema, shopSchema, getEmoji() (+11 more)
+Cohesion: 0.09
+Nodes (22): EXPLORATION_LOCATIONS, getExplorationEntryCost(), npcSchema, questSchema, getEmoji(), getGlobalAssets(), isUsableUrl(), resolveBodyPart() (+14 more)
 
 ### Community 52 - "InteractiveBattleService.js"
 Cohesion: 0.23
-Nodes (10): battleEntitySchema, battleSessionSchema, uuidv4(), applyItemConditionCure(), applyKnockbackEffect(), CONDITION_METADATA, normalizeConditions(), processCombatTurnConditions() (+2 more)
+Nodes (10): uuidv4(), applyItemConditionCure(), applyKnockbackEffect(), CONDITION_METADATA, normalizeConditions(), processCombatTurnConditions(), processElementalInteractions(), processGridStepConditions() (+2 more)
 
 ### Community 53 - "Validation & Test Scripts (C53)"
-Cohesion: 0.06
-Nodes (27): GATES, results, startTime, totalDurationSec, atlasIndex, atlasPath, groundDir, hA (+19 more)
+Cohesion: 0.05
+Nodes (35): GATES, results, startTime, totalDurationSec, atlasIndex, atlasPath, groundDir, hA (+27 more)
 
 ### Community 54 - "World Map & Spatial Grid (C54)"
 Cohesion: 0.17
 Nodes (7): ChunkManager, chunkToBounds(), decodeBase64ToUint8(), MAX_CHUNK_X, MAX_CHUNK_Y, worldToChunkCoord(), runPhaseC2Tests()
 
 ### Community 55 - "World Map & Spatial Grid (C55)"
-Cohesion: 0.13
-Nodes (14): runPhaseC1Tests(), runPhaseDTests(), runPhaseETests(), ChunkLRUCache, getChunkLive(), getStaticChunk(), getStaticChunksBatch(), isChunkTileOccupied() (+6 more)
+Cohesion: 0.12
+Nodes (15): ensureApiServer(), ensureApiServer(), ensureApiServer(), runPhaseC1Tests(), runPhaseDTests(), ensureApiServer(), ChunkLRUCache, getChunkLive() (+7 more)
 
 ### Community 56 - "checkAssetCoverage.js"
 Cohesion: 0.07
@@ -470,16 +472,16 @@ Cohesion: 0.12
 Nodes (17): dependencies, axios@^1.19.0, clsx@^2.1.1, cookie@^2.0.1, framer-motion@^13.1.1, lucide-react@^1.33.0, next@^16.3.2, react@19.2.8 (+9 more)
 
 ### Community 59 - "SectArenaModal.tsx"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (20): SectArenaPage(), WorldBossPage(), BattleArena(), BattleArenaProps, getMonsterFrameId(), LadderEntry, MatchRecord, OverviewData (+12 more)
 
 ### Community 60 - "World Map & Spatial Grid (C60)"
-Cohesion: 0.18
-Nodes (20): AUTOTILE_COMPATIBILITY, calculateAutotileBitmask(), FAMILY_RENDER_ORDER, getAutotileFrameId(), getFamilyPriority(), getScratch(), getTerrainWashPalette(), hash2d() (+12 more)
+Cohesion: 0.17
+Nodes (22): AUTOTILE_COMPATIBILITY, calculateAutotileBitmask(), drawSoftBlobRoadPath(), FAMILY_RENDER_ORDER, getAutotileFrameId(), getFamilyPriority(), getScratch(), getTerrainWashPalette() (+14 more)
 
 ### Community 61 - "Sect.js"
-Cohesion: 0.09
-Nodes (12): sectAssetSchema, sectResourceSchema, sectSchema, autocomplete(), execute(), autocomplete(), execute(), execute() (+4 more)
+Cohesion: 0.15
+Nodes (11): sectAssetSchema, sectResourceSchema, sectSchema, autocomplete(), execute(), autocomplete(), execute(), execute() (+3 more)
 
 ### Community 62 - "World Map & Spatial Grid (C62)"
 Cohesion: 0.10
@@ -498,8 +500,8 @@ Cohesion: 0.11
 Nodes (19): 1. Identitas & Visi Proyek, 2. Struktur Repositori & Tech Stack, 3.10. Arsitektur Antarmuka UI (Landing Menu, Character Sheet & Shrouded NPC Panel), 3.11. Arsitektur Tri-Tab (Kultivasi, Pohon Dao, Kitab & Jurus) & Biaya SP Bertingkat, 3.1. Sistem Mount & Efisiensi Stamina, 3.2. Labirin Gua Kuno Prosedural ($8\times8$, $20\times20$, $40\times40$), 3.3. Ujian Masuk Sekte & Turnamen Sparring, 3.4. Dermaga & Moda Penyeberangan Air (+11 more)
 
 ### Community 66 - "testWorldEcosystemFinalComplete.js"
-Cohesion: 0.08
-Nodes (37): getRegionResourceProfile(), REGION_RESOURCE_PROFILES, getOriginSpawn(), ORIGIN_SPAWNS, SPAWNS_LIST, targetRegions, emptyRegions, regions (+29 more)
+Cohesion: 0.04
+Nodes (64): getRegionResourceProfile(), REGION_RESOURCE_PROFILES, getOriginSpawn(), ORIGIN_SPAWNS, SPAWNS_LIST, targetRegions, emptyRegions, regions (+56 more)
 
 ### Community 67 - "World Map & Spatial Grid (C67)"
 Cohesion: 0.13
@@ -510,8 +512,8 @@ Cohesion: 0.11
 Nodes (18): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+10 more)
 
 ### Community 70 - "routes/auth.js"
-Cohesion: 0.11
-Nodes (14): emailVerificationSchema, bcryptjs@^3.0.3, nodemailer@^10.0.10, authLimiter, characterCreateLimiter, refreshLimiter, router, VALID_BACK_HAIRS (+6 more)
+Cohesion: 0.13
+Nodes (10): emailVerificationSchema, authLimiter, characterCreateLimiter, refreshLimiter, router, VALID_BACK_HAIRS, VALID_FACES, VALID_FRONT_HAIRS (+2 more)
 
 ### Community 71 - "Battle Arena & Combat System (C71)"
 Cohesion: 0.11
@@ -533,9 +535,9 @@ Nodes (7): 1. Ringkasan Eksekutif & Pencapaian Utama, 2. Tabel Perbandingan Sebe
 Cohesion: 0.12
 Nodes (13): atlasIndex, AUTOTILE_COMPATIBILITY, calculateAutotileBitmask(), chunkBorderTileA, chunkBorderTileB, cornerRiver, cp, crossRoad (+5 more)
 
-### Community 76 - "ref_module"
-Cohesion: 0.09
-Nodes (24): __dirname, __filename, main(), outDir, require, targets, __dirname, __filename (+16 more)
+### Community 76 - "captureGroundShots.mjs"
+Cohesion: 0.04
+Nodes (67): __dirname, __filename, main(), outDir, require, targets, __dirname, ensureApiServer() (+59 more)
 
 ### Community 77 - "Cultivation & Law Engine (C77)"
 Cohesion: 0.12
@@ -550,12 +552,12 @@ Cohesion: 0.21
 Nodes (15): Asset, AssetSchema, clearAndSeedShop(), deriveTagsAndTier(), Item, ItemSchema, main(), oid() (+7 more)
 
 ### Community 80 - "Discord Bot Slash Commands (C80)"
-Cohesion: 0.20
-Nodes (10): connectDB(), client, commandFolders, eventFiles, eventsPath, helmet@^8.3.0, cleanupOldLogsForGuild(), manualCleanup() (+2 more)
+Cohesion: 0.24
+Nodes (8): connectDB(), client, commandFolders, eventFiles, eventsPath, cleanupOldLogsForGuild(), manualCleanup(), runScheduledCleanup()
 
-### Community 81 - "auditSpriteRes.js"
-Cohesion: 0.13
-Nodes (9): csvRows, familyMap, frameCounts, isBaselineMode, outCsvPath, rng, sampledChunks, sortedFamilies (+1 more)
+### Community 81 - "sys"
+Cohesion: 0.14
+Nodes (5): delta_e76(), delta_e_palette(), main(), rgb_to_lab(), validate_texture()
 
 ### Community 82 - "world.ts"
 Cohesion: 0.22
@@ -590,24 +592,28 @@ Cohesion: 0.19
 Nodes (11): lowHpPlayer, playerWithItem, playerWithoutItem, res1, res2, res3, res4, safePlayer (+3 more)
 
 ### Community 90 - "Cultivation & Law Engine (C90)"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (13): BreakthroughChecklistItemSchema, BreakthroughResponse, BreakthroughResponseSchema, CultivationDataSchema, LawData, LawSchema, OracleData, OracleEconomySchema (+5 more)
 
 ### Community 92 - "Validation & Test Scripts (C92)"
 Cohesion: 0.14
 Nodes (11): cache, from, [fx,fy], g, gI, gJ, open, path (+3 more)
 
-### Community 94 - "adminSekteWar.js"
-Cohesion: 0.33
-Nodes (7): execute(), autocomplete(), execute(), rollD100(), rollLootSuccess(), rollPartialLoot(), executeSectWar()
+### Community 93 - "adminInspectService.js"
+Cohesion: 0.18
+Nodes (5): adminLogSchema, gridZoneSchema, AdminInspectService, redactSensitiveData(), SENSITIVE_KEYS
+
+### Community 94 - "Player.js"
+Cohesion: 0.08
+Nodes (26): handleButton(), assetOwnedSchema, boundEntitySchema, cultivationLawSchema, demonicDataSchema, extendedStatsSchema, farmingProfessionSchema, farmPlotSchema (+18 more)
 
 ### Community 95 - "Battle Arena & Combat System (C95)"
 Cohesion: 0.15
 Nodes (13): 1. Ringkasan Prinsip Arsitektur (Golden Rules), 2. Struktur Data Mongoose (`Player.js`), 3.1. Formula Kapasitas Manual Eksternal, 3.2. Formula XP Serangan Tempur Nyata (Combat Attack XP), 3.3. Arsitektur Anti-Abuse Core Stat Farming (`historicSkillMastery`), 3.3. Endpoint Lupakan Manual (`POST /api/manuals/forget`), 3. Rumus & Algoritma Authoritative, 4. Antarmuka UI Web Dashboard: "Kitab & Hukum Alam" (+5 more)
 
 ### Community 96 - "ZoneGridView.tsx"
-Cohesion: 0.07
-Nodes (39): NpcPanel(), DebugCamMode(), NormalWorldContent(), WorldPage(), WorldPageContent(), QuestLog(), GridTileInspectorCard(), GridTileInspectorCardProps (+31 more)
+Cohesion: 0.08
+Nodes (33): NpcPanel(), DebugCamMode(), NormalWorldContent(), WorldPage(), WorldPageContent(), QuestLog(), GridTileInspectorCard(), GridTileInspectorCardProps (+25 more)
 
 ### Community 97 - "NPC Interaction & Social Engine (C97)"
 Cohesion: 0.23
@@ -619,7 +625,7 @@ Nodes (14): 1. Desa Xingcun — Dataran Tengah (Central Plains), 1. Ringkasan Ek
 
 ### Community 99 - "captureAll29Regions.mjs"
 Cohesion: 0.16
-Nodes (14): anchors, anchorsByRegion, anchorsPath, __dirname, ensureApiServer(), __filename, generateMontage(), main() (+6 more)
+Nodes (13): anchors, anchorsByRegion, anchorsPath, __dirname, __filename, generateMontage(), main(), outDir (+5 more)
 
 ### Community 100 - "Frontend UI Components (C100)"
 Cohesion: 0.29
@@ -633,9 +639,9 @@ Nodes (10): args, dryRun, itemsToProcess, limit, manifest, manifestPath, pickedD
 Cohesion: 0.17
 Nodes (11): anchors, anchorsPath, bestiaryV2, __dirname, __filename, layoutRecipes, monstersDir, outBestiaryPath (+3 more)
 
-### Community 103 - "captureUserZones.mjs"
-Cohesion: 0.15
-Nodes (11): __dirname, ensureApiServer(), __filename, main(), require, reviewDir, zones, outDir (+3 more)
+### Community 103 - "ZoneTile.js"
+Cohesion: 0.11
+Nodes (5): zoneTileSchema, __dirname, __filename, run(), LandService
 
 ### Community 104 - "World Map & Spatial Grid (C104)"
 Cohesion: 0.18
@@ -646,8 +652,8 @@ Cohesion: 0.17
 Nodes (11): atlasBambooFrames, atlasIndex, atlasNatureFrames, atlasTreeFrames, matches, missingFromAtlas, missingFromScale, ok (+3 more)
 
 ### Community 106 - "world.ts"
-Cohesion: 0.16
-Nodes (13): WorldCanvasProps, findAStarPath(), heuristic(), PathfindingResult, PathNode, Point, CanvasViewMode, CollisionType (+5 more)
+Cohesion: 0.10
+Nodes (18): MapActionOverlayProps, GridAssetBuildModalProps, GridAssetDetailCardProps, TaleOfImmortalCanvas(), WorldCanvasProps, findAStarPath(), heuristic(), PathfindingResult (+10 more)
 
 ### Community 108 - "adminTournamentSetWinner.js"
 Cohesion: 0.17
@@ -658,12 +664,12 @@ Cohesion: 0.14
 Nodes (11): ANCHORS, CHUNK_SET, CHUNKS, outLines, outPath, regionPropsMap, REGIONS, regionSummary (+3 more)
 
 ### Community 110 - "utils/gridContract.js"
-Cohesion: 0.11
-Nodes (16): bestiary, bestiaryPath, chunkSet, hasFails, isBaseline, tableData, WATER_TERRAINS, canopyMap() (+8 more)
+Cohesion: 0.10
+Nodes (20): anchors, authoredData, authoredDataPath, g5Missing, g7Goal, g7Queue, g7Start, g7Visited (+12 more)
 
 ### Community 111 - "World Map & Spatial Grid (C111)"
-Cohesion: 0.29
-Nodes (7): moment-timezone@^0.5.48, isClaimedToday(), isClaimedYesterday(), isSameWIBDay(), msUntilNextResetWIB(), nowWIB(), moment-timezone
+Cohesion: 0.39
+Nodes (5): isClaimedToday(), isClaimedYesterday(), isSameWIBDay(), msUntilNextResetWIB(), nowWIB()
 
 ### Community 112 - "Frontend UI Components (C112)"
 Cohesion: 0.20
@@ -681,17 +687,17 @@ Nodes (9): atlasDir, INDEX_JSON, indexManifest, main(), patchAtlasPages(), picke
 Cohesion: 0.24
 Nodes (9): atlasDir, INDEX_JSON, indexManifest, main(), patchAtlasPages(), pickedDir, prepareCleanSourceBuffers(), SOURCES (+1 more)
 
-### Community 116 - "World Map & Spatial Grid (C116)"
-Cohesion: 0.24
-Nodes (9): atlasDir, INDEX_JSON, indexManifest, main(), patchAtlasPages(), pickedDir, prepareCleanSourceBuffers(), SOURCES (+1 more)
+### Community 116 - "checkReachability.js"
+Cohesion: 0.18
+Nodes (11): allAnchors, anchorsPath, astarReach(), DIRS_8, findWalkableNear(), isWalkable(), MinHeap, runReachabilityAudit() (+3 more)
 
-### Community 117 - "generateP2AssetGapAudit.js"
-Cohesion: 0.29
-Nodes (5): ATLAS_INDEX_FILE, BINDINGS_FILE, OUTPUT_CSV, REGIONS_FILE, ROOT_DIR
+### Community 117 - "LAPORAN AKHIR VERIFIKASI & AUDIT IMPLEMENTASI V12 (report_v12.md)"
+Cohesion: 0.12
+Nodes (16): 1. Ringkasan Eksekutif (Executive Summary), 2. Tabel Evaluasi Gerbang Lengkap V12 (P0 s/d P10), 3. Rincian Ground Textures & Zero-Lie Manifest, 4.1. Tale of Immortal Visible Grid Line Overlay (P9), 4.2. Autotile Jalan 47-Blob & Penghapusan Border Hitam (P2), 4.3. Barrier Generator Gunung Kolosal & Keterjangkauan Jalur (P10), 4.4. Single Source of Truth Scale Canon (P5), 4. Analisis Mendalam Implementasi Fitur (+8 more)
 
 ### Community 118 - "statCalculator.js"
-Cohesion: 0.06
-Nodes (26): TALENT_EFFECTS, arenaLadderEntrySchema, arenaSeasonConfigSchema, dropTableSchema, monsterSchema, worldBossSeasonSchema, DEFAULT_ARENA_TIERS, DEFAULT_WORLD_BOSS_TIERS (+18 more)
+Cohesion: 0.07
+Nodes (23): TALENT_EFFECTS, arenaLadderEntrySchema, arenaSeasonConfigSchema, defeatedMonsterTileSchema, dropTableSchema, monsterSchema, worldBossSeasonSchema, DEFAULT_ARENA_TIERS (+15 more)
 
 ### Community 119 - "measureViewport.js"
 Cohesion: 0.18
@@ -709,9 +715,9 @@ Nodes (9): __dirname, errors, families, __filename, GROUND_ASSETS_DIR, manifest,
 Cohesion: 0.24
 Nodes (9): atlasDir, INDEX_JSON, indexManifest, main(), patchAtlasPages(), pickedDir, prepareCleanSourceBuffers(), SOURCES (+1 more)
 
-### Community 123 - "testFarmingHuntingZones.js"
-Cohesion: 0.20
-Nodes (9): azureMtn, bambooWild, deepForest, lavaSpine, safePlains, safeRoad, safeSettlement, testTile1 (+1 more)
+### Community 123 - "interiorService.js"
+Cohesion: 0.21
+Nodes (7): InteriorService, compressLayoutRLE(), decompressLayoutRLE(), generateCottageLayout(), generateDefaultEstateLayout(), INTERIOR_TILES, TILE_METADATA
 
 ### Community 124 - "Validation & Test Scripts (C124)"
 Cohesion: 0.22
@@ -729,17 +735,17 @@ Nodes (8): 1. `structure_scatter_ruin_ancient_broken_halberd_sword_grave` (Gundu
 Cohesion: 0.20
 Nodes (7): canonData, canonPath, __dirname, __filename, require, totalViolations, violations
 
-### Community 128 - "captureGroundShots.mjs"
-Cohesion: 0.31
-Nodes (8): analyzeImage(), __dirname, ensureApiServer(), __filename, main(), outDir, require, targets
+### Community 128 - "runVerification"
+Cohesion: 0.23
+Nodes (9): battleEntitySchema, battleSessionSchema, runVerification(), claimBodyTemperingPart(), getMaxEssenceStorage(), getTemperingDurationSeconds(), harvestEnvironmentalEssence(), NATURAL_ESSENCES (+1 more)
 
-### Community 129 - "packMasterV9Assets.js"
-Cohesion: 0.25
-Nodes (8): atlasDir, HIGHRES_SPECS, highresDir, main(), packPage(), rootDir, WATER_SPECS, waterDir
+### Community 129 - "checkRoadsV10.js"
+Cohesion: 0.14
+Nodes (13): allPass, authored, authoredPath, blockedSamples, isolatedSamples, results, roadDonghaiPath, roadOverrides (+5 more)
 
-### Community 130 - "patchVisualReview.mjs"
-Cohesion: 0.22
-Nodes (8): code, __dirname, __filename, loopEndIdx, loopStartIdx, repEndIdx, repStartIdx, targetFile
+### Community 130 - "1. Autotile Road Blob Sets (P2)"
+Cohesion: 0.17
+Nodes (11): 1. Autotile Road Blob Sets (P2), 2. Sprite Karakter Pemain (P5), 3. Massif Gunung Raksasa (P10), `art_input/mountain/mountain_XXL_{A..F}.png` (8x4 cells -> 1024x1500 px), `art_input/player/cultivator_player.png`, `art_input/road/road_dirt.png`, `art_input/road/road_gravel.png`, `art_input/road/road_sand.png` (+3 more)
 
 ### Community 131 - "World Map & Spatial Grid (C131)"
 Cohesion: 0.29
@@ -749,17 +755,17 @@ Nodes (7): Admin Commands (Guild only), Daftar Command Lengkap, Jianghu World RP
 Cohesion: 0.29
 Nodes (7): 1. `structure_scatter_ruin_ancient_broken_halberd_sword_grave` (Gundukan Kuburan Pedang Medan Perang Kuno), 3. `structure_scatter_mountain_daoist_stone_lantern_beacon` (Lentera Batu Pagoda Kuno Berlumut), 4. `structure_scatter_riverside_moored_wooden_sampan` (Perahu Sampan Kayu Tertambat di Tepi Sungai), 5. `nature_scatter_wild_spirit_ginseng_flowering_patch` (Rumpun Ginseng Liar Seribu Tahun Berbunga), 🌟 BATCH P2-04 SELESAI & PRA-REGISTRASI BATCH P2-05!, 📊 Laporan Validasi Sistem (Batch P2-04), 🎨 Prompt Gambar untuk Batch P2-05 (Medan Perang, Gazebo Jalan & Tanaman Roh)
 
-### Community 133 - "testLoadStress10Min.mjs"
-Cohesion: 0.28
-Nodes (8): __dirname, ensureApiServer(), __filename, main(), REGION_WAYPOINTS, reportPath, require, reviewDir
+### Community 133 - "imageMetrics.py"
+Cohesion: 0.24
+Nodes (5): analyze_col_lattice(), analyze_empty_quadrants(), analyze_road_ladder(), analyze_white_squares(), evaluate_shot()
 
 ### Community 134 - "code/gridContract.js"
 Cohesion: 0.26
 Nodes (8): canopyMap(), cellsOf(), getGrid(), getObjectCoveringCell(), isCellBlocked(), isFree(), mark(), reserveSetPieces()
 
-### Community 135 - "lawCultivation.js"
-Cohesion: 0.14
-Nodes (14): dungeonInstanceSchema, dungeonTileSchema, getWibParts(), isClaimedToday(), isClaimedYesterday(), ensureDailyHubInitialized(), getTodayString(), getYesterdayString() (+6 more)
+### Community 135 - "express"
+Cohesion: 0.07
+Nodes (27): locationSchema, travelSchema, DUNGEON_CONFIGS, generateDungeonMaze(), authenticateToken(), router, router, clientLogLimiter (+19 more)
 
 ### Community 136 - "SPESIFIKASI TEKNIS GROUND AI V11 (KONTRAK GAMBAR & RENDERING)"
 Cohesion: 0.25
@@ -785,9 +791,9 @@ Nodes (6): 1. Sistem Mata Uang Tunggal Berbasis Total Copper (5 Tier), 2. Market
 Cohesion: 0.33
 Nodes (6): 1. What This PR Implemented (Framework vs Live), 2. Next Development Priorities, 3. Open Risks, Roadmap: Five Pillars & Combat System Expansions, Live Frameworks Implemented:, Website Survival Loop Sprint Updates (Completed):
 
-### Community 142 - "REST API & Routes (C142)"
-Cohesion: 0.33
-Nodes (5): express-rate-limit@^8.6.2, clientLogLimiter, memoryLogBuffer, router, express-rate-limit
+### Community 142 - "getQiRequired"
+Cohesion: 0.27
+Nodes (10): runProgressionEstimation(), main(), getMaxQi(), getBaseQiRequired(), getChannelQiRate(), getQiRequired(), getStageMult(), getStageMultSum() (+2 more)
 
 ### Community 143 - "World Map & Spatial Grid (C143)"
 Cohesion: 0.33
@@ -798,12 +804,12 @@ Cohesion: 0.32
 Nodes (7): bbox, canon, clamp(), classify(), h, isHouse(), out
 
 ### Community 145 - "chunkManager.ts"
-Cohesion: 0.10
-Nodes (13): PROMPT K — TANAH (perbaiki F10 & F11), CHUNK_SIZE, ChunkCoords, LiveChunkData, MAX_CHUNK_X, MAX_CHUNK_Y, MAX_RESIDENT_CHUNKS, StaticChunkData (+5 more)
+Cohesion: 0.09
+Nodes (14): PROMPT K — TANAH (perbaiki F10 & F11), CHUNK_SIZE, ChunkCoords, LiveChunkData, MAX_CHUNK_X, MAX_CHUNK_Y, MAX_RESIDENT_CHUNKS, StaticChunkData (+6 more)
 
 ### Community 146 - "ref_url"
-Cohesion: 0.10
-Nodes (15): atlasDir, __dirname, __filename, reviewDir, canon, __dirname, __filename, procContent (+7 more)
+Cohesion: 0.05
+Nodes (35): canon, __dirname, __filename, lines, objects, oneGridDiscrepancies, procFile, atlasDir (+27 more)
 
 ### Community 147 - "atlasLoader.ts Subsystem (C147)"
 Cohesion: 0.33
@@ -821,17 +827,17 @@ Nodes (5): 1. Mekanisme Verifikasi `requireAdmin`, 2. Cara Mengonfigurasi `OWNER
 Cohesion: 0.40
 Nodes (5): 1.1. MATRIKS COMBAT POLISH & RUNTIME SAFETY (CD-11 s/d CD-13), 1.2. MATRIKS SKILL TREE POLISH & SIGNATURE CONTRACT (ST-P1 s/d ST-P5), 1. MATRIKS PENGUJIAN UTAMA (CD-01 s/d CD-10), 2. PANDUAN PENGUJIAN SMOKE TEST CEPAT, COMBAT QA & DEPTH ENGINE CHECKLIST (IMMORTAL-X)
 
-### Community 151 - "captureAuthoredShots.mjs"
-Cohesion: 0.32
-Nodes (7): __dirname, ensureApiServer(), __filename, main(), outDir, require, targets
+### Community 151 - "json"
+Cohesion: 0.25
+Nodes (4): build_manifest(), f(), clean_all_atlases(), clean_frame_disc()
 
 ### Community 152 - "services/petService.js"
-Cohesion: 0.33
-Nodes (10): addExp(), createPetInstance(), getElementAdvantage(), getExpRequired(), getRandomStatMultiplier(), parsePetItemEffect(), RANK_MULTIPLIER, simulateRound() (+2 more)
+Cohesion: 0.26
+Nodes (12): petBattleSchema, addExp(), createPetInstance(), getElementAdvantage(), getExpRequired(), getRandomStatMultiplier(), parsePetItemEffect(), RANK_MULTIPLIER (+4 more)
 
-### Community 153 - "Player Identity & RPG Stats (C153)"
-Cohesion: 0.40
-Nodes (4): playerAzure, playerPlains, resultAzure, resultPlains
+### Community 153 - "updateBestiaryV9.js"
+Cohesion: 0.22
+Nodes (6): bestiary, bestiaryPath, bossNames, challenge, challengePath, tierLevelBase
 
 ### Community 154 - "sparseFogManager.js"
 Cohesion: 0.60
@@ -845,9 +851,9 @@ Nodes (5): scripts, build, dev, lint, start
 Cohesion: 0.40
 Nodes (5): Jianghu World — Catatan Laporan Tinjauan Visual & Spasial, Laporan V9 — 2026-10-25, File yang diubah, Hasil gerbang (angka asli), Status Penyelesaian Aset & Yang Ditangguhkan (Jujur)
 
-### Community 158 - "captureShowcaseShots.mjs"
-Cohesion: 0.32
-Nodes (7): __dirname, ensureApiServer(), __filename, main(), require, reviewDir, showcases
+### Community 158 - "measureBaseline.js"
+Cohesion: 0.31
+Nodes (8): analyzeLatticeAndQuadrants(), getViewportSprites(), main(), OUT_JSON, POINTS, PROJECT_ROOT, runMetricsOnImage(), SHOT_DIR
 
 ### Community 160 - "Discord Bot Slash Commands (C160)"
 Cohesion: 0.50
@@ -862,12 +868,16 @@ Cohesion: 0.40
 Nodes (4): nextConfig, withPWA, @ducanh2912/next-pwa@^10.2.9, @ducanh2912/next-pwa
 
 ### Community 179 - "jianghu-bot/package.json"
-Cohesion: 0.12
-Nodes (16): axios@^1.19.0, cors@^2.8.6, uuid@^10.0.0, description, devDependencies, vitest@^5.0.5, engines, node (+8 more)
+Cohesion: 0.06
+Nodes (44): dependencies, axios@^1.19.0, bcryptjs@^3.0.3, cookie@^0.6.0, cookie-parser@^1.4.7, cors@^2.8.6, discord.js@^14.27.0, dotenv@^16.6.1 (+36 more)
 
-### Community 184 - "compareScaleObjects.mjs"
-Cohesion: 0.25
-Nodes (7): canon, __dirname, __filename, lines, objects, oneGridDiscrepancies, procFile
+### Community 184 - "truthCheck.py"
+Cohesion: 0.48
+Nodes (3): compute_sobel_mean(), get_file_sha256(), main()
+
+### Community 185 - "deriveScaleCanon.js"
+Cohesion: 0.29
+Nodes (5): dashboardDir, dashGridPath, dashScalePath, gridCanonPath, scaleCanonPath
 
 ### Community 186 - "SPESIFIKASI AUTOTILE 47-BLOB V11 (JALAN & TEPIAN AIR)"
 Cohesion: 0.29
@@ -877,25 +887,25 @@ Nodes (6): 1. Konsep & Prinsip Desain, 2. Sistem Bitmask 8-Tetangga (8-Neighbor 
 Cohesion: 0.33
 Nodes (4): zod@^4.5.4, zod, overrides, serialize-javascript
 
-### Community 190 - "recaptureDonghai.mjs"
-Cohesion: 0.38
-Nodes (6): __dirname, ensureApiServer(), __filename, main(), require, reviewDir
+### Community 190 - "ground/gen_ground_placeholder.py"
+Cohesion: 0.47
+Nodes (3): fbm(), hx(), make()
 
 ### Community 191 - "colorProbe.js"
 Cohesion: 0.52
 Nodes (6): deltaE76(), hexToRgb(), probeImage(), rgbToLab(), rgbToXyz(), xyzToLab()
 
-### Community 193 - "exportCanonicalRegionsToDashboard.js"
-Cohesion: 0.33
-Nodes (5): anchors, dest, regions, tsLandmarks, tsRegions
+### Community 192 - "scripts/gen_ground_placeholder.py"
+Cohesion: 0.47
+Nodes (3): fbm(), hx(), make()
 
-### Community 194 - "scanOneGridObjects.mjs"
-Cohesion: 0.33
-Nodes (5): canon, canonPath, categorized, __dirname, __filename
+### Community 193 - "checkBestiaryUnique.js"
+Cohesion: 0.14
+Nodes (11): bestiary, bestiaryPath, bossIds, commonRegionMap, eliteRegionMap, regions, anchors, dest (+3 more)
 
-### Community 195 - "testSectsAndSecretRealms.js"
-Cohesion: 0.33
-Nodes (4): anchors, ANCHORS_PATH, EXPECTED_SECRET_REALMS, EXPECTED_SECTS
+### Community 194 - "V12 GATE CHANGES & BASELINE RECONCILIATION SPECIFICATION (v12_gate_changes.md)"
+Cohesion: 0.40
+Nodes (4): 1. Latar Belakang & Filosofi Zero-Lie (Aturan 0), 2. Matriks Transformasi Gerbang V11 ke V12, 3. Ambang Batas Evaluasi Kualitas (Threshold Canon V12), V12 GATE CHANGES & BASELINE RECONCILIATION SPECIFICATION (v12_gate_changes.md)
 
 ### Community 196 - "Q: Why does mongoose connect Player.js across 26 different communities?"
 Cohesion: 0.40
@@ -905,37 +915,29 @@ Nodes (4): Answer, Outcome, Q: Why does mongoose connect Player.js across 26 dif
 Cohesion: 0.40
 Nodes (4): 1. Ringkasan Eksekutif Gerbang Gate P4, 2. Matriks Tema 29 Region Kanonikal, 3. Rincian Pelanggaran (Jika Ada), REVIEW V11 — MATRIKS TEMA REGION & LARANGAN SILANG
 
-### Community 198 - "backfillLawItemTagsAndTier.js"
-Cohesion: 0.67
-Nodes (3): RANK_TIER_MAP, resolveTier(), runBackfill()
-
-### Community 199 - "buildKnownFrames.js"
-Cohesion: 0.40
-Nodes (4): ATLAS_DIR, framesArray, frameSet, OUTPUT_FILE
-
 ### Community 200 - "REVIEW V11 — DAFTAR KEBUTUHAN ASET SENI (MISSING ART & ASSET WISHLIST)"
 Cohesion: 0.50
 Nodes (3): 1. Status Aset Bertema Salju & Arktik (T4), 2. Aset Seni Tambahan yang Disarankan (Wishlist Masa Depan), REVIEW V11 — DAFTAR KEBUTUHAN ASET SENI (MISSING ART & ASSET WISHLIST)
 
 ## Knowledge Gaps
 - **398 isolated node(s):** `next/core-web-vitals`, `10.1 Filosofi Visual: Dari Icon Abstrak Menuju Lukisan Tinta Dinasti Song`, `10.2 Katalog Sprite Gambar Seni Tinta per Grid (Tile-Art Atlas)`, `10.3 Sistem Penanda Interaksi Badge Angka Minimalis (`❶`, `❷`)`, `10.4 Token Karakter Pendekar & Bingkai Emas Menyala` (+393 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2104 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2165 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **31 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `next` connect `Cultivation & Law Engine (C1)` to `Cultivation & Law Engine (C0)`, `ZoneGridView.tsx`, `store.ts`, `next.config.ts`, `character/page.tsx`, `DashboardModal.tsx`, `web-dashboard/package.json`, `dependencies`, `explore/layout.tsx`?**
-  _High betweenness centrality (0.107) - this node is a cross-community bridge._
+- **Why does `next` connect `next` to `Cultivation & Law Engine (C0)`, `Cultivation & Law Engine (C1)`, `ZoneGridView.tsx`, `next.config.ts`, `store.ts`, `character/page.tsx`, `web-dashboard/package.json`, `dependencies`, `app/layout.tsx`?**
+  _High betweenness centrality (0.101) - this node is a cross-community bridge._
 - **What connects `next/core-web-vitals`, `10.1 Filosofi Visual: Dari Icon Abstrak Menuju Lukisan Tinta Dinasti Song`, `10.2 Katalog Sprite Gambar Seni Tinta per Grid (Tile-Art Atlas)` to the rest of the system?**
   _398 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Cultivation & Law Engine (C0)` be split into smaller, more focused modules?**
-  _Cohesion score 0.05175438596491228 - nodes in this community are weakly interconnected._
-- **Why does `discord.js` connect `Sect.js` to `dependencies`, `Inventory & Equipment Management (C2)`, `ref_fs`, `Inventory & Equipment Management (C4)`, `beliService.js`, `logAdminAction`, `Item.js`, `Sect System & Entrance Exam (C10)`, `Discord Bot Slash Commands (C139)`, `player.js`, `adminTournamentSetWinner.js`, `Asset.js`, `Discord Bot Slash Commands (C80)`, `currency.js`, `Cultivation & Law Engine (C83)`, `jianghu-bot/package.json`, `services/petService.js`, `adminSekteWar.js`?**
+  _Cohesion score 0.0528555431131019 - nodes in this community are weakly interconnected._
+- **Why does `discord.js` connect `Inventory & Equipment Management (C2)` to `Inventory & Equipment Management (C4)`, `logAdminAction`, `Item.js`, `Sect System & Entrance Exam (C10)`, `Discord Bot Slash Commands (C139)`, `adminTournamentSetWinner.js`, `Asset.js`, `Cultivation & Law Engine (C15)`, `Discord Bot Slash Commands (C80)`, `currency.js`, `Cultivation & Law Engine (C83)`, `jianghu-bot/package.json`, `Sect.js`, `services/petService.js`, `adminInspectService.js`, `Player.js`?**
   _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Should `Cultivation & Law Engine (C1)` be split into smaller, more focused modules?**
-  _Cohesion score 0.05611798525184352 - nodes in this community are weakly interconnected._
-- **Why does `mongoose` connect `Player.js` to `Inventory & Equipment Management (C2)`, `logAdminAction`, `lawCultivation.js`, `Item.js`, `Sect System & Entrance Exam (C10)`, `player.js`, `Cultivation & Law Engine (C15)`, `currency.js`, `express`, `Battle Arena & Combat System (C20)`, `Cultivation & Law Engine (C21)`, `getCurrentStamina`, `kungfuMastery.js`, `dependencies`, `World Map & Spatial Grid (C38)`, `testCultivationTabTierBtPolish.js`, `Asset.js`, `Cultivation & Law Engine (C47)`, `pve.js`, `InteractiveBattleService.js`, `jianghu-bot/package.json`, `Sect.js`, `testWorldEcosystemFinalComplete.js`, `routes/auth.js`, `backfillLawItemTagsAndTier.js`, `Inventory & Equipment Management (C79)`, `Discord Bot Slash Commands (C80)`, `adminTournamentSetWinner.js`, `statCalculator.js`?**
-  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+  _Cohesion score 0.07386255473063012 - nodes in this community are weakly interconnected._
+- **Why does `mongoose` connect `mongoose` to `runVerification`, `Inventory & Equipment Management (C2)`, `logAdminAction`, `express`, `Item.js`, `Sect System & Entrance Exam (C10)`, `player.js`, `currency.js`, `testPhase1MovementEngine.js`, `Battle Arena & Combat System (C20)`, `calculateChannelingProgress`, `services/petService.js`, `getCurrentStamina`, `kungfuMastery.js`, `professions.js`, `World Map & Spatial Grid (C38)`, `lawCultivationEngine.js`, `Asset.js`, `pve.js`, `jianghu-bot/package.json`, `Sect.js`, `testWorldEcosystemFinalComplete.js`, `routes/auth.js`, `Inventory & Equipment Management (C79)`, `Discord Bot Slash Commands (C80)`, `adminInspectService.js`, `Player.js`, `ZoneTile.js`, `adminTournamentSetWinner.js`, `statCalculator.js`, `interiorService.js`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Should `Inventory & Equipment Management (C2)` be split into smaller, more focused modules?**
-  _Cohesion score 0.06806526806526807 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05524537173082574 - nodes in this community are weakly interconnected._
