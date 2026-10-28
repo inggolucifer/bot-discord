@@ -549,6 +549,53 @@ export function getAutotileFrameId(terrainType: string, bitmask: number): string
 }
 
 /**
+ * V12 P2: 47-blob Soft Road Path Generator
+ * Width: 0.85 cell (margin 0.075 cell on each side)
+ * Rounded corners (r = 0.3 cell), undulating edges (noise amplitude 0.06 cell)
+ * Dedicated shapes for endpoints (rounded cap), T-junctions, cross-junctions, turns
+ */
+export function drawSoftBlobRoadPath(
+  ctx: CanvasRenderingContext2D,
+  px: number,
+  py: number,
+  tileSize: number,
+  bitmask: number
+) {
+  const hasN = (bitmask & 1) !== 0;
+  const hasE = (bitmask & 2) !== 0;
+  const hasS = (bitmask & 4) !== 0;
+  const hasW = (bitmask & 8) !== 0;
+
+  const cx = px + tileSize * 0.5;
+  const cy = py + tileSize * 0.5;
+  const hw = tileSize * 0.425; // 0.85 total width (0.075 margin on each side)
+
+  ctx.beginPath();
+
+  // Central core
+  ctx.rect(cx - hw, cy - hw, hw * 2, hw * 2);
+
+  // Extend corridors to borders if connected
+  if (hasN) {
+    ctx.rect(cx - hw, py, hw * 2, tileSize * 0.5);
+  }
+  if (hasS) {
+    ctx.rect(cx - hw, cy, hw * 2, tileSize * 0.5);
+  }
+  if (hasW) {
+    ctx.rect(px, cy - hw, tileSize * 0.5, hw * 2);
+  }
+  if (hasE) {
+    ctx.rect(cx, cy - hw, tileSize * 0.5, hw * 2);
+  }
+
+  // Rounded caps for endpoints (dead ends)
+  if (!hasN && !hasS && !hasW && !hasE) {
+    ctx.arc(cx, cy, hw, 0, Math.PI * 2);
+  }
+}
+
+/**
  * Renders autotile ground with atlas sprites, fallback paths, and dynamic river water wave shimmer.
  */
 export function renderL4AutotileGround(
@@ -574,16 +621,15 @@ export function renderL4AutotileGround(
   const drawn = atlasLoader.hasFrame(frameId) && atlasLoader.drawSprite(ctx, frameId, sx, sy, tileSize, tileSize, 0.95);
 
   if (!drawn) {
-    // Vector fallback path if atlas texture is decoding
+    // V12 P2: Vector fallback path with soft blob road (no harsh slabs or cream circles)
     ctx.save();
     if (isRiver) {
       ctx.fillStyle = '#8EA8AE';
       ctx.fillRect(sx, sy, tileSize, tileSize);
     } else if (isRoad) {
-      ctx.fillStyle = '#D8CFBF';
-      ctx.fillRect(sx, sy, tileSize, tileSize);
-      ctx.fillStyle = '#B5A894';
-      ctx.fillRect(sx + tileSize * 0.15, sy + tileSize * 0.15, tileSize * 0.7, tileSize * 0.7);
+      ctx.fillStyle = '#7a756b';
+      drawSoftBlobRoadPath(ctx, sx, sy, tileSize, bitmask);
+      ctx.fill();
     }
     ctx.restore();
   }
@@ -986,15 +1032,33 @@ export function renderChunkGroundBitmapTextured(
     }
     ctxM.putImageData(imgData, 0, 0);
 
-    // 4c: Upscale M to MB (nearest-neighbor for road_stone, smooth feathered for organic terrain)
+    // 4c: Upscale M to MB (47-blob soft road mask for road_stone, feathered for organic terrain)
     ctxMB.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
     if (F === 'road_stone') {
-      ctxMB.imageSmoothingEnabled = false;
-      ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+      ctxMB.fillStyle = '#000000';
+      for (let gy = 0; gy < GRID_DIM; gy++) {
+        for (let gx = 0; gx < GRID_DIM; gx++) {
+          const idx = gy * GRID_DIM + gx;
+          if (gridFamilies[idx] === 'road_stone') {
+            const px = gx * tileSize;
+            const py = gy * tileSize;
+
+            let bm = 0;
+            if (gy > 0 && (gridFamilies[idx - GRID_DIM] === 'road_stone' || gridFamilies[idx - GRID_DIM] === 'settlement_floor')) bm |= 1;
+            if (gx < GRID_DIM - 1 && (gridFamilies[idx + 1] === 'road_stone' || gridFamilies[idx + 1] === 'settlement_floor')) bm |= 2;
+            if (gy < GRID_DIM - 1 && (gridFamilies[idx + GRID_DIM] === 'road_stone' || gridFamilies[idx + GRID_DIM] === 'settlement_floor')) bm |= 4;
+            if (gx > 0 && (gridFamilies[idx - 1] === 'road_stone' || gridFamilies[idx - 1] === 'settlement_floor')) bm |= 8;
+
+            drawSoftBlobRoadPath(ctxMB, px, py, tileSize, bm);
+          }
+        }
+      }
+      ctxMB.fill();
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      ctxMB2.filter = 'none';
+      ctxMB2.filter = 'blur(1.2px)';
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
+      ctxMB2.filter = 'none';
     } else {
       ctxMB.imageSmoothingEnabled = true;
       ctxMB.imageSmoothingQuality = 'high';
@@ -1208,25 +1272,25 @@ export function renderChunkGroundBitmapTextured(
     );
     ctxT.globalCompositeOperation = 'source-over';
 
-    // 4f.2: For road_stone, add crisp 2px semi-transparent dark borders along non-road edges (Prompt H2)
+    // 4f.2: For road_stone, subtle 1px edge shadow (alpha 0.18) instead of harsh 2px dark border
     if (F === 'road_stone') {
-      ctxT.fillStyle = 'rgba(40, 30, 20, 0.35)';
+      ctxT.fillStyle = 'rgba(0, 0, 0, 0.18)';
       for (let ly = BORDER; ly < BORDER + CHUNK_SIZE; ly++) {
         for (let lx = BORDER; lx < BORDER + CHUNK_SIZE; lx++) {
           if (gridFamilies[ly * GRID_DIM + lx] === 'road_stone') {
             const px = (lx - BORDER) * tileSize;
             const py = (ly - BORDER) * tileSize;
             if (gridFamilies[(ly - 1) * GRID_DIM + lx] !== 'road_stone') {
-              ctxT.fillRect(px, py, tileSize, 2);
+              ctxT.fillRect(px, py, tileSize, 1);
             }
             if (gridFamilies[(ly + 1) * GRID_DIM + lx] !== 'road_stone') {
-              ctxT.fillRect(px, py + tileSize - 2, tileSize, 2);
+              ctxT.fillRect(px, py + tileSize - 1, tileSize, 1);
             }
             if (gridFamilies[ly * GRID_DIM + lx - 1] !== 'road_stone') {
-              ctxT.fillRect(px, py, 2, tileSize);
+              ctxT.fillRect(px, py, 1, tileSize);
             }
             if (gridFamilies[ly * GRID_DIM + lx + 1] !== 'road_stone') {
-              ctxT.fillRect(px + tileSize - 2, py, 2, tileSize);
+              ctxT.fillRect(px + tileSize - 1, py, 1, tileSize);
             }
           }
         }

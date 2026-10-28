@@ -1,0 +1,32 @@
+{
+  "t1": {
+    "material": "road_stone",
+    "baseColor": "#7a756b",
+    "accentColor": "#8c877a",
+    "description": "Cobblestone and flagstone roads in civilized T1 settlements"
+  },
+  "wilderness": {
+    "material": "road_dirt",
+    "baseColor": "#7a6444",
+    "accentColor": "#88a05a",
+    "description": "Tamped earth and dirt paths in untamed wilderness"
+  },
+  "t4_snow": {
+    "material": "road_snow",
+    "baseColor": "#d0dde8",
+    "accentColor": "#b8c9d9",
+    "description": "Packed snow and frosty tracks in northern glacial reaches"
+  },
+  "desert": {
+    "material": "road_sand",
+    "baseColor": "#c4a76c",
+    "accentColor": "#b39455",
+    "description": "Wind-swept sandstone and caravan desert trails"
+  },
+  "volcanic": {
+    "material": "road_gravel",
+    "baseColor": "#3d3835",
+    "accentColor": "#544c45",
+    "description": "Crushed basalt and dark obsidian gravel paths across lava fields"
+  }
+}
