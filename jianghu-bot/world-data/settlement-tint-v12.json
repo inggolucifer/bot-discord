@@ -1,0 +1,44 @@
+{
+  "tundra": {
+    "tintFamily": "snow",
+    "blendRatio": 0.60,
+    "settlementRatio": 0.40,
+    "targetLum": 220,
+    "description": "Glacial & Snow biomes (60% snow, 40% settlement_floor)"
+  },
+  "desert": {
+    "tintFamily": "desert_sand",
+    "blendRatio": 0.55,
+    "settlementRatio": 0.45,
+    "targetLum": 165,
+    "description": "Arid Desert biomes (55% desert_sand, 45% settlement_floor)"
+  },
+  "volcanic": {
+    "tintFamily": "volcanic",
+    "blendRatio": 0.50,
+    "settlementRatio": 0.50,
+    "targetLum": 85,
+    "description": "Volcanic & Magma biomes (50% volcanic, 50% settlement_floor)"
+  },
+  "swamp": {
+    "tintFamily": "swamp",
+    "blendRatio": 0.45,
+    "settlementRatio": 0.55,
+    "targetLum": 110,
+    "description": "Wetland & Swamp biomes (45% swamp, 55% settlement_floor)"
+  },
+  "plains": {
+    "tintFamily": "plains",
+    "blendRatio": 0.30,
+    "settlementRatio": 0.70,
+    "targetLum": 145,
+    "description": "Central Plains & Meadow biomes (30% plains, 70% settlement_floor)"
+  },
+  "default": {
+    "tintFamily": "plains",
+    "blendRatio": 0.30,
+    "settlementRatio": 0.70,
+    "targetLum": 145,
+    "description": "Default temperate settlement floor"
+  }
+}

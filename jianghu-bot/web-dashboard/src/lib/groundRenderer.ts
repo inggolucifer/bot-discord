@@ -954,8 +954,35 @@ export function renderChunkGroundBitmapTextured(
     // 4b: Small mask M (36x36)
     const imgData = ctxM.createImageData(GRID_DIM, GRID_DIM);
     const d32 = new Uint32Array(imgData.data.buffer);
-    for (let i = 0; i < gridFamilies.length; i++) {
-      d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+    if (F === 'settlement_floor') {
+      // V12 P1: 2-octave noise jitter on border tiles with threshold 0.45 and width 0.8-1.4 cells
+      for (let gy = 0; gy < GRID_DIM; gy++) {
+        for (let gx = 0; gx < GRID_DIM; gx++) {
+          const idx = gy * GRID_DIM + gx;
+          if (gridFamilies[idx] === 'settlement_floor') {
+            const isEdge = (gx > 0 && gridFamilies[idx - 1] !== 'settlement_floor') ||
+                           (gx < GRID_DIM - 1 && gridFamilies[idx + 1] !== 'settlement_floor') ||
+                           (gy > 0 && gridFamilies[idx - GRID_DIM] !== 'settlement_floor') ||
+                           (gy < GRID_DIM - 1 && gridFamilies[idx + GRID_DIM] !== 'settlement_floor');
+            if (isEdge) {
+              const worldX = cx * CHUNK_SIZE + (gx - BORDER);
+              const worldY = cy * CHUNK_SIZE + (gy - BORDER);
+              const n1 = (hash2d(worldX * 31 + 7, worldY * 59 + 13) % 100) / 100.0;
+              const n2 = (hash2d(worldX * 97 + 19, worldY * 127 + 37) % 100) / 100.0;
+              const noiseVal = n1 * 0.7 + n2 * 0.3;
+              d32[idx] = noiseVal < 0.45 ? 0x66000000 : 0xff000000;
+            } else {
+              d32[idx] = 0xff000000;
+            }
+          } else {
+            d32[idx] = 0x00000000;
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < gridFamilies.length; i++) {
+        d32[i] = gridFamilies[i] === F ? 0xff000000 : 0x00000000;
+      }
     }
     ctxM.putImageData(imgData, 0, 0);
 
@@ -974,22 +1001,20 @@ export function renderChunkGroundBitmapTextured(
       ctxMB.drawImage(scratchM.canvas, 0, 0, GRID_DIM, GRID_DIM, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
 
       ctxMB2.clearRect(0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-      // V11: Settlement floor feathering blur 0.85 * tileSize (~46px) dissolves sharp box
-      const blurPx = F === 'settlement_floor' ? tileSize * 0.85 : tileSize * 0.32;
+      // V12 P1: Settlement floor feathering blur (1.1 * tileSize) and organic edge mask
+      const blurPx = F === 'settlement_floor' ? tileSize * 1.1 : tileSize * 0.32;
       ctxMB2.filter = `blur(${blurPx.toFixed(1)}px)`;
       ctxMB2.drawImage(scratchMB.canvas, 0, 0);
       ctxMB2.filter = 'none';
 
-      // V11: Organic transition mask overlay (ink splatter edges) for organic biomes
-      if (F !== 'settlement_floor') {
-        const transMask = groundTextures.getTransitionMask(Math.abs(hash2d(cx * 17 + cy, cy * 31)));
-        if (transMask) {
-          ctxMB2.save();
-          ctxMB2.globalCompositeOperation = 'source-atop';
-          ctxMB2.globalAlpha = 0.25;
-          ctxMB2.drawImage(transMask, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
-          ctxMB2.restore();
-        }
+      // Organic transition mask overlay (ink splatter edges)
+      const transMask = groundTextures.getTransitionMask(Math.abs(hash2d(cx * 17 + cy, cy * 31)));
+      if (transMask) {
+        ctxMB2.save();
+        ctxMB2.globalCompositeOperation = 'source-atop';
+        ctxMB2.globalAlpha = F === 'settlement_floor' ? 0.35 : 0.25;
+        ctxMB2.drawImage(transMask, 0, 0, GRID_DIM * tileSize, GRID_DIM * tileSize);
+        ctxMB2.restore();
       }
     }
 
@@ -1117,6 +1142,55 @@ export function renderChunkGroundBitmapTextured(
       ctxT.fillStyle = detailPattern;
       ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
       ctxT.restore();
+    }
+
+    // V12 P1: Settlement floor biome tinting (snow 60%, desert 55%, plains 35%)
+    if (F === 'settlement_floor') {
+      let snowCnt = 0;
+      let desertCnt = 0;
+      let volcanicCnt = 0;
+      let swampCnt = 0;
+      for (let i = 0; i < gridFamilies.length; i++) {
+        const fam = gridFamilies[i];
+        if (fam === 'snow' || fam === 'ice_crack' || fam === 'glacier') snowCnt++;
+        else if (fam === 'desert_sand' || fam === 'dune' || fam === 'oasis') desertCnt++;
+        else if (fam === 'volcanic' || fam === 'lava_flow') volcanicCnt++;
+        else if (fam === 'swamp' || fam === 'demonic_swamp' || fam === 'poison_pool') swampCnt++;
+      }
+
+      let tintFamily = 'plains';
+      let blendRatio = 0.35;
+      if (snowCnt >= 30) {
+        tintFamily = 'snow';
+        blendRatio = 0.60;
+      } else if (desertCnt >= 30) {
+        tintFamily = 'desert_sand';
+        blendRatio = 0.55;
+      } else if (volcanicCnt >= 30) {
+        tintFamily = 'volcanic';
+        blendRatio = 0.50;
+      } else if (swampCnt >= 30) {
+        tintFamily = 'swamp';
+        blendRatio = 0.45;
+      }
+
+      const tintFInfo = groundTextures.familyOf(tintFamily);
+      const tintVars = tintFInfo && tintFInfo.variants && tintFInfo.variants.length > 0
+        ? tintFInfo.variants
+        : [`${tintFamily}_v1`];
+      const tintPattern = groundTextures.getPattern(ctxT, tintVars[0]);
+      if (tintPattern) {
+        ctxT.save();
+        ctxT.globalCompositeOperation = 'source-over';
+        ctxT.globalAlpha = blendRatio;
+        if (typeof (tintPattern as any).setTransform === 'function') {
+          const matrix = new DOMMatrix().translate(originX, originY).scale(scale);
+          tintPattern.setTransform(matrix);
+        }
+        ctxT.fillStyle = tintPattern;
+        ctxT.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctxT.restore();
+      }
     }
 
     // 4f: Mask T with blurred MB2 (crisp mask for road_stone)
