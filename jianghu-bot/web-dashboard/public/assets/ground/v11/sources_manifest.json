@@ -1,0 +1,942 @@
+{
+  "ai_count": 0,
+  "procedural_count": 4,
+  "families": {
+    "plains": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "meadow": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "farmland": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "herb_field": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "forest_floor": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "bamboo_floor": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "dead_wood": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "hill": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "rock_ground": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "mountain_pass": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "canyon_floor": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "desert_sand": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "dune": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "oasis": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "snow": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "ice_crack": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "swamp": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "demonic_swamp": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "poison_pool": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "miasma_waste": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "battlefield_ash": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "volcanic": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "lava_flow": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "crater": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "lightning_scar": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "formation_tile": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "ruin_floor": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "island_reef": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "abyss_edge": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "settlement_floor": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "road_stone": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "ocean": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "river": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "lake": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "cliff": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ],
+    "glacier": [
+      {
+        "variant": "m1",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m2",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m3",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      },
+      {
+        "variant": "m4",
+        "source": "procedural",
+        "src_sha256": null,
+        "reason": "missing_source"
+      }
+    ]
+  }
+}

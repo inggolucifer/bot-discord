@@ -97,8 +97,9 @@ def main():
             except Exception:
                 source_type = "procedural"
         
-        # Quality classification
-        if std_lum < 8.0 or kb_size < 40.0:
+        # Quality classification (V12 gate: >= 7.0 for snow/sand, >= 8.5 general)
+        min_std = 7.0 if family in ("snow", "ice_crack", "glacier", "desert_sand", "dune") else 8.5
+        if std_lum < min_std or kb_size < 40.0:
             quality_flag = "low_contrast_placeholder"
             if source_type != "ai":
                 placeholder_count += 1

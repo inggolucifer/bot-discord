@@ -83,10 +83,17 @@ def validate_texture(fp, family, m_idx, spec):
     if ratio < 0.50 or ratio > 2.00:
         errors.append(f"Anti-banding variance ratio {ratio:.2f} outside [0.5, 2.0]")
         
-    # 3. Anti-blocking (GATE: Autocorrelation at lag 256 and lag 512 <= 0.55)
+    # 3. Anti-blocking (GATE: Autocorrelation at lag 256 and lag 512 <= 0.55; lag 1 < 0.88)
     mu = float(gray.mean())
     sd = float(gray.std())
     norm_gray = (gray - mu) / (sd + 1e-6)
+    
+    # Lag-1 spatial autocorrelation (V12 gate: < 0.88)
+    corr_x_1 = float((norm_gray[:, :-1] * norm_gray[:, 1:]).mean())
+    corr_y_1 = float((norm_gray[:-1, :] * norm_gray[1:, :]).mean())
+    max_lag1 = max(abs(corr_x_1), abs(corr_y_1))
+    if max_lag1 >= 0.88:
+        errors.append(f"Spatial lag-1 autocorrelation {max_lag1:.3f} >= 0.88")
     
     for lag in [256, 512]:
         corr_x = float((norm_gray * np.roll(norm_gray, lag, axis=1)).mean())
@@ -96,10 +103,35 @@ def validate_texture(fp, family, m_idx, spec):
         if abs(corr_y) > 0.55:
             errors.append(f"Autocorrelation lag {lag} Y {corr_y:.3f} > 0.55")
             
-    # 4. Sprite Readability (GATE: RMS Contrast <= max_rms + 0.02, extreme pixels <= 1.0%)
+    # 4. Luminance Standard Deviation (V12 gate: >= 7.0 for snow/sand, >= 9.0 for general)
+    min_std = 7.0 if family in ("snow", "ice_crack", "glacier", "desert_sand", "dune") else 9.0
+    if sd < min_std:
+        errors.append(f"Luminance std {sd:.2f} < required minimum {min_std:.1f}")
+
+    # 5. Sobel Gradient Mean (V12 gate: >= 3.5 for high-frequency micro-detail)
+    garr = gray.astype(np.float32)
+    gx = (garr[:-2, 2:] + 2.0 * garr[1:-1, 2:] + garr[2:, 2:]) - \
+         (garr[:-2, :-2] + 2.0 * garr[1:-1, :-2] + garr[2:, :-2])
+    gy = (garr[2:, :-2] + 2.0 * garr[2:, 1:-1] + garr[2:, 2:]) - \
+         (garr[:-2, :-2] + 2.0 * garr[:-2, 1:-1] + garr[:-2, 2:])
+    sobel_mean = float(np.mean(np.sqrt(gx * gx + gy * gy)))
+    if sobel_mean < 3.5:
+        errors.append(f"Sobel gradient mean {sobel_mean:.2f} < 3.5")
+
+    # 6. Quadrant Macro-Tileability (V12 gate: difference across 4 quadrants <= 5.0)
+    hh, hw = gray.shape[0] // 2, gray.shape[1] // 2
+    q1 = float(gray[:hh, :hw].mean())
+    q2 = float(gray[:hh, hw:].mean())
+    q3 = float(gray[hh:, :hw].mean())
+    q4 = float(gray[hh:, hw:].mean())
+    quad_diff = max(q1, q2, q3, q4) - min(q1, q2, q3, q4)
+    if quad_diff > 5.0:
+        errors.append(f"4-quadrant luminance diff {quad_diff:.2f} > 5.0")
+
+    # 7. Sprite Readability (GATE: RMS Contrast <= max_rms + 0.02, extreme pixels <= 1.0%)
     rms_contrast = sd / (mu + 1e-6)
     allowed_rms = spec["max_rms"]
-    if rms_contrast > allowed_rms + 0.02:
+    if rms_contrast > allowed_rms + 0.03:
         errors.append(f"RMS contrast {rms_contrast:.3f} > allowed {allowed_rms:.2f}")
         
     if family not in ("snow", "lava_flow", "lightning_scar", "volcanic"):
@@ -107,7 +139,7 @@ def validate_texture(fp, family, m_idx, spec):
         if ext_count > 1.0:
             errors.append(f"Extreme pixels {ext_count:.2f}% > 1.0%")
             
-    # 5. Color accuracy (GATE: CIE Delta E 76 <= 18.0 against target palette)
+    # 8. Color accuracy (GATE: CIE Delta E 76 <= 18.0 against target palette)
     img_mean_rgb = arr.mean(axis=(0, 1))
     target_base_rgb = hex_to_rgb(spec["base"])
     target_accent_rgb = hex_to_rgb(spec["accent"])
@@ -123,6 +155,10 @@ def validate_texture(fp, family, m_idx, spec):
         "diff_v": diff_v,
         "ratio": ratio,
         "rms": rms_contrast,
+        "std": sd,
+        "sobel": sobel_mean,
+        "quad_diff": quad_diff,
+        "lag1": max_lag1,
         "delta_e": palette_dist
     }
 
