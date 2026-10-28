@@ -123,22 +123,23 @@ server.listen(3001, async () => {
     console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}${gridParam}...`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
-    // a. window.__chunksReady === true DAN window.groundTextures.ready === true (timeout 30s)
+    // a. window.__chunksReady === true DAN window.atlasReady === true DAN window.groundTextures.ready === true
     let chunksReady = false;
     try {
       await page.waitForFunction(
-        () => window.__chunksReady === true && window.groundTextures && window.groundTextures.ready === true,
+        () => window.__chunksReady === true && window.atlasReady === true && window.groundTextures && window.groundTextures.ready === true,
         { timeout: 90000 }
       );
       chunksReady = true;
     } catch (e) {
       const diag = await page.evaluate(() => ({
         chunksReady: window.__chunksReady,
+        atlasReady: window.atlasReady,
         hasGroundTextures: Boolean(window.groundTextures),
         groundReady: window.groundTextures ? window.groundTextures.ready : false,
         debugMetrics: window.__debugMetrics
       })).catch(() => null);
-      console.error(`[ERROR] Timeout 30s menunggu __chunksReady & groundTextures.ready untuk ${s.name}! Diag:`, diag);
+      console.error(`[ERROR] Timeout 90s menunggu __chunksReady, atlasReady & groundTextures.ready untuk ${s.name}! Diag:`, diag);
       await page.close();
       await br.close();
       server.close();

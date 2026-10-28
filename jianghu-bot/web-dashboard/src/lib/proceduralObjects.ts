@@ -6409,11 +6409,17 @@ export function renderL4ProceduralObject(
     return;
   }
 
-  // 2. Phase HA: All vector fallback branches (karst_pillar, mt_rock, bamboo_clump, pine_tree, village_house, sect_gate, etc.)
-  // have been strictly removed to eliminate distorted geometries and placeholder silhouettes.
+  // If the atlas index or this specific frame page is still loading, skip cleanly to await next frame
+  if (!atlasLoader.isLoaded() || atlasLoader.isFrameLoading(defId)) {
+    return;
+  }
+
+  // 2. Only warn if the atlas index has fully loaded and this frame genuinely does not exist
   if (!warnedMissingAtlasDefs.has(defId)) {
-    warnedMissingAtlasDefs.add(defId);
-    console.warn(`[renderL4ProceduralObject] Missing or unloaded atlas frame for '${defId}', vector fallback disabled.`);
+    if (!atlasLoader.hasFrame(defId)) {
+      warnedMissingAtlasDefs.add(defId);
+      console.warn(`[renderL4ProceduralObject] Missing atlas frame for '${defId}' (not in atlas index), vector fallback disabled.`);
+    }
   }
 
   // In dev mode only, draw a lightweight red outline and label to aid debugging without corrupting aesthetics

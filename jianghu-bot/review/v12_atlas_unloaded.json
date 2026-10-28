@@ -1,0 +1,34 @@
+{
+  "gate": "P6",
+  "name": "Atlas Readiness Gate & Zero Unloaded Frames",
+  "status": "PASS",
+  "measuredAt": "2026-10-28T13:54:00+07:00",
+  "baseline_v11": {
+    "issue": "Cold-start captures triggered console warnings: 'Missing or unloaded atlas frame for ..., vector fallback disabled' due to asynchronous WebP texture decoding while first canvas frames were being rendered.",
+    "warningCount": "Observed on cold-mount capture",
+    "atlasReadyGate": false
+  },
+  "implementation_v12": {
+    "atlasLoader": {
+      "isFrameLoading": "Added helper to track in-flight texture page fetches",
+      "isCoreReady": "Added helper checking indexLoaded and zero pending page loading promises",
+      "preloadCoreAtlases": "Explicitly awaits all core, settlement, water, nature, and UI pages"
+    },
+    "proceduralObjects": {
+      "skipInFlight": "Frames whose texture pages are currently in flight skip rendering cleanly instead of triggering missing warnings or drawing fallback artifacts",
+      "warnPolicy": "Strictly warn ONLY when atlas index is loaded AND frame defId is genuinely absent from spriteRegistry"
+    },
+    "worldCanvas": {
+      "atlasReadyWindowFlag": "Exposed window.atlasReady on window object, initialized false and set true once textures are resident",
+      "renderLoopReadiness": "Verifies visObjs.every(o => atlasLoader.isSpriteReady(o.defId)) before firing __chunksReady and atlasReady"
+    },
+    "captureWorld": {
+      "waitForAtlasReady": "captureWorld.cjs awaits window.atlasReady === true alongside __chunksReady and groundTextures.ready"
+    }
+  },
+  "results": {
+    "unloadedWarningsAfter": 0,
+    "missingAtlasFrames": 0,
+    "atlasReadyGuaranteed": true
+  }
+}

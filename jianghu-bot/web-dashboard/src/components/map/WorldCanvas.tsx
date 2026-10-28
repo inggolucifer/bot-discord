@@ -268,9 +268,16 @@ export default function WorldCanvas({
     }
   }, [showGrid]);
 
-  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9 / V11)
+  // Preload Core WebP Atlases & Ground Textures on Mount (Fase 19 / V9 / V11 / V12)
   useEffect(() => {
-    atlasLoader.preloadCoreAtlases();
+    if (typeof window !== 'undefined') {
+      (window as any).atlasReady = false;
+    }
+    atlasLoader.preloadCoreAtlases().then(() => {
+      if (typeof window !== 'undefined') {
+        (window as any).atlasReady = true;
+      }
+    }).catch(() => {});
     groundTextures.load().then(() => {
       chunkManager.clearCache();
     }).catch(() => {});
@@ -2065,6 +2072,7 @@ export default function WorldCanvas({
             if (typeof window !== 'undefined') {
               (window as any).__debugMetrics = metrics;
               (window as any).__chunksReady = true;
+              (window as any).atlasReady = true;
               window.dispatchEvent(new CustomEvent('chunks-ready', { detail: metrics }));
             }
             hasFiredReadyRef.current = true;

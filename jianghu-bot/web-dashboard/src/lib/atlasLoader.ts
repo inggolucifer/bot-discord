@@ -141,6 +141,17 @@ class AtlasLoader {
     return false;
   }
 
+  public isFrameLoading(frameId: string): boolean {
+    if (!this.isIndexLoaded) return true;
+    const entry = this.spriteRegistry.get(frameId);
+    if (!entry) return false;
+    return this.pageLoadingPromises.has(entry.page);
+  }
+
+  public isCoreReady(): boolean {
+    return this.isIndexLoaded && this.pageLoadingPromises.size === 0;
+  }
+
   /**
    * Loads a specific modular WebP texture page with LRU eviction and createImageBitmap.
    */
