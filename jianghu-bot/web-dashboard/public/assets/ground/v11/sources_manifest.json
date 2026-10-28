@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -848,15 +848,21 @@
     "island_reef": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "055952822b8b4c12f633b01024982204964862271a702b2721d5dfb84ccf9012",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "ef0694184659cd719b6eaba0d13e219f3e74add714b6247e58c6ea82ac01fdc6",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -874,15 +880,21 @@
     "abyss_edge": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "5c8148dfc17f13d395883cd1175e0174e3eb5ee0bd6c6b997dbb50642b769897",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "1411ce17d3d05eb4a6118e9853aa8efcb592c2746aedf8c2e6975c74f9032914",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -941,9 +953,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "4d3ee3e9d5b893d5456754ff4d7347c0b982f6c6ee2a16cccdf91e250b3b6c73",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",

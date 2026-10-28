@@ -1,58 +1,64 @@
 {
   "total_macros": 144,
-  "ai_count": 50,
-  "procedural_count": 94,
+  "ai_count": 55,
+  "procedural_count": 89,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
     "abyss_edge_m1.webp": {
       "family": "abyss_edge",
       "variant": "m1",
-      "kb": 240.7,
+      "kb": 186.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.56,
-      "lum_std": 9.56,
-      "sobel_mean": 27.07,
-      "unique_colors_sample": 1988,
+      "lum_mean": 54.38,
+      "lum_std": 9.6,
+      "sobel_mean": 22.13,
+      "unique_colors_sample": 1369,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "abyss_edge_m1.png",
+      "src_sha256": "5c8148dfc17f13d395883cd1175e0174e3eb5ee0bd6c6b997dbb50642b769897",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "abyss_edge_m2.webp": {
       "family": "abyss_edge",
       "variant": "m2",
-      "kb": 233.89,
+      "kb": 214.82,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.87,
-      "lum_std": 10.68,
-      "sobel_mean": 26.65,
-      "unique_colors_sample": 2535,
+      "lum_mean": 55.14,
+      "lum_std": 10.12,
+      "sobel_mean": 27.84,
+      "unique_colors_sample": 1474,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "abyss_edge_m2.png",
+      "src_sha256": "1411ce17d3d05eb4a6118e9853aa8efcb592c2746aedf8c2e6975c74f9032914",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "abyss_edge_m3.webp": {
       "family": "abyss_edge",
       "variant": "m3",
-      "kb": 232.56,
+      "kb": 191.92,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.78,
-      "lum_std": 9.58,
-      "sobel_mean": 25.67,
-      "unique_colors_sample": 2046,
+      "lum_mean": 54.37,
+      "lum_std": 9.64,
+      "sobel_mean": 22.4,
+      "unique_colors_sample": 1275,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -62,15 +68,15 @@
     "abyss_edge_m4.webp": {
       "family": "abyss_edge",
       "variant": "m4",
-      "kb": 230.91,
+      "kb": 199.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 54.9,
-      "lum_std": 9.58,
-      "sobel_mean": 25.93,
-      "unique_colors_sample": 1827,
+      "lum_mean": 54.61,
+      "lum_std": 11.8,
+      "sobel_mean": 25.99,
+      "unique_colors_sample": 2613,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1307,51 +1313,57 @@
     "island_reef_m1.webp": {
       "family": "island_reef",
       "variant": "m1",
-      "kb": 274.65,
+      "kb": 271.36,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 165.35,
-      "lum_std": 17.36,
-      "sobel_mean": 33.63,
-      "unique_colors_sample": 9297,
+      "lum_mean": 164.91,
+      "lum_std": 19.7,
+      "sobel_mean": 38.92,
+      "unique_colors_sample": 24371,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "island_reef_m1.png",
+      "src_sha256": "055952822b8b4c12f633b01024982204964862271a702b2721d5dfb84ccf9012",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "island_reef_m2.webp": {
       "family": "island_reef",
       "variant": "m2",
-      "kb": 274.19,
+      "kb": 300.18,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 164.8,
-      "lum_std": 16.67,
-      "sobel_mean": 33.53,
-      "unique_colors_sample": 9322,
+      "lum_mean": 164.22,
+      "lum_std": 22.28,
+      "sobel_mean": 51.06,
+      "unique_colors_sample": 16632,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "island_reef_m2.png",
+      "src_sha256": "ef0694184659cd719b6eaba0d13e219f3e74add714b6247e58c6ea82ac01fdc6",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "island_reef_m3.webp": {
       "family": "island_reef",
       "variant": "m3",
-      "kb": 248.7,
+      "kb": 272.66,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 166.16,
-      "lum_std": 13.2,
-      "sobel_mean": 28.36,
-      "unique_colors_sample": 6248,
+      "lum_mean": 164.91,
+      "lum_std": 19.71,
+      "sobel_mean": 38.93,
+      "unique_colors_sample": 24236,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1361,15 +1373,15 @@
     "island_reef_m4.webp": {
       "family": "island_reef",
       "variant": "m4",
-      "kb": 261.22,
+      "kb": 296.84,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 165.66,
-      "lum_std": 15.81,
-      "sobel_mean": 29.27,
-      "unique_colors_sample": 7736,
+      "lum_mean": 164.61,
+      "lum_std": 21.12,
+      "sobel_mean": 48.92,
+      "unique_colors_sample": 28767,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2207,15 +2219,15 @@
     "road_stone_m1.webp": {
       "family": "road_stone",
       "variant": "m1",
-      "kb": 191.75,
+      "kb": 191.74,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.35,
-      "lum_std": 11.47,
-      "sobel_mean": 25.75,
-      "unique_colors_sample": 1017,
+      "lum_mean": 120.34,
+      "lum_std": 11.46,
+      "sobel_mean": 25.76,
+      "unique_colors_sample": 1082,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m1.png",
@@ -2228,33 +2240,36 @@
     "road_stone_m2.webp": {
       "family": "road_stone",
       "variant": "m2",
-      "kb": 191.67,
+      "kb": 218.05,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.35,
-      "lum_std": 11.46,
-      "sobel_mean": 25.72,
-      "unique_colors_sample": 1007,
+      "lum_mean": 120.73,
+      "lum_std": 12.2,
+      "sobel_mean": 29.9,
+      "unique_colors_sample": 2373,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "road_stone_m2.png",
+      "src_sha256": "4d3ee3e9d5b893d5456754ff4d7347c0b982f6c6ee2a16cccdf91e250b3b6c73",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "road_stone_m3.webp": {
       "family": "road_stone",
       "variant": "m3",
-      "kb": 192.79,
+      "kb": 193.36,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 120.34,
-      "lum_std": 11.47,
-      "sobel_mean": 25.76,
-      "unique_colors_sample": 1033,
+      "lum_std": 11.48,
+      "sobel_mean": 25.78,
+      "unique_colors_sample": 1027,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2264,15 +2279,15 @@
     "road_stone_m4.webp": {
       "family": "road_stone",
       "variant": "m4",
-      "kb": 191.16,
+      "kb": 214.63,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.34,
-      "lum_std": 11.44,
-      "sobel_mean": 25.7,
-      "unique_colors_sample": 1021,
+      "lum_mean": 120.93,
+      "lum_std": 12.54,
+      "sobel_mean": 29.26,
+      "unique_colors_sample": 2212,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
