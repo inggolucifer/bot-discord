@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 60,
-  "procedural_count": 84,
+  "ai_count": 65,
+  "procedural_count": 79,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -1178,51 +1178,57 @@
     "hill_m1.webp": {
       "family": "hill",
       "variant": "m1",
-      "kb": 226.45,
+      "kb": 275.38,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 131.98,
-      "lum_std": 10.57,
-      "sobel_mean": 25.42,
-      "unique_colors_sample": 1753,
+      "lum_mean": 132.5,
+      "lum_std": 16.92,
+      "sobel_mean": 44.0,
+      "unique_colors_sample": 4118,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "hill_m1.png",
+      "src_sha256": "85c5c62d8836dba5f215561816f7b105159b17165eb49a0a66eabb0814122ab7",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "hill_m2.webp": {
       "family": "hill",
       "variant": "m2",
-      "kb": 233.01,
+      "kb": 243.75,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 131.85,
-      "lum_std": 9.57,
-      "sobel_mean": 26.11,
-      "unique_colors_sample": 1351,
+      "lum_mean": 132.25,
+      "lum_std": 15.17,
+      "sobel_mean": 32.16,
+      "unique_colors_sample": 5721,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "hill_m2.png",
+      "src_sha256": "2c209ede938c8c2c75134e11fede0e6b164e9dc0c987784a7a9d8c2b97cc43d8",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "hill_m3.webp": {
       "family": "hill",
       "variant": "m3",
-      "kb": 219.74,
+      "kb": 275.99,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 132.18,
-      "lum_std": 9.58,
-      "sobel_mean": 24.18,
-      "unique_colors_sample": 1210,
+      "lum_mean": 132.51,
+      "lum_std": 16.92,
+      "sobel_mean": 44.02,
+      "unique_colors_sample": 4069,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1232,15 +1238,15 @@
     "hill_m4.webp": {
       "family": "hill",
       "variant": "m4",
-      "kb": 224.11,
+      "kb": 242.51,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 131.57,
-      "lum_std": 10.38,
-      "sobel_mean": 25.08,
-      "unique_colors_sample": 1557,
+      "lum_mean": 132.57,
+      "lum_std": 15.53,
+      "sobel_mean": 33.25,
+      "unique_colors_sample": 4460,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1634,51 +1640,57 @@
     "meadow_m1.webp": {
       "family": "meadow",
       "variant": "m1",
-      "kb": 231.84,
+      "kb": 295.86,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.49,
-      "lum_std": 14.14,
-      "sobel_mean": 25.57,
-      "unique_colors_sample": 4593,
+      "lum_mean": 150.73,
+      "lum_std": 14.37,
+      "sobel_mean": 46.58,
+      "unique_colors_sample": 12476,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "meadow_m1.png",
+      "src_sha256": "ceb19fc33cdcb765d1e83b36895946663d77e72c7a9196bb362fe87aa541acd5",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "meadow_m2.webp": {
       "family": "meadow",
       "variant": "m2",
-      "kb": 209.55,
+      "kb": 294.52,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.16,
-      "lum_std": 11.9,
-      "sobel_mean": 22.46,
-      "unique_colors_sample": 3385,
+      "lum_mean": 150.51,
+      "lum_std": 14.63,
+      "sobel_mean": 49.9,
+      "unique_colors_sample": 3850,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "meadow_m2.png",
+      "src_sha256": "f9dab6bb185581597a4a44e87c5394466cda6a76fb9adc2b549781d8e5b8d1d8",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "meadow_m3.webp": {
       "family": "meadow",
       "variant": "m3",
-      "kb": 209.96,
+      "kb": 295.28,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.09,
-      "lum_std": 11.18,
-      "sobel_mean": 22.62,
-      "unique_colors_sample": 3338,
+      "lum_mean": 150.73,
+      "lum_std": 14.38,
+      "sobel_mean": 46.58,
+      "unique_colors_sample": 12374,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1688,15 +1700,15 @@
     "meadow_m4.webp": {
       "family": "meadow",
       "variant": "m4",
-      "kb": 205.44,
+      "kb": 329.28,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 150.42,
-      "lum_std": 10.89,
-      "sobel_mean": 22.27,
-      "unique_colors_sample": 2817,
+      "lum_mean": 150.93,
+      "lum_std": 19.77,
+      "sobel_mean": 62.96,
+      "unique_colors_sample": 15913,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2012,33 +2024,36 @@
     "plains_m1.webp": {
       "family": "plains",
       "variant": "m1",
-      "kb": 231.94,
+      "kb": 271.59,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 145.06,
-      "lum_std": 10.66,
-      "sobel_mean": 25.93,
-      "unique_colors_sample": 2023,
+      "lum_mean": 146.47,
+      "lum_std": 17.68,
+      "sobel_mean": 36.61,
+      "unique_colors_sample": 8893,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "plains_m1.png",
+      "src_sha256": "1f6e34af227ce2be7fed78b535c22767cd30ed8f852d291d6802b795ecdb6d57",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "plains_m2.webp": {
       "family": "plains",
       "variant": "m2",
-      "kb": 228.8,
+      "kb": 270.93,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 144.94,
-      "lum_std": 9.58,
-      "sobel_mean": 25.52,
-      "unique_colors_sample": 1658,
+      "lum_mean": 146.47,
+      "lum_std": 17.69,
+      "sobel_mean": 36.66,
+      "unique_colors_sample": 8973,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2048,15 +2063,15 @@
     "plains_m3.webp": {
       "family": "plains",
       "variant": "m3",
-      "kb": 238.66,
+      "kb": 270.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 144.73,
-      "lum_std": 10.46,
-      "sobel_mean": 26.91,
-      "unique_colors_sample": 1902,
+      "lum_mean": 146.47,
+      "lum_std": 17.69,
+      "sobel_mean": 36.67,
+      "unique_colors_sample": 8783,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2066,15 +2081,15 @@
     "plains_m4.webp": {
       "family": "plains",
       "variant": "m4",
-      "kb": 234.03,
+      "kb": 269.23,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 145.06,
-      "lum_std": 10.54,
-      "sobel_mean": 25.85,
-      "unique_colors_sample": 1815,
+      "lum_mean": 146.47,
+      "lum_std": 17.61,
+      "sobel_mean": 36.53,
+      "unique_colors_sample": 8974,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
