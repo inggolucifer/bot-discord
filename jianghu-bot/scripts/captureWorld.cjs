@@ -118,8 +118,9 @@ server.listen(3001, async () => {
       }
     });
 
-    const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}`;
-    console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}...`);
+    const gridParam = s.grid !== undefined ? `&grid=${s.grid}` : '';
+    const url = `http://localhost:3000/world?debugCam=${s.x},${s.y},${s.zoom || 1}${gridParam}`;
+    console.log(`\n[Shot] Capturing ${s.name} at (${s.x}, ${s.y}) zoom=${s.zoom || 1}${gridParam}...`);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
 
     // a. window.__chunksReady === true DAN window.groundTextures.ready === true (timeout 30s)

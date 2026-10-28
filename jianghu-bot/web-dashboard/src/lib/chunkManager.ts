@@ -10,7 +10,7 @@
 
 import { TileData, MapObjectInstance } from '@/types/world';
 import api from '@/lib/api';
-import { renderChunkGroundBitmap } from '@/lib/groundRenderer';
+import { renderChunkGroundBitmap, renderChunkGridBitmap } from '@/lib/groundRenderer';
 import { groundTextures } from '@/lib/groundTextures';
 
 export const CHUNK_SIZE = 32;
@@ -137,6 +137,7 @@ export class ChunkManager {
   private chunks = new Map<string, StaticChunkData>();
   private unpackedChunks = new Map<string, TileData[]>();
   private chunkBitmaps = new Map<string, HTMLCanvasElement | ImageBitmap>();
+  private chunkGridBitmaps = new Map<string, HTMLCanvasElement>();
   private liveData = new Map<string, LiveChunkData>();
 
   private pendingFetches = new Set<string>();
@@ -635,6 +636,27 @@ export class ChunkManager {
   }
 
   /**
+   * Pre-renders and caches 32x32 chunk Tale of Immortal grid lines & solid cell tints
+   */
+  public getChunkGridBitmap(cx: number, cy: number, tileSize = 54): HTMLCanvasElement | null {
+    if (typeof document === 'undefined') return null;
+
+    const key = `${cx}:${cy}`;
+    if (this.chunkGridBitmaps.has(key)) {
+      return this.chunkGridBitmaps.get(key)!;
+    }
+
+    const tiles = this.unpackedChunks.get(key);
+    if (!tiles) return null;
+
+    const canvas = renderChunkGridBitmap(cx, cy, tiles, tileSize);
+    if (canvas) {
+      this.chunkGridBitmaps.set(key, canvas);
+    }
+    return canvas;
+  }
+
+  /**
    * Resets all internal caches
    */
   public clear() {
@@ -648,12 +670,17 @@ export class ChunkManager {
     this.chunks.clear();
     this.unpackedChunks.clear();
     this.chunkBitmaps.clear();
+    this.chunkGridBitmaps.clear();
     this.liveData.clear();
     this.pendingFetches.clear();
     this.failedFetches.clear();
     this.hotRing.clear();
     this.warmRing.clear();
     this.lastSubscribedRooms.clear();
+  }
+
+  public clearCache() {
+    this.clear();
   }
 }
 

@@ -241,10 +241,28 @@ export default function WorldCanvas({
   // Build Mode State (Fase 18)
   const [isBuildMode, setIsBuildMode] = useState(false);
 
-  // V11: Grid Overlay State (Default OFF, toggle via 'G' hotkey)
-  const [showGrid, setShowGrid] = useState(false);
+  // V12 P9: Grid Overlay State (Default ON, persist in localStorage, overridden by ?grid=0|1)
+  const [showGrid, setShowGrid] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('grid')) {
+          return params.get('grid') === '1';
+        }
+        const saved = localStorage.getItem('jianghu_show_grid');
+        if (saved !== null) {
+          return saved === 'true';
+        }
+      } catch (e) {}
+    }
+    return true; // Default ON (Tale of Immortal style)
+  });
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('jianghu_show_grid', String(showGrid));
+      } catch (e) {}
       (window as any).__setShowGrid = setShowGrid;
       (window as any).__getShowGrid = () => showGrid;
     }
@@ -782,29 +800,46 @@ export default function WorldCanvas({
       ctx.restore();
 
       // ----------------------------------------------------------------------
-      // L2.8: SHAN SHUI GRID LINES (Toggled via 'G', Default OFF, subtle alpha <= 0.08)
+      // L2.8: SHAN SHUI GRID LINES (Tale of Immortal Style, Cached Chunk Bitmaps)
       // ----------------------------------------------------------------------
-      if (showGrid && camera.zoom >= 0.35) {
+      if (showGrid && camera.zoom >= 0.25) {
         ctx.save();
-        ctx.strokeStyle = 'rgba(165, 155, 142, 0.08)'; // Subdued wuxia parchment grid
-        ctx.lineWidth = 1;
-        for (let tx = minTileX; tx <= maxTileX + 1; tx++) {
-          const sx = Math.floor(toScreenX(tx)) + 0.5;
-          const startY = Math.max(0, Math.floor(toScreenY(minTileY)));
-          const endY = Math.min(height, Math.floor(toScreenY(maxTileY + 1)));
-          ctx.beginPath();
-          ctx.moveTo(sx, startY);
-          ctx.lineTo(sx, endY);
-          ctx.stroke();
-        }
-        for (let ty = minTileY; ty <= maxTileY + 1; ty++) {
-          const sy = Math.floor(toScreenY(ty)) + 0.5;
-          const startX = Math.max(0, Math.floor(toScreenX(minTileX)));
-          const endX = Math.min(width, Math.floor(toScreenX(maxTileX + 1)));
-          ctx.beginPath();
-          ctx.moveTo(startX, sy);
-          ctx.lineTo(endX, sy);
-          ctx.stroke();
+        if (camera.zoom >= 0.50) {
+          // Full grid: draw cached chunk grid bitmaps
+          for (let cy = minChunkY; cy <= maxChunkY; cy++) {
+            for (let cx = minChunkX; cx <= maxChunkX; cx++) {
+              const gridBmp = chunkManager.getChunkGridBitmap(cx, cy, 54);
+              if (gridBmp) {
+                const csx = Math.round(toScreenX(cx * CHUNK_SIZE)) + 0.5;
+                const csy = Math.round(toScreenY(cy * CHUNK_SIZE)) + 0.5;
+                const csw = Math.round(CHUNK_SIZE * currentTileSize);
+                const csh = Math.round(CHUNK_SIZE * currentTileSize);
+                ctx.drawImage(gridBmp, csx, csy, csw, csh);
+              }
+            }
+          }
+        } else {
+          // Zoom between 0.25 and 0.50: only draw major 8-cell lines
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = 'rgba(40, 30, 20, 0.22)';
+          const startMajorX = Math.floor(minTileX / 8) * 8;
+          const endMajorX = Math.ceil((maxTileX + 1) / 8) * 8;
+          for (let tx = startMajorX; tx <= endMajorX; tx += 8) {
+            const sx = Math.round(toScreenX(tx)) + 0.5;
+            ctx.beginPath();
+            ctx.moveTo(sx, 0);
+            ctx.lineTo(sx, height);
+            ctx.stroke();
+          }
+          const startMajorY = Math.floor(minTileY / 8) * 8;
+          const endMajorY = Math.ceil((maxTileY + 1) / 8) * 8;
+          for (let ty = startMajorY; ty <= endMajorY; ty += 8) {
+            const sy = Math.round(toScreenY(ty)) + 0.5;
+            ctx.beginPath();
+            ctx.moveTo(0, sy);
+            ctx.lineTo(width, sy);
+            ctx.stroke();
+          }
         }
         ctx.restore();
       }

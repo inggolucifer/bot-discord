@@ -799,6 +799,86 @@ function getFamilyPriority(f: string): number {
 const perfRing: number[] = [];
 
 /**
+ * V12 P9: Tale of Immortal Authentic Grid Overlay Pre-renderer
+ * Pre-renders cell lines, 8-cell major lines, and blocked solid cell tints onto an OffscreenCanvas.
+ * Cached per 32x32 chunk for 60+ FPS zero-overhead pan & zoom.
+ */
+export function renderChunkGridBitmap(
+  cx: number,
+  cy: number,
+  tiles: Array<{ tileX: number; tileY: number; terrainType: string; isSolid?: boolean }>,
+  tileSize: number = 54
+): HTMLCanvasElement | null {
+  if (typeof document === 'undefined') return null;
+
+  const canvasWidth = CHUNK_SIZE * tileSize;
+  const canvasHeight = CHUNK_SIZE * tileSize;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // 1. Blocked solid cell tint: rgba(180, 40, 30, 0.10) (exclude roads)
+  ctx.fillStyle = 'rgba(180, 40, 30, 0.10)';
+  for (const t of tiles) {
+    if (t.isSolid && !t.terrainType.includes('road')) {
+      const lx = t.tileX - cx * CHUNK_SIZE;
+      const ly = t.tileY - cy * CHUNK_SIZE;
+      ctx.fillRect(lx * tileSize, ly * tileSize, tileSize, tileSize);
+    }
+  }
+
+  // 2. Adaptive cell lines (width: 1 device-px, snap to half-pixel)
+  for (const t of tiles) {
+    const lx = t.tileX - cx * CHUNK_SIZE;
+    const ly = t.tileY - cy * CHUNK_SIZE;
+    const x0 = Math.round(lx * tileSize) + 0.5;
+    const y0 = Math.round(ly * tileSize) + 0.5;
+    const x1 = Math.round((lx + 1) * tileSize) + 0.5;
+    const y1 = Math.round((ly + 1) * tileSize) + 0.5;
+
+    const fInfo = groundTextures.familyOf(t.terrainType);
+    const fam = fInfo ? fInfo.family : 'plains';
+    const famSpec = (groundTextures.manifest as any)?.families?.[fam];
+    const lum = famSpec?.targetLuminance ?? 120;
+    const isLight = lum > 140;
+
+    // Delta L target 6-14: light ground -> rgba(40,30,20,0.09); dark ground -> rgba(255,248,230,0.07)
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = isLight ? 'rgba(40, 30, 20, 0.09)' : 'rgba(255, 248, 230, 0.07)';
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y0);
+    ctx.lineTo(x1, y1);
+    ctx.moveTo(x0, y1);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+  }
+
+  // 3. Major lines: every 8 cells and chunk borders (alpha 0.22, 1.5 device-px)
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(40, 30, 20, 0.22)';
+  for (let i = 0; i <= CHUNK_SIZE; i += 8) {
+    const px = Math.min(canvasWidth - 1, Math.round(i * tileSize)) + 0.5;
+    const py = Math.min(canvasHeight - 1, Math.round(i * tileSize)) + 0.5;
+
+    ctx.beginPath();
+    ctx.moveTo(px, 0);
+    ctx.lineTo(px, canvasHeight);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, py);
+    ctx.lineTo(canvasWidth, py);
+    ctx.stroke();
+  }
+
+  return canvas;
+}
+
+/**
  * High-fidelity seamless ink-wash textured ground renderer (V9 Prompt B4 & B5).
  * Renders layered multi-family seamless textures with soft edge masks and macro radial variation.
  */
