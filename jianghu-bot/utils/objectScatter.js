@@ -680,6 +680,40 @@ function markFootprintOccupied(startX, startY, cw, ch, occupiedGrid, objId, defI
   }
 }
 
+/**
+ * Removes footprint and canopy cells of an object from occupiedGrid.
+ */
+function unmarkFootprint(obj, occupiedGrid) {
+  if (!obj || !obj.defId) return;
+  const actualDef = resolveDef(obj.defId) || obj.defId;
+  const g = GC.getGrid(actualDef) || GC.getGrid(obj.defId);
+  if (g) {
+    if (g.mode === 'none') return;
+    const canopy = occupiedGrid.canopy;
+    for (const k of GC.cellsOf(obj.x, obj.y, g, false)) {
+      if (occupiedGrid.get(k) === obj.id) occupiedGrid.delete(k);
+    }
+    if (canopy) {
+      for (let dy = 1; dy <= g.rowsAbove; dy++) {
+        for (let dx = 0; dx < g.fw; dx++) {
+          const k = `${obj.x + dx},${obj.y - dy}`;
+          if (canopy.get(k) === obj.id) canopy.delete(k);
+        }
+      }
+    }
+    return;
+  }
+  const col = getCanonCollision(obj.defId, 1, 1);
+  const baseStartX = obj.x + Math.round(col.offsetX || 0);
+  const baseStartY = obj.y;
+  for (let dy = 0; dy < col.h; dy++) {
+    for (let dx = 0; dx < col.w; dx++) {
+      const k = `${baseStartX + dx},${baseStartY + dy}`;
+      if (occupiedGrid.get(k) === obj.id) occupiedGrid.delete(k);
+    }
+  }
+}
+
 const REGION_LANDMARK_CENTERS = {
   central_plains: { x: 2700, y: 2800 },
   nine_springs_delta: { x: 2400, y: 2450 },
@@ -732,6 +766,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
   const objects = [];
   const occupiedGrid = new Map();
+  const chunkDefCounts = new Map();
   const chunkRegion = getRegionAt(startTileX + 16, startTileY + 16);
   const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
 
@@ -1365,12 +1400,12 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
     for (let ci = 0; ci < numClusters; ci++) {
       let center = null;
-      for (let attempt = 0; attempt < 20; attempt++) {
+      for (let attempt = 0; attempt < 25; attempt++) {
         const cx = startTileX + 4 + Math.floor(clusterRand() * 24);
         const cy = startTileY + 4 + Math.floor(clusterRand() * 24);
 
-        // Distance between cluster centers >= 5 cells
-        const tooClose = clusterCenters.some(c => Math.hypot(cx - c.x, cy - c.y) < 5.0);
+        // Distance between cluster centers >= 6.0 cells (Poisson center)
+        const tooClose = clusterCenters.some(c => Math.hypot(cx - c.x, cy - c.y) < 6.0);
         if (tooClose) continue;
 
         const tile = getTileAt(cx, cy);
@@ -1390,24 +1425,46 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       const primaryPool = isTreeCluster ? clusterTreePool : clusterRockPool;
       const clusterTarget = Math.floor(4 + clusterRand() * 6); // 4..9 objects
       let clusterPlaced = 0;
+      const existingClusterMembers = [];
 
-      for (let pi = 0; pi < 24; pi++) {
+      for (let pi = 0; pi < 32; pi++) {
         if (clusterPlaced >= clusterTarget) break;
         if (objects.length - authoredCount >= maxObjectsBudget) break;
 
-        const angle = clusterRand() * Math.PI * 2;
-        const dist = 1.0 + clusterRand() * 5.0; // r <= 6 cells
-        const px = Math.floor(center.x + Math.cos(angle) * dist);
-        const py = Math.floor(center.y + Math.sin(angle) * dist);
+        // Disk-Gaussian member distribution with sigma = 1.8 (Box-Muller)
+        const u1 = Math.max(1e-6, clusterRand());
+        const u2 = clusterRand();
+        const rDist = 1.8 * Math.sqrt(-2.0 * Math.log(u1));
+        const theta = 2.0 * Math.PI * u2;
+        let px = Math.round(center.x + rDist * Math.cos(theta));
+        let py = Math.round(center.y + rDist * Math.sin(theta));
 
         if (px < startTileX || px > endTileX || py < startTileY || py > endTileY) continue;
+
+        const defId = primaryPool[Math.floor(clusterRand() * primaryPool.length)];
+        const fam = getAssetFamily(defId);
+
+        // Minimum distance between members of same kind r >= 2.0
+        const tooClose = existingClusterMembers.some(m => m.fam === fam && Math.hypot(px - m.x, py - m.y) < 2.0);
+        if (tooClose) continue;
+
+        // Anti-lattice on candidate: shift if >= 2 members already share same x or y
+        const sameX = existingClusterMembers.filter(m => m.fam === fam && m.x === px).length;
+        const sameY = existingClusterMembers.filter(m => m.fam === fam && m.y === py).length;
+        if (sameX >= 2) px += (clusterRand() < 0.5 ? 1 : -1);
+        if (sameY >= 2) py += (clusterRand() < 0.5 ? 1 : -1);
+
+        if (px < startTileX || px > endTileX || py < startTileY || py > endTileY) continue;
+
+        // Dominance cap: <= 30% per chunk
+        const maxPerDef = Math.max(3, Math.floor(maxObjectsBudget * 0.30));
+        if ((chunkDefCounts.get(defId) || 0) >= maxPerDef) continue;
 
         const pTile = getTileAt(px, py);
         if (!pTile) continue;
         const pt = pTile.terrainType || '';
         if (WATER_TERRAINS.has(pt) || pt.includes('road') || pt.includes('pass') || pt === 'settlement' || pTile.isSettlementOrigin) continue;
 
-        const defId = primaryPool[Math.floor(clusterRand() * primaryPool.length)];
         const col = getCanonCollision(defId, 1, 1);
         if (px + col.w - 1 > endTileX || py + col.h - 1 > endTileY) continue;
 
@@ -1422,6 +1479,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             collision: col.mode || 'soft',
             tags: ['cluster_prop', isTreeCluster ? 'tree' : 'rock', chunkRegion.id]
           });
+          chunkDefCounts.set(defId, (chunkDefCounts.get(defId) || 0) + 1);
+          existingClusterMembers.push({ fam, x: px, y: py });
           clusterPlaced++;
         }
       }
@@ -1429,14 +1488,22 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   }
 
   // 4. Procedural Biome Scatter by Terrain & Region
-  // Uniform spatial permutation across all 1024 cells (avoids top-heavy raster scan truncation)
-  const cellOffset = (Math.abs(chunkX * 17 + chunkY * 31)) & 1023;
+  // Organic Fisher-Yates permutation across all 1024 cells (avoids linear congruence lattice)
+  const cellOrder = new Uint16Array(1024);
+  for (let i = 0; i < 1024; i++) cellOrder[i] = i;
+  for (let i = 1023; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    const tmp = cellOrder[i];
+    cellOrder[i] = cellOrder[j];
+    cellOrder[j] = tmp;
+  }
+
   for (let cellIdx = 0; cellIdx < 1024; cellIdx++) {
     if (objects.length - authoredCount >= maxObjectsBudget) break;
 
-    const perm = (cellIdx * 383 + cellOffset) & 1023;
-    const x = startTileX + (perm % 32);
-    const y = startTileY + Math.floor(perm / 32);
+    const cell = cellOrder[cellIdx];
+    const x = startTileX + (cell % 32);
+    const y = startTileY + Math.floor(cell / 32);
 
       const tileKey = `${x},${y}`;
       if (occupiedGrid.has(tileKey)) continue;
@@ -2068,10 +2135,135 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               }
             }
           }
+      }
+    }
+  }
+
+  // --- V12 P4: Strict Anti-Lattice Constraint & Dominance Enforcement ---
+  // Ensure that no >= 3 objects of the same family share identical x or identical y
+  const filteredObjects = [];
+  const xOccur = new Map();
+  const yOccur = new Map();
+  const finalDefCounts = new Map();
+  const maxPerDef = Math.max(1, Math.floor(objects.length * 0.30));
+
+  for (const obj of objects) {
+    if (!obj || !obj.defId) continue;
+    // Anchor & Landmark set-pieces are never removed or shifted
+    if (obj.tags && (obj.tags.includes('landmark') || obj.tags.includes('setpiece') || obj.tags.includes('anchor') || obj.tags.includes('structure'))) {
+      filteredObjects.push(obj);
+      continue;
+    }
+
+    // Dominance cap: <= 28% per chunk (resolved definition)
+    const actualDef = resolveDef(obj.defId) || obj.defId;
+    const curCnt = finalDefCounts.get(actualDef) || 0;
+    if (curCnt >= Math.floor(objects.length * 0.28)) {
+      unmarkFootprint(obj, occupiedGrid);
+      continue;
+    }
+
+    const fam = getAssetFamily(obj.defId);
+    const xKey = `${fam}_x_${obj.x}`;
+    const yKey = `${fam}_y_${obj.y}`;
+    const xCount = xOccur.get(xKey) || 0;
+    const yCount = yOccur.get(yKey) || 0;
+
+    if (xCount < 2 && yCount < 2) {
+      filteredObjects.push(obj);
+      finalDefCounts.set(actualDef, curCnt + 1);
+      xOccur.set(xKey, xCount + 1);
+      yOccur.set(yKey, yCount + 1);
+      continue;
+    }
+
+    // Diagonal shift to break collinearity
+    const g = GC.getGrid(obj.defId);
+    const fw = g ? g.fw : 1;
+    const fh = g ? g.fh : 1;
+    let shifted = false;
+
+    unmarkFootprint(obj, occupiedGrid);
+
+    const shiftVectors = [
+      { dx: 1, dy: 1 }, { dx: -1, dy: 1 }, { dx: 1, dy: -1 }, { dx: -1, dy: -1 },
+      { dx: 2, dy: 1 }, { dx: -2, dy: 1 }, { dx: 1, dy: 2 }, { dx: -1, dy: 2 }
+    ];
+
+    for (const sv of shiftVectors) {
+      const nx = obj.x + sv.dx;
+      const ny = obj.y + sv.dy;
+      if (nx < startTileX || nx + fw - 1 > endTileX || ny < startTileY || ny + fh - 1 > endTileY) continue;
+
+      const newXKey = `${fam}_x_${nx}`;
+      const newYKey = `${fam}_y_${ny}`;
+      if ((xOccur.get(newXKey) || 0) >= 2 || (yOccur.get(newYKey) || 0) >= 2) continue;
+
+      if (canPlaceFootprint(nx, ny, fw, fh, occupiedGrid, getTileAt, false, obj.defId, filteredObjects)) {
+        obj.x = nx;
+        obj.y = ny;
+        obj.id = `${obj.defId}_${nx}_${ny}`;
+        markFootprintOccupied(nx, ny, fw, fh, occupiedGrid, obj.id, obj.defId);
+        filteredObjects.push(obj);
+        finalDefCounts.set(actualDef, curCnt + 1);
+        xOccur.set(newXKey, (xOccur.get(newXKey) || 0) + 1);
+        yOccur.set(newYKey, (yOccur.get(newYKey) || 0) + 1);
+        shifted = true;
+        break;
+      }
+    }
+  }
+
+  // Replace objects array with filteredObjects
+  objects.length = 0;
+  objects.push(...filteredObjects);
+
+  // --- V12 P4: Minimum 8x8 Wilderness Density Pass ---
+  // Ensure no 8x8 block in wilderness is completely empty
+  const isExtremeDesert = chunkRegion.id.includes('desert') || chunkRegion.id.includes('gorge');
+  for (let by = 0; by < 4; by++) {
+    for (let bx = 0; bx < 4; bx++) {
+      const bMinX = startTileX + bx * 8;
+      const bMaxX = bMinX + 7;
+      const bMinY = startTileY + by * 8;
+      const bMaxY = bMinY + 7;
+
+      const cTile = getTileAt(bMinX + 4, bMinY + 4);
+      const ctt = cTile?.terrainType || '';
+      if (WATER_TERRAINS.has(ctt) || isExtremeDesert) continue;
+
+      const hasAny = objects.some(o => o.x >= bMinX && o.x <= bMaxX && o.y >= bMinY && o.y <= bMaxY);
+      if (!hasAny) {
+        let fallbackId = 'rock_boulder_moss_v1';
+        if (chunkRegion.id.includes('snow') || chunkRegion.id.includes('frost')) {
+          fallbackId = 'nature_granite_boulder_basking';
+        } else if (!isDefForbiddenInRegion('nature_wild_mountain_camellia_shrub', chunkRegion.id)) {
+          fallbackId = 'nature_wild_mountain_camellia_shrub';
+        }
+        const col = getCanonCollision(fallbackId, 1, 1);
+        for (let dy = 2; dy <= 5; dy++) {
+          for (let dx = 2; dx <= 5; dx++) {
+            const tx = bMinX + dx;
+            const ty = bMinY + dy;
+            if (canPlaceFootprint(tx, ty, col.w, col.h, occupiedGrid, getTileAt, false, fallbackId, objects)) {
+              const objId = `density_${tx}_${ty}`;
+              markFootprintOccupied(tx, ty, col.w, col.h, occupiedGrid, objId, fallbackId);
+              objects.push({
+                id: objId,
+                defId: fallbackId,
+                x: tx,
+                y: ty,
+                collision: col.mode || 'soft',
+                tags: ['wilderness_density', chunkRegion.id]
+              });
+              break;
+            }
+          }
+          if (objects.some(o => o.x >= bMinX && o.x <= bMaxX && o.y >= bMinY && o.y <= bMaxY)) break;
         }
       }
     }
-
+  }
 
   // Apply frame substitutions to all objects before caching and returning (Prompt C2)
   for (let i = 0; i < objects.length; i++) {
