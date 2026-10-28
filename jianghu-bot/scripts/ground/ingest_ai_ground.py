@@ -162,16 +162,21 @@ def normalize_texture(img_np, family, spec):
     if cur_sd > max_allowed_sd:
         contrast_factor = max_allowed_sd / (cur_sd + 1e-5)
         for ch in range(3):
-            arr[:, :, ch] = (arr[:, :, ch] - cur_mean) * contrast_factor + cur_mean
+            ch_m = float(arr[:, :, ch].mean())
+            arr[:, :, ch] = (arr[:, :, ch] - ch_m) * contrast_factor + ch_m
     elif cur_sd < min_required_sd:
         contrast_factor = min_required_sd / (cur_sd + 1e-5)
         for ch in range(3):
-            arr[:, :, ch] = (arr[:, :, ch] - cur_mean) * contrast_factor + cur_mean
+            ch_m = float(arr[:, :, ch].mean())
+            arr[:, :, ch] = (arr[:, :, ch] - ch_m) * contrast_factor + ch_m
             
     gray = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
-    lum_diff = target_lum - float(gray.mean())
-    for ch in range(3):
-        arr[:, :, ch] += lum_diff
+    cur_m = float(gray.mean())
+    if cur_m > 0:
+        scale = target_lum / cur_m
+        for ch in range(3):
+            arr[:, :, ch] *= scale
+
 
     # 5. Extreme pixel clamp (<3 or >252 <= 1%) unless whitelisted
     if family not in ("snow", "lava_flow", "lightning_scar", "volcanic"):

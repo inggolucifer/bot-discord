@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 25,
-  "procedural_count": 119,
+  "ai_count": 30,
+  "procedural_count": 114,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -530,51 +530,57 @@
     "demonic_swamp_m1.webp": {
       "family": "demonic_swamp",
       "variant": "m1",
-      "kb": 231.45,
+      "kb": 186.41,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 74.57,
-      "lum_std": 10.31,
-      "sobel_mean": 26.34,
-      "unique_colors_sample": 1547,
+      "lum_mean": 75.3,
+      "lum_std": 13.22,
+      "sobel_mean": 26.1,
+      "unique_colors_sample": 3916,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "demonic_swamp_m1.png",
+      "src_sha256": "21d2cf04773cac7b14e9617d13cb33b3a6d268e39da7f65d78f71883e37df7f7",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "demonic_swamp_m2.webp": {
       "family": "demonic_swamp",
       "variant": "m2",
-      "kb": 227.39,
+      "kb": 194.13,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 74.96,
-      "lum_std": 10.66,
-      "sobel_mean": 25.65,
-      "unique_colors_sample": 1478,
+      "lum_mean": 75.13,
+      "lum_std": 11.41,
+      "sobel_mean": 24.01,
+      "unique_colors_sample": 1278,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "demonic_swamp_m2.png",
+      "src_sha256": "1620851cfe29f03c4ce1ab222441d4f74fa2f8f5e0875cc05ad9167f050e1a92",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "demonic_swamp_m3.webp": {
       "family": "demonic_swamp",
       "variant": "m3",
-      "kb": 248.17,
+      "kb": 185.86,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 74.7,
-      "lum_std": 10.77,
-      "sobel_mean": 28.27,
-      "unique_colors_sample": 1754,
+      "lum_mean": 75.3,
+      "lum_std": 13.23,
+      "sobel_mean": 26.1,
+      "unique_colors_sample": 3903,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -584,15 +590,15 @@
     "demonic_swamp_m4.webp": {
       "family": "demonic_swamp",
       "variant": "m4",
-      "kb": 250.85,
+      "kb": 201.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.02,
-      "lum_std": 10.65,
-      "sobel_mean": 28.77,
-      "unique_colors_sample": 1853,
+      "lum_mean": 75.42,
+      "lum_std": 12.62,
+      "sobel_mean": 25.38,
+      "unique_colors_sample": 2475,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1205,51 +1211,57 @@
     "ice_crack_m1.webp": {
       "family": "ice_crack",
       "variant": "m1",
-      "kb": 223.12,
+      "kb": 232.95,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 205.24,
-      "lum_std": 12.67,
-      "sobel_mean": 24.58,
-      "unique_colors_sample": 3042,
+      "lum_mean": 205.57,
+      "lum_std": 13.78,
+      "sobel_mean": 30.47,
+      "unique_colors_sample": 7002,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ice_crack_m1.png",
+      "src_sha256": "4c6c60274a1b82dc58ced0f9344e847885a5179ce7545468197a694ddec85c6f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ice_crack_m2.webp": {
       "family": "ice_crack",
       "variant": "m2",
-      "kb": 227.96,
+      "kb": 222.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 204.64,
-      "lum_std": 12.77,
-      "sobel_mean": 24.8,
-      "unique_colors_sample": 3002,
+      "lum_mean": 204.76,
+      "lum_std": 9.76,
+      "sobel_mean": 29.4,
+      "unique_colors_sample": 4919,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ice_crack_m2.png",
+      "src_sha256": "4f769b062f4a51f480a12504447e0049241e35ce769688258b134ecb2f6e6f1c",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ice_crack_m3.webp": {
       "family": "ice_crack",
       "variant": "m3",
-      "kb": 209.72,
+      "kb": 233.42,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 204.78,
-      "lum_std": 9.21,
-      "sobel_mean": 22.6,
-      "unique_colors_sample": 2021,
+      "lum_mean": 205.57,
+      "lum_std": 13.78,
+      "sobel_mean": 30.42,
+      "unique_colors_sample": 7072,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1259,15 +1271,15 @@
     "ice_crack_m4.webp": {
       "family": "ice_crack",
       "variant": "m4",
-      "kb": 205.93,
+      "kb": 228.0,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 205.73,
-      "lum_std": 9.46,
-      "sobel_mean": 22.25,
-      "unique_colors_sample": 1819,
+      "lum_mean": 205.19,
+      "lum_std": 11.06,
+      "sobel_mean": 29.0,
+      "unique_colors_sample": 5747,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2009,33 +2021,36 @@
     "poison_pool_m1.webp": {
       "family": "poison_pool",
       "variant": "m1",
-      "kb": 229.78,
+      "kb": 220.42,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.02,
-      "lum_std": 15.47,
-      "sobel_mean": 26.24,
-      "unique_colors_sample": 2836,
+      "lum_mean": 110.14,
+      "lum_std": 14.5,
+      "sobel_mean": 25.72,
+      "unique_colors_sample": 5692,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "poison_pool_m1.png",
+      "src_sha256": "ef63e147dbde90d9262ea8d66305be4628dd8b15fb6ee6b45e6668fd6b7a885d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "poison_pool_m2.webp": {
       "family": "poison_pool",
       "variant": "m2",
-      "kb": 207.49,
+      "kb": 221.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.67,
-      "lum_std": 9.94,
-      "sobel_mean": 22.54,
-      "unique_colors_sample": 1547,
+      "lum_mean": 110.14,
+      "lum_std": 14.51,
+      "sobel_mean": 25.71,
+      "unique_colors_sample": 5605,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2045,15 +2060,15 @@
     "poison_pool_m3.webp": {
       "family": "poison_pool",
       "variant": "m3",
-      "kb": 202.45,
+      "kb": 220.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.01,
-      "lum_std": 9.67,
-      "sobel_mean": 22.35,
-      "unique_colors_sample": 1602,
+      "lum_mean": 110.13,
+      "lum_std": 14.51,
+      "sobel_mean": 25.74,
+      "unique_colors_sample": 5705,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2063,15 +2078,15 @@
     "poison_pool_m4.webp": {
       "family": "poison_pool",
       "variant": "m4",
-      "kb": 234.23,
+      "kb": 221.76,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.54,
-      "lum_std": 15.01,
-      "sobel_mean": 26.53,
-      "unique_colors_sample": 2881,
+      "lum_mean": 110.14,
+      "lum_std": 14.47,
+      "sobel_mean": 25.74,
+      "unique_colors_sample": 5627,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
