@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -569,9 +569,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "1fc8c677aebcc30c48a9dd4fc35789593c0641dd5a36441250e205e47d6241a6",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -589,15 +592,21 @@
     "miasma_waste": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "a23373ccb562b4424fd47497b634d56e216aa1b5fd371ef056e2778175d5b7f2",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "550136736f62f25b6fbb41268819472df5d340fdd7181677fbc3e6bd1e6abd49",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -641,15 +650,21 @@
     "volcanic": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "88a29cdef0e0700f4f47bdf2a0dfccf6a0592b750876d3cdb5b8020273800b03",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "5392b41d5c1347aa90c3a084889ec3380d832e4e040b6d97b9bb038a7a22f438",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
