@@ -1202,34 +1202,60 @@ export default function WorldCanvas({
               ctx.drawImage(loadedImages.sprites.flying_sword_aura, footX - pw / 2, footY - currentTileSize * 0.1, pw, currentTileSize * 0.25);
             }
           } else {
-            // Radiant Qi Silhouette / Fallback
-            const auraPulse = (pw * 0.7) + Math.sin(time * 4) * (currentTileSize * 0.05);
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+            // Radiant Qi Aura
+            const auraPulse = (pw * 0.72) + Math.sin(time * 3.5) * (currentTileSize * 0.04);
+            ctx.fillStyle = 'rgba(45, 212, 191, 0.20)';
             ctx.beginPath();
-            ctx.arc(footX, footY - ph * 0.5, auraPulse, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.48, auraPulse, 0, Math.PI * 2);
             ctx.fill();
 
-            // Robe Body
-            ctx.fillStyle = '#1E293B';
+            // Outer Robe Body (Jade / Cyan Daoist Robe #1E6075)
+            ctx.fillStyle = '#1E6075';
             ctx.beginPath();
-            ctx.moveTo(footX, footY - ph * 0.75);
-            ctx.lineTo(footX + pw * 0.45, footY - currentTileSize * 0.05);
-            ctx.lineTo(footX - pw * 0.45, footY - currentTileSize * 0.05);
+            ctx.moveTo(footX, footY - ph * 0.72);
+            ctx.lineTo(footX + pw * 0.46, footY - currentTileSize * 0.05);
+            ctx.lineTo(footX - pw * 0.46, footY - currentTileSize * 0.05);
             ctx.closePath();
             ctx.fill();
 
-            // Inner sash / belt
-            ctx.fillStyle = '#F1F5F9';
-            ctx.fillRect(footX - pw * 0.12, footY - ph * 0.6, pw * 0.24, ph * 0.5);
+            // Inner Silk Robe (Cream White #F8FAFC) - crossed chest collar
+            ctx.fillStyle = '#F8FAFC';
+            ctx.beginPath();
+            ctx.moveTo(footX, footY - ph * 0.72);
+            ctx.lineTo(footX + pw * 0.14, footY - ph * 0.48);
+            ctx.lineTo(footX - pw * 0.14, footY - ph * 0.48);
+            ctx.closePath();
+            ctx.fill();
 
-            // Head and Hair Bun
+            // Gold Silk Sash / Waistband (#C5A880)
+            ctx.fillStyle = '#C5A880';
+            ctx.fillRect(footX - pw * 0.22, footY - ph * 0.50, pw * 0.44, ph * 0.09);
+            // Sash tails hanging down
+            ctx.fillRect(footX - pw * 0.06, footY - ph * 0.41, pw * 0.12, ph * 0.18);
+
+            // Skin Neck & Face (#FBD38D)
+            ctx.fillStyle = '#FBD38D';
+            ctx.beginPath();
+            ctx.arc(footX, footY - ph * 0.78, pw * 0.22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dark Hair & Topknot Bun (#0F172A)
             ctx.fillStyle = '#0F172A';
             ctx.beginPath();
-            ctx.arc(footX, footY - ph * 0.8, pw * 0.25, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.81, pw * 0.24, Math.PI, Math.PI * 2);
             ctx.fill();
+            // Hair bun on top
             ctx.beginPath();
-            ctx.arc(footX, footY - ph * 0.95, pw * 0.12, 0, Math.PI * 2);
+            ctx.arc(footX, footY - ph * 0.94, pw * 0.13, 0, Math.PI * 2);
             ctx.fill();
+
+            // Jade Hairpin (#10B981)
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = Math.max(1.5, currentTileSize * 0.035);
+            ctx.beginPath();
+            ctx.moveTo(footX - pw * 0.24, footY - ph * 0.94);
+            ctx.lineTo(footX + pw * 0.24, footY - ph * 0.94);
+            ctx.stroke();
           }
           ctx.restore();
         }
