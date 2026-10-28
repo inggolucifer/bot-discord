@@ -500,6 +500,11 @@ const chunkCache = new Map();
  * Checks if a multi-cell footprint (cw x ch) at (x, y) can be placed without collision.
  */
 function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAnchor = false, defId = null, objects = null, collisionOverride = false) {
+  // Fast rejection if root anchor cell is already occupied
+  if (occupiedGrid && occupiedGrid.has(startX + ',' + startY)) {
+    return false;
+  }
+
   const actualDefId = resolveDef(defId) || defId;
 
   // Phase HA: Asset Quarantine rejection (never place code-generated placeholder sprites)
@@ -766,8 +771,32 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
   const endTileY = startTileY + CHUNK_SIZE - 1;
 
   const objects = [];
+  objects.familyCounts = new Map();
+  objects.defCounts = new Map();
+  const origPush = objects.push.bind(objects);
+  objects.push = function(...items) {
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      if (it && it.defId) {
+        const fam = getAssetFamily(it.defId);
+        objects.familyCounts.set(fam, (objects.familyCounts.get(fam) || 0) + 1);
+        objects.defCounts.set(it.defId, (objects.defCounts.get(it.defId) || 0) + 1);
+      }
+    }
+    return origPush(...items);
+  };
   const occupiedGrid = new Map();
   const chunkDefCounts = new Map();
+  const _localTileCache = new Map();
+  const getLocalTile = (tx, ty) => {
+    const k = (tx << 16) | (ty & 0xffff);
+    let t = _localTileCache.get(k);
+    if (t === undefined) {
+      t = getTileAt(tx, ty);
+      _localTileCache.set(k, t);
+    }
+    return t;
+  };
   const chunkRegion = getRegionAt(startTileX + 16, startTileY + 16);
   const isPopulated = ['central_plains', 'nine_springs_delta', 'mirror_lake'].includes(chunkRegion.id);
 
@@ -1110,33 +1139,32 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               }
               if (nearAnchor) continue;
 
-              // Road rejection (Chebyshev >= 3)
+              // Road rejection (Chebyshev >= 3) - Fast Set lookup
               let nearRoad = false;
               for (let dy = -2; dy <= 2; dy++) {
                 for (let dx = -2; dx <= 2; dx++) {
-                  const checkX = candX + dx;
-                  const checkY = candY + dy;
-                  const nt = getTileAt(checkX, checkY);
-                  if (nt && (nt.terrainType.includes('road') || AUTHORED_ROAD_TILES.has(`${checkX},${checkY}`))) {
+                  if (AUTHORED_ROAD_TILES.has(`${candX + dx},${candY + dy}`)) {
                     nearRoad = true;
                     break;
                   }
                 }
                 if (nearRoad) break;
               }
-              if (nearRoad) continue;
+              if (nearRoad || t.includes('road')) continue;
 
-              // Prefer scenic (4 cardinal checks at dist 3, fast O(1))
+              // Prefer scenic (Fast check: naturally scenic terrain or cardinal neighbors)
               if (preferScenic) {
-                let isScenic = false;
-                const SCENIC_CHECKS = [{ dx: 3, dy: 0 }, { dx: -3, dy: 0 }, { dx: 0, dy: 3 }, { dx: 0, dy: -3 }];
-                for (const sc of SCENIC_CHECKS) {
-                  const nt = getTileAt(candX + sc.dx, candY + sc.dy);
-                  if (nt) {
-                    const ntt = nt.terrainType || '';
-                    if (WATER_TERRAINS.has(ntt) || ntt.includes('road') || ntt.includes('forest') || ntt === 'spirit_wood' || ntt.includes('mountain')) {
-                      isScenic = true;
-                      break;
+                let isScenic = (WATER_TERRAINS.has(t) || t.includes('forest') || t === 'spirit_wood' || t.includes('mountain') || t.includes('cliff'));
+                if (!isScenic) {
+                  const SCENIC_CHECKS = [{ dx: 3, dy: 0 }, { dx: -3, dy: 0 }, { dx: 0, dy: 3 }, { dx: 0, dy: -3 }];
+                  for (let sci = 0; sci < 4; sci++) {
+                    const nt = getTileAt(candX + SCENIC_CHECKS[sci].dx, candY + SCENIC_CHECKS[sci].dy);
+                    if (nt) {
+                      const ntt = nt.terrainType || '';
+                      if (WATER_TERRAINS.has(ntt) || ntt.includes('road') || ntt.includes('forest') || ntt === 'spirit_wood' || ntt.includes('mountain')) {
+                        isScenic = true;
+                        break;
+                      }
                     }
                   }
                 }
@@ -1521,13 +1549,15 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
       const tileKey = `${x},${y}`;
       if (occupiedGrid.has(tileKey)) continue;
 
-      const tile = getTileAt(x, y);
+      const roll = rand();
+      if (roll >= 0.55) continue;
+
+      const tile = getLocalTile(x, y);
       const terrain = tile.terrainType || '';
       const region = getRegionAt(x, y);
 
       // --- WATER TERRAINS (SEA, OCEAN, LAKES, RIVERS, REEFS) ---
       if (WATER_TERRAINS.has(terrain)) {
-        const roll = rand();
         if (roll < 0.085) {
           let waterPool = [];
           if (region.id === 'frostmoon_sea') {
@@ -1630,10 +1660,11 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           }
 
           const startIdx = Math.floor(rand() * waterPool.length);
-          for (let wi = 0; wi < waterPool.length; wi++) {
+          const maxWaterTries = Math.min(3, waterPool.length);
+          for (let wi = 0; wi < maxWaterTries; wi++) {
             const defId = waterPool[(startIdx + wi) % waterPool.length];
             const col = getCanonCollision(defId, 1, 1);
-            if (canPlaceFootprint(x, y, col.w, col.h, occupiedGrid, getTileAt, false, defId, objects)) {
+            if (canPlaceFootprint(x, y, col.w, col.h, occupiedGrid, getLocalTile, false, defId, objects)) {
               const objId = `water_obj_${x}_${y}`;
               markFootprintOccupied(x, y, col.w, col.h, occupiedGrid, objId, defId);
               objects.push({
@@ -1652,7 +1683,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- MOUNTAIN, ROCK, PEAK, CRAG, HILL & CLIFF SCATTER ---
       else if (terrain === 'azure_mountain' || terrain.includes('mountain') || terrain.includes('crag') || terrain.includes('peak') || terrain === 'cliff' || terrain === 'hill' || terrain.includes('canyon') || region.id === 'ore_teeth_range') {
-        const roll = rand();
         if (roll < 0.45) {
           const candidateRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('mountain') || r.biomes.includes('ore_teeth_range')
@@ -1665,9 +1695,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           ].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
           const pool = [...candidateRocks, ...candidateFlora];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let ri = 0; ri < pool.length; ri++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let ri = 0; ri < maxPoolTries; ri++) {
             const rDef = pool[(startIdx + ri) % pool.length];
-            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
+            if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getLocalTile, false, rDef.defId, objects)) {
               const objId = `mountain_${x}_${y}`;
               markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
               objects.push({
@@ -1686,7 +1717,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- DESERT & ARID DUNES ---
       else if (terrain.includes('desert') || terrain.includes('sand') || terrain.includes('dune') || terrain === 'oasis' || region.id === 'western_sacred_desert' || region.id === 'western_gorge_labyrinth') {
-        const roll = rand();
         if (roll < 0.45) {
           const desertRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes('western_sacred_desert') || r.biomes.includes('desert')
@@ -1699,9 +1729,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           ].filter(Boolean);
           const pool = [...desertRocks, ...candidateFlora];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `desert_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1720,7 +1751,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- DEAD WOOD, LAVA, VOLCANIC OBSIDIAN, BASALT & CRATER ---
       else if (terrain === 'dead_wood' || terrain.includes('lava') || terrain.includes('volcano') || terrain === 'basalt' || terrain === 'crater' || region.id === 'lava_spine') {
-        const roll = rand();
         const volcanicThreshold = (region.id === 'lava_spine') ? 0.55 : 0.40;
         if (roll < volcanicThreshold) {
           const volcanicPillars = assetBindings.natureScatters.rocks.filter(r =>
@@ -1734,9 +1764,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...volcanicPillars, ...deadTrees, ...stumps];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `volcanic_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1755,7 +1786,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- SWAMP, DEMONIC SWAMP, POISON POOL & MIASMA WETLANDS ---
       else if (terrain === 'swamp' || terrain === 'demonic_swamp' || terrain === 'poison_pool' || region.id === 'venom_mire' || region.id === 'southern_plague_woods') {
-        const roll = rand();
         if (roll < 0.55) {
           const swampTrees = assetBindings.natureScatters.trees.filter(t =>
             !t.biomes || t.biomes.includes('swamp') || t.biomes.includes('venom_mire') || t.biomes.includes('southern_plague_woods') || t.biomes.includes('dead_wood')
@@ -1771,9 +1801,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...swampTrees, ...swampRocks, ...swampWaters, ...swampStumps].filter(item => item && !isDefForbiddenInRegion(item.defId, region.id));
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `swamp_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1792,7 +1823,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- BATTLEFIELD ASH, MIASMA WASTE & ABYSS EDGE ---
       else if (terrain === 'battlefield_ash' || terrain === 'miasma_waste' || terrain === 'abyss_edge' || region.id === 'crimson_battlefield' || region.id === 'abyssal_scar' || region.id === 'void_rift' || region.id === 'southern_demon_domain' || region.id === 'border_march' || region.id === 'lava_spine') {
-        const roll = rand();
         if (roll < 0.45) {
           const abyssRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes(region.id) || r.biomes.includes('abyssal_scar') || r.biomes.includes('void_rift') || r.biomes.includes('crimson_battlefield') || r.biomes.includes('southern_demon_domain') || r.biomes.includes('mountain') || r.defId.includes('cleft')
@@ -1805,9 +1835,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...abyssRocks, ...abyssTrees, ...abyssShrubs];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `abyss_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1822,11 +1853,8 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
             }
           }
         }
-      }
-
-      // --- CANYON, CLIFF & GORGE ---
+            // --- CANYON, CLIFF & GORGE ---
       else if (terrain === 'cliff' || terrain === 'canyon_floor' || region.id === 'sword_gorge' || region.id === 'western_gorge_labyrinth') {
-        const roll = rand();
         if (roll < 0.45) {
           const gorgeRocks = assetBindings.natureScatters.rocks.filter(r =>
             r.biomes && (r.biomes.includes('sword_gorge') || r.biomes.includes('western_gorge_labyrinth') || r.biomes.includes('mountain'))
@@ -1836,9 +1864,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...gorgeRocks, ...gorgeTrees];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `gorge_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1857,7 +1886,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- SNOW, GLACIER, ICE CRACK & FROZEN TUNDRA ---
       else if (terrain === 'snow' || terrain === 'glacier' || terrain === 'ice_crack' || region.id === 'northern_desolate') {
-        const roll = rand();
         if (roll < 0.45) {
           const frostTrees = assetBindings.natureScatters.trees.filter(t =>
             t.biomes && (t.biomes.includes('northern_desolate') || t.biomes.includes('mountain'))
@@ -1870,9 +1898,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...frostTrees, ...frostRocks, ...frostShrubs];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `frost_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1891,7 +1920,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- ISLAND REEFS, FLOATING ISLES & COASTAL SHORES ---
       else if (terrain === 'island_reef' || terrain.includes('island') || terrain.includes('reef') || region.id === 'floating_wind_isles' || region.id === 'eastern_sea' || region.id === 'bone_sea_coast') {
-        const roll = rand();
         if (roll < 0.30) {
           const islandWaters = (assetBindings.natureScatters.waters || []).filter(w =>
             w.biomes && (w.biomes.includes('eastern_sea') || w.biomes.includes('floating_wind_isles') || w.biomes.includes('bone_sea_coast'))
@@ -1904,9 +1932,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...islandWaters, ...islandRocks, ...islandTrees];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `island_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1925,7 +1954,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- FORMATION BARRENS & IMMORTAL RUINS ---
       else if (terrain === 'formation_tile' || terrain === 'ruin_floor' || region.id === 'formation_barrens' || region.id === 'immortal_ruins_valley') {
-        const roll = rand();
         if (roll < 0.45) {
           const formRocks = assetBindings.natureScatters.rocks.filter(r =>
             !r.biomes || r.biomes.includes('formation_barrens') || r.biomes.includes('immortal_ruins_valley') || r.biomes.includes('mountain') || r.defId.includes('cleft')
@@ -1938,9 +1966,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           const pool = [...formRocks, ...formShrubs, ...formTrees];
           const startIdx = Math.floor(rand() * pool.length);
-          for (let pi = 0; pi < pool.length; pi++) {
+          const maxPoolTries = Math.min(3, pool.length);
+          for (let pi = 0; pi < maxPoolTries; pi++) {
             const itemDef = pool[(startIdx + pi) % pool.length];
-            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getTileAt, false, itemDef.defId, objects)) {
+            if (itemDef && canPlaceFootprint(x, y, itemDef.cw, itemDef.ch, occupiedGrid, getLocalTile, false, itemDef.defId, objects)) {
               const objId = `formation_${x}_${y}`;
               markFootprintOccupied(x, y, itemDef.cw, itemDef.ch, occupiedGrid, objId, itemDef.defId);
               objects.push({
@@ -1957,14 +1986,12 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
         }
       }
 
-
       // --- BAMBOO GROVE CLUSTER ---
       else if (terrain.includes('bamboo')) {
-        const roll = rand();
         if (roll < 0.45) {
           const bDefs = assetBindings.natureScatters.bamboo;
           const bDef = bDefs[Math.floor(rand() * bDefs.length)];
-          if (canPlaceFootprint(x, y, bDef.cw, bDef.ch, occupiedGrid, getTileAt, false, bDef.defId, objects)) {
+          if (canPlaceFootprint(x, y, bDef.cw, bDef.ch, occupiedGrid, getLocalTile, false, bDef.defId, objects)) {
             const objId = `bamboo_${x}_${y}`;
             markFootprintOccupied(x, y, bDef.cw, bDef.ch, occupiedGrid, objId, bDef.defId);
             objects.push({
@@ -1981,16 +2008,16 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- FOREST, SPIRIT WOOD & DENSE WOODLAND ---
       else if (terrain === 'forest' || terrain === 'spirit_wood' || region.id === 'spirit_wood_sea') {
-        const roll = rand();
         if (roll < 0.45) {
           const candidateTrees = assetBindings.natureScatters.trees.filter(t =>
             !t.biomes || t.biomes.includes(region.id) || t.biomes.includes('forest') || t.biomes.includes('spirit_wood_sea')
           );
           if (candidateTrees.length > 0) {
             const startIdx = Math.floor(rand() * candidateTrees.length);
-            for (let ti = 0; ti < candidateTrees.length; ti++) {
+            const maxTreeTries = Math.min(3, candidateTrees.length);
+            for (let ti = 0; ti < maxTreeTries; ti++) {
               const tDef = candidateTrees[(startIdx + ti) % candidateTrees.length];
-              if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
+              if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getLocalTile, false, tDef.defId, objects)) {
                 const objId = `tree_${x}_${y}`;
                 markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId, tDef.defId);
                 objects.push({
@@ -2011,9 +2038,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           if (mossRocks.length > 0) {
             const startIdx = Math.floor(rand() * mossRocks.length);
-            for (let ri = 0; ri < mossRocks.length; ri++) {
+            const maxRockTries = Math.min(3, mossRocks.length);
+            for (let ri = 0; ri < maxRockTries; ri++) {
               const rDef = mossRocks[(startIdx + ri) % mossRocks.length];
-              if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
+              if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getLocalTile, false, rDef.defId, objects)) {
                 const objId = `forest_rock_${x}_${y}`;
                 markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
                 objects.push({
@@ -2033,11 +2061,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- WATER EDGES & DELTA FLORA ---
       else if (terrain.includes('lake') || terrain.includes('pond') || terrain === 'pond_lotus' || terrain === 'river') {
-        const roll = rand();
         if (roll < 0.18) {
           const wDefs = assetBindings.natureScatters.waters;
           const wDef = wDefs[Math.floor(rand() * wDefs.length)];
-          if (canPlaceFootprint(x, y, wDef.cw, wDef.ch, occupiedGrid, getTileAt, false, wDef.defId, objects)) {
+          if (canPlaceFootprint(x, y, wDef.cw, wDef.ch, occupiedGrid, getLocalTile, false, wDef.defId, objects)) {
             const objId = `water_veg_${x}_${y}`;
             markFootprintOccupied(x, y, wDef.cw, wDef.ch, occupiedGrid, objId, wDef.defId);
             objects.push({
@@ -2051,7 +2078,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           }
         } else if (roll < 0.24) {
           const willow = assetBindings.natureScatters.trees.find(t => t.defId.includes('willow'));
-          if (willow && canPlaceFootprint(x, y, willow.cw, willow.ch, occupiedGrid, getTileAt, false, willow.defId, objects)) {
+          if (willow && canPlaceFootprint(x, y, willow.cw, willow.ch, occupiedGrid, getLocalTile, false, willow.defId, objects)) {
             const objId = `willow_${x}_${y}`;
             markFootprintOccupied(x, y, willow.cw, willow.ch, occupiedGrid, objId, willow.defId);
             objects.push({
@@ -2068,7 +2095,6 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
 
       // --- PLAINS, MEADOW & PRAIRIE SCATTER ---
       else if (terrain === 'plains' || terrain === 'meadow' || terrain === 'farmland' || terrain === 'herb_field' || terrain === 'lightning_scar' || region.id === 'central_plains' || region.id === 'beast_prairies' || region.id === 'border_march' || region.id === 'nine_springs_delta' || region.id === 'mirror_lake' || region.id === 'thundersteppe') {
-        const roll = rand();
         const treeThreshold = isPopulated ? 0.28 : 0.24;
         const shrubThreshold = isPopulated ? 0.42 : 0.35;
         const rockThreshold = isPopulated ? 0.52 : 0.45;
@@ -2085,9 +2111,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           ].filter(t => !isDefForbiddenInRegion(t.defId, region.id));
           if (candidateTrees.length > 0) {
             const startIdx = Math.floor(rand() * candidateTrees.length);
-            for (let ti = 0; ti < candidateTrees.length; ti++) {
+            const maxTreeTries = Math.min(3, candidateTrees.length);
+            for (let ti = 0; ti < maxTreeTries; ti++) {
               const tDef = candidateTrees[(startIdx + ti) % candidateTrees.length];
-              if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getTileAt, false, tDef.defId, objects)) {
+              if (canPlaceFootprint(x, y, tDef.cw, tDef.ch, occupiedGrid, getLocalTile, false, tDef.defId, objects)) {
                 const objId = `tree_${x}_${y}`;
                 markFootprintOccupied(x, y, tDef.cw, tDef.ch, occupiedGrid, objId, tDef.defId);
                 objects.push({
@@ -2108,9 +2135,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           if (shrubs.length > 0) {
             const startIdx = Math.floor(rand() * shrubs.length);
-            for (let si = 0; si < shrubs.length; si++) {
+            const maxShrubTries = Math.min(3, shrubs.length);
+            for (let si = 0; si < maxShrubTries; si++) {
               const sDef = shrubs[(startIdx + si) % shrubs.length];
-              if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getTileAt, false, sDef.defId, objects)) {
+              if (canPlaceFootprint(x, y, sDef.cw, sDef.ch, occupiedGrid, getLocalTile, false, sDef.defId, objects)) {
                 const objId = `shrub_${x}_${y}`;
                 markFootprintOccupied(x, y, sDef.cw, sDef.ch, occupiedGrid, objId, sDef.defId);
                 objects.push({
@@ -2131,9 +2159,10 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
           );
           if (candidateRocks.length > 0) {
             const startIdx = Math.floor(rand() * candidateRocks.length);
-            for (let ri = 0; ri < candidateRocks.length; ri++) {
+            const maxRockTries = Math.min(3, candidateRocks.length);
+            for (let ri = 0; ri < maxRockTries; ri++) {
               const rDef = candidateRocks[(startIdx + ri) % candidateRocks.length];
-              if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getTileAt, false, rDef.defId, objects)) {
+              if (canPlaceFootprint(x, y, rDef.cw, rDef.ch, occupiedGrid, getLocalTile, false, rDef.defId, objects)) {
                 const objId = `rock_${x}_${y}`;
                 markFootprintOccupied(x, y, rDef.cw, rDef.ch, occupiedGrid, objId, rDef.defId);
                 objects.push({
@@ -2148,6 +2177,7 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
               }
             }
           }
+        }
       }
     }
   }

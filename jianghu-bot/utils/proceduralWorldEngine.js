@@ -220,10 +220,30 @@ function getBarrierAt(tileX, tileY) {
   return null;
 }
 
+const TILE_CACHE = new Map();
+const MAX_TILE_CACHE = 65536;
+
 /**
  * Ambil data deterministik tile pada koordinat (tileX, tileY)
  */
 function getTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
+  if (candidateSettlements !== ANCHOR_SETTLEMENTS) {
+    return _computeTileAt(tileX, tileY, candidateSettlements);
+  }
+  const cacheKey = (tileX << 13) | tileY;
+  let cached = TILE_CACHE.get(cacheKey);
+  if (cached === undefined) {
+    cached = _computeTileAt(tileX, tileY, ANCHOR_SETTLEMENTS);
+    if (TILE_CACHE.size >= MAX_TILE_CACHE) {
+      const iter = TILE_CACHE.keys();
+      for (let i = 0; i < 16384; i++) TILE_CACHE.delete(iter.next().value);
+    }
+    TILE_CACHE.set(cacheKey, cached);
+  }
+  return cached;
+}
+
+function _computeTileAt(tileX, tileY, candidateSettlements = ANCHOR_SETTLEMENTS) {
   // 1. Batas Dunia 5000x5000
   if (tileX < 0 || tileX >= WORLD_WIDTH || tileY < 0 || tileY >= WORLD_HEIGHT) {
     return {

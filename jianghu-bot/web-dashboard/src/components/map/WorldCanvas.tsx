@@ -1493,8 +1493,8 @@ export default function WorldCanvas({
         }
       }
 
-      // 3. Spiritual Resource Gathering Nodes (Atlas Sprite & Subtle Sparkle - Only when zoom >= 1.0)
-      if (camera.zoom >= 1.0) {
+      // 3. Spiritual Resource Gathering Nodes (Atlas Sprite & Subtle Sparkle - zoom >= 0.75 or hovered)
+      if (camera.zoom >= 0.75 || hoveredTile) {
         for (let ty = minTileY; ty <= maxTileY; ty++) {
           for (let tx = minTileX; tx <= maxTileX; tx++) {
             const tile = tileMap.get(`${tx},${ty}`) || chunkManager.getTile(tx, ty);
@@ -1509,9 +1509,9 @@ export default function WorldCanvas({
               tile.nodeRespawnAt && new Date(tile.nodeRespawnAt).getTime() > Date.now()
             );
 
-            // Resource Node Rendering (Prompt V11 P7 - B7)
-            // Hidden when zoom < 1.0; 0.5 cell world sprite with 6% glow
-            if (camera.zoom >= 1.0) {
+            // Resource Node Rendering (Prompt V11 P7 - B7 / V12 P7)
+            const isHovered = hoveredTile && hoveredTile.tileX === tile.tileX && hoveredTile.tileY === tile.tileY;
+            if (camera.zoom >= 0.75 || isHovered) {
               const rt = tile.resourceType || 'herb';
               const candidates = RESOURCE_ICON_FRAMES[rt] || ['icon_res_herb'];
               let drawn = false;
@@ -1561,19 +1561,18 @@ export default function WorldCanvas({
                 isDormant
               );
 
-              // Single-Label Rule & Strict Proximity Filter (Prompt V11 P7 - B7)
-              // Only shown on hover, selection, or close radius <= 1.5 tiles from player
+              // Single-Label Rule & Strict Proximity Filter (Prompt V11 P7 - B7 / V12 P7)
+              // Shown on hover, selection, or close radius <= 1.5 tiles from player
               // Never draw label on player position unless resource is explicitly on that tile
               if (!isDormant) {
                 const dist = Math.max(Math.abs(tile.tileX - playerPos.x), Math.abs(tile.tileY - playerPos.y));
-                const isHovered = hoveredTile && hoveredTile.tileX === tile.tileX && hoveredTile.tileY === tile.tileY;
                 const isSelected = targetTile && targetTile.x === tile.tileX && targetTile.y === tile.tileY;
                 const isPlayerOnCell = Math.floor(playerPos.x) === tile.tileX && Math.floor(playerPos.y) === tile.tileY;
 
                 // Max 1 label per cell; never draw on player cell unless resource node is there
                 const cellKey = `${tile.tileX},${tile.tileY}`;
                 if (!seenLabelCells.has(cellKey)) {
-                  if (isHovered || isSelected || (dist <= 1.5 && (!isPlayerOnCell || tile.resourceType))) {
+                  if (isHovered || isSelected || (camera.zoom >= 0.75 && dist <= 1.5 && (!isPlayerOnCell || tile.resourceType))) {
                     seenLabelCells.add(cellKey);
                     const resLabel = (
                       tile.resourceType === 'herb' ? 'Herba Roh' :
@@ -1586,7 +1585,7 @@ export default function WorldCanvas({
                       tile,
                       screenX: sx + currentTileSize * 0.5,
                       screenY: sy + currentTileSize * 0.85,
-                      dist,
+                      dist: isHovered ? -1 : dist,
                       label: resLabel
                     });
                   }
@@ -1801,15 +1800,15 @@ export default function WorldCanvas({
       ctx.restore();
 
       // ======================================================================
-      // 11. DEDICATED XUAN PAPER RESOURCE LABEL PASS (Prompt V11 P7 - B7)
+      // 11. DEDICATED XUAN PAPER RESOURCE LABEL PASS (Prompt V11 P7 - B7 / V12 P7)
       // ======================================================================
-      if (currentMode === 'zone' && camera.zoom >= 1.0 && eligibleResourceLabels.length > 0) {
-        // Urutkan berdasarkan jarak terdekat ke pemain
+      if (currentMode === 'zone' && eligibleResourceLabels.length > 0 && (camera.zoom >= 0.75 || hoveredTile)) {
+        // Urutkan berdasarkan jarak terdekat ke pemain (hovered dist = -1 duluan)
         eligibleResourceLabels.sort((a, b) => a.dist - b.dist);
 
         const renderedBoxes: Array<{ x: number; y: number; w: number; h: number }> = [];
         const maxLabels = 8;
-        const fontSize = Math.max(11, Math.min(13, Math.floor(12 * camera.zoom)));
+        const fontSize = Math.max(11, Math.min(13, Math.floor(12 * Math.max(1.0, camera.zoom))));
 
         ctx.font = `bold ${fontSize}px "Cinzel", "Noto Serif SC", serif, sans-serif`;
         ctx.textAlign = 'center';
@@ -1823,8 +1822,16 @@ export default function WorldCanvas({
           const paddingY = 4;
           const boxWidth = textWidth + paddingX * 2;
           const boxHeight = fontSize + paddingY * 2;
-          const boxX = item.screenX - boxWidth / 2;
-          const boxY = item.screenY - boxHeight - 8;
+
+          // Clamp coordinates inside canvas boundaries to prevent clipping on top or sides
+          const boxX = Math.max(8, Math.min(width - boxWidth - 8, item.screenX - boxWidth / 2));
+          let boxY = item.screenY - boxHeight - 8;
+          // If clipped off the top edge, flip to below the tile node
+          if (boxY < 8) {
+            boxY = Math.min(height - boxHeight - 8, item.screenY + 12);
+          } else {
+            boxY = Math.min(height - boxHeight - 8, boxY);
+          }
 
           // Simple collision avoidance
           let overlaps = false;
@@ -1861,10 +1868,19 @@ export default function WorldCanvas({
           ctx.fill();
 
           // Panah kecil mengarah ke simpul tile
+          const arrowX = Math.max(boxX + 8, Math.min(boxX + boxWidth - 8, item.screenX));
           ctx.beginPath();
-          ctx.moveTo(item.screenX - 4, boxY + boxHeight);
-          ctx.lineTo(item.screenX + 4, boxY + boxHeight);
-          ctx.lineTo(item.screenX, boxY + boxHeight + 4);
+          if (boxY < item.screenY) {
+            // Box is above tile, arrow points down
+            ctx.moveTo(arrowX - 4, boxY + boxHeight);
+            ctx.lineTo(arrowX + 4, boxY + boxHeight);
+            ctx.lineTo(arrowX, boxY + boxHeight + 4);
+          } else {
+            // Box is below tile, arrow points up
+            ctx.moveTo(arrowX - 4, boxY);
+            ctx.lineTo(arrowX + 4, boxY);
+            ctx.lineTo(arrowX, boxY - 4);
+          }
           ctx.closePath();
           ctx.fill();
 
@@ -1888,9 +1904,9 @@ export default function WorldCanvas({
           ctx.lineTo(boxX + boxWidth - r, boxY + 1.5);
           ctx.stroke();
 
-          // Teks Tinta Gelap
+          // Teks Tinta Gelap (centered inside clamped box)
           ctx.fillStyle = '#1A2421';
-          ctx.fillText(item.label, item.screenX, boxY + boxHeight / 2 + 1);
+          ctx.fillText(item.label, boxX + boxWidth / 2, boxY + boxHeight / 2 + 1);
 
           ctx.restore();
         }
