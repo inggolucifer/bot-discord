@@ -2,6 +2,120 @@
  "version": 10,
  "rule": "left=x+(fw-vw)/2 ; contentBottom=y+fh ; contentWidth=vw cells ; contentHeight=vh cells",
  "frames": {
+  "mountain_L": {
+   "class": "mountain_l",
+   "fw": 6,
+   "fh": 4,
+   "vw": 8,
+   "vh": 6,
+   "rowsAbove": 2,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 800,
+   "srcH": 600,
+   "category": "mountain"
+  },
+  "mountain_XL": {
+   "class": "mountain_xl",
+   "fw": 10,
+   "fh": 6,
+   "vw": 13,
+   "vh": 9,
+   "rowsAbove": 3,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 1200,
+   "srcH": 900,
+   "category": "mountain"
+  },
+  "mountain_XXL": {
+   "class": "mountain_xxl",
+   "fw": 16,
+   "fh": 10,
+   "vw": 20,
+   "vh": 14,
+   "rowsAbove": 4,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 1600,
+   "srcH": 1200,
+   "category": "mountain"
+  },
+  "mountain_range": {
+   "class": "mountain_range",
+   "fw": 24,
+   "fh": 8,
+   "vw": 28,
+   "vh": 12,
+   "rowsAbove": 4,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 2048,
+   "srcH": 1024,
+   "category": "mountain"
+  },
+  "cliff_wall_seg": {
+   "class": "cliff_wall",
+   "fw": 4,
+   "fh": 1,
+   "vw": 4,
+   "vh": 3,
+   "rowsAbove": 2,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 512,
+   "srcH": 384,
+   "category": "mountain"
+  },
+  "giant_tree": {
+   "class": "giant_tree",
+   "fw": 4,
+   "fh": 4,
+   "vw": 7,
+   "vh": 9,
+   "rowsAbove": 5,
+   "mode": "solid",
+   "isSetPiece": true,
+   "bbox": {
+    "x0": 0.01,
+    "y0": 0.05,
+    "x1": 0.99,
+    "y1": 0.99
+   },
+   "srcW": 700,
+   "srcH": 900,
+   "category": "tree"
+  },
   "mt_rock_4x3": {
    "class": "mountain_5",
    "fw": 5,

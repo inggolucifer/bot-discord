@@ -23,6 +23,7 @@ const scaleCanon = require('../world-data/scale-canon.json');
 const frameSubstitutions = require('../world-data/frame-substitutions-v9.json');
 const GC = require('./gridContract');
 const assetPlacementV10 = require('./assetPlacementV10');
+const barrierGenerator = require('./barrierGenerator');
 
 // Regional Palettes & Themes SSOT (Prompt J1)
 const regionPalettes = require('../world-data/region-palettes-v10.json');
@@ -635,7 +636,7 @@ function canPlaceFootprint(startX, startY, cw, ch, occupiedGrid, getTileFn, isAn
       }
 
       // Do not block roads or passes (bridges exempt)
-      if (!isBridge && !collisionOverride && (t.includes('road') || AUTHORED_ROAD_TILES.has(key) || (!isAnchor && t.includes('pass')))) {
+      if (!isBridge && !collisionOverride && (t.includes('road') || AUTHORED_ROAD_TILES.has(key) || (!isAnchor && t.includes('pass')) || barrierGenerator.isPassCorridor(tx, ty))) {
         return false;
       }
 
@@ -805,6 +806,18 @@ function getChunkObjects(chunkX, chunkY, worldSeed = WORLD_SEED) {
     }
   }
   GC.reserveSetPieces(occupiedGrid, nearbySetPieces);
+
+  // 0. Colossal Barrier Massifs (Prompt V12 P10)
+  if (barrierGenerator && barrierGenerator.isBarrierChunk(chunkX, chunkY)) {
+    const barrierMassifs = barrierGenerator.getBarrierObjectsForChunk(chunkX, chunkY, worldSeed);
+    for (const bObj of barrierMassifs) {
+      const g = GC.getGrid(bObj.defId);
+      if (g && GC.isFree(bObj.x, bObj.y, g, occupiedGrid)) {
+        GC.mark(bObj.x, bObj.y, g, occupiedGrid, bObj.id);
+        objects.push(bObj);
+      }
+    }
+  }
 
   // Density Noise Field (Prompt V11 P5: Multi-Tier Spatial Density)
   // Wilderness (Tier 1/2): 110-130, Frontier (Tier 3): 95-115, Barren/Arktik (Tier 4): 60-80, Death Zone (Tier 5): 40-60
