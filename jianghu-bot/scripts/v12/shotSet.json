@@ -1,0 +1,39 @@
+[
+  { "id": "ref_xingcun", "name": "a_xingcun", "x": 2050, "y": 2650, "category": "reference", "description": "Xingcun Starter Settlement (T1)" },
+  { "id": "ref_wild", "name": "b_wild", "x": 2300, "y": 3000, "category": "reference", "description": "Wilderness Central Plains" },
+  { "id": "ref_plain", "name": "c_plain", "x": 2450, "y": 2450, "category": "reference", "description": "Open Meadow Plains" },
+  { "id": "ref_desert", "name": "d_desert", "x": 900, "y": 2600, "category": "reference", "description": "Western Arid Desert Dunes" },
+  { "id": "ref_azure", "name": "e_azure", "x": 2600, "y": 3330, "category": "reference", "description": "Azure Mountain Wall & Barrier" },
+  { "id": "ref_xueshan", "name": "f_frost", "x": 2350, "y": 4300, "category": "reference", "description": "Northern Xueshan Glacial Tundra (T4)" },
+  
+  { "id": "road_xingcun_cross", "name": "road_xingcun_cross", "x": 2080, "y": 2620, "category": "road_intersection", "description": "Xingcun Perimeter Road Fork" },
+  { "id": "road_north_pass", "name": "road_north_pass", "x": 2200, "y": 3350, "category": "road_intersection", "description": "North Gate Imperial Pass Corridor" },
+  { "id": "road_caravan_gap", "name": "road_caravan_gap", "x": 750, "y": 3350, "category": "road_intersection", "description": "Western Silk Road Caravan Gap" },
+  { "id": "road_sword_gorge", "name": "road_sword_gorge", "x": 3100, "y": 3350, "category": "road_intersection", "description": "Sword Gorge Great Mountain Pass" },
+
+  { "id": "border_plains_desert", "name": "border_plains_desert", "x": 1500, "y": 2500, "category": "region_border", "description": "Transition Border: Central Plains to Arid Desert" },
+  { "id": "border_plains_snow", "name": "border_plains_snow", "x": 2200, "y": 3800, "category": "region_border", "description": "Transition Border: Highlands to Frozen Tundra" },
+  { "id": "border_plains_swamp", "name": "border_plains_swamp", "x": 2200, "y": 1600, "category": "region_border", "description": "Transition Border: Southern Plains to Venom Mire" },
+  { "id": "border_plains_azure", "name": "border_plains_azure", "x": 2600, "y": 3100, "category": "region_border", "description": "Transition Border: Foothills to Azure Wall Base" },
+
+  { "id": "village_t1_qingfeng", "name": "village_t1_qingfeng", "x": 2000, "y": 2700, "category": "village_tier", "tier": 1, "description": "Qingfeng Valley Hamlet (T1)" },
+  { "id": "village_t2_baishi", "name": "village_t2_baishi", "x": 1800, "y": 2400, "category": "village_tier", "tier": 2, "description": "Baishi Frontier Town (T2)" },
+  { "id": "village_t3_ironforge", "name": "village_t3_ironforge", "x": 1100, "y": 2200, "category": "village_tier", "tier": 3, "description": "Iron Ore Mining Outpost (T3)" },
+  { "id": "village_t4_frostpeak", "name": "village_t4_frostpeak", "x": 2320, "y": 4280, "category": "village_tier", "tier": 4, "description": "Frost Peak Sanctuary (T4)" },
+
+  { "id": "coast_east_sea", "name": "coast_east_sea", "x": 3960, "y": 2200, "category": "coast", "description": "Eastern Sea Rocky Shoreline" },
+  { "id": "island_reef_bay", "name": "island_reef_bay", "x": 4050, "y": 2600, "category": "coast", "description": "Spiritual Coral Reef Island Bay" },
+
+  { "id": "lava_lake_basin", "name": "lava_lake_basin", "x": 1100, "y": 700, "category": "lava", "description": "Boiling Magma Lake Caldera" },
+  { "id": "lava_spine_crags", "name": "lava_spine_crags", "x": 1250, "y": 850, "category": "lava", "description": "Basalt Crags & Lava River Corridor" },
+
+  { "id": "swamp_venom_mire", "name": "swamp_venom_mire", "x": 2400, "y": 1400, "category": "swamp", "description": "Southern Venom Mire & Stagnant Fen" },
+  { "id": "swamp_demonic_marsh", "name": "swamp_demonic_marsh", "x": 2100, "y": 1200, "category": "swamp", "description": "Corrupted Nether Purple Miasma Bog" },
+
+  { "id": "mount_godthunder", "name": "mount_godthunder", "x": 3400, "y": 3200, "category": "mountain", "description": "Godthunder Lightning Peaks" },
+  { "id": "mount_great_rift", "name": "mount_great_rift", "x": 2100, "y": 1950, "category": "chasm", "description": "Tian Yuan Bottomless Chasm" },
+  { "id": "mount_ore_teeth", "name": "mount_ore_teeth", "x": 1300, "y": 2900, "category": "mountain", "description": "Ore Teeth Jagged Ridge" },
+  { "id": "mount_hermit_highland", "name": "mount_hermit_highland", "x": 2800, "y": 3700, "category": "mountain", "description": "Hermit Highlands Snowmass" },
+  { "id": "mount_abyssal_scar", "name": "mount_abyssal_scar", "x": 1800, "y": 800, "category": "chasm", "description": "Abyssal Void Rift Edge" },
+  { "id": "mount_sword_gorge_massif", "name": "mount_sword_gorge_massif", "x": 3050, "y": 3380, "category": "mountain", "description": "Sword Gorge Colossal Vertical Spires" }
+]

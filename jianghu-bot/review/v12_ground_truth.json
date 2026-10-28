@@ -1,0 +1,2601 @@
+{
+  "total_macros": 144,
+  "ai_count": 0,
+  "procedural_count": 0,
+  "placeholder_count": 144,
+  "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
+  "files": {
+    "abyss_edge_m1.webp": {
+      "family": "abyss_edge",
+      "variant": "m1",
+      "kb": 19.33,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 54.63,
+      "lum_std": 3.32,
+      "sobel_mean": 3.11,
+      "unique_colors_sample": 366,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "abyss_edge_m2.webp": {
+      "family": "abyss_edge",
+      "variant": "m2",
+      "kb": 18.28,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 54.58,
+      "lum_std": 3.6,
+      "sobel_mean": 2.9,
+      "unique_colors_sample": 363,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "abyss_edge_m3.webp": {
+      "family": "abyss_edge",
+      "variant": "m3",
+      "kb": 18.49,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 54.6,
+      "lum_std": 4.1,
+      "sobel_mean": 3.28,
+      "unique_colors_sample": 448,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "abyss_edge_m4.webp": {
+      "family": "abyss_edge",
+      "variant": "m4",
+      "kb": 26.33,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 54.56,
+      "lum_std": 4.84,
+      "sobel_mean": 4.68,
+      "unique_colors_sample": 697,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "bamboo_floor_m1.webp": {
+      "family": "bamboo_floor",
+      "variant": "m1",
+      "kb": 9.92,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 124.58,
+      "lum_std": 5.93,
+      "sobel_mean": 1.5,
+      "unique_colors_sample": 323,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "bamboo_floor_m2.webp": {
+      "family": "bamboo_floor",
+      "variant": "m2",
+      "kb": 9.57,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 124.66,
+      "lum_std": 6.95,
+      "sobel_mean": 1.44,
+      "unique_colors_sample": 314,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "bamboo_floor_m3.webp": {
+      "family": "bamboo_floor",
+      "variant": "m3",
+      "kb": 10.93,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 124.65,
+      "lum_std": 8.24,
+      "sobel_mean": 1.81,
+      "unique_colors_sample": 376,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "bamboo_floor_m4.webp": {
+      "family": "bamboo_floor",
+      "variant": "m4",
+      "kb": 8.49,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 124.59,
+      "lum_std": 4.26,
+      "sobel_mean": 1.14,
+      "unique_colors_sample": 191,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "battlefield_ash_m1.webp": {
+      "family": "battlefield_ash",
+      "variant": "m1",
+      "kb": 26.47,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.5,
+      "lum_std": 5.15,
+      "sobel_mean": 4.42,
+      "unique_colors_sample": 1583,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "battlefield_ash_m2.webp": {
+      "family": "battlefield_ash",
+      "variant": "m2",
+      "kb": 23.43,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.54,
+      "lum_std": 4.3,
+      "sobel_mean": 3.77,
+      "unique_colors_sample": 980,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "battlefield_ash_m3.webp": {
+      "family": "battlefield_ash",
+      "variant": "m3",
+      "kb": 27.57,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.54,
+      "lum_std": 5.59,
+      "sobel_mean": 4.59,
+      "unique_colors_sample": 1814,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "battlefield_ash_m4.webp": {
+      "family": "battlefield_ash",
+      "variant": "m4",
+      "kb": 21.98,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.52,
+      "lum_std": 2.52,
+      "sobel_mean": 2.99,
+      "unique_colors_sample": 387,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "canyon_floor_m1.webp": {
+      "family": "canyon_floor",
+      "variant": "m1",
+      "kb": 23.61,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.59,
+      "lum_std": 5.46,
+      "sobel_mean": 4.65,
+      "unique_colors_sample": 846,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "canyon_floor_m2.webp": {
+      "family": "canyon_floor",
+      "variant": "m2",
+      "kb": 22.67,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.66,
+      "lum_std": 5.51,
+      "sobel_mean": 4.31,
+      "unique_colors_sample": 880,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "canyon_floor_m3.webp": {
+      "family": "canyon_floor",
+      "variant": "m3",
+      "kb": 21.67,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.61,
+      "lum_std": 4.25,
+      "sobel_mean": 3.83,
+      "unique_colors_sample": 507,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "canyon_floor_m4.webp": {
+      "family": "canyon_floor",
+      "variant": "m4",
+      "kb": 23.04,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.62,
+      "lum_std": 4.05,
+      "sobel_mean": 3.92,
+      "unique_colors_sample": 483,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "cliff_m1.webp": {
+      "family": "cliff",
+      "variant": "m1",
+      "kb": 8.79,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 104.62,
+      "lum_std": 3.32,
+      "sobel_mean": 1.16,
+      "unique_colors_sample": 132,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "cliff_m2.webp": {
+      "family": "cliff",
+      "variant": "m2",
+      "kb": 11.3,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 104.59,
+      "lum_std": 4.84,
+      "sobel_mean": 1.65,
+      "unique_colors_sample": 220,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "cliff_m3.webp": {
+      "family": "cliff",
+      "variant": "m3",
+      "kb": 8.48,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 104.59,
+      "lum_std": 3.13,
+      "sobel_mean": 1.12,
+      "unique_colors_sample": 112,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "cliff_m4.webp": {
+      "family": "cliff",
+      "variant": "m4",
+      "kb": 10.87,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 104.62,
+      "lum_std": 3.54,
+      "sobel_mean": 1.4,
+      "unique_colors_sample": 183,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "crater_m1.webp": {
+      "family": "crater",
+      "variant": "m1",
+      "kb": 26.03,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 81.64,
+      "lum_std": 4.57,
+      "sobel_mean": 4.37,
+      "unique_colors_sample": 950,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "crater_m2.webp": {
+      "family": "crater",
+      "variant": "m2",
+      "kb": 25.66,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 81.74,
+      "lum_std": 4.92,
+      "sobel_mean": 4.55,
+      "unique_colors_sample": 1169,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "crater_m3.webp": {
+      "family": "crater",
+      "variant": "m3",
+      "kb": 24.19,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 81.7,
+      "lum_std": 4.11,
+      "sobel_mean": 3.98,
+      "unique_colors_sample": 874,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "crater_m4.webp": {
+      "family": "crater",
+      "variant": "m4",
+      "kb": 28.02,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 81.69,
+      "lum_std": 4.6,
+      "sobel_mean": 4.86,
+      "unique_colors_sample": 1022,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dead_wood_m1.webp": {
+      "family": "dead_wood",
+      "variant": "m1",
+      "kb": 21.96,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.64,
+      "lum_std": 4.74,
+      "sobel_mean": 3.98,
+      "unique_colors_sample": 733,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dead_wood_m2.webp": {
+      "family": "dead_wood",
+      "variant": "m2",
+      "kb": 21.99,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.62,
+      "lum_std": 4.56,
+      "sobel_mean": 4.02,
+      "unique_colors_sample": 724,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dead_wood_m3.webp": {
+      "family": "dead_wood",
+      "variant": "m3",
+      "kb": 18.75,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.7,
+      "lum_std": 3.26,
+      "sobel_mean": 3.05,
+      "unique_colors_sample": 347,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dead_wood_m4.webp": {
+      "family": "dead_wood",
+      "variant": "m4",
+      "kb": 23.79,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.62,
+      "lum_std": 3.35,
+      "sobel_mean": 3.55,
+      "unique_colors_sample": 444,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "demonic_swamp_m1.webp": {
+      "family": "demonic_swamp",
+      "variant": "m1",
+      "kb": 7.57,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 74.68,
+      "lum_std": 3.1,
+      "sobel_mean": 0.88,
+      "unique_colors_sample": 141,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "demonic_swamp_m2.webp": {
+      "family": "demonic_swamp",
+      "variant": "m2",
+      "kb": 7.64,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 74.71,
+      "lum_std": 3.22,
+      "sobel_mean": 0.89,
+      "unique_colors_sample": 158,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "demonic_swamp_m3.webp": {
+      "family": "demonic_swamp",
+      "variant": "m3",
+      "kb": 10.37,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 74.63,
+      "lum_std": 4.45,
+      "sobel_mean": 1.4,
+      "unique_colors_sample": 277,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "demonic_swamp_m4.webp": {
+      "family": "demonic_swamp",
+      "variant": "m4",
+      "kb": 9.38,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 74.71,
+      "lum_std": 3.34,
+      "sobel_mean": 1.16,
+      "unique_colors_sample": 192,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "desert_sand_m1.webp": {
+      "family": "desert_sand",
+      "variant": "m1",
+      "kb": 14.44,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 174.5,
+      "lum_std": 4.19,
+      "sobel_mean": 2.77,
+      "unique_colors_sample": 275,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "desert_sand_m2.webp": {
+      "family": "desert_sand",
+      "variant": "m2",
+      "kb": 10.57,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 174.63,
+      "lum_std": 3.09,
+      "sobel_mean": 1.93,
+      "unique_colors_sample": 173,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "desert_sand_m3.webp": {
+      "family": "desert_sand",
+      "variant": "m3",
+      "kb": 10.6,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 174.79,
+      "lum_std": 3.01,
+      "sobel_mean": 1.92,
+      "unique_colors_sample": 186,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "desert_sand_m4.webp": {
+      "family": "desert_sand",
+      "variant": "m4",
+      "kb": 12.61,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 174.58,
+      "lum_std": 3.09,
+      "sobel_mean": 2.16,
+      "unique_colors_sample": 204,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dune_m1.webp": {
+      "family": "dune",
+      "variant": "m1",
+      "kb": 12.4,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 169.61,
+      "lum_std": 3.75,
+      "sobel_mean": 2.31,
+      "unique_colors_sample": 253,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dune_m2.webp": {
+      "family": "dune",
+      "variant": "m2",
+      "kb": 12.66,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 169.65,
+      "lum_std": 3.85,
+      "sobel_mean": 2.41,
+      "unique_colors_sample": 264,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dune_m3.webp": {
+      "family": "dune",
+      "variant": "m3",
+      "kb": 11.35,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 169.72,
+      "lum_std": 3.34,
+      "sobel_mean": 2.01,
+      "unique_colors_sample": 218,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "dune_m4.webp": {
+      "family": "dune",
+      "variant": "m4",
+      "kb": 10.29,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 169.62,
+      "lum_std": 2.49,
+      "sobel_mean": 1.62,
+      "unique_colors_sample": 154,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "farmland_m1.webp": {
+      "family": "farmland",
+      "variant": "m1",
+      "kb": 11.67,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.53,
+      "lum_std": 1.58,
+      "sobel_mean": 1.13,
+      "unique_colors_sample": 364,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "farmland_m2.webp": {
+      "family": "farmland",
+      "variant": "m2",
+      "kb": 13.68,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.63,
+      "lum_std": 2.11,
+      "sobel_mean": 1.66,
+      "unique_colors_sample": 702,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "farmland_m3.webp": {
+      "family": "farmland",
+      "variant": "m3",
+      "kb": 13.67,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.6,
+      "lum_std": 2.21,
+      "sobel_mean": 1.67,
+      "unique_colors_sample": 700,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "farmland_m4.webp": {
+      "family": "farmland",
+      "variant": "m4",
+      "kb": 10.91,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.57,
+      "lum_std": 1.11,
+      "sobel_mean": 0.93,
+      "unique_colors_sample": 290,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "forest_floor_m1.webp": {
+      "family": "forest_floor",
+      "variant": "m1",
+      "kb": 8.4,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 91.66,
+      "lum_std": 4.37,
+      "sobel_mean": 1.05,
+      "unique_colors_sample": 180,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "forest_floor_m2.webp": {
+      "family": "forest_floor",
+      "variant": "m2",
+      "kb": 8.11,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 91.67,
+      "lum_std": 3.92,
+      "sobel_mean": 1.02,
+      "unique_colors_sample": 180,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "forest_floor_m3.webp": {
+      "family": "forest_floor",
+      "variant": "m3",
+      "kb": 9.16,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 91.59,
+      "lum_std": 4.85,
+      "sobel_mean": 1.22,
+      "unique_colors_sample": 229,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "forest_floor_m4.webp": {
+      "family": "forest_floor",
+      "variant": "m4",
+      "kb": 10.11,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 91.68,
+      "lum_std": 4.44,
+      "sobel_mean": 1.31,
+      "unique_colors_sample": 264,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "formation_tile_m1.webp": {
+      "family": "formation_tile",
+      "variant": "m1",
+      "kb": 18.72,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.12,
+      "lum_std": 10.67,
+      "sobel_mean": 7.22,
+      "unique_colors_sample": 1649,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "formation_tile_m2.webp": {
+      "family": "formation_tile",
+      "variant": "m2",
+      "kb": 22.93,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 113.82,
+      "lum_std": 15.42,
+      "sobel_mean": 8.41,
+      "unique_colors_sample": 2211,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "formation_tile_m3.webp": {
+      "family": "formation_tile",
+      "variant": "m3",
+      "kb": 18.03,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.46,
+      "lum_std": 12.44,
+      "sobel_mean": 7.73,
+      "unique_colors_sample": 1792,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "formation_tile_m4.webp": {
+      "family": "formation_tile",
+      "variant": "m4",
+      "kb": 23.04,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 113.61,
+      "lum_std": 12.37,
+      "sobel_mean": 8.21,
+      "unique_colors_sample": 1918,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "glacier_m1.webp": {
+      "family": "glacier",
+      "variant": "m1",
+      "kb": 24.07,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 194.83,
+      "lum_std": 4.73,
+      "sobel_mean": 4.98,
+      "unique_colors_sample": 892,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "glacier_m2.webp": {
+      "family": "glacier",
+      "variant": "m2",
+      "kb": 29.19,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 194.57,
+      "lum_std": 6.75,
+      "sobel_mean": 6.22,
+      "unique_colors_sample": 1767,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "glacier_m3.webp": {
+      "family": "glacier",
+      "variant": "m3",
+      "kb": 25.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 194.75,
+      "lum_std": 4.92,
+      "sobel_mean": 4.93,
+      "unique_colors_sample": 877,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "glacier_m4.webp": {
+      "family": "glacier",
+      "variant": "m4",
+      "kb": 20.76,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 194.53,
+      "lum_std": 3.19,
+      "sobel_mean": 3.55,
+      "unique_colors_sample": 359,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "herb_field_m1.webp": {
+      "family": "herb_field",
+      "variant": "m1",
+      "kb": 10.01,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 119.5,
+      "lum_std": 7.18,
+      "sobel_mean": 1.55,
+      "unique_colors_sample": 366,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "herb_field_m2.webp": {
+      "family": "herb_field",
+      "variant": "m2",
+      "kb": 10.32,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 119.54,
+      "lum_std": 7.6,
+      "sobel_mean": 1.63,
+      "unique_colors_sample": 362,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "herb_field_m3.webp": {
+      "family": "herb_field",
+      "variant": "m3",
+      "kb": 9.74,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 119.49,
+      "lum_std": 6.09,
+      "sobel_mean": 1.42,
+      "unique_colors_sample": 359,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "herb_field_m4.webp": {
+      "family": "herb_field",
+      "variant": "m4",
+      "kb": 8.75,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 119.53,
+      "lum_std": 5.25,
+      "sobel_mean": 1.18,
+      "unique_colors_sample": 270,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "hill_m1.webp": {
+      "family": "hill",
+      "variant": "m1",
+      "kb": 8.46,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 131.68,
+      "lum_std": 3.15,
+      "sobel_mean": 0.97,
+      "unique_colors_sample": 169,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "hill_m2.webp": {
+      "family": "hill",
+      "variant": "m2",
+      "kb": 13.31,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 131.67,
+      "lum_std": 4.22,
+      "sobel_mean": 1.7,
+      "unique_colors_sample": 306,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "hill_m3.webp": {
+      "family": "hill",
+      "variant": "m3",
+      "kb": 8.28,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 131.69,
+      "lum_std": 3.52,
+      "sobel_mean": 1.04,
+      "unique_colors_sample": 178,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "hill_m4.webp": {
+      "family": "hill",
+      "variant": "m4",
+      "kb": 12.43,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 131.69,
+      "lum_std": 2.69,
+      "sobel_mean": 1.42,
+      "unique_colors_sample": 234,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ice_crack_m1.webp": {
+      "family": "ice_crack",
+      "variant": "m1",
+      "kb": 24.45,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 204.8,
+      "lum_std": 4.76,
+      "sobel_mean": 5.08,
+      "unique_colors_sample": 890,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ice_crack_m2.webp": {
+      "family": "ice_crack",
+      "variant": "m2",
+      "kb": 29.03,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 204.55,
+      "lum_std": 6.74,
+      "sobel_mean": 6.16,
+      "unique_colors_sample": 1677,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ice_crack_m3.webp": {
+      "family": "ice_crack",
+      "variant": "m3",
+      "kb": 26.38,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 204.72,
+      "lum_std": 4.94,
+      "sobel_mean": 5.01,
+      "unique_colors_sample": 942,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ice_crack_m4.webp": {
+      "family": "ice_crack",
+      "variant": "m4",
+      "kb": 20.38,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 204.52,
+      "lum_std": 3.11,
+      "sobel_mean": 3.41,
+      "unique_colors_sample": 355,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "island_reef_m1.webp": {
+      "family": "island_reef",
+      "variant": "m1",
+      "kb": 21.15,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 164.74,
+      "lum_std": 2.96,
+      "sobel_mean": 2.18,
+      "unique_colors_sample": 1321,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "island_reef_m2.webp": {
+      "family": "island_reef",
+      "variant": "m2",
+      "kb": 18.37,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 164.68,
+      "lum_std": 2.85,
+      "sobel_mean": 2.02,
+      "unique_colors_sample": 1166,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "island_reef_m3.webp": {
+      "family": "island_reef",
+      "variant": "m3",
+      "kb": 15.5,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 164.72,
+      "lum_std": 2.26,
+      "sobel_mean": 1.58,
+      "unique_colors_sample": 842,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "island_reef_m4.webp": {
+      "family": "island_reef",
+      "variant": "m4",
+      "kb": 15.32,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 164.71,
+      "lum_std": 2.1,
+      "sobel_mean": 1.65,
+      "unique_colors_sample": 781,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lake_m1.webp": {
+      "family": "lake",
+      "variant": "m1",
+      "kb": 10.54,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 111.81,
+      "lum_std": 3.53,
+      "sobel_mean": 1.97,
+      "unique_colors_sample": 176,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lake_m2.webp": {
+      "family": "lake",
+      "variant": "m2",
+      "kb": 10.62,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 111.64,
+      "lum_std": 3.54,
+      "sobel_mean": 2.06,
+      "unique_colors_sample": 176,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lake_m3.webp": {
+      "family": "lake",
+      "variant": "m3",
+      "kb": 10.4,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 111.87,
+      "lum_std": 3.35,
+      "sobel_mean": 1.96,
+      "unique_colors_sample": 174,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lake_m4.webp": {
+      "family": "lake",
+      "variant": "m4",
+      "kb": 9.95,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 111.72,
+      "lum_std": 2.6,
+      "sobel_mean": 1.57,
+      "unique_colors_sample": 137,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lava_flow_m1.webp": {
+      "family": "lava_flow",
+      "variant": "m1",
+      "kb": 30.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 79.69,
+      "lum_std": 9.34,
+      "sobel_mean": 6.49,
+      "unique_colors_sample": 3983,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lava_flow_m2.webp": {
+      "family": "lava_flow",
+      "variant": "m2",
+      "kb": 31.76,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 79.58,
+      "lum_std": 6.32,
+      "sobel_mean": 6.2,
+      "unique_colors_sample": 2276,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lava_flow_m3.webp": {
+      "family": "lava_flow",
+      "variant": "m3",
+      "kb": 29.76,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 79.48,
+      "lum_std": 9.32,
+      "sobel_mean": 6.26,
+      "unique_colors_sample": 3687,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lava_flow_m4.webp": {
+      "family": "lava_flow",
+      "variant": "m4",
+      "kb": 38.25,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 79.67,
+      "lum_std": 6.59,
+      "sobel_mean": 7.32,
+      "unique_colors_sample": 2006,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lightning_scar_m1.webp": {
+      "family": "lightning_scar",
+      "variant": "m1",
+      "kb": 26.06,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.49,
+      "lum_std": 7.24,
+      "sobel_mean": 6.47,
+      "unique_colors_sample": 1095,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lightning_scar_m2.webp": {
+      "family": "lightning_scar",
+      "variant": "m2",
+      "kb": 24.76,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.49,
+      "lum_std": 9.13,
+      "sobel_mean": 6.82,
+      "unique_colors_sample": 1391,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lightning_scar_m3.webp": {
+      "family": "lightning_scar",
+      "variant": "m3",
+      "kb": 24.5,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.51,
+      "lum_std": 7.81,
+      "sobel_mean": 5.85,
+      "unique_colors_sample": 897,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "lightning_scar_m4.webp": {
+      "family": "lightning_scar",
+      "variant": "m4",
+      "kb": 32.37,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 84.48,
+      "lum_std": 7.19,
+      "sobel_mean": 7.79,
+      "unique_colors_sample": 949,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "meadow_m1.webp": {
+      "family": "meadow",
+      "variant": "m1",
+      "kb": 9.82,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 149.72,
+      "lum_std": 3.97,
+      "sobel_mean": 1.28,
+      "unique_colors_sample": 388,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "meadow_m2.webp": {
+      "family": "meadow",
+      "variant": "m2",
+      "kb": 9.87,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 149.69,
+      "lum_std": 4.82,
+      "sobel_mean": 1.29,
+      "unique_colors_sample": 397,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "meadow_m3.webp": {
+      "family": "meadow",
+      "variant": "m3",
+      "kb": 13.81,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 149.56,
+      "lum_std": 7.21,
+      "sobel_mean": 2.08,
+      "unique_colors_sample": 925,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "meadow_m4.webp": {
+      "family": "meadow",
+      "variant": "m4",
+      "kb": 8.78,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 149.75,
+      "lum_std": 3.69,
+      "sobel_mean": 1.07,
+      "unique_colors_sample": 260,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "miasma_waste_m1.webp": {
+      "family": "miasma_waste",
+      "variant": "m1",
+      "kb": 18.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 99.59,
+      "lum_std": 3.7,
+      "sobel_mean": 3.53,
+      "unique_colors_sample": 331,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "miasma_waste_m2.webp": {
+      "family": "miasma_waste",
+      "variant": "m2",
+      "kb": 18.57,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 99.74,
+      "lum_std": 3.69,
+      "sobel_mean": 3.43,
+      "unique_colors_sample": 311,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "miasma_waste_m3.webp": {
+      "family": "miasma_waste",
+      "variant": "m3",
+      "kb": 21.43,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 99.64,
+      "lum_std": 5.39,
+      "sobel_mean": 4.56,
+      "unique_colors_sample": 451,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "miasma_waste_m4.webp": {
+      "family": "miasma_waste",
+      "variant": "m4",
+      "kb": 21.93,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 99.66,
+      "lum_std": 3.91,
+      "sobel_mean": 4.03,
+      "unique_colors_sample": 359,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "mountain_pass_m1.webp": {
+      "family": "mountain_pass",
+      "variant": "m1",
+      "kb": 8.48,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 121.66,
+      "lum_std": 3.36,
+      "sobel_mean": 1.1,
+      "unique_colors_sample": 144,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "mountain_pass_m2.webp": {
+      "family": "mountain_pass",
+      "variant": "m2",
+      "kb": 8.25,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 121.59,
+      "lum_std": 2.95,
+      "sobel_mean": 1.02,
+      "unique_colors_sample": 138,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "mountain_pass_m3.webp": {
+      "family": "mountain_pass",
+      "variant": "m3",
+      "kb": 9.63,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 121.67,
+      "lum_std": 3.24,
+      "sobel_mean": 1.1,
+      "unique_colors_sample": 140,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "mountain_pass_m4.webp": {
+      "family": "mountain_pass",
+      "variant": "m4",
+      "kb": 7.41,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 121.63,
+      "lum_std": 2.07,
+      "sobel_mean": 0.76,
+      "unique_colors_sample": 105,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "oasis_m1.webp": {
+      "family": "oasis",
+      "variant": "m1",
+      "kb": 11.93,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 147.75,
+      "lum_std": 7.88,
+      "sobel_mean": 1.93,
+      "unique_colors_sample": 626,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "oasis_m2.webp": {
+      "family": "oasis",
+      "variant": "m2",
+      "kb": 10.51,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 147.73,
+      "lum_std": 7.55,
+      "sobel_mean": 1.64,
+      "unique_colors_sample": 479,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "oasis_m3.webp": {
+      "family": "oasis",
+      "variant": "m3",
+      "kb": 10.63,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 147.69,
+      "lum_std": 7.52,
+      "sobel_mean": 1.63,
+      "unique_colors_sample": 463,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "oasis_m4.webp": {
+      "family": "oasis",
+      "variant": "m4",
+      "kb": 12.56,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 147.73,
+      "lum_std": 7.37,
+      "sobel_mean": 1.88,
+      "unique_colors_sample": 668,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ocean_m1.webp": {
+      "family": "ocean",
+      "variant": "m1",
+      "kb": 10.68,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.8,
+      "lum_std": 3.56,
+      "sobel_mean": 2.03,
+      "unique_colors_sample": 184,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ocean_m2.webp": {
+      "family": "ocean",
+      "variant": "m2",
+      "kb": 10.74,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.61,
+      "lum_std": 3.55,
+      "sobel_mean": 2.08,
+      "unique_colors_sample": 185,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ocean_m3.webp": {
+      "family": "ocean",
+      "variant": "m3",
+      "kb": 10.45,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.86,
+      "lum_std": 3.38,
+      "sobel_mean": 1.98,
+      "unique_colors_sample": 160,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ocean_m4.webp": {
+      "family": "ocean",
+      "variant": "m4",
+      "kb": 9.28,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.69,
+      "lum_std": 2.6,
+      "sobel_mean": 1.55,
+      "unique_colors_sample": 139,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "plains_m1.webp": {
+      "family": "plains",
+      "variant": "m1",
+      "kb": 10.75,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 144.6,
+      "lum_std": 4.44,
+      "sobel_mean": 1.57,
+      "unique_colors_sample": 249,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "plains_m2.webp": {
+      "family": "plains",
+      "variant": "m2",
+      "kb": 11.17,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 144.6,
+      "lum_std": 4.83,
+      "sobel_mean": 1.64,
+      "unique_colors_sample": 275,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "plains_m3.webp": {
+      "family": "plains",
+      "variant": "m3",
+      "kb": 11.24,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 144.61,
+      "lum_std": 4.19,
+      "sobel_mean": 1.62,
+      "unique_colors_sample": 230,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "plains_m4.webp": {
+      "family": "plains",
+      "variant": "m4",
+      "kb": 7.06,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 144.58,
+      "lum_std": 2.14,
+      "sobel_mean": 0.81,
+      "unique_colors_sample": 98,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "poison_pool_m1.webp": {
+      "family": "poison_pool",
+      "variant": "m1",
+      "kb": 9.55,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.73,
+      "lum_std": 6.69,
+      "sobel_mean": 1.44,
+      "unique_colors_sample": 215,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "poison_pool_m2.webp": {
+      "family": "poison_pool",
+      "variant": "m2",
+      "kb": 11.18,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.65,
+      "lum_std": 9.87,
+      "sobel_mean": 1.78,
+      "unique_colors_sample": 430,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "poison_pool_m3.webp": {
+      "family": "poison_pool",
+      "variant": "m3",
+      "kb": 9.25,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.67,
+      "lum_std": 6.37,
+      "sobel_mean": 1.39,
+      "unique_colors_sample": 297,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "poison_pool_m4.webp": {
+      "family": "poison_pool",
+      "variant": "m4",
+      "kb": 9.54,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 109.63,
+      "lum_std": 4.68,
+      "sobel_mean": 1.38,
+      "unique_colors_sample": 302,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "river_m1.webp": {
+      "family": "river",
+      "variant": "m1",
+      "kb": 10.42,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.74,
+      "lum_std": 3.54,
+      "sobel_mean": 2.0,
+      "unique_colors_sample": 211,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "river_m2.webp": {
+      "family": "river",
+      "variant": "m2",
+      "kb": 10.41,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.57,
+      "lum_std": 3.52,
+      "sobel_mean": 2.05,
+      "unique_colors_sample": 192,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "river_m3.webp": {
+      "family": "river",
+      "variant": "m3",
+      "kb": 10.31,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.8,
+      "lum_std": 3.35,
+      "sobel_mean": 1.95,
+      "unique_colors_sample": 172,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "river_m4.webp": {
+      "family": "river",
+      "variant": "m4",
+      "kb": 9.36,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.65,
+      "lum_std": 2.54,
+      "sobel_mean": 1.51,
+      "unique_colors_sample": 149,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "road_stone_m1.webp": {
+      "family": "road_stone",
+      "variant": "m1",
+      "kb": 15.73,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.74,
+      "lum_std": 5.21,
+      "sobel_mean": 3.35,
+      "unique_colors_sample": 291,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "road_stone_m2.webp": {
+      "family": "road_stone",
+      "variant": "m2",
+      "kb": 15.29,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.78,
+      "lum_std": 5.0,
+      "sobel_mean": 3.5,
+      "unique_colors_sample": 290,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "road_stone_m3.webp": {
+      "family": "road_stone",
+      "variant": "m3",
+      "kb": 15.42,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 118.06,
+      "lum_std": 5.38,
+      "sobel_mean": 3.37,
+      "unique_colors_sample": 271,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "road_stone_m4.webp": {
+      "family": "road_stone",
+      "variant": "m4",
+      "kb": 15.29,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.71,
+      "lum_std": 4.05,
+      "sobel_mean": 3.24,
+      "unique_colors_sample": 287,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "rock_ground_m1.webp": {
+      "family": "rock_ground",
+      "variant": "m1",
+      "kb": 8.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.63,
+      "lum_std": 3.3,
+      "sobel_mean": 1.16,
+      "unique_colors_sample": 131,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "rock_ground_m2.webp": {
+      "family": "rock_ground",
+      "variant": "m2",
+      "kb": 13.74,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.62,
+      "lum_std": 4.83,
+      "sobel_mean": 1.8,
+      "unique_colors_sample": 267,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "rock_ground_m3.webp": {
+      "family": "rock_ground",
+      "variant": "m3",
+      "kb": 8.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.59,
+      "lum_std": 3.14,
+      "sobel_mean": 1.11,
+      "unique_colors_sample": 148,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "rock_ground_m4.webp": {
+      "family": "rock_ground",
+      "variant": "m4",
+      "kb": 11.77,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 117.65,
+      "lum_std": 3.51,
+      "sobel_mean": 1.53,
+      "unique_colors_sample": 209,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ruin_floor_m1.webp": {
+      "family": "ruin_floor",
+      "variant": "m1",
+      "kb": 16.88,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.67,
+      "lum_std": 7.49,
+      "sobel_mean": 4.53,
+      "unique_colors_sample": 416,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ruin_floor_m2.webp": {
+      "family": "ruin_floor",
+      "variant": "m2",
+      "kb": 15.67,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.53,
+      "lum_std": 6.81,
+      "sobel_mean": 4.54,
+      "unique_colors_sample": 402,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ruin_floor_m3.webp": {
+      "family": "ruin_floor",
+      "variant": "m3",
+      "kb": 12.64,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.53,
+      "lum_std": 6.68,
+      "sobel_mean": 4.27,
+      "unique_colors_sample": 352,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "ruin_floor_m4.webp": {
+      "family": "ruin_floor",
+      "variant": "m4",
+      "kb": 15.34,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 114.52,
+      "lum_std": 5.89,
+      "sobel_mean": 4.32,
+      "unique_colors_sample": 361,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "settlement_floor_m1.webp": {
+      "family": "settlement_floor",
+      "variant": "m1",
+      "kb": 15.99,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 152.59,
+      "lum_std": 5.51,
+      "sobel_mean": 3.87,
+      "unique_colors_sample": 313,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "settlement_floor_m2.webp": {
+      "family": "settlement_floor",
+      "variant": "m2",
+      "kb": 16.11,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 152.39,
+      "lum_std": 5.61,
+      "sobel_mean": 3.97,
+      "unique_colors_sample": 336,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "settlement_floor_m3.webp": {
+      "family": "settlement_floor",
+      "variant": "m3",
+      "kb": 16.69,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 152.56,
+      "lum_std": 4.95,
+      "sobel_mean": 3.77,
+      "unique_colors_sample": 308,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "settlement_floor_m4.webp": {
+      "family": "settlement_floor",
+      "variant": "m4",
+      "kb": 14.55,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 152.42,
+      "lum_std": 4.65,
+      "sobel_mean": 3.69,
+      "unique_colors_sample": 264,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "snow_m1.webp": {
+      "family": "snow",
+      "variant": "m1",
+      "kb": 9.48,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 234.79,
+      "lum_std": 3.96,
+      "sobel_mean": 1.46,
+      "unique_colors_sample": 216,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "snow_m2.webp": {
+      "family": "snow",
+      "variant": "m2",
+      "kb": 9.21,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 234.62,
+      "lum_std": 4.05,
+      "sobel_mean": 1.46,
+      "unique_colors_sample": 241,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "snow_m3.webp": {
+      "family": "snow",
+      "variant": "m3",
+      "kb": 12.7,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 234.66,
+      "lum_std": 4.84,
+      "sobel_mean": 2.14,
+      "unique_colors_sample": 393,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "snow_m4.webp": {
+      "family": "snow",
+      "variant": "m4",
+      "kb": 8.46,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 234.73,
+      "lum_std": 3.12,
+      "sobel_mean": 1.12,
+      "unique_colors_sample": 172,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "swamp_m1.webp": {
+      "family": "swamp",
+      "variant": "m1",
+      "kb": 11.08,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.64,
+      "lum_std": 4.86,
+      "sobel_mean": 1.65,
+      "unique_colors_sample": 266,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "swamp_m2.webp": {
+      "family": "swamp",
+      "variant": "m2",
+      "kb": 7.86,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.51,
+      "lum_std": 3.28,
+      "sobel_mean": 1.02,
+      "unique_colors_sample": 135,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "swamp_m3.webp": {
+      "family": "swamp",
+      "variant": "m3",
+      "kb": 10.91,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.62,
+      "lum_std": 5.1,
+      "sobel_mean": 1.67,
+      "unique_colors_sample": 292,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "swamp_m4.webp": {
+      "family": "swamp",
+      "variant": "m4",
+      "kb": 7.45,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 94.56,
+      "lum_std": 2.11,
+      "sobel_mean": 0.85,
+      "unique_colors_sample": 96,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "volcanic_m1.webp": {
+      "family": "volcanic",
+      "variant": "m1",
+      "kb": 32.53,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 59.56,
+      "lum_std": 2.79,
+      "sobel_mean": 2.86,
+      "unique_colors_sample": 1968,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "volcanic_m2.webp": {
+      "family": "volcanic",
+      "variant": "m2",
+      "kb": 30.81,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 59.61,
+      "lum_std": 2.82,
+      "sobel_mean": 2.72,
+      "unique_colors_sample": 1707,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "volcanic_m3.webp": {
+      "family": "volcanic",
+      "variant": "m3",
+      "kb": 33.64,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 59.54,
+      "lum_std": 3.71,
+      "sobel_mean": 3.16,
+      "unique_colors_sample": 2736,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    },
+    "volcanic_m4.webp": {
+      "family": "volcanic",
+      "variant": "m4",
+      "kb": 29.13,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 59.57,
+      "lum_std": 2.16,
+      "sobel_mean": 2.55,
+      "unique_colors_sample": 895,
+      "quality_flag": "low_contrast_placeholder",
+      "source": "procedural",
+      "src_file": null,
+      "src_sha256": null,
+      "src_resolution": null
+    }
+  }
+}

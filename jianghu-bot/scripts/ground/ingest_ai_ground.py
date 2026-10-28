@@ -6,6 +6,7 @@ Automated ingestion, seam fixing, luminance normalization, and export pipeline f
 import os
 import sys
 import json
+import hashlib
 import numpy as np
 from PIL import Image
 
@@ -197,43 +198,48 @@ def main():
     create_organic_transition_masks()
     
     ai_count = 0
-    placeholder_count = 0
+    procedural_count = 0
+    manifest_sources = {}
     
     for family, spec in FAMILY_SPECS.items():
         base_rgb = hex_to_rgb(spec["base"])
         accent_rgb = hex_to_rgb(spec["accent"])
         
-        # Check source inputs
+        # Check real AI source inputs in art_input/ground/<family>_m{1..4}.png
         source_imgs = []
-        for v in [1, 2, 3]:
-            fn = f"{family}_v{v}.png"
+        family_sources = []
+        for v in [1, 2, 3, 4]:
+            fn = f"{family}_m{v}.png"
             fp = os.path.join(ART_INPUT_DIR, fn)
             if os.path.exists(fp):
-                source_imgs.append(Image.open(fp).convert("RGB"))
-        
-        # Fallback / derived sources for newly separated families
-        if len(source_imgs) == 0:
-            placeholder_count += 4
-            if family in ("lake", "river"):
-                parent_family = "ocean"
-            elif family == "cliff":
-                parent_family = "rock_ground"
-            elif family == "glacier":
-                parent_family = "ice_crack"
+                try:
+                    im = Image.open(fp).convert("RGB")
+                    sw, sh = im.size
+                    if sw >= 1024 and sh >= 1024:
+                        h = hashlib.sha256()
+                        with open(fp, "rb") as fsrc:
+                            while chunk := fsrc.read(65536):
+                                h.update(chunk)
+                        source_imgs.append(im)
+                        family_sources.append({"variant": f"m{v}", "source": "ai", "src_sha256": h.hexdigest(), "resolution": [sw, sh]})
+                    else:
+                        family_sources.append({"variant": f"m{v}", "source": "procedural", "src_sha256": None, "reason": "undersized_source"})
+                except Exception:
+                    family_sources.append({"variant": f"m{v}", "source": "procedural", "src_sha256": None, "reason": "corrupt_file"})
             else:
-                parent_family = "plains"
-                
-            for v in [1, 2, 3]:
-                fn = f"{parent_family}_v{v}.png"
-                fp = os.path.join(ART_INPUT_DIR, fn)
-                if os.path.exists(fp):
-                    source_imgs.append(Image.open(fp).convert("RGB"))
-                else:
-                    arr = np.ones((512, 512, 3), dtype=np.uint8) * base_rgb.astype(np.uint8)
-                    source_imgs.append(Image.fromarray(arr))
+                family_sources.append({"variant": f"m{v}", "source": "procedural", "src_sha256": None, "reason": "missing_source"})
+        
+        manifest_sources[family] = family_sources
+        
+        if len(source_imgs) == 0:
+            procedural_count += 4
+            # Procedural base generation
+            for v in range(4):
+                arr = np.ones((512, 512, 3), dtype=np.uint8) * base_rgb.astype(np.uint8)
+                source_imgs.append(Image.fromarray(arr))
         else:
-            ai_count += 3
-            placeholder_count += 1
+            ai_count += len(source_imgs)
+            procedural_count += (4 - len(source_imgs))
             
         imgs_np = []
         for i in range(3):
@@ -273,8 +279,13 @@ def main():
         
         print(f"[{family}] Ingested & normalized (4 macros + detail)")
 
-    print(f"\nProcessing summary: real_ai={ai_count}, placeholder={placeholder_count}")
+    print(f"\nProcessing summary: real_ai={ai_count}, procedural={procedural_count}")
     print(f"Total textures written to: {OUTPUT_DIR}")
+    
+    # Save manifest sources to ground/v11/sources_manifest.json
+    sources_manifest_path = os.path.join(OUTPUT_DIR, "sources_manifest.json")
+    with open(sources_manifest_path, "w", encoding="utf-8") as f:
+        json.dump({"ai_count": ai_count, "procedural_count": procedural_count, "families": manifest_sources}, f, indent=2)
 
 if __name__ == "__main__":
     main()
