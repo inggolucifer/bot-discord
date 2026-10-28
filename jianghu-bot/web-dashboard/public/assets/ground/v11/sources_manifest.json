@@ -1,6 +1,6 @@
 {
   "ai_count": 5,
-  "procedural_count": 11,
+  "procedural_count": 7,
   "families": {
     "plains": [
       {
@@ -138,15 +138,21 @@
     "bamboo_floor": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "a3c004a14606c7185376c37cd0d03b757d962d1fb196c2b39b1f737f5f8f9ef5",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "2d71fcf15e3555f05e42bb0fab33c07b75d70981c80441ae5ec50cda8d76a0e1",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -216,15 +222,21 @@
     "rock_ground": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "2d8712fbacc0d0081809c96fed641eb80a2c096dd5b640677b88eba110dd6522",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "1214b317344c960b1bf6186f80845209518eb9690e731d411e01f1e93f037619",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -242,9 +254,12 @@
     "mountain_pass": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "c824dcf04808ff93921789ac31c488fe0d4984c708063507e59d99344751ef8e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
