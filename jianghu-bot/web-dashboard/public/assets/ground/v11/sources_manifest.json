@@ -1,6 +1,6 @@
 {
-  "ai_count": 5,
-  "procedural_count": 7,
+  "ai_count": 6,
+  "procedural_count": 6,
   "families": {
     "plains": [
       {
@@ -720,15 +720,21 @@
     "crater": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "4e0199e52abe2369bd9a8e94fad34552679ddd523b5def9c3a5b21fca309629d",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "dcd791db6076e106ac71898980c1a721fcdd74ea43ecc380a4fa32daa23a2c47",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -755,9 +761,12 @@
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "bcbabe9f819cba278b8a94dd5d69ba2ea59ba5f3fca20c63e9a9234f847d384d",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
@@ -775,15 +784,21 @@
     "formation_tile": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "462f4f3e4045388c950b700311b1a9169d5691633621edcb67697465f9cdebd9",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "de8bb93a30c8fdb5b6f32083325e9d4cc1418d3e10135ac335843c2834771a9f",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",

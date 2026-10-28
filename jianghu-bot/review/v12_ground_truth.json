@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 40,
-  "procedural_count": 104,
+  "ai_count": 45,
+  "procedural_count": 99,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -386,51 +386,57 @@
     "crater_m1.webp": {
       "family": "crater",
       "variant": "m1",
-      "kb": 230.44,
+      "kb": 228.83,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 82.46,
-      "lum_std": 9.59,
-      "sobel_mean": 25.77,
-      "unique_colors_sample": 1567,
+      "lum_mean": 81.53,
+      "lum_std": 13.52,
+      "sobel_mean": 32.33,
+      "unique_colors_sample": 4965,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "crater_m1.png",
+      "src_sha256": "4e0199e52abe2369bd9a8e94fad34552679ddd523b5def9c3a5b21fca309629d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "crater_m2.webp": {
       "family": "crater",
       "variant": "m2",
-      "kb": 229.55,
+      "kb": 223.72,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 81.65,
-      "lum_std": 10.66,
-      "sobel_mean": 25.92,
-      "unique_colors_sample": 2246,
+      "lum_mean": 81.78,
+      "lum_std": 10.91,
+      "sobel_mean": 31.51,
+      "unique_colors_sample": 2780,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "crater_m2.png",
+      "src_sha256": "dcd791db6076e106ac71898980c1a721fcdd74ea43ecc380a4fa32daa23a2c47",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "crater_m3.webp": {
       "family": "crater",
       "variant": "m3",
-      "kb": 232.45,
+      "kb": 228.55,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 81.93,
-      "lum_std": 9.53,
-      "sobel_mean": 26.38,
-      "unique_colors_sample": 1868,
+      "lum_mean": 81.53,
+      "lum_std": 13.52,
+      "sobel_mean": 32.29,
+      "unique_colors_sample": 4975,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -440,15 +446,15 @@
     "crater_m4.webp": {
       "family": "crater",
       "variant": "m4",
-      "kb": 228.53,
+      "kb": 239.43,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 81.74,
-      "lum_std": 11.16,
-      "sobel_mean": 25.96,
-      "unique_colors_sample": 2288,
+      "lum_mean": 81.67,
+      "lum_std": 12.92,
+      "sobel_mean": 35.95,
+      "unique_colors_sample": 5122,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -923,51 +929,57 @@
     "formation_tile_m1.webp": {
       "family": "formation_tile",
       "variant": "m1",
-      "kb": 241.46,
+      "kb": 245.33,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.39,
-      "lum_std": 16.09,
-      "sobel_mean": 27.71,
-      "unique_colors_sample": 5340,
+      "lum_mean": 117.04,
+      "lum_std": 14.59,
+      "sobel_mean": 35.7,
+      "unique_colors_sample": 4362,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "formation_tile_m1.png",
+      "src_sha256": "462f4f3e4045388c950b700311b1a9169d5691633621edcb67697465f9cdebd9",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "formation_tile_m2.webp": {
       "family": "formation_tile",
       "variant": "m2",
-      "kb": 216.51,
+      "kb": 299.87,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.1,
-      "lum_std": 12.35,
-      "sobel_mean": 23.85,
-      "unique_colors_sample": 3532,
+      "lum_mean": 118.58,
+      "lum_std": 16.36,
+      "sobel_mean": 52.36,
+      "unique_colors_sample": 6878,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "formation_tile_m2.png",
+      "src_sha256": "de8bb93a30c8fdb5b6f32083325e9d4cc1418d3e10135ac335843c2834771a9f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "formation_tile_m3.webp": {
       "family": "formation_tile",
       "variant": "m3",
-      "kb": 227.39,
+      "kb": 244.16,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.27,
-      "lum_std": 12.13,
-      "sobel_mean": 24.81,
-      "unique_colors_sample": 3519,
+      "lum_mean": 117.04,
+      "lum_std": 14.59,
+      "sobel_mean": 35.69,
+      "unique_colors_sample": 4358,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -977,15 +989,15 @@
     "formation_tile_m4.webp": {
       "family": "formation_tile",
       "variant": "m4",
-      "kb": 222.11,
+      "kb": 261.43,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.89,
-      "lum_std": 11.18,
-      "sobel_mean": 24.28,
-      "unique_colors_sample": 3047,
+      "lum_mean": 117.01,
+      "lum_std": 14.49,
+      "sobel_mean": 40.65,
+      "unique_colors_sample": 4478,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1517,15 +1529,15 @@
     "lightning_scar_m1.webp": {
       "family": "lightning_scar",
       "variant": "m1",
-      "kb": 227.66,
+      "kb": 227.51,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.48,
-      "lum_std": 13.98,
-      "sobel_mean": 30.55,
-      "unique_colors_sample": 4984,
+      "lum_mean": 84.47,
+      "lum_std": 13.99,
+      "sobel_mean": 30.65,
+      "unique_colors_sample": 4900,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lightning_scar_m1.png",
@@ -1538,33 +1550,36 @@
     "lightning_scar_m2.webp": {
       "family": "lightning_scar",
       "variant": "m2",
-      "kb": 227.03,
+      "kb": 231.43,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.5,
-      "lum_std": 14.0,
-      "sobel_mean": 30.61,
-      "unique_colors_sample": 4909,
+      "lum_mean": 84.3,
+      "lum_std": 13.94,
+      "sobel_mean": 32.65,
+      "unique_colors_sample": 7689,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lightning_scar_m2.png",
+      "src_sha256": "bcbabe9f819cba278b8a94dd5d69ba2ea59ba5f3fca20c63e9a9234f847d384d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lightning_scar_m3.webp": {
       "family": "lightning_scar",
       "variant": "m3",
-      "kb": 227.79,
+      "kb": 226.76,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.48,
-      "lum_std": 14.0,
-      "sobel_mean": 30.64,
-      "unique_colors_sample": 4914,
+      "lum_mean": 84.49,
+      "lum_std": 13.98,
+      "sobel_mean": 30.51,
+      "unique_colors_sample": 4940,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1574,15 +1589,15 @@
     "lightning_scar_m4.webp": {
       "family": "lightning_scar",
       "variant": "m4",
-      "kb": 227.62,
+      "kb": 230.62,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.49,
-      "lum_std": 13.98,
-      "sobel_mean": 30.57,
-      "unique_colors_sample": 4962,
+      "lum_mean": 84.34,
+      "lum_std": 13.97,
+      "sobel_mean": 32.18,
+      "unique_colors_sample": 6146,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
