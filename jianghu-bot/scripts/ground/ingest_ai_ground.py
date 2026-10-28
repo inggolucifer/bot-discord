@@ -8,7 +8,7 @@ import sys
 import json
 import hashlib
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "../.."))
@@ -217,6 +217,32 @@ def create_organic_transition_masks():
         Image.fromarray(mask, mode="L").save(out_path)
     print("Created 4 organic transition masks (transition_mask_a..d.png)")
 
+def preprocess_ai_source(im):
+    arr_l = np.array(im.convert("L"), dtype=np.float32)
+    mu = arr_l.mean()
+    sd = arr_l.std()
+    norm = (arr_l - mu) / (sd + 1e-6)
+    ac_512_x = float((norm * np.roll(norm, 512, axis=1)).mean())
+    ac_512_y = float((norm * np.roll(norm, 512, axis=0)).mean())
+    
+    # Check if this is a 2x2 quad-tiled preview
+    if ac_512_x > 0.60 and ac_512_y > 0.60:
+        im = im.crop((0, 0, 512, 512)).resize((1024, 1024), Image.Resampling.LANCZOS)
+        
+    # Check for excessive directional macro-gradient that causes negative lag-512
+    arr_rgb = np.array(im, dtype=np.float32)
+    gray = 0.299 * arr_rgb[:, :, 0] + 0.587 * arr_rgb[:, :, 1] + 0.114 * arr_rgb[:, :, 2]
+    norm_g = (gray - gray.mean()) / (gray.std() + 1e-6)
+    ac_512 = min(float((norm_g * np.roll(norm_g, 512, axis=0)).mean()), float((norm_g * np.roll(norm_g, 512, axis=1)).mean()))
+    if ac_512 < -0.50:
+        blur = np.array(im.filter(ImageFilter.GaussianBlur(radius=64)), dtype=np.float32)
+        detail = arr_rgb - blur
+        base_mean = arr_rgb.mean(axis=(0, 1))
+        arr_rgb = base_mean + blur * 0.35 + detail
+        im = Image.fromarray(np.clip(arr_rgb, 0, 255).astype(np.uint8))
+        
+    return im
+
 def main():
     print("=== INGEST & PROCESS GROUND AI V11 ===")
     create_organic_transition_masks()
@@ -257,6 +283,7 @@ def main():
                         with open(fp, "rb") as fsrc:
                             while chunk := fsrc.read(65536):
                                 h.update(chunk)
+                        im = preprocess_ai_source(im)
                         source_imgs.append(im)
                         family_sources.append({"variant": f"m{v}", "source": "ai", "src_sha256": h.hexdigest(), "resolution": [sw, sh]})
                     else:
@@ -327,6 +354,18 @@ def main():
             if sd < min_sd:
                 m = float(gray.mean())
                 factor = (min_sd + 0.1) / (sd + 1e-6)
+                for c in range(3):
+                    arr[:, :, c] = (arr[:, :, c] - m) * factor + m
+                    
+            # Clamp RMS contrast to not exceed allowed_rms + 0.02
+            gray = 0.299 * arr[:, :, 0] + 0.587 * arr[:, :, 1] + 0.114 * arr[:, :, 2]
+            sd = float(gray.std())
+            m = float(gray.mean())
+            rms = sd / (m + 1e-6)
+            allowed_rms = spec["max_rms"]
+            if rms > allowed_rms + 0.02:
+                target_sd = (allowed_rms + 0.015) * m
+                factor = target_sd / (sd + 1e-6)
                 for c in range(3):
                     arr[:, :, c] = (arr[:, :, c] - m) * factor + m
                     
