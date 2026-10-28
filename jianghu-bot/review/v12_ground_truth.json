@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 35,
-  "procedural_count": 109,
+  "ai_count": 40,
+  "procedural_count": 104,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -158,51 +158,57 @@
     "battlefield_ash_m1.webp": {
       "family": "battlefield_ash",
       "variant": "m1",
-      "kb": 223.11,
+      "kb": 210.05,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.46,
-      "lum_std": 9.58,
-      "sobel_mean": 24.78,
-      "unique_colors_sample": 928,
+      "lum_mean": 86.26,
+      "lum_std": 12.25,
+      "sobel_mean": 27.93,
+      "unique_colors_sample": 3126,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "battlefield_ash_m1.png",
+      "src_sha256": "05da651b9f400581d34751c9b5446ba3b228ead7c0bc6a08ac7d0852d8ca047b",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "battlefield_ash_m2.webp": {
       "family": "battlefield_ash",
       "variant": "m2",
-      "kb": 227.9,
+      "kb": 219.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.87,
-      "lum_std": 9.58,
-      "sobel_mean": 25.42,
-      "unique_colors_sample": 949,
+      "lum_mean": 85.07,
+      "lum_std": 14.07,
+      "sobel_mean": 31.69,
+      "unique_colors_sample": 2910,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "battlefield_ash_m2.png",
+      "src_sha256": "b5ee9066ccb2582907c870082102e304a5e8cb70a7d466e87b0c9250a3cea8a1",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "battlefield_ash_m3.webp": {
       "family": "battlefield_ash",
       "variant": "m3",
-      "kb": 229.6,
+      "kb": 214.34,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.61,
-      "lum_std": 9.57,
-      "sobel_mean": 25.45,
-      "unique_colors_sample": 938,
+      "lum_mean": 86.26,
+      "lum_std": 12.27,
+      "sobel_mean": 28.12,
+      "unique_colors_sample": 3077,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -212,15 +218,15 @@
     "battlefield_ash_m4.webp": {
       "family": "battlefield_ash",
       "variant": "m4",
-      "kb": 221.98,
+      "kb": 213.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.74,
-      "lum_std": 10.47,
-      "sobel_mean": 25.19,
-      "unique_colors_sample": 1091,
+      "lum_mean": 85.98,
+      "lum_std": 11.88,
+      "sobel_mean": 27.41,
+      "unique_colors_sample": 2122,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1433,51 +1439,57 @@
     "lava_flow_m1.webp": {
       "family": "lava_flow",
       "variant": "m1",
-      "kb": 219.83,
+      "kb": 253.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 79.8,
-      "lum_std": 10.97,
-      "sobel_mean": 23.08,
-      "unique_colors_sample": 5003,
+      "lum_mean": 79.68,
+      "lum_std": 11.17,
+      "sobel_mean": 31.53,
+      "unique_colors_sample": 14014,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lava_flow_m1.png",
+      "src_sha256": "7764e7cc4c945facc3602021eb9985580be6e531de3e7001d377564d7fa246da",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lava_flow_m2.webp": {
       "family": "lava_flow",
       "variant": "m2",
-      "kb": 220.99,
+      "kb": 235.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 80.75,
-      "lum_std": 12.89,
-      "sobel_mean": 23.45,
-      "unique_colors_sample": 5588,
+      "lum_mean": 79.77,
+      "lum_std": 10.79,
+      "sobel_mean": 29.17,
+      "unique_colors_sample": 16256,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lava_flow_m2.png",
+      "src_sha256": "4913006f3565307bd15648ed54e41edced1f5564ee1d2e406b366c67afded834",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lava_flow_m3.webp": {
       "family": "lava_flow",
       "variant": "m3",
-      "kb": 216.43,
+      "kb": 252.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 79.5,
-      "lum_std": 10.73,
-      "sobel_mean": 23.36,
-      "unique_colors_sample": 5295,
+      "lum_mean": 79.68,
+      "lum_std": 11.17,
+      "sobel_mean": 31.56,
+      "unique_colors_sample": 14097,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1487,15 +1499,15 @@
     "lava_flow_m4.webp": {
       "family": "lava_flow",
       "variant": "m4",
-      "kb": 224.67,
+      "kb": 263.8,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 80.32,
-      "lum_std": 14.12,
-      "sobel_mean": 24.34,
-      "unique_colors_sample": 7083,
+      "lum_mean": 79.8,
+      "lum_std": 14.07,
+      "sobel_mean": 35.4,
+      "unique_colors_sample": 24005,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1505,33 +1517,36 @@
     "lightning_scar_m1.webp": {
       "family": "lightning_scar",
       "variant": "m1",
-      "kb": 230.14,
+      "kb": 227.66,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.33,
-      "lum_std": 15.1,
-      "sobel_mean": 25.77,
-      "unique_colors_sample": 2412,
+      "lum_mean": 84.48,
+      "lum_std": 13.98,
+      "sobel_mean": 30.55,
+      "unique_colors_sample": 4984,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lightning_scar_m1.png",
+      "src_sha256": "2adf25d72e3918dca89ca3b0219f4fe81c7ae89f728c3c5bf3c7e8452b7fe498",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lightning_scar_m2.webp": {
       "family": "lightning_scar",
       "variant": "m2",
-      "kb": 237.6,
+      "kb": 227.03,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.1,
-      "lum_std": 14.69,
-      "sobel_mean": 27.43,
-      "unique_colors_sample": 3178,
+      "lum_mean": 84.5,
+      "lum_std": 14.0,
+      "sobel_mean": 30.61,
+      "unique_colors_sample": 4909,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1541,15 +1556,15 @@
     "lightning_scar_m3.webp": {
       "family": "lightning_scar",
       "variant": "m3",
-      "kb": 230.97,
+      "kb": 227.79,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.19,
-      "lum_std": 14.65,
-      "sobel_mean": 26.36,
-      "unique_colors_sample": 2608,
+      "lum_mean": 84.48,
+      "lum_std": 14.0,
+      "sobel_mean": 30.64,
+      "unique_colors_sample": 4914,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1559,15 +1574,15 @@
     "lightning_scar_m4.webp": {
       "family": "lightning_scar",
       "variant": "m4",
-      "kb": 232.0,
+      "kb": 227.62,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.96,
-      "lum_std": 14.81,
-      "sobel_mean": 26.54,
-      "unique_colors_sample": 2649,
+      "lum_mean": 84.49,
+      "lum_std": 13.98,
+      "sobel_mean": 30.57,
+      "unique_colors_sample": 4962,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
