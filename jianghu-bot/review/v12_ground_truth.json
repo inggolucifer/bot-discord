@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 85,
-  "procedural_count": 59,
+  "ai_count": 90,
+  "procedural_count": 54,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -1202,15 +1202,15 @@
     "hill_m1.webp": {
       "family": "hill",
       "variant": "m1",
-      "kb": 275.38,
+      "kb": 275.17,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 132.5,
-      "lum_std": 16.92,
-      "sobel_mean": 44.0,
-      "unique_colors_sample": 4118,
+      "lum_mean": 132.51,
+      "lum_std": 16.93,
+      "sobel_mean": 44.04,
+      "unique_colors_sample": 4092,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "hill_m1.png",
@@ -1223,15 +1223,15 @@
     "hill_m2.webp": {
       "family": "hill",
       "variant": "m2",
-      "kb": 243.75,
+      "kb": 243.91,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 132.25,
-      "lum_std": 15.17,
-      "sobel_mean": 32.16,
-      "unique_colors_sample": 5721,
+      "lum_mean": 132.26,
+      "lum_std": 15.19,
+      "sobel_mean": 32.15,
+      "unique_colors_sample": 5681,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "hill_m2.png",
@@ -1244,33 +1244,36 @@
     "hill_m3.webp": {
       "family": "hill",
       "variant": "m3",
-      "kb": 275.99,
-      "dimensions": [
-        1024,
-        1024
-      ],
-      "lum_mean": 132.51,
-      "lum_std": 16.92,
-      "sobel_mean": 44.02,
-      "unique_colors_sample": 4069,
-      "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
-    },
-    "hill_m4.webp": {
-      "family": "hill",
-      "variant": "m4",
-      "kb": 242.51,
+      "kb": 240.07,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 132.57,
-      "lum_std": 15.53,
-      "sobel_mean": 33.25,
-      "unique_colors_sample": 4460,
+      "lum_std": 14.67,
+      "sobel_mean": 32.94,
+      "unique_colors_sample": 3330,
+      "quality_flag": "structured",
+      "source": "ai",
+      "src_file": "hill_m3.png",
+      "src_sha256": "9d0f64a610e9a8ca90a9a656a5eac439e0b32637db6fa076d4800f3b24059062",
+      "src_resolution": [
+        1024,
+        1024
+      ]
+    },
+    "hill_m4.webp": {
+      "family": "hill",
+      "variant": "m4",
+      "kb": 242.46,
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "lum_mean": 132.56,
+      "lum_std": 15.55,
+      "sobel_mean": 33.23,
+      "unique_colors_sample": 4511,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1907,15 +1910,15 @@
     "oasis_m1.webp": {
       "family": "oasis",
       "variant": "m1",
-      "kb": 233.63,
+      "kb": 230.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 148.28,
-      "lum_std": 17.38,
-      "sobel_mean": 32.27,
-      "unique_colors_sample": 18113,
+      "lum_mean": 148.21,
+      "lum_std": 16.21,
+      "sobel_mean": 31.04,
+      "unique_colors_sample": 14979,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "oasis_m1.png",
@@ -1928,15 +1931,15 @@
     "oasis_m2.webp": {
       "family": "oasis",
       "variant": "m2",
-      "kb": 229.23,
+      "kb": 231.07,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 147.99,
-      "lum_std": 18.77,
-      "sobel_mean": 34.25,
-      "unique_colors_sample": 15456,
+      "lum_mean": 147.98,
+      "lum_std": 18.98,
+      "sobel_mean": 34.51,
+      "unique_colors_sample": 15680,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "oasis_m2.png",
@@ -1949,33 +1952,36 @@
     "oasis_m3.webp": {
       "family": "oasis",
       "variant": "m3",
-      "kb": 232.89,
+      "kb": 210.09,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 148.28,
-      "lum_std": 17.37,
-      "sobel_mean": 32.26,
-      "unique_colors_sample": 18103,
+      "lum_mean": 147.69,
+      "lum_std": 13.66,
+      "sobel_mean": 27.34,
+      "unique_colors_sample": 2785,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "oasis_m3.png",
+      "src_sha256": "1934dfa915f8808b9acb16c1cef48a173a58e257300d8c89df662aa637e3323b",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "oasis_m4.webp": {
       "family": "oasis",
       "variant": "m4",
-      "kb": 229.15,
+      "kb": 227.57,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 148.22,
-      "lum_std": 12.71,
-      "sobel_mean": 29.8,
-      "unique_colors_sample": 5566,
+      "lum_mean": 148.17,
+      "lum_std": 12.31,
+      "sobel_mean": 29.3,
+      "unique_colors_sample": 5018,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2300,15 +2306,15 @@
     "road_stone_m1.webp": {
       "family": "road_stone",
       "variant": "m1",
-      "kb": 191.74,
+      "kb": 201.03,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 120.34,
-      "lum_std": 11.46,
-      "sobel_mean": 25.76,
-      "unique_colors_sample": 1082,
+      "lum_std": 11.49,
+      "sobel_mean": 25.93,
+      "unique_colors_sample": 1040,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m1.png",
@@ -2321,15 +2327,15 @@
     "road_stone_m2.webp": {
       "family": "road_stone",
       "variant": "m2",
-      "kb": 218.05,
+      "kb": 213.48,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 120.73,
       "lum_std": 12.2,
-      "sobel_mean": 29.9,
-      "unique_colors_sample": 2373,
+      "sobel_mean": 29.79,
+      "unique_colors_sample": 2334,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "road_stone_m2.png",
@@ -2342,33 +2348,36 @@
     "road_stone_m3.webp": {
       "family": "road_stone",
       "variant": "m3",
-      "kb": 193.36,
+      "kb": 229.56,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.34,
-      "lum_std": 11.48,
-      "sobel_mean": 25.78,
-      "unique_colors_sample": 1027,
+      "lum_mean": 120.38,
+      "lum_std": 11.43,
+      "sobel_mean": 33.25,
+      "unique_colors_sample": 2064,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "road_stone_m3.png",
+      "src_sha256": "9409d8b173de0a72dae6e0e4beb2e8b965ce771f3278ded0c33fa75be8748c4e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "road_stone_m4.webp": {
       "family": "road_stone",
       "variant": "m4",
-      "kb": 214.63,
+      "kb": 218.89,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.93,
-      "lum_std": 12.54,
-      "sobel_mean": 29.26,
-      "unique_colors_sample": 2212,
+      "lum_mean": 120.94,
+      "lum_std": 12.56,
+      "sobel_mean": 29.36,
+      "unique_colors_sample": 2181,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2459,15 +2468,15 @@
     "ruin_floor_m1.webp": {
       "family": "ruin_floor",
       "variant": "m1",
-      "kb": 230.23,
+      "kb": 230.96,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 113.04,
-      "lum_std": 15.54,
+      "lum_std": 15.53,
       "sobel_mean": 34.66,
-      "unique_colors_sample": 4870,
+      "unique_colors_sample": 4681,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ruin_floor_m1.png",
@@ -2480,15 +2489,15 @@
     "ruin_floor_m2.webp": {
       "family": "ruin_floor",
       "variant": "m2",
-      "kb": 239.83,
+      "kb": 240.18,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.63,
-      "lum_std": 16.24,
-      "sobel_mean": 37.97,
-      "unique_colors_sample": 2637,
+      "lum_mean": 118.64,
+      "lum_std": 16.25,
+      "sobel_mean": 38.02,
+      "unique_colors_sample": 2656,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "ruin_floor_m2.png",
@@ -2501,33 +2510,36 @@
     "ruin_floor_m3.webp": {
       "family": "ruin_floor",
       "variant": "m3",
-      "kb": 233.2,
+      "kb": 242.13,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 113.05,
-      "lum_std": 15.55,
-      "sobel_mean": 34.79,
-      "unique_colors_sample": 4724,
+      "lum_mean": 116.49,
+      "lum_std": 12.03,
+      "sobel_mean": 37.98,
+      "unique_colors_sample": 1709,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "ruin_floor_m3.png",
+      "src_sha256": "1d9008b0f35c785bab702813995de2c26613f7d947f822d94a344afde0bbc28e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "ruin_floor_m4.webp": {
       "family": "ruin_floor",
       "variant": "m4",
-      "kb": 249.8,
+      "kb": 248.61,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.45,
+      "lum_mean": 115.46,
       "lum_std": 15.18,
-      "sobel_mean": 39.28,
-      "unique_colors_sample": 4132,
+      "sobel_mean": 39.26,
+      "unique_colors_sample": 4087,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2537,15 +2549,15 @@
     "settlement_floor_m1.webp": {
       "family": "settlement_floor",
       "variant": "m1",
-      "kb": 212.29,
+      "kb": 211.93,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 155.02,
-      "lum_std": 10.51,
-      "sobel_mean": 25.19,
-      "unique_colors_sample": 2416,
+      "lum_std": 10.5,
+      "sobel_mean": 25.17,
+      "unique_colors_sample": 2369,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "settlement_floor_m1.png",
@@ -2558,15 +2570,15 @@
     "settlement_floor_m2.webp": {
       "family": "settlement_floor",
       "variant": "m2",
-      "kb": 227.75,
+      "kb": 226.24,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 154.94,
-      "lum_std": 13.28,
-      "sobel_mean": 30.93,
-      "unique_colors_sample": 6208,
+      "lum_mean": 154.92,
+      "lum_std": 13.29,
+      "sobel_mean": 30.97,
+      "unique_colors_sample": 6143,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "settlement_floor_m2.png",
@@ -2579,33 +2591,36 @@
     "settlement_floor_m3.webp": {
       "family": "settlement_floor",
       "variant": "m3",
-      "kb": 211.34,
+      "kb": 288.49,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 155.02,
-      "lum_std": 10.5,
-      "sobel_mean": 25.16,
-      "unique_colors_sample": 2365,
+      "lum_mean": 154.89,
+      "lum_std": 12.31,
+      "sobel_mean": 48.68,
+      "unique_colors_sample": 7252,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "settlement_floor_m3.png",
+      "src_sha256": "23712809bbb8d46791bb817ace53f4b2b94d8627af2f6499436053bac2c0e92f",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "settlement_floor_m4.webp": {
       "family": "settlement_floor",
       "variant": "m4",
-      "kb": 201.52,
+      "kb": 201.29,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 154.98,
-      "lum_std": 9.45,
-      "sobel_mean": 23.52,
-      "unique_colors_sample": 1443,
+      "lum_mean": 154.99,
+      "lum_std": 9.46,
+      "sobel_mean": 23.6,
+      "unique_colors_sample": 1526,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
