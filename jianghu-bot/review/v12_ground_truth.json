@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 100,
-  "procedural_count": 44,
+  "ai_count": 105,
+  "procedural_count": 39,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -170,15 +170,15 @@
     "battlefield_ash_m1.webp": {
       "family": "battlefield_ash",
       "variant": "m1",
-      "kb": 210.05,
+      "kb": 209.67,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 86.26,
       "lum_std": 12.25,
-      "sobel_mean": 27.93,
-      "unique_colors_sample": 3126,
+      "sobel_mean": 27.88,
+      "unique_colors_sample": 3162,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "battlefield_ash_m1.png",
@@ -191,15 +191,15 @@
     "battlefield_ash_m2.webp": {
       "family": "battlefield_ash",
       "variant": "m2",
-      "kb": 219.15,
+      "kb": 220.49,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 85.07,
+      "lum_mean": 85.08,
       "lum_std": 14.07,
-      "sobel_mean": 31.69,
-      "unique_colors_sample": 2910,
+      "sobel_mean": 31.73,
+      "unique_colors_sample": 2825,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "battlefield_ash_m2.png",
@@ -212,33 +212,36 @@
     "battlefield_ash_m3.webp": {
       "family": "battlefield_ash",
       "variant": "m3",
-      "kb": 214.34,
+      "kb": 219.87,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 86.26,
-      "lum_std": 12.27,
-      "sobel_mean": 28.12,
-      "unique_colors_sample": 3077,
+      "lum_mean": 86.24,
+      "lum_std": 11.42,
+      "sobel_mean": 27.84,
+      "unique_colors_sample": 1225,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "battlefield_ash_m3.png",
+      "src_sha256": "17aca07df5f6474e54b9ffe481c68338b47388959da9dfd8be2f25aea99a3c81",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "battlefield_ash_m4.webp": {
       "family": "battlefield_ash",
       "variant": "m4",
-      "kb": 213.39,
+      "kb": 214.32,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 85.98,
-      "lum_std": 11.88,
-      "sobel_mean": 27.41,
-      "unique_colors_sample": 2122,
+      "lum_std": 11.89,
+      "sobel_mean": 27.39,
+      "unique_colors_sample": 2218,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -410,15 +413,15 @@
     "crater_m1.webp": {
       "family": "crater",
       "variant": "m1",
-      "kb": 228.83,
+      "kb": 227.08,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 81.53,
-      "lum_std": 13.52,
-      "sobel_mean": 32.33,
-      "unique_colors_sample": 4965,
+      "lum_mean": 81.52,
+      "lum_std": 13.51,
+      "sobel_mean": 32.22,
+      "unique_colors_sample": 5029,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "crater_m1.png",
@@ -431,15 +434,15 @@
     "crater_m2.webp": {
       "family": "crater",
       "variant": "m2",
-      "kb": 223.72,
+      "kb": 224.24,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 81.78,
       "lum_std": 10.91,
-      "sobel_mean": 31.51,
-      "unique_colors_sample": 2780,
+      "sobel_mean": 31.56,
+      "unique_colors_sample": 2807,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "crater_m2.png",
@@ -452,33 +455,36 @@
     "crater_m3.webp": {
       "family": "crater",
       "variant": "m3",
-      "kb": 228.55,
+      "kb": 217.11,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 81.53,
-      "lum_std": 13.52,
-      "sobel_mean": 32.29,
-      "unique_colors_sample": 4975,
+      "lum_mean": 82.23,
+      "lum_std": 10.62,
+      "sobel_mean": 29.27,
+      "unique_colors_sample": 1037,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "crater_m3.png",
+      "src_sha256": "f96358d0ab1035fc4ec71d5f759299b675d3d189237e4e3dcb6e21c753b4374d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "crater_m4.webp": {
       "family": "crater",
       "variant": "m4",
-      "kb": 239.43,
+      "kb": 238.68,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 81.67,
-      "lum_std": 12.92,
-      "sobel_mean": 35.95,
-      "unique_colors_sample": 5122,
+      "lum_std": 12.9,
+      "sobel_mean": 35.93,
+      "unique_colors_sample": 5091,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -569,15 +575,15 @@
     "demonic_swamp_m1.webp": {
       "family": "demonic_swamp",
       "variant": "m1",
-      "kb": 186.41,
+      "kb": 186.76,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 75.3,
-      "lum_std": 13.22,
-      "sobel_mean": 26.1,
-      "unique_colors_sample": 3916,
+      "lum_std": 13.23,
+      "sobel_mean": 26.11,
+      "unique_colors_sample": 3876,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "demonic_swamp_m1.png",
@@ -590,15 +596,15 @@
     "demonic_swamp_m2.webp": {
       "family": "demonic_swamp",
       "variant": "m2",
-      "kb": 194.13,
+      "kb": 193.5,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 75.13,
-      "lum_std": 11.41,
-      "sobel_mean": 24.01,
-      "unique_colors_sample": 1278,
+      "lum_std": 11.42,
+      "sobel_mean": 24.06,
+      "unique_colors_sample": 1285,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "demonic_swamp_m2.png",
@@ -611,33 +617,36 @@
     "demonic_swamp_m3.webp": {
       "family": "demonic_swamp",
       "variant": "m3",
-      "kb": 185.86,
+      "kb": 224.07,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.3,
-      "lum_std": 13.23,
-      "sobel_mean": 26.1,
-      "unique_colors_sample": 3903,
+      "lum_mean": 75.11,
+      "lum_std": 13.22,
+      "sobel_mean": 35.16,
+      "unique_colors_sample": 4766,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "demonic_swamp_m3.png",
+      "src_sha256": "8b21585eff73bcc45be129c4a66215df4fa9b0a6a24d2d81f96d15d92b6efd47",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "demonic_swamp_m4.webp": {
       "family": "demonic_swamp",
       "variant": "m4",
-      "kb": 201.39,
+      "kb": 201.99,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 75.42,
-      "lum_std": 12.62,
-      "sobel_mean": 25.38,
-      "unique_colors_sample": 2475,
+      "lum_mean": 75.44,
+      "lum_std": 12.63,
+      "sobel_mean": 25.35,
+      "unique_colors_sample": 2514,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -971,15 +980,15 @@
     "formation_tile_m1.webp": {
       "family": "formation_tile",
       "variant": "m1",
-      "kb": 245.33,
+      "kb": 243.97,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.04,
-      "lum_std": 14.59,
-      "sobel_mean": 35.7,
-      "unique_colors_sample": 4362,
+      "lum_mean": 117.05,
+      "lum_std": 14.58,
+      "sobel_mean": 35.73,
+      "unique_colors_sample": 4335,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "formation_tile_m1.png",
@@ -992,15 +1001,15 @@
     "formation_tile_m2.webp": {
       "family": "formation_tile",
       "variant": "m2",
-      "kb": 299.87,
+      "kb": 299.88,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 118.58,
-      "lum_std": 16.36,
-      "sobel_mean": 52.36,
-      "unique_colors_sample": 6878,
+      "lum_std": 16.37,
+      "sobel_mean": 52.32,
+      "unique_colors_sample": 6982,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "formation_tile_m2.png",
@@ -1013,33 +1022,36 @@
     "formation_tile_m3.webp": {
       "family": "formation_tile",
       "variant": "m3",
-      "kb": 244.16,
+      "kb": 233.11,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.04,
-      "lum_std": 14.59,
-      "sobel_mean": 35.69,
-      "unique_colors_sample": 4358,
+      "lum_mean": 117.36,
+      "lum_std": 15.89,
+      "sobel_mean": 37.16,
+      "unique_colors_sample": 4311,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "formation_tile_m3.png",
+      "src_sha256": "6060cd3174d40a2a68136208220b44396eb11fa1e070c4412c03c83f71522324",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "formation_tile_m4.webp": {
       "family": "formation_tile",
       "variant": "m4",
-      "kb": 261.43,
+      "kb": 260.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.01,
-      "lum_std": 14.49,
+      "lum_mean": 116.99,
+      "lum_std": 14.5,
       "sobel_mean": 40.65,
-      "unique_colors_sample": 4478,
+      "unique_colors_sample": 4508,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1613,15 +1625,15 @@
     "lightning_scar_m1.webp": {
       "family": "lightning_scar",
       "variant": "m1",
-      "kb": 227.51,
+      "kb": 226.52,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 84.47,
-      "lum_std": 13.99,
-      "sobel_mean": 30.65,
-      "unique_colors_sample": 4900,
+      "lum_std": 13.98,
+      "sobel_mean": 30.55,
+      "unique_colors_sample": 4890,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lightning_scar_m1.png",
@@ -1634,15 +1646,15 @@
     "lightning_scar_m2.webp": {
       "family": "lightning_scar",
       "variant": "m2",
-      "kb": 231.43,
+      "kb": 231.09,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 84.3,
-      "lum_std": 13.94,
-      "sobel_mean": 32.65,
-      "unique_colors_sample": 7689,
+      "lum_std": 13.95,
+      "sobel_mean": 32.71,
+      "unique_colors_sample": 7552,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "lightning_scar_m2.png",
@@ -1655,33 +1667,36 @@
     "lightning_scar_m3.webp": {
       "family": "lightning_scar",
       "variant": "m3",
-      "kb": 226.76,
+      "kb": 236.85,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 84.49,
-      "lum_std": 13.98,
-      "sobel_mean": 30.51,
-      "unique_colors_sample": 4940,
+      "lum_mean": 84.97,
+      "lum_std": 14.1,
+      "sobel_mean": 30.57,
+      "unique_colors_sample": 3102,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "lightning_scar_m3.png",
+      "src_sha256": "39ec4a69ed55374e3065d54ac230b925cf755c250279dfbf12a1937caf7f021d",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "lightning_scar_m4.webp": {
       "family": "lightning_scar",
       "variant": "m4",
-      "kb": 230.62,
+      "kb": 231.25,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 84.34,
       "lum_std": 13.97,
-      "sobel_mean": 32.18,
-      "unique_colors_sample": 6146,
+      "sobel_mean": 32.23,
+      "unique_colors_sample": 6222,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
