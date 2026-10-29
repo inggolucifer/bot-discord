@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 75,
-  "procedural_count": 69,
+  "ai_count": 80,
+  "procedural_count": 64,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -86,15 +86,15 @@
     "bamboo_floor_m1.webp": {
       "family": "bamboo_floor",
       "variant": "m1",
-      "kb": 224.47,
+      "kb": 223.55,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 125.82,
-      "lum_std": 12.75,
-      "sobel_mean": 32.4,
-      "unique_colors_sample": 6390,
+      "lum_mean": 126.29,
+      "lum_std": 13.06,
+      "sobel_mean": 32.55,
+      "unique_colors_sample": 6517,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "bamboo_floor_m1.png",
@@ -107,15 +107,15 @@
     "bamboo_floor_m2.webp": {
       "family": "bamboo_floor",
       "variant": "m2",
-      "kb": 226.96,
+      "kb": 228.8,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 124.78,
-      "lum_std": 10.35,
-      "sobel_mean": 28.38,
-      "unique_colors_sample": 7681,
+      "lum_mean": 124.8,
+      "lum_std": 10.69,
+      "sobel_mean": 28.64,
+      "unique_colors_sample": 8303,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "bamboo_floor_m2.png",
@@ -128,33 +128,36 @@
     "bamboo_floor_m3.webp": {
       "family": "bamboo_floor",
       "variant": "m3",
-      "kb": 226.6,
+      "kb": 236.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 125.83,
-      "lum_std": 12.75,
-      "sobel_mean": 32.39,
-      "unique_colors_sample": 6605,
+      "lum_mean": 125.68,
+      "lum_std": 11.77,
+      "sobel_mean": 33.91,
+      "unique_colors_sample": 4153,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "bamboo_floor_m3.png",
+      "src_sha256": "8a499cd68b5f1953beb586a4ffaaf7851d9dccc35c0c03a90d9b1f6f44b43e3e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "bamboo_floor_m4.webp": {
       "family": "bamboo_floor",
       "variant": "m4",
-      "kb": 227.15,
+      "kb": 218.39,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 125.3,
-      "lum_std": 9.57,
-      "sobel_mean": 28.82,
-      "unique_colors_sample": 4200,
+      "lum_mean": 125.56,
+      "lum_std": 9.54,
+      "sobel_mean": 28.02,
+      "unique_colors_sample": 4270,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -632,15 +635,15 @@
     "desert_sand_m1.webp": {
       "family": "desert_sand",
       "variant": "m1",
-      "kb": 204.82,
+      "kb": 204.76,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 174.62,
-      "lum_std": 7.43,
-      "sobel_mean": 26.25,
-      "unique_colors_sample": 2675,
+      "lum_mean": 174.58,
+      "lum_std": 7.39,
+      "sobel_mean": 26.1,
+      "unique_colors_sample": 2578,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "desert_sand_m1.png",
@@ -653,15 +656,15 @@
     "desert_sand_m2.webp": {
       "family": "desert_sand",
       "variant": "m2",
-      "kb": 212.44,
+      "kb": 218.04,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 174.61,
-      "lum_std": 7.34,
-      "sobel_mean": 23.2,
-      "unique_colors_sample": 3820,
+      "lum_mean": 174.55,
+      "lum_std": 7.37,
+      "sobel_mean": 23.84,
+      "unique_colors_sample": 3915,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "desert_sand_m2.png",
@@ -674,33 +677,36 @@
     "desert_sand_m3.webp": {
       "family": "desert_sand",
       "variant": "m3",
-      "kb": 204.12,
+      "kb": 223.15,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 174.62,
-      "lum_std": 7.42,
-      "sobel_mean": 26.19,
-      "unique_colors_sample": 2828,
+      "lum_mean": 174.9,
+      "lum_std": 11.74,
+      "sobel_mean": 27.54,
+      "unique_colors_sample": 4770,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "desert_sand_m3.png",
+      "src_sha256": "dbcffab20200e737a688c381e967215e59448685dcb5fb1e6c8bb159c06ac34c",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "desert_sand_m4.webp": {
       "family": "desert_sand",
       "variant": "m4",
-      "kb": 212.23,
+      "kb": 218.29,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 174.62,
-      "lum_std": 7.33,
-      "sobel_mean": 25.04,
-      "unique_colors_sample": 3436,
+      "lum_mean": 174.56,
+      "lum_std": 7.37,
+      "sobel_mean": 25.54,
+      "unique_colors_sample": 3334,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -788,15 +794,15 @@
     "farmland_m1.webp": {
       "family": "farmland",
       "variant": "m1",
-      "kb": 240.23,
+      "kb": 225.72,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 114.98,
-      "lum_std": 11.5,
-      "sobel_mean": 31.01,
-      "unique_colors_sample": 8910,
+      "lum_mean": 115.18,
+      "lum_std": 11.87,
+      "sobel_mean": 30.84,
+      "unique_colors_sample": 9204,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "farmland_m1.png",
@@ -809,15 +815,15 @@
     "farmland_m2.webp": {
       "family": "farmland",
       "variant": "m2",
-      "kb": 215.06,
+      "kb": 222.27,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 116.49,
-      "lum_std": 12.04,
-      "sobel_mean": 27.82,
-      "unique_colors_sample": 2615,
+      "lum_mean": 117.37,
+      "lum_std": 13.0,
+      "sobel_mean": 28.14,
+      "unique_colors_sample": 2851,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "farmland_m2.png",
@@ -830,33 +836,36 @@
     "farmland_m3.webp": {
       "family": "farmland",
       "variant": "m3",
-      "kb": 240.06,
+      "kb": 238.11,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 114.97,
-      "lum_std": 11.51,
-      "sobel_mean": 31.0,
-      "unique_colors_sample": 8891,
+      "lum_mean": 115.28,
+      "lum_std": 15.63,
+      "sobel_mean": 32.69,
+      "unique_colors_sample": 7327,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "farmland_m3.png",
+      "src_sha256": "cb53da792e21d5c672a40aaba2a878781f0702b2dff652b3c22cf2ab80fac971",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "farmland_m4.webp": {
       "family": "farmland",
       "variant": "m4",
-      "kb": 217.54,
+      "kb": 223.19,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 116.11,
-      "lum_std": 10.67,
-      "sobel_mean": 27.52,
-      "unique_colors_sample": 3378,
+      "lum_mean": 116.79,
+      "lum_std": 11.42,
+      "sobel_mean": 28.11,
+      "unique_colors_sample": 3539,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2357,15 +2366,15 @@
     "rock_ground_m1.webp": {
       "family": "rock_ground",
       "variant": "m1",
-      "kb": 226.31,
+      "kb": 223.65,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.84,
-      "lum_std": 11.62,
-      "sobel_mean": 29.71,
-      "unique_colors_sample": 2858,
+      "lum_mean": 117.94,
+      "lum_std": 11.59,
+      "sobel_mean": 29.54,
+      "unique_colors_sample": 2818,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "rock_ground_m1.png",
@@ -2378,15 +2387,15 @@
     "rock_ground_m2.webp": {
       "family": "rock_ground",
       "variant": "m2",
-      "kb": 231.1,
+      "kb": 225.45,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.55,
+      "lum_mean": 118.93,
       "lum_std": 16.1,
-      "sobel_mean": 33.58,
-      "unique_colors_sample": 2203,
+      "sobel_mean": 32.54,
+      "unique_colors_sample": 2060,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "rock_ground_m2.png",
@@ -2399,33 +2408,36 @@
     "rock_ground_m3.webp": {
       "family": "rock_ground",
       "variant": "m3",
-      "kb": 225.67,
+      "kb": 243.34,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 117.85,
-      "lum_std": 11.62,
-      "sobel_mean": 29.7,
-      "unique_colors_sample": 2824,
+      "lum_mean": 118.47,
+      "lum_std": 11.64,
+      "sobel_mean": 35.07,
+      "unique_colors_sample": 1867,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "rock_ground_m3.png",
+      "src_sha256": "dadb65dcb76ae61d0592512d2245867aabfd0a5d6801fbaf05ead2898bfa0f96",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "rock_ground_m4.webp": {
       "family": "rock_ground",
       "variant": "m4",
-      "kb": 246.71,
+      "kb": 244.71,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 118.51,
-      "lum_std": 15.94,
-      "sobel_mean": 35.31,
-      "unique_colors_sample": 3469,
+      "lum_mean": 118.86,
+      "lum_std": 16.3,
+      "sobel_mean": 35.32,
+      "unique_colors_sample": 3566,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2669,15 +2681,15 @@
     "swamp_m1.webp": {
       "family": "swamp",
       "variant": "m1",
-      "kb": 204.54,
+      "kb": 197.02,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 95.58,
+      "lum_mean": 95.63,
       "lum_std": 14.85,
-      "sobel_mean": 26.43,
-      "unique_colors_sample": 6016,
+      "sobel_mean": 25.52,
+      "unique_colors_sample": 5985,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "swamp_m1.png",
@@ -2690,15 +2702,15 @@
     "swamp_m2.webp": {
       "family": "swamp",
       "variant": "m2",
-      "kb": 228.19,
+      "kb": 231.54,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 95.89,
-      "lum_std": 13.55,
-      "sobel_mean": 29.55,
-      "unique_colors_sample": 4449,
+      "lum_mean": 95.98,
+      "lum_std": 14.49,
+      "sobel_mean": 30.84,
+      "unique_colors_sample": 4939,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "swamp_m2.png",
@@ -2711,33 +2723,36 @@
     "swamp_m3.webp": {
       "family": "swamp",
       "variant": "m3",
-      "kb": 206.69,
+      "kb": 207.34,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 95.58,
+      "lum_mean": 95.62,
       "lum_std": 14.85,
-      "sobel_mean": 26.45,
-      "unique_colors_sample": 5953,
+      "sobel_mean": 30.7,
+      "unique_colors_sample": 2077,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "swamp_m3.png",
+      "src_sha256": "971af2ecbc0a8c6b4910d7d5715d369a9c168f10d6770c0dbd77963f77fcc81e",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "swamp_m4.webp": {
       "family": "swamp",
       "variant": "m4",
-      "kb": 203.94,
+      "kb": 206.62,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 95.94,
-      "lum_std": 12.29,
-      "sobel_mean": 24.63,
-      "unique_colors_sample": 2263,
+      "lum_mean": 96.02,
+      "lum_std": 13.06,
+      "sobel_mean": 25.41,
+      "unique_colors_sample": 2613,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,

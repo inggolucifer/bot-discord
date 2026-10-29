@@ -1,5 +1,5 @@
 {
-  "ai_count": 11,
+  "ai_count": 15,
   "procedural_count": 5,
   "families": {
     "plains": [
@@ -90,9 +90,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "cb53da792e21d5c672a40aaba2a878781f0702b2dff652b3c22cf2ab80fac971",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -189,9 +192,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "8a499cd68b5f1953beb586a4ffaaf7851d9dccc35c0c03a90d9b1f6f44b43e3e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -285,9 +291,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "dadb65dcb76ae61d0592512d2245867aabfd0a5d6801fbaf05ead2898bfa0f96",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -384,9 +393,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "dbcffab20200e737a688c381e967215e59448685dcb5fb1e6c8bb159c06ac34c",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -544,9 +556,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "971af2ecbc0a8c6b4910d7d5715d369a9c168f10d6770c0dbd77963f77fcc81e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
