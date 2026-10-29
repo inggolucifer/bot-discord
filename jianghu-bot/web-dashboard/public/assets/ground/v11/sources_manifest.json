@@ -1,6 +1,6 @@
 {
-  "ai_count": 6,
-  "procedural_count": 6,
+  "ai_count": 11,
+  "procedural_count": 5,
   "families": {
     "plains": [
       {
@@ -23,9 +23,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "870c66337d81487c0a2135ac7dd375db285998b424e6be3e6233a9d415422a2e",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -151,9 +154,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "ed3e225f7e5de65cd1778afe78e8793b6b26d9cfb4ac1a1e1a0f2dfb8567e03f",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -311,9 +317,12 @@
       },
       {
         "variant": "m3",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "6306f97550ed8c98ee17b360232ad1948f37055426afd3dc95e5ffe60828d118",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m4",
@@ -1061,15 +1070,21 @@
     "lake": [
       {
         "variant": "m1",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "65e8850d6a0317e42f58817883f059bbfc51c45ba76e2dc87e609e3012962f98",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m2",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "b1a0386dd3a48a0086bb716c9c3ad652aead4fda40cf5dded20d028006bf220b",
+        "resolution": [
+          1024,
+          1024
+        ]
       },
       {
         "variant": "m3",
