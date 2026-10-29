@@ -1,7 +1,7 @@
 {
   "total_macros": 144,
-  "ai_count": 80,
-  "procedural_count": 64,
+  "ai_count": 85,
+  "procedural_count": 59,
   "placeholder_count": 0,
   "rule": "ai count strictly derived from art_input/ground/<family>_m<N>.png (>=1024x1024) and valid sha256",
   "files": {
@@ -245,15 +245,15 @@
     "canyon_floor_m1.webp": {
       "family": "canyon_floor",
       "variant": "m1",
-      "kb": 230.44,
+      "kb": 232.18,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.27,
-      "lum_std": 14.79,
-      "sobel_mean": 30.59,
-      "unique_colors_sample": 14870,
+      "lum_mean": 115.23,
+      "lum_std": 14.68,
+      "sobel_mean": 30.4,
+      "unique_colors_sample": 14449,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "canyon_floor_m1.png",
@@ -266,15 +266,15 @@
     "canyon_floor_m2.webp": {
       "family": "canyon_floor",
       "variant": "m2",
-      "kb": 230.74,
+      "kb": 222.44,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 114.84,
-      "lum_std": 9.58,
-      "sobel_mean": 28.9,
-      "unique_colors_sample": 4230,
+      "lum_mean": 114.83,
+      "lum_std": 10.59,
+      "sobel_mean": 28.61,
+      "unique_colors_sample": 7777,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "canyon_floor_m2.png",
@@ -287,33 +287,36 @@
     "canyon_floor_m3.webp": {
       "family": "canyon_floor",
       "variant": "m3",
-      "kb": 231.39,
+      "kb": 250.63,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.26,
-      "lum_std": 14.8,
-      "sobel_mean": 30.6,
-      "unique_colors_sample": 14753,
+      "lum_mean": 114.77,
+      "lum_std": 15.2,
+      "sobel_mean": 36.4,
+      "unique_colors_sample": 7347,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "canyon_floor_m3.png",
+      "src_sha256": "aa438e14101758fd6d8f6d7fc4dc52f37e9dc656f13aec9a55c95747005fea9c",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "canyon_floor_m4.webp": {
       "family": "canyon_floor",
       "variant": "m4",
-      "kb": 222.51,
+      "kb": 221.91,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 115.1,
-      "lum_std": 10.52,
-      "sobel_mean": 27.91,
-      "unique_colors_sample": 6744,
+      "lum_mean": 115.07,
+      "lum_std": 10.35,
+      "sobel_mean": 27.62,
+      "unique_colors_sample": 6500,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -479,15 +482,15 @@
     "dead_wood_m1.webp": {
       "family": "dead_wood",
       "variant": "m1",
-      "kb": 221.91,
+      "kb": 223.64,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.57,
-      "lum_std": 11.6,
-      "sobel_mean": 31.41,
-      "unique_colors_sample": 921,
+      "lum_mean": 109.56,
+      "lum_std": 11.66,
+      "sobel_mean": 31.52,
+      "unique_colors_sample": 967,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m1.png",
@@ -500,15 +503,15 @@
     "dead_wood_m2.webp": {
       "family": "dead_wood",
       "variant": "m2",
-      "kb": 226.58,
+      "kb": 228.76,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 110.67,
-      "lum_std": 14.88,
-      "sobel_mean": 36.07,
-      "unique_colors_sample": 2057,
+      "lum_mean": 110.68,
+      "lum_std": 15.14,
+      "sobel_mean": 36.6,
+      "unique_colors_sample": 2113,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dead_wood_m2.png",
@@ -521,33 +524,36 @@
     "dead_wood_m3.webp": {
       "family": "dead_wood",
       "variant": "m3",
-      "kb": 222.11,
+      "kb": 236.91,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 109.58,
-      "lum_std": 11.6,
-      "sobel_mean": 31.41,
-      "unique_colors_sample": 986,
+      "lum_mean": 110.14,
+      "lum_std": 11.13,
+      "sobel_mean": 36.86,
+      "unique_colors_sample": 964,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dead_wood_m3.png",
+      "src_sha256": "bdf186a0a34e1cf77475825b9abb745d9e6400f5139820d518f6488902a3a2d6",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "dead_wood_m4.webp": {
       "family": "dead_wood",
       "variant": "m4",
-      "kb": 236.32,
+      "kb": 236.56,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 110.32,
-      "lum_std": 14.67,
-      "sobel_mean": 38.45,
-      "unique_colors_sample": 2028,
+      "lum_std": 14.78,
+      "sobel_mean": 38.79,
+      "unique_colors_sample": 2059,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -716,15 +722,15 @@
     "dune_m1.webp": {
       "family": "dune",
       "variant": "m1",
-      "kb": 221.9,
+      "kb": 221.54,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.52,
-      "lum_std": 11.4,
+      "lum_mean": 169.53,
+      "lum_std": 11.38,
       "sobel_mean": 26.72,
-      "unique_colors_sample": 2598,
+      "unique_colors_sample": 2646,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dune_m1.png",
@@ -737,15 +743,15 @@
     "dune_m2.webp": {
       "family": "dune",
       "variant": "m2",
-      "kb": 248.13,
+      "kb": 247.66,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 170.24,
-      "lum_std": 17.21,
-      "sobel_mean": 31.36,
-      "unique_colors_sample": 5051,
+      "lum_mean": 170.25,
+      "lum_std": 17.14,
+      "sobel_mean": 31.39,
+      "unique_colors_sample": 4767,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "dune_m2.png",
@@ -758,33 +764,36 @@
     "dune_m3.webp": {
       "family": "dune",
       "variant": "m3",
-      "kb": 221.78,
+      "kb": 273.68,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 169.53,
-      "lum_std": 11.39,
-      "sobel_mean": 26.65,
-      "unique_colors_sample": 2538,
+      "lum_mean": 170.56,
+      "lum_std": 18.75,
+      "sobel_mean": 39.16,
+      "unique_colors_sample": 7809,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "dune_m3.png",
+      "src_sha256": "fc503eb24896327c817247ea60ad2c894b43cc3a18474eb000383d213b73514a",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "dune_m4.webp": {
       "family": "dune",
       "variant": "m4",
-      "kb": 219.69,
+      "kb": 215.6,
       "dimensions": [
         1024,
         1024
       ],
       "lum_mean": 169.91,
-      "lum_std": 12.54,
-      "sobel_mean": 26.43,
-      "unique_colors_sample": 2751,
+      "lum_std": 12.44,
+      "sobel_mean": 26.15,
+      "unique_colors_sample": 2833,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -1112,15 +1121,15 @@
     "herb_field_m1.webp": {
       "family": "herb_field",
       "variant": "m1",
-      "kb": 207.32,
+      "kb": 207.12,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.97,
-      "lum_std": 12.21,
-      "sobel_mean": 25.03,
-      "unique_colors_sample": 5943,
+      "lum_mean": 120.15,
+      "lum_std": 12.47,
+      "sobel_mean": 25.19,
+      "unique_colors_sample": 6358,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "herb_field_m1.png",
@@ -1133,15 +1142,15 @@
     "herb_field_m2.webp": {
       "family": "herb_field",
       "variant": "m2",
-      "kb": 231.65,
+      "kb": 231.8,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.92,
-      "lum_std": 15.82,
-      "sobel_mean": 31.74,
-      "unique_colors_sample": 20608,
+      "lum_mean": 120.07,
+      "lum_std": 16.27,
+      "sobel_mean": 31.92,
+      "unique_colors_sample": 21211,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "herb_field_m2.png",
@@ -1154,33 +1163,36 @@
     "herb_field_m3.webp": {
       "family": "herb_field",
       "variant": "m3",
-      "kb": 206.61,
+      "kb": 248.93,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 119.97,
-      "lum_std": 12.21,
-      "sobel_mean": 25.01,
-      "unique_colors_sample": 5872,
+      "lum_mean": 119.83,
+      "lum_std": 12.39,
+      "sobel_mean": 37.04,
+      "unique_colors_sample": 4573,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "herb_field_m3.png",
+      "src_sha256": "9adc357f41159c99619138d042000536d17a8419c390ae62a70a491bfba31553",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "herb_field_m4.webp": {
       "family": "herb_field",
       "variant": "m4",
-      "kb": 214.75,
+      "kb": 213.06,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 120.02,
-      "lum_std": 10.24,
-      "sobel_mean": 26.57,
-      "unique_colors_sample": 6213,
+      "lum_mean": 120.23,
+      "lum_std": 10.51,
+      "sobel_mean": 26.49,
+      "unique_colors_sample": 6790,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
@@ -2603,15 +2615,15 @@
     "snow_m1.webp": {
       "family": "snow",
       "variant": "m1",
-      "kb": 181.89,
+      "kb": 181.38,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 234.6,
-      "lum_std": 9.56,
-      "sobel_mean": 21.04,
-      "unique_colors_sample": 1792,
+      "lum_mean": 234.58,
+      "lum_std": 9.62,
+      "sobel_mean": 21.03,
+      "unique_colors_sample": 1806,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "snow_m1.png",
@@ -2624,15 +2636,15 @@
     "snow_m2.webp": {
       "family": "snow",
       "variant": "m2",
-      "kb": 190.27,
+      "kb": 189.89,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 234.87,
+      "lum_mean": 234.94,
       "lum_std": 10.91,
-      "sobel_mean": 22.33,
-      "unique_colors_sample": 1587,
+      "sobel_mean": 22.22,
+      "unique_colors_sample": 1689,
       "quality_flag": "structured",
       "source": "ai",
       "src_file": "snow_m2.png",
@@ -2645,33 +2657,36 @@
     "snow_m3.webp": {
       "family": "snow",
       "variant": "m3",
-      "kb": 180.92,
+      "kb": 206.6,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 234.6,
-      "lum_std": 9.55,
-      "sobel_mean": 20.98,
-      "unique_colors_sample": 1770,
+      "lum_mean": 235.15,
+      "lum_std": 12.83,
+      "sobel_mean": 25.59,
+      "unique_colors_sample": 4782,
       "quality_flag": "structured",
-      "source": "procedural",
-      "src_file": null,
-      "src_sha256": null,
-      "src_resolution": null
+      "source": "ai",
+      "src_file": "snow_m3.png",
+      "src_sha256": "08089f7849308041eb53e650a033a7eecae89ba7a809f32e13ccadb0d4185c79",
+      "src_resolution": [
+        1024,
+        1024
+      ]
     },
     "snow_m4.webp": {
       "family": "snow",
       "variant": "m4",
-      "kb": 192.21,
+      "kb": 189.93,
       "dimensions": [
         1024,
         1024
       ],
-      "lum_mean": 234.76,
-      "lum_std": 9.45,
-      "sobel_mean": 21.93,
-      "unique_colors_sample": 1900,
+      "lum_mean": 234.79,
+      "lum_std": 9.46,
+      "sobel_mean": 21.82,
+      "unique_colors_sample": 1957,
       "quality_flag": "structured",
       "source": "procedural",
       "src_file": null,
