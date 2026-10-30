@@ -298,9 +298,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "7a9e4720fb6a0ff50a327aad66a5a78069094c5a19428fa0ab624643c6d31f16",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "rock_ground": [
@@ -333,9 +336,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "7fd263d4b4ebe49c6c58ef798daccb67432349c76b3cdd3689321644cf56e219",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "mountain_pass": [
@@ -368,9 +374,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "953b91bbb16de74f96abbb14e554bace80ca6cf5e5e45126a622914ddeeef9ab",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "canyon_floor": [
@@ -403,9 +412,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "6755956029d12dd3f17285897a1a19e9886b17d968863bde1c652bb399d0953a",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "desert_sand": [
@@ -438,9 +450,12 @@
       },
       {
         "variant": "m4",
-        "source": "procedural",
-        "src_sha256": null,
-        "reason": "missing_source"
+        "source": "ai",
+        "src_sha256": "905cb05cc25d7b2c901f6cbeeb242e6e501cbaef3dce087d5c53fd84ca04bf48",
+        "resolution": [
+          1024,
+          1024
+        ]
       }
     ],
     "dune": [
